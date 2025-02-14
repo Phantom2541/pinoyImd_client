@@ -1,0 +1,5 @@
+'Step 1 Change  const ENDPOINT = "http://localhost:5000"; to const ENDPOINT = window.location.origin;';
+"Step 2 Run npm run build in client";
+"Step 3 Copy the build folder and paste it in server folder named views";
+"Step 4 Push the server in github";
+"Step 5 Go to heroku and click deploy";

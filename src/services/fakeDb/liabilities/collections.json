@@ -1,0 +1,178 @@
+[
+  {
+    "id": 1,
+    "title": "Service income",
+    "abbreviation": "SI",
+    "meaning": "Amount of income earned from services rendered of a service concern business",
+    "category": "income",
+    "profitable": true
+  },
+  {
+    "id": 2,
+    "title": "Professional Fee/ Payable",
+    "abbreviation": "PF/P",
+    "meaning": "Amounts due to the employees for lisence  they have rendered",
+    "category": "liabilities",
+    "profitable": false
+  },
+  {
+    "id": 3,
+    "title": "Salary",
+    "abbreviation": "salary",
+    "meaning": "Amounts due to the employees for their jobs",
+    "category": "liabilities",
+    "profitable": false
+  },
+  {
+    "id": 4,
+    "title": "Water/ Utilities Expense",
+    "abbreviation": "W/UE",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 5,
+    "title": "Electricity/ Utilities Expense",
+    "abbreviation": "E/UE",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 6,
+    "title": "Taxes and Licenses Expense",
+    "abbreviation": "TL/E",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 7,
+    "title": "Transportation Expense",
+    "abbreviation": "TE",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 8,
+    "title": "Representation & Entertainment Expense",
+    "abbreviation": "RE/E",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 9,
+    "title": "Accumulated Depreciation",
+    "abbreviation": "AD",
+    "meaning": null,
+    "category": "assets",
+    "profitable": false
+  },
+  {
+    "id": 10,
+    "title": "Doubtful Accounts Expense",
+    "abbreviation": "DA/E",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 11,
+    "title": "Insurance Expense",
+    "abbreviation": "I/E",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 12,
+    "title": "Miscellaneous Expense",
+    "abbreviation": "M/E",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 13,
+    "title": "Account Payable",
+    "abbreviation": "A/P",
+    "meaning": null,
+    "category": "liabilities",
+    "profitable": false
+  },
+  {
+    "id": 14,
+    "title": "Note Payable",
+    "abbreviation": "N/P",
+    "meaning": null,
+    "category": "liabilities",
+    "profitable": true
+  },
+  {
+    "id": 15,
+    "title": "Cable/ Utilities Expense",
+    "abbreviation": "C/UE",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 16,
+    "title": "Outsource Expense",
+    "abbreviation": "OE",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 17,
+    "title": "Phone/ Utilities Expense",
+    "abbreviation": "P/UE",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 18,
+    "title": "Medical Inventories Expense",
+    "abbreviation": "M/SE",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 19,
+    "title": "Repair /Maintenace Expense",
+    "abbreviation": "R/ME",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 20,
+    "title": "Solicitation",
+    "abbreviation": "Gft",
+    "meaning": "Customer request financial support.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 21,
+    "title": "INTERNET/ Utilities Expense",
+    "abbreviation": "I/UE",
+    "meaning": null,
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 22,
+    "title": "Office Inventories Expense",
+    "abbreviation": "OIE",
+    "meaning": "The supplies that have been used during the accounting period should be reported in the income statement account Inventories Expense. Basically, supplies are assets until they are used. When they are used, they become an expense",
+    "category": "expenses",
+    "profitable": false
+  }
+]

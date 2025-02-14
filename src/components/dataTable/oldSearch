@@ -1,0 +1,49 @@
+   <MDBBtn
+            title="Search"
+            disabled={isLoading}
+            onClick={async () => {
+              if (search) {
+                setSearch("");
+                handleSearch(false);
+                if (selectedAll) setSelectedAll(false);
+              } else {
+                if (!arrayLength)
+                  return addToast("Records are empty.", {
+                    appearance: "info",
+                  });
+
+                const { value: _search } = await Swal.fire({
+                  title: "What are you looking for?",
+                  text: "Provide a keyword and we will find it for you.",
+                  icon: "question",
+                  input: "text",
+                  confirmButtonText: "Search",
+                  inputValidator: value => {
+                    if (!value) {
+                      return "You need to write something!";
+                    }
+                  },
+                });
+
+                if (_search) {
+                  const _key = _search.toUpperCase();
+
+                  setSearch(_key);
+                  setSelected([]);
+
+                  handleSearch(true, _key);
+                }
+              }
+            }}
+            outline
+            color="white"
+            rounded
+            size="sm"
+            className="px-2"
+          >
+            <MDBIcon
+              pulse={isLoading}
+              icon={isLoading ? "spinner" : search ? "times" : "search"}
+              className="mt-0"
+            />
+          </MDBBtn>

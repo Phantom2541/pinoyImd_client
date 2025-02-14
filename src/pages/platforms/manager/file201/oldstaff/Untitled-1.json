@@ -1,0 +1,17 @@
+{
+  "branch": {
+    "$oid": "653e20bf38d485058ad83414"
+  },
+  "user": {
+    "$oid": "636d37e0187c30ab0f611ce3"
+  },
+  "department": "laboratory",
+  "section": "pathologist",
+  "createdAt": {
+    "$date": "2023-09-17T13:32:32.740Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-17T13:32:32.740Z"
+  },
+  "__v": 0
+}
