@@ -18,7 +18,7 @@ export default function Routes() {
 
   return (
     <Switch>
-      {Sidebars[activePlatform].map(({ path, component, children }, index) => {
+      {Sidebars[activePlatform]?.map(({ path, component, children }, index) => {
         if (children)
           return children.map((child, cIndex) => (
             <Route

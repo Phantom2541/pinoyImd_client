@@ -78,7 +78,7 @@ class TopNavigation extends Component {
               <Branches />
               <Platforms />
             </>
-          )}
+          )} 
           <Profile />
         </MDBNavbarNav>
       </MDBNavbar>
