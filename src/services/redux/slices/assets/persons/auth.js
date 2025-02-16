@@ -236,6 +236,7 @@ export const reduxSlice = createSlice({
           branch: activePlatform.branchId?._id,
         };
 
+        console.log("activePlatform", activePlatform);
 
         _branches = branches.map((branch) => {
           const _access = access.filter((data) => branch._id === data.branchId);
@@ -266,6 +267,7 @@ export const reduxSlice = createSlice({
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
         state.company = company;
+        state.activePlatform = activePlatform;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
