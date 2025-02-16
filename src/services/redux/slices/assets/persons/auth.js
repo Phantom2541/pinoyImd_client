@@ -190,55 +190,57 @@ export const reduxSlice = createSlice({
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, company, isPatient } = payload;
-          console.log("payload",payload);
-          
+          { token, auth, branches,  access, company, isPatient } = payload;
+        
         state.isPatient = isPatient;
 
         let _branches = [];
 
-        if (isCeo) {
-          state.isCeo = isCeo;
+        // if (isCeo) {
+        //   state.isCeo = isCeo;
 
-          //-NOT WORKING BY THOM
-          let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-          console.log(lastVisited);
+        //   //-NOT WORKING BY THOM
+        //   let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
+        //   console.log(lastVisited);
           
-          // if (!lastVisited) {
-          //   const { _id, platform } = branches.find(({ isMain }) => isMain);
-          //   lastVisited = {
-          //     _id,
-          //     platform,
-          //   };
-          // }
-            // localStorage.setItem("lastVisited", JSON.stringify(auth.activePlatform));
-          //-
+        //   // if (!lastVisited) {
+        //   //   const { _id, platform } = branches.find(({ isMain }) => isMain);
+        //   //   lastVisited = {
+        //   //     _id,
+        //   //     platform,
+        //   //   };
+        //   // }
+        //     // localStorage.setItem("lastVisited", JSON.stringify(auth.activePlatform));
+        //   //-
 
-          _branches = branches.map((branch) => {
-            const _access = access.filter(
-              (data) => branch._id === data.branchId
-            );
+        //   _branches = branches.map((branch) => {
+        //     const _access = access.filter(
+        //       (data) => branch._id === data.branchId
+        //     );
 
-            const lastVisit = lastVisited.branch === branch._id;
+        //     const lastVisit = lastVisited.branch === branch._id;
 
-            return {
-              ...branch,
-              access: _access,
-              lastVisit,
-              platform: lastVisit ? lastVisit.platform : branch.platform,
-            };
-          });
-        }
+        //     return {
+        //       ...branch,
+        //       access: _access,
+        //       lastVisit,
+        //       platform: lastVisit ? lastVisit.platform : branch.platform,
+        //     };
+        //   });
+        // }
 
-        let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-        console.log(lastVisited);
+        let activePlatform = JSON.parse(localStorage.getItem("lastVisited"));
+        
+        activePlatform = {...activePlatform, branch:activePlatform.branchId?._id}
+
+        console.log('activePlatform',activePlatform);
         
         _branches = branches.map((branch) => {
           const _access = access.filter((data) => branch._id === data.branchId);
 
           return {
             ...branch,
-            platform: lastVisited.branch === branch._id ? lastVisited.platform : branch.platform,
+            platform: activePlatform.branch === branch._id ? activePlatform.platform : branch.platform,
             access: _access,
           };
         });
@@ -259,7 +261,7 @@ export const reduxSlice = createSlice({
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
         state.company = company;
-        state.activePlatform = lastVisited.platform;
+        state.activePlatform = activePlatform.platform;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
@@ -315,15 +317,15 @@ export const reduxSlice = createSlice({
           state.isCeo = isCeo;
 
           //-NOT WORKING BY THOM
-          let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-          if (!lastVisited) {
-            const { _id, platform } = branches.find(({ isMain }) => isMain);
-            lastVisited = {
-              _id,
-              platform,
-            };
-            localStorage.setItem("lastVisited", JSON.stringify(lastVisited));
-          }
+          let activePlatform = JSON.parse(localStorage.getItem("lastVisited"));
+          // if (!activePlatform) {
+          //   const { _id, platform } = branches.find(({ isMain }) => isMain);
+          //   activePlatform = {
+          //     _id,
+          //     platform,
+          //   };
+          //   localStorage.setItem("activePlatform", JSON.stringify(activePlatform));
+          // }
           //-
 
           _branches = branches.map((branch) => {
@@ -331,13 +333,11 @@ export const reduxSlice = createSlice({
               (data) => branch._id === data.branchId
             );
 
-            const lastVisit = lastVisited._id === branch._id;
-
             return {
               ...branch,
               access: _access,
-              lastVisit,
-              platform: lastVisit ? lastVisit.platform : branch.platform,
+              activePlatform:activePlatform.branchId?._id === branch._id,
+              platform: activePlatform.branchId?._id === branch._id ? activePlatform.platform : branch.platform,
             };
           });
         }
