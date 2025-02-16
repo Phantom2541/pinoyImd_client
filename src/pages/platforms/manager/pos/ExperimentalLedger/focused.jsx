@@ -44,7 +44,7 @@ import Swal from "sweetalert2";
 export default function FocusedSale({ ledger, focusedDay, month, year }) {
   const [filteredCashiers, setFilteredCashiers] = useState([]),
     [filteredByProcessing, setFilteredByProcessing] = useState([]),
-    { onDuty, token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { onDuty, token, activePortal, auth } = useSelector(({ auth }) => auth),
     { collections: sales, isLoading } = useSelector(({ sales }) => sales),
     { collections: physicians } = useSelector(({ physicians }) => physicians),
     { collections: sources } = useSelector(({ providers }) => providers),
@@ -80,7 +80,7 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
             branchId: onDuty._id,
             createdAt: startDate,
             endDate,
-            ...(activePlatform === "cashier" && { cashierId: auth._id }), // if cashier view, only show own transactions
+            ...(activePortal === "cashier" && { cashierId: auth._id }), // if cashier view, only show own transactions
           },
           token,
         })
@@ -100,7 +100,7 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
     token,
     cashiers,
     sales,
-    activePlatform,
+    activePortal,
     auth,
     dispatch,
   ]);

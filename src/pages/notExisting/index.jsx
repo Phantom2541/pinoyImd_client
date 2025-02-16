@@ -4,14 +4,14 @@ import { useSelector } from "react-redux";
 import { capitalize } from "../../services/utilities";
 
 export default function NotExisting() {
-  const { activePlatform } = useSelector(({ auth }) => auth);
+  const { activePortal } = useSelector(({ auth }) => auth);
 
   return (
     <MDBContainer className="text-center">
       <h1>Error 400</h1>
 
       <h4 className="mt-3">
-        [{capitalize(activePlatform)}] - {window.location.pathname}
+        [{capitalize(activePortal)}] - {window.location.pathname}
       </h4>
 
       <p>

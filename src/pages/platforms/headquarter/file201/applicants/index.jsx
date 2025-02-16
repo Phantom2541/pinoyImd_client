@@ -4,15 +4,15 @@ import { BROWSE } from "../../../../../services/redux/slices/assets/persons/appl
 import { MDBCard, MDBCardBody, MDBTable, MDBTableBody } from "mdbreact";
 
 const Applicants = () => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, activePortal } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ applicants }) => applicants),
     [applicants, setApplicants] = useState([]),
     dispatch = useDispatch();
 
-  console.log(activePlatform);
+  console.log(activePortal);
 
   useEffect(() => {
-    dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
+    dispatch(BROWSE({ token, branchId: activePortal.branchId }));
   }, [token, dispatch]);
 
   useEffect(() => {

@@ -14,8 +14,8 @@ export default function Calendar({ month, year }) {
     { expenses, grossSales, patients } = census,
     { pathname } = useLocation(),
     history = useHistory();
-  // { activePlatform } = useSelector(({ auth }) => auth);
-  // isManager = activePlatform === "manager";
+  // { activePortal } = useSelector(({ auth }) => auth);
+  // isManager = activePortal === "manager";
 
   return (
     <>

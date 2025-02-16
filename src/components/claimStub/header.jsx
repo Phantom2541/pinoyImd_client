@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 
 export default function Header({ date, saleId }) {
   const { company, onDuty } = useSelector(({ auth }) => auth);
-
+  console.log("onDuty", onDuty);
+  
   return (
     <>
       <h4

@@ -44,7 +44,7 @@ export default function Calendar({
 }) {
   const [parsedCalendarTable, setParsedCalendarTable] = useState([]),
     [isLoading, setIsLoading] = useState(false),
-    { token, onDuty, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { token, onDuty, activePortal, auth } = useSelector(({ auth }) => auth),
     { pathname } = useLocation(),
     history = useHistory(),
     dispatch = useDispatch();
@@ -103,7 +103,7 @@ export default function Calendar({
           branch: onDuty._id,
           month: Months[month],
           year,
-          ...(activePlatform === "cashier" && { cashier: auth._id }),
+          ...(activePortal === "cashier" && { cashier: auth._id }),
         };
 
         const {
@@ -143,7 +143,7 @@ export default function Calendar({
     year,
     token,
     onDuty,
-    activePlatform,
+    activePortal,
     auth,
     showPopUp,
     setShowPopUp,
@@ -394,7 +394,7 @@ export default function Calendar({
                       {!isSelectedMonthAndYearFuture && breakdown && (
                         <>
                           {/* only display breakdowns if manager is viewing ledger */}
-                          {activePlatform === "manager" && (
+                          {activePortal === "manager" && (
                             <>
                               {Object.entries(cashiers).map(([key, value]) => (
                                 <MDBAlert

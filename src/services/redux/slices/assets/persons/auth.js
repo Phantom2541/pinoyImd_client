@@ -5,7 +5,7 @@ const name = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
   token = localStorage.getItem("token") || "",
   email = localStorage.getItem("email") || "",
-  activePlatform = localStorage.getItem("activePlatform"),
+  activePortal = localStorage.getItem("activePortal"),
   defaultDuty = {
     _id: "",
     designation: 1,
@@ -17,7 +17,7 @@ const name = "auth",
 
 const initialState = {
   auth: {}, // user details
-  activePlatform, // active platform for sidebar and routes
+  activePortal, // active platform for sidebar and routes
   token,
   email, // email for login detection
   image: "", // user image
@@ -196,47 +196,46 @@ export const reduxSlice = createSlice({
 
         let _branches = [];
 
-        // if (isCeo) {
-        //   state.isCeo = isCeo;
+        if (isCeo) {
+          state.isCeo = isCeo;
 
-        //   //-NOT WORKING BY THOM
-        //   let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-        //   console.log(lastVisited);
+          //-NOT WORKING BY THOM
+          let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
+          console.log(lastVisited);
 
-        //   // if (!lastVisited) {
-        //   //   const { _id, platform } = branches.find(({ isMain }) => isMain);
-        //   //   lastVisited = {
-        //   //     _id,
-        //   //     platform,
-        //   //   };
-        //   // }
-        //     // localStorage.setItem("lastVisited", JSON.stringify(auth.activePlatform));
-        //   //-
+          // if (!lastVisited) {
+          //   const { _id, platform } = branches.find(({ isMain }) => isMain);
+          //   lastVisited = {
+          //     _id,
+          //     platform,
+          //   };
+          // }
+            // localStorage.setItem("lastVisited", JSON.stringify(auth.activePortal));
+          //-
 
-        //   _branches = branches.map((branch) => {
-        //     const _access = access.filter(
-        //       (data) => branch._id === data.branchId
-        //     );
+          _branches = branches.map((branch) => {
+            const _access = access.filter(
+              (data) => branch._id === data.branchId
+            );
 
-        //     const lastVisit = lastVisited.branch === branch._id;
+            const lastVisit = lastVisited.branch === branch._id;
 
-        //     return {
-        //       ...branch,
-        //       access: _access,
-        //       lastVisit,
-        //       platform: lastVisit ? lastVisit.platform : branch.platform,
-        //     };
-        //   });
-        // }
+            return {
+              ...branch,
+              access: _access,
+              lastVisit,
+              platform: lastVisit ? lastVisit.platform : branch.platform,
+            };
+          });
+        }
 
-        let activePlatform = JSON.parse(localStorage.getItem("lastVisited"));
+        let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
 
-        activePlatform = {
-          ...activePlatform,
-          branch: activePlatform.branchId?._id,
+        lastVisited = {
+          ...lastVisited,
+          branch: lastVisited.branchId?._id,
         };
 
-        console.log("activePlatform", activePlatform);
 
         _branches = branches.map((branch) => {
           const _access = access.filter((data) => branch._id === data.branchId);
@@ -244,8 +243,8 @@ export const reduxSlice = createSlice({
           return {
             ...branch,
             platform:
-              activePlatform.branch === branch._id
-                ? activePlatform.platform
+              lastVisited.branch === branch._id
+                ? lastVisited.platform
                 : branch.platform,
             access: _access,
           };
@@ -267,7 +266,7 @@ export const reduxSlice = createSlice({
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
         state.company = company;
-        state.activePlatform = activePlatform;
+        state.activePortal = lastVisited;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
@@ -296,7 +295,7 @@ export const reduxSlice = createSlice({
         state.auth = payload;
         state.email = payload.email;
         localStorage.setItem("email", payload.email);
-        state.activePlatform = payload.activePlatform?.platform;
+        state.activePortal = payload.lastVisited;
         state.isLoading = false;
         state.isSuccess = true;
       })
@@ -323,14 +322,14 @@ export const reduxSlice = createSlice({
           state.isCeo = isCeo;
 
           //-NOT WORKING BY THOM
-          let activePlatform = JSON.parse(localStorage.getItem("lastVisited"));
-          // if (!activePlatform) {
+          let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
+          // if (!activePortal) {
           //   const { _id, platform } = branches.find(({ isMain }) => isMain);
-          //   activePlatform = {
+          //   activePortal = {
           //     _id,
           //     platform,
           //   };
-          //   localStorage.setItem("activePlatform", JSON.stringify(activePlatform));
+          //   localStorage.setItem("activePortal", JSON.stringify(activePortal));
           // }
           //-
 
@@ -342,10 +341,10 @@ export const reduxSlice = createSlice({
             return {
               ...branch,
               access: _access,
-              activePlatform: activePlatform.branchId?._id === branch._id,
+              lastVisited: lastVisited.branchId?._id === branch._id,
               platform:
-                activePlatform.branchId?._id === branch._id
-                  ? activePlatform.platform
+                lastVisited.branchId?._id === branch._id
+                  ? lastVisited.platform
                   : branch.platform,
             };
           });

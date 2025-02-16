@@ -12,13 +12,14 @@ import { UPDATE } from "../../../services/redux/slices/assets/persons/auth";
 
 export default function Platforms() {
   const [text, setText] = useState("Platforms"),
-    { activePlatform, token, auth, access, onDuty } = useSelector(({ auth }) => auth),
+    { activePortal, token, auth, access, onDuty } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
-
+  console.log("onDuty", onDuty);
+  
   const changePlatform = platform => {
     
-    if (platform !== activePlatform) {
-      localStorage.setItem("activePlatform", platform);
+    if (platform !== activePortal) {
+      localStorage.setItem("activePortal", platform);
       dispatch(UPDATE({
         data: {
           _id: auth._id,
@@ -36,11 +37,11 @@ export default function Platforms() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setText(prev => (prev === activePlatform ? "Platforms" : activePlatform));
+      setText(prev => (prev === activePortal ? "Platforms" : activePortal));
     }, 10000);
 
     return () => clearInterval(timer);
-  }, [activePlatform]);
+  }, [activePortal]);
 
   return (
     <MDBDropdown>
@@ -54,7 +55,7 @@ export default function Platforms() {
           .filter(({ status }) => status) // filter disabled status
           .map(({ platform }, index) => (
             <MDBDropdownItem
-              active={platform === activePlatform}
+              active={platform === activePortal}
               key={`platform-${index}`}
               onClick={() => changePlatform(platform)}
             >

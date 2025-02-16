@@ -21,7 +21,7 @@ export default function SideNavigation({
   onLinkClick,
 }) {
   const [links, setLinks] = useState([]),
-    { activePlatform, company, onDuty } = useSelector(({ auth }) => auth),
+    { activePortal, company, onDuty } = useSelector(({ auth }) => auth),
     [logo, setLogo] = useState(FailedLogo);
 
   useEffect(() => {
@@ -34,10 +34,10 @@ export default function SideNavigation({
   }, [company, onDuty]);
 
   useEffect(() => {
-    if (activePlatform) {
-      setLinks(Sidebars[activePlatform]);
+    if (activePortal) {
+      setLinks(Sidebars[activePortal]);
     }
-  }, [activePlatform]);
+  }, [activePortal]);
 
   return (
     <div className="white-skin">
@@ -51,7 +51,7 @@ export default function SideNavigation({
         triggerOpening={triggerOpening}
         style={{ transition: "padding-left .3s" }}
       >
-        {activePlatform && (
+        {activePortal && (
           <MDBSideNavNav>
             {links.map(({ path, name, icon, children }, index) => {
               if (children)
