@@ -14,9 +14,9 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(
   `${name}`,
-  ({ token, branchId }, thunkAPI) => {
+  ({ token, branchId, status }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, { branchId });
+      return axioKit.universal(`${name}/browse`, token, { branchId, status });
     } catch (error) {
       const message =
         (error.response &&

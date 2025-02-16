@@ -6,16 +6,30 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
 } from "mdbreact";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { capitalize } from "../../../services/utilities";
+import { UPDATE } from "../../../services/redux/slices/assets/persons/auth";
 
 export default function Platforms() {
   const [text, setText] = useState("Platforms"),
-    { activePlatform, access } = useSelector(({ auth }) => auth);
+    { activePlatform, token, auth, access, onDuty } = useSelector(({ auth }) => auth),
+    dispatch = useDispatch();
 
   const changePlatform = platform => {
+    
     if (platform !== activePlatform) {
       localStorage.setItem("activePlatform", platform);
+      dispatch(UPDATE({
+        data: {
+          _id: auth._id,
+          email: auth.email,
+          activePlatform: {
+            branch: onDuty._id,
+            platform: platform,
+            role: platform
+          }
+        }, token
+      }));
       window.location.href = "/dashboard";
     }
   };

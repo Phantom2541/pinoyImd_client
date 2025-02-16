@@ -21,6 +21,7 @@ import FAQ from "./pages/others/faq";
 import "./App.css";
 import "./animations.css";
 import Payslip from "./pages/platforms/manager/responsibilities/payslip";
+import PersonnelPrintOut from "./components/personnelPrintOut";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),
@@ -57,6 +58,7 @@ export default function App() {
 
       <Route path="/printout/task" exact component={TaskPrintout} />
       <Route path="/printout/payslip" exact component={Payslip} />
+      <Route path="/printout/personnel" exact component={PersonnelPrintOut} />
       <Platforms />
     </Switch>
   );

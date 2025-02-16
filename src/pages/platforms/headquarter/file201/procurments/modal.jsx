@@ -11,7 +11,7 @@ import {
 import {
   SAVE,
   UPDATE,
-} from "../../../../../services/redux/slices/assets/persons/personnels";
+} from "../../../../../services/redux/slices/assets/persons/heads";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
@@ -20,7 +20,12 @@ const _form = {
   name: "",
 };
 
-export default function Modal({ show, toggle, selected, willCreate }) {
+export default function Modal({
+  show,
+  toggle,
+  selected = { name: "" },
+  willCreate,
+}) {
   const { isLoading } = useSelector(({ personnels }) => personnels),
     { token } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
@@ -31,18 +36,17 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     toggle();
 
     // check if object has changed
-    if (isEqual(form, selected)) {
-      addToast("No changes found, skipping update.", {
+    if (isEqual(form, selected))
+      return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
-    } else {
-      dispatch(
-        UPDATE({
-          data: { ...form, _id: selected._id },
-          token,
-        })
-      );
-    }
+
+    dispatch(
+      UPDATE({
+        data: { ...form, _id: selected._id },
+        token,
+      })
+    );
 
     setForm(_form);
   };
@@ -50,7 +54,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleCreate = () => {
     dispatch(
       SAVE({
-        data: { ...form, _id: selected._id },
+        data: form,
         token,
       })
     );
@@ -59,43 +63,37 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     toggle();
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (willCreate) {
-      handleCreate();
-    } else {
-      handleUpdate();
+      return handleCreate();
     }
+
+    handleUpdate();
   };
 
   // use for direct values like strings and numbers
-  const handleValue = key =>
-    willCreate ? form[key] : form[key] || selected[key];
+  const handleValue = (key) => (willCreate ? form[key] : selected[key] || "");
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
 
   return (
-    <MDBModal
-      isOpen={show}
-      toggle={toggle}
-      backdrop={true}
-      disableFocusTrap={false}
-    >
+    <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} {selected.name || "a Role"}
+        {willCreate ? "Create" : "Update"} {selected?.name || "a Role"}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBInput
             type="text"
             label="Name"
-            value={handleValue("name")}
-            onChange={e => handleChange("name", e.target.value)}
+            value={handleValue("name") || ""}
+            onChange={(e) => handleChange("name", e.target.value)}
             required
             icon="user-shield"
           />

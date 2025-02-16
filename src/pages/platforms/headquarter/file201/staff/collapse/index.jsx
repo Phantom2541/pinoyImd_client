@@ -51,12 +51,15 @@ export default function MenuCollapse({ staffs, page, resetSearch, searchKey }) {
     );
   };
 
+  console.log("Roles:", Roles);
+
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
       {handlePagination(staffs, page, maxPage).map((staff, index) => {
         const { user, employment, status, rate, contribution, _id } = staff;
-        const role = Roles.find(
-          (role) => role.id === Number(employment?.designation)
+
+        const role = Roles.findById(
+          Number(employment?.designation)
         )?.display_name;
 
         return (

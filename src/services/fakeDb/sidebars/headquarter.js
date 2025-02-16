@@ -1,4 +1,10 @@
-import Staff from "../../../pages/platforms/headquarter/file201/staffs";
+// import Staff from "../../../pages/platforms/headquarter/file201/exstaffs";
+
+import Equipments from "../../../pages/platforms/headquarter/file201/equipments";
+import Heads from "../../../pages/platforms/headquarter/file201/heads";
+import Physicians from "../../../pages/platforms/headquarter/file201/physicians";
+import Procurments from "../../../pages/platforms/headquarter/file201/procurments";
+import Staffs from "../../../pages/platforms/headquarter/file201/staff";
 
 const headquarter = [
   {
@@ -9,11 +15,12 @@ const headquarter = [
       {
         name: "Staff",
         path: "/staff",
-        component: Staff,
+        component: Staffs,
       },
       {
         name: "Heads",
         path: "/heads",
+        component: Heads,
       },
       {
         name: "Applicants",
@@ -22,14 +29,17 @@ const headquarter = [
       {
         name: "Physicians",
         path: "/physicians",
+        component: Physicians,
       },
       {
         name: "Equipments",
         path: "/equipments",
+        component: Equipments,
       },
       {
         name: "Procurement",
         path: "/procurement",
+        component: Procurments,
       },
     ],
   },
