@@ -61,7 +61,6 @@ export default function MenuCollapse({ staffs, page, resetSearch, searchKey }) {
         const role = Roles.findById(
           Number(employment?.designation)
         )?.display_name;
-
         return (
           <MDBCard key={`staffs-${index}`}>
             <MDBCollapseHeader
@@ -86,6 +85,7 @@ export default function MenuCollapse({ staffs, page, resetSearch, searchKey }) {
               <MDBCardBody className="pt-0">
                 <CollapseTable
                   employment={employment}
+                  access={staff.access}
                   rate={rate}
                   contribution={contribution}
                   _id={_id}

@@ -46,11 +46,13 @@ function EditableField({
 
 export default function CollapseTable({
   employment,
+  access = [],
   rate,
   contribution,
   _id,
   onSubmit,
 }) {
+  console.log(employment);
   const [editField, setEditField] = useState(null);
   const {
     register,
@@ -87,7 +89,7 @@ export default function CollapseTable({
 
   return (
     <MDBRow>
-      <MDBCol md={4}>
+      <MDBCol md={3}>
         <h5>Employment</h5>
         <hr />
         <EditableField
@@ -185,7 +187,7 @@ export default function CollapseTable({
         </EditableField>
       </MDBCol>
 
-      <MDBCol md={4}>
+      <MDBCol md={3}>
         <h5>Rate</h5>
         <hr />
         <EditableField
@@ -249,7 +251,7 @@ export default function CollapseTable({
         </EditableField>
       </MDBCol>
 
-      <MDBCol md={4}>
+      <MDBCol md={3}>
         <h5>Contribution</h5>
         <hr />
         <EditableField
@@ -311,6 +313,15 @@ export default function CollapseTable({
             }`}
           />
         </EditableField>
+      </MDBCol>
+      <MDBCol md={3}>
+        <h5>Access</h5>
+        <hr />
+        {access.length > 0 ? (
+          access.map((acc, index) => <p key={index}>{acc}</p>)
+        ) : (
+          <p>No Access</p>
+        )}
       </MDBCol>
     </MDBRow>
   );
