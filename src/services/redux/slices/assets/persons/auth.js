@@ -5,7 +5,7 @@ const name = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
   token = localStorage.getItem("token") || "",
   email = localStorage.getItem("email") || "",
-  activePlatform = localStorage.getItem("activePlatform") || "patron",
+  activePlatform = localStorage.getItem("activePlatform") ,
   defaultDuty = {
     _id: "",
     designation: 1,
@@ -80,6 +80,7 @@ export const LOGIN = createAsyncThunk(
     }
   }
 );
+
 
 export const VALIDATEREFRESH = createAsyncThunk(
   `${name}/validateRefresh`,
@@ -190,7 +191,8 @@ export const reduxSlice = createSlice({
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
           { token, auth, branches, isCeo, access, company, isPatient } = payload;
-
+          console.log("payload",payload);
+          
         state.isPatient = isPatient;
 
         let _branches = [];
@@ -200,14 +202,16 @@ export const reduxSlice = createSlice({
 
           //-NOT WORKING BY THOM
           let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-          if (!lastVisited) {
-            const { _id, platform } = branches.find(({ isMain }) => isMain);
-            lastVisited = {
-              _id,
-              platform,
-            };
-            localStorage.setItem("lastVisited", JSON.stringify(lastVisited));
-          }
+          console.log(lastVisited);
+          
+          // if (!lastVisited) {
+          //   const { _id, platform } = branches.find(({ isMain }) => isMain);
+          //   lastVisited = {
+          //     _id,
+          //     platform,
+          //   };
+          // }
+            // localStorage.setItem("lastVisited", JSON.stringify(auth.activePlatform));
           //-
 
           _branches = branches.map((branch) => {
@@ -215,7 +219,7 @@ export const reduxSlice = createSlice({
               (data) => branch._id === data.branchId
             );
 
-            const lastVisit = lastVisited._id === branch._id;
+            const lastVisit = lastVisited.branch === branch._id;
 
             return {
               ...branch,
@@ -225,11 +229,16 @@ export const reduxSlice = createSlice({
             };
           });
         }
+
+        let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
+        console.log(lastVisited);
+        
         _branches = branches.map((branch) => {
           const _access = access.filter((data) => branch._id === data.branchId);
 
           return {
             ...branch,
+            platform: lastVisited.branch === branch._id ? lastVisited.platform : branch.platform,
             access: _access,
           };
         });
@@ -250,6 +259,7 @@ export const reduxSlice = createSlice({
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
         state.company = company;
+        state.activePlatform = lastVisited.platform;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
@@ -272,10 +282,13 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+        console.log('payload',payload);
+        
         state.message = success;
         state.auth = payload;
         state.email = payload.email;
         localStorage.setItem("email", payload.email);
+        state.activePlatform = payload.activePlatform?.platform;
         state.isLoading = false;
         state.isSuccess = true;
       })
