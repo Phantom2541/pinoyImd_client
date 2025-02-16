@@ -6,6 +6,7 @@ import Physicians from "../../../pages/platforms/headquarter/file201/physicians"
 import Procurments from "../../../pages/platforms/headquarter/file201/procurments";
 import Staffs from "../../../pages/platforms/headquarter/file201/staff";
 import Sources from "../../../pages/platforms/headquarter/file201/sources";
+import Applicants from "../../../pages/platforms/headquarter/file201/applicants";
 
 const headquarter = [
   {
@@ -26,6 +27,7 @@ const headquarter = [
       {
         name: "Applicants",
         path: "/petitioners",
+        component: Applicants,
       },
       {
         name: "Physicians",
