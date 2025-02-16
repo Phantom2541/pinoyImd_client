@@ -27,7 +27,7 @@ const Applicants = () => {
         <MDBCardBody>
           <MDBTable>
             <MDBTableBody>
-              {applicants.length > 0 ? (
+              {/* {applicants.length > 0 ? (
                 applicants.map((applicants) => (
                   <tr key={applicants._id}>
                     <td>{applicants.fullName}</td>
@@ -39,7 +39,7 @@ const Applicants = () => {
                 <tr>
                   <td colSpan="3">No Applicants</td>
                 </tr>
-              )}
+              )} */}
             </MDBTableBody>
           </MDBTable>
         </MDBCardBody>
