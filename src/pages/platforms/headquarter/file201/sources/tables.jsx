@@ -43,6 +43,32 @@ const Tables = ({ vendors }) => {
               <td>{clients?.contacts?.mobile}</td>
               <td>{clients?.contacts?.email}</td>
               <td>{clients?.address?.city}</td>
+              <td className="py-2 text-center">
+                <MDBBtnGroup>
+                  <MDBBtn
+                    className="m-0"
+                    size="sm"
+                    color="info"
+                    rounded
+                    title="Update"
+                    onClick={() => {
+                      handleUpdate(vendors);
+                    }}
+                  >
+                    <MDBIcon icon="pen" />
+                  </MDBBtn>
+                  <MDBBtn
+                    className="m-0"
+                    size="sm"
+                    rounded
+                    color="danger"
+                    title="Delete"
+                    onClick={() => handleDelete(vendors)}
+                  >
+                    <MDBIcon icon="trash-alt" />
+                  </MDBBtn>
+                </MDBBtnGroup>
+              </td>
             </tr>
           );
         })}
