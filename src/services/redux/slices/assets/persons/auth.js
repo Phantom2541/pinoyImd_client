@@ -5,7 +5,7 @@ const name = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
   token = localStorage.getItem("token") || "",
   email = localStorage.getItem("email") || "",
-  activePlatform = localStorage.getItem("activePlatform") ,
+  activePlatform = localStorage.getItem("activePlatform"),
   defaultDuty = {
     _id: "",
     designation: 1,
@@ -80,7 +80,6 @@ export const LOGIN = createAsyncThunk(
     }
   }
 );
-
 
 export const VALIDATEREFRESH = createAsyncThunk(
   `${name}/validateRefresh`,
@@ -190,9 +189,9 @@ export const reduxSlice = createSlice({
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, company, isPatient } = payload;
-          console.log("payload",payload);
-          
+          { token, auth, branches, isCeo, access, company, isPatient } =
+            payload;
+
         state.isPatient = isPatient;
 
         let _branches = [];
@@ -202,8 +201,8 @@ export const reduxSlice = createSlice({
 
           //-NOT WORKING BY THOM
           let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-          console.log(lastVisited);
-          
+          console.log("lastVisited", lastVisited);
+
           // if (!lastVisited) {
           //   const { _id, platform } = branches.find(({ isMain }) => isMain);
           //   lastVisited = {
@@ -211,7 +210,7 @@ export const reduxSlice = createSlice({
           //     platform,
           //   };
           // }
-            // localStorage.setItem("lastVisited", JSON.stringify(auth.activePlatform));
+          // localStorage.setItem("lastVisited", JSON.stringify(auth.activePlatform));
           //-
 
           _branches = branches.map((branch) => {
@@ -232,13 +231,16 @@ export const reduxSlice = createSlice({
 
         let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
         console.log(lastVisited);
-        
+
         _branches = branches.map((branch) => {
           const _access = access.filter((data) => branch._id === data.branchId);
 
           return {
             ...branch,
-            platform: lastVisited.branch === branch._id ? lastVisited.platform : branch.platform,
+            platform:
+              lastVisited.branch === branch._id
+                ? lastVisited.platform
+                : branch.platform,
             access: _access,
           };
         });
@@ -282,8 +284,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log('payload',payload);
-        
+        console.log("payload", payload);
+
         state.message = success;
         state.auth = payload;
         state.email = payload.email;
@@ -308,7 +310,7 @@ export const reduxSlice = createSlice({
           { auth, branches, access, isCeo, company, isPatient } = payload;
 
         state.isPatient = isPatient;
-        
+
         let _branches = [];
 
         if (isCeo) {

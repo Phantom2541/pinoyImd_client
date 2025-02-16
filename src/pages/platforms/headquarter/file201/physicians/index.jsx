@@ -15,7 +15,7 @@ import {
 } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 // mobile;
-export default function Index() {
+export default function Physicians() {
   const { onDuty, token } = useSelector(({ auth }) => auth),
     [tieups, setTieups] = useState([]),
     [selected, setSelected] = useState({}),
@@ -25,11 +25,11 @@ export default function Index() {
       ({ physicians }) => physicians
     ),
     { addToast } = useToasts(),
-    dispatch = useDispatch(); 
+    dispatch = useDispatch();
   //Initial Browse
   useEffect(() => {
     console.log(onDuty);
-    
+
     if (token && onDuty._id)
       dispatch(TIEUPS({ key: { branch: onDuty._id }, token }));
 

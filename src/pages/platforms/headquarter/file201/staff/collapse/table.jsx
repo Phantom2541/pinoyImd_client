@@ -141,9 +141,7 @@ export default function CollapseTable({
           errors={errors}
           saveField={saveField}
           handleCancel={handleCancel}
-          value={
-            Roles.find((id) => id == employment?.designation)?.display_name
-          }
+          value={Roles.findById(employment?.designation)?.display_name}
         >
           <select
             {...register("employmentDesignation")}
@@ -152,7 +150,7 @@ export default function CollapseTable({
             }`}
           >
             <option />
-            {Roles.map((role) => (
+            {Roles.collections.map((role) => (
               <option value={role.id}>{role.display_name}</option>
             ))}
           </select>

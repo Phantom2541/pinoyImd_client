@@ -4,22 +4,22 @@ import Menus from "../../../pages/platforms/manager/settings/menus";
 import Banner from "../../../pages/platforms/manager/settings/banner";
 import Logo from "../../../pages/platforms/manager/settings/logo";
 import Tieups from "../../../pages/platforms/manager/settings/tieups";
-import Physicians from "../../../pages/platforms/manager/file201/physicians";
+import Physicians from "../../../pages/platforms/headquarter/file201/physicians";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
-import Heads from "../../../pages/platforms/manager/file201/heads";
-import Procurments from "../../../pages/platforms/manager/file201/procurments";
+import Heads from "../../../pages/platforms/headquarter/file201/heads";
+import Procurments from "../../../pages/platforms/headquarter/file201/procurments";
 
-import Staff from "../../../pages/platforms/manager/file201/oldstaff";
-import ExperentalStaff from "../../../pages/platforms/manager/file201/staff";
+// import Staff from "../../../pages/platforms/manager/file201/oldstaff";
+import ExperentalStaff from "../../../pages/platforms/headquarter/file201/staff";
 
-import Equipments from "../../../pages/platforms/manager/file201/equipments";
+import Equipments from "../../../pages/platforms/headquarter/file201/equipments";
 import Payrolls from "../../../pages/platforms/manager/responsibilities/payroll";
 import Assurance from "../../../pages/platforms/manager/responsibilities/liability/quality/assurance";
 import Sales from "../../../pages/platforms/manager/pos/sales";
-import Ledger from "../../../pages/platforms/manager/pos/ledger";
-import newLedger from "../../../pages/platforms/cashier/pos/newledger";
-import Employees from "../../../pages/platforms/manager/file201/employees";
+// import Ledger from "../../../pages/platforms/manager/pos/ledger";
+// import newLedger from "../../../pages/platforms/cashier/pos/newledger";
+import Employees from "../../../pages/platforms/headquarter/file201/employees";
 import Applicants from "../../../pages/platforms/manager/settings/applicants";
 import Branches from "../../../pages/platforms/manager/branches";
 import Providers from "../../../pages/platforms/manager/provider";
@@ -105,11 +105,6 @@ const manager = [
     children: [
       {
         name: "Staff",
-        path: "/staff",
-        component: Staff,
-      },
-      {
-        name: "Experemental Staff",
         path: "/expstaff",
         component: ExperentalStaff,
       },

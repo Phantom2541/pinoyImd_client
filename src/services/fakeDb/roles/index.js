@@ -4,7 +4,7 @@ export const Policy = {};
 
 const Roles = {
   collections: collections,
-  findById: (pk) => collections.find(({ id }) => id === pk),
+  findById: (pk) => collections.find(({ id }) => id === Number(pk)),
 };
 
 export default Roles;

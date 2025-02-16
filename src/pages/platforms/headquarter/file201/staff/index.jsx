@@ -11,7 +11,6 @@ import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
 // import TableRowCount from "../../../../../components/pagination/rows";
 // import Pagination from "../../../../../components/pagination";
-import Swal from "sweetalert2";
 
 export default function Staffs() {
   const [staffs, setStaffs] = useState([]),

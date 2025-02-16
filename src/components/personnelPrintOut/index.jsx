@@ -2,6 +2,7 @@ import { MDBTableBody, MDBTableHead } from "mdbreact";
 import React, { useEffect, useState } from "react";
 import { fullName } from "../../services/utilities";
 import { Roles } from "../../services/fakeDb";
+import Header from "./header";
 
 const PersonnelPrintOut = () => {
   const [personnels, setPersonnels] = useState([]);
@@ -20,31 +21,11 @@ const PersonnelPrintOut = () => {
     border: "1px solid black",
     height: "20px",
   };
+
+  console.log(personnels);
   return (
     <div className="m-4">
-      <h5 className="text-center font-weight-bold">List of Personnel</h5>
-      <div>
-        <h5 className="font-weight-bold">Annex A</h5>
-        <div
-          className="d-flex justify-items-center"
-          style={{ marginTop: "-8px" }}
-        >
-          <h5 style={{ fontWeight: 400 }}>Name of labaratory</h5>
-          <h5 className="ml-5" style={{ fontWeight: 400 }}>
-            : HEALTH-WIZ MEDICAL AND DIAGNOSTIC CENTER
-          </h5>
-        </div>
-
-        <div
-          className="d-flex justify-items-center"
-          style={{ marginTop: "-8px" }}
-        >
-          <h5 style={{ fontWeight: 400 }}>Address of labaratory </h5>
-          <h5 className="ml-4" style={{ fontWeight: 400 }}>
-            : 096 QUEZON ST., F. C. OTIC, CARRANGLAN, NUEVA ECIJA
-          </h5>
-        </div>
-      </div>
+      <Header />
 
       <table
         style={{ border: "1px solid black", width: "100%" }}
@@ -88,7 +69,7 @@ const PersonnelPrintOut = () => {
           {personnels.length > 0 ? (
             personnels.map((personnel, index) => {
               const { user, employment } = personnel;
-              const { prc = { id: "", from: "", to: "" } } = user;
+              const { prc = { id: "", from: "", to: "" }, hea = "" } = user;
 
               return (
                 <tr
@@ -102,7 +83,7 @@ const PersonnelPrintOut = () => {
                     {Roles.findById(employment.designation)?.name || ""}
                   </td>
                   <td style={tdStyle} className="text-center">
-                    College (static)
+                    {hea}
                   </td>
                   <td className="text-center" style={tdStyle}>
                     {prc.id}
