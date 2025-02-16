@@ -1,9 +1,44 @@
-import React from "react";
-import { MDBTable, MDBIcon } from "mdbreact";
-
+import React, { useState } from "react";
+import { MDBTable, MDBIcon, MDBBtnGroup, MDBBtn } from "mdbreact";
 import { DESTROY } from "../../../../../services/redux/slices/assets/persons/source";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { handlePagination } from "../../../../../services/utilities";
 
-const Tables = ({ vendors }) => {
+const Tables = ({
+  vendors,
+  setSelected,
+  setWillCreate,
+  setShowModal,
+  page,
+}) => {
+  // Rest of your code here
+
+  const { token, maxPage, auth } = useSelector(({ auth }) => auth);
+  const dispatch = useDispatch();
+
+  //Trigger for update
+  const handleUpdate = (selected) => {
+    setSelected(selected);
+    setWillCreate(false);
+    setShowModal(true);
+  };
+
+  const handleDelete = ({ _id }) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(DESTROY({ token, data: { _id } }));
+      }
+    });
+  };
   return (
     <MDBTable responsive hover bordered>
       <thead>
@@ -33,7 +68,7 @@ const Tables = ({ vendors }) => {
         </tr>
       </thead>
       <tbody>
-        {vendors?.map((vendor, index) => {
+        {handlePagination(vendors, page, maxPage)?.map((vendor, index) => {
           const { clients, address } = vendor;
           // Rest of your code here
 
@@ -45,6 +80,32 @@ const Tables = ({ vendors }) => {
               <td>{clients?.contacts?.mobile}</td>
               <td>{clients?.contacts?.email}</td>
               <td>{clients?.address?.city}</td>
+              <td className="py-2 text-center">
+                <MDBBtnGroup>
+                  <MDBBtn
+                    className="m-0"
+                    size="sm"
+                    color="info"
+                    rounded
+                    title="Update"
+                    onClick={() => {
+                      handleUpdate(vendors);
+                    }}
+                  >
+                    <MDBIcon icon="pen" />
+                  </MDBBtn>
+                  <MDBBtn
+                    className="m-0"
+                    size="sm"
+                    rounded
+                    color="danger"
+                    title="Delete"
+                    onClick={() => handleDelete(vendors)}
+                  >
+                    <MDBIcon icon="trash-alt" />
+                  </MDBBtn>
+                </MDBBtnGroup>
+              </td>
             </tr>
           );
         })}
