@@ -1,3 +1,5 @@
+import HumanResources from "../../../pages/platforms/accredetations/humanResources";
+
 const accreditation = [
   {
     name: "Dashboard",
@@ -16,6 +18,7 @@ const accreditation = [
       {
         name: "2. HUMAN RESOURCES MANAGEMANT",
         path: "/laboratory/manpower",
+        component: HumanResources,
       },
       {
         name: "3. PHYSICAL PLANT and ENVIRONMENT MANAGEMENT",
