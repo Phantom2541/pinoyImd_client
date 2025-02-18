@@ -7,6 +7,7 @@ import Procurments from "../../../pages/platforms/headquarter/file201/procurment
 import Staffs from "../../../pages/platforms/headquarter/file201/staff";
 import Sources from "../../../pages/platforms/headquarter/file201/sources";
 import Applicants from "../../../pages/platforms/headquarter/file201/applicants";
+import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 
 const headquarter = [
   {
@@ -144,6 +145,7 @@ const headquarter = [
         name: "Equipments",
         path: "/duty/equipments",
         icon: "list",
+        component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",
