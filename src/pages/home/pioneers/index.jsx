@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBCol, MDBAvatar, MDBRow, MDBIcon } from "mdbreact";
+import { MDBCol, MDBRow, MDBIcon } from "mdbreact";
 
 export default function Pioneers() {
   const THOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/thomas.jpg`;
@@ -85,6 +85,7 @@ export default function Pioneers() {
           <MDBCol md="4" className="mb-4" key={index}>
             <div className="testimonial">
               <img
+                alt="avatar"
                 tag="img"
                 style={{ width: "200px", height: "200px" }}
                 src={pioneer.img}
