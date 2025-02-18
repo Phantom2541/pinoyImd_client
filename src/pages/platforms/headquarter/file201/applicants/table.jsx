@@ -19,6 +19,9 @@ const Table = ({
   handleReject = () => {},
   handleApprove = () => {},
 }) => {
+  const style = {
+    fontWeight: 400,
+  };
   return (
     <MDBTable bordered>
       <MDBTableHead>
@@ -53,13 +56,23 @@ const Table = ({
             const { id = "", from = "", to = "" } = prc || {};
             return (
               <tr key={applicant._id}>
-                <td>{fullName(name)}</td>
-                <td className="text-center">{mobile(phone)}</td>
-                <td className="text-center">{hea}</td>
-                <td className="text-center">{id}</td>
-                <td className="text-center">{dateFormat(from)}</td>
-                <td className="text-center">{dateFormat(to)}</td>
-                <td className="text-center">
+                <td style={style}>{fullName(name)}</td>
+                <td className="text-center" style={style}>
+                  {mobile(phone)}
+                </td>
+                <td className="text-center" style={style}>
+                  {hea}
+                </td>
+                <td className="text-center" style={style}>
+                  {id}
+                </td>
+                <td className="text-center" style={style}>
+                  {dateFormat(from)}
+                </td>
+                <td className="text-center" style={style}>
+                  {dateFormat(to)}
+                </td>
+                <td className="text-center" style={style}>
                   <MDBBtnGroup>
                     <MDBBtn
                       size="sm"

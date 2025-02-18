@@ -9,10 +9,11 @@ import TopHeader from "../../../../../components/topHeader";
 import Table from "./table";
 import Swal from "sweetalert2";
 import { fullName, globalSearch } from "../../../../../services/utilities";
+import TableLoading from "../../../../../components/tableLoading";
 
 const Applicants = () => {
   const { token, onDuty } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ applicants }) => applicants),
+    { collections, isLoading } = useSelector(({ applicants }) => applicants),
     [category, setCategory] = useState("Petition"),
     [didSearch, setDidSearch] = useState(false),
     [baseApplicants, setBaseApplicants] = useState([]),
@@ -115,12 +116,16 @@ const Applicants = () => {
           didSearch={didSearch}
         />
         <MDBCardBody>
-          <Table
-            applicants={applicants}
-            handleReject={handleReject}
-            didSearch={didSearch}
-            handleApprove={handleApprove}
-          />
+          {isLoading ? (
+            <TableLoading />
+          ) : (
+            <Table
+              applicants={applicants}
+              handleReject={handleReject}
+              didSearch={didSearch}
+              handleApprove={handleApprove}
+            />
+          )}
         </MDBCardBody>
       </MDBCard>
     </>
