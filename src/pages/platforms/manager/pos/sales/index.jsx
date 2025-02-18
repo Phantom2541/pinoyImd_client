@@ -33,19 +33,19 @@ export default function Sales() {
     [daily, setDaily] = useState({}),
     [selected, setSelected] = useState({}),
     [showCashRegister, setShowCashRegister] = useState(false),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id && auth._id) {
+    if (token && activePlatform?.branchId && auth._id) {
       const today = new Date().setHours(0, 0, 0, 0);
 
       dispatch(
         BROWSE({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             createdAt: today,
           },
         })
@@ -59,7 +59,7 @@ export default function Sales() {
         day: today.getDate(),
         year: today.getFullYear(),
         cashier: auth._id,
-        branch: onDuty._id,
+        branch: activePlatform?.branchId,
       })
       .then((item) => {
         setDaily(item);
@@ -69,7 +69,7 @@ export default function Sales() {
       });
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, auth]);
+  }, [token, dispatch, activePlatform, auth]);
   console.log(daily);
 
   //Set fetched data for mapping

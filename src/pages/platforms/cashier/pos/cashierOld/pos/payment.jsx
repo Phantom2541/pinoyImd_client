@@ -41,7 +41,7 @@ export default function CashierPayment({
   const [payment, setPayment] = useState(""),
     [isDeliver, setIsDeliver] = useState(false),
     [cash, setCash] = useState(0),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const { abbr = "" } = Categories[categoryIndex],
@@ -65,7 +65,7 @@ export default function CashierPayment({
       source: sourceVendor || undefined,
       physicianId: physicianId || undefined,
       authorizedBy: authorizedBy || undefined,
-      branchId: onDuty._id,
+      branchId: activePlatform?.branchId,
       customerId: _id,
       cashierId: auth._id,
       category: categoryIndex === 0 ? "walkin" : abbr,

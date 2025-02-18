@@ -73,7 +73,7 @@ var category = [
 
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ personnels }) => personnels),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -110,7 +110,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleCreate = () => {
     dispatch(
       SAVE({
-        data: { ...form, user: auth._id, branchId: onDuty._id },
+        data: { ...form, user: auth._id, branchId: activePlatform?.branchId },
         token,
       })
     );

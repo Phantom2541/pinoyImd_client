@@ -39,7 +39,7 @@ export default function Modal({
       alert: 0,
       critical: 0,
     }),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const key = preference === "gender" ? "isMale" : "development";
@@ -79,7 +79,12 @@ export default function Modal({
       return dispatch(
         SAVE({
           token,
-          data: { ...form, serviceId, branchId: onDuty._id, userId: auth._id },
+          data: {
+            ...form,
+            serviceId,
+            branchId: activePlatform?.branchId,
+            userId: auth._id,
+          },
         })
       );
 

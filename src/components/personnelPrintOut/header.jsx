@@ -2,8 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const Header = () => {
-  const { onDuty, auth } = useSelector(({ auth }) => auth);
-  const { companyId = {} } = onDuty || {};
+  const { activePlatform, auth } = useSelector(({ auth }) => auth);
+  const { companyId = {} } = activePlatform || {};
   const { name = "", subName = "" } = companyId;
 
   console.log("auth", auth);

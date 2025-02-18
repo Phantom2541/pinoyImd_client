@@ -16,7 +16,7 @@ export default function SABranches() {
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ branches }) => branches
     ),
@@ -25,11 +25,11 @@ export default function SABranches() {
 
   // Initial Browse
   useEffect(() => {
-    if (token && onDuty && onDuty._id) {
-    //   dispatch(BROWSE({ token }));
+    if (token && activePlatform && activePlatform?.branchId) {
+      //   dispatch(BROWSE({ token }));
     }
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
   useEffect(() => {

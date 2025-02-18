@@ -37,16 +37,16 @@ const formatTime = (hours, minutes) => {
 export default function ChemsPrint() {
   const [chems, setChems] = useState([]),
     { collections } = useSelector(({ chemistry }) => chemistry),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty?._id) {
+    if (token && activePlatform?._id) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/chemistry/logbook",
           data: {
-            branch: onDuty._id,
+            branch: activePlatform?.branchId,
             month,
             year,
           },
@@ -55,7 +55,7 @@ export default function ChemsPrint() {
       );
     }
     return () => RESET();
-  }, [onDuty, dispatch, token, month, year]);
+  }, [activePlatform, dispatch, token, month, year]);
 
   useEffect(() => {
     setChems(collections);
@@ -124,11 +124,14 @@ export default function ChemsPrint() {
       );
     });
   };
-  console.log(onDuty);
+  console.log(activePlatform);
 
   return (
     <div>
-      <Banner company={onDuty?.companyId?.name} branch={onDuty?.name} />
+      <Banner
+        company={activePlatform?.companyId?.name}
+        branch={activePlatform?.name}
+      />
 
       <h3 className="text-center">
         Chemistry Report for {Months[month - 1]} {year}

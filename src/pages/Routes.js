@@ -14,11 +14,11 @@ import Profile from "../components/profile";
 import { useSelector } from "react-redux";
 
 export default function Routes() {
-  const { activePortal } = useSelector(({ auth }) => auth);
+  const { activePlatform } = useSelector(({ auth }) => auth);
 
   return (
     <Switch>
-      {Sidebars[activePortal]?.map(({ path, component, children }, index) => {
+      {Sidebars[activePlatform]?.map(({ path, component, children }, index) => {
         if (children)
           return children.map((child, cIndex) => (
             <Route

@@ -15,19 +15,19 @@ const today = new Date();
 export default function Temperature() {
   const [month, setMonth] = useState(today.getMonth()),
     [year, setYear] = useState(today.getFullYear()),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, isLoading } = useSelector(
       ({ temperatures }) => temperatures
     ), // Adjust selector for ledger data
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty._id && year && month) {
+    if (token && activePlatform?.branchId && year && month) {
       dispatch(
         BROWSE({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             start: new Date(year, month, 0),
             end: new Date(year, month + 1, 0, 23, 59, 59, 999),
           },
@@ -45,7 +45,7 @@ export default function Temperature() {
     }
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, month, year]);
+  }, [token, dispatch, activePlatform, month, year]);
   const handlePrint = () => {
     localStorage.setItem("temperature", JSON.stringify(collections));
     window.open(

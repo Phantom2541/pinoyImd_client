@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
 
 export default function Summary() {
-  const { token, onDuty, auth } = useSelector(({ auth }) => auth),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { category, privilege, physicianId, sourceId, cart } = useSelector(
       ({ checkout }) => checkout
     ),

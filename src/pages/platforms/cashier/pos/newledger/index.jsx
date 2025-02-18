@@ -10,7 +10,7 @@ import Yearly from "./year";
 const today = new Date();
 
 export default function CashierSales() {
-  const { token, onDuty } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     [currentYear, setCurrentYear] = useState(), //today.getFullYear()
     [currentMonth, setCurrentMonth] = useState(), //today.getMonth()
     [activeIndex, setActiveIndex] = useState(0),
@@ -20,12 +20,12 @@ export default function CashierSales() {
     const d = new Date();
     setCurrentMonth(d.getMonth() + 1);
     setCurrentYear(d.getFullYear());
-    if (onDuty && onDuty._id) {
+    if (activePlatform && activePlatform?.branchId) {
       dispatch(
         OLDLEDGER({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             month: d.getMonth() + 1,
             year: d.getFullYear(),
             // start: new Date(currentYear, currentMonth, 0),
@@ -34,7 +34,7 @@ export default function CashierSales() {
         })
       );
     }
-  }, [onDuty, token, dispatch]);
+  }, [activePlatform, token, dispatch]);
 
   const handleMonth = (m) => {
     console.log(m);
@@ -45,7 +45,7 @@ export default function CashierSales() {
         OLDLEDGER({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             month: m,
             year: currentYear,
           },
@@ -66,7 +66,7 @@ export default function CashierSales() {
       OLDLEDGER({
         token,
         key: {
-          branchId: onDuty._id,
+          branchId: activePlatform?.branchId,
           month: currentMonth,
           year,
         },

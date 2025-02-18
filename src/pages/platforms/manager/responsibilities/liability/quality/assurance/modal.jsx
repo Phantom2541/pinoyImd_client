@@ -35,7 +35,7 @@ const _form = {
 
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ personnels }) => personnels),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -67,8 +67,8 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       SAVE({
         data: {
           ...form,
-          companyName: onDuty.companyId?.name,
-          companyId: onDuty.companyId?._id,
+          companyName: activePlatform.companyId?.name,
+          companyId: activePlatform.companyId?._id,
         },
         token,
       })

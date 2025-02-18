@@ -18,18 +18,18 @@ const today = new Date();
 export default function Ledger() {
   const [month, setMonth] = useState(today.getMonth()),
     [year, setYear] = useState(today.getFullYear()),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { isLoading } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty._id && year && month)
+    if (token && activePlatform?.branchId && year && month)
       dispatch(
         CENSUS({
           token,
           key: {
             user: auth._id,
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             start: new Date(year, month, 0),
             end: new Date(year, month + 1, 0, 23, 59, 59, 999),
           },
@@ -37,7 +37,7 @@ export default function Ledger() {
       );
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, month, year]);
+  }, [token, dispatch, activePlatform, month, year]);
 
   return (
     <MDBContainer className="d-grid" fluid>

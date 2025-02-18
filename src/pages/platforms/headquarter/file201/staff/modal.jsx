@@ -46,7 +46,7 @@ const _form = {
   tabs = ["Suggested Retail Price", "Insourcing", "Others"];
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ personnels }) => personnels),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     [activeTab, setActiveTab] = useState("menu-0"),
     { addToast } = useToasts(),
@@ -80,7 +80,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       SAVE({
         data: {
           ...form,
-          branchId: onDuty._id,
+          branchId: activePlatform?.branchId,
         },
         token,
       })

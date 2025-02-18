@@ -24,7 +24,7 @@ export default function Tasks() {
     [patients, setPatients] = useState([]), // this is the matched patients
     [didSearch, setDidSearch] = useState(false),
     [searchKey, setSearchKey] = useState(""),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections: users } = useSelector(({ users }) => users),
     { search } = useLocation(),
     history = useHistory(),
@@ -33,29 +33,29 @@ export default function Tasks() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (patient?._id && onDuty?._id) {
+    if (patient?._id && activePlatform?._id) {
       dispatch(
         TRACKER({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             customerId: patient._id,
           },
         })
       );
     }
-  }, [patient, onDuty, dispatch, token]);
+  }, [patient, activePlatform, dispatch, token]);
   useEffect(() => {
-    if (token && onDuty._id) {
-      dispatch(BROWSE({ token, branchId: onDuty._id }));
-      dispatch(HEADS({ token, branchId: onDuty._id }));
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
+      dispatch(HEADS({ token, branchId: activePlatform?.branchId }));
     }
 
     return () => {
       dispatch(PREFRESET());
       dispatch(HEADSRESET());
     };
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   // used for external patient query
   useEffect(() => {
@@ -64,14 +64,14 @@ export default function Tasks() {
   }, [queryPatient, users]);
 
   useEffect(() => {
-    if (token && onDuty._id) {
+    if (token && activePlatform?.branchId) {
       dispatch(PATIENTS({ token }));
     }
 
     return () => {
       dispatch(RESET());
     };
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     setPatients(searchKey && didSearch ? fullNameSearch(searchKey, users) : []);

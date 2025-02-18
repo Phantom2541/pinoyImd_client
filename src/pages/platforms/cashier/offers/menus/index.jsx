@@ -15,17 +15,17 @@ export default function Menus() {
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ menus }) => menus
     ),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty._id) {
-      dispatch(BROWSE({ token, branchId: onDuty._id }));
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
     }
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     setMenus(collections);

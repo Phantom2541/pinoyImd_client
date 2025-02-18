@@ -15,41 +15,29 @@ import {
   isImageValid,
 } from "../../services/utilities";
 
-<<<<<<< Updated upstream
 export default function SideNavigation({
   triggerOpening,
   breakWidth,
   onLinkClick,
 }) {
   const [links, setLinks] = useState([]),
-    { activePortal, company, onDuty } = useSelector(({ auth }) => auth),
+    { activePlatform, company, auth } = useSelector(({ auth }) => auth),
     [logo, setLogo] = useState(FailedLogo);
-=======
-const SideNavigation = ({ triggerOpening, breakWidth, onLinkClick }) => {
-  const { activePlatform, company, onDuty } = useSelector(({ auth }) => auth);
-  const [links, setLinks] = useState([]);
-  const [logo, setLogo] = useState(FailedLogo);
->>>>>>> Stashed changes
 
   useEffect(() => {
-    if (company?.name && onDuty?.name) {
-      const url = `${ENDPOINT}/public/credentials/${company.name}/${onDuty.name}/logo.png`;
+    if (company?.name && activePlatform?.name) {
+      const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.name}/logo.png`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);
       });
     }
-  }, [company, onDuty]);
+  }, [company, activePlatform]);
 
   useEffect(() => {
-<<<<<<< Updated upstream
-    if (activePortal) {
-      setLinks(Sidebars[activePortal]);
-=======
     if (activePlatform) {
       setLinks(Sidebars[activePlatform] || []);
->>>>>>> Stashed changes
     }
-  }, [activePortal]);
+  }, [activePlatform, auth]);
 
   // Recursive function to render nav items (both links and categories)
   const renderNavItems = (items, keyPrefix = "", basePath = "") => {
@@ -94,33 +82,8 @@ const SideNavigation = ({ triggerOpening, breakWidth, onLinkClick }) => {
         triggerOpening={triggerOpening}
         style={{ transition: "padding-left .3s" }}
       >
-<<<<<<< Updated upstream
-        {activePortal && (
-          <MDBSideNavNav>
-            {links.map(({ path, name, icon, children }, index) => {
-              if (children)
-                return (
-                  <MDBSideNavCat
-                    id={`${name}-cat`}
-                    name={capitalize(name)}
-                    key={`sidebar-${index}-cat`}
-                    icon={icon}
-                  >
-                    {children.map((child, cIndex) => (
-                      <MDBSideNavLink
-                        key={`sidebar-${index}-${cIndex}`}
-                        to={`${path}${child.path}`}
-                        onClick={onLinkClick}
-                      >
-                        {capitalize(child.name)}
-                      </MDBSideNavLink>
-                    ))}
-                  </MDBSideNavCat>
-                );
-=======
         {activePlatform && (
           <MDBSideNavNav>{renderNavItems(links, "sidebar")}</MDBSideNavNav>
->>>>>>> Stashed changes
 
           // <MDBSideNavNav>
           //   {links.map(({ path, name, icon, children }, index) =>
@@ -158,6 +121,4 @@ const SideNavigation = ({ triggerOpening, breakWidth, onLinkClick }) => {
       </MDBSideNav>
     </div>
   );
-};
-
-export default SideNavigation;
+}

@@ -1,10 +1,13 @@
-import React from 'react';
-import './index.css';
-import { currency, generateCalendar } from '../../../../../../services/utilities';
-import { useSelector } from 'react-redux';
-import { MDBIcon } from 'mdbreact';
-import { useLocation, useHistory } from 'react-router-dom';
-import DailySaleModal from '../dailySaleModal';
+import React from "react";
+import "./index.css";
+import {
+  currency,
+  generateCalendar,
+} from "../../../../../../services/utilities";
+import { useSelector } from "react-redux";
+import { MDBIcon } from "mdbreact";
+import { useLocation, useHistory } from "react-router-dom";
+import DailySaleModal from "../dailySaleModal";
 
 // const today = new Date();
 
@@ -14,8 +17,8 @@ export default function Calendar({ month, year }) {
     { expenses, grossSales, patients } = census,
     { pathname } = useLocation(),
     history = useHistory();
-  // { activePortal } = useSelector(({ auth }) => auth);
-  // isManager = activePortal === "manager";
+  // { activePlatform } = useSelector(({ auth }) => auth);
+  // isManager = activePlatform === "manager";
 
   return (
     <>
@@ -41,7 +44,7 @@ export default function Calendar({ month, year }) {
           <div>Sat</div>
         </div>
         <div className="pos-ledger-calendar-daily">
-          {generateCalendar(month, year).map(({ num, txt = '' }, index) => {
+          {generateCalendar(month, year).map(({ num, txt = "" }, index) => {
             const today = new Date(); // Assuming 'today' is defined somewhere in your code
             const { sales = [], total = 0 } = census?.daily?.[txt] || {};
             const isEmpty = !sales.length; // reverse sales.length to see if its empty
@@ -73,7 +76,12 @@ export default function Calendar({ month, year }) {
 
                   const modalTitle = new Date(year, month, num).toDateString(),
                     startDate = new Date(year, month, num).setHours(0, 0, 0, 0),
-                    endDate = new Date(year, month, num).setHours(23, 59, 59, 999);
+                    endDate = new Date(year, month, num).setHours(
+                      23,
+                      59,
+                      59,
+                      999
+                    );
 
                   const queryParams = new URLSearchParams({
                     dailyFilter: 1,
@@ -87,7 +95,9 @@ export default function Calendar({ month, year }) {
               >
                 {num && (
                   <span className="text-left">
-                    <small className={`${week === 'Sun' && 'sunday'}`}>{num}</small>
+                    <small className={`${week === "Sun" && "sunday"}`}>
+                      {num}
+                    </small>
 
                     {isFuture ? (
                       <>

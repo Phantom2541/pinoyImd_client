@@ -15,9 +15,9 @@ import Swal from "sweetalert2";
 export default function Heads() {
   const [heads, setHeads] = useState([]),
     [selected, setSelected] = useState({}),
-    [showModal, setShowModal] = useState(false), 
+    [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ heads }) => heads
     ),
@@ -26,10 +26,11 @@ export default function Heads() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id) dispatch(BROWSE({ token, branchId: onDuty._id }));
+    if (token && activePlatform?.branchId)
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
   //Set fetched data for mapping
   useEffect(() => {
     const newArray =

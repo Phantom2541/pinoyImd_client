@@ -44,7 +44,7 @@ import Swal from "sweetalert2";
 export default function FocusedSale({ ledger, focusedDay, month, year }) {
   const [filteredCashiers, setFilteredCashiers] = useState([]),
     [filteredByProcessing, setFilteredByProcessing] = useState([]),
-    { onDuty, token, activePortal, auth } = useSelector(({ auth }) => auth),
+    { activePlatform, token, auth } = useSelector(({ auth }) => auth),
     { collections: sales, isLoading } = useSelector(({ sales }) => sales),
     { collections: physicians } = useSelector(({ physicians }) => physicians),
     { collections: sources } = useSelector(({ providers }) => providers),
@@ -70,23 +70,27 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
 
   useEffect(() => {
     // this will only perform a query if the pre_calculated_sales has a saved transaction
-    if (dateKey && onDuty?._id && cashiers.length && !sales.length) {
+    if (dateKey && activePlatform?._id && cashiers.length && !sales.length) {
       const startDate = new Date(dateKey).setHours(0, 0, 0, 0),
         endDate = new Date(dateKey).setHours(23, 59, 59, 999);
 
       dispatch(
         BROWSE({
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             createdAt: startDate,
             endDate,
-            ...(activePortal === "cashier" && { cashierId: auth._id }), // if cashier view, only show own transactions
+            ...(activePlatform === "cashier" && { cashierId: auth._id }), // if cashier view, only show own transactions
           },
           token,
         })
       );
-      dispatch(PHYSICIANS({ key: { branch: onDuty._id }, token }));
-      dispatch(SOURCELIST({ token, key: { clients: onDuty._id } }));
+      dispatch(
+        PHYSICIANS({ key: { branch: activePlatform?.branchId }, token })
+      );
+      dispatch(
+        SOURCELIST({ token, key: { clients: activePlatform?.branchId } })
+      );
 
       return () => {
         dispatch(RESET());
@@ -96,11 +100,11 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
     }
   }, [
     dateKey,
-    onDuty._id,
+    activePlatform?.branchId,
     token,
     cashiers,
     sales,
-    activePortal,
+    activePlatform,
     auth,
     dispatch,
   ]);

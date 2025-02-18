@@ -22,7 +22,7 @@ import { useToasts } from "react-toast-notifications";
 import { fullNameSearch } from "../../../../../services/utilities";
 
 export default function Cashier() {
-  const { token, onDuty } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, newPatient } = useSelector(
       ({ users }) => users
     ),
@@ -66,11 +66,15 @@ export default function Cashier() {
   }, [transaction, saleSuccess]);
 
   useEffect(() => {
-    if (token && onDuty._id) {
+    if (token && activePlatform?.branchId) {
       dispatch(PATIENTS({ token }));
-      // dispatch(SOURCELIST({ key: { branch: onDuty._id }, token }));
-      dispatch(SOURCELIST({ token, key: { clients: onDuty._id } }));
-      dispatch(PHYSICIANS({ key: { branch: onDuty._id }, token }));
+      // dispatch(SOURCELIST({ key: { branch: activePlatform?.branchId }, token }));
+      dispatch(
+        SOURCELIST({ token, key: { clients: activePlatform?.branchId } })
+      );
+      dispatch(
+        PHYSICIANS({ key: { branch: activePlatform?.branchId }, token })
+      );
     }
 
     return () => {
@@ -78,7 +82,7 @@ export default function Cashier() {
       dispatch(SOURCERESET());
       dispatch(PHYSICIANRESET());
     };
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     if (!!collections.length) {

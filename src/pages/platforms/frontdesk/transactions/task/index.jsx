@@ -28,24 +28,28 @@ export default function Sales() {
     [didSearch, setDidSearch] = useState(false),
     [sales, setSales] = useState([]),
     [view, setView] = useState("All"),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, isLoading } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id && auth._id) {
+    if (token && activePlatform?.branchId && auth._id) {
       dispatch(
         BROWSE({
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             createdAt: new Date().setHours(0, 0, 0, 0),
           },
           token,
         })
       );
-      dispatch(SOURCELIST({ token, key: { clients: onDuty._id } }));
-      dispatch(PHYSICIANS({ key: { branch: onDuty._id }, token }));
+      dispatch(
+        SOURCELIST({ token, key: { clients: activePlatform?.branchId } })
+      );
+      dispatch(
+        PHYSICIANS({ key: { branch: activePlatform?.branchId }, token })
+      );
     }
 
     return () => {
@@ -53,7 +57,7 @@ export default function Sales() {
       dispatch(SOURCERESET());
       dispatch(PHYSICIANRESET());
     };
-  }, [token, dispatch, onDuty, auth]);
+  }, [token, dispatch, activePlatform, auth]);
 
   //Set fetched data for mapping
   useEffect(() => {
@@ -113,7 +117,7 @@ export default function Sales() {
               packages: buntisPresent,
               saleId: _id,
               customerId: customerId?._id,
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               buntis: true,
             },
             token
@@ -131,7 +135,7 @@ export default function Sales() {
           packages: [test],
           saleId: _id,
           customerId: customerId?._id,
-          branchId: onDuty._id,
+          branchId: activePlatform?.branchId,
           _buntis: false,
         }));
 
@@ -152,7 +156,7 @@ export default function Sales() {
           packages: task[key],
           _id,
           customerId: customerId?._id,
-          branchId: onDuty._id,
+          branchId: activePlatform?.branchId,
         },
         token
       );

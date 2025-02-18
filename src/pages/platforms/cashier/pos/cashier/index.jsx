@@ -14,7 +14,7 @@ import { SETCASHIER } from "../../../../../services/redux/slices/commerce/checko
 //detect if searchKey is empty
 
 export default function Cashier() {
-  const { token, onDuty, auth } = useSelector(({ auth }) => auth),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { newPatient } = useSelector(({ users }) => users),
     { branchId, cashierId, transaction, isSuccess } = useSelector(
       ({ checkout }) => checkout
@@ -37,7 +37,7 @@ export default function Cashier() {
       // reset everything
       setSelected({});
     }
-  }, [transaction, isSuccess, onDuty]);
+  }, [transaction, isSuccess, activePlatform]);
 
   // if a new patient is created
   // automatically set it as selected and go to POS
@@ -48,9 +48,12 @@ export default function Cashier() {
   }, [newPatient]);
 
   useEffect(() => {
-    if (token && onDuty?._id) {
+    if (token && activePlatform?._id) {
       dispatch(
-        SETCASHIER({ branchId: onDuty.companyId._id, cashierId: auth._id })
+        SETCASHIER({
+          branchId: activePlatform.companyId._id,
+          cashierId: auth._id,
+        })
       );
 
       dispatch(PATIENTS({ token }));
@@ -58,7 +61,7 @@ export default function Cashier() {
         dispatch(RESET());
       };
     }
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   // check if a patron has been selected
   const patronPresent = Boolean(selected?._id);

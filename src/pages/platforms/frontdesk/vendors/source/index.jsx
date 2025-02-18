@@ -17,19 +17,19 @@ import { fullAddress } from "../../../../../services/utilities";
 
 export default function Source() {
   const [sources, setSources] = useState([]),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty._id) {
-      dispatch(BROWSE({ token, vendors: onDuty.branch }));
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ token, vendors: activePlatform.branch }));
     }
 
     return () => {
       dispatch(RESET());
     };
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     setSources(collections);

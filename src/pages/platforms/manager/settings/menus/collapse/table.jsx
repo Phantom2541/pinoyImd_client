@@ -19,7 +19,7 @@ export default function CollapseTable({
   const [services, setServices] = useState([]),
     [showModal, setShowModal] = useState(false),
     { isLoading } = useSelector(({ menus }) => menus),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const toggleModal = () => setShowModal(!showModal);
@@ -45,7 +45,7 @@ export default function CollapseTable({
         data: {
           abbreviation: menuAbbreviation,
           description: menuDescription,
-          branchId: onDuty._id,
+          branchId: activePlatform?.branchId,
           packages: [...new Set([...ids, ...packages])],
           _id: menuId,
         },
@@ -77,7 +77,7 @@ export default function CollapseTable({
             token,
             data: {
               description: menuDescription,
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               packages: packages.filter((service) => !ids.includes(service)),
               _id: menuId,
             },

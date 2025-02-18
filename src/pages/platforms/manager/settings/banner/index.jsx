@@ -31,7 +31,7 @@ export default function Banner() {
   const { auth } = useSelector(({ auth }) => auth);
   const { addToast } = useToasts();
   const [preview, setPreview] = useState("");
-  const { onDuty, company, token } = useSelector(({ auth }) => auth);
+  const { activePlatform, company, token } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
 
   const handleError = (message) => {
@@ -61,7 +61,7 @@ export default function Banner() {
         dispatch(
           UPLOAD({
             data: {
-              path: `credentials/${company.name}/${onDuty.name}`,
+              path: `credentials/${company.name}/${activePlatform.name}`,
               base64: result.split(",")[1],
               name: `banner.jpg`,
             },
@@ -91,7 +91,7 @@ export default function Banner() {
             <img
               src={
                 preview ||
-                `${ENDPOINT}/public/credentials/${company.name}/${onDuty.name}/banner.jpg`
+                `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.name}/banner.jpg`
               }
               className="img-fluid"
               alt={company?.name || "Default Banner"}

@@ -5,25 +5,16 @@ const name = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
   token = localStorage.getItem("token") || "",
   email = localStorage.getItem("email") || "",
-  activePortal = localStorage.getItem("activePortal"),
-  defaultDuty = {
-    _id: "",
-    designation: 1,
-    platform: "patron",
-    name: "Default Duty", // branch
-    company: null, // company name
-    access: [],
-  },
+  activePlatform = localStorage.getItem("activePlatform"),
   fileUrl = `public/${email}`;
 
 const initialState = {
   auth: {}, // user details
-  activePortal, // active platform for sidebar and routes
+  activePlatform, // active platform for sidebar and routes
   token,
   email, // email for login detection
   image: "", // user image
   isPatient: true,
-
   resume: "",
   prc: "",
   board: "",
@@ -37,7 +28,6 @@ const initialState = {
   company: {
     name: "Default Company",
   },
-  onDuty: defaultDuty,
   isCeo: false,
   maxPage,
   loginSuccess: false,
@@ -46,6 +36,23 @@ const initialState = {
   message: "",
 };
 
+export const SETACTIVEPLATFORM = createAsyncThunk(
+  `${name}/setActivePlatform`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(`${name}`, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const CHANGEPASSWORD = createAsyncThunk(
   `${name}/changePassword`,
   ({ data, token }, thunkAPI) => {
@@ -161,6 +168,25 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(SETACTIVEPLATFORM.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SETACTIVEPLATFORM.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+
+        state.showModal = false;
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+        state.activePlatform = { ...payload.activePlatform };
+      })
+      .addCase(SETACTIVEPLATFORM.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
       .addCase(CHANGEPASSWORD.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -193,86 +219,22 @@ export const reduxSlice = createSlice({
           { token, auth, branches, isCeo, access, company, isPatient } =
             payload;
 
-        state.isPatient = isPatient;
-
-        let _branches = [];
-
-        if (isCeo) {
-          state.isCeo = isCeo;
-
-          //-NOT WORKING BY THOM
-          let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-          console.log(lastVisited);
-
-          // if (!lastVisited) {
-          //   const { _id, platform } = branches.find(({ isMain }) => isMain);
-          //   lastVisited = {
-          //     _id,
-          //     platform,
-          //   };
-          // }
-            // localStorage.setItem("lastVisited", JSON.stringify(auth.activePortal));
-          //-
-
-          _branches = branches.map((branch) => {
-            const _access = access.filter(
-              (data) => branch._id === data.branchId
-            );
-
-            const lastVisit = lastVisited.branch === branch._id;
-
-            return {
-              ...branch,
-              access: _access,
-              lastVisit,
-              platform: lastVisit ? lastVisit.platform : branch.platform,
-            };
-          });
-        }
-
-        let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-
-        lastVisited = {
-          ...lastVisited,
-          branch: lastVisited.branchId?._id,
-        };
-
-
-        _branches = branches.map((branch) => {
-          const _access = access.filter((data) => branch._id === data.branchId);
-
-          return {
-            ...branch,
-            platform:
-              lastVisited.branch === branch._id
-                ? lastVisited.platform
-                : branch.platform,
-            access: _access,
-          };
-        });
-        const onDuty = _branches.find(({ lastVisit }) => lastVisit);
-
-        if (onDuty) {
-          state.onDuty = onDuty;
-        } else {
-          state.onDuty = !!_branches.length ? _branches[0] : defaultDuty;
-        }
-
         state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
-
         state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
         state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
         state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
         state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
+        state.isPatient = isPatient;
+        state.isCeo = isCeo;
+        state.activePlatform = auth.activePlatform;
         state.company = company;
-        state.activePortal = lastVisited;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
         state.access = access;
-        state.branches = _branches;
+        state.branches = branches;
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
@@ -296,7 +258,7 @@ export const reduxSlice = createSlice({
         state.auth = payload;
         state.email = payload.email;
         localStorage.setItem("email", payload.email);
-        state.activePortal = payload.lastVisited;
+        state.activePlatform = payload.activePlatform;
         state.isLoading = false;
         state.isSuccess = true;
       })
@@ -321,19 +283,6 @@ export const reduxSlice = createSlice({
 
         if (isCeo) {
           state.isCeo = isCeo;
-
-          //-NOT WORKING BY THOM
-          let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-          // if (!activePortal) {
-          //   const { _id, platform } = branches.find(({ isMain }) => isMain);
-          //   activePortal = {
-          //     _id,
-          //     platform,
-          //   };
-          //   localStorage.setItem("activePortal", JSON.stringify(activePortal));
-          // }
-          //-
-
           _branches = branches.map((branch) => {
             const _access = access.filter(
               (data) => branch._id === data.branchId
@@ -342,32 +291,10 @@ export const reduxSlice = createSlice({
             return {
               ...branch,
               access: _access,
-              lastVisited: lastVisited.branchId?._id === branch._id,
-              platform:
-                lastVisited.branchId?._id === branch._id
-                  ? lastVisited.platform
-                  : branch.platform,
             };
           });
         }
-        _branches = branches.map((branch) => {
-          const _access = access.filter((data) => branch._id === data.branchId);
-
-          return {
-            ...branch,
-            access: _access,
-          };
-        });
-        const onDuty = _branches.find(({ lastVisit }) => lastVisit);
-
-        if (onDuty) {
-          state.onDuty = onDuty;
-        } else {
-          state.onDuty = !!_branches.length ? _branches[0] : defaultDuty;
-        }
-
         state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
-
         state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
         state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
         state.board = `$${ENDPOINT}/${fileUrl}/board.jpg`;

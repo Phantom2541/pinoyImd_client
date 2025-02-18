@@ -32,17 +32,17 @@ const _form = {
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { collections: patients } = useSelector(({ users }) => users),
     { collections: sources } = useSelector(({ providers }) => providers),
-    { token, auth, onDuty } = useSelector(({ auth }) => auth),
+    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     [isParticular, setIsParticular] = useState(true),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty) {
+    if (token && activePlatform) {
       dispatch(PATIENTS({ token }));
-      dispatch(BROWSE({ token, key: { clients: onDuty._id } }));
+      dispatch(BROWSE({ token, key: { clients: activePlatform?.branchId } }));
     }
-  }, [token, onDuty, dispatch]);
+  }, [token, activePlatform, dispatch]);
 
   // console.log(selected);
   const handleSubmit = () => {
@@ -51,7 +51,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         data: {
           ...form,
           userId: auth._id,
-          branchId: onDuty._id,
+          branchId: activePlatform?.branchId,
           range: [form?.start, form?.end],
         },
         token,

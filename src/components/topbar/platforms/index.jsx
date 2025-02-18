@@ -12,36 +12,40 @@ import { UPDATE } from "../../../services/redux/slices/assets/persons/auth";
 
 export default function Platforms() {
   const [text, setText] = useState("Platforms"),
-    { activePortal, token, auth, access, onDuty } = useSelector(({ auth }) => auth),
+    { activePlatform, token, auth, access } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
-  console.log("onDuty", onDuty);
-  
-  const changePlatform = platform => {
-    
-    if (platform !== activePortal) {
-      localStorage.setItem("activePortal", platform);
-      dispatch(UPDATE({
-        data: {
-          _id: auth._id,
-          email: auth.email,
-          activePlatform: {
-            branch: onDuty._id,
-            platform: platform,
-            role: platform
-          }
-        }, token
-      }));
+  console.log("activePlatform", activePlatform);
+
+  const changePlatform = (platform) => {
+    if (platform !== activePlatform) {
+      localStorage.setItem("activePlatform", platform);
+      dispatch(
+        UPDATE({
+          data: {
+            _id: auth._id,
+            email: auth.email,
+            activePlatform: {
+              branch: activePlatform?.branchId,
+              platform: platform,
+              role: platform,
+            },
+          },
+          token,
+        })
+      );
       window.location.href = "/dashboard";
     }
   };
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setText(prev => (prev === activePortal ? "Platforms" : activePortal));
+      setText((prev) =>
+        prev === activePlatform ? "Platforms" : activePlatform
+      );
     }, 10000);
 
     return () => clearInterval(timer);
-  }, [activePortal]);
+  }, [activePlatform]);
 
   return (
     <MDBDropdown>
@@ -55,7 +59,7 @@ export default function Platforms() {
           .filter(({ status }) => status) // filter disabled status
           .map(({ platform }, index) => (
             <MDBDropdownItem
-              active={platform === activePortal}
+              active={platform === activePlatform}
               key={`platform-${index}`}
               onClick={() => changePlatform(platform)}
             >

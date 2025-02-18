@@ -24,19 +24,19 @@ const today = new Date();
 export default function Ledger() {
   const [month, setMonth] = useState(today.getMonth()),
     [year, setYear] = useState(today.getFullYear()),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     // { census, isLoading } = useSelector(({ sales }) => sales),
     { censusLoading: isLoading } = useSelector(({ sales }) => sales),
     [show, setShow] = useState(false),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty._id && year && month)
+    if (token && activePlatform?.branchId && year && month)
       dispatch(
         CENSUS({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             start: new Date(year, month, 0),
             end: new Date(year, month + 1, 0, 23, 59, 59, 999),
             isManager: true,
@@ -45,7 +45,7 @@ export default function Ledger() {
       );
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, month, year]);
+  }, [token, dispatch, activePlatform, month, year]);
 
   // const handleDownloadExcel = () => {
   //   const {
@@ -90,7 +90,7 @@ export default function Ledger() {
   //     monthlySale: currency(monthlySale),
   //     patients,
   //     expenses: currency(expenses),
-  //     title: `${onDuty?.name} Ledger_${calendar.Months[month]}, ${year}`,
+  //     title: `${activePlatform?.name} Ledger_${calendar.Months[month]}, ${year}`,
   //     preparedBy: fullName(auth?.fullName),
   //     tables: {
   //       days,

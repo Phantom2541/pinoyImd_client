@@ -7,7 +7,7 @@ import { Menus, Services } from "../../../../../services/fakeDb";
 import DataTable from "../../../../../components/dataTable";
 export default function Generate({ visible, setVisible }) {
   const { isLoading } = useSelector(({ personnels }) => personnels),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
   //   useEffect(() => {
   //     if (selected._id) setForm(selected);
@@ -18,7 +18,7 @@ export default function Generate({ visible, setVisible }) {
       GENERATE({
         data: data.map((d) => ({
           ...d,
-          branchId: onDuty._id,
+          branchId: activePlatform?._id,
           description: d.name,
         })),
         token,
