@@ -12,6 +12,7 @@ const TopHeader = ({
   handlePrint = () => {},
   setCategory = () => {},
   handleSearch = () => {},
+  handleCreate = () => {},
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -41,7 +42,7 @@ const TopHeader = ({
         )}
       </div>
       <div>
-        <div className="text-right d-flex items-center">
+        <div className="text-right d-flex align-items-center gap-2">
           <input
             className="form-control"
             type="search"
@@ -70,7 +71,7 @@ const TopHeader = ({
             outline
             color="white"
             rounded
-            type={"button"}
+            type="button"
             size="sm"
             className="px-2"
           >

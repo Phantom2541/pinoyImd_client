@@ -15,8 +15,13 @@ import TableRowCount from "../../../../../components/pagination/rows";
 
 export default function Sources() {
   const [vendors, setVendors] = useState([]),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ sources }) => sources),
+    { token, onDuty, maxPage } = useSelector(({ auth }) => auth),
+    { collections, isLoading } = useSelector(({ sources }) => sources),
+    [page, setPage] = useState(1),
+    [totalPages, setTotalPages] = useState(1),
+    [showModal, setShowModal] = useState(false),
+    [selected, setSelected] = useState({}),
+    [willCreate, setWillCreate] = useState(true),
     dispatch = useDispatch();
 
   //Initial Browse
@@ -45,16 +50,17 @@ export default function Sources() {
     setVendors(collections);
   }, [collections]);
 
+  // for modal
   const toggleModal = () => setShowModal(!showModal);
 
-  // Handale Update
+  // for update
   const handleUpdate = (selected) => {
     setSelected(selected);
     setWillCreate(false);
     setShowModal(true);
   };
 
-  // Handale Create
+  // for create
   const handleCreate = () => {
     setWillCreate(true);
     setShowModal(true);
@@ -63,10 +69,16 @@ export default function Sources() {
   return (
     <>
       <MDBCard narrow className="pb-3">
-        <TopHeader title="Vendors" />
+        <TopHeader title="Company Source" />
 
         <MDBCardBody>
-          <CardTables vendors={vendors} page={page} />
+          <CardTables
+            vendors={vendors}
+            page={page}
+            setSelected={setSelected}
+            setWillCreate={setWillCreate}
+            setShowModal={setShowModal}
+          />
 
           <div className="d-flex justify-content-between align-items-center px-4">
             <TableRowCount />

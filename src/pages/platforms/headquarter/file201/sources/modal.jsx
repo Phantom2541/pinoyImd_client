@@ -7,6 +7,8 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
+  MDBCol,
+  MDBRow,
 } from "mdbreact";
 import {
   SAVE,
@@ -14,8 +16,19 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/source";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-// declare your expected items
-const _form = {};
+
+const _form = {
+  name: "",
+  subName: "",
+  clients: {
+    companyName: "",
+    name: "",
+    contacts: {
+      mobile: "",
+      email: "",
+    },
+  },
+};
 
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ sources }) => sources),
@@ -33,7 +46,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleUpdate = () => {
     toggle();
 
-    // check if object has changed
     if (isEqual(form, selected))
       return addToast("No changes found, skipping update.", {
         appearance: "info",
@@ -47,6 +59,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     );
 
     setForm(_form);
+    toggle();
   };
 
   const handleCreate = () => {
@@ -70,7 +83,8 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
 
-  const handleValue = (key) => (willCreate ? form[key] : form[key] || selected);
+  const handleValue = (key) =>
+    willCreate ? form[key] : form[key] || selected[key];
 
   const handleClose = () => {
     setForm(_form);
@@ -78,23 +92,113 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   };
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop size="sm">
+    <MDBModal isOpen={show} toggle={toggle} backdrop size="m">
       <MDBModalHeader
         toggle={handleClose}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} {selected || "a Vendors"}
+        {willCreate ? "Create" : "Update"}{" "}
+        {selected?.clients?.companyName || "a Vendor"}
       </MDBModalHeader>
+
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
-          <MDBInput
-            label="Name"
-            type="text"
-            value={handleValue("name")}
-            required
-            onChange={(e) => handleChange("name", e.target.value)}
-          />
+          <MDBCol size="15">
+            <MDBInput
+              label="Company"
+              type="text"
+              value={form.clients?.companyName || ""}
+              onChange={(e) => {
+                e.persist();
+                setForm((prev) => ({
+                  ...prev,
+                  clients: { ...prev.clients, companyName: e.target.value },
+                }));
+              }}
+            />
+          </MDBCol>
+
+          <MDBCol size="15">
+            <MDBInput
+              label="SubName"
+              type="text"
+              value={handleValue("name")}
+              required
+              onChange={(e) => handleChange("name", e.target.value)}
+            />
+          </MDBCol>
+
+          <MDBCol size="15">
+            <MDBInput
+              label="Branch"
+              type="text"
+              value={form.clients?.name || ""}
+              onChange={(e) => {
+                e.persist();
+                setForm((prev) => ({
+                  ...prev,
+                  clients: { ...prev.clients, name: e.target.value },
+                }));
+              }}
+            />
+          </MDBCol>
+
+          <MDBCol size="15">
+            <MDBInput
+              label="Subname"
+              type="text"
+              value={handleValue("subName")}
+              required
+              onChange={(e) => handleChange("subName", e.target.value)}
+            />
+          </MDBCol>
+
+          <MDBRow>
+            <MDBCol size="12" className="font-weight-bold">
+              Contact
+            </MDBCol>
+          </MDBRow>
+
+          <MDBRow>
+            <MDBCol size="6">
+              <MDBInput
+                label="Person"
+                type="text"
+                value={form.clients?.contacts?.mobile || ""}
+                onChange={(e) => {
+                  e.persist();
+                  setForm((prev) => ({
+                    ...prev,
+                    clients: {
+                      ...prev.clients.contacts,
+                      mobile: e.target.value,
+                    },
+                  }));
+                }}
+              />
+            </MDBCol>
+
+            <MDBCol size="6">
+              <MDBInput
+                label="Email"
+                required
+                type="email"
+                value={form.clients?.contacts?.email || ""}
+                onChange={(e) => {
+                  e.persist();
+                  setForm((prev) => ({
+                    ...prev,
+                    clients: {
+                      ...prev.clients.contacts,
+                      email: e.target.value,
+                    },
+                  }));
+                }}
+              />
+            </MDBCol>
+          </MDBRow>
+
           <div className="text-center mb-1-half; ">
             <MDBBtn
               type="submit"
