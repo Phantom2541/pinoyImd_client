@@ -4,8 +4,8 @@ const Payments = {
   cw: ["cash", "gcash", "cheque", "credit"], // credit: [patient, company]
   pw: ["cash", "gcash", "cheque", "credit"],
   hmo: ["credit"], // need SOA
-  sc: ["credit"],
-  ssc: ["credit"],
+  sc: ["cash", "gcash", "credit"],
+  ssc: ["cash", "gcash", "credit"],
   promo: ["cash", "gcash", "cheque"],
 };
 

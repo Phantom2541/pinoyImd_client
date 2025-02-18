@@ -13,7 +13,7 @@ import {
 import DataTable from "../../../../../components/dataTable";
 import { capitalize } from "lodash";
 import { Categories, Services } from "../../../../../services/fakeDb";
-import CashRegister from "../cashier/pos";
+import CashRegister from "../cashierOld/pos";
 
 import {
   MDBCard,

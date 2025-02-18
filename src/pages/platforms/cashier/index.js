@@ -1,4 +1,4 @@
-import Cashier from "./pos/cashier";
+import Cashier from "./pos/cashierOld";
 import Sales from "./pos/sales";
 import Ledger from "./pos/ledger";
 import Menus from "./offers/menus";

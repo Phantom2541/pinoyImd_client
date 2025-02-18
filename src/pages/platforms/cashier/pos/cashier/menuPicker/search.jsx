@@ -1,23 +1,42 @@
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { MDBIcon } from "mdbreact";
-import React from "react";
+
+import { BROWSE as MENUS } from "../../../../../../services/redux/slices/commerce/menus";
+import { SETMENUS } from "../../../../../../services/redux/slices/commerce/checkout";
 
 export default function Search({
-  handleSearch,
-  searchKey,
-  setSearchKey,
   selected,
   didSearch,
   // choices map
   children,
-  // design
-  info = {},
-  placeholder = "Fullname Search...",
   searchRef,
 }) {
-  const {
-    message = "Last name, First name y Middle name",
-    description = "Please maintain this order when searching.",
-  } = info;
+  const { category, privilege, cart, customer, menus } = useSelector(
+      ({ checkout }) => checkout
+    ),
+    { collections } = useSelector(({ menus }) => menus),
+    { token, auth } = useSelector(({ auth }) => auth),
+    [searchKey, setSearchKey] = useState(""),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(MENUS({ token, key: { branchId: "637097f0535529a3a57e933e" } }));
+  }, [searchKey, token]);
+  useEffect(() => {
+    dispatch(SETMENUS(collections));
+  }, [collections]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    if (didSearch && searchKey) setSearchKey("");
+
+    // setDidSearch(!didSearch);
+  };
+
+  const handeSearchKey = (e) => setSearchKey(e.target.value);
 
   return (
     <div
@@ -32,8 +51,8 @@ export default function Search({
           className="text-info cursor-pointer"
         />
         <div>
-          <p>{message}</p>
-          <i>{description}</i>
+          <p>Search your menus</p>
+          <i>You can search by name or abbreviation.</i>
         </div>
       </div>
       <form
@@ -47,9 +66,9 @@ export default function Search({
         </div>
         <input
           ref={searchRef}
-          placeholder={placeholder}
+          placeholder="Menu Search.."
           value={searchKey}
-          onChange={({ target }) => setSearchKey(target.value)}
+          onChange={handeSearchKey}
           autoCorrect="off"
           spellCheck={false}
         />

@@ -12,6 +12,7 @@ const name = "auth",
     platform: "patron",
     name: "Default Duty", // branch
     company: null, // company name
+    access: [],
   },
   fileUrl = `public/${email}`;
 
