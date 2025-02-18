@@ -12,14 +12,12 @@ const Tables = ({
   setShowModal,
   page,
 }) => {
-  // Rest of your code here
-
-  const { token, maxPage, auth } = useSelector(({ auth }) => auth);
+  const { token, maxPage } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
 
-  //Trigger for update
-  const handleUpdate = (selected) => {
-    setSelected(selected);
+  // Trigger for update
+  const handleUpdate = (vendor) => {
+    setSelected(vendor);
     setWillCreate(false);
     setShowModal(true);
   };
@@ -39,44 +37,38 @@ const Tables = ({
       }
     });
   };
+
   return (
     <MDBTable responsive hover bordered>
       <thead>
         <tr>
-          <th className="th-lg cursor-pointer" rowSpan={2}>
-            No&nbsp;
-            <MDBIcon
-              icon="sort"
-              title="Sort by Name"
-              className="text-primary"
-            />
-          </th>
-          <th rowSpan={2}>Company Name</th>
-          <th rowSpan={2}>Branch Name</th>
+          <th rowSpan={2}>Company</th>
+          <th rowSpan={2}>Branch</th>
           <th colSpan={2} className="text-center">
-            Contact
+            Contact Person
           </th>
           <th rowSpan={2}>Address</th>
           <th className="text-center " rowSpan={2}>
-            {" "}
             Action
           </th>
         </tr>
         <tr>
-          <th>Contact Person</th>
+          <th>Mobile</th>
           <th>Email</th>
         </tr>
       </thead>
       <tbody>
         {handlePagination(vendors, page, maxPage)?.map((vendor, index) => {
-          const { clients, address } = vendor;
-          // Rest of your code here
+          const { clients, name, subName } = vendor;
 
           return (
             <tr key={index}>
-              <td>{index + 1}.</td>
-              <td>{clients?.companyName}</td>
-              <td>{clients?.name}</td>
+              <td>
+                {clients?.companyName} ({name})
+              </td>
+              <td>
+                {clients?.name} ({subName})
+              </td>
               <td>{clients?.contacts?.mobile}</td>
               <td>{clients?.contacts?.email}</td>
               <td>{clients?.address?.city}</td>
@@ -88,9 +80,7 @@ const Tables = ({
                     color="info"
                     rounded
                     title="Update"
-                    onClick={() => {
-                      handleUpdate(vendors);
-                    }}
+                    onClick={() => handleUpdate(vendor)}
                   >
                     <MDBIcon icon="pen" />
                   </MDBBtn>
@@ -100,7 +90,7 @@ const Tables = ({
                     rounded
                     color="danger"
                     title="Delete"
-                    onClick={() => handleDelete(vendors)}
+                    onClick={() => handleDelete(vendor)}
                   >
                     <MDBIcon icon="trash-alt" />
                   </MDBBtn>
@@ -113,4 +103,5 @@ const Tables = ({
     </MDBTable>
   );
 };
+
 export default Tables;

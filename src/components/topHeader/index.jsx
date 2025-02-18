@@ -9,6 +9,7 @@ const TopHeader = ({
   categories = [],
   setCategory = () => {},
   handleSearch = () => {},
+  handleCreate = () => {},
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -44,7 +45,7 @@ const TopHeader = ({
         )}
       </div>
       <div>
-        <div className="text-right d-flex items-center">
+        <div className="text-right d-flex align-items-center gap-2">
           <input
             className="form-control"
             type="search"
@@ -73,11 +74,24 @@ const TopHeader = ({
             outline
             color="white"
             rounded
-            type={"button"}
+            type="button"
             size="sm"
             className="px-2"
           >
             <MDBIcon icon={didSearch ? "undo" : "search"} className="mt-0" />
+          </MDBBtn>
+
+          {/* Plus Button */}
+          <MDBBtn
+            onClick={() => handleCreate(true)} // Add your function to handle the plus button action onClick={handleAdd}
+            outline
+            color="white" // Change from "white" to "dark" to remove the blue background
+            rounded
+            type="button"
+            size="sm"
+            className="px-2"
+          >
+            <MDBIcon icon="plus" className="mt-0" />
           </MDBBtn>
         </div>
       </div>

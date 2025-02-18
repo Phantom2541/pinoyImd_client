@@ -19,13 +19,9 @@ export default function Sources() {
     { collections, isLoading } = useSelector(({ sources }) => sources),
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
-    // for Modal
     [showModal, setShowModal] = useState(false),
-    // for Update
     [selected, setSelected] = useState({}),
-    // for Create
     [willCreate, setWillCreate] = useState(true),
-    // Toggle Modal
     dispatch = useDispatch();
 
   //Initial Browse
@@ -52,16 +48,17 @@ export default function Sources() {
     setVendors(collections);
   }, [collections]);
 
+  // for modal
   const toggleModal = () => setShowModal(!showModal);
 
-  // Handale Update
+  // for update
   const handleUpdate = (selected) => {
     setSelected(selected);
     setWillCreate(false);
     setShowModal(true);
   };
 
-  // Handale Create
+  // for create
   const handleCreate = () => {
     setWillCreate(true);
     setShowModal(true);
@@ -70,10 +67,16 @@ export default function Sources() {
   return (
     <>
       <MDBCard narrow className="pb-3">
-        <TopHeader title="Vendors" />
+        <TopHeader title="Company Source" />
 
         <MDBCardBody>
-          <CardTables vendors={vendors} page={page} />
+          <CardTables
+            vendors={vendors}
+            page={page}
+            setSelected={setSelected}
+            setWillCreate={setWillCreate}
+            setShowModal={setShowModal}
+          />
 
           <div className="d-flex justify-content-between align-items-center px-4">
             <TableRowCount />

@@ -5,6 +5,7 @@ const name = "assets/sources";
 
 const initialState = {
   collections: [],
+  showModal: false,
   isSuccess: false,
   isLoading: false,
   message: "",
