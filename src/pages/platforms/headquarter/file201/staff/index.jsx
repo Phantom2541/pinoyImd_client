@@ -9,6 +9,7 @@ import {
 // import { globalSearch } from "../../../../../services/utilities";
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
+import TableLoading from "../../../../../components/tableLoading";
 // import TableRowCount from "../../../../../components/pagination/rows";
 // import Pagination from "../../../../../components/pagination";
 
@@ -146,23 +147,29 @@ export default function Staffs() {
           </div>
         </MDBView>
         <MDBCardBody className="pb-0">
-          <MenuCollapse
-            staffs={staffs}
-            page={page}
-            resetSearch={resetSearch}
-            searchKey={searchKey}
-            handleUpdate={handleUpdate}
-          />
-          <div className="d-flex justify-content-between align-items-center px-4">
-            {/* <TableRowCount /> */}
+          {isLoading ? (
+            <TableLoading />
+          ) : (
+            <>
+              <MenuCollapse
+                staffs={staffs}
+                page={page}
+                resetSearch={resetSearch}
+                searchKey={searchKey}
+                handleUpdate={handleUpdate}
+              />
+              <div className="d-flex justify-content-between align-items-center px-4">
+                {/* <TableRowCount /> */}
 
-            {/* <Pagination
+                {/* <Pagination
               isLoading={isLoading}
               total={totalPages}
               page={page}
               setPage={setPage}
             /> */}
-          </div>
+              </div>
+            </>
+          )}
         </MDBCardBody>
       </MDBCard>
       {/* <Modal
