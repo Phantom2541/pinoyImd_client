@@ -189,8 +189,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, company, isPatient } =
-            payload;
+          { token, auth, branches, access, company, isPatient } = payload;
 
         state.isPatient = isPatient;
 

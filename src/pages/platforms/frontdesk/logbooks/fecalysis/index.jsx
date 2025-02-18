@@ -122,9 +122,7 @@ export default function Chems() {
             </td>
           </tr>
           {groupedFecal[day].map((fecal, index) => {
-            const { ce, pe, me, createdAt, customerId } = fecal;
-
-            console.log(fecal);
+            const { pe, me, createdAt, customerId } = fecal;
 
             const fecalDate = new Date(createdAt);
             const h = fecalDate.getHours();

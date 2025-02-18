@@ -1,8 +1,8 @@
 import React from "react";
-import { MDBCol, MDBTable, MDBTableBody } from "mdbreact";
+import { MDBTable } from "mdbreact";
 
 export default function Gloucose({ task, fontSize }) {
-  const { results, packages } = task;
+  const { results } = task;
   return (
     <div style={{ fontSize: `${fontSize}rem` }}>
       <h3 className="text-center">GLYCOSYLATED HEMOGLOBIN TEST</h3>

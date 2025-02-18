@@ -9,8 +9,6 @@ import {
 } from "../../services/redux/slices/results/laboratory/serology"; // Updated slice for Serology
 import { Services } from "../../services/fakeDb";
 
-const today = new Date();
-
 const dayNames = [
   "Sunday",
   "Monday",
@@ -21,8 +19,6 @@ const dayNames = [
   "Saturday",
 ];
 
-const month = JSON.parse(localStorage.getItem("month"));
-const year = JSON.parse(localStorage.getItem("year"));
 // Format time function as in original
 const addZero = (i) => (i < 10 ? "0" + i : i);
 const formatTime = (hours, minutes) => {
@@ -39,23 +35,29 @@ const formatTime = (hours, minutes) => {
 export default function SerologyPrint() {
   const [serology, setSerology] = useState([]),
     { collections } = useSelector(({ serology }) => serology),
+    [month, setMonth] = useState(""),
+    [year, setYear] = useState(""),
     { token, onDuty } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {
+    const _month = JSON.parse(localStorage.getItem("month"));
+    const _year = JSON.parse(localStorage.getItem("year"));
     if (token && onDuty?._id) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/serology/logbook",
           data: {
             branch: onDuty._id,
-            month,
-            year,
+            month: _month,
+            year: _year,
           },
           token,
         })
       );
     }
+    setMonth(_month);
+    setYear(_year);
     return () => dispatch(RESET());
   }, [onDuty, dispatch, token, month, year]);
 

@@ -14,7 +14,6 @@ const Applicants = () => {
   const { token, onDuty } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ applicants }) => applicants),
     [category, setCategory] = useState("Petition"),
-    [search, setSearch] = useState(""),
     [didSearch, setDidSearch] = useState(false),
     [baseApplicants, setBaseApplicants] = useState([]),
     [applicants, setApplicants] = useState([]),

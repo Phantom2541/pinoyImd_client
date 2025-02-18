@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
-import {
-  currency,
-  generateCalendar,
-} from "../../../../../../services/utilities";
+import { generateCalendar } from "../../../../../../services/utilities";
 import {
   SAVE,
   UPDATE,
@@ -15,9 +12,7 @@ import Swal from "sweetalert2";
 const today = new Date();
 
 export default function Calendar({ month, year }) {
-  const { collections, isLoading } = useSelector(
-    ({ temperatures }) => temperatures
-  );
+  const { collections } = useSelector(({ temperatures }) => temperatures);
   const [temps, setTemps] = useState([]);
   const { token, onDuty, auth } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();

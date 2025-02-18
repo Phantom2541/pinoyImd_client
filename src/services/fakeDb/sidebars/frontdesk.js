@@ -21,7 +21,6 @@ import {
   Services,
 } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
-import Expenses from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
 import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 

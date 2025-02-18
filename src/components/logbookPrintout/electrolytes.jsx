@@ -18,8 +18,6 @@ const dayNames = [
   "Saturday",
 ];
 
-const month = JSON.parse(localStorage.getItem("month"));
-const year = JSON.parse(localStorage.getItem("year"));
 const addZero = (i) => (i < 10 ? "0" + i : i);
 const formatTime = (hours, minutes) => {
   let period = "AM";
@@ -35,23 +33,29 @@ const formatTime = (hours, minutes) => {
 export default function ElectrolytesPrint() {
   const [electrolytes, setElectrolytes] = useState([]),
     { collections } = useSelector(({ electrolyte }) => electrolyte),
+    [month, setMonth] = useState(""),
+    [year, setYear] = useState(""),
     { token, onDuty } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {
+    const _month = JSON.parse(localStorage.getItem("month"));
+    const _year = JSON.parse(localStorage.getItem("year"));
     if (token && onDuty?._id) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/electrolyte/logbook",
           data: {
             branch: onDuty._id,
-            month,
-            year,
+            month: _month,
+            year: _year,
           },
           token,
         })
       );
     }
+    setMonth(_month);
+    setYear(_year);
     return () => {
       dispatch(RESET());
     };

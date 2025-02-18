@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
@@ -50,7 +50,7 @@ export default function AccessModal({ show, toggle, selected }) {
       handleSetRoles(_roles);
     }
     setAccessChanges({ deleted: [], added: [] });
-  }, [show, selected]);
+  }, [show, selected, handleSetRoles, removeDuplicate]);
 
   const handleSubmit = () => {
     const { added, deleted } = accessChanges;

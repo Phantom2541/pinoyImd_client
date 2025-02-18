@@ -1,9 +1,5 @@
 import React from "react";
-import { MDBInput, MDBTable } from "mdbreact";
-import {
-  referenceColor,
-  findReference,
-} from "../../../../../../../../../../../services/utilities";
+import { MDBTable } from "mdbreact";
 
 export default function Gloucose({ task, setTask }) {
   const { results = false } = task;

@@ -5,12 +5,9 @@ import {
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
-  MDBIcon,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  capitalize,
-  currency,
   fullName,
   handlePagination,
 } from "../../../../../../services/utilities";
@@ -19,7 +16,7 @@ import { Roles } from "../../../../../../services/fakeDb";
 
 import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
-export default function MenuCollapse({ staffs, page, resetSearch, searchKey }) {
+export default function MenuCollapse({ staffs, page }) {
   const [activeId, setActiveId] = useState(-1);
   const { maxPage, token } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();

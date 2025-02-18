@@ -52,7 +52,6 @@ const formatTime = (hours, minutes) => {
 
 export default function Chems() {
   const [chems, setChems] = useState([]),
-    [chemsPrint, setChemsPrint] = useState([]),
     { token, onDuty } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ chemistry }) => chemistry),
     { search, pathname } = useLocation(),

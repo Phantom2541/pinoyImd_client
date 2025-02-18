@@ -3,14 +3,12 @@ import { MDBCol, MDBRow, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Roles } from "../../../../../../services/fakeDb";
-import Modal from "./modal";
 import AccessModal from "./accessModal";
 function EditableField({
   label,
   fieldName,
   editField,
   setEditField,
-  register,
   errors,
   saveField,
   handleCancel,

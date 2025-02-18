@@ -1,11 +1,6 @@
-import { MDBContainer } from "mdbreact";
 import { Line } from "react-chartjs-2";
-import React, { useState, useEffect } from "react";
+import React from "react";
 // import "./index.css";
-import { useSelector, useDispatch } from "react-redux";
-import { MDBIcon } from "mdbreact";
-import { fullName, getAge, Banner } from "../../../services/utilities";
-import Months from "../../../services/fakeDb/calendar/months";
 
 const barChartData = {
   labels: ["1 AM", "1 PM", "2 AM", "2 PM", "3 AM", "3 PM", "4 AM", "4 PM"],
@@ -90,11 +85,11 @@ const barChartOptions = {
 };
 
 const ChemsPrint = () => {
-  const [chems, setChems] = useState([]);
-  const [chartData, setChartData] = useState({});
-  const { collections } = useSelector(({ chemistry }) => chemistry);
-  const { token, onDuty } = useSelector(({ auth }) => auth);
-  const dispatch = useDispatch();
+  // const [chems, setChems] = useState([]);
+  // const [chartData, setChartData] = useState({});
+  // const { collections } = useSelector(({ chemistry }) => chemistry);
+  // const { token, onDuty } = useSelector(({ auth }) => auth);
+  // const dispatch = useDispatch();
 
   // useEffect(() => {
   //   if (token && onDuty?._id) {

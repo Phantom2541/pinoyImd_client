@@ -24,6 +24,8 @@ export default function Laboratories() {
     [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
 
+  console.log("unused variable setFavorites", setFavorites);
+
   useEffect(() => {
     setCompanies(collections);
   }, [collections]);
@@ -46,7 +48,7 @@ export default function Laboratories() {
     };
 
     handleSearch();
-  }, [searchKey]);
+  }, [searchKey, collections]);
 
   return (
     <MDBContainer>

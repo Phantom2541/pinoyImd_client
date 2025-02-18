@@ -21,13 +21,19 @@ export default function Staffs() {
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
     [willCreate, setWillCreate] = useState(true),
-    [visible, setVisible] = useState(false),
     { token, onDuty, maxPage } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ personnels }) => personnels
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  console.log(
+    "unused variables selected,showModal,totalPages remove this by darrel",
+    selected,
+    showModal,
+    totalPages
+  );
 
   useEffect(() => {
     if (staffs.length > 0) {
@@ -55,7 +61,7 @@ export default function Staffs() {
   }, [collections]);
 
   //Modal toggle
-  const toggleModal = () => setShowModal(!showModal);
+  // const toggleModal = () => setShowModal(!showModal);
 
   //Trigger for update
   const handleUpdate = (selected) => {

@@ -13,7 +13,6 @@ import {
   MicroscopicInRange,
 } from "../../services/fakeDb";
 
-const today = new Date();
 const dayNames = [
   "Sunday",
   "Monday",
@@ -24,8 +23,6 @@ const dayNames = [
   "Saturday",
 ];
 
-const month = JSON.parse(localStorage.getItem("month"));
-const year = JSON.parse(localStorage.getItem("year"));
 const addZero = (i) => (i < 10 ? "0" + i : i);
 const formatTime = (hours, minutes) => {
   let period = "AM";
@@ -42,22 +39,28 @@ export default function FecalysisPrint() {
   const [fecalysis, setFecalysis] = useState([]),
     { collections } = useSelector(({ fecalysis }) => fecalysis),
     { token, onDuty } = useSelector(({ auth }) => auth),
+    [month, setMonth] = useState(""),
+    [year, setYear] = useState(""),
     dispatch = useDispatch();
 
   useEffect(() => {
+    const _month = JSON.parse(localStorage.getItem("month"));
+    const _year = JSON.parse(localStorage.getItem("year"));
     if (token && onDuty?._id) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/fecalysis/logbook",
           data: {
             branch: onDuty._id,
-            month,
-            year,
+            month: _month,
+            year: _year,
           },
           token,
         })
       );
     }
+    setMonth(_month);
+    setYear(_year);
     return () => {
       dispatch(RESET());
     };

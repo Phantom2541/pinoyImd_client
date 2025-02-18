@@ -7,11 +7,11 @@ import {
   RESET,
 } from "../../../../services/redux/slices/assets/companies";
 
-const path = [
-  {
-    path: "List of Companies",
-  },
-];
+// const path = [
+//   {
+//     path: "List of Companies",
+//   },
+// ];
 
 export default function UnsetApply() {
   const { token, maxPage } = useSelector(({ auth }) => auth),
@@ -20,6 +20,8 @@ export default function UnsetApply() {
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
     dispatch = useDispatch();
+
+  console.log("unused variable total pages", totalPages);
 
   useEffect(() => {
     if (token) dispatch(BROWSE(token));
