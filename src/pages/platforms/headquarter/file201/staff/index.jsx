@@ -46,6 +46,8 @@ export default function Staffs() {
     return () => dispatch(RESET());
   }, [token, dispatch, onDuty]);
 
+  console.log(onDuty.id);
+
   //Set fetched data for mapping
   useEffect(() => {
     setStaffs(collections);

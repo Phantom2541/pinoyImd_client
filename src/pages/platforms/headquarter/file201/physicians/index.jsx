@@ -26,6 +26,7 @@ export default function Physicians() {
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
   //Initial Browse
   useEffect(() => {
     console.log(onDuty);
