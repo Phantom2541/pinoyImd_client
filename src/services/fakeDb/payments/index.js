@@ -1,11 +1,11 @@
 const Payments = {
-  opd: ["cash", "gcash", "cheque"],
-  er: ["cash", "gcash", "cheque", "credit"], // Credit: Note Receivable
-  cw: ["cash", "gcash", "cheque", "credit"], // credit: [patient, company]
-  pw: ["cash", "gcash", "cheque", "credit"],
-  hmo: ["credit"], // need SOA
-  sc: ["cash", "gcash", "credit"],
-  ssc: ["cash", "gcash", "credit"],
+  opd: ["cash", "gcash", "cheque", "downpayment"],
+  er: ["cash", "gcash", "cheque", "voucher"], // Credit: Note Receivable
+  cw: ["cash", "gcash", "cheque", "voucher"], // credit: [patient, company]
+  pw: ["cash", "gcash", "cheque", "voucher"],
+  hmo: ["voucher"], // need SOA
+  sc: ["cash", "gcash", "voucher"],
+  ssc: ["cash", "gcash", "voucher"],
   promo: ["cash", "gcash", "cheque"],
 };
 
