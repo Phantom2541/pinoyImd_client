@@ -1,11 +1,15 @@
-import React, { useState, useRef } from 'react';
-import Search from './search';
-import { MDBIcon } from 'mdbreact';
-import { useSelector } from 'react-redux';
-import { Categories } from '../../../../../services/fakeDb';
-import { computeGD, currency, globalSearch } from '../../../../../services/utilities';
-import { useToasts } from 'react-toast-notifications';
-import ConflictModal from './conflictModal';
+import React, { useState, useRef } from "react";
+import { MDBIcon } from "mdbreact";
+import { useSelector } from "react-redux";
+import { Categories } from "../../../../../../services/fakeDb";
+import Search from "./search";
+import {
+  computeGD,
+  currency,
+  globalSearch,
+} from "../../../../../../services/utilities";
+import { useToasts } from "react-toast-notifications";
+import ConflictModal from "./conflictModal";
 
 const _compare = {
   show: false,
@@ -13,9 +17,17 @@ const _compare = {
   conflicts: [],
 };
 
-export default function Menus({ categoryIndex, cart, setCart, patronPresent, privilegeIndex, didSearch, setDidSearch }) {
+export default function Menus({
+  categoryIndex,
+  cart,
+  setCart,
+  patronPresent,
+  privilegeIndex,
+  didSearch,
+  setDidSearch,
+}) {
   const { collections } = useSelector(({ menus }) => menus),
-    [searchKey, setSearchKey] = useState(''),
+    [searchKey, setSearchKey] = useState(""),
     [compare, setCompare] = useState(_compare),
     searchRef = useRef(null),
     { addToast } = useToasts();
@@ -23,7 +35,7 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
   const handleSearch = (e) => {
     e.preventDefault();
 
-    if (didSearch && searchKey) setSearchKey('');
+    if (didSearch && searchKey) setSearchKey("");
 
     setDidSearch(!didSearch);
   };
@@ -38,7 +50,7 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
     // for the first menu, simply insert it
     if (!cart.length) {
       // empty the previous search.
-      setSearchKey('');
+      setSearchKey("");
       focusSearchInput(); // auto focus search input
       // setDidSearch(false); // auto close search input
       return setCart([selected]);
@@ -51,19 +63,21 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
     // if a sameId is found, notify them.
     if (sameId)
       return addToast(`You already selected: ${description || abbreviation}`, {
-        appearance: 'info',
+        appearance: "info",
       });
 
     // if the selected menu only has 1 package, directly find it in the cart
     if (packages.length === 1) {
       const [_package] = packages;
 
-      const duplicatePackage = cart.filter((c) => c?.packages.includes(_package));
+      const duplicatePackage = cart.filter((c) =>
+        c?.packages.includes(_package)
+      );
 
       // reset before pushing or comparing
       focusSearchInput(); // auto focus search input
       // setDidSearch(false); // auto close search input
-      setSearchKey('');
+      setSearchKey("");
 
       // if a duplicate has been found, show for comparison
       if (!!duplicatePackage.length)
@@ -81,7 +95,9 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
 
     // if selected menu has 2 or more packages
     for (const _package of packages) {
-      const duplicatePackage = cart.filter((c) => c?.packages.includes(_package));
+      const duplicatePackage = cart.filter((c) =>
+        c?.packages.includes(_package)
+      );
 
       // if no duplicate found, simply skip it
       if (!duplicatePackage.length) continue;
@@ -91,11 +107,13 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
     }
 
     // remove all redundant ids in conflicts
-    const conflicts = [...new Map(rawConflicts.map((c) => [c._id, c])).values()];
+    const conflicts = [
+      ...new Map(rawConflicts.map((c) => [c._id, c])).values(),
+    ];
 
     focusSearchInput(); // auto focus search input
     // setDidSearch(false); // auto close search input
-    setSearchKey('');
+    setSearchKey("");
 
     // if no conflicts found, simply push it
     if (!conflicts.length) return setCart([...cart, selected]);
@@ -129,7 +147,8 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
     let _cart = [...cart];
 
     // iterate conflcits to filter out each _id
-    for (const { _id = '' } of conflicts) _cart = _cart.filter((c) => c?._id !== _id);
+    for (const { _id = "" } of conflicts)
+      _cart = _cart.filter((c) => c?._id !== _id);
 
     // copy the filtered _cart and add the selected
     setCart([..._cart, selected]);
@@ -137,7 +156,7 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
     setCompare(_compare);
 
     addToast(`Conflicts have been resolved.`, {
-      appearance: 'info',
+      appearance: "info",
     });
   };
 
@@ -158,8 +177,8 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
               <div className="d-flex justify-content-center">
                 <Search
                   info={{
-                    message: 'Search your menus',
-                    description: 'You can search by name or abbreviation.',
+                    message: "Search your menus",
+                    description: "You can search by name or abbreviation.",
                   }}
                   placeholder="Menu Search..."
                   handleSearch={handleSearch}
@@ -168,10 +187,12 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
                   didSearch={didSearch}
                   searchRef={searchRef}
                 >
-                  {!searchMatch.length && !searchKey && <li>Please type a menu name.</li>}
+                  {!searchMatch.length && !searchKey && (
+                    <li>Please type a menu name.</li>
+                  )}
                   {!searchMatch.length && searchKey && <li>No match found.</li>}
                   {searchMatch?.map((menu, index) => {
-                    const { description = '', abbreviation = '' } = menu,
+                    const { description = "", abbreviation = "" } = menu,
                       price = menu[abbr];
 
                     return (
@@ -180,10 +201,11 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
                         onClick={() => {
                           // isNew means its a new transaction, the prices will be shown
                           // this will be used when editing a transaction
-                          if (price) return handlePicker({ ...menu, isNew: true });
+                          if (price)
+                            return handlePicker({ ...menu, isNew: true });
 
                           addToast(`This product has no set price.`, {
-                            appearance: 'warning',
+                            appearance: "warning",
                           });
                         }}
                       >
@@ -197,7 +219,9 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
                               </>
                             )}
                           </span>
-                          <span className="ml-3">{price ? currency(price) : `??`}</span>
+                          <span className="ml-3">
+                            {price ? currency(price) : `??`}
+                          </span>
                         </div>
                       </li>
                     );
@@ -208,21 +232,29 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
           </tr>
           <tr>
             <th className="text-left">Services</th>
-            <th style={{ width: '75px' }}>SRP</th>
-            <th style={{ width: '75px' }}>
+            <th style={{ width: "75px" }}>SRP</th>
+            <th style={{ width: "75px" }}>
               <div className="d-flex align-items-center justify-content-center">
                 UP
                 <div className="menus-legend ml-2 m-0">
-                  <MDBIcon icon="info-circle" size="sm" className="text-info cursor-pointer" />
+                  <MDBIcon
+                    icon="info-circle"
+                    size="sm"
+                    className="text-info cursor-pointer"
+                  />
                   <div>
                     <ul>
-                      <li className="menu-legend-lightblue">Special Discount</li>
+                      <li className="menu-legend-lightblue">
+                        Special Discount
+                      </li>
                       <li className="menu-legend-yellow">Promo Price</li>
                       <li className="menu-legend-green">Discounted Price</li>
                       <li className="menu-legend-red">
                         Special services, discount is not applicable
                       </li>
-                      <li className="menu-legend-black">Suggested Retail Price</li>
+                      <li className="menu-legend-black">
+                        Suggested Retail Price
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -236,7 +268,10 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
               <td colSpan="3" className="menus-empty">
                 <span>
                   Start by&nbsp;
-                  {patronPresent ? 'searching your menus' : 'selecting a patron'}.
+                  {patronPresent
+                    ? "searching your menus"
+                    : "selecting a patron"}
+                  .
                 </span>
               </td>
             </tr>
@@ -246,8 +281,8 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
               {
                 gross = 0,
                 up = 0,
-                title = '',
-                color = '',
+                title = "",
+                color = "",
               } = computeGD(menu, categoryIndex, privilegeIndex);
 
             return (
@@ -259,7 +294,10 @@ export default function Menus({ categoryIndex, cart, setCart, patronPresent, pri
                 <td title="Suggested Retail Price">{currency(gross)}</td>
                 <td title={title}>
                   <span className={`text-${color}`}>{currency(up)}</span>
-                  <button onClick={() => handleDelete(_id)} className="menus-button-delete">
+                  <button
+                    onClick={() => handleDelete(_id)}
+                    className="menus-button-delete"
+                  >
                     <MDBIcon icon="trash" />
                   </button>
                 </td>
