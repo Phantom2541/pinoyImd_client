@@ -18,6 +18,7 @@ const _compare = {
 };
 
 <<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
+<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
 export default function Menus({
   categoryIndex,
   cart,
@@ -27,6 +28,9 @@ export default function Menus({
   didSearch,
   setDidSearch,
 }) {
+=======
+export default function Menus({ patronPresent }) {
+>>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
 =======
 export default function Menus({ patronPresent }) {
 >>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
@@ -141,6 +145,7 @@ export default function Menus({ patronPresent }) {
   const searchMatch = search();
 
 <<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
+<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
   // if chosen is true, remove all conflicts and push selected then reset compare state
   // if chosen is false, simply reset the compare state
   const handleConflict = (chosen) => {
@@ -167,6 +172,8 @@ export default function Menus({ patronPresent }) {
 
   const handleDelete = (_id) => setCart(cart.filter((c) => c?._id !== _id));
 =======
+=======
+>>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
   const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
   const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
 >>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
@@ -200,6 +207,9 @@ export default function Menus({ patronPresent }) {
 =======
                 <SearchBox>
                   <li>Please type a menu name.</li>
+<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
+>>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
+=======
 >>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
                   {!searchMatch.length && !searchKey && (
                     <li>Please type a menu name.</li>
