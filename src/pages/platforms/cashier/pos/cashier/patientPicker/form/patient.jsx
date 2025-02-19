@@ -91,6 +91,12 @@ export default function Patient({ selected, injectName }) {
     setForm(_form);
   };
 
+  // useEffect(() => {
+  //   if(_id){
+  //     // fetch localStorage from previous created address and set it as default
+  //   }
+  // }, [_id])
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="patient-personal-container">

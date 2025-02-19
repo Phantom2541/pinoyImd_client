@@ -1,9 +1,8 @@
 import React, { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import SearchBox from "./search";
 import { MDBIcon } from "mdbreact";
+import { useSelector } from "react-redux";
 import { Categories } from "../../../../../../services/fakeDb";
+import Search from "./search";
 import {
   computeGD,
   currency,
@@ -11,10 +10,6 @@ import {
 } from "../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import ConflictModal from "./conflictModal";
-import {
-  ADDTOCART,
-  REMOVEFROMCART,
-} from "../../../../../../services/redux/slices/commerce/checkout";
 
 const _compare = {
   show: false,
@@ -22,101 +17,120 @@ const _compare = {
   conflicts: [],
 };
 
-export default function Menus({ patronPresent, didSearch, setDidSearch }) {
+export default function Menus({
+  categoryIndex,
+  cart,
+  setCart,
+  patronPresent,
+  privilegeIndex,
+  didSearch,
+  setDidSearch,
+}) {
   const { collections } = useSelector(({ menus }) => menus),
-    { category, privilege, cart } = useSelector(({ checkout }) => checkout),
     [searchKey, setSearchKey] = useState(""),
-    // [compare, setCompare] = useState(_compare),
+    [compare, setCompare] = useState(_compare),
     searchRef = useRef(null),
-    { addToast } = useToasts(),
-    dispatch = useDispatch();
+    { addToast } = useToasts();
 
-  // const handleSearch = (e) => {
-  //   e.preventDefault();
-  //   if (didSearch && searchKey) setSearchKey("");
-  //   setDidSearch(!didSearch);
-  // };
+  const handleSearch = (e) => {
+    e.preventDefault();
 
-  // const focusSearchInput = () => {
-  //   if (searchRef.current) {
-  //     searchRef.current.focus();
-  //   }
-  // };
+    if (didSearch && searchKey) setSearchKey("");
 
-  // const { packages, _id, description, abbreviation } = selected;
+    setDidSearch(!didSearch);
+  };
 
-  // const sameId = cart.find((c) => c?._id === _id);
+  const focusSearchInput = () => {
+    if (searchRef.current) {
+      searchRef.current.focus();
+    }
+  };
 
-  // if a sameId is found, notify them.
-  // if (sameId)
-  // return addToast(`You already selected: ${description || abbreviation}`, {
-  //   appearance: "info",
-  // });
+  const handlePicker = (selected) => {
+    // for the first menu, simply insert it
+    if (!cart.length) {
+      // empty the previous search.
+      setSearchKey("");
+      focusSearchInput(); // auto focus search input
+      // setDidSearch(false); // auto close search input
+      return setCart([selected]);
+    }
 
-  // if the selected menu only has 1 package, directly find it in the cart
-  // if (packages.length === 1) {
-  //   const [_package] = packages;
+    const { packages, _id, description, abbreviation } = selected;
 
-  //   const duplicatePackage = cart.filter((c) =>
-  //     c?.packages.includes(_package)
-  //   );
+    const sameId = cart.find((c) => c?._id === _id);
 
-  //   // reset before pushing or comparing
-  //   focusSearchInput(); // auto focus search input
-  //   // setDidSearch(false); // auto close search input
-  //   setSearchKey("");
+    // if a sameId is found, notify them.
+    if (sameId)
+      return addToast(`You already selected: ${description || abbreviation}`, {
+        appearance: "info",
+      });
 
-  //   // if a duplicate has been found, show for comparison
-  //   if (!!duplicatePackage.length)
-  //     return setCompare({
-  //       selected,
-  //       conflicts: duplicatePackage,
-  //       show: true,
-  //     });
+    // if the selected menu only has 1 package, directly find it in the cart
+    if (packages.length === 1) {
+      const [_package] = packages;
 
-  //   // if no duplicate found, proceed to push to cart
-  //   return setCart([...cart, selected]);
-  // }
+      const duplicatePackage = cart.filter((c) =>
+        c?.packages.includes(_package)
+      );
 
-  // let rawConflicts = [];
+      // reset before pushing or comparing
+      focusSearchInput(); // auto focus search input
+      // setDidSearch(false); // auto close search input
+      setSearchKey("");
 
-  // if selected menu has 2 or more packages
-  // for (const _package of packages) {
-  //   const duplicatePackage = cart.filter((c) =>
-  //     c?.packages.includes(_package)
-  //   );
+      // if a duplicate has been found, show for comparison
+      if (!!duplicatePackage.length)
+        return setCompare({
+          selected,
+          conflicts: duplicatePackage,
+          show: true,
+        });
 
-  //   // if no duplicate found, simply skip it
-  //   if (!duplicatePackage.length) continue;
+      // if no duplicate found, proceed to push to cart
+      return setCart([...cart, selected]);
+    }
 
-  //   // if a duplicate is found, add it in the conflicts
-  //   rawConflicts = [...rawConflicts, ...duplicatePackage];
-  // }
+    let rawConflicts = [];
 
-  // remove all redundant ids in conflicts
-  // const conflicts = [
-  //   ...new Map(rawConflicts.map((c) => [c._id, c])).values(),
-  // ];
+    // if selected menu has 2 or more packages
+    for (const _package of packages) {
+      const duplicatePackage = cart.filter((c) =>
+        c?.packages.includes(_package)
+      );
 
-  // focusSearchInput(); // auto focus search input
-  // setDidSearch(false); // auto close search input
-  // setSearchKey("");
+      // if no duplicate found, simply skip it
+      if (!duplicatePackage.length) continue;
 
-  // if no conflicts found, simply push it
-  // if (!conflicts.length) return setCart([...cart, selected]);
+      // if a duplicate is found, add it in the conflicts
+      rawConflicts = [...rawConflicts, ...duplicatePackage];
+    }
 
-  // if there are conflicts, show for comparison
-  //   setCompare({
-  //     selected,
-  //     conflicts,
-  //     show: true,
-  //   });
-  // };
+    // remove all redundant ids in conflicts
+    const conflicts = [
+      ...new Map(rawConflicts.map((c) => [c._id, c])).values(),
+    ];
 
-  const { abbr } = Categories[category];
+    focusSearchInput(); // auto focus search input
+    // setDidSearch(false); // auto close search input
+    setSearchKey("");
+
+    // if no conflicts found, simply push it
+    if (!conflicts.length) return setCart([...cart, selected]);
+
+    // if there are conflicts, show for comparison
+    setCompare({
+      selected,
+      conflicts,
+      show: true,
+    });
+  };
+
+  const { abbr } = Categories[categoryIndex];
 
   const search = () => {
-    // if (!searchKey) return [];
+    if (!searchKey) return [];
+
     return globalSearch(collections, searchKey);
   };
 
@@ -124,45 +138,60 @@ export default function Menus({ patronPresent, didSearch, setDidSearch }) {
 
   // if chosen is true, remove all conflicts and push selected then reset compare state
   // if chosen is false, simply reset the compare state
-  // const handleConflict = (chosen) => {
-  //   const { selected = {}, conflicts = [] } = compare;
+  const handleConflict = (chosen) => {
+    const { selected = {}, conflicts = [] } = compare;
 
-  //   if (!chosen) return setCompare(_compare);
+    if (!chosen) return setCompare(_compare);
 
-  //   // clone state
-  //   let _cart = [...cart];
+    // clone state
+    let _cart = [...cart];
 
-  //   // iterate conflcits to filter out each _id
-  //   for (const { _id = "" } of conflicts)
-  //     _cart = _cart.filter((c) => c?._id !== _id);
+    // iterate conflcits to filter out each _id
+    for (const { _id = "" } of conflicts)
+      _cart = _cart.filter((c) => c?._id !== _id);
 
-  //   // copy the filtered _cart and add the selected
-  //   setCart([..._cart, selected]);
+    // copy the filtered _cart and add the selected
+    setCart([..._cart, selected]);
 
-  //   setCompare(_compare);
+    setCompare(_compare);
 
-  //   addToast(`Conflicts have been resolved.`, {
-  //     appearance: "info",
-  //   });
-  // };
+    addToast(`Conflicts have been resolved.`, {
+      appearance: "info",
+    });
+  };
 
-  const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
-  const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
+  const handleDelete = (_id) => setCart(cart.filter((c) => c?._id !== _id));
 
   return (
     <>
-      {/* <ConflictModal data={compare} handleConflict={handleConflict} /> */}
+      <ConflictModal
+        data={compare}
+        handleConflict={handleConflict}
+        categoryIndex={categoryIndex}
+        privilegeIndex={privilegeIndex}
+      />
       <table className="menus-table">
         <thead>
           <tr>
             <th colSpan="3" className="bg-white">
               <div className="d-flex justify-content-center">
-                <SearchBox>
+                <Search
+                  info={{
+                    message: "Search your menus",
+                    description: "You can search by name or abbreviation.",
+                  }}
+                  placeholder="Menu Search..."
+                  handleSearch={handleSearch}
+                  searchKey={searchKey}
+                  setSearchKey={setSearchKey}
+                  didSearch={didSearch}
+                  searchRef={searchRef}
+                >
                   {!searchMatch.length && !searchKey && (
                     <li>Please type a menu name.</li>
                   )}
                   {!searchMatch.length && searchKey && <li>No match found.</li>}
-                  {cart?.map((menu, index) => {
+                  {searchMatch?.map((menu, index) => {
                     const { description = "", abbreviation = "" } = menu,
                       price = menu[abbr];
 
@@ -173,7 +202,7 @@ export default function Menus({ patronPresent, didSearch, setDidSearch }) {
                           // isNew means its a new transaction, the prices will be shown
                           // this will be used when editing a transaction
                           if (price)
-                            return handleADDtoCart({ ...menu, isNew: true });
+                            return handlePicker({ ...menu, isNew: true });
 
                           addToast(`This product has no set price.`, {
                             appearance: "warning",
@@ -197,7 +226,7 @@ export default function Menus({ patronPresent, didSearch, setDidSearch }) {
                       </li>
                     );
                   })}
-                </SearchBox>
+                </Search>
               </div>
             </th>
           </tr>
@@ -241,7 +270,7 @@ export default function Menus({ patronPresent, didSearch, setDidSearch }) {
                   Start by&nbsp;
                   {patronPresent
                     ? "searching your menus"
-                    : "selecting a client"}
+                    : "selecting a patron"}
                   .
                 </span>
               </td>
@@ -254,7 +283,7 @@ export default function Menus({ patronPresent, didSearch, setDidSearch }) {
                 up = 0,
                 title = "",
                 color = "",
-              } = computeGD(menu, category, privilege);
+              } = computeGD(menu, categoryIndex, privilegeIndex);
 
             return (
               <tr key={_id}>
@@ -266,7 +295,7 @@ export default function Menus({ patronPresent, didSearch, setDidSearch }) {
                 <td title={title}>
                   <span className={`text-${color}`}>{currency(up)}</span>
                   <button
-                    onClick={() => handleRemovedToCart(_id)}
+                    onClick={() => handleDelete(_id)}
                     className="menus-button-delete"
                   >
                     <MDBIcon icon="trash" />

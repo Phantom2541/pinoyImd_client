@@ -1,24 +1,33 @@
 import { MDBIcon } from "mdbreact";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import SearchBox from "./searchbox";
-import { Patient, PosCard } from "./form";
+import Search from "./search";
+import Patient from "./form/patient";
+import PosCard from "./form/posCard";
+import { useSelector } from "react-redux";
 import {
   fullName,
   fullNameSearch,
   getAge,
 } from "../../../../../../services/utilities";
 
-import { SETPRIVILEGE } from "../../../../../../services/redux/slices/commerce/checkout";
-
-export default function PatientPicker({ setSelected, selected }) {
+export default function POS({
+  setSelected,
+  selected,
+  setCategoryIndex,
+  categoryIndex,
+  privilegeIndex,
+  setPrivilegeIndex,
+  setPhysicianId,
+  physicianId,
+  setSourceId,
+  sourceId,
+}) {
   const { collections, newPatient, isLoading } = useSelector(
       ({ users }) => users
     ),
     [searchKey, setSearchKey] = useState(""),
     [activeIndex, setActiveIndex] = useState(0),
-    [didSearch, setDidSearch] = useState(false),
-    dispatch = useDispatch();
+    [didSearch, setDidSearch] = useState(false);
 
   // if a newPatient id is present and active index is 1
   // it means a new patient has been injected, you should go back to POS
@@ -37,9 +46,6 @@ export default function PatientPicker({ setSelected, selected }) {
   };
 
   const searchMatch = fullNameSearch(searchKey, collections);
-  const handlePrevilege = (e) => {
-    dispatch(SETPRIVILEGE(e.target.value));
-  };
 
   return (
     <div className="pos-container">
@@ -52,8 +58,7 @@ export default function PatientPicker({ setSelected, selected }) {
             {fullName(selected?.fullName)}
           </h4>
         )}
-
-        <SearchBox
+        <Search
           handleSearch={handleSearch}
           searchKey={searchKey}
           setSearchKey={setSearchKey}
@@ -77,7 +82,7 @@ export default function PatientPicker({ setSelected, selected }) {
                   <MDBIcon pulse icon="spinner" />
                 </div>
               ) : (
-                "Add new client..."
+                "Add new patron..."
               )}
             </li>
           )}
@@ -88,9 +93,11 @@ export default function PatientPicker({ setSelected, selected }) {
                 setSelected(user);
                 const { privilege = 0, dob } = user;
 
+                if (privilege !== privilegeIndex) setPrivilegeIndex(privilege);
+
                 // if current privilege is 0 but the customer is a valid senior, auto select senior as privilege
                 if (privilege === 0 && getAge(dob, true) > 59)
-                  handlePrevilege(2);
+                  setPrivilegeIndex(2);
 
                 setDidSearch(false);
               }}
@@ -100,14 +107,14 @@ export default function PatientPicker({ setSelected, selected }) {
                   user?.isMale ? "fa fa-mars" : "fa fa-venus"
                 }`}
               ></i>
-              {fullName(user?.fullName)} |
+              {fullName(user?.fullName)}|{" "}
               <span style={{ color: "blue" }}>{getAge(user?.dob)}</span>
             </li>
           ))}
-        </SearchBox>
+        </Search>
       </div>
       <div className="pos-card-button">
-        {["Details", "Patient"]?.map((name, index) => {
+        {["POS", "Patient"]?.map((name, index) => {
           return (
             <button
               key={`button-${index}`}
@@ -116,7 +123,7 @@ export default function PatientPicker({ setSelected, selected }) {
             >
               {name}
               <MDBIcon
-                icon={name === "Details" ? "cash-register" : "user-injured"}
+                icon={name === "POS" ? "cash-register" : "user-injured"}
                 className="pos-button-icon"
               />
             </button>
@@ -126,7 +133,17 @@ export default function PatientPicker({ setSelected, selected }) {
       <div className="pos-card">
         <div className="pos-card-body">
           <section className={`${activeIndex === 0 && "active"}`}>
-            <PosCard selected={selected} />
+            <PosCard
+              selected={selected}
+              setCategoryIndex={setCategoryIndex}
+              categoryIndex={categoryIndex}
+              setPrivilegeIndex={setPrivilegeIndex}
+              privilegeIndex={privilegeIndex}
+              setPhysicianId={setPhysicianId}
+              physicianId={physicianId}
+              setSourceId={setSourceId}
+              sourceId={sourceId}
+            />
           </section>
           <section className={`${activeIndex === 1 && "active"}`}>
             <Patient

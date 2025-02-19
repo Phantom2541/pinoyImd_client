@@ -7,30 +7,42 @@ import {
 } from "../../../../../../services/utilities";
 import { Categories, Payments } from "../../../../../../services/fakeDb";
 import { SAVE } from "../../../../../../services/redux/slices/commerce/sales";
-// import { UPDATE as PATIENTUPDATE } from "../../../../../../services/redux/slices/assets/persons/users";
+import { UPDATE as PATIENTUPDATE } from "../../../../../../services/redux/slices/assets/persons/users";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
 
-export default function Summary() {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { category, privilege, physicianId, sourceId, cart } = useSelector(
-      ({ checkout }) => checkout
-    ),
+export default function Summary({
+  resetCustomer,
+  patronPresent,
+  categoryIndex,
+  privilegeIndex,
+  physicianId,
+  sourceId,
+  cart = [],
+  customerId,
+  customer,
+}) {
+  const { token, onDuty, auth } = useSelector(({ auth }) => auth),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
     dispatch = useDispatch();
 
-  const { gross = 0, discount = 0 } = computeGD(cart, category, privilege),
+  const { gross = 0, discount = 0 } = computeGD(
+      cart,
+      categoryIndex,
+      privilegeIndex
+    ),
     amount = gross - discount,
-    { abbr = "" } = Categories[category],
+    { abbr = "" } = Categories[categoryIndex],
     paymentOptions = Payments[abbr];
 
   const handleCheckout = (e) => {
     e.preventDefault();
 
-    const cash = Number(e.target.cash.value),
-      today = new Date();
+    const cash = Number(e.target.cash.value);
+
+    const today = new Date();
 
     const data = {
       // exact date used for pre calculated daily sale
@@ -44,15 +56,19 @@ export default function Summary() {
       physicianId: physicianId || undefined,
       source: sourceId || undefined,
       // authorizedBy: authorizedBy || undefined,
-      // category: category === 0 ? "walkin" : abbr,
-      // payment: paymentOptions[payment],
-      // cash,
-      // amount,
-      // discount,
-      // isPickup,
-      // customer,
-      // cashier: auth?.fullName,
-      // isPrint: true,
+      branchId: onDuty._id,
+      customerId,
+      cashierId: auth._id,
+      category: categoryIndex === 0 ? "walkin" : abbr,
+      payment: paymentOptions[payment],
+      cash,
+      amount,
+      discount,
+      isPickup,
+      privilege: privilegeIndex,
+      customer,
+      cashier: auth?.fullName,
+      isPrint: true,
       cart: cart.map((menu) => {
         const {
             description,
@@ -64,7 +80,7 @@ export default function Summary() {
             up: soldUp,
             discount: soldDiscount,
           } = menu,
-          { up, discount } = computeGD(menu, category, privilege);
+          { up, discount } = computeGD(menu, categoryIndex, privilegeIndex);
 
         return {
           capital,
@@ -87,22 +103,22 @@ export default function Summary() {
         text: "Please return the change to the customer.",
       });
 
-    // if (customer?.privilege !== privilege)
-    //   dispatch(
-    //     PATIENTUPDATE({
-    //       token,
-    //       data: { _id: customerId, privilege: privilege },
-    //     })
-    //   );
+    if (customer?.privilege !== privilegeIndex)
+      dispatch(
+        PATIENTUPDATE({
+          token,
+          data: { _id: customerId, privilege: privilegeIndex },
+        })
+      );
 
-    // dispatch(
-    //   SAVE({
-    //     token,
-    //     data,
-    //   })
-    // );
+    dispatch(
+      SAVE({
+        token,
+        data,
+      })
+    );
 
-    // resetCustomer();
+    resetCustomer();
     e.target.reset();
   };
 
@@ -182,7 +198,7 @@ export default function Summary() {
       </table>
       <MDBBtn
         type="submit"
-        // disabled={!patronPresent || !cart.length}
+        disabled={!patronPresent || !cart.length}
         className="m-0 w-100 fw-bold mt-4"
         color="success"
       >

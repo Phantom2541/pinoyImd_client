@@ -1,25 +1,40 @@
 import React, { useEffect, useState } from "react";
+import POS from "./patientPicker/pos";
+import Menus from "./menuPicker/menus";
+import Summary from "./summary/index";
 import { useDispatch, useSelector } from "react-redux";
-import PatientPicker from "./patientPicker";
-import MenuPicker from "./menuPicker";
-import Summary from "./Summary";
 import {
   PATIENTS,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/users";
+import {
+  BROWSE as MENUS,
+  RESET as MENUSRESET,
+} from "../../../../../services/redux/slices/commerce/menus";
+import {
+  TIEUPS as SOURCELIST,
+  RESET as SOURCERESET,
+} from "../../../../../services/redux/slices/assets/providers";
+import {
+  TIEUPS as PHYSICIANS,
+  RESET as PHYSICIANRESET,
+} from "../../../../../services/redux/slices/assets/persons/physicians";
 import "./index.css";
 import { MDBCol, MDBRow } from "mdbreact";
-import { SETCASHIER } from "../../../../../services/redux/slices/commerce/checkout";
 
 //detect if searchKey is empty
 
 export default function Cashier() {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+  const { token, onDuty } = useSelector(({ auth }) => auth),
     { newPatient } = useSelector(({ users }) => users),
-    { branchId, cashierId, transaction, isSuccess } = useSelector(
-      ({ checkout }) => checkout
-    ),
+    { transaction, isSuccess } = useSelector(({ sales }) => sales),
     [selected, setSelected] = useState({}),
+    [menuSearch, setMenuSearch] = useState(false), // used to auto close menu if open upon submission
+    [cart, setCart] = useState([]),
+    [categoryIndex, setCategoryIndex] = useState(0),
+    [privilegeIndex, setPrivilegeIndex] = useState(0),
+    [sourceId, setSourceId] = useState(""),
+    [physicianId, setPhysicianId] = useState(""),
     dispatch = useDispatch();
 
   // transaction printout
@@ -36,8 +51,15 @@ export default function Cashier() {
 
       // reset everything
       setSelected({});
+      setCart([]);
+      setCategoryIndex(0);
+      setPrivilegeIndex(0);
+      setSourceId("");
+      setPhysicianId("");
+
+      // trigger auto generate task
     }
-  }, [transaction, isSuccess, activePlatform]);
+  }, [transaction, isSuccess, onDuty]);
 
   // if a new patient is created
   // automatically set it as selected and go to POS
@@ -48,20 +70,20 @@ export default function Cashier() {
   }, [newPatient]);
 
   useEffect(() => {
-    if (token && activePlatform?._id) {
-      dispatch(
-        SETCASHIER({
-          branchId: activePlatform.companyId._id,
-          cashierId: auth._id,
-        })
-      );
-
+    if (token && onDuty?._id) {
       dispatch(PATIENTS({ token }));
+      dispatch(SOURCELIST({ token, key: { clients: onDuty._id } }));
+      dispatch(PHYSICIANS({ key: { branch: onDuty._id }, token }));
+      dispatch(MENUS({ key: { branchId: onDuty._id }, token }));
+
       return () => {
         dispatch(RESET());
+        dispatch(MENUSRESET());
+        dispatch(SOURCERESET());
+        dispatch(PHYSICIANRESET());
       };
     }
-  }, [token, dispatch, activePlatform]);
+  }, [token, dispatch, onDuty]);
 
   // check if a patron has been selected
   const patronPresent = Boolean(selected?._id);
@@ -69,13 +91,53 @@ export default function Cashier() {
   return (
     <MDBRow className="res-container">
       <MDBCol size="5" className="pr-1">
-        <PatientPicker setSelected={setSelected} selected={selected} />
+        <POS
+          setSelected={setSelected}
+          selected={selected}
+          setCategoryIndex={setCategoryIndex}
+          categoryIndex={categoryIndex}
+          setPrivilegeIndex={setPrivilegeIndex}
+          privilegeIndex={privilegeIndex}
+          setPhysicianId={setPhysicianId}
+          physicianId={physicianId}
+          setSourceId={setSourceId}
+          sourceId={sourceId}
+        />
       </MDBCol>
       <MDBCol size="4" className="px-1">
-        <MenuPicker patronPresent={patronPresent} />
+        <Menus
+          didSearch={menuSearch}
+          setDidSearch={setMenuSearch}
+          categoryIndex={categoryIndex}
+          privilegeIndex={privilegeIndex}
+          setCart={setCart}
+          cart={cart}
+          patronPresent={patronPresent}
+        />
       </MDBCol>
       <MDBCol size="3" className="px-1">
-        <Summary />
+        <Summary
+          // called upon submission to reset customer
+          resetCustomer={() => {
+            setSelected({});
+            if (menuSearch) setMenuSearch(false);
+          }}
+          customer={{
+            fullName: selected?.fullName,
+            mobile: selected?.mobile,
+            privilege: selected?.privilege,
+            address: `${
+              selected?.address?.barangay && `${selected?.address?.barangay}, `
+            }${selected?.address?.city}`,
+          }}
+          patronPresent={patronPresent}
+          cart={cart}
+          categoryIndex={categoryIndex}
+          physicianId={physicianId}
+          sourceId={sourceId}
+          privilegeIndex={privilegeIndex}
+          customerId={selected?._id}
+        />
       </MDBCol>
     </MDBRow>
   );

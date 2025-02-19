@@ -1,7 +1,7 @@
 import { MDBIcon } from "mdbreact";
 import React from "react";
 
-export default function SearchBox({
+export default function Search({
   handleSearch,
   searchKey,
   setSearchKey,
@@ -11,6 +11,7 @@ export default function SearchBox({
   children,
   // design
   info = {},
+  placeholder = "Fullname Search...",
   searchRef,
 }) {
   const {
@@ -46,7 +47,7 @@ export default function SearchBox({
         </div>
         <input
           ref={searchRef}
-          placeholder="Search Patient..."
+          placeholder={placeholder}
           value={searchKey}
           onChange={({ target }) => setSearchKey(target.value)}
           autoCorrect="off"

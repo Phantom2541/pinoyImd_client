@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { MDBBtn, MDBModal, MDBModalHeader } from "mdbreact";
+import React, { useState } from "react";
 import { computeGD, currency } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
 
-const Card = ({ menu, chosen = "selected", handlePick }) => {
+const Card = ({
+  menu,
+  chosen = "selected",
+  handlePick,
+  categoryIndex,
+  privilegeIndex,
+}) => {
   const { description = "", abbreviation = "", packages = [] } = menu,
-    { category, privilege } = useSelector(({ checkout }) => checkout),
-    { gross } = computeGD(menu, category, privilege);
+    { gross } = computeGD(menu, categoryIndex, privilegeIndex);
 
   return (
     <div className="conflict-card" onClick={() => handlePick(chosen)}>
@@ -36,7 +40,12 @@ const Card = ({ menu, chosen = "selected", handlePick }) => {
   );
 };
 
-export default function ConflictModal({ data, handleConflict }) {
+export default function ConflictModal({
+  data,
+  handleConflict,
+  categoryIndex,
+  privilegeIndex,
+}) {
   const [choice, setChoice] = useState("selected");
 
   const { show, selected, conflicts = [] } = data;
@@ -63,7 +72,12 @@ export default function ConflictModal({ data, handleConflict }) {
           }`}
         >
           <label>Selected Menu</label>
-          <Card menu={selected} handlePick={setChoice} />
+          <Card
+            menu={selected}
+            handlePick={setChoice}
+            categoryIndex={categoryIndex}
+            privilegeIndex={privilegeIndex}
+          />
         </div>
         <p className="conflict-or">OR</p>
         <div
@@ -79,6 +93,8 @@ export default function ConflictModal({ data, handleConflict }) {
                 menu={conflict}
                 chosen="conflict"
                 handlePick={setChoice}
+                categoryIndex={categoryIndex}
+                privilegeIndex={privilegeIndex}
               />
             ))}
           </div>
