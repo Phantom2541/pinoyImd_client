@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 
 const Header = () => {
   const { activePlatform, auth } = useSelector(({ auth }) => auth);
-  const { companyId = {} } = activePlatform || {};
-  const { name = "", subName = "" } = companyId;
+  const { branch = {} } = activePlatform || {};
+  const { name = "", subName = "" } = branch;
 
   console.log("auth", auth);
 

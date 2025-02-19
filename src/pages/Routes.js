@@ -18,26 +18,28 @@ export default function Routes() {
 
   return (
     <Switch>
-      {Sidebars[activePlatform]?.map(({ path, component, children }, index) => {
-        if (children)
-          return children.map((child, cIndex) => (
-            <Route
-              key={`route-${index}-${cIndex}`}
-              exact
-              path={`${path}${child.path}`}
-              component={child.component || NotExisting}
-            />
-          ));
+      {Sidebars[activePlatform?.platform]?.map(
+        ({ path, component, children }, index) => {
+          if (children)
+            return children.map((child, cIndex) => (
+              <Route
+                key={`route-${index}-${cIndex}`}
+                exact
+                path={`${path}${child.path}`}
+                component={child.component || NotExisting}
+              />
+            ));
 
-        return (
-          <Route
-            key={`route-${index}`}
-            exact
-            path={path}
-            component={component || NotExisting}
-          />
-        );
-      })}
+          return (
+            <Route
+              key={`route-${index}`}
+              exact
+              path={path}
+              component={component || NotExisting}
+            />
+          );
+        }
+      )}
 
       <Route path="/profile" exact component={Profile} />
 

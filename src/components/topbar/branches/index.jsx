@@ -11,25 +11,37 @@ import { capitalize } from "../../../services/utilities";
 import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth.js";
 
 export default function Branches() {
-  const [text, setText] = useState("Branches"),
-    { branches, activePlatform, token } = useSelector(({ auth }) => auth),
+  const { branches, access, activePlatform, token, auth } = useSelector(
+      ({ auth }) => auth
+    ),
     dispatch = useDispatch();
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setText((prev) =>
-        prev === activePlatform?.name ? "Branches" : activePlatform?.name
-      );
-    }, 10000);
+    console.log("Branches activePlatform :", activePlatform);
 
-    return () => clearInterval(timer);
+    // const timer = setInterval(() => {
+    //   setText((prev) =>
+    //     prev === activePlatform?.name ? "Branches" : activePlatform?.name
+    //   );
+    // }, 10000);
+    // return () => clearInterval(timer);
   }, [activePlatform]);
 
   const handleActivePlatform = (branchId) => {
-    const data = { activePlatform: { ...activePlatform, branchId } };
-    console.log("new activePlatform :", activePlatform);
+    const _access =
+      access
+        .filter((branch) => branch.branchId === branchId)
+        .flatMap(({ platform }) => platform) || [];
 
-    dispatch(SETACTIVEPLATFORM(data, token));
+    const data = {
+      _id: auth._id,
+      email: auth.email,
+      activePlatform: { ...activePlatform, branchId, access: [..._access] },
+    };
+
+    console.log("handle Active Platform :", data);
+
+    dispatch(SETACTIVEPLATFORM({ data, token }));
   };
 
   return (
@@ -37,7 +49,7 @@ export default function Branches() {
       <MDBDropdownToggle nav caret>
         <MDBIcon icon="code-branch" />
         &nbsp;
-        <div className="d-none d-md-inline">{capitalize(text)}</div>
+        <div className="d-none d-md-inline">{capitalize("text")}</div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right>
         {branches.map(({ name, _id }, index) => (

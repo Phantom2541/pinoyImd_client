@@ -40,7 +40,7 @@ export const SETACTIVEPLATFORM = createAsyncThunk(
   `${name}/setActivePlatform`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.update(`${name}`, data, token);
+      return axioKit.update(`assets/persons/users`, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -175,12 +175,21 @@ export const reduxSlice = createSlice({
       })
       .addCase(SETACTIVEPLATFORM.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+        console.log("state.branches :", state.branches);
+        console.log("SETACTIVEPLATFORM :", payload);
 
+        const branch = state.branches.find(
+          (branch) => branch._id === payload.activePlatform.branchId
+        );
+        console.log("SETACTIVEPLATFORM payload :", payload);
+
+        console.log("branch :", branch);
+
+        state.activePlatform = { branch, ...payload.activePlatform };
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
-        state.activePlatform = { ...payload.activePlatform };
       })
       .addCase(SETACTIVEPLATFORM.rejected, (state, action) => {
         const { error } = action;
@@ -226,9 +235,15 @@ export const reduxSlice = createSlice({
         state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
+        const branch = branches.find(
+          (branch) => branch._id === auth.activePlatform.branchId
+        );
+
+        console.log(" LOGIN branch :", branch);
+
         state.isPatient = isPatient;
         state.isCeo = isCeo;
-        state.activePlatform = auth.activePlatform;
+        state.activePlatform = { branch, ...auth.activePlatform };
         state.company = company;
         state.token = token;
         state.email = auth.email;
@@ -252,13 +267,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log("payload", payload);
+        console.log("UPDATE.fulfilled payload", payload);
+        const branch = state.branches.find(
+          (branch) => branch._id === payload.activePlatform.branchId
+        );
 
         state.message = success;
         state.auth = payload;
         state.email = payload.email;
         localStorage.setItem("email", payload.email);
-        state.activePlatform = payload.activePlatform;
+        state.activePlatform = { ...payload.activePlatform, branch };
         state.isLoading = false;
         state.isSuccess = true;
       })
@@ -275,25 +293,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(VALIDATEREFRESH.fulfilled, (state, action) => {
         const { payload } = action.payload,
-          { auth, branches, access, isCeo, company, isPatient } = payload;
+          { auth, branches, access, isCeo, isPatient, company } = payload;
 
-        state.isPatient = isPatient;
-
-        let _branches = [];
-
-        if (isCeo) {
-          state.isCeo = isCeo;
-          _branches = branches.map((branch) => {
-            const _access = access.filter(
-              (data) => branch._id === data.branchId
-            );
-
-            return {
-              ...branch,
-              access: _access,
-            };
-          });
-        }
         state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
         state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
         state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
@@ -301,9 +302,14 @@ export const reduxSlice = createSlice({
         state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
+        const branch = branches.find(
+          (branch) => branch._id === auth.activePlatform.branchId
+        );
+
+        state.activePlatform = { ...auth.activePlatform, branch };
+        state.isPatient = isPatient;
         state.company = company;
-        state.branches = _branches;
-        state.access = access;
+        state.isCeo = isCeo;
         state.auth = auth;
         state.email = auth.email;
         state.isLoading = false;

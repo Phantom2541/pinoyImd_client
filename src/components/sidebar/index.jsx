@@ -25,8 +25,8 @@ export default function SideNavigation({
     [logo, setLogo] = useState(FailedLogo);
 
   useEffect(() => {
-    if (company?.name && activePlatform?.name) {
-      const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.name}/logo.png`;
+    if (company?.name && activePlatform?.platform) {
+      const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.platform}/logo.png`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);
       });
@@ -35,9 +35,9 @@ export default function SideNavigation({
 
   useEffect(() => {
     if (activePlatform) {
-      setLinks(Sidebars[activePlatform] || []);
+      setLinks(Sidebars[activePlatform.platform] || []);
     }
-  }, [activePlatform, auth]);
+  }, [activePlatform]);
 
   // Recursive function to render nav items (both links and categories)
   const renderNavItems = (items, keyPrefix = "", basePath = "") => {
