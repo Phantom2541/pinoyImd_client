@@ -187,95 +187,151 @@ export const reduxSlice = createSlice({
         state.loginSuccess = false;
         state.message = "";
       })
+      // .addCase(LOGIN.fulfilled, (state, action) => {
+      //   const { success, payload } = action.payload,
+      //     { token, auth, branches, isCeo, access, company, isPatient } =
+      //       payload;
+
+      //   state.isPatient = isPatient;
+
+      //   let _branches = [];
+
+      //   if (isCeo) {
+      //     state.isCeo = isCeo;
+
+      //     //-NOT WORKING BY THOM
+      //     let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
+      //     console.log(lastVisited);
+
+      //     // if (!lastVisited) {
+      //     //   const { _id, platform } = branches.find(({ isMain }) => isMain);
+      //     //   lastVisited = {
+      //     //     _id,
+      //     //     platform,
+      //     //   };
+      //     // }
+      //       // localStorage.setItem("lastVisited", JSON.stringify(auth.activePortal));
+      //     //-
+
+      //     _branches = branches.map((branch) => {
+      //       const _access = access.filter(
+      //         (data) => branch._id === data.branchId
+      //       );
+
+      //       const lastVisit = lastVisited.branch === branch._id;
+
+      //       return {
+      //         ...branch,
+      //         access: _access,
+      //         lastVisit,
+      //         platform: lastVisit ? lastVisit.platform : branch.platform,
+      //       };
+      //     });
+      //   }
+
+      //   let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
+
+      //   lastVisited = {
+      //     ...lastVisited,
+      //     branch: lastVisited.branchId?._id,
+      //   };
+
+
+      //   _branches = branches.map((branch) => {
+      //     const _access = access.filter((data) => branch._id === data.branchId);
+
+      //     return {
+      //       ...branch,
+      //       platform:
+      //         lastVisited.branch === branch._id
+      //           ? lastVisited.platform
+      //           : branch.platform,
+      //       access: _access,
+      //     };
+      //   });
+      //   const onDuty = _branches.find(({ lastVisit }) => lastVisit);
+
+      //   if (onDuty) {
+      //     state.onDuty = onDuty;
+      //   } else {
+      //     state.onDuty = !!_branches.length ? _branches[0] : defaultDuty;
+      //   }
+
+      //   state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
+
+      //   state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
+      //   state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
+      //   state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
+      //   state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
+      //   state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
+
+      //   state.company = company;
+      //   state.activePortal = lastVisited;
+      //   state.token = token;
+      //   state.email = auth.email;
+      //   state.auth = auth;
+      //   state.access = access;
+      //   state.branches = _branches;
+      //   state.message = success;
+      //   state.loginSuccess = true;
+      //   state.isLoading = false;
+      // })
+
       .addCase(LOGIN.fulfilled, (state, action) => {
-        const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, company, isPatient } =
-            payload;
+  const { success, payload } = action.payload,
+    { token, auth, branches, isCeo, access, company, isPatient } =
+    payload;
 
-        state.isPatient = isPatient;
+  state.isPatient = isPatient;
 
-        let _branches = [];
+  let _branches = [];
 
-        if (isCeo) {
-          state.isCeo = isCeo;
+  if (isCeo) {
+    state.isCeo = isCeo;
 
-          //-NOT WORKING BY THOM
-          let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-          console.log(lastVisited);
+    _branches = branches.map((branch) => {
+      const _access = access.filter(
+        (data) => branch._id === data.branchId
+      );
 
-          // if (!lastVisited) {
-          //   const { _id, platform } = branches.find(({ isMain }) => isMain);
-          //   lastVisited = {
-          //     _id,
-          //     platform,
-          //   };
-          // }
-            // localStorage.setItem("lastVisited", JSON.stringify(auth.activePortal));
-          //-
+      return {
+        ...branch,
+        access: _access,
+      };
+    });
+  }
 
-          _branches = branches.map((branch) => {
-            const _access = access.filter(
-              (data) => branch._id === data.branchId
-            );
+  _branches = branches.map((branch) => {
+    const _access = access.filter((data) => branch._id === data.branchId);
 
-            const lastVisit = lastVisited.branch === branch._id;
+    return {
+      ...branch,
+      access: _access,
+    };
+  });
 
-            return {
-              ...branch,
-              access: _access,
-              lastVisit,
-              platform: lastVisit ? lastVisit.platform : branch.platform,
-            };
-          });
-        }
+  state.onDuty = auth.activePlatform; // <--- Changed this line
 
-        let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
+  state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
 
-        lastVisited = {
-          ...lastVisited,
-          branch: lastVisited.branchId?._id,
-        };
+  state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
+  state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
+  state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
+  state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
+  state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
-
-        _branches = branches.map((branch) => {
-          const _access = access.filter((data) => branch._id === data.branchId);
-
-          return {
-            ...branch,
-            platform:
-              lastVisited.branch === branch._id
-                ? lastVisited.platform
-                : branch.platform,
-            access: _access,
-          };
-        });
-        const onDuty = _branches.find(({ lastVisit }) => lastVisit);
-
-        if (onDuty) {
-          state.onDuty = onDuty;
-        } else {
-          state.onDuty = !!_branches.length ? _branches[0] : defaultDuty;
-        }
-
-        state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
-
-        state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
-        state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
-        state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
-        state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
-        state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
-
-        state.company = company;
-        state.activePortal = lastVisited;
-        state.token = token;
-        state.email = auth.email;
-        state.auth = auth;
-        state.access = access;
-        state.branches = _branches;
-        state.message = success;
-        state.loginSuccess = true;
-        state.isLoading = false;
-      })
+  state.company = company;
+  state.activePortal = auth.activePlatform;
+  state.branches = _branches;
+  state.access = access;
+  state.auth = auth;
+  state.email = auth.email;
+  state.token = token;
+  state.message = success;
+  state.loginSuccess = true;
+  state.isLoading = false;
+})
+      
       .addCase(LOGIN.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
