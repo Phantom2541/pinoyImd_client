@@ -4,8 +4,8 @@ import { useLocation, useHistory } from "react-router-dom";
 import {
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/results/laboratory/urinalysis";
-import { fullName, getAge } from "../../../../../services/utilities";
+} from "../../../../../../services/redux/slices/results/laboratory/serology";
+import { fullName, getAge } from "../../../../../../services/utilities";
 import {
   MDBCard,
   MDBCardBody,
@@ -15,22 +15,12 @@ import {
   MDBBtnGroup,
   MDBIcon,
 } from "mdbreact";
-import TableRowCount from "../../../../../components/pagination/rows";
-import Months from "../../../../../services/fakeDb/calendar/months";
-import Years from "../../../../../services/fakeDb/calendar/years";
-import {
-  MicroscopicInRange,
-  MicroscopicResultInWord,
-  PH,
-  ResultInRange,
-  ResultInName,
-  SpecificGravity,
-  Transparency,
-  UrineColors,
-} from "../../../../../services/fakeDb";
+import TableRowCount from "../../../../../../components/pagination/rows";
+import Months from "../../../../../../services/fakeDb/calendar/months";
+import Years from "../../../../../../services/fakeDb/calendar/years";
+import { Services } from "../../../../../../services/fakeDb";
 
 const today = new Date();
-
 const addZero = (i) => {
   if (i < 10) {
     i = "0" + i;
@@ -61,9 +51,9 @@ const formatTime = (hours, minutes) => {
 };
 
 export default function Chems() {
-  const [hemas, setChems] = useState([]),
+  const [chems, setChems] = useState([]),
     { token, onDuty } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ urinalysis }) => urinalysis),
+    { collections } = useSelector(({ serology }) => serology),
     { search, pathname } = useLocation(),
     query = new URLSearchParams(search),
     month = query.get("month"),
@@ -76,12 +66,13 @@ export default function Chems() {
     if (token && onDuty?._id) {
       dispatch(
         BROWSE({
-          token,
+          entity: "results/laboratory/serology/logbook",
           data: {
             branch: onDuty._id,
             month,
             year,
           },
+          token,
         })
       );
     }
@@ -92,27 +83,28 @@ export default function Chems() {
     setChems(collections);
   }, [collections]);
 
-  // Function to group hemas by the day they were created
-  const groupByDay = (hemaData) => {
-    return hemaData.reduce((acc, urin) => {
-      const createdAt = new Date(urin.createdAt); // assuming `createdAt` field exists
+  // Function to group chems by the day they were created
+  const groupByDay = (chemistryData) => {
+    return chemistryData.reduce((acc, chem) => {
+      const createdAt = new Date(chem.createdAt); // assuming `createdAt` field exists
       const day = createdAt.getDate();
 
       if (!acc[day]) {
         acc[day] = [];
       }
-      acc[day].push(urin);
+      acc[day].push(chem);
       return acc;
     }, {});
   };
 
-  // Group the hemas by day
-  const groupedUrins = groupByDay(hemas);
+  // Group the chems by day
+  const groupedChems = groupByDay(chems);
 
-  const renderGroupedUrin = () => {
-    return Object.keys(groupedUrins).map((day) => {
-      const sampleUrin = groupedUrins[day][0]; // Get one urin item to determine the date
-      const d = new Date(sampleUrin.createdAt); // Use `createdAt` to get the correct day
+  // Function to filter and display only non-empty services and results
+  const renderGroupedChems = () => {
+    return Object.keys(groupedChems).map((day) => {
+      const sampleChem = groupedChems[day][0]; // Get one chem item to determine the date
+      const d = new Date(sampleChem.createdAt); // Use `createdAt` to get the correct day
       const dayOfWeek = dayNames[d.getDay()]; // Get the day of the week
 
       return (
@@ -124,56 +116,49 @@ export default function Chems() {
               </strong>
             </td>
           </tr>
-          {groupedUrins[day].map((urin, index) => {
-            const { ce, pe, me, createdAt, customerId } = urin;
+          {groupedChems[day].map((chem, index) => {
+            const { customerId, packages, createdAt } = chem;
 
-            const urinDate = new Date(createdAt);
-            const h = urinDate.getHours();
-            const m = urinDate.getMinutes();
+            const chemDate = new Date(createdAt);
+            const h = chemDate.getHours();
+            const m = chemDate.getMinutes();
             const timeFormatted = formatTime(h, m); // Format time to standard time
-            const nonEmptyPackages = Object.entries(ce).filter(
-              ([key, value]) => value && value !== 0
+
+            // Filter the packages to show only those with a value
+            const nonEmptyPackages = Object.entries(packages).filter(
+              ([key, value]) => value && value !== ""
             );
 
-            const getInitials = (text) => {
-              return text
-                ?.split(" ") // Split the string by spaces to get each word
-                .map((word) => word[0]) // Get the first letter of each word
-                .join(""); // Join the letters together
-            };
-
             return (
-              <tr key={urin._id}>
-                <td>{index + 1}</td>
-                <td>
-                  <h6>{fullName(customerId.fullName)}</h6>
-                  <span>
-                    {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
-                  </span>
-                </td>
-                <td>{timeFormatted}</td> {/* Display formatted time */}
-                <td className="text-center">
-                  {getInitials(UrineColors[pe[0]])}/
-                  {getInitials(Transparency[pe[1]])}
-                </td>
-                <td>{SpecificGravity[pe[2]]}</td>
-                <td>{PH[pe[3]]}</td>
-                <td>
-                  {nonEmptyPackages.map(([key, value]) => (
-                    <p key={key}>
-                      {ResultInName[parseInt(key)]?.substring(0, 3)}:
-                      {ResultInRange[value]?.substring(0, 2)}
-                    </p>
-                  ))}
-                </td>
-                <td>{MicroscopicInRange[me[0]]?.replace("/hpf", "")}</td>
-                <td>{MicroscopicInRange[me[1]]?.replace("/hpf", "")}</td>
-                <td>{MicroscopicResultInWord[me[2]]?.substring(0, 1)}</td>
-                <td>{MicroscopicResultInWord[me[3]]?.substring(0, 1)}</td>
-                <td>{MicroscopicResultInWord[me[4]]?.substring(0, 1)}</td>
-                <td>{MicroscopicResultInWord[me[5]]?.substring(0, 1)}</td>
-                <td></td>
-              </tr>
+              <React.Fragment key={chem._id}>
+                <tr>
+                  <td>{index + 1}</td>
+                  <td>
+                    <h6>{fullName(customerId.fullName)}</h6>
+                    <span>
+                      {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
+                    </span>
+                  </td>
+                  <td>{timeFormatted}</td> {/* Display formatted time */}
+                  <td>
+                    {nonEmptyPackages.map(([key, value]) => {
+                      console.log(nonEmptyPackages);
+                      const service = Services.find(key);
+                      return (
+                        <React.Fragment key={key}>
+                          <p>
+                            {" "}
+                            {service.abbreviation != null
+                              ? service.abbreviation
+                              : service.name}
+                            : {value}
+                          </p>
+                        </React.Fragment>
+                      );
+                    })}
+                  </td>
+                </tr>
+              </React.Fragment>
             );
           })}
         </React.Fragment>
@@ -234,10 +219,10 @@ export default function Chems() {
   };
 
   const handlePrint = () => {
-    localStorage.setItem("UrinLog", JSON.stringify());
+    localStorage.setItem("SeroLog", JSON.stringify());
     window.open(
-      "/printout/urin",
-      "Urinalysis Logbook",
+      "/printout/sero",
+      "Serology Logbook",
       "top=100px,left=100px,width=1050px,height=750px" // size of page that will open
     );
   };
@@ -287,7 +272,7 @@ export default function Chems() {
               <MDBIcon icon="print" /> Print
             </MDBBtn>
           </div>
-          <h3>Urinalysis</h3>
+          <h3>Serology</h3>
         </MDBCardHeader>
         <MDBCardBody className="pb-0">
           <MDBTable className="responsive">
@@ -296,20 +281,11 @@ export default function Chems() {
                 <th>#</th>
                 <th>Name</th>
                 <th>Time</th>
-                <th>Color / Trans</th>
-                <th>SG</th>
-                <th>PH</th>
-                <th>Chemical Reaction</th>
-                <th>PUS</th>
-                <th>RC</th>
-                <th>EC</th>
-                <th>MT</th>
-                <th>AU</th>
-                <th>Bact</th>
+                <th>Service</th>
                 <th>Remarks</th>
               </tr>
             </thead>
-            <tbody>{renderGroupedUrin()}</tbody>
+            <tbody>{renderGroupedChems()}</tbody>
           </MDBTable>
           <div className="d-flex justify-content-between align-items-center px-4">
             <TableRowCount />

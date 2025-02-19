@@ -4,8 +4,8 @@ import { useLocation, useHistory } from "react-router-dom";
 import {
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/results/laboratory/serology";
-import { fullName, getAge } from "../../../../../services/utilities";
+} from "../../../../../../services/redux/slices/results/laboratory/fecalysis";
+import { fullName, getAge } from "../../../../../../services/utilities";
 import {
   MDBCard,
   MDBCardBody,
@@ -15,12 +15,17 @@ import {
   MDBBtnGroup,
   MDBIcon,
 } from "mdbreact";
-import TableRowCount from "../../../../../components/pagination/rows";
-import Months from "../../../../../services/fakeDb/calendar/months";
-import Years from "../../../../../services/fakeDb/calendar/years";
-import { Services } from "../../../../../services/fakeDb";
+import TableRowCount from "../../../../../../components/pagination/rows";
+import Months from "../../../../../../services/fakeDb/calendar/months";
+import Years from "../../../../../../services/fakeDb/calendar/years";
+import {
+  Consistency,
+  FecalColor,
+  MicroscopicInRange,
+} from "../../../../../../services/fakeDb";
 
 const today = new Date();
+
 const addZero = (i) => {
   if (i < 10) {
     i = "0" + i;
@@ -51,9 +56,9 @@ const formatTime = (hours, minutes) => {
 };
 
 export default function Chems() {
-  const [chems, setChems] = useState([]),
+  const [hemas, setChems] = useState([]),
     { token, onDuty } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ serology }) => serology),
+    { collections } = useSelector(({ fecalysis }) => fecalysis),
     { search, pathname } = useLocation(),
     query = new URLSearchParams(search),
     month = query.get("month"),
@@ -66,13 +71,12 @@ export default function Chems() {
     if (token && onDuty?._id) {
       dispatch(
         BROWSE({
-          entity: "results/laboratory/serology/logbook",
+          token,
           data: {
             branch: onDuty._id,
             month,
             year,
           },
-          token,
         })
       );
     }
@@ -83,28 +87,29 @@ export default function Chems() {
     setChems(collections);
   }, [collections]);
 
-  // Function to group chems by the day they were created
-  const groupByDay = (chemistryData) => {
-    return chemistryData.reduce((acc, chem) => {
-      const createdAt = new Date(chem.createdAt); // assuming `createdAt` field exists
+  // Function to group hemas by the day they were created
+  const groupByDay = (hemaData) => {
+    return hemaData.reduce((acc, fecal) => {
+      const createdAt = new Date(fecal.createdAt); // assuming `createdAt` field exists
       const day = createdAt.getDate();
 
       if (!acc[day]) {
         acc[day] = [];
       }
-      acc[day].push(chem);
+      acc[day].push(fecal);
       return acc;
     }, {});
   };
 
-  // Group the chems by day
-  const groupedChems = groupByDay(chems);
+  // Group the hemas by day
+  const groupedFecal = groupByDay(hemas);
 
-  // Function to filter and display only non-empty services and results
-  const renderGroupedChems = () => {
-    return Object.keys(groupedChems).map((day) => {
-      const sampleChem = groupedChems[day][0]; // Get one chem item to determine the date
-      const d = new Date(sampleChem.createdAt); // Use `createdAt` to get the correct day
+  // Create an array for day names
+
+  const renderGroupedUrin = () => {
+    return Object.keys(groupedFecal).map((day) => {
+      const sampleUrin = groupedFecal[day][0]; // Get one fecal item to determine the date
+      const d = new Date(sampleUrin.createdAt); // Use `createdAt` to get the correct day
       const dayOfWeek = dayNames[d.getDay()]; // Get the day of the week
 
       return (
@@ -116,49 +121,30 @@ export default function Chems() {
               </strong>
             </td>
           </tr>
-          {groupedChems[day].map((chem, index) => {
-            const { customerId, packages, createdAt } = chem;
+          {groupedFecal[day].map((fecal, index) => {
+            const { pe, me, createdAt, customerId } = fecal;
 
-            const chemDate = new Date(createdAt);
-            const h = chemDate.getHours();
-            const m = chemDate.getMinutes();
+            const fecalDate = new Date(createdAt);
+            const h = fecalDate.getHours();
+            const m = fecalDate.getMinutes();
             const timeFormatted = formatTime(h, m); // Format time to standard time
 
-            // Filter the packages to show only those with a value
-            const nonEmptyPackages = Object.entries(packages).filter(
-              ([key, value]) => value && value !== ""
-            );
-
             return (
-              <React.Fragment key={chem._id}>
-                <tr>
-                  <td>{index + 1}</td>
-                  <td>
-                    <h6>{fullName(customerId.fullName)}</h6>
-                    <span>
-                      {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
-                    </span>
-                  </td>
-                  <td>{timeFormatted}</td> {/* Display formatted time */}
-                  <td>
-                    {nonEmptyPackages.map(([key, value]) => {
-                      console.log(nonEmptyPackages);
-                      const service = Services.find(key);
-                      return (
-                        <React.Fragment key={key}>
-                          <p>
-                            {" "}
-                            {service.abbreviation != null
-                              ? service.abbreviation
-                              : service.name}
-                            : {value}
-                          </p>
-                        </React.Fragment>
-                      );
-                    })}
-                  </td>
-                </tr>
-              </React.Fragment>
+              <tr key={fecal._id}>
+                <td>{index + 1}</td>
+                <td>
+                  <h6>{fullName(customerId.fullName)}</h6>
+                  <span>
+                    {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
+                  </span>
+                </td>
+                <td>{timeFormatted}</td> {/* Display formatted time */}
+                <td>{FecalColor[pe[0]]}</td>
+                <td>{Consistency[pe[1]]}</td>
+                <td>{MicroscopicInRange[me[0]]}</td>
+                <td>{MicroscopicInRange[me[1]]}</td>
+                <td></td>
+              </tr>
             );
           })}
         </React.Fragment>
@@ -219,10 +205,10 @@ export default function Chems() {
   };
 
   const handlePrint = () => {
-    localStorage.setItem("SeroLog", JSON.stringify());
+    localStorage.setItem("FecaLog", JSON.stringify());
     window.open(
-      "/printout/sero",
-      "Serology Logbook",
+      "/printout/feca",
+      "Fecalysis Logbook",
       "top=100px,left=100px,width=1050px,height=750px" // size of page that will open
     );
   };
@@ -272,7 +258,7 @@ export default function Chems() {
               <MDBIcon icon="print" /> Print
             </MDBBtn>
           </div>
-          <h3>Serology</h3>
+          <h3>Fecalysis</h3>
         </MDBCardHeader>
         <MDBCardBody className="pb-0">
           <MDBTable className="responsive">
@@ -281,11 +267,39 @@ export default function Chems() {
                 <th>#</th>
                 <th>Name</th>
                 <th>Time</th>
-                <th>Service</th>
+                {/* cc */}
+                <th
+                  style={{
+                    transform: "skewX(10deg)",
+                  }}
+                >
+                  color
+                </th>
+                <th
+                  style={{
+                    transform: "skewX(10deg)",
+                  }}
+                >
+                  consistensy
+                </th>
+                <th
+                  style={{
+                    transform: "skewX(10deg)",
+                  }}
+                >
+                  PUS
+                </th>
+                <th
+                  style={{
+                    transform: "skewX(10deg)",
+                  }}
+                >
+                  RBC
+                </th>
                 <th>Remarks</th>
               </tr>
             </thead>
-            <tbody>{renderGroupedChems()}</tbody>
+            <tbody>{renderGroupedUrin()}</tbody>
           </MDBTable>
           <div className="d-flex justify-content-between align-items-center px-4">
             <TableRowCount />
