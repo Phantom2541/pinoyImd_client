@@ -1,5 +1,7 @@
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { MDBTypography } from "mdbreact";
-import React from "react";
+
 import {
   fullAddress,
   getAge,
@@ -7,22 +9,25 @@ import {
   properFullname,
 } from "../../../../../../../services/utilities";
 import { Categories, Privileges } from "../../../../../../../services/fakeDb";
-import { useSelector } from "react-redux";
+import {
+  SETCATEGORY,
+  SETPRIVILEGE,
+} from "./../../../../../../../services/redux/slices/commerce/checkout.js";
 
 export default function PosCard({
   selected,
-  setCategoryIndex,
-  categoryIndex,
-  privilegeIndex,
-  setPrivilegeIndex,
   setPhysicianId,
   physicianId,
   setSourceId,
   sourceId,
 }) {
   const { collections: physicians } = useSelector(
-    ({ physicians }) => physicians
-  );
+      ({ physicians }) => physicians
+    ),
+    { category, privilege } = useSelector(({ checkout }) => checkout),
+    // { token } = useSelector(({ auth }) => auth),
+    dispatch = useDispatch();
+
   const { collections: sources } = useSelector(({ providers }) => providers);
 
   const {
@@ -36,6 +41,16 @@ export default function PosCard({
     didSelect = Boolean(_id),
     isSenior = getAge(dob, true) > 59; // detect if not a valid senior
 
+  useEffect(() => {
+    console.log("category :", category);
+  }, [category]);
+  const handleCategory = (value) => {
+    dispatch(SETCATEGORY(value));
+  };
+  const handlePreviledge = (value) => {
+    dispatch(SETPRIVILEGE(value));
+  };
+
   return (
     <>
       <div className="pos-select-wrapper">
@@ -43,8 +58,8 @@ export default function PosCard({
           <span>Category</span>
           <select
             disabled={!didSelect}
-            value={categoryIndex}
-            onChange={({ target }) => setCategoryIndex(Number(target.value))}
+            value={category}
+            onChange={({ target }) => handleCategory(Number(target.value))}
           >
             {Categories.map(({ name }, index) => (
               <option value={index} key={`category-${index}`}>
@@ -57,14 +72,14 @@ export default function PosCard({
           <span>Privilege</span>
           <select
             disabled={!didSelect}
-            value={privilegeIndex}
-            onChange={({ target }) => setPrivilegeIndex(Number(target.value))}
+            value={privilege}
+            onChange={({ target }) => handlePreviledge(Number(target.value))}
           >
             {/* auto remove Senior Citizen from choices if not a valid senior */}
             {Privileges.filter((_, i) => isSenior || i !== 2).map(
               (privilege, index) => {
                 let disabled = false,
-                  // if privilegeIndex is greater than 0, disable all other choices
+                  // if privilege is greater than 0, disable all other choices
                   alreadyQualified = userPrivilege > 0;
 
                 if (alreadyQualified) disabled = true;

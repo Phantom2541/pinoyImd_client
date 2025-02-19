@@ -15,8 +15,6 @@ import Months from "../../../../../../services/fakeDb/calendar/months";
 export default function Summary({
   resetCustomer,
   patronPresent,
-  categoryIndex,
-  privilegeIndex,
   physicianId,
   sourceId,
   cart = [],
@@ -24,17 +22,14 @@ export default function Summary({
   customer,
 }) {
   const { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    { category, privilege } = useSelector(({ checkout }) => checkout),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
     dispatch = useDispatch();
 
-  const { gross = 0, discount = 0 } = computeGD(
-      cart,
-      categoryIndex,
-      privilegeIndex
-    ),
+  const { gross = 0, discount = 0 } = computeGD(cart, category, privilege),
     amount = gross - discount,
-    { abbr = "" } = Categories[categoryIndex],
+    { abbr = "" } = Categories[category],
     paymentOptions = Payments[abbr];
 
   const handleCheckout = (e) => {
@@ -59,13 +54,13 @@ export default function Summary({
       branchId: onDuty._id,
       customerId,
       cashierId: auth._id,
-      category: categoryIndex === 0 ? "walkin" : abbr,
+      category: category === 0 ? "walkin" : abbr,
       payment: paymentOptions[payment],
       cash,
       amount,
       discount,
       isPickup,
-      privilege: privilegeIndex,
+      privilege: privilege,
       customer,
       cashier: auth?.fullName,
       isPrint: true,
@@ -80,7 +75,7 @@ export default function Summary({
             up: soldUp,
             discount: soldDiscount,
           } = menu,
-          { up, discount } = computeGD(menu, categoryIndex, privilegeIndex);
+          { up, discount } = computeGD(menu, category, privilege);
 
         return {
           capital,
@@ -103,11 +98,11 @@ export default function Summary({
         text: "Please return the change to the customer.",
       });
 
-    if (customer?.privilege !== privilegeIndex)
+    if (customer?.privilege !== privilege)
       dispatch(
         PATIENTUPDATE({
           token,
-          data: { _id: customerId, privilege: privilegeIndex },
+          data: { _id: customerId, privilege },
         })
       );
 

@@ -1,22 +1,20 @@
-import { MDBIcon } from "mdbreact";
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { MDBIcon } from "mdbreact";
 import Search from "./search";
 import Patient from "./form/patient";
 import PosCard from "./form/posCard";
-import { useSelector } from "react-redux";
 import {
   fullName,
   fullNameSearch,
   getAge,
 } from "../../../../../../services/utilities";
 
+import { SETPRIVILEGE } from "./../../../../../../services/redux/slices/commerce/checkout.js";
+
 export default function POS({
   setSelected,
   selected,
-  setCategoryIndex,
-  categoryIndex,
-  privilegeIndex,
-  setPrivilegeIndex,
   setPhysicianId,
   physicianId,
   setSourceId,
@@ -27,7 +25,8 @@ export default function POS({
     ),
     [searchKey, setSearchKey] = useState(""),
     [activeIndex, setActiveIndex] = useState(0),
-    [didSearch, setDidSearch] = useState(false);
+    [didSearch, setDidSearch] = useState(false),
+    dispatch = useDispatch();
 
   // if a newPatient id is present and active index is 1
   // it means a new patient has been injected, you should go back to POS
@@ -92,12 +91,9 @@ export default function POS({
               onClick={() => {
                 setSelected(user);
                 const { privilege = 0, dob } = user;
-
-                if (privilege !== privilegeIndex) setPrivilegeIndex(privilege);
-
                 // if current privilege is 0 but the customer is a valid senior, auto select senior as privilege
                 if (privilege === 0 && getAge(dob, true) > 59)
-                  setPrivilegeIndex(2);
+                  dispatch(SETPRIVILEGE(2));
 
                 setDidSearch(false);
               }}
@@ -135,10 +131,6 @@ export default function POS({
           <section className={`${activeIndex === 0 && "active"}`}>
             <PosCard
               selected={selected}
-              setCategoryIndex={setCategoryIndex}
-              categoryIndex={categoryIndex}
-              setPrivilegeIndex={setPrivilegeIndex}
-              privilegeIndex={privilegeIndex}
               setPhysicianId={setPhysicianId}
               physicianId={physicianId}
               setSourceId={setSourceId}

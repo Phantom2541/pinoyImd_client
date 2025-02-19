@@ -147,6 +147,8 @@ export const reduxSlice = createSlice({
       state.sourceId = payload;
     },
     ADDTOCART: (state, { payload }) => {
+      console.log("payload :", payload);
+
       state.cart = [...state.cart, payload];
     },
     REMOVEFROMCART: (state, { payload }) => {

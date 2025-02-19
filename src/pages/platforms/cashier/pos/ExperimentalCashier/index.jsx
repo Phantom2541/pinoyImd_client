@@ -31,8 +31,6 @@ export default function Cashier() {
     [selected, setSelected] = useState({}),
     [menuSearch, setMenuSearch] = useState(false), // used to auto close menu if open upon submission
     [cart, setCart] = useState([]),
-    [categoryIndex, setCategoryIndex] = useState(0),
-    [privilegeIndex, setPrivilegeIndex] = useState(0),
     [sourceId, setSourceId] = useState(""),
     [physicianId, setPhysicianId] = useState(""),
     dispatch = useDispatch();
@@ -52,8 +50,6 @@ export default function Cashier() {
       // reset everything
       setSelected({});
       setCart([]);
-      setCategoryIndex(0);
-      setPrivilegeIndex(0);
       setSourceId("");
       setPhysicianId("");
 
@@ -94,10 +90,6 @@ export default function Cashier() {
         <POS
           setSelected={setSelected}
           selected={selected}
-          setCategoryIndex={setCategoryIndex}
-          categoryIndex={categoryIndex}
-          setPrivilegeIndex={setPrivilegeIndex}
-          privilegeIndex={privilegeIndex}
           setPhysicianId={setPhysicianId}
           physicianId={physicianId}
           setSourceId={setSourceId}
@@ -108,8 +100,6 @@ export default function Cashier() {
         <Menus
           didSearch={menuSearch}
           setDidSearch={setMenuSearch}
-          categoryIndex={categoryIndex}
-          privilegeIndex={privilegeIndex}
           setCart={setCart}
           cart={cart}
           patronPresent={patronPresent}
@@ -132,10 +122,8 @@ export default function Cashier() {
           }}
           patronPresent={patronPresent}
           cart={cart}
-          categoryIndex={categoryIndex}
           physicianId={physicianId}
           sourceId={sourceId}
-          privilegeIndex={privilegeIndex}
           customerId={selected?._id}
         />
       </MDBCol>

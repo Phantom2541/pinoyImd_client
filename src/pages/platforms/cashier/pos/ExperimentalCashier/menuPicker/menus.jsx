@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
-import { MDBIcon } from "mdbreact";
 import { useSelector } from "react-redux";
+import { MDBIcon } from "mdbreact";
 import { Categories } from "../../../../../../services/fakeDb";
 import Search from "./search";
 import {
@@ -18,15 +18,14 @@ const _compare = {
 };
 
 export default function Menus({
-  categoryIndex,
   cart,
   setCart,
   patronPresent,
-  privilegeIndex,
   didSearch,
   setDidSearch,
 }) {
   const { collections } = useSelector(({ menus }) => menus),
+    { category, privilege } = useSelector(({ checkout }) => checkout),
     [searchKey, setSearchKey] = useState(""),
     [compare, setCompare] = useState(_compare),
     searchRef = useRef(null),
@@ -126,7 +125,7 @@ export default function Menus({
     });
   };
 
-  const { abbr } = Categories[categoryIndex];
+  const { abbr } = Categories[category];
 
   const search = () => {
     if (!searchKey) return [];
@@ -164,12 +163,7 @@ export default function Menus({
 
   return (
     <>
-      <ConflictModal
-        data={compare}
-        handleConflict={handleConflict}
-        categoryIndex={categoryIndex}
-        privilegeIndex={privilegeIndex}
-      />
+      <ConflictModal data={compare} handleConflict={handleConflict} />
       <table className="menus-table">
         <thead>
           <tr>
@@ -283,7 +277,7 @@ export default function Menus({
                 up = 0,
                 title = "",
                 color = "",
-              } = computeGD(menu, categoryIndex, privilegeIndex);
+              } = computeGD(menu, category, privilege);
 
             return (
               <tr key={_id}>
