@@ -102,7 +102,13 @@ export default function POS({
                 setDidSearch(false);
               }}
             >
-              {fullName(user?.fullName)}| {user.ismale ? "male" : "female"}
+              <i
+                className={`mr-2 ${
+                  user?.isMale ? "fa fa-mars" : "fa fa-venus"
+                }`}
+              ></i>
+              {fullName(user?.fullName)}|{" "}
+              <span style={{ color: "blue" }}>{getAge(user?.dob)}</span>
             </li>
           ))}
         </Search>
