@@ -15,7 +15,7 @@ import {
 } from "mdbreact";
 import { SAVE } from "../../../../../services/redux/slices/responsibilities/liabilities";
 import { capitalize, fullName } from "../../../../../services/utilities";
-import { PATIENTS } from "../../../../../services/redux/slices/assets/persons/users";
+import { GETPATIENTS } from "../../../../../services/redux/slices/assets/persons/users";
 import { BROWSE } from "../../../../../services/redux/slices/assets/sources";
 import { Liabilities } from "../../../../../services/fakeDb";
 
@@ -39,7 +39,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   useEffect(() => {
     if (token && activePlatform) {
-      dispatch(PATIENTS({ token }));
+      dispatch(GETPATIENTS({ token }));
       dispatch(BROWSE({ token, key: { clients: activePlatform?.branchId } }));
     }
   }, [token, activePlatform, dispatch]);

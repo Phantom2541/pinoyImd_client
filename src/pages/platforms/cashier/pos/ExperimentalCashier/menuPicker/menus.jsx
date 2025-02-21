@@ -1,12 +1,7 @@
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-import React, { useState, useRef } from "react";
-import { MDBIcon } from "mdbreact";
-import { useSelector } from "react-redux";
-========
+
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBIcon } from "mdbreact";
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/menuPicker/menus.jsx
 import { Categories } from "../../../../../../services/fakeDb";
 import Search from "./search";
 import {
@@ -16,8 +11,7 @@ import {
 } from "../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import ConflictModal from "./conflictModal";
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-========
+
 import {
   BROWSE as MENUS,
   RESET as MENUSRESET,
@@ -26,36 +20,13 @@ import {
   ADDTOCART,
   REMOVEFROMCART,
 } from "../../../../../../services/redux/slices/commerce/pos";
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/menuPicker/menus.jsx
 
 const _compare = {
   show: false,
   selected: {},
   conflicts: [],
-};
-
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-export default function Menus({
-  categoryIndex,
-  cart,
-  setCart,
-  patronPresent,
-  privilegeIndex,
-  didSearch,
-  setDidSearch,
-}) {
-=======
-export default function Menus({ patronPresent }) {
->>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
-=======
-export default function Menus({ patronPresent }) {
->>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
-  const { collections } = useSelector(({ menus }) => menus),
-    [searchKey, setSearchKey] = useState(""),
-========
-export default function Menus() {
+};      
+export default function Menus(patronPresent) {
   const { token, onDuty } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ menus }) => menus),
     { category, privilege, cart, hasActiveCustomer } = useSelector(
@@ -63,7 +34,6 @@ export default function Menus() {
     ),
     [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false), // used to auto close menu if open upon submission
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/menuPicker/menus.jsx
     [compare, setCompare] = useState(_compare),
     searchRef = useRef(null),
     { addToast } = useToasts(),
@@ -183,8 +153,6 @@ export default function Menus() {
 
   const searchMatch = search();
 
-<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
   // if chosen is true, remove all conflicts and push selected then reset compare state
   // if chosen is false, simply reset the compare state
   const handleConflict = (chosen) => {
@@ -195,10 +163,7 @@ export default function Menus() {
     // iterate conflcits to filter out each _id
     for (const { _id = "" } of conflicts)
       _cart = _cart.filter((c) => c?._id !== _id);
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
 
-========
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/menuPicker/menus.jsx
     // copy the filtered _cart and add the selected
     dispatch(ADDTOCART(selected));
     setCompare(_compare);
@@ -207,17 +172,10 @@ export default function Menus() {
     });
   };
 
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-  const handleDelete = (_id) => setCart(cart.filter((c) => c?._id !== _id));
-=======
-=======
->>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
   const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
   const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
->>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
-========
+
   const handleDelete = (id) => dispatch(REMOVEFROMCART(id));
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/menuPicker/menus.jsx
 
   return (
     <>
@@ -227,7 +185,6 @@ export default function Menus() {
           <tr>
             <th colSpan="3" className="bg-white">
               <div className="d-flex justify-content-center">
-<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
                 <Search
                   info={{
                     message: "Search your menus",
@@ -240,23 +197,6 @@ export default function Menus() {
                   didSearch={didSearch}
                   searchRef={searchRef}
                 >
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-=======
-                <SearchBox>
-                  <li>Please type a menu name.</li>
-<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
->>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
-=======
->>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
-                  {!searchMatch.length && !searchKey && (
-                    <li>Please type a menu name.</li>
-                  )}
-
-========
-                  {!searchMatch.length && !searchKey && (
-                    <li>Please type a menu name.</li>
-                  )}
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/menuPicker/menus.jsx
                   {!searchMatch.length && searchKey && <li>No match found.</li>}
                   {searchMatch?.map((menu, index) => {
                     const { description = "", abbreviation = "" } = menu,
@@ -335,11 +275,7 @@ export default function Menus() {
               <td colSpan="3" className="menus-empty">
                 <span>
                   Start by&nbsp;
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-                  {patronPresent
-========
                   {hasActiveCustomer
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/menuPicker/menus.jsx
                     ? "searching your menus"
                     : "selecting a patron"}
                   .
@@ -354,11 +290,7 @@ export default function Menus() {
                 up = 0,
                 title = "",
                 color = "",
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
-              } = computeGD(menu, categoryIndex, privilegeIndex);
-========
               } = computeGD(menu, category, privilege);
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/menuPicker/menus.jsx
 
             return (
               <tr key={_id}>

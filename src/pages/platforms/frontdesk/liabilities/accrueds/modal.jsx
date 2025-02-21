@@ -39,7 +39,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   useEffect(() => {
     // if (token && activePlatform) {
-    //   dispatch(PATIENTS({ token }));
+    //   dispatch(GETPATIENTS({ token }));
     //   dispatch(BROWSE({ token, key: { clients: activePlatform?.branchId } }));
     if (token && activePlatform) {
       dispatch(GETPATIENTS({ token }));

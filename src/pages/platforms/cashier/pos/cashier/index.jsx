@@ -71,7 +71,7 @@ export default function Cashier() {
 
   useEffect(() => {
     // if (token && onDuty?._id) {
-    //   dispatch(PATIENTS({ token }));
+    //   dispatch(GETPATIENTS({ token }));
     if (token && onDuty._id) {
       dispatch(GETPATIENTS({ token }));
       // dispatch(SOURCELIST({ key: { branch: onDuty._id }, token }));

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/menuPicker/conflictModal.jsx
-========
+
 import { useSelector } from "react-redux";
 import { MDBBtn, MDBModal, MDBModalHeader } from "mdbreact";
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/menuPicker/conflictModal.jsx
 import { computeGD, currency } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
 
