@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { MDBTypography } from "mdbreact";
-
+import React from "react";
 import {
   fullAddress,
   getAge,
@@ -9,33 +7,22 @@ import {
   properFullname,
 } from "../../../../../../../services/utilities";
 import { Categories, Privileges } from "../../../../../../../services/fakeDb";
-import {
-  SETCATEGORY,
-  SETPRIVILEGE,
-  SETPHYSICIAN,
-  SETSOURCE,
-} from "./../../../../../../../services/redux/slices/commerce/pos.js";
+import { useSelector } from "react-redux";
 
-import {
-  TIEUPS as SOURCELIST,
-  RESET as SOURCERESET,
-} from "./../../../../../../../services/redux/slices/assets/providers";
-import {
-  TIEUPS as PHYSICIANS,
-  RESET as PHYSICIANRESET,
-} from "./../../../../../../../services/redux/slices/assets/persons/physicians";
-
-export default function PosCard() {
+export default function PosCard({
+  selected,
+  setCategoryIndex,
+  categoryIndex,
+  privilegeIndex,
+  setPrivilegeIndex,
+  setPhysicianId,
+  physicianId,
+  setSourceId,
+  sourceId,
+}) {
   const { collections: physicians } = useSelector(
-      ({ physicians }) => physicians
-    ),
-    { token, onDuty } = useSelector(({ auth }) => auth),
-    { category, privilege, sourceId, physicianId, customer } = useSelector(
-      ({ pos }) => pos
-    ),
-    // { token } = useSelector(({ auth }) => auth),
-    dispatch = useDispatch();
-
+    ({ physicians }) => physicians
+  );
   const { collections: sources } = useSelector(({ providers }) => providers);
 
   const {
@@ -45,36 +32,9 @@ export default function PosCard() {
       mobile: _mobile,
       address,
       privilege: userPrivilege = 0,
-    } = customer,
+    } = selected,
     didSelect = Boolean(_id),
     isSenior = getAge(dob, true) > 59; // detect if not a valid senior
-
-  useEffect(() => {
-    if (token && onDuty?._id) {
-      dispatch(SOURCELIST({ token, key: { clients: onDuty._id } }));
-      dispatch(PHYSICIANS({ key: { branch: onDuty._id }, token }));
-
-      return () => {
-        dispatch(SOURCERESET());
-        dispatch(PHYSICIANRESET());
-      };
-    }
-  }, [token, dispatch, onDuty]);
-
-  const handleCategory = (value) => {
-    dispatch(SETCATEGORY(value));
-  };
-  const handlePreviledge = (value) => {
-    dispatch(SETPRIVILEGE(value));
-  };
-
-  const handlePhysician = (value) => {
-    dispatch(SETPHYSICIAN(value));
-  };
-
-  const handleSource = (value) => {
-    dispatch(SETSOURCE(value));
-  };
 
   return (
     <>
@@ -83,8 +43,8 @@ export default function PosCard() {
           <span>Category</span>
           <select
             disabled={!didSelect}
-            value={category}
-            onChange={({ target }) => handleCategory(Number(target.value))}
+            value={categoryIndex}
+            onChange={({ target }) => setCategoryIndex(Number(target.value))}
           >
             {Categories.map(({ name }, index) => (
               <option value={index} key={`category-${index}`}>
@@ -97,14 +57,14 @@ export default function PosCard() {
           <span>Privilege</span>
           <select
             disabled={!didSelect}
-            value={privilege}
-            onChange={({ target }) => handlePreviledge(Number(target.value))}
+            value={privilegeIndex}
+            onChange={({ target }) => setPrivilegeIndex(Number(target.value))}
           >
             {/* auto remove Senior Citizen from choices if not a valid senior */}
             {Privileges.filter((_, i) => isSenior || i !== 2).map(
               (privilege, index) => {
                 let disabled = false,
-                  // if privilege is greater than 0, disable all other choices
+                  // if privilegeIndex is greater than 0, disable all other choices
                   alreadyQualified = userPrivilege > 0;
 
                 if (alreadyQualified) disabled = true;
@@ -127,7 +87,7 @@ export default function PosCard() {
           <select
             disabled={!didSelect}
             value={sourceId}
-            onChange={({ target }) => handleSource(target.value)}
+            onChange={({ target }) => setSourceId(target.value)}
           >
             <option value="">None</option>
             {sources?.map(({ _id, name, vendors }) => (
@@ -142,7 +102,7 @@ export default function PosCard() {
           <select
             disabled={!didSelect}
             value={physicianId}
-            onChange={({ target }) => handlePhysician(target.value)}
+            onChange={({ target }) => setPhysicianId(target.value)}
           >
             <option value="">None</option>
             {physicians?.map(({ user }) => (

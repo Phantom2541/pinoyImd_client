@@ -42,7 +42,7 @@ import {
 import { access, liabilities, payrolls } from "./slices/responsibilities";
 
 import remmitance from "./slices/finance/remmitance";
-// import pos from "./slices/commerce/pos";
+import pos from "./slices/commerce/pos";
 
 import temperatures from "./slices/monitoring/temperature";
 
@@ -74,7 +74,7 @@ const store = configureStore({
     serology,
     temperatures,
     providers,
-    sources,
+    // sources,
     pos,
   },
 });

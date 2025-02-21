@@ -1,7 +1,7 @@
 import { MDBIcon } from "mdbreact";
 import React from "react";
 
-export default function SearchBox({
+export default function Search({
   handleSearch,
   searchKey,
   setSearchKey,

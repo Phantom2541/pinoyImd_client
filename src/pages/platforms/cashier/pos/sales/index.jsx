@@ -4,12 +4,16 @@ import {
   CASHIER,
   RESET,
 } from "../../../../../services/redux/slices/commerce/sales";
-import { currency, fullName } from "../../../../../services/utilities";
+import {
+  currency,
+  fullName,
+  getGenderIcon,
+  globalSearch,
+} from "../../../../../services/utilities";
+import DataTable from "../../../../../components/dataTable";
 import { capitalize } from "lodash";
 import { Categories, Services } from "../../../../../services/fakeDb";
 import CashRegister from "../cashierOld/pos";
-// import { Categories } from "../../../../../services/fakeDb";
-// import CashRegister from "../cashier/pos";
 
 import {
   MDBCard,
@@ -31,16 +35,7 @@ export default function Sales() {
     [showPhysicians, setShowPhysicians] = useState(false), // show physicians in table head if set to true
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
-    // { token, onDuty, auth } = useSelector(({ auth }) => auth),
-    // { collections, transaction } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
-
-  console.log(
-    "unused variable showSources,showPhysicians",
-    showSources,
-    showPhysicians,
-    setView
-  );
 
   //Initial CASHIER
   useEffect(() => {
@@ -83,15 +78,14 @@ export default function Sales() {
   const toggleCashRegister = () => setShowCashRegister(!showCashRegister);
 
   //Search function
-  //comment by darrel unused function
-  // const handleSearch = async (willSearch, key) => {
-  //   if (willSearch) {
-  //     setView("all");
-  //     setSales(globalSearch(collections, key));
-  //   } else {
-  //     setSales(collections);
-  //   }
-  // };
+  const handleSearch = async (willSearch, key) => {
+    if (willSearch) {
+      setView("all");
+      setSales(globalSearch(collections, key));
+    } else {
+      setSales(collections);
+    }
+  };
 
   const generateStub = (sale) => ({
     ...sale,

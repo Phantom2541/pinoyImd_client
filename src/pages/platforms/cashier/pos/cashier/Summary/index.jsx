@@ -12,26 +12,29 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
 
-export default function Summary() {
-  // authorizedBy
+export default function Summary({
+  resetCustomer,
+  patronPresent,
+  categoryIndex,
+  privilegeIndex,
+  physicianId,
+  sourceId,
+  cart = [],
+  customerId,
+  customer,
+}) {
   const { token, onDuty, auth } = useSelector(({ auth }) => auth),
-    {
-      category,
-      privilege,
-      cart,
-      physicianId,
-      sourceId,
-      customerId,
-      customer,
-      hasActiveCustomer,
-    } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
     dispatch = useDispatch();
 
-  const { gross = 0, discount = 0 } = computeGD(cart, category, privilege),
+  const { gross = 0, discount = 0 } = computeGD(
+      cart,
+      categoryIndex,
+      privilegeIndex
+    ),
     amount = gross - discount,
-    { abbr = "" } = Categories[category],
+    { abbr = "" } = Categories[categoryIndex],
     paymentOptions = Payments[abbr];
 
   const handleCheckout = (e) => {
@@ -56,13 +59,13 @@ export default function Summary() {
       branchId: onDuty._id,
       customerId,
       cashierId: auth._id,
-      category: category === 0 ? "walkin" : abbr,
+      category: categoryIndex === 0 ? "walkin" : abbr,
       payment: paymentOptions[payment],
       cash,
       amount,
       discount,
       isPickup,
-      privilege: privilege,
+      privilege: privilegeIndex,
       customer,
       cashier: auth?.fullName,
       isPrint: true,
@@ -77,7 +80,7 @@ export default function Summary() {
             up: soldUp,
             discount: soldDiscount,
           } = menu,
-          { up, discount } = computeGD(menu, category, privilege);
+          { up, discount } = computeGD(menu, categoryIndex, privilegeIndex);
 
         return {
           capital,
@@ -100,11 +103,11 @@ export default function Summary() {
         text: "Please return the change to the customer.",
       });
 
-    if (customer?.privilege !== privilege)
+    if (customer?.privilege !== privilegeIndex)
       dispatch(
         PATIENTUPDATE({
           token,
-          data: { _id: customerId, privilege },
+          data: { _id: customerId, privilege: privilegeIndex },
         })
       );
 
@@ -114,6 +117,8 @@ export default function Summary() {
         data,
       })
     );
+
+    resetCustomer();
     e.target.reset();
   };
 
@@ -193,7 +198,7 @@ export default function Summary() {
       </table>
       <MDBBtn
         type="submit"
-        disabled={!hasActiveCustomer || !cart.length}
+        disabled={!patronPresent || !cart.length}
         className="m-0 w-100 fw-bold mt-4"
         color="success"
       >

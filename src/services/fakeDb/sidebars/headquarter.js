@@ -37,7 +37,7 @@ const headquarter = [
       {
         name: "Sources",
         path: "/source",
-        component: Sources,
+        // component: Sources,
       },
       {
         name: "Referral",
@@ -144,7 +144,7 @@ const headquarter = [
         name: "Equipments",
         path: "/duty/equipments",
         icon: "list",
-        component: ProcurmentEquipments,
+        // component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",
