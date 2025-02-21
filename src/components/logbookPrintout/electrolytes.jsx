@@ -35,16 +35,16 @@ const formatTime = (hours, minutes) => {
 export default function ElectrolytesPrint() {
   const [electrolytes, setElectrolytes] = useState([]),
     { collections } = useSelector(({ electrolyte }) => electrolyte),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty?._id) {
+    if (token && activePlatform?._id) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/electrolyte/logbook",
           data: {
-            branch: onDuty._id,
+            branch: activePlatform?.branchId,
             month,
             year,
           },
@@ -55,7 +55,7 @@ export default function ElectrolytesPrint() {
     return () => {
       dispatch(RESET());
     };
-  }, [onDuty, dispatch, token, month, year]);
+  }, [activePlatform, dispatch, token, month, year]);
 
   useEffect(() => {
     setElectrolytes(collections);
@@ -118,7 +118,10 @@ export default function ElectrolytesPrint() {
 
   return (
     <div>
-      <Banner company={onDuty?.companyId?.name} branch={onDuty?.name} />
+      <Banner
+        company={activePlatform?.companyId?.name}
+        branch={activePlatform?.name}
+      />
       <h3 className="text-center">
         Electrolytes Report for {Months[month - 1]} {year}
       </h3>

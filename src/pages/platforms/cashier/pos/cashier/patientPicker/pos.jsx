@@ -4,7 +4,11 @@ import Search from "./search";
 import Patient from "./form/patient";
 import PosCard from "./form/posCard";
 import { useSelector } from "react-redux";
-import { fullName, fullNameSearch, getAge } from "../../../../../services/utilities";
+import {
+  fullName,
+  fullNameSearch,
+  getAge,
+} from "../../../../../../services/utilities";
 
 export default function POS({
   setSelected,
@@ -89,16 +93,22 @@ export default function POS({
                 setSelected(user);
                 const { privilege = 0, dob } = user;
 
-                if (privilege !== privilegeIndex)
-                  setPrivilegeIndex(privilege);
+                if (privilege !== privilegeIndex) setPrivilegeIndex(privilege);
 
                 // if current privilege is 0 but the customer is a valid senior, auto select senior as privilege
-                if(privilege === 0 && getAge(dob, true) > 59) setPrivilegeIndex(2)
+                if (privilege === 0 && getAge(dob, true) > 59)
+                  setPrivilegeIndex(2);
 
                 setDidSearch(false);
               }}
             >
-              {fullName(user?.fullName)}
+              <i
+                className={`mr-2 ${
+                  user?.isMale ? "fa fa-mars" : "fa fa-venus"
+                }`}
+              ></i>
+              {fullName(user?.fullName)}|{" "}
+              <span style={{ color: "blue" }}>{getAge(user?.dob)}</span>
             </li>
           ))}
         </Search>

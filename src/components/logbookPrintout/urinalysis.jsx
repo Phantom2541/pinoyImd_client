@@ -46,16 +46,16 @@ const formatTime = (hours, minutes) => {
 export default function UrinalysisPrint() {
   const [urinalysis, setUrinalysis] = useState([]),
     { collections } = useSelector(({ urinalysis }) => urinalysis),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty?._id) {
+    if (token && activePlatform?._id) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/urinalysis/logbook",
           data: {
-            branch: onDuty._id,
+            branch: activePlatform?.branchId,
             month,
             year,
           },
@@ -66,7 +66,7 @@ export default function UrinalysisPrint() {
     return () => {
       dispatch(RESET());
     };
-  }, [onDuty, dispatch, token, month, year]);
+  }, [activePlatform, dispatch, token, month, year]);
 
   useEffect(() => {
     setUrinalysis(collections);
@@ -157,7 +157,10 @@ export default function UrinalysisPrint() {
 
   return (
     <div>
-      <Banner company={onDuty?.companyId?.name} branch={onDuty?.name} />
+      <Banner
+        company={activePlatform?.companyId?.name}
+        branch={activePlatform?.name}
+      />
       <h3 className="text-center">
         Urinalysis Report for {Months[month - 1]} {year}
       </h3>

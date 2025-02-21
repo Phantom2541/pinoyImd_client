@@ -90,17 +90,17 @@ const barChartOptions = {
 };
 
 export default function Dashboard() {
-  const { token, onDuty } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     // { collections } = useSelector(({ sales }) => sales),
     // [sales, setSales] = useState([]),
     dispatch = useDispatch();
 
   // commented, causing an error in backend, double check controller
   useEffect(() => {
-    // if (token) dispatch(YEARLY({ token, branchId: onDuty._id, year: 2023 }));
+    // if (token) dispatch(YEARLY({ token, branchId: activePlatform?.branchId, year: 2023 }));
 
     return () => dispatch(RESET());
-  }, [token, onDuty, dispatch]);
+  }, [token, activePlatform, dispatch]);
 
   // useEffect(() => {
   //   if (collections) setSales(collections.monthlyStatistic);

@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const Header = () => {
-  const { onDuty, auth } = useSelector(({ auth }) => auth);
-  const { companyId = {} } = onDuty || {};
-  const { name = "", subName = "" } = companyId;
+  const { activePlatform, auth } = useSelector(({ auth }) => auth);
+  const { branch = {} } = activePlatform || {};
+  const { name = "", subName = "" } = branch;
 
   console.log("auth", auth);
 

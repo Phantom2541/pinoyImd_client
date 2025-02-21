@@ -5,8 +5,8 @@ import {
   getAge,
   mobile,
   properFullname,
-} from "../../../../../../services/utilities";
-import { Categories, Privileges } from "../../../../../../services/fakeDb";
+} from "../../../../../../../services/utilities";
+import { Categories, Privileges } from "../../../../../../../services/fakeDb";
 import { useSelector } from "react-redux";
 
 export default function PosCard({

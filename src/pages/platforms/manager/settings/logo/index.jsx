@@ -20,7 +20,9 @@ const array = new Array(5).fill().map((_, index) => index);
 
 export default function Logo() {
   const { addToast } = useToasts();
-  const { onDuty, company, token, isLoading } = useSelector(({ auth }) => auth);
+  const { activePlatform, company, token, isLoading } = useSelector(
+    ({ auth }) => auth
+  );
   const dispatch = useDispatch();
   const [preview, setPreview] = useState("");
 
@@ -53,7 +55,7 @@ export default function Logo() {
         dispatch(
           UPLOAD({
             data: {
-              path: `credentials/${company.name}/${onDuty.name}`,
+              path: `credentials/${company.name}/${activePlatform.name}`,
               base64: result.split(",")[1],
               name: `logo.png`,
             },
@@ -84,7 +86,7 @@ export default function Logo() {
             <img
               src={
                 preview ||
-                `${ENDPOINT}/public/credentials/${company.name}/${onDuty.name}/logo.png`
+                `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.name}/logo.png`
               }
               className="img-fluid"
               alt={company?.name || "Default Logo"}

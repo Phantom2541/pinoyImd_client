@@ -22,7 +22,7 @@ export default function Services() {
     { message, isSuccess, isLoading } = useSelector(
       ({ preferences }) => preferences
     ),
-    { onDuty, maxPage } = useSelector(({ auth }) => auth),
+    { activePlatform, maxPage } = useSelector(({ auth }) => auth),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -41,13 +41,13 @@ export default function Services() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty?._id) {
+    if (token && activePlatform?._id) {
       setServices(Service.collections);
-      dispatch(BROWSE({ token, branchId: onDuty._id }));
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
     }
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   //Toast for errors or success
   useEffect(() => {

@@ -32,7 +32,7 @@ export default function Tasks() {
     [searchKey, setSearchKey] = useState(""),
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
-    { token, onDuty, maxPage } = useSelector(({ auth }) => auth),
+    { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ sales }) => sales
     ),
@@ -53,18 +53,18 @@ export default function Tasks() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id) {
+    if (token && activePlatform?.branchId) {
       dispatch(
         TASKS({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             createdAt: new Date().setHours(0, 0, 0, 0),
           },
         })
       );
-      dispatch(BROWSE({ token, branchId: onDuty._id }));
-      dispatch(HEADS({ token, branchId: onDuty._id }));
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
+      dispatch(HEADS({ token, branchId: activePlatform?.branchId }));
     }
 
     return () => {
@@ -72,7 +72,7 @@ export default function Tasks() {
       dispatch(PREFRESET());
       dispatch(HEADSRESET());
     };
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
   useEffect(() => {

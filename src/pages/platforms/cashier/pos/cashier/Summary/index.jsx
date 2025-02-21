@@ -4,13 +4,13 @@ import {
   capitalize,
   computeGD,
   currency,
-} from "../../../../../services/utilities";
-import { Categories, Payments } from "../../../../../services/fakeDb";
-import { SAVE } from "../../../../../services/redux/slices/commerce/sales";
-import { UPDATE as PATIENTUPDATE } from "../../../../../services/redux/slices/assets/persons/users";
+} from "../../../../../../services/utilities";
+import { Categories, Payments } from "../../../../../../services/fakeDb";
+import { SAVE } from "../../../../../../services/redux/slices/commerce/sales";
+import { UPDATE as PATIENTUPDATE } from "../../../../../../services/redux/slices/assets/persons/users";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import Months from "../../../../../services/fakeDb/calendar/months";
+import Months from "../../../../../../services/fakeDb/calendar/months";
 
 export default function Summary({
   resetCustomer,

@@ -12,7 +12,7 @@ import { globalSearch } from "../../../../../services/utilities";
 export default function Procurments() {
   const [machines, setMachines] = useState([]),
     [showModal, setShowModal] = useState(false),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ procurements }) => procurements
     ),
@@ -21,18 +21,18 @@ export default function Procurments() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id)
+    if (token && activePlatform?.branchId)
       dispatch(
         MACHINES({
           token,
           key: {
-            branch: onDuty._id,
+            branch: activePlatform?.branchId,
           },
         })
       );
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
   //Set fetched data for mapping
   useEffect(() => {
     setMachines(collections);

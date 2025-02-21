@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   MDBIcon,
   MDBDropdown,
@@ -6,62 +7,60 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
 } from "mdbreact";
-import { useSelector, useDispatch } from "react-redux";
 import { capitalize } from "../../../services/utilities";
-import { UPDATE } from "../../../services/redux/slices/assets/persons/auth";
+import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth";
 
 export default function Platforms() {
-  const [text, setText] = useState("Platforms"),
-    { activePortal, token, auth, access, onDuty } = useSelector(({ auth }) => auth),
+  const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
+    [access, setAccess] = useState([]),
     dispatch = useDispatch();
-  console.log("onDuty", onDuty);
-  
-  const changePlatform = platform => {
-    
-    if (platform !== activePortal) {
-      localStorage.setItem("activePortal", platform);
-      dispatch(UPDATE({
+
+  useEffect(() => {
+    setAccess(activePlatform.access);
+
+    // const timer = setInterval(() => {
+    //   setText((prev) =>
+    //     prev === activePlatform?.name ? "Branches" : activePlatform?.name
+    //   );
+    // }, 10000);
+    // return () => clearInterval(timer);
+  }, [activePlatform]);
+
+  const handlePlatform = (platform) => {
+    dispatch(
+      SETACTIVEPLATFORM({
         data: {
           _id: auth._id,
           email: auth.email,
           activePlatform: {
-            branch: onDuty._id,
-            platform: platform,
-            role: platform
-          }
-        }, token
-      }));
-      window.location.href = "/dashboard";
-    }
+            ...activePlatform,
+            platform,
+          },
+        },
+        token,
+      })
+    );
+    window.location.href = "/dashboard";
   };
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setText(prev => (prev === activePortal ? "Platforms" : activePortal));
-    }, 10000);
-
-    return () => clearInterval(timer);
-  }, [activePortal]);
 
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
         <MDBIcon icon="network-wired" />
         &nbsp;
-        <div className="d-none d-md-inline">{capitalize(text)}</div>
+        <div className="d-none d-md-inline">
+          {capitalize(activePlatform.platform)}
+        </div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right>
-        {access
-          .filter(({ status }) => status) // filter disabled status
-          .map(({ platform }, index) => (
-            <MDBDropdownItem
-              active={platform === activePortal}
-              key={`platform-${index}`}
-              onClick={() => changePlatform(platform)}
-            >
-              {capitalize(platform)}
-            </MDBDropdownItem>
-          ))}
+        {access.map((platform, index) => (
+          <MDBDropdownItem
+            key={`platform-${index}`}
+            onClick={() => handlePlatform(platform)}
+          >
+            {capitalize(platform)}
+          </MDBDropdownItem>
+        ))}
       </MDBDropdownMenu>
     </MDBDropdown>
   );

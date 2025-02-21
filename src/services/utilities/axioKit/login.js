@@ -11,11 +11,17 @@ const login = async (email, password) =>
   await axios
     .get(`assets/persons/auth/login?email=${email}&password=${password}`)
     .then(({ data }) => {
+      /**
+       * Clear the local storage first
+       */
+      localStorage.clear();
       const { payload } = data;
       localStorage.setItem("token", payload.token);
       localStorage.setItem("email", payload.auth.email);
-      localStorage.setItem("lastVisited", JSON.stringify(payload.auth?.activePlatform));
-      localStorage.setItem("activePortal", payload.auth?.activePlatform.platform);
+      localStorage.setItem(
+        "activePlatform",
+        payload.auth?.activePlatform.platform
+      );
       return data;
     })
     .catch(({ response }) => {

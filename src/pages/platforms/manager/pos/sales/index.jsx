@@ -15,7 +15,7 @@ import {
 import DataTable from "../../../../../components/dataTable";
 import { capitalize } from "lodash";
 import { Categories } from "../../../../../services/fakeDb";
-import CashRegister from "../../../cashier/pos/cashier/pos";
+import CashRegister from "../../../cashier/pos/cashierOld/pos";
 import Swal from "sweetalert2";
 import Months from "../../../../../services/fakeDb/calendar/months";
 import {
@@ -33,19 +33,19 @@ export default function Sales() {
     [daily, setDaily] = useState({}),
     [selected, setSelected] = useState({}),
     [showCashRegister, setShowCashRegister] = useState(false),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id && auth._id) {
+    if (token && activePlatform?.branchId && auth._id) {
       const today = new Date().setHours(0, 0, 0, 0);
 
       dispatch(
         BROWSE({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             createdAt: today,
           },
         })
@@ -53,25 +53,24 @@ export default function Sales() {
     }
 
     const today = new Date();
-    axioKit.universal(
-        "finance/pre-calculated-daily-sale/find",
-        token,
-        {
-          month: Months[today.getMonth()],
-          day: today.getDate(),
-          year: today.getFullYear(),
-          cashier: auth._id,
-          branch: onDuty._id
-        }
-      ).then((item) => {
+    axioKit
+      .universal("finance/pre-calculated-daily-sale/find", token, {
+        month: Months[today.getMonth()],
+        day: today.getDate(),
+        year: today.getFullYear(),
+        cashier: auth._id,
+        branch: activePlatform?.branchId,
+      })
+      .then((item) => {
         setDaily(item);
-      }).catch((error) => {
-        console.error('Error fetching daily sale:', error);
+      })
+      .catch((error) => {
+        console.error("Error fetching daily sale:", error);
       });
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, auth]);
-console.log(daily);
+  }, [token, dispatch, activePlatform, auth]);
+  console.log(daily);
 
   //Set fetched data for mapping
   useEffect(() => {
@@ -136,11 +135,10 @@ console.log(daily);
   };
 
   const handleDelete = async ({ _id }) => {
-    
     const { value: remarks } = await Swal.fire({
       title: "Are you sure?",
       text: "Please, specify a reason.",
-      input: "text", 
+      input: "text",
       inputPlaceholder: "Remarks",
       icon: "warning",
       showCancelButton: true,
@@ -155,7 +153,7 @@ console.log(daily);
     });
 
     if (remarks) {
-    const today = new Date();
+      const today = new Date();
 
       dispatch(
         MANAGERUPDATE({
@@ -176,8 +174,6 @@ console.log(daily);
   };
 
   const handleAmountUpdate = async ({ _id, amount: _amount }) => {
-
-    
     const { value: amount } = await Swal.fire({
       title: "Enter new amount.",
       text: `Old amount is ${currency(_amount)}.`,

@@ -1,11 +1,14 @@
 import Dashboard from "../../../pages/platforms/frontdesk/dashboard";
-import Fecalysis from "../../../pages/platforms/frontdesk/logbooks/fecalysis";
-import Hermatology from "../../../pages/platforms/frontdesk/logbooks/hermatology";
-import Urinalysis from "../../../pages/platforms/frontdesk/logbooks/urinalysis";
-import Chemistry from "../../../pages/platforms/frontdesk/logbooks/chemistry";
-import Electrolite from "../../../pages/platforms/frontdesk/logbooks/electrolite";
-import Serology from "../../../pages/platforms/frontdesk/logbooks/serology";
-import ExperimentalPOS from "../../../pages/platforms/cashier/pos/ExperimentalCashier";
+import {
+  Chemistry,
+  Hematology,
+  Urinalysis,
+  Fecalysis,
+  Serology,
+  Electrolyte,
+} from "../../../pages/platforms/frontdesk";
+
+import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 
 import {
   Task,
@@ -33,29 +36,34 @@ const frontdesk = [
     component: Dashboard,
   },
   {
-    name: "POS", // Point Of Sales
+    name: "Point Of Sales",
     path: "/pos",
     icon: "cogs",
     children: [
       {
         name: "Cashier",
         path: "/patients",
-        component: ExperimentalPOS,
+        component: Cashier,
       },
       {
-        name: "Sales",
+        name: "Sales", // his daily
         path: "/sales",
         component: Sales,
       },
       {
-        name: "Ledger",
+        name: "Ledger", // his monthly Sales Ledger
         path: "/ledger",
         component: Ledger,
+      },
+      {
+        name: "Remittances", // Persona remit only
+        path: "/remittances",
+        // component: Ledger,
       },
     ],
   },
   {
-    name: "Transactions",
+    name: "Diagnostics",
     path: "/transactions",
     icon: "cogs",
     children: [
@@ -193,59 +201,66 @@ const frontdesk = [
     ],
   },
   {
-    name: "Logbooks",
-    path: "/logbooks",
-    icon: "books",
+    name: "Reports",
+    path: "/reports",
+    icon: "cogs",
     children: [
       {
-        name: "Chemistry",
-        path: "/chemistry",
-        component: Chemistry,
+        name: "Logbooks",
+        path: "/logbooks",
+        icon: "books",
+        children: [
+          {
+            name: "Chemistry",
+            path: "/chemistry",
+            component: Chemistry,
+          },
+          {
+            name: "Electrolytes",
+            path: "/Electrolyte",
+            component: Electrolyte,
+          },
+          {
+            name: "Hematology",
+            path: "/hematology",
+            component: Hematology,
+          },
+          {
+            name: "Urinalysis",
+            path: "/urinalysis",
+            component: Urinalysis,
+          },
+          {
+            name: "Fecalysis",
+            path: "/fecalysis",
+            component: Fecalysis,
+          },
+          {
+            name: "Serology",
+            path: "/serology",
+            component: Serology,
+          },
+          {
+            name: "Miscellaneous",
+            path: "/miscellaneous",
+          },
+        ],
       },
       {
-        name: "Electrolites",
-        path: "/electrolite",
-        component: Electrolite,
-      },
-      {
-        name: "Hematology",
-        path: "/hematology",
-        component: Hermatology,
-      },
-      {
-        name: "Urinalysis",
-        path: "/urinalysis",
-        component: Urinalysis,
-      },
-      {
-        name: "Fecalysis",
-        path: "/fecalysis",
-        component: Fecalysis,
-      },
-      {
-        name: "Serology",
-        path: "/serology",
-        component: Serology,
-      },
-      {
-        name: "Miscellaneous",
-        path: "/miscellaneous",
-      },
-    ],
-  },
-  {
-    name: "Utilities",
-    path: "/utilities",
-    icon: "tools",
-    children: [
-      {
-        name: "Temperature",
-        path: "/temperature",
-        component: Temperature,
-      },
-      {
-        name: "Quality Control",
-        path: "/qc",
+        name: "Utilities",
+        path: "/utilities",
+        icon: "tools",
+        children: [
+          {
+            name: "Temperature",
+            path: "/temperature",
+            component: Temperature,
+          },
+          {
+            name: "Quality Control",
+            path: "/qc",
+          },
+        ],
       },
     ],
   },
@@ -255,14 +270,19 @@ const frontdesk = [
     icon: "handshake",
     children: [
       {
+        name: "Source",
+        path: "/source",
+        component: Source,
+      },
+      {
         name: "Outsource",
         path: "/outsource",
         component: Outsource,
       },
       {
-        name: "Source",
-        path: "/source",
-        component: Source,
+        name: "Tieup",
+        path: "/tieup",
+        // component: Source,
       },
     ],
   },

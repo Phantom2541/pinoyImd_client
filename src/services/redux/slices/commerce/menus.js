@@ -10,6 +10,16 @@ const initialState = {
   message: "",
 };
 
+/**
+ * Asynchronous thunk action to browse items.
+ *
+ * @function BROWSE
+ * @param {Object} payload - The payload object containing token and key.
+ * @param {string} payload.token - The authentication token.
+ * @param {string} payload.key - The key for browsing.
+ * @param {Object} thunkAPI - The thunk API object.
+ * @returns {Promise<Object>} The response data or an error message.
+ */
 export const BROWSE = createAsyncThunk(
   `${name}`,
   ({ token, key }, thunkAPI) => {

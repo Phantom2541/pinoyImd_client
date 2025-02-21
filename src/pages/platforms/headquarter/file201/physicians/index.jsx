@@ -16,7 +16,7 @@ import {
 import Swal from "sweetalert2";
 // mobile;
 export default function Physicians() {
-  const { onDuty, token } = useSelector(({ auth }) => auth),
+  const { activePlatform, token } = useSelector(({ auth }) => auth),
     [tieups, setTieups] = useState([]),
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
@@ -28,13 +28,13 @@ export default function Physicians() {
     dispatch = useDispatch();
   //Initial Browse
   useEffect(() => {
-    console.log(onDuty);
+    console.log(activePlatform);
 
-    if (token && onDuty._id)
-      dispatch(TIEUPS({ key: { branch: onDuty._id }, token }));
+    if (token && activePlatform?.branchId)
+      dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
 
     return () => dispatch(RESET());
-  }, [token, onDuty, dispatch]);
+  }, [token, activePlatform, dispatch]);
 
   //Set fetched data for mapping
   useEffect(() => {

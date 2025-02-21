@@ -39,16 +39,16 @@ const formatTime = (hours, minutes) => {
 export default function SerologyPrint() {
   const [serology, setSerology] = useState([]),
     { collections } = useSelector(({ serology }) => serology),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty?._id) {
+    if (token && activePlatform?._id) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/serology/logbook",
           data: {
-            branch: onDuty._id,
+            branch: activePlatform?.branchId,
             month,
             year,
           },
@@ -57,7 +57,7 @@ export default function SerologyPrint() {
       );
     }
     return () => dispatch(RESET());
-  }, [onDuty, dispatch, token, month, year]);
+  }, [activePlatform, dispatch, token, month, year]);
 
   useEffect(() => {
     setSerology(collections);
@@ -138,7 +138,10 @@ export default function SerologyPrint() {
 
   return (
     <div>
-      <Banner company={onDuty?.companyId?.name} branch={onDuty?.name} />
+      <Banner
+        company={activePlatform?.companyId?.name}
+        branch={activePlatform?.name}
+      />
 
       <h3 className="text-center">
         Serology Report for {Months[month - 1]} {year}

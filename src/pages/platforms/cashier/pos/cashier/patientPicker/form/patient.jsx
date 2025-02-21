@@ -1,16 +1,16 @@
 import { MDBBtn } from "mdbreact";
 import React, { useEffect, useState } from "react";
-import { Privileges, Suffixes } from "../../../../../../services/fakeDb";
+import { Privileges, Suffixes } from "../../../../../../../services/fakeDb";
 import {
   generateEmail,
   getAge,
   validateContact,
-} from "../../../../../../services/utilities";
-import AddressSelect from "../../../../../../components/addressSelect";
+} from "../../../../../../../services/utilities";
+import AddressSelect from "../../../../../../../components/addressSelect";
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../services/redux/slices/assets/persons/users";
+} from "../../../../../../../services/redux/slices/assets/persons/users";
 import { useDispatch, useSelector } from "react-redux";
 import { isEqual } from "lodash";
 

@@ -22,7 +22,7 @@ export default function Ledger() {
     [year, setYear] = useState(new Date().getFullYear()),
     [showCalendar, setShowCalendar] = useState(false),
     [page, setPage] = useState(1),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, isLoading, totalPages, totalSale, totalPatient } =
       useSelector(({ sales }) => sales),
     dispatch = useDispatch(),
@@ -30,12 +30,12 @@ export default function Ledger() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id && year && month)
+    if (token && activePlatform?.branchId && year && month)
       dispatch(
         LEDGER({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             start: new Date(year, month, 1),
             end: new Date(year, month + 1, 0, 23, 59, 59, 999),
           },
@@ -43,11 +43,11 @@ export default function Ledger() {
       );
 
     // old query (03/02/2024)
-    // if (token && onDuty._id && auth._id && maxPage && page && year)
+    // if (token && activePlatform?.branchId && auth._id && maxPage && page && year)
     // dispatch(
     //   LEDGER({
     //     token,
-    //     branchId: onDuty._id,
+    //     branchId: activePlatform?.branchId,
     //     cashierId: auth._id,
     //     limit: maxPage,
     //     page,
@@ -57,7 +57,7 @@ export default function Ledger() {
     // );
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, month, year]);
+  }, [token, dispatch, activePlatform, month, year]);
 
   //Set fetched data for mapping
   useEffect(() => {

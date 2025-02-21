@@ -23,7 +23,7 @@ export default function Menus() {
     [totalPages, setTotalPages] = useState(1),
     [willCreate, setWillCreate] = useState(true),
     [visible, setVisible] = useState(false),
-    { token, onDuty, maxPage } = useSelector(({ auth }) => auth),
+    { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ menus }) => menus
     ),
@@ -44,12 +44,12 @@ export default function Menus() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id) {
-      dispatch(BROWSE({ token, key: { branchId: onDuty._id } }));
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
     }
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
   useEffect(() => {

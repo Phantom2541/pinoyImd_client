@@ -22,7 +22,7 @@ import {
 } from "../../../../../services/redux/slices/assets/companies";
 
 export default function Modal({ show, toggle, companyName }) {
-  const { token, onDuty } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, isLoading, message, isSuccess } = useSelector(
       ({ companies }) => companies
     ),
@@ -49,7 +49,7 @@ export default function Modal({ show, toggle, companyName }) {
         token,
         data: {
           vendors: company._id,
-          clients: onDuty._id,
+          clients: activePlatform?.branchId,
           status: "active",
           name: company.name,
           subName: company.subName,

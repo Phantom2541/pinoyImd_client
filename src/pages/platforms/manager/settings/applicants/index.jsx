@@ -6,7 +6,7 @@ import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../services/utilities";
 
 export default function Applicants() {
-  const { token, onDuty } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess } = useSelector(
       ({ applicants }) => applicants
     ),
@@ -23,10 +23,10 @@ export default function Applicants() {
   }, [isSuccess, message, addToast]);
 
   useEffect(() => {
-    if (token && onDuty._id) {
-      dispatch(BROWSE({ token, branchId: onDuty._id }));
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
     }
-  }, [dispatch, token, onDuty]);
+  }, [dispatch, token, activePlatform]);
 
   useEffect(() => {
     setApplicants(collections);

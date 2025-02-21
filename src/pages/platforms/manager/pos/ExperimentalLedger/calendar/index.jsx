@@ -44,7 +44,7 @@ export default function Calendar({
 }) {
   const [parsedCalendarTable, setParsedCalendarTable] = useState([]),
     [isLoading, setIsLoading] = useState(false),
-    { token, onDuty, activePortal, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { pathname } = useLocation(),
     history = useHistory(),
     dispatch = useDispatch();
@@ -92,7 +92,7 @@ export default function Calendar({
     // only fetch if the year and month is NOT a future
     if (
       !isSelectedMonthAndYearFuture &&
-      onDuty?._id &&
+      activePlatform?._id &&
       auth?._id &&
       !showPopUp &&
       !showProgress
@@ -100,10 +100,10 @@ export default function Calendar({
       setIsLoading(true);
       const fetchPreCalculatedSales = async () => {
         const query = {
-          branch: onDuty._id,
+          branch: activePlatform?.branchId,
           month: Months[month],
           year,
-          ...(activePortal === "cashier" && { cashier: auth._id }),
+          ...(activePlatform === "cashier" && { cashier: auth._id }),
         };
 
         const {
@@ -142,8 +142,7 @@ export default function Calendar({
     month,
     year,
     token,
-    onDuty,
-    activePortal,
+    activePlatform,
     auth,
     showPopUp,
     setShowPopUp,
@@ -394,7 +393,7 @@ export default function Calendar({
                       {!isSelectedMonthAndYearFuture && breakdown && (
                         <>
                           {/* only display breakdowns if manager is viewing ledger */}
-                          {activePortal === "manager" && (
+                          {activePlatform === "manager" && (
                             <>
                               {Object.entries(cashiers).map(([key, value]) => (
                                 <MDBAlert
