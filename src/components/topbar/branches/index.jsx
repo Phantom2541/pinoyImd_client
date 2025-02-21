@@ -18,6 +18,7 @@ export default function Branches() {
 
   useEffect(() => {
     console.log("Branches activePlatform :", activePlatform);
+    console.log("Branches :", branches);
 
     // const timer = setInterval(() => {
     //   setText((prev) =>
@@ -25,7 +26,7 @@ export default function Branches() {
     //   );
     // }, 10000);
     // return () => clearInterval(timer);
-  }, [activePlatform]);
+  }, [activePlatform, branches]);
 
   const handleActivePlatform = (branchId) => {
     const _access =

@@ -175,16 +175,9 @@ export const reduxSlice = createSlice({
       })
       .addCase(SETACTIVEPLATFORM.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log("state.branches :", state.branches);
-        console.log("SETACTIVEPLATFORM :", payload);
-
         const branch = state.branches.find(
           (branch) => branch._id === payload.activePlatform.branchId
         );
-        console.log("SETACTIVEPLATFORM payload :", payload);
-
-        console.log("branch :", branch);
-
         state.activePlatform = { branch, ...payload.activePlatform };
         state.showModal = false;
         state.message = success;
@@ -223,95 +216,6 @@ export const reduxSlice = createSlice({
         state.loginSuccess = false;
         state.message = "";
       })
-      // .addCase(LOGIN.fulfilled, (state, action) => {
-      //   const { success, payload } = action.payload,
-      //     { token, auth, branches, isCeo, access, company, isPatient } =
-      //       payload;
-
-      //   state.isPatient = isPatient;
-
-      //   let _branches = [];
-
-      //   if (isCeo) {
-      //     state.isCeo = isCeo;
-
-      //     //-NOT WORKING BY THOM
-      //     let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-      //     console.log(lastVisited);
-
-      //     // if (!lastVisited) {
-      //     //   const { _id, platform } = branches.find(({ isMain }) => isMain);
-      //     //   lastVisited = {
-      //     //     _id,
-      //     //     platform,
-      //     //   };
-      //     // }
-      //       // localStorage.setItem("lastVisited", JSON.stringify(auth.activePortal));
-      //     //-
-
-      //     _branches = branches.map((branch) => {
-      //       const _access = access.filter(
-      //         (data) => branch._id === data.branchId
-      //       );
-
-      //       const lastVisit = lastVisited.branch === branch._id;
-
-      //       return {
-      //         ...branch,
-      //         access: _access,
-      //         lastVisit,
-      //         platform: lastVisit ? lastVisit.platform : branch.platform,
-      //       };
-      //     });
-      //   }
-
-      //   let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-
-      //   lastVisited = {
-      //     ...lastVisited,
-      //     branch: lastVisited.branchId?._id,
-      //   };
-
-      //   _branches = branches.map((branch) => {
-      //     const _access = access.filter((data) => branch._id === data.branchId);
-
-      //     return {
-      //       ...branch,
-      //       platform:
-      //         lastVisited.branch === branch._id
-      //           ? lastVisited.platform
-      //           : branch.platform,
-      //       access: _access,
-      //     };
-      //   });
-      //   const activePlatform = _branches.find(({ lastVisit }) => lastVisit);
-
-      //   if (activePlatform) {
-      //     state.activePlatform = activePlatform;
-      //   } else {
-      //     state.activePlatform = !!_branches.length ? _branches[0] : defaultDuty;
-      //   }
-
-      //   state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
-
-      //   state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
-      //   state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
-      //   state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
-      //   state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
-      //   state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
-
-      //   state.company = company;
-      //   state.activePortal = lastVisited;
-      //   state.token = token;
-      //   state.email = auth.email;
-      //   state.auth = auth;
-      //   state.access = access;
-      //   state.branches = _branches;
-      //   state.message = success;
-      //   state.loginSuccess = true;
-      //   state.isLoading = false;
-      // })
-
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
           { token, auth, branches, isCeo, access, company, isPatient } =
@@ -321,78 +225,33 @@ export const reduxSlice = createSlice({
 
         let _branches = [];
 
-        if (isCeo) {
-          state.isCeo = isCeo;
-
-          _branches = branches.map((branch) => {
-            const _access = access.filter(
-              (data) => branch._id === data.branchId
-            );
-
-            return {
-              ...branch,
-              access: _access,
-            };
-          });
-        }
-
-        _branches = branches.map((branch) => {
-          const _access = access.filter((data) => branch._id === data.branchId);
-
-          return {
-            ...branch,
-            access: _access,
-          };
-        });
-
-        state.activePlatform = auth.activePlatform; // <--- Changed this line
-
+        state.isCeo = isCeo;
         state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
-
         state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
         state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
         state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
         state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
+        const branch = branches.find(
+          (branch) => branch._id === auth.activePlatform.branchId
+        );
+
+        console.log(" LOGIN branch :", branch);
+
+        state.isPatient = isPatient;
+        state.isCeo = isCeo;
+        state.activePlatform = { branch, ...auth.activePlatform };
         state.company = company;
-        state.activePortal = auth.activePlatform;
-        state.branches = _branches;
-        state.access = access;
-        state.auth = auth;
-        state.email = auth.email;
         state.token = token;
+        state.email = auth.email;
+        state.auth = auth;
+        state.access = access;
+        state.branches = branches;
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
       })
-
-      //   state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
-      //   state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
-      //   state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
-      //   state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
-      //   state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
-      //   state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
-
-      //   const branch = branches.find(
-      //     (branch) => branch._id === auth.activePlatform.branchId
-      //   );
-
-      //   console.log(" LOGIN branch :", branch);
-
-      //   state.isPatient = isPatient;
-      //   state.isCeo = isCeo;
-      //   state.activePlatform = { branch, ...auth.activePlatform };
-      //   state.company = company;
-      //   state.token = token;
-      //   state.email = auth.email;
-      //   state.auth = auth;
-      //   state.access = access;
-      //   state.branches = branches;
-      //   state.message = success;
-      //   state.loginSuccess = true;
-      //   state.isLoading = false;
-      // })
       .addCase(LOGIN.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -406,7 +265,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log("UPDATE.fulfilled payload", payload);
         const branch = state.branches.find(
           (branch) => branch._id === payload.activePlatform.branchId
         );
@@ -432,7 +290,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(VALIDATEREFRESH.fulfilled, (state, action) => {
         const { payload } = action.payload,
-          { auth, branches, access, isCeo, isPatient, company } = payload;
+          { auth, branches, isCeo, isPatient, company } = payload;
 
         state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
         state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
@@ -446,6 +304,7 @@ export const reduxSlice = createSlice({
         );
 
         state.activePlatform = { ...auth.activePlatform, branch };
+        state.branches = branches;
         state.isPatient = isPatient;
         state.company = company;
         state.isCeo = isCeo;
