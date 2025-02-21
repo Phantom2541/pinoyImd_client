@@ -2,7 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 export default function Header({ date, saleId }) {
-  const { company, onDuty } = useSelector(({ auth }) => auth);
+  const { company, activePlatform } = useSelector(({ auth }) => auth);
+  console.log("activePlatform", activePlatform);
 
   return (
     <>
@@ -19,7 +20,7 @@ export default function Header({ date, saleId }) {
       <h6 className="mb-0">{company?.subName}</h6>
 
       <p className="mb-0">
-        <small>{onDuty?.name} Branch</small>
+        <small>{activePlatform?.branch?.name} Branch</small>
       </p>
       <small className="fw-bold">
         {new Date(date).toDateString()}, {new Date(date).toLocaleTimeString()}

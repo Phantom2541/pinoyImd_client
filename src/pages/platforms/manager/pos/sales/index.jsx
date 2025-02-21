@@ -8,6 +8,7 @@ import {
 import { currency, fullName, axioKit } from "../../../../../services/utilities";
 import { capitalize } from "lodash";
 import { Categories } from "../../../../../services/fakeDb";
+import CashRegister from "../../../cashier/pos/cashierOld/pos";
 import Swal from "sweetalert2";
 import Months from "../../../../../services/fakeDb/calendar/months";
 import {
@@ -23,21 +24,25 @@ export default function Sales() {
     [view, setView] = useState("all"),
     [total, setTotal] = useState(0),
     [daily, setDaily] = useState({}),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ sales }) => sales),
+    [selected, setSelected] = useState({}),
+    [showCashRegister, setShowCashRegister] = useState(false),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
+    // { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    // { collections } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
 
   console.log("unused variable setView", setView);
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id && auth._id) {
+    if (token && activePlatform?.branchId && auth._id) {
       const today = new Date().setHours(0, 0, 0, 0);
 
       dispatch(
         BROWSE({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             createdAt: today,
           },
         })
@@ -51,7 +56,7 @@ export default function Sales() {
         day: today.getDate(),
         year: today.getFullYear(),
         cashier: auth._id,
-        branch: onDuty._id,
+        branch: activePlatform?.branchId,
       })
       .then((item) => {
         setDaily(item);
@@ -61,7 +66,7 @@ export default function Sales() {
       });
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, auth]);
+  }, [token, dispatch, activePlatform, auth]);
   console.log(daily);
 
   //Set fetched data for mapping

@@ -23,19 +23,19 @@ export default function CashierMenu({ categoryIndex, handlePicker }) {
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ menus }) => menus
     ),
-    { token, onDuty, maxPage } = useSelector(({ auth }) => auth),
+    { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
   const { abbr, name } = Categories[categoryIndex];
 
   useEffect(() => {
-    if (token && onDuty._id) {
-      dispatch(BROWSE({ token, key: { branchId: onDuty._id } }));
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
     }
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     if (collections > 0 && !setPage) {

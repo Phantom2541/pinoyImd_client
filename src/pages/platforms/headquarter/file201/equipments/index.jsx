@@ -16,7 +16,7 @@ export default function Equipments() {
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ procurements }) => procurements
     ),
@@ -25,11 +25,11 @@ export default function Equipments() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty?._id)
-      dispatch(BROWSE({ token, key: { branchId: onDuty._id } }));
+    if (token && activePlatform?._id)
+      dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
   useEffect(() => {

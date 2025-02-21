@@ -34,7 +34,7 @@ const formatTime = (hours, minutes) => {
 export default function HemaPrint() {
   const [hema, setHema] = useState([]),
     { collections } = useSelector(({ hematology }) => hematology),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+        { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
     dispatch = useDispatch();
@@ -42,14 +42,14 @@ export default function HemaPrint() {
   useEffect(() => {
     const _month = JSON.parse(localStorage.getItem("month"));
     const _year = JSON.parse(localStorage.getItem("year"));
-    if (token && onDuty?._id) {
+    if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/hematology/logbook",
           data: {
-            branch: onDuty._id,
-            month,
-            year,
+            branch: activePlatform?.branchId,
+            month: _month,
+            year: _year,
           },
           token,
         })
@@ -57,10 +57,9 @@ export default function HemaPrint() {
     }
     setMonth(_month);
     setYear(_year);
-    return () => {
-      dispatch(RESET());
-    };
-  }, [onDuty, dispatch, token, month, year]);
+    return () => RESET();
+  }, [activePlatform, dispatch, token, month, year]);
+
 
   useEffect(() => {
     setHema(collections);
@@ -136,7 +135,10 @@ export default function HemaPrint() {
 
   return (
     <div>
-      <Banner company={onDuty?.companyId?.name} branch={onDuty?.name} />
+      <Banner
+        company={activePlatform?.companyId?.name}
+        branch={activePlatform?.name}
+      />
       <h3 className="text-center">
         Hematology Report for {Months[month - 1]} {year}
       </h3>

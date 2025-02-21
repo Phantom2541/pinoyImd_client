@@ -8,9 +8,8 @@ const initialState = {
   catalogs: [],
   transaction: { _id: "default" },
   totalPatient: 0,
-  totalSale: 0,
+  // this is used for ledger
   census: {
-    // this is used for ledger
     daily: {},
     grossSales: 0,
     menus: {},
@@ -253,11 +252,11 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    RESET: (state, { payload = {}}) => {
+    RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
 
-      if(payload?.resetCollections) state.collections = [];
+      if (payload?.resetCollections) state.collections = [];
     },
   },
   extraReducers: (builder) => {
@@ -396,33 +395,6 @@ export const reduxSlice = createSlice({
         state.censusLoading = false;
       })
 
-      // .addCase(CENSUS.pending, (state) => {
-      //   state.census = {
-      //     // this is used for ledger
-      //     daily: {},
-      //     grossSales: 0,
-      //     menus: {},
-      //     services: {},
-      //     expenses: 0,
-      //     patients: 0,
-      //     isEmpty: true,
-      //   };
-      //   state.isLoading = true;
-      //   state.isSuccess = false;
-      //   state.message = "";
-      // })
-
-      // .addCase(CENSUS.fulfilled, (state, action) => {
-      //   const { daily } = action.payload;
-      //   state.census = { ...daily, sales: daily.sales || [] };
-      //   state.isLoading = false;
-      // })
-      // .addCase(CENSUS.rejected, (state, action) => {
-      //   const { error } = action;
-      //   state.message = error.message;
-      //   state.isLoading = false;
-      // })
-
       .addCase(OLDLEDGER.pending, (state) => {
         state.census = {
           // this is used for ledger
@@ -440,10 +412,6 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(OLDLEDGER.fulfilled, (state, action) => {
-        // const { payload, totalSale, totalPatient } = action.payload;
-        // state.totalSale = totalSale;
-        // state.totalPatient = totalPatient;
-
         state.catalogs = action.payload;
         state.collections = action.payload;
         state.isLoading = false;

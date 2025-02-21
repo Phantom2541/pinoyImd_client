@@ -23,7 +23,7 @@ import {
 import Card from "../../../../frontdesk/transactions/task/card";
 
 export default function DailySaleModal() {
-  const { token, onDuty, auth } = useSelector(({ auth }) => auth),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { search, pathname } = useLocation(),
     { collections: sales, isLoading } = useSelector(({ sales }) => sales),
     dispatch = useDispatch(),
@@ -35,9 +35,9 @@ export default function DailySaleModal() {
     modalTitle = queryParams.get("modalTitle");
 
   useEffect(() => {
-    if (show && onDuty._id && auth._id && token) {
+    if (show && activePlatform?.branchId && auth._id && token) {
       const key = {
-        branchId: onDuty._id,
+        branchId: activePlatform?.branchId,
         createdAt: startDate,
         endDate,
       };
@@ -48,8 +48,12 @@ export default function DailySaleModal() {
           token,
         })
       );
-      dispatch(SOURCELIST({ token, key: { clients: onDuty._id } }));
-      dispatch(PHYSICIANS({ key: { branch: onDuty._id }, token }));
+      dispatch(
+        SOURCELIST({ token, key: { clients: activePlatform?.branchId } })
+      );
+      dispatch(
+        PHYSICIANS({ key: { branch: activePlatform?.branchId }, token })
+      );
 
       return () => {
         dispatch(RESET());
@@ -57,7 +61,7 @@ export default function DailySaleModal() {
         dispatch(PHYSICIANRESET());
       };
     }
-  }, [show, startDate, endDate, token, onDuty, auth, dispatch]);
+  }, [show, startDate, endDate, token, activePlatform, auth, dispatch]);
 
   const toggle = () => history.push(pathname);
 

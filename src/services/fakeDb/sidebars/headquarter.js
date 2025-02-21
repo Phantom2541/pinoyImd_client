@@ -1,13 +1,12 @@
-// import Staff from "../../../pages/platforms/headquarter/file201/exstaffs";
-
-import Equipments from "../../../pages/platforms/headquarter/file201/equipments";
-import Heads from "../../../pages/platforms/headquarter/file201/heads";
-import Physicians from "../../../pages/platforms/headquarter/file201/physicians";
-import Procurments from "../../../pages/platforms/headquarter/file201/procurments";
-import Staffs from "../../../pages/platforms/headquarter/file201/staff";
-import Sources from "../../../pages/platforms/headquarter/file201/sources";
-import Applicants from "../../../pages/platforms/headquarter/file201/applicants";
-import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
+import {
+  Employee,
+  Applicants,
+  Equipments,
+  Heads,
+  Physicians,
+  Procurments,
+  Staffs,
+} from "../../../pages/platforms/headquarter/file201";
 
 const headquarter = [
   {

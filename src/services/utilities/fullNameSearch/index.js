@@ -10,15 +10,19 @@ const fullNameSearch = (searchKey, array, custom = "") => {
 
     const { fname, lname, mname = "" } = fullName;
 
-    if (!rest && lname.includes(_lname)) return true;
+    if (!rest && lname.includes(_lname?.trim())) return true;
 
-    if (!_mname && lname.includes(_lname) && fname.includes(_fname))
+    if (
+      !_mname &&
+      lname.includes(_lname?.trim()) &&
+      fname.includes(_fname?.trim())
+    )
       return true;
 
     if (
-      mname.includes(_mname) &&
-      lname.includes(_lname) &&
-      fname.includes(_fname)
+      mname.includes(_mname?.trim()) &&
+      lname.includes(_lname?.trim()) &&
+      fname.includes(_fname?.trim())
     )
       return true;
 

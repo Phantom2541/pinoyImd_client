@@ -21,7 +21,8 @@ export default function Staffs() {
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
     [willCreate, setWillCreate] = useState(true),
-    { token, onDuty, maxPage } = useSelector(({ auth }) => auth),
+    [visible, setVisible] = useState(false),
+    { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ personnels }) => personnels
     ),
@@ -49,9 +50,10 @@ export default function Staffs() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id) dispatch(BROWSE({ token, branchId: onDuty._id }));
+    if (token && activePlatform?.branchId)
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   console.log(onDuty.id);
 

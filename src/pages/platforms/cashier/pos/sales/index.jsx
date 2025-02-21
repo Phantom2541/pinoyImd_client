@@ -6,8 +6,10 @@ import {
 } from "../../../../../services/redux/slices/commerce/sales";
 import { currency, fullName } from "../../../../../services/utilities";
 import { capitalize } from "lodash";
-import { Categories } from "../../../../../services/fakeDb";
-import CashRegister from "../cashier/pos";
+import { Categories, Services } from "../../../../../services/fakeDb";
+import CashRegister from "../cashierOld/pos";
+// import { Categories } from "../../../../../services/fakeDb";
+// import CashRegister from "../cashier/pos";
 
 import {
   MDBCard,
@@ -27,8 +29,10 @@ export default function Sales() {
     // hiding optional items in table head to conserve UI design and avoid crumpled view
     [showSources, setShowSources] = useState(false), // show sources in table head if set to true
     [showPhysicians, setShowPhysicians] = useState(false), // show physicians in table head if set to true
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
-    { collections, transaction } = useSelector(({ sales }) => sales),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
+    // { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    // { collections, transaction } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
 
   console.log(
@@ -40,19 +44,23 @@ export default function Sales() {
 
   //Initial CASHIER
   useEffect(() => {
-    if (token && onDuty._id && auth._id) {
+    if (token && activePlatform?.branchId && auth._id) {
       const today = new Date().setHours(0, 0, 0, 0); //date and time today starting from 00:00 AM
 
       dispatch(
         CASHIER({
           token,
-          key: { branchId: onDuty._id, cashierId: auth._id, date: today },
+          key: {
+            branchId: activePlatform?.branchId,
+            cashierId: auth._id,
+            date: today,
+          },
         })
       );
     }
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, auth]);
+  }, [token, dispatch, activePlatform, auth]);
 
   //Set fetched data for mapping
   useEffect(() => {

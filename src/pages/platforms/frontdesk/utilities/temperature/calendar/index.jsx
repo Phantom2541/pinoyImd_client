@@ -14,7 +14,7 @@ const today = new Date();
 export default function Calendar({ month, year }) {
   const { collections } = useSelector(({ temperatures }) => temperatures);
   const [temps, setTemps] = useState([]);
-  const { token, onDuty, auth } = useSelector(({ auth }) => auth);
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function Calendar({ month, year }) {
           UPDATE({
             data: {
               _id: entry._id,
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               userId: auth._id,
               [meridiem]: {
                 room: temp,
@@ -55,7 +55,7 @@ export default function Calendar({ month, year }) {
         dispatch(
           SAVE({
             data: {
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               userId: auth._id,
               [meridiem]: {
                 room: temp,
@@ -87,7 +87,7 @@ export default function Calendar({ month, year }) {
           UPDATE({
             data: {
               _id: entry._id,
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               userId: auth._id,
               [meridiem]: {
                 ref: temp,
@@ -101,7 +101,7 @@ export default function Calendar({ month, year }) {
         dispatch(
           SAVE({
             data: {
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               userId: auth._id,
               [meridiem]: {
                 ref: temp,

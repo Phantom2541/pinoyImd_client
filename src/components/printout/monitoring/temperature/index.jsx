@@ -88,16 +88,16 @@ const ChemsPrint = () => {
   // const [chems, setChems] = useState([]);
   // const [chartData, setChartData] = useState({});
   // const { collections } = useSelector(({ chemistry }) => chemistry);
-  // const { token, onDuty } = useSelector(({ auth }) => auth);
+  // const { token, activePlatform } = useSelector(({ auth }) => auth);
   // const dispatch = useDispatch();
 
   // useEffect(() => {
-  //   if (token && onDuty?._id) {
+  //   if (token && activePlatform?._id) {
   //     dispatch(
   //       BROWSE({
   //         entity: "results/laboratory/chemistry/logbook",
   //         data: {
-  //           branch: onDuty._id,
+  //           branch: activePlatform?.branchId,
   //           month,
   //           year,
   //         },
@@ -106,7 +106,7 @@ const ChemsPrint = () => {
   //     );
   //   }
   //   return () => RESET();
-  // }, [onDuty, dispatch, token, month, year]);
+  // }, [activePlatform, dispatch, token, month, year]);
 
   //   useEffect(() => {
   //     setChems(collections);

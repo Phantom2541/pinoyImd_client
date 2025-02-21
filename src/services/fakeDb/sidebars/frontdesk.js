@@ -1,5 +1,14 @@
 import Dashboard from "../../../pages/platforms/frontdesk/dashboard";
-import ExperimentalPOS from "../../../pages/platforms/cashier/pos/ExperimentalCashier";
+import {
+  Chemistry,
+  Hematology,
+  Urinalysis,
+  Fecalysis,
+  Serology,
+  Electrolyte,
+} from "../../../pages/platforms/frontdesk";
+
+import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 
 import {
   Fecalysis,
@@ -42,17 +51,22 @@ const frontdesk = [
       {
         name: "Cashier",
         path: "/patients",
-        component: ExperimentalPOS,
+        component: Cashier,
       },
       {
-        name: "Sales",
+        name: "Sales", // his daily
         path: "/sales",
         component: Sales,
       },
       {
-        name: "Ledger",
+        name: "Ledger", // his monthly Sales Ledger
         path: "/ledger",
         component: Ledger,
+      },
+      {
+        name: "Remittances", // Persona remit only
+        path: "/remittances",
+        // component: Ledger,
       },
     ],
   },
@@ -195,45 +209,95 @@ const frontdesk = [
     ],
   },
   {
-    name: "Logbooks",
-    path: "/logbooks",
-    icon: "books",
+    name: "Reports",
+    path: "/reports",
+    icon: "cogs",
     children: [
       {
-        name: "Chemistry",
-        path: "/chemistry",
-        component: Chemistry,
+        name: "Logbooks",
+        path: "/logbooks",
+        icon: "books",
+        children: [
+          {
+            name: "Chemistry",
+            path: "/chemistry",
+            component: Chemistry,
+          },
+          {
+            name: "Electrolytes",
+            path: "/Electrolyte",
+            component: Electrolyte,
+          },
+          {
+            name: "Hematology",
+            path: "/hematology",
+            component: Hematology,
+          },
+          {
+            name: "Urinalysis",
+            path: "/urinalysis",
+            component: Urinalysis,
+          },
+          {
+            name: "Fecalysis",
+            path: "/fecalysis",
+            component: Fecalysis,
+          },
+          {
+            name: "Serology",
+            path: "/serology",
+            component: Serology,
+          },
+          {
+            name: "Miscellaneous",
+            path: "/miscellaneous",
+          },
+        ],
       },
       {
-        name: "Electrolytes",
-        path: "/electrolyte",
-        component: Electrolyte,
-      },
-      {
-        name: "Hematology",
-        path: "/hematology",
-        component: Hermatology,
-      },
-      {
-        name: "Urinalysis",
-        path: "/urinalysis",
-        component: Urinalysis,
-      },
-      {
-        name: "Fecalysis",
-        path: "/fecalysis",
-        component: Fecalysis,
-      },
-      {
-        name: "Serology",
-        path: "/serology",
-        component: Serology,
-      },
-      {
-        name: "Miscellaneous",
-        path: "/miscellaneous",
-      },
-    ],
+        name: "Utilities",
+        path: "/utilities",
+        icon: "tools",
+        children: [
+          {
+            name: "Temperature",
+            path: "/temperature",
+            component: Temperature,
+          },
+          {
+            name: "Quality Control",
+            path: "/qc",
+          },
+        ],
+      //   name: "Electrolytes",
+      //   path: "/electrolyte",
+      //   component: Electrolyte,
+      // },
+      // {
+      //   name: "Hematology",
+      //   path: "/hematology",
+      //   component: Hermatology,
+      // },
+      // {
+      //   name: "Urinalysis",
+      //   path: "/urinalysis",
+      //   component: Urinalysis,
+      // },
+      // {
+      //   name: "Fecalysis",
+      //   path: "/fecalysis",
+      //   component: Fecalysis,
+      // },
+      // {
+      //   name: "Serology",
+      //   path: "/serology",
+      //   component: Serology,
+      // },
+      // {
+      //   name: "Miscellaneous",
+      //   path: "/miscellaneous",
+      // },
+    // ],
   },
   {
     name: "Utilities",
@@ -257,14 +321,19 @@ const frontdesk = [
     icon: "handshake",
     children: [
       {
+        name: "Source",
+        path: "/source",
+        component: Source,
+      },
+      {
         name: "Outsource",
         path: "/outsource",
         component: Outsource,
       },
       {
-        name: "Source",
-        path: "/source",
-        component: Source,
+        name: "Tieup",
+        path: "/tieup",
+        // component: Source,
       },
     ],
   },

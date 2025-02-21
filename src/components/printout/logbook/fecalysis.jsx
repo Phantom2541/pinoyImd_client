@@ -38,7 +38,7 @@ const formatTime = (hours, minutes) => {
 export default function FecalysisPrint() {
   const [fecalysis, setFecalysis] = useState([]),
     { collections } = useSelector(({ fecalysis }) => fecalysis),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+        { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
     dispatch = useDispatch();
@@ -46,12 +46,12 @@ export default function FecalysisPrint() {
   useEffect(() => {
     const _month = JSON.parse(localStorage.getItem("month"));
     const _year = JSON.parse(localStorage.getItem("year"));
-    if (token && onDuty?._id) {
+    if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
-          entity: "results/laboratory/fecalysis/logbook",
+          entity: "results/laboratory/fecalysis/ logbook",
           data: {
-            branch: onDuty._id,
+            branch: activePlatform?.branchId,
             month: _month,
             year: _year,
           },
@@ -61,10 +61,8 @@ export default function FecalysisPrint() {
     }
     setMonth(_month);
     setYear(_year);
-    return () => {
-      dispatch(RESET());
-    };
-  }, [onDuty, dispatch, token, month, year]);
+    return () => RESET();
+  }, [activePlatform, dispatch, token, month, year]);
 
   useEffect(() => {
     setFecalysis(collections);
@@ -128,7 +126,10 @@ export default function FecalysisPrint() {
 
   return (
     <div>
-      <Banner company={onDuty?.companyId?.name} branch={onDuty?.name} />
+      <Banner
+        company={activePlatform?.companyId?.name}
+        branch={activePlatform?.name}
+      />
       <h3 className="text-center">
         Fecalysis Report for {Months[month - 1]} {year}
       </h3>

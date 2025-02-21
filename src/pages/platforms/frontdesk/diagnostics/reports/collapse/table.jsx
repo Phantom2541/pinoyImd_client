@@ -10,7 +10,7 @@ export default function CollapseTable({ menu }) {
     [task, setTask] = useState({}),
     [showModal, setShowModal] = useState(false),
     { collections } = useSelector(({ preferences }) => preferences),
-    { onDuty } = useSelector(({ auth }) => auth);
+    { activePlatform } = useSelector(({ auth }) => auth);
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -104,7 +104,7 @@ export default function CollapseTable({ menu }) {
                   onClick={() =>
                     handlePrint({
                       ...task,
-                      branchId: onDuty,
+                      branchId: activePlatform?.branchId,
                       referral: physicianId || {},
                       services: Services.whereIn(_packages),
                       preferences: collections,

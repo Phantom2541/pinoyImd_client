@@ -52,7 +52,9 @@ const formatTime = (hours, minutes) => {
 
 export default function Chems() {
   const [chems, setChems] = useState([]),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    [chemsPrint, setChemsPrint] = useState([]),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
+    // { token, onDuty } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ chemistry }) => chemistry),
     { search, pathname } = useLocation(),
     query = new URLSearchParams(search),
@@ -63,12 +65,12 @@ export default function Chems() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty?._id) {
+    if (token && activePlatform?._id) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/chemistry/logbook",
           data: {
-            branch: onDuty._id,
+            branch: activePlatform?.branchId,
             month,
             year,
           },
@@ -77,7 +79,7 @@ export default function Chems() {
       );
     }
     return () => RESET();
-  }, [onDuty, dispatch, token, month, year]);
+  }, [activePlatform, dispatch, token, month, year]);
 
   useEffect(() => {
     setChems(collections);

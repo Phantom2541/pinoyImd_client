@@ -12,28 +12,49 @@ import { fullName, globalSearch } from "../../../../../services/utilities";
 import TableLoading from "../../../../../components/tableLoading";
 
 const Applicants = () => {
-  const { token, onDuty } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, isLoading } = useSelector(({ applicants }) => applicants),
-    [category, setCategory] = useState("Petition"),
-    [didSearch, setDidSearch] = useState(false),
-    [baseApplicants, setBaseApplicants] = useState([]),
     [applicants, setApplicants] = useState([]),
     dispatch = useDispatch();
 
-  useEffect(() => {
-    if (onDuty?._id) {
-      dispatch(BROWSE({ token, branchId: onDuty._id }));
-    }
-  }, [token, dispatch, onDuty]);
+  console.log(activePlatform);
 
   useEffect(() => {
-    const filteredApplicants = collections.filter(
-      ({ status }) => status === category.toLowerCase()
-    );
-    setBaseApplicants(filteredApplicants);
-    setApplicants(filteredApplicants);
-  }, [category, collections]);
+    dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
+  }, [token, dispatch]);
+  // // merge
+  // // const { token, activePortal } = useSelector(({ auth }) => auth),
+  // //   { collections } = useSelector(({ applicants }) => applicants),
+  // //   [applicants, setApplicants] = useState([]),
+  // //   dispatch = useDispatch();
 
+  // // console.log(activePortal);
+
+  // // useEffect(() => {
+  // //   dispatch(BROWSE({ token, branchId: activePortal.branchId }));
+  // // }, [token, dispatch]);
+  // const { token, onDuty } = useSelector(({ auth }) => auth),
+  //   { collections, isLoading } = useSelector(({ applicants }) => applicants),
+  //   [category, setCategory] = useState("Petition"),
+  //   [didSearch, setDidSearch] = useState(false),
+  //   [baseApplicants, setBaseApplicants] = useState([]),
+  //   [applicants, setApplicants] = useState([]),
+  //   dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   if (onDuty?._id) {
+  //     dispatch(BROWSE({ token, branchId: onDuty._id }));
+  //   }
+  // }, [token, dispatch, onDuty]);
+
+  // useEffect(() => {
+  //   const filteredApplicants = collections.filter(
+  //     ({ status }) => status === category.toLowerCase()
+  //   );
+  //   setBaseApplicants(filteredApplicants);
+  //   setApplicants(filteredApplicants);
+  // }, [category, collections]);
+//
   const handleApprove = (applicant) => {
     const { user } = applicant;
     Swal.fire({
@@ -96,24 +117,24 @@ const Applicants = () => {
     });
   };
 
-  const handleSearch = () => {
-    const searchValue = document.getElementById("search").value;
-    const searchResults = globalSearch(baseApplicants, searchValue);
-    setApplicants(didSearch ? baseApplicants : searchResults);
-    setDidSearch(!didSearch);
-  };
+  // const handleSearch = () => {
+  //   const searchValue = document.getElementById("search").value;
+  //   const searchResults = globalSearch(baseApplicants, searchValue);
+  //   setApplicants(didSearch ? baseApplicants : searchResults);
+  //   setDidSearch(!didSearch);
+  // };
 
   return (
     <>
       <MDBCard narrow>
         <TopHeader
           title="Applicant List"
-          handleSearch={handleSearch}
+          // handleSearch={handleSearch}
           categories={["Petition", "Denied"]}
-          setCategory={setCategory}
-          category={category}
+          // setCategory={setCategory}
+          // category={category}
           hasCategory={true}
-          didSearch={didSearch}
+          // didSearch={didSearch}
         />
         <MDBCardBody>
           {isLoading ? (
@@ -122,7 +143,7 @@ const Applicants = () => {
             <Table
               applicants={applicants}
               handleReject={handleReject}
-              didSearch={didSearch}
+              // didSearch={didSearch}
               handleApprove={handleApprove}
             />
           )}

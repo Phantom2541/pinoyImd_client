@@ -24,7 +24,7 @@ export default function Sales() {
   const [sales, setSales] = useState([]),
     [view, setView] = useState("all"),
     [total, setTotal] = useState(0),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, isLoading, message, isSuccess } = useSelector(
       ({ sales }) => sales
     ),
@@ -33,11 +33,11 @@ export default function Sales() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id && auth._id)
-      dispatch(BROWSE({ token, branchId: onDuty._id }));
+    if (token && activePlatform?.branchId && auth._id)
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, auth]);
+  }, [token, dispatch, activePlatform, auth]);
 
   //Set fetched data for mapping
   useEffect(() => {
@@ -118,7 +118,7 @@ export default function Sales() {
                 packages: buntisPresent,
                 saleId: _id,
                 customerId: customerId?._id,
-                branchId: onDuty._id,
+                branchId: activePlatform?.branchId,
                 buntis: true,
               },
               token
@@ -134,7 +134,7 @@ export default function Sales() {
             packages: [test],
             saleId: _id,
             customerId: customerId?._id,
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             _buntis: false,
           }));
 
@@ -152,7 +152,7 @@ export default function Sales() {
             packages: task[key],
             _id,
             customerId: customerId?._id,
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
           },
           token
         );

@@ -35,20 +35,20 @@ const formatTime = (hours, minutes) => {
 export default function SerologyPrint() {
   const [serology, setSerology] = useState([]),
     { collections } = useSelector(({ serology }) => serology),
+        { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
-    { token, onDuty } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {
     const _month = JSON.parse(localStorage.getItem("month"));
     const _year = JSON.parse(localStorage.getItem("year"));
-    if (token && onDuty?._id) {
+    if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
           entity: "results/laboratory/serology/logbook",
           data: {
-            branch: onDuty._id,
+            branch: activePlatform?.branchId,
             month: _month,
             year: _year,
           },
@@ -58,8 +58,8 @@ export default function SerologyPrint() {
     }
     setMonth(_month);
     setYear(_year);
-    return () => dispatch(RESET());
-  }, [onDuty, dispatch, token, month, year]);
+    return () => RESET();
+  }, [activePlatform, dispatch, token, month, year]);
 
   useEffect(() => {
     setSerology(collections);
@@ -140,7 +140,10 @@ export default function SerologyPrint() {
 
   return (
     <div>
-      <Banner company={onDuty?.companyId?.name} branch={onDuty?.name} />
+      <Banner
+        company={activePlatform?.companyId?.name}
+        branch={activePlatform?.name}
+      />
 
       <h3 className="text-center">
         Serology Report for {Months[month - 1]} {year}
