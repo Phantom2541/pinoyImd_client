@@ -195,38 +195,38 @@ export const reduxSlice = createSlice({
 
         let _branches = [];
 
-        if (isCeo) {
-          state.isCeo = isCeo;
+        // if (isCeo) {
+        //   state.isCeo = isCeo;
 
-          //-NOT WORKING BY THOM
-          let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
-          console.log(lastVisited);
+        //   //-NOT WORKING BY THOM
+        //   let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
+        //   console.log(lastVisited);
 
-          // if (!lastVisited) {
-          //   const { _id, platform } = branches.find(({ isMain }) => isMain);
-          //   lastVisited = {
-          //     _id,
-          //     platform,
-          //   };
-          // }
-            // localStorage.setItem("lastVisited", JSON.stringify(auth.activePortal));
-          //-
+        //   // if (!lastVisited) {
+        //   //   const { _id, platform } = branches.find(({ isMain }) => isMain);
+        //   //   lastVisited = {
+        //   //     _id,
+        //   //     platform,
+        //   //   };
+        //   // }
+        //     // localStorage.setItem("lastVisited", JSON.stringify(auth.activePortal));
+        //   //-
 
-          _branches = branches.map((branch) => {
-            const _access = access.filter(
-              (data) => branch._id === data.branchId
-            );
+        //   _branches = branches.map((branch) => {
+        //     const _access = access.filter(
+        //       (data) => branch._id === data.branchId
+        //     );
 
-            const lastVisit = lastVisited.branch === branch._id;
+        //     const lastVisit = lastVisited.branch === branch._id;
 
-            return {
-              ...branch,
-              access: _access,
-              lastVisit,
-              platform: lastVisit ? lastVisit.platform : branch.platform,
-            };
-          });
-        }
+        //     return {
+        //       ...branch,
+        //       access: _access,
+        //       lastVisit,
+        //       platform: lastVisit ? lastVisit.platform : branch.platform,
+        //     };
+        //   });
+        // }
 
         let lastVisited = JSON.parse(localStorage.getItem("lastVisited"));
 
