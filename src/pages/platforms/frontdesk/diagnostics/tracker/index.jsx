@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "./header";
 import Body from "./body";
 import {
-  PATIENTS,
+  GETPATIENTS,
   RESET,
 } from "./../../../../../services/redux/slices/assets/persons/users";
 import { TRACKER } from "../../../../../services/redux/slices/commerce/sales";
@@ -65,7 +65,7 @@ export default function Tasks() {
 
   useEffect(() => {
     if (token && onDuty._id) {
-      dispatch(PATIENTS({ token }));
+      dispatch(GETPATIENTS({ token }));
     }
 
     return () => {

@@ -1,11 +1,10 @@
-import { MDBIcon } from "mdbreact";
 import React from "react";
-
+import { useSelector, useDispatch } from "react-redux";
+import { MDBIcon } from "mdbreact";
+import { SETPATIENT } from "../../../../../../services/redux/slices/commerce/pos";
 export default function Search({
-  handleSearch,
   searchKey,
   setSearchKey,
-  selected,
   didSearch,
   // choices map
   children,
@@ -19,13 +18,26 @@ export default function Search({
     description = "Please maintain this order when searching.",
   } = info;
 
+  const { customer } = useSelector(({ pos }) => pos),
+    dispatch = useDispatch();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    if (didSearch && searchKey) setSearchKey("");
+
+    if (!didSearch && customer?._id) dispatch(SETPATIENT({}));
+
+    // setDidSearch(!didSearch);
+  };
+
   return (
     <div
       className={`cashier-search-cotaniner ${
-        selected?._id && "pickedSearched"
+        customer?._id && "pickedSearched"
       }`}
     >
-      <div className={`cashier-instruction ${selected?._id && "hide"}`}>
+      <div className={`cashier-instruction ${customer?._id && "hide"}`}>
         <MDBIcon
           icon="info-circle"
           size="lg"
@@ -39,7 +51,7 @@ export default function Search({
       <form
         onSubmit={handleSearch}
         className={`cashier-search ${didSearch && "active"} ${
-          selected?._id && "pickedSearch"
+          customer?._id && "pickedSearch"
         }`}
       >
         <div className="cashier-search-suggestions">
@@ -55,10 +67,10 @@ export default function Search({
         />
         <button
           type="submit"
-          className={`${(didSearch || selected?._id) && "bg-danger"}`}
+          className={`${(didSearch || customer?._id) && "bg-danger"}`}
         >
           <MDBIcon
-            icon={didSearch || selected?._id ? "times" : "search"}
+            icon={didSearch || customer?._id ? "times" : "search"}
             className="search-icon"
           />
         </button>

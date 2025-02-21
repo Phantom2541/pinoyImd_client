@@ -1,5 +1,6 @@
-import { MDBBtn } from "mdbreact";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { MDBBtn } from "mdbreact";
 import { Privileges, Suffixes } from "../../../../../../../services/fakeDb";
 import {
   generateEmail,
@@ -11,10 +12,14 @@ import {
   SAVE,
   UPDATE,
 } from "../../../../../../../services/redux/slices/assets/persons/users";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  GETPATIENTS,
+  RESET,
+} from "../../../../../../../services/redux/slices/assets/persons/users";
+import { SETPATIENT } from "../../../../../../../services/redux/slices/commerce/pos";
 import { isEqual } from "lodash";
 
-const _form = {
+const defaultPatient = {
   fullName: {
     fname: "",
     mname: "",
@@ -34,18 +39,29 @@ const _form = {
   privilege: 0,
 };
 
-export default function Patient({ selected, injectName }) {
-  const [form, setForm] = useState(_form),
-    { token } = useSelector(({ auth }) => auth),
+export default function Patient({ injectName }) {
+  const { customer } = useSelector(({ pos }) => pos),
+    [patient, setPatient] = useState(defaultPatient),
+    { token, onDuty } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    if (token && onDuty?._id) {
+      dispatch(GETPATIENTS({ token }));
+
+      return () => {
+        dispatch(RESET());
+      };
+    }
+  }, [token, dispatch, onDuty]);
 
   // inject searched name if no match
   useEffect(() => {
     if (injectName) {
-      const [lname, rest = ""] = injectName.toUpperCase().split(", "),
-        [fname = "", mname = ""] = rest.split(" Y ");
+      const [lname, rest = ""] = injectName.trim().toUpperCase().split(", "),
+        [fname = "", mname = ""] = rest.trim().split(" Y ");
 
-      setForm((prev) => ({
+      setPatient((prev) => ({
         ...prev,
         fullName: {
           ...prev.fullName,
@@ -57,24 +73,23 @@ export default function Patient({ selected, injectName }) {
     }
   }, [injectName]);
 
-  // update form for selected user
   useEffect(() => {
-    setForm(selected?._id ? selected : _form);
-  }, [selected]);
+    dispatch(SETPATIENT(customer?._id ? customer : defaultPatient));
+  }, [customer, dispatch]);
 
-  const handleChange = (key, value) => setForm({ ...form, [key]: value });
+  const handleChange = (key, value) => setPatient({ ...patient, [key]: value });
 
-  const { fullName, _id, dob, privilege, mobile, isMale, address } = form;
+  const { fullName, _id, dob, privilege, mobile, isMale, address } = patient;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (_id) {
       // update
-      if (!isEqual(form, selected))
+      if (!isEqual(patient, customer))
         dispatch(
           UPDATE({
-            data: form,
+            data: patient,
             token,
           })
         );
@@ -82,13 +97,17 @@ export default function Patient({ selected, injectName }) {
       // create
       dispatch(
         SAVE({
-          data: { ...form, password: "password", email: generateEmail(form) },
+          data: {
+            ...patient,
+            password: "password",
+            email: generateEmail(patient),
+          },
           token,
         })
       );
     }
 
-    setForm(_form);
+    setPatient(defaultPatient);
   };
 
   // useEffect(() => {
@@ -177,8 +196,7 @@ export default function Patient({ selected, injectName }) {
 
                 if (getAge(target.value, true) > 59) data.privilege = 2;
 
-                setForm({ ...form, ...data });
-                // handleChange("dob", target.value)
+                setPatient({ ...patient, ...data });
               }}
               required
             />

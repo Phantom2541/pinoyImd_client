@@ -12,19 +12,27 @@ import { Categories, Privileges } from "../../../../../../../services/fakeDb";
 import {
   SETCATEGORY,
   SETPRIVILEGE,
-} from "./../../../../../../../services/redux/slices/commerce/checkout.js";
+  SETPHYSICIAN,
+  SETSOURCE,
+} from "./../../../../../../../services/redux/slices/commerce/pos.js";
 
-export default function PosCard({
-  selected,
-  setPhysicianId,
-  physicianId,
-  setSourceId,
-  sourceId,
-}) {
+import {
+  TIEUPS as SOURCELIST,
+  RESET as SOURCERESET,
+} from "./../../../../../../../services/redux/slices/assets/providers";
+import {
+  TIEUPS as PHYSICIANS,
+  RESET as PHYSICIANRESET,
+} from "./../../../../../../../services/redux/slices/assets/persons/physicians";
+
+export default function PosCard() {
   const { collections: physicians } = useSelector(
       ({ physicians }) => physicians
     ),
-    { category, privilege } = useSelector(({ checkout }) => checkout),
+    { token, onDuty } = useSelector(({ auth }) => auth),
+    { category, privilege, sourceId, physicianId, customer } = useSelector(
+      ({ pos }) => pos
+    ),
     // { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
@@ -37,18 +45,35 @@ export default function PosCard({
       mobile: _mobile,
       address,
       privilege: userPrivilege = 0,
-    } = selected,
+    } = customer,
     didSelect = Boolean(_id),
     isSenior = getAge(dob, true) > 59; // detect if not a valid senior
 
   useEffect(() => {
-    console.log("category :", category);
-  }, [category]);
+    if (token && onDuty?._id) {
+      dispatch(SOURCELIST({ token, key: { clients: onDuty._id } }));
+      dispatch(PHYSICIANS({ key: { branch: onDuty._id }, token }));
+
+      return () => {
+        dispatch(SOURCERESET());
+        dispatch(PHYSICIANRESET());
+      };
+    }
+  }, [token, dispatch, onDuty]);
+
   const handleCategory = (value) => {
     dispatch(SETCATEGORY(value));
   };
   const handlePreviledge = (value) => {
     dispatch(SETPRIVILEGE(value));
+  };
+
+  const handlePhysician = (value) => {
+    dispatch(SETPHYSICIAN(value));
+  };
+
+  const handleSource = (value) => {
+    dispatch(SETSOURCE(value));
   };
 
   return (
@@ -102,7 +127,7 @@ export default function PosCard({
           <select
             disabled={!didSelect}
             value={sourceId}
-            onChange={({ target }) => setSourceId(target.value)}
+            onChange={({ target }) => handleSource(target.value)}
           >
             <option value="">None</option>
             {sources?.map(({ _id, name, vendors }) => (
@@ -117,7 +142,7 @@ export default function PosCard({
           <select
             disabled={!didSelect}
             value={physicianId}
-            onChange={({ target }) => setPhysicianId(target.value)}
+            onChange={({ target }) => handlePhysician(target.value)}
           >
             <option value="">None</option>
             {physicians?.map(({ user }) => (

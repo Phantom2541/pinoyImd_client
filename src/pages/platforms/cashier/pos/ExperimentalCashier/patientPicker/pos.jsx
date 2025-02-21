@@ -10,59 +10,42 @@ import {
   getAge,
 } from "../../../../../../services/utilities";
 
-import { SETPRIVILEGE } from "./../../../../../../services/redux/slices/commerce/checkout.js";
+import {
+  SETPRIVILEGE,
+  SETPATIENT,
+} from "./../../../../../../services/redux/slices/commerce/pos.js";
 
-export default function POS({
-  setSelected,
-  selected,
-  setPhysicianId,
-  physicianId,
-  setSourceId,
-  sourceId,
-}) {
-  const { collections, newPatient, isLoading } = useSelector(
-      ({ users }) => users
-    ),
+export default function POS() {
+  const { collections, isLoading } = useSelector(({ users }) => users),
+    { customer } = useSelector(({ pos }) => pos),
     [searchKey, setSearchKey] = useState(""),
     [activeIndex, setActiveIndex] = useState(0),
     [didSearch, setDidSearch] = useState(false),
     dispatch = useDispatch();
 
-  // if a newPatient id is present and active index is 1
+  // if a customer id is present and active index is 1
   // it means a new patient has been injected, you should go back to POS
   useEffect(() => {
-    if (newPatient?._id && activeIndex === 1) setActiveIndex(0);
-  }, [newPatient, activeIndex]);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-
-    if (didSearch && searchKey) setSearchKey("");
-
-    if (!didSearch && selected?._id) setSelected({});
-
-    setDidSearch(!didSearch);
-  };
+    if (customer?._id && activeIndex === 1) setActiveIndex(0);
+  }, [customer, activeIndex]);
 
   const searchMatch = fullNameSearch(searchKey, collections);
 
   return (
     <div className="pos-container">
       <div
-        className={`pos-container-header ${selected?._id && "pickedSearch"}`}
+        className={`pos-container-header ${customer?._id && "pickedSearch"}`}
       >
-        {selected?._id && (
+        {customer?._id && (
           <h4>
             <MDBIcon icon="mars" className="text-primary mr-2" />
-            {fullName(selected?.fullName)}
+            {fullName(customer?.fullName)}
           </h4>
         )}
         <Search
-          handleSearch={handleSearch}
           searchKey={searchKey}
           setSearchKey={setSearchKey}
           didSearch={didSearch}
-          selected={selected}
         >
           {!searchMatch.length && !searchKey && (
             <li>Please type a fullname.</li>
@@ -89,7 +72,7 @@ export default function POS({
             <li
               key={`search-suggestion-${index}`}
               onClick={() => {
-                setSelected(user);
+                dispatch(SETPATIENT(user));
                 const { privilege = 0, dob } = user;
                 // if current privilege is 0 but the customer is a valid senior, auto select senior as privilege
                 if (privilege === 0 && getAge(dob, true) > 59)
@@ -129,17 +112,10 @@ export default function POS({
       <div className="pos-card">
         <div className="pos-card-body">
           <section className={`${activeIndex === 0 && "active"}`}>
-            <PosCard
-              selected={selected}
-              setPhysicianId={setPhysicianId}
-              physicianId={physicianId}
-              setSourceId={setSourceId}
-              sourceId={sourceId}
-            />
+            <PosCard />
           </section>
           <section className={`${activeIndex === 1 && "active"}`}>
             <Patient
-              selected={selected}
               injectName={
                 didSearch && !searchMatch.length && searchKey ? searchKey : ""
               }

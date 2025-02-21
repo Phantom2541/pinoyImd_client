@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { MDBIcon } from "mdbreact";
 import { Categories } from "../../../../../../services/fakeDb";
 import Search from "./search";
@@ -10,6 +10,14 @@ import {
 } from "../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import ConflictModal from "./conflictModal";
+import {
+  BROWSE as MENUS,
+  RESET as MENUSRESET,
+} from "../../../../../../services/redux/slices/commerce/menus";
+import {
+  ADDTOCART,
+  REMOVEFROMCART,
+} from "../../../../../../services/redux/slices/commerce/pos";
 
 const _compare = {
   show: false,
@@ -17,19 +25,28 @@ const _compare = {
   conflicts: [],
 };
 
-export default function Menus({
-  cart,
-  setCart,
-  patronPresent,
-  didSearch,
-  setDidSearch,
-}) {
-  const { collections } = useSelector(({ menus }) => menus),
-    { category, privilege } = useSelector(({ checkout }) => checkout),
+export default function Menus() {
+  const { token, onDuty } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ menus }) => menus),
+    { category, privilege, cart, hasActiveCustomer } = useSelector(
+      ({ pos }) => pos
+    ),
     [searchKey, setSearchKey] = useState(""),
+    [didSearch, setDidSearch] = useState(false), // used to auto close menu if open upon submission
     [compare, setCompare] = useState(_compare),
     searchRef = useRef(null),
-    { addToast } = useToasts();
+    { addToast } = useToasts(),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    if (token && onDuty?._id) {
+      dispatch(MENUS({ key: { branchId: onDuty._id }, token }));
+
+      return () => {
+        dispatch(MENUSRESET());
+      };
+    }
+  }, [token, dispatch, onDuty]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -52,7 +69,7 @@ export default function Menus({
       setSearchKey("");
       focusSearchInput(); // auto focus search input
       // setDidSearch(false); // auto close search input
-      return setCart([selected]);
+      dispatch(ADDTOCART(selected));
     }
 
     const { packages, _id, description, abbreviation } = selected;
@@ -87,7 +104,7 @@ export default function Menus({
         });
 
       // if no duplicate found, proceed to push to cart
-      return setCart([...cart, selected]);
+      dispatch(ADDTOCART(selected));
     }
 
     let rawConflicts = [];
@@ -115,7 +132,7 @@ export default function Menus({
     setSearchKey("");
 
     // if no conflicts found, simply push it
-    if (!conflicts.length) return setCart([...cart, selected]);
+    if (!conflicts.length) dispatch(ADDTOCART(selected));
 
     // if there are conflicts, show for comparison
     setCompare({
@@ -139,31 +156,25 @@ export default function Menus({
   // if chosen is false, simply reset the compare state
   const handleConflict = (chosen) => {
     const { selected = {}, conflicts = [] } = compare;
-
     if (!chosen) return setCompare(_compare);
-
     // clone state
     let _cart = [...cart];
-
     // iterate conflcits to filter out each _id
     for (const { _id = "" } of conflicts)
       _cart = _cart.filter((c) => c?._id !== _id);
-
     // copy the filtered _cart and add the selected
-    setCart([..._cart, selected]);
-
+    dispatch(ADDTOCART(selected));
     setCompare(_compare);
-
     addToast(`Conflicts have been resolved.`, {
       appearance: "info",
     });
   };
 
-  const handleDelete = (_id) => setCart(cart.filter((c) => c?._id !== _id));
+  const handleDelete = (id) => dispatch(REMOVEFROMCART(id));
 
   return (
     <>
-      <ConflictModal data={compare} handleConflict={handleConflict} />
+      {/* <ConflictModal data={compare} handleConflict={handleConflict} /> */}
       <table className="menus-table">
         <thead>
           <tr>
@@ -262,7 +273,7 @@ export default function Menus({
               <td colSpan="3" className="menus-empty">
                 <span>
                   Start by&nbsp;
-                  {patronPresent
+                  {hasActiveCustomer
                     ? "searching your menus"
                     : "selecting a patron"}
                   .

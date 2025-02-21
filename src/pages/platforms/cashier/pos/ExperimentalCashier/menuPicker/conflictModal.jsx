@@ -5,7 +5,7 @@ import { computeGD, currency } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
 
 const Card = ({ menu, chosen = "selected", handlePick }) => {
-  const { category, privilege } = useSelector(({ checkout }) => checkout),
+  const { category, privilege } = useSelector(({ pos }) => pos),
     { description = "", abbreviation = "", packages = [] } = menu;
 
   const { gross } = computeGD(menu, category, privilege);
@@ -39,7 +39,6 @@ const Card = ({ menu, chosen = "selected", handlePick }) => {
 
 export default function ConflictModal({ data, handleConflict }) {
   const [choice, setChoice] = useState("selected");
-
   const { show, selected, conflicts = [] } = data;
 
   return (

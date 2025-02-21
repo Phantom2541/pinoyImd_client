@@ -26,7 +26,7 @@ import electrolyte from "./slices/results/laboratory/electrolyte";
 import serology from "./slices/results/laboratory/serology";
 
 import remmitance from "./slices/finance/remmitance";
-import checkout from "./slices/commerce/checkout";
+import pos from "./slices/commerce/pos";
 
 import temperatures from "./slices/monitoring/temperature";
 
@@ -58,7 +58,7 @@ const store = configureStore({
     temperatures,
     providers,
     sources,
-    checkout,
+    pos,
   },
 });
 

@@ -4,22 +4,25 @@ import Platforms from "./pages/platforms";
 import Home from "./pages/home";
 import { useDispatch, useSelector } from "react-redux";
 import { VALIDATEREFRESH } from "./services/redux/slices/assets/persons/auth";
-import ClaimStub from "./components/claimStub";
-import RequestForm from "./components/requestFormNew";
-import TaskPrintout from "./components/taskPrintout";
-import ChemLog from "./components/logbookPrintout/chemistry";
-import ElecLog from "./components/logbookPrintout/electrolytes";
-import HemaLog from "./components/logbookPrintout/hematology";
-import FecaLog from "./components/logbookPrintout/fecalysis";
-import SeroLog from "./components/logbookPrintout/serology";
-import UrinLog from "./components/logbookPrintout/urinalysis";
-import TempGraph from "./components/monitoring/temperature";
+import {
+  ClaimStub,
+  ChemLog,
+  RequestForm,
+  TempGraph,
+  PersonnelPrintOut,
+  TaskPrintout,
+  ElecLog,
+  HemaLog,
+  UrinLog,
+  FecaLog,
+  SeroLog,
+} from "./components/printout";
+
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 import "./App.css";
 import "./animations.css";
 import Payslip from "./pages/platforms/manager/responsibilities/payslip";
-import PersonnelPrintOut from "./components/personnelPrintOut";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),

@@ -12,17 +12,19 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
 
-export default function Summary({
-  resetCustomer,
-  patronPresent,
-  physicianId,
-  sourceId,
-  cart = [],
-  customerId,
-  customer,
-}) {
+export default function Summary() {
+  // authorizedBy
   const { token, onDuty, auth } = useSelector(({ auth }) => auth),
-    { category, privilege } = useSelector(({ checkout }) => checkout),
+    {
+      category,
+      privilege,
+      cart,
+      physicianId,
+      sourceId,
+      customerId,
+      customer,
+      hasActiveCustomer,
+    } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
     dispatch = useDispatch();
@@ -112,8 +114,6 @@ export default function Summary({
         data,
       })
     );
-
-    resetCustomer();
     e.target.reset();
   };
 
@@ -193,7 +193,7 @@ export default function Summary({
       </table>
       <MDBBtn
         type="submit"
-        disabled={!patronPresent || !cart.length}
+        disabled={!hasActiveCustomer || !cart.length}
         className="m-0 w-100 fw-bold mt-4"
         color="success"
       >

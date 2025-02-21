@@ -2,7 +2,7 @@ import React from "react";
 import { MDBIcon } from "mdbreact";
 import { useSelector } from "react-redux";
 
-const choices = ["All", "Inhouse", "Insource", "Sendout"];
+const choices = ["All", "Inhouse", "Insource", "Outsource"];
 
 export default function Header({
   length,
