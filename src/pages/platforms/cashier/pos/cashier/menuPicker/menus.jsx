@@ -17,6 +17,8 @@ const _compare = {
   conflicts: [],
 };
 
+<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
+<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
 export default function Menus({
   categoryIndex,
   cart,
@@ -26,6 +28,12 @@ export default function Menus({
   didSearch,
   setDidSearch,
 }) {
+=======
+export default function Menus({ patronPresent }) {
+>>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
+=======
+export default function Menus({ patronPresent }) {
+>>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
   const { collections } = useSelector(({ menus }) => menus),
     [searchKey, setSearchKey] = useState(""),
     [compare, setCompare] = useState(_compare),
@@ -136,6 +144,8 @@ export default function Menus({
 
   const searchMatch = search();
 
+<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
+<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
   // if chosen is true, remove all conflicts and push selected then reset compare state
   // if chosen is false, simply reset the compare state
   const handleConflict = (chosen) => {
@@ -161,6 +171,12 @@ export default function Menus({
   };
 
   const handleDelete = (_id) => setCart(cart.filter((c) => c?._id !== _id));
+=======
+=======
+>>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
+  const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
+  const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
+>>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
 
   return (
     <>
@@ -175,6 +191,7 @@ export default function Menus({
           <tr>
             <th colSpan="3" className="bg-white">
               <div className="d-flex justify-content-center">
+<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
                 <Search
                   info={{
                     message: "Search your menus",
@@ -187,9 +204,17 @@ export default function Menus({
                   didSearch={didSearch}
                   searchRef={searchRef}
                 >
+=======
+                <SearchBox>
+                  <li>Please type a menu name.</li>
+<<<<<<< Updated upstream:src/pages/platforms/cashier/pos/cashier/menuPicker/menus.jsx
+>>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
+=======
+>>>>>>> Stashed changes:src/pages/platforms/cashier/pos/cashier/menuPicker/index.jsx
                   {!searchMatch.length && !searchKey && (
                     <li>Please type a menu name.</li>
                   )}
+
                   {!searchMatch.length && searchKey && <li>No match found.</li>}
                   {searchMatch?.map((menu, index) => {
                     const { description = "", abbreviation = "" } = menu,
