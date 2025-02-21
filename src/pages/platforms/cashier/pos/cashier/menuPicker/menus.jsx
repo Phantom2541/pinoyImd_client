@@ -268,7 +268,6 @@ export default function Menus({ patronPresent }) {
                   {hasActiveCustomer
                     ? "searching your menus"
                     : "selecting a patron"}
-                  .
                 </span>
               </td>
             </tr>

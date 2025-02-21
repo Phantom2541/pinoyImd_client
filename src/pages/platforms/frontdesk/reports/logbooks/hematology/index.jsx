@@ -4,8 +4,8 @@ import { useLocation, useHistory } from "react-router-dom";
 import {
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/results/laboratory/hematology";
-import { fullName, getAge } from "../../../../../services/utilities";
+} from "../../../../../../services/redux/slices/results/laboratory/hematology";
+import { fullName, getAge } from "../../../../../../services/utilities";
 import {
   MDBCard,
   MDBCardBody,
@@ -15,9 +15,9 @@ import {
   MDBBtnGroup,
   MDBIcon,
 } from "mdbreact";
-import TableRowCount from "../../../../../components/pagination/rows";
-import Months from "../../../../../services/fakeDb/calendar/months";
-import Years from "../../../../../services/fakeDb/calendar/years";
+import TableRowCount from "../../../../../../components/pagination/rows";
+import Months from "../../../../../../services/fakeDb/calendar/months";
+import Years from "../../../../../../services/fakeDb/calendar/years";
 
 const today = new Date();
 
