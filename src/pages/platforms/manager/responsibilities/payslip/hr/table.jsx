@@ -21,28 +21,69 @@ export default function Table() {
     [totDeduc, setTotDeduc] = useState(0),
     [totEarn, setTotEarn] = useState(0);
 
-  useEffect(() => {
-    if (payslip) {
-      setCola(rate.cola / 2);
-      setHoliday(payroll[0]?.breakdown?.income?.holiday);
-      setOTn(payroll[0]?.breakdown?.income?.overtime.number * rate.daily);
-      setBonus(payroll[0]?.breakdown?.income?.bonus);
+  //comment for darrel
+  // useEffect(() => {
+  //   if (payslip) {
+  //     setCola(rate.cola / 2);
+  //     setHoliday(payroll[0]?.breakdown?.income?.holiday);
+  //     setOTn(payroll[0]?.breakdown?.income?.overtime.number * rate.daily);
+  //     setBonus(payroll[0]?.breakdown?.income?.bonus);
 
-      setAbsent(payroll[0]?.breakdown?.Deduction?.absent * rate.daily);
-      setCa(payroll[0]?.breakdown?.Deduction?.ca);
-      setSss(payroll[0]?.breakdown?.Deduction?.sss);
-      setLoan(payroll[0]?.breakdown?.Deduction?.loan);
-      setPh(payroll[0]?.breakdown?.Deduction?.ph);
-      setPi(Number(payroll[0]?.breakdown?.Deduction?.pi));
+  //     setAbsent(payroll[0]?.breakdown?.Deduction?.absent * rate.daily);
+  //     setCa(payroll[0]?.breakdown?.Deduction?.ca);
+  //     setSss(payroll[0]?.breakdown?.Deduction?.sss);
+  //     setLoan(payroll[0]?.breakdown?.Deduction?.loan);
+  //     setPh(payroll[0]?.breakdown?.Deduction?.ph);
+  //     setPi(Number(payroll[0]?.breakdown?.Deduction?.pi));
 
-      setTotEarn(cola + oTn + holiday + bonus);
-      setTotDeduc(absent + ca + sss + loan + ph + pi);
-    }
-  }, [payslip]);
+  //     setTotEarn(cola + oTn + holiday + bonus);
+  //     setTotDeduc(absent + ca + sss + loan + ph + pi);
+  //   }
+  // }, [payslip, payroll[0]]);
 
   // console.log("earnings", totEarn);
 
   // console.log("deductions", totDeduc);
+
+  // optimized by darrel
+  const _payroll = payroll[0];
+  useEffect(() => {
+    if (payslip) {
+      const { breakdown = {} } = payroll[0] || {};
+      const { income = {}, Deduction = {} } = breakdown || {};
+      const { holiday: _holiday, overtime = {}, bonus } = income;
+      setCola(rate.cola / 2);
+      setHoliday(_holiday);
+      setOTn(overtime.number * rate.daily);
+      setBonus(income?.bonus);
+
+      setAbsent(Deduction?.absent * rate.daily);
+      setCa(Deduction?.ca);
+      setSss(Deduction?.sss);
+      setLoan(Deduction?.loan);
+      setPh(Deduction?.ph);
+      setPi(Number(Deduction?.pi));
+
+      setTotEarn(cola + oTn + holiday + bonus);
+      setTotDeduc(absent + ca + sss + loan + ph + pi);
+    }
+  }, [
+    payslip,
+    _payroll,
+    loan,
+    oTn,
+    holiday,
+    bonus,
+    rate.daily,
+    rate.cola,
+    payroll,
+    absent,
+    ca,
+    cola,
+    ph,
+    pi,
+    sss,
+  ]);
 
   return (
     <div>

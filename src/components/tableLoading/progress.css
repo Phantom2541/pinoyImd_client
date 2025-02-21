@@ -1,0 +1,11 @@
+#progress-table {
+  /* height: 27px; */
+  height: 25px !important;
+}
+
+#thead-loading {
+  height: 40px;
+}
+#tbody-loading {
+  height: 24px;
+}

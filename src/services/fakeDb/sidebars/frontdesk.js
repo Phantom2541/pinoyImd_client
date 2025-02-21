@@ -11,10 +11,19 @@ import {
 import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 
 import {
+  Fecalysis,
+  Hermatology,
+  Urinalysis,
+  Chemistry,
+  Electrolyte,
+  Serology,
+} from "../../../pages/platforms/frontdesk/reports";
+
+import {
   Task,
   Report,
   Tracker,
-} from "../../../pages/platforms/frontdesk/transactions";
+} from "../../../pages/platforms/frontdesk/diagnostics";
 
 import {
   // Cashier,
@@ -24,7 +33,6 @@ import {
   Services,
 } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
-import Expenses from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
 import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 
@@ -261,6 +269,49 @@ const frontdesk = [
             path: "/qc",
           },
         ],
+      //   name: "Electrolytes",
+      //   path: "/electrolyte",
+      //   component: Electrolyte,
+      // },
+      // {
+      //   name: "Hematology",
+      //   path: "/hematology",
+      //   component: Hermatology,
+      // },
+      // {
+      //   name: "Urinalysis",
+      //   path: "/urinalysis",
+      //   component: Urinalysis,
+      // },
+      // {
+      //   name: "Fecalysis",
+      //   path: "/fecalysis",
+      //   component: Fecalysis,
+      // },
+      // {
+      //   name: "Serology",
+      //   path: "/serology",
+      //   component: Serology,
+      // },
+      // {
+      //   name: "Miscellaneous",
+      //   path: "/miscellaneous",
+      // },
+    // ],
+  },
+  {
+    name: "Utilities",
+    path: "/utilities",
+    icon: "tools",
+    children: [
+      {
+        name: "Temperature",
+        path: "/temperature",
+        component: Temperature,
+      },
+      {
+        name: "Quality Control",
+        path: "/qc",
       },
     ],
   },

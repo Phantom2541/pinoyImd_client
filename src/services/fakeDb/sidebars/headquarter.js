@@ -35,6 +35,21 @@ const headquarter = [
         component: Physicians,
       },
       {
+        name: "Sources",
+        path: "/source",
+        component: Sources,
+      },
+      {
+        name: "Referral",
+        path: "/referral",
+        // component: Sources,
+      },
+      {
+        name: "Outsources",
+        path: "/outsource",
+        // component: Sources,
+      },
+      {
         name: "Equipments",
         path: "/equipments",
         component: Equipments,
@@ -129,6 +144,7 @@ const headquarter = [
         name: "Equipments",
         path: "/duty/equipments",
         icon: "list",
+        component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",

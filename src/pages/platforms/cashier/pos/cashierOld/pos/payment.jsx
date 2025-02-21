@@ -132,9 +132,9 @@ export default function CashierPayment({
     );
   };
 
-  const handleDiscountValidation = () => {
-    console.log("here");
-  };
+  // const handleDiscountValidation = () => {
+  //   console.log("here");
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -126,6 +126,7 @@ export default function Payrolls() {
                       return payslip;
                     }
                   }
+                  return null;
                 });
                 return (
                   <tr key={`payroll-${index + 1}`}>

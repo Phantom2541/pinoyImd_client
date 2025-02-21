@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   MDBCard,
   MDBCardBody,
@@ -6,14 +6,12 @@ import {
   MDBCardTitle,
   MDBCol,
 } from "mdbreact";
-import { useSelector } from "react-redux";
 import { PresetUser, ENDPOINT } from "../../../../../services/utilities";
 
 import ApplicationModal from "./modal";
 
 export default function CompanyCard({ company }) {
-  const { theme } = useSelector(({ auth }) => auth),
-    [visibility, setVisibility] = useState(false),
+  const [visibility, setVisibility] = useState(false),
     [didHover, setDidHover] = useState(false);
 
   return (

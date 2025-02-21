@@ -35,7 +35,7 @@ export default function Modal({ show, toggle, companyName }) {
       dispatch(VENDORS({ token, key: { name: capitalize(companyName) } }));
 
     return () => dispatch(RESET());
-  }, [companyName, dispatch]);
+  }, [companyName, dispatch, token]);
 
   useEffect(() => {
     if (collections.length > 0) {

@@ -4,7 +4,7 @@ import Menus from "./menuPicker/menus";
 import Summary from "./summary/index";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  PATIENTS,
+  GETPATIENTS,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/users";
 import {
@@ -70,8 +70,11 @@ export default function Cashier() {
   }, [newPatient]);
 
   useEffect(() => {
-    if (token && onDuty?._id) {
-      dispatch(PATIENTS({ token }));
+    // if (token && onDuty?._id) {
+    //   dispatch(PATIENTS({ token }));
+    if (token && onDuty._id) {
+      dispatch(GETPATIENTS({ token }));
+      // dispatch(SOURCELIST({ key: { branch: onDuty._id }, token }));
       dispatch(SOURCELIST({ token, key: { clients: onDuty._id } }));
       dispatch(PHYSICIANS({ key: { branch: onDuty._id }, token }));
       dispatch(MENUS({ key: { branchId: onDuty._id }, token }));
