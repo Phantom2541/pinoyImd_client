@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/patientPicker/form/patient.jsx
-========
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn } from "mdbreact";
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/patientPicker/form/patient.jsx
 import { Privileges, Suffixes } from "../../../../../../../services/fakeDb";
 import {
   generateEmail,
@@ -15,15 +12,11 @@ import {
   SAVE,
   UPDATE,
 } from "../../../../../../../services/redux/slices/assets/persons/users";
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/patientPicker/form/patient.jsx
-import { useDispatch, useSelector } from "react-redux";
-========
 import {
   GETPATIENTS,
   RESET,
 } from "../../../../../../../services/redux/slices/assets/persons/users";
 import { SETPATIENT } from "../../../../../../../services/redux/slices/commerce/pos";
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/patientPicker/form/patient.jsx
 import { isEqual } from "lodash";
 
 const defaultPatient = {

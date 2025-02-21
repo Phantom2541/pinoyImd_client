@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useRef } from "react";
 import { MDBIcon } from "mdbreact";
+import { useSelector } from "react-redux";
 import { Categories } from "../../../../../../services/fakeDb";
 import Search from "./search";
 import {
@@ -10,14 +10,6 @@ import {
 } from "../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import ConflictModal from "./conflictModal";
-import {
-  BROWSE as MENUS,
-  RESET as MENUSRESET,
-} from "../../../../../../services/redux/slices/commerce/menus";
-import {
-  ADDTOCART,
-  REMOVEFROMCART,
-} from "../../../../../../services/redux/slices/commerce/pos"
 
 const _compare = {
   show: false,
@@ -25,36 +17,21 @@ const _compare = {
   conflicts: [],
 };
 
-export default function Menus() {
-  const { token, onDuty } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ menus }) => menus),
-    { category, privilege, cart, hasActiveCustomer } = useSelector(
-      ({ pos }) => pos
-    ),
+export default function Menus({ patronPresent }) {
+  const { collections } = useSelector(({ menus }) => menus),
     [searchKey, setSearchKey] = useState(""),
-    [didSearch, setDidSearch] = useState(false), // used to auto close m
     [compare, setCompare] = useState(_compare),
+    [cart, setCart] = useState(""),
     searchRef = useRef(null),
-    { addToast } = useToasts(),
-    dispatch = useDispatch();
+    { addToast } = useToasts();
 
-  useEffect(() => {
-    if (token && onDuty?._id) {
-      dispatch(MENUS({ key: { branchId: onDuty._id }, token }));
+  // const handleSearch = (e) => {
+  //   e.preventDefault();
 
-      return () => {
-        dispatch(MENUSRESET());
-      };
-    }
-  }, [token, dispatch, onDuty]);
+  //   if (didSearch && searchKey) setSearchKey("");
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-
-    if (didSearch && searchKey) setSearchKey("");
-
-    setDidSearch(!didSearch);
-  };
+  //   setDidSearch(!didSearch);
+  // };
 
   const focusSearchInput = () => {
     if (searchRef.current) {
@@ -69,10 +46,10 @@ export default function Menus() {
       setSearchKey("");
       focusSearchInput(); // auto focus search input
       // setDidSearch(false); // auto close search input
-      dispatch(ADDTOCART(selected));
+      return setCart([selected]);
     }
 
-    const { packages, _id, description, abbreviation } = selected;
+    const { packages, _id, description, abbreviation, } = selected;
 
     const sameId = cart.find((c) => c?._id === _id);
 
@@ -104,7 +81,7 @@ export default function Menus() {
         });
 
       // if no duplicate found, proceed to push to cart
-      dispatch(ADDTOCART(selected));
+      return setCart([...cart, selected]);
     }
 
     let rawConflicts = [];
@@ -132,7 +109,7 @@ export default function Menus() {
     setSearchKey("");
 
     // if no conflicts found, simply push it
-    if (!conflicts.length) dispatch(ADDTOCART(selected));
+    if (!conflicts.length) return setCart([...cart, selected]);
 
     // if there are conflicts, show for comparison
     setCompare({
@@ -140,178 +117,187 @@ export default function Menus() {
       conflicts,
       show: true,
     });
-  };
 
-  const { abbr } = Categories[category];
+    const { abbr } = Categories[categoryIndex];
 
-  const search = () => {
-    if (!searchKey) return [];
+    const search = () => {
+      if (!searchKey) return [];
 
-    return globalSearch(collections, searchKey);
-  };
+      return globalSearch(collections, searchKey);
+    };
 
-  const searchMatch = search();
+    const searchMatch = search();
 
-  // if chosen is true, remove all conflicts and push selected then reset compare state
-  // if chosen is false, simply reset the compare state
-  const handleConflict = (chosen) => {
-    const { selected = {}, conflicts = [] } = compare;
-    if (!chosen) return setCompare(_compare);
-    // clone state
-    let _cart = [...cart];
-    // iterate conflcits to filter out each _id
-    for (const { _id = "" } of conflicts)
-      _cart = _cart.filter((c) => c?._id !== _id);
+    // if chosen is true, remove all conflicts and push selected then reset compare state
+    // if chosen is false, simply reset the compare state
+    const handleConflict = (chosen) => {
+      const { selected = {}, conflicts = [] } = compare;
 
-    // copy the filtered _cart and add the selected
-    dispatch(ADDTOCART(selected));
-    setCompare(_compare);
-    addToast(`Conflicts have been resolved.`, {
-      appearance: "info",
-    });
-  };
+      if (!chosen) return setCompare(_compare);
 
-  const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
-  const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
-  const handleDelete = (id) => dispatch(REMOVEFROMCART(id));
+      // clone state
+      let _cart = [...cart];
 
-  return (
-    <>
-      {/* <ConflictModal data={compare} handleConflict={handleConflict} /> */}
-      <table className="menus-table">
-        <thead>
-          <tr>
-            <th colSpan="3" className="bg-white">
-              <div className="d-flex justify-content-center">
-                <Search
-                  info={{
-                    message: "Search your menus",
-                    description: "You can search by name or abbreviation.",
-                  }}
-                  placeholder="Menu Search..."
-                  handleSearch={handleSearch}
-                  searchKey={searchKey}
-                  setSearchKey={setSearchKey}
-                  didSearch={didSearch}
-                  searchRef={searchRef}
-                >
-                  <li>Please type a menu name.</li>
-                  {!searchMatch.length && searchKey && <li>No match found.</li>}
-                  {searchMatch?.map((menu, index) => {
-                    const { description = "", abbreviation = "" } = menu,
-                      price = menu[abbr];
+      // iterate conflcits to filter out each _id
+      for (const { _id = "" } of conflicts)
+        _cart = _cart.filter((c) => c?._id !== _id);
 
-                    return (
-                      <li
-                        key={`menu-suggestion-${index}`}
-                        onClick={() => {
-                          // isNew means its a new transaction, the prices will be shown
-                          // this will be used when editing a transaction
-                          if (price)
-                            return handlePicker({ ...menu, isNew: true });
+      // copy the filtered _cart and add the selected
+      setCart([..._cart, selected]);
 
-                          addToast(`This product has no set price.`, {
-                            appearance: "warning",
-                          });
-                        }}
-                      >
-                        <div className="d-flex align-items-center justify-content-between">
-                          <span>
-                            {abbreviation}
-                            {description && (
-                              <>
-                                <br />
-                                <span className="small">{description}</span>
-                              </>
-                            )}
-                          </span>
-                          <span className="ml-3">
-                            {price ? currency(price) : `??`}
-                          </span>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </Search>
-              </div>
-            </th>
-          </tr>
-          <tr>
-            <th className="text-left">Services</th>
-            <th style={{ width: "75px" }}>SRP</th>
-            <th style={{ width: "75px" }}>
-              <div className="d-flex align-items-center justify-content-center">
-                UP
-                <div className="menus-legend ml-2 m-0">
-                  <MDBIcon
-                    icon="info-circle"
-                    size="sm"
-                    className="text-info cursor-pointer"
-                  />
-                  <div>
-                    <ul>
-                      <li className="menu-legend-lightblue">
-                        Special Discount
-                      </li>
-                      <li className="menu-legend-yellow">Promo Price</li>
-                      <li className="menu-legend-green">Discounted Price</li>
-                      <li className="menu-legend-red">
-                        Special services, discount is not applicable
-                      </li>
-                      <li className="menu-legend-black">
-                        Suggested Retail Price
-                      </li>
-                    </ul>
+      setCompare(_compare);
+
+      addToast(`Conflicts have been resolved.`, {
+        appearance: "info",
+      });
+    };
+
+    const handleDelete = (_id) => setCart(cart.filter((c) => c?._id !== _id));
+    const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
+    const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
+
+    return (
+      <>
+        <ConflictModal
+          data={compare}
+        // handleConflict={handleConflict}
+        // categoryIndex={categoryIndex}
+        // privilegeIndex={privilegeIndex}
+        />
+        <table className="menus-table">
+          <thead>
+            <tr>
+              <th colSpan="3" className="bg-white">
+                <div className="d-flex justify-content-center">
+                  <Search
+                    info={{
+                      message: "Search your menus",
+                      description: "You can search by name or abbreviation.",
+                    }}
+                    placeholder="Menu Search..."
+                    handleSearch={handleSearch}
+                    searchKey={searchKey}
+                    setSearchKey={setSearchKey}
+                    didSearch={didSearch}
+                    searchRef={searchRef}
+                  >
+
+                    {!searchMatch.length && searchKey && <li>No match found.</li>}
+                    {searchMatch?.map((menu, index) => {
+                      const { description = "", abbreviation = "" } = menu,
+                        price = menu[abbr];
+
+                      return (
+                        <li
+                          key={`menu-suggestion-${index}`}
+                          onClick={() => {
+                            // isNew means its a new transaction, the prices will be shown
+                            // this will be used when editing a transaction
+                            if (price)
+                              return handlePicker({ ...menu, isNew: true });
+
+                            addToast(`This product has no set price.`, {
+                              appearance: "warning",
+                            });
+                          }}
+                        >
+                          <div className="d-flex align-items-center justify-content-between">
+                            <span>
+                              {abbreviation}
+                              {description && (
+                                <>
+                                  <br />
+                                  <span className="small">{description}</span>
+                                </>
+                              )}
+                            </span>
+                            <span className="ml-3">
+                              {price ? currency(price) : `??`}
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </Search>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th className="text-left">Services</th>
+              <th style={{ width: "75px" }}>SRP</th>
+              <th style={{ width: "75px" }}>
+                <div className="d-flex align-items-center justify-content-center">
+                  UP
+                  <div className="menus-legend ml-2 m-0">
+                    <MDBIcon
+                      icon="info-circle"
+                      size="sm"
+                      className="text-info cursor-pointer"
+                    />
+                    <div>
+                      <ul>
+                        <li className="menu-legend-lightblue">
+                          Special Discount
+                        </li>
+                        <li className="menu-legend-yellow">Promo Price</li>
+                        <li className="menu-legend-green">Discounted Price</li>
+                        <li className="menu-legend-red">
+                          Special services, discount is not applicable
+                        </li>
+                        <li className="menu-legend-black">
+                          Suggested Retail Price
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {!cart.length && (
-            <tr>
-              <td colSpan="3" className="menus-empty">
-                <span>
-                  Start by&nbsp;
-                  {hasActiveCustomer
-                    ? "searching your menus"
-                    : "selecting a patron"}
-                  .
-                </span>
-              </td>
+              </th>
             </tr>
-          )}
-          {cart.map((menu) => {
-            const { _id, descritpion, abbreviation } = menu,
-              {
-                gross = 0,
-                up = 0,
-                title = "",
-                color = "",
-              } = computeGD(menu, category, privilege);
-
-            return (
-              <tr key={_id}>
-                <td className="text-left">
-                  {descritpion && `${descritpion} - `}
-                  {abbreviation}
-                </td>
-                <td title="Suggested Retail Price">{currency(gross)}</td>
-                <td title={title}>
-                  <span className={`text-${color}`}>{currency(up)}</span>
-                  <button
-                    onClick={() => handleDelete(_id)}
-                    className="menus-button-delete"
-                  >
-                    <MDBIcon icon="trash" />
-                  </button>
+          </thead>
+          <tbody>
+            {!cart.length && (
+              <tr>
+                <td colSpan="3" className="menus-empty">
+                  <span>
+                    Start by&nbsp;
+                    {patronPresent
+                      ? "searching your menus"
+                      : "selecting a patron"}
+                    .
+                  </span>
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </>
-  );
-}
+            )}
+            {cart.map((menu) => {
+              const { _id, descritpion, abbreviation } = menu,
+                {
+                  gross = 0,
+                  up = 0,
+                  title = "",
+                  color = "",
+                } = computeGD(menu, categoryIndex, privilegeIndex);
+
+              return (
+                <tr key={_id}>
+                  <td className="text-left">
+                    {descritpion && `${descritpion} - `}
+                    {abbreviation}
+                  </td>
+                  <td title="Suggested Retail Price">{currency(gross)}</td>
+                  <td title={title}>
+                    <span className={`text-${color}`}>{currency(up)}</span>
+                    <button
+                      onClick={() => handleDelete(_id)}
+                      className="menus-button-delete"
+                    >
+                      <MDBIcon icon="trash" />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </>
+    );
+  }

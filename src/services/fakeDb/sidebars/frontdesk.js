@@ -1,18 +1,9 @@
 import Dashboard from "../../../pages/platforms/frontdesk/dashboard";
-import {
-  Chemistry,
-  Hematology,
-  Urinalysis,
-  Fecalysis,
-  Serology,
-  Electrolyte,
-} from "../../../pages/platforms/frontdesk";
-
 import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 
 import {
   Fecalysis,
-  Hermatology,
+  Hematology,
   Urinalysis,
   Chemistry,
   Electrolyte,
@@ -269,6 +260,7 @@ const frontdesk = [
             path: "/qc",
           },
         ],
+      },
       //   name: "Electrolytes",
       //   path: "/electrolyte",
       //   component: Electrolyte,
@@ -276,7 +268,7 @@ const frontdesk = [
       // {
       //   name: "Hematology",
       //   path: "/hematology",
-      //   component: Hermatology,
+      //   component:   Hematology,
       // },
       // {
       //   name: "Urinalysis",
@@ -297,7 +289,8 @@ const frontdesk = [
       //   name: "Miscellaneous",
       //   path: "/miscellaneous",
       // },
-    // ],
+      ,
+    ],
   },
   {
     name: "Utilities",
