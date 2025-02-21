@@ -9,16 +9,12 @@ import {
   properFullname,
 } from "../../../../../../../services/utilities";
 import { Categories, Privileges } from "../../../../../../../services/fakeDb";
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/patientPicker/form/posCard.jsx
-import { useSelector } from "react-redux";
-========
 import {
   SETCATEGORY,
   SETPRIVILEGE,
   SETPHYSICIAN,
   SETSOURCE,
 } from "./../../../../../../../services/redux/slices/commerce/pos.js";
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/patientPicker/form/posCard.jsx
 
 import {
   TIEUPS as SOURCELIST,

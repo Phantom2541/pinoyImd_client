@@ -65,7 +65,7 @@ export default function Tasks() {
 
   useEffect(() => {
     // if (token && activePlatform?.branchId) {
-    //   dispatch(PATIENTS({ token }));
+    //   dispatch(GETPATIENTS({ token }));
     if (token && activePlatform._id) {
       dispatch(GETPATIENTS({ token }));
     }

@@ -4,7 +4,7 @@ import Header from "./header";
 import Carousel from "./carousel";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  PATIENTS,
+  GETPATIENTS,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/users";
 import {
@@ -67,7 +67,7 @@ export default function Cashier() {
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
-      dispatch(PATIENTS({ token }));
+      dispatch(GETPATIENTS({ token }));
       // dispatch(SOURCELIST({ key: { branch: activePlatform?.branchId }, token }));
       dispatch(
         SOURCELIST({ token, key: { clients: activePlatform?.branchId } })

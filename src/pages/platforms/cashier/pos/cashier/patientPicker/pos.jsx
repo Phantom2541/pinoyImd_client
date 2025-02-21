@@ -4,10 +4,6 @@ import { MDBIcon } from "mdbreact";
 import Search from "./search";
 import Patient from "./form/patient";
 import PosCard from "./form/posCard";
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/patientPicker/pos.jsx
-import { useSelector } from "react-redux";
-========
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/patientPicker/pos.jsx
 import {
   fullName,
   fullNameSearch,
@@ -78,19 +74,9 @@ export default function POS() {
               onClick={() => {
                 dispatch(SETPATIENT(user));
                 const { privilege = 0, dob } = user;
-<<<<<<<< HEAD:src/pages/platforms/cashier/pos/cashier/patientPicker/pos.jsx
-
-                if (privilege !== privilegeIndex) setPrivilegeIndex(privilege);
-
-                // if current privilege is 0 but the customer is a valid senior, auto select senior as privilege
-                if (privilege === 0 && getAge(dob, true) > 59)
-                  setPrivilegeIndex(2);
-========
                 // if current privilege is 0 but the customer is a valid senior, auto select senior as privilege
                 if (privilege === 0 && getAge(dob, true) > 59)
                   dispatch(SETPRIVILEGE(2));
->>>>>>>> main:src/pages/platforms/cashier/pos/ExperimentalCashier/patientPicker/pos.jsx
-
                 setDidSearch(false);
               }}
             >
