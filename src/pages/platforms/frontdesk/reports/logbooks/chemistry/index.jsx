@@ -54,7 +54,7 @@ export default function Chems() {
   const [chems, setChems] = useState([]),
     [chemsPrint, setChemsPrint] = useState([]),
     { token, activePlatform } = useSelector(({ auth }) => auth),
-    // { token, onDuty } = useSelector(({ auth }) => auth),
+    // { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ chemistry }) => chemistry),
     { search, pathname } = useLocation(),
     query = new URLSearchParams(search),

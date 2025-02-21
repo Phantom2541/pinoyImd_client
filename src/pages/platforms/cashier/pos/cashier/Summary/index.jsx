@@ -23,7 +23,7 @@ export default function Summary({
   customerId,
   customer,
 }) {
-  const { token, onDuty, auth } = useSelector(({ auth }) => auth),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
     dispatch = useDispatch();
@@ -56,7 +56,7 @@ export default function Summary({
       physicianId: physicianId || undefined,
       source: sourceId || undefined,
       // authorizedBy: authorizedBy || undefined,
-      branchId: onDuty._id,
+      branchId: activePlatform.branchId,
       customerId,
       cashierId: auth._id,
       category: categoryIndex === 0 ? "walkin" : abbr,

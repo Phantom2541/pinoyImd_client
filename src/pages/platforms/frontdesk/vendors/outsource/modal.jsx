@@ -24,8 +24,8 @@ import {
 export default function Modal({ show, toggle, companyName }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, isLoading, message, isSuccess } = useSelector(
-  // const { token, onDuty } = useSelector(({ auth }) => auth),
-  //   { collections, message, isSuccess } = useSelector(
+      // const { token, activePlatform } = useSelector(({ auth }) => auth),
+      //   { collections, message, isSuccess } = useSelector(
       ({ companies }) => companies
     ),
     [companies, setCompanies] = useState([]),

@@ -17,7 +17,7 @@ import { UPDATE_ACCESS } from "../../../../../../../services/redux/slices/assets
 import Table from "./table";
 
 export default function AccessModal({ show, toggle, selected }) {
-  const { auth, onDuty, token } = useSelector(({ auth }) => auth),
+  const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
     [existingAccess, setExistingAccess] = useState([]),
     [roles, setRoles] = useState([]),
     [search, setSearch] = useState([]),
@@ -89,7 +89,7 @@ export default function AccessModal({ show, toggle, selected }) {
       _addedRoles.push({
         platform: role.name,
         approvedBy: auth._id,
-        branchId: onDuty._id,
+        branchId: activePlatform.branchId,
         userId: user._id,
         id: roleID,
         status: true,

@@ -7,7 +7,7 @@ import { generateClaimStub } from "../../../../../../../services/utilities";
 import { UPDATE } from "../../../../../../../services/redux/slices/commerce/sales";
 
 const PrimaryFooter = ({ sale, setEdit, ledgerView }) => {
-  const { token, onDuty, auth } = useSelector(({ auth }) => auth),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const generateTask = async (sale) => {
@@ -38,7 +38,7 @@ const PrimaryFooter = ({ sale, setEdit, ledgerView }) => {
               packages: buntisPresent,
               saleId: _id,
               customerId: customerId?._id,
-              branchId: onDuty._id,
+              branchId: activePlatform.branchId,
               buntis: true,
             },
             token
@@ -56,7 +56,7 @@ const PrimaryFooter = ({ sale, setEdit, ledgerView }) => {
           packages: [test],
           saleId: _id,
           customerId: customerId?._id,
-          branchId: onDuty._id,
+          branchId: activePlatform.branchId,
           _buntis: false,
         }));
 
@@ -77,7 +77,7 @@ const PrimaryFooter = ({ sale, setEdit, ledgerView }) => {
           packages: task[key],
           _id,
           customerId: customerId?._id,
-          branchId: onDuty._id,
+          branchId: activePlatform.branchId,
         },
         token
       );

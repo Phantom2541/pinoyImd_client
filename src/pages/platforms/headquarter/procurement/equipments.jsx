@@ -13,7 +13,7 @@ import { dateFormat } from "../../../../services/utilities";
 import TableLoading from "../../../../components/tableLoading";
 
 const Equipments = () => {
-  const { onDuty, token } = useSelector(({ auth }) => auth),
+  const { activePlatform, token } = useSelector(({ auth }) => auth),
     { collections, isLoading } = useSelector(
       ({ procurements }) => procurements
     ),
@@ -21,8 +21,8 @@ const Equipments = () => {
     dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(BROWSE({ token, key: { branchId: onDuty._id } }));
-  }, [onDuty, dispatch, token]);
+    dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));
+  }, [activePlatform, dispatch, token]);
 
   useEffect(() => {
     const arrangeEquipment = [...collections]?.reduce((acc, curr) => {

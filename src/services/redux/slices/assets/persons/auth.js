@@ -272,7 +272,6 @@ export const reduxSlice = createSlice({
       //     branch: lastVisited.branchId?._id,
       //   };
 
-
       //   _branches = branches.map((branch) => {
       //     const _access = access.filter((data) => branch._id === data.branchId);
 
@@ -285,12 +284,12 @@ export const reduxSlice = createSlice({
       //       access: _access,
       //     };
       //   });
-      //   const onDuty = _branches.find(({ lastVisit }) => lastVisit);
+      //   const activePlatform = _branches.find(({ lastVisit }) => lastVisit);
 
-      //   if (onDuty) {
-      //     state.onDuty = onDuty;
+      //   if (activePlatform) {
+      //     state.activePlatform = activePlatform;
       //   } else {
-      //     state.onDuty = !!_branches.length ? _branches[0] : defaultDuty;
+      //     state.activePlatform = !!_branches.length ? _branches[0] : defaultDuty;
       //   }
 
       //   state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
@@ -314,60 +313,60 @@ export const reduxSlice = createSlice({
       // })
 
       .addCase(LOGIN.fulfilled, (state, action) => {
-  const { success, payload } = action.payload,
-    { token, auth, branches, isCeo, access, company, isPatient } =
-    payload;
+        const { success, payload } = action.payload,
+          { token, auth, branches, isCeo, access, company, isPatient } =
+            payload;
 
-  state.isPatient = isPatient;
+        state.isPatient = isPatient;
 
-  let _branches = [];
+        let _branches = [];
 
-  if (isCeo) {
-    state.isCeo = isCeo;
+        if (isCeo) {
+          state.isCeo = isCeo;
 
-    _branches = branches.map((branch) => {
-      const _access = access.filter(
-        (data) => branch._id === data.branchId
-      );
+          _branches = branches.map((branch) => {
+            const _access = access.filter(
+              (data) => branch._id === data.branchId
+            );
 
-      return {
-        ...branch,
-        access: _access,
-      };
-    });
-  }
+            return {
+              ...branch,
+              access: _access,
+            };
+          });
+        }
 
-  _branches = branches.map((branch) => {
-    const _access = access.filter((data) => branch._id === data.branchId);
+        _branches = branches.map((branch) => {
+          const _access = access.filter((data) => branch._id === data.branchId);
 
-    return {
-      ...branch,
-      access: _access,
-    };
-  });
+          return {
+            ...branch,
+            access: _access,
+          };
+        });
 
-  state.onDuty = auth.activePlatform; // <--- Changed this line
+        state.activePlatform = auth.activePlatform; // <--- Changed this line
 
-  state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
+        state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
 
-  state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
-  state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
-  state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
-  state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
-  state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
+        state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
+        state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
+        state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
+        state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
+        state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
-  state.company = company;
-  state.activePortal = auth.activePlatform;
-  state.branches = _branches;
-  state.access = access;
-  state.auth = auth;
-  state.email = auth.email;
-  state.token = token;
-  state.message = success;
-  state.loginSuccess = true;
-  state.isLoading = false;
-})
-      
+        state.company = company;
+        state.activePortal = auth.activePlatform;
+        state.branches = _branches;
+        state.access = access;
+        state.auth = auth;
+        state.email = auth.email;
+        state.token = token;
+        state.message = success;
+        state.loginSuccess = true;
+        state.isLoading = false;
+      })
+
       //   state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
       //   state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
       //   state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;

@@ -28,7 +28,7 @@ export default function Sales() {
     [showCashRegister, setShowCashRegister] = useState(false),
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
-    // { token, onDuty, auth } = useSelector(({ auth }) => auth),
+    // { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     // { collections } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
 

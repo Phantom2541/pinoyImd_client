@@ -33,7 +33,7 @@ const Applicants = () => {
   // // useEffect(() => {
   // //   dispatch(BROWSE({ token, branchId: activePortal.branchId }));
   // // }, [token, dispatch]);
-  // const { token, onDuty } = useSelector(({ auth }) => auth),
+  // const { token, activePlatform } = useSelector(({ auth }) => auth),
   //   { collections, isLoading } = useSelector(({ applicants }) => applicants),
   //   [category, setCategory] = useState("Petition"),
   //   [didSearch, setDidSearch] = useState(false),
@@ -42,10 +42,10 @@ const Applicants = () => {
   //   dispatch = useDispatch();
 
   // useEffect(() => {
-  //   if (onDuty?._id) {
-  //     dispatch(BROWSE({ token, branchId: onDuty._id }));
+  //   if (activePlatform.branchId) {
+  //     dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
   //   }
-  // }, [token, dispatch, onDuty]);
+  // }, [token, dispatch, activePlatform]);
 
   // useEffect(() => {
   //   const filteredApplicants = collections.filter(
@@ -54,7 +54,7 @@ const Applicants = () => {
   //   setBaseApplicants(filteredApplicants);
   //   setApplicants(filteredApplicants);
   // }, [category, collections]);
-//
+  //
   const handleApprove = (applicant) => {
     const { user } = applicant;
     Swal.fire({
