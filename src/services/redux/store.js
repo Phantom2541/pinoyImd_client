@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import auth from "./slices/assets/persons/auth";
 import personnels from "./slices/assets/persons/personnels";
+import sources from "./slices/assets/persons/source";
 import access from "./slices/responsibilities/access";
 import users from "./slices/assets/persons/users";
 import companies from "./slices/assets/companies";
@@ -25,6 +26,7 @@ import electrolyte from "./slices/results/laboratory/electrolyte";
 import serology from "./slices/results/laboratory/serology";
 
 import remmitance from "./slices/finance/remmitance";
+import pos from "./slices/commerce/pos";
 
 import temperatures from "./slices/monitoring/temperature";
 
@@ -55,6 +57,8 @@ const store = configureStore({
     serology,
     temperatures,
     providers,
+    sources,
+    pos,
   },
 });
 

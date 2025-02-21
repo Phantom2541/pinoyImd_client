@@ -61,7 +61,7 @@ export default function CustomSelect({
       color="primary"
     >
       <MDBSelectInput className={`${inputClassName}`} selected={preValue} />
-      <MDBSelectOptions search={handleSearchDisabling()} searchId={label}>
+      <MDBSelectOptions search={handleSearchDisabling()}>
         {choices.map((choice, index) => {
           const value = String(choice[values]),
             text = choice[texts];

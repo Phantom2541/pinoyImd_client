@@ -37,7 +37,7 @@ export default function Ledger() {
       );
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, month, year]);
+  }, [token, dispatch, onDuty, month, year, auth._id]);
 
   return (
     <MDBContainer className="d-grid" fluid>

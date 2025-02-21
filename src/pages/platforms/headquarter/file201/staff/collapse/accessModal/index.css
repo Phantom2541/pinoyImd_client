@@ -1,0 +1,23 @@
+.custom-scroll::-webkit-scrollbar {
+  width: 7px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #f0ecec;
+  border-radius: 4px;
+}
+
+.roles-search {
+  border: 1px solid gray !important;
+  border-radius: 3px;
+}
+
+.roles-search:focus {
+  border-color: blue;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
+}

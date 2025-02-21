@@ -32,7 +32,7 @@ export default function Payrolls() {
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
     { token, onDuty } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, isLoading } = useSelector(
+    { collections, message, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
     { addToast } = useToasts(),
@@ -125,6 +125,7 @@ export default function Payrolls() {
                       return payslip;
                     }
                   }
+                  return null;
                 });
                 return (
                   <tr key={`payroll-${index + 1}`}>

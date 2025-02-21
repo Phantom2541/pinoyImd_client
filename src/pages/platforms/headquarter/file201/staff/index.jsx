@@ -9,6 +9,7 @@ import {
 // import { globalSearch } from "../../../../../services/utilities";
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
+import TableLoading from "../../../../../components/tableLoading";
 // import TableRowCount from "../../../../../components/pagination/rows";
 // import Pagination from "../../../../../components/pagination";
 
@@ -20,13 +21,19 @@ export default function Staffs() {
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
     [willCreate, setWillCreate] = useState(true),
-    [visible, setVisible] = useState(false),
     { token, onDuty, maxPage } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ personnels }) => personnels
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  console.log(
+    "unused variables selected,showModal,totalPages remove this by darrel",
+    selected,
+    showModal,
+    totalPages
+  );
 
   useEffect(() => {
     if (staffs.length > 0) {
@@ -46,13 +53,15 @@ export default function Staffs() {
     return () => dispatch(RESET());
   }, [token, dispatch, onDuty]);
 
+  console.log(onDuty.id);
+
   //Set fetched data for mapping
   useEffect(() => {
     setStaffs(collections);
   }, [collections]);
 
   //Modal toggle
-  const toggleModal = () => setShowModal(!showModal);
+  // const toggleModal = () => setShowModal(!showModal);
 
   //Trigger for update
   const handleUpdate = (selected) => {
@@ -146,23 +155,29 @@ export default function Staffs() {
           </div>
         </MDBView>
         <MDBCardBody className="pb-0">
-          <MenuCollapse
-            staffs={staffs}
-            page={page}
-            resetSearch={resetSearch}
-            searchKey={searchKey}
-            handleUpdate={handleUpdate}
-          />
-          <div className="d-flex justify-content-between align-items-center px-4">
-            {/* <TableRowCount /> */}
+          {isLoading ? (
+            <TableLoading />
+          ) : (
+            <>
+              <MenuCollapse
+                staffs={staffs}
+                page={page}
+                resetSearch={resetSearch}
+                searchKey={searchKey}
+                handleUpdate={handleUpdate}
+              />
+              <div className="d-flex justify-content-between align-items-center px-4">
+                {/* <TableRowCount /> */}
 
-            {/* <Pagination
+                {/* <Pagination
               isLoading={isLoading}
               total={totalPages}
               page={page}
               setPage={setPage}
             /> */}
-          </div>
+              </div>
+            </>
+          )}
         </MDBCardBody>
       </MDBCard>
       {/* <Modal

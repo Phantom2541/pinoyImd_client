@@ -189,8 +189,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, company, isPatient } =
-            payload;
+          { token, auth, branches, access, company, isPatient } = payload;
 
         state.isPatient = isPatient;
 
@@ -266,7 +265,7 @@ export const reduxSlice = createSlice({
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
         state.company = company;
-        state.activePortal = lastVisited;
+        // state.activePortal = lastVisited;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;

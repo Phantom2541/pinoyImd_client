@@ -5,7 +5,9 @@ import Heads from "../../../pages/platforms/headquarter/file201/heads";
 import Physicians from "../../../pages/platforms/headquarter/file201/physicians";
 import Procurments from "../../../pages/platforms/headquarter/file201/procurments";
 import Staffs from "../../../pages/platforms/headquarter/file201/staff";
+import Sources from "../../../pages/platforms/headquarter/file201/sources";
 import Applicants from "../../../pages/platforms/headquarter/file201/applicants";
+import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 
 const headquarter = [
   {
@@ -32,6 +34,21 @@ const headquarter = [
         name: "Physicians",
         path: "/physicians",
         component: Physicians,
+      },
+      {
+        name: "Sources",
+        path: "/source",
+        component: Sources,
+      },
+      {
+        name: "Referral",
+        path: "/referral",
+        // component: Sources,
+      },
+      {
+        name: "Outsources",
+        path: "/outsource",
+        // component: Sources,
       },
       {
         name: "Equipments",
@@ -128,6 +145,7 @@ const headquarter = [
         name: "Equipments",
         path: "/duty/equipments",
         icon: "list",
+        component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",

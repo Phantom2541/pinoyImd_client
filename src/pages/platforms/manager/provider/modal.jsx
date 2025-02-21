@@ -23,7 +23,7 @@ import {
 
 export default function Modal({ show, toggle, companyName }) {
   const { token, onDuty } = useSelector(({ auth }) => auth),
-    { collections, isLoading, message, isSuccess } = useSelector(
+    { collections, message, isSuccess } = useSelector(
       ({ companies }) => companies
     ),
     [companies, setCompanies] = useState([]),
@@ -35,7 +35,7 @@ export default function Modal({ show, toggle, companyName }) {
       dispatch(VENDORS({ token, key: { name: capitalize(companyName) } }));
 
     return () => dispatch(RESET());
-  }, [companyName, dispatch]);
+  }, [companyName, dispatch, token]);
 
   useEffect(() => {
     if (collections.length > 0) {

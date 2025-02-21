@@ -1,17 +1,20 @@
 import Dashboard from "../../../pages/platforms/frontdesk/dashboard";
-import Fecalysis from "../../../pages/platforms/frontdesk/logbooks/fecalysis";
-import Hermatology from "../../../pages/platforms/frontdesk/logbooks/hermatology";
-import Urinalysis from "../../../pages/platforms/frontdesk/logbooks/urinalysis";
-import Chemistry from "../../../pages/platforms/frontdesk/logbooks/chemistry";
-import Electrolite from "../../../pages/platforms/frontdesk/logbooks/electrolite";
-import Serology from "../../../pages/platforms/frontdesk/logbooks/serology";
 import ExperimentalPOS from "../../../pages/platforms/cashier/pos/ExperimentalCashier";
+
+import {
+  Fecalysis,
+  Hermatology,
+  Urinalysis,
+  Chemistry,
+  Electrolyte,
+  Serology,
+} from "../../../pages/platforms/frontdesk/reports";
 
 import {
   Task,
   Report,
   Tracker,
-} from "../../../pages/platforms/frontdesk/transactions";
+} from "../../../pages/platforms/frontdesk/diagnostics";
 
 import {
   // Cashier,
@@ -21,7 +24,6 @@ import {
   Services,
 } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
-import Expenses from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
 import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 
@@ -33,7 +35,7 @@ const frontdesk = [
     component: Dashboard,
   },
   {
-    name: "POS", // Point Of Sales
+    name: "Point Of Sales",
     path: "/pos",
     icon: "cogs",
     children: [
@@ -55,7 +57,7 @@ const frontdesk = [
     ],
   },
   {
-    name: "Transactions",
+    name: "Diagnostics",
     path: "/transactions",
     icon: "cogs",
     children: [
@@ -203,9 +205,9 @@ const frontdesk = [
         component: Chemistry,
       },
       {
-        name: "Electrolites",
-        path: "/electrolite",
-        component: Electrolite,
+        name: "Electrolytes",
+        path: "/electrolyte",
+        component: Electrolyte,
       },
       {
         name: "Hematology",

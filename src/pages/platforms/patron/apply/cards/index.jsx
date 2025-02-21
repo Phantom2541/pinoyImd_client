@@ -9,12 +9,9 @@ import {
   MDBCardTitle,
 } from "mdbreact";
 import CompanyCard from "./card";
-import { useSelector } from "react-redux";
 import { PresetUser } from "../../../../../services/utilities";
 
-export default function CompanyCards({ companies, page }) {
-  const { theme, maxPage } = useSelector(({ auth }) => auth);
-
+export default function CompanyCards({ companies }) {
   return (
     <>
       <MDBTypography note noteColor="info" className="text-center">
