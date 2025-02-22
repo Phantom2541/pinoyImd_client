@@ -178,7 +178,21 @@ export const reduxSlice = createSlice({
         const branch = state.branches.find(
           (branch) => branch._id === payload.activePlatform.branchId
         );
-        state.activePlatform = { branch, ...payload.activePlatform };
+        const _access = state.access
+          .filter(
+            ({ branchId }) => branchId?._id === payload.activePlatform.branchId
+          )
+          .map((a) => a.platform);
+
+        console.log("access", state.access);
+        console.log("active branch id", payload.activePlatform.branchId);
+
+        console.log("_access", _access);
+        state.activePlatform = {
+          branch,
+          ...payload.activePlatform,
+          access: [..._access],
+        };
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
@@ -223,8 +237,6 @@ export const reduxSlice = createSlice({
 
         state.isPatient = isPatient;
 
-        let _branches = [];
-
         state.isCeo = isCeo;
         state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
         state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
@@ -236,12 +248,19 @@ export const reduxSlice = createSlice({
         const branch = branches.find(
           (branch) => branch._id === auth.activePlatform.branchId
         );
-
-        console.log(" LOGIN branch :", branch);
+        const _access = access
+          .filter(
+            ({ branchId }) => branchId?._id === auth.activePlatform.branchId
+          )
+          .map((a) => a.platform);
 
         state.isPatient = isPatient;
         state.isCeo = isCeo;
-        state.activePlatform = { branch, ...auth.activePlatform };
+        state.activePlatform = {
+          branch,
+          ...auth.activePlatform,
+          access: [..._access],
+        };
         state.company = company;
         state.token = token;
         state.email = auth.email;
@@ -273,7 +292,10 @@ export const reduxSlice = createSlice({
         state.auth = payload;
         state.email = payload.email;
         localStorage.setItem("email", payload.email);
-        state.activePlatform = { ...payload.activePlatform, branch };
+        state.activePlatform = {
+          ...payload.activePlatform,
+          branch,
+        };
         state.isLoading = false;
         state.isSuccess = true;
       })
@@ -290,7 +312,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(VALIDATEREFRESH.fulfilled, (state, action) => {
         const { payload } = action.payload,
-          { auth, branches, isCeo, isPatient, company } = payload;
+          { auth, branches, isCeo, isPatient, company, access } = payload;
 
         state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
         state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
@@ -303,10 +325,22 @@ export const reduxSlice = createSlice({
           (branch) => branch._id === auth.activePlatform.branchId
         );
 
-        state.activePlatform = { ...auth.activePlatform, branch };
+        const _access = access
+          .filter(
+            ({ branchId }) => branchId?._id === auth.activePlatform.branchId
+          )
+          .map((a) => a.platform);
+
+        state.activePlatform = {
+          ...auth.activePlatform,
+          branch,
+          access: [..._access],
+        };
         state.branches = branches;
         state.isPatient = isPatient;
         state.company = company;
+        state.access = access;
+
         state.isCeo = isCeo;
         state.auth = auth;
         state.email = auth.email;

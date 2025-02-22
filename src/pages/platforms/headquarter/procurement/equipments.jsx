@@ -45,9 +45,17 @@ const Equipments = () => {
     fontWeight: 400,
   };
 
+  const handlePrint = () => {
+    alert("printed");
+  };
+
   return (
     <MDBCard narrow>
-      <TopHeader title="Equipment List" />
+      <TopHeader
+        title="Equipment List"
+        hasPrint={true}
+        handlePrint={handlePrint}
+      />
       <MDBCardBody>
         {isLoading ? (
           <TableLoading />

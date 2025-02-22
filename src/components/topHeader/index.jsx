@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
+import Categories from "./categories";
 
 const TopHeader = ({
   title = "",
   category = "",
   didSearch = false,
   hasCategory = false,
+  hasPrint = false,
   categories = [],
+  handlePrint = () => {},
   setCategory = () => {},
   handleSearch = () => {},
 }) => {
@@ -30,17 +33,11 @@ const TopHeader = ({
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-2">{title} </span>
         {hasCategory && (
-          <select
-            className="form-control bg-light"
-            value={category.toLowerCase()}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            {categories.map((c, index) => (
-              <option key={index} value={c.toLowerCase()}>
-                {c}
-              </option>
-            ))}
-          </select>
+          <Categories
+            categories={categories}
+            category={category}
+            setCategory={setCategory}
+          />
         )}
       </div>
       <div>
@@ -79,6 +76,17 @@ const TopHeader = ({
           >
             <MDBIcon icon={didSearch ? "undo" : "search"} className="mt-0" />
           </MDBBtn>
+          {hasPrint && (
+            <MDBBtn
+              size="sm"
+              className="px-2"
+              rounded
+              color="primary"
+              onClick={handlePrint}
+            >
+              <MDBIcon icon="print" />
+            </MDBBtn>
+          )}
         </div>
       </div>
     </MDBView>

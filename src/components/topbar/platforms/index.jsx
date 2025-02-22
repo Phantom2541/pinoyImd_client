@@ -15,6 +15,7 @@ export default function Platforms() {
     [access, setAccess] = useState([]),
     dispatch = useDispatch();
 
+  console.log("active platform", activePlatform);
   useEffect(() => {
     setAccess(activePlatform.access);
 
@@ -40,7 +41,7 @@ export default function Platforms() {
         token,
       })
     );
-    window.location.href = "/dashboard";
+    // window.location.href = "/dashboard";
   };
 
   return (
@@ -49,7 +50,7 @@ export default function Platforms() {
         <MDBIcon icon="network-wired" />
         &nbsp;
         <div className="d-none d-md-inline">
-          {capitalize(activePlatform.platform)}
+          {capitalize(activePlatform?.platform)}
         </div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right>

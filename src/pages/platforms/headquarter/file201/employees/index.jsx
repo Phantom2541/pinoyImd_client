@@ -56,6 +56,7 @@ export default function Employees() {
     setEmployees(collections);
   };
   const toggleModal = () => setShowModal(!showModal);
+
   const handleUpdate = (selected) => {
     setSelected(selected);
     if (willCreate) {

@@ -8,6 +8,8 @@ import {
   Staffs,
 } from "../../../pages/platforms/headquarter/file201";
 
+import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
+
 const headquarter = [
   {
     name: "File 201",
@@ -144,7 +146,7 @@ const headquarter = [
         name: "Equipments",
         path: "/duty/equipments",
         icon: "list",
-        // component: ProcurmentEquipments,
+        component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",

@@ -33,12 +33,13 @@ export default function Branches() {
     dispatch(SETACTIVEPLATFORM({ data, token }));
   };
 
+  const { branch } = activePlatform;
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
         <MDBIcon icon="code-branch" />
         &nbsp;
-        <div className="d-none d-md-inline">{capitalize("text")}</div>
+        <div className="d-none d-md-inline">{capitalize(branch.name)}</div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right>
         {branches.map(({ name, _id }, index) => (
