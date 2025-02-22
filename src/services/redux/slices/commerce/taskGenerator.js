@@ -2,44 +2,23 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
 const name = "commerce/sales";
-const defaultState = {
-  branchId: JSON.parse(localStorage.getItem("auth"))?.branchId || "",
-  cashierId: JSON.parse(localStorage.getItem("auth"))?._id || "",
+
+const initialState = {
+  collections: [],
+  _id: "default",
+  source: "",
+  physician: "",
   transaction: { _id: "default" },
-  customerId: { _id: "default" },
-  customer: "",
-  category: 0,
-  privilege: 0,
-  payment: "cash",
-  cash: 0,
-  hasDiscount: false,
-  discount: 0,
-  authorizedBy: "",
-  gross: 0,
-  physicianId: "",
-  sourceId: "",
-  cart: [],
-  isPickup: true,
-  isPrint: true,
+  totalPatient: 0,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
-
-const initialState = {
-  // if needed but empty, then it will be updated from the database
-  menus: JSON.parse(localStorage.getItem("menus")) || [],
-  sources: JSON.parse(localStorage.getItem("sources")) || [],
-  physicians: JSON.parse(localStorage.getItem("physicians")) || [],
-  // needed every time
-  ...defaultState,
-};
-
-export const CASHIER = createAsyncThunk(
-  `${name}/cashier`,
+export const BROWSE = createAsyncThunk(
+  `${name}`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/cashier`, token, key);
+      return axioKit.universal(`${name}/browse`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -52,30 +31,11 @@ export const CASHIER = createAsyncThunk(
     }
   }
 );
-
-export const SAVE = createAsyncThunk(
-  `${name}/save`,
-  ({ data, token }, thunkAPI) => {
+export const TASKS = createAsyncThunk(
+  `${name}/tasks`,
+  ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.save(name, data, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const UPDATE = createAsyncThunk(
-  `${name}/update`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(name, data, token);
+      return axioKit.universal(`${name}/tasks`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -106,51 +66,52 @@ export const TAGGING = createAsyncThunk(
     }
   }
 );
+export const UPDATE = createAsyncThunk(
+  `${name}/update`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(name, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const SAVE = createAsyncThunk(
+  `${name}/save`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(name, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    SETMENUS: (state, { payload }) => {
-      state.menus = [...payload];
-      localStorage.setItem("menus", JSON.stringify(payload));
-    },
-    SETCASHIER: (state, { payload }) => {
-      state.cashierId = payload.cashierId;
-      state.branchId = payload.branchId;
-    },
-    SETPATIENT: (state, { payload }) => {
-      state.customerId = payload;
-    },
-    SETCATEGORY: (state, { payload }) => {
-      state.category = payload;
-    },
-    SETPRIVILEGE: (state, { payload }) => {
-      state.privilege = payload;
-    },
-    SETPAYMENT: (state, { payload }) => {
-      state.payment = payload;
-    },
-    SETCASH: (state, { payload }) => {
-      state.cash = payload;
-    },
-    SETAUTHORIZEDBY: (state, { payload }) => {
-      state.authorizedBy = payload;
-    },
-    SETGROSS: (state, { payload }) => {
-      state.gross = payload;
+    SETSOURCE: (state, { payload }) => {
+      state.source = payload.source;
+      state._id = payload._id;
     },
     SETPHYSICIAN: (state, { payload }) => {
-      state.physicianId = payload;
-    },
-    SETSOURCE: (state, { payload }) => {
-      state.sourceId = payload;
-    },
-    ADDTOCART: (state, { payload }) => {
-      state.cart = [...state.cart, payload];
-    },
-    REMOVEFROMCART: (state, { payload }) => {
-      state.cart = state.cart.filter((item) => item._id !== payload);
+      state.physician = payload.physician;
+      state._id = payload._id;
     },
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
@@ -161,21 +122,55 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(CASHIER.pending, (state) => {
+      .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(CASHIER.fulfilled, (state, action) => {
+      .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.collections = payload;
         state.isLoading = false;
       })
-      .addCase(CASHIER.rejected, (state, action) => {
+      .addCase(BROWSE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(TAGGING.pending, (state) => {
+        // state.isLoading = true;
+        // state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(TAGGING.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        const index = state.collections.findIndex((c) => c._id === payload._id);
+
+        state.collections[index] = payload;
+
+        state.isLoading = false;
+      })
+      .addCase(TAGGING.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(TASKS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(TASKS.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = payload;
+        state.isLoading = false;
+      })
+      .addCase(TASKS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -193,7 +188,6 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
       .addCase(UPDATE.pending, (state) => {
         // state.isLoading = true; comment this to stop loading and refreshing UI
         state.isSuccess = false;
@@ -201,24 +195,11 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-        state.transaction = {
-          ...payload,
-          _id: state.transaction._id === payload._id ? "default" : payload._id,
-        };
 
-        const currentValue = { ...state.collections[index] };
-
-        for (const key in payload) {
-          if (currentValue.hasOwnProperty(key)) {
-            currentValue[key] = payload[key];
-          }
-        }
-
-        state.collections[index] = currentValue;
+        state.collections[index] = payload;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -231,21 +212,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const {
-  SETMENUS,
-  SETCASHIER,
-  SETAUTHORIZEDBY,
-  SETCATEGORY,
-  SETPRIVILEGE,
-  SETCASH,
-  SETPAYMENT,
-  SETPATIENT,
-  SETGROSS,
-  SETPHYSICIAN,
-  SETSOURCE,
-  ADDTOCART,
-  REMOVEFROMCART,
-  RESET,
-} = reduxSlice.actions;
+export const { RESET, SETSOURCE, SETPHYSICIAN } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

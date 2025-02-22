@@ -29,8 +29,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
   RESET,
-  TAGGING,
 } from "../../../../../services/redux/slices/commerce/sales";
+import { TAGGING } from "../../../../../services/redux/slices/commerce/taskGenerator";
 import {
   TIEUPS as PHYSICIANS,
   RESET as PHYSICIANRESET,

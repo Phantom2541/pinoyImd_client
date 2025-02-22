@@ -1,27 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBadge, MDBIcon, MDBTypography } from "mdbreact";
-import { fullName } from "../../../../../../services/utilities";
-import { TAGGING } from "../../../../../../services/redux/slices/commerce/sales";
 import { SecondaryFooter, PrimaryFooter } from "./footer";
+import { fullName } from "../../../../../../services/utilities";
 
-export default function Card({
-  sale,
-  number,
-  generateTask,
+import Tagging from "./tagging";
+import Show from "./show";
 
-  // this is used by DailySaleModal
-  ledgerView = false, // toggle for showing/hiding items depending on view
-  isDeleted = false,
-  remarks = "",
-}) {
-  const [edit, setEdit] = useState(false),
-    { collections: physicians } = useSelector(({ physicians }) => physicians),
-    { collections: sources } = useSelector(({ providers }) => providers),
-    [data, setData] = useState({}),
-    { token } = useSelector(({ auth }) => auth),
-    dispatch = useDispatch();
-
+export default function Card({ item, index }) {
+  const { collections: sources } = useSelector(({ providers }) => providers),
+    [sale, setSale] = useState({}),
+    [edit, setEdit] = useState(false);
   const {
       customerId = {},
       createdAt,
@@ -34,43 +23,26 @@ export default function Card({
     { fullName: fullname = {} } = customerId,
     source = sources.find(({ vendors }) => vendors?._id === forwardedBy?._id);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    console.log(name, value);
-    setData({ ...data, _id, [name]: value });
-  };
-
-  const handleUpdate = () => {
-    dispatch(
-      TAGGING({
-        token,
-        key: data,
-      })
-    );
-    setEdit(false);
-  };
+  useEffect(() => {
+    setSale(item);
+  }, [item]);
 
   const handlePin = () => {
-    if (!ledgerView)
-      return (
-        <span className={`sales-card-num ${renderedAt && "rendered"}`}>
-          {number}
-        </span>
-      );
-
-    // do not return anything if in ledgerView but not deleted
-    if (!isDeleted) return;
-
     return (
-      <span className={`sales-card-num ${isDeleted && "deleted"}`}>
-        <MDBIcon icon="trash-alt" />
+      <span className={`sales-card-num ${renderedAt && "rendered"}`}>
+        {sale.page}
       </span>
     );
+    // return (
+    //   <span className={`sales-card-num ${true && "deleted"}`}>
+    //     <MDBIcon icon="trash-alt" />
+    //   </span>
+    // );
   };
 
   return (
     <>
-      <div className="sales-card">
+      <div className="sales-card" key={index}>
         {handlePin()}
         <p className="line-clamp">{fullName(fullname)}</p>
         <div className="sales-card-body">
@@ -94,66 +66,20 @@ export default function Card({
               </span>
             </div>
           </div>
-          <div className="sales-card-info">
-            <small>Source</small>
-            {edit ? (
-              <select
-                name="source"
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-                defaultValue={forwardedBy?._id}
-                className="w-100"
-              >
-                <option value="-">-</option>
-                {sources?.map(({ _id, name, vendors }) => (
-                  <option key={_id} value={vendors?._id}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <span className="ellipse">{source?.name || "walk in"}</span>
-            )}
-          </div>
-          <div className="sales-card-info">
-            <small>Referral</small>
-            {edit ? (
-              <select
-                name="physician"
-                defaultValue={physicianId?._id}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-                className="w-100"
-              >
-                <option value="-">-</option>
-                {physicians?.map(({ user }) => (
-                  <option key={user?._id} value={user?._id}>
-                    {fullName(user?.fullName)}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <span className="ellipse">{fullName(physicianId?.fullName)}</span>
-            )}
-          </div>
+          {edit ? (
+            <Tagging
+              forwardedBy={forwardedBy}
+              physicianId={physicianId}
+              _id={_id}
+            />
+          ) : (
+            <Show source={source} physicianId={physicianId} />
+          )}
         </div>
-        {ledgerView && remarks && (
-          <div>
-            <MDBTypography noteColor="warning" note>
-              {remarks}
-            </MDBTypography>
-          </div>
-        )}
         {edit ? (
-          <SecondaryFooter setEdit={setEdit} handleUpdate={handleUpdate} />
+          <SecondaryFooter setEdit={setEdit} />
         ) : (
-          <PrimaryFooter
-            sale={sale}
-            setEdit={setEdit}
-            ledgerView={ledgerView}
-          />
+          <PrimaryFooter sale={sale} setEdit={setEdit} />
         )}
       </div>
     </>

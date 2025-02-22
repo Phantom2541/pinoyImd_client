@@ -10,7 +10,10 @@ import {
 } from "../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import ConflictModal from "./conflictModal";
-import { ADDTOCART, REMOVEFROMCART } from "../../../../../../services/redux/slices/commerce/checkout";
+import {
+  ADDTOCART,
+  REMOVEFROMCART,
+} from "../../../../../../services/redux/slices/commerce/pos.js";
 
 const initialCompareState = {
   show: false,
@@ -48,23 +51,34 @@ export default function Menus({ patronPresent }) {
 
     if (packages.length === 1) {
       const [_package] = packages;
-      const duplicatePackage = cart.filter((c) => c?.packages.includes(_package));
+      const duplicatePackage = cart.filter((c) =>
+        c?.packages.includes(_package)
+      );
       focusSearchInput();
       setSearchKey("");
 
       if (duplicatePackage.length)
-        return setCompare({ selected, conflicts: duplicatePackage, show: true });
+        return setCompare({
+          selected,
+          conflicts: duplicatePackage,
+          show: true,
+        });
 
       return setCart([...cart, selected]);
     }
 
     let rawConflicts = [];
     for (const _package of packages) {
-      const duplicatePackage = cart.filter((c) => c?.packages.includes(_package));
-      if (duplicatePackage.length) rawConflicts = [...rawConflicts, ...duplicatePackage];
+      const duplicatePackage = cart.filter((c) =>
+        c?.packages.includes(_package)
+      );
+      if (duplicatePackage.length)
+        rawConflicts = [...rawConflicts, ...duplicatePackage];
     }
 
-    const conflicts = [...new Map(rawConflicts.map((c) => [c._id, c])).values()];
+    const conflicts = [
+      ...new Map(rawConflicts.map((c) => [c._id, c])).values(),
+    ];
     focusSearchInput();
     setSearchKey("");
 
@@ -76,7 +90,9 @@ export default function Menus({ patronPresent }) {
   const handleConflict = (chosen) => {
     if (!chosen) return setCompare(initialCompareState);
 
-    let updatedCart = cart.filter((c) => !compare.conflicts.some(({ _id }) => _id === c._id));
+    let updatedCart = cart.filter(
+      (c) => !compare.conflicts.some(({ _id }) => _id === c._id)
+    );
     setCart([...updatedCart, compare.selected]);
     setCompare(initialCompareState);
     addToast("Conflicts have been resolved.", { appearance: "info" });
@@ -110,7 +126,11 @@ export default function Menus({ patronPresent }) {
               <div className="d-flex align-items-center justify-content-center">
                 UP
                 <div className="menus-legend ml-2 m-0">
-                  <MDBIcon icon="info-circle" size="sm" className="text-info cursor-pointer" />
+                  <MDBIcon
+                    icon="info-circle"
+                    size="sm"
+                    className="text-info cursor-pointer"
+                  />
                 </div>
               </div>
             </th>
@@ -120,13 +140,24 @@ export default function Menus({ patronPresent }) {
           {!cart.length && (
             <tr>
               <td colSpan="3" className="menus-empty">
-                <span>Start by {patronPresent ? "searching your menus" : "selecting a patron"}.</span>
+                <span>
+                  Start by{" "}
+                  {patronPresent
+                    ? "searching your menus"
+                    : "selecting a patron"}
+                  .
+                </span>
               </td>
             </tr>
           )}
           {cart.map((menu) => {
             const { _id, description, abbreviation } = menu;
-            const { gross = 0, up = 0, title = "", color = "" } = computeGD(menu);
+            const {
+              gross = 0,
+              up = 0,
+              title = "",
+              color = "",
+            } = computeGD(menu);
 
             return (
               <tr key={_id}>
@@ -137,7 +168,10 @@ export default function Menus({ patronPresent }) {
                 <td title="Suggested Retail Price">{currency(gross)}</td>
                 <td title={title}>
                   <span className={`text-${color}`}>{currency(up)}</span>
-                  <button onClick={() => handleDelete(_id)} className="menus-button-delete">
+                  <button
+                    onClick={() => handleDelete(_id)}
+                    className="menus-button-delete"
+                  >
                     <MDBIcon icon="trash" />
                   </button>
                 </td>

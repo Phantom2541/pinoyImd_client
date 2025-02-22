@@ -212,24 +212,6 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
-export const TAGGING = createAsyncThunk(
-  `${name}/tagging`,
-  ({ key, token }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${name}/tagging`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const MANAGERUPDATE = createAsyncThunk(
   `${name}/managerUpdate`,
   ({ key, token }, thunkAPI) => {
@@ -272,25 +254,6 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
-      .addCase(TAGGING.pending, (state) => {
-        // state.isLoading = true;
-        // state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(TAGGING.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        const index = state.collections.findIndex((c) => c._id === payload._id);
-
-        state.collections[index] = payload;
-
-        state.isLoading = false;
-      })
-      .addCase(TAGGING.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
