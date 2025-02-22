@@ -16,15 +16,13 @@ const TopHeader = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const getSearchValue = () => document.getElementById("search")?.value;
+
   const handleClick = () => {
     const searchValue = getSearchValue();
-    if (isExpanded === false) return setIsExpanded(true);
+    if (!isExpanded) return setIsExpanded(true);
     if (isExpanded && !searchValue) return setIsExpanded(false);
-    if (isExpanded && searchValue) return setIsExpanded(true);
-    if (didSearch) return (document.getElementById("search").value = "");
   };
-
-  const getSearchValue = () => document.getElementById("search")?.value;
 
   return (
     <MDBView
@@ -49,9 +47,12 @@ const TopHeader = ({
             name="se"
             id="search"
             placeholder="Search..."
+            onChange={(e) => {
+              if (!e.target.value.trim()) handleSearch(); // Reset kapag walang laman
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                if (getSearchValue()) return handleSearch();
+                handleSearch();
                 setIsExpanded(false);
               }
             }}

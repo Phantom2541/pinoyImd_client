@@ -9,14 +9,17 @@ import {
   MDBRow,
   MDBCol,
 } from "mdbreact";
+
 import {
   EMPLOYEES,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/personnels";
+
 import {
   SAVE,
   UPDATE,
 } from "../../../../../services/redux/slices/assets/persons/heads";
+
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../services/utilities";
@@ -71,6 +74,8 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   useEffect(() => {
     setCrews(collections);
   }, [collections]);
+
+  console.log(collections);
 
   useEffect(() => {
     if (show && !willCreate && selected._id) return setForm(selected);

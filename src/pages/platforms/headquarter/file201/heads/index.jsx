@@ -11,6 +11,7 @@ import DataTable from "../../../../../components/dataTable";
 import { fullName, globalSearch } from "../../../../../services/utilities";
 import { ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
+import Branches from "../../../manager/branches";
 
 export default function Heads() {
   const [heads, setHeads] = useState([]),

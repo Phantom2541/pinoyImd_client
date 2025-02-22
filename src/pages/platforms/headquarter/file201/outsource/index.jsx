@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
   BROWSE,
   RESET,
 } from "../../../../../services/redux/slices/assets/providers";
-
 import { MDBCard, MDBCardBody } from "mdbreact";
 import Modal from "./modal";
 import CardTables from "./tables";
@@ -22,16 +20,14 @@ export default function Sources() {
     [showModal, setShowModal] = useState(false),
     [selected, setSelected] = useState({}),
     [willCreate, setWillCreate] = useState(true),
-    [searchQuery, setSearchQuery] = useState(""),
+    [didSearch, setSearchKey] = useState(""),
     dispatch = useDispatch();
 
-  // Initial Browse
   useEffect(() => {
-    if ((token, activePlatform.branchId))
-      -dispatch(BROWSE({ token, vendors: activePlatform.branchId }));
-    console.log(activePlatform.branchId);
+    if (token && onDuty._id)
+      dispatch(BROWSE({ token, key: { clients: "650fda4617d20470229e2c8d" } }));
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform]);
+  }, [token, dispatch, onDuty._id]);
 
   useEffect(() => {
     if (vendors.length > 0) {
@@ -45,47 +41,47 @@ export default function Sources() {
     setVendors(collections);
   }, [collections]);
 
-  // Toggle Modal
   const toggleModal = () => setShowModal(!showModal);
 
-  // Handle Update
   const handleUpdate = (selected) => {
     setSelected(selected);
     setWillCreate(false);
     setShowModal(true);
   };
 
-  // Handle Create
   const handleCreate = () => {
     setWillCreate(true);
     setSelected({});
     setShowModal(true);
   };
 
-  // Handle Search
   const handleSearch = () => {
-    const searchValue = document.getElementById("search")?.value.toLowerCase();
-    setSearchQuery(searchValue);
+    const searchInput = document.getElementById("search");
+    const searchValue = searchInput?.value.toLowerCase().trim();
 
-    if (searchValue) {
-      const filteredVendors = collections.filter((vendor) =>
-        vendor.name.toLowerCase().includes(searchValue)
-      );
-      setVendors(filteredVendors);
-    } else {
-      setVendors(collections); // Reset vendors when search input is empty
+    if (!searchValue) {
+      setSearchKey("");
+      setVendors(collections);
+      return;
     }
+
+    setSearchKey(searchValue);
+    const filteredVendors = collections.filter((vendor) =>
+      vendor.name.toLowerCase().includes(searchValue)
+    );
+    setVendors(filteredVendors);
   };
 
   return (
     <>
       <MDBCard narrow className="pb-3">
         <TopHeader
-          title="Company Source"
-          handleCreate={handleCreate}
+          title="Company Outsource"
+          searchKey={didSearch}
           handleSearch={handleSearch}
-          didSearch={searchQuery !== ""}
+          handleCreate={handleCreate}
         />
+
         <MDBCardBody>
           <CardTables
             vendors={vendors}
@@ -94,8 +90,10 @@ export default function Sources() {
             setWillCreate={setWillCreate}
             setShowModal={setShowModal}
           />
+
           <div className="d-flex justify-content-between align-items-center px-4">
             <TableRowCount />
+
             <Pagination
               isLoading={isLoading}
               total={totalPages}
@@ -105,8 +103,6 @@ export default function Sources() {
           </div>
         </MDBCardBody>
       </MDBCard>
-
-      {/* Modal Component */}
       <Modal
         selected={selected}
         show={showModal}

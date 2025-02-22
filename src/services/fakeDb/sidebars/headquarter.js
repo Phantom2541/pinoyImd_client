@@ -42,13 +42,13 @@ const headquarter = [
         // component: Sources,
       },
       {
-        name: "Referral",
-        path: "/referral",
-        // component: Sources,
-      },
-      {
         name: "Outsources",
         path: "/outsource",
+        component: Outsources,
+      },
+      {
+        name: "Referral",
+        path: "/referral",
         // component: Sources,
       },
       {

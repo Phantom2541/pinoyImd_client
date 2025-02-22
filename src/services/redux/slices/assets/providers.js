@@ -27,6 +27,7 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+
 export const TIEUPS = createAsyncThunk(
   `${name}/tieups`,
   ({ token, key }, thunkAPI) => {
@@ -74,6 +75,19 @@ export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
 export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   try {
     return axioKit.update(name, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const DESTROY = createAsyncThunk(`${name}/destroy`, (form, thunkAPI) => {
+  try {
+    return axioKit.destroy(name, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
