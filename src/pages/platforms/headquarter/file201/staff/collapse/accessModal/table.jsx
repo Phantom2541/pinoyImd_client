@@ -60,9 +60,15 @@ const Table = ({
                 collections.map((item, index) => (
                   <tr key={index}>
                     <td className="text-center">{index + 1}</td>
-                    <td className="text-start" style={{ fontWeight: 400 }}>
-                      &nbsp;&nbsp;&nbsp;&nbsp;
-                      {item[isTag ? "platform" : "name"]}{" "}
+                    <td
+                      className="text-start"
+                      style={{ fontWeight: 500, lineHeight: "1rem" }}
+                    >
+                      <div className="ml-3">
+                        {item[isTag ? "platform" : "display_name"]}
+                        <br />
+                        {!isTag && <small>{item.description}</small>}
+                      </div>
                     </td>
                     <td className="text-center">
                       <MDBBtn

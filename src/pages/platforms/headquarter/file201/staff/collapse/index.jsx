@@ -80,8 +80,8 @@ export default function MenuCollapse({ staffs, page }) {
               }
             >
               <label className="d-flex justify-content-between">
-                {index + 1}. {user && `${fullName(user?.fullName)} | `}
-                {employment.designation && `${role}`}
+                {index + 1}. {user && `${fullName(user?.fullName)}`}
+                {employment.designation && `| ${role}`}
                 <small>
                   {employment.soe && `${employment.soe?.toUpperCase()} | `}
                   {status && status.toUpperCase()}
