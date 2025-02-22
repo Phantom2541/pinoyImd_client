@@ -67,17 +67,17 @@ const frontdesk = [
     icon: "cogs",
     children: [
       {
-        name: "Tasks",
+        name: "Generator",
         path: "/task",
         component: Task,
       },
       {
-        name: "Reports",
+        name: "Tasks",
         path: "/reports",
         component: Report,
       },
       {
-        name: "Tracker",
+        name: "Reports",
         path: "/tracker",
         component: Tracker,
       },
