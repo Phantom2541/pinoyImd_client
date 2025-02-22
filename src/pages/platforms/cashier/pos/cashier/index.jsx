@@ -70,7 +70,12 @@ export default function Cashier() {
   }, [newPatient]);
 
   useEffect(() => {
+      console.log("LOL TOKEN", token);
+      console.log("LOL BRANCH", activePlatform.branchId);
+
     if (token && activePlatform.branchId) {
+      console.log(token && activePlatform.branchId);
+      
       dispatch(GETPATIENTS({ token }));
       dispatch(
         SOURCELIST({ token, key: { clients: activePlatform.branchId } })

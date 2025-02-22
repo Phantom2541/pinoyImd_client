@@ -49,7 +49,11 @@ export default function Search({
           ref={searchRef}
           placeholder={placeholder}
           value={searchKey}
-          onChange={({ target }) => setSearchKey(target.value)}
+          onChange={({ target }) => {
+            console.log('target.value',target.value);
+            
+            setSearchKey(target.value)
+          }}
           autoCorrect="off"
           spellCheck={false}
         />

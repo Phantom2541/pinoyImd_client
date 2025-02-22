@@ -29,6 +29,11 @@ export default function POS({
     [activeIndex, setActiveIndex] = useState(0),
     [didSearch, setDidSearch] = useState(false);
 
+  
+  useEffect(() => {
+    if (newPatient?._id && activeIndex === 1) setActiveIndex(0);
+  }, [newPatient, activeIndex]);
+
   // if a newPatient id is present and active index is 1
   // it means a new patient has been injected, you should go back to POS
   useEffect(() => {
@@ -47,6 +52,7 @@ export default function POS({
 
   const searchMatch = fullNameSearch(searchKey, collections);
   console.log('searchMatch',searchMatch);
+  console.log('collections',collections);
   
   return (
     <div className="pos-container">
