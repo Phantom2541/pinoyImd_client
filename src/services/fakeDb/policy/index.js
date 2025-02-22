@@ -10,6 +10,7 @@ const Services = {
     collections.find(
       ({ department, positions }) => department === key && positions
     ),
+    findByCode: (key) => collections.find(({ code }) => code === key),
 };
 
 export default Services;

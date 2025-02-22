@@ -1,3 +1,13 @@
+import {
+  Task,
+  Report,
+  Tracker,
+} from "../../../pages/platforms/frontdesk/diagnostics";
+import {
+  Menus,
+  Services,
+} from "../../../pages/platforms/cashier";
+
 const radiology = [
   {
     name: "Dashboard",
@@ -5,35 +15,50 @@ const radiology = [
     path: "/dashboard",
   },
   {
-    name: "POS", // Transactions || Point Of Sales
-    path: "/transactions",
+    name: "Diagnostics",
+    path: "/radiology",
     icon: "cogs",
     children: [
       {
-        name: "Bills",
-        path: "/transactions/patients",
+        name: "Onboarding",
+        path: "/onboarding",
+        component: Task,
       },
       {
-        name: "Ledgers",
-        path: "/transactions/sales",
+        name: "Tasks",
+        path: "/task",
+        component: Report,
+      },
+      {
+        name: "Reports",
+        path: "/reports",
+        component: Tracker,
       },
     ],
   },
-  {
-    name: "Accrued",
-    path: "/accrued",
-    icon: "tv",
-    children: [
-      {
-        name: "Payables",
-        path: "/accrued/payables",
-      },
-      {
-        name: "Receivables",
-        path: "/accrued/receivables",
-      },
-    ],
-  },
+   {
+     name: "Services", //viewing only
+     path: "/offers",
+     icon: "list",
+     children: [
+       /**
+        * a group of related services
+        */
+       {
+         name: "Menus",
+         path: "/menus",
+         component: Menus,
+       },
+       /**
+        *  a single service
+        */
+       {
+         name: "examinations",
+         path: "/services",
+         component: Services,
+       },
+     ],
+   },
   {
     name: "Liability",
     path: "/liability",
@@ -53,11 +78,11 @@ const radiology = [
     children: [
       {
         name: "Products",
-        path: "/offers/menus",
+        path: "/radiology/offers/menus",
       },
       {
         name: "Stocks",
-        path: "/offers/stocks",
+        path: "/radiology/offers/stocks",
       },
     ],
   },
