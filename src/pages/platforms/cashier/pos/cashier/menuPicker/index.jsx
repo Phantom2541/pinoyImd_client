@@ -14,7 +14,7 @@ import ConflictModal from "./conflictModal";
 import {
   ADDTOCART,
   REMOVEFROMCART,
-} from "../../../../../../services/redux/slices/commerce/checkout";
+} from "../../../../../../services/redux/slices/commerce/pos.js";
 
 const _compare = {
   show: false,
@@ -24,7 +24,7 @@ const _compare = {
 
 export default function Menus({ patronPresent }) {
   const { collections } = useSelector(({ menus }) => menus),
-    { category, privilege, cart } = useSelector(({ checkout }) => checkout),
+    { category, privilege, cart } = useSelector(({ pos }) => pos),
     [searchKey, setSearchKey] = useState(""),
     // [compare, setCompare] = useState(_compare),
     searchRef = useRef(null),

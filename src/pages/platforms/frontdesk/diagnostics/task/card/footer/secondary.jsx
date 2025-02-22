@@ -1,7 +1,24 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { TAGGING } from "./../../../../../../../services/redux/slices/commerce/taskGenerator";
 import { MDBBtn, MDBBtnGroup } from "mdbreact";
 
-const SecondaryFooter = ({ setEdit, handleUpdate }) => {
+const SecondaryFooter = ({ setEdit }) => {
+  const { token } = useSelector(({ auth }) => auth),
+    { source, physician, _id } = useSelector(
+      ({ taskGenerator }) => taskGenerator
+    ),
+    dispatch = useDispatch();
+  const handleUpdate = () => {
+    dispatch(
+      TAGGING({
+        token,
+        key: { source, physician, _id },
+      })
+    );
+    setEdit(false);
+  };
+
   return (
     <MDBBtnGroup className="w-100">
       <MDBBtn

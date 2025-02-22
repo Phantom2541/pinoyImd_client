@@ -4,16 +4,19 @@ import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
 import { axioKit, harvestTask } from "../../../../../../../services/utilities";
 import { generateClaimStub } from "../../../../../../../services/utilities";
-import { UPDATE } from "../../../../../../../services/redux/slices/commerce/sales";
+import { UPDATE } from "../../../../../../../services/redux/slices/commerce/taskGenerator";
 
-const PrimaryFooter = ({ sale, setEdit, ledgerView }) => {
+const PrimaryFooter = ({ sale, setEdit }) => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const generateTask = async (sale) => {
+    localStorage.setItem("claimStub", JSON.stringify(sale));
     const { _id, cart, customerId } = sale;
     let RequestForm = { customer: sale?.customerId };
     const task = harvestTask(cart);
+    const forms = Object.keys(task).length;
+    localStorage.setItem("task", JSON.stringify(task));
 
     for (const key in task) {
       const lowercaseKey = key.toLowerCase();
@@ -50,7 +53,7 @@ const PrimaryFooter = ({ sale, setEdit, ledgerView }) => {
         // 1. Preg test (67),
         // 2. Dengue Duo (77),
         // 3. Blood Typing (66)
-        console.log("Solo form");
+        console.log("single form");
 
         const newArr = tests.map((test) => ({
           packages: [test],
@@ -98,7 +101,7 @@ const PrimaryFooter = ({ sale, setEdit, ledgerView }) => {
           _id,
           renderedBy: auth._id,
           renderedAt: new Date().toLocaleString(),
-          hasResult: true,
+          forms,
         },
       })
     );
@@ -126,18 +129,16 @@ const PrimaryFooter = ({ sale, setEdit, ledgerView }) => {
       >
         <MDBIcon icon="eye" />
       </MDBBtn>
-      {!ledgerView && (
-        <MDBBtn
-          type="button"
-          onClick={() => generateTask(sale)}
-          className="m-0 "
-          title="Generate Task"
-          size="sm"
-          color="primary"
-        >
-          <MDBIcon icon="user-injured" />
-        </MDBBtn>
-      )}
+      <MDBBtn
+        type="button"
+        onClick={() => generateTask(sale)}
+        className="m-0 "
+        title="Generate Task"
+        size="sm"
+        color="primary"
+      >
+        <MDBIcon icon="user-injured" />
+      </MDBBtn>
     </MDBBtnGroup>
   );
 };

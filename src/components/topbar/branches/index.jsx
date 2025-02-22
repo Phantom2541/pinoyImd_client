@@ -16,18 +16,6 @@ export default function Branches() {
     ),
     dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log("Branches activePlatform :", activePlatform);
-    console.log("Branches :", branches);
-
-    // const timer = setInterval(() => {
-    //   setText((prev) =>
-    //     prev === activePlatform?.name ? "Branches" : activePlatform?.name
-    //   );
-    // }, 10000);
-    // return () => clearInterval(timer);
-  }, [activePlatform, branches]);
-
   const handleActivePlatform = (branchId) => {
     const _access =
       access
