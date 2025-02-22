@@ -3,6 +3,7 @@
     "id": 1,
     "name": "patron",
     "display_name": "Patron"
+    "description": "To views his personal records."
   },
   {
     "id": 2,
@@ -33,187 +34,224 @@
   {
     "id": 9,
     "name": "cashier",
-    "display_name": "Cashier"
+    "display_name": "Cashier",
+    "description": "To collect and distribute cash."
   },
   {
     "id": 10,
     "name": "admission",
-    "display_name": "Admission"
+    "display_name": "Admission",
+    "description": "To check in and check out patients."
   },
   {
     "id": 11,
     "name": "billing",
-    "display_name": "Billing"
+    "display_name": "Billing",
+    "description": "To collect and distribute cash."
   },
   {
     "id": 12,
     "name": "hmo clerk",
-    "display_name": "HMO Clerk"
+    "display_name": "HMO Clerk",
+    "description": "To inquire and process HMO claims."
   },
   {
     "id": 13,
     "name": "assistant accountant",
-    "display_name": "Assistant Accountant"
+    "display_name": "Assistant Accountant",
+    "description": "To prepare and distribute accounting reports."
   },
   {
     "id": 14,
     "name": "accountant",
-    "display_name": "Accountant"
+    "display_name": "Accountant",
+    "description": "To prepare and distribute accounting reports."
   },
   {
     "id": 15,
     "name": "chief accountant",
-    "display_name": "Chief Accountant"
+    "display_name": "Chief Accountant",
+    "description": "To prepare and distribute accounting reports and monitor his staff."
   },
   {
     "id": 16,
     "name": "payroll",
-    "display_name": "Payroll"
+    "display_name": "Payroll",
+    "description": "To prepare and distribute payroll."
   },
   {
     "id": 17,
     "name": "procurement clerk",
-    "display_name": "Procurement Clerk"
+    "display_name": "Procurement Clerk",
+    "description": "To prepare and distribute procurement reports."
   },
   {
     "id": 18,
     "name": "procurement officer",
-    "display_name": "Procurement Officer"
+    "display_name": "Procurement Officer",
+    "description": "To prepare and distribute procurement reports."
   },
   {
     "id": 19,
     "name": "procurement manager",
-    "display_name": "Procurement Manager"
+    "display_name": "Procurement Manager",
+    "description": "To prepare and distribute procurement reports and monitor his staff."
   },
   {
     "id": 20,
     "name": "hr clerk",
-    "display_name": "Human Resource Clerk"
+    "display_name": "Human Resource Clerk",
+    "description": "To prepare and distribute HR reports."
   },
   {
     "id": 21,
     "name": "hr",
-    "display_name": "Human Resource"
+    "display_name": "Human Resource",
+    "description": "To manage HR personnel."
   },
   {
     "id": 22,
     "name": "HR MANAGER",
-    "display_name": "Human Resource Manager"
+    "display_name": "Human Resource Manager",
+    "description": "To manage HR personnel and monitor his staff."
   },
   {
     "id": 23,
     "name": "frontdesk",
-    "display_name": "Front Desk"
+    "display_name": "Front Desk",
+    "description": "first line of contact"
   },
   {
     "id": 24,
     "name": "phlebotomist",
-    "display_name": "Phlebotomist"
+    "display_name": "Phlebotomist",
+    "description": "To collect blood samples."
   },
   {
     "id": 25,
     "name": "labtech",
-    "display_name": "Laboratory Technician"
+    "display_name": "Laboratory Technician",
+    "description": "To collect blood samples."
   },
   {
     "id": 26,
     "name": "scientist",
-    "display_name": "Medical Laboratory Scientist"
+    "display_name": "Medical Laboratory Scientist",
+    "description": "To collect blood samples. and process blood works."
   },
   {
     "id": 27,
     "name": "chief mls",
-    "display_name": "Chief MLS"
+    "display_name": "Chief MLS",
+    "description": "To collect blood samples. and process blood works. and manage laboratory personnel."
   },
   {
     "id": 28,
     "name": "patho",
-    "display_name": "Pathologist"
+    "display_name": "Pathologist",
+    "description": "Manage Laboratory personnels."
   },
   {
     "id": 29,
     "name": "chief patho",
-    "display_name": "Chief Pathologist"
+    "display_name": "Chief Pathologist",
+    "description": "Manage Laboratory personnels."
   },
   {
     "id": 30,
     "name": "ass tech",
-    "display_name": "Assistant Technology"
+    "display_name": "Assistant Technology",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 31,
     "name": "sonographer",
-    "display_name": "Sonographer"
+    "display_name": "Sonographer",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 32,
     "name": "radtech",
-    "display_name": "Radiation Technology"
+    "display_name": "Radiation Technology",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 33,
     "name": "radiologist",
-    "display_name": "Radiologist"
+    "display_name": "Radiologist",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 34,
     "name": "chief radio",
-    "display_name": "Chief Radiologist"
+    "display_name": "Chief Radiologist",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 35,
     "name": "midwife",
-    "display_name": "Midwife"
+    "display_name": "Midwife",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 36,
     "name": "nurse aide",
-    "display_name": "Nursing Aide"
+    "display_name": "Nursing Aide",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 37,
     "name": "nurse",
-    "display_name": "Nurse"
+    "display_name": "Nurse",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 38,
     "name": "head nurse",
-    "display_name": "Head Nurse"
+    "display_name": "Head Nurse",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 39,
     "name": "nurse supervisor",
-    "display_name": "Nurse Supervisor"
+    "display_name": "Nurse Supervisor",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 40,
     "name": "chief nurse",
-    "display_name": "Chief Nurse"
+    "display_name": "Chief Nurse",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 41,
     "name": "pharmacy assistant",
-    "display_name": "Pharmacy Assistant"
+    "display_name": "Pharmacy Assistant",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 42,
     "name": "pharmacist",
-    "display_name": "Pharmacist"
+    "display_name": "Pharmacist",
+"description": "Provide pharmaceutical services."
   },
   {
     "id": 43,
     "name": "head pharmacist",
-    "display_name": "Head Pharmacist"
+    "display_name": "Head Pharmacist",
+ "description": "Provide pharmaceutical services."
   },
   {
     "id": 44,
     "name": "therapist assistant",
-    "display_name": "Therapist Assistant"
+    "display_name": "Therapist Assistant",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 45,
     "name": "therapist",
-    "display_name": "Therapist"
+    "display_name": "Therapist",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 46,
