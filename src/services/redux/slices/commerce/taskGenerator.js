@@ -189,7 +189,6 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(UPDATE.pending, (state) => {
-        // state.isLoading = true; comment this to stop loading and refreshing UI
         state.isSuccess = false;
         state.message = "";
       })

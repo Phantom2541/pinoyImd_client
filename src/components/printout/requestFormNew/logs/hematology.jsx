@@ -1,3 +1,6 @@
+import React from "react";
+import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
+
 const Attri = [
   ["hct", "hgb", "rbc", "wbc"],
   [

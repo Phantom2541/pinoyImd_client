@@ -141,12 +141,10 @@ const Stub = ({ sale }) => {
 };
 
 export default function ClaimStub() {
-  const [sale, setSale] = useState({ _id: "" }),
-    [forms, setForms] = useState([]);
+  const [sale, setSale] = useState({ _id: "" });
 
   useEffect(() => {
     setSale(JSON.parse(localStorage.getItem("claimStub")));
-    setForms(JSON.parse(localStorage.getItem("task")));
   }, []);
 
   if (sale?._id) return <Stub sale={sale} />;
