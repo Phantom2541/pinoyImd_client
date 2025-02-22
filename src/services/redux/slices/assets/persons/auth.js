@@ -180,7 +180,7 @@ export const reduxSlice = createSlice({
         );
         const _access = state.access
           .filter(
-            ({ branchId }) => branchId?._id === payload.activePlatform.branchId
+            ({ branchId }) => branchId === payload.activePlatform.branchId
           )
           .map((a) => a.platform);
 
@@ -249,9 +249,7 @@ export const reduxSlice = createSlice({
           (branch) => branch._id === auth.activePlatform.branchId
         );
         const _access = access
-          .filter(
-            ({ branchId }) => branchId?._id === auth.activePlatform.branchId
-          )
+          .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
           .map((a) => a.platform);
 
         state.isPatient = isPatient;
@@ -326,9 +324,7 @@ export const reduxSlice = createSlice({
         );
 
         const _access = access
-          .filter(
-            ({ branchId }) => branchId?._id === auth.activePlatform.branchId
-          )
+          .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
           .map((a) => a.platform);
 
         state.activePlatform = {
