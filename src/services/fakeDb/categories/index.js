@@ -7,8 +7,8 @@ const Categories = [
   { name: "Promotion", abbr: "promo", color: "yellow" },
   { name: "Health Maintenance Organization", abbr: "hmo", color: "orange" },
   { name: "Insourcing", abbr: "insc", color: "orange" },
-  { name: "Medical Certificate", abbr: "mc", color: "orange" },
-  { name: "Surgical Certificate", abbr: "sc", color: "orange" },
+  { name: "Medical Clearance", abbr: "mc", color: "orange" },
+  { name: "Surgical Clearance", abbr: "sc", color: "orange" },
   { name: "Business Permit", abbr: "bp", color: "orange" },
 ];
 
