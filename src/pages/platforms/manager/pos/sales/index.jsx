@@ -8,7 +8,6 @@ import {
 import { currency, fullName, axioKit } from "../../../../../services/utilities";
 import { capitalize } from "lodash";
 import { Categories } from "../../../../../services/fakeDb";
-import CashRegister from "../../../cashier/pos/cashierOld/pos";
 import Swal from "sweetalert2";
 import Months from "../../../../../services/fakeDb/calendar/months";
 import {
@@ -24,10 +23,8 @@ export default function Sales() {
     [view, setView] = useState("all"),
     [total, setTotal] = useState(0),
     [daily, setDaily] = useState({}),
-    [selected, setSelected] = useState({}),
-    [showCashRegister, setShowCashRegister] = useState(false),
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
+    { collections } = useSelector(({ sales }) => sales),
     // { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     // { collections } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();

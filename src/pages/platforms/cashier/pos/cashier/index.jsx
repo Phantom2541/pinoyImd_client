@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import POS from "./patientPicker/pos";
 import Menus from "./menuPicker/menus";
-import Summary from "./summary";
+import Summary from "./Summary";
 import { useDispatch, useSelector } from "react-redux";
 import {
   GETPATIENTS,
@@ -70,12 +70,12 @@ export default function Cashier() {
   }, [newPatient]);
 
   useEffect(() => {
-      console.log("LOL TOKEN", token);
-      console.log("LOL BRANCH", activePlatform.branchId);
+    console.log("LOL TOKEN", token);
+    console.log("LOL BRANCH", activePlatform.branchId);
 
     if (token && activePlatform.branchId) {
       console.log(token && activePlatform.branchId);
-      
+
       dispatch(GETPATIENTS({ token }));
       dispatch(
         SOURCELIST({ token, key: { clients: activePlatform.branchId } })

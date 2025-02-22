@@ -7,12 +7,10 @@ import {
 import {
   currency,
   fullName,
-  getGenderIcon,
-  globalSearch,
+  // globalSearch,
 } from "../../../../../services/utilities";
-import DataTable from "../../../../../components/dataTable";
 import { capitalize } from "lodash";
-import { Categories, Services } from "../../../../../services/fakeDb";
+import { Categories } from "../../../../../services/fakeDb";
 import CashRegister from "../cashierOld/pos";
 
 import {
@@ -34,8 +32,15 @@ export default function Sales() {
     [showSources, setShowSources] = useState(false), // show sources in table head if set to true
     [showPhysicians, setShowPhysicians] = useState(false), // show physicians in table head if set to true
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
+    { collections, transaction } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
+
+  console.log(
+    "unused variable showSources,showPhysicians,setView",
+    showSources,
+    showPhysicians,
+    setView
+  );
 
   //Initial CASHIER
   useEffect(() => {
@@ -78,14 +83,15 @@ export default function Sales() {
   const toggleCashRegister = () => setShowCashRegister(!showCashRegister);
 
   //Search function
-  const handleSearch = async (willSearch, key) => {
-    if (willSearch) {
-      setView("all");
-      setSales(globalSearch(collections, key));
-    } else {
-      setSales(collections);
-    }
-  };
+  //comment by darrel
+  // const handleSearch = async (willSearch, key) => {
+  //   if (willSearch) {
+  //     setView("all");
+  //     setSales(globalSearch(collections, key));
+  //   } else {
+  //     setSales(collections);
+  //   }
+  // };
 
   const generateStub = (sale) => ({
     ...sale,

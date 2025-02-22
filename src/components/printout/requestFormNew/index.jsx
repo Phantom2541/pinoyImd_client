@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Header from "./header";
-import { MDBTable } from "mdbreact";
 import {
   Chemistry,
   Hematology,

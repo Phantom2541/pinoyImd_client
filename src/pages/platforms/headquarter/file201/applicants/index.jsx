@@ -8,20 +8,20 @@ import { MDBCard, MDBCardBody } from "mdbreact";
 import TopHeader from "../../../../../components/topHeader";
 import Table from "./table";
 import Swal from "sweetalert2";
-import { fullName, globalSearch } from "../../../../../services/utilities";
+import { fullName } from "../../../../../services/utilities";
 import TableLoading from "../../../../../components/tableLoading";
 
 const Applicants = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, isLoading } = useSelector(({ applicants }) => applicants),
+    { isLoading } = useSelector(({ applicants }) => applicants),
     [applicants, setApplicants] = useState([]),
     dispatch = useDispatch();
 
-  console.log(activePlatform);
+  console.log("unsused variable setApplicants", setApplicants);
 
   useEffect(() => {
     dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
-  }, [token, dispatch]);
+  }, [token, dispatch, activePlatform]);
   // // merge
   // // const { token, activePortal } = useSelector(({ auth }) => auth),
   // //   { collections } = useSelector(({ applicants }) => applicants),

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fullName } from "../../../../../../services/utilities";
 import {
@@ -10,15 +10,15 @@ const Editable = ({ forwardedBy, physicianId, _id }) => {
       ({ physicians }) => physicians
     ),
     { collections: sources } = useSelector(({ providers }) => providers),
-    { source, physician } = useSelector(({ taskGenerator }) => taskGenerator),
+    // { source, physician } = useSelector(({ taskGenerator }) => taskGenerator),
     dispatch = useDispatch();
 
   const handleSource = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     dispatch(SETSOURCE({ source: value, _id }));
   };
   const handlePhysician = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     dispatch(SETPHYSICIAN({ physician: value, _id }));
   };
 

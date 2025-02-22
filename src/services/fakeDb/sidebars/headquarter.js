@@ -1,5 +1,5 @@
 import {
-  Employee,
+  // Employee,
   Applicants,
   Equipments,
   Heads,
@@ -7,6 +7,8 @@ import {
   Procurments,
   Staffs,
 } from "../../../pages/platforms/headquarter/file201";
+
+import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 
 const headquarter = [
   {
@@ -144,7 +146,7 @@ const headquarter = [
         name: "Equipments",
         path: "/duty/equipments",
         icon: "list",
-        // component: ProcurmentEquipments,
+        component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",

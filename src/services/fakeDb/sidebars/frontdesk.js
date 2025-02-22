@@ -289,7 +289,7 @@ const frontdesk = [
       //   name: "Miscellaneous",
       //   path: "/miscellaneous",
       // },
-      ,
+      // ,
     ],
   },
   {
