@@ -163,6 +163,7 @@ export default function Sales() {
           token,
           data: {
             _id,
+            branchId: activePlatform?.branchId,
             renderedBy: auth._id,
             renderedAt: new Date().toLocaleString(),
             hasResult: true,

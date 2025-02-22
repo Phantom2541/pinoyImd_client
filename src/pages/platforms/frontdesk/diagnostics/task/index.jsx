@@ -88,7 +88,7 @@ export default function Sales() {
       <div className="sales-card-wrapper mt-3">
         {!sales.length && !isLoading && (
           <MDBTypography noteColor="info" note>
-            Sales are empty
+            Sales are emptys
           </MDBTypography>
         )}
         {isLoading ? (
