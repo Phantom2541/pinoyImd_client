@@ -32,12 +32,11 @@ export default function Payrolls() {
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
     { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, isLoading } = useSelector(
+    { collections, message, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  console.log("payroll", collections);
   //Initial Browse
   useEffect(() => {
     if (token && activePlatform?.branchId)

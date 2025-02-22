@@ -1,10 +1,10 @@
 import React from "react";
-import { MDBRow, MDBCol, MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
-import {
-  FecalColor,
-  Consistency,
-  MicroscopicInRange,
-} from "../../../../services/fakeDb";
+import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
+// import {
+//   FecalColor,
+//   Consistency,
+//   MicroscopicInRange,
+// } from "../../../../services/fakeDb";
 
 const Fecalysis = ({ fecalysis }) => {
   const tableRows = [

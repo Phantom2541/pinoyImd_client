@@ -69,28 +69,28 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
   const cashiers = useMemo(() => fetchCashiers(breakdown), [breakdown]);
 
   useEffect(() => {
-    // this will only perform a query if the pre_calculated_sales has a saved transaction
-    if (dateKey && activePlatform?._id && cashiers.length && !sales.length) {
-      const startDate = new Date(dateKey).setHours(0, 0, 0, 0),
-        endDate = new Date(dateKey).setHours(23, 59, 59, 999);
+    const branchId = activePlatform?.branchId;
+    const platformId = activePlatform?._id;
+    const cashierId = auth._id;
+
+    if (dateKey && platformId && cashiers.length && !sales.length) {
+      const startDate = new Date(dateKey).setHours(0, 0, 0, 0);
+      const endDate = new Date(dateKey).setHours(23, 59, 59, 999);
 
       dispatch(
         BROWSE({
           key: {
-            branchId: activePlatform?.branchId,
+            branchId,
             createdAt: startDate,
             endDate,
-            ...(activePlatform === "cashier" && { cashierId: auth._id }), // if cashier view, only show own transactions
+            ...(activePlatform === "cashier" && { cashierId }), // only show own transactions for cashiers
           },
           token,
         })
       );
-      dispatch(
-        PHYSICIANS({ key: { branch: activePlatform?.branchId }, token })
-      );
-      dispatch(
-        SOURCELIST({ token, key: { clients: activePlatform?.branchId } })
-      );
+
+      dispatch(PHYSICIANS({ key: { branch: branchId }, token }));
+      dispatch(SOURCELIST({ token, key: { clients: branchId } }));
 
       return () => {
         dispatch(RESET());
@@ -98,16 +98,7 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
         dispatch(SOURCERESET());
       };
     }
-  }, [
-    dateKey,
-    activePlatform?.branchId,
-    token,
-    cashiers,
-    sales,
-    activePlatform,
-    auth,
-    dispatch,
-  ]);
+  }, [dateKey, token, cashiers, sales, activePlatform, auth, dispatch]);
 
   const showDeletionMotive = ({ title, text }) =>
     Swal.fire({

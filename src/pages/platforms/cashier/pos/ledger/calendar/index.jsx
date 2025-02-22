@@ -11,7 +11,7 @@ const today = new Date();
 
 export default function Calendar({ month, year }) {
   const { census, isLoading } = useSelector(({ sales }) => sales),
-    { expenses, grossSales, patients, isEmpty } = census;
+    { grossSales, patients } = census;
 
   return (
     <div className="pos-ledger-calendar">

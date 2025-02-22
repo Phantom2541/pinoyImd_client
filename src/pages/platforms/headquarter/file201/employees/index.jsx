@@ -32,7 +32,7 @@ export default function Employees() {
       dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform?.branchId]);
+  }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
   useEffect(() => {

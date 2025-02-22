@@ -1,19 +1,14 @@
 import React, { useState, useRef } from "react";
 import { MDBIcon } from "mdbreact";
-import { useSelector, useDispatch } from "react-redux";
-import { Categories } from "../../../../../../services/fakeDb";
+// import { useDispatch } from "react-redux";
 import Search from "./search";
-import {
-  computeGD,
-  currency,
-  globalSearch,
-} from "../../../../../../services/utilities";
+import { computeGD, currency } from "../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import ConflictModal from "./conflictModal";
-import {
-  ADDTOCART,
-  REMOVEFROMCART,
-} from "../../../../../../services/redux/slices/commerce/pos.js";
+// import {
+//   ADDTOCART,
+//   REMOVEFROMCART,
+// } from "../../../../../../services/redux/slices/commerce/pos.js";
 
 const initialCompareState = {
   show: false,
@@ -22,70 +17,70 @@ const initialCompareState = {
 };
 
 export default function Menus({ patronPresent }) {
-  const dispatch = useDispatch();
-  const { collections } = useSelector(({ menus }) => menus);
+  // const dispatch = useDispatch();
   const [searchKey, setSearchKey] = useState("");
   const [compare, setCompare] = useState(initialCompareState);
   const [cart, setCart] = useState([]);
   const searchRef = useRef(null);
   const { addToast } = useToasts();
 
-  const focusSearchInput = () => {
-    if (searchRef.current) searchRef.current.focus();
-  };
+  // const focusSearchInput = () => {
+  //   if (searchRef.current) searchRef.current.focus();
+  // };
 
-  const handlePicker = (selected) => {
-    if (!cart.length) {
-      setSearchKey("");
-      focusSearchInput();
-      return setCart([selected]);
-    }
+  //comment by darrel
+  // const handlePicker = (selected) => {
+  //   if (!cart.length) {
+  //     setSearchKey("");
+  //     focusSearchInput();
+  //     return setCart([selected]);
+  //   }
 
-    const { packages, _id, description, abbreviation } = selected;
-    const sameId = cart.find((c) => c?._id === _id);
+  //   const { packages, _id, description, abbreviation } = selected;
+  //   const sameId = cart.find((c) => c?._id === _id);
 
-    if (sameId)
-      return addToast(`You already selected: ${description || abbreviation}`, {
-        appearance: "info",
-      });
+  //   if (sameId)
+  //     return addToast(`You already selected: ${description || abbreviation}`, {
+  //       appearance: "info",
+  //     });
 
-    if (packages.length === 1) {
-      const [_package] = packages;
-      const duplicatePackage = cart.filter((c) =>
-        c?.packages.includes(_package)
-      );
-      focusSearchInput();
-      setSearchKey("");
+  //   if (packages.length === 1) {
+  //     const [_package] = packages;
+  //     const duplicatePackage = cart.filter((c) =>
+  //       c?.packages.includes(_package)
+  //     );
+  //     focusSearchInput();
+  //     setSearchKey("");
 
-      if (duplicatePackage.length)
-        return setCompare({
-          selected,
-          conflicts: duplicatePackage,
-          show: true,
-        });
+  //     if (duplicatePackage.length)
+  //       return setCompare({
+  //         selected,
+  //         conflicts: duplicatePackage,
+  //         show: true,
+  //       });
 
-      return setCart([...cart, selected]);
-    }
+  //     return setCart([...cart, selected]);
+  //   }
 
-    let rawConflicts = [];
-    for (const _package of packages) {
-      const duplicatePackage = cart.filter((c) =>
-        c?.packages.includes(_package)
-      );
-      if (duplicatePackage.length)
-        rawConflicts = [...rawConflicts, ...duplicatePackage];
-    }
+  //   let rawConflicts = [];
+  //   for (const _package of packages) {
+  //     const duplicatePackage = cart.filter((c) =>
+  //       c?.packages.includes(_package)
+  //     );
+  //     if (duplicatePackage.length)
+  //       rawConflicts = [...rawConflicts, ...duplicatePackage];
+  //   }
 
-    const conflicts = [
-      ...new Map(rawConflicts.map((c) => [c._id, c])).values(),
-    ];
-    focusSearchInput();
-    setSearchKey("");
+  //   const conflicts = [
+  //     ...new Map(rawConflicts.map((c) => [c._id, c])).values(),
+  //   ];
+  //   focusSearchInput();
+  //   setSearchKey("");
 
-    if (!conflicts.length) return setCart([...cart, selected]);
+  //   if (!conflicts.length) return setCart([...cart, selected]);
 
-    setCompare({ selected, conflicts, show: true });
-  };
+  //   setCompare({ selected, conflicts, show: true });
+  // };
 
   const handleConflict = (chosen) => {
     if (!chosen) return setCompare(initialCompareState);
@@ -99,8 +94,8 @@ export default function Menus({ patronPresent }) {
   };
 
   const handleDelete = (_id) => setCart(cart.filter((c) => c?._id !== _id));
-  const handleAddToCart = (item) => dispatch(ADDTOCART(item));
-  const handleRemoveFromCart = (_id) => dispatch(REMOVEFROMCART(_id));
+  // const handleAddToCart = (item) => dispatch(ADDTOCART(item));
+  // const handleRemoveFromCart = (_id) => dispatch(REMOVEFROMCART(_id));
 
   return (
     <>

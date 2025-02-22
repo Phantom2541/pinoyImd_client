@@ -21,7 +21,7 @@ export default function Staffs() {
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
     [willCreate, setWillCreate] = useState(true),
-    [visible, setVisible] = useState(false),
+    // [visible, setVisible] = useState(false),
     { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ personnels }) => personnels
