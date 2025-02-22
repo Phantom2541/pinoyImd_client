@@ -4,7 +4,7 @@ import {
   FecalColor,
   Consistency,
   MicroscopicInRange,
-} from "../../../../../services/fakeDb";
+} from "../../../../services/fakeDb";
 
 const Fecalysis = ({ fecalysis }) => {
   const tableRows = [

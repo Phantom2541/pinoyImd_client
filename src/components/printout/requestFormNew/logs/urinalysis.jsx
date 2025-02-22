@@ -1,3 +1,5 @@
+import React from "react";
+import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 const Urinalysis = () => {
   const tableRows = [
     ["color", "sg", "ph"],

@@ -1,0 +1,11 @@
+export { default as Chemistry } from "./chemistry";
+export { default as Hematology } from "./hematology";
+// export {default as Microbiology} from "./microbiology";
+export { default as Parasitology } from "./fecalysis.jsx";
+export { default as Serology } from "./serology";
+export { default as Microscopy } from "./urinalysis.jsx";
+// export {default as Virology} from "./virology";
+// export {default as Histopathology} from "./histopathology";
+// export {default as Immunology} from "./immunology";
+// export {default as Mycology} from "./mycology";
+// export {default as Toxicology} from "./toxicology";
