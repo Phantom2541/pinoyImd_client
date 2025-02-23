@@ -8,12 +8,15 @@ import { MDBCard, MDBCardBody } from "mdbreact";
 import TopHeader from "../../../../../components/topHeader";
 import Table from "./table";
 import Swal from "sweetalert2";
-import { fullName } from "../../../../../services/utilities";
+import { fullName, globalSearch } from "../../../../../services/utilities";
 import TableLoading from "../../../../../components/tableLoading";
 
 const Applicants = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { isLoading } = useSelector(({ applicants }) => applicants),
+    { collections, isLoading } = useSelector(({ applicants }) => applicants),
+    [category, setCategory] = useState("Petition"),
+    [didSearch, setDidSearch] = useState(false),
+    [baseApplicants, setBaseApplicants] = useState([]),
     [applicants, setApplicants] = useState([]),
     dispatch = useDispatch();
 
@@ -22,38 +25,20 @@ const Applicants = () => {
   useEffect(() => {
     dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
   }, [token, dispatch, activePlatform]);
-  // // merge
-  // // const { token, activePortal } = useSelector(({ auth }) => auth),
-  // //   { collections } = useSelector(({ applicants }) => applicants),
-  // //   [applicants, setApplicants] = useState([]),
-  // //   dispatch = useDispatch();
 
-  // // //console.log(activePortal);
+  useEffect(() => {
+    if (activePlatform.branchId) {
+      dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
+    }
+  }, [token, dispatch, activePlatform]);
 
-  // // useEffect(() => {
-  // //   dispatch(BROWSE({ token, branchId: activePortal.branchId }));
-  // // }, [token, dispatch]);
-  // const { token, activePlatform } = useSelector(({ auth }) => auth),
-  //   { collections, isLoading } = useSelector(({ applicants }) => applicants),
-  //   [category, setCategory] = useState("Petition"),
-  //   [didSearch, setDidSearch] = useState(false),
-  //   [baseApplicants, setBaseApplicants] = useState([]),
-  //   [applicants, setApplicants] = useState([]),
-  //   dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   if (activePlatform.branchId) {
-  //     dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
-  //   }
-  // }, [token, dispatch, activePlatform]);
-
-  // useEffect(() => {
-  //   const filteredApplicants = collections.filter(
-  //     ({ status }) => status === category.toLowerCase()
-  //   );
-  //   setBaseApplicants(filteredApplicants);
-  //   setApplicants(filteredApplicants);
-  // }, [category, collections]);
+  useEffect(() => {
+    const filteredApplicants = collections.filter(
+      ({ status }) => status === category.toLowerCase()
+    );
+    setBaseApplicants(filteredApplicants);
+    setApplicants(filteredApplicants);
+  }, [category, collections]);
   //
   const handleApprove = (applicant) => {
     const { user } = applicant;
@@ -117,24 +102,24 @@ const Applicants = () => {
     });
   };
 
-  // const handleSearch = () => {
-  //   const searchValue = document.getElementById("search").value;
-  //   const searchResults = globalSearch(baseApplicants, searchValue);
-  //   setApplicants(didSearch ? baseApplicants : searchResults);
-  //   setDidSearch(!didSearch);
-  // };
+  const handleSearch = () => {
+    const searchValue = document.getElementById("search").value;
+    const searchResults = globalSearch(baseApplicants, searchValue);
+    setApplicants(didSearch ? baseApplicants : searchResults);
+    setDidSearch(!didSearch);
+  };
 
   return (
     <>
       <MDBCard narrow>
         <TopHeader
           title="Applicant List"
-          // handleSearch={handleSearch}
+          handleSearch={handleSearch}
           categories={["Petition", "Denied"]}
-          // setCategory={setCategory}
-          // category={category}
+          setCategory={setCategory}
+          category={category}
           hasCategory={true}
-          // didSearch={didSearch}
+          didSearch={didSearch}
         />
         <MDBCardBody>
           {isLoading ? (
@@ -143,7 +128,7 @@ const Applicants = () => {
             <Table
               applicants={applicants}
               handleReject={handleReject}
-              // didSearch={didSearch}
+              didSearch={didSearch}
               handleApprove={handleApprove}
             />
           )}
