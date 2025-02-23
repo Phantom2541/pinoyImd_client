@@ -12,7 +12,7 @@ import {
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../../../services/utilities";
-import { Roles } from "../../../../../../../services/fakeDb";
+import { Access } from "../../../../../../../services/fakeDb";
 import { UPDATE_ACCESS } from "../../../../../../../services/redux/slices/assets/persons/personnels";
 import Table from "./table";
 
@@ -37,8 +37,8 @@ export default function AccessModal({ show, toggle, selected }) {
   }, []);
 
   const removeDuplicate = useCallback((_existingAccess) => {
-    return Roles.collections.filter((c) =>
-      _existingAccess?.every((existAcc) => existAcc.platform !== c.name)
+    return Access.collections.filter((c) =>
+      _existingAccess?.every((existAcc) => existAcc.platform !== c.platform)
     );
   }, []);
 
@@ -126,16 +126,15 @@ export default function AccessModal({ show, toggle, selected }) {
   };
 
   const getIndexOfRoleDeleted = (collections = [], item = {}) => {
-    const { name = "", platform = "" } = item;
-    const deletedRoleName = name || platform;
-    return collections.findIndex(({ platform = "", name = "" }) => {
-      const _name = platform || name;
-      return _name === deletedRoleName;
+    const { platform = "" } = item;
+    const deletedRoleName = platform;
+    return collections.findIndex(({ platform = "" }) => {
+      return platform === deletedRoleName;
     });
   };
 
   const handleDelete = (item) => {
-    const nameOfDeletedRole = item?.name || item?.platform;
+    const nameOfDeletedRole = item?.platform;
     const _roles = [...roles];
     const _existingAccess = [...existingAccess];
     const indexOfAccess = getIndexOfRoleDeleted(_existingAccess, item);
@@ -162,28 +161,61 @@ export default function AccessModal({ show, toggle, selected }) {
     setSearch(searchValue);
   };
 
-  const [draggedItem, setDraggedItem] = useState(null);
+  const [hasDrag, setHasDrag] = useState(false);
 
-  const handleDragStart = (event, index) => {
-    setDraggedItem(index);
-    event.dataTransfer.effectAllowed = "move";
+  const handleDragStart = (e, role, isAdd = true, dragTo = "Access") => {
+    setHasDrag(true);
+    e.dataTransfer.setData(
+      "application/json",
+      JSON.stringify({ role, isAdd, dragTo })
+    );
+
+    const dragPreview = document.createElement("div");
+    dragPreview.textContent = role.platform;
+    Object.assign(dragPreview.style, {
+      position: "absolute",
+      top: "0",
+      left: "0",
+      padding: "8px 12px",
+      background: "#f0f0f0",
+      border: "1px solid #ccc",
+      borderRadius: "6px",
+      boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+      fontSize: "1rem",
+      fontWeight: "500",
+      color: "#333",
+      whiteSpace: "nowrap", // Prevents text from breaking
+      pointerEvents: "none", // Prevents accidental interaction
+      transform: "translate(-50%, -50%)", // Centers on cursor
+    });
+
+    document.body.appendChild(dragPreview);
+
+    // Set as drag image
+    e.dataTransfer.setDragImage(dragPreview, 10, 10);
+
+    setTimeout(() => {
+      if (dragPreview.parentNode) {
+        dragPreview.parentNode.removeChild(dragPreview);
+      }
+    }, 0);
   };
 
   const handleDragOver = (event) => {
-    event.preventDefault(); // Para payagan ang pag-drop
+    event.preventDefault();
   };
 
-  const handleDrop = (event, index) => {
+  const handleDrop = (event, dropTo = "Tag Access") => {
     event.preventDefault();
-
-    if (draggedItem === null) return;
-
-    // const newItems = [...items];
-    // const movedItem = newItems.splice(draggedItem, 1)[0]; // Alisin ang item
-    // newItems.splice(index, 0, movedItem); // Ilagay sa bagong posisyon
-
-    // setItems(newItems);
-    // setDraggedItem(null);
+    const data = event.dataTransfer.getData("application/json");
+    if (!data) return "unknown role";
+    const { role, isAdd, dragTo } = JSON.parse(data);
+    if (dragTo === dropTo) return "No changes";
+    if (isAdd) {
+      handleADD(role);
+    } else {
+      handleDelete(role);
+    }
   };
 
   return (
@@ -210,17 +242,21 @@ export default function AccessModal({ show, toggle, selected }) {
               handleSearch={handleSearch}
               handleDragStart={handleDragStart}
               handleDragOver={handleDragOver}
+              tableName="Access"
               handleDrop={handleDrop}
+              hasDrag={hasDrag}
             />
           </MDBCol>
           <MDBCol md="6">
             <Table
               collections={existingAccess}
+              tableName="Tag Access"
               isTag={true}
               handleAction={handleDelete}
               handleDragStart={handleDragStart}
               handleDragOver={handleDragOver}
               handleDrop={handleDrop}
+              hasDrag={hasDrag}
             />
           </MDBCol>
         </MDBRow>
@@ -229,7 +265,7 @@ export default function AccessModal({ show, toggle, selected }) {
         <MDBBtn
           onClick={handleSubmit}
           color="info"
-          disabled={existingAccess.length === 0}
+          // disabled={existingAccess.length === 0}
         >
           Save Changes
         </MDBBtn>

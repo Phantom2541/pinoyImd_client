@@ -16,7 +16,7 @@ import MicroscopicResultInWord from "./microscopicResultInWord";
 import UrineColors from "./urineColors";
 import ResultInRange from "./resultInRange";
 import ResultInName from "./resultInName";
-
+import Access from "./access";
 import Transparency from "./transparency";
 import SpecificGravity from "./specificGravity";
 import Cellcount from "./cellCount";
@@ -60,5 +60,6 @@ export {
   Menus,
   Roles,
   Liabilities,
+  Access,
   Policy,
 };

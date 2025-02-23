@@ -5,8 +5,6 @@ import {
   MDBView,
   MDBTableBody,
   MDBTableHead,
-  MDBBtn,
-  MDBIcon,
 } from "mdbreact";
 import "./index.css";
 
@@ -14,7 +12,8 @@ const Table = ({
   collections,
   isTag = false,
   search = "",
-  handleAction = () => {},
+  tableName = "Access",
+  hasDrag = false,
   handleSearch = () => {},
   handleDragOver,
   handleDragStart,
@@ -47,15 +46,17 @@ const Table = ({
       </MDBView>
       <MDBCardBody>
         <div
-          style={{ maxHeight: "440px", overflowY: "auto" }}
+          style={{ maxHeight: "440px", overflowY: "auto", minHeight: "440px" }}
           className="custom-scroll"
+          onDrop={(event) => handleDrop(event, tableName)}
+          onDragOver={handleDragOver}
         >
           <table style={{ width: "100%" }} border={1}>
             <MDBTableHead>
               <tr>
                 <th className="text-center">#</th>
                 <th className="text-center">Platform</th>
-                <th className="text-center">Action</th>
+                {/* <th className="text-center">Action</th> */}
               </tr>
             </MDBTableHead>
             <MDBTableBody>
@@ -63,40 +64,48 @@ const Table = ({
                 collections.map((item, index) => (
                   <tr
                     key={index}
-                    onDragStart={(event) => handleDragStart(event, index)}
+                    onDragStart={(event) =>
+                      handleDragStart(event, item, !isTag, tableName)
+                    }
                     onDragOver={handleDragOver}
+                    className={`${hasDrag ? "cursor-grabbing" : "cursor-grab"}`}
                     draggable
-                    onDrop={(event) => handleDrop(event, index)}
+                    style={{
+                      height: "36px",
+                    }}
                   >
-                    <td className="text-center">{index + 1}</td>
+                    <td
+                      className="text-center"
+                      style={{ padding: "6px", lineHeight: "1.2rem" }}
+                    >
+                      {index + 1}
+                    </td>
                     <td
                       className="text-start"
-                      style={{ fontWeight: 500, lineHeight: "1rem" }}
+                      style={{
+                        fontWeight: 500,
+                        lineHeight: "1.2rem",
+                        padding: "6px",
+                      }}
                     >
                       <div className="ml-3">
-                        {item[isTag ? "platform" : "display_name"]}
+                        {item?.platform}
                         <br />
                         {!isTag && <small>{item.description}</small>}
                       </div>
-                    </td>
-                    <td className="text-center">
-                      <MDBBtn
-                        size="sm"
-                        color={isTag ? "danger" : "info"}
-                        rounded
-                        onClick={() => handleAction(item)}
-                      >
-                        <MDBIcon icon={isTag ? "trash" : "share"} />
-                      </MDBBtn>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={3} className="text-center">
+                  <td
+                    colSpan={3}
+                    className="text-center"
+                    style={{ padding: "8px", height: "36px" }}
+                  >
                     {isTag
                       ? "No tag access"
-                      : "No results try another keywords."}
+                      : "No results try another keyword."}
                   </td>
                 </tr>
               )}
