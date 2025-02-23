@@ -87,7 +87,7 @@ export default function AccessModal({ show, toggle, selected }) {
     if (isDelete && isExist) _deletedRoles.push(role);
     if (!isDelete && !isExist)
       _addedRoles.push({
-        platform: role.name,
+        platform: role.platform,
         approvedBy: auth._id,
         branchId: activePlatform.branchId,
         userId: user._id,
