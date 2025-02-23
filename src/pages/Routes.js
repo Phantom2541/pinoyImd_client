@@ -12,7 +12,7 @@ import NotExisting from "./notExisting";
 import Profile from "../components/profile";
 
 import { useSelector } from "react-redux";
-import UnsetApply from "./platforms/patron/apply";
+import UnsetApply from "./platforms/guest/apply";
 
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);

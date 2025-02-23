@@ -5,10 +5,11 @@ const Policy = {
   getDepartment: pk => {
     const { code = "", positions = [] } =
       collections.find(({ positions = [] }) =>
-        positions.some(({ id }) => id === pk)
+        positions.some(({ id }) => id === Number(pk))
       ) || {};
+
     if (!code) return { department: "", role: "" };
-    const role = [...positions].find(({ id }) => id === pk).display_name;
+    const role = [...positions].find(({ id }) => id === Number(pk)).name;
     return { department: code, role };
   },
   getPositions: code => {

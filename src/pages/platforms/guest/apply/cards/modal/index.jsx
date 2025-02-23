@@ -16,6 +16,7 @@ import {
 
 import { Policy } from "../../../../../../services/fakeDb";
 import { UPLOAD } from "../../../../../../services/redux/slices/assets/persons/auth.js";
+import { useToasts } from "react-toast-notifications";
 
 export default function ApplicationModal({
   visibility,
@@ -27,6 +28,7 @@ export default function ApplicationModal({
     [application, setApplication] = useState({}),
     [department, setDepartment] = useState(),
     [positions, setPositions] = useState([]),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
   useEffect(() => {
     token &&
@@ -105,13 +107,12 @@ export default function ApplicationModal({
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const _company = company?.branches.find(
       branch => branch._id === application.branchId
     );
-    const role = Policy.getDepartment(application.designation);
-    alert(role);
-    return;
+    const { role } = await Policy.getDepartment(application.designation);
+
     const id = `${_company.companyName
       .split(" ")
       .map(word => word[0])
@@ -119,10 +120,12 @@ export default function ApplicationModal({
       .split(" ")
       .map(word => word[0])
       .join("")}-${Math.floor(Math.random() * 100)}`;
+    alert(role);
     dispatch(
       SAVE({
         data: {
           id,
+          platform: role,
           user: auth._id,
           status: "petition",
           branch: application.branchId,
@@ -135,12 +138,14 @@ export default function ApplicationModal({
             designation: application.designation,
           },
           hos: 8,
-          platform: "",
           message: application.message,
         },
         token,
       })
     );
+    addToast("Application submitted successfully.", {
+      appearance: "success",
+    });
     setVisibility(!visibility);
   };
 
