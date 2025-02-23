@@ -26,11 +26,12 @@ export default function Branches() {
   // Initial Browse
   useEffect(() => {
     if (token && activePlatform && activePlatform?.branchId) {
-      dispatch(BROWSE({ token, companyId: activePlatform.companyId._id }));
+      dispatch(BROWSE({ token, companyId: activePlatform.companyId }));
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform]);
 
+  console.log(activePlatform.companyId);
   //Set fetched data for mapping
   useEffect(() => {
     setBranches(collections);
