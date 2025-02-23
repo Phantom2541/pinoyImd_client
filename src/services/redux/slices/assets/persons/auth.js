@@ -240,9 +240,9 @@ export const reduxSlice = createSlice({
         const { activePlatform } = auth;
         const { branchId } = activePlatform;
 
-        const branch = branches.find((branch) => branch._id === branchId._id);
+        const branch = branches.find((branch) => branch._id === branchId);
         const _access = access
-          .filter(({ branchId }) => branchId === branchId._id)
+          .filter(({ branchId: bID }) => bID === branchId)
           .map((a) => a.platform);
 
         const { contract = { designation: -1 } } = branch || {};
@@ -322,7 +322,6 @@ export const reduxSlice = createSlice({
         state.board = `$${ENDPOINT}/${fileUrl}/board.jpg`;
         state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
-
         const branch = branches.find(
           (branch) => branch._id === auth.activePlatform.branchId
         );
