@@ -8,8 +8,10 @@ const TopHeader = ({
   didSearch = false,
   hasCategory = false,
   hasPrint = false,
+  hasAction = false,
   categories = [],
   handlePrint = () => {},
+  handleCreate = () => {},
   setCategory = () => {},
   handleSearch = () => {},
 }) => {
@@ -85,6 +87,17 @@ const TopHeader = ({
               onClick={handlePrint}
             >
               <MDBIcon icon="print" />
+            </MDBBtn>
+          )}
+          {hasAction && (
+            <MDBBtn
+              size="sm"
+              className="px-2"
+              rounded
+              color="success"
+              onClick={handleCreate}
+            >
+              <MDBIcon icon="plus" />
             </MDBBtn>
           )}
         </div>
