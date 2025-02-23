@@ -21,7 +21,7 @@ export default function SACompany() {
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ companies }) => companies
     ),
@@ -30,11 +30,11 @@ export default function SACompany() {
 
   // Initial Browse
   useEffect(() => {
-    if (token && onDuty && onDuty._id) {
+    if (token && activePlatform && activePlatform?.branchId) {
       dispatch(BROWSE({ token }));
     }
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
   useEffect(() => {

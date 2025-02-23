@@ -7,13 +7,11 @@ import {
 import {
   currency,
   fullName,
-  getGenderIcon,
-  globalSearch,
+  // globalSearch,
 } from "../../../../../services/utilities";
-import DataTable from "../../../../../components/dataTable";
 import { capitalize } from "lodash";
-import { Categories, Services } from "../../../../../services/fakeDb";
-import CashRegister from "../cashier/pos";
+import { Categories } from "../../../../../services/fakeDb";
+import CashRegister from "../cashierOld/pos";
 
 import {
   MDBCard,
@@ -33,25 +31,36 @@ export default function Sales() {
     // hiding optional items in table head to conserve UI design and avoid crumpled view
     [showSources, setShowSources] = useState(false), // show sources in table head if set to true
     [showPhysicians, setShowPhysicians] = useState(false), // show physicians in table head if set to true
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
-    { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { collections, transaction } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
+
+  console.log(
+    "unused variable showSources,showPhysicians,setView",
+    showSources,
+    showPhysicians,
+    setView
+  );
 
   //Initial CASHIER
   useEffect(() => {
-    if (token && onDuty._id && auth._id) {
+    if (token && activePlatform?.branchId && auth._id) {
       const today = new Date().setHours(0, 0, 0, 0); //date and time today starting from 00:00 AM
 
       dispatch(
         CASHIER({
           token,
-          key: { branchId: onDuty._id, cashierId: auth._id, date: today },
+          key: {
+            branchId: activePlatform?.branchId,
+            cashierId: auth._id,
+            date: today,
+          },
         })
       );
     }
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, auth]);
+  }, [token, dispatch, activePlatform, auth]);
 
   //Set fetched data for mapping
   useEffect(() => {
@@ -74,14 +83,15 @@ export default function Sales() {
   const toggleCashRegister = () => setShowCashRegister(!showCashRegister);
 
   //Search function
-  const handleSearch = async (willSearch, key) => {
-    if (willSearch) {
-      setView("all");
-      setSales(globalSearch(collections, key));
-    } else {
-      setSales(collections);
-    }
-  };
+  //comment by darrel
+  // const handleSearch = async (willSearch, key) => {
+  //   if (willSearch) {
+  //     setView("all");
+  //     setSales(globalSearch(collections, key));
+  //   } else {
+  //     setSales(collections);
+  //   }
+  // };
 
   const generateStub = (sale) => ({
     ...sale,
@@ -136,7 +146,7 @@ export default function Sales() {
             </thead>
             <tbody>
               {sales?.map((sale, index) => {
-                console.log(sale);
+                //console.log(sale);
                 return (
                   <tr key={`sales-${index + 1}`}>
                     <td>{index + 1}.</td>

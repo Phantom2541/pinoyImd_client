@@ -15,7 +15,7 @@ import {
 } from "mdbreact";
 import { SAVE } from "../../../../../services/redux/slices/responsibilities/liabilities";
 import { capitalize, fullName } from "../../../../../services/utilities";
-import { PATIENTS } from "../../../../../services/redux/slices/assets/persons/users";
+import { GETPATIENTS } from "../../../../../services/redux/slices/assets/persons/users";
 import { BROWSE } from "../../../../../services/redux/slices/assets/providers";
 import { Liabilities } from "../../../../../services/fakeDb";
 
@@ -32,17 +32,20 @@ const _form = {
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { collections: patients } = useSelector(({ users }) => users),
     { collections: providers } = useSelector(({ providers }) => providers),
-    { token, auth, onDuty } = useSelector(({ auth }) => auth),
+    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     [isParticular, setIsParticular] = useState(true),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty) {
-      dispatch(PATIENTS({ token }));
-      dispatch(BROWSE({ token, key: { clients: onDuty._id } }));
+    // if (token && activePlatform) {
+    //   dispatch(GETPATIENTS({ token }));
+    //   dispatch(BROWSE({ token, key: { clients: activePlatform?.branchId } }));
+    if (token && activePlatform) {
+      dispatch(GETPATIENTS({ token }));
+      dispatch(BROWSE({ token, key: { clients: activePlatform._id } }));
     }
-  }, [token, onDuty, dispatch]);
+  }, [token, activePlatform, dispatch]);
 
   const handleSubmit = () => {
     dispatch(
@@ -50,7 +53,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         data: {
           ...form,
           userId: auth._id,
-          branchId: onDuty._id,
+          branchId: activePlatform?.branchId,
         },
         token,
       })

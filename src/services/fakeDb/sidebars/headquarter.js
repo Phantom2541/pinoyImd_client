@@ -1,12 +1,18 @@
-// import Staff from "../../../pages/platforms/headquarter/file201/exstaffs";
-
-import Equipments from "../../../pages/platforms/headquarter/file201/equipments";
-import Heads from "../../../pages/platforms/headquarter/file201/heads";
-import Physicians from "../../../pages/platforms/headquarter/file201/physicians";
-import Procurments from "../../../pages/platforms/headquarter/file201/procurments";
-import Staffs from "../../../pages/platforms/headquarter/file201/staff";
-import Sources from "../../../pages/platforms/headquarter/file201/sources";
-import Applicants from "../../../pages/platforms/headquarter/file201/applicants";
+import {
+  // Employee,
+  Applicants,
+  Equipments,
+  Heads,
+  Physicians,
+  Procurments,
+  Staffs,
+} from "../../../pages/platforms/headquarter/file201";
+import Services from "../../../pages/platforms/manager/settings/services";
+import Menus from "../../../pages/platforms/manager/settings/menus";
+import Banner from "../../../pages/platforms/manager/settings/banner";
+import Logo from "../../../pages/platforms/manager/settings/logo";
+import Tieups from "../../../pages/platforms/manager/settings/tieups";
+import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 
 const headquarter = [
   {
@@ -37,7 +43,7 @@ const headquarter = [
       {
         name: "Sources",
         path: "/source",
-        component: Sources,
+        // component: Sources,
       },
       {
         name: "Referral",
@@ -64,17 +70,12 @@ const headquarter = [
   {
     name: "Human Resources",
     path: "/hr",
-    icon: "code-branch",
+    icon: "code-*branch",
     children: [
       {
         name: "Branches",
         path: "/hr/branches",
         icon: "code-branch",
-      },
-      {
-        name: "Menus",
-        path: "/hr/menus",
-        icon: "list",
       },
       {
         name: "Top Branch",
@@ -93,6 +94,16 @@ const headquarter = [
     path: "/commerce",
     icon: "tv",
     children: [
+      {
+        name: "Menus",
+        path: "/menus",
+        component: Menus,
+      },
+      {
+        name: "Services",
+        path: "/services",
+        component: Services,
+      },
       {
         name: "Sales", // daily
         path: "/commerce/sales",
@@ -144,6 +155,7 @@ const headquarter = [
         name: "Equipments",
         path: "/duty/equipments",
         icon: "list",
+        component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",
@@ -152,6 +164,47 @@ const headquarter = [
       },
     ],
   },
+   {
+      name: "Settings",
+      path: "/settings",
+      icon: "cogs",
+      children: [
+        {
+          name: "Equipments",
+          path: "/equipments",
+          component: Equipments,
+        },
+        {
+          name: "Procurement",
+          path: "/procurement",
+          component: Procurments, 
+        },
+  
+        {
+          name: "Banner",
+          path: "/banners",
+          component: Banner,
+        },
+        {
+          name: "Logos",
+          path: "/logos",
+          component: Logo,
+        },
+        {
+          name: "Suppliers",
+          path: "/suppliers",
+        },
+        {
+          name: "Sourcing",
+          path: "/sourcing",
+        },
+        {
+          name: "Tie Up",
+          path: "/tieup",
+          component: Tieups,
+        },
+      ],
+    },
   {
     name: "Mortality",
     icon: "code-branch",

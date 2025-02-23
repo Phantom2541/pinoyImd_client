@@ -97,6 +97,24 @@ export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
   }
 });
 
+export const UPDATE_ACCESS = createAsyncThunk(
+  `${name}/UPDATE_ACCESS`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.save(name, form.data, form.token, "update-access");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   try {
     return axioKit.update(name, form.data, form.token);
@@ -149,6 +167,49 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(UPDATE_ACCESS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE_ACCESS.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const { staffID, accessChanges } = payload;
+        const { deleted, added } = accessChanges;
+        const index = state.collections.findIndex(
+          (item) => item._id === staffID
+        );
+
+        const staff = state.collections[index];
+        var StaffAccess = [...staff.access];
+
+        if (deleted.length > 0) {
+          deleted.forEach((element) => {
+            const index = StaffAccess.findIndex(
+              (item) => item._id === element._id
+            );
+            //console.log(index);
+            StaffAccess.splice(index, 1);
+          });
+        }
+
+        if (added.length > 0) {
+          StaffAccess = [...added, ...StaffAccess];
+        }
+        state.collections[index] = {
+          ...staff,
+          access: StaffAccess,
+        };
+
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(UPDATE_ACCESS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

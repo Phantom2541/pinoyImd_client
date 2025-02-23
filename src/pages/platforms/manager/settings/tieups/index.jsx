@@ -10,7 +10,7 @@ import DataTable from "../../../../../components/dataTable";
 import { globalSearch } from "../../../../../services/utilities";
 // mobile;
 export default function Index() {
-  const { onDuty, token } = useSelector(({ auth }) => auth),
+  const { activePlatform, token } = useSelector(({ auth }) => auth),
     [tieups, setTieups] = useState([]),
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
@@ -23,16 +23,16 @@ export default function Index() {
 
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id)
-      dispatch(TIEUPS({ data: { branch: onDuty._id }, token }));
+    if (token && activePlatform?.branchId)
+      dispatch(TIEUPS({ data: { branch: activePlatform?.branchId }, token }));
 
     return () => dispatch(RESET());
-  }, [token, onDuty, dispatch]);
+  }, [token, activePlatform, dispatch]);
 
   //Set fetched data for mapping
   useEffect(() => {
     setTieups(collections);
-  }, [onDuty, collections]);
+  }, [activePlatform, collections]);
 
   //Modal toggle
   const toggleModal = () => setShowModal(!showModal);

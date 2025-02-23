@@ -5,7 +5,6 @@ const name = "assets/persons/users";
 
 const initialState = {
   collections: [],
-  newPatient: { _id: "" },
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -29,7 +28,7 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
-export const PATIENTS = createAsyncThunk(
+export const GETPATIENTS = createAsyncThunk(
   `${name}/patients`,
   ({ token, key }, thunkAPI) => {
     try {
@@ -100,17 +99,19 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(PATIENTS.pending, (state) => {
+      .addCase(GETPATIENTS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(PATIENTS.fulfilled, (state, action) => {
+      .addCase(GETPATIENTS.fulfilled, (state, action) => {
         const { payload } = action.payload;
+        //console.log('payload',payload);
+        
         state.collections = payload;
         state.isLoading = false;
       })
-      .addCase(PATIENTS.rejected, (state, action) => {
+      .addCase(GETPATIENTS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -125,7 +126,6 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.collections.unshift(payload);
-        state.newPatient = payload;
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -146,7 +146,6 @@ export const reduxSlice = createSlice({
           (item) => item._id === payload._id
         );
 
-        state.newPatient = payload;
         state.collections[index] = payload;
         state.message = success;
         state.isSuccess = true;

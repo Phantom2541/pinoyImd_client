@@ -5,12 +5,9 @@ import {
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
-  MDBIcon,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  capitalize,
-  currency,
   fullName,
   handlePagination,
 } from "../../../../../../services/utilities";
@@ -19,7 +16,7 @@ import { Roles } from "../../../../../../services/fakeDb";
 
 import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
-export default function MenuCollapse({ staffs, page, resetSearch, searchKey }) {
+export default function MenuCollapse({ staffs, page }) {
   const [activeId, setActiveId] = useState(-1);
   const { maxPage, token } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
@@ -51,10 +48,15 @@ export default function MenuCollapse({ staffs, page, resetSearch, searchKey }) {
     );
   };
 
-  console.log("Roles:", Roles);
+  //console.log("Roles:", Roles);
 
   return (
-    <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
+    <MDBContainer
+      style={{
+        minHeight: "300px",
+      }}
+      fluid
+    >
       {handlePagination(staffs, page, maxPage).map((staff, index) => {
         const { user, employment, status, rate, contribution, _id } = staff;
 
@@ -62,8 +64,17 @@ export default function MenuCollapse({ staffs, page, resetSearch, searchKey }) {
           Number(employment?.designation)
         )?.display_name;
         return (
-          <MDBCard key={`staffs-${index}`}>
+          <MDBCard
+            key={`staffs-${index}`}
+            style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
+          >
             <MDBCollapseHeader
+              className={`${
+                index === activeId
+                  ? "bg-info text-white transition"
+                  : "bg-white"
+              } ${activeId === index ? "custom-header" : ""}`}
+              style={{ borderRadius: "50%" }}
               onClick={() =>
                 setActiveId((prev) => (prev === index ? -1 : index))
               }
@@ -76,16 +87,25 @@ export default function MenuCollapse({ staffs, page, resetSearch, searchKey }) {
                   {status && status.toUpperCase()}
                   <i
                     style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
-                    className="fa fa-angle-down transition-all"
+                    className="fa fa-angle-down transition-all ml-2"
                   />
                 </small>
               </label>
             </MDBCollapseHeader>
-            <MDBCollapse id={`collapse-${index}`} isOpen={index === activeId}>
-              <MDBCardBody className="pt-0">
+            <MDBCollapse
+              id={`collapse-${index}`}
+              className="mb-2"
+              isOpen={index === activeId}
+              style={{
+                borderBottom: "1px solid black",
+                borderRight: "1px solid black",
+                borderLeft: "1px solid black",
+              }}
+            >
+              <MDBCardBody className="pt-2">
                 <CollapseTable
                   employment={employment}
-                  access={staff.access}
+                  staff={staff}
                   rate={rate}
                   contribution={contribution}
                   _id={_id}

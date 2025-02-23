@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   MDBBtn,
   MDBModal,
   MDBModalHeader,
-  MDBModalTitle,
   MDBModalBody,
   MDBModalFooter,
-  MDBTextArea,
   MDBRow,
   MDBCol,
 } from "mdbreact";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 // import { UPLOAD } from "../../../../../../redux/slices/assets/persons/auth.js";
 // import { toast } from "react-toastify";
-import {
-  SAVE,
-  APPLICATION,
-} from "../../../../../../services/redux/slices/assets/persons/personnels";
+// import {
+//   SAVE,
+//   APPLICATION,
+// } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
 import { Policy } from "../../../../../../services/fakeDb";
-import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
+// import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
 
 // import { Collection } from "mongoose";
 
@@ -28,12 +26,12 @@ export default function ApplicationModal({
   setVisibility,
   company,
 }) {
-  const { theme, auth, token } = useSelector(({ auth }) => auth),
+  const { auth } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ personnels }) => personnels),
     [application, setApplication] = useState({}),
     [department, setDepartment] = useState(),
-    [positions, setPositions] = useState([]),
-    dispatch = useDispatch();
+    [positions, setPositions] = useState([]);
+  // dispatch = useDispatch();
   // useEffect(() => {
   //   token &&
   //     dispatch(
@@ -47,12 +45,14 @@ export default function ApplicationModal({
   //     );
   // }, [dispatch, token, auth]);
 
+  //console.log("unused variable setPositions", setPositions);
+
   const handleToggle = () => setVisibility(!visibility);
 
   const handleApplication = (e) => {
     e.preventDefault();
     if (!!company.branches.length) {
-      console.log({
+      //console.log({
         userId: auth._id,
         ...application,
       });
@@ -222,7 +222,7 @@ export default function ApplicationModal({
                 </option>
                 {Object.entries(positions)?.map((collections, i) => {
                   collections.map((collection) => {
-                    console.log("collection", collection);
+                    //console.log("collection", collection);
                     return (
                       <option
                         value={collections.id}

@@ -15,7 +15,6 @@ import {
   // UPDATE,
 } from "../../../../../services/redux/slices/responsibilities/liabilities";
 // import { isEqual } from "lodash";
-import { useToasts } from "react-toast-notifications";
 import { currency } from "../../../../../services/utilities";
 
 // declare your expected items
@@ -29,12 +28,10 @@ const _form = {
 };
 
 export default function Modal({ show, toggle, selected, willCreate }) {
-  const { isLoading } = useSelector(({ personnels }) => personnels),
-    { token, auth } = useSelector(({ auth }) => auth),
+  const { token, auth } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     [totDeduc, setTotDeduc] = useState(),
     [totEarn, setTotEarn] = useState(),
-    { addToast } = useToasts(),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,10 +52,10 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           Number(form?.bonus)
       );
     }
-  }, [form]);
+  }, [form, selected]);
 
   const handleSubmit = () => {
-    console.log(selected);
+    //console.log(selected);
     dispatch(
       SAVE({
         data: {

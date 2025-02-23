@@ -1,3 +1,15 @@
+import {
+  Task,
+  Report,
+  Tracker,
+} from "../../../pages/platforms/frontdesk/diagnostics";
+
+import {
+  Menus,
+  Services,
+} from "../../../pages/platforms/cashier";
+
+
 const clinical = [
   {
     name: "Dashboard",
@@ -5,32 +17,47 @@ const clinical = [
     path: "/dashboard",
   },
   {
-    name: "POS", // Transactions || Point Of Sales
-    path: "/pos",
+    name: "Diagnostics",
+    path: "/laboratory",
     icon: "cogs",
     children: [
       {
-        name: "Bills",
-        path: "/pos/patients",
+        name: "Onboarding",
+        path: "/onboarding",
+        component: Task,
       },
       {
-        name: "Ledgers",
-        path: "/pos/sales",
+        name: "Tasks",
+        path: "/task",
+        component: Report,
+      },
+      {
+        name: "Reports",
+        path: "/reports",
+        component: Tracker,
       },
     ],
   },
   {
-    name: "Accrued",
-    path: "/accrued",
-    icon: "tv",
+    name: "Services", //viewing only
+    path: "/offers",
+    icon: "list",
     children: [
+      /**
+       * a group of related services
+       */
       {
-        name: "Payables",
-        path: "/accrued/payables",
+        name: "Menus",
+        path: "/menus",
+        component: Menus,
       },
+      /**
+       *  a single service
+       */
       {
-        name: "Receivables",
-        path: "/accrued/receivables",
+        name: "examinations",
+        path: "/services",
+        component: Services,
       },
     ],
   },
@@ -53,12 +80,12 @@ const clinical = [
       {
         name: "Products",
         icon: "cogs",
-        path: "/pharmacist/offers/menus",
+        path: "/clinical/offers/menus",
       },
       {
         name: "Stocks",
         icon: "tools",
-        path: "/pharmacist/merchandise/stocks",
+        path: "/clinical/merchandise/stocks",
       },
     ],
   },

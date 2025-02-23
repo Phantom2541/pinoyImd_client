@@ -8,9 +8,8 @@ const initialState = {
   catalogs: [],
   transaction: { _id: "default" },
   totalPatient: 0,
-  totalSale: 0,
+  // this is used for ledger
   census: {
-    // this is used for ledger
     daily: {},
     grossSales: 0,
     menus: {},
@@ -118,7 +117,7 @@ export const OLDLEDGER = createAsyncThunk(
 export const YEARLY = createAsyncThunk(
   `${name}/yearly`,
   ({ token, branchId, year }, thunkAPI) => {
-    console.log("branchId", branchId);
+    //console.log("branchId", branchId);
     try {
       return axioKit.universal(`${name}/yearly`, token, {
         branchId,
@@ -213,24 +212,6 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
-export const TAGGING = createAsyncThunk(
-  `${name}/tagging`,
-  ({ key, token }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${name}/tagging`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const MANAGERUPDATE = createAsyncThunk(
   `${name}/managerUpdate`,
   ({ key, token }, thunkAPI) => {
@@ -253,11 +234,11 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    RESET: (state, { payload = {}}) => {
+    RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
 
-      if(payload?.resetCollections) state.collections = [];
+      if (payload?.resetCollections) state.collections = [];
     },
   },
   extraReducers: (builder) => {
@@ -273,25 +254,6 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
-      .addCase(TAGGING.pending, (state) => {
-        // state.isLoading = true;
-        // state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(TAGGING.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        const index = state.collections.findIndex((c) => c._id === payload._id);
-
-        state.collections[index] = payload;
-
-        state.isLoading = false;
-      })
-      .addCase(TAGGING.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -373,7 +335,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(CENSUS.fulfilled, (state, action) => {
-        // console.log("payload-census", action.payload.census);
+        // //console.log("payload-census", action.payload.census);
         const { sales = [], ...rest } = action.payload.census;
 
         const daily = sales?.reduce((daily, { createdAt, amount, ...rest }) => {
@@ -382,7 +344,7 @@ export const reduxSlice = createSlice({
 
           obj.sales.push({ createdAt, amount, ...rest });
           obj.total += amount;
-          // console.log("daily", daily);
+          // //console.log("daily", daily);
 
           return daily;
         }, {});
@@ -395,33 +357,6 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.censusLoading = false;
       })
-
-      // .addCase(CENSUS.pending, (state) => {
-      //   state.census = {
-      //     // this is used for ledger
-      //     daily: {},
-      //     grossSales: 0,
-      //     menus: {},
-      //     services: {},
-      //     expenses: 0,
-      //     patients: 0,
-      //     isEmpty: true,
-      //   };
-      //   state.isLoading = true;
-      //   state.isSuccess = false;
-      //   state.message = "";
-      // })
-
-      // .addCase(CENSUS.fulfilled, (state, action) => {
-      //   const { daily } = action.payload;
-      //   state.census = { ...daily, sales: daily.sales || [] };
-      //   state.isLoading = false;
-      // })
-      // .addCase(CENSUS.rejected, (state, action) => {
-      //   const { error } = action;
-      //   state.message = error.message;
-      //   state.isLoading = false;
-      // })
 
       .addCase(OLDLEDGER.pending, (state) => {
         state.census = {
@@ -440,10 +375,6 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(OLDLEDGER.fulfilled, (state, action) => {
-        // const { payload, totalSale, totalPatient } = action.payload;
-        // state.totalSale = totalSale;
-        // state.totalPatient = totalPatient;
-
         state.catalogs = action.payload;
         state.collections = action.payload;
         state.isLoading = false;

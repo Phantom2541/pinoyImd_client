@@ -17,3 +17,7 @@
   color: #dc3545;
   margin-left: 5px;
 }
+
+.custom-header {
+  border: none !important;
+}

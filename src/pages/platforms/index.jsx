@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import SideNavigation from '../../components/sidebar';
-import TopNavigation from '../../components/topbar';
-import Routes from '../Routes';
-import Login from '../home/login';
-import { useDispatch, useSelector } from 'react-redux';
-import { socket } from '../../services/utilities';
-import { NETWORK } from '../../services/redux/slices/assets/persons/auth';
+import React, { useState, useEffect } from "react";
+import SideNavigation from "../../components/sidebar";
+import TopNavigation from "../../components/topbar";
+import Routes from "../Routes";
+import Login from "../home/login";
+import { useDispatch, useSelector } from "react-redux";
+import { socket } from "../../services/utilities";
+import { NETWORK } from "../../services/redux/slices/assets/persons/auth";
 
 const breakWidth = 1400;
 export default function Platforms() {
   const [show, setShow] = useState(false),
     [windowWidth, setWindowWidth] = useState(window.innerWidth),
     [sideNavToggled, setSideNavToggled] = useState(false),
-    [dynamicLeftPadding, setDynamicLeftPadding] = useState('0'),
+    [dynamicLeftPadding, setDynamicLeftPadding] = useState("0"),
     { email, auth, token, isOnline } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
@@ -20,26 +20,26 @@ export default function Platforms() {
 
   useEffect(() => {
     if (!token && !email) {
-      window.location.href = '/';
+      window.location.href = "/";
     }
   }, [token, email]);
 
   useEffect(() => {
-    socket.on('me', (id) => console.log(`[Socket] ${id} Connected.`));
+    socket.on("me", (id) => console.log(`[Socket] ${id} Connected.`));
 
-    return () => socket.off('me');
+    return () => socket.off("me");
   }, []);
 
   useEffect(() => {
     const handleOnline = () => dispatch(NETWORK(true));
     const handleOffline = () => dispatch(NETWORK(false));
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, [dispatch]);
 
@@ -53,17 +53,17 @@ export default function Platforms() {
 
   useEffect(() => {
     if (windowWidth > breakWidth) {
-      setDynamicLeftPadding('240px');
+      setDynamicLeftPadding("240px");
     } else {
-      setDynamicLeftPadding('0');
+      setDynamicLeftPadding("0");
     }
   }, [windowWidth]);
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -77,7 +77,7 @@ export default function Platforms() {
     <div className="app">
       <SideNavigation
         breakWidth={breakWidth}
-        style={{ transition: 'all .3s' }}
+        style={{ transition: "all .3s" }}
         triggerOpening={sideNavToggled}
         onLinkClick={toggleSideNav}
       />
@@ -87,7 +87,9 @@ export default function Platforms() {
           onSideNavToggleClick={toggleSideNav}
           className="white-skin"
         />
-        <main style={{ paddingLeft: dynamicLeftPadding, margin: '8rem 6% 6rem' }}>
+        <main
+          style={{ paddingLeft: dynamicLeftPadding, margin: "8rem 6% 6rem" }}
+        >
           <Login show={show} />
           <Routes />
         </main>

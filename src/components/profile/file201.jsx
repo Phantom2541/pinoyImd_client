@@ -23,14 +23,16 @@ const tabs = ["Resume", "PRC Id", "Board Cert", "Diploma", "Medical Cert"],
 
 export default function Details() {
   const [activeTab, setActiveTab] = useState(0),
-    { auth, token, onDuty } = useSelector(({ auth }) => auth),
+    { auth, token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
   useEffect(() => {
-    if (token && onDuty._id)
-      dispatch(USER({ token, branchId: onDuty._id, userId: auth._id }));
+    if (token && activePlatform?.branchId)
+      dispatch(
+        USER({ token, branchId: activePlatform?.branchId, userId: auth._id })
+      );
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, auth]);
+  }, [token, dispatch, activePlatform, auth]);
 
   return (
     <MDBContainer>

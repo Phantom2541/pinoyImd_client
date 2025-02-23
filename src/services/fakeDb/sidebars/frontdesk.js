@@ -1,27 +1,25 @@
 import Dashboard from "../../../pages/platforms/frontdesk/dashboard";
-import Fecalysis from "../../../pages/platforms/frontdesk/logbooks/fecalysis";
-import Hermatology from "../../../pages/platforms/frontdesk/logbooks/hermatology";
-import Urinalysis from "../../../pages/platforms/frontdesk/logbooks/urinalysis";
-import Chemistry from "../../../pages/platforms/frontdesk/logbooks/chemistry";
-import Electrolite from "../../../pages/platforms/frontdesk/logbooks/electrolite";
-import Serology from "../../../pages/platforms/frontdesk/logbooks/serology";
-import ExperimentalPOS from "../../../pages/platforms/cashier/pos/ExperimentalCashier";
+
+import {
+  Fecalysis,
+  Hematology,
+  Urinalysis,
+  Chemistry,
+  Electrolyte,
+  Serology,
+} from "../../../pages/platforms/frontdesk/reports";
 
 import {
   Task,
   Report,
   Tracker,
-} from "../../../pages/platforms/frontdesk/transactions";
+} from "../../../pages/platforms/frontdesk/diagnostics";
 
 import {
-  // Cashier,
-  Sales,
-  Ledger,
   Menus,
   Services,
 } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
-import Expenses from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
 import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 
@@ -33,61 +31,45 @@ const frontdesk = [
     component: Dashboard,
   },
   {
-    name: "POS", // Point Of Sales
-    path: "/pos",
-    icon: "cogs",
-    children: [
-      {
-        name: "Cashier",
-        path: "/patients",
-        component: ExperimentalPOS,
-      },
-      {
-        name: "Sales",
-        path: "/sales",
-        component: Sales,
-      },
-      {
-        name: "Ledger",
-        path: "/ledger",
-        component: Ledger,
-      },
-    ],
-  },
-  {
-    name: "Transactions",
+    name: "Diagnostics",
     path: "/transactions",
     icon: "cogs",
     children: [
       {
+        name: "Onboarding",
+        path: "/onboarding",
+        component: Task,
+      },
+      {
         name: "Tasks",
         path: "/task",
-        component: Task,
+        component: Report,
       },
       {
         name: "Reports",
         path: "/reports",
-        component: Report,
-      },
-      {
-        name: "Tracker",
-        path: "/tracker",
         component: Tracker,
       },
     ],
   },
   {
-    name: "Offers", //viewing only
+    name: "Services", //viewing only
     path: "/offers",
     icon: "list",
     children: [
+      /**
+       * a group of related services
+       */
       {
         name: "Menus",
         path: "/menus",
         component: Menus,
       },
+      /**
+       *  a single service
+       */
       {
-        name: "Services",
+        name: "examinations",
         path: "/services",
         component: Services,
       },
@@ -193,59 +175,66 @@ const frontdesk = [
     ],
   },
   {
-    name: "Logbooks",
-    path: "/logbooks",
-    icon: "books",
+    name: "Reports",
+    path: "/reports",
+    icon: "cogs",
     children: [
       {
-        name: "Chemistry",
-        path: "/chemistry",
-        component: Chemistry,
+        name: "Logbooks",
+        path: "/logbooks",
+        icon: "books",
+        children: [
+          {
+            name: "Chemistry",
+            path: "/chemistry",
+            component: Chemistry,
+          },
+          {
+            name: "Electrolytes",
+            path: "/Electrolyte",
+            component: Electrolyte,
+          },
+          {
+            name: "Hematology",
+            path: "/hematology",
+            component: Hematology,
+          },
+          {
+            name: "Urinalysis",
+            path: "/urinalysis",
+            component: Urinalysis,
+          },
+          {
+            name: "Fecalysis",
+            path: "/fecalysis",
+            component: Fecalysis,
+          },
+          {
+            name: "Serology",
+            path: "/serology",
+            component: Serology,
+          },
+          {
+            name: "Miscellaneous",
+            path: "/miscellaneous",
+          },
+        ],
       },
       {
-        name: "Electrolites",
-        path: "/electrolite",
-        component: Electrolite,
-      },
-      {
-        name: "Hematology",
-        path: "/hematology",
-        component: Hermatology,
-      },
-      {
-        name: "Urinalysis",
-        path: "/urinalysis",
-        component: Urinalysis,
-      },
-      {
-        name: "Fecalysis",
-        path: "/fecalysis",
-        component: Fecalysis,
-      },
-      {
-        name: "Serology",
-        path: "/serology",
-        component: Serology,
-      },
-      {
-        name: "Miscellaneous",
-        path: "/miscellaneous",
-      },
-    ],
-  },
-  {
-    name: "Utilities",
-    path: "/utilities",
-    icon: "tools",
-    children: [
-      {
-        name: "Temperature",
-        path: "/temperature",
-        component: Temperature,
-      },
-      {
-        name: "Quality Control",
-        path: "/qc",
+        name: "Utilities",
+        path: "/utilities",
+        icon: "tools",
+        children: [
+          {
+            name: "Temperature",
+            path: "/temperature",
+            component: Temperature,
+          },
+          {
+            name: "Quality Control",
+            path: "/qc",
+          },
+        ],
       },
     ],
   },
@@ -254,15 +243,29 @@ const frontdesk = [
     path: "/vendors",
     icon: "handshake",
     children: [
+      /**
+       * where client came from
+       */
+      {
+        name: "Source",
+        path: "/source",
+        component: Source,
+      },
+      /**
+       * where we send services that are not available on the store
+       */
       {
         name: "Outsource",
         path: "/outsource",
         component: Outsource,
       },
-      {
-        name: "Source",
-        path: "/source",
-        component: Source,
+      /**
+       * have a multi-vendor relationship
+       */
+             {
+        name: "Tieup",
+        path: "/tieup",
+        // component: Source,
       },
     ],
   },

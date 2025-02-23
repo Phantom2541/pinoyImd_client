@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
 import { useLocation } from "react-router-dom";
 
 const Census = () => {
-  const [census, setCensus] = useState([]),
-    { search, pathname } = useLocation(),
+  const { search } = useLocation(),
     query = new URLSearchParams(search),
     month = query.get("month"),
-    year = query.get("year"),
-    dispatch = useDispatch(),
-    { collections } = useSelector(({ chemistry }) => chemistry);
+    year = query.get("year");
 
   return (
     <div>

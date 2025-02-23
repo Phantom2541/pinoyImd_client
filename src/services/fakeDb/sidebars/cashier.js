@@ -6,7 +6,7 @@ import {
   Menus,
   Services,
 } from "../../../pages/platforms/cashier";
-import ExperimentalPOS from "../../../pages/platforms/cashier/pos/ExperimentalCashier";
+import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
 import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
@@ -24,15 +24,10 @@ const cashier = [
     path: "/pos",
     icon: "cogs",
     children: [
-      // {
-      //   name: "Experimental POS",
-      //   path: "/experimentalPOS",
-      //   component: ExperimentalPOS,
-      // },
       {
         name: "Cashier",
         path: "/patients",
-        component: ExperimentalPOS,
+        component: Cashier,
       },
       {
         name: "Sales",

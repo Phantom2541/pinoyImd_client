@@ -34,7 +34,7 @@ export default function ContactUs() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(auth._id);
+    //console.log(auth._id);
 
     addToast("Thank you for the feedback.", {
       appearance: "success",
@@ -156,7 +156,7 @@ export default function ContactUs() {
               <label className="btn-floating primary-color">
                 <MDBIcon icon="phone" />
               </label>
-              <p>+63 932-341-8168</p>
+              <p>+63 935-033-9777</p>
               <p>Sat - Fri, 6:00 AM - 6:00 PM</p>
             </MDBCol>
 

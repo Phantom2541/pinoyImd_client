@@ -55,7 +55,8 @@ const individual = (menu, abbr, privilegeIndex) => {
 };
 
 const computeGD = (cart, categoryIndex, privilegeIndex) => {
-  const { abbr = "" } = Categories[categoryIndex];
+  const category = Categories[categoryIndex] || {}; // Ensure category is always an object
+  const abbr = category.abbr || ""; // Fallback to an empty string if undefined
 
   if (!Array.isArray(cart)) return individual(cart, abbr, privilegeIndex);
 

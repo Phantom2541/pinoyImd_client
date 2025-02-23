@@ -11,20 +11,21 @@ import CardTables from "./tables";
 
 export default function Sources() {
   const [vendors, setVendors] = useState([]),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ sources }) => sources),
     dispatch = useDispatch();
 
   //Initial Browse
   useEffect(() => {
-    if ((token, onDuty._id)) dispatch(BROWSE({ token, vendors: onDuty._id }));
-    console.log(onDuty._id);
+    if ((token, activePlatform.branchId))
+      dispatch(BROWSE({ token, vendors: activePlatform.branchId }));
+    //console.log(activePlatform.branchId);
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty._id]);
+  }, [token, dispatch, activePlatform.branchId]);
 
   //Set fetched data for mapping
   useEffect(() => {
-    //console.log(collections);
+    ////console.log(collections);
     setVendors(collections);
   }, [collections]);
 

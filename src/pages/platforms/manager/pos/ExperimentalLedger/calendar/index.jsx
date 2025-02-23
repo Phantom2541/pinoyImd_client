@@ -44,7 +44,7 @@ export default function Calendar({
 }) {
   const [parsedCalendarTable, setParsedCalendarTable] = useState([]),
     [isLoading, setIsLoading] = useState(false),
-    { token, onDuty, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { pathname } = useLocation(),
     history = useHistory(),
     dispatch = useDispatch();
@@ -92,7 +92,7 @@ export default function Calendar({
     // only fetch if the year and month is NOT a future
     if (
       !isSelectedMonthAndYearFuture &&
-      onDuty?._id &&
+      activePlatform?._id &&
       auth?._id &&
       !showPopUp &&
       !showProgress
@@ -100,7 +100,7 @@ export default function Calendar({
       setIsLoading(true);
       const fetchPreCalculatedSales = async () => {
         const query = {
-          branch: onDuty._id,
+          branch: activePlatform?.branchId,
           month: Months[month],
           year,
           ...(activePlatform === "cashier" && { cashier: auth._id }),
@@ -142,7 +142,6 @@ export default function Calendar({
     month,
     year,
     token,
-    onDuty,
     activePlatform,
     auth,
     showPopUp,

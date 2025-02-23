@@ -30,7 +30,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       ({ companies }) => companies
     ),
     { collections: branchcollect } = useSelector(({ branches }) => branches),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [companies, setCompanies] = useState(),
     [branches, setBranches] = useState(),
     [form, setForm] = useState(_form),
@@ -38,13 +38,13 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty._id) {
+    if (token && activePlatform?.branchId) {
       dispatch(COMPANYBROWSE({ token }));
     }
     return () => {
       dispatch(COMPANYRESET());
     };
-  }, [token, onDuty, dispatch]);
+  }, [token, activePlatform, dispatch]);
 
   useEffect(() => {
     if (companycollect || branchcollect) {
@@ -99,16 +99,16 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     const _val = value.split("-");
 
     dispatch(BRANCHBROWSE({ token, companyId: value }));
-    console.log(onDuty);
+    //console.log(activePlatform);
     setForm({
       ...form,
       name: _val[1],
       vendors: _val[0],
-      clients: onDuty._id,
-      ao: onDuty?.companyId?.ceo,
+      clients: activePlatform?.branchId,
+      ao: activePlatform?.companyId?.ceo,
     });
   };
-  console.log(form);
+  //console.log(form);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>

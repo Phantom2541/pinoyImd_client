@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import Calendar from './calendar';
-import { MDBBtn, MDBProgress, MDBTypography } from 'mdbreact';
-import Swal from 'sweetalert2';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-import Months from '../../../../../services/fakeDb/calendar/months';
-import { useLocation, useHistory } from 'react-router-dom';
-import FocusedSale from './focused';
+import React, { useEffect, useState } from "react";
+import Calendar from "./calendar";
+import { MDBBtn, MDBProgress, MDBTypography } from "mdbreact";
+import Swal from "sweetalert2";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import Months from "../../../../../services/fakeDb/calendar/months";
+import { useLocation, useHistory } from "react-router-dom";
+import FocusedSale from "./focused";
 
 const today = new Date();
 
@@ -15,12 +15,12 @@ export default function ExperimentalLedger() {
     [showProgress, setShowProgress] = useState(false),
     { search, pathname } = useLocation(),
     query = new URLSearchParams(search),
-    month = query.get('month'),
-    year = query.get('year'),
-    focusedDay = query.get('focusedDay'),
+    month = query.get("month"),
+    year = query.get("year"),
+    focusedDay = query.get("focusedDay"),
     history = useHistory(),
     [progressBar, setProgressBar] = useState(0),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [ledger, setLedger] = useState([]),
     [totalGrossSales, setTotalGrossSales] = useState(0),
     [totalTransactionCount, setTotalTransactionCount] = useState(0),
@@ -38,20 +38,24 @@ export default function ExperimentalLedger() {
       });
 
       history.push(`${pathname}?${params.toString()}`);
-    } 
+    }
   }, [month, year, history, pathname]);
 
   const isTodaySelected =
-      Number(month) === today.getMonth() && Number(year) === today.getFullYear(),
+      Number(month) === today.getMonth() &&
+      Number(year) === today.getFullYear(),
     isSelectedMonthAndYearFuture =
       Number(year) > today.getFullYear() ||
-      (Number(year) === today.getFullYear() && Number(month) > today.getMonth());
+      (Number(year) === today.getFullYear() &&
+        Number(month) > today.getMonth());
 
   // listener if the ledger calculation gets cut off
   useEffect(() => {
     // only check if the selected month is not a future
     if (!isSelectedMonthAndYearFuture) {
-      const ledgerCalculation = localStorage.getItem(`${month}-${year}-ledgerCalculation`);
+      const ledgerCalculation = localStorage.getItem(
+        `${month}-${year}-ledgerCalculation`
+      );
 
       if (ledgerCalculation) {
         setAutoCalculateResume(true);
@@ -62,11 +66,11 @@ export default function ExperimentalLedger() {
 
   const calculateLedger = () =>
     Swal.fire({
-      icon: 'warning',
-      title: 'Warning',
-      text: 'Calculating data for an entire month may take several minutes. Please do not leave this page while the process is ongoing.',
+      icon: "warning",
+      title: "Warning",
+      text: "Calculating data for an entire month may take several minutes. Please do not leave this page while the process is ongoing.",
       showCancelButton: true,
-      confirmButtonText: 'Continue',
+      confirmButtonText: "Continue",
     }).then(async (result) => {
       if (result.isConfirmed) {
         const lsName = `${month}-${year}-ledgerCalculation`; //local storage name
@@ -91,7 +95,7 @@ export default function ExperimentalLedger() {
           }
 
           return {
-            branch: onDuty._id,
+            branch: activePlatform?.branchId,
             days,
             month: Months[month],
             year,
@@ -115,7 +119,7 @@ export default function ExperimentalLedger() {
               headers: {
                 Authorization: `QTracy ${token}`,
               },
-            },
+            }
           );
 
           const progress = Math.round((value.day / max) * 100);
@@ -127,10 +131,10 @@ export default function ExperimentalLedger() {
           } else {
             localStorage.removeItem(lsName);
             Swal.fire({
-              icon: 'success',
-              title: 'Calculation Complete',
-              text: 'Your ledger has been calculated, please reload to reflect changes.',
-              confirmButtonText: 'Continue',
+              icon: "success",
+              title: "Calculation Complete",
+              text: "Your ledger has been calculated, please reload to reflect changes.",
+              confirmButtonText: "Continue",
             }).then(() => window.location.reload());
           }
         }
@@ -154,19 +158,23 @@ export default function ExperimentalLedger() {
         <MDBTypography
           note
           noteColor="info"
-          noteTitle={autoCalculateResume ? 'Incomplete Ledger ' : 'Empty Data Set '}
+          noteTitle={
+            autoCalculateResume ? "Incomplete Ledger " : "Empty Data Set "
+          }
         >
           {autoCalculateResume
-            ? 'Your previous calculation was not completed.'
-            : 'The currently selected month and year do not have data calculated yet.'}
+            ? "Your previous calculation was not completed."
+            : "The currently selected month and year do not have data calculated yet."}
           <MDBBtn onClick={calculateLedger} size="sm" color="primary">
-            {autoCalculateResume ? 'Click here to resume calculation' : 'Click here to calculate'}
+            {autoCalculateResume
+              ? "Click here to resume calculation"
+              : "Click here to calculate"}
           </MDBBtn>
         </MDBTypography>
       )}
       {showProgress && <MDBProgress min={1} value={progressBar} animated />}
 
-      <div className={`${focusedDay && 'd-flex'}`}>
+      <div className={`${focusedDay && "d-flex"}`}>
         <Calendar
           focusedDay={Number(focusedDay)}
           totalGrossSales={totalGrossSales}

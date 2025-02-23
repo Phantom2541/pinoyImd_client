@@ -31,19 +31,19 @@ export default function Payrolls() {
   const [personnels, setPersonnels] = useState([]),
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
-    { token, onDuty } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, isLoading } = useSelector(
+    { token, activePlatform } = useSelector(({ auth }) => auth),
+    { collections, message, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  console.log("payroll", collections);
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id) dispatch(PAYROLL({ token, branchId: onDuty._id }));
+    if (token && activePlatform?.branchId)
+      dispatch(PAYROLL({ token, branchId: activePlatform?.branchId }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
   //Set fetched data for mapping
   useEffect(() => {
     setPersonnels(collections);
@@ -109,7 +109,7 @@ export default function Payrolls() {
                 const designation = Roles.find(
                   (role) => role.id === Number(employment.designation)
                 );
-                // console.log("payrollss", payroll);
+                // //console.log("payrollss", payroll);
 
                 let akinsenas = payroll?.find(
                   ({ createdAt }) => getDate(createdAt) <= 15
@@ -125,6 +125,7 @@ export default function Payrolls() {
                       return payslip;
                     }
                   }
+                  return null;
                 });
                 return (
                   <tr key={`payroll-${index + 1}`}>

@@ -40,8 +40,9 @@ class TopNavigation extends Component {
       transition: "padding-left .3s",
     };
 
-    const { company, isPatient } = this.props;
-
+    const { company, isPatient, platform } = this.props;
+    //console.log("platform", platform);
+    
     return (
       <MDBNavbar
         className="flexible-MDBNavbar"
@@ -65,7 +66,11 @@ class TopNavigation extends Component {
         </div>
 
         <MDBNavbarBrand href="#" style={navStyle}>
-          <strong>{isPatient ? 'Welcome to Pinoy iMD': capitalize(company?.name)}</strong>
+          <strong>
+            {isPatient
+              ? "Welcome to Pinoy iMD"
+              : `${capitalize(company?.name)} | ${capitalize(platform)}`}
+          </strong>
         </MDBNavbarBrand>
         <MDBNavbarNav
           expand="sm"
@@ -78,7 +83,7 @@ class TopNavigation extends Component {
               <Branches />
               <Platforms />
             </>
-          )} 
+          )}
           <Profile />
         </MDBNavbarNav>
       </MDBNavbar>
@@ -90,6 +95,7 @@ const mapStateToProps = (state) => {
   return {
     company: state.auth.company,
     isPatient: state.auth.isPatient,
+    platform: state.auth.activePlatform.platform,
   };
 };
 

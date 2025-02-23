@@ -15,7 +15,7 @@ import {
 } from "mdbreact";
 import { SAVE } from "../../../../../services/redux/slices/responsibilities/liabilities";
 import { capitalize, fullName } from "../../../../../services/utilities";
-import { PATIENTS } from "../../../../../services/redux/slices/assets/persons/users";
+import { GETPATIENTS } from "../../../../../services/redux/slices/assets/persons/users";
 import { BROWSE } from "../../../../../services/redux/slices/assets/sources";
 import { Liabilities } from "../../../../../services/fakeDb";
 
@@ -32,26 +32,26 @@ const _form = {
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { collections: patients } = useSelector(({ users }) => users),
     { collections: sources } = useSelector(({ providers }) => providers),
-    { token, auth, onDuty } = useSelector(({ auth }) => auth),
+    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     [isParticular, setIsParticular] = useState(true),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty) {
-      dispatch(PATIENTS({ token }));
-      dispatch(BROWSE({ token, key: { clients: onDuty._id } }));
+    if (token && activePlatform) {
+      dispatch(GETPATIENTS({ token }));
+      dispatch(BROWSE({ token, key: { clients: activePlatform?.branchId } }));
     }
-  }, [token, onDuty, dispatch]);
+  }, [token, activePlatform, dispatch]);
 
-  // console.log(selected);
+  // //console.log(selected);
   const handleSubmit = () => {
     dispatch(
       SAVE({
         data: {
           ...form,
           userId: auth._id,
-          branchId: onDuty._id,
+          branchId: activePlatform?.branchId,
           range: [form?.start, form?.end],
         },
         token,
@@ -61,7 +61,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   };
 
   // use for direct values like strings and numbers
-  const handleValue = (key) => console.log(key);
+  const handleValue = (key) => //console.log(key);
 
   // willCreate ? form[key] : form[key] || selected[key];
 
@@ -125,7 +125,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             </>
           ) : (
             <>
-              {console.log(sources)}
+              {//console.log(sources)}
               <span>Vendor</span>
               <select
                 value={handleValue("supplier")}

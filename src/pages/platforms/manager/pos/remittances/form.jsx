@@ -1,7 +1,7 @@
-import React from 'react';
-import { MDBInput, MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
-import { capitalize, currency } from '../../../../../services/utilities';
-import { Remmitances } from '../../../../../services/fakeDb';
+import React from "react";
+import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
+import { capitalize, currency } from "../../../../../services/utilities";
+import { Remmitances } from "../../../../../services/fakeDb";
 
 export default function RemmitanceForm({ title }) {
   //   return (
@@ -37,7 +37,12 @@ export default function RemmitanceForm({ title }) {
               <div className="pt-1 pl-2">{currency(Number(bill), true)}</div>
             </td>
             <td className="p-0">
-              <input type="number" min={0} className="w-100 text-center" required />
+              <input
+                type="number"
+                min={0}
+                className="w-100 text-center"
+                required
+              />
             </td>
           </tr>
         ))}
@@ -58,7 +63,12 @@ export default function RemmitanceForm({ title }) {
               <div className="pt-1 pl-2">{currency(Number(coin), true)}</div>
             </td>
             <td className="p-0">
-              <input type="number" min={0} className="w-100 text-center" required />
+              <input
+                type="number"
+                min={0}
+                className="w-100 text-center"
+                required
+              />
             </td>
           </tr>
         ))}

@@ -7,6 +7,9 @@ const Categories = [
   { name: "Promotion", abbr: "promo", color: "yellow" },
   { name: "Health Maintenance Organization", abbr: "hmo", color: "orange" },
   { name: "Insourcing", abbr: "insc", color: "orange" },
+  { name: "Business Permit", abbr: "bp", color: "orange" },
+  { name: "Medical Clearance", abbr: "mc", color: "red" },
+  { name: "Surgical Clearance", abbr: "sc", color: "red" },
 ];
 
 export default Categories;

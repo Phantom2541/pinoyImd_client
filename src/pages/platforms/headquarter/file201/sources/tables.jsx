@@ -1,8 +1,6 @@
 import React from "react";
 import { MDBTable, MDBIcon } from "mdbreact";
 
-import { DESTROY } from "../../../../../services/redux/slices/assets/persons/source";
-
 const Tables = ({ vendors }) => {
   return (
     <MDBTable responsive hover bordered>
@@ -34,7 +32,7 @@ const Tables = ({ vendors }) => {
       </thead>
       <tbody>
         {vendors?.map((vendor, index) => {
-          const { clients, address } = vendor;
+          const { clients } = vendor;
           // Rest of your code here
 
           return (

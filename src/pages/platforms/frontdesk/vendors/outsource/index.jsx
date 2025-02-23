@@ -24,19 +24,19 @@ export default function Outsource() {
   const [sources, setSources] = useState([]),
     [name, setName] = useState(""),
     [showModal, setShowModal] = useState(false),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty._id) {
-      dispatch(BROWSE({ token, key: { clients: onDuty._id } }));
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ token, key: { clients: activePlatform?.branchId } }));
     }
 
     return () => {
       dispatch(RESET());
     };
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     setSources(collections);
@@ -48,9 +48,9 @@ export default function Outsource() {
       input: "text",
       inputLabel: "Company name",
     });
-    console.log("outside if", name);
+    //console.log("outside if", name);
     if (name) {
-      console.log("inside if", name);
+      //console.log("inside if", name);
       setName(name);
       setShowModal(true);
     }

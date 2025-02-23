@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
-import {
-  currency,
-  generateCalendar,
-} from "../../../../../../services/utilities";
+import { generateCalendar } from "../../../../../../services/utilities";
 import {
   SAVE,
   UPDATE,
@@ -15,11 +12,9 @@ import Swal from "sweetalert2";
 const today = new Date();
 
 export default function Calendar({ month, year }) {
-  const { collections, isLoading } = useSelector(
-    ({ temperatures }) => temperatures
-  );
+  const { collections } = useSelector(({ temperatures }) => temperatures);
   const [temps, setTemps] = useState([]);
-  const { token, onDuty, auth } = useSelector(({ auth }) => auth);
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,7 +22,7 @@ export default function Calendar({ month, year }) {
       setTemps(collections);
     }
   }, [collections]);
-  console.log(temps);
+  //console.log(temps);
 
   const room = async (meridiem, entry) => {
     const { value: temp } = await Swal.fire({
@@ -46,7 +41,7 @@ export default function Calendar({ month, year }) {
           UPDATE({
             data: {
               _id: entry._id,
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               userId: auth._id,
               [meridiem]: {
                 room: temp,
@@ -60,7 +55,7 @@ export default function Calendar({ month, year }) {
         dispatch(
           SAVE({
             data: {
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               userId: auth._id,
               [meridiem]: {
                 room: temp,
@@ -92,7 +87,7 @@ export default function Calendar({ month, year }) {
           UPDATE({
             data: {
               _id: entry._id,
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               userId: auth._id,
               [meridiem]: {
                 ref: temp,
@@ -106,7 +101,7 @@ export default function Calendar({ month, year }) {
         dispatch(
           SAVE({
             data: {
-              branchId: onDuty._id,
+              branchId: activePlatform?.branchId,
               userId: auth._id,
               [meridiem]: {
                 ref: temp,
@@ -155,7 +150,7 @@ export default function Calendar({ month, year }) {
             const entryDate = new Date(entry?.createdAt);
             return entryDate.toDateString() === date.toDateString();
           });
-          console.log("entry", entry);
+          //console.log("entry", entry);
 
           return (
             <div

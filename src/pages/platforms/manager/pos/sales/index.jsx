@@ -5,17 +5,9 @@ import {
   MANAGERUPDATE,
   RESET,
 } from "../../../../../services/redux/slices/commerce/sales";
-import {
-  currency,
-  fullName,
-  getGenderIcon,
-  globalSearch,
-  axioKit,
-} from "../../../../../services/utilities";
-import DataTable from "../../../../../components/dataTable";
+import { currency, fullName, axioKit } from "../../../../../services/utilities";
 import { capitalize } from "lodash";
 import { Categories } from "../../../../../services/fakeDb";
-import CashRegister from "../../../cashier/pos/cashier/pos";
 import Swal from "sweetalert2";
 import Months from "../../../../../services/fakeDb/calendar/months";
 import {
@@ -31,21 +23,23 @@ export default function Sales() {
     [view, setView] = useState("all"),
     [total, setTotal] = useState(0),
     [daily, setDaily] = useState({}),
-    [selected, setSelected] = useState({}),
-    [showCashRegister, setShowCashRegister] = useState(false),
-    { token, onDuty, auth } = useSelector(({ auth }) => auth),
-    { collections, isLoading, transaction } = useSelector(({ sales }) => sales),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ sales }) => sales),
+    // { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    // { collections } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
+
+  //console.log("unused variable setView", setView);
   //Initial Browse
   useEffect(() => {
-    if (token && onDuty._id && auth._id) {
+    if (token && activePlatform?.branchId && auth._id) {
       const today = new Date().setHours(0, 0, 0, 0);
 
       dispatch(
         BROWSE({
           token,
           key: {
-            branchId: onDuty._id,
+            branchId: activePlatform?.branchId,
             createdAt: today,
           },
         })
@@ -53,30 +47,29 @@ export default function Sales() {
     }
 
     const today = new Date();
-    axioKit.universal(
-        "finance/pre-calculated-daily-sale/find",
-        token,
-        {
-          month: Months[today.getMonth()],
-          day: today.getDate(),
-          year: today.getFullYear(),
-          cashier: auth._id,
-          branch: onDuty._id
-        }
-      ).then((item) => {
+    axioKit
+      .universal("finance/pre-calculated-daily-sale/find", token, {
+        month: Months[today.getMonth()],
+        day: today.getDate(),
+        year: today.getFullYear(),
+        cashier: auth._id,
+        branch: activePlatform?.branchId,
+      })
+      .then((item) => {
         setDaily(item);
-      }).catch((error) => {
-        console.error('Error fetching daily sale:', error);
+      })
+      .catch((error) => {
+        console.error("Error fetching daily sale:", error);
       });
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty, auth]);
-console.log(daily);
+  }, [token, dispatch, activePlatform, auth]);
+  //console.log(daily);
 
   //Set fetched data for mapping
   useEffect(() => {
     if (!!collections.length) {
-      console.log(collections);
+      //console.log(collections);
       const sales =
         view === "all"
           ? collections
@@ -87,17 +80,17 @@ console.log(daily);
   }, [collections, view]);
 
   //Modal toggle
-  const toggleCashRegister = () => setShowCashRegister(!showCashRegister);
+  // const toggleCashRegister = () => setShowCashRegister(!showCashRegister);
 
   //Search function
-  const handleSearch = async (willSearch, key) => {
-    if (willSearch) {
-      setView("all");
-      setSales(globalSearch(collections, key));
-    } else {
-      setSales(collections);
-    }
-  };
+  // const handleSearch = async (willSearch, key) => {
+  //   if (willSearch) {
+  //     setView("all");
+  //     setSales(globalSearch(collections, key));
+  //   } else {
+  //     setSales(collections);
+  //   }
+  // };
 
   const generateStub = (sale) => ({
     ...sale,
@@ -121,26 +114,25 @@ console.log(daily);
     );
   };
 
-  const handleCashRegister = (selected) => {
-    Swal.fire({
-      icon: "info",
-      text: "Temporarily disabled.",
-    });
-    // setSelected({
-    //   ...selected.customerId,
-    //   category: selected.category,
-    //   saleId: selected._id,
-    //   soldCart: selected.cart,
-    // });
-    // toggleCashRegister();
-  };
+  // const handleCashRegister = (selected) => {
+  //   Swal.fire({
+  //     icon: "info",
+  //     text: "Temporarily disabled.",
+  //   });
+  //   // setSelected({
+  //   //   ...selected.customerId,
+  //   //   category: selected.category,
+  //   //   saleId: selected._id,
+  //   //   soldCart: selected.cart,
+  //   // });
+  //   // toggleCashRegister();
+  // };
 
   const handleDelete = async ({ _id }) => {
-    
     const { value: remarks } = await Swal.fire({
       title: "Are you sure?",
       text: "Please, specify a reason.",
-      input: "text", 
+      input: "text",
       inputPlaceholder: "Remarks",
       icon: "warning",
       showCancelButton: true,
@@ -155,7 +147,7 @@ console.log(daily);
     });
 
     if (remarks) {
-    const today = new Date();
+      const today = new Date();
 
       dispatch(
         MANAGERUPDATE({
@@ -176,8 +168,6 @@ console.log(daily);
   };
 
   const handleAmountUpdate = async ({ _id, amount: _amount }) => {
-
-    
     const { value: amount } = await Swal.fire({
       title: "Enter new amount.",
       text: `Old amount is ${currency(_amount)}.`,
@@ -226,7 +216,7 @@ console.log(daily);
             </thead>
             <tbody>
               {sales?.map((sale, index) => {
-                console.log(sale);
+                //console.log(sale);
                 return (
                   <tr key={`sales-${index + 1}`}>
                     <td>{index + 1}.</td>

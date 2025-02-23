@@ -16,7 +16,7 @@ export default function Branches() {
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ branches }) => branches
     ),
@@ -25,11 +25,11 @@ export default function Branches() {
 
   // Initial Browse
   useEffect(() => {
-    if (token && onDuty && onDuty._id) {
-      dispatch(BROWSE({ token, companyId: onDuty.companyId._id }));
+    if (token && activePlatform && activePlatform?.branchId) {
+      dispatch(BROWSE({ token, companyId: activePlatform.companyId._id }));
     }
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty]);
+  }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
   useEffect(() => {

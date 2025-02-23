@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   MDBIcon,
   MDBDropdown,
@@ -6,41 +7,46 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
 } from "mdbreact";
-import { useSelector } from "react-redux";
 import { capitalize } from "../../../services/utilities";
+import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth.js";
 
 export default function Branches() {
-  const [text, setText] = useState("Branches"),
-    { branches, onDuty } = useSelector(({ auth }) => auth);
+  const { branches, access, activePlatform, token, auth } = useSelector(
+      ({ auth }) => auth
+    ),
+    dispatch = useDispatch();
 
-  const changeBranch = (_id, index) => {
-    if (_id !== onDuty._id) {
-      console.log(branches[index]);
-      alert("Still in progress");
-    }
+  const handleActivePlatform = (branchId) => {
+    const _access =
+      access
+        .filter((branch) => branch.branchId === branchId)
+        .flatMap(({ platform }) => platform) || [];
+
+    const data = {
+      _id: auth._id,
+      email: auth.email,
+      activePlatform: { ...activePlatform, branchId, access: [..._access] },
+    };
+
+    //console.log("handle Active Platform :", data);
+
+    dispatch(SETACTIVEPLATFORM({ data, token }));
   };
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setText(prev => (prev === onDuty?.name ? "Branches" : onDuty?.name));
-    }, 10000);
-
-    return () => clearInterval(timer);
-  }, [onDuty]);
-
+  const { branch } = activePlatform;
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
         <MDBIcon icon="code-branch" />
         &nbsp;
-        <div className="d-none d-md-inline">{capitalize(text)}</div>
+        <div className="d-none d-md-inline">{capitalize(branch?.name)}</div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right>
         {branches.map(({ name, _id }, index) => (
           <MDBDropdownItem
-            active={_id === onDuty._id}
+            active={_id === activePlatform?.branchId}
             key={`branch-${index}`}
-            onClick={() => changeBranch(_id, index)}
+            onClick={() => handleActivePlatform(_id)}
           >
             {capitalize(name)}
           </MDBDropdownItem>

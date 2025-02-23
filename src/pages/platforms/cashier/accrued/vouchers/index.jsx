@@ -16,7 +16,7 @@ import { Roles } from "../../../../../services/fakeDb";
 
 export default function Vouchers() {
   const [employees, setEmployees] = useState([]),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
     [selected, setSelected] = useState({}),
@@ -28,10 +28,11 @@ export default function Vouchers() {
 
   //Initial Browse
   useEffect(() => {
-    if ((token, onDuty._id)) dispatch(BROWSE({ token, branchId: onDuty._id }));
+    if ((token, activePlatform?.branchId))
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty._id]);
+  }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
   useEffect(() => {

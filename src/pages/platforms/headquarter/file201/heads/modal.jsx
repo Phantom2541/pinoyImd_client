@@ -57,16 +57,16 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       ({ personnels }) => personnels
     ),
     [crews, setCrews] = useState([]),
-    { token, onDuty } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (willCreate && onDuty._id)
-      dispatch(EMPLOYEES({ token, branch: onDuty._id }));
+    if (willCreate && activePlatform?.branchId)
+      dispatch(EMPLOYEES({ token, branch: activePlatform?.branchId }));
     return () => dispatch(RESET());
-  }, [onDuty, token, willCreate, dispatch]);
+  }, [activePlatform, token, willCreate, dispatch]);
 
   useEffect(() => {
     setCrews(collections);
@@ -97,7 +97,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleCreate = () => {
     dispatch(
       SAVE({
-        data: { ...form, branch: onDuty._id },
+        data: { ...form, branch: activePlatform?.branchId },
         token,
       })
     );

@@ -1,29 +1,45 @@
 import { configureStore } from "@reduxjs/toolkit";
-import auth from "./slices/assets/persons/auth";
-import personnels from "./slices/assets/persons/personnels";
-import sources from "./slices/assets/persons/source";
-import access from "./slices/responsibilities/access";
-import users from "./slices/assets/persons/users";
-import companies from "./slices/assets/companies";
-import preferences from "./slices/results/preferences";
-import menus from "./slices/commerce/menus";
-import providers from "./slices/assets/providers";
-import physicians from "./slices/assets/persons/physicians";
-import sales from "./slices/commerce/sales";
-import heads from "./slices/assets/persons/heads";
-import tieups from "./slices/assets/tieups/companies";
-import chemistry from "./slices/results/laboratory/chemistry";
+// import auth from "./slices/assets/persons/auth";
+// import personnels from "./slices/assets/persons/personnels";
+// import sources from "./slices/assets/persons/source";
+// import access from "./slices/responsibilities/access";
+// import users from "./slices/assets/persons/users";
+// import companies from "./slices/assets/companies";
+// import preferences from "./slices/results/preferences";
+// import menus from "./slices/commerce/menus";
+// import providers from "./slices/assets/providers";
+// import physicians from "./slices/assets/persons/physicians";
+// import sales from "./slices/commerce/sales";
+// import heads from "./slices/assets/persons/heads";
+// import tieups from "./slices/assets/tieups/companies";
+// import chemistry from "./slices/results/laboratory/chemistry";
 
-import procurements from "./slices/assets/procurements";
-import branches from "./slices/assets/branches";
-import liabilities from "./slices/responsibilities/liabilities";
-import payrolls from "./slices/responsibilities/payroll";
-import applicants from "./slices/assets/persons/applicants";
-import hematology from "./slices/results/laboratory/hematology";
-import urinalysis from "./slices/results/laboratory/urinalysis";
-import fecalysis from "./slices/results/laboratory/fecalysis";
-import electrolyte from "./slices/results/laboratory/electrolyte";
-import serology from "./slices/results/laboratory/serology";
+import {
+  auth,
+  personnels,
+  users,
+  physicians,
+  heads,
+  applicants,
+  companies,
+  procurements,
+  branches,
+  providers,
+  tieups,
+} from "./slices/assets";
+import { menus, sales, pos, taskGenerator } from "./slices/commerce";
+
+import {
+  hematology,
+  urinalysis,
+  fecalysis,
+  electrolyte,
+  serology,
+  chemistry,
+  preferences,
+} from "./slices/results";
+
+import { access, liabilities, payrolls } from "./slices/responsibilities";
 
 import remmitance from "./slices/finance/remmitance";
 
@@ -40,6 +56,8 @@ const store = configureStore({
     menus,
     physicians,
     sales,
+    pos,
+    taskGenerator,
     heads,
     tieups,
     chemistry,
@@ -56,7 +74,6 @@ const store = configureStore({
     serology,
     temperatures,
     providers,
-    sources,
   },
 });
 

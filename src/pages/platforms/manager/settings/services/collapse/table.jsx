@@ -20,7 +20,7 @@ export default function CollapseTable({ id, preference }) {
   const toggleModal = () => setShowModal(!showModal);
 
   const toggleRemove = (reference) => {
-    console.log("reference", reference);
+    //console.log("reference", reference);
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",

@@ -27,7 +27,7 @@ import {
 import { BROWSE } from "../../../../../services/redux/slices/assets/persons/users";
 
 export default function Modal({ show, toggle, selected, name }) {
-  const { token, onDuty } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, isLoading, message, isSuccess } = useSelector(
       ({ users }) => users
     ),
@@ -48,11 +48,11 @@ export default function Modal({ show, toggle, selected, name }) {
 
     return () => dispatch(RESET());
   }, [name, dispatch, token]);
-  console.log(collections);
+  //console.log(collections);
 
   useEffect(() => {
     if (collections.payload) {
-      console.log(collections.payload);
+      //console.log(collections.payload);
       setUsers(collections.payload);
     }
   }, [collections]);
@@ -82,7 +82,11 @@ export default function Modal({ show, toggle, selected, name }) {
   // };
 
   const handleAddPhysicians = (user) => {
-    setDoctors({ user: user._id, branch: onDuty._id, status: "active" });
+    setDoctors({
+      user: user._id,
+      branch: activePlatform?.branchId,
+      status: "active",
+    });
   };
 
   return (
