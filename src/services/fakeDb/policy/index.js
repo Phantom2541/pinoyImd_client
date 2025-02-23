@@ -1,15 +1,12 @@
 import collections from "./collections.json";
-
-export const Policy = {};
-
-const Services = {
-  collections: collections,
-  find: (pk) => collections.find(({ id }) => id === pk),
-  departments: () => collections.filter(({ department }) => department),
-  positions: (key) =>
-    collections.find(
-      ({ department, positions }) => department === key && positions
-    ),
+ 
+ const Policy = {
+  collections,
+  getDepartment:(pk)=>{
+   const {code,positions}=collections.find(({positions=[]})=>positions.some(({id})=>id===pk))
+   if(!code) return "unknown designation"
+   const role= [...positions].find(({ id }) => id === pk).display_name
+   return {department:code,role}
+  }
 };
-
-export default Services;
+export default Policy;

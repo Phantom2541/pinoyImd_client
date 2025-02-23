@@ -46,8 +46,8 @@ export default function PosCard({
             value={categoryIndex}
             onChange={({ target }) => setCategoryIndex(Number(target.value))}
           >
-            {Categories.map(({ name }, index) => (
-              <option value={index} key={`category-${index}`}>
+            {Categories.map(({ name,color }, index) => (
+              <option value={index} key={`category-${index}`}  style={{ backgroundColor: color }}>
                 {name}
               </option>
             ))}
