@@ -19,11 +19,12 @@ export default function Summary({
   privilegeIndex,
   physicianId,
   sourceId,
-  cart = [],
+  // cart = [],
   customerId,
   customer,
 }) {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { cart } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
     dispatch = useDispatch();
@@ -36,6 +37,8 @@ export default function Summary({
     amount = gross - discount,
     { abbr = "" } = Categories[categoryIndex],
     paymentOptions = Payments[abbr];
+
+  console.log("carts :", cart);
 
   const handleCheckout = (e) => {
     e.preventDefault();
@@ -65,6 +68,7 @@ export default function Summary({
       amount,
       discount,
       isPickup,
+      department: "LAB",
       privilege: privilegeIndex,
       customer,
       cashier: auth?.fullName,

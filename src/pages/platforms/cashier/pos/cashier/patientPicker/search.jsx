@@ -51,8 +51,8 @@ export default function Search({
           value={searchKey}
           onChange={({ target }) => {
             //console.log('target.value',target.value);
-            
-            setSearchKey(target.value)
+
+            setSearchKey(target.value);
           }}
           autoCorrect="off"
           spellCheck={false}

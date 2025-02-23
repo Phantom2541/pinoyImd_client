@@ -1,81 +1,65 @@
-import { MDBIcon } from "mdbreact";
-import React from "react";
+ <SearchBox
+                  handleSearch={(e) => {
+                    e.preventDefault();
+                    setSearchKey("");
+                  }}
+                  placeholder="Menu Search..."
+                  setSearchKey={setSearchKey}
+                  searchRef={searchRef}
+                  searchKey={searchKey}
+                >
+                  {console.log("Search Key:", searchKey)}
+                  {console.log("Search Match:", searchMatch)}
 
-export default function Search({
-  handleSearch,
-  searchKey,
-  setSearchKey,
-  selected,
-  didSearch,
-  children,
-  info = {},
-  placeholder = "Fullname Search...",
-  searchRef,
-}) {
-  const {
-    message = "Last name, First name y Middle name",
-    description = "Please maintain this order when searching.",
-  } = info;
-  const findMenu = () => handleSearch; // Placeholder function for search
-  return (
-    <div
-      className={`cashier-search-cotaniner ${
-        selected?._id && "pickedSearched"
-      }`}
-    >
-      <div className={`cashier-instruction ${selected?._id && "hide"}`}>
-        <MDBIcon
-          icon="info-circle"
-          size="lg"
-          className="text-info cursor-pointer"
-        />
-        <div>
-          <p>{message}</p>
-          <i>{description}</i>
-        </div>
-      </div>
-      <div
-        className={`cashier-search ${didSearch && "active"} ${
-          selected?._id && "pickedSearch"
-        }`}
-      >
-        <div className="cashier-search-suggestions">
-          <ul className="text-dark">{children}</ul>
-        </div>
-      <input
-        ref={searchRef}
-        placeholder={placeholder}
-        value={searchKey}
-          onChange={({ target }) => {
-            console.log(target.value);
-            
-            setSearchKey(target.value)
-          }}
-        autoCorrect="off"
-        spellCheck={false}
-        className="form-control"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            console.log("enter");
-            
-            e.preventDefault(); // Prevent form submission behavior
-              findMenu(); // Call the search function only if it's defined
-            }
-          }
-        }
-      />
+                  {/* Case 1: Walang input at walang results */}
+                  {searchMatch.length === 0 && !searchKey && (
+                    <li>Please type a menu name.</li>
+                  )}
 
-        <button
-          type="button"
-          className={`${(didSearch || selected?._id) && "bg-danger"}`}
-          onClick={findMenu()} // Trigger search manually
-        >
-          <MDBIcon
-            icon={didSearch || selected?._id ? "times" : "search"}
-            className="search-icon"
-          />
-        </button>
-      </div>
-    </div>
-  );
-}
+                  {/* Case 2: May input pero walang matching result */}
+                  {searchKey && searchMatch.length === 0 && (
+                    <li>No match found.</li>
+                  )}
+
+                  {/* Case 3: May matching result */}
+                  {searchMatch.length > 0 &&
+                    searchMatch.map((menu, index) => {
+                      console.log("Menu Item:", menu);
+
+                      const {
+                        description = "",
+                        abbreviation = "",
+                        price = 0,
+                      } = menu; // Use correct price field
+
+                      return (
+                        <li
+                          key={`menu-suggestion-${index}`}
+                          onClick={() => {
+                            if (price) {
+                              handleADDtoCart({ ...menu, isNew: true });
+                            } else {
+                              addToast("This product has no set price.", {
+                                appearance: "warning",
+                              });
+                            }
+                          }}
+                        >
+                          <div className="d-flex align-items-center justify-content-between">
+                            <span>
+                              {abbreviation}
+                              {description && (
+                                <>
+                                  <br />
+                                  <span className="small">{description}</span>
+                                </>
+                              )}
+                            </span>
+                            <span className="ml-3">
+                              {price ? currency(price) : "N/A"}
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                </SearchBox>

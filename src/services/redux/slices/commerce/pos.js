@@ -166,6 +166,7 @@ export const reduxSlice = createSlice({
       state.sourceId = payload;
     },
     ADDTOCART: (state, { payload }) => {
+      console.log("payload :", payload);
       const index = state.cart.findIndex((item) => item._id === payload._id);
       if (index === -1) {
         state.cart = [...state.cart, payload];
