@@ -32,7 +32,7 @@ export default function Branches() {
   };
 
   const { branch } = activePlatform;
-  console.log(branch);
+  console.log("branch", activePlatform);
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
