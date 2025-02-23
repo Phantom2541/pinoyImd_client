@@ -129,7 +129,7 @@ export default function CollapseTable({
             />
           </EditableField>
           <EditableField
-            label="SOE"
+            label="Status of Employment"
             fieldName="employmentSoe"
             editField={editField}
             setEditField={setEditField}

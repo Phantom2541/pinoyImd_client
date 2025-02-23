@@ -38,7 +38,10 @@ export default function AccessModal({ show, toggle, selected }) {
 
   const removeDuplicate = useCallback((_existingAccess) => {
     return Access.collections.filter((c) =>
-      _existingAccess?.every((existAcc) => existAcc.platform !== c.platform)
+      _existingAccess?.every(
+        (existAcc) =>
+          existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
+      )
     );
   }, []);
 
