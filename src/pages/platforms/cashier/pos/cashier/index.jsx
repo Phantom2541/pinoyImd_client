@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import POS from "./patientPicker/pos";
 import Menus from "./menuPicker/menus";
-import Summary from "./Summary";
+import Summary from "./summary";
 import { useDispatch, useSelector } from "react-redux";
 import {
   GETPATIENTS,

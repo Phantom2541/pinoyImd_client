@@ -6,7 +6,12 @@ const name = "assets/persons/personnels";
 const initialState = {
   collections: [],
   personnel: {},
-
+  access: {
+    _id: "",
+    roles: [],
+    permited: [],
+    unpermited: [],
+  },
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -159,6 +164,18 @@ export const reduxSlice = createSlice({
       }
 
       state.collections[index].access = newAccess;
+    },
+    ONHOTSEAT: (state, { payload }) => {
+      state.personnel = payload.personnel;
+      state.access._id = payload._id;
+    },
+    SETPERMITED: (state, { payload }) => {
+      state.access.permited = payload.access;
+      state.access.unpermited = payload.aceess;
+    },
+    SETUNPERMITED: (state, { payload }) => {
+      state.permited = payload.permited;
+      state.unpermited = payload.unpermited;
     },
     RESET: (state, data) => {
       state.isSuccess = false;

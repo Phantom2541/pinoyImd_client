@@ -16,6 +16,19 @@ import { Access } from "../../../../../../../services/fakeDb";
 import { UPDATE_ACCESS } from "../../../../../../../services/redux/slices/assets/persons/personnels";
 import Table from "./table";
 
+/**
+ * AccessModal component manages user access roles through a modal interface.
+ * It displays available roles and existing access, allowing users to add or
+ * remove roles for a selected user. The changes can be saved and sent to the
+ * backend for processing. The component supports searching for roles,
+ * drag-and-drop functionality for managing roles, and visual feedback for
+ * the current state of access changes.
+ *
+ * @param {boolean} show - Controls the visibility of the modal.
+ * @param {function} toggle - Function to toggle the modal's visibility.
+ * @param {object} selected - Contains user and their current access data.
+ */
+
 export default function AccessModal({ show, toggle, selected }) {
   const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
     [existingAccess, setExistingAccess] = useState([]),
