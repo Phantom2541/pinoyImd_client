@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit, ENDPOINT } from "../../../../utilities";
+import { Policy } from "../../../../fakeDb";
 
 const name = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
@@ -178,6 +179,11 @@ export const reduxSlice = createSlice({
         const branch = state.branches.find(
           (branch) => branch._id === payload.activePlatform.branchId
         );
+
+        console.log("branches", state.branches);
+        console.log("branch", branch);
+
+        
         const _access = state.access
           .filter(
             ({ branchId }) => branchId === payload.activePlatform.branchId
@@ -188,10 +194,15 @@ export const reduxSlice = createSlice({
         console.log("active branch id", payload.activePlatform.branchId);
 
         console.log("_access", _access);
+        // console.log("auth",payload)
+
         state.activePlatform = {
           branch,
+          branchId: payload.activePlatform.branchId,
           ...payload.activePlatform,
           access: [..._access],
+          // department:
+          // role:Policy.find(({ personel.contract.designation }) => name === payload.activePlatform.role),
         };
         state.showModal = false;
         state.message = success;
@@ -248,6 +259,11 @@ export const reduxSlice = createSlice({
         const branch = branches.find(
           (branch) => branch._id === auth.activePlatform.branchId
         );
+
+        console.log("LOGIN.fulfilled branches", branches);
+        console.log("branch", branch);
+        console.log("branch", auth.activePlatform.branchId);
+
         const _access = access
           .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
           .map((a) => a.platform);
@@ -327,11 +343,15 @@ export const reduxSlice = createSlice({
           .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
           .map((a) => a.platform);
 
+        const {contract}=branch
+        const department=Policy.getDepartment(contract.designation)
         state.activePlatform = {
           ...auth.activePlatform,
           branch,
           access: [..._access],
+          ...department
         };
+
         state.branches = branches;
         state.isPatient = isPatient;
         state.company = company;
