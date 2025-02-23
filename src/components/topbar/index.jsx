@@ -40,7 +40,7 @@ class TopNavigation extends Component {
       transition: "padding-left .3s",
     };
     const { company, isPatient, platform } = this.props;
-
+    console.log("platform topbar", company);
     return (
       <MDBNavbar
         className="flexible-MDBNavbar"
@@ -90,6 +90,7 @@ class TopNavigation extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log("state in map state", state.auth);
   return {
     company: state.auth.company,
     isPatient: state.auth.isPatient,

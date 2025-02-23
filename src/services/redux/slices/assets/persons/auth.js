@@ -235,11 +235,9 @@ export const reduxSlice = createSlice({
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, company, isPatient } =
-            payload;
+          { token, auth, branches, isCeo, access, isPatient } = payload;
         const { activePlatform } = auth;
         const { branchId } = activePlatform;
-
         const branch = branches.find((branch) => branch._id === branchId);
         const _access = access
           .filter(({ branchId: bID }) => bID === branchId)
@@ -257,7 +255,7 @@ export const reduxSlice = createSlice({
 
         state.isPatient = isPatient;
         state.isCeo = isCeo;
-        state.company = company;
+        state.company = branch.companyId;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
@@ -342,7 +340,7 @@ export const reduxSlice = createSlice({
         state.isPatient = isPatient;
         state.company = company;
         state.access = access;
-
+        state.company = branch.companyId;
         state.isCeo = isCeo;
         state.auth = auth;
         state.email = auth.email;
