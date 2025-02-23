@@ -68,7 +68,6 @@ export default function MenuCollapse({ staffs, page }) {
           Number(employment?.designation)
         )?.display_name;
 
-        console.log(employment);
         return (
           <MDBCard
             key={`staffs-${index}`}

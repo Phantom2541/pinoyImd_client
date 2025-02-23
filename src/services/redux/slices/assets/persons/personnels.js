@@ -303,8 +303,8 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-
-        state.collections[index] = payload;
+        const oldPersonnel = { ...state.collections[index] };
+        state.collections[index] = { ...oldPersonnel, ...payload };
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
