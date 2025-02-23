@@ -24,10 +24,10 @@ export default function Sources() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && onDuty._id)
+    if (token && onDuty?._id)
       dispatch(BROWSE({ token, key: { clients: "650fda4617d20470229e2c8d" } }));
     return () => dispatch(RESET());
-  }, [token, dispatch, onDuty._id]);
+  }, [token, dispatch, onDuty?._id]);
 
   useEffect(() => {
     if (vendors.length > 0) {

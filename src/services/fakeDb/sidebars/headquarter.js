@@ -1,3 +1,4 @@
+import Outsource from "../../../pages/platforms/headquarter/file201/outsource";
 import {
   // Employee,
   Applicants,
@@ -44,7 +45,7 @@ const headquarter = [
       {
         name: "Outsources",
         path: "/outsource",
-        component: Outsources,
+        component: Outsource,
       },
       {
         name: "Referral",

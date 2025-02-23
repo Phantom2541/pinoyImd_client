@@ -12,6 +12,7 @@ import CardTables from "./tables";
 import TopHeader from "../../../../../components/topHeader";
 import Pagination from "../../../../../components/pagination";
 import TableRowCount from "../../../../../components/pagination/rows";
+import TableLoading from "../../../../../components/tableLoading";
 
 export default function Sources() {
   const [vendors, setVendors] = useState([]),
@@ -87,22 +88,28 @@ export default function Sources() {
           didSearch={searchQuery !== ""}
         />
         <MDBCardBody>
-          <CardTables
-            vendors={vendors}
-            page={page}
-            setSelected={setSelected}
-            setWillCreate={setWillCreate}
-            setShowModal={setShowModal}
-          />
-          <div className="d-flex justify-content-between align-items-center px-4">
-            <TableRowCount />
-            <Pagination
-              isLoading={isLoading}
-              total={totalPages}
-              page={page}
-              setPage={setPage}
-            />
-          </div>
+          {isLoading ? (
+            <TableLoading />
+          ) : (
+            <>
+              <CardTables
+                vendors={vendors}
+                page={page}
+                setSelected={setSelected}
+                setWillCreate={setWillCreate}
+                setShowModal={setShowModal}
+              />
+              <div className="d-flex justify-content-between align-items-center px-4">
+                <TableRowCount />
+                <Pagination
+                  isLoading={isLoading}
+                  total={totalPages}
+                  page={page}
+                  setPage={setPage}
+                />
+              </div>
+            </>
+          )}
         </MDBCardBody>
       </MDBCard>
 
