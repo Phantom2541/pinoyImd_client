@@ -16,6 +16,9 @@ const Table = ({
   search = "",
   handleAction = () => {},
   handleSearch = () => {},
+  handleDragOver,
+  handleDragStart,
+  handleDrop,
 }) => {
   return (
     <MDBCard narrow>
@@ -58,7 +61,13 @@ const Table = ({
             <MDBTableBody>
               {collections?.length > 0 ? (
                 collections.map((item, index) => (
-                  <tr key={index}>
+                  <tr
+                    key={index}
+                    onDragStart={(event) => handleDragStart(event, index)}
+                    onDragOver={handleDragOver}
+                    draggable
+                    onDrop={(event) => handleDrop(event, index)}
+                  >
                     <td className="text-center">{index + 1}</td>
                     <td
                       className="text-start"

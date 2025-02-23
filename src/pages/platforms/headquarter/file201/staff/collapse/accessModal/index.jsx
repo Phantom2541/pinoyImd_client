@@ -162,6 +162,30 @@ export default function AccessModal({ show, toggle, selected }) {
     setSearch(searchValue);
   };
 
+  const [draggedItem, setDraggedItem] = useState(null);
+
+  const handleDragStart = (event, index) => {
+    setDraggedItem(index);
+    event.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault(); // Para payagan ang pag-drop
+  };
+
+  const handleDrop = (event, index) => {
+    event.preventDefault();
+
+    if (draggedItem === null) return;
+
+    // const newItems = [...items];
+    // const movedItem = newItems.splice(draggedItem, 1)[0]; // Alisin ang item
+    // newItems.splice(index, 0, movedItem); // Ilagay sa bagong posisyon
+
+    // setItems(newItems);
+    // setDraggedItem(null);
+  };
+
   return (
     <MDBModal
       isOpen={show}
@@ -184,6 +208,9 @@ export default function AccessModal({ show, toggle, selected }) {
               collections={roles}
               handleAction={handleADD}
               handleSearch={handleSearch}
+              handleDragStart={handleDragStart}
+              handleDragOver={handleDragOver}
+              handleDrop={handleDrop}
             />
           </MDBCol>
           <MDBCol md="6">
@@ -191,6 +218,9 @@ export default function AccessModal({ show, toggle, selected }) {
               collections={existingAccess}
               isTag={true}
               handleAction={handleDelete}
+              handleDragStart={handleDragStart}
+              handleDragOver={handleDragOver}
+              handleDrop={handleDrop}
             />
           </MDBCol>
         </MDBRow>

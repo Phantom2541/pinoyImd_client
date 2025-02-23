@@ -183,7 +183,6 @@ export const reduxSlice = createSlice({
         console.log("branches", state.branches);
         console.log("branch", branch);
 
-        
         const _access = state.access
           .filter(
             ({ branchId }) => branchId === payload.activePlatform.branchId
@@ -343,13 +342,13 @@ export const reduxSlice = createSlice({
           .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
           .map((a) => a.platform);
 
-        const {contract}=branch
-        const department=Policy.getDepartment(contract.designation)
+        const { contract } = branch;
+        const department = Policy.getDepartment(contract.designation);
         state.activePlatform = {
           ...auth.activePlatform,
           branch,
           access: [..._access],
-          ...department
+          ...department,
         };
 
         state.branches = branches;
