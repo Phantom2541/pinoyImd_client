@@ -37,7 +37,7 @@ export default function CashierSales() {
   }, [activePlatform, token, dispatch]);
 
   const handleMonth = (m) => {
-    console.log(m);
+    //console.log(m);
     // this.Browse(month, year);
     setActiveIndex(0);
     if (m != currentMonth) {

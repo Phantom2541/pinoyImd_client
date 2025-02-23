@@ -24,7 +24,7 @@ export default function Laboratories() {
     [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
 
-  console.log("unused variable setFavorites", setFavorites);
+  //console.log("unused variable setFavorites", setFavorites);
 
   useEffect(() => {
     setCompanies(collections);

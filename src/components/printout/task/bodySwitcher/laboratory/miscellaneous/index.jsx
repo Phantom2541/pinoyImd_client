@@ -6,7 +6,7 @@ import Category from "./category";
 export default function Miscellaneous({ task, fontSize }) {
   const { specimen, packages } = task;
   const style = { fontSize: `${fontSize}rem` };
-  console.log(fontSize);
+  //console.log(fontSize);
   return (
     <div
       style={{

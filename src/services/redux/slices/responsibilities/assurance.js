@@ -101,7 +101,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        console.log("action", action);
+        //console.log("action", action);
         const { payload } = action;
         state.collections = payload;
         state.isLoading = false;

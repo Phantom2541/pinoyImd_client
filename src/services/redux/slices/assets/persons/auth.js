@@ -184,10 +184,10 @@ export const reduxSlice = createSlice({
           )
           .map((a) => a.platform);
 
-        console.log("access", state.access);
-        console.log("active branch id", payload.activePlatform.branchId);
+        //console.log("access", state.access);
+        //console.log("active branch id", payload.activePlatform.branchId);
 
-        console.log("_access", _access);
+        //console.log("_access", _access);
         state.activePlatform = {
           branch,
           ...payload.activePlatform,

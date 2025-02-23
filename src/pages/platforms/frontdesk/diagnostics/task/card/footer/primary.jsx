@@ -30,9 +30,9 @@ const PrimaryFooter = ({ sale, setEdit }) => {
         const buntisPresent = tests.filter((test) =>
           buntisTests.includes(test)
         );
-        console.log("Miscellaneous");
+        //console.log("Miscellaneous");
         if (!!buntisPresent.length) {
-          console.log("buntisPresent");
+          //console.log("buntisPresent");
 
           tests = tests.filter((item) => !buntisTests.includes(item));
           await axioKit.save(
@@ -53,7 +53,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
         // 1. Preg test (67),
         // 2. Dengue Duo (77),
         // 3. Blood Typing (66)
-        console.log("single form");
+        //console.log("single form");
 
         const newArr = tests.map((test) => ({
           packages: [test],

@@ -34,7 +34,7 @@ export default function Source() {
   useEffect(() => {
     setSources(collections);
   }, [collections]);
-  console.log(collections);
+  //console.log(collections);
   return (
     <MDBContainer>
       <MDBCard>

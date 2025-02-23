@@ -41,9 +41,9 @@ export default function Table() {
   //   }
   // }, [payslip, payroll[0]]);
 
-  // console.log("earnings", totEarn);
+  // //console.log("earnings", totEarn);
 
-  // console.log("deductions", totDeduc);
+  // //console.log("deductions", totDeduc);
 
   // optimized by darrel
   const _payroll = payroll[0];

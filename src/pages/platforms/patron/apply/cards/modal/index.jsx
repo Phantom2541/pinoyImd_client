@@ -45,14 +45,14 @@ export default function ApplicationModal({
   //     );
   // }, [dispatch, token, auth]);
 
-  console.log("unused variable setPositions", setPositions);
+  //console.log("unused variable setPositions", setPositions);
 
   const handleToggle = () => setVisibility(!visibility);
 
   const handleApplication = (e) => {
     e.preventDefault();
     if (!!company.branches.length) {
-      console.log({
+      //console.log({
         userId: auth._id,
         ...application,
       });
@@ -222,7 +222,7 @@ export default function ApplicationModal({
                 </option>
                 {Object.entries(positions)?.map((collections, i) => {
                   collections.map((collection) => {
-                    console.log("collection", collection);
+                    //console.log("collection", collection);
                     return (
                       <option
                         value={collections.id}

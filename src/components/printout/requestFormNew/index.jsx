@@ -18,7 +18,7 @@ const formComponents = {
 };
 
 const Printout = ({ sale, forms }) => {
-  console.log("sale", sale);
+  //console.log("sale", sale);
 
   const { updatedAt, customer, referral, category } = sale;
   return (
@@ -70,7 +70,7 @@ export default function TaskPrintout() {
     setForms(JSON.parse(localStorage.getItem("task")));
   }, []);
 
-  console.log(sale);
+  //console.log(sale);
   if (sale?.customer) return <Printout sale={sale} forms={forms} />;
 
   return <div>Task is Empty</div>;

@@ -72,7 +72,7 @@ export default function ProfileImage({ task, setTask }) {
 
     reader.readAsDataURL(file);
   };
-  console.log("task", task);
+  //console.log("task", task);
 
   return (
     <MDBCol lg="3" className="mb-4">

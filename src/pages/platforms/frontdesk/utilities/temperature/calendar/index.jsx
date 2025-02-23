@@ -22,7 +22,7 @@ export default function Calendar({ month, year }) {
       setTemps(collections);
     }
   }, [collections]);
-  console.log(temps);
+  //console.log(temps);
 
   const room = async (meridiem, entry) => {
     const { value: temp } = await Swal.fire({
@@ -150,7 +150,7 @@ export default function Calendar({ month, year }) {
             const entryDate = new Date(entry?.createdAt);
             return entryDate.toDateString() === date.toDateString();
           });
-          console.log("entry", entry);
+          //console.log("entry", entry);
 
           return (
             <div

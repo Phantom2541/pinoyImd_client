@@ -175,11 +175,11 @@ export const reduxSlice = createSlice({
       }
     },
     REMOVEFROMCART: (state, { payload }) => {
-      console.log("state.cart :", state.cart);
-      console.log("payload :", payload);
+      //console.log("state.cart :", state.cart);
+      //console.log("payload :", payload);
 
       state.cart = state.cart.filter((item) => item._id !== payload);
-      console.log("state.cart :", state.cart);
+      //console.log("state.cart :", state.cart);
     },
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;

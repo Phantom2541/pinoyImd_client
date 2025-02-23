@@ -7,9 +7,7 @@ export default function Search({
   setSearchKey,
   selected,
   didSearch,
-  // choices map
   children,
-  // design
   info = {},
   placeholder = "Fullname Search...",
   searchRef,
@@ -18,7 +16,7 @@ export default function Search({
     message = "Last name, First name y Middle name",
     description = "Please maintain this order when searching.",
   } = info;
-
+  const findMenu = () => handleSearch; // Placeholder function for search
   return (
     <div
       className={`cashier-search-cotaniner ${
@@ -36,8 +34,7 @@ export default function Search({
           <i>{description}</i>
         </div>
       </div>
-      <form
-        onSubmit={handleSearch}
+      <div
         className={`cashier-search ${didSearch && "active"} ${
           selected?._id && "pickedSearch"
         }`}
@@ -45,28 +42,40 @@ export default function Search({
         <div className="cashier-search-suggestions">
           <ul className="text-dark">{children}</ul>
         </div>
-        <input
-          ref={searchRef}
-          placeholder={placeholder}
-          value={searchKey}
+      <input
+        ref={searchRef}
+        placeholder={placeholder}
+        value={searchKey}
           onChange={({ target }) => {
-            //console.log('target.value',target.value);
+            console.log(target.value);
             
             setSearchKey(target.value)
           }}
-          autoCorrect="off"
-          spellCheck={false}
-        />
+        autoCorrect="off"
+        spellCheck={false}
+        className="form-control"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            console.log("enter");
+            
+            e.preventDefault(); // Prevent form submission behavior
+              findMenu(); // Call the search function only if it's defined
+            }
+          }
+        }
+      />
+
         <button
-          type="submit"
+          type="button"
           className={`${(didSearch || selected?._id) && "bg-danger"}`}
+          onClick={findMenu()} // Trigger search manually
         >
           <MDBIcon
             icon={didSearch || selected?._id ? "times" : "search"}
             className="search-icon"
           />
         </button>
-      </form>
+      </div>
     </div>
   );
 }

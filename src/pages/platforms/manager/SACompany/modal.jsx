@@ -139,7 +139,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleChangeCategory = (category) => {
     setForm({ ...form, category });
   };
-  console.log(form);
+  //console.log(form);
   return (
     <MDBModal
       isOpen={show}

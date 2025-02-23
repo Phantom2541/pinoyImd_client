@@ -17,7 +17,7 @@ const Applicants = () => {
     [applicants, setApplicants] = useState([]),
     dispatch = useDispatch();
 
-  console.log("unsused variable setApplicants", setApplicants);
+  //console.log("unsused variable setApplicants", setApplicants);
 
   useEffect(() => {
     dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
@@ -28,7 +28,7 @@ const Applicants = () => {
   // //   [applicants, setApplicants] = useState([]),
   // //   dispatch = useDispatch();
 
-  // // console.log(activePortal);
+  // // //console.log(activePortal);
 
   // // useEffect(() => {
   // //   dispatch(BROWSE({ token, branchId: activePortal.branchId }));

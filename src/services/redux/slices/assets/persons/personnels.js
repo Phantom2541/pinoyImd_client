@@ -188,7 +188,7 @@ export const reduxSlice = createSlice({
             const index = StaffAccess.findIndex(
               (item) => item._id === element._id
             );
-            console.log(index);
+            //console.log(index);
             StaffAccess.splice(index, 1);
           });
         }

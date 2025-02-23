@@ -29,7 +29,7 @@ export default function Sales() {
     // { collections } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
 
-  console.log("unused variable setView", setView);
+  //console.log("unused variable setView", setView);
   //Initial Browse
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
@@ -64,12 +64,12 @@ export default function Sales() {
 
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, auth]);
-  console.log(daily);
+  //console.log(daily);
 
   //Set fetched data for mapping
   useEffect(() => {
     if (!!collections.length) {
-      console.log(collections);
+      //console.log(collections);
       const sales =
         view === "all"
           ? collections
@@ -216,7 +216,7 @@ export default function Sales() {
             </thead>
             <tbody>
               {sales?.map((sale, index) => {
-                console.log(sale);
+                //console.log(sale);
                 return (
                   <tr key={`sales-${index + 1}`}>
                     <td>{index + 1}.</td>

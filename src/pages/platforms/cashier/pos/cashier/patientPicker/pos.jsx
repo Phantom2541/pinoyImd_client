@@ -51,8 +51,8 @@ export default function POS({
   };
 
   const searchMatch = fullNameSearch(searchKey, collections);
-  console.log('searchMatch',searchMatch);
-  console.log('collections',collections);
+  //console.log('searchMatch',searchMatch);
+  //console.log('collections',collections);
   
   return (
     <div className="pos-container">

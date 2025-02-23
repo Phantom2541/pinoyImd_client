@@ -48,9 +48,9 @@ export default function Outsource() {
       input: "text",
       inputLabel: "Company name",
     });
-    console.log("outside if", name);
+    //console.log("outside if", name);
     if (name) {
-      console.log("inside if", name);
+      //console.log("inside if", name);
       setName(name);
       setShowModal(true);
     }
@@ -84,7 +84,7 @@ export default function Outsource() {
             </MDBTableHead>
             <MDBTableBody>
               {providers.map((source, index) => {
-                console.log("source", source);
+                //console.log("source", source);
 
                 return (
                   <tr>

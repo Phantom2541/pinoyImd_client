@@ -29,7 +29,7 @@ export default function Physicians() {
 
   //Initial Browse
   useEffect(() => {
-    console.log(activePlatform);
+    //console.log(activePlatform);
 
     if (token && activePlatform?.branchId)
       dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
