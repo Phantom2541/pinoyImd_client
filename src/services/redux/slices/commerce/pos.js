@@ -137,7 +137,7 @@ export const reduxSlice = createSlice({
       state.cashierId = payload.cashierId;
       state.branchId = payload.branchId;
     },
-    SETPATIENT: (state, { payload }) => {
+    SETPATIENT: (state, { payload }) => {      
       state.customer = payload;
       state.customerId = payload._id;
     },

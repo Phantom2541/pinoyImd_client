@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
-import POS from "./patientPicker/pos";
+import React, { useEffect } from "react";
+import POS from "./patientPicker";
 import Menus from "./menuPicker";
 import Summary from "./summary";
 import {  useSelector } from "react-redux";
 import "./index.css";
 import { MDBCol, MDBRow } from "mdbreact";
 
-//detect if searchKey is empty
-
 export default function Cashier() {
   const {  activePlatform } = useSelector(({ auth }) => auth),
     { transaction, isSuccess } = useSelector(({ sales }) => sales);
 
   // transaction printout
-  // reset all transaction
-  // check if we can auto generate task
   useEffect(() => {
     if (transaction?._id !== "default" && isSuccess) {
       localStorage.setItem("claimStub", JSON.stringify(transaction));

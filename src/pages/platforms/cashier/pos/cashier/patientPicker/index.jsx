@@ -7,40 +7,32 @@ import PosCard from "./form/posCard";
 import {SETPATIENT, SETPRIVILEGE} from "../../../../../../services/redux/slices/commerce/pos";
 import {
   fullName,
-  fullNameSearch,
   getAge,
 } from "../../../../../../services/utilities";
 
 export default function POS() {
-  const { collections, newPatient, isLoading } = useSelector(
+  const { collections,  isLoading } = useSelector(
       ({ users }) => users
     ),    
-    {customer} = useSelector(({pos}) => pos),
-    [searchKey, setSearchKey] = useState(""),
+    {searchKey, customer}=useSelector(({pos}) => pos),
     [activeIndex, setActiveIndex] = useState(0),
     [didSearch, setDidSearch] = useState(false),
     [searchMatch, setSearchMatch] =useState([]),
     dispatch = useDispatch();
 
-  
-  useEffect(() => {
-    if (newPatient?._id && activeIndex === 1) setActiveIndex(0);
-  }, [newPatient, activeIndex]);
 
   useEffect(()=>{
     if(collections.length>0){
       setSearchMatch([...collections])
       setDidSearch(true)
-    }
-    console.log(searchMatch);
-    
+    }    
   },[collections]  )
 
   // if a newPatient id is present and active index is 1
   // it means a new patient has been injected, you should go back to POS
-  useEffect(() => {
-    if (newPatient?._id && activeIndex === 1) setActiveIndex(0);
-  }, [newPatient, activeIndex]);
+  // useEffect(() => {
+  //   if (customer?._id && activeIndex === 1) setActiveIndex(0);
+  // }, [customer, activeIndex]);
 
 const handleCustomer = (customer) =>   dispatch(SETPATIENT(customer));
 
@@ -55,9 +47,7 @@ const handleCustomer = (customer) =>   dispatch(SETPATIENT(customer));
             {fullName(customer?.fullName)}
           </h4>
         )}
-        <Search
-          didSearch={true}
-        >
+        <Search didSearch={didSearch} >
           {!searchMatch.length && !searchKey && (
             <li>Please type a fullname.</li>
           )}
@@ -65,7 +55,6 @@ const handleCustomer = (customer) =>   dispatch(SETPATIENT(customer));
             <li
               onClick={() => {
                 if (isLoading) return;
-
                 if (!activeIndex) setActiveIndex(1);
                 setDidSearch(false);
               }}
@@ -104,6 +93,7 @@ const handleCustomer = (customer) =>   dispatch(SETPATIENT(customer));
       </div>
       <div className="pos-card-button">
         {["POS", "Patient"]?.map((name, index) => {
+          
           return (
             <button
               key={`button-${index}`}

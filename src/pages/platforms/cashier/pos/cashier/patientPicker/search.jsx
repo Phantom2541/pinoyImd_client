@@ -10,16 +10,10 @@ import {formatNameToObj} from "./../../../../../../services/utilities"
 export default function Search({
   didSearch,
   children,
-  // design
-  info = {},
-  placeholder = "Fullname Search...",
-  searchRef,
 }) {
-  const {
-    message = "Last name, First name y Middle name",
+  const      message = "Last name, First name y Middle name",
     description = "Please maintain this order when searching.",
-  } = info,
-  {token} = useSelector(({auth}) => auth),
+     {token} = useSelector(({auth}) => auth),
   [searchKey, setSearchKey] = useState(""),
   {customer} = useSelector(({pos}) => pos),
   dispatch = useDispatch();
@@ -29,16 +23,10 @@ export default function Search({
     const handleMatch = (e) => {
       e.preventDefault();
       const query = formatNameToObj(searchKey)
-      
-
         dispatch(GETPATIENTS({ token, query }));
-        return () => {
-          dispatch(RESET());
-        };
-    };
+        return () =>           dispatch(RESET());
+      };
       
-    
-
   return (
     <div
       className={`cashier-search-cotaniner ${
@@ -66,8 +54,7 @@ export default function Search({
           <ul className="text-dark">{children}</ul>
         </div>
         <input
-          ref={searchRef}
-          placeholder={placeholder}
+          placeholder="Fullname Search..."
           value={searchKey}
           onChange={({ target }) => {
             handleSearchKey(target.value);

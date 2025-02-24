@@ -19,8 +19,7 @@ import {
   RESET as PHYSICIANRESET,
 } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 
-export default function PosCard(
-) {
+export default function PosCard() {
   const { collections: physicians } = useSelector(
     ({ physicians }) => physicians
   ),
@@ -32,11 +31,10 @@ export default function PosCard(
      useEffect(() => {
     
         if (token && activePlatform.branchId) {
-    
           dispatch(
             SOURCELIST({ token, key: { clients: activePlatform.branchId } })
           );
-          dispatch(PHYSICIANS({ key: { branch: activePlatform.branchId }, token }));
+          dispatch(PHYSICIANS({token, key: { branch: activePlatform.branchId } }));
     
           return () => {
             dispatch(SOURCERESET());
@@ -56,10 +54,10 @@ export default function PosCard(
     didSelect = Boolean(_id),
     isSenior = getAge(dob, true) > 59; // detect if not a valid senior
 
-    const handleCategory = (category) =>       dispatch(SETCATEGORY(category));
-    const handlePrivilege = (privilege) =>       dispatch(SETPRIVILEGE( privilege ));
-    const handlePhysician = (physician) =>       dispatch(SETPHYSICIAN({ physician }));
-    const handleSource = (source) =>             dispatch(SETSOURCE({ source }));
+    const handleCategory = (category) => dispatch(SETCATEGORY(category));
+    const handlePrivilege = (privilege) => dispatch(SETPRIVILEGE( privilege ));
+    const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
+    const handleSource = (source) => dispatch(SETSOURCE({ source }));
 
   return (
     <>

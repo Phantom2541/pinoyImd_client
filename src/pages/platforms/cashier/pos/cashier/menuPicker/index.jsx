@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SearchBox from "./search";
 import { MDBIcon } from "mdbreact";
-import { Categories } from "../../../../../../services/fakeDb";
+// import { Categories } from "../../../../../../services/fakeDb";
 import {
   computeGD,
   currency,
@@ -18,7 +18,7 @@ import {
   BROWSE as MENUS,
   RESET as MENUSRESET,
 } from "../../../../../../services/redux/slices/commerce/menus";
-import { set } from "lodash";
+// import { set } from "lodash";
 
 export default function Menus() {
   const { collections } = useSelector(({ menus }) => menus),
@@ -42,7 +42,7 @@ export default function Menus() {
     }, [token, dispatch, activePlatform]);
 
   // Ensure abbr does not cause issues
-  const { abbr } = Categories[category] || {};
+  // const { abbr } = Categories[category] || {};
   const patronPresent = Boolean(customer?._id);
 
   // Perform search within render
@@ -63,7 +63,7 @@ export default function Menus() {
     setDidSearch(true);
 
   };
-  console.log("searchMatch",searchMatch);
+
   return (
     <>
       <table className="menus-table">
