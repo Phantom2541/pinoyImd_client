@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SearchBox from "./search";
 import { MDBIcon } from "mdbreact";
@@ -13,20 +13,37 @@ import {
   ADDTOCART,
   REMOVEFROMCART,
 } from "../../../../../../services/redux/slices/commerce/pos.js";
+
+import {
+  BROWSE as MENUS,
+  RESET as MENUSRESET,
+} from "../../../../../../services/redux/slices/commerce/menus";
 import { set } from "lodash";
 
-export default function Menus({ patronPresent }) {
-  const { collections } = useSelector(({ menus }) => menus);
-  const { category, privilege, cart } = useSelector(({ pos }) => pos);
-  const [searchKey, setSearchKey] = useState(""),
+export default function Menus() {
+  const { collections } = useSelector(({ menus }) => menus),
+   { category, privilege, cart, customer } = useSelector(({ pos }) => pos),
+   {token, activePlatform} = useSelector(({ auth }) => auth),
+   [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
-    [selected, setSelected] = useState({});
-  const searchRef = useRef(null);
+   searchRef = useRef(null);
   const { addToast } = useToasts();
   const dispatch = useDispatch();
 
+  
+    useEffect(() => {  
+      if (token && activePlatform.branchId) {  
+        dispatch(MENUS({ key: { branchId: activePlatform.branchId }, token }));
+  
+        return () => {
+          dispatch(MENUSRESET());
+        };
+      }
+    }, [token, dispatch, activePlatform]);
+
   // Ensure abbr does not cause issues
   const { abbr } = Categories[category] || {};
+  const patronPresent = Boolean(customer?._id);
 
   // Perform search within render
   const searchMatch = searchKey ? globalSearch(collections, searchKey) : [];
@@ -36,13 +53,17 @@ export default function Menus({ patronPresent }) {
   const handleSearch = (e) => {
     e.preventDefault();
 
-    if (didSearch && searchKey) setSearchKey("");
-
-    if (!didSearch && selected?._id) setSelected({});
+    if (didSearch && searchKey ) {
+      console.log(searchKey);
+      
+      setSearchKey("");
+      setDidSearch(false);
+    }
 
     setDidSearch(true);
+
   };
-  console.log(searchMatch);
+  console.log("searchMatch",searchMatch);
   return (
     <>
       <table className="menus-table">
@@ -58,7 +79,7 @@ export default function Menus({ patronPresent }) {
                   didSearch={didSearch}
                   searchKey={searchKey}
                 >
-                  {searchMatch.length === 0 && !searchKey && (
+                  {searchMatch.length === 0 && !searchKey  && (
                     <li>Please type a menu name.</li>
                   )}
 

@@ -66,7 +66,7 @@ export const TAGGING = createAsyncThunk(
     }
   }
 );
-export const UPDATE = createAsyncThunk(
+export const REFORM = createAsyncThunk(
   `${name}/update`,
   ({ data, token }, thunkAPI) => {
     try {
@@ -188,11 +188,13 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(UPDATE.pending, (state) => {
+      .addCase(REFORM.pending, (state) => {
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(UPDATE.fulfilled, (state, action) => {
+      .addCase(REFORM.fulfilled, (state, action) => {
+        console.log("action.payload", action.payload);
+        
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
@@ -203,7 +205,7 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
         state.isLoading = false;
       })
-      .addCase(UPDATE.rejected, (state, action) => {
+      .addCase(REFORM.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

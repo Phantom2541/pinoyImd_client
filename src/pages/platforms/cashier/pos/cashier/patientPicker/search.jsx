@@ -1,13 +1,14 @@
+import React, { useState} from "react";
+import {useSelector, useDispatch} from "react-redux";
 import { MDBIcon } from "mdbreact";
-import React from "react";
+import {
+  GETPATIENTS,
+  RESET,
+} from "../../../../../../services/redux/slices/assets/persons/users";
+import {formatNameToObj} from "./../../../../../../services/utilities"
 
 export default function Search({
-  handleSearch,
-  searchKey,
-  setSearchKey,
-  selected,
   didSearch,
-  // choices map
   children,
   // design
   info = {},
@@ -17,15 +18,34 @@ export default function Search({
   const {
     message = "Last name, First name y Middle name",
     description = "Please maintain this order when searching.",
-  } = info;
+  } = info,
+  {token} = useSelector(({auth}) => auth),
+  [searchKey, setSearchKey] = useState(""),
+  {customer} = useSelector(({pos}) => pos),
+  dispatch = useDispatch();
+
+    const handleSearchKey = (value) => setSearchKey(value)
+
+    const handleMatch = (e) => {
+      e.preventDefault();
+      const query = formatNameToObj(searchKey)
+      
+
+        dispatch(GETPATIENTS({ token, query }));
+        return () => {
+          dispatch(RESET());
+        };
+    };
+      
+    
 
   return (
     <div
       className={`cashier-search-cotaniner ${
-        selected?._id && "pickedSearched"
+        customer?._id && "pickedSearched"
       }`}
     >
-      <div className={`cashier-instruction ${selected?._id && "hide"}`}>
+      <div className={`cashier-instruction ${customer?._id && "hide"}`}>
         <MDBIcon
           icon="info-circle"
           size="lg"
@@ -37,9 +57,9 @@ export default function Search({
         </div>
       </div>
       <form
-        onSubmit={handleSearch}
+        onSubmit={handleMatch}
         className={`cashier-search ${didSearch && "active"} ${
-          selected?._id && "pickedSearch"
+          customer?._id && "pickedSearch"
         }`}
       >
         <div className="cashier-search-suggestions">
@@ -50,19 +70,17 @@ export default function Search({
           placeholder={placeholder}
           value={searchKey}
           onChange={({ target }) => {
-            //console.log('target.value',target.value);
-
-            setSearchKey(target.value);
+            handleSearchKey(target.value);
           }}
           autoCorrect="off"
           spellCheck={false}
         />
         <button
           type="submit"
-          className={`${(didSearch || selected?._id) && "bg-danger"}`}
+          className={`${(didSearch || customer?._id) && "bg-danger"}`}
         >
           <MDBIcon
-            icon={didSearch || selected?._id ? "times" : "search"}
+            icon={didSearch || customer?._id ? "times" : "search"}
             className="search-icon"
           />
         </button>

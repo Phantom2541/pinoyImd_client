@@ -4,7 +4,7 @@ import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
 import { axioKit, harvestTask } from "../../../../../../../services/utilities";
 import { generateClaimStub } from "../../../../../../../services/utilities";
-import { UPDATE } from "../../../../../../../services/redux/slices/commerce/taskGenerator";
+import { REFORM } from "../../../../../../../services/redux/slices/commerce/taskGenerator";
 
 const PrimaryFooter = ({ sale, setEdit }) => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -94,8 +94,10 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       "Request Form",
       "top=100px,left=100px,width=1050px,height=750px"
     );
+    console.log("data here");
+    
     dispatch(
-      UPDATE({
+      REFORM({
         token,
         data: {
           _id,

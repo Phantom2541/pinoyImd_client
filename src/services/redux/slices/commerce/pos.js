@@ -230,6 +230,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
+        console.log("action pos",action);
+        
         const { success, payload } = action.payload;
 
         const index = state.collections.findIndex(
