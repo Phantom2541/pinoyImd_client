@@ -237,7 +237,7 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload,
           { token, auth, branches, isCeo, access, isPatient } = payload;
         const { activePlatform } = auth;
-        const { branchId } = activePlatform;
+        const { branchId } = activePlatform;        
         const branch = branches.find((branch) => branch._id === branchId);
         const _access = access
           .filter(({ branchId: bID }) => bID === branchId)
@@ -251,7 +251,7 @@ export const reduxSlice = createSlice({
           branch,
           access: [..._access],
           ...department,
-        };
+        };        
 
         state.isPatient = isPatient;
         state.isCeo = isCeo;

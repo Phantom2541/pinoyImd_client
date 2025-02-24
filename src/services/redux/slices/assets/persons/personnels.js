@@ -5,16 +5,18 @@ const name = "assets/persons/personnels";
 
 const initialState = {
   collections: [],
-
-  stat: {
+  personnel: {},
+/**
+ * Responsible for access control
+ */
     _id: "",
-    personnel: {},
+    staff: {},
     contract: {},
     access: [], // Permissions or features that are available
     granted: [], // Permissions that have been acquired or activated or stock
     queued: [], // permissions are lined up for activation.
     revoked: [], // Permissions that have been removed or denied
-  },
+  
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -169,13 +171,11 @@ export const reduxSlice = createSlice({
       state.collections[index].access = newAccess;
     },
     SETOnHotSEAT: (state, { payload }) => {
-      console.log(payload);
-      // const { personnel, contract, _id, access } = state.stat;
       // set default values
-      state.stat.personnel = payload.user;
-      state.stat.contract = payload.contract;
-      state.stat._id = payload._id;
-      state.stat.access = payload.access;
+      state.staff = payload.user;
+      state.contract = payload.contract;
+      state._id = payload._id;
+      state.access = payload.access;
     },
     SETQUEUED: (state, { payload }) => {
       // pending access to be granted

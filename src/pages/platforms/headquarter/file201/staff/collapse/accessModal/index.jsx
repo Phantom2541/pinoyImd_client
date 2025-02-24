@@ -15,9 +15,6 @@ import { fullName } from "../../../../../../../services/utilities";
 import { Access } from "../../../../../../../services/fakeDb";
 import {
   UPDATE_ACCESS,
-  ONHOTSEAT,
-  SETQUEUED,
-  SETREVOKED,
 } from "../../../../../../../services/redux/slices/assets/persons/personnels";
 import Table from "./table";
 
@@ -36,6 +33,7 @@ import Table from "./table";
 
 export default function AccessModal({ show, toggle, selected }) {
   const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
+  {stat}=useSelector(({personnels})=>personnels),
     [existingAccess, setExistingAccess] = useState([]),
     [roles, setRoles] = useState([]),
     [search, setSearch] = useState([]),
@@ -71,6 +69,7 @@ export default function AccessModal({ show, toggle, selected }) {
       handleSetRoles(_roles);
     }
     setAccessChanges({ deleted: [], added: [] });
+    
   }, [show, selected, handleSetRoles, removeDuplicate]);
 
   const handleSubmit = () => {
