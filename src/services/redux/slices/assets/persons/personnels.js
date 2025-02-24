@@ -128,6 +128,26 @@ export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   }
 });
 
+export const APPLICATION = createAsyncThunk(
+  `${name}/application`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${name}/application`, token, {
+        auth: data?._id,
+      });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name,
   initialState,
@@ -137,7 +157,7 @@ export const reduxSlice = createSlice({
       const { _id, access, isNew = false } = data.payload,
         { collections } = state;
 
-      const index = collections.findIndex((item) => item._id === _id);
+      const index = collections.findIndex(item => item._id === _id);
 
       const personnelAccess = [...collections[index].access];
 
@@ -146,8 +166,8 @@ export const reduxSlice = createSlice({
       if (isNew) {
         newAccess = personnelAccess.concat(access);
       } else {
-        newAccess = personnelAccess.map((pAccess) => {
-          if (access.find((_access) => _access._id === pAccess._id)) {
+        newAccess = personnelAccess.map(pAccess => {
+          if (access.find(_access => _access._id === pAccess._id)) {
             return {
               ...pAccess,
               status: !pAccess.status,
@@ -165,9 +185,9 @@ export const reduxSlice = createSlice({
       state.message = "";
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(UPDATE_ACCESS.pending, (state) => {
+      .addCase(UPDATE_ACCESS.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -176,17 +196,15 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         const { staffID, accessChanges } = payload;
         const { deleted, added } = accessChanges;
-        const index = state.collections.findIndex(
-          (item) => item._id === staffID
-        );
+        const index = state.collections.findIndex(item => item._id === staffID);
 
         const staff = state.collections[index];
         var StaffAccess = [...staff.access];
 
         if (deleted.length > 0) {
-          deleted.forEach((element) => {
+          deleted.forEach(element => {
             const index = StaffAccess.findIndex(
-              (item) => item._id === element._id
+              item => item._id === element._id
             );
             //console.log(index);
             StaffAccess.splice(index, 1);
@@ -210,7 +228,7 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(BROWSE.pending, (state) => {
+      .addCase(BROWSE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -225,8 +243,23 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(APPLICATION.pending, state => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(APPLICATION.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = payload;
+        state.isLoading = false;
+      })
+      .addCase(APPLICATION.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
 
-      .addCase(PAYROLL.pending, (state) => {
+      .addCase(PAYROLL.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -242,7 +275,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(USER.pending, (state) => {
+      .addCase(USER.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -258,7 +291,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(EMPLOYEES.pending, (state) => {
+      .addCase(EMPLOYEES.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -274,7 +307,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(SAVE.pending, (state) => {
+      .addCase(SAVE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -282,7 +315,7 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        state.collections.unshift(payload);
+        if (state.collections) state.collections.unshift(payload);
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -292,7 +325,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, (state) => {
+      .addCase(UPDATE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -301,7 +334,7 @@ export const reduxSlice = createSlice({
         const { success, payload } = action;
 
         const index = state.collections.findIndex(
-          (item) => item._id === payload._id
+          item => item._id === payload._id
         );
 
         state.collections[index] = payload;
