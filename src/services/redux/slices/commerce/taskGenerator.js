@@ -9,11 +9,11 @@ const initialState = {
   source: "",
   physician: "",
   transaction: { _id: "default" },
-  totalPatient: 0,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
+
 export const BROWSE = createAsyncThunk(
   `${name}`,
   ({ token, key }, thunkAPI) => {

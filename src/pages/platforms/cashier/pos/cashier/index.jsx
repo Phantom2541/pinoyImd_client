@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import POS from "./patientPicker/pos";
 import Menus from "./menuPicker";
-import Summary from "./Summary";
+import Summary from "./summary";
 import { useDispatch, useSelector } from "react-redux";
 import {
   GETPATIENTS,
@@ -113,12 +113,6 @@ export default function Cashier() {
       </MDBCol>
       <MDBCol size="4" className="px-1">
         <Menus
-          didSearch={menuSearch}
-          setDidSearch={setMenuSearch}
-          categoryIndex={categoryIndex}
-          privilegeIndex={privilegeIndex}
-          setCart={setCart}
-          cart={cart}
           patronPresent={patronPresent}
         />
       </MDBCol>
