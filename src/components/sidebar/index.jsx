@@ -22,7 +22,8 @@ export default function SideNavigation({
 }) {
   const [links, setLinks] = useState([]),
     { activePlatform, company } = useSelector(({ auth }) => auth),
-    [logo, setLogo] = useState(FailedLogo);
+    [logo, setLogo] = useState(FailedLogo),
+    [activeCategory, setActiveCategory] = useState(""); //for multiple children sidebar
 
   useEffect(() => {
     if (company?.name && activePlatform?.platform) {
@@ -39,31 +40,45 @@ export default function SideNavigation({
     }
   }, [activePlatform]);
 
-  // Recursive function to render nav items (both links and categories)
-  const renderNavItems = (items, keyPrefix = "", basePath = "") => {
+  const renderNavItems = (
+    items,
+    keyPrefix = "",
+    basePath = "",
+    level = 1.5
+  ) => {
     return items.map((item, index) => {
       const key = `${keyPrefix}-${index}`;
+      const fullPath = `${basePath}${item.path || ""}`;
+      const isOpen = activeCategory === key;
+      const indentStyle = { paddingLeft: `${level * 15}px` };
+
       if (item.children && item.children.length > 0) {
         return (
           <MDBSideNavCat
-            id={`${item.name}-cat`}
+            id={`${key}-cat`}
             name={capitalize(item.name)}
             key={`${key}-cat`}
             icon={item.icon}
+            isOpen={isOpen}
+            onClick={() =>
+              setActiveCategory((prev) => (prev === key ? "" : key))
+            }
+            style={indentStyle}
           >
-            {renderNavItems(item.children, key, `${basePath}${item.path}`)}{" "}
-            {item.name}
+            {renderNavItems(item.children, key, fullPath, level + 1)}
           </MDBSideNavCat>
         );
       }
+
       return (
         <MDBSideNavLink
           key={key}
-          to={`${basePath}${item.path}`}
+          to={fullPath}
           topLevel
           onClick={onLinkClick}
+          style={indentStyle}
         >
-          <MDBIcon icon={`${item.icon} mr-2`} />
+          <MDBIcon icon={item.icon} className="mr-2" />
           {capitalize(item.name)}
         </MDBSideNavLink>
       );
@@ -84,39 +99,6 @@ export default function SideNavigation({
       >
         {activePlatform && (
           <MDBSideNavNav>{renderNavItems(links, "sidebar")}</MDBSideNavNav>
-
-          // <MDBSideNavNav>
-          //   {links.map(({ path, name, icon, children }, index) =>
-          //     children && children.length ? (
-          //       <MDBSideNavCat
-          //         id={`${name}-cat`}
-          //         name={capitalize(name)}
-          //         key={`sidebar-${index}-cat`}
-          //         icon={icon}
-          //       >
-          //         {children.map((child, cIndex) => (
-          //           <MDBSideNavLink
-          //             key={`sidebar-${index}-${cIndex}`}
-          //             to={`${path}${child.path}`}
-          //             onClick={onLinkClick}
-          //           >
-          //             {capitalize(child.name)}
-          //           </MDBSideNavLink>
-          //         ))}
-          //       </MDBSideNavCat>
-          //     ) : (
-          //       <MDBSideNavLink
-          //         key={`sidebar-${index}`}
-          //         to={path}
-          //         topLevel
-          //         onClick={onLinkClick}
-          //       >
-          //         <MDBIcon icon={`${icon} mr-2`} />
-          //         {capitalize(name)}
-          //       </MDBSideNavLink>
-          //     )
-          //   )}
-          // </MDBSideNavNav>
         )}
       </MDBSideNav>
     </div>

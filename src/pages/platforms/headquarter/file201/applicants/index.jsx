@@ -9,6 +9,7 @@ import TopHeader from "../../../../../components/topHeader";
 import Table from "./table";
 import Swal from "sweetalert2";
 import { fullName, globalSearch } from "../../../../../services/utilities";
+import { fullName, globalSearch } from "../../../../../services/utilities";
 import TableLoading from "../../../../../components/tableLoading";
 
 const Applicants = () => {
@@ -103,18 +104,24 @@ const Applicants = () => {
     setApplicants(didSearch ? baseApplicants : searchResults);
     setDidSearch(!didSearch);
   };
+  const handleSearch = () => {
+    const searchValue = document.getElementById("search").value;
+    const searchResults = globalSearch(baseApplicants, searchValue);
+    setApplicants(didSearch ? baseApplicants : searchResults);
+    setDidSearch(!didSearch);
+  };
 
   return (
     <>
       <MDBCard narrow>
         <TopHeader
           title="Applicant List"
-          // handleSearch={handleSearch}
+          handleSearch={handleSearch}
           categories={["Petition", "Denied"]}
-          // setCategory={setCategory}
-          // category={category}
+          setCategory={setCategory}
+          category={category}
           hasCategory={true}
-          // didSearch={didSearch}
+          didSearch={didSearch}
         />
         <MDBCardBody>
           {isLoading ? (
@@ -123,7 +130,7 @@ const Applicants = () => {
             <Table
               applicants={applicants}
               handleReject={handleReject}
-              // didSearch={didSearch}
+              didSearch={didSearch}
               handleApprove={handleApprove}
             />
           )}
