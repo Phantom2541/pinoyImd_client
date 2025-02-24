@@ -72,7 +72,7 @@ export default function Modal({ show, toggle, companyName }) {
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
 
-  console.log(companies);
+  //console.log(companies);
   return (
     <MDBModal
       isOpen={show}

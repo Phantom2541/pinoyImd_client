@@ -17,7 +17,7 @@ export default function CollapseTable({ menu }) {
   useEffect(() => {
     const labTests = Templates.reduce(
       (accumulator, { components, department }) => {
-        if (department === "laboratory") {
+        if (department === "LAB") {
           const filteredComponents = components.filter(
             (component) => menu[component.toLowerCase()]
           );

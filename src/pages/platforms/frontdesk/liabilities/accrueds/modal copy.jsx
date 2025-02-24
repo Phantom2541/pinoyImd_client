@@ -44,7 +44,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     }
   }, [token, activePlatform, dispatch]);
 
-  // console.log(selected);
+  // //console.log(selected);
   const handleSubmit = () => {
     dispatch(
       SAVE({
@@ -61,7 +61,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   };
 
   // use for direct values like strings and numbers
-  const handleValue = (key) => console.log(key);
+  const handleValue = (key) => //console.log(key);
 
   // willCreate ? form[key] : form[key] || selected[key];
 
@@ -125,7 +125,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             </>
           ) : (
             <>
-              {console.log(sources)}
+              {//console.log(sources)}
               <span>Vendor</span>
               <select
                 value={handleValue("supplier")}

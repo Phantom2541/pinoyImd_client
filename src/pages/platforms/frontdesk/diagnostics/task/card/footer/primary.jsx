@@ -4,7 +4,7 @@ import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
 import { axioKit, harvestTask } from "../../../../../../../services/utilities";
 import { generateClaimStub } from "../../../../../../../services/utilities";
-import { UPDATE } from "../../../../../../../services/redux/slices/commerce/taskGenerator";
+import { REFORM } from "../../../../../../../services/redux/slices/commerce/taskGenerator";
 
 const PrimaryFooter = ({ sale, setEdit }) => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -30,9 +30,9 @@ const PrimaryFooter = ({ sale, setEdit }) => {
         const buntisPresent = tests.filter((test) =>
           buntisTests.includes(test)
         );
-        console.log("Miscellaneous");
+        //console.log("Miscellaneous");
         if (!!buntisPresent.length) {
-          console.log("buntisPresent");
+          //console.log("buntisPresent");
 
           tests = tests.filter((item) => !buntisTests.includes(item));
           await axioKit.save(
@@ -53,7 +53,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
         // 1. Preg test (67),
         // 2. Dengue Duo (77),
         // 3. Blood Typing (66)
-        console.log("single form");
+        //console.log("single form");
 
         const newArr = tests.map((test) => ({
           packages: [test],
@@ -94,8 +94,10 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       "Request Form",
       "top=100px,left=100px,width=1050px,height=750px"
     );
+    console.log("data here");
+    
     dispatch(
-      UPDATE({
+      REFORM({
         token,
         data: {
           _id,

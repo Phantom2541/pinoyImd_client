@@ -1,15 +1,22 @@
 import collections from "./collections.json";
 
-export const Policy = {};
+const Policy = {
+  collections,
+  getDepartment: pk => {
+    const { code = "", positions = [] } =
+      collections.find(({ positions = [] }) =>
+        positions.some(({ id }) => id === Number(pk))
+      ) || {};
 
-const Services = {
-  collections: collections,
-  find: (pk) => collections.find(({ id }) => id === pk),
-  departments: () => collections.filter(({ department }) => department),
-  positions: (key) =>
-    collections.find(
-      ({ department, positions }) => department === key && positions
-    ),
+    if (!code) return { department: "", role: "" };
+    const role = [...positions].find(({ id }) => id === Number(pk)).name;
+    return { department: code, role };
+  },
+  getPositions: code => {
+    const { positions = [] } = collections.find(
+      ({ code: department }) => department === code
+    );
+    return positions;
+  },
 };
-
-export default Services;
+export default Policy;

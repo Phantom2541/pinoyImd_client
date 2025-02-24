@@ -55,7 +55,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   }, [form, selected]);
 
   const handleSubmit = () => {
-    console.log(selected);
+    //console.log(selected);
     dispatch(
       SAVE({
         data: {

@@ -27,7 +27,7 @@ export default function TasksCollapse({ tasks, page, resetSearch, searchKey }) {
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
       {handlePagination(tasks, page, maxPage).map((menu, index) => {
-        console.log("menu", menu);
+        //console.log("menu", menu);
         const { customerId, category, source, _id = "" } = menu,
           categoryName =
             category === "walkin"

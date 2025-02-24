@@ -166,6 +166,7 @@ export const reduxSlice = createSlice({
       state.sourceId = payload;
     },
     ADDTOCART: (state, { payload }) => {
+      console.log("payload :", payload);
       const index = state.cart.findIndex((item) => item._id === payload._id);
       if (index === -1) {
         state.cart = [...state.cart, payload];
@@ -175,11 +176,11 @@ export const reduxSlice = createSlice({
       }
     },
     REMOVEFROMCART: (state, { payload }) => {
-      console.log("state.cart :", state.cart);
-      console.log("payload :", payload);
+      //console.log("state.cart :", state.cart);
+      //console.log("payload :", payload);
 
       state.cart = state.cart.filter((item) => item._id !== payload);
-      console.log("state.cart :", state.cart);
+      //console.log("state.cart :", state.cart);
     },
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
@@ -229,6 +230,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
+        console.log("action pos",action);
+        
         const { success, payload } = action.payload;
 
         const index = state.collections.findIndex(

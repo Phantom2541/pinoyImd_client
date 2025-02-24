@@ -1,5 +1,4 @@
 import Dashboard from "../../../pages/platforms/frontdesk/dashboard";
-import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 
 import {
   Fecalysis,
@@ -17,9 +16,6 @@ import {
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import {
-  // Cashier,
-  Sales,
-  Ledger,
   Menus,
   Services,
 } from "../../../pages/platforms/cashier";
@@ -35,66 +31,45 @@ const frontdesk = [
     component: Dashboard,
   },
   {
-    name: "Point Of Sales",
-    path: "/pos",
-    icon: "cogs",
-    children: [
-      {
-        name: "Cashier",
-        path: "/patients",
-        component: Cashier,
-      },
-      {
-        name: "Sales", // his daily
-        path: "/sales",
-        component: Sales,
-      },
-      {
-        name: "Ledger", // his monthly Sales Ledger
-        path: "/ledger",
-        component: Ledger,
-      },
-      {
-        name: "Remittances", // Persona remit only
-        path: "/remittances",
-        // component: Ledger,
-      },
-    ],
-  },
-  {
     name: "Diagnostics",
     path: "/transactions",
     icon: "cogs",
     children: [
       {
-        name: "Generator",
-        path: "/task",
+        name: "Onboarding",
+        path: "/onboarding",
         component: Task,
       },
       {
         name: "Tasks",
-        path: "/reports",
+        path: "/task",
         component: Report,
       },
       {
         name: "Reports",
-        path: "/tracker",
+        path: "/reports",
         component: Tracker,
       },
     ],
   },
   {
-    name: "Offers", //viewing only
+    name: "Services", //viewing only
     path: "/offers",
     icon: "list",
     children: [
+      /**
+       * a group of related services
+       */
       {
         name: "Menus",
         path: "/menus",
         component: Menus,
       },
+      /**
+       *  a single service
+       */
       {
-        name: "Services",
+        name: "examinations",
         path: "/services",
         component: Services,
       },
@@ -261,51 +236,6 @@ const frontdesk = [
           },
         ],
       },
-      //   name: "Electrolytes",
-      //   path: "/electrolyte",
-      //   component: Electrolyte,
-      // },
-      // {
-      //   name: "Hematology",
-      //   path: "/hematology",
-      //   component:   Hematology,
-      // },
-      // {
-      //   name: "Urinalysis",
-      //   path: "/urinalysis",
-      //   component: Urinalysis,
-      // },
-      // {
-      //   name: "Fecalysis",
-      //   path: "/fecalysis",
-      //   component: Fecalysis,
-      // },
-      // {
-      //   name: "Serology",
-      //   path: "/serology",
-      //   component: Serology,
-      // },
-      // {
-      //   name: "Miscellaneous",
-      //   path: "/miscellaneous",
-      // },
-      // ,
-    ],
-  },
-  {
-    name: "Utilities",
-    path: "/utilities",
-    icon: "tools",
-    children: [
-      {
-        name: "Temperature",
-        path: "/temperature",
-        component: Temperature,
-      },
-      {
-        name: "Quality Control",
-        path: "/qc",
-      },
     ],
   },
   {
@@ -313,17 +243,26 @@ const frontdesk = [
     path: "/vendors",
     icon: "handshake",
     children: [
+      /**
+       * where client came from
+       */
       {
         name: "Source",
         path: "/source",
         component: Source,
       },
+      /**
+       * where we send services that are not available on the store
+       */
       {
         name: "Outsource",
         path: "/outsource",
         component: Outsource,
       },
-      {
+      /**
+       * have a multi-vendor relationship
+       */
+             {
         name: "Tieup",
         path: "/tieup",
         // component: Source,

@@ -67,7 +67,7 @@ export default function Modal({ show, toggle, task, setTask }) {
         department === "laboratory" ? "pathologist" : "radiologist"
       );
 
-    // console.log({
+    // //console.log({
     //   ...task,
     //   //if meant to save, just copy current state in db
     //   hasDone: hasDone || dbDone,

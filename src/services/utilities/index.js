@@ -33,6 +33,7 @@ import referenceColor from "./referenceColor";
 import properFullname from "./properFullname";
 import calculateIndicators from "./calculateIndicators";
 import formatToSI from "./formatToSI";
+import formatNameToObj from "./formatNameToObject"
 import findReference from "./findReference";
 import isImageValid from "./isImageValid";
 import generateCode from "./generateCode";
@@ -104,5 +105,5 @@ export {
   formatToSI,
   findReference,
   Search,
-  PresetUser,
+  PresetUser,formatNameToObj
 };

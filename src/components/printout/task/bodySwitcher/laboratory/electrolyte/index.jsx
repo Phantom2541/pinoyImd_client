@@ -7,7 +7,7 @@ import {
 } from "../../../../../../services/utilities";
 
 export default function Electrolyte({ task, fontSize }) {
-  console.log(fontSize);
+  //console.log(fontSize);
   const style = { fontSize: `${fontSize}px` },
     { packages, services, patient, preferences } = task;
 

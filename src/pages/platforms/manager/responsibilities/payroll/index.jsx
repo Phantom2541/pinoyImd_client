@@ -109,7 +109,7 @@ export default function Payrolls() {
                 const designation = Roles.find(
                   (role) => role.id === Number(employment.designation)
                 );
-                // console.log("payrollss", payroll);
+                // //console.log("payrollss", payroll);
 
                 let akinsenas = payroll?.find(
                   ({ createdAt }) => getDate(createdAt) <= 15

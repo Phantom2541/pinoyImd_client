@@ -23,7 +23,7 @@ export default function Electrolyte({ task, setTask }) {
       packages: { ...packages, [name]: _value },
     });
   };
-  console.log("packages", packages);
+  //console.log("packages", packages);
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>

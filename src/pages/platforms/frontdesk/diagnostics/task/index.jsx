@@ -22,7 +22,7 @@ export default function Sales() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("collections has updated:", collections);
+    //console.log("collections has updated:", collections);
     setSales(collections);
   }, [collections]);
   //Initial Browse and Fetch Data

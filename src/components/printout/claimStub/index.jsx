@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { capitalize, currency } from "../../../services/utilities";
+import { capitalize, currency, fullAddress } from "../../../services/utilities";
 import { Developer, Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
@@ -15,12 +15,15 @@ const Hr = () => (
   />
 );
 
-const Text = ({ title, value, className }) => (
+const Text = ({ title, value, className }) => {
+  console.log("title, value", className);
+  
+  return (
   <div className={`d-flex justify-content-between ${className}`}>
     <span>{title}</span>
     <span className="fw-bold text-right">{value}</span>
   </div>
-);
+);}
 
 const Stub = ({ sale }) => {
   const {
@@ -56,7 +59,7 @@ const Stub = ({ sale }) => {
         title="Name"
         value={capitalize(`${fullName.fname.split(" ")[0]} ${fullName.lname}`)}
       />
-      <Text title="Address" value={address} />
+      <Text title="Address" value={fullAddress(address)} />
       {privilege !== 0 && (
         <Text title="Privilege" value={Privileges[privilege] || "-"} />
       )}
@@ -82,7 +85,7 @@ const Stub = ({ sale }) => {
                   {description || abbreviation}
                   {packages.length > 1 &&
                     packages.map((id, index) => {
-                      console.log(packages);
+                      //console.log(packages);
                       const { name, abbreviation } = Services.find(id);
 
                       return (

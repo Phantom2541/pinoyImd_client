@@ -7,7 +7,7 @@ export default function Ogtt({ task, setTask }) {
   const handleChange = (name, value) =>
     setTask({ ...task, results: { ...results, [name]: value } });
 
-  console.log(task);
+  //console.log(task);
   return (
     <>
       <MDBInput

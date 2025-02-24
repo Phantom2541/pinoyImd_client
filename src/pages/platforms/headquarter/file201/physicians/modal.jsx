@@ -48,11 +48,11 @@ export default function Modal({ show, toggle, selected, name }) {
 
     return () => dispatch(RESET());
   }, [name, dispatch, token]);
-  console.log(collections);
+  //console.log(collections);
 
   useEffect(() => {
     if (collections.payload) {
-      console.log(collections.payload);
+      //console.log(collections.payload);
       setUsers(collections.payload);
     }
   }, [collections]);

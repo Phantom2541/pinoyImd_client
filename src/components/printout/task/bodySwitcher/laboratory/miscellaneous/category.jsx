@@ -3,7 +3,7 @@ import { MDBCol } from "mdbreact";
 
 export default function Category({ task }) {
   const { specimen } = task;
-  console.log(task);
+  //console.log(task);
   return (
     <MDBCol
       size="12"

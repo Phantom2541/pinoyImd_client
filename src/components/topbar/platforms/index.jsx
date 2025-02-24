@@ -15,7 +15,7 @@ export default function Platforms() {
     [access, setAccess] = useState([]),
     dispatch = useDispatch();
 
-  console.log("active platform", activePlatform);
+  //console.log("active platform", activePlatform);
   useEffect(() => {
     setAccess(activePlatform.access);
 

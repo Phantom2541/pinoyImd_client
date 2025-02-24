@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 export default function Header({ date, saleId }) {
   const { company, activePlatform } = useSelector(({ auth }) => auth);
-  console.log("activePlatform", activePlatform);
+  //console.log("activePlatform", activePlatform);
 
   return (
     <>

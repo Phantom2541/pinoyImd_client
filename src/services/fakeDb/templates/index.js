@@ -1,6 +1,6 @@
 const Templates = [
   {
-    department: "laboratory",
+    department: "LAB",
     components: [
       "Analysis",
       "Bacteriology",
@@ -21,11 +21,11 @@ const Templates = [
     ],
   },
   {
-    department: "radiology",
+    department: "RAD",
     components: ["ECG", "Ultrasound", "X-ray", "2DEcho"],
   },
   {
-    department: "clinic",
+    department: "CLINIC",
     components: ["Certicifate", "Examination"],
   },
 ];

@@ -6,7 +6,7 @@ const Header = () => {
   const { branch = {} } = activePlatform || {};
   const { name = "", subName = "" } = branch;
 
-  console.log("auth", auth);
+  //console.log("auth", auth);
 
   return (
     <>

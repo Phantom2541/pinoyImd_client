@@ -24,7 +24,7 @@ export default function Laboratories() {
     [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
 
-  console.log("unused variable setFavorites", setFavorites);
+  //console.log("unused variable setFavorites", setFavorites);
 
   useEffect(() => {
     setCompanies(collections);
@@ -41,7 +41,7 @@ export default function Laboratories() {
       if (!searchKey) return setCompanies(collections);
 
       setCompanies(
-        collections?.filter((c) =>
+        collections?.filter(c =>
           String(c.name).toLowerCase().includes(searchKey.toLowerCase())
         )
       );
@@ -59,7 +59,7 @@ export default function Laboratories() {
         {!isLoading && (
           <MDBCol size="6">
             <MDBInput
-              onChange={(e) => setSearchKey(e.target.value)}
+              onChange={e => setSearchKey(e.target.value)}
               type="search"
               label="Search by Company name"
             />
@@ -94,7 +94,7 @@ export default function Laboratories() {
       {/* if companies have value, it will display */}
       {Boolean(companies.length) && (
         <MDBRow>
-          {companies.map((company) => (
+          {companies.map(company => (
             <MDBCol md="3" key={company._id} className="p-2">
               <CompanyCard
                 company={company}

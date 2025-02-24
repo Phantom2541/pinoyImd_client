@@ -18,7 +18,7 @@ export default function TasksCollapse({
   setActiveCollapse,
   isActive,
 }) {
-  console.log("task", task);
+  //console.log("task", task);
 
   const { _id, createdAt, category } = task,
     date = new Date(createdAt).toDateString(),

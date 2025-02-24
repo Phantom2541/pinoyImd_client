@@ -1,11 +1,12 @@
 [
   {
-    "id": 1,
-    "name": "patron",
-    "display_name": "Patron"
+    "department": "DEFAULT",
+    "code": "DEFAULT",
+    "positions": [{ "id": 1, "name": "patron", "display_name": "Patron" }]
   },
   {
     "department": "Office Management",
+    "code": "OM",
     "positions": [
       {
         "id": 7,
@@ -41,6 +42,7 @@
   },
   {
     "department": "accounting",
+    "code": "ACC",
     "positions": [
       {
         "id": 9,
@@ -81,6 +83,7 @@
   },
   {
     "department": "Finance",
+    "code": "FIN",
     "positions": [
       {
         "id": 18,
@@ -91,6 +94,7 @@
   },
   {
     "department": "Procurement",
+    "code": "PROC",
     "positions": [
       {
         "id": 25,
@@ -111,6 +115,7 @@
   },
   {
     "department": "human resource",
+    "code": "HR",
     "positions": [
       {
         "id": 30,
@@ -130,19 +135,19 @@
     ]
   },
   {
-    "id": 36,
-    "name": "phlebotomist",
-    "display_name": "Phlebotomist"
-  },
-  {
     "department": "laboratory",
+    "code": "LAB",
     "positions": [
       {
         "id": 35,
         "name": "frontdesk",
         "display_name": "Frontdesk"
       },
-
+      {
+        "id": 36,
+        "name": "phlebotomist",
+        "display_name": "Phlebotomist"
+      },
       {
         "id": 37,
         "name": "labtech",
@@ -172,6 +177,7 @@
   },
   {
     "department": "radiology",
+    "code": "RAD",
     "positions": [
       {
         "id": 43,
@@ -201,7 +207,8 @@
     ]
   },
   {
-    "department": "clinic",
+    "department": "nursing",
+    "code": "NUR",
     "positions": [
       {
         "id": 50,
@@ -237,6 +244,7 @@
   },
   {
     "department": "pharmacy",
+    "code": "PHARM",
     "positions": [
       {
         "id": 60,
@@ -257,6 +265,7 @@
   },
   {
     "department": "rehabilitation",
+    "code": "REHAB",
     "positions": [
       {
         "id": 67,
@@ -282,6 +291,7 @@
   },
   {
     "department": "social services",
+    "code": "SOCIAL",
     "positions": [
       {
         "id": 75,
@@ -307,6 +317,7 @@
   },
   {
     "department": "Philippine Health Insurance Corporation",
+    "code": "PHIC",
     "positions": [
       {
         "id": 80,
@@ -327,6 +338,7 @@
   },
   {
     "department": "dietary",
+    "code": "DIET",
     "positions": [
       {
         "id": 85,
@@ -362,6 +374,7 @@
   },
   {
     "department": "auxillary services",
+    "code": "AUX",
     "positions": [
       {
         "id": 95,
