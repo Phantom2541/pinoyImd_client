@@ -30,6 +30,7 @@ export default function CollapseTable({ menu }) {
   }, [menu]);
 
   const handlePrint = (labTest) => {
+
     localStorage.setItem("taskPrintout", JSON.stringify(labTest));
     window.open(
       "/printout/task",
@@ -101,7 +102,7 @@ export default function CollapseTable({ menu }) {
                   onClick={() =>
                     handlePrint({
                       ...task,
-                      branchId: activePlatform?.branchId,
+                      branchId: activePlatform?.branch,
                       referral: physicianId || {},
                       services: Services.whereIn(_packages),
                       signatories,
