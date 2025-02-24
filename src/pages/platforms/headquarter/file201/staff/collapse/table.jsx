@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { MDBCol, MDBRow, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
+import { useDispatch } from "react-redux";
+import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Roles } from "../../../../../../services/fakeDb";
 import AccessModal from "./accessModal";
+import { SETOnHotSEAT } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
 function EditableField({
   label,
@@ -59,7 +61,8 @@ export default function CollapseTable({
 }) {
   const [editField, setEditField] = useState(null),
     [show, setShow] = useState(false),
-    [selected, setSelected] = useState({});
+    [selected, setSelected] = useState({}),
+    dispatch = useDispatch();
 
   const toggle = () => setShow(!show);
   const {
@@ -99,6 +102,13 @@ export default function CollapseTable({
   const handleCancel = () => {
     resetData();
     setEditField(null);
+  };
+
+  const handleOnHotSeat = (e) => {
+    e.preventDefault();
+    dispatch(SETOnHotSEAT(staff));
+    setSelected(staff);
+    toggle();
   };
 
   const { access = [] } = staff || {};
@@ -339,10 +349,7 @@ export default function CollapseTable({
               <MDBIcon
                 icon="pencil-alt"
                 className="mt-2 cursor-pointer"
-                onClick={() => {
-                  setSelected(staff);
-                  toggle();
-                }}
+                onClick={handleOnHotSeat}
                 style={{ fontSize: "1.2rem", color: "blue" }}
               />
             )}
@@ -364,16 +371,17 @@ export default function CollapseTable({
             ))
           ) : (
             <>
-              <MDBBtn
-                size="md"
-                color="primary"
-                onClick={() => {
-                  setSelected(staff);
-                  toggle();
-                }}
-              >
-                <MDBIcon icon="plus" className="ml-1" /> ADD
-              </MDBBtn>
+              <p className="text-center">No access</p>
+              <p className="text-center">
+                <span
+                  className="text-primary font-weight-bold"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleOnHotSeat}
+                >
+                  Click here
+                </span>{" "}
+                to grant access
+              </p>
             </>
           )}
         </MDBCol>

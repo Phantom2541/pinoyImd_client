@@ -5,12 +5,15 @@ const name = "assets/persons/personnels";
 
 const initialState = {
   collections: [],
-  personnel: {},
-  access: {
+
+  stat: {
     _id: "",
-    roles: [],
-    permited: [],
-    unpermited: [],
+    personnel: {},
+    contract: {},
+    access: [], // Permissions or features that are available
+    granted: [], // Permissions that have been acquired or activated or stock
+    queued: [], // permissions are lined up for activation.
+    revoked: [], // Permissions that have been removed or denied
   },
   isSuccess: false,
   isLoading: false,
@@ -165,17 +168,37 @@ export const reduxSlice = createSlice({
 
       state.collections[index].access = newAccess;
     },
-    ONHOTSEAT: (state, { payload }) => {
-      state.personnel = payload.personnel;
-      state.access._id = payload._id;
+    SETOnHotSEAT: (state, { payload }) => {
+      console.log(payload);
+      // const { personnel, contract, _id, access } = state.stat;
+      // set default values
+      state.stat.personnel = payload.user;
+      state.stat.contract = payload.contract;
+      state.stat._id = payload._id;
+      state.stat.access = payload.access;
     },
-    SETPERMITED: (state, { payload }) => {
-      state.access.permited = payload.access;
-      state.access.unpermited = payload.aceess;
+    SETQUEUED: (state, { payload }) => {
+      // pending access to be granted
+      const { _id, access } = payload;
+
+      const index = state.access.queued.findIndex((item) => item._id === _id);
+
+      if (index >= 0) {
+        state.access.permited[index].access = access;
+      } else {
+        state.access.permited.unshift({ _id, access });
+        state.access.available = state.access.available.filter(
+          (item) => item._id !== _id
+        );
+      }
     },
-    SETUNPERMITED: (state, { payload }) => {
-      state.permited = payload.permited;
-      state.unpermited = payload.unpermited;
+    SETREVOKED: (state, { payload }) => {
+      const { _id, access } = payload;
+      // remove access
+      state.access.permited = state.access.permited.filter(
+        (item) => item._id !== payload._id
+      );
+      state.access.available = state.access.available.unshift({ _id, access });
     },
     RESET: (state, data) => {
       state.isSuccess = false;
@@ -334,6 +357,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, UPDATEACCESS } = reduxSlice.actions;
+export const { SETOnHotSEAT, SETQUEUED, SETREVOKED, UPDATEACCESS, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;
