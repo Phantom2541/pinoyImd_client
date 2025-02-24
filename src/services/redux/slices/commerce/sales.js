@@ -177,7 +177,7 @@ export const LABRESULT = createAsyncThunk(
   ({ token, data }, thunkAPI) => {
     try {
       return axioKit.save(
-        `results/${data.department}/${data.form}`,
+        `results/${data.department ==="LAB"?"laboratory":data.department ==="RAD"?"radiology":"clinic"}/${data.form.toLowerCase()}`,
         data,
         token
       );

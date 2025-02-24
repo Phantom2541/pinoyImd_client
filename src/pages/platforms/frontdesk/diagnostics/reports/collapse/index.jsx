@@ -43,7 +43,7 @@ export default function TasksCollapse({ tasks, page, resetSearch, searchKey }) {
               <MDBBadge
                 onClick={() =>
                   history.push(
-                    `/transactions/tracker?patient=${customerId?._id}`
+                    `/transactions/reports?patient=${customerId?._id}`
                   )
                 }
                 color="info"
