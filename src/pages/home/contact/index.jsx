@@ -34,7 +34,7 @@ export default function ContactUs() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(auth._id);
+    //console.log(auth._id);
 
     addToast("Thank you for the feedback.", {
       appearance: "success",

@@ -118,7 +118,7 @@ export default function Chems() {
           </tr>
           {groupedChems[day].map((hema, index) => {
             const { cc, dc, rci, apc, bt, esr, createdAt, customerId } = hema;
-            console.log(hema);
+            //console.log(hema);
 
             const chemDate = new Date(createdAt);
             const h = chemDate.getHours();

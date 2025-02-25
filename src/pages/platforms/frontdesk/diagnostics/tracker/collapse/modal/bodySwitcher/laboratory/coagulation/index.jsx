@@ -20,7 +20,7 @@ const Coagulation = ({ task, setTask }) => {
   const // [pt, setPt] = useState([null, null]),
     // [aptt, setAptt] = useState([null, null]),
     [activeTab, setActiveTab] = useState("tab1");
-  console.log("task", task);
+  //console.log("task", task);
 
   return (
     <MDBCard>

@@ -19,12 +19,12 @@ export default function Register() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    // console.log("test");
+    // //console.log("test");
     // document.getElementById("registration-form").reset();
 
     const { email, password, confirmPassword } = e.target;
 
-    console.log(email);
+    //console.log(email);
 
     if (password.value === confirmPassword.value) {
       // dispatch(

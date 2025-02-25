@@ -61,7 +61,7 @@ export default function Ledger() {
 
   //Set fetched data for mapping
   useEffect(() => {
-    console.log(collections);
+    //console.log(collections);
     setSales(collections);
   }, [collections]);
 

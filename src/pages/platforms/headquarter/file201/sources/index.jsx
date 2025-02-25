@@ -19,13 +19,13 @@ export default function Sources() {
   useEffect(() => {
     if ((token, activePlatform.branchId))
       dispatch(BROWSE({ token, vendors: activePlatform.branchId }));
-    console.log(activePlatform.branchId);
+    //console.log(activePlatform.branchId);
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform.branchId]);
 
   //Set fetched data for mapping
   useEffect(() => {
-    //console.log(collections);
+    ////console.log(collections);
     setVendors(collections);
   }, [collections]);
 

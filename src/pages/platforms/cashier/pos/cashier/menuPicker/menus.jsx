@@ -1,14 +1,10 @@
 import React, { useState, useRef } from "react";
 import { MDBIcon } from "mdbreact";
-// import { useDispatch } from "react-redux";
 import Search from "./search";
 import { computeGD, currency } from "../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import ConflictModal from "./conflictModal";
-// import {
-//   ADDTOCART,
-//   REMOVEFROMCART,
-// } from "../../../../../../services/redux/slices/commerce/pos.js";
+import { useSelector } from "react-redux";
 
 const initialCompareState = {
   show: false,
@@ -17,85 +13,97 @@ const initialCompareState = {
 };
 
 export default function Menus({ patronPresent }) {
-  // const dispatch = useDispatch();
   const [searchKey, setSearchKey] = useState("");
   const [compare, setCompare] = useState(initialCompareState);
   const [cart, setCart] = useState([]);
+  const { collections } = useSelector(({ menus }) => menus); 
   const searchRef = useRef(null);
   const { addToast } = useToasts();
 
-  // const focusSearchInput = () => {
-  //   if (searchRef.current) searchRef.current.focus();
-  // };
+  const focusSearchInput = () => {
+    if (searchRef.current) searchRef.current.focus();
+  };
 
-  //comment by darrel
-  // const handlePicker = (selected) => {
-  //   if (!cart.length) {
-  //     setSearchKey("");
-  //     focusSearchInput();
-  //     return setCart([selected]);
-  //   }
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearchKey(e.target.value);
+  };
 
-  //   const { packages, _id, description, abbreviation } = selected;
-  //   const sameId = cart.find((c) => c?._id === _id);
+const filteredMenus = collections.filter((menu) => {
+  const description = menu.description || "";
+  const abbreviation = menu.abbreviation || "";
+  return (
+    description.toLowerCase().includes(searchKey.toLowerCase()) ||
+    abbreviation.toLowerCase().includes(searchKey.toLowerCase())
+  );
+});
 
-  //   if (sameId)
-  //     return addToast(`You already selected: ${description || abbreviation}`, {
-  //       appearance: "info",
-  //     });
 
-  //   if (packages.length === 1) {
-  //     const [_package] = packages;
-  //     const duplicatePackage = cart.filter((c) =>
-  //       c?.packages.includes(_package)
-  //     );
-  //     focusSearchInput();
-  //     setSearchKey("");
+  const handlePicker = (selected) => {
+    if (!cart.length) {
+      setSearchKey("");
+      focusSearchInput();
+      return setCart([selected]);
+    }
 
-  //     if (duplicatePackage.length)
-  //       return setCompare({
-  //         selected,
-  //         conflicts: duplicatePackage,
-  //         show: true,
-  //       });
+    const { packages, _id, description, abbreviation } = selected;
+    const sameId = cart.find((c) => c?._id === _id);
 
-  //     return setCart([...cart, selected]);
-  //   }
+    if (sameId) {
+      addToast(`You already selected: ${description || abbreviation}`, {
+        appearance: "info",
+      });
+      return;
+    }
 
-  //   let rawConflicts = [];
-  //   for (const _package of packages) {
-  //     const duplicatePackage = cart.filter((c) =>
-  //       c?.packages.includes(_package)
-  //     );
-  //     if (duplicatePackage.length)
-  //       rawConflicts = [...rawConflicts, ...duplicatePackage];
-  //   }
+    if (packages.length === 1) {
+      const [_package] = packages;
+      const duplicatePackage = cart.filter((c) => c?.packages.includes(_package));
+      focusSearchInput();
+      setSearchKey("");
 
-  //   const conflicts = [
-  //     ...new Map(rawConflicts.map((c) => [c._id, c])).values(),
-  //   ];
-  //   focusSearchInput();
-  //   setSearchKey("");
+      if (duplicatePackage.length) {
+        setCompare({ selected, conflicts: duplicatePackage, show: true });
+        return;
+      }
 
-  //   if (!conflicts.length) return setCart([...cart, selected]);
+      setCart([...cart, selected]);
+      return;
+    }
 
-  //   setCompare({ selected, conflicts, show: true });
-  // };
+    let rawConflicts = [];
+    for (const _package of packages) {
+      const duplicatePackage = cart.filter((c) => c?.packages.includes(_package));
+      if (duplicatePackage.length) rawConflicts = [...rawConflicts, ...duplicatePackage];
+    }
+
+    const conflicts = [...new Map(rawConflicts.map((c) => [c._id, c])).values()];
+    focusSearchInput();
+    setSearchKey("");
+
+    if (!conflicts.length) {
+      setCart([...cart, selected]);
+      return;
+    }
+
+    setCompare({ selected, conflicts, show: true });
+  };
 
   const handleConflict = (chosen) => {
-    if (!chosen) return setCompare(initialCompareState);
+    if (!chosen) {
+      setCompare(initialCompareState);
+      return;
+    }
 
-    let updatedCart = cart.filter(
-      (c) => !compare.conflicts.some(({ _id }) => _id === c._id)
-    );
+    let updatedCart = cart.filter((c) => !compare.conflicts.some(({ _id }) => _id === c._id));
     setCart([...updatedCart, compare.selected]);
     setCompare(initialCompareState);
     addToast("Conflicts have been resolved.", { appearance: "info" });
   };
 
-  const handleDelete = (_id) => setCart(cart.filter((c) => c?._id !== _id));
-  // const handleAddToCart = (item) => dispatch(ADDTOCART(item));
-  // const handleRemoveFromCart = (_id) => dispatch(REMOVEFROMCART(_id));
+  const handleDelete = (_id) => {
+    setCart(cart.filter((c) => c?._id !== _id));
+  };
 
   return (
     <>
@@ -110,6 +118,7 @@ export default function Menus({ patronPresent }) {
                   searchKey={searchKey}
                   setSearchKey={setSearchKey}
                   searchRef={searchRef}
+                  handleSearch={handleSearch}
                 />
               </div>
             </th>
@@ -121,38 +130,25 @@ export default function Menus({ patronPresent }) {
               <div className="d-flex align-items-center justify-content-center">
                 UP
                 <div className="menus-legend ml-2 m-0">
-                  <MDBIcon
-                    icon="info-circle"
-                    size="sm"
-                    className="text-info cursor-pointer"
-                  />
+                  <MDBIcon icon="info-circle" size="sm" className="text-info cursor-pointer" />
                 </div>
               </div>
             </th>
           </tr>
         </thead>
         <tbody>
-          {!cart.length && (
+          {!filteredMenus.length && (
             <tr>
               <td colSpan="3" className="menus-empty">
                 <span>
-                  Start by{" "}
-                  {patronPresent
-                    ? "searching your menus"
-                    : "selecting a patron"}
-                  .
+                  Start by {patronPresent ? "searching your menus" : "selecting a patron"}.
                 </span>
               </td>
             </tr>
           )}
-          {cart.map((menu) => {
+          {filteredMenus.map((menu) => {
             const { _id, description, abbreviation } = menu;
-            const {
-              gross = 0,
-              up = 0,
-              title = "",
-              color = "",
-            } = computeGD(menu);
+            const { gross = 0, up = 0, title = "", color = "" } = computeGD(menu);
 
             return (
               <tr key={_id}>
@@ -163,10 +159,7 @@ export default function Menus({ patronPresent }) {
                 <td title="Suggested Retail Price">{currency(gross)}</td>
                 <td title={title}>
                   <span className={`text-${color}`}>{currency(up)}</span>
-                  <button
-                    onClick={() => handleDelete(_id)}
-                    className="menus-button-delete"
-                  >
+                  <button onClick={() => handleDelete(_id)} className="menus-button-delete">
                     <MDBIcon icon="trash" />
                   </button>
                 </td>

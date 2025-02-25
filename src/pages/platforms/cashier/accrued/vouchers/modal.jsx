@@ -42,7 +42,7 @@ export default function Modal({ show, toggle, selected, willCreate, users }) {
         to: form.to,
       },
     };
-    console.log("data", data);
+    //console.log("data", data);
     // check if object has changed
     if (isEqual(form, selected))
       return addToast("No changes found, skipping update.", {

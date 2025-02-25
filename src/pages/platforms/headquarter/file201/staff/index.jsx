@@ -31,13 +31,6 @@ export default function Staffs() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  console.log(
-    "unused variables selected,showModal,totalPages remove this by darrel",
-    selected,
-    showModal,
-    totalPages
-  );
-
   useEffect(() => {
     if (staffs.length > 0) {
       let totalPages = Math.floor(staffs.length / maxPage);
@@ -58,7 +51,7 @@ export default function Staffs() {
   }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
-  useEffect(() => {
+  useEffect(() => {    
     setStaffs(collections);
   }, [collections]);
 

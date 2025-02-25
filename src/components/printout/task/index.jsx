@@ -6,6 +6,7 @@ import BodySwitcher from "./bodySwitcher";
 // import { capitalize } from "lodash";
 import Signatories from "./signatories";
 // import Drugtest from "./drugtest";
+import { useSelector } from "react-redux";
 
 const Printout = ({ task }) => {
   const {
@@ -19,7 +20,14 @@ const Printout = ({ task }) => {
     remarks,
     signatories,
   } = task;
+  console.log("task", task);
+  const { activePlatform, company, auth } = useSelector(({ auth }) => auth);
 
+console.log(activePlatform);
+console.log(company);
+console.log(auth);
+
+  
   return (
     <div style={{ width: "100vw", height: "100vh", backgroundColor: "white" }}>
       <div

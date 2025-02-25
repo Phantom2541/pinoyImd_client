@@ -19,14 +19,10 @@ export default function Miscellaneous({ task, setTask }) {
   const [activeTab, setActiveTab] = useState("results");
 
   const { packages = [], specimen = "" } = task;
-
+  console.log(packages);
   return (
     <MDBContainer>
-      {/* Default is 1, hide all the tab button
-        146=ogtt,
-        11=hba1c
-      */}
-
+      {/* Default is 1, hide all the tab button */}
       {!packages.includes(146, 11) && (
         <MDBNav color="primary" tabs className="nav-justified">
           <MDBNavItem>

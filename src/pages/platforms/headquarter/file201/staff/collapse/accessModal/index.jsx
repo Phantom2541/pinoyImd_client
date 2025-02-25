@@ -13,11 +13,27 @@ import {
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../../../services/utilities";
 import { Access } from "../../../../../../../services/fakeDb";
-import { UPDATE_ACCESS } from "../../../../../../../services/redux/slices/assets/persons/personnels";
+import {
+  UPDATE_ACCESS,
+} from "../../../../../../../services/redux/slices/assets/persons/personnels";
 import Table from "./table";
+
+/**
+ * AccessModal component manages user access roles through a modal interface.
+ * It displays available roles and existing access, allowing users to add or
+ * remove roles for a selected user. The changes can be saved and sent to the
+ * backend for processing. The component supports searching for roles,
+ * drag-and-drop functionality for managing roles, and visual feedback for
+ * the current state of access changes.
+ *
+ * @param {boolean} show - Controls the visibility of the modal.
+ * @param {function} toggle - Function to toggle the modal's visibility.
+ * @param {object} selected - Contains user and their current access data.
+ */
 
 export default function AccessModal({ show, toggle, selected }) {
   const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
+  // {stat}=useSelector(({personnels})=>personnels),
     [existingAccess, setExistingAccess] = useState([]),
     [roles, setRoles] = useState([]),
     [search, setSearch] = useState([]),
@@ -38,7 +54,10 @@ export default function AccessModal({ show, toggle, selected }) {
 
   const removeDuplicate = useCallback((_existingAccess) => {
     return Access.collections.filter((c) =>
-      _existingAccess?.every((existAcc) => existAcc.platform !== c.platform)
+      _existingAccess?.every(
+        (existAcc) =>
+          existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
+      )
     );
   }, []);
 
@@ -50,6 +69,7 @@ export default function AccessModal({ show, toggle, selected }) {
       handleSetRoles(_roles);
     }
     setAccessChanges({ deleted: [], added: [] });
+    
   }, [show, selected, handleSetRoles, removeDuplicate]);
 
   const handleSubmit = () => {
@@ -87,7 +107,7 @@ export default function AccessModal({ show, toggle, selected }) {
     if (isDelete && isExist) _deletedRoles.push(role);
     if (!isDelete && !isExist)
       _addedRoles.push({
-        platform: role.name,
+        platform: role.platform,
         approvedBy: auth._id,
         branchId: activePlatform.branchId,
         userId: user._id,

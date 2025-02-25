@@ -146,7 +146,7 @@ export default function Sales() {
             </thead>
             <tbody>
               {sales?.map((sale, index) => {
-                console.log(sale);
+                //console.log(sale);
                 return (
                   <tr key={`sales-${index + 1}`}>
                     <td>{index + 1}.</td>

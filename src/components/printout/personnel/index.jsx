@@ -22,7 +22,7 @@ const PersonnelPrintOut = () => {
     height: "20px",
   };
 
-  console.log(personnels);
+  //console.log(personnels);
   return (
     <div className="m-4">
       <Header />

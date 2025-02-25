@@ -28,7 +28,7 @@ const _form = {
 
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ controls }) => controls),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { token, auth } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     { addToast } = useToasts(),
     dispatch = useDispatch();

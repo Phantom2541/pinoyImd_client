@@ -189,6 +189,7 @@ export const reduxSlice = createSlice({
         const { contract = { designation: -1 } } = branch || {};
         const department = Policy.getDepartment(contract.designation) || {};
 
+        //console.log("_access", _access);
         state.activePlatform = {
           branch,
           branchId: payload.activePlatform.branchId,

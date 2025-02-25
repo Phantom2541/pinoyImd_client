@@ -144,7 +144,7 @@ export default function Cashier() {
   };
 
   const handlePatronHistory = (selected) => {
-    console.log(selected);
+    //console.log(selected);
   };
 
   const handleCashRegister = (selected) => {

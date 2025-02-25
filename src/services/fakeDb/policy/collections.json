@@ -1,8 +1,8 @@
 [
   {
-    "id": 1,
-    "name": "patron",
-    "display_name": "Patron"
+    "department": "DEFAULT",
+    "code": "DEFAULT",
+    "positions": [{ "id": 1, "name": "patron", "display_name": "Patron" }]
   },
   {
     "department": "Office Management",
@@ -133,7 +133,7 @@
         "display_name": "Human Resource Manager"
       }
     ]
-  }, 
+  },
   {
     "department": "laboratory",
     "code": "LAB",
