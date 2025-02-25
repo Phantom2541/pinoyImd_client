@@ -9,9 +9,16 @@ import {
 export default function Pregnancy({ task, setTask }) {
   const { results = false } = task;
 
+  // console.log("results", task);
+  // return (
+  //   <>
+  //     {Object.entries(task.packages).map(([key, value], index) => {
+  //       console.log(key, value);
+  //       const { name } = Services.find(value);
+
   return (
     <MDBSelect
-      getValue={e => setTask({ ...task, results: Boolean(Number(e[0])) })}
+      getValue={(e) => setTask({ ...task, results: Boolean(Number(e[0])) })}
       className="colorful-select dropdown-primary hidden-md-down"
     >
       <MDBSelectInput

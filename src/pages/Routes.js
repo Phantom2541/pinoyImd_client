@@ -12,12 +12,16 @@ import NotExisting from "./notExisting";
 import Profile from "../components/profile";
 
 import { useSelector } from "react-redux";
+import UnsetApply from "./platforms/guest/apply";
 
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
 
   return (
     <Switch>
+      {!activePlatform?.platform && (
+        <Route exact path={`/dashboard`} component={UnsetApply} />
+      )}
       {Sidebars[activePlatform?.platform]?.map(
         ({ path, component, children }, index) => {
           if (children)

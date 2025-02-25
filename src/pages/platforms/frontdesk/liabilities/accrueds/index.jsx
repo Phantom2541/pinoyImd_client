@@ -74,7 +74,7 @@ export default function Accrued() {
   };
 
   const formatDate = (dateString) => {
-    console.log("Received dateString:", dateString);
+    //console.log("Received dateString:", dateString);
     if (!dateString) return "Invalid date";
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "Invalid date";
@@ -97,7 +97,7 @@ export default function Accrued() {
   // };
 
   const handlePayment = (model) => {
-    console.log(model);
+    //console.log(model);
 
     // localStorage.setItem("payslip", JSON.stringify(model));
     // window.open(
@@ -131,7 +131,7 @@ export default function Accrued() {
             <tbody>
               {accrued?.map((liability, index) => {
                 const statement = Liabilities.find(liability?.fsId);
-                console.log(liability);
+                //console.log(liability);
 
                 return (
                   <tr key={`payroll-${index + 1}`}>

@@ -33,6 +33,7 @@ import referenceColor from "./referenceColor";
 import properFullname from "./properFullname";
 import calculateIndicators from "./calculateIndicators";
 import formatToSI from "./formatToSI";
+import formatNameToObj from "./formatNameToObject";
 import findReference from "./findReference";
 import isImageValid from "./isImageValid";
 import generateCode from "./generateCode";
@@ -47,6 +48,7 @@ import generateClaimStub from "./generateClaimStub";
 import nickname from "./nickname";
 import paymentBadge from "./paymentBadge";
 import formatNameToObj from "./formatNameToObject";
+
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 

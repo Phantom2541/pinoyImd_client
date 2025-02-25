@@ -21,7 +21,7 @@ export default function UnsetApply() {
     [totalPages, setTotalPages] = useState(1),
     dispatch = useDispatch();
 
-  console.log("unused variable total pages", totalPages);
+  //console.log("unused variable total pages", totalPages);
 
   useEffect(() => {
     if (token) dispatch(BROWSE(token));

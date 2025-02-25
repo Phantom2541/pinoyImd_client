@@ -4,7 +4,7 @@ import { MDBTable } from "mdbreact";
 // import { Services } from "../../..services/fakeDb";
 
 export default function Drugtest({ sale }) {
-  console.log("sale", sale);
+  //console.log("sale", sale);
 
   // const {
   //   category,

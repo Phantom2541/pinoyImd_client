@@ -15,7 +15,7 @@ export default function Parasitology({ fontSize, task }) {
     [color, consistency] = pe || [null, null],
     [pH, occult] = ce || [null, null],
     [pus, red, bac, yeast, fat] = me || [null, null];
-  console.log("occult", occult);
+  //console.log("occult", occult);
   return (
     <MDBTable hover bordered responsive className="mb-0">
       <thead>

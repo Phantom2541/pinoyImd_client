@@ -101,7 +101,7 @@ export default function Ledger() {
   // };
 
   // const generateLedger = () => {
-  //   console.log("still in progress");
+  //   //console.log("still in progress");
   // };
 
   const modalCensus = () => setShow(!show);

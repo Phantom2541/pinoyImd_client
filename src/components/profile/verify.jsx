@@ -35,7 +35,7 @@ export default function VerificationCode({ show, toggle }) {
           text: "Codes did not match.",
         });
 
-      console.log(code);
+      //console.log(code);
 
       return;
     }

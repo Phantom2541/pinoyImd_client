@@ -20,7 +20,7 @@ export default function Users() {
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  console.log(collections);
+  //console.log(collections);
 
   //Initial Browse
   useEffect(() => {

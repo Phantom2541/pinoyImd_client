@@ -19,7 +19,6 @@ export default function Miscellaneous({ task, setTask }) {
   const [activeTab, setActiveTab] = useState("results");
 
   const { packages = [], specimen = "" } = task;
-
   return (
     <MDBContainer>
       {/* Default is 1, hide all the tab button

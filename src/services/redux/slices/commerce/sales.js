@@ -117,7 +117,7 @@ export const OLDLEDGER = createAsyncThunk(
 export const YEARLY = createAsyncThunk(
   `${name}/yearly`,
   ({ token, branchId, year }, thunkAPI) => {
-    console.log("branchId", branchId);
+    //console.log("branchId", branchId);
     try {
       return axioKit.universal(`${name}/yearly`, token, {
         branchId,
@@ -177,7 +177,7 @@ export const LABRESULT = createAsyncThunk(
   ({ token, data }, thunkAPI) => {
     try {
       return axioKit.save(
-        `results/${data.department}/${data.form}`,
+        `results/${data.department ==="LAB"?"laboratory":data.department ==="RAD"?"radiology":"clinic"}/${data.form.toLowerCase()}`,
         data,
         token
       );
@@ -335,7 +335,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(CENSUS.fulfilled, (state, action) => {
-        // console.log("payload-census", action.payload.census);
+        // //console.log("payload-census", action.payload.census);
         const { sales = [], ...rest } = action.payload.census;
 
         const daily = sales?.reduce((daily, { createdAt, amount, ...rest }) => {
@@ -344,7 +344,7 @@ export const reduxSlice = createSlice({
 
           obj.sales.push({ createdAt, amount, ...rest });
           obj.total += amount;
-          // console.log("daily", daily);
+          // //console.log("daily", daily);
 
           return daily;
         }, {});

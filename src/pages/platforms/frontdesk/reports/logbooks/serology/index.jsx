@@ -142,7 +142,7 @@ export default function Chems() {
                   <td>{timeFormatted}</td> {/* Display formatted time */}
                   <td>
                     {nonEmptyPackages.map(([key, value]) => {
-                      console.log(nonEmptyPackages);
+                      //console.log(nonEmptyPackages);
                       const service = Services.find(key);
                       return (
                         <React.Fragment key={key}>

@@ -157,7 +157,8 @@ export default function Sales() {
           token
         );
       }
-
+      console.log(" old pos here");
+      
       dispatch(
         UPDATE({
           token,

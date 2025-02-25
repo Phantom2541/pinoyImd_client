@@ -146,7 +146,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         // const {} = action.payload;
-        console.log("payload", action.success);
+        //console.log("payload", action.success);
 
         state.message = action?.success;
         state.collections.unshift(action.payload);

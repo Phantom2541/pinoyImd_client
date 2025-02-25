@@ -99,7 +99,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     const _val = value.split("-");
 
     dispatch(BRANCHBROWSE({ token, companyId: value }));
-    console.log(activePlatform);
+    //console.log(activePlatform);
     setForm({
       ...form,
       name: _val[1],
@@ -108,7 +108,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       ao: activePlatform?.companyId?.ceo,
     });
   };
-  console.log(form);
+  //console.log(form);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>

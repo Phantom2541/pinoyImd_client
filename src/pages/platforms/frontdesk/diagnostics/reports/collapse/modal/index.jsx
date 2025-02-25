@@ -64,10 +64,10 @@ export default function Modal({ show, toggle, task, setTask }) {
       // kulang pa to
       //patholist or radiologist
       sub = findSignatoryId(
-        department === "laboratory" ? "pathologist" : "radiologist"
+        department === "LAB" ? "pathologist" : "radiologist"
       );
 
-    // console.log({
+    // //console.log({
     //   ...task,
     //   //if meant to save, just copy current state in db
     //   hasDone: hasDone || dbDone,

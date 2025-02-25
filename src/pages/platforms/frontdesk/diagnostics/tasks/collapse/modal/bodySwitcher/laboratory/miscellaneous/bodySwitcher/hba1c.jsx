@@ -7,7 +7,7 @@ export default function Gloucose({ task, setTask }) {
   const handleChange = (value) =>
     setTask({ ...task, results: { ...results, hba1c: value } });
 
-  console.log(task);
+  //console.log(task);
   return (
     <>
       <MDBTable hover responsive className="mb-0">

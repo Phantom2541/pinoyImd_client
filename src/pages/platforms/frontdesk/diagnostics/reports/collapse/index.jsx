@@ -18,56 +18,51 @@ export default function TasksCollapse({
   setActiveCollapse,
   isActive,
 }) {
-  console.log("task", task);
-
   const { _id, createdAt, category } = task,
     date = new Date(createdAt).toDateString(),
     week = date.slice(0, 3),
     complete = date.slice(4);
 
   return (
-    <MDBCard>
-      <MDBCollapseHeader>
-        <div className="d-flex justify-content-between">
-          <label>
-            {number}.&nbsp;
-            <span className={`${week === "Sun" && "text-danger"}`}>{week}</span>
-            , {complete}
+    <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
+      <MDBCard>
+        <MDBCollapseHeader
+          onClick={() => setActiveCollapse(_id)}
+          className="d-flex align-items-center justify-content-between"
+        >
+          <span>
+            {number}. {task.customerId?.fullName}
+          </span>
+          <div>
             <MDBBadge color={sourceColor(category)} className="mx-2">
               {category}
             </MDBBadge>
-          </label>
-          <MDBBtnGroup>
-            <MDBBtn
-              color="primary"
-              onClick={() => alert("modal")}
-              size="sm"
-              rounded
-            >
-              <MDBIcon icon="pencil-alt" className="mr-2" />
-            </MDBBtn>
-
-            <MDBBtn
-              color="info"
+            <MDBBadge
               onClick={() =>
-                setActiveCollapse((prev) => (prev === _id ? "" : _id))
+                history.push(
+                  `/transactions/reports?patient=${task.customerId?._id}`
+                )
               }
-              size="sm"
-              rounded
+              color="info"
+              className="px-2 cursor-pointer"
             >
-              <i
-                style={{ rotate: `${isActive ? 0 : 90}deg` }}
-                className="fa fa-angle-down transition-all"
-              />
-            </MDBBtn>
-          </MDBBtnGroup>
-        </div>
-      </MDBCollapseHeader>
-      <MDBCollapse id={`collapse-${_id}`} isOpen={isActive}>
-        <MDBCardBody className="pt-0">
-          <Table menu={task} />
-        </MDBCardBody>
-      </MDBCollapse>
-    </MDBCard>
+              <MDBIcon icon="eye" />
+            </MDBBadge>
+            {task.source && (
+              <MDBBadge color="warning">{task.source?.name}</MDBBadge>
+            )}
+            <i
+              style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
+              className="fa fa-angle-down transition-all ml-2"
+            />
+          </div>
+        </MDBCollapseHeader>
+        <MDBCollapse id={`collapse-${_id}`} isOpen={isActive}>
+          <MDBCardBody className="pt-0">
+            <Table menu={task} />
+          </MDBCardBody>
+        </MDBCollapse>
+      </MDBCard>
+    </MDBContainer>
   );
 }
