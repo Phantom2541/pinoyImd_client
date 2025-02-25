@@ -51,7 +51,7 @@ export default function Staffs() {
   }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
-  useEffect(() => {
+  useEffect(() => {    
     setStaffs(collections);
   }, [collections]);
 

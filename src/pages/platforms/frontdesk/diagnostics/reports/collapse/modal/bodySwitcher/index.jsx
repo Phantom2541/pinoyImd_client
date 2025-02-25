@@ -10,10 +10,8 @@ import Miscellaneous from "./laboratory/miscellaneous";
 import Analysis from "./laboratory/analysis";
 import Bacteriology from "./laboratory/bacteriology";
 import Compatibility from "./laboratory/compatibility";
-import Electrolyte from "./laboratory/electrolyte";
 import Pbs from "./laboratory/pbs";
-import PE from "./clinic/pe";
-import MC from "./clinic/mc";
+import Electrolyte from "./laboratory/electrolyte";
 
 const Blank = ({ task }) => {
   return <div>{task.form} is not working</div>;
@@ -31,14 +29,11 @@ const componentMap = {
   analysis: Analysis,
   bacteriology: Bacteriology,
   compatibility: Compatibility,
-  electrolyte: Electrolyte,
   pbs: Pbs,
-  pe: PE,
-  mc: MC,
+  electrolyte: Electrolyte,
 };
 
 export default function BodySwitcher({ task, setTask }) {
-  console.log("task", task);
   const Component = componentMap[task.form?.toLowerCase()] || Blank;
   return <Component task={task} setTask={setTask} />;
 }

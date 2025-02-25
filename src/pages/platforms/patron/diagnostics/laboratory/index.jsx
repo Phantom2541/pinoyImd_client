@@ -27,6 +27,7 @@ export default function Laboratories() {
   console.log("unused variable setFavorites", setFavorites);
 
   useEffect(() => {
+    setFavorites('sample')
     setCompanies(collections);
   }, [collections]);
 

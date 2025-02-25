@@ -7,18 +7,17 @@ export default function Cellcount({ task, setTask }) {
   const { patient, cc = [] } = task,
     { Preferences, Abbreviation, Title } = CellCount;
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target,
       _name = Number(name),
-      // _value = parseFloat(value),
+      _value = Number(value),
       _cells = [...cc];
 
-    // cell count float
-    _cells[_name] = value;
+    _cells[_name] = _value;
 
     if (!_name) {
-      _cells[1] = parseFloat((Number(value) * 340).toFixed(0));
-      _cells[2] = parseFloat((Number(value) * 11).toFixed(2));
+      _cells[1] = Number((_value * 340).toFixed(0));
+      _cells[2] = Number((_value * 11).toFixed(2));
     }
 
     while (_cells.length < 4) {

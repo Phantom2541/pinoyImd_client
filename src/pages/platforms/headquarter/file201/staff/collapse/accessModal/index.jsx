@@ -33,7 +33,7 @@ import Table from "./table";
 
 export default function AccessModal({ show, toggle, selected }) {
   const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
-  {stat}=useSelector(({personnels})=>personnels),
+  // {stat}=useSelector(({personnels})=>personnels),
     [existingAccess, setExistingAccess] = useState([]),
     [roles, setRoles] = useState([]),
     [search, setSearch] = useState([]),

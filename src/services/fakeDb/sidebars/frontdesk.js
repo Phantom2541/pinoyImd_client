@@ -10,9 +10,9 @@ import {
 } from "../../../pages/platforms/frontdesk/reports";
 
 import {
-  Task,
-  Report,
-  Tracker,
+  Onboard,
+  Tasks,
+  Reports,
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import { Menus, Services } from "../../../pages/platforms/cashier";
@@ -35,17 +35,17 @@ const frontdesk = [
       {
         name: "Onboarding",
         path: "/onboarding",
-        component: Task,
+        component: Onboard,
       },
       {
         name: "Tasks",
         path: "/task",
-        component: Report,
+        component: Tasks,
       },
       {
         name: "Reports",
         path: "/reports",
-        component: Tracker,
+        component: Reports,
       },
     ],
   },
