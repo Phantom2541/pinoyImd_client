@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  MDBContainer,
   MDBBadge,
   MDBCard,
   MDBCardBody,
@@ -11,6 +12,7 @@ import {
 } from "mdbreact";
 import { sourceColor } from "../../../../../../services/utilities";
 import Table from "./table";
+import { useHistory, useLocation } from "react-router";
 
 export default function TasksCollapse({
   task,
@@ -21,7 +23,8 @@ export default function TasksCollapse({
   const { _id, createdAt, category } = task,
     date = new Date(createdAt).toDateString(),
     week = date.slice(0, 3),
-    complete = date.slice(4);
+    complete = date.slice(4),
+    history = useHistory();
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
