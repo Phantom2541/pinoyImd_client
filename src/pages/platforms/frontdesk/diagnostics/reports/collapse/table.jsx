@@ -17,7 +17,7 @@ export default function CollapseTable({ menu }) {
   useEffect(() => {
     const labTests = Templates.reduce(
       (accumulator, { components, department }) => {
-        if (department === "laboratory") {
+        if (department === "LAB") {
           const filteredComponents = components.filter(
             (component) => menu[component.toLowerCase()]
           );
@@ -34,6 +34,9 @@ export default function CollapseTable({ menu }) {
   }, [menu]);
 
   const handlePrint = (labTest) => {
+    // console.log("reports",labTest);
+    // console.log("activePlatform",activePlatform);
+
     localStorage.setItem("taskPrintout", JSON.stringify(labTest));
     window.open(
       "/printout/task",
@@ -86,6 +89,7 @@ export default function CollapseTable({ menu }) {
         <td>
           <MDBBtnGroup>
             <MDBBtn
+              title="Modal"
               onClick={() => {
                 setTask(task);
                 toggleModal();
@@ -104,7 +108,7 @@ export default function CollapseTable({ menu }) {
                   onClick={() =>
                     handlePrint({
                       ...task,
-                      branchId: activePlatform?.branchId,
+                      branchId: activePlatform?.branch,
                       referral: physicianId || {},
                       services: Services.whereIn(_packages),
                       preferences: collections,

@@ -33,6 +33,7 @@ import referenceColor from "./referenceColor";
 import properFullname from "./properFullname";
 import calculateIndicators from "./calculateIndicators";
 import formatToSI from "./formatToSI";
+import formatNameToObj from "./formatNameToObject";
 import findReference from "./findReference";
 import isImageValid from "./isImageValid";
 import generateCode from "./generateCode";
@@ -54,7 +55,7 @@ const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = "https://pinoy-imd-deed6e69cc41.herokuapp.com";
 
 const socket = io.connect(ENDPOINT);
-const PresetImage = (gender) => (gender ? Male : Female);
+const PresetImage = gender => (gender ? Male : Female);
 
 export {
   paymentBadge,
@@ -105,4 +106,5 @@ export {
   findReference,
   Search,
   PresetUser,
+  formatNameToObj,
 };

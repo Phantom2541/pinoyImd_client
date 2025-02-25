@@ -34,9 +34,10 @@ const _form = {
   privilege: 0,
 };
 
-export default function Patient({ selected, injectName }) {
+export default function Patient({  injectName }) {
   const [form, setForm] = useState(_form),
     { token } = useSelector(({ auth }) => auth),
+    { customer } = useSelector(({ pos }) => pos),
     dispatch = useDispatch();
 
   // inject searched name if no match
@@ -59,8 +60,8 @@ export default function Patient({ selected, injectName }) {
 
   // update form for selected user
   useEffect(() => {
-    setForm(selected?._id ? selected : _form);
-  }, [selected]);
+    setForm(customer?._id ? customer : _form);
+  }, [customer]);
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
 
@@ -71,7 +72,7 @@ export default function Patient({ selected, injectName }) {
 
     if (_id) {
       // update
-      if (!isEqual(form, selected))
+      if (!isEqual(form, customer))
         dispatch(
           UPDATE({
             data: form,

@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SearchBox from "./search";
 import { MDBIcon } from "mdbreact";
+// import { Categories } from "../../../../../../services/fakeDb";
 // import { Categories } from "../../../../../../services/fakeDb";
 import {
   computeGD,
@@ -14,6 +15,12 @@ import {
   REMOVEFROMCART,
 } from "../../../../../../services/redux/slices/commerce/pos.js";
 
+import {
+  BROWSE as MENUS,
+  RESET as MENUSRESET,
+} from "../../../../../../services/redux/slices/commerce/menus";
+// import { set } from "lodash";
+
 export default function Menus({ patronPresent }) {
   const { collections } = useSelector(({ menus }) => menus);
   const { category, privilege, cart } = useSelector(({ pos }) => pos);
@@ -23,6 +30,16 @@ export default function Menus({ patronPresent }) {
   const searchRef = useRef(null);
   const { addToast } = useToasts();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (token && activePlatform.branchId) {
+      dispatch(MENUS({ key: { branchId: activePlatform.branchId }, token }));
+
+      return () => {
+        dispatch(MENUSRESET());
+      };
+    }
+  }, [token, dispatch, activePlatform]);
 
   // Ensure abbr does not cause issues
   // const { abbr } = Categories[category] || {};
@@ -41,7 +58,7 @@ export default function Menus({ patronPresent }) {
 
     setDidSearch(true);
   };
-  console.log(searchMatch);
+
   return (
     <>
       <table className="menus-table">
