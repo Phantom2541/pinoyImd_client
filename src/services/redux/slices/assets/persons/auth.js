@@ -27,7 +27,8 @@ const initialState = {
   branches: [], // list of connected branches
   access: [], // list of accessible platforms
   company: {
-    name: "Default Company",
+    name: "Pinoy iMD",
+    subname: "Medical Diagnostic Center",
   },
   isCeo: false,
   maxPage,
@@ -128,7 +129,7 @@ export const UPDATE = createAsyncThunk(
 
 export const UPLOAD = createAsyncThunk(`${name}/upload`, (form, thunkAPI) => {
   try {
-    return axioKit.upload(form.data, form.token, progress => {
+    return axioKit.upload(form.data, form.token, (progress) => {
       thunkAPI.dispatch(
         UPLOADBAR(Math.round((progress.loaded * 100) / progress.total))
       );
@@ -161,15 +162,15 @@ export const reduxSlice = createSlice({
       localStorage.setItem("maxPage", data.payload);
       state.maxPage = data.payload;
     },
-    RESET: state => {
+    RESET: (state) => {
       state.isSuccess = false;
       state.loginSuccess = false;
       state.message = "";
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(SETACTIVEPLATFORM.pending, state => {
+      .addCase(SETACTIVEPLATFORM.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -177,28 +178,19 @@ export const reduxSlice = createSlice({
       .addCase(SETACTIVEPLATFORM.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const branch = state.branches.find(
-          branch => branch._id === payload.activePlatform.branchId
+          (branch) => branch._id === payload.activePlatform.branchId
         );
-
-        console.log("branches", state.branches);
-        console.log("branch", branch);
-
         const _access = state.access
           .filter(
             ({ branchId }) => branchId === payload.activePlatform.branchId
           )
-          .map(a => a.platform);
+          .map((a) => a.platform);
 
-        //console.log("access", state.access);
-        //console.log("active branch id", payload.activePlatform.branchId);
-
-        //console.log("_access", _access);
         state.activePlatform = {
           branch,
           branchId: payload.activePlatform.branchId,
           ...payload.activePlatform,
           access: [..._access],
-          // department:
           // role:Policy.find(({ personel.contract.designation }) => name === payload.activePlatform.role),
         };
         state.showModal = false;
@@ -211,7 +203,7 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(CHANGEPASSWORD.pending, state => {
+      .addCase(CHANGEPASSWORD.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -233,15 +225,14 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(LOGIN.pending, state => {
+      .addCase(LOGIN.pending, (state) => {
         state.isLoading = true;
         state.loginSuccess = false;
         state.message = "";
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, company, isPatient } =
-            payload;
+          { token, auth, branches, isCeo, access, isPatient } = payload;
 
         state.isPatient = isPatient;
 
@@ -254,16 +245,13 @@ export const reduxSlice = createSlice({
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
         const branch = branches.find(
-          branch => branch._id === auth.activePlatform.branchId
+          (branch) => branch._id === auth.activePlatform.branchId
         );
-
-        console.log("LOGIN.fulfilled branches", branches);
-        console.log("branch", branch);
-        console.log("branch", auth.activePlatform.branchId);
+        console.log("LOGIN.fulfilled payload", branch);
 
         const _access = access
           .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
-          .map(a => a.platform);
+          .map((a) => a.platform);
 
         state.isPatient = isPatient;
         state.isCeo = isCeo;
@@ -272,7 +260,7 @@ export const reduxSlice = createSlice({
           ...auth.activePlatform,
           access: [..._access],
         };
-        state.company = company;
+        state.company = branch.companyId;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
@@ -288,7 +276,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, state => {
+      .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -296,7 +284,7 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const branch = state.branches.find(
-          branch => branch._id === payload.activePlatform.branchId
+          (branch) => branch._id === payload.activePlatform.branchId
         );
 
         state.message = success;
@@ -316,7 +304,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(VALIDATEREFRESH.pending, state => {
+      .addCase(VALIDATEREFRESH.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -333,12 +321,12 @@ export const reduxSlice = createSlice({
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
 
         const branch = branches.find(
-          branch => branch._id === auth.activePlatform.branchId
+          (branch) => branch._id === auth.activePlatform.branchId
         );
 
         const _access = access
           .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
-          .map(a => a.platform);
+          .map((a) => a.platform);
 
         const department = Policy.getDepartment(branch?.contract?.designation);
         state.activePlatform = {
@@ -364,7 +352,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPLOAD.pending, state => {
+      .addCase(UPLOAD.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";

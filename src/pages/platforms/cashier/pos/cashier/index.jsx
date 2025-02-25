@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import POS from "./patientPicker";
 import Menus from "./menuPicker";
-import Summary from "./Summary";
+import Summary from "./summary";
 import { useSelector } from "react-redux";
 import "./index.css";
 import { MDBCol, MDBRow } from "mdbreact";

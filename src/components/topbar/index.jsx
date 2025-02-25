@@ -41,8 +41,7 @@ class TopNavigation extends Component {
     };
 
     const { company, isPatient, platform } = this.props;
-    //console.log("platform", platform);
-    
+
     return (
       <MDBNavbar
         className="flexible-MDBNavbar"
