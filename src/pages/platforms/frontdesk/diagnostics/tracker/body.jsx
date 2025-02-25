@@ -5,7 +5,7 @@ import Collapse from "./collapse";
 
 export default function Body({ patient }) {
   const [activeCollapse, setActiveCollapse] = useState(""),
-    { collections: tasks, isLoading } = useSelector(({ sales }) => sales);
+    { collections: records, isLoading } = useSelector(({ sales }) => sales);
 
   if (!patient?._id)
     return (
@@ -21,7 +21,7 @@ export default function Body({ patient }) {
       </div>
     );
 
-  if (!tasks.length)
+  if (!records.length)
     return (
       <MDBTypography note noteColor="warning" className="mt-3">
         This patient has no records.
@@ -30,7 +30,7 @@ export default function Body({ patient }) {
 
   return (
     <MDBContainer className="mt-4 md-accordion px-0" fluid>
-      {tasks.map((task, index) => (
+      {records.map((task, index) => (
         <Collapse
           key={task?._id}
           task={task}
