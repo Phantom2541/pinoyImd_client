@@ -1,6 +1,11 @@
 import React from "react";
 import { MDBTable, MDBIcon } from "mdbreact";
 
+<<<<<<< Updated upstream
+=======
+//import { DESTROY } from "../../../../../services/redux/slices/assets/persons/source";
+
+>>>>>>> Stashed changes
 const Tables = ({ vendors }) => {
   return (
     <MDBTable responsive hover bordered>
