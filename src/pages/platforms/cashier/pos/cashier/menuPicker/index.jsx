@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SearchBox from "./search";
 import { MDBIcon } from "mdbreact";
 // import { Categories } from "../../../../../../services/fakeDb";
+// import { Categories } from "../../../../../../services/fakeDb";
 import {
   computeGD,
   currency,
@@ -20,48 +21,42 @@ import {
 } from "../../../../../../services/redux/slices/commerce/menus";
 // import { set } from "lodash";
 
-export default function Menus() {
-  const { collections } = useSelector(({ menus }) => menus),
-   { category, privilege, cart, customer } = useSelector(({ pos }) => pos),
-   {token, activePlatform} = useSelector(({ auth }) => auth),
-   [searchKey, setSearchKey] = useState(""),
+export default function Menus({ patronPresent }) {
+  const { collections } = useSelector(({ menus }) => menus);
+  const { category, privilege, cart } = useSelector(({ pos }) => pos);
+  const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
-   searchRef = useRef(null);
+    [selected, setSelected] = useState({});
+  const searchRef = useRef(null);
   const { addToast } = useToasts();
   const dispatch = useDispatch();
 
-  
-    useEffect(() => {  
-      if (token && activePlatform.branchId) {  
-        dispatch(MENUS({ key: { branchId: activePlatform.branchId }, token }));
-  
-        return () => {
-          dispatch(MENUSRESET());
-        };
-      }
-    }, [token, dispatch, activePlatform]);
+  useEffect(() => {
+    if (token && activePlatform.branchId) {
+      dispatch(MENUS({ key: { branchId: activePlatform.branchId }, token }));
+
+      return () => {
+        dispatch(MENUSRESET());
+      };
+    }
+  }, [token, dispatch, activePlatform]);
 
   // Ensure abbr does not cause issues
   // const { abbr } = Categories[category] || {};
-  const patronPresent = Boolean(customer?._id);
 
   // Perform search within render
   const searchMatch = searchKey ? globalSearch(collections, searchKey) : [];
 
-  const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
-  const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
-  const handleSearch = (e) => {
+  const handleADDtoCart = item => dispatch(ADDTOCART(item));
+  const handleRemovedToCart = _id => dispatch(REMOVEFROMCART(_id));
+  const handleSearch = e => {
     e.preventDefault();
 
-    if (didSearch && searchKey ) {
-      console.log(searchKey);
-      
-      setSearchKey("");
-      setDidSearch(false);
-    }
+    if (didSearch && searchKey) setSearchKey("");
+
+    if (!didSearch && selected?._id) setSelected({});
 
     setDidSearch(true);
-
   };
 
   return (
@@ -79,7 +74,7 @@ export default function Menus() {
                   didSearch={didSearch}
                   searchKey={searchKey}
                 >
-                  {searchMatch.length === 0 && !searchKey  && (
+                  {searchMatch.length === 0 && !searchKey && (
                     <li>Please type a menu name.</li>
                   )}
 
@@ -149,7 +144,7 @@ export default function Menus() {
               </td>
             </tr>
           )}
-          {cart.map((menu) => {
+          {cart.map(menu => {
             const { _id, description, abbreviation } = menu;
             const {
               gross = 0,

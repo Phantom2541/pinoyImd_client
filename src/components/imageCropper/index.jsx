@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import Modal from "./modal";
 
-export default function ImageCropper({ accept, aspect = 1 }) {
+export default function ImageCropper({
+  accept,
+  aspect = 1,
+  handleUpload = () => {},
+  isUpload = false,
+}) {
   const [show, setShow] = useState(false),
     [img, setImg] = useState(null),
     [ext, setExt] = useState("jpg");
@@ -39,7 +44,15 @@ export default function ImageCropper({ accept, aspect = 1 }) {
         className="d-none"
         accept={accept}
       />
-      <Modal show={show} toggle={toggle} img={img} aspect={aspect} ext={ext} />
+      <Modal
+        show={show}
+        toggle={toggle}
+        img={img}
+        aspect={aspect}
+        ext={ext}
+        handleUpload={handleUpload}
+        isUpload={isUpload}
+      />
     </>
   );
 }
