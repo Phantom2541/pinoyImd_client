@@ -2,12 +2,14 @@
   {
     "id": 1,
     "name": "patron",
-    "display_name": "Patron"
+    "display_name": "Patron",
+    "description": "To views his personal records."
   },
   {
     "id": 2,
     "name": "administrative clerk",
-    "display_name": "Administrative Clerk"
+    "display_name": "Administrative Clerk",
+    "description": "Handles records, documents, and office tasks."
   },
   {
     "id": 3,
@@ -18,306 +20,367 @@
   {
     "id": 4,
     "name": "CEO",
-    "display_name": "Chief Executive Officer"
+    "display_name": "Chief Executive Officer",
+    "description": "Leads the company and makes major decisions."
   },
   {
     "id": 5,
     "name": "stock holder",
-    "display_name": "Stock Holder"
+    "display_name": "Stock Holder",
+    "description": "Owns shares in the company."
   },
   {
     "id": 6,
     "name": "proprietor",
-    "display_name": "Proprietor"
+    "display_name": "Proprietor",
+    "description": "Owns and manages the business."
   },
   {
     "id": 9,
     "name": "cashier",
-    "display_name": "Cashier"
+    "display_name": "Cashier",
+    "description": "To collect and distribute cash."
   },
   {
     "id": 10,
     "name": "admission",
-    "display_name": "Admission"
+    "display_name": "Admission",
+    "description": "To check in and check out patients."
   },
   {
     "id": 11,
     "name": "billing",
-    "display_name": "Billing"
+    "display_name": "Billing",
+    "description": "To collect and distribute cash."
   },
   {
     "id": 12,
     "name": "hmo clerk",
-    "display_name": "HMO Clerk"
+    "display_name": "HMO Clerk",
+    "description": "To inquire and process HMO claims."
   },
   {
     "id": 13,
     "name": "assistant accountant",
-    "display_name": "Assistant Accountant"
+    "display_name": "Assistant Accountant",
+    "description": "To prepare and distribute accounting reports."
   },
   {
     "id": 14,
     "name": "accountant",
-    "display_name": "Accountant"
+    "display_name": "Accountant",
+    "description": "To prepare and distribute accounting reports."
   },
   {
     "id": 15,
     "name": "chief accountant",
-    "display_name": "Chief Accountant"
+    "display_name": "Chief Accountant",
+    "description": "To prepare and distribute accounting reports and monitor his staff."
   },
   {
     "id": 16,
     "name": "payroll",
-    "display_name": "Payroll"
+    "display_name": "Payroll",
+    "description": "To prepare and distribute payroll."
   },
   {
     "id": 17,
     "name": "procurement clerk",
-    "display_name": "Procurement Clerk"
+    "display_name": "Procurement Clerk",
+    "description": "To prepare and distribute procurement reports."
   },
   {
     "id": 18,
     "name": "procurement officer",
-    "display_name": "Procurement Officer"
+    "display_name": "Procurement Officer",
+    "description": "To prepare and distribute procurement reports."
   },
   {
     "id": 19,
     "name": "procurement manager",
-    "display_name": "Procurement Manager"
+    "display_name": "Procurement Manager",
+    "description": "To prepare and distribute procurement reports and monitor his staff."
   },
   {
     "id": 20,
     "name": "hr clerk",
-    "display_name": "Human Resource Clerk"
+    "display_name": "Human Resource Clerk",
+    "description": "To prepare and distribute HR reports."
   },
   {
     "id": 21,
     "name": "hr",
-    "display_name": "Human Resource"
+    "display_name": "Human Resource",
+    "description": "To manage HR personnel."
   },
   {
     "id": 22,
     "name": "HR MANAGER",
-    "display_name": "Human Resource Manager"
+    "display_name": "Human Resource Manager",
+    "description": "To manage HR personnel and monitor his staff."
   },
   {
     "id": 23,
     "name": "frontdesk",
-    "display_name": "Front Desk"
+    "display_name": "Front Desk",
+    "description": "first line of contact"
   },
   {
     "id": 24,
     "name": "phlebotomist",
-    "display_name": "Phlebotomist"
+    "display_name": "Phlebotomist",
+    "description": "To collect blood samples."
   },
   {
     "id": 25,
     "name": "labtech",
-    "display_name": "Laboratory Technician"
+    "display_name": "Laboratory Technician",
+    "description": "To collect blood samples."
   },
   {
     "id": 26,
     "name": "scientist",
-    "display_name": "Medical Laboratory Scientist"
+    "display_name": "Medical Laboratory Scientist",
+    "description": "To collect blood samples. and process blood works."
   },
   {
     "id": 27,
     "name": "chief mls",
-    "display_name": "Chief MLS"
+    "display_name": "Chief MLS",
+    "description": "To collect blood samples. and process blood works. and manage laboratory personnel."
   },
   {
     "id": 28,
     "name": "patho",
-    "display_name": "Pathologist"
+    "display_name": "Pathologist",
+    "description": "Manage Laboratory personnels."
   },
   {
     "id": 29,
     "name": "chief patho",
-    "display_name": "Chief Pathologist"
+    "display_name": "Chief Pathologist",
+    "description": "Manage Laboratory personnels."
   },
   {
     "id": 30,
     "name": "ass tech",
-    "display_name": "Assistant Technology"
+    "display_name": "Assistant Technology",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 31,
     "name": "sonographer",
-    "display_name": "Sonographer"
+    "display_name": "Sonographer",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 32,
     "name": "radtech",
-    "display_name": "Radiation Technology"
+    "display_name": "Radiation Technology",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 33,
     "name": "radiologist",
-    "display_name": "Radiologist"
+    "display_name": "Radiologist",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 34,
     "name": "chief radio",
-    "display_name": "Chief Radiologist"
+    "display_name": "Chief Radiologist",
+    "description": "To monitor and assist radiologists."
   },
   {
     "id": 35,
     "name": "midwife",
-    "display_name": "Midwife"
+    "display_name": "Midwife",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 36,
     "name": "nurse aide",
-    "display_name": "Nursing Aide"
+    "display_name": "Nursing Aide",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 37,
     "name": "nurse",
-    "display_name": "Nurse"
+    "display_name": "Nurse",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 38,
     "name": "head nurse",
-    "display_name": "Head Nurse"
+    "display_name": "Head Nurse",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 39,
     "name": "nurse supervisor",
-    "display_name": "Nurse Supervisor"
+    "display_name": "Nurse Supervisor",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 40,
     "name": "chief nurse",
-    "display_name": "Chief Nurse"
+    "display_name": "Chief Nurse",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 41,
     "name": "pharmacy assistant",
-    "display_name": "Pharmacy Assistant"
+    "display_name": "Pharmacy Assistant",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 42,
     "name": "pharmacist",
-    "display_name": "Pharmacist"
+    "display_name": "Pharmacist",
+    "description": "Provide pharmaceutical services."
   },
   {
     "id": 43,
     "name": "head pharmacist",
-    "display_name": "Head Pharmacist"
+    "display_name": "Head Pharmacist",
+    "description": "Provide pharmaceutical services."
   },
   {
     "id": 44,
     "name": "therapist assistant",
-    "display_name": "Therapist Assistant"
+    "display_name": "Therapist Assistant",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 45,
     "name": "therapist",
-    "display_name": "Therapist"
+    "display_name": "Therapist",
+    "description": "To monitor and assist nurses."
   },
   {
     "id": 46,
     "name": "head therapist",
-    "display_name": "Head Therapist"
+    "display_name": "Head Therapist",
+    "description": "Supervises therapy sessions, manages therapists, and ensures quality patient rehabilitation."
   },
   {
     "id": 47,
     "name": "chief therapist",
-    "display_name": "Chief Therapist"
+    "display_name": "Chief Therapist",
+    "description": "Oversees all therapy-related activities, develops rehabilitation plans, and ensures compliance with healthcare regulations."
   },
   {
     "id": 48,
     "name": "assistant social worker",
-    "display_name": "Assistant Social Worker"
+    "display_name": "Assistant Social Worker",
+    "description": "Supports social workers by assisting patients with resources, paperwork, and emotional support."
   },
   {
     "id": 49,
     "name": "social worker",
-    "display_name": "Social Worker"
+    "display_name": "Social Worker",
+    "description": "Helps patients and families navigate social services, emotional challenges, and healthcare resources."
   },
   {
     "id": 50,
     "name": "head social worker",
-    "display_name": "Head Social Worker"
+    "display_name": "Head Social Worker",
+    "description": "Leads the social work department, develops support programs, and ensures patients receive appropriate assistance."
   },
   {
     "id": 51,
     "name": "chief social worker",
-    "display_name": "Chief Social Worker"
+    "display_name": "Chief Social Worker",
+    "description": "Oversees all social work operations, policy-making, and ensures effective patient welfare programs."
   },
   {
     "id": 52,
     "name": "phic clerk",
-    "display_name": "PHIC Clerk"
+    "display_name": "PHIC Clerk",
+    "description": "Handles PhilHealth documentation, processes claims, and assists patients with insurance-related concerns."
   },
   {
     "id": 53,
     "name": "phic officer",
-    "display_name": "PHIC Officer"
+    "display_name": "PHIC Officer",
+    "description": "Manages PhilHealth transactions, verifies claims, and ensures compliance with insurance policies."
   },
   {
     "id": 54,
     "name": "head phic",
-    "display_name": "Head PHIC"
+    "display_name": "Head PHIC",
+    "description": "Oversees all PhilHealth-related processes, ensures policy compliance, and supervises PHIC staff."
   },
   {
     "id": 55,
     "name": "kitchen aide",
-    "display_name": "Kitchen Aide"
+    "display_name": "Kitchen Aide",
+    "description": "Assists in meal preparation, maintains kitchen cleanliness, and follows food safety protocols."
   },
   {
     "id": 56,
     "name": "cook assistant",
-    "display_name": "Cook Assistant"
+    "display_name": "Cook Assistant",
+    "description": "Supports cooks in meal preparation, ingredient handling, and kitchen organization."
   },
   {
     "id": 57,
     "name": "cook",
-    "display_name": "Cook"
+    "display_name": "Cook",
+    "description": "Prepares meals following dietary guidelines and ensures food safety standards."
   },
   {
     "id": 58,
     "name": "head cook",
-    "display_name": "Head Cook"
+    "display_name": "Head Cook",
+    "description": "Supervises kitchen staff, plans menus, and ensures efficient meal preparation."
   },
   {
     "id": 59,
     "name": "dietician",
-    "display_name": "Dietician"
+    "display_name": "Dietician",
+    "description": "Designs nutritional plans, assesses patient dietary needs, and promotes healthy eating."
   },
   {
     "id": 60,
     "name": "head dietician",
-    "display_name": "Head Dietician"
+    "display_name": "Head Dietician",
+    "description": "Leads the nutrition team, sets dietary policies, and ensures patients receive proper nutrition."
   },
   {
     "id": 61,
     "name": "utility",
-    "display_name": "Utility"
+    "display_name": "Utility",
+    "description": "Performs general maintenance, cleaning, and supports hospital operations as needed."
   },
   {
     "id": 62,
     "name": "utility head",
-    "display_name": "Utility Head"
+    "display_name": "Utility Head",
+    "description": "Manages utility staff, ensures cleanliness, and oversees maintenance tasks."
   },
   {
     "id": 63,
     "name": "guard",
-    "display_name": "Guard"
+    "display_name": "Guard",
+    "description": "Provides security, monitors hospital premises, and ensures safety of staff and patients."
   },
   {
     "id": 64,
     "name": "driver",
-    "display_name": "Driver"
+    "display_name": "Driver",
+    "description": "Transports medical personnel, supplies, and patients as needed."
   },
   {
     "id": 65,
     "name": "auxillary supervisor",
-    "display_name": "Auxillary Supervisor"
+    "display_name": "Auxillary Supervisor",
+    "description": "Oversees auxiliary staff, ensures smooth hospital operations, and supports administrative duties."
   },
   {
     "id": 66,
     "name": "chief auxillary",
-    "display_name": "Chief Auxillary"
+    "display_name": "Chief Auxillary",
+    "description": "Manages auxiliary services, coordinates hospital logistics, and ensures efficient support operations."
   }
 ]

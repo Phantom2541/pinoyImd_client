@@ -1,7 +1,7 @@
 import {
-  Task,
-  Report,
-  Tracker,
+  Onboard,
+  Tasks,
+  Reports,
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import {
@@ -24,17 +24,17 @@ const clinical = [
       {
         name: "Onboarding",
         path: "/onboarding",
-        component: Task,
+        component: Onboard,
       },
       {
         name: "Tasks",
         path: "/task",
-        component: Report,
+        component: Tasks,
       },
       {
         name: "Reports",
         path: "/reports",
-        component: Tracker,
+        component: Reports,
       },
     ],
   },

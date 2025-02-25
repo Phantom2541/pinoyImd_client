@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import { MDBCol, MDBRow, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Roles } from "../../../../../../services/fakeDb";
 import AccessModal from "./accessModal";
+import { SETOnHotSEAT } from "../../../../../../services/redux/slices/assets/persons/personnels";
+
 function EditableField({
   label,
   fieldName,
@@ -18,7 +21,7 @@ function EditableField({
   const isEditing = editField === fieldName;
 
   return (
-    <div className="editable-field">
+    <div className="editable-field ">
       <strong
         style={{ fontSize: "0.9rem", color: "#757575" }}
         className="text-nowrap"
@@ -26,7 +29,7 @@ function EditableField({
         {label}:
       </strong>
       {isEditing ? (
-        <div className="input-inline">
+        <div className="input-inline ml-2">
           {children}
           <MDBIcon
             icon="check"
@@ -36,7 +39,7 @@ function EditableField({
           <MDBIcon
             icon="times"
             className="icon-inline cancel"
-            onClick={() => handleCancel(fieldName)}
+            onClick={() => handleCancel()}
           />
           {errors[fieldName] && (
             <div className="invalid-feedback">{errors[fieldName].message}</div>
@@ -48,7 +51,6 @@ function EditableField({
     </div>
   );
 }
-
 export default function CollapseTable({
   employment,
   staff,
@@ -59,18 +61,20 @@ export default function CollapseTable({
 }) {
   const [editField, setEditField] = useState(null),
     [show, setShow] = useState(false),
-    [selected, setSelected] = useState({});
+    [selected, setSelected] = useState({}),
+    dispatch = useDispatch();
 
   const toggle = () => setShow(!show);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({
-    defaultValues: {
-      employmentHor: employment?.hos || "",
+  } = useForm();
+
+  const resetData = useCallback(() => {
+    reset({
+      employmentHor: employment?.hos || 0,
       employmentSoe: employment?.soe || "",
       employmentPc: employment?.pc || 0,
       employmentDesignation: employment?.designation || 0,
@@ -80,8 +84,12 @@ export default function CollapseTable({
       contributionPh: contribution?.ph || 0,
       contributionPi: contribution?.pi || 0,
       contributionSss: contribution?.sss || 0,
-    },
-  });
+    });
+  }, [reset, contribution, rate, employment]);
+
+  useEffect(() => {
+    resetData();
+  }, [resetData]);
 
   const saveField = handleSubmit((data) => {
     onSubmit({
@@ -91,9 +99,16 @@ export default function CollapseTable({
     setEditField(null);
   });
 
-  const handleCancel = (field) => {
-    reset({ [field]: employment[field] || rate[field] || contribution[field] });
+  const handleCancel = () => {
+    resetData();
     setEditField(null);
+  };
+
+  const handleOnHotSeat = (e) => {
+    e.preventDefault();
+    dispatch(SETOnHotSEAT(staff));
+    setSelected(staff);
+    toggle();
   };
 
   const { access = [] } = staff || {};
@@ -101,7 +116,7 @@ export default function CollapseTable({
   return (
     <>
       <MDBRow>
-        <MDBCol md={3}>
+        <MDBCol md={4}>
           <h5>Employment</h5>
           <hr />
           <EditableField
@@ -113,7 +128,7 @@ export default function CollapseTable({
             errors={errors}
             saveField={saveField}
             handleCancel={handleCancel}
-            value={employment?.hor}
+            value={employment?.hos}
           >
             <input
               type="number"
@@ -263,7 +278,7 @@ export default function CollapseTable({
           </EditableField>
         </MDBCol>
 
-        <MDBCol md={3}>
+        <MDBCol md={2}>
           <h5>Contribution</h5>
           <hr />
           <EditableField
@@ -334,10 +349,7 @@ export default function CollapseTable({
               <MDBIcon
                 icon="pencil-alt"
                 className="mt-2 cursor-pointer"
-                onClick={() => {
-                  setSelected(staff);
-                  toggle();
-                }}
+                onClick={handleOnHotSeat}
                 style={{ fontSize: "1.2rem", color: "blue" }}
               />
             )}
@@ -359,16 +371,17 @@ export default function CollapseTable({
             ))
           ) : (
             <>
-              <MDBBtn
-                size="md"
-                color="primary"
-                onClick={() => {
-                  setSelected(staff);
-                  toggle();
-                }}
-              >
-                <MDBIcon icon="plus" className="ml-1" /> ADD
-              </MDBBtn>
+              <p className="text-center">No access</p>
+              <p className="text-center">
+                <span
+                  className="text-primary font-weight-bold"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleOnHotSeat}
+                >
+                  Click here
+                </span>{" "}
+                to grant access
+              </p>
             </>
           )}
         </MDBCol>

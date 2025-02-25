@@ -9,9 +9,6 @@ import {
 export default function Pregnancy({ task, setTask }) {
   const { specimen } = task;
 
-  // fix this
-  // [object, object]
-
   return (
     <MDBSelect
       getValue={(e) => setTask({ ...task, specimen: e[0] })}

@@ -47,6 +47,7 @@ import isClosingTime from "./isClosingTime";
 import generateClaimStub from "./generateClaimStub";
 import nickname from "./nickname";
 import paymentBadge from "./paymentBadge";
+import formatNameToObj from "./formatNameToObject";
 
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;

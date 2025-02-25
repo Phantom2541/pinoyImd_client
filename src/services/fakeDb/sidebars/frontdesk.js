@@ -10,18 +10,17 @@ import {
 } from "../../../pages/platforms/frontdesk/reports";
 
 import {
-  Task,
-  Report,
-  Tracker,
+  Onboard,
+  Tasks,
+  Reports,
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
-import {
-  Menus,
-  Services,
-} from "../../../pages/platforms/cashier";
+import { Menus, Services } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
 import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
+import Controls from "../../../pages/platforms/manager/responsibilities/liability/quality/controls";
+import Assurance from "../../../pages/platforms/manager/responsibilities/liability/quality/assurance";
 
 const frontdesk = [
   {
@@ -38,17 +37,17 @@ const frontdesk = [
       {
         name: "Onboarding",
         path: "/onboarding",
-        component: Task,
+        component: Onboard,
       },
       {
         name: "Tasks",
         path: "/task",
-        component: Report,
+        component: Tasks,
       },
       {
         name: "Reports",
         path: "/reports",
-        component: Tracker,
+        component: Reports,
       },
     ],
   },
@@ -259,10 +258,20 @@ const frontdesk = [
         path: "/outsource",
         component: Outsource,
       },
+      {
+        name: "Controls",
+        path: "/controls",
+        component: Controls,
+      },
+      {
+        name: "Assurance",
+        path: "/assurance",
+        component: Assurance,
+      },
       /**
        * have a multi-vendor relationship
        */
-             {
+      {
         name: "Tieup",
         path: "/tieup",
         // component: Source,
