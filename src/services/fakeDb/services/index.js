@@ -1,3 +1,4 @@
+import { filter } from "lodash";
 import collections from "./collections.json";
 
 const prioritizedSort = () => {
@@ -27,6 +28,8 @@ const Services = {
 
   whereNotIn: (cluster) =>
     collections.filter(({ id }) => !cluster.includes(id)),
+  filterByTemplate: (pk) =>
+    collections.filter(({ template }) => template === Number(pk)),
 };
 
 export default Services;

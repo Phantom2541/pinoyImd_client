@@ -14,6 +14,7 @@ const TopHeader = ({
   handleCreate = () => {},
   setCategory = () => {},
   handleSearch = () => {},
+  handleFilter = () => {},
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -100,6 +101,24 @@ const TopHeader = ({
               <MDBIcon icon="plus" />
             </MDBBtn>
           )}
+
+          <select
+            className="browser-default custom-select"
+            style={{ width: "100px", marginRight: "10px" }}
+            onChange={(e) => {
+              const year = e.target.value;
+              handleFilter({ year });
+            }}
+          >
+            <option selected disabled>
+              Year
+            </option>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <option key={i + 2023} value={i + 2023}>
+                {i + 2023}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </MDBView>

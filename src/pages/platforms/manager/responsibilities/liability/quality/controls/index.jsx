@@ -1,84 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  RESET,
-  BROWSE,
-  DESTROY,
-} from "../../../../../../../services/redux/slices/responsibilities/controls";
+import { DESTROY } from "../../../../../../../services/redux/slices/responsibilities/controls";
 import { MDBCard, MDBCardBody } from "mdbreact";
 import Swal from "sweetalert2";
-import Modal from "./modal";
-
+import TopHeader from "./header";
 import CardTables from "./tables";
-import TopHeader from "../../../../../../../components/topHeader";
+import Modal from "./modal";
 import Pagination from "../../../../../../../components/pagination";
 import TableRowCount from "../../../../../../../components/pagination/rows";
-import { globalSearch } from "../../../../../../../services/utilities";
+
 const Controls = () => {
   const { collections, isLoading } = useSelector(({ controls }) => controls),
-    { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
+    { token, maxPage } = useSelector(({ auth }) => auth),
     [controls, setControls] = useState([]),
     [totalPages, setTotalPages] = useState(1),
     [page, setPage] = useState(1),
-    dispatch = useDispatch(),
-    // for Modal
     [showModal, setShowModal] = useState(false),
+    [willCreate, setWillCreate] = useState(true),
     [selected, setSelected] = useState({}),
-    // for Create
-    [willCreate, setWillCreate] = useState(true);
-
-  const handleSearch = () => {
-    const searchValue = document.getElementById("search").value;
-    const results = globalSearch(controls, searchValue);
-    console.log(results);
-    setControls(results);
-  };
+    dispatch = useDispatch();
 
   const toggleModal = () => setShowModal(!showModal);
-
-  useEffect(() => {
-    if (token && activePlatform?.branchId) {
-      dispatch(
-        BROWSE({
-          token,
-          params: {
-            branchId: "637097f0535529a3a57e933e",
-            year: 2023,
-            month: 6,
-          },
-        })
-      );
-    }
-    return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     if (controls.length > 0) {
       let totalPages = Math.floor(controls.length / maxPage);
       if (controls.length % maxPage > 0) totalPages += 1;
       setTotalPages(totalPages);
-
       if (page > totalPages) {
         setPage(totalPages);
       }
     }
-  }, [controls, page, maxPage]);
+  }, [controls.length, maxPage, page]);
 
-  //Set fetched data for mapping
   useEffect(() => {
     setControls(collections);
   }, [collections]);
 
-  // Handale Create
   const handleCreate = () => {
     setWillCreate(true);
     setShowModal(true);
   };
 
   const handleEdit = (control) => {
+    setSelected(control);
     setWillCreate(false);
     setShowModal(true);
-    setSelected(control);
   };
 
   const handleDelete = (_id) => {
@@ -97,15 +64,19 @@ const Controls = () => {
     });
   };
 
+  // const handleDepartmentChange = (e) => {
+  //   setSelectedDepartment(e.target.value);
+  //   setSelectedComponent(""); // Reset component when department changes
+  // };
+
+  // const handleComponentChange = (e) => {
+  //   setSelectedComponent(e.target.value);
+  // };
+
   return (
     <>
       <MDBCard narrow className="pb-3">
-        <TopHeader
-          title="Controls"
-          handleSearch={handleSearch}
-          handleCreate={handleCreate}
-          hasAction={true}
-        />
+        <TopHeader hasAction={true} handleCreate={handleCreate} />
 
         <MDBCardBody>
           <CardTables

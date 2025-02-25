@@ -25,7 +25,14 @@ const Tables = ({ controls, page, handleEdit, handleDelete }) => {
               <td>{control?.abnormal}</td>
               <td>{control?.high}</td>
               <td>{control?.normal}</td>
-              <td>{control?.createdAt}</td>
+              {/* <td>{control?.createdAt}</td> */}
+              <td>
+                {new Date(control?.createdAt).toLocaleDateString("en-GB", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
+              </td>
               <td>
                 <button onClick={() => handleEdit(control)}>Edit</button>
                 <button onClick={() => handleDelete(control._id)}>

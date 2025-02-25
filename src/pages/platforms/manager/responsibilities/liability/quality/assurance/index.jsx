@@ -1,88 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  RESET,
-  DESTROY,
-} from "../../../../../../../services/redux/slices/assets/branches";
-import { useToasts } from "react-toast-notifications";
-import Modal from "./modal";
-import DataTable from "../../../../../../../components/dataTable";
-import { globalSearch } from "../../../../../../../services/utilities";
+import { DESTROY } from "../../../../../../../services/redux/slices/responsibilities/assurance";
+import { MDBCard, MDBCardBody } from "mdbreact";
 import Swal from "sweetalert2";
+import TopHeader from "./header";
+import CardTables from "./tables";
+import Modal from "./modal";
+import Pagination from "../../../../../../../components/pagination";
+import TableRowCount from "../../../../../../../components/pagination/rows";
 
-export default function SABranches() {
-  const [branches, setBranches] = useState([]),
-    [selected, setSelected] = useState({}),
+const Assurances = () => {
+  const { collections, isLoading } = useSelector(
+      ({ asssuraces }) => asssuraces
+    ),
+    { token, maxPage } = useSelector(({ auth }) => auth),
+    [assurances, setAssurances] = useState([]),
+    [totalPages, setTotalPages] = useState(1),
+    [page, setPage] = useState(1),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, isLoading } = useSelector(
-      ({ branches }) => branches
-    ),
-    { addToast } = useToasts(),
+    [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
-  // Initial Browse
-  useEffect(() => {
-    if (token && activePlatform && activePlatform?.branchId) {
-      //   dispatch(BROWSE({ token }));
-    }
-    return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform]);
-
-  //Set fetched data for mapping
-  useEffect(() => {
-    setBranches(collections);
-  }, [collections]);
-
-  //Modal toggle
   const toggleModal = () => setShowModal(!showModal);
 
-  //Trigger for update
-  const handleUpdate = (selected) => {
-    setSelected(selected);
-    if (willCreate) {
-      setWillCreate(false);
-    }
-    setShowModal(true);
-  };
-
-  //Trigger for create
-  const handleCreate = () => {
-    if (!willCreate) {
-      setWillCreate(true);
-    }
-    setShowModal(true);
-  };
-
-  //Toast for errors or success
   useEffect(() => {
-    if (message) {
-      addToast(message, {
-        appearance: isSuccess ? "success" : "error",
-      });
+    if (assurances.length > 0) {
+      let totalPages = Math.floor(assurances.length / maxPage);
+      if (assurances.length % maxPage > 0) totalPages += 1;
+      setTotalPages(totalPages);
+      if (page > totalPages) {
+        setPage(totalPages);
+      }
     }
+  }, [assurances.length, maxPage, page]);
 
-    return () => dispatch(RESET());
-  }, [isSuccess, message, addToast, dispatch]);
+  useEffect(() => {
+    setAssurances(collections);
+  }, [collections]);
 
-  //Search function
-  const handleSearch = async (willSearch, key) => {
-    if (willSearch) return setBranches(globalSearch(collections, key));
-
-    setBranches(collections);
+  const handleCreate = () => {
+    setWillCreate(true);
+    setShowModal(true);
   };
 
-  const handleAddress = (address) => {
-    if (typeof address === "object") {
-      const { city, barangay, province } = address;
-      return barangay + "," + city + "," + province;
-    } else {
-      return "-";
-    }
+  const handleEdit = (control) => {
+    setSelected(control);
+    setWillCreate(false);
+    setShowModal(true);
   };
 
-  const handleDestroy = (data) => {
+  const handleDelete = (_id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -93,78 +61,51 @@ export default function SABranches() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { id: data._id } }));
+        dispatch(DESTROY({ token, data: { _id } }));
       }
     });
   };
 
+  // const handleDepartmentChange = (e) => {
+  //   setSelectedDepartment(e.target.value);
+  //   setSelectedComponent(""); // Reset component when department changes
+  // };
+
+  // const handleComponentChange = (e) => {
+  //   setSelectedComponent(e.target.value);
+  // };
+
   return (
     <>
-      <DataTable
-        isLoading={isLoading}
-        title="Assurance"
-        array={branches}
-        actions={[
-          {
-            _icon: "plus",
-            _function: handleCreate,
-            _disabledOnSearch: true,
-          },
-          {
-            _icon: "pencil-alt",
-            _function: handleUpdate,
-            _haveSelect: true,
-            _allowMultiple: false,
-            _shouldReset: true,
-          },
-          {
-            _icon: "trash",
-            _function: handleDestroy,
-            _haveSelect: true,
-            _allowMultiple: false,
-            _shouldReset: true,
-          },
-        ]}
-        tableHeads={[
-          {
-            _text: "Name",
-          },
-          {
-            _text: "Email",
-          },
-          {
-            _text: "Mobile",
-          },
-          {
-            _text: "Address",
-          },
-        ]}
-        tableBodies={[
-          {
-            _key: "name",
-            _format: (data) => data,
-          },
-          {
-            _key: "contacts",
-            _format: (data) => data.email,
-          },
-          {
-            _key: "contacts",
-            _format: (data) => data.mobile,
-          },
-          {
-            _key: "address",
-            _format: (data) => handleAddress(data),
-          },
-        ]}
-        handleSearch={handleSearch}
-      />
+      <MDBCard narrow className="pb-3">
+        <TopHeader hasAction={true} handleCreate={handleCreate} />
+
+        <MDBCardBody>
+          <CardTables
+            asssuraces={assurances}
+            page={page}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <div className="d-flex justify-content-between align-items-center px-4">
+            <TableRowCount />
+            <Pagination
+              isLoading={isLoading}
+              total={totalPages}
+              page={page}
+              setPage={setPage}
+            />
+          </div>
+        </MDBCardBody>
+      </MDBCard>
       <Modal
-        selected={selected}
-        willCreate={willCreate}
         show={showModal}
         toggle={toggleModal}
+        willCreate={willCreate}
+        selected={selected}
       />
     </>
   );
-}
+};
+
+export default Assurances;

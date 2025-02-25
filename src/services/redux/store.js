@@ -30,6 +30,7 @@ import {
   liabilities,
   payrolls,
   controls,
+  assurance,
 } from "./slices/responsibilities";
 
 import remmitance from "./slices/finance/remmitance";
@@ -66,6 +67,7 @@ const store = configureStore({
     temperatures,
     providers,
     controls,
+    assurance,
   },
 });
 

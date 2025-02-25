@@ -20,6 +20,8 @@ import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
 import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 import Controls from "../../../pages/platforms/manager/responsibilities/liability/quality/controls";
+import Assurance from "../../../pages/platforms/manager/responsibilities/liability/quality/assurance";
+
 const frontdesk = [
   {
     name: "Dashboard",
@@ -260,6 +262,11 @@ const frontdesk = [
         name: "Controls",
         path: "/controls",
         component: Controls,
+      },
+      {
+        name: "Assurance",
+        path: "/assurance",
+        component: Assurance,
       },
       /**
        * have a multi-vendor relationship

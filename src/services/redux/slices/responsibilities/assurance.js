@@ -56,6 +56,24 @@ export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   }
 });
 
+export const DESTROY = createAsyncThunk(
+  `${name}/destroy`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.destroy(name, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name,
   initialState,
