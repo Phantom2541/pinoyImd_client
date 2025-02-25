@@ -23,6 +23,7 @@ import {
 
 export default function Menus({ patronPresent }) {
   const { collections } = useSelector(({ menus }) => menus);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { category, privilege, cart } = useSelector(({ pos }) => pos);
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
