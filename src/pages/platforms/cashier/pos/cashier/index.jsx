@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import POS from "./patientPicker";
 import Menus from "./menuPicker";
-import Summary from "./summary";
-import {  useSelector } from "react-redux";
+import Summary from "./Summary";
+import { useSelector } from "react-redux";
 import "./index.css";
 import { MDBCol, MDBRow } from "mdbreact";
 
 export default function Cashier() {
-  const {  activePlatform } = useSelector(({ auth }) => auth),
+  const { activePlatform } = useSelector(({ auth }) => auth),
     { transaction, isSuccess } = useSelector(({ sales }) => sales);
 
   // transaction printout
@@ -20,7 +20,7 @@ export default function Cashier() {
         "top=100px,left=100px,width=550px,height=750px"
       );
     }
-  }, [transaction, isSuccess, activePlatform]); 
+  }, [transaction, isSuccess, activePlatform]);
 
   return (
     <MDBRow className="res-container">
@@ -31,7 +31,7 @@ export default function Cashier() {
         <Menus />
       </MDBCol>
       <MDBCol size="3" className="px-1">
-        <Summary  />
+        <Summary />
       </MDBCol>
     </MDBRow>
   );

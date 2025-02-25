@@ -56,7 +56,7 @@ const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = "https://pinoy-imd-deed6e69cc41.herokuapp.com";
 
 const socket = io.connect(ENDPOINT);
-const PresetImage = (gender) => (gender ? Male : Female);
+const PresetImage = gender => (gender ? Male : Female);
 
 export {
   paymentBadge,

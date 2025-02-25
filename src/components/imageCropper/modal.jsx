@@ -10,13 +10,24 @@ import {
 import Cropper from "react-easy-crop";
 import generateDownload from "./cropImage";
 
-export default function Modal({ show, toggle, img, aspect, ext }) {
+export default function Modal({
+  show,
+  toggle,
+  img,
+  aspect,
+  ext,
+  isUpload,
+  handleUpload,
+}) {
   const [croppedArea, setCroppedArea] = useState(null),
     [crop, setCrop] = useState({ x: 0, y: 0 }),
     [zoom, setZoom] = useState(1);
 
-  const handleDownload = () => {
-    generateDownload(img, ext, croppedArea);
+  const handleDownload = async () => {
+    generateDownload(img, ext, croppedArea, isUpload);
+    if (isUpload) {
+      handleUpload(await generateDownload(img, ext, croppedArea, isUpload));
+    }
     toggle();
   };
 
@@ -50,7 +61,7 @@ export default function Modal({ show, toggle, img, aspect, ext }) {
         </div>
         <MDBRangeInput min={1} max={3} value={zoom} getValue={setZoom} />
         <MDBBtn onClick={handleDownload} color="primary" rounded size="sm">
-          Download
+          {isUpload ? "Upload" : "Download"}
         </MDBBtn>
       </MDBModalBody>
     </MDBModal>
