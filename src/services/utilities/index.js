@@ -33,7 +33,7 @@ import referenceColor from "./referenceColor";
 import properFullname from "./properFullname";
 import calculateIndicators from "./calculateIndicators";
 import formatToSI from "./formatToSI";
-import formatNameToObj from "./formatNameToObject"
+import formatNameToObj from "./formatNameToObject";
 import findReference from "./findReference";
 import isImageValid from "./isImageValid";
 import generateCode from "./generateCode";
@@ -48,14 +48,14 @@ import generateClaimStub from "./generateClaimStub";
 import nickname from "./nickname";
 import paymentBadge from "./paymentBadge";
 
-// const ENDPOINT = "http://localhost:5000";
-const ENDPOINT = window.location.origin;
+const ENDPOINT = "http://localhost:5000";
+// const ENDPOINT = window.location.origin;
 
 // endpoint ni kuya kevin
 // const ENDPOINT = "https://pinoy-imd-deed6e69cc41.herokuapp.com";
 
 const socket = io.connect(ENDPOINT);
-const PresetImage = (gender) => (gender ? Male : Female);
+const PresetImage = gender => (gender ? Male : Female);
 
 export {
   paymentBadge,
@@ -105,5 +105,6 @@ export {
   formatToSI,
   findReference,
   Search,
-  PresetUser,formatNameToObj
+  PresetUser,
+  formatNameToObj,
 };
