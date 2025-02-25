@@ -19,7 +19,6 @@ export default function BodySwitcher({ task, setTask }) {
     if (packages.includes(146)) return Ogtt;
 
     if (packages.includes(11)) return Gloucose;
-
     return Cluster;
   };
 

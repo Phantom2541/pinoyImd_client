@@ -29,12 +29,9 @@ export default function Chemical({ task, setTask }) {
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
-            selected={`Stool pH :${phs[ce[0]] ? `: ${phs[ce[0]]}` : ""}`}
+            selected={`Stool pH${phs[ce[0]] && `: ${phs[ce[0]]}`}`}
           />
           <MDBSelectOptions>
-            <MDBSelectOption>
-              <span className="d-none">Stool pH: </span>
-            </MDBSelectOption>
             {phs.map((ph, index) => (
               <MDBSelectOption key={`Stool pH-${index}`} value={String(index)}>
                 <span className="d-none">Stool pH: </span>
@@ -50,14 +47,9 @@ export default function Chemical({ task, setTask }) {
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
-            selected={`Occult Blood${
-              occults[ce[1]] ? `: ${occults[ce[1]]}` : ""
-            }`}
+            selected={`Occult Blood${occults[ce[1]] && `: ${occults[ce[1]]}`}`}
           />
           <MDBSelectOptions>
-            <MDBSelectOption>
-              <span className="d-none">Occult Blood: </span>
-            </MDBSelectOption>
             {occults.map((occult, index) => (
               <MDBSelectOption
                 key={`Occult Blood-${index}`}

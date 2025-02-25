@@ -15,16 +15,8 @@ export default function Platforms() {
     [access, setAccess] = useState([]),
     dispatch = useDispatch();
 
-  //console.log("active platform", activePlatform);
   useEffect(() => {
     setAccess(activePlatform.access);
-
-    // const timer = setInterval(() => {
-    //   setText((prev) =>
-    //     prev === activePlatform?.name ? "Branches" : activePlatform?.name
-    //   );
-    // }, 10000);
-    // return () => clearInterval(timer);
   }, [activePlatform]);
 
   const handlePlatform = (platform) => {

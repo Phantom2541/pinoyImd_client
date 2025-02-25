@@ -21,3 +21,10 @@
   outline: none;
   box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
 }
+
+.cursor-grab {
+  cursor: grab; /* Open hand when not dragging */
+}
+.cursor-grabbing {
+  cursor: grabbing; /* Closed hand when dragging */
+}

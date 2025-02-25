@@ -11,7 +11,7 @@ export default function Rci({ task, setTask }) {
     { Preferences } = Cellcount,
     { Category } = RCI;
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target,
       _name = Number(name),
       _value = Number(value),

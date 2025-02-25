@@ -10,6 +10,8 @@ import {
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
 import TableLoading from "../../../../../components/tableLoading";
+import Pagination from "../../../../../components/pagination";
+import TableRowCount from "../../../../../components/pagination/rows";
 // import TableRowCount from "../../../../../components/pagination/rows";
 // import Pagination from "../../../../../components/pagination";
 
@@ -28,13 +30,6 @@ export default function Staffs() {
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
-  console.log(
-    "unused variables selected,showModal,totalPages remove this by darrel",
-    selected,
-    showModal,
-    totalPages
-  );
 
   useEffect(() => {
     if (staffs.length > 0) {
@@ -56,7 +51,7 @@ export default function Staffs() {
   }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
-  useEffect(() => {
+  useEffect(() => {    
     setStaffs(collections);
   }, [collections]);
 
@@ -121,6 +116,15 @@ export default function Staffs() {
   //   }
   // };
 
+  useEffect(() => {
+    if (staffs.length > 0) {
+      let totalPages = Math.floor(staffs.length / maxPage);
+      if (staffs.length % maxPage > 0) totalPages += 1;
+      setTotalPages(totalPages);
+
+      if (page > totalPages) setPage(totalPages);
+    }
+  }, [staffs, page, maxPage]);
   return (
     <>
       <MDBCard narrow>
@@ -167,14 +171,14 @@ export default function Staffs() {
                 handleUpdate={handleUpdate}
               />
               <div className="d-flex justify-content-between align-items-center px-4">
-                {/* <TableRowCount /> */}
+                <TableRowCount />
 
-                {/* <Pagination
-              isLoading={isLoading}
-              total={totalPages}
-              page={page}
-              setPage={setPage}
-            /> */}
+                <Pagination
+                  isLoading={isLoading}
+                  total={totalPages}
+                  page={page}
+                  setPage={setPage}
+                />
               </div>
             </>
           )}

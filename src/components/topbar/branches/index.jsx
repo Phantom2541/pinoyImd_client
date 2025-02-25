@@ -28,12 +28,11 @@ export default function Branches() {
       activePlatform: { ...activePlatform, branchId, access: [..._access] },
     };
 
-    //console.log("handle Active Platform :", data);
-
     dispatch(SETACTIVEPLATFORM({ data, token }));
   };
 
   const { branch } = activePlatform;
+
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
