@@ -40,7 +40,7 @@ export default function Header({
         >
           <div className="cashier-search-suggestions">
             {!patients.length ? (
-              <small>No results found...</small>
+              <small>No Patient Record found...</small>
             ) : (
               <ul>
                 {patients?.map((user) => {
