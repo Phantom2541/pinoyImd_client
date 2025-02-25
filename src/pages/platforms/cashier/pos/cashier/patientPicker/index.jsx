@@ -4,29 +4,26 @@ import { MDBIcon } from "mdbreact";
 import Search from "./search";
 import Patient from "./form/patient";
 import PosCard from "./form/posCard";
-import {SETPATIENT, SETPRIVILEGE} from "../../../../../../services/redux/slices/commerce/pos";
 import {
-  fullName,
-  getAge,
-} from "../../../../../../services/utilities";
+  SETPATIENT,
+  SETPRIVILEGE,
+} from "../../../../../../services/redux/slices/commerce/pos";
+import { fullName, getAge } from "../../../../../../services/utilities";
 
 export default function POS() {
-  const { collections,  isLoading } = useSelector(
-      ({ users }) => users
-    ),    
-    {searchKey, customer}=useSelector(({pos}) => pos),
+  const { collections, isLoading } = useSelector(({ users }) => users),
+    { searchKey, customer } = useSelector(({ pos }) => pos),
     [activeIndex, setActiveIndex] = useState(0),
     [didSearch, setDidSearch] = useState(false),
-    [searchMatch, setSearchMatch] =useState([]),
+    [searchMatch, setSearchMatch] = useState([]),
     dispatch = useDispatch();
 
-
-  useEffect(()=>{
-    if(collections.length>0){
-      setSearchMatch([...collections])
-      setDidSearch(true)
-    }    
-  },[collections]  )
+  useEffect(() => {
+    if (collections.length > 0) {
+      setSearchMatch([...collections]);
+      setDidSearch(true);
+    }
+  }, [collections]);
 
   // if a newPatient id is present and active index is 1
   // it means a new patient has been injected, you should go back to POS
@@ -34,7 +31,7 @@ export default function POS() {
   //   if (customer?._id && activeIndex === 1) setActiveIndex(0);
   // }, [customer, activeIndex]);
 
-const handleCustomer = (customer) =>   dispatch(SETPATIENT(customer));
+  const handleCustomer = customer => dispatch(SETPATIENT(customer));
 
   return (
     <div className="pos-container">
@@ -47,7 +44,7 @@ const handleCustomer = (customer) =>   dispatch(SETPATIENT(customer));
             {fullName(customer?.fullName)}
           </h4>
         )}
-        <Search didSearch={didSearch} >
+        <Search didSearch={didSearch}>
           {!searchMatch.length && !searchKey && (
             <li>Please type a fullname.</li>
           )}
@@ -76,7 +73,8 @@ const handleCustomer = (customer) =>   dispatch(SETPATIENT(customer));
                 const { privilege = 0, dob } = user;
 
                 // if current privilege is 0 but the customer is a valid senior, auto select senior as privilege
-                if (privilege === 0 && getAge(dob, true) > 59)  dispatch(SETPRIVILEGE( 2 ))
+                if (privilege === 0 && getAge(dob, true) > 59)
+                  dispatch(SETPRIVILEGE(2));
                 setDidSearch(false);
               }}
             >
@@ -93,7 +91,6 @@ const handleCustomer = (customer) =>   dispatch(SETPATIENT(customer));
       </div>
       <div className="pos-card-button">
         {["POS", "Patient"]?.map((name, index) => {
-          
           return (
             <button
               key={`button-${index}`}
