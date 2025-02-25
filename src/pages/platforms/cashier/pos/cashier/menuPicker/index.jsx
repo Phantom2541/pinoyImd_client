@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SearchBox from "./search";
 import { MDBIcon } from "mdbreact";
-import { Categories } from "../../../../../../services/fakeDb";
+// import { Categories } from "../../../../../../services/fakeDb";
 import {
   computeGD,
   currency,
@@ -13,7 +13,6 @@ import {
   ADDTOCART,
   REMOVEFROMCART,
 } from "../../../../../../services/redux/slices/commerce/pos.js";
-import { set } from "lodash";
 
 export default function Menus({ patronPresent }) {
   const { collections } = useSelector(({ menus }) => menus);
@@ -26,14 +25,14 @@ export default function Menus({ patronPresent }) {
   const dispatch = useDispatch();
 
   // Ensure abbr does not cause issues
-  const { abbr } = Categories[category] || {};
+  // const { abbr } = Categories[category] || {};
 
   // Perform search within render
   const searchMatch = searchKey ? globalSearch(collections, searchKey) : [];
 
-  const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
-  const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
-  const handleSearch = (e) => {
+  const handleADDtoCart = item => dispatch(ADDTOCART(item));
+  const handleRemovedToCart = _id => dispatch(REMOVEFROMCART(_id));
+  const handleSearch = e => {
     e.preventDefault();
 
     if (didSearch && searchKey) setSearchKey("");
@@ -128,7 +127,7 @@ export default function Menus({ patronPresent }) {
               </td>
             </tr>
           )}
-          {cart.map((menu) => {
+          {cart.map(menu => {
             const { _id, description, abbreviation } = menu;
             const {
               gross = 0,
