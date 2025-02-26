@@ -15,8 +15,8 @@ import ExperentalStaff from "../../../pages/platforms/headquarter/file201/staff"
 
 import Equipments from "../../../pages/platforms/headquarter/file201/equipments";
 import Payrolls from "../../../pages/platforms/manager/responsibilities/payroll";
-import Assurance from "../../../pages/platforms/manager/responsibilities/liability/quality/assurance";
-import Controls from "../../../pages/platforms/manager/responsibilities/liability/quality/controls";
+//import Assurance from "../../../pages/platforms/manager/responsibilities/liability/quality/assurance";
+// Controls from "../../../pages/platforms/manager/responsibilities/liability/quality/controls";
 import Sales from "../../../pages/platforms/manager/pos/sales";
 // import Ledger from "../../../pages/platforms/manager/pos/ledger";
 // import newLedger from "../../../pages/platforms/cashier/pos/newledger";
@@ -79,16 +79,16 @@ const manager = [
         name: "P M S",
         path: "/preventive/maintenenace/schedule",
       },
-      {
-        name: "Q A",
-        path: "/quality/assurance",
-        component: Assurance,
-      },
-      {
-        name: "Q C",
-        path: "/quality/controls",
-        component: Controls,
-      },
+      // {
+      //   name: "Q A",
+      //   path: "/quality/assurance",
+      //   component: Assurance,
+      // },
+      // {
+      //   name: "Q C",
+      //   path: "/quality/controls",
+      //   component: Controls,
+      // },
       {
         name: "Payroll",
         path: "/payroll",

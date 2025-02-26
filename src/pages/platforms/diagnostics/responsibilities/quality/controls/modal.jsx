@@ -11,9 +11,9 @@ import {
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../../services/redux/slices/responsibilities/controls";
+} from "../../../../../../services/redux/slices/responsibilities/controls";
 
-import Services from "./../../../../../../../services/fakeDb/services";
+import { Services } from "./../../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";

@@ -1,23 +1,19 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { MDBPagination, MDBPageItem, MDBPageNav } from "mdbreact";
 import Swal from "sweetalert2";
 
-export default function Pagination({
-  total,
-  setPage,
-  page,
-  isLoading,
-  getPage,
-}) {
-  const handlePage = action => {
-    if (action) {
-      setPage(prev => prev + 1);
-      if (getPage) getPage(prev => prev + 1);
-    } else {
-      setPage(prev => prev - 1);
-      if (getPage) getPage(prev => prev - 1);
-    }
-  };
+export default function Pagination({ total, setPage, page, getPage }) {
+  const { isLoading } = useSelector(({ assurances }) => assurances),
+    handlePage = (action) => {
+      if (action) {
+        setPage((prev) => prev + 1);
+        if (getPage) getPage((prev) => prev + 1);
+      } else {
+        setPage((prev) => prev - 1);
+        if (getPage) getPage((prev) => prev - 1);
+      }
+    };
 
   const handleOverride = async () => {
     const { value: _page } = await Swal.fire({
@@ -25,7 +21,7 @@ export default function Pagination({
       input: "number",
       inputLabel: `Minimum is 1 and Maximum is ${total}`,
       inputPlaceholder: `Current page is #${page}.`,
-      inputValidator: value => {
+      inputValidator: (value) => {
         if (!value) {
           return "You need to write something!";
         }

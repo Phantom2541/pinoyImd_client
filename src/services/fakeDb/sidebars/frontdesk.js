@@ -19,8 +19,8 @@ import { Menus, Services } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
 import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
-import Controls from "../../../pages/platforms/manager/responsibilities/liability/quality/controls";
-import Assurance from "../../../pages/platforms/manager/responsibilities/liability/quality/assurance";
+import Assurance from "../../../pages/platforms/diagnostics/responsibilities/quality/assurance";
+import Controls from "../../../pages/platforms/diagnostics/responsibilities/quality/controls";
 
 const frontdesk = [
   {
@@ -104,6 +104,16 @@ const frontdesk = [
         name: "Settled",
         title: "stocks",
         path: "/settled",
+      },
+      {
+        name: "Q A",
+        path: "/quality/assurance",
+        component: Assurance,
+      },
+      {
+        name: "Q C",
+        path: "/quality/controls",
+        component: Controls,
       },
       // {
       //   name: "Expenses",

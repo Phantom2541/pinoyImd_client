@@ -1,9 +1,9 @@
 import React from "react";
-import { Templates as templates } from "./../../../services/fakeDb";
+import { Templates as templates } from "../../../services/fakeDb";
 
 const Templates = ({ setTemplate }) => {
   const components = templates.find(
-    ({ department }) => department === "laboratory"
+    ({ department }) => department === "LAB"
   ).components;
 
   const handleChange = (e) => {

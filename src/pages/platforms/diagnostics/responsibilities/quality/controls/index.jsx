@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DESTROY } from "../../../../../../../services/redux/slices/responsibilities/assurance";
+import { DESTROY } from "../../../../../../services/redux/slices/responsibilities/controls";
 import { MDBCard, MDBCardBody } from "mdbreact";
 import Swal from "sweetalert2";
 import TopHeader from "./header";
 import CardTables from "./tables";
 import Modal from "./modal";
-import Pagination from "../../../../../../../components/pagination";
-import TableRowCount from "../../../../../../../components/pagination/rows";
+import Pagination from "../../../../../../components/pagination";
+import TableRowCount from "./../../../../../../components/pagination/rows";
 
-const Assurances = () => {
-  const { collections, isLoading } = useSelector(
-      ({ asssuraces }) => asssuraces
-    ),
+const Controls = () => {
+  const { collections, isLoading } = useSelector(({ controls }) => controls),
     { token, maxPage } = useSelector(({ auth }) => auth),
-    [assurances, setAssurances] = useState([]),
+    [controls, setControls] = useState([]),
     [totalPages, setTotalPages] = useState(1),
     [page, setPage] = useState(1),
     [showModal, setShowModal] = useState(false),
@@ -25,18 +23,18 @@ const Assurances = () => {
   const toggleModal = () => setShowModal(!showModal);
 
   useEffect(() => {
-    if (assurances.length > 0) {
-      let totalPages = Math.floor(assurances.length / maxPage);
-      if (assurances.length % maxPage > 0) totalPages += 1;
+    if (controls.length > 0) {
+      let totalPages = Math.floor(controls.length / maxPage);
+      if (controls.length % maxPage > 0) totalPages += 1;
       setTotalPages(totalPages);
       if (page > totalPages) {
         setPage(totalPages);
       }
     }
-  }, [assurances.length, maxPage, page]);
+  }, [controls.length, maxPage, page]);
 
   useEffect(() => {
-    setAssurances(collections);
+    setControls(collections);
   }, [collections]);
 
   const handleCreate = () => {
@@ -82,7 +80,7 @@ const Assurances = () => {
 
         <MDBCardBody>
           <CardTables
-            asssuraces={assurances}
+            controls={controls}
             page={page}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
@@ -108,4 +106,4 @@ const Assurances = () => {
   );
 };
 
-export default Assurances;
+export default Controls;

@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "resposibilities/assurance";
+const name = "responsibilities/assurance";
 
 const initialState = {
   collections: [],
   personnel: {},
-
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -14,9 +13,9 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(
   `${name}`,
-  ({ token, branchId }, thunkAPI) => {
+  ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, { branchId });
+      return axioKit.universal(`${name}/browse`, token, params);
     } catch (error) {
       const message =
         (error.response &&

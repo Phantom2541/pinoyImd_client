@@ -11,9 +11,9 @@ import {
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../../services/redux/slices/responsibilities/controls";
+} from "../../../../../../services/redux/slices/responsibilities/assurances";
 
-import Services from "./../../../../../../../services/fakeDb/services";
+import { Services } from "../../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
@@ -27,7 +27,7 @@ const _form = {
 };
 
 export default function Modal({ show, toggle, selected, willCreate }) {
-  const { isLoading } = useSelector(({ controls }) => controls),
+  const { isLoading } = useSelector(({ assurances }) => assurances),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     { addToast } = useToasts(),
@@ -110,7 +110,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} {selected?.serviceId || "Controls"}
+        {willCreate ? "Create" : "Update"} {selected?.serviceId || "Assurances"}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>

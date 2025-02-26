@@ -2,8 +2,8 @@ import React from "react";
 import { MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
 
-import Services from "./../../../../../../../services/fakeDb/services";
-import { handlePagination } from "./../../../../../../../services/utilities";
+import { Services } from "../../../../../../services/fakeDb";
+import { handlePagination } from "../../../../../../services/utilities";
 const Tables = ({ controls, page, handleEdit, handleDelete }) => {
   const { maxPage } = useSelector(({ auth }) => auth);
 

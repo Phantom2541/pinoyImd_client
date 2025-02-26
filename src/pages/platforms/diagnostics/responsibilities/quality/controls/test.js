@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
-import Departments from "./../../../../../../../services/fakeDb/templates";
+import Departments from "../../../../../../services/fakeDb/templates";
 const Header = ({
   year,
   setYear,
