@@ -39,10 +39,7 @@ class TopNavigation extends Component {
       paddingLeft: this.props.toggle ? "16px" : "240px",
       transition: "padding-left .3s",
     };
-
     const { company, isPatient, platform } = this.props;
-    //console.log("platform", platform);
-    
     return (
       <MDBNavbar
         className="flexible-MDBNavbar"

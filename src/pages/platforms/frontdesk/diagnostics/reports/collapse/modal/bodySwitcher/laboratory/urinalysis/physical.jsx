@@ -1,12 +1,25 @@
 import React from "react";
-import { MDBCol, MDBRow } from "mdbreact";
-import CustomSelect from "../../../../../../../../../../components/customSelect";
 import {
-  Transparency,
-  UrineColors,
-  SpecificGravity,
-  PH,
-} from "../../../../../../../../../../services/fakeDb";
+  MDBCol,
+  MDBRow,
+  MDBSelect,
+  MDBSelectInput,
+  MDBSelectOption,
+  MDBSelectOptions,
+} from "mdbreact";
+
+const colors = [
+    "Very Light Yellow",
+    "Light Yellow",
+    "Yellow (Healthy)",
+    "Dark Yellow",
+    "Reddish Yellow",
+    "Orange",
+    "Amber",
+  ],
+  transparencies = ["Clear (Healthy)", "Slightly Turbid", "Turbid"],
+  reactions = ["5.0", "6.0 (Healthy)", "6.5", "7.0", "7.5", "8.0", "8.5"],
+  gravities = ["1.005", "1.010 (Healthy)", "1.015", "1.020", "1.025", "1.030"];
 
 export default function Physical({ task, setTask }) {
   const handleSelectChange = (index, value) => {
@@ -21,39 +34,95 @@ export default function Physical({ task, setTask }) {
 
   const { pe } = task;
 
-  const physicalSelects = [
-    {
-      label: "Color",
-      choices: UrineColors,
-    },
-    {
-      label: "Transparency",
-      choices: Transparency,
-    },
-    {
-      label: "Specific Gravity",
-      choices: SpecificGravity,
-    },
-    {
-      label: "Reaction / pH",
-      choices: PH,
-    },
-  ];
-
   return (
-    <MDBRow className="text-left">
-      {physicalSelects.map(({ label, choices }, index) => (
-        <MDBCol md="6" key={`${label}-${index}`}>
-          <CustomSelect
-            choices={choices.map((u, i) => ({ str: u, index: i }))}
-            label={label}
-            preValue={String(pe[index])}
-            texts="str"
-            values="index"
-            onChange={(e) => handleSelectChange(index, Number(e))}
+    <MDBRow>
+      <MDBCol md="6">
+        <MDBSelect
+          getValue={e => handleSelectChange(0, Number(e[0]))}
+          className="colorful-select dropdown-primary hidden-md-down"
+        >
+          <MDBSelectInput
+            selected={colors[pe[0]] ? `Color: ${colors[pe[0]]}` : "Color"}
           />
-        </MDBCol>
-      ))}
+          <MDBSelectOptions>
+            {colors.map((color, index) => (
+              <MDBSelectOption key={`color-${index}`} value={String(index)}>
+                <span className="d-none">Color: </span>
+                {color}
+              </MDBSelectOption>
+            ))}
+          </MDBSelectOptions>
+        </MDBSelect>
+      </MDBCol>
+      <MDBCol md="6">
+        <MDBSelect
+          getValue={e => handleSelectChange(1, Number(e[0]))}
+          className="colorful-select dropdown-primary hidden-md-down"
+        >
+          <MDBSelectInput
+            selected={
+              transparencies[pe[1]]
+                ? `Transparency: ${transparencies[pe[1]]}`
+                : "Transparency"
+            }
+          />
+          <MDBSelectOptions>
+            {transparencies.map((transparency, index) => (
+              <MDBSelectOption
+                key={`transparency-${index}`}
+                value={String(index)}
+              >
+                <span className="d-none">Transparency: </span>
+                {transparency}
+              </MDBSelectOption>
+            ))}
+          </MDBSelectOptions>
+        </MDBSelect>
+      </MDBCol>
+      <MDBCol md="6">
+        <MDBSelect
+          getValue={e => handleSelectChange(2, Number(e[0]))}
+          className="colorful-select dropdown-primary hidden-md-down"
+        >
+          <MDBSelectInput
+            selected={
+              gravities[pe[2]]
+                ? `Specific Gravity: ${gravities[pe[2]]}`
+                : "Specific Gravity"
+            }
+          />
+          <MDBSelectOptions>
+            {gravities.map((gravity, index) => (
+              <MDBSelectOption key={`gravity-${index}`} value={String(index)}>
+                <span className="d-none">Specific Gravity: </span>
+                {gravity}
+              </MDBSelectOption>
+            ))}
+          </MDBSelectOptions>
+        </MDBSelect>
+      </MDBCol>
+      <MDBCol md="6">
+        <MDBSelect
+          getValue={e => handleSelectChange(3, Number(e[0]))}
+          className="colorful-select dropdown-primary hidden-md-down"
+        >
+          <MDBSelectInput
+            selected={
+              reactions[pe[3]]
+                ? `Reaction / pH: ${reactions[pe[3]]}`
+                : "Reaction / pH"
+            }
+          />
+          <MDBSelectOptions>
+            {reactions.map((reaction, index) => (
+              <MDBSelectOption key={`reactions-${index}`} value={String(index)}>
+                <span className="d-none">Reaction / pH: </span>
+                {reaction}
+              </MDBSelectOption>
+            ))}
+          </MDBSelectOptions>
+        </MDBSelect>
+      </MDBCol>
     </MDBRow>
   );
 }

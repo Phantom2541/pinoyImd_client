@@ -4,10 +4,10 @@ import { MDBTable } from "mdbreact";
 export default function Platelet({ task, setTask }) {
   const { apc = 0 } = task;
 
-  const handleChange = (e) =>
+  const handleChange = e =>
     setTask({
       ...task,
-      apc: parseFloat(e.target.value),
+      apc: Number(e.target.value),
     });
 
   return (

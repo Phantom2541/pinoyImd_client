@@ -30,9 +30,9 @@ export const BROWSE = createAsyncThunk(
 
 export const GETPATIENTS = createAsyncThunk(
   `${name}/patients`,
-  ({ token, key }, thunkAPI) => {
+  ({ token, query }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/patients`, token, key);
+      return axioKit.universal(`${name}/patients`, token, query);
     } catch (error) {
       const message =
         (error.response &&

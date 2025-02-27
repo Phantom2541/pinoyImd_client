@@ -1,17 +1,15 @@
 import { Services, Templates } from "../../fakeDb";
 
-const harvestTask = (menu) =>
+const harvestTask = (menu) => 
   Services.whereIn(
     menu?.reduce((collection, deal) => collection.concat(deal.packages), [])
   ).reduce((collection, service) => {
-    console.log("service", service);
-    console.log("collection", collection);
-    
+    console.log("collection",collection);
+    console.log("service",service);
+
     let forms = Templates.find(
-      ({ department }) => console.log("lol",department === service?.department)
-      
-    )?.components[service?.template];
-    console.log("forms", forms);
+      ({ department }) => department === service.department
+    ).components[service.template];
     
     switch (forms) {
       case "Chemistry":

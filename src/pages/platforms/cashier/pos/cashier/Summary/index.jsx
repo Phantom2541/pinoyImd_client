@@ -14,28 +14,20 @@ import Months from "../../../../../../services/fakeDb/calendar/months";
 
 export default function Summary({
   resetCustomer,
-  patronPresent,
-  categoryIndex,
-  privilegeIndex,
-  physicianId,
-  sourceId,
-  // cart = [],
-  customerId,
-  customer,
 }) {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { cart } = useSelector(({ pos }) => pos),
+    { cart,category, privilege, customer,physicianId, sourceId } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
     dispatch = useDispatch();
 
   const { gross = 0, discount = 0 } = computeGD(
       cart,
-      categoryIndex,
-      privilegeIndex
+      category,
+      privilege
     ),
     amount = gross - discount,
-    { abbr = "" } = Categories[categoryIndex],
+    { abbr = "" } = Categories[category],
     paymentOptions = Payments[abbr];
 
   console.log("carts :", cart);
@@ -60,16 +52,16 @@ export default function Summary({
       source: sourceId || undefined,
       // authorizedBy: authorizedBy || undefined,
       branchId: activePlatform.branchId,
-      customerId,
+      customerId:customer._id,
       cashierId: auth._id,
-      category: categoryIndex === 0 ? "walkin" : abbr,
+      category: category === 0 ? "walkin" : abbr,
       payment: paymentOptions[payment],
       cash,
       amount,
       discount,
       isPickup,
       department: "LAB",
-      privilege: privilegeIndex,
+      privilege: privilege,
       customer,
       cashier: auth?.fullName,
       isPrint: true,
@@ -84,7 +76,7 @@ export default function Summary({
             up: soldUp,
             discount: soldDiscount,
           } = menu,
-          { up, discount } = computeGD(menu, categoryIndex, privilegeIndex);
+          { up, discount } = computeGD(menu, category, privilege);
 
         return {
           capital,
@@ -107,11 +99,11 @@ export default function Summary({
         text: "Please return the change to the customer.",
       });
 
-    if (customer?.privilege !== privilegeIndex)
+    if (customer?.privilege !== privilege)
       dispatch(
         PATIENTUPDATE({
           token,
-          data: { _id: customerId, privilege: privilegeIndex },
+          data: { _id: customer._id, privilege  },
         })
       );
 
@@ -121,8 +113,8 @@ export default function Summary({
         data,
       })
     );
-
-    resetCustomer();
+    // is not a function
+    // resetCustomer();
     e.target.reset();
   };
 
@@ -202,7 +194,7 @@ export default function Summary({
       </table>
       <MDBBtn
         type="submit"
-        disabled={!patronPresent || !cart.length}
+        // disabled={!patronPresent || !cart.length}
         className="m-0 w-100 fw-bold mt-4"
         color="success"
       >

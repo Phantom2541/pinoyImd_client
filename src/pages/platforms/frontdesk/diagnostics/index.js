@@ -1,5 +1,5 @@
-import Task from "./task";
-import Report from "./reports";
-import Tracker from "./tracker";
+import Onboard from "./onboard";
+import Tasks from "./tasks";
+import Reports from "./reports";
 
-export { Task, Report, Tracker };
+export { Onboard, Tasks, Reports };

@@ -33,10 +33,6 @@ const tabs = {
     names: ["SPECIAL TEST"],
     components: [SpecialTest],
   },
-  63: {
-    names: ["SPECIAL TEST"],
-    components: [SpecialTest],
-  },
 };
 
 export default function Hematology({ task, setTask }) {

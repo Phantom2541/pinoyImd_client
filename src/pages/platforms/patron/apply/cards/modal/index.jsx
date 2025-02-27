@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBBtn,
   MDBModal,
@@ -8,68 +8,65 @@ import {
   MDBRow,
   MDBCol,
 } from "mdbreact";
-import { useSelector } from "react-redux";
-// import { UPLOAD } from "../../../../../../redux/slices/assets/persons/auth.js";
-// import { toast } from "react-toastify";
-// import {
-//   SAVE,
-//   APPLICATION,
-// } from "../../../../../../services/redux/slices/assets/persons/personnels";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SAVE,
+  APPLICATION,
+} from "../../../../../../services/redux/slices/assets/persons/personnels.js";
 
 import { Policy } from "../../../../../../services/fakeDb";
-// import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
-
-// import { Collection } from "mongoose";
+import { UPLOAD } from "../../../../../../services/redux/slices/assets/persons/auth.js";
 
 export default function ApplicationModal({
   visibility,
   setVisibility,
   company,
 }) {
-  const { auth } = useSelector(({ auth }) => auth),
+  const { auth, token } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ personnels }) => personnels),
     [application, setApplication] = useState({}),
     [department, setDepartment] = useState(),
-    [positions, setPositions] = useState([]);
-  // dispatch = useDispatch();
-  // useEffect(() => {
-  //   token &&
-  //     dispatch(
-  //       APPLICATION({
-  //         data: {
-  //           _id: auth._id,
-  //           key: "",
-  //         },
-  //         token,
-  //       })
-  //     );
-  // }, [dispatch, token, auth]);
+    [positions, setPositions] = useState([]),
+    dispatch = useDispatch();
+  useEffect(() => {
+    token &&
+      dispatch(
+        APPLICATION({
+          data: {
+            _id: auth._id,
+            key: "",
+          },
+          token,
+        })
+      );
+  }, [dispatch, token, auth]);
 
   //console.log("unused variable setPositions", setPositions);
 
   const handleToggle = () => setVisibility(!visibility);
 
-  const handleApplication = (e) => {
+  const handleApplication = e => {
     e.preventDefault();
     if (!!company.branches.length) {
-      //console.log({
-        userId: auth._id,
-        ...application,
-      });
+      // console.log({
+      //   userId: auth._id,
+      //   ...application,
+      // });
     } else {
       // toast.warn("Sorry, there are no available branches for this company.");
       alert("Sorry, there are no available branches for this company.");
     }
   };
 
-  const handleDepartment = (e) => {
+  const handleDepartment = e => {
     const { value } = e.target;
     setDepartment(value);
-    // setPositions(Policy.positions(value));
-    //.positions
+    console.log(Policy.getPositions(value));
+
+    setPositions(Policy.getPositions(value));
   };
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
     setApplication({
       ...application,
@@ -78,54 +75,73 @@ export default function ApplicationModal({
   };
 
   const handleFile = (e, name) => {
-    // const reader = new FileReader();
-    // reader.onload = (e) => {
-    //   let image = new Image();
-    //   image.src = e.target.result;
-    //   image.onload = function () {
-    //     if (this.width === this.height) {
-    //       if (this.width <= 300) {
-    //         dispatch(
-    //           UPLOAD({
-    //             data: {
-    //               path: `patron/${auth.email}/Smart Care/General Tinio Branch/Applications`,
-    //               base64: reader.result.split(",")[1],
-    //               name,
-    //             },
-    //             token,
-    //           })
-    //         );
-    //       } else {
-    //         // toast.warn("Maximum size is 300 pixels and below.");
-    //         alert("Maximum size is 300 pixels and below.");
-    //       }
-    //     } else {
-    //       // toast.warn("Proportion must be 1:1");
-    //       alert("Proportion must be 1:1");
-    //     }
-    //   };
-    // };
-    // reader.readAsDataURL(e.target.files[0]);
+    const reader = new FileReader();
+    reader.onload = e => {
+      let image = new Image();
+      image.src = e.target.result;
+      image.onload = function () {
+        if (this.width === this.height) {
+          if (this.width <= 300) {
+            dispatch(
+              UPLOAD({
+                data: {
+                  path: `patron/${auth.email}/Smart Care/${company}/Applications`,
+                  base64: reader.result.split(",")[1],
+                  name,
+                },
+                token,
+              })
+            );
+          } else {
+            // toast.warn("Maximum size is 300 pixels and below.");
+            alert("Maximum size is 300 pixels and below.");
+          }
+        } else {
+          // toast.warn("Proportion must be 1:1");
+          alert("Proportion must be 1:1");
+        }
+      };
+    };
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   const handleSubmit = () => {
-    // dispatch(
-    //   SAVE({
-    //     form: {
-    //       user: auth._id,
-    //       status: "petition",
-    //       branch: application.branchId,
-    //       hasPds: application.pds ? true : false,
-    //       hasResume: application.resume ? true : false,
-    //       hasLetter: application.letter ? true : false,
-    //       designation: Number(application.designation),
-    //       hos: 8,
-    //       message: application.message,
-    //     },
-    //     token,
-    //   })
-    // );
-    // setVisibility(!visibility);
+    const _company = company?.branches.find(
+      branch => branch._id === application.branchId
+    );
+    const role = Policy.getDepartment(application.designation);
+    alert(role);
+    return;
+    const id = `${_company.companyName
+      .split(" ")
+      .map(word => word[0])
+      .join("")}-${_company.name
+      .split(" ")
+      .map(word => word[0])
+      .join("")}-${Math.floor(Math.random() * 100)}`;
+    dispatch(
+      SAVE({
+        data: {
+          id,
+          user: auth._id,
+          status: "petition",
+          branch: application.branchId,
+          file201: {
+            hasPds: application.pds ? true : false,
+            hasResume: application.resume ? true : false,
+            hasLetter: application.letter ? true : false,
+          },
+          employment: {
+            designation: application.designation,
+          },
+          hos: 8,
+          platform: "",
+          message: application.message,
+        },
+        token,
+      })
+    );
+    setVisibility(!visibility);
   };
 
   const handleReadDataSheet = () => {
@@ -142,18 +158,19 @@ export default function ApplicationModal({
     //   </>
     // );
   };
-
   return (
     <MDBModal
       size="fluid"
       staticBackdrop
       tabIndex="-1"
-      show={visibility}
+      isOpen={visibility}
       setShow={setVisibility}
     >
-      <MDBModalHeader>
+      <MDBModalHeader className="d-flex flex-coloumn justify-content-between align-items-center ">
         <h3>{company.name}'s Application Requirements</h3>
-        <MDBBtn className="btn-close" color="none" onClick={handleToggle} />
+        {/* <MDBBtn className="btn btn-sm" color="danger" onClick={handleToggle}>
+          <MDBIcon icon="times" size="lg" />
+        </MDBBtn> */}
       </MDBModalHeader>
       <form onSubmit={handleApplication}>
         <MDBModalBody className="text-start">
@@ -169,9 +186,9 @@ export default function ApplicationModal({
                 <option value="" selected>
                   Select a branch
                 </option>
-                {company.branches?.map((branch) => {
+                {company.branches?.map(branch => {
                   const disabler = collections?.find(
-                    (catalog) => catalog.branch._id === branch._id
+                    catalog => catalog.branch._id === branch._id
                   );
                   return (
                     <option
@@ -200,13 +217,12 @@ export default function ApplicationModal({
                 <option value="" selected>
                   Select a department
                 </option>
-                {Object.entries(Policy.departments())?.map(
-                  ([index, collections]) => (
-                    <option value={collections.department} key={index}>
-                      {collections.department.toLocaleUpperCase()}
-                    </option>
-                  )
-                )}
+                {Policy.collections.map((collections, i) => (
+                  <option value={collections.code} key={`department-${i}`}>
+                    {collections.department}
+                  </option>
+                ))}
+                ;
               </select>
             </MDBCol>
             <MDBCol md="4">
@@ -220,19 +236,14 @@ export default function ApplicationModal({
                 <option value="" selected>
                   Select a Designation / Positions
                 </option>
-                {Object.entries(positions)?.map((collections, i) => {
-                  collections.map((collection) => {
-                    //console.log("collection", collection);
-                    return (
-                      <option
-                        value={collections.id}
-                        key={`position-${collections.id}-${i}`}
-                      >
-                        {collections?.display_name}
-                      </option>
-                    );
-                  });
-                })}
+                {positions?.map((position, i) => (
+                  <option
+                    value={position.id}
+                    key={`position-${position.id}-${i}`}
+                  >
+                    {position?.display_name}
+                  </option>
+                ))}
               </select>
             </MDBCol>
           </MDBRow>
@@ -246,7 +257,7 @@ export default function ApplicationModal({
                 Personal Data Sheet
               </label>
               <input
-                onChange={(e) => handleFile(e, "dataSheet.docx")}
+                onChange={e => handleFile(e, "dataSheet.docx")}
                 type="file"
                 id="upload-personal-data-sheet"
                 className="d-none"
@@ -265,7 +276,7 @@ export default function ApplicationModal({
                 type="file"
                 id="upload-resume"
                 className="d-none"
-                onChange={(e) => handleFile(e, "Resume.pdf")}
+                onChange={e => handleFile(e, "Resume.pdf")}
                 accept=".pdf"
               />
             </MDBCol>
@@ -281,7 +292,7 @@ export default function ApplicationModal({
                 type="file"
                 id="upload-application"
                 className="d-none"
-                onChange={(e) => handleFile(e, "AppLetter.docx")}
+                onChange={e => handleFile(e, "AppLetter.docx")}
                 accept="image/*"
               />
             </MDBCol>
@@ -294,6 +305,7 @@ export default function ApplicationModal({
           <MDBRow>
             <MDBCol md="12" className="mt-4">
               <textarea
+                className="form-control"
                 label="Message"
                 value={application?.message}
                 name="message"

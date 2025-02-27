@@ -15,30 +15,38 @@ export default function CollapseTable({ menu }) {
   const toggleModal = () => setShowModal(!showModal);
 
   useEffect(() => {
-    const labTests = Templates.reduce(
-      (accumulator, { components, department }) => {
-        if (department === "laboratory") {
-          const filteredComponents = components.filter(
-            (component) => menu[component.toLowerCase()]
-          );
-
-          return [...accumulator, ...filteredComponents];
+    setLabTests(
+      Templates.reduce((accumulator, { components, department }) => {
+        if (department === "LAB") {
+          return [
+            ...accumulator,
+            ...components.filter((component) => menu[component.toLowerCase()]),
+          ];
         }
+        // const labTests = Templates.reduce(
+        //   (accumulator, { components, department }) => {
+        //     if (department === "LAB") {
+        //       const filteredComponents = components.filter(
+        //         (component) => menu[component.toLowerCase()]
+        //       );
 
-        return accumulator;
-      },
-      []
+        //       return [...accumulator, ...filteredComponents];
+        //     }
+
+        //     return accumulator;
+      }, [])
     );
-
-    setLabTests(labTests);
   }, [menu]);
 
   const handlePrint = (labTest) => {
+    // console.log("reports",labTest);
+    // console.log("activePlatform",activePlatform);
+
     localStorage.setItem("taskPrintout", JSON.stringify(labTest));
     window.open(
       "/printout/task",
       "Task Printout",
-      "top=100px,left=100px,width=1050px,height=750px" // size of page that will open
+      "top=100px,left=100px,width=1050px,height=750px"
     );
   };
 
@@ -68,6 +76,7 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
+
     return (
       <tr key={task.key} className={`${hasDone && "table-active"}`}>
         <td className="fw-bold">{capitalize(department)}</td>
@@ -86,6 +95,7 @@ export default function CollapseTable({ menu }) {
         <td>
           <MDBBtnGroup>
             <MDBBtn
+              title="Modal"
               onClick={() => {
                 setTask(task);
                 toggleModal();
@@ -104,11 +114,11 @@ export default function CollapseTable({ menu }) {
                   onClick={() =>
                     handlePrint({
                       ...task,
-                      branchId: activePlatform?.branchId,
+                      branchId: activePlatform?.branch,
                       referral: physicianId || {},
                       services: Services.whereIn(_packages),
-                      preferences: collections,
                       signatories,
+                      preferences: collections,
                       isPrint: true,
                     })
                   }

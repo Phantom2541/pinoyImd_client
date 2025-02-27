@@ -12,6 +12,7 @@ import { fullName, globalSearch } from "../../../../../services/utilities";
 import TableLoading from "../../../../../components/tableLoading";
 
 const Applicants = () => {
+  // // merge
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, isLoading } = useSelector(({ applicants }) => applicants),
     [category, setCategory] = useState("Petition"),
@@ -19,12 +20,6 @@ const Applicants = () => {
     [baseApplicants, setBaseApplicants] = useState([]),
     [applicants, setApplicants] = useState([]),
     dispatch = useDispatch();
-
-  //console.log("unsused variable setApplicants", setApplicants);
-
-  useEffect(() => {
-    dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
-  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     if (activePlatform.branchId) {
@@ -40,7 +35,7 @@ const Applicants = () => {
     setApplicants(filteredApplicants);
   }, [category, collections]);
   //
-  const handleApprove = (applicant) => {
+  const handleApprove = applicant => {
     const { user } = applicant;
     Swal.fire({
       title: "Are you sure?",
@@ -50,12 +45,12 @@ const Applicants = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, approve it!",
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         dispatch(
           UPDATE({
             token,
-            data: { status: "approved", _id: applicant._id },
+            data: { status: "active", _id: applicant._id },
           })
         );
 
@@ -68,7 +63,7 @@ const Applicants = () => {
     });
   };
 
-  const handleReject = (applicant) => {
+  const handleReject = applicant => {
     Swal.fire({
       title: "Enter your reason",
       input: "textarea",
@@ -77,13 +72,13 @@ const Applicants = () => {
       showCancelButton: true,
       reverseButtons: true,
       confirmButtonText: "Deny",
-      preConfirm: (value) => {
+      preConfirm: value => {
         if (!value) {
           Swal.showValidationMessage("Reason is required");
         }
         return value;
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         const reason = result.value;
         dispatch(

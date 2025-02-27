@@ -10,20 +10,19 @@ import clinical from "./clinical";
 import frontdesk from "./frontdesk";
 import headquarter from "./headquarter";
 import hr from "./hr";
-import laboratory from "./laboratory";
 import nutritionist from "./nutritionist";
 import pharmacist from "./pharmacist";
 import procurement from "./procurement";
-import radiology from "./radiology";
 import utility from "./utility";
+import diagnostic from "./diagnostic";
+import laboratory from "./laboratory";
+import radiology from "./radiology";
 
 const Sidebars = {
   utility,
-  radiology,
   procurement,
   pharmacist,
   nutritionist,
-  laboratory,
   headquarter,
   hr,
   frontdesk,
@@ -36,6 +35,9 @@ const Sidebars = {
   accreditation,
   manager,
   patron,
+  diagnostic,
+  laboratory,
+  radiology,
 };
 
 export default Sidebars;

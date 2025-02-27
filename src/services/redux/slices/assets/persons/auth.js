@@ -27,7 +27,8 @@ const initialState = {
   branches: [], // list of connected branches
   access: [], // list of accessible platforms
   company: {
-    name: "Default Company",
+    name: "Pinoy iMD",
+    subname: "Medical Diagnostic Center",
   },
   isCeo: false,
   maxPage,
@@ -179,19 +180,14 @@ export const reduxSlice = createSlice({
         const branch = state.branches.find(
           (branch) => branch._id === payload.activePlatform.branchId
         );
-
-        console.log("branches", state.branches);
-        console.log("branch", branch);
-
-        
         const _access = state.access
           .filter(
             ({ branchId }) => branchId === payload.activePlatform.branchId
           )
           .map((a) => a.platform);
 
-        //console.log("access", state.access);
-        //console.log("active branch id", payload.activePlatform.branchId);
+        const { contract = { designation: -1 } } = branch || {};
+        const department = Policy.getDepartment(contract.designation) || {};
 
         //console.log("_access", _access);
         state.activePlatform = {
@@ -199,8 +195,7 @@ export const reduxSlice = createSlice({
           branchId: payload.activePlatform.branchId,
           ...payload.activePlatform,
           access: [..._access],
-          // department:
-          // role:Policy.find(({ personel.contract.designation }) => name === payload.activePlatform.role),
+          ...department,
         };
         state.showModal = false;
         state.message = success;
@@ -241,39 +236,27 @@ export const reduxSlice = createSlice({
       })
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
-          { token, auth, branches, isCeo, access, company, isPatient } =
-            payload;
-
-        state.isPatient = isPatient;
-
-        state.isCeo = isCeo;
-        state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
-        state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
-        state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
-        state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
-        state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
-        state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
-
-        const branch = branches.find(
-          (branch) => branch._id === auth.activePlatform.branchId
-        );
-
-        console.log("LOGIN.fulfilled branches", branches);
-        console.log("branch", branch);
-        console.log("branch", auth.activePlatform.branchId);
-
+          { token, auth, branches, isCeo, access, isPatient } = payload;
+        const { activePlatform } = auth;
+        const { branchId } = activePlatform;
+        const branch = branches.find((branch) => branch._id === branchId);
         const _access = access
-          .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
+          .filter(({ branchId: bID }) => bID === branchId)
           .map((a) => a.platform);
 
+        const { contract = { designation: -1 } } = branch || {};
+        const department = Policy.getDepartment(contract.designation) || {};
+
+        state.activePlatform = {
+          ...auth.activePlatform,
+          branch,
+          access: [..._access],
+          ...department,
+        };
+
         state.isPatient = isPatient;
         state.isCeo = isCeo;
-        state.activePlatform = {
-          branch,
-          ...auth.activePlatform,
-          access: [..._access],
-        };
-        state.company = company;
+        state.company = branch.companyId;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
@@ -282,6 +265,12 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
+        state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
+        state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
+        state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
+        state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
+        state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
+        state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
       })
       .addCase(LOGIN.rejected, (state, action) => {
         const { error } = action;
@@ -332,7 +321,6 @@ export const reduxSlice = createSlice({
         state.board = `$${ENDPOINT}/${fileUrl}/board.jpg`;
         state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
         state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
-
         const branch = branches.find(
           (branch) => branch._id === auth.activePlatform.branchId
         );
@@ -340,21 +328,20 @@ export const reduxSlice = createSlice({
         const _access = access
           .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
           .map((a) => a.platform);
-
-        const {contract}=branch
-        const department=Policy.getDepartment(contract.designation)
+        const { contract = { designation: -1 } } = branch || {};
+        const department = Policy.getDepartment(contract.designation) || {};
         state.activePlatform = {
           ...auth.activePlatform,
           branch,
           access: [..._access],
-          ...department
+          ...department,
         };
 
         state.branches = branches;
         state.isPatient = isPatient;
         state.company = company;
         state.access = access;
-
+        state.company = branch.companyId;
         state.isCeo = isCeo;
         state.auth = auth;
         state.email = auth.email;
@@ -371,7 +358,7 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(UPLOAD.fulfilled, (state, action) => {
+      .addCase(UPLOAD.fulfilled, (state, _) => {
         state.isLoading = false;
       })
       .addCase(UPLOAD.rejected, (state, action) => {

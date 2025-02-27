@@ -27,6 +27,7 @@ export default function Laboratories() {
   //console.log("unused variable setFavorites", setFavorites);
 
   useEffect(() => {
+    setFavorites('sample')
     setCompanies(collections);
   }, [collections]);
 
@@ -98,7 +99,7 @@ export default function Laboratories() {
             <MDBCol md="3" key={company._id} className="p-2">
               <CompanyCard
                 company={company}
-                isFavorite={favorites.includes(company._id)}
+                isFavorite={setFavorites([...favorites, company._id])}
               />
             </MDBCol>
           ))}

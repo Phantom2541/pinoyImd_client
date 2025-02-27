@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SearchBox from "./search";
 import { MDBIcon } from "mdbreact";
-import { Categories } from "../../../../../../services/fakeDb";
+// import { Categories } from "../../../../../../services/fakeDb";
 import {
   computeGD,
   currency,
@@ -13,11 +13,17 @@ import {
   ADDTOCART,
   REMOVEFROMCART,
 } from "../../../../../../services/redux/slices/commerce/pos.js";
-import { set } from "lodash";
+
+import {
+  BROWSE as MENUS,
+  RESET as MENUSRESET,
+} from "../../../../../../services/redux/slices/commerce/menus";
+// import { set } from "lodash";
 
 export default function Menus({ patronPresent }) {
-  const { collections } = useSelector(({ menus }) => menus);
-  const { category, privilege, cart } = useSelector(({ pos }) => pos);
+  const { collections } = useSelector(({ menus }) => menus),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
+    { category, privilege, cart } = useSelector(({ pos }) => pos);
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
     [selected, setSelected] = useState({});
@@ -25,8 +31,18 @@ export default function Menus({ patronPresent }) {
   const { addToast } = useToasts();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (token && activePlatform.branchId) {
+      dispatch(MENUS({ key: { branchId: activePlatform.branchId }, token }));
+
+      return () => {
+        dispatch(MENUSRESET());
+      };
+    }
+  }, [token, dispatch, activePlatform]);
+
   // Ensure abbr does not cause issues
-  const { abbr } = Categories[category] || {};
+  // const { abbr } = Categories[category] || {};
 
   // Perform search within render
   const searchMatch = searchKey ? globalSearch(collections, searchKey) : [];
@@ -42,7 +58,7 @@ export default function Menus({ patronPresent }) {
 
     setDidSearch(true);
   };
-  console.log(searchMatch);
+
   return (
     <>
       <table className="menus-table">

@@ -19,7 +19,7 @@ export default function Diffcount({ task, setTask }) {
     { Preferences } = Cellcount,
     { Category } = DiffCount;
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target,
       _value = parseInt(value),
       diff = { ...dc };

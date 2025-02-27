@@ -26,7 +26,7 @@ export default function MenuCollapse({ staffs, page }) {
       UPDATE({
         data: {
           _id: data._id,
-          employment: {
+          contract: {
             hos: data.employmentHor,
             soe: data.employmentSoe,
             pc: data.employmentPc,
@@ -48,8 +48,6 @@ export default function MenuCollapse({ staffs, page }) {
     );
   };
 
-  //console.log("Roles:", Roles);
-
   return (
     <MDBContainer
       style={{
@@ -58,11 +56,18 @@ export default function MenuCollapse({ staffs, page }) {
       fluid
     >
       {handlePagination(staffs, page, maxPage).map((staff, index) => {
-        const { user, employment, status, rate, contribution, _id } = staff;
-
+        const {
+          user,
+          contract: employment,
+          status,
+          rate,
+          contribution,
+          _id,
+        } = staff;
         const role = Roles.findById(
           Number(employment?.designation)
         )?.display_name;
+
         return (
           <MDBCard
             key={`staffs-${index}`}
@@ -80,10 +85,12 @@ export default function MenuCollapse({ staffs, page }) {
               }
             >
               <label className="d-flex justify-content-between">
+                {/* {index + 1}. {user && `${fullName(user?.fullName)}`}
+                {employment?.designation && `| ${role}`} */}
                 {index + 1}. {user && `${fullName(user?.fullName)} | `}
-                {employment.designation && `${role}`}
+                {employment?.designation && `${role}`}
                 <small>
-                  {employment.soe && `${employment.soe?.toUpperCase()} | `}
+                  {employment?.soe && `${employment?.soe?.toUpperCase()} | `}
                   {status && status.toUpperCase()}
                   <i
                     style={{ rotate: `${activeId === index ? 0 : 90}deg` }}

@@ -124,6 +124,7 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
         state.isLoading = false;
       })
+
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
