@@ -4,10 +4,15 @@ const harvestTask = (menu) =>
   Services.whereIn(
     menu?.reduce((collection, deal) => collection.concat(deal.packages), [])
   ).reduce((collection, service) => {
+    console.log("service", service);
+    console.log("collection", collection);
+    
     let forms = Templates.find(
-      ({ department }) => department === service.department
-    ).components[service.template];
-
+      ({ department }) => console.log("lol",department === service?.department)
+      
+    )?.components[service?.template];
+    console.log("forms", forms);
+    
     switch (forms) {
       case "Chemistry":
       case "Electrolyte":
