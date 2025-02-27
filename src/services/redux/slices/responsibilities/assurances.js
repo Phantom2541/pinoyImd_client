@@ -5,10 +5,19 @@ const name = "responsibilities/assurance";
 
 const initialState = {
   collections: [],
+  filter: [],
   personnel: {},
   isSuccess: false,
   isLoading: false,
   message: "",
+
+  // Bread attributes
+  selected: {}, // assurance
+  totalPages: 0,
+  page: 0,
+  showModal: false,
+  willCreate: false,
+  maxPage: 5,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -77,33 +86,31 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    UPDATEACCESS: (state, data) => {
-      // used for updating access in file201
-      const { _id, access, isNew = false } = data.payload,
-        { collections } = state;
-
-      const index = collections.findIndex((item) => item._id === _id);
-
-      const personnelAccess = [...collections[index].access];
-
-      var newAccess = [];
-
-      if (isNew) {
-        newAccess = personnelAccess.concat(access);
-      } else {
-        newAccess = personnelAccess.map((pAccess) => {
-          if (access.find((_access) => _access._id === pAccess._id)) {
-            return {
-              ...pAccess,
-              status: !pAccess.status,
-            };
-          }
-
-          return pAccess;
-        });
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetCREATE: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetFILTER: (state, { payload }) => {
+      const { page, filtered } = state;
+      const { maxPage } = payload;
+      if (payload.length > 0) {
+        let totalPages = Math.floor(payload.length / maxPage);
+        if (payload.length % maxPage > 0) totalPages += 1;
+        state.totalPages = totalPages;
+        if (page > totalPages) {
+          state.page = totalPages;
+        }
       }
-
-      state.collections[index].access = newAccess;
+      state.filter = filtered;
+    },
+    SetPAGE: (state, { payload }) => {
+      state.page = payload;
     },
     RESET: (state, data) => {
       state.isSuccess = false;
@@ -191,6 +198,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, UPDATEACCESS } = reduxSlice.actions;
+export const { SetCREATE, SetEDIT, SetFILTER, SetPAGE, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

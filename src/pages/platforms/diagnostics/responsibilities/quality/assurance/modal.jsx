@@ -19,8 +19,10 @@ import { Services } from "./../../../../../../services/fakeDb";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
-export default function Modal({ show, toggle, selected, willCreate }) {
-  const { isLoading } = useSelector(({ assurances }) => assurances),
+export default function Modal() {
+  const { show, toggle, selected, willCreate, isLoading } = useSelector(
+      ({ assurances }) => assurances
+    ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),

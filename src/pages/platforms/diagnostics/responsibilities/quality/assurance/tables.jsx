@@ -1,15 +1,18 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-import { DESTROY } from "../../../../../../services/redux/slices/responsibilities/assurances";
+import {
+  DESTROY,
+  SetEDIT,
+} from "../../../../../../services/redux/slices/responsibilities/assurances";
 import Swal from "sweetalert2";
 
 import { Services } from "../../../../../../services/fakeDb";
 import { handlePagination } from "../../../../../../services/utilities";
 
-const Tables = ({ page, handleEdit }) => {
+const Tables = () => {
   const { maxPage, token } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ assurances }) => assurances),
+    { collections, page } = useSelector(({ assurances }) => assurances),
     dispatch = useDispatch();
 
   const handleDelete = (_id) => {
@@ -57,7 +60,9 @@ const Tables = ({ page, handleEdit }) => {
                   })}
                 </td>
                 <td>
-                  <button onClick={() => handleEdit(assurance)}>Edit</button>
+                  <button onClick={() => dispatch(SetEDIT(assurance))}>
+                    Edit
+                  </button>
                   <button onClick={() => handleDelete(assurance._id)}>
                     Delete
                   </button>
