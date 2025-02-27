@@ -11,7 +11,7 @@ import {
   RESET,
   BROWSE,
 } from "../../../../../../services/redux/slices/responsibilities/assurances";
-const Header = ({ hasAction, handleCreate }) => {
+const Header = ({ hasAction, onCreate, setSelected }) => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
     [month, setMonth] = useState(new Date().getMonth() + 1),
@@ -36,6 +36,13 @@ const Header = ({ hasAction, handleCreate }) => {
     return () => dispatch(RESET());
   }, [token, activePlatform?.branchId, year, month, service, dispatch]);
 
+  const handleCreate = () => {
+    setSelected({
+      serviceId: service,
+    });
+    onCreate(true);
+  };
+
   return (
     <MDBView
       cascade
@@ -46,11 +53,7 @@ const Header = ({ hasAction, handleCreate }) => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <Services
-            template={template}
-            service={service}
-            setService={setService}
-          />
+          <Services template={template} setService={setService} />
           <Templates setTemplate={setTemplate} />
           <Month month={month} setMonth={setMonth} />
           <Year year={year} setYear={setYear} />

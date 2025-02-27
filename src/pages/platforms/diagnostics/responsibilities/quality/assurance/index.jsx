@@ -5,11 +5,14 @@ import TopHeader from "./header";
 import CardTables from "./tables";
 import Modal from "./modal";
 import Pagination from "../../../../../../components/pagination";
-import TableRowCount from "../../../../../../components/pagination/rows";
+import TableRowCount from "./../../../../../../components/pagination/rows";
 
 const Assurances = () => {
-  const { collections } = useSelector(({ assurances }) => assurances),
+  const { collections, isLoading } = useSelector(
+      ({ assurances }) => assurances
+    ),
     { maxPage } = useSelector(({ auth }) => auth),
+    [assurances, setAssurances] = useState([]),
     [totalPages, setTotalPages] = useState(1),
     [page, setPage] = useState(1),
     [showModal, setShowModal] = useState(false),
@@ -19,37 +22,57 @@ const Assurances = () => {
   const toggleModal = () => setShowModal(!showModal);
 
   useEffect(() => {
-    if (collections.length > 0) {
-      let totalPages = Math.floor(collections.length / maxPage);
-      if (collections.length % maxPage > 0) totalPages += 1;
+    if (assurances.length > 0) {
+      let totalPages = Math.floor(assurances.length / maxPage);
+      if (assurances.length % maxPage > 0) totalPages += 1;
       setTotalPages(totalPages);
       if (page > totalPages) {
         setPage(totalPages);
       }
     }
-  }, [collections, maxPage, page]);
+  }, [assurances.length, maxPage, page]);
+
+  useEffect(() => {
+    setAssurances(collections);
+  }, [collections]);
 
   const handleCreate = () => {
     setWillCreate(true);
     setShowModal(true);
   };
 
+  const handleEdit = (assurance) => {
+    setSelected(assurance);
+    setWillCreate(false);
+    setShowModal(true);
+  };
+
   return (
     <>
-      <MDBCard narrow className="pb-3">
-        <TopHeader hasAction={true} handleCreate={handleCreate} />
+      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+        <TopHeader
+          hasAction={true}
+          onCreate={handleCreate}
+          setSelected={setSelected}
+        />
+
         <MDBCardBody>
           <CardTables
+            assurances={assurances}
             page={page}
-            setSelected={setSelected}
-            setWillCreate={setWillCreate}
-            setShowModal={setShowModal}
+            handleEdit={handleEdit}
           />
-          <div className="d-flex justify-content-between align-items-center px-4">
-            <TableRowCount />
-            <Pagination total={totalPages} page={page} setPage={setPage} />
-          </div>
         </MDBCardBody>
+
+        <div className="mb-auto d-flex justify-content-between align-items-center px-4">
+          <TableRowCount />
+          <Pagination
+            isLoading={isLoading}
+            total={totalPages}
+            page={page}
+            setPage={setPage}
+          />
+        </div>
       </MDBCard>
       <Modal
         show={showModal}

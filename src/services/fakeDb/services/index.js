@@ -1,4 +1,3 @@
-import { filter } from "lodash";
 import collections from "./collections.json";
 
 const prioritizedSort = () => {

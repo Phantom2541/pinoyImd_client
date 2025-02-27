@@ -1,14 +1,35 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { MDBTable } from "mdbreact";
-import { useSelector } from "react-redux";
+import { DESTROY } from "../../../../../../services/redux/slices/responsibilities/controls";
+import Swal from "sweetalert2";
 
 import { Services } from "../../../../../../services/fakeDb";
 import { handlePagination } from "../../../../../../services/utilities";
-const Tables = ({ controls, page, handleEdit, handleDelete }) => {
-  const { maxPage } = useSelector(({ auth }) => auth);
+const Tables = ({ page, handleEdit }) => {
+  const { maxPage } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ controls }) => controls),
+    { token } = useSelector(({ auth }) => auth),
+    dispatch = useDispatch();
+
+  const handleDelete = (_id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(DESTROY({ token, data: { _id } }));
+      }
+    });
+  };
 
   return (
-    <MDBTable responsive hover bordered>
+    <MDBTable responsive hover bordered style={{ minHeight: "300px" }}>
       <thead>
         <tr>
           <th>Service ID</th>
@@ -19,14 +40,17 @@ const Tables = ({ controls, page, handleEdit, handleDelete }) => {
         </tr>
       </thead>
       <tbody>
-        {handlePagination(controls, page, maxPage)?.map((control, index) => {
-          return (
+        {handlePagination(collections, page, maxPage)
+          .slice() // Create a copy to avoid modifying the original array
+          .sort((a, b) => collections.indexOf(a) - collections.indexOf(b)) // Sort by index
+          .map((control, index) => (
             <tr key={index}>
-              <td>{Services.getName(control?.serviceId)}</td>
+              <td style={{ minHeight: "30px" }}>
+                {Services.getName(control?.serviceId)}
+              </td>
               <td>{control?.abnormal}</td>
               <td>{control?.high}</td>
               <td>{control?.normal}</td>
-              {/* <td>{control?.createdAt}</td> */}
               <td>
                 {new Date(control?.createdAt).toLocaleDateString("en-GB", {
                   month: "short",
@@ -41,8 +65,7 @@ const Tables = ({ controls, page, handleEdit, handleDelete }) => {
                 </button>
               </td>
             </tr>
-          );
-        })}
+          ))}
       </tbody>
     </MDBTable>
   );

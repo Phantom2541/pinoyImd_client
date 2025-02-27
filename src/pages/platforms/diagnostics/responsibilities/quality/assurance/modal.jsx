@@ -7,39 +7,28 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
+  MDBTypography,
 } from "mdbreact";
 import {
   SAVE,
   UPDATE,
 } from "../../../../../../services/redux/slices/responsibilities/assurances";
 
-import { Services } from "../../../../../../services/fakeDb";
+import { Services } from "./../../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
-// Declare initial form state
-const _form = {
-  serviceId: "",
-  abnormal: "",
-  high: "",
-  normal: "",
-};
-
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ assurances }) => assurances),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(_form),
+    [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
   // Set form data kapag nagbukas ng modal
   useEffect(() => {
-    if (!willCreate && show && selected) {
-      setForm(selected);
-    } else {
-      setForm(_form);
-    }
+    setForm(selected);
   }, [willCreate, selected, show]);
 
   // Handle update function
@@ -59,8 +48,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         token,
       })
     );
-
-    setForm(_form);
   };
 
   // Handle create function
@@ -70,7 +57,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         data: form,
         token,
       })
-    );
+    ).then(() => toggle()); // Close modal after successful save
   };
 
   // Handle form submit
@@ -88,9 +75,9 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleChange = (key, value) => {
     setForm({
       ...form,
-      [key]: value,
+      [key]: Number(value),
       userId: auth._id,
-      branchId: "637097f0535529a3a57e933e",
+      branchId: activePlatform.branchId,
     });
   };
 
@@ -98,10 +85,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleValue = (key) => form[key] || "";
 
   // Handle modal close
-  const handleClose = () => {
-    setForm(_form);
-    toggle();
-  };
+  const handleClose = () => toggle();
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop size="sm">
@@ -110,43 +94,36 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} {selected?.serviceId || "Assurances"}
+        {willCreate ? "Create" : "Update"} Controls
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
-          {/* Select dropdown */}
-          <select
-            name="serviceId"
-            onChange={(e) => handleChange("serviceId", e.target.value)}
-            className="w-100"
-            value={handleValue("serviceId")}
+          <MDBTypography
+            tag="h4"
+            variant="h4-responsive"
+            className="text-center"
           >
-            <option value="">Select Service</option>
-            {Services.collections.map((service) => (
-              <option key={service.id} value={service.id}>
-                {service.name}
-              </option>
-            ))}
-          </select>
+            {Services.getName(selected.serviceId)}
+          </MDBTypography>
 
           {/* Input fields */}
           <MDBInput
             label="Abnormal"
-            type="text"
+            type="number"
             value={handleValue("abnormal")}
             required
             onChange={(e) => handleChange("abnormal", e.target.value)}
           />
           <MDBInput
             label="High"
-            type="text"
+            type="number"
             value={handleValue("high")}
             required
             onChange={(e) => handleChange("high", e.target.value)}
           />
           <MDBInput
             label="Normal"
-            type="text"
+            type="number"
             value={handleValue("normal")}
             required
             onChange={(e) => handleChange("normal", e.target.value)}

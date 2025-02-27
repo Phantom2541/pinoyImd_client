@@ -1,27 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-
-import { Services } from "../../../../../../services/fakeDb";
-import { handlePagination } from "../../../../../../services/utilities";
 import { DESTROY } from "../../../../../../services/redux/slices/responsibilities/assurances";
 import Swal from "sweetalert2";
 
-const Tables = ({ page, setSelected, setWillCreate, setShowModal }) => {
+import { Services } from "../../../../../../services/fakeDb";
+import { handlePagination } from "../../../../../../services/utilities";
+
+const Tables = ({ page, handleEdit }) => {
   const { maxPage, token } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ assurances }) => assurances),
-    [assurances, setAssurances] = useState([]),
-    dispatch = useDispatch;
-
-  useEffect(() => {
-    setAssurances(collections);
-  }, [collections]);
-
-  const handleEdit = (assurance) => {
-    setSelected(assurance);
-    setWillCreate(false);
-    setShowModal(true);
-  };
+    dispatch = useDispatch();
 
   const handleDelete = (_id) => {
     Swal.fire({
@@ -51,7 +40,7 @@ const Tables = ({ page, setSelected, setWillCreate, setShowModal }) => {
         </tr>
       </thead>
       <tbody>
-        {handlePagination(assurances, page, maxPage)?.map(
+        {handlePagination(collections, page, maxPage)?.map(
           (assurance, index) => {
             return (
               <tr key={index}>

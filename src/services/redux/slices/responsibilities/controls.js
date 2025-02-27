@@ -118,7 +118,6 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        console.log("action", action);
         const { payload } = action;
         state.collections = payload;
         state.isLoading = false;
@@ -135,9 +134,13 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload } = action;
         state.message = success;
-        state.collections.unshift(payload);
+        state.collections = [payload, ...state.collections];
+        console.log("state.collections", action);
+
+        console.log("payload", payload);
+
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -176,7 +179,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success } = action.payload;
+        const { success } = action;
         const index = state.collections.findIndex(
           (item) => item?._id === action.payload
         );
