@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  BROWSE,
+  OUTSOURCE,
   RESET,
 } from "../../../../../services/redux/slices/assets/providers";
 import {
@@ -23,7 +23,7 @@ export default function Source() {
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
-      dispatch(BROWSE({ token, vendors: activePlatform.branch }));
+      dispatch(OUTSOURCE({ token, vendors: activePlatform.branch }));
     }
 
     return () => {

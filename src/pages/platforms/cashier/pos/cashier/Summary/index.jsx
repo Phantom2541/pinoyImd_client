@@ -11,48 +11,52 @@ import { UPDATE as PATIENTUPDATE } from "../../../../../../services/redux/slices
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
+import { RESET } from "../../../../../../services/redux/slices/commerce/pos";
+import { removeUndefinedValues } from "../../../../../../services/utilities";
 
-export default function Summary({
-  resetCustomer,
-}) {
+export default function Summary() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { cart,category, privilege, customer,physicianId, sourceId } = useSelector(({ pos }) => pos),
-    [isPickup, setIsPickup] = useState(true),
-    [payment, setPayment] = useState(0),
-    dispatch = useDispatch();
-
-  const { gross = 0, discount = 0 } = computeGD(
+    {
       cart,
       category,
-      privilege
-    ),
-    amount = gross - discount,
-    { abbr = "" } = Categories[category],
-    paymentOptions = Payments[abbr];
+      privilege,
+      customer,
+      physicianId,
+      sourceId,
+      ssx,
+      authorizedBy,
+      department,
+    } = useSelector(({ pos }) => pos),
+    [isPickup, setIsPickup] = useState(true),
+    [payment, setPayment] = useState(0),
+    // [cash, setCash] = useState(0),
+    dispatch = useDispatch();
 
-  console.log("carts :", cart);
+  const { gross = 0, discount = 0 } = computeGD(cart, category, privilege),
+    amount = gross - discount,
+    { abbr = undefined } = Categories[category],
+    paymentOptions = Payments[abbr];
 
   const handleCheckout = (e) => {
     e.preventDefault();
 
-    const cash = Number(e.target.cash.value);
+    const cash = Number(e.target.amount.value);
 
     const today = new Date();
 
-    const data = {
+    const _data = {
       // exact date used for pre calculated daily sale
       date: {
         month: Months[today.getMonth()],
         day: today.getDate(),
         year: today.getFullYear(),
       },
-      // saleId: saleId || undefined,
-      // source: sourceVendor || undefined,
       physicianId: physicianId || undefined,
       source: sourceId || undefined,
-      // authorizedBy: authorizedBy || undefined,
+      authorizedBy: authorizedBy || undefined,
+      ssx: ssx || undefined,
       branchId: activePlatform.branchId,
-      customerId:customer._id,
+      customerId: customer._id,
       cashierId: auth._id,
       category: category === 0 ? "walkin" : abbr,
       payment: paymentOptions[payment],
@@ -60,7 +64,7 @@ export default function Summary({
       amount,
       discount,
       isPickup,
-      department: "LAB",
+      department,
       privilege: privilege,
       customer,
       cashier: auth?.fullName,
@@ -85,8 +89,8 @@ export default function Summary({
           packages,
           menuId: _id,
           isNew,
-          up: isNew ? up : soldUp,
-          discount: isNew ? discount : soldDiscount,
+          up: up,
+          discount: soldDiscount,
         };
       }),
     };
@@ -99,13 +103,17 @@ export default function Summary({
         text: "Please return the change to the customer.",
       });
 
-    if (customer?.privilege !== privilege)
+    if (customer?.privilege !== privilege && privilege !== 4)
+      // 4 : special discount
+      // a Special occasion of privilege
       dispatch(
         PATIENTUPDATE({
           token,
-          data: { _id: customer._id, privilege  },
+          data: { _id: customer._id, privilege },
         })
       );
+
+    const data = removeUndefinedValues(_data);
 
     dispatch(
       SAVE({
@@ -113,9 +121,7 @@ export default function Summary({
         data,
       })
     );
-    // is not a function
-    // resetCustomer();
-    e.target.reset();
+    return dispatch(RESET());
   };
 
   return (
@@ -161,9 +167,10 @@ export default function Summary({
               <input
                 type="number"
                 min={amount}
+                // onChange={({ target }) => setCash(Number(target.value))}
                 placeholder="Amount in Peso"
                 required
-                name="cash"
+                name="amount"
               />
             </td>
           </tr>

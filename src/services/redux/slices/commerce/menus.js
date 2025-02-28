@@ -91,6 +91,9 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    SETMENUS: (state, { payload }) => {
+      state.collections = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -175,6 +178,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { SETMENUS, RESET } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

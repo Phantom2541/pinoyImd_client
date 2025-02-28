@@ -5,12 +5,17 @@ import {
   Ledger,
   Menus,
   Services,
+  Insources,
+  Outsources,
 } from "../../../pages/platforms/cashier";
+import { Tablestemplate, Collapsable } from "../../../pages/tamplates";
+
 import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
 import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
 import Remmitances from "../../../pages/platforms/manager/pos/remittances";
+//import Outsource from "../../../pages/platforms/manager/provider";
 
 const cashier = [
   {
@@ -22,7 +27,7 @@ const cashier = [
   {
     name: "POS", // Point Of Sales
     path: "/pos",
-    icon: "cogs",
+    icon: "money-bill",
     children: [
       {
         name: "Cashier",
@@ -57,7 +62,7 @@ const cashier = [
     icon: "tv",
     children: [
       {
-        name: "Payables",
+        name: "Payables", // unpaid bills (Water, Electricity, etc.)
         path: "/payables",
         component: Payables,
       },
@@ -79,7 +84,7 @@ const cashier = [
   {
     name: "Offers", //viewing only
     path: "/offers",
-    icon: "list",
+    icon: "handshake",
     children: [
       {
         name: "Menus",
@@ -87,9 +92,44 @@ const cashier = [
         component: Menus,
       },
       {
+        icon: "list",
         name: "Services",
         path: "/services",
         component: Services,
+      },
+    ],
+  },
+  {
+    name: "Sources", //viewing only
+    path: "/sources",
+    icon: "cogs",
+    children: [
+      {
+        name: "Outsources",
+        path: "/outsources",
+        component: Outsources,
+      },
+      {
+        name: "Insources",
+        path: "/insources",
+        component: Insources,
+      },
+    ],
+  },
+  {
+    name: "Templates ", //viewing only
+    path: "/templates ",
+    icon: "list",
+    children: [
+      {
+        name: "Tables",
+        path: "/tables",
+        component: Tablestemplate,
+      },
+      {
+        name: "Collapsables",
+        path: "/collapsables",
+        component: Collapsable,
       },
     ],
   },

@@ -5,10 +5,19 @@ const name = "responsibilities/assurance";
 
 const initialState = {
   collections: [],
-  personnel: {},
+  filter: [],
+  paginated: [],
   isSuccess: false,
   isLoading: false,
   message: "",
+
+  // Bread attributes
+  selected: {}, // assurance
+  totalPages: 0,
+  page: 0,
+  showModal: false,
+  willCreate: false,
+  maxPage: 5,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -77,33 +86,39 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    UPDATEACCESS: (state, data) => {
-      // used for updating access in file201
-      const { _id, access, isNew = false } = data.payload,
-        { collections } = state;
-
-      const index = collections.findIndex((item) => item._id === _id);
-
-      const personnelAccess = [...collections[index].access];
-
-      var newAccess = [];
-
-      if (isNew) {
-        newAccess = personnelAccess.concat(access);
-      } else {
-        newAccess = personnelAccess.map((pAccess) => {
-          if (access.find((_access) => _access._id === pAccess._id)) {
-            return {
-              ...pAccess,
-              status: !pAccess.status,
-            };
-          }
-
-          return pAccess;
-        });
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetCREATE: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetFILTER: (state, { payload }) => {
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPages = Math.floor(payload.length / maxPage);
+        if (payload.length % maxPage > 0) totalPages += 1;
+        state.totalPages = totalPages;
+        if (page > totalPages) {
+          state.page = totalPages;
+        }
       }
+      state.filter = payload;
+    },
+    SetPagination: (state, { payload }) => {
+      const { page, max, getPage } = state;
+      // if (getPage) return array;
 
-      state.collections[index].access = newAccess;
+      state.paginated = state.filter.slice(
+        (page - 1) * max,
+        max + (page - 1) * max
+      );
+    },
+    SetPAGE: (state, { payload }) => {
+      state.page = payload;
     },
     RESET: (state, data) => {
       state.isSuccess = false;
@@ -118,9 +133,11 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        //console.log("action", action);
         const { payload } = action;
         state.collections = payload;
+        const _paginated = state.filter.slice(0, state.maxPage);
+        state.paginated = _paginated;
+        state.isSuccess = true;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -138,6 +155,7 @@ export const reduxSlice = createSlice({
         const { success, payload } = action;
         state.message = success;
         state.collections.unshift(payload);
+        state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -159,6 +177,7 @@ export const reduxSlice = createSlice({
         );
 
         state.collections[index] = payload;
+        state.showModal = false;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -191,6 +210,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, UPDATEACCESS } = reduxSlice.actions;
+export const { SetCREATE, SetEDIT, SetFILTER, SetPAGE, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

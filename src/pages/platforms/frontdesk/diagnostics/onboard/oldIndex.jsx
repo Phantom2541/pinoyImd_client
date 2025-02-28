@@ -7,7 +7,6 @@ import {
 } from "../../../../../services/redux/slices/commerce/sales";
 import {
   axioKit,
-  currency,
   fullName,
   getGenderIcon,
   globalSearch,
@@ -158,7 +157,7 @@ export default function Sales() {
         );
       }
       console.log(" old pos here");
-      
+
       dispatch(
         UPDATE({
           token,
