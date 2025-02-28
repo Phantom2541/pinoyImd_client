@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 import {
   RESET,
-  BROWSE,
+  // BROWSE,
   SetCREATE,
 } from "../../../../../services/redux/slices/assets/providers";
 const Header = () => {
@@ -14,14 +14,13 @@ const Header = () => {
     // console.log("Outside if");
     if (token && activePlatform?.branchId) {
       console.log("Inside if");
-      dispatch(
-        BROWSE({
-          token,
-          params: {
-            branchId: activePlatform?.branchId,
-          },
-        })
-      );
+      dispatch();
+      // BROWSE({
+      //   token,
+      //   params: {
+      //     branchId: activePlatform?.branchId,
+      //   },
+      // })
     }
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);

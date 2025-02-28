@@ -16,7 +16,7 @@ export default function Body({ patient }) {
 
   if (isLoading)
     return (
-      <div className="text-center mt-5">
+      <div className="text-center  mt-5">
         <MDBSpinner />
       </div>
     );
@@ -29,7 +29,7 @@ export default function Body({ patient }) {
     );
 
   return (
-    <MDBContainer className="mt-4 md-accordion px-0" fluid>
+    <MDBContainer className=" mt-3 px-0" fluid>
       {collections.map((task, index) => (
         <Collapse
           key={task?._id}

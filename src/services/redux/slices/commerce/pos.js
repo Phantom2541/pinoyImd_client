@@ -75,24 +75,6 @@ export const SAVE = createAsyncThunk(
   }
 );
 
-export const UPDATE = createAsyncThunk(
-  `${name}/update`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(name, data, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const TAGGING = createAsyncThunk(
   `${name}/tagging`,
   ({ key, token }, thunkAPI) => {
@@ -232,44 +214,6 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
-      .addCase(UPDATE.pending, (state) => {
-        // state.isLoading = true; comment this to stop loading and refreshing UI
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(UPDATE.fulfilled, (state, action) => {
-        console.log("action pos", action);
-
-        const { success, payload } = action.payload;
-
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
-
-        state.transaction = {
-          ...payload,
-          _id: state.transaction._id === payload._id ? "default" : payload._id,
-        };
-
-        const currentValue = { ...state.collections[index] };
-
-        for (const key in payload) {
-          if (currentValue.hasOwnProperty(key)) {
-            currentValue[key] = payload[key];
-          }
-        }
-
-        state.collections[index] = currentValue;
-        state.message = success;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

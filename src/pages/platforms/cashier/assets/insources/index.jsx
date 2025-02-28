@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody } from "mdbreact";
 
-import Collapsable from "./collapse";
+// import Collapsable from "./collapse";
 import TopHeader from "./header";
 import Pagination from "../../../../../components/pagination";
 import TableRowCount from "../../../../../components/pagination/rows";
