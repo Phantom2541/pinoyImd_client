@@ -56,7 +56,7 @@ export default function Vouchers() {
     setEmployees(collections);
   };
   const toggleModal = () => setShowModal(!showModal);
-  const handleUpdate = (selected) => {
+  const handleUpdate = selected => {
     setSelected(selected);
     if (willCreate) {
       setWillCreate(false);
@@ -100,7 +100,7 @@ export default function Vouchers() {
         tableBodies={[
           {
             _key: "user",
-            _format: (data) => (
+            _format: data => (
               <h6>
                 <strong>{capitalize(fullName(data.fullName))}</strong>
               </h6>
@@ -108,9 +108,9 @@ export default function Vouchers() {
           },
           {
             _key: "employment",
-            _format: (data) => {
+            _format: data => {
               const designation = Roles.find(
-                (role) => role.id === Number(data.designation)
+                role => role.id === Number(data.designation)
               );
 
               return <strong> {designation?.display_name}</strong>;
@@ -118,12 +118,12 @@ export default function Vouchers() {
           },
           {
             _key: "id",
-            _format: (data) => <strong>{data}</strong>,
+            _format: data => <strong>{data}</strong>,
           },
 
           {
             _key: "status",
-            _format: (data) => <strong>{data}</strong>,
+            _format: data => <strong>{data}</strong>,
           },
         ]}
         handleSearch={handleSearch}
