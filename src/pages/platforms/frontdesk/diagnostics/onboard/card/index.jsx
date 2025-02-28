@@ -4,8 +4,8 @@ import { MDBBadge } from "mdbreact";
 import { SecondaryFooter, PrimaryFooter } from "./footer";
 import { fullName } from "../../../../../../services/utilities";
 
-import Tagging from "./body/tagging";
-import Show from "./body/show";
+import Tagging from "./tagging";
+import Show from "./show";
 
 export default function Card({ item, index }) {
   const { collections: sources } = useSelector(({ providers }) => providers),

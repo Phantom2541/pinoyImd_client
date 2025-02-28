@@ -4,173 +4,198 @@ import { axioKit } from "../../../utilities";
 const name = "responsibilities/controls";
 
 const initialState = {
-  collections: [], // incase one query only
-  filter: [], // filtered on collection to eliminate server load
-  paginated: [], // paginated the filtered
+  collections: [],
+  personnel: {},
   isSuccess: false,
   isLoading: false,
   message: "",
-  // for BREAD
-  selected: {},
-  totalPages: 0,
-  page: 0,
-  showModal: false,
-  willCreate: false,
-  maxPage: 5, // Default value, computed dynamically when needed
 };
 
-// Async thunks
 export const BROWSE = createAsyncThunk(
-  `${name}/browse`,
-  async ({ token, params }, thunkAPI) => {
+  `${name}`,
+  ({ token, params }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/browse`, token, params);
+      return axioKit.universal(`${name}/browse`, token, params);
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
-      );
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
+export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
   try {
-    return await axioKit.save(name, form.data, form.token);
+    return axioKit.save(name, form.data, form.token);
   } catch (error) {
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
-    );
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
   }
 });
 
-export const UPDATE = createAsyncThunk(
-  `${name}/update`,
-  async (form, thunkAPI) => {
-    try {
-      return await axioKit.update(name, form.data, form.token);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
-      );
-    }
+export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(name, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 export const DESTROY = createAsyncThunk(
   `${name}/destroy`,
-  async ({ data, token }, thunkAPI) => {
+  ({ data, token }, thunkAPI) => {
     try {
-      return await axioKit.destroy(name, data, token);
+      return axioKit.destroy(name, data, token);
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
-      );
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-// Redux slice
 export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    SetEDIT: (state, { payload }) => {
-      state.selected = payload;
-      state.willCreate = false;
-      state.showModal = true;
-    },
-    SetCREATE: (state, { payload }) => {
-      state.selected = payload;
-      state.willCreate = true;
-      state.showModal = true;
-    },
-    SetFILTER: (state, { payload }) => {
-      const { page, maxPage } = payload;
-      if (page.length > 0) {
-        state.totalPages = Math.ceil(payload.length / maxPage);
-        if (state.page > state.totalPages) {
-          state.page = state.totalPages;
-        }
+    UPDATEACCESS: (state, data) => {
+      // used for updating access in file201
+      const { _id, access, isNew = false } = data.payload,
+        { collections } = state;
+
+      const index = collections.findIndex((item) => item._id === _id);
+
+      const personnelAccess = [...collections[index].access];
+
+      var newAccess = [];
+
+      if (isNew) {
+        newAccess = personnelAccess.concat(access);
+      } else {
+        newAccess = personnelAccess.map((pAccess) => {
+          if (access.find((_access) => _access._id === pAccess._id)) {
+            return {
+              ...pAccess,
+              status: !pAccess.status,
+            };
+          }
+
+          return pAccess;
+        });
       }
-      state.filter = page;
+
+      state.collections[index].access = newAccess;
     },
-    SetPAGE: (state, { payload }) => {
-      state.page = payload;
-    },
-    RESET: (state) => {
+    RESET: (state, data) => {
       state.isSuccess = false;
       state.message = "";
     },
   },
   extraReducers: (builder) => {
     builder
-      // BROWSE
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+      .addCase(BROWSE.fulfilled, (state, action) => {
+        const { payload } = action;
         state.collections = payload;
         state.isLoading = false;
       })
-      .addCase(BROWSE.rejected, (state, { payload }) => {
-        state.message = payload;
+      .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
         state.isLoading = false;
       })
 
-      // SAVE
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, { payload }) => {
-        state.collections.unshift(payload);
-        state.showModal = false;
+      .addCase(SAVE.fulfilled, (state, action) => {
+        const { success, payload } = action;
+        state.message = success;
+        state.collections = [payload, ...state.collections];
+        console.log("state.collections", action);
+
+        console.log("payload", payload);
+
         state.isSuccess = true;
         state.isLoading = false;
       })
-      .addCase(SAVE.rejected, (state, { payload }) => {
-        state.message = payload;
+      .addCase(SAVE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
         state.isLoading = false;
       })
 
-      // UPDATE
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
       })
-      .addCase(UPDATE.fulfilled, (state, { payload }) => {
+      .addCase(UPDATE.fulfilled, (state, action) => {
+        const { success, payload } = action;
+        console.log("payload", action.payload);
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-        if (index !== -1) {
-          state.collections[index] = payload;
-        }
-        state.showModal = false;
+
+        state.collections[index] = payload;
+        state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
       })
-      .addCase(UPDATE.rejected, (state, { payload }) => {
-        state.message = payload;
+      .addCase(UPDATE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
         state.isLoading = false;
       })
 
-      // DESTROY
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
       })
-      .addCase(DESTROY.fulfilled, (state, { payload }) => {
-        state.collections = state.collections.filter(
-          (item) => item._id !== payload
+      .addCase(DESTROY.fulfilled, (state, action) => {
+        const { success } = action;
+        const index = state.collections.findIndex(
+          (item) => item?._id === action.payload
         );
+        state.collections.splice(index, 1);
+        state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
       })
-      .addCase(DESTROY.rejected, (state, { payload }) => {
-        state.message = payload;
+      .addCase(DESTROY.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
         state.isLoading = false;
       });
   },
 });
 
-// Export actions and reducer
-export const { SetCREATE, SetEDIT, SetFILTER, SetPAGE, RESET } =
-  reduxSlice.actions;
+export const { RESET, UPDATEACCESS } = reduxSlice.actions;
+
 export default reduxSlice.reducer;

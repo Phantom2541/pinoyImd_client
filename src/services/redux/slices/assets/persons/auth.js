@@ -159,6 +159,7 @@ export const reduxSlice = createSlice({
       state.isOnline = data.payload;
     },
     MAXPAGE: (state, data) => {
+      localStorage.setItem("maxPage", data.payload);
       state.maxPage = data.payload;
     },
     RESET: (state) => {
@@ -291,6 +292,7 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.auth = payload;
         state.email = payload.email;
+        localStorage.setItem("email", payload.email);
         state.activePlatform = {
           ...payload.activePlatform,
           branch,

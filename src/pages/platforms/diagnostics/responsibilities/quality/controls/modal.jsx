@@ -27,9 +27,9 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     dispatch = useDispatch();
 
   // Set form data kapag nagbukas ng modal
-  // useEffect(() => {
-  //   setForm(selected);
-  // }, [selected]);
+  useEffect(() => {
+    setForm(selected);
+  }, [willCreate, selected, show]);
 
   // Handle update function
   const handleUpdate = () => {
@@ -82,11 +82,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   };
 
   // Fix: Return correct form value
-  const handleValue = (key) => {
-    console.log("key", key);
-
-    // form?.[key] || "";
-  };
+  const handleValue = (key) => form[key] || "";
 
   // Handle modal close
   const handleClose = () => toggle();
@@ -107,7 +103,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             variant="h4-responsive"
             className="text-center"
           >
-            {Services.getName(selected?.serviceId)}
+            {Services.getName(selected.serviceId)}
           </MDBTypography>
 
           {/* Input fields */}

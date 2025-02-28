@@ -11,52 +11,48 @@ import { UPDATE as PATIENTUPDATE } from "../../../../../../services/redux/slices
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
-import { RESET } from "../../../../../../services/redux/slices/commerce/pos";
-import { removeUndefinedValues } from "../../../../../../services/utilities";
 
-export default function Summary() {
+export default function Summary({
+  resetCustomer,
+}) {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    {
-      cart,
-      category,
-      privilege,
-      customer,
-      physicianId,
-      sourceId,
-      ssx,
-      authorizedBy,
-      department,
-    } = useSelector(({ pos }) => pos),
+    { cart,category, privilege, customer,physicianId, sourceId } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
-    // [cash, setCash] = useState(0),
     dispatch = useDispatch();
 
-  const { gross = 0, discount = 0 } = computeGD(cart, category, privilege),
+  const { gross = 0, discount = 0 } = computeGD(
+      cart,
+      category,
+      privilege
+    ),
     amount = gross - discount,
-    { abbr = undefined } = Categories[category],
+    { abbr = "" } = Categories[category],
     paymentOptions = Payments[abbr];
+
+  console.log("carts :", cart);
 
   const handleCheckout = (e) => {
     e.preventDefault();
 
-    const cash = Number(e.target.amount.value);
+    const cash = Number(e.target.cash.value);
 
     const today = new Date();
 
-    const _data = {
+    const data = {
       // exact date used for pre calculated daily sale
       date: {
         month: Months[today.getMonth()],
         day: today.getDate(),
         year: today.getFullYear(),
       },
+      // saleId: saleId || undefined,
+      // source: sourceVendor || undefined,
       physicianId: physicianId || undefined,
       source: sourceId || undefined,
-      authorizedBy: authorizedBy || undefined,
-      ssx: ssx || undefined,
+      // authorizedBy: authorizedBy || undefined,
       branchId: activePlatform.branchId,
-      customerId: customer._id,
+      customerId:customer._id,
       cashierId: auth._id,
       category: category === 0 ? "walkin" : abbr,
       payment: paymentOptions[payment],
@@ -64,7 +60,7 @@ export default function Summary() {
       amount,
       discount,
       isPickup,
-      department,
+      department: "LAB",
       privilege: privilege,
       customer,
       cashier: auth?.fullName,
@@ -89,8 +85,8 @@ export default function Summary() {
           packages,
           menuId: _id,
           isNew,
-          up: up,
-          discount: soldDiscount,
+          up: isNew ? up : soldUp,
+          discount: isNew ? discount : soldDiscount,
         };
       }),
     };
@@ -103,17 +99,13 @@ export default function Summary() {
         text: "Please return the change to the customer.",
       });
 
-    if (customer?.privilege !== privilege && privilege !== 4)
-      // 4 : special discount
-      // a Special occasion of privilege
+    if (customer?.privilege !== privilege)
       dispatch(
         PATIENTUPDATE({
           token,
-          data: { _id: customer._id, privilege },
+          data: { _id: customer._id, privilege  },
         })
       );
-
-    const data = removeUndefinedValues(_data);
 
     dispatch(
       SAVE({
@@ -121,7 +113,9 @@ export default function Summary() {
         data,
       })
     );
-    return dispatch(RESET());
+    // is not a function
+    // resetCustomer();
+    e.target.reset();
   };
 
   return (
@@ -167,10 +161,9 @@ export default function Summary() {
               <input
                 type="number"
                 min={amount}
-                // onChange={({ target }) => setCash(Number(target.value))}
                 placeholder="Amount in Peso"
                 required
-                name="amount"
+                name="cash"
               />
             </td>
           </tr>

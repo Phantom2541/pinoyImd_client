@@ -36,7 +36,7 @@ import {
   RESET as PHYSICIANRESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import {
-  OUTSOURCE as SOURCELIST,
+  BROWSE as SOURCELIST,
   RESET as SOURCERESET,
 } from "../../../../../services/redux/slices/assets/providers";
 import Swal from "sweetalert2";

@@ -19,19 +19,17 @@ import { Services } from "./../../../../../../services/fakeDb";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
-export default function Modal() {
-  const { show, toggle, selected, willCreate, isLoading } = useSelector(
-      ({ assurances }) => assurances
-    ),
+export default function Modal({ show, toggle, selected, willCreate }) {
+  const { isLoading } = useSelector(({ assurances }) => assurances),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
   // Set form data kapag nagbukas ng modal
-  // useEffect(() => {
-  //   setForm(selected);
-  // }, [selected]);
+  useEffect(() => {
+    setForm(selected);
+  }, [willCreate, selected, show]);
 
   // Handle update function
   const handleUpdate = () => {
@@ -105,7 +103,7 @@ export default function Modal() {
             variant="h4-responsive"
             className="text-center"
           >
-            {Services.getName(selected?.serviceId)}
+            {Services.getName(selected.serviceId)}
           </MDBTypography>
 
           {/* Input fields */}

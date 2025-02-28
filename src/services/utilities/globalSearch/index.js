@@ -1,23 +1,14 @@
-const globalSearch = (collection, key) => {
-  key = key.toUpperCase(); // Normalize search key
-
-  // console.log("collection", collection);
-  // console.log("key", key);
-
-  return collection.filter((obj) => {
-    if (!obj) return false;
-
-    if (typeof obj === "object") {
-      return Object.values(obj).some((value) => {
-        if (typeof value === "object") {
-          return globalSearch([value], key).length > 0; // Recursively search nested objects
-        }
-        return String(value).toUpperCase().includes(key);
-      });
+const globalSearch = (collection, key) =>
+  collection.filter((obj) => {
+    if (obj) {
+      if (typeof obj === "object") {
+        let nestedResults = globalSearch(Object.values(obj), key);
+        return nestedResults.length > 0;
+      } else if (String(obj).toUpperCase().includes(key.toUpperCase())) {
+        return true;
+      }
     }
-
-    return String(obj).toUpperCase().includes(key);
+    return false;
   });
-};
 
 export default globalSearch;
