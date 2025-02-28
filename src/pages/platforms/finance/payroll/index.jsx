@@ -106,9 +106,7 @@ export default function Payroll() {
             <tbody>
               {personnels.map((personnel, index) => {
                 const { user, employment, rate, payroll } = personnel;
-                const designation = Roles.find(
-                  role => role.id === Number(employment.designation)
-                );
+                const designation = Roles.findById(Number(data.designation));
                 // //console.log("payrollss", payroll);
 
                 let akinsenas = payroll?.find(
