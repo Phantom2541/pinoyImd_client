@@ -15,22 +15,27 @@ export default function CollapseTable({ menu }) {
   const toggleModal = () => setShowModal(!showModal);
 
   useEffect(() => {
-    const labTests = Templates.reduce(
-      (accumulator, { components, department }) => {
+    setLabTests(
+      Templates.reduce((accumulator, { components, department }) => {
         if (department === "LAB") {
-          const filteredComponents = components.filter(
-            (component) => menu[component.toLowerCase()]
-          );
-
-          return [...accumulator, ...filteredComponents];
+          return [
+            ...accumulator,
+            ...components.filter((component) => menu[component.toLowerCase()]),
+          ];
         }
+        // const labTests = Templates.reduce(
+        //   (accumulator, { components, department }) => {
+        //     if (department === "LAB") {
+        //       const filteredComponents = components.filter(
+        //         (component) => menu[component.toLowerCase()]
+        //       );
 
-        return accumulator;
-      },
-      []
+        //       return [...accumulator, ...filteredComponents];
+        //     }
+
+        //     return accumulator;
+      }, [])
     );
-
-    setLabTests(labTests);
   }, [menu]);
 
   const handlePrint = (labTest) => {
@@ -41,7 +46,7 @@ export default function CollapseTable({ menu }) {
     window.open(
       "/printout/task",
       "Task Printout",
-      "top=100px,left=100px,width=1050px,height=750px" // size of page that will open
+      "top=100px,left=100px,width=1050px,height=750px"
     );
   };
 
@@ -71,6 +76,7 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
+
     return (
       <tr key={task.key} className={`${hasDone && "table-active"}`}>
         <td className="fw-bold">{capitalize(department)}</td>
@@ -111,8 +117,8 @@ export default function CollapseTable({ menu }) {
                       branchId: activePlatform?.branch,
                       referral: physicianId || {},
                       services: Services.whereIn(_packages),
-                      preferences: collections,
                       signatories,
+                      preferences: collections,
                       isPrint: true,
                     })
                   }

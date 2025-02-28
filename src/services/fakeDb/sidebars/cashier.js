@@ -5,6 +5,7 @@ import {
   Ledger,
   Menus,
   Services,
+  Insources,
 } from "../../../pages/platforms/cashier";
 import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
@@ -90,6 +91,23 @@ const cashier = [
         name: "Services",
         path: "/services",
         component: Services,
+      },
+    ],
+  },
+  {
+    name: "Sources", //viewing only
+    path: "/sources",
+    icon: "list",
+    children: [
+      {
+        name: "Outsources",
+        path: "/outsources",
+        //component: Services,
+      },
+      {
+        name: "Insources",
+        path: "/insources",
+        //component: Services,
       },
     ],
   },

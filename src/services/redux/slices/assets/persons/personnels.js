@@ -6,7 +6,17 @@ const name = "assets/persons/personnels";
 const initialState = {
   collections: [],
   personnel: {},
-
+/**
+ * Responsible for access control
+ */
+    _id: "",
+    staff: {},
+    contract: {},
+    access: [], // Permissions or features that are available
+    granted: [], // Permissions that have been acquired or activated or stock
+    queued: [], // permissions are lined up for activation.
+    revoked: [], // Permissions that have been removed or denied
+  
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -180,6 +190,36 @@ export const reduxSlice = createSlice({
 
       state.collections[index].access = newAccess;
     },
+    SETOnHotSEAT: (state, { payload }) => {
+      // set default values
+      state.staff = payload.user;
+      state.contract = payload.contract;
+      state._id = payload._id;
+      state.access = payload.access;
+    },
+    SETQUEUED: (state, { payload }) => {
+      // pending access to be granted
+      const { _id, access } = payload;
+
+      const index = state.access.queued.findIndex((item) => item._id === _id);
+
+      if (index >= 0) {
+        state.access.permited[index].access = access;
+      } else {
+        state.access.permited.unshift({ _id, access });
+        state.access.available = state.access.available.filter(
+          (item) => item._id !== _id
+        );
+      }
+    },
+    SETREVOKED: (state, { payload }) => {
+      const { _id, access } = payload;
+      // remove access
+      state.access.permited = state.access.permited.filter(
+        (item) => item._id !== payload._id
+      );
+      state.access.available = state.access.available.unshift({ _id, access });
+    },
     RESET: (state, data) => {
       state.isSuccess = false;
       state.message = "";
@@ -336,8 +376,8 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           item => item._id === payload._id
         );
-
-        state.collections[index] = payload;
+        const oldPersonnel = { ...state.collections[index] };
+        state.collections[index] = { ...oldPersonnel, ...payload };
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -350,6 +390,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, UPDATEACCESS } = reduxSlice.actions;
+export const { SETOnHotSEAT, SETQUEUED, SETREVOKED, UPDATEACCESS, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

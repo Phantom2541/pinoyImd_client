@@ -46,10 +46,10 @@ export default function UnsetApply() {
     }
   }, [companies, page, maxPage]);
 
-  const handleSearch = string => {
+  const handleSearch = (string) => {
     if (string) {
       setCompanies(
-        collections?.filter(catalog =>
+        collections?.filter((catalog) =>
           String(catalog.name).toLowerCase().startsWith(string.toLowerCase())
         )
       );
@@ -64,7 +64,7 @@ export default function UnsetApply() {
         <MDBRow className="mb-3">
           <MDBCol md="6">
             <MDBInput
-              onChange={e => handleSearch(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               type="search"
               label="Search by Company name"
             />

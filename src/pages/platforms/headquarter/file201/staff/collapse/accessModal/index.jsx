@@ -12,12 +12,28 @@ import {
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../../../services/utilities";
-import { Roles } from "../../../../../../../services/fakeDb";
-import { UPDATE_ACCESS } from "../../../../../../../services/redux/slices/assets/persons/personnels";
+import { Access } from "../../../../../../../services/fakeDb";
+import {
+  UPDATE_ACCESS,
+} from "../../../../../../../services/redux/slices/assets/persons/personnels";
 import Table from "./table";
+
+/**
+ * AccessModal component manages user access roles through a modal interface.
+ * It displays available roles and existing access, allowing users to add or
+ * remove roles for a selected user. The changes can be saved and sent to the
+ * backend for processing. The component supports searching for roles,
+ * drag-and-drop functionality for managing roles, and visual feedback for
+ * the current state of access changes.
+ *
+ * @param {boolean} show - Controls the visibility of the modal.
+ * @param {function} toggle - Function to toggle the modal's visibility.
+ * @param {object} selected - Contains user and their current access data.
+ */
 
 export default function AccessModal({ show, toggle, selected }) {
   const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
+  // {stat}=useSelector(({personnels})=>personnels),
     [existingAccess, setExistingAccess] = useState([]),
     [roles, setRoles] = useState([]),
     [search, setSearch] = useState([]),
@@ -37,8 +53,11 @@ export default function AccessModal({ show, toggle, selected }) {
   }, []);
 
   const removeDuplicate = useCallback((_existingAccess) => {
-    return Roles.collections.filter((c) =>
-      _existingAccess?.every((existAcc) => existAcc.platform !== c.name)
+    return Access.collections.filter((c) =>
+      _existingAccess?.every(
+        (existAcc) =>
+          existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
+      )
     );
   }, []);
 
@@ -50,6 +69,7 @@ export default function AccessModal({ show, toggle, selected }) {
       handleSetRoles(_roles);
     }
     setAccessChanges({ deleted: [], added: [] });
+    
   }, [show, selected, handleSetRoles, removeDuplicate]);
 
   const handleSubmit = () => {
@@ -87,7 +107,7 @@ export default function AccessModal({ show, toggle, selected }) {
     if (isDelete && isExist) _deletedRoles.push(role);
     if (!isDelete && !isExist)
       _addedRoles.push({
-        platform: role.name,
+        platform: role.platform,
         approvedBy: auth._id,
         branchId: activePlatform.branchId,
         userId: user._id,
@@ -126,16 +146,15 @@ export default function AccessModal({ show, toggle, selected }) {
   };
 
   const getIndexOfRoleDeleted = (collections = [], item = {}) => {
-    const { name = "", platform = "" } = item;
-    const deletedRoleName = name || platform;
-    return collections.findIndex(({ platform = "", name = "" }) => {
-      const _name = platform || name;
-      return _name === deletedRoleName;
+    const { platform = "" } = item;
+    const deletedRoleName = platform;
+    return collections.findIndex(({ platform = "" }) => {
+      return platform === deletedRoleName;
     });
   };
 
   const handleDelete = (item) => {
-    const nameOfDeletedRole = item?.name || item?.platform;
+    const nameOfDeletedRole = item?.platform;
     const _roles = [...roles];
     const _existingAccess = [...existingAccess];
     const indexOfAccess = getIndexOfRoleDeleted(_existingAccess, item);
@@ -162,6 +181,63 @@ export default function AccessModal({ show, toggle, selected }) {
     setSearch(searchValue);
   };
 
+  const [hasDrag, setHasDrag] = useState(false);
+
+  const handleDragStart = (e, role, isAdd = true, dragTo = "Access") => {
+    setHasDrag(true);
+    e.dataTransfer.setData(
+      "application/json",
+      JSON.stringify({ role, isAdd, dragTo })
+    );
+
+    const dragPreview = document.createElement("div");
+    dragPreview.textContent = role.platform;
+    Object.assign(dragPreview.style, {
+      position: "absolute",
+      top: "0",
+      left: "0",
+      padding: "8px 12px",
+      background: "#f0f0f0",
+      border: "1px solid #ccc",
+      borderRadius: "6px",
+      boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+      fontSize: "1rem",
+      fontWeight: "500",
+      color: "#333",
+      whiteSpace: "nowrap", // Prevents text from breaking
+      pointerEvents: "none", // Prevents accidental interaction
+      transform: "translate(-50%, -50%)", // Centers on cursor
+    });
+
+    document.body.appendChild(dragPreview);
+
+    // Set as drag image
+    e.dataTransfer.setDragImage(dragPreview, 10, 10);
+
+    setTimeout(() => {
+      if (dragPreview.parentNode) {
+        dragPreview.parentNode.removeChild(dragPreview);
+      }
+    }, 0);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event, dropTo = "Tag Access") => {
+    event.preventDefault();
+    const data = event.dataTransfer.getData("application/json");
+    if (!data) return "unknown role";
+    const { role, isAdd, dragTo } = JSON.parse(data);
+    if (dragTo === dropTo) return "No changes";
+    if (isAdd) {
+      handleADD(role);
+    } else {
+      handleDelete(role);
+    }
+  };
+
   return (
     <MDBModal
       isOpen={show}
@@ -184,13 +260,23 @@ export default function AccessModal({ show, toggle, selected }) {
               collections={roles}
               handleAction={handleADD}
               handleSearch={handleSearch}
+              handleDragStart={handleDragStart}
+              handleDragOver={handleDragOver}
+              tableName="Access"
+              handleDrop={handleDrop}
+              hasDrag={hasDrag}
             />
           </MDBCol>
           <MDBCol md="6">
             <Table
               collections={existingAccess}
+              tableName="Tag Access"
               isTag={true}
               handleAction={handleDelete}
+              handleDragStart={handleDragStart}
+              handleDragOver={handleDragOver}
+              handleDrop={handleDrop}
+              hasDrag={hasDrag}
             />
           </MDBCol>
         </MDBRow>
@@ -199,7 +285,7 @@ export default function AccessModal({ show, toggle, selected }) {
         <MDBBtn
           onClick={handleSubmit}
           color="info"
-          disabled={existingAccess.length === 0}
+          // disabled={existingAccess.length === 0}
         >
           Save Changes
         </MDBBtn>

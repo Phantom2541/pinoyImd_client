@@ -1,5 +1,5 @@
 const fullNameSearch = (searchKey, array, custom = "") => {
-  const [_lname, rest = ""] = searchKey.toUpperCase()?.split(", "),
+  const [_lname, rest = ""] = searchKey?.toUpperCase()?.split(", "),
     [_fname, _mname] = rest.split(" Y ");
 
   if (!_lname) return [];

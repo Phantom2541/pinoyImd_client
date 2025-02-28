@@ -1,18 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-// import auth from "./slices/assets/persons/auth";
-// import personnels from "./slices/assets/persons/personnels";
-// import sources from "./slices/assets/persons/source";
-// import access from "./slices/responsibilities/access";
-// import users from "./slices/assets/persons/users";
-// import companies from "./slices/assets/companies";
-// import preferences from "./slices/results/preferences";
-// import menus from "./slices/commerce/menus";
-// import providers from "./slices/assets/providers";
-// import physicians from "./slices/assets/persons/physicians";
-// import sales from "./slices/commerce/sales";
-// import heads from "./slices/assets/persons/heads";
-// import tieups from "./slices/assets/tieups/companies";
-// import chemistry from "./slices/results/laboratory/chemistry";
 
 import {
   auth,
@@ -39,7 +25,13 @@ import {
   preferences,
 } from "./slices/results";
 
-import { access, liabilities, payrolls } from "./slices/responsibilities";
+import {
+  access,
+  liabilities,
+  payrolls,
+  controls,
+  assurances,
+} from "./slices/responsibilities";
 
 import remmitance from "./slices/finance/remmitance";
 
@@ -74,6 +66,8 @@ const store = configureStore({
     serology,
     temperatures,
     providers,
+    controls,
+    assurances,
   },
 });
 

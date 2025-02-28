@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "name": "accredetation",
+    "code": "accre",
+    "platform": "Accredetation"
+  },
+  {
+    "id": 2,
+    "name": "administrative",
+    "code": "admin",
+    "platform": "Administrative"
+  },
+  {
+    "id": 3,
+    "name": "auditor",
+    "code": "auditor",
+    "platform": "Auditor"
+  },
+  {
+    "id": 4,
+    "name": "cashier",
+    "code": "cashier",
+    "platform": "Cashier"
+  },
+  {
+    "id": 5,
+    "name": "frontdesk",
+    "code": "frontdesk",
+    "platform": "Frontdesk"
+  },
+  {
+    "id": 6,
+    "name": "manager",
+    "code": "manager",
+    "platform": "Manager"
+  },
+  {
+    "id": 7,
+    "name": "patron",
+    "code": "patron",
+    "platform": "Patron"
+  },
+  {
+    "id": 8,
+    "name": "Human Resources",
+    "code": "hr",
+    "platform": "Human Resources"
+  },
+  {
+    "id": 9,
+    "name": "clinical",
+    "code": "clinical",
+    "platform": "Clinical"
+  },
+  {
+    "id": 10,
+    "name": "laboratory",
+    "code": "laboratory",
+    "platform": "Laboratory"
+  },
+  {
+    "id": 11,
+    "name": "radiology",
+    "code": "radiology",
+    "platform": "Radiology"
+  },
+  {
+    "id": 12,
+    "name": "pharmacist",
+    "code": "pharmacist",
+    "platform": "Pharmacist"
+  },
+  {
+    "id": 13,
+    "name": "procurement",
+    "code": "procurement",
+    "platform": "Procurement"
+  },
+  {
+    "id": 14,
+    "name": "utility",
+    "code": "utility",
+    "platform": "Utility"
+  },
+  {
+    "id": 15,
+    "name": "nutritionist",
+    "code": "nutritionist",
+    "platform": "Nutritionist"
+  },
+  {
+    "id": 16,
+    "name": "driver",
+    "code": "driver",
+    "platform": "Driver"
+  },
+  {
+    "id": 17,
+    "name": "clinical",
+    "code": "clinical",
+    "platform": "Clinical"
+  },
+  {
+    "id": 18,
+    "name": "author",
+    "code": "author",
+    "platform": "Author"
+  }
+]

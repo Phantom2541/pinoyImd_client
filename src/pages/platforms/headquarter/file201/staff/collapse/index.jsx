@@ -48,8 +48,6 @@ export default function MenuCollapse({ staffs, page }) {
     );
   };
 
-  //console.log("Roles:", Roles);
-
   return (
     <MDBContainer
       style={{
@@ -63,6 +61,7 @@ export default function MenuCollapse({ staffs, page }) {
         const role = Roles.findById(
           Number(contract?.designation)
         )?.display_name;
+
         return (
           <MDBCard
             key={`staffs-${index}`}
@@ -78,6 +77,8 @@ export default function MenuCollapse({ staffs, page }) {
               onClick={() => setActiveId(prev => (prev === index ? -1 : index))}
             >
               <label className="d-flex justify-content-between">
+                {/* {index + 1}. {user && `${fullName(user?.fullName)}`}
+                {employment?.designation && `| ${role}`} */}
                 {index + 1}. {user && `${fullName(user?.fullName)} | `}
                 {contract?.designation && `${role}`}
                 <small>
