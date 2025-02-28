@@ -109,7 +109,7 @@ export default function Vouchers() {
           {
             _key: "employment",
             _format: (data) => {
-              const designation = Roles.find(
+              const designation = Roles.findById(
                 (role) => role.id === Number(data.designation)
               );
 
