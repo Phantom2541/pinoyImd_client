@@ -96,7 +96,6 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       "Request Form",
       "top=100px,left=100px,width=1050px,height=750px"
     );
-
     dispatch(
       REFORM({
         token,

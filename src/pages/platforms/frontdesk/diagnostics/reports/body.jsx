@@ -5,12 +5,12 @@ import Collapse from "./collapse";
 
 export default function Body({ patient }) {
   const [activeCollapse, setActiveCollapse] = useState(""),
-    { collections, isLoading } = useSelector(({ sales }) => sales);
+    { collections: records, isLoading } = useSelector(({ sales }) => sales);
 
   if (!patient?._id)
     return (
       <MDBTypography note noteColor="info" className="mt-3">
-        Look for a patient first.
+        Search for a patient first.
       </MDBTypography>
     );
 
@@ -21,7 +21,7 @@ export default function Body({ patient }) {
       </div>
     );
 
-  if (!collections.length)
+  if (!records.length)
     return (
       <MDBTypography note noteColor="warning" className="mt-3">
         This patient has no records.
@@ -29,8 +29,8 @@ export default function Body({ patient }) {
     );
 
   return (
-    <MDBContainer className=" mt-3 px-0" fluid>
-      {collections.map((task, index) => (
+    <MDBContainer className="mt-4 md-accordion px-0" fluid>
+      {records.map((task, index) => (
         <Collapse
           key={task?._id}
           task={task}

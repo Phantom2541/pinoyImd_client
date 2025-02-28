@@ -101,8 +101,9 @@ const TopHeader = ({
               <MDBIcon icon="plus" />
             </MDBBtn>
           )}
+          {/* comment by darrel */}
 
-          <select
+          {/* <select
             className="browser-default custom-select"
             style={{ width: "100px", marginRight: "10px" }}
             onChange={(e) => {
@@ -118,7 +119,7 @@ const TopHeader = ({
                 {i + 2023}
               </option>
             ))}
-          </select>
+          </select> */}
         </div>
       </div>
     </MDBView>
