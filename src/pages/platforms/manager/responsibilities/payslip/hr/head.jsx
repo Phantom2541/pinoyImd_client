@@ -11,9 +11,7 @@ import { MDBAlert } from "mdbreact";
 export default function Head() {
   const payslip = JSON.parse(localStorage.getItem("payslip")),
     { user, employment, branch } = payslip,
-    designation = Roles.find(
-      (role) => role.id === Number(employment.designation)
-    ),
+    designation = Roles.findById(Number(employment.designation)),
     d = new Date(),
     m = d.getMonth(),
     y = d.getFullYear();

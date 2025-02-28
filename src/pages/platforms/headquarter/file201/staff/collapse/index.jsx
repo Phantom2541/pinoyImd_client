@@ -26,7 +26,7 @@ export default function MenuCollapse({ staffs, page }) {
       UPDATE({
         data: {
           _id: data._id,
-          employment: {
+          contract: {
             hos: data.employmentHor,
             soe: data.employmentSoe,
             pc: data.employmentPc,
@@ -58,10 +58,10 @@ export default function MenuCollapse({ staffs, page }) {
       fluid
     >
       {handlePagination(staffs, page, maxPage).map((staff, index) => {
-        const { user, employment, status, rate, contribution, _id } = staff;
+        const { user, contract, status, rate, contribution, _id } = staff;
 
         const role = Roles.findById(
-          Number(employment?.designation)
+          Number(contract?.designation)
         )?.display_name;
         return (
           <MDBCard
@@ -79,9 +79,9 @@ export default function MenuCollapse({ staffs, page }) {
             >
               <label className="d-flex justify-content-between">
                 {index + 1}. {user && `${fullName(user?.fullName)} | `}
-                {employment?.designation && `${role}`}
+                {contract?.designation && `${role}`}
                 <small>
-                  {employment?.soe && `${employment?.soe?.toUpperCase()} | `}
+                  {contract?.soe && `${contract?.soe?.toUpperCase()} | `}
                   {status && status.toUpperCase()}
                   <i
                     style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
@@ -102,7 +102,7 @@ export default function MenuCollapse({ staffs, page }) {
             >
               <MDBCardBody className="pt-2">
                 <CollapseTable
-                  employment={employment}
+                  employment={contract}
                   staff={staff}
                   rate={rate}
                   contribution={contribution}

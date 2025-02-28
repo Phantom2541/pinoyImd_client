@@ -44,7 +44,7 @@ export default function UnsetApply() {
 
       page > totalPages && setPage(totalPages);
     }
-  }, [companies, page]);
+  }, [companies, page, maxPage]);
 
   const handleSearch = string => {
     if (string) {
