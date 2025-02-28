@@ -17,7 +17,7 @@ export default function CollapseTable({ menu }) {
   useEffect(() => {
     const labTests = Templates.reduce(
       (accumulator, { components, department }) => {
-        if (department === "laboratory") {
+        if (department === "LAB") {
           const filteredComponents = components.filter(
             (component) => menu[component.toLowerCase()]
           );
@@ -34,7 +34,6 @@ export default function CollapseTable({ menu }) {
   }, [menu]);
 
   const handlePrint = (labTest) => {
-
     localStorage.setItem("taskPrintout", JSON.stringify(labTest));
     window.open(
       "/printout/task",

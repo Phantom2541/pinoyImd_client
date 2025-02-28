@@ -23,7 +23,7 @@ const cashier = [
   {
     name: "POS", // Point Of Sales
     path: "/pos",
-    icon: "cogs",
+    icon: "money-bill",
     children: [
       {
         name: "Cashier",
@@ -58,7 +58,7 @@ const cashier = [
     icon: "tv",
     children: [
       {
-        name: "Payables",
+        name: "Payables", // unpaid bills (Water, Electricity, etc.)
         path: "/payables",
         component: Payables,
       },
@@ -80,7 +80,7 @@ const cashier = [
   {
     name: "Offers", //viewing only
     path: "/offers",
-    icon: "list",
+    icon: "handshake",
     children: [
       {
         name: "Menus",
@@ -88,6 +88,7 @@ const cashier = [
         component: Menus,
       },
       {
+        icon: "list",
         name: "Services",
         path: "/services",
         component: Services,
@@ -97,17 +98,17 @@ const cashier = [
   {
     name: "Sources", //viewing only
     path: "/sources",
-    icon: "list",
+    icon: "cogs",
     children: [
       {
-        name: "Outsources",
-        path: "/outsources",
-        //component: Services,
+        name: "Insource",
+        path: "/insource",
+        component: Menus,
       },
       {
-        name: "Insources",
-        path: "/insources",
-        //component: Services,
+        name: "Outsource",
+        path: "/outsource",
+        component: Services,
       },
     ],
   },

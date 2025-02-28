@@ -1,78 +1,96 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { MDBContainer, MDBSpinner, MDBTypography } from "mdbreact";
-import {
-  BROWSE,
-  RESET,
-} from "../../../../../services/redux/slices/commerce/taskGenerator.js";
-import Header from "./header";
+
+import Header from "./headers";
 import Card from "./card";
-import "./index.css";
-import { fullNameSearch } from "../../../../../services/utilities";
+import "./style.css";
+// import { fullNameSearch } from "../../../../../services/utilities";
+import {
+  INSOURCE,
+  SETSOURCES,
+  RESET,
+} from "../../../../../services/redux/slices/assets/providers.js";
 
 export default function Sales() {
   const [searchKey, setSearchKey] = useState([]),
-    [didSearch, setDidSearch] = useState(false),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
+    { collections: sources } = useSelector(({ providers }) => providers),
     [sales, setSales] = useState([]),
     [view, setView] = useState("All"),
-    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, isLoading } = useSelector(
       ({ taskGenerator }) => taskGenerator
     ),
     dispatch = useDispatch();
 
   useEffect(() => {
-    //console.log("collections has updated:", collections);
+    if (token && activePlatform.branchId) {
+      const branchId = activePlatform.branchId;
+
+      // Check if the source data for the specific branchId is already in localStorage
+      const storedSource = localStorage.getItem(`source_${branchId}`);
+
+      if (storedSource) {
+        // If source data is found in localStorage, use it (parse back to an object)
+        const sourceData = JSON.parse(storedSource);
+        console.log("Using stored source data:", sourceData);
+
+        // Optionally dispatch the source data to update the store
+        dispatch(SETSOURCES(sourceData));
+      } else {
+        // If no data in localStorage, make the server request
+        dispatch(INSOURCE({ token, key: { vendors: activePlatform.branchId } }))
+          .then(({ payload }) => {
+            // Assuming the response contains the source data in 'payload'
+            const sourceData = payload.payload;
+            console.log("Fetching source data:", sourceData);
+
+            // Store the fetched data in localStorage for future use
+            localStorage.setItem(
+              `source_${branchId}`,
+              JSON.stringify(sourceData)
+            );
+          })
+          .catch((error) => {
+            console.error("Error fetching source data:", error);
+          });
+      }
+
+      // Cleanup function
+      return () => {
+        dispatch(RESET());
+      };
+    }
+  }, [token, dispatch, activePlatform]);
+
+  useEffect(() => {
+    console.log("sources", sources);
+  }, [sources]);
+
+  useEffect(() => {
     setSales(collections);
   }, [collections]);
-  //Initial Browse and Fetch Data
-  useEffect(() => {
-    if (token && activePlatform?.branchId && auth._id) {
-      dispatch(
-        BROWSE({
-          key: {
-            branchId: activePlatform?.branchId,
-            createdAt: new Date().setHours(0, 0, 0, 0),
-          },
-          token,
-        })
-      );
-    }
-
-    return () => {
-      dispatch(RESET());
-    };
-  }, [token, dispatch, activePlatform, auth]);
 
   //Set fetched data for mapping
   useEffect(() => {
     if (!!collections.length) {
-      const _collections = collections.map((c, i) => ({
-        ...c,
-        page: collections.length - i,
-      }));
-
-      if (didSearch) {
-        setSales(fullNameSearch(searchKey, _collections, "customerId"));
-      } else {
-        setSales(
-          view === "All"
-            ? _collections
-            : _collections.filter(
-                ({ perform }) => perform === view.toLowerCase()
-              )
-        );
-      }
+      // const _collections = collections.map((c, i) => ({
+      //   ...c,
+      //   page: collections.length - i,
+      // }));
+      // if (didSearch) {
+      //   setSales(fullNameSearch(searchKey, _collections, "customerId"));
+      // } else {
+      //   setSales(
+      //     view === "All"
+      //       ? _collections
+      //       : _collections.filter(
+      //           ({ perform }) => perform === view.toLowerCase()
+      //         )
+      //   );
+      // }
     }
-  }, [collections, view, didSearch, searchKey]);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-
-    if (didSearch && searchKey) setSearchKey("");
-
-    setDidSearch(!didSearch);
-  };
+  }, [collections, view, searchKey]);
 
   return (
     <MDBContainer fluid>
@@ -80,10 +98,8 @@ export default function Sales() {
         length={sales.length}
         view={view}
         setView={setView}
-        handleSearch={handleSearch}
         searchKey={searchKey}
         setSearchKey={setSearchKey}
-        didSearch={didSearch}
       />
       <div className="sales-card-wrapper mt-3">
         {!sales.length && !isLoading && (

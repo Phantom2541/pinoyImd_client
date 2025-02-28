@@ -10,11 +10,29 @@ const initialState = {
   message: "",
 };
 
-export const BROWSE = createAsyncThunk(
-  `${name}`,
-  ({ token, key }, thunkAPI) => {
+export const OUTSOURCE = createAsyncThunk(
+  `${name}/outsource`,
+  ({ key, token }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, key);
+      return axioKit.universal(`${name}/outsource`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const INSOURCE = createAsyncThunk(
+  `${name}/insource`,
+  ({ key, token }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${name}/insource`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -88,6 +106,9 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    SETSOURCES: (state, { payload }) => {
+      state.collections = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -95,22 +116,21 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(BROWSE.pending, (state) => {
+      .addCase(OUTSOURCE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, action) => {
+      .addCase(OUTSOURCE.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.collections = payload;
         state.isLoading = false;
       })
-      .addCase(BROWSE.rejected, (state, action) => {
+      .addCase(OUTSOURCE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
       })
-
       .addCase(TIEUPS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -181,10 +201,25 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+      .addCase(INSOURCE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(INSOURCE.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = payload;
+        state.isLoading = false;
+      })
+      .addCase(INSOURCE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
       });
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { SETSOURCES, RESET } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

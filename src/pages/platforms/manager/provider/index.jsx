@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  BROWSE,
+  OUTSOURCE,
   RESET,
 } from "../../../../services/redux/slices/assets/providers";
 import {
@@ -30,7 +30,9 @@ export default function Outsource() {
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
-      dispatch(BROWSE({ token, key: { clients: activePlatform?.branchId } }));
+      dispatch(
+        OUTSOURCE({ token, key: { clients: activePlatform?.branchId } })
+      );
     }
 
     return () => {

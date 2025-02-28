@@ -34,7 +34,7 @@ const _form = {
   privilege: 0,
 };
 
-export default function Patient({  injectName }) {
+export default function Patient({ injectName }) {
   const [form, setForm] = useState(_form),
     { token } = useSelector(({ auth }) => auth),
     { customer } = useSelector(({ pos }) => pos),
@@ -91,12 +91,6 @@ export default function Patient({  injectName }) {
 
     setForm(_form);
   };
-
-  // useEffect(() => {
-  //   if(_id){
-  //     // fetch localStorage from previous created address and set it as default
-  //   }
-  // }, [_id])
 
   return (
     <form onSubmit={handleSubmit}>
