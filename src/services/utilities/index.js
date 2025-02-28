@@ -47,6 +47,7 @@ import isClosingTime from "./isClosingTime";
 import generateClaimStub from "./generateClaimStub";
 import nickname from "./nickname";
 import paymentBadge from "./paymentBadge";
+import removeUndefinedValues from "./dataCleaner";
 
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
@@ -107,4 +108,5 @@ export {
   Search,
   PresetUser,
   formatNameToObj,
+  removeUndefinedValues,
 };

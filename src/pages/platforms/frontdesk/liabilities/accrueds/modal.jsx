@@ -16,7 +16,7 @@ import {
 import { SAVE } from "../../../../../services/redux/slices/responsibilities/liabilities";
 import { capitalize, fullName } from "../../../../../services/utilities";
 import { GETPATIENTS } from "../../../../../services/redux/slices/assets/persons/users";
-import { BROWSE } from "../../../../../services/redux/slices/assets/providers";
+import { OUTSOURCE } from "../../../../../services/redux/slices/assets/providers";
 import { Liabilities } from "../../../../../services/fakeDb";
 
 // declare your expected items
@@ -40,10 +40,10 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   useEffect(() => {
     // if (token && activePlatform) {
     //   dispatch(GETPATIENTS({ token }));
-    //   dispatch(BROWSE({ token, key: { clients: activePlatform?.branchId } }));
+    //   dispatch(OUTSOURCE({ token, key: { clients: activePlatform?.branchId } }));
     if (token && activePlatform) {
       dispatch(GETPATIENTS({ token }));
-      dispatch(BROWSE({ token, key: { clients: activePlatform._id } }));
+      dispatch(OUTSOURCE({ token, key: { clients: activePlatform._id } }));
     }
   }, [token, activePlatform, dispatch]);
 

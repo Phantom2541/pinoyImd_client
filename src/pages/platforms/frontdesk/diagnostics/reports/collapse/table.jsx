@@ -39,9 +39,6 @@ export default function CollapseTable({ menu }) {
   }, [menu]);
 
   const handlePrint = (labTest) => {
-    // console.log("reports",labTest);
-    // console.log("activePlatform",activePlatform);
-
     localStorage.setItem("taskPrintout", JSON.stringify(labTest));
     window.open(
       "/printout/task",

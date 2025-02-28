@@ -46,7 +46,7 @@ export default function Patron({
 
   useEffect(() => {
     if (searchKey && show && willCreate) {
-      const [lname, rest = ""] = searchKey.toUpperCase().split(", "),
+      const [lname, rest = ""] = searchKey?.toUpperCase().split(", "),
         [fname, mname = ""] = rest.split(" Y ");
 
       setForm((prev) => ({

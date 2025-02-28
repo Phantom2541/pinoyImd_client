@@ -4,107 +4,92 @@ import { axioKit } from "../../../utilities";
 const name = "assets/providers";
 
 const initialState = {
-  collections: [], // incase one query only
-  isSuccess: false, // filtered on collection to eliminate server load
-  isLoading: false, // paginated the filtered
+  collections: [],
+  isSuccess: false,
+  isLoading: false,
   message: "",
-  // for BREAD
   selected: {},
   totalPages: 0,
   page: 0,
   showModal: false,
   willCreate: false,
-  maxPage: 5, // Default value, computed dynamically when needed
+  maxPage: 5,
 };
 
-export const BROWSE = createAsyncThunk(
-  `${name}`,
-  ({ token, key }, thunkAPI) => {
+export const OUTSOURCE = createAsyncThunk(
+  `${name}/outsource`,
+  async ({ key, token }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, key);
+      return await axioKit.universal(`${name}/outsource`, token, key);
     } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
 
-      return thunkAPI.rejectWithValue(message);
+export const INSOURCE = createAsyncThunk(
+  `${name}/insource`,
+  async ({ key, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${name}/insource`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
     }
   }
 );
 
 export const TIEUPS = createAsyncThunk(
   `${name}/tieups`,
-  ({ token, key }, thunkAPI) => {
+  async ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/tieups`, token, key);
+      return await axioKit.universal(`${name}/tieups`, token, key);
     } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
     }
   }
 );
 
-export const LIST = createAsyncThunk(`${name}/list`, (token, thunkAPI) => {
-  try {
-    return axioKit.universal(`${name}/list`, token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
-export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
-  try {
-    return axioKit.save(name, form.data, form.token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
-export const INSOURCE = createAsyncThunk(
-  `${name}/insource`,
-  ({ key, token }, thunkAPI) => {
+export const LIST = createAsyncThunk(
+  `${name}/list`,
+  async (token, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/insource`, token, key);
+      return await axioKit.universal(`${name}/list`, token);
     } catch (error) {
-      const message =
-        error.response?.data?.message || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
     }
   }
 );
 
-export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
+export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
   try {
-    return axioKit.update(name, form.data, form.token);
+    return await axioKit.save(name, form.data, form.token);
   } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || error.message || error.toString()
+    );
   }
 });
+
+export const UPDATE = createAsyncThunk(
+  `${name}/update`,
+  async (form, thunkAPI) => {
+    try {
+      return await axioKit.update(name, form.data, form.token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
 
 export const reduxSlice = createSlice({
   name,
@@ -133,6 +118,9 @@ export const reduxSlice = createSlice({
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
+    SETSOURCES: (state, { payload }) => {
+      state.collections = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -140,112 +128,71 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(BROWSE.pending, (state) => {
+      .addCase(OUTSOURCE.pending, (state) => {
         state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+      .addCase(OUTSOURCE.fulfilled, (state, { payload }) => {
         state.collections = payload;
         state.isLoading = false;
       })
-      .addCase(BROWSE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+      .addCase(OUTSOURCE.rejected, (state, { payload }) => {
+        state.message = payload;
         state.isLoading = false;
       })
-
       .addCase(TIEUPS.pending, (state) => {
         state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
       })
-      .addCase(TIEUPS.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+      .addCase(TIEUPS.fulfilled, (state, { payload }) => {
         state.collections = payload;
         state.isLoading = false;
       })
-      .addCase(TIEUPS.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+      .addCase(TIEUPS.rejected, (state, { payload }) => {
+        state.message = payload;
         state.isLoading = false;
       })
-
       .addCase(LIST.pending, (state) => {
         state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
       })
-      .addCase(LIST.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+      .addCase(LIST.fulfilled, (state, { payload }) => {
         state.collections = payload;
         state.isLoading = false;
       })
-      .addCase(LIST.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+      .addCase(LIST.rejected, (state, { payload }) => {
+        state.message = payload;
         state.isLoading = false;
       })
-
-      .addCase(INSOURCE.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(INSOURCE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
-        state.isLoading = false;
-      })
-      .addCase(INSOURCE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
+      .addCase(SAVE.fulfilled, (state, { payload }) => {
         state.collections.unshift(payload);
         state.isSuccess = true;
         state.isLoading = false;
       })
-      .addCase(SAVE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+      .addCase(SAVE.rejected, (state, { payload }) => {
+        state.message = payload;
         state.isLoading = false;
       })
-
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
       })
-      .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+      .addCase(UPDATE.fulfilled, (state, { payload }) => {
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-
-        state.collections[index] = payload;
-        state.message = success;
+        if (index !== -1) {
+          state.collections[index] = payload;
+        }
         state.isSuccess = true;
         state.isLoading = false;
       })
-      .addCase(UPDATE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+      .addCase(UPDATE.rejected, (state, { payload }) => {
+        state.message = payload;
         state.isLoading = false;
       });
   },
 });
 
-export const { SetEDIT, SetCREATE, SetFILTER, SetPAGE, RESET } =
+export const { SetEDIT, SetCREATE, SetFILTER, SetPAGE, SETSOURCES, RESET } =
   reduxSlice.actions;
-
 export default reduxSlice.reducer;

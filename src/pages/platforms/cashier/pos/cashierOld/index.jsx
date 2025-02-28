@@ -8,7 +8,7 @@ import {
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/users";
 import {
-  BROWSE as SOURCELIST,
+  OUTSOURCE as SOURCELIST,
   RESET as SOURCERESET,
 } from "../../../../../services/redux/slices/assets/providers";
 import {

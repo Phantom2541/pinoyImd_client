@@ -69,10 +69,10 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       }
       const department =
         key === "ECG" || key === "X-ray"
-          ? "radiology"
+          ? "RAD"
           : key === "Examination" || key === "Certicifate"
-          ? "clinic"
-          : "laboratory";
+          ? "CLINIC"
+          : "LAB";
 
       axioKit.save(
         `results/${department}/${lowercaseKey}`,
@@ -95,13 +95,13 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       "top=100px,left=100px,width=1050px,height=750px"
     );
     console.log("data here");
-    
+
     dispatch(
       REFORM({
         token,
         data: {
           _id,
-          lol : auth._id,
+          lol: auth._id,
           renderedBy: auth._id,
           renderedAt: new Date().toLocaleString(),
           forms,

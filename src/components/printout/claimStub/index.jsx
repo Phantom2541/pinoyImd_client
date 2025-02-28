@@ -17,13 +17,14 @@ const Hr = () => (
 
 const Text = ({ title, value, className }) => {
   console.log("title, value", className);
-  
+
   return (
-  <div className={`d-flex justify-content-between ${className}`}>
-    <span>{title}</span>
-    <span className="fw-bold text-right">{value}</span>
-  </div>
-);}
+    <div className={`d-flex justify-content-between ${className}`}>
+      <span>{title}</span>
+      <span className="fw-bold text-right">{value}</span>
+    </div>
+  );
+};
 
 const Stub = ({ sale }) => {
   const {
@@ -75,6 +76,7 @@ const Stub = ({ sale }) => {
         <tbody>
           {cart?.map((menu, index) => {
             const { description, abbreviation, packages = [], up } = menu;
+            console.log("menus", sale);
 
             return (
               <tr key={`menu-${index}`}>

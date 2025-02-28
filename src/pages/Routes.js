@@ -22,6 +22,7 @@ export default function Routes() {
       {!activePlatform?.platform && (
         <Route exact path={`/dashboard`} component={UnsetApply} />
       )}
+
       {Sidebars[activePlatform?.platform]?.map(
         ({ path, component, children }, index) => {
           if (children)

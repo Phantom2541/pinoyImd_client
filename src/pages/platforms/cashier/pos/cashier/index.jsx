@@ -3,7 +3,7 @@ import POS from "./patientPicker";
 import Menus from "./menuPicker";
 import Summary from "./summary";
 import { useSelector } from "react-redux";
-import "./index.css";
+import "./style.css";
 import { MDBCol, MDBRow } from "mdbreact";
 
 export default function Cashier() {

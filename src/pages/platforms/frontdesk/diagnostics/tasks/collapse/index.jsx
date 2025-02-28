@@ -21,25 +21,27 @@ import CollapseTable from "./table";
 import { Categories } from "../../../../../../services/fakeDb";
 import { useHistory } from "react-router-dom";
 
-export default function TasksCollapse({ tasks, page }) {
+export default function TasksCollapse({ page }) {
   const [activeId, setActiveId] = useState(-1),
     { maxPage } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ sales }) => sales),
     history = useHistory();
 
   return (
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
-      {handlePagination(tasks, page, maxPage).map((menu, index) => {
+      {handlePagination(collections, page, maxPage).map((menu, index) => {
         const { customerId, category, source, _id = "" } = menu,
           categoryName =
             category === "walkin"
               ? "Walkin"
               : Categories.find(({ abbr }) => abbr === category)?.name;
-              
+
         return (
           <MDBCard key={_id}>
             <MDBCollapseHeader>
-              {index + 1}. {getGenderIcon(customerId?.isMale)} {fullName(customerId?.fullName)} |
-               <span style={{ color: "blue" }}>{getAge(customerId?.dob)}</span>
+              {index + 1}. {getGenderIcon(customerId?.isMale)}{" "}
+              {fullName(customerId?.fullName)} |
+              <span style={{ color: "blue" }}>{getAge(customerId?.dob)}</span>
               <MDBBadge color={sourceColor(categoryName)} className="mx-2">
                 {categoryName}
               </MDBBadge>
