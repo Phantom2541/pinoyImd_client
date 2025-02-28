@@ -29,9 +29,9 @@ export default function Modal() {
     dispatch = useDispatch();
 
   // Set form data kapag nagbukas ng modal
-  useEffect(() => {
-    setForm(selected);
-  }, [willCreate, selected, show]);
+  // useEffect(() => {
+  //   setForm(selected);
+  // }, [selected]);
 
   // Handle update function
   const handleUpdate = () => {
@@ -105,7 +105,7 @@ export default function Modal() {
             variant="h4-responsive"
             className="text-center"
           >
-            {Services.getName(selected.serviceId)}
+            {Services.getName(selected?.serviceId)}
           </MDBTypography>
 
           {/* Input fields */}

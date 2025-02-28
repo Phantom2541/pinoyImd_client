@@ -12,7 +12,7 @@ import {
   BROWSE,
   SetCREATE,
 } from "../../../../../../services/redux/slices/responsibilities/assurances";
-const Header = ({}) => {
+const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
     [month, setMonth] = useState(new Date().getMonth() + 1),
@@ -56,11 +56,13 @@ const Header = ({}) => {
             className="px-2"
             rounded
             color="success"
-            onClick={dispatch(
-              SetCREATE({
-                serviceId: service,
-              })
-            )}
+            onClick={() =>
+              dispatch(
+                SetCREATE({
+                  serviceId: service,
+                })
+              )
+            }
           >
             <MDBIcon icon="plus" />
           </MDBBtn>

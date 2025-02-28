@@ -6,13 +6,11 @@ import {
   SetEDIT,
 } from "../../../../../../services/redux/slices/responsibilities/assurances";
 import Swal from "sweetalert2";
-
 import { Services } from "../../../../../../services/fakeDb";
-import { handlePagination } from "../../../../../../services/utilities";
 
 const Tables = () => {
-  const { maxPage, token } = useSelector(({ auth }) => auth),
-    { collections, page } = useSelector(({ assurances }) => assurances),
+  const { token } = useSelector(({ auth }) => auth),
+    { paginated } = useSelector(({ assurances }) => assurances),
     dispatch = useDispatch();
 
   const handleDelete = (_id) => {
@@ -43,34 +41,32 @@ const Tables = () => {
         </tr>
       </thead>
       <tbody>
-        {handlePagination(collections, page, maxPage)?.map(
-          (assurance, index) => {
-            return (
-              <tr key={index}>
-                <td>{Services.getName(assurance?.serviceId)}</td>
-                <td>{assurance?.abnormal}</td>
-                <td>{assurance?.high}</td>
-                <td>{assurance?.normal}</td>
-                {/* <td>{control?.createdAt}</td> */}
-                <td>
-                  {new Date(assurance?.createdAt).toLocaleDateString("en-GB", {
-                    month: "short",
-                    day: "2-digit",
-                    year: "numeric",
-                  })}
-                </td>
-                <td>
-                  <button onClick={() => dispatch(SetEDIT(assurance))}>
-                    Edit
-                  </button>
-                  <button onClick={() => handleDelete(assurance._id)}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          }
-        )}
+        {paginated.map((assurance, index) => {
+          return (
+            <tr key={index}>
+              <td>{Services.getName(assurance?.serviceId)}</td>
+              <td>{assurance?.abnormal}</td>
+              <td>{assurance?.high}</td>
+              <td>{assurance?.normal}</td>
+              {/* <td>{control?.createdAt}</td> */}
+              <td>
+                {new Date(assurance?.createdAt).toLocaleDateString("en-GB", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
+              </td>
+              <td>
+                <button onClick={() => dispatch(SetEDIT(assurance))}>
+                  Edit
+                </button>
+                <button onClick={() => handleDelete(assurance._id)}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </MDBTable>
   );

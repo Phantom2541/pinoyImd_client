@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody } from "mdbreact";
-import TopHeader from "./header";
-import CardTables from "./tables";
-import Modal from "./modal";
-import Pagination from "../../../../../../components/pagination";
-import TableRowCount from "./../../../../../../components/pagination/rows";
-import { SetPAGE } from "./../../../../../../services/redux/slices/responsibilities/controls";
 
-const Controls = () => {
+import Collapsable from "./collapse";
+import TopHeader from "./header";
+import Pagination from "../../../../../components/pagination";
+import TableRowCount from "../../../../../components/pagination/rows";
+import { SetPAGE } from "../../../../../services/redux/slices/assets/providers";
+import TableLoading from "../../../../../components/tableLoading";
+const Insources = () => {
   const { totalPages, page, isLoading } = useSelector(
       ({ controls }) => controls
     ),
@@ -21,7 +21,7 @@ const Controls = () => {
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <TopHeader />
         <MDBCardBody>
-          <CardTables />
+          {/* {isLoading ? <TableLoading /> : <Collapsable />} */}
         </MDBCardBody>
 
         <div className="mb-auto d-flex justify-content-between align-items-center px-4">
@@ -34,9 +34,8 @@ const Controls = () => {
           />
         </div>
       </MDBCard>
-      <Modal />
     </>
   );
 };
 
-export default Controls;
+export default Insources;

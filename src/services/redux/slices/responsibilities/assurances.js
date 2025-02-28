@@ -6,7 +6,7 @@ const name = "responsibilities/assurance";
 const initialState = {
   collections: [],
   filter: [],
-  personnel: {},
+  paginated: [],
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -97,8 +97,7 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
-      const { page, filtered } = state;
-      const { maxPage } = payload;
+      const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
         if (payload.length % maxPage > 0) totalPages += 1;
@@ -107,7 +106,16 @@ export const reduxSlice = createSlice({
           state.page = totalPages;
         }
       }
-      state.filter = filtered;
+      state.filter = payload;
+    },
+    SetPagination: (state, { payload }) => {
+      const { page, max, getPage } = state;
+      // if (getPage) return array;
+
+      state.paginated = state.filter.slice(
+        (page - 1) * max,
+        max + (page - 1) * max
+      );
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -125,9 +133,11 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        //console.log("action", action);
         const { payload } = action;
         state.collections = payload;
+        const _paginated = state.filter.slice(0, state.maxPage);
+        state.paginated = _paginated;
+        state.isSuccess = true;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -145,6 +155,7 @@ export const reduxSlice = createSlice({
         const { success, payload } = action;
         state.message = success;
         state.collections.unshift(payload);
+        state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -166,6 +177,7 @@ export const reduxSlice = createSlice({
         );
 
         state.collections[index] = payload;
+        state.showModal = false;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;

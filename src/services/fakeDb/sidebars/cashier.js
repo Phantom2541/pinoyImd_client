@@ -6,12 +6,16 @@ import {
   Menus,
   Services,
   Insources,
+  Outsources,
 } from "../../../pages/platforms/cashier";
+import { Tablestemplate, Collapsable } from "../../../pages/tamplates";
+
 import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
 import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
 import Remmitances from "../../../pages/platforms/manager/pos/remittances";
+//import Outsource from "../../../pages/platforms/manager/provider";
 
 const cashier = [
   {
@@ -102,12 +106,29 @@ const cashier = [
       {
         name: "Outsources",
         path: "/outsources",
-        //component: Services,
+        component: Outsources,
       },
       {
         name: "Insources",
         path: "/insources",
-        //component: Services,
+        component: Insources,
+      },
+    ],
+  },
+  {
+    name: "Templates ", //viewing only
+    path: "/templates ",
+    icon: "list",
+    children: [
+      {
+        name: "Tables",
+        path: "/tables",
+        component: Tablestemplate,
+      },
+      {
+        name: "Collapsables",
+        path: "/collapsables",
+        component: Collapsable,
       },
     ],
   },

@@ -10,8 +10,9 @@ import {
 import {
   RESET,
   BROWSE,
+  SetCREATE,
 } from "../../../../../../services/redux/slices/responsibilities/controls";
-const Header = ({ hasAction, onCreate, setSelected }) => {
+const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
     [month, setMonth] = useState(new Date().getMonth() + 1),
@@ -36,13 +37,6 @@ const Header = ({ hasAction, onCreate, setSelected }) => {
     return () => dispatch(RESET());
   }, [token, activePlatform, year, month, service, dispatch]);
 
-  const handleCreate = () => {
-    setSelected({
-      serviceId: service,
-    });
-    onCreate(true);
-  };
-
   return (
     <MDBView
       cascade
@@ -57,17 +51,21 @@ const Header = ({ hasAction, onCreate, setSelected }) => {
           <Templates setTemplate={setTemplate} />
           <Month month={month} setMonth={setMonth} />
           <Year year={year} setYear={setYear} />
-          {hasAction && (
-            <MDBBtn
-              size="sm"
-              className="px-2"
-              rounded
-              color="success"
-              onClick={handleCreate}
-            >
-              <MDBIcon icon="plus" />
-            </MDBBtn>
-          )}
+          <MDBBtn
+            size="sm"
+            className="px-2"
+            rounded
+            color="success"
+            onClick={() =>
+              dispatch(
+                SetCREATE({
+                  serviceId: service,
+                })
+              )
+            }
+          >
+            <MDBIcon icon="plus" />
+          </MDBBtn>
         </div>
       </div>
     </MDBView>

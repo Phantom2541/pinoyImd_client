@@ -4,10 +4,17 @@ import { axioKit } from "../../../utilities";
 const name = "assets/providers";
 
 const initialState = {
-  collections: [],
-  isSuccess: false,
-  isLoading: false,
+  collections: [], // incase one query only
+  isSuccess: false, // filtered on collection to eliminate server load
+  isLoading: false, // paginated the filtered
   message: "",
+  // for BREAD
+  selected: {},
+  totalPages: 0,
+  page: 0,
+  showModal: false,
+  willCreate: false,
+  maxPage: 5, // Default value, computed dynamically when needed
 };
 
 export const BROWSE = createAsyncThunk(
@@ -27,6 +34,7 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+
 export const TIEUPS = createAsyncThunk(
   `${name}/tieups`,
   ({ token, key }, thunkAPI) => {
@@ -71,6 +79,20 @@ export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
   }
 });
 
+export const INSOURCE = createAsyncThunk(
+  `${name}/insource`,
+  ({ key, token }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${name}/insource`, token, key);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   try {
     return axioKit.update(name, form.data, form.token);
@@ -88,6 +110,29 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetCREATE: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetFILTER: (state, { payload }) => {
+      const { page, maxPage } = payload;
+      if (page.length > 0) {
+        state.totalPages = Math.ceil(payload.length / maxPage);
+        if (state.page > state.totalPages) {
+          state.page = state.totalPages;
+        }
+      }
+      state.filter = page;
+    },
+    SetPAGE: (state, { payload }) => {
+      state.page = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -100,8 +145,7 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+      .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = payload;
         state.isLoading = false;
       })
@@ -138,6 +182,22 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(LIST.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(INSOURCE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(INSOURCE.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = payload;
+        state.isLoading = false;
+      })
+      .addCase(INSOURCE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -185,6 +245,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { SetEDIT, SetCREATE, SetFILTER, SetPAGE, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

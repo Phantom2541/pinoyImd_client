@@ -15,9 +15,7 @@ const Assurances = () => {
     dispatch = useDispatch();
   // { maxPage } = useSelector(({ auth }) => auth),
 
-  const setPage = (page) => {
-    dispatch(SetPAGE(page));
-  };
+  const setPage = (page) => dispatch(SetPAGE(page));
 
   return (
     <>
