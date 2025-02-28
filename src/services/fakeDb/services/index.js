@@ -29,6 +29,9 @@ const Services = {
     collections.filter(({ id }) => !cluster.includes(id)),
   filterByTemplate: (pk) =>
     collections.filter(({ template }) => template === Number(pk)),
+
+  filterByDepartment: (pk) =>
+    collections.filter(({ department }) => department === pk),
 };
 
 export default Services;
