@@ -23,9 +23,7 @@ export default function Menus() {
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
-      dispatch(
-        BROWSE({ token, params: { branchId: activePlatform?.branchId } })
-      );
+      dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
     }
 
     return () => dispatch(RESET());
