@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody } from "mdbreact";
-import TopHeader from "./header";
-import CardTables from "./tables";
+import CardHeader from "./header";
+import CardTables from "./body";
 import Modal from "./modal";
 import Pagination from "../../../../../../components/pagination";
-import TableRowCount from "./../../../../../../components/pagination/rows";
+import TableRowCount from "../../../../../../components/pagination/rows";
+import { SetPAGE } from "../../../../../../services/redux/slices/liability/controls";
 
 const Controls = () => {
   const { collections, isLoading } = useSelector(({ controls }) => controls),
@@ -54,6 +55,7 @@ const Controls = () => {
           setSelected={setSelected}
         />
 
+        <CardHeader />
         <MDBCardBody>
           <CardTables controls={controls} page={page} handleEdit={handleEdit} />
         </MDBCardBody>

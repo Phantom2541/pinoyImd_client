@@ -10,8 +10,9 @@ import {
 import {
   RESET,
   BROWSE,
-} from "../../../../../../services/redux/slices/responsibilities/controls";
-const Header = ({ hasAction, onCreate, setSelected }) => {
+  SetCREATE,
+} from "../../../../../../services/redux/slices/liability/controls";
+const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
     [month, setMonth] = useState(new Date().getMonth() + 1),

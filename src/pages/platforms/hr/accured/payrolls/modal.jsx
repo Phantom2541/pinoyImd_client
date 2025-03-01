@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   // MDBBtn,
@@ -33,6 +33,21 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     [totDeduc, setTotDeduc] = useState(),
     [totEarn, setTotEarn] = useState(),
     dispatch = useDispatch();
+  const handleCalc = useCallback(
+    (monthly) => {
+      const payCycle = Number(selected?.contract?.pc);
+      switch (payCycle) {
+        case 1:
+          return monthly / 2;
+        case 2:
+          return monthly * 1;
+
+        default:
+          return monthly * 3;
+      }
+    },
+    [selected?.contract?.pc]
+  );
 
   useEffect(() => {
     if (form) {
@@ -45,14 +60,14 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           selected?.contribution?.pi
       );
       setTotEarn(
-        selected?.rate?.monthly / 2 +
-          selected?.rate?.cola / 2 +
+        handleCalc(selected?.rate?.monthly / 2) +
+          handleCalc(selected?.rate?.cola / 2) +
           Number(form?.holiday) +
           Number((form?.overtime / 8) * selected?.rate?.daily) +
           Number(form?.bonus)
       );
     }
-  }, [form, selected]);
+  }, [form, selected, handleCalc]);
 
   const handleSubmit = () => {
     //console.log(selected);
@@ -65,8 +80,8 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           branchId: selected?.branch._id,
           fsId: 3,
           net: totEarn - totDeduc,
-          rate: selected?.rate?.monthly / 2,
-          cola: selected?.rate?.cola / 2,
+          rate: handleCalc(selected?.rate?.monthly / 2),
+          cola: handleCalc(selected?.rate?.cola / 2),
         },
         token,
       })
@@ -108,7 +123,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <tbody>
             <tr>
               <td>Rate</td>
-              <td>{currency(selected?.rate?.monthly / 2)}</td>
+              <td>{currency(handleCalc(selected?.rate?.monthly / 2))}</td>
               <td>Cash Advance</td>
               <td>
                 <input
@@ -121,7 +136,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             </tr>
             <tr>
               <td>Cola</td>
-              <td>{currency(selected?.rate?.cola / 2)}</td>
+              <td>{currency(handleCalc(selected?.rate?.cola / 2))}</td>
               <td>Absent (day)</td>
               <td>
                 <input

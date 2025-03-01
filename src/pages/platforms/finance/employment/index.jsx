@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
   RESET,
-} from "../../../../services/redux/slices/responsibilities/payroll";
+} from "../../../../services/redux/slices/liability/payroll";
 
 import { MDBCard, MDBCardBody } from "mdbreact";
 // import Modal from "./modal";
@@ -25,14 +25,14 @@ export default function Payroll() {
     [selected, setSelected] = useState({}),
     [willCreate, setWillCreate] = useState(true),
     dispatch = useDispatch();
-    
-//  console.log(payrolls);
+
+  //  console.log(payrolls);
   //Initial Browse
   useEffect(() => {
-    if ((token)) dispatch(BROWSE({ token, branchId:activePlatform.branchId }));
+    if (token) dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform]);
- console.log(branchId);
+  console.log(branchId);
 
   //Set fetched data for mapping
   useEffect(() => {

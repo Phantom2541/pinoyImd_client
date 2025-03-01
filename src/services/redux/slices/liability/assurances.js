@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "responsibilities/assurance";
+const name = "liability/assurance";
 
 const initialState = {
   collections: [],
@@ -121,6 +121,9 @@ export const reduxSlice = createSlice({
         //console.log("action", action);
         const { payload } = action;
         state.collections = payload;
+        state.filter = payload;
+        state.paginated = payload;
+        state.isSuccess = true;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

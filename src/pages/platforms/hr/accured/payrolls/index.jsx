@@ -35,6 +35,7 @@ export default function Payrolls() {
     { collections, message, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
+    PaySlip = useSelector(({ liabilities }) => liabilities.isSuccess),
     { addToast } = useToasts(),
     dispatch = useDispatch();
   //Initial Browse
@@ -43,7 +44,7 @@ export default function Payrolls() {
       dispatch(PAYROLL({ token, branchId: activePlatform?.branchId }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform]);
+  }, [token, dispatch, activePlatform, PaySlip]);
   //Set fetched data for mapping
   useEffect(() => {
     setPersonnels(collections);
@@ -99,15 +100,16 @@ export default function Payrolls() {
                 <th>Name</th>
                 <th>Rate</th>
                 <th>COLA</th>
+                {/* Cost of Living Allowance */}
                 <th>Akinsenas</th>
                 <th>Katapusan</th>
               </tr>
             </thead>
             <tbody>
               {personnels.map((personnel, index) => {
-                const { user, employment, rate, payroll } = personnel;
-                const designation = Roles.find(
-                  (role) => role.id === Number(employment.designation)
+                const { user, contract, rate, payroll } = personnel;
+                const designation = Roles.findById(
+                  Number(contract?.designation)
                 );
                 // //console.log("payrollss", payroll);
 
@@ -120,13 +122,20 @@ export default function Payrolls() {
                     if (getDate(payslip.createdAt) > 15) {
                       return payslip;
                     }
-                  } else {
+                  } else if (Number(contract?.pc) === 2) {
                     if (getDate(payslip.createdAt) <= 31) {
+                      return payslip;
+                    }
+                  } else {
+                    if (getDate(payslip.createdAt) <= 90) {
                       return payslip;
                     }
                   }
                   return null;
                 });
+                console.log("akinsenas", akinsenas);
+                console.log("katapusan", katapusan);
+
                 return (
                   <tr key={`payroll-${index + 1}`}>
                     <td>{index + 1}.</td>
@@ -137,7 +146,7 @@ export default function Payrolls() {
                       <p className="text-muted mb-0">
                         <p className="text-muted mb-0">
                           {designation?.name?.toUpperCase()} |
-                          {employment?.soe?.toUpperCase()}
+                          {contract?.soe?.toUpperCase()}
                         </p>
                       </p>
                     </td>
@@ -145,7 +154,7 @@ export default function Payrolls() {
                       <p className="fw-bold mb-1 text-capitalize">
                         monthly:{currency(rate?.monthly)}
                       </p>
-                      {employment?.bimonthly && (
+                      {Number(contract?.pc) === 1 && (
                         <p className="text-muted mb-0">
                           <p className="text-muted mb-0">
                             Daily: {currency(rate?.daily)}
@@ -158,7 +167,7 @@ export default function Payrolls() {
                         {currency(rate?.cola)}
                       </p>
                     </td>
-                    {employment.bimonthly && (
+                    {Number(contract?.pc) === 1 && (
                       <td className="text-center">
                         {akinsenas ? (
                           <MDBBtnGroup className="shadow-0">
@@ -187,12 +196,12 @@ export default function Payrolls() {
                     )}
                     <td
                       className="text-center"
-                      colSpan={employment.bimonthly ? 1 : 2}
+                      colSpan={Number(contract?.pc) === 1 ? 1 : 2}
                     >
                       {katapusan ? (
                         <MDBBtnGroup className="shadow-0">
                           <MDBBtn
-                            onClick={() => handleToggle(personnel)}
+                            onClick={() => handlePayslip(personnel)}
                             color="warning"
                             size="sm"
                             title="Untag this branch."

@@ -1,15 +1,18 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-import { DESTROY } from "../../../../../../services/redux/slices/responsibilities/controls";
+import {
+  DESTROY,
+  SetEDIT,
+} from "../../../../../../services/redux/slices/liability/assurances";
 import Swal from "sweetalert2";
 
 import { Services } from "../../../../../../services/fakeDb";
 import { handlePagination } from "../../../../../../services/utilities";
+
 const Tables = ({ page, handleEdit }) => {
-  const { maxPage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ controls }) => controls),
-    { token } = useSelector(({ auth }) => auth),
+  const { maxPage, token } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ assurances }) => assurances),
     dispatch = useDispatch();
 
   const handleDelete = (_id) => {
@@ -29,7 +32,7 @@ const Tables = ({ page, handleEdit }) => {
   };
 
   return (
-    <MDBTable responsive hover bordered style={{ minHeight: "300px" }}>
+    <MDBTable responsive hover bordered>
       <thead>
         <tr>
           <th>Service ID</th>
@@ -40,32 +43,33 @@ const Tables = ({ page, handleEdit }) => {
         </tr>
       </thead>
       <tbody>
-        {handlePagination(collections, page, maxPage)
-          .slice() // Create a copy to avoid modifying the original array
-          .sort((a, b) => collections.indexOf(a) - collections.indexOf(b)) // Sort by index
-          .map((control, index) => (
+        {!paginated.length && <tr>No data</tr>}
+        {paginated.map((assurance, index) => {
+          return (
             <tr key={index}>
-              <td style={{ minHeight: "30px" }}>
-                {Services.getName(control?.serviceId)}
-              </td>
-              <td>{control?.abnormal}</td>
-              <td>{control?.high}</td>
-              <td>{control?.normal}</td>
+              <td>{Services.getName(assurance?.serviceId)}</td>
+              <td>{assurance?.abnormal}</td>
+              <td>{assurance?.high}</td>
+              <td>{assurance?.normal}</td>
+              {/* <td>{control?.createdAt}</td> */}
               <td>
-                {new Date(control?.createdAt).toLocaleDateString("en-GB", {
+                {new Date(assurance?.createdAt).toLocaleDateString("en-GB", {
                   month: "short",
                   day: "2-digit",
                   year: "numeric",
                 })}
               </td>
               <td>
-                <button onClick={() => handleEdit(control)}>Edit</button>
-                <button onClick={() => handleDelete(control._id)}>
+                <button onClick={() => dispatch(SetEDIT(assurance))}>
+                  Edit
+                </button>
+                <button onClick={() => handleDelete(assurance._id)}>
                   Delete
                 </button>
               </td>
             </tr>
-          ))}
+          );
+        })}
       </tbody>
     </MDBTable>
   );
