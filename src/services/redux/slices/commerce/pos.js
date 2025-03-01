@@ -147,6 +147,9 @@ export const reduxSlice = createSlice({
       state.customer = payload;
       state.customerId = payload._id;
     },
+    SETSEARCHKEY: (state, { payload }) => {
+      state.customer = payload;
+    },
     SETCATEGORY: (state, { payload }) => {
       state.category = payload;
     },
@@ -287,6 +290,7 @@ export const {
   SETCASH,
   SETPAYMENT,
   SETPATIENT,
+  SETSEARCHKEY,
   SETGROSS,
   SETPHYSICIAN,
   SETSOURCE,

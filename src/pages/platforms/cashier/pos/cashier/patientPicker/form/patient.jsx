@@ -34,7 +34,7 @@ const _form = {
   privilege: 0,
 };
 
-export default function Patient({ injectName }) {
+export default function Patient() {
   const [form, setForm] = useState(_form),
     { token } = useSelector(({ auth }) => auth),
     { customer } = useSelector(({ pos }) => pos),
@@ -42,26 +42,13 @@ export default function Patient({ injectName }) {
 
   // inject searched name if no match
   useEffect(() => {
-    if (injectName) {
-      const [lname, rest = ""] = injectName.toUpperCase().split(", "),
-        [fname = "", mname = ""] = rest.split(" Y ");
-
-      setForm((prev) => ({
-        ...prev,
-        fullName: {
-          ...prev.fullName,
-          fname,
-          lname,
-          mname,
-        },
-      }));
-    }
-  }, [injectName]);
+    setForm((prev) => ({
+      ...prev,
+      fullName: { ...customer },
+    }));
+  }, [customer]);
 
   // update form for selected user
-  useEffect(() => {
-    setForm(customer?._id ? customer : _form);
-  }, [customer]);
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
 

@@ -122,21 +122,15 @@ export default function Search({ setMenu, setRegister }) {
                     }
                   }}
                 >
-                  <div className="d-flex align-items-left justify-content-between">
-                    <span>
+                  <div className="d-flex align-items-left justify-content-between menu-suggestion ">
+                    <span className="text-left  ">
                       {description && (
-                        <>
-                          <span className="description text-dark">
-                            {description}
-                          </span>
-                          <br />
-                        </>
+                        <span className="description text-dark">
+                          {description}
+                        </span>
                       )}
                       {abbreviation && (
-                        <span
-                          style={{ textAlign: "left" }}
-                          className="abbreviation text-dark"
-                        >
+                        <span className="abbreviation text-dark ">
                           {abbreviation}
                         </span>
                       )}

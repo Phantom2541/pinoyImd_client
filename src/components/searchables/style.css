@@ -110,11 +110,16 @@
   padding: 5px 10px;
 }
 
-.searchable-search .searchable-search-suggestions ul li:hover {
+.searchable-search .searchable-search-suggestions ul li:hover,
+.menu-suggestion:hover {
   background-color: hsl(207, 90%, 56%);
-  color: white;
   cursor: pointer;
   box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.3);
+}
+
+.searchable-search .searchable-search-suggestions ul li:hover span,
+.menu-suggestion:hover span {
+  color: white !important;
 }
 /* End of Search Design */
 

@@ -6,14 +6,21 @@ import Patient from "./form/patient";
 import PosCard from "./form/posCard";
 import {
   SETPATIENT,
+  SETSEARCHKEY,
   SETPRIVILEGE,
 } from "../../../../../../services/redux/slices/commerce/pos";
-import { fullName, getAge } from "../../../../../../services/utilities";
+import {
+  formatNameToObj,
+  fullName,
+  getAge,
+} from "../../../../../../services/utilities";
+import { SearchUser } from "../../../../../../components/searchables";
 
 export default function POS() {
   const { collections, isLoading } = useSelector(({ users }) => users),
     { searchKey, customer } = useSelector(({ pos }) => pos),
     [activeIndex, setActiveIndex] = useState(0),
+    [user, setUser] = useState({}),
     [didSearch, setDidSearch] = useState(false),
     [searchMatch, setSearchMatch] = useState([]),
     dispatch = useDispatch();
@@ -31,7 +38,14 @@ export default function POS() {
   //   if (customer?._id && activeIndex === 1) setActiveIndex(0);
   // }, [customer, activeIndex]);
 
-  const handleCustomer = customer => dispatch(SETPATIENT(customer));
+  const handleCustomer = (customer) => dispatch(SETPATIENT(customer));
+
+  const handleRegister = (customer) => {
+    if (isLoading) return;
+    if (!activeIndex) setActiveIndex(1);
+    setDidSearch(false);
+    dispatch(SETSEARCHKEY(customer));
+  };
 
   return (
     <div className="pos-container">
@@ -44,7 +58,8 @@ export default function POS() {
             {fullName(customer?.fullName)}
           </h4>
         )}
-        <Search didSearch={didSearch}>
+        <SearchUser setPatient={handleCustomer} setRegister={handleRegister} />
+        {/* <Search didSearch={didSearch}>
           {!searchMatch.length && !searchKey && (
             <li>Please type a fullname.</li>
           )}
@@ -87,7 +102,7 @@ export default function POS() {
               <span style={{ color: "blue" }}>{getAge(user?.dob)}</span>
             </li>
           ))}
-        </Search>
+        </Search> */}
       </div>
       <div className="pos-card-button">
         {["POS", "Patient"]?.map((name, index) => {
