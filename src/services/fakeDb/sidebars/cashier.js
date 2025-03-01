@@ -6,8 +6,8 @@ import {
   Menus,
   Services,
   Insources,
-  Animation,
   Outsources,
+  Utilities,
 } from "../../../pages/platforms/cashier";
 import { Tablestemplate, Collapsable } from "../../../pages/templates";
 
@@ -114,6 +114,11 @@ const cashier = [
         name: "Insources",
         path: "/insources",
         component: Insources,
+      },
+      {
+        name: "Utilities",
+        path: "/utilities",
+        component: Utilities,
       },
     ],
   },

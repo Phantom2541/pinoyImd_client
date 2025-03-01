@@ -5,17 +5,13 @@ import TopHeader from "./header";
 import TableLoading from "../../../../../components/tableLoading";
 import CardBody from "./body";
 import { useSelector } from "react-redux";
-const Outsources = () => {
+export default function Utilities() {
   const { isLoading } = useSelector(({ providers }) => providers);
 
   return (
-    <>
-      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-        <TopHeader />
-        <MDBCardBody>{isLoading ? <TableLoading /> : <CardBody />}</MDBCardBody>
-      </MDBCard>
-    </>
+    <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+      <TopHeader />
+      <MDBCardBody>{isLoading ? <TableLoading /> : <CardBody />}</MDBCardBody>
+    </MDBCard>
   );
-};
-
-export default Outsources;
+}
