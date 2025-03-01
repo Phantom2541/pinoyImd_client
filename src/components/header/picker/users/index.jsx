@@ -12,8 +12,21 @@ import {
   getAge,
   getGenderIcon,
 } from "../../../../services/utilities";
+import Notification from "./notification";
 
-export default function Search({ setPatient, onRegister }) {
+/**
+ * A Search component that allows the user to search for a patient by last name, first name, and middle name.
+ * The component will make an API call to search for patients and render a list of results below the search input.
+ * The user can select a patient from the list and the setPatient callback will be called with the selected patient.
+ * The component also renders a button to register a new patient if no patient record is found with the search key.
+ * The setSearchKey callback will be called with the search key when the button is clicked.
+ *
+ * @param {function} setPatient - A callback function that will be called when a patient is selected from the list.
+ * @param {function} setRegister - A callback function that will be called when the button to register a new patient is clicked.
+ *
+ * @returns {JSX.Element} users
+ */
+export default function Search({ setPatient, setRegister }) {
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
     { collections, isLoading } = useSelector(({ users }) => users),
@@ -35,18 +48,17 @@ export default function Search({ setPatient, onRegister }) {
   // for patients and update the state with the result.
   const debouncedSearch = debounce((searchKey) => {
     const key = formatNameToObj(searchKey);
-    console.log("key2", key);
 
     dispatch(GETPATIENTS({ token, query: key }));
   }, 1000);
 
   const handleChange = (e) => {
-    const searchKey = e.target.value;
-    setSearchKey(searchKey);
-    const searchKeys = searchKey.split(",");
-    if (searchKeys.length > 1 && searchKeys[1].trim()) {
+    const _searchKey = e.target.value;
+    setSearchKey(_searchKey);
+    const searchKey = _searchKey.split(",");
+    if (searchKey.length > 1 && searchKey[1].trim()) {
       setDidSearch(true);
-      return debouncedSearch(searchKey);
+      return debouncedSearch(_searchKey);
     }
   };
 
@@ -58,7 +70,7 @@ export default function Search({ setPatient, onRegister }) {
   };
 
   const handleRegister = () => {
-    onRegister(formatNameToObj(searchKey));
+    setRegister(formatNameToObj(searchKey));
     setSearchKey("");
     dispatch(RESET());
     setDidSearch(false);
@@ -66,17 +78,7 @@ export default function Search({ setPatient, onRegister }) {
 
   return (
     <div className="d-flex align-items-center">
-      <div className="cashier-instruction">
-        <MDBIcon
-          icon="info-circle"
-          size="lg"
-          className="text-info cursor-pointer"
-        />
-        <div>
-          <p>Last name, First name y Middle name</p>
-          <i>Please maintain this order when searching.</i>
-        </div>
-      </div>
+      <Notification didSearch={didSearch} />
       <div className={`cashier-search ${didSearch && "active"}`}>
         <div className="cashier-search-suggestions">
           {!collections.length ? (

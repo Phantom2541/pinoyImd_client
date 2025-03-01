@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import SearchMenu from "../../../../../../components/header/picker/users/search.jsx";
+import { SearchMenu } from "../../../../../../components/header";
 import { MDBIcon, MDBBadge } from "mdbreact";
 import { computeGD, currency } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
