@@ -1,5 +1,5 @@
 /* search */
-.cashier-search-cotaniner {
+.searchable-search-cotaniner {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7,7 +7,7 @@
   max-width: 350px;
 }
 
-.cashier-search {
+.searchable-search {
   position: relative;
   display: flex;
   align-items: center;
@@ -18,20 +18,20 @@
   background-color: #fff;
 }
 
-.cashier-search input {
+.searchable-search input {
   width: 100%;
   border: none;
   outline: none;
   margin-inline: 5px;
 }
 
-.cashier-search input::placeholder {
+.searchable-search input::placeholder {
   font-style: italic;
   color: hsl(0, 0%, 60%);
   letter-spacing: 0.5px;
 }
 
-.cashier-search button {
+.searchable-search button {
   border: none;
   background-color: #007bff;
   color: white;
@@ -41,22 +41,22 @@
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
 }
 
-.cashier-search button:active {
+.searchable-search button:active {
   transform: scale(0.95);
 }
 
-.cashier-search button:hover {
+.searchable-search button:hover {
   background-color: hsl(221.25, 70.8%, 61.1%);
 }
 
-.cashier-search.active {
+.searchable-search.active {
   border-radius: 0;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 }
 
 /* Suggestions Design */
-.cashier-search .cashier-search-suggestions {
+.searchable-search .searchable-search-suggestions {
   display: none;
   position: absolute;
   bottom: 0;
@@ -72,11 +72,11 @@
   z-index: 9999;
 }
 
-.cashier-search.active .cashier-search-suggestions {
+.searchable-search.active .searchable-search-suggestions {
   display: block;
 }
 
-.cashier-search .cashier-search-suggestions::before {
+.searchable-search .searchable-search-suggestions::before {
   content: "";
   position: absolute;
   top: 0;
@@ -88,13 +88,13 @@
   box-shadow: -1px 0 2px 0 rgba(0, 0, 0, 0.1);
 }
 
-.cashier-search .cashier-search-suggestions small {
+.searchable-search .searchable-search-suggestions small {
   font-size: 0.9rem;
   font-style: italic;
   color: grey;
 }
 
-.cashier-search .cashier-search-suggestions ul {
+.searchable-search .searchable-search-suggestions ul {
   list-style-type: none;
   padding: 0;
   padding-inline: 5px;
@@ -106,11 +106,11 @@
   overflow-y: auto;
 }
 
-.cashier-search .cashier-search-suggestions ul li {
+.searchable-search .searchable-search-suggestions ul li {
   padding: 5px 10px;
 }
 
-.cashier-search .cashier-search-suggestions ul li:hover {
+.searchable-search .searchable-search-suggestions ul li:hover {
   background-color: hsl(207, 90%, 56%);
   color: white;
   cursor: pointer;
