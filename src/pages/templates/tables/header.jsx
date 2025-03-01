@@ -42,20 +42,6 @@ const Header = () => {
         <span className="white-text mx-3 text-nowrap mt-0">Controls </span>
       </div>
       <Search setPatient={setPatient} setRegister={setRegister} />
-
-      {/* <div>
-        <div className="text-right d-flex items-center">
-          <MDBBtn
-            size="sm"
-            className="px-2"
-            rounded
-            color="success"
-            // onClick={() => dispatch(SetCREATE())}
-          >
-            <MDBIcon icon="plus" />
-          </MDBBtn>
-        </div>
-      </div> */}
     </MDBView>
   );
 };
