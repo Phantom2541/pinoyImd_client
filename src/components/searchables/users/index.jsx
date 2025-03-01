@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  GETPATIENTS,
+  BROWSE,
   RESET,
 } from "./../../../services/redux/slices/assets/persons/users";
 import { MDBIcon } from "mdbreact";
@@ -13,6 +13,7 @@ import {
   getGenderIcon,
 } from "./../../../services/utilities";
 import Notification from "./notification";
+import "../style.css";
 
 /**
  * A Search component that allows the user to search for a patient by last name, first name, and middle name.
@@ -26,11 +27,13 @@ import Notification from "./notification";
  *
  * @returns {JSX.Element} users
  */
-export default function Search({ setPatient, setRegister }) {
-  const [searchKey, setSearchKey] = useState(""),
-    [didSearch, setDidSearch] = useState(false),
-    { collections, isLoading } = useSelector(({ users }) => users),
+export default function Search({ setPatient, setRegister = () => {} }) {
+  const { collections, isLoading } = useSelector(({ users }) => users),
     { token } = useSelector((state) => state.auth),
+    [patients, setPatients] = useState([]),
+    [didSearch, setDidSearch] = useState(false),
+    [didHover, setDidHover] = useState(false),
+    [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
 
   // This function is debounced which means it will only be executed after 1000 milliseconds (1 second)
@@ -46,9 +49,13 @@ export default function Search({ setPatient, setRegister }) {
   // The function then dispatches the GETPATIENTS action with the token and the formatted
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
+
+  useEffect(() => {
+    setPatients(collections);
+  }, [collections]);
   const debouncedSearch = debounce((searchKey) => {
     const key = formatNameToObj(searchKey);
-    dispatch(GETPATIENTS({ token, key }));
+    dispatch(BROWSE({ token, key }));
   }, 1000);
 
   const handleChange = (e) => {
@@ -57,7 +64,7 @@ export default function Search({ setPatient, setRegister }) {
     const searchKey = _searchKey.split(",");
     if (searchKey.length > 1 && searchKey[1].trim()) {
       setDidSearch(true);
-      return debouncedSearch(searchKey);
+      return debouncedSearch(_searchKey);
     }
   };
 
@@ -76,19 +83,30 @@ export default function Search({ setPatient, setRegister }) {
   };
 
   return (
-    <div className="d-flex align-items-center">
+    <div className="d-flex align-items-center" style={{ position: "relative" }}>
       <Notification didSearch={didSearch} />
-      <div className={`cashier-search ${didSearch && "active"}`}>
-        <div className="cashier-search-suggestions">
-          {!collections.length ? (
-            <small onClick={handleRegister}>No Patient Record found...</small>
+      <div className={`searchable-search ${didSearch && "active"}`}>
+        <div className="searchable-search-suggestions">
+          {!patients.length ? (
+            <small
+              className={didHover ? "text-success" : ""}
+              onClick={handleRegister}
+              onMouseEnter={() => setDidHover(true)}
+              onMouseLeave={() => setDidHover(false)}
+            >
+              No Patient Record found. <br /> click here to register
+            </small>
           ) : (
             <ul>
-              {collections?.map((user) => {
+              {patients?.map((user) => {
                 const { _id, fullName: fullname } = user;
 
                 return (
-                  <li onClick={() => handleSelect(user)} key={_id}>
+                  <li
+                    onClick={() => handleSelect(user)}
+                    key={_id}
+                    className="text-dark text-nowrap"
+                  >
                     {getGenderIcon(user.gender)} {fullName(fullname)} |{" "}
                     {getAge(user.dob)}
                   </li>
@@ -105,7 +123,18 @@ export default function Search({ setPatient, setRegister }) {
           autoCorrect="off"
           spellCheck={false}
         />
-        <button type="submit">
+        <button
+          type="submit"
+          className={didSearch && !isLoading ? "bg-danger" : ""}
+          onClick={
+            didSearch
+              ? () => {
+                  setDidSearch(false);
+                  setSearchKey("");
+                }
+              : () => console.log("search")
+          }
+        >
           <MDBIcon
             pulse={isLoading}
             icon={isLoading ? "spinner" : didSearch ? "times" : "search"}

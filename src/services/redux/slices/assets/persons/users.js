@@ -88,10 +88,11 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, action) => {
-        // const { payload } = action.payload;
-        state.collections = action.payload;
+      .addCase(BROWSE.fulfilled, (state, { payload, success }) => {
+        console.log("payload", payload);
+        state.collections = payload.payload;
         state.isLoading = false;
+        state.message = success;
       })
       .addCase(BROWSE.rejected, (state, action) => {
         const { error } = action;
@@ -107,7 +108,7 @@ export const reduxSlice = createSlice({
       .addCase(GETPATIENTS.fulfilled, (state, action) => {
         const { payload } = action.payload;
         //console.log('payload',payload);
-        
+
         state.collections = payload;
         state.isLoading = false;
       })

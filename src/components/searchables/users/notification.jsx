@@ -6,7 +6,10 @@ const Notification = ({ didSearch }) => {
     description = "Please maintain this order when searching.";
 
   return (
-    <div className={`cashier-instruction ${didSearch && "hide"}`}>
+    <div
+      className={`cashier-instruction ${didSearch && "hide"}`}
+      style={{ zIndex: "9999 !important", position: "relative" }}
+    >
       <MDBIcon
         icon="info-circle"
         size="lg"

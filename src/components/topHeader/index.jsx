@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 import Categories from "./categories";
+import Search from "../searchables/users";
 
 const TopHeader = ({
   title = "",
