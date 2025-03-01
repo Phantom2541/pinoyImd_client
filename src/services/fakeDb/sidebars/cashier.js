@@ -6,9 +6,10 @@ import {
   Menus,
   Services,
   Insources,
+  Animation,
   Outsources,
 } from "../../../pages/platforms/cashier";
-import { Tablestemplate, Collapsable } from "../../../pages/tamplates";
+import { Tablestemplate, Collapsable } from "../../../pages/templates";
 
 import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
@@ -23,6 +24,12 @@ const cashier = [
     icon: "tachometer-alt",
     path: "/dashboard",
     component: Dashboard,
+  },
+  {
+    name: "Animation",
+    icon: "tachometer-alt",
+    path: "/animation",
+    component: Animation,
   },
   {
     name: "POS", // Point Of Sales

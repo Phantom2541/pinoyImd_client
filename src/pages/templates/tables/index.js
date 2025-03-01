@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBCard, MDBCardBody } from "mdbreact";
+import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 
 import Tables from "./tables";
 import TopHeader from "./header";
@@ -17,7 +17,7 @@ const Tablestemplate = () => {
   const isLoading = false;
 
   return (
-    <>
+    <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <TopHeader />
         <MDBCardBody>{isLoading ? <TableLoading /> : <Tables />}</MDBCardBody>
@@ -32,7 +32,7 @@ const Tablestemplate = () => {
           /> */}
         </div>
       </MDBCard>
-    </>
+    </MDBAnimation>
   );
 };
 
