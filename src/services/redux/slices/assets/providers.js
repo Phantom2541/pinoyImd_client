@@ -110,20 +110,6 @@ export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   }
 });
 
-export const INSOURCE = createAsyncThunk(
-  `${name}/insource`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/insource`, token, key);
-    } catch (error) {
-      const message =
-        error.response?.data?.message || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const reduxSlice = createSlice({
   name,
   initialState,
@@ -139,22 +125,6 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-      const { page, maxPage } = payload;
-      if (page.length > 0) {
-        state.totalPages = Math.ceil(payload.length / maxPage);
-        if (state.page > state.totalPages) {
-          state.page = state.totalPages;
-        }
-      }
-      state.filter = page;
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
       const { page, filtered } = state;
       const { maxPage } = payload;
       if (payload.length > 0) {
@@ -168,29 +138,13 @@ export const reduxSlice = createSlice({
       } else {
         state.filtered = filtered;
       }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     SETSOURCES: (state, { payload }) => {
       state.collections = payload;
     },
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -298,17 +252,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 export const { SETSOURCES, SetEDIT, SetCREATE, SetFILTER, SetPAGE, RESET } =
   reduxSlice.actions;
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-export const { SetPAGE, SetCREATE, RESET } = reduxSlice.actions;
 
->>>>>>> Stashed changes
 export default reduxSlice.reducer;
