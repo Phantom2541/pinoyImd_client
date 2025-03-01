@@ -7,12 +7,14 @@ import {
   MDBContainer,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import CollapseTable from "./table";
 import { Services } from "../../../../services/fakeDb";
+
+import CollapsableBody from "./collapsable/body";
+import CollapsableHeader from "./collapsable/header";
 
 // import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
-export default function MenuCollapse() {
+export default function Body() {
   /**
    * check who will open
    */
@@ -39,7 +41,7 @@ export default function MenuCollapse() {
       fluid
     >
       {Services.collections.map((service, index) => {
-        const { name, abbreviation, decSS, frequency, template } = service;
+        const { decSS, frequency } = service;
 
         return (
           <MDBCard
@@ -57,16 +59,7 @@ export default function MenuCollapse() {
                 setActiveId((prev) => (prev === index ? -1 : index))
               }
             >
-              <label className="d-flex justify-content-between">
-                {index + 1}. {name} {abbreviation}
-                <small>
-                  {template}
-                  <i
-                    style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
-                    className="fa fa-angle-down transition-all ml-2"
-                  />
-                </small>
-              </label>
+              <CollapsableHeader service={service} index={index} />
             </MDBCollapseHeader>
 
             <MDBCollapse
@@ -80,7 +73,7 @@ export default function MenuCollapse() {
               }}
             >
               <MDBCardBody className="pt-2">
-                <CollapseTable decSS={decSS} frequency={frequency} />
+                <CollapsableBody decSS={decSS} frequency={frequency} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

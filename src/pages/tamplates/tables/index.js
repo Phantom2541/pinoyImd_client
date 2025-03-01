@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBCard, MDBCardBody } from "mdbreact";
 
-import Tables from "./tables";
+import Body from "./body";
 import TopHeader from "./header";
 // import Pagination from "../../../../../components/pagination";
 import TableRowCount from "../../../components/pagination/rows";
@@ -20,7 +20,7 @@ const Tablestemplate = () => {
     <>
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <TopHeader />
-        <MDBCardBody>{isLoading ? <TableLoading /> : <Tables />}</MDBCardBody>
+        <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
 
         <div className="mb-auto d-flex justify-content-between align-items-center px-4">
           <TableRowCount disablePageSelect={false} />

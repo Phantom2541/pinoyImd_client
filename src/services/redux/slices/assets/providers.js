@@ -7,7 +7,7 @@ const initialState = {
   collections: [],
   isSuccess: false,
   isLoading: false,
-  message: "",
+
   selected: {},
   totalPages: 0,
   page: 0,
@@ -17,10 +17,10 @@ const initialState = {
 };
 
 export const OUTSOURCE = createAsyncThunk(
-  `${name}/outsource`,
+  `${name}/browse`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/outsource`, token, key);
+      return await axioKit.universal(`${name}/browse`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -91,6 +91,24 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
+export const DESTROY = createAsyncThunk(
+  `${name}/destroy`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.destroy(name, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name,
   initialState,
@@ -132,7 +150,11 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(OUTSOURCE.fulfilled, (state, { payload }) => {
-        state.collections = payload;
+        const { payload: data } = payload;
+        state.collections = data;
+        state.filter = data;
+        state.paginated = data;
+        state.isSuccess = true;
         state.isLoading = false;
       })
       .addCase(OUTSOURCE.rejected, (state, { payload }) => {
@@ -199,6 +221,28 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.rejected, (state, { payload }) => {
         state.message = payload;
+        state.isLoading = false;
+      })
+
+      .addCase(DESTROY.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(DESTROY.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const index = state.collections.findIndex(
+          (item) => item._id === payload
+        );
+
+        state.collections.splice(index, 1);
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(DESTROY.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
         state.isLoading = false;
       });
   },

@@ -8,7 +8,7 @@ import {
 import Swal from "sweetalert2";
 
 import { Services } from "../../../../../../services/fakeDb";
-import { handlePagination } from "../../../../../../services/utilities";
+// import { handlePagination } from "../../../../../../services/utilities";
 const Tables = () => {
   const { maxPage, token } = useSelector(({ auth }) => auth),
     { paginated, page } = useSelector(({ controls }) => controls),

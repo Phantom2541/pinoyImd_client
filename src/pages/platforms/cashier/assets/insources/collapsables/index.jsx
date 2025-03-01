@@ -9,7 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import CollapseTable from "./table";
 import { SearchPhysicians as Search } from "../../../../../../components/searchables";
-import { TagPHYSICIAN } from "../../../../../../services/redux/slices/assets/branches";
+// import { TagPHYSICIAN } from "../../../../../../services/redux/slices/assets/branches";
 
 export default function MenuCollapse() {
   /**

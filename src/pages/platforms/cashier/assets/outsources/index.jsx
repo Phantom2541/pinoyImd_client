@@ -1,17 +1,20 @@
 import React from "react";
 import { MDBCard, MDBCardBody } from "mdbreact";
 
+import TopHeader from "./header";
+import TableLoading from "../../../../../components/tableLoading";
+import CardBody from "./body";
+import { useSelector } from "react-redux";
 const Outsources = () => {
+  const { isLoading } = useSelector(({ providers }) => providers);
+
   return (
-    <MDBCard>
-      <MDBCardBody>
-        <h5 className="font-weight-bold">Outsources</h5>
-        <p>
-          This is a default component for Outsources. You can customize and
-          extend it as needed.
-        </p>
-      </MDBCardBody>
-    </MDBCard>
+    <>
+      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+        <TopHeader />
+        <MDBCardBody>{isLoading ? <TableLoading /> : <CardBody />}</MDBCardBody>
+      </MDBCard>
+    </>
   );
 };
 
