@@ -10,7 +10,7 @@ import {
 } from "./../../../services/redux/slices/commerce/menus";
 import { currency, globalSearch } from "./../../../services/utilities";
 import Notification from "./notifications";
-import "./styles.css";
+import "../style.css";
 
 export default function Search({ setMenu, setRegister }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -126,20 +126,24 @@ export default function Search({ setMenu, setRegister }) {
                     <span>
                       {description && (
                         <>
-                          <span className="description">{description}</span>
+                          <span className="description text-dark">
+                            {description}
+                          </span>
                           <br />
                         </>
                       )}
                       {abbreviation && (
                         <span
                           style={{ textAlign: "left" }}
-                          className="abbreviation"
+                          className="abbreviation text-dark"
                         >
                           {abbreviation}
                         </span>
                       )}
                     </span>
-                    <span className="ml-3">{opd ? currency(opd) : "N/A"}</span>
+                    <span className="ml-3 text-dark">
+                      {opd ? currency(opd) : "N/A"}
+                    </span>
                   </div>
                 </li>
               );
