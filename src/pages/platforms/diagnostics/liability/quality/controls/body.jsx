@@ -9,15 +9,15 @@ import Swal from "sweetalert2";
 
 import { Services } from "../../../../../../services/fakeDb";
 import { handlePagination } from "../../../../../../services/utilities";
-const Tables = ({ page, handleEdit }) => {
-  const { maxPage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ controls }) => controls),
-    { token } = useSelector(({ auth }) => auth),
-    // incoming merge
-// const Tables = () => {
-//   const { maxPage, token } = useSelector(({ auth }) => auth),
-//     { paginated, page } = useSelector(({ controls }) => controls),
-//     dispatch = useDispatch();
+// const Tables = ({ page, handleEdit }) => {
+//   const { maxPage } = useSelector(({ auth }) => auth),
+//     { collections } = useSelector(({ controls }) => controls),
+//     { token } = useSelector(({ auth }) => auth);
+// incoming merge
+const Tables = () => {
+  const { maxPage, token } = useSelector(({ auth }) => auth),
+    { collections, paginated, page } = useSelector(({ controls }) => controls),
+    dispatch = useDispatch();
 
   const handleDelete = (_id) => {
     Swal.fire({
@@ -66,7 +66,7 @@ const Tables = ({ page, handleEdit }) => {
                 })}
               </td>
               <td>
-                <button onClick={() => handleEdit(control)}>Edit</button>
+                <button onClick={() => "handleEdit(control)"}>Edit</button>
                 <button onClick={() => handleDelete(control._id)}>
                   Delete
                 </button>

@@ -116,7 +116,8 @@ export default function Payrolls() {
                 );
 
                 let katapusan = payroll?.find((payslip) => {
-                  if (Number(contract?.pc) === 1) {
+                  if (employment.bimonthly) {
+                    // if (Number(contract?.pc) === 1) {
                     if (getDate(payslip.createdAt) > 15) {
                       return payslip;
                     }

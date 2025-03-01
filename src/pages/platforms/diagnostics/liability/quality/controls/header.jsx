@@ -37,12 +37,12 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [token, activePlatform, year, month, service, dispatch]);
 
-  const handleCreate = () => {
-    setSelected({
-      serviceId: service,
-    });
-    onCreate(true);
-  };
+  // const handleCreate = () => {
+  //   setSelected({
+  //     serviceId: service,
+  //   });
+  //   onCreate(true);
+  // };
 
   return (
     <MDBView
@@ -58,7 +58,7 @@ const Header = () => {
           <Templates setTemplate={setTemplate} />
           <Month month={month} setMonth={setMonth} />
           <Year year={year} setYear={setYear} />
-          {hasAction && (
+          {/* {hasAction && (
             <MDBBtn
               size="sm"
               className="px-2"
@@ -68,7 +68,7 @@ const Header = () => {
             >
               <MDBIcon icon="plus" />
             </MDBBtn>
-          )}
+          )} */}
         </div>
       </div>
     </MDBView>

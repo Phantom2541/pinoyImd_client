@@ -51,11 +51,11 @@ const Assurances = () => {
   return (
     <>
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-        <TopHeader
+        {/* <TopHeader
           hasAction={true}
           onCreate={handleCreate}
           setSelected={setSelected}
-        />
+        /> */}
 
         <CardHeader />
         <MDBCardBody>
