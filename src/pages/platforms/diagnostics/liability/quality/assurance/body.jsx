@@ -40,7 +40,7 @@ const Tables = () => {
           <th>Created At</th>
         </tr>
       </thead>
-      <tbody>
+      {/* <tbody>
         {!paginated.length && <tr>No data</tr>}
         {paginated.map((assurance, index) => {
           return (
@@ -49,7 +49,7 @@ const Tables = () => {
               <td>{assurance?.abnormal}</td>
               <td>{assurance?.high}</td>
               <td>{assurance?.normal}</td>
-              {/* <td>{control?.createdAt}</td> */}
+              <td>{control?.createdAt}</td>
               <td>
                 {new Date(assurance?.createdAt).toLocaleDateString("en-GB", {
                   month: "short",
@@ -68,7 +68,7 @@ const Tables = () => {
             </tr>
           );
         })}
-      </tbody>
+      </tbody> */}
     </MDBTable>
   );
 };

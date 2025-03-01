@@ -25,13 +25,13 @@ const cashier = [
     component: Dashboard,
   },
   {
-    name: "POS", // Point Of Sales
-    path: "/pos",
+    name: "Cashier",
+    path: "/cashier",
     icon: "money-bill",
     children: [
       {
-        name: "Cashier",
-        path: "/patients",
+        name: "pos", // Point Of Sales
+        path: "/pos",
         component: Cashier,
       },
       {
@@ -45,7 +45,7 @@ const cashier = [
         component: Remmitances,
       },
       {
-        name: "Ledger",
+        name: "Ledger experimental",
         path: "/Ledger",
         component: ExperimentalLedger,
       },
