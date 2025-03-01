@@ -2,7 +2,7 @@ import React from "react";
 import { MDBInput, MDBRow, MDBCol, MDBSwitch } from "mdbreact";
 import { getAge, validateContact } from "../../../../../../services/utilities";
 import { Privileges, Suffixes } from "../../../../../../services/fakeDb";
-import CustomSelect from "../../../../../../components/customSelect";
+import CustomSelect from "../../../../../../components/searchables/customSelect";
 
 export default function PersonalInformation({ handleChange, form }) {
   const { fullName, dob, mobile, isMale, privilege } = form;

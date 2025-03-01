@@ -13,7 +13,7 @@ import {
   MDBRow,
   MDBCol,
 } from "mdbreact";
-import { SAVE } from "../../../../../services/redux/slices/responsibilities/liabilities";
+import { SAVE } from "../../../../../services/redux/slices/liability/liabilities";
 import { capitalize, fullName } from "../../../../../services/utilities";
 import { GETPATIENTS } from "../../../../../services/redux/slices/assets/persons/users";
 import { BROWSE } from "../../../../../services/redux/slices/assets/sources";

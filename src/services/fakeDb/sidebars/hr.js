@@ -1,14 +1,11 @@
 import Services from "../../../pages/platforms/manager/settings/services";
 import Menus from "../../../pages/platforms/manager/settings/menus";
-import Dashboard from "../../../pages/platforms/hr/dashboard";
-import Payrolls from "../../../pages/platforms/hr/accured/payrolls";
 
 const hr = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
     path: "/dashboard",
-    component: Dashboard,
   },
   {
     name: "File 201",
@@ -37,13 +34,12 @@ const hr = [
       {
         name: "Payroll",
         icon: "list",
-        path: "/payroll",
-        component: Payrolls,
+        path: "/accrued/payroll",
       },
       {
         name: "Check",
         icon: "list",
-        path: "/checks",
+        path: "/accrued/checks",
       },
     ],
   },
@@ -58,15 +54,15 @@ const hr = [
         path: "/finance/employment",
       },
       {
-        name: "Menus",
-        path: "/finance/menus",
-        component: Menus,
-      },
-      {
-        name: "Services",
-        path: "/finance/services",
-        component: Services,
-      },
+              name: "Menus",
+              path: "/finance/menus",
+              component: Menus,
+            },
+            {
+              name: "Services",
+              path: "/finance/services",
+              component: Services,
+            },
     ],
   },
 ];

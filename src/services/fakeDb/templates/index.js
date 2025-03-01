@@ -1,33 +1,19 @@
-const Templates = [
-  {
-    department: "LAB",
-    components: [
-      "Analysis",
-      "Bacteriology",
-      "Biopsy",
-      "Chemistry",
-      "Coagulation",
-      "Compatibility",
-      "Hematology",
-      "Miscellaneous",
-      "Parasitology",
-      "PAPs",
-      "PBS",
-      "Serology",
-      "Urinalysis",
-      "Drugtest",
-      "Electrolyte",
-      "",
-    ],
-  },
-  {
-    department: "RAD",
-    components: ["ECG", "Ultrasound", "X-ray", "2DEcho"],
-  },
-  {
-    department: "CLINIC",
-    components: ["Certicifate", "Examination"],
-  },
-];
+import collections from "./collections.json";
 
-export default Templates;
+const Services = {
+  collections,
+  getTemplate: (department, templateIndex) => {
+    if (!department) return "Department not found!";
+
+    const { components = [] } =
+      collections.find(({ department: dep }) => dep === department) || {};
+
+    console.log(components);
+
+    if (components?.length === 0) return "Template not found!";
+
+    return components[templateIndex] || "Template not found!";
+  },
+};
+
+export default Services;

@@ -4,6 +4,7 @@ const formatNameToObj = (searchKey) => {
       ?.split(",")
       .map((s) => s.trim()),
     [fname, mname] = rest.split(" Y ").map((s) => s.trim());
+  console.log("data", { fname, lname, mname });
 
   if (!lname) return {};
 

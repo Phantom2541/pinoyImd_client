@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/responsibilities/liabilities";
+} from "../../../../../services/redux/slices/liability/liabilities";
 import { useToasts } from "react-toast-notifications";
 import Modal from "./modal";
 import { currency, fullName } from "../../../../../services/utilities";
@@ -98,7 +98,6 @@ export default function Accrued() {
 
   const handlePayment = (model) => {
     //console.log(model);
-
     // localStorage.setItem("payslip", JSON.stringify(model));
     // window.open(
     //   "/printout/payslip",

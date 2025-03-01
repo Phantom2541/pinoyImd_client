@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import {
 //   BROWSE as PAYROLL,
 //   RESET as PAYROLLRESET,
-// } from "../../../../services/redux/slices/responsibilities/payroll";
+// } from "../../../../services/redux/slices/liability/payroll";
 import {
   PAYROLL,
   RESET,
@@ -35,7 +35,6 @@ export default function Payrolls() {
     { collections, message, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
-    PaySlip = useSelector(({ liabilities }) => liabilities.isSuccess),
     { addToast } = useToasts(),
     dispatch = useDispatch();
   //Initial Browse
@@ -44,7 +43,7 @@ export default function Payrolls() {
       dispatch(PAYROLL({ token, branchId: activePlatform?.branchId }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform, PaySlip]);
+  }, [token, dispatch, activePlatform]);
   //Set fetched data for mapping
   useEffect(() => {
     setPersonnels(collections);
@@ -71,12 +70,12 @@ export default function Payrolls() {
   //   setPersonnels(collections);
   // };
 
-  const handleToggle = model => {
+  const handleToggle = (model) => {
     setShowModal(true);
     setSelected(model);
   };
 
-  const handlePayslip = model => {
+  const handlePayslip = (model) => {
     localStorage.setItem("payslip", JSON.stringify(model));
 
     window.open(
@@ -100,16 +99,15 @@ export default function Payrolls() {
                 <th>Name</th>
                 <th>Rate</th>
                 <th>COLA</th>
-                {/* Cost of Living Allowance */}
                 <th>Akinsenas</th>
                 <th>Katapusan</th>
               </tr>
             </thead>
             <tbody>
               {personnels.map((personnel, index) => {
-                const { user, contract, rate, payroll } = personnel;
-                const designation = Roles.findById(
-                  Number(contract?.designation)
+                const { user, employment, rate, payroll } = personnel;
+                const designation = Roles.find(
+                  (role) => role.id === Number(employment.designation)
                 );
                 // //console.log("payrollss", payroll);
 
@@ -117,25 +115,19 @@ export default function Payrolls() {
                   ({ createdAt }) => getDate(createdAt) <= 15
                 );
 
-                let katapusan = payroll?.find(payslip => {
-                  if (Number(contract?.pc) === 1) {
+                let katapusan = payroll?.find((payslip) => {
+                  if (employment.bimonthly) {
+                    // if (Number(contract?.pc) === 1) {
                     if (getDate(payslip.createdAt) > 15) {
                       return payslip;
                     }
-                  } else if (Number(contract?.pc) === 2) {
-                    if (getDate(payslip.createdAt) <= 31) {
-                      return payslip;
-                    }
                   } else {
-                    if (getDate(payslip.createdAt) <= 90) {
+                    if (getDate(payslip.createdAt) <= 31) {
                       return payslip;
                     }
                   }
                   return null;
                 });
-                console.log("akinsenas", akinsenas);
-                console.log("katapusan", katapusan);
-
                 return (
                   <tr key={`payroll-${index + 1}`}>
                     <td>{index + 1}.</td>
@@ -146,7 +138,7 @@ export default function Payrolls() {
                       <p className="text-muted mb-0">
                         <p className="text-muted mb-0">
                           {designation?.name?.toUpperCase()} |
-                          {contract?.soe?.toUpperCase()}
+                          {employment?.soe?.toUpperCase()}
                         </p>
                       </p>
                     </td>
@@ -154,7 +146,7 @@ export default function Payrolls() {
                       <p className="fw-bold mb-1 text-capitalize">
                         monthly:{currency(rate?.monthly)}
                       </p>
-                      {Number(contract?.pc) === 1 && (
+                      {employment?.bimonthly && (
                         <p className="text-muted mb-0">
                           <p className="text-muted mb-0">
                             Daily: {currency(rate?.daily)}
@@ -167,7 +159,7 @@ export default function Payrolls() {
                         {currency(rate?.cola)}
                       </p>
                     </td>
-                    {Number(contract?.pc) === 1 && (
+                    {employment.bimonthly && (
                       <td className="text-center">
                         {akinsenas ? (
                           <MDBBtnGroup className="shadow-0">
@@ -196,12 +188,12 @@ export default function Payrolls() {
                     )}
                     <td
                       className="text-center"
-                      colSpan={Number(contract?.pc) === 1 ? 1 : 2}
+                      colSpan={employment.bimonthly ? 1 : 2}
                     >
                       {katapusan ? (
                         <MDBBtnGroup className="shadow-0">
                           <MDBBtn
-                            onClick={() => handlePayslip(personnel)}
+                            onClick={() => handleToggle(personnel)}
                             color="warning"
                             size="sm"
                             title="Untag this branch."

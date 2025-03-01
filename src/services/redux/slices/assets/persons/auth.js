@@ -256,7 +256,7 @@ export const reduxSlice = createSlice({
 
         state.isPatient = isPatient;
         state.isCeo = isCeo;
-        state.company = branch.companyId;
+        state.company = branch?.companyId;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
@@ -341,7 +341,7 @@ export const reduxSlice = createSlice({
         state.isPatient = isPatient;
         state.company = company;
         state.access = access;
-        state.company = branch.companyId;
+        state.company = branch?.companyId;
         state.isCeo = isCeo;
         state.auth = auth;
         state.email = auth.email;

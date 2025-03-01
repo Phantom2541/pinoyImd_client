@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBRow, MDBCol } from "mdbreact";
-import CustomSelect from "../../../../../../../../../../../components/customSelect";
+import CustomSelect from "../../../../../../../../../../../components/searchables/customSelect";
 
 const choices = [
   {

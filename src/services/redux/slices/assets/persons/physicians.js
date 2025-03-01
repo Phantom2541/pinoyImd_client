@@ -28,9 +28,27 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
+export const FILTER = createAsyncThunk(
+  `${name}/filter`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${name}/filter`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const TIEUPS = createAsyncThunk(
   `${name}/tieups`,
-  ({ token, key }, thunkAPI) => { 
+  ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${name}/tieups`, token, key);
     } catch (error) {
@@ -107,6 +125,20 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(FILTER.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(FILTER.fulfilled, (state, { payload }) => {
+        state.collections = payload;
+        state.isLoading = false;
+      })
+      .addCase(FILTER.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

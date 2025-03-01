@@ -19,9 +19,11 @@ export default function Menus() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  console.log(activePlatform);
+
   useEffect(() => {
     if (token && activePlatform?.branchId) {
-      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
+      dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
     }
 
     return () => dispatch(RESET());
