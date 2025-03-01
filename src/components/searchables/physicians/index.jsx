@@ -2,34 +2,33 @@ import React, { useState } from "react";
 import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  GETPATIENTS,
+  FILTER,
   RESET,
-} from "../../../../services/redux/slices/assets/persons/users";
+} from "./../../../services/redux/slices/assets/persons/physicians";
 import { MDBIcon } from "mdbreact";
 import {
   formatNameToObj,
   fullName,
-  getAge,
   getGenderIcon,
-} from "../../../../services/utilities";
+} from "./../../../services/utilities";
 import Notification from "./notification";
 
 /**
  * A Search component that allows the user to search for a patient by last name, first name, and middle name.
  * The component will make an API call to search for patients and render a list of results below the search input.
- * The user can select a patient from the list and the setPatient callback will be called with the selected patient.
+ * The user can select a patient from the list and the setPhysician callback will be called with the selected patient.
  * The component also renders a button to register a new patient if no patient record is found with the search key.
  * The setSearchKey callback will be called with the search key when the button is clicked.
  *
- * @param {function} setPatient - A callback function that will be called when a patient is selected from the list.
+ * @param {function} setPhysician - A callback function that will be called when a patient is selected from the list.
  * @param {function} setRegister - A callback function that will be called when the button to register a new patient is clicked.
  *
  * @returns {JSX.Element} users
  */
-export default function Search({ setPatient, setRegister }) {
+export default function Search({ setPhysician, setRegister }) {
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
-    { collections, isLoading } = useSelector(({ users }) => users),
+    { collections, isLoading } = useSelector(({ physicians }) => physicians),
     { token } = useSelector((state) => state.auth),
     dispatch = useDispatch();
 
@@ -48,7 +47,7 @@ export default function Search({ setPatient, setRegister }) {
   // for patients and update the state with the result.
   const debouncedSearch = debounce((searchKey) => {
     const key = formatNameToObj(searchKey);
-    dispatch(GETPATIENTS({ token, key }));
+    dispatch(FILTER({ token, key }));
   }, 1000);
 
   const handleChange = (e) => {
@@ -57,12 +56,12 @@ export default function Search({ setPatient, setRegister }) {
     const searchKey = _searchKey.split(",");
     if (searchKey.length > 1 && searchKey[1].trim()) {
       setDidSearch(true);
-      return debouncedSearch(searchKey);
+      return debouncedSearch(_searchKey);
     }
   };
 
   const handleSelect = (user) => {
-    setPatient(user);
+    setPhysician(user);
     setSearchKey("");
     dispatch(RESET());
     setDidSearch(false);
@@ -80,17 +79,29 @@ export default function Search({ setPatient, setRegister }) {
       <Notification didSearch={didSearch} />
       <div className={`cashier-search ${didSearch && "active"}`}>
         <div className="cashier-search-suggestions">
-          {!collections.length ? (
-            <small onClick={handleRegister}>No Patient Record found...</small>
+          {!collections?.length ? (
+            <div>
+              <small>
+                No Physician found...{" "}
+                <i
+                  onClick={handleRegister}
+                  style={{ color: "blue", cursor: "pointer" }}
+                >
+                  Click to register
+                </i>
+              </small>
+            </div>
           ) : (
             <ul>
-              {collections?.map((user) => {
+              {collections?.map(({ user, specialization }) => {
                 const { _id, fullName: fullname } = user;
 
                 return (
                   <li onClick={() => handleSelect(user)} key={_id}>
-                    {getGenderIcon(user.gender)} {fullName(fullname)} |{" "}
-                    {getAge(user.dob)}
+                    <h5>
+                      {getGenderIcon(user.gender)} {fullName(fullname)}
+                    </h5>
+                    <small>{specialization}</small>
                   </li>
                 );
               })}

@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBCol, MDBRow } from "mdbreact";
-import CustomSelect from "../../../../../../../../../../components/customSelect";
+import CustomSelect from "../../../../../../../../../../components/searchables/customSelect";
 import { ResultInRange } from "../../../../../../../../../../services/fakeDb";
 
 export default function Chemical({ task, setTask }) {

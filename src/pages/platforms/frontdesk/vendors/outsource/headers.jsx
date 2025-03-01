@@ -6,7 +6,7 @@ import {
   RESET,
 } from "../../../../../services/redux/slices/assets/providers";
 import { MDBCardHeader } from "mdbreact";
-import { SearchBranch } from "../../../../../components/header";
+import { SearchBranch } from "../../../../../components/searchables";
 const NewComponent = ({ setName, setShowModal }) => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();

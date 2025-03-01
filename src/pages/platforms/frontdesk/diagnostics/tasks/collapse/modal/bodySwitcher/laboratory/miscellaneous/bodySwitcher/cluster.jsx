@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBRow, MDBCol } from "mdbreact";
 import { Services } from "../../../../../../../../../../../services/fakeDb";
-import CustomSelect from "../../../../../../../../../../../components/customSelect";
+import CustomSelect from "../../../../../../../../../../../components/searchables/customSelect";
 
 export default function Cluster({ task, setTask }) {
   const { packages = [], results = {} } = task;

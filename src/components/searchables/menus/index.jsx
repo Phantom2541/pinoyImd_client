@@ -7,8 +7,8 @@ import {
   BROWSE as MENUS,
   SETMENUS,
   RESET as MENUSRESET,
-} from "../../../../services/redux/slices/commerce/menus";
-import { currency, globalSearch } from "../../../../services/utilities";
+} from "./../../../services/redux/slices/commerce/menus";
+import { currency, globalSearch } from "./../../../services/utilities";
 import Notification from "./notifications";
 import "./styles.css";
 

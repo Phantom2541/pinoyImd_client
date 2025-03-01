@@ -7,45 +7,32 @@ import {
   MDBContainer,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fullName,
-  handlePagination,
-} from "../../../../../../services/utilities";
 import CollapseTable from "./table";
-import { Roles } from "../../../../../../services/fakeDb";
+import { SearchPhysicians as Search } from "../../../../../../components/searchables";
+import { TagPHYSICIAN } from "../../../../../../services/redux/slices/assets/branches";
 
-import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
-
-export default function MenuCollapse({ staffs, page }) {
-  const [activeId, setActiveId] = useState(-1);
+export default function MenuCollapse() {
+  /**
+   * check who will open
+   */
+  const [activeId, setActiveId] = useState(-1),
+    { collections } = useSelector(({ providers }) => providers);
   const { maxPage, token } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
+  // console.log("collections: ", collections);
 
-  const onSubmit = (data) => {
-    dispatch(
-      UPDATE({
-        data: {
-          _id: data._id,
-          contract: {
-            hos: data.employmentHor,
-            soe: data.employmentSoe,
-            pc: data.employmentPc,
-            designation: data.employmentDesignation,
-          },
-          rate: {
-            monthly: data.rateMonthly,
-            cola: data.rateCola,
-            daily: data.rateDaily,
-          },
-          contribution: {
-            ph: data.contributionPh,
-            pi: data.contributionPi,
-            sss: data.contributionSss,
-          },
-        },
-        token,
-      })
-    );
+  const handleTag = (physician) => {
+    console.log("physician", physician);
+
+    // dispatch(
+    //   TagPHYSICIAN({
+    //     data: {
+    //       physicianId,
+    //       BranchId,
+    //     },
+    //     token,
+    //   })
+    // );
   };
 
   return (
@@ -55,18 +42,8 @@ export default function MenuCollapse({ staffs, page }) {
       }}
       fluid
     >
-      {handlePagination(staffs, page, maxPage).map((staff, index) => {
-        const {
-          user,
-          contract: employment,
-          status,
-          rate,
-          contribution,
-          _id,
-        } = staff;
-        const role = Roles.findById(
-          Number(employment?.designation)
-        )?.display_name;
+      {collections?.map(({ clients, name, subName }, index) => {
+        const affiliated = clients?.affiliated || [];
 
         return (
           <MDBCard
@@ -80,21 +57,20 @@ export default function MenuCollapse({ staffs, page }) {
                   : "bg-white"
               } ${activeId === index ? "custom-header" : ""}`}
               style={{ borderRadius: "50%" }}
-              onClick={() =>
-                setActiveId((prev) => (prev === index ? -1 : index))
-              }
             >
               <label className="d-flex justify-content-between">
-                {/* {index + 1}. {user && `${fullName(user?.fullName)}`}
-                {employment?.designation && `| ${role}`} */}
-                {index + 1}. {user && `${fullName(user?.fullName)} | `}
-                {employment?.designation && `${role}`}
-                <small>
-                  {employment?.soe && `${employment?.soe?.toUpperCase()} | `}
-                  {status && status.toUpperCase()}
+                <span>
+                  {index + 1}. {name} {subName}
+                </span>
+                <small
+                  className="d-flex justify-content-between"
+                  onClick={() =>
+                    setActiveId((prev) => (prev === index ? -1 : index))
+                  }
+                >
                   <i
                     style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
-                    className="fa fa-angle-down transition-all ml-2"
+                    className="fa fa-angle-down transition-all mr-2"
                   />
                 </small>
               </label>
@@ -109,14 +85,20 @@ export default function MenuCollapse({ staffs, page }) {
                 borderLeft: "1px solid black",
               }}
             >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <span>Tag Physician</span>
+                <Search setPhysician={handleTag} />
+              </div>
               <MDBCardBody className="pt-2">
                 <CollapseTable
-                  employment={employment}
-                  staff={staff}
-                  rate={rate}
-                  contribution={contribution}
-                  _id={_id}
-                  onSubmit={onSubmit} // Updated to pass handleSubmit as onSubmit
+                  affiliated={affiliated}
+                  BranchId={clients?._id}
                 />
               </MDBCardBody>
             </MDBCollapse>

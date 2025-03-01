@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { TRACKER } from "../../../../../services/redux/slices/commerce/sales";
 import { fullName, getAge } from "../../../../../services/utilities";
-import { SearchUser } from "../../../../../components/header";
+import { SearchUser } from "../../../../../components/searchables";
 
 export default function Header({ patient, setPatient }) {
   const { _id, dob, fullName: fullname } = patient,

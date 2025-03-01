@@ -6,7 +6,7 @@ import {
   getAge,
   validateContact,
 } from "../../../../../../../services/utilities";
-import AddressSelect from "../../../../../../../components/addressSelect";
+import AddressSelect from "../../../../../../../components/searchables/addressSelect";
 import {
   SAVE,
   UPDATE,

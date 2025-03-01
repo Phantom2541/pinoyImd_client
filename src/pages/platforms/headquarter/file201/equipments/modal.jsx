@@ -16,7 +16,7 @@ import {
 } from "../../../../../services/redux/slices/assets/procurements";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import CustomSelect from "../../../../../components/customSelect";
+import CustomSelect from "../../../../../components/searchables/customSelect";
 
 // declare your expected items
 const _form = {

@@ -5,7 +5,7 @@ import { MDBIcon, MDBInput } from "mdbreact";
 import {
   BROWSE,
   RESET,
-} from "../../../../services/redux/slices/assets/branches";
+} from "./../../../services/redux/slices/assets/branches";
 
 const Search = ({ setBranch, setRegister }) => {
   const dispatch = useDispatch();

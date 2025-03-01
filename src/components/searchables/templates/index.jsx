@@ -1,5 +1,5 @@
 import React from "react";
-import { Templates as templates } from "../../../services/fakeDb";
+import { Templates as templates } from "./../../../services/fakeDb";
 
 const Templates = ({ setTemplate }) => {
   const components = templates.find(
@@ -8,8 +8,6 @@ const Templates = ({ setTemplate }) => {
 
   const handleChange = (e) => {
     e.preventDefault();
-    console.log(Number(e.target.value));
-
     setTemplate(Number(e.target.value));
   };
 

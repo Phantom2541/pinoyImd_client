@@ -17,7 +17,7 @@ import {
 import { BROWSE } from "../../../../services/redux/slices/assets/persons/users";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import CustomSelect from "../../../../components/customSelect";
+import CustomSelect from "../../../../components/searchables/customSelect";
 import { fullName } from "../../../../services/utilities";
 
 // declare your expected items

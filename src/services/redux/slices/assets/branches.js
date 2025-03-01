@@ -101,6 +101,40 @@ export const DESTROY = createAsyncThunk(
     }
   }
 );
+export const UntagPHYSICIAN = createAsyncThunk(
+  `${name}/untagPhysician`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(`${name}/untagPhysician`, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const TagPHYSICIAN = createAsyncThunk(
+  `${name}/tagPhysician`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(`${name}/tagPhysician`, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const reduxSlice = createSlice({
   name,
   initialState,
@@ -197,6 +231,48 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(TagPHYSICIAN.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(TagPHYSICIAN.fulfilled, (state, action) => {
+        const { success, payload } = action;
+        const index = state.collections.findIndex(
+          (item) => item._id === payload
+        );
+
+        state.collections.splice(index, 1);
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(TagPHYSICIAN.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(UntagPHYSICIAN.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UntagPHYSICIAN.fulfilled, (state, action) => {
+        const { success, payload } = action;
+        const index = state.collections.findIndex(
+          (item) => item._id === payload
+        );
+
+        state.collections.splice(index, 1);
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(UntagPHYSICIAN.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

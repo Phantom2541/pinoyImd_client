@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 import {
-  Services,
-  Templates,
-  Year,
-  Month,
-} from "../../../../../../components/header/picker";
+  SearchServices as Services,
+  SearchTemplates as Templates,
+  SearchYear as Year,
+  SearchMonth as Month,
+} from "../../../../../../components/searchables";
 import {
   RESET,
   BROWSE,
