@@ -236,21 +236,6 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
-      })
-      .addCase(INSOURCE.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(INSOURCE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
-        state.isLoading = false;
-      })
-      .addCase(INSOURCE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
       });
   },
 });

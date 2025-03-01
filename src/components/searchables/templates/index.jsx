@@ -6,6 +6,9 @@ const Templates = ({ setTemplate }) => {
     ({ department }) => department === "LAB"
   ).components;
 
+  console.log("templates", templates);
+  console.log("components", components);
+
   const handleChange = (e) => {
     e.preventDefault();
     setTemplate(Number(e.target.value));
