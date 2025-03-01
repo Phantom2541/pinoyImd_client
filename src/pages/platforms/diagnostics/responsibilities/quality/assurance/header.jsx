@@ -10,9 +10,8 @@ import {
 import {
   RESET,
   BROWSE,
-  SetCREATE,
 } from "../../../../../../services/redux/slices/responsibilities/assurances";
-const Header = () => {
+const Header = ({ hasAction, onCreate, setSelected }) => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
     [month, setMonth] = useState(new Date().getMonth() + 1),
@@ -35,7 +34,14 @@ const Header = () => {
       );
     }
     return () => dispatch(RESET());
-  }, [token, activePlatform, year, month, service, dispatch]);
+  }, [token, activePlatform?.branchId, year, month, service, dispatch]);
+
+  const handleCreate = () => {
+    setSelected({
+      serviceId: service,
+    });
+    onCreate(true);
+  };
 
   return (
     <MDBView
@@ -51,21 +57,17 @@ const Header = () => {
           <Templates setTemplate={setTemplate} />
           <Month month={month} setMonth={setMonth} />
           <Year year={year} setYear={setYear} />
-          <MDBBtn
-            size="sm"
-            className="px-2"
-            rounded
-            color="success"
-            onClick={() =>
-              dispatch(
-                SetCREATE({
-                  serviceId: service,
-                })
-              )
-            }
-          >
-            <MDBIcon icon="plus" />
-          </MDBBtn>
+          {hasAction && (
+            <MDBBtn
+              size="sm"
+              className="px-2"
+              rounded
+              color="success"
+              onClick={handleCreate}
+            >
+              <MDBIcon icon="plus" />
+            </MDBBtn>
+          )}
         </div>
       </div>
     </MDBView>

@@ -1,12 +1,19 @@
 import { Categories } from "../../fakeDb";
 
-const individual = (menu, abbr, privilege) => {
-  const { isPromo, promo = 0, discountable } = menu;
+const individual = (menu, abbr, privilegeIndex) => {
+  const { isPromo, promo = 0, isNew, discountable } = menu;
 
   const gross = menu[abbr],
     up = (gross * 80) / 100;
 
-  if (privilege === 4) {
+  if (!isNew)
+    return {
+      gross: 0,
+      up: 0,
+      discount: 0,
+    };
+
+  if (privilegeIndex === 4) {
     const _up = promo > 0 ? promo : up;
 
     return {
@@ -27,7 +34,7 @@ const individual = (menu, abbr, privilege) => {
       title: "Promo Price",
     };
 
-  if (privilege > 0 && discountable)
+  if (privilegeIndex > 0 && discountable)
     return {
       gross,
       up,
@@ -40,26 +47,26 @@ const individual = (menu, abbr, privilege) => {
     gross,
     up: gross,
     discount: 0,
-    color: privilege && "danger",
-    title: privilege
+    color: privilegeIndex && "danger",
+    title: privilegeIndex
       ? "Special services, discount is not applicable."
       : "Suggested Retail Price",
   };
 };
 
-const computeGD = (menu, categoryIndex, privilege) => {
+const computeGD = (cart, categoryIndex, privilegeIndex) => {
   const category = Categories[categoryIndex] || {}; // Ensure category is always an object
   const abbr = category.abbr || ""; // Fallback to an empty string if undefined
 
-  if (!Array.isArray(menu)) return individual(menu, abbr, privilege);
+  if (!Array.isArray(cart)) return individual(cart, abbr, privilegeIndex);
 
   const accumulator = {
     gross: 0,
     discount: 0,
   };
 
-  for (const item of menu) {
-    const { gross, discount } = individual(item, abbr, privilege);
+  for (const menu of cart) {
+    const { gross, discount } = individual(menu, abbr, privilegeIndex);
     accumulator.gross += gross;
     accumulator.discount += discount;
   }

@@ -11,7 +11,6 @@ const Header = () => {
     dispatch = useDispatch();
 
   useEffect(() => {
-    // console.log("Outside if");
     if (token && activePlatform?.branchId) {
       dispatch(
         INSOURCE({

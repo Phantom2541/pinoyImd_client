@@ -3,7 +3,7 @@ import Header from "./header";
 import {
   Chemistry,
   Hematology,
-  Microscopy,
+  Urinalysis,
   Parasitology,
   Serology,
 } from "./logs";
@@ -12,25 +12,26 @@ import {
 const formComponents = {
   Chemistry,
   Hematology,
-  Microscopy,
+  Urinalysis,
   Parasitology,
   Serology,
 };
 
-const Printout = ({ sale, forms }) => {
-  //console.log("sale", sale);
-
+const Printout = ({ sale, forms, ssx }) => {
   const { updatedAt, customer, referral, category } = sale;
+  console.log("sale", sale);
+  console.log("forms", forms);
+  console.log("ssx", ssx);
+
   return (
     <div style={{ width: "100vw", height: "100vh", backgroundColor: "white" }}>
       <div
         style={{
-          width: "500px",
-          height: "624px",
+          width: "600px",
           cursor: "default",
           fontFamily: "Helvetica, sans-serif",
           letterSpacing: "-0.5px",
-          fontSize: "18px",
+          fontSize: "16px",
         }}
       >
         <Header
@@ -38,24 +39,56 @@ const Printout = ({ sale, forms }) => {
           date={updatedAt}
           category={category}
           referral={referral}
+          ssx={ssx}
         />
+      </div>
 
-        <div style={{ padding: "0 20px" }}>
-          {Object.keys(forms).map((key, index) => {
-            const FormComponent = formComponents[key];
-            return (
-              <div key={index}>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <span>{key}</span>
-                  <span>{forms[key]?.price}</span>
-                </div>
-                {FormComponent && <FormComponent data={forms[key]} />}
+      {/* Updated layout */}
+      <div
+        style={{
+          display: "flex", // Display forms side by side
+          flexWrap: "wrap", // Allow wrapping if needed
+          gap: "5px", // Reduce spacing for better fit
+          padding: "5px", // Reduced padding for a tighter fit
+          fontSize: "12px", // Smaller text for better fit
+        }}
+      >
+        {Object.keys(forms).map((key, index) => {
+          const FormComponent = formComponents[key];
+          return (
+            <div
+              key={index}
+              style={{
+                minWidth: "250px", // Smaller width
+                flex: "1",
+                padding: "5px", // Reduce padding
+                border: "1px solid #ddd", // Light border
+                borderRadius: "3px", // Smaller border radius
+                backgroundColor: "#fff",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  borderBottom: "1px solid #ccc",
+                  paddingBottom: "3px",
+                  marginBottom: "5px",
+                  fontWeight: "bold",
+                  fontSize: "12px", // Smaller font
+                }}
+              >
+                <span>{key}</span>
+                <span>{forms[key]?.price}</span>
               </div>
-            );
-          })}
-        </div>
+              {FormComponent && (
+                <div style={{ fontSize: "10px", padding: "2px" }}>
+                  <FormComponent data={forms[key]} />
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -63,15 +96,16 @@ const Printout = ({ sale, forms }) => {
 
 export default function TaskPrintout() {
   const [sale, setSale] = useState({ _id: "" }),
-    [forms, setForms] = useState({});
+    [forms, setForms] = useState({}),
+    [ssx, setSsx] = useState({});
 
   useEffect(() => {
     setSale(JSON.parse(localStorage.getItem("RequestForm")));
     setForms(JSON.parse(localStorage.getItem("task")));
+    setSsx(localStorage.getItem("ssx"));
   }, []);
 
-  //console.log(sale);
-  if (sale?.customer) return <Printout sale={sale} forms={forms} />;
+  if (sale?.customer) return <Printout sale={sale} forms={forms} ssx={ssx} />;
 
   return <div>Task is Empty</div>;
 }

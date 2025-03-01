@@ -193,8 +193,6 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(REFORM.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload);
-        
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
           (item) => item._id === payload._id

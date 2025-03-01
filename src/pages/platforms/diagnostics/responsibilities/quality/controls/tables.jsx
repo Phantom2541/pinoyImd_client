@@ -1,17 +1,15 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable } from "mdbreact";
-import {
-  DESTROY,
-  SetEDIT,
-} from "../../../../../../services/redux/slices/responsibilities/controls";
+import { DESTROY } from "../../../../../../services/redux/slices/responsibilities/controls";
 import Swal from "sweetalert2";
 
 import { Services } from "../../../../../../services/fakeDb";
 import { handlePagination } from "../../../../../../services/utilities";
-const Tables = () => {
-  const { maxPage, token } = useSelector(({ auth }) => auth),
-    { collections, page } = useSelector(({ controls }) => controls),
+const Tables = ({ page, handleEdit }) => {
+  const { maxPage } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ controls }) => controls),
+    { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const handleDelete = (_id) => {
@@ -61,7 +59,7 @@ const Tables = () => {
                 })}
               </td>
               <td>
-                <button onClick={() => dispatch(SetEDIT(control))}>Edit</button>
+                <button onClick={() => handleEdit(control)}>Edit</button>
                 <button onClick={() => handleDelete(control._id)}>
                   Delete
                 </button>

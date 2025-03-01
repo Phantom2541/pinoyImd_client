@@ -1,15 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
-import { Services } from "../../../fakeDb";
 
 const name = "commerce/sales";
 const defaultState = {
-  branchId: JSON.parse(localStorage.getItem("auth"))?.branchId || undefined,
-  cashierId: JSON.parse(localStorage.getItem("auth"))?._id || undefined,
+  branchId: JSON.parse(localStorage.getItem("auth"))?.branchId || "",
+  cashierId: JSON.parse(localStorage.getItem("auth"))?._id || "",
   transaction: { _id: "default" },
   customerId: { _id: "default" },
   customer: {},
-  ssx: undefined,
   hasActiveCustomer: false,
   category: 0,
   privilege: 0,
@@ -17,17 +15,16 @@ const defaultState = {
   cash: 0,
   hasDiscount: false,
   discount: 0,
-  authorizedBy: undefined,
+  authorizedBy: "",
   gross: 0,
-  physicianId: undefined,
-  sourceId: undefined,
+  physicianId: "",
+  sourceId: "",
   cart: [],
   isPickup: true,
   isPrint: true,
   isSuccess: false,
   isLoading: false,
-  message: undefined,
-  department: [],
+  message: "",
 };
 
 const initialState = {
@@ -62,24 +59,6 @@ export const SAVE = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(name, data, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const UPDATE = createAsyncThunk(
-  `${name}/update`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(name, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -136,9 +115,6 @@ export const reduxSlice = createSlice({
       state.menus = [...payload];
       localStorage.setItem("menus", JSON.stringify(payload));
     },
-    SETSSX: (state, { payload }) => {
-      state.ssx = payload;
-    },
     SETCASHIER: (state, { payload }) => {
       state.cashierId = payload.cashierId;
       state.branchId = payload.branchId;
@@ -172,6 +148,7 @@ export const reduxSlice = createSlice({
       state.sourceId = payload;
     },
     ADDTOCART: (state, { payload }) => {
+      console.log("payload :", payload);
       const index = state.cart.findIndex((item) => item._id === payload._id);
       if (index === -1) {
         state.cart = [...state.cart, payload];
@@ -179,14 +156,6 @@ export const reduxSlice = createSlice({
         // update this item and increase the quantity
         state.cart[index] = payload;
       }
-      // Get the department(s) related to the new item
-      const _department = Services.getDepartment(payload.packages);
-
-      // Combine the current department array with the new department array and ensure uniqueness
-      const department = [...new Set([..._department, ...state.department])];
-
-      // Update the department state with the unique departments
-      state.department = department;
     },
     REMOVEFROMCART: (state, { payload }) => {
       //console.log("state.cart :", state.cart);
@@ -235,50 +204,11 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
-      })
-
-      .addCase(UPDATE.pending, (state) => {
-        // state.isLoading = true; comment this to stop loading and refreshing UI
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(UPDATE.fulfilled, (state, action) => {
-        console.log("action pos", action);
-
-        const { success, payload } = action.payload;
-
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
-
-        state.transaction = {
-          ...payload,
-          _id: state.transaction._id === payload._id ? "default" : payload._id,
-        };
-
-        const currentValue = { ...state.collections[index] };
-
-        for (const key in payload) {
-          if (currentValue.hasOwnProperty(key)) {
-            currentValue[key] = payload[key];
-          }
-        }
-
-        state.collections[index] = currentValue;
-        state.message = success;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(UPDATE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
       });
   },
 });
 
 export const {
-  SETSSX,
   SETMENUS,
   SETCASHIER,
   SETAUTHORIZEDBY,
