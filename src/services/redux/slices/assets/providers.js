@@ -107,6 +107,29 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetCREATE: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetFILTER: (state, { payload }) => {
+      const { page, maxPage } = payload;
+      if (page.length > 0) {
+        state.totalPages = Math.ceil(payload.length / maxPage);
+        if (state.page > state.totalPages) {
+          state.page = state.totalPages;
+        }
+      }
+      state.filter = page;
+    },
+    SetPAGE: (state, { payload }) => {
+      state.page = payload;
+    },
     SETSOURCES: (state, { payload }) => {
       state.collections = payload;
     },
@@ -232,6 +255,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SETSOURCES } = reduxSlice.actions;
-
+export const { SETSOURCES, SetEDIT, SetCREATE, SetFILTER, SetPAGE, RESET } =
+  reduxSlice.actions;
 export default reduxSlice.reducer;
