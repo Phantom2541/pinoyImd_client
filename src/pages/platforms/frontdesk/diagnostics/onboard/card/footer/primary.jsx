@@ -94,11 +94,6 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       "Request Form",
       "top=100px,left=100px,width=1050px,height=750px"
     );
-<<<<<<< HEAD
-=======
-    console.log("data here");
-
->>>>>>> parent of d298244 (update cashier -> frontdesk)
     dispatch(
       REFORM({
         token,

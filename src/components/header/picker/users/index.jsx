@@ -48,13 +48,9 @@ export default function Search({ setPatient, setRegister }) {
   // for patients and update the state with the result.
   const debouncedSearch = debounce((searchKey) => {
     const key = formatNameToObj(searchKey);
-<<<<<<< HEAD
     console.log("key1", key);
 
-    // dispatch(GETPATIENTS({ token, query: key }));
-=======
-    dispatch(GETPATIENTS({ token, key }));
->>>>>>> parent of d298244 (update cashier -> frontdesk)
+    dispatch(GETPATIENTS({ token, query: key }));
   }, 1000);
 
   const handleChange = (e) => {
