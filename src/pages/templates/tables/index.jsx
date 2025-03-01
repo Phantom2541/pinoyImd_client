@@ -7,6 +7,8 @@ import Footer from "./footer";
 import TableLoading from "../../../components/tableLoading";
 
 const Index = () => {
+  const isLoading = false;
+
   return (
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>

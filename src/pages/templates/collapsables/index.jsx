@@ -1,11 +1,10 @@
 import React from "react";
 import { MDBCard, MDBCardBody } from "mdbreact";
 
-import Body from "./body";
+import Body from "./collapse";
 import Header from "./header";
-// import Pagination from "../../../../../components/pagination";
-import TableRowCount from "../../../components/pagination/rows";
 import TableLoading from "../../../components/tableLoading";
+import Footer from "./footer";
 const Collapsable = () => {
   // const { totalPages, page, isLoading } = useSelector(
   //     ({ controls }) => controls
@@ -21,16 +20,7 @@ const Collapsable = () => {
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <Header />
         <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
-
-        <div className="mb-auto d-flex justify-content-between align-items-center px-4">
-          {/*<TableRowCount disablePageSelect={false} />
-         <Pagination
-            isLoading={isLoading}
-            total={totalPages}
-            page={page}
-            setPage={setPage}
-          /> */}
-        </div>
+        <Footer />
       </MDBCard>
     </>
   );

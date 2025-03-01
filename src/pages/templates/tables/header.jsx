@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { MDBView } from "mdbreact";
 import Search from "../../../components/searchables/users";
-import "./index.css";
 // import {
 //   RESET,
 //   BROWSE,

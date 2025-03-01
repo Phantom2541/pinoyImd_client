@@ -9,8 +9,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Services } from "../../../../services/fakeDb";
 
-import CollapsableBody from "./collapsable/body";
-import CollapsableHeader from "./collapsable/header";
+import CollapsableBody from "./body";
+import CollapsableHeader from "./header";
 
 // import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
