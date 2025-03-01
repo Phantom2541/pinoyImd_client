@@ -1,10 +1,14 @@
 import React from "react";
 import { MDBCard, MDBCardBody } from "mdbreact";
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useSelector, useDispatch } from "react-redux";
 import { SetPAGE } from "../../../../../services/redux/slices/assets/providers";
 import TableLoading from "../../../../../components/tableLoading";
 // import Collapsable from "./collapsables";
+=======
+// import TableLoading from "../../../../../components/tableLoading";
+>>>>>>> Stashed changes
 =======
 // import TableLoading from "../../../../../components/tableLoading";
 >>>>>>> Stashed changes

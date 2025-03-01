@@ -140,6 +140,7 @@ export const reduxSlice = createSlice({
     },
     SetFILTER: (state, { payload }) => {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       const { page, maxPage } = payload;
       if (page.length > 0) {
         state.totalPages = Math.ceil(payload.length / maxPage);
@@ -149,6 +150,8 @@ export const reduxSlice = createSlice({
       }
       state.filter = page;
 =======
+=======
+>>>>>>> Stashed changes
       const { page, filtered } = state;
       const { maxPage } = payload;
       if (payload.length > 0) {
@@ -162,15 +165,21 @@ export const reduxSlice = createSlice({
       } else {
         state.filtered = filtered;
       }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     SETSOURCES: (state, { payload }) => {
       state.collections = payload;
     },
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     RESET: (state) => {
@@ -281,9 +290,12 @@ export const reduxSlice = createSlice({
 });
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export const { SETSOURCES, SetEDIT, SetCREATE, SetFILTER, SetPAGE, RESET } =
   reduxSlice.actions;
 =======
+=======
+>>>>>>> Stashed changes
 export const { SetPAGE, SetCREATE, RESET } = reduxSlice.actions;
 
 >>>>>>> Stashed changes
