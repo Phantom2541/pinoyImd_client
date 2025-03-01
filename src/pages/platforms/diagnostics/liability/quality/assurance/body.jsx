@@ -4,7 +4,7 @@ import { MDBTable } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
-} from "../../../../../../services/redux/slices/responsibilities/assurances";
+} from "../../../../../../services/redux/slices/liability/assurances";
 import Swal from "sweetalert2";
 import { Services } from "../../../../../../services/fakeDb";
 
@@ -41,6 +41,7 @@ const Tables = () => {
         </tr>
       </thead>
       <tbody>
+        {!paginated.length && <tr>No data</tr>}
         {paginated.map((assurance, index) => {
           return (
             <tr key={index}>

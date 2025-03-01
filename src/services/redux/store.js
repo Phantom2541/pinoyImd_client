@@ -31,7 +31,7 @@ import {
   payrolls,
   controls,
   assurances,
-} from "./slices/responsibilities";
+} from "./slices/liability";
 
 import remmitance from "./slices/finance/remmitance";
 

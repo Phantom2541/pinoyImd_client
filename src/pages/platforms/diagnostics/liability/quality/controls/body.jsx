@@ -4,14 +4,14 @@ import { MDBTable } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
-} from "../../../../../../services/redux/slices/responsibilities/controls";
+} from "../../../../../../services/redux/slices/liability/controls";
 import Swal from "sweetalert2";
 
 import { Services } from "../../../../../../services/fakeDb";
 import { handlePagination } from "../../../../../../services/utilities";
 const Tables = () => {
   const { maxPage, token } = useSelector(({ auth }) => auth),
-    { collections, page } = useSelector(({ controls }) => controls),
+    { paginated, page } = useSelector(({ controls }) => controls),
     dispatch = useDispatch();
 
   const handleDelete = (_id) => {
@@ -42,32 +42,28 @@ const Tables = () => {
         </tr>
       </thead>
       <tbody>
-        {handlePagination(collections, page, maxPage)
-          .slice() // Create a copy to avoid modifying the original array
-          .sort((a, b) => collections.indexOf(a) - collections.indexOf(b)) // Sort by index
-          .map((control, index) => (
-            <tr key={index}>
-              <td style={{ minHeight: "30px" }}>
-                {Services.getName(control?.serviceId)}
-              </td>
-              <td>{control?.abnormal}</td>
-              <td>{control?.high}</td>
-              <td>{control?.normal}</td>
-              <td>
-                {new Date(control?.createdAt).toLocaleDateString("en-GB", {
-                  month: "short",
-                  day: "2-digit",
-                  year: "numeric",
-                })}
-              </td>
-              <td>
-                <button onClick={() => dispatch(SetEDIT(control))}>Edit</button>
-                <button onClick={() => handleDelete(control._id)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
+        {!paginated.length && <tr>No Data</tr>}
+        {paginated.map((control, index) => (
+          <tr key={index}>
+            <td style={{ minHeight: "30px" }}>
+              {Services.getName(control?.serviceId)}
+            </td>
+            <td>{control?.abnormal}</td>
+            <td>{control?.high}</td>
+            <td>{control?.normal}</td>
+            <td>
+              {new Date(control?.createdAt).toLocaleDateString("en-GB", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+              })}
+            </td>
+            <td>
+              <button onClick={() => dispatch(SetEDIT(control))}>Edit</button>
+              <button onClick={() => handleDelete(control._id)}>Delete</button>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </MDBTable>
   );

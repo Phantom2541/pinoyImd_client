@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "responsibilities/assurance";
+const name = "liability/assurance";
 
 const initialState = {
   collections: [],
@@ -135,8 +135,8 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action;
         state.collections = payload;
-        const _paginated = state.filter.slice(0, state.maxPage);
-        state.paginated = _paginated;
+        state.filter = payload;
+        state.paginated = payload;
         state.isSuccess = true;
         state.isLoading = false;
       })

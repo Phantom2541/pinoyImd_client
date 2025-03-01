@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "responsibilities/access";
+const name = "liability/access";
 
 const initialState = {
   collections: [],
@@ -40,19 +40,19 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    CUSTOMRESET: state => {
+    CUSTOMRESET: (state) => {
       state.collections = [];
       state.message = "";
       state.isSuccess = false;
     },
-    RESET: state => {
+    RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(SAVE.pending, state => {
+      .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -70,7 +70,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, state => {
+      .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";

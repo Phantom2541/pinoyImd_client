@@ -12,9 +12,9 @@ import {
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../services/redux/slices/responsibilities/assurances";
+} from "../../../../../../services/redux/slices/liability/assurances";
 
-import { Services } from "./../../../../../../services/fakeDb";
+import { Services } from "../../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";

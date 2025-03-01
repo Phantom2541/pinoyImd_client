@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "responsibilities/controls";
+const name = "liability/controls";
 
 const initialState = {
   collections: [], // incase one query only
@@ -110,6 +110,9 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = payload;
+        state.filter = payload;
+        state.paginated = payload;
+        state.isSuccess = true;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, { payload }) => {

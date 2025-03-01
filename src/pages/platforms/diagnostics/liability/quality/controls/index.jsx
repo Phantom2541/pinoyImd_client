@@ -1,12 +1,12 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody } from "mdbreact";
-import TopHeader from "./header";
-import CardTables from "./tables";
+import CardHeader from "./header";
+import CardTables from "./body";
 import Modal from "./modal";
 import Pagination from "../../../../../../components/pagination";
-import TableRowCount from "./../../../../../../components/pagination/rows";
-import { SetPAGE } from "./../../../../../../services/redux/slices/responsibilities/controls";
+import TableRowCount from "../../../../../../components/pagination/rows";
+import { SetPAGE } from "../../../../../../services/redux/slices/liability/controls";
 
 const Controls = () => {
   const { totalPages, page, isLoading } = useSelector(
@@ -19,7 +19,7 @@ const Controls = () => {
   return (
     <>
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-        <TopHeader />
+        <CardHeader />
         <MDBCardBody>
           <CardTables />
         </MDBCardBody>

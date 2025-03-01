@@ -13,7 +13,7 @@ import {
 import {
   SAVE,
   // UPDATE,
-} from "../../../../../services/redux/slices/responsibilities/liabilities";
+} from "../../../../../services/redux/slices/liability/liabilities";
 // import { isEqual } from "lodash";
 import { currency } from "../../../../../services/utilities";
 

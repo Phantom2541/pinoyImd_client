@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import {
 //   BROWSE as PAYROLL,
 //   RESET as PAYROLLRESET,
-// } from "../../../../services/redux/slices/responsibilities/payroll";
+// } from "../../../../services/redux/slices/liability/payroll";
 import {
   PAYROLL,
   RESET,
@@ -71,12 +71,12 @@ export default function Payrolls() {
   //   setPersonnels(collections);
   // };
 
-  const handleToggle = model => {
+  const handleToggle = (model) => {
     setShowModal(true);
     setSelected(model);
   };
 
-  const handlePayslip = model => {
+  const handlePayslip = (model) => {
     localStorage.setItem("payslip", JSON.stringify(model));
 
     window.open(
@@ -117,7 +117,7 @@ export default function Payrolls() {
                   ({ createdAt }) => getDate(createdAt) <= 15
                 );
 
-                let katapusan = payroll?.find(payslip => {
+                let katapusan = payroll?.find((payslip) => {
                   if (Number(contract?.pc) === 1) {
                     if (getDate(payslip.createdAt) > 15) {
                       return payslip;

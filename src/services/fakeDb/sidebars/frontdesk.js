@@ -19,8 +19,10 @@ import { Menus, Services } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
 import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
-import Assurance from "../../../pages/platforms/diagnostics/responsibilities/quality/assurance";
-import Controls from "../../../pages/platforms/diagnostics/responsibilities/quality/controls";
+import {
+  Assurance,
+  Controls,
+} from "../../../pages/platforms/diagnostics/liability/quality";
 
 const frontdesk = [
   {
@@ -115,11 +117,6 @@ const frontdesk = [
         path: "/quality/controls",
         component: Controls,
       },
-      // {
-      //   name: "Expenses",
-      //   path: "/expenses",
-      //   component: Expenses,
-      // },
     ],
   },
   {

@@ -4,7 +4,7 @@ import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 //   RESET,
 //   BROWSE,
 //   SetCREATE,
-// } from "../../../../../../services/redux/slices/responsibilities/assurances";
+// } from "../../../../../../services/redux/slices/liability/assurances";
 const Header = () => {
   // const { token, activePlatform } = useSelector(({ auth }) => auth),
   //   dispatch = useDispatch();
