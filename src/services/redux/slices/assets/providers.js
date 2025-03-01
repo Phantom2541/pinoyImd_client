@@ -27,6 +27,25 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+
+export const INSOURCE = createAsyncThunk(
+  `${name}/insource`,
+  ({ key, token }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${name}/insource`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const TIEUPS = createAsyncThunk(
   `${name}/tieups`,
   ({ token, key }, thunkAPI) => {
@@ -88,6 +107,9 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    SETSOURCES: (state, { payload }) => {
+      state.collections = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -181,10 +203,25 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+      .addCase(INSOURCE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(INSOURCE.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = payload;
+        state.isLoading = false;
+      })
+      .addCase(INSOURCE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
       });
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { RESET, SETSOURCES } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

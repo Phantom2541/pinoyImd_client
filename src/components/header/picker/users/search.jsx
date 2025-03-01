@@ -2,19 +2,23 @@ import React, { useState } from "react";
 import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
-    GETPATIENTS,
-    RESET,
-  } from "../../../../services/redux/slices/assets/persons/users";
+  GETPATIENTS,
+  RESET,
+} from "../../../../services/redux/slices/assets/persons/users";
 import { MDBIcon } from "mdbreact";
-import {formatNameToObj, fullName, getAge, getGenderIcon} from "../../../../services/utilities";
+import {
+  formatNameToObj,
+  fullName,
+  getAge,
+  getGenderIcon,
+} from "../../../../services/utilities";
 
-
-export default function Search({ onSelect, onRegister }) {
+export default function Search({ setPatient, onRegister }) {
   const [searchKey, setSearchKey] = useState(""),
-  [didSearch, setDidSearch] = useState(false),
-   { collections, isLoading } = useSelector(({ users }) => users),
-  {token} = useSelector((state) => state.auth),
-  dispatch = useDispatch();
+    [didSearch, setDidSearch] = useState(false),
+    { collections, isLoading } = useSelector(({ users }) => users),
+    { token } = useSelector((state) => state.auth),
+    dispatch = useDispatch();
 
   // This function is debounced which means it will only be executed after 1000 milliseconds (1 second)
   // of not being called again. This is useful for when the user is typing in the search
@@ -30,84 +34,84 @@ export default function Search({ onSelect, onRegister }) {
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
   const debouncedSearch = debounce((searchKey) => {
-    const key=formatNameToObj(searchKey);    
-    dispatch(GETPATIENTS({ token, key }));
+    const key = formatNameToObj(searchKey);
+    console.log("key2", key);
+
+    dispatch(GETPATIENTS({ token, query: key }));
   }, 1000);
 
   const handleChange = (e) => {
-    const searchKey = e.target.value;    
+    const searchKey = e.target.value;
     setSearchKey(searchKey);
     const searchKeys = searchKey.split(",");
-if (searchKeys.length > 1 && searchKeys[1].trim()) {
-  setDidSearch(true);
-    return debouncedSearch(searchKey);
-}
+    if (searchKeys.length > 1 && searchKeys[1].trim()) {
+      setDidSearch(true);
+      return debouncedSearch(searchKey);
+    }
   };
 
   const handleSelect = (user) => {
-    onSelect(user);
+    setPatient(user);
     setSearchKey("");
     dispatch(RESET());
     setDidSearch(false);
   };
 
   const handleRegister = () => {
-    onRegister(formatNameToObj(searchKey))
-    setSearchKey(""); 
+    onRegister(formatNameToObj(searchKey));
+    setSearchKey("");
     dispatch(RESET());
     setDidSearch(false);
   };
 
   return (
     <div className="d-flex align-items-center">
-    <div className="cashier-instruction">
-      <MDBIcon
-        icon="info-circle"
-        size="lg"
-        className="text-info cursor-pointer"
-      />
-      <div>
-        <p>Last name, First name y Middle name</p>
-        <i>Please maintain this order when searching.</i>
-      </div>
-    </div>
-    <div
-      className={`cashier-search ${didSearch && "active"}`}
-    >
-      <div className="cashier-search-suggestions">
-        {!collections.length ? (
-          <small onClick={handleRegister}>No Patient Record found...</small>
-        ) : (
-          <ul>
-            {collections?.map((user) => {
-              const { _id, fullName: fullname } = user;
-
-              return (
-                <li onClick={() => handleSelect(user)} key={_id}>
-                 {getGenderIcon(user.gender)} {fullName(fullname)} | {getAge(user.dob)}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-      <input
-        disabled={isLoading}
-        value={searchKey}
-        onChange={handleChange}
-        placeholder="Search..."
-        autoCorrect="off"
-        spellCheck={false}
-      />
-      <button type="submit">
+      <div className="cashier-instruction">
         <MDBIcon
-          pulse={isLoading}
-          icon={isLoading ? "spinner" : didSearch ? "times" : "search"}
-          
-          className="search-icon"
+          icon="info-circle"
+          size="lg"
+          className="text-info cursor-pointer"
         />
-      </button>
+        <div>
+          <p>Last name, First name y Middle name</p>
+          <i>Please maintain this order when searching.</i>
+        </div>
+      </div>
+      <div className={`cashier-search ${didSearch && "active"}`}>
+        <div className="cashier-search-suggestions">
+          {!collections.length ? (
+            <small onClick={handleRegister}>No Patient Record found...</small>
+          ) : (
+            <ul>
+              {collections?.map((user) => {
+                const { _id, fullName: fullname } = user;
+
+                return (
+                  <li onClick={() => handleSelect(user)} key={_id}>
+                    {getGenderIcon(user.gender)} {fullName(fullname)} |{" "}
+                    {getAge(user.dob)}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+        <input
+          disabled={isLoading}
+          value={searchKey}
+          onChange={handleChange}
+          placeholder="Search..."
+          autoCorrect="off"
+          spellCheck={false}
+        />
+        <button type="submit">
+          <MDBIcon
+            pulse={isLoading}
+            icon={isLoading ? "spinner" : didSearch ? "times" : "search"}
+            className="search-icon"
+          />
+        </button>
+      </div>
     </div>
-  </div>
   );
 }

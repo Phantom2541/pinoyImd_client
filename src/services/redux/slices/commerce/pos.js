@@ -147,6 +147,9 @@ export const reduxSlice = createSlice({
     SETSOURCE: (state, { payload }) => {
       state.sourceId = payload;
     },
+    SETSSX: (state, { payload }) => {
+      state.ssx = payload;
+    },
     ADDTOCART: (state, { payload }) => {
       console.log("payload :", payload);
       const index = state.cart.findIndex((item) => item._id === payload._id);
@@ -212,6 +215,7 @@ export const {
   SETMENUS,
   SETCASHIER,
   SETAUTHORIZEDBY,
+  SETSSX,
   SETCATEGORY,
   SETPRIVILEGE,
   SETCASH,

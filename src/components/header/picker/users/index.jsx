@@ -48,8 +48,9 @@ export default function Search({ setPatient, setRegister }) {
   // for patients and update the state with the result.
   const debouncedSearch = debounce((searchKey) => {
     const key = formatNameToObj(searchKey);
+    console.log("key1", key);
 
-    dispatch(GETPATIENTS({ token, query: key }));
+    // dispatch(GETPATIENTS({ token, query: key }));
   }, 1000);
 
   const handleChange = (e) => {
