@@ -12,13 +12,11 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
   const generateTask = async (sale) => {
     localStorage.setItem("claimStub", JSON.stringify(sale));
-    const { _id, cart, customerId, ssx } = sale;
+    const { _id, cart, customerId } = sale;
     let RequestForm = { customer: sale?.customerId };
     const task = harvestTask(cart);
     const forms = Object.keys(task).length;
-
     localStorage.setItem("task", JSON.stringify(task));
-    localStorage.setItem("ssx", ssx);
 
     for (const key in task) {
       const lowercaseKey = key.toLowerCase();
@@ -71,10 +69,10 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       }
       const department =
         key === "ECG" || key === "X-ray"
-          ? "radiology"
+          ? "RAD"
           : key === "Examination" || key === "Certicifate"
-          ? "clinic"
-          : "laboratory";
+          ? "CLINIC"
+          : "LAB";
 
       axioKit.save(
         `results/${department}/${lowercaseKey}`,
@@ -96,6 +94,11 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       "Request Form",
       "top=100px,left=100px,width=1050px,height=750px"
     );
+<<<<<<< HEAD
+=======
+    console.log("data here");
+
+>>>>>>> parent of d298244 (update cashier -> frontdesk)
     dispatch(
       REFORM({
         token,

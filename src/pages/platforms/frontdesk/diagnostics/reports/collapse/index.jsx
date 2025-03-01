@@ -6,9 +6,11 @@ import {
   MDBCardBody,
   MDBCollapse,
   MDBCollapseHeader,
+  MDBBtn,
+  MDBBtnGroup,
   MDBIcon,
 } from "mdbreact";
-import { dateFormat, sourceColor } from "../../../../../../services/utilities";
+import { sourceColor } from "../../../../../../services/utilities";
 import Table from "./table";
 import { useHistory, useLocation } from "react-router";
 
@@ -23,7 +25,6 @@ export default function TasksCollapse({
     week = date.slice(0, 3),
     complete = date.slice(4),
     history = useHistory();
-  console.log("task", task);
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
@@ -33,10 +34,9 @@ export default function TasksCollapse({
           className="d-flex align-items-center justify-content-between"
         >
           <span>
-            {number}.{dateFormat(task?.createdAt)}
+            {number}. {task.customerId?.fullName}
           </span>
-
-          <span>
+          <div>
             <MDBBadge color={sourceColor(category)} className="mx-2">
               {category}
             </MDBBadge>
@@ -58,7 +58,7 @@ export default function TasksCollapse({
               style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
               className="fa fa-angle-down transition-all ml-2"
             />
-          </span>
+          </div>
         </MDBCollapseHeader>
         <MDBCollapse id={`collapse-${_id}`} isOpen={isActive}>
           <MDBCardBody className="pt-0">

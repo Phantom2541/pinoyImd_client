@@ -16,7 +16,7 @@ export default function Body({ patient }) {
 
   if (isLoading)
     return (
-      <div className="text-center  mt-5">
+      <div className="text-center mt-5">
         <MDBSpinner />
       </div>
     );
@@ -30,7 +30,11 @@ export default function Body({ patient }) {
 
   return (
     <MDBContainer className="mt-4 md-accordion px-0" fluid>
+<<<<<<< HEAD
       {records.map((task, index) => (
+=======
+      {collections.map((task, index) => (
+>>>>>>> parent of d298244 (update cashier -> frontdesk)
         <Collapse
           key={task?._id}
           task={task}

@@ -69,13 +69,6 @@ export default function Chemistry({ task, setTask }) {
               preference,
               preferences
             );
-          console.log("lo", lo);
-          console.log("hi", hi);
-          console.log("warn", warn);
-          console.log("alert", alert);
-          console.log("critical", critical);
-          console.log("units", units);
-          console.log("_id", _id);
 
           return (
             <tr key={`${mapKey}-${index}`}>

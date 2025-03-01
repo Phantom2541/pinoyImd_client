@@ -48,9 +48,13 @@ export default function Search({ setPatient, setRegister }) {
   // for patients and update the state with the result.
   const debouncedSearch = debounce((searchKey) => {
     const key = formatNameToObj(searchKey);
+<<<<<<< HEAD
     console.log("key1", key);
 
     // dispatch(GETPATIENTS({ token, query: key }));
+=======
+    dispatch(GETPATIENTS({ token, key }));
+>>>>>>> parent of d298244 (update cashier -> frontdesk)
   }, 1000);
 
   const handleChange = (e) => {
@@ -59,7 +63,7 @@ export default function Search({ setPatient, setRegister }) {
     const searchKey = _searchKey.split(",");
     if (searchKey.length > 1 && searchKey[1].trim()) {
       setDidSearch(true);
-      return debouncedSearch(_searchKey);
+      return debouncedSearch(searchKey);
     }
   };
 

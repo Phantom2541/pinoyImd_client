@@ -1,37 +1,70 @@
 import React from "react";
-
-const ChemistryTests = [
-  "Blood Urea Nitrogen (BUN)",
-  "Creatinine",
-  "Glucose",
-  "Cholesterol",
-  "Triglycerides",
-  "HDL",
-  "LDL",
-  "Uric Acid",
-  "SGOT (AST)",
-  "SGPT (ALT)",
-  "Albumin",
-  "Globulin",
-  "A/G Ratio",
-];
+import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 
 const Chemistry = () => {
   return (
-    <div style={{ fontSize: "12px", fontFamily: "Helvetica, sans-serif" }}>
-      <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Chemistry</div>
-      {ChemistryTests.map((test, index) => (
-        <div
-          key={index}
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <span>{test}</span>
-          <span
-            style={{ borderBottom: "1px dotted black", minWidth: "50px" }}
-          ></span>
-        </div>
-      ))}
-    </div>
+    <MDBTable className="mt-3">
+      <MDBTableHead>
+        <tr>
+          <th>Test</th>
+          <th>Result</th>
+        </tr>
+      </MDBTableHead>
+      <MDBTableBody>
+        <tr>
+          <td>Blood Urea Nitrogen (BUN)</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Creatinine</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Glucose</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Cholesterol</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Triglycerides</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>HDL</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>LDL</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Uric Acid</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>SGOT (AST)</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>SGPT (ALT)</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Albumin</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Globulin</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>A/G Ratio</td>
+          <td></td>
+        </tr>
+      </MDBTableBody>
+    </MDBTable>
   );
 };
 

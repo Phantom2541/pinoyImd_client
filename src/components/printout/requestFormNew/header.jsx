@@ -2,7 +2,7 @@ import React from "react";
 import { getAge, fullName as nameFormatter } from "../../../services/utilities";
 import { MDBRow, MDBCol } from "mdbreact";
 // import { Categories } from "../../services/fakeDb";
-export default function Header({ patient, category, ssx }) {
+export default function Header({ patient, category, task }) {
   const { fullName: pFull, isMale = false, dob = "" } = patient;
 
   return (
@@ -17,18 +17,15 @@ export default function Header({ patient, category, ssx }) {
       </MDBRow>
 
       <MDBRow>
-        <MDBCol style={{ alignItems: "baseline" }} md="" className="text-left">
-          <span style={{ width: "30%" }}>
+        <MDBCol style={{ alignItems: "baseline" }} className="text-left">
+          <span style={{ width: "64.2%" }}>
             Age:&nbsp;{getAge(dob)} | Gender: {isMale ? "Male" : "Female"}
           </span>
         </MDBCol>
-        <MDBCol style={{ alignItems: "baseline" }} className="text-right">
-          <span>Category:&nbsp;{category} </span>
+        <MDBCol style={{ alignItems: "baseline" }} className="text-left">
+          <span>Category:&nbsp;{category} |</span>
         </MDBCol>
       </MDBRow>
-      <h5>
-        Sign and Symptoms: <span>{ssx}</span>
-      </h5>
     </div>
   );
 }
