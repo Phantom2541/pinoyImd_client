@@ -24,15 +24,15 @@ export default function MenuCollapse() {
   const handleTag = (physician) => {
     console.log("physician", physician);
 
-    // dispatch(
-    //   TagPHYSICIAN({
-    //     data: {
-    //       physicianId,
-    //       BranchId,
-    //     },
-    //     token,
-    //   })
-    // );
+    dispatch(
+      TagPHYSICIAN({
+        data: {
+          physicianId: physician._id,
+          BranchId,
+        },
+        token,
+      })
+    );
   };
 
   return (

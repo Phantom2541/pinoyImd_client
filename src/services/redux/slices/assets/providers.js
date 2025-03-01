@@ -8,6 +8,13 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  // Bread attributes
+  selected: {}, // assurance
+  totalPages: 0,
+  page: 0,
+  showModal: false,
+  willCreate: false,
+  maxPage: 5,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -103,6 +110,20 @@ export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   }
 });
 
+export const INSOURCE = createAsyncThunk(
+  `${name}/insource`,
+  async ({ key, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${name}/insource`, token, key);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name,
   initialState,
@@ -118,6 +139,7 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
+<<<<<<< Updated upstream
       const { page, maxPage } = payload;
       if (page.length > 0) {
         state.totalPages = Math.ceil(payload.length / maxPage);
@@ -126,13 +148,31 @@ export const reduxSlice = createSlice({
         }
       }
       state.filter = page;
+=======
+      const { page, filtered } = state;
+      const { maxPage } = payload;
+      if (payload.length > 0) {
+        let totalPages = Math.floor(payload.length / maxPage);
+        if (payload.length % maxPage > 0) totalPages += 1;
+        state.totalPages = totalPages;
+        if (page > totalPages) {
+          state.page = totalPages;
+        }
+        state.filtered = payload;
+      } else {
+        state.filtered = filtered;
+      }
+>>>>>>> Stashed changes
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
+<<<<<<< Updated upstream
     SETSOURCES: (state, { payload }) => {
       state.collections = payload;
     },
+=======
+>>>>>>> Stashed changes
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -240,6 +280,11 @@ export const reduxSlice = createSlice({
   },
 });
 
+<<<<<<< Updated upstream
 export const { SETSOURCES, SetEDIT, SetCREATE, SetFILTER, SetPAGE, RESET } =
   reduxSlice.actions;
+=======
+export const { SetPAGE, SetCREATE, RESET } = reduxSlice.actions;
+
+>>>>>>> Stashed changes
 export default reduxSlice.reducer;

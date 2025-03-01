@@ -191,6 +191,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, UPDATEACCESS } = reduxSlice.actions;
+export const { RESET, UPDATEACCESS, SetCREATE, SetEDIT, SetFILTER, SetPAGE } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

@@ -8,6 +8,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  // for BREAD
 };
 
 /**
