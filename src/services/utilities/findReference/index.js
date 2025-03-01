@@ -9,22 +9,11 @@ const findReference = (
   preferences = []
 ) => {
   const getReference = (predicate) => {
-    //console.log("predicate", predicate);
-
-    const testPref = preferences.find(({ serviceId }) => serviceId === 23);
-    //console.log(testPref);
-
-    if (testPref) {
-      //console.log(testPref);
-    }
-
-    const returnValue = preferences.find(
-      ({ serviceId, ...rest }) => serviceId === Number(key) && predicate(rest)
+    return (
+      preferences.find(
+        ({ serviceId, ...rest }) => serviceId === Number(key) && predicate(rest)
+      ) || null
     );
-
-    //console.log(returnValue);
-
-    return returnValue;
   };
 
   const preferencePredicates = {
@@ -35,7 +24,17 @@ const findReference = (
       References.preferences.development.indexOf(getDevelopment(dob)),
   };
 
-  if (preference === "development") //console.log(key);
+  if (!preferencePredicates[preference]) {
+    return {
+      lo: 0,
+      hi: 0,
+      warn: 0,
+      alert: 0,
+      critical: 0,
+      units: "",
+      _id: "",
+    };
+  }
 
   return (
     getReference(preferencePredicates[preference]) || {
