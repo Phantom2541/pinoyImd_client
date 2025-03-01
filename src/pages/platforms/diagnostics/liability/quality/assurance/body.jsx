@@ -15,7 +15,7 @@ const Tables = ({ page, handleEdit }) => {
     { collections } = useSelector(({ assurances }) => assurances),
     dispatch = useDispatch();
 
-  const handleDelete = (_id) => {
+  const handleDelete = _id => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -24,7 +24,7 @@ const Tables = ({ page, handleEdit }) => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         dispatch(DESTROY({ token, data: { _id } }));
       }
@@ -43,8 +43,8 @@ const Tables = ({ page, handleEdit }) => {
         </tr>
       </thead>
       <tbody>
-        {!paginated.length && <tr>No data</tr>}
-        {paginated.map((assurance, index) => {
+        {!collections.length && <tr>No data</tr>}
+        {collections.map((assurance, index) => {
           return (
             <tr key={index}>
               <td>{Services.getName(assurance?.serviceId)}</td>
