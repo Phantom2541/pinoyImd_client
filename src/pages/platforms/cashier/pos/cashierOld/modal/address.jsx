@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBInput, MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { useSelector } from "react-redux";
-import AddressSelect from "../../../../../../components/addressSelect";
+import AddressSelect from "../../../../../../components/searchables/addressSelect";
 
 export default function AddressInformation({ handleChange, form, willCreate }) {
   const { isLoading } = useSelector(({ users }) => users);

@@ -12,7 +12,7 @@ import {
   MDBRow,
   MDBCol,
 } from "mdbreact";
-import CustomSelect from "../../../../../../../../../../components/customSelect";
+import CustomSelect from "../../../../../../../../../../components/searchables/customSelect";
 import Troupe from "./troupe";
 import Picture from "./picture";
 

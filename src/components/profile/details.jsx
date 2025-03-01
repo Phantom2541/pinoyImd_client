@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBSwitch } from "mdbreact";
 // import AddressSelect from "../addressSelect";
-import CustomSelect from "../customSelect";
+import { SearchCustom } from "../searchables";
 import { Suffixes } from "../../services/fakeDb";
 import { getAge } from "../../services/utilities";
 import ProfileOthers from "./others";
@@ -90,7 +90,7 @@ export default function Details({
           />
         </MDBCol>
         <MDBCol md="4" style={{ paddingTop: "2px" }} className="pl-0">
-          <CustomSelect
+          <SearchCustom
             label="Suffix"
             preValue={form.fullName?.suffix || "None"}
             choices={Suffixes.map((str) => ({ str }))}

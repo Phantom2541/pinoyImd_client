@@ -1,6 +1,6 @@
 import React from "react";
 import { fullName, getAge } from "../../../../../services/utilities";
-import SearchUser from "../../../../../components/header/picker/users/search";
+import { SearchUser } from "../../../../../components/searchables";
 
 export default function Header({ patient, selectPatient }) {
   const { _id, dob, fullName: fullname } = patient;

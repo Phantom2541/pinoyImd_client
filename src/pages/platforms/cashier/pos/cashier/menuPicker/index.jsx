@@ -1,14 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import SearchBox from "./search";
+import { SearchMenu } from "../../../../../../components/searchables";
 import { MDBIcon } from "mdbreact";
-// import { Categories } from "../../../../../../services/fakeDb";
-import {
-  computeGD,
-  currency,
-  globalSearch,
-} from "../../../../../../services/utilities";
-import { useToasts } from "react-toast-notifications";
+import { computeGD, currency } from "../../../../../../services/utilities";
 import {
   ADDTOCART,
   REMOVEFROMCART,
@@ -66,7 +60,7 @@ export default function Menus({ patronPresent }) {
           <tr>
             <th colSpan="3" className="bg-white">
               <div className="d-flex justify-content-center">
-                <SearchBox
+                <SearchMenu
                   handleSearch={handleSearch}
                   placeholder="Menu Search..."
                   setSearchKey={setSearchKey}
@@ -120,7 +114,7 @@ export default function Menus({ patronPresent }) {
                         </li>
                       );
                     })}
-                </SearchBox>
+                </SearchMenu>
               </div>
             </th>
           </tr>

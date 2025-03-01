@@ -4,14 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   GETPATIENTS,
   RESET,
-} from "../../../../services/redux/slices/assets/persons/users";
+} from "./../../../services/redux/slices/assets/persons/users";
 import { MDBIcon } from "mdbreact";
 import {
   formatNameToObj,
   fullName,
   getAge,
   getGenderIcon,
-} from "../../../../services/utilities";
+} from "./../../../services/utilities";
 import Notification from "./notification";
 
 /**

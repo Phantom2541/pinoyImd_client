@@ -132,7 +132,17 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
+      .addCase(INSOURCE.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(INSOURCE.fulfilled, (state, { payload }) => {
+        state.collections = payload.payload;
+        state.isLoading = false;
+      })
+      .addCase(INSOURCE.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
       .addCase(TIEUPS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
