@@ -241,12 +241,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(TagPHYSICIAN.fulfilled, (state, action) => {
-        const { success, payload } = action;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload
-        );
-
-        state.collections.splice(index, 1);
+        const { success } = action.payload;
+        // const { affiliated, providerId } = payload;
+        // const index = state.collections.findIndex(
+        //   (item) => item._id === providerId
+        // );
+        // const provider = state.collections[index];
+        // provider.affiliated.unshift(affiliated);
+        // state.collections[index] = provider;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;

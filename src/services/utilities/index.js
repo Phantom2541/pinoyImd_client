@@ -24,7 +24,7 @@ import removeRedundantPackages from "./removeRedundantPackages";
 import computeGD from "./computeGD";
 import validateContact from "./validateContact";
 import generateEmail from "./generateEmail";
-import getGenderIcon from "./getGenderIcon";
+import { getGenderIcon, getPhysicianGenderIcon } from "./getGenderIcon";
 import harvestTask from "./harvestTask";
 import sourceColor from "./sourceColor";
 import getDevelopment from "./getDevelopment";
@@ -96,6 +96,7 @@ export {
   validateContact,
   generateEmail,
   getGenderIcon,
+  getPhysicianGenderIcon,
   harvestTask,
   sourceColor,
   getDevelopment,

@@ -1,11 +1,13 @@
-import { MDBIcon } from "mdbreact";
 import React from "react";
 
-const getGenderIcon = (isMale) => (
-  <MDBIcon
-    className={`mr-2 text-${isMale ? "primary" : "danger"}`}
-    icon={isMale ? "mars" : "venus"}
-  />
+const getPhysicianGenderIcon = (isMale, isGhost) => (
+  <span style={{ fontSize: "24px" }}>
+    {isGhost ? "👻" : isMale ? "👨‍⚕️" : "👩‍⚕️"}
+  </span>
 );
 
-export default getGenderIcon;
+const getGenderIcon = (isMale) => (
+  <span style={{ fontSize: "24px" }}>{isMale ? "♂️" : "♀️"}</span>
+);
+
+export { getPhysicianGenderIcon, getGenderIcon };

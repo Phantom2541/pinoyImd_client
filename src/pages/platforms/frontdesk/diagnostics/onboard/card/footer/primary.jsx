@@ -12,11 +12,13 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
   const generateTask = async (sale) => {
     localStorage.setItem("claimStub", JSON.stringify(sale));
-    const { _id, cart, customerId } = sale;
+    const { _id, cart, customerId, ssx } = sale;
     let RequestForm = { customer: sale?.customerId };
     const task = harvestTask(cart);
     const forms = Object.keys(task).length;
+
     localStorage.setItem("task", JSON.stringify(task));
+    localStorage.setItem("ssx", ssx);
 
     for (const key in task) {
       const lowercaseKey = key.toLowerCase();
@@ -69,10 +71,10 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       }
       const department =
         key === "ECG" || key === "X-ray"
-          ? "RAD"
+          ? "radiology"
           : key === "Examination" || key === "Certicifate"
-          ? "CLINIC"
-          : "LAB";
+          ? "clinic"
+          : "laboratory";
 
       axioKit.save(
         `results/${department}/${lowercaseKey}`,
@@ -94,7 +96,6 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       "Request Form",
       "top=100px,left=100px,width=1050px,height=750px"
     );
-    console.log("data here");
 
     dispatch(
       REFORM({

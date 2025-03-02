@@ -67,13 +67,6 @@ export default function Modal({ show, toggle, task, setTask }) {
         department === "LAB" ? "pathologist" : "radiologist"
       );
 
-    // //console.log({
-    //   ...task,
-    //   //if meant to save, just copy current state in db
-    //   hasDone: hasDone || dbDone,
-    //   signatories: [head, sub, auth._id],
-    // });
-
     dispatch(
       LABRESULT({
         token,
@@ -87,26 +80,6 @@ export default function Modal({ show, toggle, task, setTask }) {
     );
     toggle();
   };
-
-  // remove if no error has occured
-  // const handleSubmit = () =>
-  //   Swal.fire({
-  //     title: "Everything complete?",
-  //     text: `You can post if its completed.`,
-  //     icon: "question",
-  //     confirmButtonText: "Post",
-  //     confirmButtonColor: "#28a745",
-  //     showDenyButton: true,
-  //     denyButtonText: "Save",
-  //     denyButtonColor: "#007bff",
-  //   }).then(({ isConfirmed, isDenied }) => {
-  //     if (isConfirmed) {
-  //     } else if (isDenied) {
-  //       if (task.form === "Hematology") return computeHemaDiff(false);
-
-  //       handleSave(false);
-  //     }
-  //   });
 
   const generateHealthyStats = () => {
     setRerender(false);

@@ -118,6 +118,33 @@ export const reduxSlice = createSlice({
       state.willCreate = false;
       state.showModal = true;
     },
+    SetBRANCHES: (state, { payload }) => {
+      const { affiliated = {}, providerId = "", physicianId = "" } = payload;
+      const index = state.collections.findIndex((e) => e._id === providerId);
+      if (index < 0) return console.log("provider not found");
+      const provider = { ...state.collections[index] };
+
+      const { clients = {} } = provider || {};
+
+      const affiliateds = [...clients?.affiliated];
+      if (physicianId) {
+        const affiliatedIndex = affiliateds.findIndex(
+          (e) => e._id === physicianId
+        );
+        console.log(affiliatedIndex);
+        affiliateds.splice(affiliatedIndex, 1);
+      } else {
+        affiliateds.unshift(affiliated);
+      }
+
+      state.collections[index] = {
+        ...provider,
+        clients: { ...clients, affiliated: affiliateds },
+      };
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
     SetCREATE: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = true;
@@ -223,7 +250,6 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
-
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -248,6 +274,13 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetEDIT, SetCREATE, SetFILTER, SetPAGE, SETSOURCES, RESET } =
-  reduxSlice.actions;
+export const {
+  SetEDIT,
+  SetCREATE,
+  SetFILTER,
+  SetPAGE,
+  SETSOURCES,
+  SetBRANCHES,
+  RESET,
+} = reduxSlice.actions;
 export default reduxSlice.reducer;

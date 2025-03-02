@@ -1,12 +1,21 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
+import {
+  MDBBadge,
+  MDBBtn,
+  MDBIcon,
+  MDBTable,
+  MDBTableBody,
+  MDBTableHead,
+} from "mdbreact";
 import { fullName } from "../../../../../../services/utilities";
 import { UntagPHYSICIAN } from "../../../../../../services/redux/slices/assets/branches";
+import { SetBRANCHES } from "../../../../../../services/redux/slices/assets/providers";
 
-export default function CollapseTable({ BranchId, affiliated }) {
+export default function CollapseTable({ BranchId, affiliated, providerId }) {
   const { auth, token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
+
   const handleUntag = (physicianId) => {
     dispatch(
       UntagPHYSICIAN({
@@ -16,7 +25,9 @@ export default function CollapseTable({ BranchId, affiliated }) {
         },
         token,
       })
-    );
+    ).then(() => {
+      dispatch(SetBRANCHES({ providerId, physicianId }));
+    });
   };
 
   return (
@@ -41,19 +52,18 @@ export default function CollapseTable({ BranchId, affiliated }) {
         {affiliated.map(({ _id, specialization, user }, index) => (
           <tr key={_id}>
             {<td>{index + 1}</td>}
-            <td>
-              <h5>{fullName(user.fullName)} </h5>
-              <small>{specialization}</small>
+            <td style={{ fontWeight: 400 }}>
+              <div className="d-flex flex-column">
+                {fullName(user.fullName)}
+              </div>
+              <MDBBadge>{specialization}</MDBBadge>
             </td>
             <td>{user?.isMale ? "Male" : "Female"}</td>
-            <td>{user?.phone}</td>
+            <td>{user?.mobile}</td>
             <td>
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={() => handleUntag(_id)}
-              >
-                Edit
-              </button>
+              <MDBBtn color="danger" size="sm" onClick={() => handleUntag(_id)}>
+                <MDBIcon fas icon="user-times" className="mr-2" /> Untag
+              </MDBBtn>
             </td>
           </tr>
         ))}
