@@ -151,7 +151,7 @@ export default function Sales() {
                   <tr key={`sales-${index + 1}`}>
                     <td>{index + 1}.</td>
                     <td>
-                      <h6>{fullName(sale.customerId.fullName)}</h6>
+                      <h6>{fullName(sale?.customerId?.fullName)}</h6>
                       <small>
                         {capitalize(
                           sale.category === "walkin"

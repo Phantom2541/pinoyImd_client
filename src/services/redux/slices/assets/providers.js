@@ -7,7 +7,7 @@ const initialState = {
   collections: [],
   isSuccess: false,
   isLoading: false,
-  message: "",
+
   selected: {},
   totalPages: 0,
   page: 0,
@@ -17,10 +17,10 @@ const initialState = {
 };
 
 export const OUTSOURCE = createAsyncThunk(
-  `${name}/outsource`,
+  `${name}/browse`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/outsource`, token, key);
+      return await axioKit.universal(`${name}/browse`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -177,7 +177,11 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(OUTSOURCE.fulfilled, (state, { payload }) => {
-        state.collections = payload;
+        const { payload: data } = payload;
+        state.collections = data;
+        state.filter = data;
+        state.paginated = data;
+        state.isSuccess = true;
         state.isLoading = false;
       })
       .addCase(OUTSOURCE.rejected, (state, { payload }) => {

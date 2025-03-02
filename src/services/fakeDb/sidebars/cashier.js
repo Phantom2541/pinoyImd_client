@@ -6,8 +6,8 @@ import {
   Menus,
   Services,
   Insources,
-  Animation,
   Outsources,
+  Utilities,
 } from "../../../pages/platforms/cashier";
 import { Tablestemplate, Collapsable } from "../../../pages/templates";
 
@@ -26,19 +26,13 @@ const cashier = [
     component: Dashboard,
   },
   {
-    name: "Animation",
-    icon: "tachometer-alt",
-    path: "/animation",
-    component: Animation,
-  },
-  {
-    name: "POS", // Point Of Sales
-    path: "/pos",
+    name: "Cashier",
+    path: "/cashier",
     icon: "money-bill",
     children: [
       {
-        name: "Cashier",
-        path: "/patients",
+        name: "pos", // Point Of Sales
+        path: "/pos",
         component: Cashier,
       },
       {
@@ -52,7 +46,7 @@ const cashier = [
         component: Remmitances,
       },
       {
-        name: "Ledger",
+        name: "Ledger experimental",
         path: "/Ledger",
         component: ExperimentalLedger,
       },
@@ -120,6 +114,11 @@ const cashier = [
         name: "Insources",
         path: "/insources",
         component: Insources,
+      },
+      {
+        name: "Utilities",
+        path: "/utilities",
+        component: Utilities,
       },
     ],
   },

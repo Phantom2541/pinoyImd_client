@@ -1,8 +1,7 @@
 import React from "react";
 import { MDBCol, MDBRow, MDBBadge } from "mdbreact";
-import "./styles.css";
 
-export default function CollapseTable({ decSS, frequency, onSubmit }) {
+export default function Collapsable({ decSS, frequency }) {
   return (
     <>
       <MDBRow>

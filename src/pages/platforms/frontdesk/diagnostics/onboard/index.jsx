@@ -71,27 +71,6 @@ export default function Sales() {
     setSales(collections);
   }, [collections]);
 
-  //Set fetched data for mapping
-  useEffect(() => {
-    if (!!collections.length) {
-      // const _collections = collections.map((c, i) => ({
-      //   ...c,
-      //   page: collections.length - i,
-      // }));
-      // if (didSearch) {
-      //   setSales(fullNameSearch(searchKey, _collections, "customerId"));
-      // } else {
-      //   setSales(
-      //     view === "All"
-      //       ? _collections
-      //       : _collections.filter(
-      //           ({ perform }) => perform === view.toLowerCase()
-      //         )
-      //   );
-      // }
-    }
-  }, [collections, view, searchKey]);
-
   return (
     <MDBContainer fluid>
       <Header

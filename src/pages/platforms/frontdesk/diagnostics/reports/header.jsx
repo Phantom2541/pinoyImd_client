@@ -35,7 +35,7 @@ export default function Header({ patient, setPatient }) {
         {_id ? fullName(fullname) : "Tracker"}
         {_id && getAge(dob)}
       </h3>
-      <SearchUser onSelect={selectPatient} onRegister={onRegister} />
+      <SearchUser setPatient={selectPatient} onRegister={onRegister} />
     </div>
   );
 }
