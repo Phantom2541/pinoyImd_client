@@ -70,12 +70,12 @@ export default function Payrolls() {
   //   setPersonnels(collections);
   // };
 
-  const handleToggle = (model) => {
+  const handleToggle = model => {
     setShowModal(true);
     setSelected(model);
   };
 
-  const handlePayslip = (model) => {
+  const handlePayslip = model => {
     localStorage.setItem("payslip", JSON.stringify(model));
 
     window.open(
@@ -107,15 +107,13 @@ export default function Payrolls() {
               {personnels.map((personnel, index) => {
                 const { user, employment, rate, payroll } = personnel;
                 const designation = Roles.find(
-                  (role) => role.id === Number(employment.designation)
+                  role => role.id === Number(employment.designation)
                 );
-                // //console.log("payrollss", payroll);
-
                 let akinsenas = payroll?.find(
                   ({ createdAt }) => getDate(createdAt) <= 15
                 );
 
-                let katapusan = payroll?.find((payslip) => {
+                let katapusan = payroll?.find(payslip => {
                   if (employment.bimonthly) {
                     // if (Number(contract?.pc) === 1) {
                     if (getDate(payslip.createdAt) > 15) {
@@ -204,10 +202,15 @@ export default function Payrolls() {
                       ) : (
                         <MDBBtnGroup className="shadow-0">
                           <MDBBtn
+                            disabled={new Date().getDate() < 15}
                             onClick={() => handleToggle(personnel)}
                             color="success"
                             size="sm"
-                            title="Untag this branch."
+                            title={
+                              new Date().getDate() < 15
+                                ? "Create Payroll"
+                                : "Payroll is not yet available."
+                            }
                           >
                             Payroll
                           </MDBBtn>

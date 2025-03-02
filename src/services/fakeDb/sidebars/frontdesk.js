@@ -24,6 +24,8 @@ import {
   Controls,
 } from "../../../pages/platforms/diagnostics/liability/quality";
 
+import { Products } from "../../../pages/platforms/frontdesk/merchandise";
+
 const frontdesk = [
   {
     name: "Dashboard",
@@ -169,6 +171,7 @@ const frontdesk = [
       {
         name: "Products",
         path: "/products",
+        component: Products,
       },
       {
         name: "Machines",

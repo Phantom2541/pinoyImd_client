@@ -111,8 +111,6 @@ export default function Payrolls() {
                 const designation = Roles.findById(
                   Number(contract?.designation)
                 );
-                // //console.log("payrollss", payroll);
-
                 let akinsenas = payroll?.find(
                   ({ createdAt }) => getDate(createdAt) <= 15
                 );
@@ -133,8 +131,6 @@ export default function Payrolls() {
                   }
                   return null;
                 });
-                console.log("akinsenas", akinsenas);
-                console.log("katapusan", katapusan);
 
                 return (
                   <tr key={`payroll-${index + 1}`}>
@@ -212,10 +208,15 @@ export default function Payrolls() {
                       ) : (
                         <MDBBtnGroup className="shadow-0">
                           <MDBBtn
+                            disabled={new Date().getDate() < 15}
                             onClick={() => handleToggle(personnel)}
                             color="success"
                             size="sm"
-                            title="Untag this branch."
+                            title={
+                              new Date().getDate() < 15
+                                ? "Create Payroll"
+                                : "Payroll is not yet available."
+                            }
                           >
                             Payroll
                           </MDBBtn>
