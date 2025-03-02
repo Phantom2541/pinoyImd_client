@@ -1,4 +1,4 @@
-export { default as Liabilities } from "./liabilities";
+export { default as Liabilities } from "./feasibility";
 export { default as Menus } from "./menus";
 export { default as Payments } from "./payments";
 export { default as Philippines } from "./philippines";
