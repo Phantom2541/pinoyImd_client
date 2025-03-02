@@ -60,8 +60,8 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           selected?.contribution?.pi
       );
       setTotEarn(
-        handleCalc(selected?.rate?.monthly / 2) +
-          handleCalc(selected?.rate?.cola / 2) +
+        handleCalc(selected?.rate?.monthly) +
+          handleCalc(selected?.rate?.cola) +
           Number(form?.holiday) +
           Number((form?.overtime / 8) * selected?.rate?.daily) +
           Number(form?.bonus)
@@ -80,8 +80,8 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           branchId: selected?.branch._id,
           fsId: 3,
           net: totEarn - totDeduc,
-          rate: handleCalc(selected?.rate?.monthly / 2),
-          cola: handleCalc(selected?.rate?.cola / 2),
+          rate: handleCalc(selected?.rate?.monthly),
+          cola: handleCalc(selected?.rate?.cola),
         },
         token,
       })
@@ -123,7 +123,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <tbody>
             <tr>
               <td>Rate</td>
-              <td>{currency(handleCalc(selected?.rate?.monthly / 2))}</td>
+              <td>{currency(handleCalc(selected?.rate?.monthly))}</td>
               <td>Cash Advance</td>
               <td>
                 <input
@@ -136,7 +136,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             </tr>
             <tr>
               <td>Cola</td>
-              <td>{currency(handleCalc(selected?.rate?.cola / 2))}</td>
+              <td>{currency(handleCalc(selected?.rate?.cola))}</td>
               <td>Absent (day)</td>
               <td>
                 <input
