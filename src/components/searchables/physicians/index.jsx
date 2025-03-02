@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
   FILTER,
+  BROWSE,
   RESET,
 } from "./../../../services/redux/slices/assets/persons/physicians";
 import { MDBIcon } from "mdbreact";
@@ -10,6 +11,7 @@ import {
   formatNameToObj,
   fullName,
   getGenderIcon,
+  getPhysicianGenderIcon,
 } from "./../../../services/utilities";
 import Notification from "./notification";
 
@@ -25,10 +27,11 @@ import Notification from "./notification";
  *
  * @returns {JSX.Element} users
  */
-export default function Search({ setPhysician, setRegister }) {
+export default function Search({ setPhysician, setRegister, clientId }) {
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
     { collections, isLoading } = useSelector(({ physicians }) => physicians),
+    [physicians, setPhysicians] = useState([]),
     { token } = useSelector((state) => state.auth),
     dispatch = useDispatch();
 
@@ -45,11 +48,13 @@ export default function Search({ setPhysician, setRegister }) {
   // The function then dispatches the GETPATIENTS action with the token and the formatted
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
+  useEffect(() => {
+    setPhysicians(collections || []);
+  }, [collections]);
   const debouncedSearch = debounce((searchKey) => {
     const key = formatNameToObj(searchKey);
     dispatch(FILTER({ token, key }));
   }, 1000);
-
   const handleChange = (e) => {
     const _searchKey = e.target.value;
     setSearchKey(_searchKey);
@@ -79,10 +84,10 @@ export default function Search({ setPhysician, setRegister }) {
       <Notification didSearch={didSearch} />
       <div className={`cashier-search ${didSearch && "active"}`}>
         <div className="cashier-search-suggestions">
-          {!collections?.length ? (
+          {!physicians?.length ? (
             <div>
               <small>
-                No Physician found...{" "}
+                No Physician found...
                 <i
                   onClick={handleRegister}
                   style={{ color: "blue", cursor: "pointer" }}
@@ -93,14 +98,32 @@ export default function Search({ setPhysician, setRegister }) {
             </div>
           ) : (
             <ul>
-              {collections?.map(({ user, specialization }) => {
-                const { _id, fullName: fullname } = user;
+              {physicians?.map((physician) => {
+                const {
+                  _id,
+                  fullName: fullname,
+                  isPhysician = false,
+                  isGhost = false,
+                  specialization,
+                  isMale,
+                } = physician;
 
                 return (
-                  <li onClick={() => handleSelect(user)} key={_id}>
-                    <h5>
-                      {getGenderIcon(user.gender)} {fullName(fullname)}
-                    </h5>
+                  <li
+                    onClick={() => handleSelect(physician)}
+                    key={_id}
+                    title={
+                      isGhost
+                        ? "This is a ghost physician not register as a user"
+                        : ""
+                    }
+                  >
+                    <h6>
+                      {isPhysician
+                        ? getPhysicianGenderIcon(isMale, isGhost)
+                        : getGenderIcon(isMale)}
+                      {fullName(fullname)}
+                    </h6>
                     <small>{specialization}</small>
                   </li>
                 );
