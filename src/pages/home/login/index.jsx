@@ -23,7 +23,7 @@ export default function Login({ show, toggle = null }) {
     location = useLocation(),
     dispatch = useDispatch();
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const { address, password } = e.target;
@@ -97,7 +97,7 @@ export default function Login({ show, toggle = null }) {
           <img
             loading="eager"
             src={image}
-            onError={e => (e.target.src = PresetImage(auth.isMale))}
+            onError={(e) => (e.target.src = PresetImage(auth.isMale))}
             alt={`avatar-${auth._id}`}
             className="rounded-circle img-responsive"
           />

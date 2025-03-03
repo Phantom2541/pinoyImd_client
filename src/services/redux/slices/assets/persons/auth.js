@@ -7,7 +7,8 @@ const name = "auth",
   token = localStorage.getItem("token") || "",
   email = localStorage.getItem("email") || "",
   activePlatform = localStorage.getItem("activePlatform"),
-  fileUrl = `public/${email}`;
+  fileUrl = `/public/users/credentials/${email}`,
+  profileUrl = `/public/users/${email}`;
 
 const initialState = {
   auth: {}, // user details
@@ -151,8 +152,8 @@ export const reduxSlice = createSlice({
     UPLOADBAR: (state, data) => {
       state.progressBar = data.payload;
     },
-    IMAGE: (state, data) => {
-      state.image = data.payload;
+    IMAGE: (state, { payload }) => {
+      state.image = payload;
       state.progressBar = -1;
     },
     NETWORK: (state, data) => {
@@ -264,12 +265,12 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
-        state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
-        state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
-        state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
-        state.board = `${ENDPOINT}/${fileUrl}/board.jpg`;
-        state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
-        state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
+        state.image = `${ENDPOINT}${profileUrl}/profile.jpg`;
+        state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
+        state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
+        state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
+        state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
+        state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
       })
       .addCase(LOGIN.rejected, (state, action) => {
         const { error } = action;
@@ -313,12 +314,12 @@ export const reduxSlice = createSlice({
         const { payload } = action.payload,
           { auth, branches, isCeo, isPatient, company, access } = payload;
 
-        state.image = `${ENDPOINT}/${fileUrl}/profile.jpg`;
-        state.resume = `${ENDPOINT}/${fileUrl}/resume.pdf`;
-        state.prc = `${ENDPOINT}/${fileUrl}/prc.jpg`;
-        state.board = `$${ENDPOINT}/${fileUrl}/board.jpg`;
-        state.diploma = `${ENDPOINT}/${fileUrl}/diploma.jpg`;
-        state.medcert = `${ENDPOINT}/${fileUrl}/medcert.pdf`;
+        state.image = `${ENDPOINT}${profileUrl}/profile.jpg`;
+        state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
+        state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
+        state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
+        state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
+        state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         const branch = branches.find(
           (branch) => branch._id === auth.activePlatform.branchId
         );

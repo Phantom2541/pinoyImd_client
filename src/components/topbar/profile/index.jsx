@@ -7,14 +7,25 @@ import {
   MDBDropdownItem,
 } from "mdbreact";
 import { useSelector } from "react-redux";
+import { PresetImage } from "../../../services/utilities";
 
 export default function Profile() {
-  const { auth, isPatient } = useSelector(({ auth }) => auth);
+  const { auth, isPatient, image } = useSelector(({ auth }) => auth);
 
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
-        <MDBIcon icon="user" />
+        {image ? (
+          <img
+            src={image}
+            className="rounded-circle z-depth-1"
+            style={{ width: "35px", height: "35px", marginRight: "10px" }}
+            alt=" avatar"
+            onError={(e) => (e.target.src = PresetImage(auth.isMale))}
+          />
+        ) : (
+          <MDBIcon icon="user" />
+        )}
         &nbsp;
         <span className="d-none d-md-inline">Profile</span>
       </MDBDropdownToggle>

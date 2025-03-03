@@ -9,7 +9,6 @@ export default function Pioneers() {
   const KEVIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kev.jpg`;
   const ROVAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rovan.jpg`;
   const VARGILIO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/vargilio.jpg`;
-  const REY = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rovan.jpg`;
   const RIC = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/ric.jpg`;
   const LIMBO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/limbo.jpg`;
 
