@@ -2,8 +2,8 @@ import React from "react";
 import { MDBCol, MDBRow, MDBIcon } from "mdbreact";
 
 export default function Pioneers() {
-  const THOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/thomas.jpg`;
-  // const TOMAS =  `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
+  const EMMAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/emman.jpg`;
+  const TOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
   const BENEDICT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/earle.jpg`;
   const CHANNEY = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/channey.jpg`;
   const KEVIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kev.jpg`;
@@ -11,23 +11,24 @@ export default function Pioneers() {
   const VARGILIO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/vargilio.jpg`;
   const REY = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rovan.jpg`;
   const RIC = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/ric.jpg`;
+  const LIMBO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/limbo.jpg`;
 
   const PIONEERS = [
     {
-      name: "Thomas Pajarillaga",
+      name: "Thomas Emmanuel R.Pajarillaga",
       role: "CTO",
       quote: "Transforming ideas into seamless and intuitive web experiences.",
-      img: THOMAS,
+      img: EMMAN,
     },
     {
-      name: "Tomas Pajarillaga Jr.",
+      name: "Tomas B. Pajarillaga Jr.RMT, RN, MSIT",
       role: "CEO",
       quote:
         "Powering applications with robust and efficient server-side functionality.",
-      // img: "https://mdbootstrap.com/img/Photos/Avatars/img%20(32).jpg",
+      img: TOMAS,
     },
     {
-      name: "Benedict Pajarillaga",
+      name: "Benedict Earle Gabriel R. Pajarillaga",
       role: "COO",
       quote:
         "Transforming visions into pixel-perfect designs that leave a lasting impression.",
@@ -35,7 +36,7 @@ export default function Pioneers() {
     },
     {
       name: "Channey Y'dreo Marzan",
-      role: "LSE",
+      role: "Lead Software Engineer",
       quote:
         "Generating innovative solutions that drive business growth and enhance user experience.",
 
@@ -49,24 +50,24 @@ export default function Pioneers() {
     },
     {
       name: "Rey John Paul Limbo",
-      role: "Senior Software Engineer",
+      role: "Software Engineer",
       quote: "Building scalable and efficient web applications.",
-      img: REY,
+      img: LIMBO,
     },
     {
       name: "Vargilio Lavidad",
-      role: "Senior Software Engineer",
+      role: "Software Engineer",
       quote: "Building scalable and efficient web applications.",
       img: VARGILIO,
     },
     {
-      name: "Rovan Abello",
-      role: "Senior Software Engineer",
+      name: "Rovan O. Juit",
+      role: "Software Engineer",
       quote: "Building scalable and efficient web applications.",
       img: ROVAN,
     },
     {
-      name: "Ric Darrel Pajarillaga",
+      name: "Ric Darrel A. Pajarillaga",
       role: "Senior Software Engineer",
       quote: "Building scalable and efficient web applications.",
       img: RIC,

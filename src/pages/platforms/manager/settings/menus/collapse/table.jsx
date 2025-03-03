@@ -145,7 +145,7 @@ export default function CollapseTable({
           {
             _key: "department",
             _format: (data, { template }) =>
-              Templates.find(({ department }) => department === data)
+              Templates.collectionsfind(({ department }) => department === data)
                 .components[template],
           },
           {

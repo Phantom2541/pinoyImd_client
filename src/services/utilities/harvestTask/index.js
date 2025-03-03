@@ -1,16 +1,35 @@
 import { Services, Templates } from "../../fakeDb";
 
-const harvestTask = (menu) => 
-  Services.whereIn(
+const harvestTask = (menu) => {
+  return Services.whereIn(
     menu?.reduce((collection, deal) => collection.concat(deal.packages), [])
   ).reduce((collection, service) => {
-    console.log("collection",collection);
-    console.log("service",service);
+    console.log("Processing service:", service);
 
-    let forms = Templates.find(
+    // Find the matching template for the department
+    const foundTemplate = Templates.collections.find(
       ({ department }) => department === service.department
-    ).components[service.template];
-    
+    );
+
+    if (!foundTemplate) {
+      console.warn(`No template found for department: ${service.department}`);
+      return collection; // Skip this iteration
+    }
+
+    console.log("Found Template:", foundTemplate);
+
+    // Ensure service.template exists in components
+    let forms = foundTemplate.components[service.template];
+
+    if (!forms) {
+      console.warn(
+        `Template "${service.template}" not found in department: ${service.department}`
+      );
+      return collection; // Skip this iteration
+    }
+
+    console.log("Processing form type:", forms);
+
     switch (forms) {
       case "Chemistry":
       case "Electrolyte":
@@ -21,12 +40,11 @@ const harvestTask = (menu) =>
         };
         break;
       default:
-        // case "Miscellaneous":
-        // case "Hematology":
         collection[forms] = [...(collection[forms] || []), service.id];
     }
 
     return collection;
   }, {});
+};
 
 export default harvestTask;

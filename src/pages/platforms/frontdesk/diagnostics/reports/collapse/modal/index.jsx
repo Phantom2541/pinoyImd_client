@@ -141,6 +141,7 @@ export default function Modal({ show, toggle, task, setTask }) {
             {form}
           </h5>
         </MDBAlert>
+        {console.log("task", task)}
         {rerender && <BodySwitcher task={task} setTask={setTask} />}
         <div className="text-center mb-1-half border-top pt-2">
           <textarea

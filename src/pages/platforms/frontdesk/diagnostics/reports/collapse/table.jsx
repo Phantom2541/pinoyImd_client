@@ -17,11 +17,13 @@ export default function CollapseTable({ menu }) {
   useEffect(() => {
     if (!menu) return;
 
-    const filteredLabTests = Templates.flatMap(({ components, department }) => {
-      if (department !== "LAB") return []; // Ignore non-lab departments
+    const filteredLabTests = Templates.collections.flatMap(
+      ({ components, department }) => {
+        if (department !== "LAB") return []; // Ignore non-lab departments
 
-      return components.filter((component) => menu[component.toLowerCase()]);
-    });
+        return components.filter((component) => menu[component.toLowerCase()]);
+      }
+    );
 
     setLabTests(filteredLabTests);
   }, [menu]);
@@ -39,7 +41,7 @@ export default function CollapseTable({ menu }) {
 
   const handleIndividual = (form, obj, index, miscIndex = 0) => {
     const { packages, hasDone = false, remarks = "", signatories = [] } = obj,
-      { department } = Templates.find(({ components }) =>
+      { department } = Templates.collections.find(({ components }) =>
         components.includes(form)
       );
 

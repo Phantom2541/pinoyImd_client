@@ -27,7 +27,7 @@ export default function Header({ patient, category, ssx }) {
         </MDBCol>
       </MDBRow>
       <h5>
-        Sign and Symptoms: <span>{ssx}</span>
+        Sign and Symptoms: <span>{ssx ? ssx : ""}</span>
       </h5>
     </div>
   );

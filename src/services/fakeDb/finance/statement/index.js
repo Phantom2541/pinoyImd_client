@@ -1,6 +1,6 @@
 import collections from "./collections.json";
 /**
- * financial feasibility
+ * financial statements
  * Balance Sheet
  */
 const Liabilities = {
