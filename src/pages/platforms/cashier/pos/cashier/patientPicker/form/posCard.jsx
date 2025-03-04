@@ -93,7 +93,7 @@ export default function PosCard() {
 
   return (
     <>
-      <div className="pos-select-wrapper">
+      <div>
         <div className="patient-form">
           <span title="Signs and Symptoms">ssx</span>
           <input

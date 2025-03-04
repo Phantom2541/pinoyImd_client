@@ -17,9 +17,6 @@ const PrimaryFooter = ({ sale, setEdit }) => {
     const task = harvestTask(cart);
     const forms = Object.keys(task).length;
 
-    localStorage.setItem("task", JSON.stringify(task));
-    localStorage.setItem("ssx", ssx);
-
     for (const key in task) {
       const lowercaseKey = key.toLowerCase();
       RequestForm[lowercaseKey] = task[key];

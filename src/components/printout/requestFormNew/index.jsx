@@ -19,9 +19,6 @@ const formComponents = {
 
 const Printout = ({ sale, forms, ssx }) => {
   const { updatedAt, customer, referral, category } = sale;
-  console.log("sale", sale);
-  console.log("forms", forms);
-  console.log("ssx", ssx);
 
   return (
     <div style={{ width: "100vw", height: "100vh", backgroundColor: "white" }}>
