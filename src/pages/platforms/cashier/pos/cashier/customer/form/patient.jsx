@@ -32,6 +32,7 @@ const _form = {
   isMale: false,
   mobile: "",
   privilege: 0,
+  email: "",
 };
 
 export default function Patient() {
@@ -52,7 +53,8 @@ export default function Patient() {
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
 
-  const { fullName, _id, dob, privilege, mobile, isMale, address } = form;
+  const { fullName, _id, dob, privilege, mobile, isMale, address, email } =
+    form;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -248,6 +250,14 @@ export default function Patient() {
             }
           />
         </div>
+      </div>
+      <div className="patient-form">
+        <span>email (Optional)</span>
+        <input
+          type="text"
+          value={email}
+          onChange={({ target }) => handleChange("email", target.value)}
+        />
       </div>
       <MDBBtn
         type="submit"

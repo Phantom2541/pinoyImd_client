@@ -127,7 +127,7 @@ export const reduxSlice = createSlice({
     },
     SETPATIENT: (state, { payload }) => {
       state.customer = payload;
-      state.customerId = payload._id;
+      state.customerId = payload?._id;
     },
     SETSEARCHKEY: (state, { payload }) => {
       state.customer = payload;

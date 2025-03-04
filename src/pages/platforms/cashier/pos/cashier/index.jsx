@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import POS from "./patientPicker";
-import Menus from "./menuPicker";
+import Customer from "./customer";
+import Purchase from "./purchase";
 import Summary from "./summary";
 import { useSelector } from "react-redux";
 import "./style.css";
@@ -25,10 +25,10 @@ export default function Cashier() {
   return (
     <MDBRow className="res-container">
       <MDBCol size="5" className="pr-1">
-        <POS />
+        <Customer />
       </MDBCol>
       <MDBCol size="4" className="px-1">
-        <Menus />
+        <Purchase />
       </MDBCol>
       <MDBCol size="3" className="px-1">
         <Summary />

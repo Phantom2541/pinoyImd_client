@@ -83,9 +83,9 @@ const cashier = [
     ],
   },
   {
-    name: "Offers", //viewing only
-    path: "/offers",
-    icon: "handshake",
+    name: "Services Catalog", //viewing only
+    path: "/catalogs",
+    icon: "clipboard-list",
     children: [
       {
         name: "Menus",
