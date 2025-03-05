@@ -1,3 +1,7 @@
+.calendar input {
+  color: white !important;
+}
+
 .ledger-select {
   width: fit-content;
   padding: 0.25rem 0.7rem;

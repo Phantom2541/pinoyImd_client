@@ -9,7 +9,7 @@ export default function Ledger() {
 
   return (
     <MDBContainer className="d-grid" fluid>
-      <MDBCard className="p-3">
+      <MDBCard className="pb-3 " narrow>
         <Header />
         <Calendar />
       </MDBCard>

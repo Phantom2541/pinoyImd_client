@@ -18,7 +18,8 @@ export default function Body() {
   /**
    * check who will open
    */
-  const [activeId, setActiveId] = useState(-1);
+  const [activeId, setActiveId] = useState(-1),
+    [didHoverId, setDidHoverId] = useState(-1);
   const { maxPage, token } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
 
@@ -33,6 +34,8 @@ export default function Body() {
   //   );
   // };
 
+  console.log(activeId);
+
   return (
     <MDBContainer
       style={{
@@ -43,34 +46,43 @@ export default function Body() {
       {Services.collections.map((service, index) => {
         const { decSS, frequency } = service;
 
+        const textColor =
+          activeId !== index
+            ? didHoverId === index
+              ? "text-primary"
+              : "text-black"
+            : "text-white";
+        const bgBorder =
+          activeId === index
+            ? " bg-info transition"
+            : didHoverId === index
+            ? "rounded border border-info bg-transparent ease-out"
+            : "bg-transparent ease-out";
+
         return (
           <MDBCard
             key={`staffs-${index}`}
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader
-              className={`${
-                index === activeId
-                  ? "bg-info text-white transition"
-                  : "bg-white"
-              } ${activeId === index ? "custom-header" : ""}`}
+              className={bgBorder}
+              onMouseLeave={() => setDidHoverId(-1)}
+              onMouseEnter={() => setDidHoverId(index)}
               style={{ borderRadius: "50%" }}
-              onClick={() =>
-                setActiveId((prev) => (prev === index ? -1 : index))
-              }
             >
-              <CollapsableHeader service={service} index={index} />
+              <CollapsableHeader
+                service={service}
+                isOpen={activeId === index}
+                textColor={textColor}
+                setActiveId={setActiveId}
+                index={index}
+              />
             </MDBCollapseHeader>
 
             <MDBCollapse
               id={`collapse-${index}`}
-              className="mb-2"
+              className="mb-2 border border-black"
               isOpen={index === activeId}
-              style={{
-                borderBottom: "1px solid black",
-                borderRight: "1px solid black",
-                borderLeft: "1px solid black",
-              }}
             >
               <MDBCardBody className="pt-2">
                 <CollapsableBody decSS={decSS} frequency={frequency} />

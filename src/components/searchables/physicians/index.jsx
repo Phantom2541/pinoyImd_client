@@ -82,8 +82,8 @@ export default function Search({ setPhysician, setRegister, clientId }) {
   return (
     <div className="d-flex align-items-center">
       <Notification didSearch={didSearch} />
-      <div className={`cashier-search ${didSearch && "active"}`}>
-        <div className="cashier-search-suggestions">
+      <div className={`searchable-search ${didSearch && "active"}`}>
+        <div className="searchable-search-suggestions">
           {!physicians?.length ? (
             <div>
               <small>
