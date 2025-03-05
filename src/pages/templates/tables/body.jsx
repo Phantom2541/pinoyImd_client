@@ -34,29 +34,22 @@ const Tables = () => {
     <MDBTable responsive hover bordered>
       <thead>
         <tr>
-          <th>Service ID</th>
-          <th>Abnormal</th>
+          <th>#</th>
+          <th>Name</th>
+          <th>aka</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {/* {paginated.map((assurance, index) => {
-          return ( */}
-        <tr
-        // key={index}
-        >
-          <td>name</td>
-          <td>subname </td>
+        <tr>
+          <td>1</td>
+          <td>Tom</td>
+          <td>Kuya TOM </td>
           <td>
-            <button
-            // onClick={() => dispatch(SetEDIT(assurance))}
-            >
-              Edit
-            </button>
+            <button>Edit</button>
             <button onClick={() => handleDelete(1)}>Delete</button>
           </td>
         </tr>
-        {/* );
-        })} */}
       </tbody>
     </MDBTable>
   );
