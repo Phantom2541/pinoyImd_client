@@ -5,11 +5,10 @@ import {
   MDBCol,
   MDBCard,
   MDBCardBody,
-  MDBCardHeader,
-  MDBIcon,
   MDBProgress,
   MDBBtn,
   MDBTable,
+  MDBIcon,
 } from "mdbreact";
 import { Sales, OutSource, InSource, Utilities } from "./wigets";
 import Transactions from "./transactions";

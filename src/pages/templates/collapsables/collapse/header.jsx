@@ -1,6 +1,5 @@
+import React from "react";
 import { MDBBtn } from "mdbreact";
-import React, { act } from "react";
-// import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 
 const Header = ({ service, isOpen, textColor, index, setActiveId }) => {
   const { name, abbreviation, template } = service;

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -6,7 +7,6 @@ import {
   MDBCollapseHeader,
   MDBContainer,
 } from "mdbreact";
-import { useDispatch, useSelector } from "react-redux";
 import { Services } from "../../../../services/fakeDb";
 
 import CollapsableBody from "./body";
@@ -20,21 +20,6 @@ export default function Body() {
    */
   const [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1);
-  const { maxPage, token } = useSelector(({ auth }) => auth);
-  const dispatch = useDispatch();
-
-  // const onSubmit = (data) => {
-  //   dispatch(
-  //     UPDATE({
-  //       data: {
-  //         _id: data._id,
-  //       },
-  //       token,
-  //     })
-  //   );
-  // };
-
-  console.log(activeId);
 
   return (
     <MDBContainer

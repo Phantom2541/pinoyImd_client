@@ -20,8 +20,7 @@ export default function ContactUs() {
       email: "",
       subject: "",
       message: "",
-    }),
-    { auth } = useSelector(({ auth }) => auth);
+    });
 
   useEffect(() => {
     const feedback = localStorage.getItem("feedback");

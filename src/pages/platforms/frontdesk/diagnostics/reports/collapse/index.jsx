@@ -10,7 +10,7 @@ import {
 } from "mdbreact";
 import { dateFormat, sourceColor } from "../../../../../../services/utilities";
 import Table from "./table";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 
 export default function TasksCollapse({
   task,
@@ -18,10 +18,10 @@ export default function TasksCollapse({
   setActiveCollapse,
   isActive,
 }) {
-  const { _id, createdAt, category } = task,
-    date = new Date(createdAt).toDateString(),
-    week = date.slice(0, 3),
-    complete = date.slice(4),
+  const { _id, category } = task,
+    // date = new Date(createdAt).toDateString(),
+    // week = date.slice(0, 3),
+    // complete = date.slice(4),
     history = useHistory();
   console.log("task", task);
 

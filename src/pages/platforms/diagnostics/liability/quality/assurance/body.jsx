@@ -1,33 +1,33 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-import {
-  DESTROY,
-  SetEDIT,
-} from "../../../../../../services/redux/slices/liability/assurances";
-import Swal from "sweetalert2";
-import { Services } from "../../../../../../services/fakeDb";
+// import {
+//   DESTROY,
+//   SetEDIT,
+// } from "../../../../../../services/redux/slices/liability/assurances";
+// import Swal from "sweetalert2";
+// import { Services } from "../../../../../../services/fakeDb";
 
 const Tables = () => {
-  const { token } = useSelector(({ auth }) => auth),
-    { paginated } = useSelector(({ assurances }) => assurances),
-    dispatch = useDispatch();
+  // const { token } = useSelector(({ auth }) => auth),
+  // { paginated } = useSelector(({ assurances }) => assurances),
+  // dispatch = useDispatch();
 
-  const handleDelete = (_id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { _id } }));
-      }
-    });
-  };
+  // const handleDelete = (_id) => {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "You won't be able to revert this!",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, delete it!",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       dispatch(DESTROY({ token, data: { _id } }));
+  //     }
+  //   });
+  // };
 
   return (
     <MDBTable responsive hover bordered>

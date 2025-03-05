@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { MDBIcon } from "mdbreact";
@@ -58,14 +58,15 @@ export default function Search({ setMenu, setRegister }) {
   }, [token, dispatch, activePlatform]);
 
   // Debounced search function to avoid too many re-renders
-  const debouncedSearch = useCallback(
-    debounce((key) => {
-      if (key.trim().length <= 1) return setMatch([]);
-      const _match = globalSearch(collections, key.trim());
-      setMatch(_match);
-    }, 500),
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((key) => {
+        if (key.trim().length <= 1) return setMatch([]);
+        const _match = globalSearch(collections, key.trim());
+        setMatch(_match);
+      }, 500),
     [collections]
-  );
+  ); // dependencies
 
   const handleChange = (value) => {
     setSearchKey(value);

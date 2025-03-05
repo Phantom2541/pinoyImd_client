@@ -51,7 +51,10 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
     dispatch = useDispatch();
 
   const dateKey = `${Months[month]} ${focusedDay}, ${year}`,
-    breakdown = ledger[dateKey] || [];
+    breakdown = useMemo(() => {
+      const key = `${Months[month]} ${focusedDay}, ${year}`;
+      return ledger[key] || [];
+    }, [ledger, month, focusedDay, year]); // Dependencies
 
   const fetchCashiers = (_breakdown) => {
     const cashiers = {};

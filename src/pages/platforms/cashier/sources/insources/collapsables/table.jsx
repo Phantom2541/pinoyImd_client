@@ -18,7 +18,7 @@ import {
 } from "../../../../../../services/redux/slices/assets/persons/users";
 
 export default function CollapseTable({ BranchId, affiliated, providerId }) {
-  const { auth, token } = useSelector(({ auth }) => auth),
+  const { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const handleUntag = (physicianId) => {

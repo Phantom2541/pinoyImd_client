@@ -99,6 +99,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
         token,
         data: {
           _id,
+          ssx,
           lol: auth._id,
           renderedBy: auth._id,
           renderedAt: new Date().toLocaleString(),

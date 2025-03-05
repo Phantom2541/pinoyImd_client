@@ -3,7 +3,6 @@ import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
   FILTER,
-  BROWSE,
   RESET,
 } from "./../../../services/redux/slices/assets/persons/physicians";
 import { MDBIcon } from "mdbreact";
