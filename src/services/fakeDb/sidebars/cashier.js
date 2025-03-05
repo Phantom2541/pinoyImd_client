@@ -9,12 +9,16 @@ import {
   Outsources,
   Utilities,
 } from "../../../pages/platforms/cashier";
-import { Tablestemplate, Collapsable } from "../../../pages/templates";
+import {
+  Tablestemplate,
+  Collapsable,
+  Calendar,
+} from "../../../pages/templates";
 
 import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
-import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
+// import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
 import Remmitances from "../../../pages/platforms/manager/pos/remittances";
 //import Outsource from "../../../pages/platforms/manager/provider";
 
@@ -45,11 +49,11 @@ const cashier = [
         path: "/remmitances",
         component: Remmitances,
       },
-      {
-        name: "Ledger experimental",
-        path: "/Ledger",
-        component: ExperimentalLedger,
-      },
+      // {
+      //   name: "Ledger experimental",
+      //   path: "/Ledger",
+      //   component: ExperimentalLedger,
+      // },
       {
         name: "Ledger",
         path: "/ledger",
@@ -136,6 +140,11 @@ const cashier = [
         name: "Collapsables",
         path: "/collapsables",
         component: Collapsable,
+      },
+      {
+        name: "Calendars",
+        path: "/calendars",
+        component: Calendar,
       },
     ],
   },
