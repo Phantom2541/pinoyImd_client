@@ -33,8 +33,6 @@ export default function MenuCollapse() {
     [didHoverId, setDidHoverId] = useState(-1),
     dispatch = useDispatch();
 
-  // console.log("collections: ", collections);
-  console.log("did hover id", didHoverId);
   const handleTag = (physician) => {
     const { isPhysician, physicianId, isGhost = false } = physician;
     const { branchId, providerId } = selected;
@@ -57,45 +55,91 @@ export default function MenuCollapse() {
   };
 
   const handleRegister = (user) => {
-    const { _id } = user;
+    const { lname, mname, fname } = user;
     const { branchId, providerId } = selected;
 
     Swal.fire({
       title: "Register as a Physician?",
-      text: "Would you like to register as a physician and be associated with this company?",
-      icon: "question",
-      input: "text",
-      inputPlaceholder: "Enter specialization",
+      html: `
+      <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+        <i class="fas fa-user-md" style="font-size: 50px; color: #007bff;"></i>
+      </div>
+      
+      <div style="display: flex; gap: 5px;">
+        <input id="lname" class="swal2-input" value="${lname}" placeholder="Family Name" style="width: 50%;">
+        <input id="fname" class="swal2-input" value="${fname}" placeholder="First Name" style="width: 50%;">
+      </div>
+
+      <div style="display: flex; gap: 5px;">
+        <input id="mname" class="swal2-input" value="${
+          mname || ""
+        }" placeholder="Middle Name" style="width: 50%;">
+        <input id="suffix" class="swal2-input" placeholder="Suffix (e.g., Jr., III)" style="width: 50%;">
+      </div>
+
+      <div style="display: flex; gap: 5px;">
+        <input id="postnominal" class="swal2-input" placeholder="Postnominal (e.g., MD, PhD)" style="width: 50%;">
+        <input id="specialization" class="swal2-input" placeholder="Specialization" style="width: 50%;">
+      </div>
+    `,
       showCancelButton: true,
       confirmButtonText: "Yes, Register",
       cancelButtonText: "No, Cancel",
-      preConfirm: (specialization) => {
-        if (!specialization) {
-          Swal.showValidationMessage("Specialization is required");
-          return false; // Prevent proceeding
+      preConfirm: () => {
+        const lname = document.getElementById("lname")?.value.trim();
+        const fname = document.getElementById("fname")?.value.trim();
+        const mname = document.getElementById("mname")?.value.trim();
+        const suffix = document.getElementById("suffix")?.value.trim();
+        const postnominal = document
+          .getElementById("postnominal")
+          ?.value.trim();
+        const specialization = document
+          .getElementById("specialization")
+          ?.value.trim();
+
+        if (!lname || !fname || !specialization) {
+          Swal.showValidationMessage(
+            "Family Name, First Name, and Specialization are required."
+          );
+          return false;
         }
-        return specialization;
+
+        return {
+          fullName: { lname, fname, mname, suffix, postnominal },
+          specialization,
+        };
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const specialization = result.value;
+        const { fullName, specialization } = result.value;
 
-        dispatch(
-          SAVE({ data: { user: _id, specialization, status: "active" }, token }) // for creating a physician
-        ).then(({ payload }) => {
-          // for tagging a physician
-          const { _id: physicianId } = payload;
-          dispatch(
-            TagPHYSICIAN({
-              data: { physicianId, providerId, branchId },
-              token,
-            })
-          ).then(({ payload: response }) => {
-            // for updating branches of provider
-            const { payload } = response;
-            dispatch(SetBRANCHES(payload));
+        // Dispatch SAVE action and wait for result
+        dispatch(SAVE({ data: { fullName, specialization }, token }))
+          .unwrap() // Ensure we get the resolved payload
+          .then((physician) => {
+            const { _id: physicianId } = physician;
+
+            // Dispatch TagPHYSICIAN action
+            return dispatch(
+              TagPHYSICIAN({
+                data: { physicianId, providerId, branchId },
+                token,
+              })
+            ).unwrap();
+          })
+          .then((branch) => {
+            dispatch(SetBRANCHES(branch));
+          })
+          .catch((error) => {
+            Swal.fire(
+              "Error",
+              "Failed to register physician. Please try again.",
+              "error"
+            );
+            console.error("Registration error:", error);
           });
-        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire("Cancelled", "Registration cancelled.", "error");
       }
     });
   };
