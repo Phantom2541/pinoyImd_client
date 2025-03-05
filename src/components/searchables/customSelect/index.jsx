@@ -17,6 +17,7 @@ export default function CustomSelect({
   className = "",
   inputClassName = "",
   disableAll = false,
+  hideLabel = false,
   multiple = false,
   disabledAllExceptSelected = false,
   disableByKey = {},
@@ -43,7 +44,7 @@ export default function CustomSelect({
 
   return (
     <MDBSelect
-      label={label}
+      label={!hideLabel && label}
       getValue={(array) => {
         if (multiple)
           return onChange(
@@ -63,14 +64,14 @@ export default function CustomSelect({
       <MDBSelectInput className={`${inputClassName}`} selected={preValue} />
       <MDBSelectOptions search={handleSearchDisabling()}>
         {choices.map((choice, index) => {
-          const value = String(choice[values]),
-            text = choice[texts];
+          const value = String(choice[values] || choice),
+            text = choice[texts] || choice;
 
           return (
             <MDBSelectOption
               id={`${label}-${value}`}
               disabled={handleChoiceDisabling(value, choice)}
-              checked={preValue ? value === preValue : false}
+              checked={preValue ? String(value) === String(preValue) : false}
               key={`${label}-${index}`}
               value={value}
             >

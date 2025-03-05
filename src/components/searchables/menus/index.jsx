@@ -93,10 +93,10 @@ export default function Search({ setMenu, setRegister }) {
   };
 
   return (
-    <div className="cashier-search-cotaniner">
+    <div className="searchable-search-cotaniner ">
       <Notification didSearch={match.length > 0} />
-      <div className={`cashier-search ${match.length > 0 && "active"}`}>
-        <div className="cashier-search-suggestions">
+      <div className={`searchable-search  ${match.length > 0 && "active"}`}>
+        <div className="searchable-search-suggestions">
           {searchKey && match.length === 0 && (
             <li onClick={handleRegister}>No match found.</li>
           )}
