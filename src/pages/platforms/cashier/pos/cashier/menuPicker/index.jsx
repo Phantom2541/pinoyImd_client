@@ -1,12 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SearchMenu } from "../../../../../../components/searchables";
+import { SearchMenu } from "../../../../../../components/header";
 import { MDBIcon, MDBBadge } from "mdbreact";
-import {
-  computeGD,
-  currency,
-} from "../../../../../../services/utilities/index.js";
-import { Services } from "../../../../../../services/fakeDb/index.js";
+import { computeGD, currency } from "../../../../../../services/utilities";
+import { Services } from "../../../../../../services/fakeDb";
 import {
   ADDTOCART,
   REMOVEFROMCART,
