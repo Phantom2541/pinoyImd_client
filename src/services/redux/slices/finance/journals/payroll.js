@@ -1,30 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../utilities";
+import { axioKit } from "../../../../utilities";
 
-const name = "commerce/menus";
+const name = "finance/payrolls";
 
 const initialState = {
   collections: [],
+  personnel: {},
+
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-/**
- * Asynchronous thunk action to browse items.
- *
- * @function BROWSE
- * @param {Object} payload - The payload object containing token and key.
- * @param {string} payload.token - The authentication token.
- * @param {string} payload.key - The key for browsing.
- * @param {Object} thunkAPI - The thunk API object.
- * @returns {Promise<Object>} The response data or an error message.
- */
 export const BROWSE = createAsyncThunk(
   `${name}`,
-  ({ token, key }, thunkAPI) => {
+  ({ token, branchId }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, key);
+      return axioKit.universal(`${name}/browse`, token, { branchId });
     } catch (error) {
       const message =
         (error.response &&
@@ -38,11 +30,11 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
-export const SAVE = createAsyncThunk(
-  `${name}/save`,
-  ({ data, token }, thunkAPI) => {
+export const USER = createAsyncThunk(
+  `${name}/user`,
+  ({ token, branchId, userId }, thunkAPI) => {
     try {
-      return axioKit.save(name, data, token);
+      return axioKit.universal(`${name}/user`, token, { branchId, userId });
     } catch (error) {
       const message =
         (error.response &&
@@ -56,11 +48,11 @@ export const SAVE = createAsyncThunk(
   }
 );
 
-export const GENERATE = createAsyncThunk(
-  `${name}/generate`,
-  ({ data, token }, thunkAPI) => {
+export const EMPLOYEES = createAsyncThunk(
+  `${name}/employees`,
+  ({ token, branch }, thunkAPI) => {
     try {
-      return axioKit.save(name, data, token, "generate");
+      return axioKit.universal(`${name}/employees`, token, { branch });
     } catch (error) {
       const message =
         (error.response &&
@@ -73,6 +65,19 @@ export const GENERATE = createAsyncThunk(
     }
   }
 );
+
+export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
+  try {
+    return axioKit.save(name, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   try {
@@ -91,10 +96,35 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    SETMENUS: (state, { payload }) => {
-      state.collections = payload;
+    UPDATEACCESS: (state, data) => {
+      // used for updating access in file201
+      const { _id, access, isNew = false } = data.payload,
+        { collections } = state;
+
+      const index = collections.findIndex((item) => item._id === _id);
+
+      const personnelAccess = [...collections[index].access];
+
+      var newAccess = [];
+
+      if (isNew) {
+        newAccess = personnelAccess.concat(access);
+      } else {
+        newAccess = personnelAccess.map((pAccess) => {
+          if (access.find((_access) => _access._id === pAccess._id)) {
+            return {
+              ...pAccess,
+              status: !pAccess.status,
+            };
+          }
+
+          return pAccess;
+        });
+      }
+
+      state.collections[index].access = newAccess;
     },
-    RESET: (state) => {
+    RESET: (state, data) => {
       state.isSuccess = false;
       state.message = "";
     },
@@ -107,12 +137,43 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload, success } = action.payload;
-        state.isSuccess = success;
+        const { payload } = action.payload;
         state.collections = payload;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(USER.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(USER.fulfilled, (state, action) => {
+        const { personnels } = action.payload;
+        state.personnel = personnels;
+        state.isLoading = false;
+      })
+      .addCase(USER.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(EMPLOYEES.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(EMPLOYEES.fulfilled, (state, action) => {
+        // const { payload } = action.payload;
+        state.collections = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(EMPLOYEES.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -131,24 +192,6 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
-      .addCase(GENERATE.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(GENERATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
-        state.collections = payload;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(GENERATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -178,6 +221,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SETMENUS, RESET } = reduxSlice.actions;
+export const { RESET, UPDATEACCESS } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

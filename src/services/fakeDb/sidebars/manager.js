@@ -24,8 +24,8 @@ import Employees from "../../../pages/platforms/headquarter/file201/employees";
 import Applicants from "../../../pages/platforms/manager/settings/applicants";
 import Branches from "../../../pages/platforms/manager/branches";
 import Providers from "../../../pages/platforms/manager/provider";
-import SABranches from "../../../pages/platforms/manager/SABranches";
-import SACompany from "../../../pages/platforms/manager/SACompany";
+import SABranches from "../../../pages/platforms/SuperAdmin/SABranches";
+import SACompany from "../../../pages/platforms/SuperAdmin/SACompany";
 import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
 import Remmitances from "../../../pages/platforms/manager/pos/remittances";
 

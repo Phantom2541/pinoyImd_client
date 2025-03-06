@@ -9,7 +9,6 @@ import {
   MDBCardBody,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import { useSelector } from "react-redux";
 import GoogleMapReact from "google-map-react";
 
 export default function ContactUs() {

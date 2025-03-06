@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import coinImage from "./path-to-your-image.png"; // Update with correct path
-import { Denominations } from "../../../../../services/utilities";
+import { Denominations } from "./../../../../../services/fakeDb";
 
 const CoinSelector = () => {
+  const coinImage = `${process.env.PUBLIC_URL}/assets/denominations.png`;
   const [selectedCoin, setSelectedCoin] = useState(null);
 
   const handleCoinSelect = (coin) => {
@@ -14,12 +14,12 @@ const CoinSelector = () => {
       1: "0px 0px", // Adjust based on the actual image slice
       5: "-50px 0px",
       10: "-100px 0px",
-      20: "-150px 0px",
+      20: "-150px 100px",
     };
 
     return {
-      width: "50px",
-      height: "50px",
+      width: "500px",
+      height: "500px",
       backgroundImage: `url(${coinImage})`,
       backgroundPosition: positions[coin] || "0px 0px",
       backgroundSize: "cover",

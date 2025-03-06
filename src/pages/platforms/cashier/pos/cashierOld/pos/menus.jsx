@@ -6,7 +6,7 @@ import { useToasts } from "react-toast-notifications";
 import {
   BROWSE,
   RESET,
-} from "../../../../../../services/redux/slices/commerce/menus";
+} from "../../../../../../services/redux/slices/commerce/catalog/menus";
 // import Pagination from "../../../../../../components/pagination";
 import {
   currency,
