@@ -8,6 +8,7 @@ import {
   Insources,
   Outsources,
   Utilities,
+  Remmitances,
 } from "../../../pages/platforms/cashier";
 import {
   Tablestemplate,
@@ -19,7 +20,7 @@ import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
 // import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
-import Remmitances from "../../../pages/platforms/cashier/pos/remmitances";
+// import Remmitances from "../../../pages/platforms/cashier/pos/remmitances";
 //import Outsource from "../../../pages/platforms/manager/provider";
 
 const cashier = [

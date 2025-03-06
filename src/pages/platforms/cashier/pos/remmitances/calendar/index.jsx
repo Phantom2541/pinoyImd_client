@@ -13,7 +13,7 @@ export default function Calendar({ month, year }) {
   // { grossSales, patients } = census;
 
   return (
-    <div className="pos-ledger-calendar">
+    <div className="pos-ledger-calendar p-3">
       <WeekHeader />
       <div className="pos-ledger-calendar-daily">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => {

@@ -16,7 +16,7 @@ import Header from "./header";
 
 const today = new Date();
 
-export default function Ledger() {
+export default function Remmitances() {
   const [month, setMonth] = useState(today.getMonth()),
     [year, setYear] = useState(today.getFullYear()),
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -42,7 +42,7 @@ export default function Ledger() {
 
   return (
     <MDBContainer className="d-grid" fluid>
-      <MDBCard className="p-3">
+      <MDBCard className="pb-3" narrow>
         <Header />
         <Calendar month={month} year={year} />
       </MDBCard>
