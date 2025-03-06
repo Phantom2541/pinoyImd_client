@@ -150,13 +150,13 @@
 
 .pos-card-details span {
   font-size: 0.9rem;
-  font-weight: 400;
+  font-weight: 300;
   color: rgba(0, 123, 255, 0.8);
 }
 
 .pos-card-details p {
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 400;
   color: rgba(0, 0, 0, 1);
 }
 

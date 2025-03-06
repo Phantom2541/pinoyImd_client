@@ -84,7 +84,7 @@ export default function Search({ setPatient, setRegister = () => {} }) {
 
   return (
     <div
-      className="d-flex align-items-center "
+      className="d-flex align-items-center  "
       style={{ position: "relative" }}
     >
       <Notification didSearch={didSearch} />

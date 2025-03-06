@@ -5,6 +5,7 @@ import {
   MDBSideNavNav,
   MDBSideNav,
   MDBIcon,
+  MDBBtn,
 } from "mdbreact";
 import { useSelector } from "react-redux";
 import { Sidebars } from "../../services/fakeDb";
@@ -106,6 +107,7 @@ export default function SideNavigation({
           <MDBSideNavNav>{renderNavItems(links, "sidebar")}</MDBSideNavNav>
         )}
       </MDBSideNav>
+      <button>tes</button>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import {
   FILTER,
   RESET,
 } from "./../../../services/redux/slices/assets/persons/physicians";
-import { MDBIcon } from "mdbreact";
+import { MDBBtn, MDBIcon } from "mdbreact";
 import {
   formatNameToObj,
   fullName,
@@ -138,7 +138,16 @@ export default function Search({ setPhysician, setRegister, clientId }) {
           autoCorrect="off"
           spellCheck={false}
         />
-        <button type="submit">
+        <button
+          type="submit"
+          onClick={() => {
+            setDidSearch(false);
+            setPhysicians([]);
+            setSearchKey("");
+          }}
+          className={didSearch && !isLoading ? "bg-danger" : "bg-primary"}
+          rounded
+        >
           <MDBIcon
             pulse={isLoading}
             icon={isLoading ? "spinner" : didSearch ? "times" : "search"}

@@ -11,6 +11,7 @@ import { Services } from "../../../../services/fakeDb";
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
+import { collapse } from "../../../../services/utilities";
 
 // import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
@@ -30,19 +31,11 @@ export default function Body() {
     >
       {Services.collections.map((service, index) => {
         const { decSS, frequency } = service;
-
-        const textColor =
-          activeId !== index
-            ? didHoverId === index
-              ? "text-primary"
-              : "text-black"
-            : "text-white";
-        const bgBorder =
-          activeId === index
-            ? " bg-info transition"
-            : didHoverId === index
-            ? "rounded border border-info bg-transparent ease-out"
-            : "bg-transparent ease-out";
+        const { color, border } = collapse.getStyle(
+          index,
+          activeId,
+          didHoverId
+        );
 
         return (
           <MDBCard
@@ -50,7 +43,7 @@ export default function Body() {
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader
-              className={bgBorder}
+              className={border}
               onMouseLeave={() => setDidHoverId(-1)}
               onMouseEnter={() => setDidHoverId(index)}
               style={{ borderRadius: "50%" }}
@@ -58,7 +51,7 @@ export default function Body() {
               <CollapsableHeader
                 service={service}
                 isOpen={activeId === index}
-                textColor={textColor}
+                textColor={color}
                 setActiveId={setActiveId}
                 index={index}
               />

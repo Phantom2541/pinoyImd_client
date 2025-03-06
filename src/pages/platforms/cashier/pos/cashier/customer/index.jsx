@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBIcon } from "mdbreact";
+import { MDBBtn, MDBIcon } from "mdbreact";
 import Patient from "./form/patient";
 import PosCard from "./form/posCard";
 import {
@@ -30,27 +30,40 @@ export default function POS() {
     dispatch(SETSEARCHKEY(customer));
   };
 
+  console.log("customer:", customer);
+
   return (
-    <div className="pos-container">
+    <div className="pos-container ">
       <div
-        className={`pos-container-header ${customer?._id && "pickedSearch"}`}
+        className={`pos-container-header  ${customer?._id && "pickedSearch"}`}
       >
         {customer?._id && (
-          <>
-            <h4>
-              <MDBIcon icon="mars" className="text-primary mr-2" />
-              {fullName(customer?.fullName)}
-            </h4>
-            <button
-              className="border-0 bg-transparent p-0"
+          <div
+            className="d-flex justify-content-between align-items-center"
+            style={{ width: "100%" }}
+          >
+            <div>
+              <h5 style={{ fontWeight: "500" }}>
+                <MDBIcon icon="mars" className="text-primary mr-2" />
+                {fullName(customer?.fullName)}{" "}
+              </h5>
+            </div>
+            <MDBBtn
+              rounded
+              color="danger"
+              title="Clear"
+              size="sm"
               onClick={() => dispatch(SETPATIENT({}))}
+              className="px-2"
             >
-              <MDBIcon icon="times" className="text-danger" />
-            </button>
-          </>
+              <MDBIcon icon="times" />
+            </MDBBtn>
+          </div>
         )}
-        {!customer && (
-          <Search setPatient={handleCustomer} setRegister={handleRegister} />
+        {!customer?.fullName && (
+          <div style={{ width: "90%" }}>
+            <Search setPatient={handleCustomer} setRegister={handleRegister} />
+          </div>
         )}
       </div>
       <div className="pos-card-button">

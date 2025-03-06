@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBTypography } from "mdbreact";
+import { MDBCol, MDBRow, MDBTypography } from "mdbreact";
 
 import {
   fullAddress,
@@ -185,28 +185,39 @@ export default function PosCard() {
         </div>
       </div>
       {_id ? (
-        <div className="mt-4">
-          <div className="d-flex align-items-center" style={{ gap: "60px" }}>
-            <div className="pos-card-details">
-              <span>Birthday</span>
-              <p>{new Date(dob).toDateString()}</p>
-            </div>
-            <div className="pos-card-details">
-              <span>Age</span>
-              <p>{getAge(dob)}</p>
-            </div>
-          </div>
-          <div className="pos-card-details">
-            <span>{_mobile ? "Contact Number" : "E-mail address"}</span>
-            <p>{_mobile ? mobile(_mobile) : email}</p>
-          </div>
-          <div className="pos-card-details">
-            <span>Address</span>
-            <p>{fullAddress(address)}</p>
-          </div>
+        <div className="mt-2">
+          <MDBRow>
+            <MDBCol>
+              <div className="pos-card-details">
+                <span>Birthday:</span>
+                <p>{new Date(dob).toDateString()}</p>
+              </div>
+            </MDBCol>
+            <MDBCol>
+              <div className="pos-card-details">
+                <span>Age:</span>
+                <p>{getAge(dob)}</p>
+              </div>
+            </MDBCol>
+          </MDBRow>
+          <MDBRow>
+            <MDBCol>
+              <div className="pos-card-details">
+                <span>{_mobile ? "Contact Number" : "E-mail address"}:</span>
+                <p>{_mobile ? mobile(_mobile) : email}</p>
+              </div>
+            </MDBCol>
+            <MDBCol>
+              <div className="pos-card-details">
+                <span>Address:</span>
+                {/* <p>{fullAddress(address)}</p> */}
+                <p>Brgy.Pias General Tinio Nueva Ecija</p>
+              </div>
+            </MDBCol>
+          </MDBRow>
         </div>
       ) : (
-        <MDBTypography note noteColor="info" className="mt-5">
+        <MDBTypography note noteColor="info" className="mt-3 mb-0">
           Please search a patron first.
         </MDBTypography>
       )}

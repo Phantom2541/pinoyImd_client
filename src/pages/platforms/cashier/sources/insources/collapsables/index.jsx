@@ -21,6 +21,7 @@ import {
 import { SAVE } from "../../../../../../services/redux/slices/assets/persons/physicians";
 import Swal from "sweetalert2";
 import CollapseTable from "./table";
+import { collapse } from "../../../../../../services/utilities";
 
 export default function MenuCollapse() {
   /**
@@ -170,18 +171,13 @@ export default function MenuCollapse() {
       {collections?.map(
         ({ clients, name, subName, _id, membership = "" }, index) => {
           const affiliated = clients?.affiliated || [];
-          const textColor =
-            activeId !== index
-              ? didHoverId === index
-                ? "text-primary"
-                : "text-black"
-              : "text-white";
-          const bgBorder =
-            activeId === index
-              ? " bg-info transition"
-              : didHoverId === index
-              ? "rounded border border-info bg-transparent ease-out"
-              : "bg-transparent ease-out";
+
+          const { color, border } = collapse.getStyle(
+            index,
+            activeId,
+            didHoverId
+          );
+
           return (
             <MDBCard
               key={`staffs-${index}`}
@@ -191,12 +187,10 @@ export default function MenuCollapse() {
                 onMouseLeave={() => setDidHoverId(-1)}
                 onMouseEnter={() => setDidHoverId(index)}
                 onClick={(event) => event.stopPropagation()}
-                className={bgBorder}
+                className={border}
                 style={{ borderRadius: "50%" }}
               >
-                <label
-                  className={`d-flex justify-content-between ${textColor} `}
-                >
+                <label className={`d-flex justify-content-between ${color} `}>
                   <span className="d-flex align-items-center transition-all">
                     {index + 1}. {name} {subName}
                     {membership ? `| ${membership}` : ""}

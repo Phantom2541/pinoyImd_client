@@ -48,7 +48,7 @@ import generateClaimStub from "./generateClaimStub";
 import nickname from "./nickname";
 import paymentBadge from "./paymentBadge";
 import removeUndefinedValues from "./dataCleaner";
-
+import collapse from "./collapse";
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -62,6 +62,7 @@ export {
   paymentBadge,
   generateClaimStub,
   nickname,
+  collapse,
   Banner,
   isClosingTime,
   fullNameSearch,

@@ -1,4 +1,4 @@
-import { MDBBtn } from "mdbreact";
+import { MDBBtn, MDBInput } from "mdbreact";
 import React, { useEffect, useState } from "react";
 import { Privileges, Suffixes } from "../../../../../../../services/fakeDb";
 import {
@@ -72,7 +72,11 @@ export default function Patient() {
       // create
       dispatch(
         SAVE({
-          data: { ...form, password: "password", email: generateEmail(form) },
+          data: {
+            ...form,
+            password: "password",
+            email: email || generateEmail(form),
+          },
           token,
         })
       );
@@ -251,18 +255,17 @@ export default function Patient() {
           />
         </div>
       </div>
-      <div className="patient-form">
-        <span>email (Optional)</span>
-        <input
-          type="text"
-          value={email}
-          onChange={({ target }) => handleChange("email", target.value)}
-        />
-      </div>
+      <MDBInput
+        label="Email (Optional)"
+        type="email"
+        onChange={({ target }) => handleChange("email", target.value)}
+        value={email || generateEmail(form)}
+      />
+
       <MDBBtn
         type="submit"
         color={_id ? "info" : "primary"}
-        className="float-right mt-4"
+        className="float-right mt-2"
       >
         {_id ? "Update" : "Create"}
       </MDBBtn>
