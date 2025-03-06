@@ -1,4 +1,4 @@
-import Dashboard from "../../../pages/platforms/cashier/dashboard";
+import Bulletin from "../../../pages/platforms/cashier/bulletin";
 import {
   // Cashier,
   Sales,
@@ -19,15 +19,15 @@ import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
 // import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
-import Remmitances from "../../../pages/platforms/manager/pos/remittances";
+import Remmitances from "../../../pages/platforms/cashier/pos/remmitances";
 //import Outsource from "../../../pages/platforms/manager/provider";
 
 const cashier = [
   {
-    name: "Dashboard",
+    name: "Bulletin",
     icon: "tachometer-alt",
-    path: "/dashboard",
-    component: Dashboard,
+    path: "/cashier/bulletin",
+    component: Bulletin,
   },
   {
     name: "Cashier",

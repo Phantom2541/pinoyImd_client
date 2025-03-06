@@ -4,7 +4,7 @@ import { capitalize, globalSearch } from "../../../../../../services/utilities";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import Modal from "./modal";
 import DataTable from "../../../../../../components/dataTable";
-import { UPDATE } from "../../../../../../services/redux/slices/commerce/menus";
+import { UPDATE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
 import Swal from "sweetalert2";
 
 export default function CollapseTable({
