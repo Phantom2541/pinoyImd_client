@@ -35,7 +35,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
           tests = tests.filter((item) => !buntisTests.includes(item));
           await axioKit.save(
-            "results/laboratory/miscellaneous",
+            "/diagnostics/laboratory/result/miscellaneous",
             {
               packages: buntisPresent,
               saleId: _id,
@@ -62,7 +62,11 @@ const PrimaryFooter = ({ sale, setEdit }) => {
           _buntis: false,
         }));
 
-        axioKit.save("results/laboratory/miscellaneous", newArr, token);
+        axioKit.save(
+          "/diagnostics/laboratory/result/miscellaneous",
+          newArr,
+          token
+        );
 
         continue;
       }
@@ -74,7 +78,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
           : "laboratory";
 
       axioKit.save(
-        `results/${department}/${lowercaseKey}`,
+        `/diagnostics/${department}/result/${lowercaseKey}`,
         {
           packages: task[key],
           _id,

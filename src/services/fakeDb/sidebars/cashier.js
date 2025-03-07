@@ -1,8 +1,8 @@
 import Bulletin from "../../../pages/platforms/cashier/bulletin";
 import {
-  // Cashier,
-  Sales,
-  Ledger,
+  Cashier,
+  Deals,
+  // Sales,
   Menus,
   Services,
   Insources,
@@ -16,12 +16,8 @@ import {
   Calendar,
 } from "../../../pages/templates";
 
-import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
-// import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
-// import Remmitances from "../../../pages/platforms/cashier/pos/remmitances";
-//import Outsource from "../../../pages/platforms/manager/provider";
 
 const cashier = [
   {
@@ -41,24 +37,14 @@ const cashier = [
         component: Cashier,
       },
       {
-        name: "Sales",
-        path: "/sales",
-        component: Sales,
+        name: "Deals",
+        path: "/deals",
+        component: Deals,
       },
       {
         name: "Remmitances",
         path: "/remmitances",
         component: Remmitances,
-      },
-      // {
-      //   name: "Ledger experimental",
-      //   path: "/Ledger",
-      //   component: ExperimentalLedger,
-      // },
-      {
-        name: "Ledger",
-        path: "/ledger",
-        component: Ledger,
       },
     ],
   },
@@ -78,12 +64,19 @@ const cashier = [
         component: Vouchers,
       },
       {
-        name: "SOA", // statement of Account (Sendout)
+        name: "Statement of Account",
         path: "/soa",
-      },
-      {
-        name: "Receivables", // unpaid services
-        path: "/receivables",
+        icon: "balance-scale",
+        children: [
+          {
+            name: "Outsource", // Sendout
+            path: "/outsource",
+          },
+          {
+            name: "Insource", // Receivables  from sales vouchers
+            path: "/insource",
+          },
+        ],
       },
     ],
   },
