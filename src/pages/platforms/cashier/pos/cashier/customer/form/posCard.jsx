@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBCol, MDBRow, MDBTypography } from "mdbreact";
 
 import {
+  fullAddress,
   getAge,
   mobile,
   properFullname,
@@ -209,8 +210,7 @@ export default function PosCard() {
             <MDBCol>
               <div className="pos-card-details">
                 <span>Address:</span>
-                {/* <p>{fullAddress(address)}</p> */}
-                <p>Brgy.Pias General Tinio Nueva Ecija</p>
+                <p>{fullAddress(address)}</p>
               </div>
             </MDBCol>
           </MDBRow>

@@ -78,7 +78,7 @@ export default function Sales() {
       setSales(sales);
       console.log(daily);
     }
-  }, [collections, view]);
+  }, [collections, view, daily]);
 
   //Modal toggle
   // const toggleCashRegister = () => setShowCashRegister(!showCashRegister);
