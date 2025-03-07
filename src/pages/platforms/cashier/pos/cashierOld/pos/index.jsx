@@ -15,7 +15,7 @@ import {
 } from "../../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
-import { RESET } from "../../../../../../services/redux/slices/commerce/sales";
+import { RESET } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { Categories } from "../../../../../../services/fakeDb";
 
 export default function CashRegister({ show, toggle, patient }) {

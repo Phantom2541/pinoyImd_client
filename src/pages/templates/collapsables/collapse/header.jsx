@@ -1,5 +1,6 @@
 import React from "react";
 import { MDBBtn } from "mdbreact";
+import { Templates } from "../../../../services/fakeDb";
 
 const Header = ({ service, isOpen, textColor, index, setActiveId }) => {
   const { name, abbreviation, template } = service;
@@ -7,7 +8,9 @@ const Header = ({ service, isOpen, textColor, index, setActiveId }) => {
     <label className={`d-flex justify-content-between ${textColor} `}>
       {index + 1}. {name} {abbreviation}
       <div className="d-flex">
-        <small className="mr-2 mt-1">{template}</small>
+        <small className="mr-2 mt-1">
+          {Templates.getComponentName(template)}
+        </small>
         <MDBBtn
           size="sm"
           color="white"

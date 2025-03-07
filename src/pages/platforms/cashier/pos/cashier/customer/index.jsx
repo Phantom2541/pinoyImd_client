@@ -6,7 +6,7 @@ import PosCard from "./form/posCard";
 import {
   SETPATIENT,
   SETSEARCHKEY,
-} from "../../../../../../services/redux/slices/commerce/pos";
+} from "../../../../../../services/redux/slices/commerce/pos/services/pos";
 import { fullName } from "../../../../../../services/utilities";
 import { SearchUser as Search } from "../../../../../../components/searchables";
 

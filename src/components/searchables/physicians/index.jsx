@@ -5,7 +5,7 @@ import {
   FILTER,
   RESET,
 } from "./../../../services/redux/slices/assets/persons/physicians";
-import { MDBBtn, MDBIcon } from "mdbreact";
+import { MDBIcon } from "mdbreact";
 import {
   formatNameToObj,
   fullName,

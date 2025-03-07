@@ -5,7 +5,6 @@ import {
   MDBSideNavNav,
   MDBSideNav,
   MDBIcon,
-  MDBBtn,
 } from "mdbreact";
 import { useSelector } from "react-redux";
 import { Sidebars } from "../../services/fakeDb";

@@ -11,7 +11,7 @@ import Patient from "./patient";
 import { formColor } from "../../../../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
 import { useDispatch, useSelector } from "react-redux";
-import { LABRESULT } from "../../../../../../../services/redux/slices/commerce/sales";
+import { LABRESULT } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
 
 export default function Modal({ show, toggle, task, setTask }) {

@@ -10,7 +10,7 @@ import { Services } from "../../../../../../services/fakeDb/index.js";
 import {
   ADDTOCART,
   REMOVEFROMCART,
-} from "../../../../../../services/redux/slices/commerce/pos.js";
+} from "../../../../../../services/redux/slices/commerce/pos/services/pos.js";
 
 export default function Menus({ patronPresent }) {
   const { category, privilege, cart } = useSelector(({ pos }) => pos),

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBCol, MDBRow, MDBTypography } from "mdbreact";
 
 import {
-  fullAddress,
   getAge,
   mobile,
   properFullname,
@@ -15,7 +14,7 @@ import {
   SETPHYSICIAN,
   SETSOURCE,
   SETSSX,
-} from "../../../../../../../services/redux/slices/commerce/pos";
+} from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import {
   INSOURCE,
   SETSOURCES,

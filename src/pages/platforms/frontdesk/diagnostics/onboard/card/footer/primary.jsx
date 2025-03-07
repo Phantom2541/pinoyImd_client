@@ -4,7 +4,7 @@ import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
 import { axioKit, harvestTask } from "../../../../../../../services/utilities";
 import { generateClaimStub } from "../../../../../../../services/utilities";
-import { REFORM } from "../../../../../../../services/redux/slices/commerce/taskGenerator";
+import { REFORM } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
 const PrimaryFooter = ({ sale, setEdit }) => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),

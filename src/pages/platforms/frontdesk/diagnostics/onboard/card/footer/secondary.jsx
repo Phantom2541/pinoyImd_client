@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { TAGGING } from "./../../../../../../../services/redux/slices/commerce/taskGenerator";
+import { TAGGING } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { MDBBtn, MDBBtnGroup } from "mdbreact";
 
 const SecondaryFooter = ({ setEdit }) => {

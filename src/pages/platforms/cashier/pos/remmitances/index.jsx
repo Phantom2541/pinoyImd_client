@@ -5,7 +5,7 @@ import { MDBCard, MDBContainer } from "mdbreact";
 import {
   CENSUS,
   RESET,
-} from "./../../../../../services/redux/slices/commerce/sales";
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import "./style.css";
 // import { Calendar as calendar } from "./../../../../../services/fakeDb";
 import Header from "./header";
