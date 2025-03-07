@@ -20,7 +20,6 @@ export default function Remmitances() {
   const [month, setMonth] = useState(today.getMonth()),
     [year, setYear] = useState(today.getFullYear()),
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { isLoading } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
 
   useEffect(() => {

@@ -9,7 +9,9 @@ import Card from "./wigets/Card";
 const today = new Date();
 
 export default function Calendar({ month, year }) {
-  const { census, isLoading } = useSelector(({ sales }) => sales);
+  const { census, censusLoading: isLoading } = useSelector(
+    ({ sales }) => sales
+  );
   // { grossSales, patients } = census;
 
   return (
