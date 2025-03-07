@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   CASHIER,
   RESET,
-} from "../../../../../services/redux/slices/commerce/sales";
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import {
   currency,
   fullName,

@@ -8,7 +8,7 @@ import Status from "./status.jsx";
 import {
   BROWSE,
   RESET,
-} from "../../../../../../services/redux/slices/commerce/taskGenerator.js";
+} from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator.js";
 
 export default function Header({
   length,

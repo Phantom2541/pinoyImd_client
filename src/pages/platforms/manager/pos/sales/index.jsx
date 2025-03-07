@@ -4,7 +4,7 @@ import {
   BROWSE,
   MANAGERUPDATE,
   RESET,
-} from "../../../../../services/redux/slices/commerce/sales";
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { currency, fullName, axioKit } from "../../../../../services/utilities";
 import { capitalize } from "lodash";
 import { Categories } from "../../../../../services/fakeDb";
@@ -76,6 +76,7 @@ export default function Sales() {
           : collections.filter(({ perform }) => perform === view);
       setTotal(sales.reduce((a, c) => a + c.amount, 0));
       setSales(sales);
+      console.log(daily);
     }
   }, [collections, view]);
 

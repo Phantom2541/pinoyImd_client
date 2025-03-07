@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -7,20 +7,29 @@ import {
   MDBCollapseHeader,
   MDBContainer,
 } from "mdbreact";
-import { Services } from "../../../../services/fakeDb";
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse } from "../../../../services/utilities";
 
-// import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
-
 export default function Body() {
+  const { filtered, activePage, maxPage } = useSelector(
+    ({ services }) => services
+  );
+
   /**
-   * check who will open
+   * Pagination: Calculate the start and end index for the current page
    */
-  const [activeId, setActiveId] = useState(-1),
-    [didHoverId, setDidHoverId] = useState(-1);
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+
+  /**
+   * Active states
+   */
+  const [activeId, setActiveId] = useState(-1);
+  const [didHoverId, setDidHoverId] = useState(-1);
 
   return (
     <MDBContainer
@@ -29,41 +38,41 @@ export default function Body() {
       }}
       fluid
     >
-      {Services.collections.map((service, index) => {
-        const { decSS, frequency } = service;
+      {paginatedData.map((service, index) => {
+        const actualIndex = startIndex + index; // Get the real index in filtered array
         const { color, border } = collapse.getStyle(
-          index,
+          actualIndex,
           activeId,
           didHoverId
         );
 
         return (
           <MDBCard
-            key={`staffs-${index}`}
+            key={`service-${actualIndex}`}
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader
               className={border}
               onMouseLeave={() => setDidHoverId(-1)}
-              onMouseEnter={() => setDidHoverId(index)}
+              onMouseEnter={() => setDidHoverId(actualIndex)}
               style={{ borderRadius: "50%" }}
             >
               <CollapsableHeader
                 service={service}
-                isOpen={activeId === index}
+                isOpen={activeId === actualIndex}
                 textColor={color}
                 setActiveId={setActiveId}
-                index={index}
+                index={actualIndex}
               />
             </MDBCollapseHeader>
 
             <MDBCollapse
-              id={`collapse-${index}`}
+              id={`collapse-${actualIndex}`}
               className="mb-2 border border-black"
-              isOpen={index === activeId}
+              isOpen={actualIndex === activeId}
             >
               <MDBCardBody className="pt-2">
-                <CollapsableBody decSS={decSS} frequency={frequency} />
+                <CollapsableBody service={service} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

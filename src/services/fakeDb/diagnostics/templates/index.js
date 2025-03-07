@@ -7,12 +7,31 @@ const TemplatetUtils = {
   collections: [...templates],
 
   /**
-   * Finds the department based on the name
-   * @param {String} departmentName
-   * @returns {Object} The department object
+   * Finds the components of a department
+   * @param {String} key Department name
+   * @returns {Array} Array of component names
    */
-  find: (departmentName) =>
-    templates.find(({ department }) => department === departmentName),
+  getComponents: (key) => {
+    const department = templates.find(({ department }) => department === key);
+    return department
+      ? [...department.components].sort((a, b) => a.localeCompare(b))
+      : [];
+  },
+  /**
+   * Finds the index of the component in the department
+   * @param {String} component Component name
+   * @param {String} [key=LAB] Department name
+   * @returns {Number} Index of the component in the department
+   */
+  getComponentIndex: (component, key = `LAB`) => {
+    const department = templates.find(({ department }) => department === key);
+    const components = department ? department.components : [];
+    return components.indexOf(component);
+  },
+  getComponentName: (component, key = `LAB`) => {
+    const department = templates.find(({ department }) => department === key);
+    return department.components[component];
+  },
 
   /**
    * Finds the department based on the component name

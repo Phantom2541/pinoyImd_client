@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../utilities";
-import { Services } from "../../../fakeDb";
+import { axioKit } from "../../../../../utilities";
+import { Services } from "../../../../../fakeDb";
 
-const name = "commerce/sales";
+const name = "commerce/pos/services/deals";
 const defaultState = {
   branchId: JSON.parse(localStorage.getItem("auth"))?.branchId || undefined,
   cashierId: JSON.parse(localStorage.getItem("auth"))?._id || undefined,

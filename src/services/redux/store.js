@@ -13,7 +13,14 @@ import {
   providers,
   tieups,
 } from "./slices/assets";
-import { menus, sales, pos, taskGenerator } from "./slices/commerce";
+import {
+  menus,
+  services,
+  sales,
+  taskGenerator,
+  deals,
+  dispenser,
+} from "./slices/commerce";
 
 import {
   hematology,
@@ -40,11 +47,13 @@ const store = configureStore({
     access,
     users,
     preferences,
-    menus,
     physicians,
+    menus,
+    services,
     sales,
-    pos,
     taskGenerator,
+    deals,
+    dispenser,
     heads,
     tieups,
     chemistry,

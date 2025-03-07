@@ -3,7 +3,8 @@ import { MDBPagination, MDBPageItem, MDBPageNav } from "mdbreact";
 import Swal from "sweetalert2";
 
 export default function Pagination({ total, setPage, page, isLoading }) {
-  const handlePage = (action) => setPage((prev) => prev + (action ? 1 : -1));
+  // const handlePage = (action) => );
+  // const handlePage = (action) => setPage(action);
 
   const handleOverride = async () => {
     const { value: _page } = await Swal.fire({
@@ -36,7 +37,7 @@ export default function Pagination({ total, setPage, page, isLoading }) {
     <MDBPagination circle className="my-4 ">
       <MDBPageItem
         disabled={isLoading || page <= 1}
-        onClick={() => handlePage(false)}
+        onClick={() => setPage(false)}
       >
         <MDBPageNav className="page-link" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
@@ -47,7 +48,7 @@ export default function Pagination({ total, setPage, page, isLoading }) {
         <MDBPageNav className="page-link">{page}</MDBPageNav>
       </MDBPageItem>
       <MDBPageItem
-        onClick={() => handlePage(true)}
+        onClick={() => setPage(true)}
         disabled={isLoading || page >= total}
       >
         <MDBPageNav className="page-link" aria-label="Next">

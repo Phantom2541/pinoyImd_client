@@ -24,7 +24,7 @@ import Swal from "sweetalert2";
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../services/redux/slices/commerce/sales";
+} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { UPDATE as PATIENTUPDATE } from "../../../../../../services/redux/slices/assets/persons/users";
 
 export default function CashierPayment({

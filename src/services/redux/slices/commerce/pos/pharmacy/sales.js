@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../utilities";
+import { axioKit } from "../../../../../utilities";
 
-const name = "commerce/sales";
+const name = "commerce/pos/pharmacy/sales";
 
 const initialState = {
   collections: [],
@@ -177,7 +177,13 @@ export const LABRESULT = createAsyncThunk(
   ({ token, data }, thunkAPI) => {
     try {
       return axioKit.save(
-        `results/${data.department ==="LAB"?"laboratory":data.department ==="RAD"?"radiology":"clinic"}/${data.form.toLowerCase()}`,
+        `results/${
+          data.department === "LAB"
+            ? "laboratory"
+            : data.department === "RAD"
+            ? "radiology"
+            : "clinic"
+        }/${data.form.toLowerCase()}`,
         data,
         token
       );

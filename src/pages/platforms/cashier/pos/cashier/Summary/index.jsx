@@ -6,12 +6,12 @@ import {
   currency,
 } from "../../../../../../services/utilities";
 import { Categories, Payments } from "../../../../../../services/fakeDb";
-import { SAVE } from "../../../../../../services/redux/slices/commerce/sales";
+import { SAVE } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { UPDATE as PATIENTUPDATE } from "../../../../../../services/redux/slices/assets/persons/users";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
-import { RESET } from "../../../../../../services/redux/slices/commerce/pos";
+import { RESET } from "../../../../../../services/redux/slices/commerce/pos/services/pos";
 import { removeUndefinedValues } from "../../../../../../services/utilities";
 
 export default function Summary() {

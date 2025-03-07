@@ -21,7 +21,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import CalendarMini from "./mini";
-import { RESET } from "../../../../../../services/redux/slices/commerce/sales";
+import { RESET } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function Calendar({
   focusedDay,

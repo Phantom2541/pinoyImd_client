@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Calendar as calendar } from "./../../../../../services/fakeDb";
-import Search from "./../../../../../components/searchables/users";
 import CustomSelect from "./../../../../../components/searchables/customSelect";
+import {
+  BROWSE,
+  RESET,
+} from "../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import "./style.css";
 
 const today = new Date();
@@ -14,31 +17,28 @@ const Header = () => {
       today.toLocaleString("en-US", { month: "long" })
     ),
     [year, setYear] = useState(today.getFullYear()),
-    // { censusLoading: isLoading } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();
 
   useEffect(() => {
-    // if (token && activePlatform?.branchId && year && month)
-    //   dispatch(
-    //     CENSUS({
-    //       token,
-    //       key: {
-    //         branchId: activePlatform?.branchId,
-    //         start: new Date(year, month, 0),
-    //         end: new Date(year, month + 1, 0, 23, 59, 59, 999),
-    //         isManager: true,
-    //       },
-    //     })
-    //   );
-    // return () => dispatch(RESET());
+    if (token && activePlatform?.branchId && year && month) {
+      const monthIndex = calendar.Months.indexOf(month); // Convert month name to index
+
+      if (monthIndex === -1) return; // Handle invalid month selection
+
+      dispatch(
+        BROWSE({
+          token,
+          key: {
+            branchId: activePlatform?.branchId,
+            start: new Date(year, monthIndex, 1), // First day of the month
+            end: new Date(year, monthIndex + 1, 0, 23, 59, 59, 999), // Last day of the month
+          },
+        })
+      );
+    }
+    return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, month, year]);
-  const setPatient = (patient) => {
-    console.log("patient", patient);
-  };
-  const setRegister = (user) => {
-    console.log("user", user);
-  };
-  console.log("yearrrrr", year);
+
   return (
     <MDBView
       cascade
