@@ -6,6 +6,8 @@ import CustomSelect from "./../../../../../components/searchables/customSelect";
 import {
   BROWSE,
   RESET,
+  SetMONTH,
+  SetYEAR,
 } from "../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import "./style.css";
 
@@ -13,25 +15,18 @@ const today = new Date();
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    [month, setMonth] = useState(
-      today.toLocaleString("en-US", { month: "long" })
-    ),
-    [year, setYear] = useState(today.getFullYear()),
+    { month, year } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
 
   useEffect(() => {
     if (token && activePlatform?.branchId && year && month) {
-      const monthIndex = calendar.Months.indexOf(month); // Convert month name to index
-
-      if (monthIndex === -1) return; // Handle invalid month selection
-
       dispatch(
         BROWSE({
           token,
           key: {
             branchId: activePlatform?.branchId,
-            start: new Date(year, monthIndex, 1), // First day of the month
-            end: new Date(year, monthIndex + 1, 0, 23, 59, 59, 999), // Last day of the month
+            start: new Date(year, month, 1), // First day of the month
+            end: new Date(year, month + 1, 0, 23, 59, 59, 999), // Last day of the month
           },
         })
       );
@@ -53,17 +48,19 @@ const Header = () => {
       <div className="d-flex align-items-center">
         <CustomSelect
           className="m-0 p-0 calendar mr-4"
-          value={month}
-          onChange={(value) => setMonth(value)}
+          value={calendar.Months[month]}
+          onChange={(value) =>
+            dispatch(SetMONTH(calendar.Months.indexOf(value)))
+          }
           inputClassName="m-0 p-0"
-          preValue={month}
+          preValue={calendar.Months[month]}
           choices={calendar.Months}
         />
         <CustomSelect
           value={year}
           inputClassName="m-0 p-0"
           preValue={year}
-          onChange={(value) => setYear(value)}
+          onChange={(value) => dispatch(SetYEAR(value))}
           className="m-0 p-0   calendar"
           choices={calendar.Years}
         />

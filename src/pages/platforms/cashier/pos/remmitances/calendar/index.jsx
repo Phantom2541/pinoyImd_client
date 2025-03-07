@@ -8,11 +8,11 @@ import Card from "./wigets/Card";
 
 const today = new Date();
 
-export default function Calendar({ month, year }) {
-  const { census, censusLoading: isLoading } = useSelector(
-    ({ sales }) => sales
+export default function Calendar() {
+  const { census, isLoading, month, year } = useSelector(
+    ({ remittances }) => remittances
   );
-  // { grossSales, patients } = census;
+  // { grossSales, patients } = collections;
 
   return (
     <div className="pos-ledger-calendar p-3">
