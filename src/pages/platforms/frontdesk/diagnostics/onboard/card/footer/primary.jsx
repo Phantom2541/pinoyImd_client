@@ -35,7 +35,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
           tests = tests.filter((item) => !buntisTests.includes(item));
           await axioKit.save(
-            "results/laboratory/miscellaneous",
+            "/diagnostics/laboratory/result/miscellaneous",
             {
               packages: buntisPresent,
               saleId: _id,
@@ -62,7 +62,11 @@ const PrimaryFooter = ({ sale, setEdit }) => {
           _buntis: false,
         }));
 
-        axioKit.save("results/laboratory/miscellaneous", newArr, token);
+        axioKit.save(
+          "/diagnostics/laboratory/result/miscellaneous",
+          newArr,
+          token
+        );
 
         continue;
       }
@@ -74,7 +78,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
           : "laboratory";
 
       axioKit.save(
-        `results/${department}/${lowercaseKey}`,
+        `/diagnostics/${department}/result/${lowercaseKey}`,
         {
           packages: task[key],
           _id,
@@ -109,6 +113,11 @@ const PrimaryFooter = ({ sale, setEdit }) => {
     );
   };
 
+  const preAnalytical = async (sale) => {
+    console.log("preAnalytical", sale);
+    
+  }
+
   return (
     <MDBBtnGroup className="sales-card-footer w-100">
       <MDBBtn
@@ -129,7 +138,18 @@ const PrimaryFooter = ({ sale, setEdit }) => {
         size="sm"
         color="primary"
       >
-        <MDBIcon icon="eye" />
+        <MDBIcon icon="receipt" />
+      </MDBBtn>
+
+       <MDBBtn
+        type="button"
+        onClick={() => preAnalytical(sale)}
+        title="Pre-Analytical Supply Dispense"
+        className="m-0 "
+        size="sm"
+        color="primary"
+      >
+        <MDBIcon icon="cog" spin />
       </MDBBtn>
       <MDBBtn
         type="button"

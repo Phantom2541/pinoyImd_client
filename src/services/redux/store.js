@@ -17,6 +17,7 @@ import { dragDrop } from "./slices/reusable";
 import {
   menus,
   services,
+  pos,
   sales,
   taskGenerator,
   deals,
@@ -54,6 +55,7 @@ const store = configureStore({
     sales,
     taskGenerator,
     deals,
+    pos,
     dispenser,
     heads,
     tieups,

@@ -74,14 +74,14 @@ export default function Sales() {
   return (
     <MDBContainer fluid>
       <Header
-        length={sales.length}
+        length={sales?.length}
         view={view}
         setView={setView}
         searchKey={searchKey}
         setSearchKey={setSearchKey}
       />
       <div className="sales-card-wrapper mt-3">
-        {!sales.length && !isLoading && (
+        {!sales?.length && !isLoading && (
           <MDBTypography noteColor="info" note>
             Sales are emptys
           </MDBTypography>

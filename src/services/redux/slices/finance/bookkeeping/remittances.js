@@ -2,9 +2,22 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
 const name = "finance/bookkeeping/remittances";
+const today = new Date();
 
 const initialState = {
   collections: [],
+  // this is used for ledger
+  census: {
+    daily: {},
+    grossSales: 0,
+    menus: {},
+    services: {},
+    expenses: 0,
+    patients: 0,
+    isEmpty: true,
+  },
+  month: today.getMonth(),
+  year: today.getFullYear(),
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -68,6 +81,12 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    SetMONTH: (state, { payload }) => {
+      state.month = payload;
+    },
+    SetYEAR: (state, { payload }) => {
+      state.year = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -133,6 +152,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { SetMONTH, SetYEAR, RESET } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
