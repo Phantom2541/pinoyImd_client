@@ -11,7 +11,7 @@ import {
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import "./style.css";
 
-const today = new Date();
+// const today = new Date();
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
