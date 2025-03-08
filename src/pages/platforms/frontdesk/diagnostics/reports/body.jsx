@@ -5,7 +5,7 @@ import Collapse from "./collapse";
 
 export default function Body({ patient }) {
   const [activeCollapse, setActiveCollapse] = useState(""),
-    { collections, isLoading } = useSelector(({ sales }) => sales);
+    { collections, isLoading } = useSelector(({ deals }) => deals);
 
   if (!patient?._id)
     return (

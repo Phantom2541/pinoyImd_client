@@ -1,10 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import { axioKit, globalSearch } from "../../../../utilities";
 
 const name = "commerce/catalog/menus";
 
 const initialState = {
   collections: [],
+  filtered: [],
+  maxPage: 5,
+  totalPages: 0,
+  activePage: 1,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -91,8 +95,25 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    SETMENUS: (state, { payload }) => {
-      state.collections = payload;
+    SetFILTERED: (state, { payload }) => {
+      // Always create a new array before filtering
+      const collectionsCopy = state.collections.map((item) =>
+        JSON.parse(JSON.stringify(item))
+      );
+      const filtered = globalSearch(collectionsCopy, payload);
+      state.filtered = filtered;
+
+      // Dispatch the action instead of calling it as a function
+      state.totalPages = Math.ceil(filtered.length / state.maxPage);
+
+      state.isSuccess = true;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -108,8 +129,11 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
+
+        state.collections = state.filtered = payload;
+        state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
-        state.collections = payload;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -178,6 +202,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SETMENUS, RESET } = reduxSlice.actions;
+export const { SetFILTERED, SetMaxPage, SetActivePAGE, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;
