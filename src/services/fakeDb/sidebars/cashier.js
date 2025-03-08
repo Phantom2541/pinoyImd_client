@@ -14,6 +14,7 @@ import {
   Tablestemplate,
   Collapsable,
   Calendar,
+  DragDrop,
 } from "../../../pages/templates";
 
 import Cashier from "../../../pages/platforms/cashier/pos/cashier";
@@ -146,6 +147,11 @@ const cashier = [
         name: "Calendars",
         path: "/calendars",
         component: Calendar,
+      },
+      {
+        name: "DragDrop",
+        path: "/DragDrop",
+        component: DragDrop,
       },
     ],
   },

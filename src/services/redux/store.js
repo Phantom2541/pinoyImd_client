@@ -13,6 +13,7 @@ import {
   providers,
   tieups,
 } from "./slices/assets";
+import { dragDrop } from "./slices/reusable";
 import {
   menus,
   services,
@@ -71,6 +72,7 @@ const store = configureStore({
     providers,
     controls,
     assurances,
+    dragDrop,
   },
 });
 
