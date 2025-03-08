@@ -113,6 +113,11 @@ const PrimaryFooter = ({ sale, setEdit }) => {
     );
   };
 
+  const preAnalytical = async (sale) => {
+    console.log("preAnalytical", sale);
+    
+  }
+
   return (
     <MDBBtnGroup className="sales-card-footer w-100">
       <MDBBtn
@@ -133,7 +138,18 @@ const PrimaryFooter = ({ sale, setEdit }) => {
         size="sm"
         color="primary"
       >
-        <MDBIcon icon="eye" />
+        <MDBIcon icon="receipt" />
+      </MDBBtn>
+
+       <MDBBtn
+        type="button"
+        onClick={() => preAnalytical(sale)}
+        title="Pre-Analytical Supply Dispense"
+        className="m-0 "
+        size="sm"
+        color="primary"
+      >
+        <MDBIcon icon="cog" spin />
       </MDBBtn>
       <MDBBtn
         type="button"
