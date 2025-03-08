@@ -24,7 +24,7 @@ import { useHistory } from "react-router-dom";
 export default function TasksCollapse({ page }) {
   const [activeId, setActiveId] = useState(-1),
     { maxPage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ sales }) => sales),
+    { collections } = useSelector(({ deals }) => deals),
     history = useHistory();
 
   return (

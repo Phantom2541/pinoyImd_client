@@ -44,7 +44,12 @@ export default function Card({ item, index }) {
     <>
       <div className="sales-card" key={index}>
         {handlePin()}
-        <p className="line-clamp">{fullName(fullname)}</p>
+        <p className="line-clamp">{fullname.lname},
+          <br />
+          <small>{fullname.fname} {`${fullname?.mname?.split(" ")
+      .map((middle) => middle.charAt(0).toUpperCase())
+      .join("")}.`}</small>
+        </p>
         <div className="sales-card-body">
           <div className="d-flex">
             {cart?.map((menu) => (

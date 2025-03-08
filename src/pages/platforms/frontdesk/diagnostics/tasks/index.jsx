@@ -11,7 +11,7 @@ import TableLoading from "../../../../../components/tableLoading";
 export default function Tasks() {
   const [searchKey, setSearchKey] = useState(""),
     [page, setPage] = useState(1),
-    { message, isSuccess, isLoading } = useSelector(({ sales }) => sales),
+    { message, isSuccess, isLoading } = useSelector(({ deals }) => deals),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
