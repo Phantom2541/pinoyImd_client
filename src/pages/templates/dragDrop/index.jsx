@@ -31,7 +31,6 @@ const DragDrop = () => {
     setTimeout(() => {
       const _collections = [...collections];
       setRemoveID(-1);
-      setAddID(-1);
       _collections.splice(index, 1);
       dispatch(setter(_collections));
     }, 180);
