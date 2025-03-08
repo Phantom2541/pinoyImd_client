@@ -63,7 +63,7 @@ export default function CashierMenu({ categoryIndex, handlePicker }) {
 
   const handleSearch = async (willSearch, key) => {
     if (willSearch) {
-      setMenus(globalSearch(collections, key.toUpperCase()));
+      setMenus(globalSearch(collections, key?.toUpperCase()));
     } else {
       setMenus(collections.filter((c) => String(c[abbr]) !== "0"));
     }
