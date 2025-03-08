@@ -77,6 +77,8 @@ export default function Sales() {
       setTotal(sales.reduce((a, c) => a + c.amount, 0));
       setSales(sales);
       console.log(daily);
+
+      setView("all");
     }
   }, [collections, view, daily]);
 

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import CustomSelect from "../../../components/searchables/customSelect";
-import { Templates, Services } from "../../../services/fakeDb";
+import CustomSelect from "../../../../../components/searchables/customSelect";
+import { Templates, Services } from "../../../../../services/fakeDb";
 import {
   SetSERVICES,
   SetByTEMPLATES,
-} from "../../../services/redux/slices/commerce/catalog/services";
+} from "../../../../../services/redux/slices/commerce/catalog/services";
 
 const Header = () => {
   const { maxPage } = useSelector(({ auth }) => auth),

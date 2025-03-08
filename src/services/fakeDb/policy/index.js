@@ -4,7 +4,6 @@ const Policy = {
   collections,
   getDepartment: (pk) => {
     if (pk < 0) return "unknown department";
-    console.log(pk);
     const { code = 0, positions = [] } =
       collections.find(({ positions = [] }) =>
         positions.some(({ id }) => id === pk)
