@@ -93,7 +93,6 @@ const DragDrop = () => {
         _collections.splice(removeIndex, 0, role);
         dispatch(setter(_collections));
       }, 200);
-      setAddID(role._id);
     } else {
       dispatch(setter([role, ...collections]));
     }
