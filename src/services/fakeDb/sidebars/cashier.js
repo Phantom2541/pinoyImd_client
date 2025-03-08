@@ -14,6 +14,7 @@ import {
   Tablestemplate,
   Collapsable,
   Calendar,
+  DragDrop,
 } from "../../../pages/templates";
 
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
@@ -34,17 +35,20 @@ const cashier = [
       {
         name: "pos", // Point Of Sales
         path: "/pos",
+        icon: "shopping-cart",
         component: Cashier,
       },
       {
         name: "Deals",
         path: "/deals",
         component: Deals,
+        icon: "handshake",
       },
       {
         name: "Remmitances",
         path: "/remmitances",
         component: Remmitances,
+        icon: "money-check",
       },
     ],
   },
@@ -57,11 +61,13 @@ const cashier = [
         name: "Payables", // unpaid bills (Water, Electricity, etc.)
         path: "/payables",
         component: Payables,
+        icon: "file-invoice-dollar",
       },
       {
         name: "Vouchers", // expenses from sales today
         path: "/vouchers",
         component: Vouchers,
+        icon: "receipt",
       },
       {
         name: "Statement of Account",
@@ -71,10 +77,12 @@ const cashier = [
           {
             name: "Outsource", // Sendout
             path: "/outsource",
+            icon: "truck",
           },
           {
             name: "Insource", // Receivables  from sales vouchers
             path: "/insource",
+            icon: "warehouse",
           },
         ],
       },
@@ -89,12 +97,13 @@ const cashier = [
         name: "Menus",
         path: "/menus",
         component: Menus,
+        icon: "utensils",
       },
       {
-        icon: "list",
         name: "Services",
         path: "/services",
         component: Services,
+        icon: "list",
       },
     ],
   },
@@ -107,16 +116,19 @@ const cashier = [
         name: "Outsources",
         path: "/outsources",
         component: Outsources,
+        icon: "truck",
       },
       {
         name: "Insources",
         path: "/insources",
         component: Insources,
+        icon: "warehouse",
       },
       {
         name: "Utilities",
         path: "/utilities",
         component: Utilities,
+        icon: "tools",
       },
     ],
   },
@@ -129,16 +141,24 @@ const cashier = [
         name: "Tables",
         path: "/tables",
         component: Tablestemplate,
+        icon: "table",
       },
       {
         name: "Collapsables",
         path: "/collapsables",
         component: Collapsable,
+        icon: "align-justify",
       },
       {
         name: "Calendars",
         path: "/calendars",
         component: Calendar,
+        icon: "calendar-alt",
+      },
+      {
+        name: "DragDrop",
+        path: "/DragDrop",
+        component: DragDrop,
       },
     ],
   },

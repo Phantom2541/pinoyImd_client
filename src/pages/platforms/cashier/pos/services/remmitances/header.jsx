@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Calendar as calendar } from "../../../../../../services/fakeDb";
@@ -11,7 +11,7 @@ import {
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import "./style.css";
 
-const today = new Date();
+// const today = new Date();
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),

@@ -60,24 +60,6 @@ export const SAVE = createAsyncThunk(
   }
 );
 
-export const GENERATE = createAsyncThunk(
-  `${name}/generate`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.save(name, data, token, "generate");
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   try {
     return axioKit.update(name, form.data, form.token);
@@ -96,16 +78,21 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetSERVICES: (state, { payload }) => {
-      console.log("payload", payload);
       const { collections, maxPage } = payload;
 
-      state.collections = collections;
-      state.filtered = collections;
+      // Create a copy before sorting to avoid modifying frozen state
+      const sortedCollections = [...collections].sort((a, b) => {
+        // Customize sorting logic as needed
+        return a.name.localeCompare(b.name); // Example: Sorting alphabetically by 'name' property
+      });
+
+      state.collections = sortedCollections;
+      state.filtered = sortedCollections;
       state.maxPage = maxPage;
 
-      if (collections.length > 0) {
-        let totalPages = Math.floor(collections.length / maxPage);
-        if (collections.length % maxPage > 0) totalPages += 1;
+      if (sortedCollections.length > 0) {
+        let totalPages = Math.floor(sortedCollections.length / maxPage);
+        if (sortedCollections.length % maxPage > 0) totalPages += 1;
         state.totalPages = totalPages;
 
         if (state.activePage > totalPages) {
@@ -173,25 +160,6 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
-      .addCase(GENERATE.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(GENERATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
-        state.collections = payload;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(GENERATE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

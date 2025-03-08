@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { MDBBadge } from "mdbreact";
 import { SecondaryFooter, PrimaryFooter } from "./footer";
-import { fullName } from "../../../../../../services/utilities";
 
 import Tagging from "./body/tagging";
 import Show from "./body/show";
@@ -44,7 +43,8 @@ export default function Card({ item, index }) {
     <>
       <div className="sales-card" key={index}>
         {handlePin()}
-        <p className="line-clamp">{fullname.lname},
+        <p className="line-clamp">
+          {fullname.lname},
           <br />
           <small>{fullname.fname} {fullname.mname}</small>
         </p>
