@@ -46,9 +46,7 @@ export default function Card({ item, index }) {
         {handlePin()}
         <p className="line-clamp">{fullname.lname},
           <br />
-          <small>{fullname.fname} {`${fullname?.mname?.split(" ")
-      .map((middle) => middle.charAt(0).toUpperCase())
-      .join("")}.`}</small>
+          <small>{fullname.fname} {fullname.mname}</small>
         </p>
         <div className="sales-card-body">
           <div className="d-flex">

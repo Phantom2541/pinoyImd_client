@@ -42,7 +42,8 @@ export default function Chemistry({ task, setTask }) {
       },
     });
   };
-
+  console.log("preferences", preferences);
+  
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>
