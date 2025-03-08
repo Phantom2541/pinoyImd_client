@@ -5,10 +5,10 @@ import { MDBIcon } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
   BROWSE as MENUS,
-  SETMENUS,
+  SetFILTERED,
   RESET as MENUSRESET,
 } from "../../../services/redux/slices/commerce/catalog/menus";
-import { currency, globalSearch } from "./../../../services/utilities";
+import { currency, globalSearch } from "../../../services/utilities";
 import Notification from "./notifications";
 import "../style.css";
 
@@ -32,9 +32,8 @@ export default function Search({ setMenu, setRegister }) {
       if (storedMenus) {
         // If menus are found in localStorage, use them (parse back to an object)
         const menus = JSON.parse(storedMenus);
-        console.log("Using stored menus:", menus);
         // You can dispatch the menus here if needed
-        dispatch(SETMENUS(menus)); // Optionally dispatch to update the store if necessary
+        dispatch(SetFILTERED(menus)); // Optionally dispatch to update the store if necessary
       } else {
         // If no data in localStorage, make the server request
         dispatch(MENUS({ key: { branchId }, token }))

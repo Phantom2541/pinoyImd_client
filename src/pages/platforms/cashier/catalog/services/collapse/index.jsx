@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -6,52 +7,77 @@ import {
   MDBCollapseHeader,
   MDBContainer,
 } from "mdbreact";
-import { useSelector } from "react-redux";
-import {
-  capitalize,
-  handlePagination,
-} from "../../../../../../services/utilities";
-import { References } from "../../../../../../services/fakeDb/index";
-import CollapseTable from "./table";
 
-export default function ServiceCollapse({ services, page }) {
-  const [activeId, setActiveId] = useState(0),
-    { maxPage } = useSelector(({ auth }) => auth);
+import CollapsableBody from "./body";
+import CollapsableHeader from "./header";
+import { collapse } from "../../../../../../services/utilities";
+
+export default function Body() {
+  const { filtered, activePage, maxPage } = useSelector(
+    ({ services }) => services
+  );
+
+  /**
+   * Pagination: Calculate the start and end index for the current page
+   */
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+
+  /**
+   * Active states
+   */
+  const [activeId, setActiveId] = useState(-1);
+  const [didHoverId, setDidHoverId] = useState(-1);
 
   return (
-    <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
-      {handlePagination(services, page, maxPage)?.map((service, index) => (
-        <MDBCard key={`services-${index}`}>
-          <MDBCollapseHeader
-            onClick={() =>
-              service?.preference &&
-              setActiveId((prev) => (prev === service?.id ? 0 : service?.id))
-            }
+    <MDBContainer
+      style={{
+        minHeight: "300px",
+      }}
+      fluid
+    >
+      {paginatedData.map((service, index) => {
+        const actualIndex = startIndex + index; // Get the real index in filtered array
+        const { color, border } = collapse.getStyle(
+          actualIndex,
+          activeId,
+          didHoverId
+        );
+
+        return (
+          <MDBCard
+            key={`service-${actualIndex}`}
+            style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
-            {index + 1}. {capitalize(service?.name)}
-            {service?.abbreviation &&
-              ` | ${service?.abbreviation.toUpperCase()}`}{" "}
-            - &nbsp;
-            <span className="text-primary">
-              {capitalize(References.forms[service?.template])}
-            </span>
-            {service?.preference && (
-              <i
-                style={{ rotate: `${activeId === service?.id ? 0 : 90}deg` }}
-                className="fa fa-angle-down transition-all"
+            <MDBCollapseHeader
+              className={border}
+              onMouseLeave={() => setDidHoverId(-1)}
+              onMouseEnter={() => setDidHoverId(actualIndex)}
+              style={{ borderRadius: "50%" }}
+            >
+              <CollapsableHeader
+                service={service}
+                isOpen={activeId === actualIndex}
+                textColor={color}
+                setActiveId={setActiveId}
+                index={actualIndex}
               />
-            )}
-          </MDBCollapseHeader>
-          <MDBCollapse
-            id={`collapse-${service?.id}`}
-            isOpen={service?.id === activeId}
-          >
-            <MDBCardBody className="pt-0">
-              <CollapseTable id={service?.id} service={service} />
-            </MDBCardBody>
-          </MDBCollapse>
-        </MDBCard>
-      ))}
+            </MDBCollapseHeader>
+
+            <MDBCollapse
+              id={`collapse-${actualIndex}`}
+              className="mb-2 border border-black"
+              isOpen={actualIndex === activeId}
+            >
+              <MDBCardBody className="pt-2">
+                <CollapsableBody service={service} />
+              </MDBCardBody>
+            </MDBCollapse>
+          </MDBCard>
+        );
+      })}
     </MDBContainer>
   );
 }

@@ -1,14 +1,23 @@
 /**
- * Removes properties with undefined values from an object.
+ * Removes properties with undefined, empty arrays ([]), and empty objects ({}).
  *
- * @param {Object} obj - The object to clean of undefined values.
- * @returns {Object} A new object with only the entries that have defined values.
+ * @param {Object} obj - The object to clean.
+ * @returns {Object} A new object without undefined, empty objects, or empty arrays.
  */
-
-const removeUndefinedValues = (obj) => {
+const removeEmptyValues = (obj) => {
   return Object.fromEntries(
-    Object.entries(obj).filter(([_, value]) => value !== undefined)
+    Object.entries(obj).filter(([_, value]) => {
+      if (value === undefined) return false;
+      if (Array.isArray(value) && value.length === 0) return false;
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        Object.keys(value).length === 0
+      )
+        return false;
+      return true;
+    })
   );
 };
 
-export default removeUndefinedValues;
+export default removeEmptyValues;
