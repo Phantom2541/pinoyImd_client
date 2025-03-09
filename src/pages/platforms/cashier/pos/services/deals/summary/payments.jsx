@@ -33,13 +33,13 @@ export default function Payments() {
         </div>
         <hr />
         <div className="d-flex justify-content-between border-bottom pb-2">
-          <span>Total Received:</span>
+          <span>Total :</span>
           <strong className="text-success">{currency(total)}</strong>
         </div>
       </MDBCardBody>
       <MDBCardFooter className="bg-light border-top pt-3">
         <div className="d-flex justify-content-between">
-          <span>Total:</span>
+          <span>COH:</span>
           <strong className="text-primary">{currency(total)}</strong>
         </div>
       </MDBCardFooter>
