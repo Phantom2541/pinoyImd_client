@@ -1,5 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../utilities";
+import { createSlice } from "@reduxjs/toolkit";
 
 const name = "results/preferences";
 const DEFAULT_ROLES = [

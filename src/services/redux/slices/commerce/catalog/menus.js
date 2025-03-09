@@ -108,6 +108,9 @@ export const reduxSlice = createSlice({
 
       state.isSuccess = true;
     },
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+    },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
       state.activePage = 1;
@@ -202,7 +205,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetFILTERED, SetMaxPage, SetActivePAGE, RESET } =
+export const { SetFILTERED, SetCOLLECTIONS, SetMaxPage, SetActivePAGE, RESET } =
   reduxSlice.actions;
 
 export default reduxSlice.reducer;

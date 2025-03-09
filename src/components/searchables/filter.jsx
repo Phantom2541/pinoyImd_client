@@ -14,7 +14,7 @@ export default function Search({ setFiltered }) {
 
   const handleChange = (value) => {
     // Debounced search trigger
-    debouncedSearch(value);
+    if (value) debouncedSearch(value);
   };
 
   return (

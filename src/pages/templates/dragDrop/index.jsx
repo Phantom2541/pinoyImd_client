@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { MDBCard, MDBRow, MDBCardBody } from "mdbreact";
 import "./style.css";
 import List from "./list";
