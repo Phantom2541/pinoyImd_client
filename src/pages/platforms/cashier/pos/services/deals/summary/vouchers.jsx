@@ -4,7 +4,7 @@ import { MDBCard, MDBCardBody, MDBCardHeader, MDBCardFooter } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
 
 export default function Vouchers() {
-  const { total } = useSelector((deals) => deals);
+  const { total } = useSelector(({ deals }) => deals);
   return (
     <MDBCard className="shadow-sm">
       <MDBCardHeader className="text-center text-uppercase font-weight-bold text-primary bg-light">

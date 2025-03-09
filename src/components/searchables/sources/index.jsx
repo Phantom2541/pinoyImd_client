@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -30,7 +30,7 @@ import { SetSEARCHRESULTS } from "../../../services/redux/slices/assets/provider
 export default function Search({ setPhysician }) {
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
-    { collections, isLoading } = useSelector(({ branches }) => branches),
+    { isLoading } = useSelector(({ branches }) => branches),
     { collections: providerCollections } = useSelector(
       ({ providers }) => providers
     ),
@@ -110,7 +110,6 @@ export default function Search({ setPhysician }) {
               {results?.map((physician) => {
                 const {
                   _id,
-                  fullName: fullname,
                   isPhysician = false,
                   isGhost = false,
                   specialization,

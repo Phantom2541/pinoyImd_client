@@ -11,19 +11,14 @@ import {
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const Tables = () => {
-  const [view, setView] = useState("all"),
-    [showCashRegister, setShowCashRegister] = useState(false),
-    { collections, filtered } = useSelector(({ deals }) => deals),
-    [showSources, setShowSources] = useState(false), // show sources in table head if set to true
-    [showPhysicians, setShowPhysicians] = useState(false), // show physicians in table head if set to true
+  const [showCashRegister, setShowCashRegister] = useState(false),
+    { collections, filtered, view = "all" } = useSelector(({ deals }) => deals),
+    /**
+     * show  in table head if set to true
+     */
+    // [showSources, setShowSources] = useState(false),
+    // [showPhysicians, setShowPhysicians] = useState(false),
     dispatch = useDispatch();
-
-  console.log(
-    "unused variable showSources,showPhysicians,setView",
-    showSources,
-    showPhysicians,
-    setView
-  );
 
   //Set fetched data for mapping
   useEffect(() => {
@@ -34,8 +29,8 @@ const Tables = () => {
           : collections.filter(({ perform }) => perform === view);
 
       // if any items inside deals has sourceKeyAsDeclared value, show sources in table head
-      if (_deals.find((s) => s.physicianId)) setShowPhysicians(true);
-      if (_deals.find((s) => s.source)) setShowSources(true);
+      // if (_deals.find((s) => s.physicianId)) setShowPhysicians(true);
+      // if (_deals.find((s) => s.source)) setShowSources(true);
 
       dispatch(SetTOTAL(_deals.reduce((a, c) => a + c.amount, 0)));
       dispatch(SetFILTERED(_deals));
