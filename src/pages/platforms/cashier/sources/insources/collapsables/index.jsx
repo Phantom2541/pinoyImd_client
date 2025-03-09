@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBBtn,
   MDBCard,
@@ -28,12 +28,22 @@ export default function MenuCollapse() {
    * check who will open
    */
   const { token } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ providers }) => providers),
+    { collections, searchResults, didSearch } = useSelector(
+      ({ providers }) => providers
+    ),
+    [insources, setInsources] = useState([]),
     [selected, setSelected] = useState({}),
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),
     dispatch = useDispatch();
-
+  console.log(collections);
+  useEffect(() => {
+    if (didSearch) {
+      setInsources(searchResults);
+    } else {
+      setInsources(collections);
+    }
+  }, [collections, didSearch, searchResults]);
   const handleTag = (physician) => {
     const { isPhysician, physicianId, isGhost = false } = physician;
     const { branchId, providerId } = selected;
@@ -160,7 +170,7 @@ export default function MenuCollapse() {
       }
     });
   };
-
+  // If there is no client, it means a ghost.
   return (
     <MDBContainer
       style={{
@@ -168,7 +178,7 @@ export default function MenuCollapse() {
       }}
       fluid
     >
-      {collections?.map(
+      {insources?.map(
         ({ clients, name, subName, _id, membership = "" }, index) => {
           const affiliated = clients?.affiliated || [];
 
