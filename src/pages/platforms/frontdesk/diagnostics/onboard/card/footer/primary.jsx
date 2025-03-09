@@ -16,6 +16,11 @@ const PrimaryFooter = ({ sale, setEdit }) => {
     let RequestForm = { customer: sale?.customerId };
     const task = harvestTask(cart);
     const forms = Object.keys(task).length;
+    console.log("task",cart);
+
+
+    localStorage.setItem("task", JSON.stringify(task));
+    localStorage.setItem("ssx", JSON.stringify(ssx));
 
     for (const key in task) {
       const lowercaseKey = key.toLowerCase();
@@ -90,7 +95,8 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
       localStorage.setItem("RequestForm", JSON.stringify(RequestForm));
     }
-
+    console.log("RequestForm", RequestForm);
+    
     // working request form but not showing anything
     window.open(
       "/printout/request/form",

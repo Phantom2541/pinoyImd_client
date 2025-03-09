@@ -18,6 +18,8 @@ const formComponents = {
 };
 
 const Printout = ({ sale, forms, ssx }) => {
+  console.log("forms", forms);
+  
   const { updatedAt, customer, referral, category } = sale;
 
   return (
@@ -92,17 +94,21 @@ const Printout = ({ sale, forms, ssx }) => {
 };
 
 export default function TaskPrintout() {
-  const [sale, setSale] = useState({ _id: "" }),
-    [forms, setForms] = useState({}),
-    [ssx, setSsx] = useState({});
+  const [sale, setSale] = useState(null);
+  const [forms, setForms] = useState(null);
+  const [ssx, setSsx] = useState(null);
 
   useEffect(() => {
-    setSale(JSON.parse(localStorage.getItem("RequestForm")));
-    setForms(JSON.parse(localStorage.getItem("task")));
-    setSsx(localStorage.getItem("ssx"));
+    setSale(JSON.parse(localStorage.getItem("RequestForm")))
+    setForms(JSON.parse(localStorage.getItem("task")))
+    setSsx(localStorage.getItem("ssx"))
   }, []);
 
-  if (sale?.customer) return <Printout sale={sale} forms={forms} ssx={ssx} />;
+  // Ensure data has been loaded before rendering
+  if (sale === null || forms === null) {
+    return <div>Loading...</div>;
+  }
 
-  return <div>Task is Empty</div>;
+  return <Printout sale={sale} forms={forms} ssx={ssx} />;
 }
+
