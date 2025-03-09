@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   SAVE,
   SetCloseModal,
-} from "../../../../../../services/redux/slices/finance/payables";
+} from "../../../../../../services/redux/slices/finance/journals/payables.js";
 import {
   MDBModal,
   MDBModalHeader,

@@ -33,20 +33,21 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     [totDeduc, setTotDeduc] = useState(),
     [totEarn, setTotEarn] = useState(),
     dispatch = useDispatch();
+
+  const payCycle = Number(selected?.contract?.pc);
+
   const handleCalc = useCallback(
     (monthly) => {
-      const payCycle = Number(selected?.contract?.pc);
       switch (payCycle) {
         case 1:
           return monthly / 2;
         case 2:
           return monthly * 1;
-
         default:
           return monthly * 3;
       }
     },
-    [selected?.contract?.pc]
+    [payCycle] // Now it's a simple variable
   );
 
   useEffect(() => {

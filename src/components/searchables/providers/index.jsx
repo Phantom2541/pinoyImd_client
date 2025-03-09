@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  GETENROLLED,
+  // GETENROLLED,
   RESET,
 } from "./../../../services/redux/slices/assets/providers";
 import { MDBIcon } from "mdbreact";
 
 import Notification from "./notification";
+// import { debounce } from "lodash";
+// import { formatNameToObj } from "../../../services/utilities";
+// import { GETPATIENTS } from "../../../services/redux/slices/assets/persons/users.js";
 
 /**
  * A Search component that allows the user to search for a patient by last name, first name, and middle name.
@@ -25,29 +27,29 @@ export default function Search({ setEnrolled, setRegister }) {
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
     { enrolled, isLoading } = useSelector(({ providers }) => providers),
-    { token, activePlatform } = useSelector((state) => state.auth),
+    { activePlatform } = useSelector((state) => state.auth),
     dispatch = useDispatch();
 
-  console.log("Searchable providers: ", enrolled);
+  /**
+   *  This function is debounced which means it will only be executed after 1000 milliseconds (1 second)
+   * of not being called again. This is useful for when the user is typing in the search
+   * input quickly and we don't want to make multiple API calls to search for the patient
+   * for each keystroke.
+   *
+   * The function takes a search key as an argument which is the value of the search
+   * input. The key is then formatted into an object with last name, first name, and
+   * middle name as separate properties. This is because the API endpoint for searching
+   * for patients expects the search key to be an object with these properties.
+   *
+   * The function then dispatches the GETPATIENTS action with the token and the formatted
+   * search key as arguments. The GETPATIENTS action will make the API call to search
+   * for patients and update the state with the result.
+   */
+  // const debouncedSearch = debounce((searchKey) => {
+  //   const key = formatNameToObj(searchKey);
 
-  // This function is debounced which means it will only be executed after 1000 milliseconds (1 second)
-  // of not being called again. This is useful for when the user is typing in the search
-  // input quickly and we don't want to make multiple API calls to search for the patient
-  // for each keystroke.
-  //
-  // The function takes a search key as an argument which is the value of the search
-  // input. The key is then formatted into an object with last name, first name, and
-  // middle name as separate properties. This is because the API endpoint for searching
-  // for patients expects the search key to be an object with these properties.
-  //
-  // The function then dispatches the GETPATIENTS action with the token and the formatted
-  // search key as arguments. The GETPATIENTS action will make the API call to search
-  // for patients and update the state with the result.
-  const debouncedSearch = debounce((searchKey) => {
-    const key = formatNameToObj(searchKey);
-
-    dispatch(GETPATIENTS({ token, query: key }));
-  }, 1000);
+  //   dispatch(GETPATIENTS({ token, query: key }));
+  // }, 1000);
 
   const handleChange = (e) => {
     const _searchKey = e.target.value;
@@ -58,6 +60,8 @@ export default function Search({ setEnrolled, setRegister }) {
       companyName: searchKey[0],
       name: searchKey[1] ? searchKey[1] : "",
     };
+    console.log("query", query);
+
     // setDidSearch(true);
     // return debouncedSearch(query);
     // if (searchKey.length > 1 && searchKey[1].trim()) {

@@ -5,12 +5,12 @@ import {
   RESET,
   BROWSE,
   SetPAYABLES,
-} from "../../../../../services/redux/slices/finance/payables";
+} from "../../../../../services/redux/slices/finance/journals/payables";
 import {
   BROWSE as PROVIDERBROWSE,
   RESET as PROVIDERRESET,
 } from "../../../../../services/redux/slices/assets/providers";
-import { SearchUser } from "../../../../../components/searchables";
+// import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();

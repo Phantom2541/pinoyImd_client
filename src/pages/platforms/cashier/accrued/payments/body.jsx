@@ -4,7 +4,7 @@ import { MDBTable } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
-} from "../../../../../services/redux/slices/finance/payments";
+} from "../../../../../services/redux/slices/finance/journals/payments.js";
 import Swal from "sweetalert2";
 import { Statements } from "../../../../../services/fakeDb";
 const Tables = () => {
@@ -27,7 +27,6 @@ const Tables = () => {
       }
     });
   };
-
 
   return (
     <MDBTable responsive hover bordered>

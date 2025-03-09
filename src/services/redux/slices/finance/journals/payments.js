@@ -1,27 +1,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../utilities";
+import { axioKit } from "../../../../utilities";
+import { Statements } from "../../../../fakeDb";
 
-const name = "finance/journals/payables";
+const name = "finance/journals/payments";
 
 const initialState = {
   collections: [],
+  filtered: [],
   isSuccess: false,
   isLoading: false,
+  paginated: [], // paginated the filtered
 
   selected: {},
-  amount: [],
   totalPages: 0,
   page: 0,
-  showPayablesModal: false,
-  showPaymentModal: false,
-  // showCreateModal: false,
+  showModal: false,
   willCreate: false,
   maxPage: 5,
 };
 
 export const BROWSE = createAsyncThunk(
   `${name}/browse`,
-  async ({ key, token }, thunkAPI) => {
+  async ({ token, key }, thunkAPI) => {
     try {
       return await axioKit.universal(`${name}/browse`, token, key);
     } catch (error) {
@@ -90,31 +90,26 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
-    SetPAYMENTS: (state, { payload }) => {
-      state.selected = payload;
-      state.willCreate = true;
-      state.showPaymentModal = true;
-      state.showPayablesModal = false;
-    },
+    SetFILTERByCategories: (state, { payload }) => {
+      const categoryId = Statements.getAllIdByCategory(payload);
+      // console.log("categoryId:", categoryId);
 
-    SetPAYABLES: (state) => {
-      state.showPaymentModal = false;
-      state.showPayablesModal = true;
+      const collections = JSON.stringify(state.collections, null, 2);
+      const filtered = JSON.parse(collections).filter(({ fsId }) =>
+        categoryId.includes(fsId)
+      );
+      // console.log("filtered:", filtered);
+      state.filtered = filtered;
     },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
-      state.willCreate = true;
-      state.showPayablesModal = true;
+      state.willCreate = false;
+      state.showModal = true;
     },
-
-    /* Modal for Create */
-    SetCloseModal: (state) => {
-      state.showPayablesModal = false;
-      state.showPaymentModal = false;
-    },
-
     SetCREATE: (state, { payload }) => {
-      state.showPayablesModal = payload;
+      state.selected = payload;
+      state.willCreate = true;
+      state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
       const { page, maxPage } = payload;
@@ -124,7 +119,7 @@ export const reduxSlice = createSlice({
           state.page = state.totalPages;
         }
       }
-      state.filter = page;
+      state.filtered = page;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -139,15 +134,13 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
       })
 
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = payload;
-        // console.log("collections: ", state.collections);
-        // state.filtered = payload;
+        state.filtered = payload;
         state.isLoading = false;
       })
 
@@ -179,6 +172,7 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
+
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
       })
@@ -203,12 +197,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success, message, _id } = action.payload;
-        const index = state.collections.findIndex((item) => item._id === _id);
+        const { success, payload } = action.payload;
+        const index = state.collections.findIndex(
+          (item) => item._id === payload
+        );
 
         state.collections.splice(index, 1);
-        state.message = message;
-        state.isSuccess = success;
+        state.message = success;
+        state.isSuccess = true;
         state.isLoading = false;
       })
 
@@ -221,16 +217,12 @@ export const reduxSlice = createSlice({
 });
 
 export const {
-  SetBUY,
   SetEDIT,
-  SetCloseModal,
   SetCREATE,
-  SetPAYABLES,
-  SetPAYMENTS,
   SetFILTER,
+  SetFILTERByCategories,
   SetPAGE,
   SETSOURCES,
-  SetShowMODAL,
   RESET,
 } = reduxSlice.actions;
 export default reduxSlice.reducer;

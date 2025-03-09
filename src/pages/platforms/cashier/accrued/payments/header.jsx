@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 import {
-  RESET,
+  // RESET,
   BROWSE,
   SetCREATE,
   SetFILTERByCategories,
-} from "../../../../../services/redux/slices/finance/payments";
+} from "../../../../../services/redux/slices/finance/journals/payments.js";
 import {
   SearchMonth as Month,
   SearchYear as Year,
