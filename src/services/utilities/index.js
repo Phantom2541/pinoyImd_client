@@ -24,7 +24,7 @@ import removeRedundantPackages from "./removeRedundantPackages";
 import computeGD from "./computeGD";
 import validateContact from "./validateContact";
 import generateEmail from "./generateEmail";
-import getGenderIcon from "./getGenderIcon";
+import { getGenderIcon, getPhysicianGenderIcon } from "./getGenderIcon";
 import harvestTask from "./harvestTask";
 import sourceColor from "./sourceColor";
 import getDevelopment from "./getDevelopment";
@@ -48,7 +48,7 @@ import generateClaimStub from "./generateClaimStub";
 import nickname from "./nickname";
 import paymentBadge from "./paymentBadge";
 import removeUndefinedValues from "./dataCleaner";
-
+import collapse from "./collapse";
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -62,6 +62,7 @@ export {
   paymentBadge,
   generateClaimStub,
   nickname,
+  collapse,
   Banner,
   isClosingTime,
   fullNameSearch,
@@ -96,6 +97,7 @@ export {
   validateContact,
   generateEmail,
   getGenderIcon,
+  getPhysicianGenderIcon,
   harvestTask,
   sourceColor,
   getDevelopment,

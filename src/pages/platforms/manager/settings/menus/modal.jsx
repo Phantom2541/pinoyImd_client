@@ -19,7 +19,7 @@ import { useToasts } from "react-toast-notifications";
 import {
   UPDATE,
   SAVE,
-} from "../../../../../services/redux/slices/commerce/menus";
+} from "../../../../../services/redux/slices/commerce/catalog/menus";
 import { Contracts, SRP, Others } from "./component";
 
 // declare your expected items

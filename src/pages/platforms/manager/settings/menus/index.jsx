@@ -6,7 +6,7 @@ import Generate from "./generate";
 import {
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/commerce/menus";
+} from "../../../../../services/redux/slices/commerce/catalog/menus";
 import { globalSearch } from "../../../../../services/utilities";
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";

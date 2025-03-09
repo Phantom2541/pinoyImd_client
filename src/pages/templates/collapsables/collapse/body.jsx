@@ -1,22 +1,27 @@
 import React from "react";
-import { MDBCol, MDBRow, MDBBadge } from "mdbreact";
+import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 
-export default function Collapsable({ decSS, frequency }) {
+export default function Collapsable({ service }) {
+  const { decSS, frequency } = service;
+
   return (
-    <>
-      <MDBRow>
-        <MDBCol md={2}>
-          <h5>{frequency}</h5>
-          <hr />
-          <small>{decSS}</small>
-        </MDBCol>
-        <MDBCol md={3}>
-          <div className="d-flex justify-items-center justify-content-between m-0 p-0 ">
-            <h5>Access</h5>
-            <MDBBadge>5</MDBBadge>
-          </div>
-        </MDBCol>
-      </MDBRow>
-    </>
+    <MDBTable bordered>
+      <MDBTableHead>
+        <tr>
+          <th>Frequency</th>
+          <th>Description</th>
+        </tr>
+      </MDBTableHead>
+      <MDBTableBody>
+        <tr>
+          <td>
+            <h5>{frequency}</h5>
+          </td>
+          <td>
+            <small>{decSS}</small>
+          </td>
+        </tr>
+      </MDBTableBody>
+    </MDBTable>
   );
 }

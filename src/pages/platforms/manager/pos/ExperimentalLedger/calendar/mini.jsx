@@ -1,10 +1,16 @@
-import { MDBBtn, MDBIcon, MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
-import React from 'react';
-import Months from '../../../../../../services/fakeDb/calendar/months';
-import { useHistory, useLocation } from 'react-router-dom';
-import BreakdownTable from './breakdown';
-import { useDispatch } from 'react-redux';
-import { RESET } from '../../../../../../services/redux/slices/commerce/sales';
+import {
+  MDBBtn,
+  MDBIcon,
+  MDBTable,
+  MDBTableBody,
+  MDBTableHead,
+} from "mdbreact";
+import React from "react";
+import Months from "../../../../../../services/fakeDb/calendar/months";
+import { useHistory, useLocation } from "react-router-dom";
+import BreakdownTable from "./breakdown";
+import { useDispatch } from "react-redux";
+import { RESET } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const today = new Date();
 
@@ -19,15 +25,15 @@ export default function CalendarMini({
   disablePrevOnLastChoice,
   next,
   disableNextOnLastChoice,
-  exitMiniView
+  exitMiniView,
 }) {
   const { pathname } = useLocation(),
     history = useHistory(),
-    dispatch = useDispatch()
+    dispatch = useDispatch();
 
   return (
     <div>
-      <div className="bg-white rounded py-1" style={{ width: '300px' }}>
+      <div className="bg-white rounded py-1" style={{ width: "300px" }}>
         <div className="d-flex align-items-center justify-content-between">
           <MDBBtn
             onClick={() => prev(false)}
@@ -39,8 +45,11 @@ export default function CalendarMini({
             <MDBIcon icon="angle-left" />
           </MDBBtn>
           <span onClick={exitMiniView}>
-            <strong className="cursor-pointer h4-responsive">{year}</strong>&nbsp;
-            <strong className="cursor-pointer h4-responsive">{Months[month]}</strong>
+            <strong className="cursor-pointer h4-responsive">{year}</strong>
+            &nbsp;
+            <strong className="cursor-pointer h4-responsive">
+              {Months[month]}
+            </strong>
           </span>
           <MDBBtn
             onClick={() => {
@@ -80,10 +89,15 @@ export default function CalendarMini({
             <MDBTableBody>
               {parsedCalendarTable.map((chunks, y) => (
                 <tr key={`chunk-${y}`}>
-                  {chunks.map(({ num = '' }, x) => {
+                  {chunks.map(({ num = "" }, x) => {
                     // if no number, means its just a placeholder
                     if (!num)
-                      return <td key={`day-${x}`} className="cursor-disabled table-active"></td>;
+                      return (
+                        <td
+                          key={`day-${x}`}
+                          className="cursor-disabled table-active"
+                        ></td>
+                      );
 
                     const focusDayOnClick = () => {
                       if (isSelectedMonthAndYearFuture) return;
@@ -95,20 +109,25 @@ export default function CalendarMini({
                       });
 
                       history.push(`${pathname}?${params.toString()}`);
-                      dispatch(RESET({ resetCollections: true}));
+                      dispatch(RESET({ resetCollections: true }));
                     };
 
                     return (
                       <td
                         key={`day-${x}`}
-                        className={`${!isSelectedMonthAndYearFuture && 'cursor-pointer'}`}
+                        className={`${
+                          !isSelectedMonthAndYearFuture && "cursor-pointer"
+                        }`}
                         onClick={focusDayOnClick}
                       >
                         <div
-                          style={{ width: '25px', height: '25px' }}
+                          style={{ width: "25px", height: "25px" }}
                           className={`d-flex align-items-center justify-content-center ${
-                            x === 0 && focusedDay !== num && 'text-danger'
-                          } ${focusedDay === num && 'bg-primary text-white rounded-circle'}`}
+                            x === 0 && focusedDay !== num && "text-danger"
+                          } ${
+                            focusedDay === num &&
+                            "bg-primary text-white rounded-circle"
+                          }`}
                         >
                           <div>{num}</div>
                         </div>
@@ -121,7 +140,12 @@ export default function CalendarMini({
           </MDBTable>
         </div>
       </div>
-      <BreakdownTable ledger={ledger} focusedDay={focusedDay} year={year} month={month} />
+      <BreakdownTable
+        ledger={ledger}
+        focusedDay={focusedDay}
+        year={year}
+        month={month}
+      />
     </div>
   );
 }

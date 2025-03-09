@@ -29,8 +29,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/commerce/sales";
-import { TAGGING } from "../../../../../services/redux/slices/commerce/taskGenerator";
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import { TAGGING } from "../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import {
   TIEUPS as PHYSICIANS,
   RESET as PHYSICIANRESET,
@@ -51,7 +51,10 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
     dispatch = useDispatch();
 
   const dateKey = `${Months[month]} ${focusedDay}, ${year}`,
-    breakdown = ledger[dateKey] || [];
+    breakdown = useMemo(() => {
+      const key = `${Months[month]} ${focusedDay}, ${year}`;
+      return ledger[key] || [];
+    }, [ledger, month, focusedDay, year]); // Dependencies
 
   const fetchCashiers = (_breakdown) => {
     const cashiers = {};

@@ -1,8 +1,6 @@
 const globalSearch = (collection, key) => {
-  key = key.toUpperCase(); // Normalize search key
-
-  // console.log("collection", collection);
-  // console.log("key", key);
+  if (!key) return "key is required!";
+  key = key?.toUpperCase(); // Normalize search key
 
   return collection.filter((obj) => {
     if (!obj) return false;

@@ -108,8 +108,11 @@ export const reduxSlice = createSlice({
       }
       state.filter = payload;
     },
-    SetPagination: (state, { payload }) => {
-      const { page, max, getPage } = state;
+    SetPagination: (state) => {
+      // {
+      //   payload;
+      // }getPage
+      const { page, max } = state;
       // if (getPage) return array;
 
       state.paginated = state.filter.slice(
@@ -120,7 +123,7 @@ export const reduxSlice = createSlice({
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
-    RESET: (state, data) => {
+    RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
     },

@@ -15,7 +15,7 @@ export default function CollapseTable({ menu }) {
   const toggleModal = () => setShowModal(!showModal);
 
   useEffect(() => {
-    const labTests = Templates.reduce(
+    const labTests = Templates.collections.reduce(
       (accumulator, { components, department }) => {
         if (department === "LAB") {
           const filteredComponents = components.filter(
@@ -38,23 +38,32 @@ export default function CollapseTable({ menu }) {
     window.open(
       "/printout/task",
       "Task Printout",
-      "top=100px,left=100px,width=1050px,height=750px" // size of page that will open
+      "top=100px,left=100px,width=1050px,height=750px" // size of the page that will open
     );
   };
 
   const { customerId, physicianId, source, category, _id } = menu;
 
   const handleIndividual = (form, obj, index, miscIndex = 0) => {
-    const { packages, hasDone = false, remarks = "", signatories = [] } = obj,
-      { department } = Templates.find(({ components }) =>
-        components.includes(form)
-      );
+    const { packages, hasDone = false, remarks = "", signatories = [] } = obj;
+
+    // Find the template that contains this form
+    const foundTemplate = Templates.collections.find(({ components }) =>
+      components.includes(form)
+    );
+
+    if (!foundTemplate) {
+      console.warn(`⚠️ No template found for form: ${form}`);
+      return null; // Skip this row to prevent undefined errors
+    }
+
+    const { department } = foundTemplate;
 
     const _packages = Array.isArray(packages)
       ? packages
       : Object.keys(packages).map((k) => Number(k));
 
-    var task = {
+    const task = {
       ...obj,
       key: `${form}-${index}`,
       form,
@@ -68,6 +77,7 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
+
     return (
       <tr key={task.key} className={`${hasDone && "table-active"}`}>
         <td className="fw-bold">{capitalize(department)}</td>
@@ -142,7 +152,7 @@ export default function CollapseTable({ menu }) {
 
             if (!labTest)
               return (
-                <tr key={task.key}>
+                <tr key={`empty-${index}`}>
                   <td colSpan={4}>Empty Test</td>
                 </tr>
               );

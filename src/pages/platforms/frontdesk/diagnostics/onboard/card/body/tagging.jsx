@@ -4,7 +4,7 @@ import { fullName } from "../../../../../../../services/utilities";
 import {
   SETSOURCE,
   SETPHYSICIAN,
-} from "../../../../../../../services/redux/slices/commerce/taskGenerator";
+} from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 const Editable = ({ forwardedBy, physicianId, _id }) => {
   const { collections: sources } = useSelector(({ providers }) => providers),
     [physicians, setPhysicians] = useState([]),

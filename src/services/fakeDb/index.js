@@ -5,7 +5,7 @@ import {
   Payments,
   Philippines,
   Privileges,
-  Remmitances,
+  Denominations,
   Services,
   Suffixes,
 } from "./finance";
@@ -35,7 +35,7 @@ import Policy from "./policy";
 import Roles from "./roles";
 
 export {
-  Remmitances,
+  Denominations,
   Suffixes,
   Calendar,
   Rci,

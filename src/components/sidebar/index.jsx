@@ -27,6 +27,11 @@ export default function SideNavigation({
 
   useEffect(() => {
     if (company?.name && activePlatform?.platform) {
+      /**
+       *  display company logo
+       *  if logo is not found, display default
+       *  @y'dreo
+       */
       const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.platform}/logo.png`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);
@@ -101,6 +106,7 @@ export default function SideNavigation({
           <MDBSideNavNav>{renderNavItems(links, "sidebar")}</MDBSideNavNav>
         )}
       </MDBSideNav>
+      <button>tes</button>
     </div>
   );
 }

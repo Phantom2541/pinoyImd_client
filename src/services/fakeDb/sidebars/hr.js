@@ -7,7 +7,7 @@ const hr = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/hr/bulletin",
     component: Dashboard,
   },
   {

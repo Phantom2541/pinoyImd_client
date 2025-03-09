@@ -44,6 +44,7 @@ export default function CustomSelect({
   className = "",
   inputClassName = "",
   disableAll = false,
+  hideLabel = false,
   multiple = false,
   disabledAllExceptSelected = false,
   disableByKey = {},
@@ -53,51 +54,53 @@ export default function CustomSelect({
     if (disableAll) return true;
     if (disabledAllExceptSelected && value !== preValue) return true;
 
-    if (!!Object.keys(disableByKey).length) {
-      for (const key in disableByKey) {
-        if (obj[key] === disableByKey[key]) return true;
-      }
+    if (Object.keys(disableByKey).length) {
+      return Object.entries(disableByKey).some(
+        ([key, val]) => obj[key] === val
+      );
     }
 
     return false;
   };
 
-  const handleSearchDisabling = () => {
-    if (disableSearch) return false;
+  const handleSearchDisabling = () => !disableSearch && choices.length > 9;
 
-    return choices.length > 9;
+  const handleSelection = (array) => {
+    if (multiple) {
+      const selectedItems = getObject
+        ? choices.filter((c) => array.includes(String(c[values] || c)))
+        : array;
+      return onChange(selectedItems);
+    }
+
+    const selectedItem = getObject
+      ? choices.find(
+          (choice) => String(choice[values] || choice) === String(array[0])
+        )
+      : array[0];
+
+    onChange(selectedItem);
   };
 
   return (
     <MDBSelect
-      label={label}
-      getValue={(array) => {
-        if (multiple)
-          return onChange(
-            getObject ? choices.filter((c) => array.includes(c[values])) : array
-          );
-
-        onChange(
-          getObject
-            ? choices.find((choice) => choice[values] === array[0])
-            : array[0]
-        );
-      }}
-      className={`${className}`}
+      label={!hideLabel && label}
+      getValue={handleSelection}
+      className={className}
       multiple={multiple}
       color="primary"
     >
-      <MDBSelectInput className={`${inputClassName}`} selected={preValue} />
+      <MDBSelectInput className={inputClassName} selected={preValue} />
       <MDBSelectOptions search={handleSearchDisabling()}>
         {choices.map((choice, index) => {
-          const value = String(choice[values]),
-            text = choice[texts];
+          const value = String(choice[values] || choice);
+          const text = choice[texts] || choice;
 
           return (
             <MDBSelectOption
               id={`${label}-${value}`}
               disabled={handleChoiceDisabling(value, choice)}
-              checked={preValue ? value === preValue : false}
+              checked={preValue ? String(value) === String(preValue) : false}
               key={`${label}-${index}`}
               value={value}
             >

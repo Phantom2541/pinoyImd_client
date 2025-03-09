@@ -16,13 +16,13 @@ export default function Register() {
     confirmPassword: true,
   });
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     // //console.log("test");
     // document.getElementById("registration-form").reset();
 
-    const { email, password, confirmPassword } = e.target;
+    const { password, confirmPassword } = e.target;
 
     //console.log(email);
 

@@ -13,7 +13,16 @@ import {
   providers,
   tieups,
 } from "./slices/assets";
-import { menus, sales, pos, taskGenerator } from "./slices/commerce";
+import { dragDrop } from "./slices/reusable";
+import {
+  menus,
+  services,
+  pos,
+  sales,
+  taskGenerator,
+  deals,
+  dispenser,
+} from "./slices/commerce";
 
 import {
   hematology,
@@ -25,38 +34,36 @@ import {
   preferences,
 } from "./slices/results";
 
-import {
-  access,
-  liabilities,
-  payrolls,
-  controls,
-  assurances,
-} from "./slices/liability";
+import { access, liabilities, controls, assurances } from "./slices/liability";
 
 import { remmitance, payables, payments } from "./slices/finance";
+// import { payrolls, remittances } from "./slices/finance";
 
 import temperatures from "./slices/monitoring/temperature";
 
 const store = configureStore({
   reducer: {
-    remmitance,
+    remittances,
+    payrolls,
     auth,
     personnels,
     access,
     users,
     preferences,
-    menus,
     physicians,
+    menus,
+    services,
     sales,
-    pos,
     taskGenerator,
+    deals,
+    pos,
+    dispenser,
     heads,
     tieups,
     chemistry,
     companies,
     procurements,
     branches,
-    payrolls,
     hematology,
     urinalysis,
     fecalysis,
@@ -70,6 +77,7 @@ const store = configureStore({
     providers,
     controls,
     assurances,
+    dragDrop,
   },
 });
 

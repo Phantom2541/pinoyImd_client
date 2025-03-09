@@ -4,7 +4,7 @@ const accreditation = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/accreditation/bulletin",
   },
   {
     name: "Laboratory Assessment Tools r2021",

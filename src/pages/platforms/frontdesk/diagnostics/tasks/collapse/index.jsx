@@ -24,7 +24,7 @@ import { useHistory } from "react-router-dom";
 export default function TasksCollapse({ page }) {
   const [activeId, setActiveId] = useState(-1),
     { maxPage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ sales }) => sales),
+    { collections } = useSelector(({ deals }) => deals),
     history = useHistory();
 
   return (
@@ -48,7 +48,7 @@ export default function TasksCollapse({ page }) {
               <MDBBadge
                 onClick={() =>
                   history.push(
-                    `/transactions/tracker?patient=${customerId?._id}`
+                    `/transactions/reports?patient=${customerId?._id}`
                   )
                 }
                 color="info"

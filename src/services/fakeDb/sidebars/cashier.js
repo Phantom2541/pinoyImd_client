@@ -1,32 +1,41 @@
-import Dashboard from "../../../pages/platforms/cashier/dashboard";
+import Bulletin from "../../../pages/platforms/cashier/bulletin";
 import {
-  // Cashier,
-  Sales,
-  Ledger,
+  Cashier,
+  Deals,
+  // Sales,
   Menus,
   Services,
   Insources,
   Outsources,
   Utilities,
+  Remmitances,
 } from "../../../pages/platforms/cashier";
-import { Tablestemplate, Collapsable } from "../../../pages/templates";
+import {
+  Tablestemplate,
+  Collapsable,
+  Calendar,
+  DragDrop,
+} from "../../../pages/templates";
 
-import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
 import Receivables from "../../../pages/platforms/cashier/accrued/receivables";
 import Payments from "../../../pages/platforms/cashier/accrued/payments";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
-import SOA from "../../../pages/platforms/cashier/accrued/soa";
-import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
-import Remmitances from "../../../pages/platforms/manager/pos/remittances";
-//import Outsource from "../../../pages/platforms/manager/provider";
+// import SOA from "../../../pages/platforms/cashier/accrued/soa";
+// import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
+// import Remmitances from "../../../pages/platforms/manager/pos/remittances";
+// //import Outsource from "../../../pages/platforms/manager/provider";
+
+// const cashier = [
+//   {
+//     name: "bulletin",
 
 const cashier = [
   {
-    name: "bulletin",
+    name: "Bulletin",
     icon: "tachometer-alt",
-    path: "/dashboard",
-    component: Dashboard,
+    path: "/cashier/bulletin",
+    component: Bulletin,
   },
   {
     name: "Cashier",
@@ -36,27 +45,20 @@ const cashier = [
       {
         name: "pos", // Point Of Sales
         path: "/pos",
+        icon: "shopping-cart",
         component: Cashier,
       },
       {
-        name: "Sales",
-        path: "/sales",
-        component: Sales,
+        name: "Deals",
+        path: "/deals",
+        component: Deals,
+        icon: "handshake",
       },
       {
         name: "Remmitances",
         path: "/remmitances",
         component: Remmitances,
-      },
-      {
-        name: "Ledger experimental",
-        path: "/Ledger",
-        component: ExperimentalLedger,
-      },
-      {
-        name: "Ledger",
-        path: "/ledger",
-        component: Ledger,
+        icon: "money-check",
       },
     ],
   },
@@ -73,6 +75,7 @@ const cashier = [
         name: "Payables",
         path: "/payables",
         component: Payables,
+        icon: "file-invoice-dollar",
       },
       /**
        * Collections from vouchers
@@ -95,32 +98,46 @@ const cashier = [
         name: "Vouchers",
         path: "/vouchers",
         component: Vouchers,
+        icon: "receipt",
       },
       /**
        * statement of Account (Sendout)
        */
       {
-        name: "SOA",
+        name: "Statement of Account",
         path: "/soa",
-        component: SOA,
+        icon: "balance-scale",
+        children: [
+          {
+            name: "Outsource", // Sendout
+            path: "/outsource",
+            icon: "truck",
+          },
+          {
+            name: "Insource", // Receivables  from sales vouchers
+            path: "/insource",
+            icon: "warehouse",
+          },
+        ],
       },
     ],
   },
   {
-    name: "Offers", //viewing only
-    path: "/offers",
-    icon: "handshake",
+    name: "Services Catalog", //viewing only
+    path: "/catalogs",
+    icon: "clipboard-list",
     children: [
       {
         name: "Menus",
         path: "/menus",
         component: Menus,
+        icon: "utensils",
       },
       {
-        icon: "list",
         name: "Services",
         path: "/services",
         component: Services,
+        icon: "list",
       },
     ],
   },
@@ -133,16 +150,25 @@ const cashier = [
         name: "Outsources",
         path: "/outsources",
         component: Outsources,
+        icon: "truck",
       },
       {
         name: "Insources",
         path: "/insources",
         component: Insources,
+        icon: "warehouse",
       },
       {
         name: "Utilities",
         path: "/utilities",
         component: Utilities,
+        icon: "tools",
+      },
+      {
+        name: "Suppliers",
+        path: "/suppliers",
+        // component: Suppliers,
+        icon: "handshake",
       },
     ],
   },
@@ -155,11 +181,24 @@ const cashier = [
         name: "Tables",
         path: "/tables",
         component: Tablestemplate,
+        icon: "table",
       },
       {
         name: "Collapsables",
         path: "/collapsables",
         component: Collapsable,
+        icon: "align-justify",
+      },
+      {
+        name: "Calendars",
+        path: "/calendars",
+        component: Calendar,
+        icon: "calendar-alt",
+      },
+      {
+        name: "DragDrop",
+        path: "/DragDrop",
+        component: DragDrop,
       },
     ],
   },

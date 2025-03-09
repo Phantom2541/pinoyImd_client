@@ -33,7 +33,6 @@ export default function Sales() {
       if (storedSource) {
         // If source data is found in localStorage, use it (parse back to an object)
         const sourceData = JSON.parse(storedSource);
-        console.log("Using stored source data:", sourceData);
 
         // Optionally dispatch the source data to update the store
         dispatch(SETSOURCES(sourceData));
@@ -71,38 +70,17 @@ export default function Sales() {
     setSales(collections);
   }, [collections]);
 
-  //Set fetched data for mapping
-  useEffect(() => {
-    if (!!collections.length) {
-      // const _collections = collections.map((c, i) => ({
-      //   ...c,
-      //   page: collections.length - i,
-      // }));
-      // if (didSearch) {
-      //   setSales(fullNameSearch(searchKey, _collections, "customerId"));
-      // } else {
-      //   setSales(
-      //     view === "All"
-      //       ? _collections
-      //       : _collections.filter(
-      //           ({ perform }) => perform === view.toLowerCase()
-      //         )
-      //   );
-      // }
-    }
-  }, [collections, view, searchKey]);
-
   return (
     <MDBContainer fluid>
       <Header
-        length={sales.length}
+        length={sales?.length}
         view={view}
         setView={setView}
         searchKey={searchKey}
         setSearchKey={setSearchKey}
       />
       <div className="sales-card-wrapper mt-3">
-        {!sales.length && !isLoading && (
+        {!sales?.length && !isLoading && (
           <MDBTypography noteColor="info" note>
             Sales are emptys
           </MDBTypography>

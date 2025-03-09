@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { TRACKER } from "../../../../../services/redux/slices/commerce/sales";
+import { TRACKER } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { fullName, getAge } from "../../../../../services/utilities";
 import { SearchUser } from "../../../../../components/searchables";
 
@@ -35,7 +35,7 @@ export default function Header({ patient, setPatient }) {
         {_id ? fullName(fullname) : "Tracker"}
         {_id && getAge(dob)}
       </h3>
-      <SearchUser onSelect={selectPatient} onRegister={onRegister} />
+      <SearchUser setPatient={selectPatient} onRegister={onRegister} />
     </div>
   );
 }

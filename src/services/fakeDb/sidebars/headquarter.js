@@ -70,7 +70,7 @@ const headquarter = [
   {
     name: "Human Resources",
     path: "/hr",
-    icon: "code-*branch",
+    icon: "code-branch",
     children: [
       {
         name: "Branches",
@@ -164,47 +164,47 @@ const headquarter = [
       },
     ],
   },
-   {
-      name: "Settings",
-      path: "/settings",
-      icon: "cogs",
-      children: [
-        {
-          name: "Equipments",
-          path: "/equipments",
-          component: Equipments,
-        },
-        {
-          name: "Procurement",
-          path: "/procurement",
-          component: Procurments, 
-        },
-  
-        {
-          name: "Banner",
-          path: "/banners",
-          component: Banner,
-        },
-        {
-          name: "Logos",
-          path: "/logos",
-          component: Logo,
-        },
-        {
-          name: "Suppliers",
-          path: "/suppliers",
-        },
-        {
-          name: "Sourcing",
-          path: "/sourcing",
-        },
-        {
-          name: "Tie Up",
-          path: "/tieup",
-          component: Tieups,
-        },
-      ],
-    },
+  {
+    name: "Settings",
+    path: "/settings",
+    icon: "cogs",
+    children: [
+      {
+        name: "Equipments",
+        path: "/equipments",
+        component: Equipments,
+      },
+      {
+        name: "Procurement",
+        path: "/procurement",
+        component: Procurments,
+      },
+
+      {
+        name: "Banner",
+        path: "/banners",
+        component: Banner,
+      },
+      {
+        name: "Logos",
+        path: "/logos",
+        component: Logo,
+      },
+      {
+        name: "Suppliers",
+        path: "/suppliers",
+      },
+      {
+        name: "Sourcing",
+        path: "/sourcing",
+      },
+      {
+        name: "Tie Up",
+        path: "/tieup",
+        component: Tieups,
+      },
+    ],
+  },
   {
     name: "Mortality",
     icon: "code-branch",

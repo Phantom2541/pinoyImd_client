@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "results/preferences";
+const name = "diagnostics/laboratory/preferences";
 
 const initialState = {
   collections: [],

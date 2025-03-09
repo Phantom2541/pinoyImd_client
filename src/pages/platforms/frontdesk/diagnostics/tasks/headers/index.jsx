@@ -5,7 +5,7 @@ import { MDBView, MDBBtnGroup } from "mdbreact";
 import {
   TASKS,
   RESET,
-} from "../../../../../../services/redux/slices/commerce/sales";
+} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import {
   BROWSE,
   RESET as PREFRESET,

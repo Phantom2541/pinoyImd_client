@@ -4,7 +4,7 @@ import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
 import { axioKit, harvestTask } from "../../../../../../../services/utilities";
 import { generateClaimStub } from "../../../../../../../services/utilities";
-import { REFORM } from "../../../../../../../services/redux/slices/commerce/taskGenerator";
+import { REFORM } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
 const PrimaryFooter = ({ sale, setEdit }) => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -12,11 +12,10 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
   const generateTask = async (sale) => {
     localStorage.setItem("claimStub", JSON.stringify(sale));
-    const { _id, cart, customerId } = sale;
+    const { _id, cart, customerId, ssx } = sale;
     let RequestForm = { customer: sale?.customerId };
     const task = harvestTask(cart);
     const forms = Object.keys(task).length;
-    localStorage.setItem("task", JSON.stringify(task));
 
     for (const key in task) {
       const lowercaseKey = key.toLowerCase();
@@ -36,7 +35,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
           tests = tests.filter((item) => !buntisTests.includes(item));
           await axioKit.save(
-            "results/laboratory/miscellaneous",
+            "/diagnostics/laboratory/result/miscellaneous",
             {
               packages: buntisPresent,
               saleId: _id,
@@ -63,19 +62,23 @@ const PrimaryFooter = ({ sale, setEdit }) => {
           _buntis: false,
         }));
 
-        axioKit.save("results/laboratory/miscellaneous", newArr, token);
+        axioKit.save(
+          "/diagnostics/laboratory/result/miscellaneous",
+          newArr,
+          token
+        );
 
         continue;
       }
       const department =
         key === "ECG" || key === "X-ray"
-          ? "RAD"
+          ? "radiology"
           : key === "Examination" || key === "Certicifate"
-          ? "CLINIC"
-          : "LAB";
+          ? "clinic"
+          : "laboratory";
 
       axioKit.save(
-        `results/${department}/${lowercaseKey}`,
+        `/diagnostics/${department}/result/${lowercaseKey}`,
         {
           packages: task[key],
           _id,
@@ -94,13 +97,13 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       "Request Form",
       "top=100px,left=100px,width=1050px,height=750px"
     );
-    console.log("data here");
 
     dispatch(
       REFORM({
         token,
         data: {
           _id,
+          ssx,
           lol: auth._id,
           renderedBy: auth._id,
           renderedAt: new Date().toLocaleString(),
@@ -109,6 +112,11 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       })
     );
   };
+
+  const preAnalytical = async (sale) => {
+    console.log("preAnalytical", sale);
+    
+  }
 
   return (
     <MDBBtnGroup className="sales-card-footer w-100">
@@ -130,7 +138,18 @@ const PrimaryFooter = ({ sale, setEdit }) => {
         size="sm"
         color="primary"
       >
-        <MDBIcon icon="eye" />
+        <MDBIcon icon="receipt" />
+      </MDBBtn>
+
+       <MDBBtn
+        type="button"
+        onClick={() => preAnalytical(sale)}
+        title="Pre-Analytical Supply Dispense"
+        className="m-0 "
+        size="sm"
+        color="primary"
+      >
+        <MDBIcon icon="cog" spin />
       </MDBBtn>
       <MDBBtn
         type="button"

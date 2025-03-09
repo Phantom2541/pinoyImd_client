@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
 import { capitalize, currency } from "../../../../../services/utilities";
-import { Remmitances } from "../../../../../services/fakeDb";
+import { Denominations } from "../../../../../services/fakeDb";
 
 export default function RemmitanceForm({ title }) {
   //   return (
@@ -31,7 +31,7 @@ export default function RemmitanceForm({ title }) {
           <td>Type</td>
           <td className="text-center">Quantity</td>
         </tr>
-        {Remmitances.bills.map((bill) => (
+        {Denominations.bills.map((bill) => (
           <tr key={`bill-${bill}`}>
             <td className="p-0">
               <div className="pt-1 pl-2">{currency(Number(bill), true)}</div>
@@ -57,7 +57,7 @@ export default function RemmitanceForm({ title }) {
           <td>Type</td>
           <td className="text-center">Quantity</td>
         </tr>
-        {Remmitances.coins.map((coin) => (
+        {Denominations.coins.map((coin) => (
           <tr key={`coin-${coin}`}>
             <td className="p-0">
               <div className="pt-1 pl-2">{currency(Number(coin), true)}</div>

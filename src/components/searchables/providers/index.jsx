@@ -43,8 +43,10 @@ export default function Search({ setEnrolled, setRegister }) {
   // The function then dispatches the GETPATIENTS action with the token and the formatted
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
-  const debouncedSearch = debounce((query) => {
-    dispatch(GETENROLLED({ token, query }));
+  const debouncedSearch = debounce((searchKey) => {
+    const key = formatNameToObj(searchKey);
+
+    dispatch(GETPATIENTS({ token, query: key }));
   }, 1000);
 
   const handleChange = (e) => {
@@ -56,8 +58,12 @@ export default function Search({ setEnrolled, setRegister }) {
       companyName: searchKey[0],
       name: searchKey[1] ? searchKey[1] : "",
     };
-    setDidSearch(true);
-    return debouncedSearch(query);
+    // setDidSearch(true);
+    // return debouncedSearch(query);
+    // if (searchKey.length > 1 && searchKey[1].trim()) {
+    //   setDidSearch(true);
+    //   return debouncedSearch(_searchKey);
+    // }
   };
 
   const handleSelect = (user) => {
@@ -81,6 +87,10 @@ export default function Search({ setEnrolled, setRegister }) {
           {!enrolled?.length ? (
             <small onClick={handleRegister}>No Branch record found...</small>
           ) : (
+            // <div className={`searchable-search ${didSearch && "active"}`}>
+            //   <div className="searchable-search-suggestions">
+            //     {!collections.length ? (
+            //       <small onClick={handleRegister}>No Patient Record found...</small>
             <ul>
               {enrolled?.map((provider) => {
                 const { _id, name, subName } = provider;

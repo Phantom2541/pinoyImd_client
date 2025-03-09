@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBModal, MDBModalBody, MDBIcon, MDBModalHeader } from "mdbreact";
-import { GENERATE } from "../../../../../services/redux/slices/commerce/menus";
+import { GENERATE } from "../../../../../services/redux/slices/commerce/catalog/menus";
 import { Menus, Services } from "../../../../../services/fakeDb";
 // declare your expected items
 import DataTable from "../../../../../components/dataTable";

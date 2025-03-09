@@ -34,44 +34,22 @@ const Body = () => {
     <MDBTable responsive hover bordered>
       <thead>
         <tr>
+          <th>#</th>
           <th>Name</th>
-          <th>Sub Name</th>
-          <td>action</td>
+          <th>aka</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {/* {paginated.map((assurance, index) => {
-          return ( */}
-        <tr
-        // key={index}
-        >
-          <td>name</td>
-          <td>subname </td>
+        <tr>
+          <td>1</td>
+          <td>Tom</td>
+          <td>Kuya TOM </td>
           <td>
-            <button
-            // onClick={() => dispatch(SetEDIT(assurance))}
-            >
-              Edit
-            </button>
+            <button>Edit</button>
             <button onClick={() => handleDelete(1)}>Delete</button>
           </td>
         </tr>
-        <tr
-        // key={index}
-        >
-          <td>second name</td>
-          <td>second subname </td>
-          <td>
-            <button
-            // onClick={() => dispatch(SetEDIT(assurance))}
-            >
-              Edit
-            </button>
-            <button onClick={() => handleDelete(1)}>Delete</button>
-          </td>
-        </tr>
-        {/* );
-        })} */}
       </tbody>
     </MDBTable>
   );

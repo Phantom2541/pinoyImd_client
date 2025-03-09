@@ -4,17 +4,13 @@ import {
   Reports,
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
-import {
-  Menus,
-  Services,
-} from "../../../pages/platforms/cashier";
-
+import { Menus, Services } from "../../../pages/platforms/cashier";
 
 const clinical = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/clinical/bulletin",
   },
   {
     name: "Diagnostics",

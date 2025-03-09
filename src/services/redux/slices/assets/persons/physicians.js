@@ -135,7 +135,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(FILTER.fulfilled, (state, { payload }) => {
-        state.collections = payload;
+        state.collections = payload.payload;
         state.isLoading = false;
       })
       .addCase(FILTER.rejected, (state, action) => {
@@ -167,7 +167,7 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        payload.length > 0 &&
+        payload?.length > 0 &&
           payload.map((data) =>
             //kasi pwede siyang mag add ng madaming physicians kaya minap ko kasi array yung return niya
             state.collections.tieups.unshift(data)

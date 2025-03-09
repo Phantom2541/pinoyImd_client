@@ -15,27 +15,17 @@ export default function CollapseTable({ menu }) {
   const toggleModal = () => setShowModal(!showModal);
 
   useEffect(() => {
-    setLabTests(
-      Templates.reduce((accumulator, { components, department }) => {
-        if (department === "LAB") {
-          return [
-            ...accumulator,
-            ...components.filter((component) => menu[component.toLowerCase()]),
-          ];
-        }
-        // const labTests = Templates.reduce(
-        //   (accumulator, { components, department }) => {
-        //     if (department === "LAB") {
-        //       const filteredComponents = components.filter(
-        //         (component) => menu[component.toLowerCase()]
-        //       );
+    if (!menu) return;
 
-        //       return [...accumulator, ...filteredComponents];
-        //     }
+    const filteredLabTests = Templates.collections.flatMap(
+      ({ components, department }) => {
+        if (department !== "LAB") return []; // Ignore non-lab departments
 
-        //     return accumulator;
-      }, [])
+        return components.filter((component) => menu[component.toLowerCase()]);
+      }
     );
+
+    setLabTests(filteredLabTests);
   }, [menu]);
 
   const handlePrint = (labTest) => {
@@ -51,7 +41,7 @@ export default function CollapseTable({ menu }) {
 
   const handleIndividual = (form, obj, index, miscIndex = 0) => {
     const { packages, hasDone = false, remarks = "", signatories = [] } = obj,
-      { department } = Templates.find(({ components }) =>
+      { department } = Templates.collections.find(({ components }) =>
         components.includes(form)
       );
 

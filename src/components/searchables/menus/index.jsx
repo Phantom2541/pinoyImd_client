@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { MDBIcon } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
   BROWSE as MENUS,
-  SETMENUS,
+  SetCOLLECTIONS,
   RESET as MENUSRESET,
-} from "./../../../services/redux/slices/commerce/menus";
-import { currency, globalSearch } from "./../../../services/utilities";
+} from "../../../services/redux/slices/commerce/catalog/menus";
+import { currency, globalSearch } from "../../../services/utilities";
 import Notification from "./notifications";
 import "../style.css";
 
@@ -22,6 +22,7 @@ export default function Search({ setMenu, setRegister }) {
 
   const inputRef = useRef(null); // Reference to the input field
 
+  // initial values
   useEffect(() => {
     if (token && activePlatform.branchId) {
       const branchId = activePlatform.branchId;
@@ -32,9 +33,8 @@ export default function Search({ setMenu, setRegister }) {
       if (storedMenus) {
         // If menus are found in localStorage, use them (parse back to an object)
         const menus = JSON.parse(storedMenus);
-        console.log("Using stored menus:", menus);
         // You can dispatch the menus here if needed
-        dispatch(SETMENUS(menus)); // Optionally dispatch to update the store if necessary
+        dispatch(SetCOLLECTIONS(menus)); // Optionally dispatch to update the store if necessary
       } else {
         // If no data in localStorage, make the server request
         dispatch(MENUS({ key: { branchId }, token }))
@@ -58,14 +58,15 @@ export default function Search({ setMenu, setRegister }) {
   }, [token, dispatch, activePlatform]);
 
   // Debounced search function to avoid too many re-renders
-  const debouncedSearch = useCallback(
-    debounce((key) => {
-      if (key.trim().length <= 1) return setMatch([]);
-      const _match = globalSearch(collections, key.trim());
-      setMatch(_match);
-    }, 500),
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((key) => {
+        if (key.trim().length <= 1) return setMatch([]);
+        const _match = globalSearch(collections, key.trim());
+        setMatch(_match);
+      }, 500),
     [collections]
-  );
+  ); // dependencies
 
   const handleChange = (value) => {
     setSearchKey(value);
@@ -93,10 +94,10 @@ export default function Search({ setMenu, setRegister }) {
   };
 
   return (
-    <div className="cashier-search-cotaniner">
+    <div className="searchable-search-cotaniner ">
       <Notification didSearch={match.length > 0} />
-      <div className={`cashier-search ${match.length > 0 && "active"}`}>
-        <div className="cashier-search-suggestions">
+      <div className={`searchable-search  ${match.length > 0 && "active"}`}>
+        <div className="searchable-search-suggestions">
           {searchKey && match.length === 0 && (
             <li onClick={handleRegister}>No match found.</li>
           )}
