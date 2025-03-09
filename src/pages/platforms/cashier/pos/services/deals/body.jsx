@@ -107,10 +107,10 @@ const Tables = () => {
               </td>
               <td>
                 <h6>
-                  {deal.physicianId?.fullName.lname && (
-                    <h6>Dr. {deal.physicianId.fullName.lname}</h6>
-                  )}
+                  {deal.physicianId?.fullName.lname &&
+                    `Dr. ${deal.physicianId.fullName.lname}`}
                 </h6>
+
                 <p>{deal.source?.companyName}</p>
               </td>
               <td>
