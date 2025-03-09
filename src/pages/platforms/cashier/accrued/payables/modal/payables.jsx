@@ -77,7 +77,7 @@ export default function ModalCreate() {
           className="browser-default custom-select"
           value={form.orOption || ""}
           onChange={(e) => {
-            console.log("New Value Selected:", e.target.value); // Debugging log
+            // console.log("New Value Selected:", e.target.value); // Debugging log
             setForm({ ...form, orOption: e.target.value });
           }}
         >

@@ -10,6 +10,7 @@ import {
   BROWSE as PROVIDERBROWSE,
   RESET as PROVIDERRESET,
 } from "../../../../../services/redux/slices/assets/providers";
+import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
