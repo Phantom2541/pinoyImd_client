@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import CashRegister from "../cashierOld/pos";
-import { MDBCard, MDBCardBody } from "mdbreact";
+import { MDBCard, MDBCardBody, MDBContainer } from "mdbreact";
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
@@ -11,8 +11,8 @@ import { Payments, Vouchers } from "./summary";
 export default function Deals() {
   const { isLoading } = useSelector(({ deals }) => deals);
   return (
-    <div className="d-flex" style={{ height: "100vh", gap: "10px" }}>
-      <div className="bg-white py-1 rounded flex-1 ml-2 px-2">
+    <MDBContainer className="d-flex" fluid>
+      <div className=" py-1 rounded flex-1 ml-2 px-2">
         <MDBCard narrow>
           <Header />
           <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
@@ -24,6 +24,6 @@ export default function Deals() {
         <Payments />
         <Vouchers />
       </div>
-    </div>
+    </MDBContainer>
   );
 }
