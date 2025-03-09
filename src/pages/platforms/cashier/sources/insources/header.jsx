@@ -6,8 +6,10 @@ import {
   INSOURCE,
   SetCREATE,
 } from "../../../../../services/redux/slices/assets/providers";
+import Search from "../../../../../components/searchables/sources";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,6 +37,8 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
+          <Search sources={collections} />
+
           <MDBBtn
             size="sm"
             className="px-2"

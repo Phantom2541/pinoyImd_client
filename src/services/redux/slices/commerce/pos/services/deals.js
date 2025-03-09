@@ -5,9 +5,9 @@ const name = "commerce/pos/services/deals";
 
 const initialState = {
   collections: [],
-  catalogs: [],
   transaction: { _id: "default" },
   totalPatient: 0,
+  filtered: [],
   // this is used for ledger
   census: {
     daily: {},
@@ -18,6 +18,11 @@ const initialState = {
     patients: 0,
     isEmpty: true,
   },
+  showModal: false,
+  totalPages: 0,
+  maxPage: 1,
+  activePage: 1,
+  selected: {},
   isSuccess: false,
   isLoading: false,
   censusLoading: false, // dedicated loader for celsus
@@ -240,6 +245,25 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    SetTOTAL: (state, { payload }) => {
+      state.total = payload;
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+    },
+    SetMODAL: (state) => {
+      state.showModal = !state.showModal;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
@@ -508,6 +532,14 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const {
+  SetTOTAL,
+  SetFILTERED,
+  SetSELECTED,
+  SetMODAL,
+  SetMaxPage,
+  SetActivePAGE,
+  RESET,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

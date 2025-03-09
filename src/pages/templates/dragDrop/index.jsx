@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { MDBCard, MDBRow, MDBCardBody } from "mdbreact";
+import React, { useCallback, useState } from "react";
+import { MDBCard, MDBRow, MDBCardBody, MDBAnimation } from "mdbreact";
 import "./style.css";
 import List from "./list";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import {
 } from "../../../services/redux/slices/reusable/dragDrop";
 const DragDrop = () => {
   const { clusters, collections } = useSelector(({ dragDrop }) => dragDrop),
+    [hasDrag, setHasDrag] = useState(false),
     [removeID, setRemoveID] = useState(-1),
     [removeBy, setRemoveBy] = useState(""),
     [addID, setAddID] = useState(-1),
@@ -26,16 +27,15 @@ const DragDrop = () => {
 
   const handleDragStart = (e, role, index, title) => {
     const { collections, setter } = getState(title);
+    setHasDrag(true);
     setRemoveID(index);
     setRemoveBy(title);
     setTimeout(() => {
       const _collections = [...collections];
       setRemoveID(-1);
-      setAddID(-1);
       _collections.splice(index, 1);
       dispatch(setter(_collections));
     }, 180);
-
     e.dataTransfer.setData(
       "application/json",
       JSON.stringify({
@@ -100,7 +100,7 @@ const DragDrop = () => {
   };
 
   return (
-    <>
+    <MDBAnimation type="bounceInDown">
       <MDBCard>
         <MDBCardBody>
           <MDBRow>
@@ -109,6 +109,7 @@ const DragDrop = () => {
               addID={addID}
               removeID={removeID}
               removeBy={removeBy}
+              hasDrag={hasDrag}
               title="List"
               tableName="List"
               handleDragStart={handleDragStart}
@@ -122,12 +123,13 @@ const DragDrop = () => {
               handleDrop={handleDrop}
               tableName="Selected"
               title="Selected"
+              hasDrag={hasDrag}
               handleDragStart={handleDragStart}
             />
           </MDBRow>
         </MDBCardBody>
       </MDBCard>
-    </>
+    </MDBAnimation>
   );
 };
 

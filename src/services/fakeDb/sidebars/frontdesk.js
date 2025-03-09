@@ -28,7 +28,7 @@ const frontdesk = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/frontdesk/bulletin",
     component: Dashboard,
   },
   {

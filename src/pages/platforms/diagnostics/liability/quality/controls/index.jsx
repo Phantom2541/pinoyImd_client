@@ -14,8 +14,6 @@ const Controls = () => {
     ),
     dispatch = useDispatch();
 
-  const setPage = (page) => dispatch(SetPAGE(page));
-
   return (
     <>
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
@@ -30,7 +28,7 @@ const Controls = () => {
             isLoading={isLoading}
             total={totalPages}
             page={page}
-            setPage={setPage}
+            setPage={(page) => dispatch(SetPAGE(page))}
           />
         </div>
       </MDBCard>

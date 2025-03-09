@@ -5,9 +5,10 @@ const name = "assets/providers";
 
 const initialState = {
   collections: [],
+  searchResults: [],
   isSuccess: false,
   isLoading: false,
-
+  didSearch: false,
   selected: {},
   totalPages: 0,
   page: 0,
@@ -117,6 +118,11 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.willCreate = false;
       state.showModal = true;
+    },
+
+    SetSEARCHRESULTS: (state, { payload }) => {
+      state.searchResults = payload;
+      state.didSearch = true;
     },
     SetBRANCHES: (state, { payload }) => {
       const { affiliated = {}, providerId = "", physicianId = "" } = payload;
@@ -280,6 +286,7 @@ export const {
   SetFILTER,
   SetPAGE,
   SETSOURCES,
+  SetSEARCHRESULTS,
   SetBRANCHES,
   RESET,
 } = reduxSlice.actions;

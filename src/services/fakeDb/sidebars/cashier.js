@@ -130,6 +130,12 @@ const cashier = [
         component: Utilities,
         icon: "tools",
       },
+      {
+        name: "Suppliers",
+        path: "/suppliers",
+        // component: Suppliers,
+        icon: "handshake",
+      },
     ],
   },
   {

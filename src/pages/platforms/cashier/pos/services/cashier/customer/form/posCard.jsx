@@ -42,7 +42,6 @@ export default function PosCard() {
       if (storedSource) {
         // If source data is found in localStorage, use it (parse back to an object)
         const sourceData = JSON.parse(storedSource);
-        console.log("Using stored source data:", sourceData);
 
         // Optionally dispatch the source data to update the store
         dispatch(SETSOURCES(sourceData));
