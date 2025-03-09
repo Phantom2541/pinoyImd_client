@@ -8,7 +8,7 @@ import { MDBTable } from "mdbreact";
 import Swal from "sweetalert2";
 // import { Services } from "../../../../../../services/fakeDb";
 
-const Tables = () => {
+const Body = () => {
   // const { token } = useSelector(({ auth }) => auth),
   //   { paginated } = useSelector(({ assurances }) => assurances),
   //   dispatch = useDispatch();
@@ -34,8 +34,9 @@ const Tables = () => {
     <MDBTable responsive hover bordered>
       <thead>
         <tr>
-          <th>Service ID</th>
-          <th>Abnormal</th>
+          <th>Name</th>
+          <th>Sub Name</th>
+          <td>action</td>
         </tr>
       </thead>
       <tbody>
@@ -55,6 +56,20 @@ const Tables = () => {
             <button onClick={() => handleDelete(1)}>Delete</button>
           </td>
         </tr>
+        <tr
+        // key={index}
+        >
+          <td>second name</td>
+          <td>second subname </td>
+          <td>
+            <button
+            // onClick={() => dispatch(SetEDIT(assurance))}
+            >
+              Edit
+            </button>
+            <button onClick={() => handleDelete(1)}>Delete</button>
+          </td>
+        </tr>
         {/* );
         })} */}
       </tbody>
@@ -62,4 +77,4 @@ const Tables = () => {
   );
 };
 
-export default Tables;
+export default Body;

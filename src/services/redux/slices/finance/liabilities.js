@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "assets/providers";
+const name = "finance/liabilities";
 
 const initialState = {
   collections: [],
-  enrolled: [],
   isSuccess: false,
   isLoading: false,
+  paginated: [], // paginated the filtered
 
   selected: {},
   totalPages: 0,
@@ -16,63 +16,12 @@ const initialState = {
   willCreate: false,
   maxPage: 5,
 };
+
 export const BROWSE = createAsyncThunk(
   `${name}/browse`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/browse`, token, key);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const GETENROLLED = createAsyncThunk(
-  `${name}/enrollements`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/enrollements`, token, key);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const OUTSOURCE = createAsyncThunk(
-  `${name}/browse`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/browse`, token, key);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const INSOURCE = createAsyncThunk(
-  `${name}/insource`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/insource`, token, key);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const TIEUPS = createAsyncThunk(
-  `${name}/tieups`,
   async ({ token, key }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/tieups`, token, key);
+      return await axioKit.universal(`${name}/browse`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -151,6 +100,7 @@ export const reduxSlice = createSlice({
     },
     SetFILTER: (state, { payload }) => {
       const { page, maxPage } = payload;
+      console.log("payload", payload);
       if (page.length > 0) {
         state.totalPages = Math.ceil(payload.length / maxPage);
         if (state.page > state.totalPages) {
@@ -172,59 +122,23 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
-      .addCase(GETENROLLED.pending, (state) => {
+      .addCase(BROWSE.pending, (state) => {
+        // console.log("BROWSE.pending action dispatched");
         state.isLoading = true;
-      })
-      .addCase(GETENROLLED.fulfilled, (state, { payload }) => {
-        const { payload: data } = payload;
-        state.enrolled = data;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(GETENROLLED.rejected, (state, { payload }) => {
-        state.message = payload;
-        state.isLoading = false;
       })
 
-      .addCase(OUTSOURCE.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(OUTSOURCE.fulfilled, (state, { payload }) => {
-        const { payload: data } = payload;
-        state.collections = data;
-        state.filter = data;
-        state.paginated = data;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(OUTSOURCE.rejected, (state, { payload }) => {
-        state.message = payload;
-        state.isLoading = false;
-      })
-
-      .addCase(INSOURCE.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(INSOURCE.fulfilled, (state, { payload }) => {
-        state.collections = payload.payload;
-        state.isLoading = false;
-      })
-      .addCase(INSOURCE.rejected, (state, { payload }) => {
-        state.message = payload;
-        state.isLoading = false;
-      })
-      .addCase(TIEUPS.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(TIEUPS.fulfilled, (state, { payload }) => {
+      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+        //console.log("BROWSE.fulfilled action dispatched:", payload);
         state.collections = payload;
+        state.paginated = payload;
         state.isLoading = false;
       })
-      .addCase(TIEUPS.rejected, (state, { payload }) => {
+      .addCase(BROWSE.rejected, (state, { payload }) => {
+        // console.log("BROWSE.rejected action dispatched:", payload);
         state.message = payload;
         state.isLoading = false;
       })
+
       .addCase(LIST.pending, (state) => {
         state.isLoading = true;
       })
@@ -248,6 +162,7 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
+
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
       })
@@ -282,6 +197,7 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
         state.isLoading = false;
       })
+
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;

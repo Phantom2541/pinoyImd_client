@@ -10,8 +10,8 @@ import Swal from "sweetalert2";
 import { Services } from "../../../../../../services/fakeDb";
 // import { handlePagination } from "../../../../../../services/utilities";
 const Tables = () => {
-  const { maxPage, token } = useSelector(({ auth }) => auth),
-    { paginated, page } = useSelector(({ controls }) => controls),
+  const { token } = useSelector(({ auth }) => auth),
+    { paginated } = useSelector(({ controls }) => controls),
     dispatch = useDispatch();
 
   const handleDelete = (_id) => {

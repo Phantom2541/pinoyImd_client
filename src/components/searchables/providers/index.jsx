@@ -2,16 +2,11 @@ import React, { useState } from "react";
 import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  GETPATIENTS,
+  GETENROLLED,
   RESET,
-} from "./../../../services/redux/slices/assets/persons/users";
+} from "./../../../services/redux/slices/assets/providers";
 import { MDBIcon } from "mdbreact";
-import {
-  formatNameToObj,
-  fullName,
-  getAge,
-  getGenderIcon,
-} from "./../../../services/utilities";
+
 import Notification from "./notification";
 
 /**
@@ -21,17 +16,19 @@ import Notification from "./notification";
  * The component also renders a button to register a new patient if no patient record is found with the search key.
  * The setSearchKey callback will be called with the search key when the button is clicked.
  *
- * @param {function} setPatient - A callback function that will be called when a patient is selected from the list.
+ * @param {function} setEnrolled - A callback function that will be called when a patient is selected from the list.
  * @param {function} setRegister - A callback function that will be called when the button to register a new patient is clicked.
  *
  * @returns {JSX.Element} users
  */
-export default function Search({ setPatient, setRegister }) {
+export default function Search({ setEnrolled, setRegister }) {
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
-    { collections, isLoading } = useSelector(({ users }) => users),
-    { token } = useSelector((state) => state.auth),
+    { enrolled, isLoading } = useSelector(({ providers }) => providers),
+    { token, activePlatform } = useSelector((state) => state.auth),
     dispatch = useDispatch();
+
+  console.log("Searchable providers: ", enrolled);
 
   // This function is debounced which means it will only be executed after 1000 milliseconds (1 second)
   // of not being called again. This is useful for when the user is typing in the search
@@ -46,30 +43,31 @@ export default function Search({ setPatient, setRegister }) {
   // The function then dispatches the GETPATIENTS action with the token and the formatted
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
-  const debouncedSearch = debounce((searchKey) => {
-    const key = formatNameToObj(searchKey);
-    dispatch(GETPATIENTS({ token, key }));
+  const debouncedSearch = debounce((query) => {
+    dispatch(GETENROLLED({ token, query }));
   }, 1000);
 
   const handleChange = (e) => {
     const _searchKey = e.target.value;
     setSearchKey(_searchKey);
     const searchKey = _searchKey.split(",");
-    if (searchKey.length > 1 && searchKey[1].trim()) {
-      setDidSearch(true);
-      return debouncedSearch(searchKey);
-    }
+    const query = {
+      vendors: activePlatform?.branchId,
+      companyName: searchKey[0],
+      name: searchKey[1] ? searchKey[1] : "",
+    };
+    setDidSearch(true);
+    return debouncedSearch(query);
   };
 
   const handleSelect = (user) => {
-    setPatient(user);
+    setEnrolled(user);
     setSearchKey("");
     dispatch(RESET());
     setDidSearch(false);
   };
 
   const handleRegister = () => {
-    setRegister(formatNameToObj(searchKey));
     setSearchKey("");
     dispatch(RESET());
     setDidSearch(false);
@@ -80,17 +78,16 @@ export default function Search({ setPatient, setRegister }) {
       <Notification didSearch={didSearch} />
       <div className={`cashier-search ${didSearch && "active"}`}>
         <div className="cashier-search-suggestions">
-          {!collections.length ? (
-            <small onClick={handleRegister}>No Patient Record found...</small>
+          {!enrolled?.length ? (
+            <small onClick={handleRegister}>No Branch record found...</small>
           ) : (
             <ul>
-              {collections?.map((user) => {
-                const { _id, fullName: fullname } = user;
+              {enrolled?.map((provider) => {
+                const { _id, name, subName } = provider;
 
                 return (
-                  <li onClick={() => handleSelect(user)} key={_id}>
-                    {getGenderIcon(user.gender)} {fullName(fullname)} |{" "}
-                    {getAge(user.dob)}
+                  <li onClick={() => handleSelect(provider)} key={_id}>
+                    {name}, {subName}
                   </li>
                 );
               })}

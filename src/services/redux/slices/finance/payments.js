@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
-
-const name = "assets/providers";
+import { Statements } from "../../../fakeDb";
+const name = "finance/journals/payments";
 
 const initialState = {
   collections: [],
-  enrolled: [],
+  filtered: [],
   isSuccess: false,
   isLoading: false,
+  paginated: [], // paginated the filtered
 
   selected: {},
   totalPages: 0,
@@ -16,63 +17,12 @@ const initialState = {
   willCreate: false,
   maxPage: 5,
 };
+
 export const BROWSE = createAsyncThunk(
   `${name}/browse`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/browse`, token, key);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const GETENROLLED = createAsyncThunk(
-  `${name}/enrollements`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/enrollements`, token, key);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const OUTSOURCE = createAsyncThunk(
-  `${name}/browse`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/browse`, token, key);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const INSOURCE = createAsyncThunk(
-  `${name}/insource`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/insource`, token, key);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const TIEUPS = createAsyncThunk(
-  `${name}/tieups`,
   async ({ token, key }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/tieups`, token, key);
+      return await axioKit.universal(`${name}/browse`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -139,6 +89,17 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    SetFILTERByCategories: (state, { payload }) => {
+      const categoryId = Statements.getAllIdByCategory(payload);
+      // console.log("categoryId:", categoryId);
+
+      const collections = JSON.stringify(state.collections, null, 2);
+      const filtered = JSON.parse(collections).filter(({ fsId }) =>
+        categoryId.includes(fsId)
+      );
+      // console.log("filtered:", filtered);
+      state.filtered = filtered;
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -157,7 +118,7 @@ export const reduxSlice = createSlice({
           state.page = state.totalPages;
         }
       }
-      state.filter = page;
+      state.filtered = page;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -172,59 +133,21 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
-      .addCase(GETENROLLED.pending, (state) => {
+      .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
-      })
-      .addCase(GETENROLLED.fulfilled, (state, { payload }) => {
-        const { payload: data } = payload;
-        state.enrolled = data;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(GETENROLLED.rejected, (state, { payload }) => {
-        state.message = payload;
-        state.isLoading = false;
       })
 
-      .addCase(OUTSOURCE.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(OUTSOURCE.fulfilled, (state, { payload }) => {
-        const { payload: data } = payload;
-        state.collections = data;
-        state.filter = data;
-        state.paginated = data;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(OUTSOURCE.rejected, (state, { payload }) => {
-        state.message = payload;
-        state.isLoading = false;
-      })
-
-      .addCase(INSOURCE.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(INSOURCE.fulfilled, (state, { payload }) => {
-        state.collections = payload.payload;
-        state.isLoading = false;
-      })
-      .addCase(INSOURCE.rejected, (state, { payload }) => {
-        state.message = payload;
-        state.isLoading = false;
-      })
-      .addCase(TIEUPS.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(TIEUPS.fulfilled, (state, { payload }) => {
+      .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = payload;
+        state.filtered = payload;
         state.isLoading = false;
       })
-      .addCase(TIEUPS.rejected, (state, { payload }) => {
+
+      .addCase(BROWSE.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
       })
+
       .addCase(LIST.pending, (state) => {
         state.isLoading = true;
       })
@@ -248,6 +171,7 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
+
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
       })
@@ -282,6 +206,7 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
         state.isLoading = false;
       })
+
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -290,6 +215,13 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetEDIT, SetCREATE, SetFILTER, SetPAGE, SETSOURCES, RESET } =
-  reduxSlice.actions;
+export const {
+  SetEDIT,
+  SetCREATE,
+  SetFILTER,
+  SetFILTERByCategories,
+  SetPAGE,
+  SETSOURCES,
+  RESET,
+} = reduxSlice.actions;
 export default reduxSlice.reducer;

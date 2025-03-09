@@ -1,38 +1,19 @@
 import React, { useState } from "react";
 import {
-  MDBCard,
-  MDBCardBody,
-  MDBCollapse,
-  MDBCollapseHeader,
   MDBContainer,
+  MDBCard,
+  MDBCollapseHeader,
+  MDBCollapse,
+  MDBCardBody,
 } from "mdbreact";
-import { useDispatch, useSelector } from "react-redux";
-import { Services } from "../../../../services/fakeDb";
+import { useSelector } from "react-redux";
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 
-// import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
-
 export default function Body() {
-  /**
-   * check who will open
-   */
-  const [activeId, setActiveId] = useState(-1);
-  const { maxPage, token } = useSelector(({ auth }) => auth);
-  const dispatch = useDispatch();
-
-  // const onSubmit = (data) => {
-  //   dispatch(
-  //     UPDATE({
-  //       data: {
-  //         _id: data._id,
-  //       },
-  //       token,
-  //     })
-  //   );
-  // };
-
+  const { filtered } = useSelector(({ payments }) => payments),
+    [activeId, setActiveId] = useState(-1);
   return (
     <MDBContainer
       style={{
@@ -40,9 +21,9 @@ export default function Body() {
       }}
       fluid
     >
-      {Services.collections.map((service, index) => {
-        const { decSS, frequency } = service;
-
+      {filtered.map((payment, index) => {
+        // console.log(payment);
+        const { breakdown } = payment;
         return (
           <MDBCard
             key={`staffs-${index}`}
@@ -59,10 +40,8 @@ export default function Body() {
                 setActiveId((prev) => (prev === index ? -1 : index))
               }
             >
-              {console.log("service", service)}
-              <CollapsableHeader service={service} index={index} />
+              <CollapsableHeader payment={payment} index={index} />
             </MDBCollapseHeader>
-
             <MDBCollapse
               id={`collapse-${index}`}
               className="mb-2"
@@ -74,7 +53,7 @@ export default function Body() {
               }}
             >
               <MDBCardBody className="pt-2">
-                <CollapsableBody decSS={decSS} frequency={frequency} />
+                <CollapsableBody breakdown={breakdown} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

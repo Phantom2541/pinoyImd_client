@@ -1,6 +1,6 @@
 import Sidebars from "./sidebars";
 import {
-  Liabilities,
+  Statements,
   Menus,
   Payments,
   Philippines,
@@ -63,7 +63,7 @@ export {
   MicroscopicInRange,
   Menus,
   Roles,
-  Liabilities,
+  Statements,
   Access,
   Policy,
 };

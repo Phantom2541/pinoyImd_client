@@ -33,7 +33,7 @@ import {
   assurances,
 } from "./slices/liability";
 
-import remmitance from "./slices/finance/remmitance";
+import { remmitance, payables, payments } from "./slices/finance";
 
 import temperatures from "./slices/monitoring/temperature";
 
@@ -61,7 +61,9 @@ const store = configureStore({
     urinalysis,
     fecalysis,
     applicants,
+    payables,
     liabilities,
+    payments,
     electrolyte,
     serology,
     temperatures,

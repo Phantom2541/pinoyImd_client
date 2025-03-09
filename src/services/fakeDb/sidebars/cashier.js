@@ -13,14 +13,17 @@ import { Tablestemplate, Collapsable } from "../../../pages/templates";
 
 import Cashier from "../../../pages/platforms/cashier/pos/cashier";
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
+import Receivables from "../../../pages/platforms/cashier/accrued/receivables";
+import Payments from "../../../pages/platforms/cashier/accrued/payments";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
+import SOA from "../../../pages/platforms/cashier/accrued/soa";
 import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
 import Remmitances from "../../../pages/platforms/manager/pos/remittances";
 //import Outsource from "../../../pages/platforms/manager/provider";
 
 const cashier = [
   {
-    name: "Dashboard",
+    name: "bulletin",
     icon: "tachometer-alt",
     path: "/dashboard",
     component: Dashboard,
@@ -62,23 +65,44 @@ const cashier = [
     path: "/accrued",
     icon: "tv",
     children: [
+      /**
+       * unpaid bills (Water, Electricity, etc.)
+       * Liabilities
+       */
       {
-        name: "Payables", // unpaid bills (Water, Electricity, etc.)
+        name: "Payables",
         path: "/payables",
         component: Payables,
       },
+      /**
+       * Collections from vouchers
+       */
       {
-        name: "Vouchers", // expenses from sales today
+        name: "Receivables",
+        path: "/receivables",
+        component: Receivables,
+      },
+      {
+        name: "Payments",
+        path: "/payments",
+        component: Payments,
+      },
+      /**
+       * Personal Vouchers
+       * from daily sales
+       */
+      {
+        name: "Vouchers",
         path: "/vouchers",
         component: Vouchers,
       },
+      /**
+       * statement of Account (Sendout)
+       */
       {
-        name: "SOA", // statement of Account (Sendout)
+        name: "SOA",
         path: "/soa",
-      },
-      {
-        name: "Receivables", // unpaid services
-        path: "/receivables",
+        component: SOA,
       },
     ],
   },
