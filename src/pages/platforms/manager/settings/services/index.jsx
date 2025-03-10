@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/results/preferences";
+} from "../../../../../services/redux/slices/results/laboratory/preferences";
 import { useToasts } from "react-toast-notifications";
 import { globalSearch } from "../../../../../services/utilities";
 import { Services as Service } from "../../../../../services/fakeDb/index";

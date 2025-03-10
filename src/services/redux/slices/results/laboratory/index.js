@@ -4,3 +4,4 @@ export { default as fecalysis } from "./fecalysis";
 export { default as electrolyte } from "./electrolyte";
 export { default as serology } from "./serology";
 export { default as chemistry } from "./chemistry";
+export { default as preferences } from "./preferences";

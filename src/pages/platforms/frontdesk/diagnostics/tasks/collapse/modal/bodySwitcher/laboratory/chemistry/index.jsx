@@ -43,20 +43,20 @@ export default function Chemistry({ task, setTask }) {
     });
   };
   console.log("preferences", preferences);
-  
+
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>
         <tr>
           <th colSpan={2} className="py-1" />
           <th className="text-center py-1" colSpan={2}>
-            Service
+            Reference
           </th>
         </tr>
         <tr>
           <th className="py-1">Service</th>
           <th className="py-1">Result</th>
-          <th className="py-1">Reference</th>
+          <th className="py-1">Value</th>
           <th className="py-1">Units</th>
         </tr>
       </thead>

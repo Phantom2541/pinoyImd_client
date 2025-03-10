@@ -5,7 +5,7 @@ import { capitalize } from "../../../../../../services/utilities";
 import { References } from "../../../../../../services/fakeDb";
 import Modal from "./modal";
 import Swal from "sweetalert2";
-import { DESTROY } from "../../../../../../services/redux/slices/results/preferences";
+import { DESTROY } from "../../../../../../services/redux/slices/results/laboratory/preferences";
 
 export default function CollapseTable({ id, preference }) {
   const [references, setReferences] = useState([]),

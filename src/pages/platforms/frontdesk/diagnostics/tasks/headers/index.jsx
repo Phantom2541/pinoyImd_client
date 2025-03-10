@@ -9,7 +9,7 @@ import {
 import {
   BROWSE,
   RESET as PREFRESET,
-} from "../../../../../../services/redux/slices/results/preferences";
+} from "../../../../../../services/redux/slices/results/laboratory/preferences";
 import {
   BROWSE as HEADS,
   RESET as HEADSRESET,
