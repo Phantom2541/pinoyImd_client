@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBadge,
   MDBBtn,
+  MDBBtnGroup,
   MDBIcon,
   MDBTable,
   MDBTableBody,
@@ -77,40 +78,46 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
               <td>{user?.isMale ? "Male" : "Female"}</td>
               <td>{user?.mobile}</td>
               <td>
-                {user ? (
+                <MDBBtnGroup>
+                  {user ? (
+                    <MDBBtn
+                      color="info"
+                      rounded
+                      size="sm"
+                      onClick={() => handleEdit(physician)}
+                    >
+                      <MDBIcon icon="user-times" className="mr-2" /> Edit
+                    </MDBBtn>
+                  ) : (
+                    <>
+                      <MDBBtn
+                        color="success"
+                        rounded
+                        size="sm"
+                        onClick={() => handleRegister(physician)}
+                      >
+                        👻 Register
+                      </MDBBtn>
+                      <MDBBtn
+                        color="info"
+                        rounded
+                        size="sm"
+                        onClick={() => handleGhostUpdate(physician)}
+                      >
+                        👻 Edit
+                      </MDBBtn>
+                    </>
+                  )}
+
                   <MDBBtn
                     color="danger"
                     size="sm"
-                    onClick={() => handleEdit(physician)}
+                    rounded
+                    onClick={() => handleUntag(_id)}
                   >
-                    <MDBIcon fas icon="user-times" className="mr-2" /> Edit
+                    <MDBIcon icon="user-times" className="mr-2" /> Untag
                   </MDBBtn>
-                ) : (
-                  <>
-                    <MDBBtn
-                      color="danger"
-                      size="sm"
-                      onClick={() => handleRegister(physician)}
-                    >
-                      👻 Register
-                    </MDBBtn>
-                    <MDBBtn
-                      color="danger"
-                      size="sm"
-                      onClick={() => handleGhostUpdate(physician)}
-                    >
-                      👻 Edit
-                    </MDBBtn>
-                  </>
-                )}
-
-                <MDBBtn
-                  color="danger"
-                  size="sm"
-                  onClick={() => handleUntag(_id)}
-                >
-                  <MDBIcon fas icon="user-times" className="mr-2" /> Untag
-                </MDBBtn>
+                </MDBBtnGroup>
               </td>
             </tr>
           );

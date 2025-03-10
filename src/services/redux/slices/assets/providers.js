@@ -13,6 +13,7 @@ const initialState = {
   totalPages: 0,
   page: 0,
   showModal: false,
+  showCompanyModal: false,
   willCreate: false,
   maxPage: 5,
 };
@@ -114,6 +115,16 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    ToggleDidSearch: (state) => {
+      state.didSearch = !state.didSearch;
+    },
+    SetSOURCE: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+    },
+    ToggleModal: (state) => {
+      state.showCompanyModal = !state.showCompanyModal;
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -287,6 +298,9 @@ export const {
   SetPAGE,
   SETSOURCES,
   SetSEARCHRESULTS,
+  ToggleModal,
+  ToggleDidSearch,
+  SetSOURCE,
   SetBRANCHES,
   RESET,
 } = reduxSlice.actions;
