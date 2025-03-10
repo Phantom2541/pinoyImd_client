@@ -19,6 +19,7 @@ const initialState = {
     isEmpty: true,
   },
   showModal: false,
+  willCreate: false,
   totalPages: 0,
   maxPage: 1,
   activePage: 1,
@@ -177,18 +178,22 @@ export const SAVE = createAsyncThunk(
   }
 );
 
+/**
+ * Automatic generate URL.
+ */
 export const LABRESULT = createAsyncThunk(
-  `${name}/labresult`,
+  `${name}/results`,
   ({ token, data }, thunkAPI) => {
     try {
+      // \diagnostics\laboratory\result\miscellaneous
       return axioKit.save(
-        `results/${
+        `diagnostics/${
           data.department === "LAB"
             ? "laboratory"
             : data.department === "RAD"
             ? "radiology"
             : "clinic"
-        }/${data.form.toLowerCase()}`,
+        }/result/${data.form.toLowerCase()}`,
         data,
         token
       );
@@ -253,6 +258,8 @@ export const reduxSlice = createSlice({
     },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
+      state.showModal = true;
+      state.willCreate = false;
     },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
@@ -271,6 +278,13 @@ export const reduxSlice = createSlice({
       if (payload?.resetCollections) state.collections = [];
     },
   },
+  /**
+   * Handles extra actions not handled by the reducer itself.
+   *
+   * @param {Object} builder - The builder object from `createSlice`.
+   *
+   * @returns {Object} The extra reducers.
+   */
   extraReducers: (builder) => {
     builder
       .addCase(BROWSE.pending, (state) => {

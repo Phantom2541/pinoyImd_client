@@ -45,7 +45,6 @@ const Tables = () => {
       "top=100px,left=150px,width=450px,height=850px"
     );
   };
-  const toggleCashRegister = () => setShowCashRegister(!showCashRegister);
 
   const handleCashRegister = (selected) => {
     dispatch(
@@ -56,7 +55,6 @@ const Tables = () => {
         soldCart: selected.cart,
       })
     );
-    toggleCashRegister();
   };
 
   const generateStub = (deal) => ({
