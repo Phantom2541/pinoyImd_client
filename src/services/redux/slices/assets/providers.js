@@ -5,6 +5,7 @@ const name = "assets/providers";
 
 const initialState = {
   collections: [],
+  // enrolled: [],
   searchResults: [],
   isSuccess: false,
   isLoading: false,
@@ -16,6 +17,31 @@ const initialState = {
   willCreate: false,
   maxPage: 5,
 };
+export const BROWSE = createAsyncThunk(
+  `${name}/browse`,
+  async ({ key, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${name}/browse`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
+export const GETENROLLED = createAsyncThunk(
+  `${name}/enrollements`,
+  async ({ key, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${name}/enrollements`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
 
 export const OUTSOURCE = createAsyncThunk(
   `${name}/browse`,
@@ -179,6 +205,21 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      .addCase(GETENROLLED.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(GETENROLLED.fulfilled, (state, { payload }) => {
+        const { payload: data } = payload;
+        state.enrolled = data;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(GETENROLLED.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
+
       .addCase(OUTSOURCE.pending, (state) => {
         state.isLoading = true;
       })
@@ -194,6 +235,7 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
+
       .addCase(INSOURCE.pending, (state) => {
         state.isLoading = true;
       })

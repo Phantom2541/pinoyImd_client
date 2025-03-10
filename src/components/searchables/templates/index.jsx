@@ -20,6 +20,7 @@ const Templates = ({ setTemplate }) => {
         {components.map((template, index) => (
           <option key={template} value={index}>
             {template}
+            {console.log(template)}
           </option>
         ))}
       </select>

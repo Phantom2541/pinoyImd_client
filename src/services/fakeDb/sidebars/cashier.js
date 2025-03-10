@@ -18,7 +18,17 @@ import {
 } from "../../../pages/templates";
 
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
+import Receivables from "../../../pages/platforms/cashier/accrued/receivables";
+import Payments from "../../../pages/platforms/cashier/accrued/payments";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
+// import SOA from "../../../pages/platforms/cashier/accrued/soa";
+// import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
+// import Remmitances from "../../../pages/platforms/manager/pos/remittances";
+// //import Outsource from "../../../pages/platforms/manager/provider";
+
+// const cashier = [
+//   {
+//     name: "bulletin",
 
 const cashier = [
   {
@@ -57,18 +67,42 @@ const cashier = [
     path: "/accrued",
     icon: "tv",
     children: [
+      /**
+       * unpaid bills (Water, Electricity, etc.)
+       * Liabilities
+       */
       {
-        name: "Payables", // unpaid bills (Water, Electricity, etc.)
+        name: "Payables",
         path: "/payables",
         component: Payables,
         icon: "file-invoice-dollar",
       },
+      /**
+       * Collections from vouchers
+       */
       {
-        name: "Vouchers", // expenses from sales today
+        name: "Receivables",
+        path: "/receivables",
+        component: Receivables,
+      },
+      {
+        name: "Payments",
+        path: "/payments",
+        component: Payments,
+      },
+      /**
+       * Personal Vouchers
+       * from daily sales
+       */
+      {
+        name: "Vouchers",
         path: "/vouchers",
         component: Vouchers,
         icon: "receipt",
       },
+      /**
+       * statement of Account (Sendout)
+       */
       {
         name: "Statement of Account",
         path: "/soa",

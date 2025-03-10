@@ -92,14 +92,20 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
                       size="sm"
                       onClick={() => handleRegister(physician)}
                     >
-                      👻 Register
+                      <span role="img" aria-label="ghost" className="mr-2">
+                        👻
+                      </span>
+                      Register
                     </MDBBtn>
                     <MDBBtn
                       color="danger"
                       size="sm"
                       onClick={() => handleGhostUpdate(physician)}
                     >
-                      👻 Edit
+                      <span role="img" aria-label="ghost" className="mr-2">
+                        👻
+                      </span>
+                      Edit
                     </MDBBtn>
                   </>
                 )}

@@ -30,8 +30,6 @@ export default function POS() {
     dispatch(SETSEARCHKEY(customer));
   };
 
-  console.log("customer:", customer);
-
   return (
     <div className="pos-container ">
       <div

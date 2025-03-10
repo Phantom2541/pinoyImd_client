@@ -16,8 +16,16 @@ import {
 import { PresetImage } from "../../../services/utilities";
 
 export default function Login({ show, toggle = null }) {
-  const { auth, email, isLoading, loginSuccess, message, image, isOnline } =
-      useSelector(({ auth }) => auth),
+  const {
+      activePlatform,
+      auth,
+      email,
+      isLoading,
+      loginSuccess,
+      message,
+      image,
+      isOnline,
+    } = useSelector(({ auth }) => auth),
     [isLocked, setIsLocked] = useState(true),
     history = useHistory(),
     location = useLocation(),
@@ -38,10 +46,14 @@ export default function Login({ show, toggle = null }) {
 
   useEffect(() => {
     if (auth._id && loginSuccess) {
-      history.push("/dashboard");
+      history.push(
+        `/${activePlatform.platform}/${
+          activePlatform.platform === "manager" ? "dashboard" : "bulletin"
+        }`
+      );
       dispatch(RESET());
     }
-  }, [auth, loginSuccess, history, location, dispatch]);
+  }, [auth, loginSuccess, history, location, dispatch, activePlatform]);
 
   const handleBody = () => {
     return (

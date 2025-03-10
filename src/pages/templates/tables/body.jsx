@@ -8,7 +8,7 @@ import { MDBTable } from "mdbreact";
 import Swal from "sweetalert2";
 // import { Services } from "../../../../../../services/fakeDb";
 
-const Tables = () => {
+const Body = () => {
   // const { token } = useSelector(({ auth }) => auth),
   //   { paginated } = useSelector(({ assurances }) => assurances),
   //   dispatch = useDispatch();
@@ -55,4 +55,4 @@ const Tables = () => {
   );
 };
 
-export default Tables;
+export default Body;
