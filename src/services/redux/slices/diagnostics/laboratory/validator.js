@@ -2,18 +2,18 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
 const name = "commerce/pos/services/deals";
-const healthyClient = {
-  urinalysis: {
-    pe: [2, 0, 1, 1],
-    ce: [0, 0, 0, 0, 0, 0, 0, 0],
-    me: [1, 0, 0, 0, 0, 0],
-  },
-  parasitology: {
-    pe: [0, 0],
-    me: [0, 0, 0],
-    remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
-  },
-};
+// const healthyClient = {
+//   urinalysis: {
+//     pe: [2, 0, 1, 1],
+//     ce: [0, 0, 0, 0, 0, 0, 0, 0],
+//     me: [1, 0, 0, 0, 0, 0],
+//   },
+//   parasitology: {
+//     pe: [0, 0],
+//     me: [0, 0, 0],
+//     remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
+//   },
+// };
 
 const initialState = {
   collections: [],

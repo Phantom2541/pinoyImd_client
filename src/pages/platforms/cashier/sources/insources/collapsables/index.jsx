@@ -224,7 +224,12 @@ export default function MenuCollapse() {
                     <span className="d-flex align-items-center transition-all">
                       {index + 1}. {baseName} {baseSubname}{" "}
                       {isGhost ? (
-                        <span style={{ fontSize: "20px" }} className="ml-2">
+                        <span
+                          style={{ fontSize: "20px" }}
+                          className="ml-2"
+                          role="img"
+                          aria-label="ghost"
+                        >
                           👻
                         </span>
                       ) : (
