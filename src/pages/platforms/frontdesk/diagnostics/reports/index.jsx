@@ -4,7 +4,7 @@ import { MDBContainer } from "mdbreact";
 import {
   BROWSE,
   RESET as PREFRESET,
-} from "../../../../../services/redux/slices/results/laboratory/preferences";
+} from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 
 import Header from "./header";
 import Body from "./body";

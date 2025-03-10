@@ -19,7 +19,7 @@ import Swal from "sweetalert2";
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../services/redux/slices/results/laboratory/preferences";
+} from "../../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 
 export default function Modal({
   show,

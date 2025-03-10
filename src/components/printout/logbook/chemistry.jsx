@@ -6,7 +6,7 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/results/laboratory/chemistry.js";
+} from "../../../services/redux/slices/diagnostics/laboratory/chemistry.js";
 
 const dayNames = [
   "Sunday",

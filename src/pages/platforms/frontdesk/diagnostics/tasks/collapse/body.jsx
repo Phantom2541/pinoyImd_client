@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { capitalize } from "../../../../../../services/utilities";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import Modal from "../modal";
+import ResultEntry from "../modal";
 import { useSelector } from "react-redux";
 
 export default function CollapseTable({ menu }) {
-  const [labTests, setLabTests] = useState([]),
-    [task, setTask] = useState({}),
-    [showModal, setShowModal] = useState(false),
+  const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    { activePlatform } = useSelector(({ auth }) => auth);
+    [labTests, setLabTests] = useState([]),
+    [task, setTask] = useState({}),
+    [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -96,10 +96,7 @@ export default function CollapseTable({ menu }) {
         <td>
           <MDBBtnGroup>
             <MDBBtn
-              onClick={() => {
-                setTask(task);
-                toggleModal();
-              }}
+              onClick={() => handeEntry(task)}
               color={hasDone ? "info" : "primary"}
               size="sm"
               className="py-1 px-2 m-0"
@@ -135,6 +132,11 @@ export default function CollapseTable({ menu }) {
     );
   };
 
+  const handeEntry = (task) => {
+    setTask(task);
+    toggleModal();
+  };
+
   return (
     <>
       <MDBTable small hover responsive>
@@ -166,7 +168,7 @@ export default function CollapseTable({ menu }) {
           })}
         </tbody>
       </MDBTable>
-      <Modal
+      <ResultEntry
         show={showModal}
         toggle={toggleModal}
         task={task}

@@ -142,24 +142,6 @@ export const YEARLY = createAsyncThunk(
   }
 );
 
-export const TASKS = createAsyncThunk(
-  `${name}/tasks`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${name}/tasks`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const SAVE = createAsyncThunk(
   `${name}/save`,
   ({ data, token }, thunkAPI) => {
@@ -444,23 +426,6 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
-      .addCase(TASKS.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(TASKS.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
-        state.isLoading = false;
-      })
-      .addCase(TASKS.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

@@ -85,10 +85,7 @@ export default function Modal({ show, toggle, task, setTask }) {
   };
 
   const generateHealthyStats = () => {
-    // setRerender(false);
-
-    console.log("form", form);
-
+    setRerender(false);
     /**
      * render time too long
      */
@@ -123,6 +120,7 @@ export default function Modal({ show, toggle, task, setTask }) {
           <h5 style={{ letterSpacing: "30px" }} className="mb-0">
             {form}
           </h5>
+          <small>Enter your results here</small>
         </MDBAlert>
         {rerender && <BodySwitcher task={task} setTask={setTask} />}
         <div className="text-center mb-1-half border-top pt-2">

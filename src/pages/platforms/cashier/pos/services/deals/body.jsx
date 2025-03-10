@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { capitalize } from "lodash";
 import { MDBTable, MDBIcon, MDBBadge } from "mdbreact";
@@ -11,8 +11,11 @@ import {
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const Tables = () => {
-  const [showCashRegister, setShowCashRegister] = useState(false),
-    { collections, filtered, view = "all" } = useSelector(({ deals }) => deals),
+  const {
+      collections,
+      filtered,
+      view = "all",
+    } = useSelector(({ deals }) => deals),
     /**
      * show  in table head if set to true
      */

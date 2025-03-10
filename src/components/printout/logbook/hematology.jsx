@@ -6,7 +6,7 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/results/laboratory/hematology"; // Updated slice for Hematology
+} from "../../../services/redux/slices/diagnostics/laboratory/hematology"; // Updated slice for Hematology
 
 // const today = new Date();
 const dayNames = [
@@ -34,7 +34,7 @@ const formatTime = (hours, minutes) => {
 export default function HemaPrint() {
   const [hema, setHema] = useState([]),
     { collections } = useSelector(({ hematology }) => hematology),
-        { token, activePlatform } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
     dispatch = useDispatch();
@@ -59,7 +59,6 @@ export default function HemaPrint() {
     setYear(_year);
     return () => RESET();
   }, [activePlatform, dispatch, token, month, year]);
-
 
   useEffect(() => {
     setHema(collections);

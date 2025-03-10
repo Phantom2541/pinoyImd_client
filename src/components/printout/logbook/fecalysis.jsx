@@ -6,7 +6,7 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/results/laboratory/fecalysis"; // Updated slice for Fecalysis
+} from "../../../services/redux/slices/diagnostics/laboratory/fecalysis"; // Updated slice for Fecalysis
 import {
   Consistency,
   FecalColor,
@@ -38,7 +38,7 @@ const formatTime = (hours, minutes) => {
 export default function FecalysisPrint() {
   const [fecalysis, setFecalysis] = useState([]),
     { collections } = useSelector(({ fecalysis }) => fecalysis),
-        { token, activePlatform } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
     dispatch = useDispatch();

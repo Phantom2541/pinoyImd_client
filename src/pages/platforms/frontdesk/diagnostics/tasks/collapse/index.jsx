@@ -17,19 +17,19 @@ import {
   handlePagination,
   sourceColor,
 } from "../../../../../../services/utilities";
-import CollapseTable from "./table";
+import CollapseBody from "./body";
 import { Categories } from "../../../../../../services/fakeDb";
 import { useHistory } from "react-router-dom";
 
 export default function TasksCollapse({ page }) {
   const [activeId, setActiveId] = useState(-1),
     { maxPage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ deals }) => deals),
+    { filtered } = useSelector(({ validator }) => validator),
     history = useHistory();
 
   return (
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
-      {handlePagination(collections, page, maxPage).map((menu, index) => {
+      {handlePagination(filtered, page, maxPage).map((menu, index) => {
         const { customerId, category, source, _id = "" } = menu,
           categoryName =
             category === "walkin"
@@ -69,7 +69,7 @@ export default function TasksCollapse({ page }) {
             </MDBCollapseHeader>
             <MDBCollapse id={`collapse-${index}`} isOpen={index === activeId}>
               <MDBCardBody className="pt-0">
-                <CollapseTable menu={menu} />
+                <CollapseBody menu={menu} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

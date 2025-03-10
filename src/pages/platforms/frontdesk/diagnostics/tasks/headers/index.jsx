@@ -1,23 +1,15 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fullName, getAge } from "../../../../../../services/utilities";
 import { MDBView, MDBBtnGroup } from "mdbreact";
 import {
   TASKS,
   RESET,
-} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
-import {
-  BROWSE,
-  RESET as PREFRESET,
-} from "../../../../../../services/redux/slices/results/laboratory/preferences";
-import {
-  BROWSE as HEADS,
-  RESET as HEADSRESET,
-} from "../../../../../../services/redux/slices/assets/persons/heads";
+} from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { FilterCollections as SEARCH } from "../../../../../../components/searchables";
 
 const Headers = ({ searchKey }) => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { isLoading, collections } = useSelector(({ sales }) => sales),
+    { isLoading, collections } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
   //Initial Browse
@@ -32,15 +24,9 @@ const Headers = ({ searchKey }) => {
           },
         })
       );
-      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
-      dispatch(HEADS({ token, branchId: activePlatform?.branchId }));
     }
 
-    return () => {
-      dispatch(RESET());
-      dispatch(PREFRESET());
-      dispatch(HEADSRESET());
-    };
+    return () => dispatch(RESET());
   }, [token, dispatch, activePlatform]);
 
   return (
@@ -53,26 +39,7 @@ const Headers = ({ searchKey }) => {
         {searchKey ? `Matches with ${searchKey}` : "Onboarding Tasks"}
       </span>
       <div className="text-right">
-        <MDBBtnGroup className="mr-2">
-          <select
-            className="browser-default custom-select"
-            onChange={(e) => {
-              // const selectedClient = e.target.value;
-              // Handle client selection logic here
-            }}
-            disabled={isLoading}
-          >
-            <option value="" disabled selected>
-              Select Client
-            </option>
-            {collections?.map(({ customerId }, index) => (
-              <option key={index} value={customerId?.id}>
-                {/* {getGenderIcon(customerId?.isMale)} Ensure this returns a valid icon */}
-                {fullName(customerId?.fullName)} |{getAge(customerId?.dob)}
-              </option>
-            ))}
-          </select>
-        </MDBBtnGroup>
+        <SEARCH />
       </div>
     </MDBView>
   );
