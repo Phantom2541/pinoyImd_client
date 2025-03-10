@@ -45,8 +45,6 @@ export default function MenuCollapse() {
     }
   }, [collections, didSearch, searchResults]);
 
-  console.log(collections);
-
   const handleTag = (physician) => {
     const { isPhysician, physicianId, isGhost = false } = physician;
     const { branchId, providerId } = selected;

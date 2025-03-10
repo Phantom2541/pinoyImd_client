@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -82,6 +82,8 @@ export default function Search({ setSource = () => {} }) {
     setDidSearch(_searchKey ? true : false);
     return debouncedSearch(_searchKey);
   };
+
+  console.log(searchInDB);
 
   const handleSelect = (selected) => {
     setSource(selected);
