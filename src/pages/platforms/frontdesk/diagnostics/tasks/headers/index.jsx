@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView, MDBBtnGroup } from "mdbreact";
+import { MDBView } from "mdbreact";
 import {
   TASKS,
   RESET,
@@ -9,7 +9,7 @@ import { FilterCollections as SEARCH } from "../../../../../../components/search
 
 const Headers = ({ searchKey }) => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { isLoading, collections } = useSelector(({ validator }) => validator),
+    { collections } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
   //Initial Browse

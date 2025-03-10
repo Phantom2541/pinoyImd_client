@@ -199,6 +199,7 @@ const cashier = [
         name: "DragDrop",
         path: "/DragDrop",
         component: DragDrop,
+        icon: "calendar-alt",
       },
     ],
   },

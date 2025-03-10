@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -6,13 +6,12 @@ import {
   RESET,
 } from "./../../../services/redux/slices/assets/branches";
 import { MDBIcon } from "mdbreact";
-import {
-  getGenderIcon,
-  getPhysicianGenderIcon,
-  globalSearch,
-} from "./../../../services/utilities";
+import { globalSearch } from "./../../../services/utilities";
 import Notification from "./notifications";
-import { SetSEARCHRESULTS } from "../../../services/redux/slices/assets/providers";
+import {
+  SetSEARCHRESULTS,
+  ToggleDidSearch,
+} from "../../../services/redux/slices/assets/providers";
 
 /**
  * A Search component that allows the user to search for a patient by last name, first name, and middle name.
@@ -27,15 +26,16 @@ import { SetSEARCHRESULTS } from "../../../services/redux/slices/assets/provider
  * @returns {JSX.Element} users
  */
 
-export default function Search({ setPhysician }) {
-  const [searchKey, setSearchKey] = useState(""),
-    [didSearch, setDidSearch] = useState(false),
-    { isLoading } = useSelector(({ branches }) => branches),
+export default function Search({ setSource = () => {} }) {
+  const { token } = useSelector((state) => state.auth),
+    { collections, isLoading } = useSelector(({ branches }) => branches),
     { collections: providerCollections } = useSelector(
       ({ providers }) => providers
     ),
     [results, setResults] = useState([]),
-    { token } = useSelector((state) => state.auth),
+    [searchInDB, setSearchInDB] = useState(false),
+    [searchKey, setSearchKey] = useState(""),
+    [didSearch, setDidSearch] = useState(false),
     dispatch = useDispatch();
 
   // This function is debounced which means it will only be executed after 1000 milliseconds (1 second)
@@ -52,9 +52,15 @@ export default function Search({ setPhysician }) {
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
 
-  // useEffect(() => {
-  //   setSearchResults(collections || []);
-  // }, [collections]);
+  useEffect(() => {
+    const removeExisting = collections.filter(
+      (item) =>
+        !providerCollections.some(
+          ({ clients = { _id: "" } }) => clients?._id === item?._id
+        )
+    );
+    setResults(removeExisting || []);
+  }, [collections, providerCollections]);
 
   const debouncedSearch = debounce((searchKey) => {
     // search result from redux
@@ -62,77 +68,76 @@ export default function Search({ setPhysician }) {
     // console.log(searchResultProviders);
 
     dispatch(SetSEARCHRESULTS(searchResultProviders));
-
-    if (searchResultProviders.length < 0) {
+    setSearchInDB(false);
+    if (searchResultProviders.length === 0) {
+      dispatch(ToggleDidSearch());
       dispatch(SEARCH({ token, key: searchKey }));
+      setSearchInDB(true);
     }
   }, 1000);
+
   const handleChange = (e) => {
     const _searchKey = e.target.value;
     setSearchKey(_searchKey);
-
-    setDidSearch(true);
+    setDidSearch(_searchKey ? true : false);
     return debouncedSearch(_searchKey);
   };
 
-  const handleSelect = (user) => {
-    setPhysician(user);
+  console.log(searchInDB);
+
+  const handleSelect = (selected) => {
+    setSource(selected);
     setSearchKey("");
     dispatch(RESET());
     setDidSearch(false);
   };
 
-  const handleRegister = () => {
-    setSearchKey("");
-    dispatch(RESET());
+  const handleSubmit = () => {
+    if (!didSearch) return;
     setDidSearch(false);
+    setResults([]);
+    setSearchKey("");
+    dispatch(ToggleDidSearch(false));
   };
 
   return (
     <div className="d-flex align-items-center">
       <Notification didSearch={didSearch} />
-      <div className={`searchable-search ${didSearch && "active"}`}>
+      <div
+        className={`searchable-search ${didSearch && searchInDB && "active"}`}
+      >
         <div className="searchable-search-suggestions">
           {!results?.length ? (
             <div>
-              <small>
-                No Physician found...
-                <i
-                  onClick={handleRegister}
-                  style={{ color: "blue", cursor: "pointer" }}
-                >
-                  Click to register
-                </i>
-              </small>
+              <small>No Company Found In Database...</small>
             </div>
           ) : (
             <ul>
-              {results?.map((physician) => {
-                const {
-                  _id,
-                  isPhysician = false,
-                  isGhost = false,
-                  specialization,
-                  isMale,
-                } = physician;
+              <span className="text-dark mb-2 text-nowrap">
+                {isLoading
+                  ? "Searching from database"
+                  : "External provider, not in your records"}
+              </span>
+              {results?.map((result) => {
+                const { _id, name, isGhost = false, companyName } = result;
 
                 return (
                   <li
-                    onClick={() => handleSelect(physician)}
+                    onClick={() => handleSelect(result)}
                     key={_id}
+                    className="d-flex text-dark"
                     title={
                       isGhost
                         ? "This is a ghost physician not register as a user"
                         : ""
                     }
                   >
-                    <h6>
-                      {isPhysician
-                        ? getPhysicianGenderIcon(isMale, isGhost)
-                        : getGenderIcon(isMale)}
-                      {"test"}
-                    </h6>
-                    <small>{specialization}</small>
+                    <MDBIcon
+                      icon="database"
+                      className="mr-2"
+                      style={{ color: "blue" }}
+                    />
+                    <small>{`${name} ${companyName}`}</small>
                   </li>
                 );
               })}
@@ -149,11 +154,7 @@ export default function Search({ setPhysician }) {
         />
         <button
           type="submit"
-          onClick={() => {
-            setDidSearch(!didSearch);
-            setResults([]);
-            setSearchKey("");
-          }}
+          onClick={handleSubmit}
           className={didSearch && !isLoading ? "bg-danger" : "bg-primary"}
           rounded
         >

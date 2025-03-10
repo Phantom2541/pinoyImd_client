@@ -36,14 +36,15 @@ export default function MenuCollapse() {
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),
     dispatch = useDispatch();
-  console.log(collections);
+
   useEffect(() => {
-    if (didSearch) {
-      setInsources(searchResults);
+    if (didSearch && searchResults.length > 0) {
+      setInsources(searchResults || []);
     } else {
-      setInsources(collections);
+      setInsources(collections || []);
     }
   }, [collections, didSearch, searchResults]);
+
   const handleTag = (physician) => {
     const { isPhysician, physicianId, isGhost = false } = physician;
     const { branchId, providerId } = selected;
@@ -178,123 +179,168 @@ export default function MenuCollapse() {
       }}
       fluid
     >
-      {insources?.map(
-        ({ clients, name, subName, _id, membership = "" }, index) => {
-          const affiliated = clients?.affiliated || [];
+      {insources?.length > 0 ? (
+        insources?.map(
+          (
+            {
+              clients,
+              _id,
+              membership = "",
+              name: ghostName,
+              subName: ghostSubName,
+            },
+            index
+          ) => {
+            const isGhost = clients?._id ? false : true;
+            const { name, companyName } = clients || "";
+            const affiliated = clients?.affiliated || [];
 
-          const { color, border } = collapse.getStyle(
-            index,
-            activeId,
-            didHoverId
-          );
+            const baseName = isGhost ? ghostName : name;
+            const baseSubname = isGhost ? ghostSubName : companyName;
 
-          return (
-            <MDBCard
-              key={`staffs-${index}`}
-              style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
-            >
-              <MDBCollapseHeader
-                onMouseLeave={() => setDidHoverId(-1)}
-                onMouseEnter={() => setDidHoverId(index)}
-                onClick={(event) => event.stopPropagation()}
-                className={border}
-                style={{ borderRadius: "50%" }}
+            const { color, border } = collapse.getStyle(
+              index,
+              activeId,
+              didHoverId
+            );
+
+            return (
+              <MDBCard
+                key={`staffs-${index}`}
+                style={{
+                  boxShadow: "0px 0px 0px 0px",
+                  backgroundColor: "white",
+                }}
               >
-                <label className={`d-flex justify-content-between ${color} `}>
-                  <span className="d-flex align-items-center transition-all">
-                    {index + 1}. {name} {subName}
-                    {membership ? `| ${membership}` : ""}
-                    {(activeId === index || didHoverId === index) && (
-                      <>
-                        <MDBPopover
-                          placement="bottom"
-                          popover
-                          clickable
-                          id={`popover-${index}`}
+                <MDBCollapseHeader
+                  onMouseLeave={() => setDidHoverId(-1)}
+                  onMouseEnter={() => setDidHoverId(index)}
+                  onClick={(event) => event.stopPropagation()}
+                  className={border}
+                  title={isGhost ? "This company is ghost" : ""}
+                  style={{ borderRadius: "50%" }}
+                >
+                  <label className={`d-flex justify-content-between ${color} `}>
+                    <span className="d-flex align-items-center transition-all">
+                      {index + 1}. {baseName} {baseSubname}{" "}
+                      {isGhost ? (
+                        <span
+                          style={{ fontSize: "20px" }}
+                          className="ml-2"
+                          role="img"
+                          aria-label="ghost"
                         >
-                          <MDBBtn
-                            className="m-0 p-0 ml-2"
-                            rounded
-                            color="light"
-                            onClick={() => setActiveId(index)}
-                            style={{
-                              width: "1.8rem",
-                              boxShadow: "0px 0px 0px 0px",
-                            }}
-                          >
-                            <i class="fa fa-ellipsis-h"></i>
-                          </MDBBtn>
-                          <div>
-                            <MDBPopoverHeader className="text-center">
-                              Actions
-                            </MDBPopoverHeader>
-                            <MDBPopoverBody className="d-flex flex-column m-0 p-0">
-                              <MDBBtn size="sm" color="primary">
-                                <MDBIcon icon="pencil-alt" className="mr-2" />
-                                Update
-                              </MDBBtn>
+                          👻
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      {membership ? ` | ${membership}` : ""}
+                      {(activeId === index || didHoverId === index) &&
+                        !isGhost && (
+                          <>
+                            <MDBPopover
+                              placement="bottom"
+                              popover
+                              clickable
+                              id={`popover-${index}`}
+                            >
                               <MDBBtn
-                                size="sm"
-                                color="danger"
-                                onClick={() => handleUntag(_id)}
+                                className="m-0 p-0 ml-2"
+                                rounded
+                                color="light"
+                                onClick={() => setActiveId(index)}
+                                style={{
+                                  width: "1.8rem",
+                                  boxShadow: "0px 0px 0px 0px",
+                                }}
                               >
-                                <MDBIcon icon="unlink" className="mr-2" />
-                                Untag
+                                <i className="fa fa-ellipsis-h"></i>
                               </MDBBtn>
-                            </MDBPopoverBody>
-                          </div>
-                        </MDBPopover>
-                      </>
-                    )}
-                  </span>
-                  <small
-                    className="d-flex justify-content-between"
-                    onClick={() => {
-                      setActiveId((prev) => (prev === index ? -1 : index));
-                      setSelected({ branchId: clients?._id, providerId: _id });
-                    }}
-                  >
-                    <MDBBtn
-                      size="sm"
-                      color="white"
-                      rounded
-                      className="m-0 p-0 transition-all "
-                      style={{ width: activeId === index ? "1.5rem" : "2rem" }}
+                              <div>
+                                <MDBPopoverHeader className="text-center">
+                                  Actions
+                                </MDBPopoverHeader>
+                                <MDBPopoverBody className="d-flex flex-column m-0 p-0">
+                                  <MDBBtn size="sm" color="primary">
+                                    <MDBIcon
+                                      icon="pencil-alt"
+                                      className="mr-2"
+                                    />
+                                    Update
+                                  </MDBBtn>
+                                  <MDBBtn
+                                    size="sm"
+                                    color="danger"
+                                    onClick={() => handleUntag(_id)}
+                                  >
+                                    <MDBIcon icon="unlink" className="mr-2" />
+                                    Untag
+                                  </MDBBtn>
+                                </MDBPopoverBody>
+                              </div>
+                            </MDBPopover>
+                          </>
+                        )}
+                    </span>
+                    <small
+                      className="d-flex justify-content-between"
+                      onClick={() => {
+                        setActiveId((prev) => (prev === index ? -1 : index));
+                        setSelected({
+                          branchId: clients?._id,
+                          providerId: _id,
+                        });
+                      }}
                     >
-                      <i
-                        style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
-                        className="fa fa-angle-down transition-all "
+                      <MDBBtn
+                        size="sm"
+                        color="white"
+                        rounded
+                        className="m-0 p-0 transition-all "
+                        style={{
+                          width: activeId === index ? "1.5rem" : "2rem",
+                        }}
+                      >
+                        <i
+                          style={{
+                            rotate: `${activeId === index ? 0 : 90}deg`,
+                          }}
+                          className="fa fa-angle-down transition-all "
+                        />
+                      </MDBBtn>
+                    </small>
+                  </label>
+                </MDBCollapseHeader>
+                <MDBCollapse
+                  id={`collapse-${index}`}
+                  className="mb-2 border border-black"
+                  isOpen={index === activeId && !isGhost}
+                >
+                  <div className="mt-2 mr-3 ml-3 d-flex justify-content-between align-items-center">
+                    <span>Physician List</span>
+                    <div className="d-flex align-items-center">
+                      <span>Tag Physician</span>
+                      <Search
+                        setPhysician={handleTag}
+                        setRegister={handleRegister}
                       />
-                    </MDBBtn>
-                  </small>
-                </label>
-              </MDBCollapseHeader>
-              <MDBCollapse
-                id={`collapse-${index}`}
-                className="mb-2 border border-black"
-                isOpen={index === activeId}
-              >
-                <div className="mt-2 mr-3 ml-3 d-flex justify-content-between align-items-center">
-                  <span>Physician List</span>
-                  <div className="d-flex align-items-center">
-                    <span>Tag Physician</span>
-                    <Search
-                      setPhysician={handleTag}
-                      setRegister={handleRegister}
-                    />
+                    </div>
                   </div>
-                </div>
-                <MDBCardBody className="pt-2">
-                  <CollapseTable
-                    affiliated={affiliated}
-                    providerId={_id}
-                    BranchId={clients?._id}
-                  />
-                </MDBCardBody>
-              </MDBCollapse>
-            </MDBCard>
-          );
-        }
+                  <MDBCardBody className="pt-2">
+                    <CollapseTable
+                      affiliated={affiliated}
+                      providerId={_id}
+                      BranchId={clients?._id}
+                    />
+                  </MDBCardBody>
+                </MDBCollapse>
+              </MDBCard>
+            );
+          }
+        )
+      ) : (
+        <p>No record</p>
       )}
     </MDBContainer>
   );
