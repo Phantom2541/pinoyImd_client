@@ -30,10 +30,10 @@ export default function Vouchers() {
             <span>Water Bill :</span>
             <strong className="text-primary">₱0.00</strong>
           </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
+          {/* <div className="d-flex justify-content-between border-bottom py-2">
             <span>Wifi Bill :</span>
             <strong className="text-primary">₱0.00</strong>
-          </div>
+          </div> */}
           {/* <div className="d-flex justify-content-between border-bottom py-2">
           <span>Miscellanious :</span>
           <strong className="text-danger">₱0.00</strong>
