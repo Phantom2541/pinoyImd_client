@@ -33,7 +33,7 @@ const manager = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/manager/dashboard",
     component: Dashboard,
   },
   {

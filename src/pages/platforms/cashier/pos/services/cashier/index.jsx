@@ -23,7 +23,10 @@ export default function Cashier() {
   }, [transaction, isSuccess, activePlatform]);
 
   return (
-    <MDBRow className="res-container">
+    <MDBRow
+      className="res-container"
+      style={{ marginLeft: "4rem", marginRight: "1rem" }}
+    >
       <MDBCol size="5" className="pr-1">
         <Customer />
       </MDBCol>

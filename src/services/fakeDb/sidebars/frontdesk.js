@@ -26,9 +26,9 @@ import {
 
 const frontdesk = [
   {
-    name: "Dashboard",
+    name: "bulletin board",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/frontdesk/bulletin",
     component: Dashboard,
   },
   {

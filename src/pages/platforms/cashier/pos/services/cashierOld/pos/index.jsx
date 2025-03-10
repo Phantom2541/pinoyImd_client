@@ -17,8 +17,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { RESET } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { Categories } from "../../../../../../../services/fakeDb";
+import { SetMODAL } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 
-export default function CashRegister({ show, toggle, patient }) {
+export default function CashRegister() {
   const [didCheckout, setDidCheckout] = useState(false),
     [categoryIndex, setCategoryIndex] = useState(0),
     [privilegeIndex, setPrivilegeIndex] = useState(0),
@@ -28,6 +29,7 @@ export default function CashRegister({ show, toggle, patient }) {
     [discount, setDiscount] = useState(0),
     [cart, setCart] = useState([]),
     { message, isSuccess } = useSelector(({ sales }) => sales),
+    { selected: patient, showModal: show } = useSelector(({ deals }) => deals),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -78,9 +80,9 @@ export default function CashRegister({ show, toggle, patient }) {
     );
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop size="fluid">
+    <MDBModal isOpen={show} toggle={SetMODAL} backdrop size="fluid">
       <MDBModalHeader
-        toggle={toggle}
+        toggle={SetMODAL}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="cash-register" className="mr-2" />
@@ -115,7 +117,7 @@ export default function CashRegister({ show, toggle, patient }) {
               cart={cart}
               privilegeIndex={privilegeIndex}
               sourceVendor={sourceVendor}
-              toggleModal={toggle}
+              toggleModal={SetMODAL}
               physicianId={physicianId}
               categoryIndex={categoryIndex}
               gross={gross}

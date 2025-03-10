@@ -5,7 +5,7 @@ import { MDBIcon } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
   BROWSE as MENUS,
-  SetFILTERED,
+  SetCOLLECTIONS,
   RESET as MENUSRESET,
 } from "../../../services/redux/slices/commerce/catalog/menus";
 import { currency, globalSearch } from "../../../services/utilities";
@@ -22,6 +22,7 @@ export default function Search({ setMenu, setRegister }) {
 
   const inputRef = useRef(null); // Reference to the input field
 
+  // initial values
   useEffect(() => {
     if (token && activePlatform.branchId) {
       const branchId = activePlatform.branchId;
@@ -33,7 +34,7 @@ export default function Search({ setMenu, setRegister }) {
         // If menus are found in localStorage, use them (parse back to an object)
         const menus = JSON.parse(storedMenus);
         // You can dispatch the menus here if needed
-        dispatch(SetFILTERED(menus)); // Optionally dispatch to update the store if necessary
+        dispatch(SetCOLLECTIONS(menus)); // Optionally dispatch to update the store if necessary
       } else {
         // If no data in localStorage, make the server request
         dispatch(MENUS({ key: { branchId }, token }))

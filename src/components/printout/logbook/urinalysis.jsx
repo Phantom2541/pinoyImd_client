@@ -6,7 +6,7 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/results/laboratory/urinalysis"; // Updated slice for Urinalysis
+} from "../../../services/redux/slices/diagnostics/laboratory/urinalysis"; // Updated slice for Urinalysis
 import {
   MicroscopicInRange,
   MicroscopicResultInWord,
@@ -43,7 +43,7 @@ const formatTime = (hours, minutes) => {
 export default function UrinalysisPrint() {
   const [urinalysis, setUrinalysis] = useState([]),
     { collections } = useSelector(({ urinalysis }) => urinalysis),
-       { token, activePlatform } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
     dispatch = useDispatch();
@@ -68,7 +68,6 @@ export default function UrinalysisPrint() {
     setYear(_year);
     return () => RESET();
   }, [activePlatform, dispatch, token, month, year]);
-
 
   useEffect(() => {
     setUrinalysis(collections);
