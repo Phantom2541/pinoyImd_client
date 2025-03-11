@@ -13,9 +13,15 @@ import BodySwitcher from "./bodySwitcher";
 import { useDispatch, useSelector } from "react-redux";
 import { LABRESULT } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
+import {
+  SetTASK,
+  SetMODAL,
+  SetHEALTHY,
+} from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-export default function Modal({ show, toggle, task, setTask }) {
+export default function Modal() {
   const { token, auth } = useSelector(({ auth }) => auth),
+    { task, showModal } = useSelector(({ validator }) => validator),
     { collections } = useSelector(({ heads }) => heads),
     [rerender, setRerender] = useState(true), //handle rendering for healthy client injection
     dispatch = useDispatch();
@@ -81,7 +87,7 @@ export default function Modal({ show, toggle, task, setTask }) {
         },
       })
     );
-    toggle();
+    dispatch(SetMODAL(false));
   };
 
   const generateHealthyStats = () => {
@@ -90,27 +96,14 @@ export default function Modal({ show, toggle, task, setTask }) {
      * render time too long
      */
 
-    if (form === "Urinalysis")
-      return setTask({
-        ...task,
-        pe: [2, 0, 1, 1],
-        ce: [0, 0, 0, 0, 0, 0, 0, 0],
-        me: [1, 0, 0, 0, 0, 0],
-      });
-
-    // Parasitology
-    setTask({
-      ...task,
-      pe: [0, 0],
-      me: [0, 0, 0],
-      remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
-    });
+    if (form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
+    else if (form === "Parasitology") dispatch(SetHEALTHY("parasitology"));
   };
 
   return (
-    <MDBModal size="lg" isOpen={show} toggle={toggle} backdrop>
+    <MDBModal size="lg" isOpen={showModal} toggle={SetMODAL} backdrop>
       <MDBModalHeader
-        toggle={toggle}
+        toggle={() => dispatch(SetMODAL(false))}
         className="light-blue darken-3 white-text"
       >
         <Patient patient={patient} />
@@ -122,12 +115,14 @@ export default function Modal({ show, toggle, task, setTask }) {
           </h5>
           <small>Enter your results here</small>
         </MDBAlert>
-        {rerender && <BodySwitcher task={task} setTask={setTask} />}
+        {rerender && <BodySwitcher task={task} setTask={SetTASK} />}
         <div className="text-center mb-1-half border-top pt-2">
           <textarea
             placeholder="Remarks"
             value={remarks}
-            onChange={(e) => setTask({ ...task, remarks: e.target.value })}
+            onChange={(e) =>
+              dispatch(SetTASK({ ...task, remarks: e.target.value }))
+            }
             className="w-100"
           />
           <div className="d-flex justify-content-between my-2">

@@ -9,7 +9,7 @@ import {
 export default function Patient({ patient }) {
   // const { patient } = useSelector(({ validator }) => validator);
 
-  const { fullName, isMale, dob } = patient;
+  const { fullName = {}, isMale, dob } = patient;
 
   return (
     <>

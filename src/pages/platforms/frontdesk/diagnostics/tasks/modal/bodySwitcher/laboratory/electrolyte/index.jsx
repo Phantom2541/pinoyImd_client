@@ -1,16 +1,19 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Services } from "./../../../../../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
-import { useSelector } from "react-redux";
 import {
   referenceColor,
   findReference,
 } from "./../../../../../../../../../services/utilities";
+import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-export default function Electrolyte({ task, setTask }) {
-  const { collections: preferences } = useSelector(
-    ({ preferences }) => preferences
-  );
+export default function Electrolyte() {
+  const { task } = useSelector(({ validator }) => validator),
+    { collections: preferences } = useSelector(
+      ({ preferences }) => preferences
+    ),
+    dispatch = useDispatch();
 
   const { packages = {}, key: mapKey, patient } = task;
 
@@ -18,10 +21,12 @@ export default function Electrolyte({ task, setTask }) {
     const { name, value } = e.target,
       _value = Number(value);
 
-    return setTask({
-      ...task,
-      packages: { ...packages, [name]: _value },
-    });
+    return dispatch(
+      SetTASK({
+        ...task,
+        packages: { ...packages, [name]: _value },
+      })
+    );
   };
   //console.log("packages", packages);
   return (

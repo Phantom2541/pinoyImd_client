@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   MDBBadge,
   MDBCard,
@@ -8,7 +9,6 @@ import {
   MDBContainer,
   MDBIcon,
 } from "mdbreact";
-import { useSelector } from "react-redux";
 import {
   capitalize,
   fullName,
@@ -20,12 +20,19 @@ import {
 import CollapseBody from "./body";
 import { Categories } from "../../../../../../services/fakeDb";
 import { useHistory } from "react-router-dom";
+// import { SetSELECTED } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 export default function TasksCollapse({ page }) {
   const [activeId, setActiveId] = useState(-1),
     { maxPage } = useSelector(({ auth }) => auth),
     { filtered } = useSelector(({ validator }) => validator),
     history = useHistory();
+  // dispatch = useDispatch();
+
+  const handeSelected = (menu, index) => {
+    // dispatch(SetSELECTED(menu));
+    setActiveId((prev) => (prev === index ? -1 : index));
+  };
 
   return (
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
@@ -60,9 +67,7 @@ export default function TasksCollapse({ page }) {
                 <MDBBadge color="warning">{capitalize(source?.name)}</MDBBadge>
               )}
               <i
-                onClick={() =>
-                  setActiveId((prev) => (prev === index ? -1 : index))
-                }
+                onClick={() => handeSelected(menu, index)}
                 style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
                 className="fa fa-angle-down transition-all"
               />

@@ -2,23 +2,27 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
 const name = "commerce/pos/services/deals";
-// const healthyClient = {
-//   urinalysis: {
-//     pe: [2, 0, 1, 1],
-//     ce: [0, 0, 0, 0, 0, 0, 0, 0],
-//     me: [1, 0, 0, 0, 0, 0],
-//   },
-//   parasitology: {
-//     pe: [0, 0],
-//     me: [0, 0, 0],
-//     remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
-//   },
-// };
+const healthyClient = {
+  urinalysis: {
+    pe: [2, 0, 1, 1],
+    ce: [0, 0, 0, 0, 0, 0, 0, 0],
+    me: [1, 0, 0, 0, 0, 0],
+  },
+  parasitology: {
+    pe: [0, 0],
+    me: [0, 0, 0],
+    remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
+  },
+};
+
+//  ;
 
 const initialState = {
   collections: [],
   filtered: [],
   selected: {},
+  task: {},
+  preferences: [],
   showModal: false,
   maxPage: 1,
   activePage: 1,
@@ -45,6 +49,28 @@ export const TASKS = createAsyncThunk(
   }
 );
 
+export const PREFERENCES = createAsyncThunk(
+  `diagnostics/laboratory/preferences`,
+  ({ token, branchId }, thunkAPI) => {
+    try {
+      return axioKit.universal(
+        `diagnostics/laboratory/preferences/browse`,
+        token,
+        { branchId }
+      );
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name,
   initialState,
@@ -53,8 +79,22 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetSELECTED: (state, { payload }) => {
+      console.log("selected", payload);
+
       state.selected = payload;
       state.showModal = true;
+    },
+    SetTASK: (state, { payload }) => {
+      state.task = payload;
+      state.showModal = true;
+    },
+    SetHEALTHY: (state, { payload }) => {
+      console.log("templates", payload);
+
+      state.task = { ...state.task, ...healthyClient[payload] };
+      console.log(healthyClient[payload]);
+
+      console.log("task", state.task);
     },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
@@ -88,11 +128,31 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+      .addCase(PREFERENCES.pending, (state) => {
+        state.message = "no preferences";
+      })
+      .addCase(PREFERENCES.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.preferences = payload;
+        state.isLoading = false;
+      })
+      .addCase(PREFERENCES.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
       });
   },
 });
 
-export const { SetSELECTED, SetMODAL, SetMaxPage, SetActivePAGE, RESET } =
-  reduxSlice.actions;
+export const {
+  SetSELECTED,
+  SetTASK,
+  SetMODAL,
+  SetHEALTHY,
+  SetMaxPage,
+  SetActivePAGE,
+  RESET,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

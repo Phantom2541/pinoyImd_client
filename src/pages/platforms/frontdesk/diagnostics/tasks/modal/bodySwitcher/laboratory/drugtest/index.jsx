@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -15,6 +16,7 @@ import {
 import CustomSelect from "./../../../../../../../../../components/searchables/customSelect";
 import Troupe from "./troupe";
 import Picture from "./picture";
+import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const choices = [
   {
@@ -27,13 +29,15 @@ const choices = [
   },
 ];
 
-export default function Drugtest({ task, setTask }) {
-  const [activeTab, setActiveTab] = useState("pic");
+export default function Drugtest() {
+  const { task } = useSelector(({ validator }) => validator),
+    [activeTab, setActiveTab] = useState("pic"),
+    dispatch = useDispatch();
   // const { met, thc, method, company, purpose } = task;
   const { met, thc } = task;
 
   const handleSelectChange = (name, value) =>
-    setTask({ ...task, [name]: value });
+    dispatch(SetTASK({ ...task, [name]: value }));
 
   return (
     <MDBContainer>
@@ -103,14 +107,14 @@ export default function Drugtest({ task, setTask }) {
             <MDBTabPane tabId="details">
               <Troupe
                 task={task}
-                setTask={setTask}
+                // setTask={setTask}
                 handleSelectChange={handleSelectChange}
               />
             </MDBTabPane>
             <MDBTabPane tabId="pic">
               <Picture
                 task={task}
-                setTask={setTask}
+                // setTask={setTask}
                 handleSelectChange={handleSelectChange}
               />
             </MDBTabPane>

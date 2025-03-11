@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -14,11 +15,16 @@ import {
 import BodySwitcher from "./bodySwitcher";
 import Troupe from "./troupe";
 import Category from "./category";
+import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
-export default function Miscellaneous({ task, setTask }) {
-  const [activeTab, setActiveTab] = useState("results");
+export default function Miscellaneous() {
+  const { task } = useSelector(({ validator }) => validator),
+    [activeTab, setActiveTab] = useState("results"),
+    dispatch = useDispatch();
 
   const { packages = [], specimen = "" } = task;
+
+  const setTask = (value) => dispatch(SetTASK(value));
   return (
     <MDBContainer>
       {/* Default is 1, hide all the tab button

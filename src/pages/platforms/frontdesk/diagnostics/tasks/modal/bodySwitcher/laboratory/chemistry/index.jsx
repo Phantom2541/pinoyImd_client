@@ -1,16 +1,19 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Services } from "./../../../../../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
-import { useSelector } from "react-redux";
 import {
   referenceColor,
   findReference,
 } from "./../../../../../../../../../services/utilities";
+import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-export default function Chemistry({ task, setTask }) {
-  const { collections: preferences } = useSelector(
-    ({ preferences }) => preferences
-  );
+export default function Chemistry() {
+  const { task } = useSelector(({ validator }) => validator),
+    { collections: preferences } = useSelector(
+      ({ preferences }) => preferences
+    ),
+    dispatch = useDispatch();
 
   const { packages = {}, key: mapKey, patient } = task;
 
@@ -20,10 +23,12 @@ export default function Chemistry({ task, setTask }) {
       _value = Number(value);
 
     if (_name !== 16)
-      return setTask({
-        ...task,
-        packages: { ...packages, [name]: _value },
-      });
+      return dispatch(
+        SetTASK({
+          ...task,
+          packages: { ...packages, [name]: _value },
+        })
+      );
 
     const chole = packages["14"],
       tg = packages["15"],
@@ -31,16 +36,18 @@ export default function Chemistry({ task, setTask }) {
       vldl = tg / 5,
       chr = Number((chole / _value).toFixed(2));
 
-    setTask({
-      ...task,
-      packages: {
-        ...packages,
-        16: _value,
-        17: ldl,
-        18: vldl,
-        19: chr,
-      },
-    });
+    dispatch(
+      SetTASK({
+        ...task,
+        packages: {
+          ...packages,
+          16: _value,
+          17: ldl,
+          18: vldl,
+          19: chr,
+        },
+      })
+    );
   };
   console.log("preferences", preferences);
 

@@ -19,6 +19,7 @@ import {
   BROWSE as HEADS,
   RESET as HEADSRESET,
 } from "./../../../../../services/redux/slices/assets/persons/heads";
+import ResultEntry from "./modal";
 
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -72,6 +73,7 @@ export default function Tasks() {
           </>
         )}
       </MDBCardBody>
+      <ResultEntry />
     </MDBCard>
   );
 }
