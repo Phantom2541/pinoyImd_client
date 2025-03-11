@@ -217,7 +217,7 @@ export default function MenuCollapse() {
                   onMouseEnter={() => setDidHoverId(index)}
                   onClick={(event) => event.stopPropagation()}
                   className={border}
-                  title={isGhost ? "This company is ghost" : ""}
+                  title={isGhost && "Unregistered company"}
                   style={{ borderRadius: "50%" }}
                 >
                   <label className={`d-flex justify-content-between ${color} `}>
@@ -236,52 +236,48 @@ export default function MenuCollapse() {
                         ""
                       )}
                       {membership ? ` | ${membership}` : ""}
-                      {(activeId === index || didHoverId === index) &&
-                        !isGhost && (
-                          <>
-                            <MDBPopover
-                              placement="bottom"
-                              popover
-                              clickable
-                              id={`popover-${index}`}
+                      {(activeId === index || didHoverId === index) && (
+                        <>
+                          <MDBPopover
+                            placement="bottom"
+                            popover
+                            clickable
+                            id={`popover-${index}`}
+                          >
+                            <MDBBtn
+                              className="m-0 p-0 ml-2"
+                              rounded
+                              color="light"
+                              onClick={() => setActiveId(index)}
+                              style={{
+                                width: "1.8rem",
+                                boxShadow: "0px 0px 0px 0px",
+                              }}
                             >
-                              <MDBBtn
-                                className="m-0 p-0 ml-2"
-                                rounded
-                                color="light"
-                                onClick={() => setActiveId(index)}
-                                style={{
-                                  width: "1.8rem",
-                                  boxShadow: "0px 0px 0px 0px",
-                                }}
-                              >
-                                <i className="fa fa-ellipsis-h"></i>
-                              </MDBBtn>
-                              <div>
-                                <MDBPopoverHeader className="text-center">
-                                  Actions
-                                </MDBPopoverHeader>
-                                <MDBPopoverBody className="d-flex flex-column m-0 p-0">
-                                  <MDBBtn size="sm" color="primary">
-                                    <MDBIcon
-                                      icon="pencil-alt"
-                                      className="mr-2"
-                                    />
-                                    Update
-                                  </MDBBtn>
-                                  <MDBBtn
-                                    size="sm"
-                                    color="danger"
-                                    onClick={() => handleUntag(_id)}
-                                  >
-                                    <MDBIcon icon="unlink" className="mr-2" />
-                                    Untag
-                                  </MDBBtn>
-                                </MDBPopoverBody>
-                              </div>
-                            </MDBPopover>
-                          </>
-                        )}
+                              <i className="fa fa-ellipsis-h"></i>
+                            </MDBBtn>
+                            <div>
+                              <MDBPopoverHeader className="text-center">
+                                Actions
+                              </MDBPopoverHeader>
+                              <MDBPopoverBody className="d-flex flex-column m-0 p-0">
+                                <MDBBtn size="sm" color="primary">
+                                  <MDBIcon icon="pencil-alt" className="mr-2" />
+                                  Update
+                                </MDBBtn>
+                                <MDBBtn
+                                  size="sm"
+                                  color="danger"
+                                  onClick={() => handleUntag(_id)}
+                                >
+                                  <MDBIcon icon="unlink" className="mr-2" />
+                                  Untag
+                                </MDBBtn>
+                              </MDBPopoverBody>
+                            </div>
+                          </MDBPopover>
+                        </>
+                      )}
                     </span>
                     <small
                       className="d-flex justify-content-between"
@@ -315,7 +311,7 @@ export default function MenuCollapse() {
                 <MDBCollapse
                   id={`collapse-${index}`}
                   className="mb-2 border border-black"
-                  isOpen={index === activeId && !isGhost}
+                  isOpen={index === activeId}
                 >
                   <div className="mt-2 mr-3 ml-3 d-flex justify-content-between align-items-center">
                     <span>Physician List</span>
