@@ -212,6 +212,8 @@ export default function PosCard() {
             <MDBCol>
               <div className="pos-card-details">
                 <span>Address:</span>
+                {console.log("address", address)}
+                
                 <p>{fullAddress(address)}</p>
               </div>
             </MDBCol>
