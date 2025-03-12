@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   SAVE,
   SetCloseModal,
-} from "../../../../../../services/redux/slices/finance/payables";
+} from "../../../../../../services/redux/slices/finance/journals/payables";
 import {
   MDBModal,
   MDBModalHeader,
@@ -22,7 +22,7 @@ export default function ModalCreate() {
   const { showPayablesModal, selected } = useSelector(
     ({ payables }) => payables
   );
-  const { collections = [] } = useSelector(({ providers }) => providers);
+  const { collections } = useSelector(({ providers }) => providers);
   const { token, activePlatform } = useSelector(({ auth }) => auth);
 
   const [form, setForm] = useState(selected || { range: ["", ""] });
@@ -95,13 +95,31 @@ export default function ModalCreate() {
           </>
         ) : form.orOption === "Supplier" ? (
           <CustomSelect
-            choices={Array.isArray(collections) ? collections : []}
+            choices={
+              Array.isArray(collections)
+                ? collections.filter((item) => item.name)
+                : []
+            }
             label={"Supplier"}
             values={"_id"}
             texts={"name"}
             onChange={(e) => setForm({ ...form, supplier: e })}
           />
-        ) : null}{" "}
+        ) : // <CustomSelect
+        //   choices={
+        //     Array.isArray(collections)
+        //       ? collections.map((item) => ({
+        //           ...item,
+        //           name: item.name || "Unnamed Supplier", // Ensure a valid string
+        //         }))
+        //       : []
+        //   }
+        //   label={"Supplier"}
+        //   values={"_id"}
+        //   texts={"name"}
+        //   onChange={(e) => setForm({ ...form, supplier: e })}
+        // />
+        null}{" "}
         {/* Ensures nothing is displayed if no selection is made */}
         {/* Supplier
         <CustomSelect

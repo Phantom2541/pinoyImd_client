@@ -36,14 +36,13 @@ import {
 
 import { access, liabilities, controls, assurances } from "./slices/liability";
 
-import { remmitance, payables, payments } from "./slices/finance";
-// import { payrolls, remittances } from "./slices/finance";
-
+import { payables, payments, payrolls } from "./slices/finance";
+// remmitance;
 import temperatures from "./slices/monitoring/temperature";
 
 const store = configureStore({
   reducer: {
-    remittances,
+    // remittances,
     payrolls,
     auth,
     personnels,

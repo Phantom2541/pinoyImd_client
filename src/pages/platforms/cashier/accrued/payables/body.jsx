@@ -4,7 +4,7 @@ import { MDBTable, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
   SetPAYMENTS,
   DESTROY,
-} from "../../../../../services/redux/slices/finance/payables";
+} from "../../../../../services/redux/slices/finance/journals/payables";
 import { Statements } from "../../../../../services/fakeDb";
 import { fullName } from "../../../../../services/utilities";
 import Swal from "sweetalert2";

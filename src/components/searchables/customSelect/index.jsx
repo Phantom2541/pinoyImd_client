@@ -102,9 +102,9 @@ export default function CustomSelect({
               disabled={handleChoiceDisabling(value, choice)}
               checked={preValue ? String(value) === String(preValue) : false}
               key={`${label}-${index}`}
-              value={value}
+              value={value || "--"}
             >
-              {text}
+              {text || "--"}
             </MDBSelectOption>
           );
         })}
