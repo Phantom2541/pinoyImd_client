@@ -25,6 +25,7 @@ import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
 // import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
 // import Remmitances from "../../../pages/platforms/manager/pos/remittances";
 // //import Outsource from "../../../pages/platforms/manager/provider";
+// import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 
 // const cashier = [
 //   {
@@ -67,6 +68,32 @@ const cashier = [
     path: "/accrued",
     icon: "tv",
     children: [
+      /**
+       * obligation for services or goods received but not yet paid for by the accounting period's en
+       * Electric bill
+       * Water bill
+       * WIFI bill
+       * Rental
+       */
+      {
+        name: "Accrued",
+        title: "stocks",
+        path: "/accrued",
+        // component: Accrued,
+      },
+      /**
+       * an obligation that has already been settled or fulfilled
+       * Paid Electric bill
+       * Paid Water bill
+       * Salary
+       * Voucher / petty cash
+       * etc.
+       */
+      {
+        name: "Settled",
+        title: "stocks",
+        // path: "/settled",
+      },
       /**
        * unpaid bills (Water, Electricity, etc.)
        * Liabilities

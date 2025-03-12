@@ -4,9 +4,9 @@ import { MDBTable } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
-} from "../../../../../../services/redux/slices/liability/assurances";
+} from "./../../../../../services/redux/slices/liability/assurances";
 import Swal from "sweetalert2";
-import { Services } from "../../../../../../services/fakeDb";
+import { Services } from "./../../../../../services/fakeDb";
 
 const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
