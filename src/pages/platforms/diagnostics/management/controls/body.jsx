@@ -4,10 +4,10 @@ import { MDBTable } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
-} from "../../../../../../services/redux/slices/liability/controls";
+} from "./../../../../../services/redux/slices/liability/controls";
 import Swal from "sweetalert2";
 
-import { Services } from "../../../../../../services/fakeDb";
+import { Services } from "./../../../../../services/fakeDb";
 // import { handlePagination } from "../../../../../../services/utilities";
 const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),

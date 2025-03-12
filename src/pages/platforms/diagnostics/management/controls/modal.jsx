@@ -12,17 +12,15 @@ import {
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../services/redux/slices/liability/assurances";
+} from "../../../../../services/redux/slices/liability/controls";
 
-import { Services } from "../../../../../../services/fakeDb";
+import { Services } from "../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
-export default function Modal() {
-  const { show, toggle, selected, willCreate, isLoading } = useSelector(
-      ({ assurances }) => assurances
-    ),
+export default function Modal({ show, toggle, selected, willCreate }) {
+  const { isLoading } = useSelector(({ controls }) => controls),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
@@ -84,7 +82,11 @@ export default function Modal() {
   };
 
   // Fix: Return correct form value
-  const handleValue = (key) => form[key] || "";
+  const handleValue = (key) => {
+    console.log("key", key);
+
+    // form?.[key] || "";
+  };
 
   // Handle modal close
   const handleClose = () => toggle();

@@ -6,12 +6,12 @@ import {
   SearchTemplates as Templates,
   SearchYear as Year,
   SearchMonth as Month,
-} from "../../../../../../components/searchables";
+} from "./../../../../../components/searchables";
 import {
   RESET,
   BROWSE,
   SetCREATE,
-} from "../../../../../../services/redux/slices/liability/controls";
+} from "./../../../../../services/redux/slices/liability/controls";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
