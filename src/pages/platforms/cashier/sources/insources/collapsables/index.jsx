@@ -21,7 +21,7 @@ import {
 import { SAVE } from "../../../../../../services/redux/slices/assets/persons/physicians";
 import Swal from "sweetalert2";
 import CollapseTable from "./table";
-import { collapse } from "../../../../../../services/utilities";
+import { collapse, fullName } from "../../../../../../services/utilities";
 import Modal from "./modal";
 
 export default function MenuCollapse() {
@@ -71,71 +71,129 @@ export default function MenuCollapse() {
     });
   };
 
+  // const handleRegister = (user) => {
+  //   const { lname, mname, fname } = user;
+  //   const { branchId, providerId } = selected;
+
+  //   Swal.fire({
+  //     title: "Register as a Physician?",
+  //     html: `
+  //     <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+  //       <i class="fas fa-user-md" style="font-size: 50px; color: #007bff;"></i>
+  //     </div>
+
+  //     <div style="display: flex; gap: 5px;">
+  //       <input id="lname" class="swal2-input" value="${lname}" placeholder="Family Name" style="width: 50%;">
+  //       <input id="fname" class="swal2-input" value="${fname}" placeholder="First Name" style="width: 50%;">
+  //     </div>
+
+  //     <div style="display: flex; gap: 5px;">
+  //       <input id="mname" class="swal2-input" value="${
+  //         mname || ""
+  //       }" placeholder="Middle Name" style="width: 50%;">
+  //       <input id="suffix" class="swal2-input" placeholder="Suffix (e.g., Jr., III)" style="width: 50%;">
+  //     </div>
+
+  //     <div style="display: flex; gap: 5px;">
+  //       <input id="postnominal" class="swal2-input" placeholder="Postnominal (e.g., MD, PhD)" style="width: 50%;">
+  //       <input id="specialization" class="swal2-input" placeholder="Specialization" style="width: 50%;">
+  //     </div>
+  //   `,
+  //     showCancelButton: true,
+  //     confirmButtonText: "Yes, Register",
+  //     cancelButtonText: "No, Cancel",
+  //     preConfirm: () => {
+  //       const lname = document.getElementById("lname")?.value.trim();
+  //       const fname = document.getElementById("fname")?.value.trim();
+  //       const mname = document.getElementById("mname")?.value.trim();
+  //       const suffix = document.getElementById("suffix")?.value.trim();
+  //       const postnominal = document
+  //         .getElementById("postnominal")
+  //         ?.value.trim();
+  //       const specialization = document
+  //         .getElementById("specialization")
+  //         ?.value.trim();
+
+  //       if (!lname || !fname || !specialization) {
+  //         Swal.showValidationMessage(
+  //           "Family Name, First Name, and Specialization are required."
+  //         );
+  //         return false;
+  //       }
+
+  //       return {
+  //         fullName: { lname, fname, mname, suffix, postnominal },
+  //         specialization,
+  //       };
+  //     },
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       const { fullName, specialization } = result.value;
+
+  //       dispatch(SAVE({ data: { fullName, specialization }, token }))
+  //         .unwrap()
+  //         .then((physician) => {
+  //           const { _id: physicianId } = physician;
+  //           // Dispatch TagPHYSICIAN action
+  //           return dispatch(
+  //             TagPHYSICIAN({
+  //               data: { physicianId, providerId, branchId },
+  //               token,
+  //             })
+  //           ).unwrap();
+  //         })
+  //         .then((branch) => {
+  //           dispatch(SetBRANCHES(branch));
+  //         })
+  //         .catch((error) => {
+  //           Swal.fire(
+  //             "Error",
+  //             "Failed to register physician. Please try again.",
+  //             "error"
+  //           );
+  //           console.error("Registration error:", error);
+  //         });
+  //     } else if (result.dismiss === Swal.DismissReason.cancel) {
+  //       Swal.fire("Cancelled", "Registration cancelled.", "error");
+  //     }
+  //   });
+  // };
   const handleRegister = (user) => {
-    const { lname, mname, fname } = user;
+    const { fullName: name } = user;
     const { branchId, providerId } = selected;
 
     Swal.fire({
-      title: "Register as a Physician?",
       html: `
-      <div style="display: flex; justify-content: center; margin-bottom: 10px;">
-        <i class="fas fa-user-md" style="font-size: 50px; color: #007bff;"></i>
-      </div>
-      
-      <div style="display: flex; gap: 5px;">
-        <input id="lname" class="swal2-input" value="${lname}" placeholder="Family Name" style="width: 50%;">
-        <input id="fname" class="swal2-input" value="${fname}" placeholder="First Name" style="width: 50%;">
-      </div>
-
-      <div style="display: flex; gap: 5px;">
-        <input id="mname" class="swal2-input" value="${
-          mname || ""
-        }" placeholder="Middle Name" style="width: 50%;">
-        <input id="suffix" class="swal2-input" placeholder="Suffix (e.g., Jr., III)" style="width: 50%;">
-      </div>
-
-      <div style="display: flex; gap: 5px;">
-        <input id="postnominal" class="swal2-input" placeholder="Postnominal (e.g., MD, PhD)" style="width: 50%;">
-        <input id="specialization" class="swal2-input" placeholder="Specialization" style="width: 50%;">
+      <h4 class="font-weight-bold">${fullName(name)}</h4>
+       <p>Not Register as a physician</p>
+      <div>
+        <input id="specialization" class=" form-control mt-3" placeholder="Specialization" >
       </div>
     `,
       showCancelButton: true,
-      confirmButtonText: "Yes, Register",
+      reverseButtons: true,
+      confirmButtonText: "Register it",
       cancelButtonText: "No, Cancel",
       preConfirm: () => {
-        const lname = document.getElementById("lname")?.value.trim();
-        const fname = document.getElementById("fname")?.value.trim();
-        const mname = document.getElementById("mname")?.value.trim();
-        const suffix = document.getElementById("suffix")?.value.trim();
-        const postnominal = document
-          .getElementById("postnominal")
-          ?.value.trim();
         const specialization = document
           .getElementById("specialization")
           ?.value.trim();
 
-        if (!lname || !fname || !specialization) {
-          Swal.showValidationMessage(
-            "Family Name, First Name, and Specialization are required."
-          );
+        if (!specialization) {
+          Swal.showValidationMessage("Specialization are required.");
           return false;
         }
 
-        return {
-          fullName: { lname, fname, mname, suffix, postnominal },
-          specialization,
-        };
+        return specialization;
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const { fullName, specialization } = result.value;
+        const specialization = result.value;
 
-        // Dispatch SAVE action and wait for result
-        dispatch(SAVE({ data: { fullName, specialization }, token }))
-          .unwrap() // Ensure we get the resolved payload
+        dispatch(SAVE({ data: { user: user._id, specialization }, token }))
+          .unwrap()
           .then((physician) => {
             const { _id: physicianId } = physician;
-
             // Dispatch TagPHYSICIAN action
             return dispatch(
               TagPHYSICIAN({
@@ -145,7 +203,7 @@ export default function MenuCollapse() {
             ).unwrap();
           })
           .then((branch) => {
-            dispatch(SetBRANCHES(branch));
+            dispatch(SetBRANCHES(branch.payload));
           })
           .catch((error) => {
             Swal.fire(
@@ -153,14 +211,12 @@ export default function MenuCollapse() {
               "Failed to register physician. Please try again.",
               "error"
             );
-            console.error("Registration error:", error);
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire("Cancelled", "Registration cancelled.", "error");
       }
     });
   };
-
   const handleUntag = (providerId) => {
     Swal.fire({
       title: "Are you sure?",
