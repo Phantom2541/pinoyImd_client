@@ -4,7 +4,8 @@ import { axioKit } from "../../../../utilities";
 const name = "assets/persons/users";
 
 const initialState = {
-  collectionsUsers: [],
+  // collectionsUsers: [],
+  collections: [],
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -89,9 +90,9 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, { payload, success }) => {
-        console.log("payload", payload);
-        // state.collections = payload.payload;
-        state.collectionsUsers = payload;
+        // console.log("payload", payload);
+        state.collections = payload.payload;
+        // state.collectionsUsers = payload;
         state.isLoading = false;
         state.message = success;
       })

@@ -4,19 +4,30 @@ import { axioKit } from "../../../../utilities";
 const name = "finance/journals/payables";
 
 const initialState = {
-  collections: [],
-  isSuccess: false,
-  isLoading: false,
+  // collections: [],
+  // isSuccess: false,
+  // isLoading: false,
 
   selected: {},
   amount: [],
-  totalPages: 0,
+  // totalPages: 0,
   page: 0,
   showPayablesModal: false,
   showPaymentModal: false,
-  // showCreateModal: false,
+  showCreateModal: false,
   willCreate: false,
+  // maxPage: 5,
+  /**
+   * for pagination
+   */
+  collections: [],
+  filtered: [],
   maxPage: 5,
+  totalPages: 0,
+  activePage: 1,
+  isSuccess: false,
+  isLoading: false,
+  message: "",
 };
 
 export const BROWSE = createAsyncThunk(
@@ -136,6 +147,16 @@ export const reduxSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
+    /**
+     * for pagination
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -144,10 +165,14 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
 
-      .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        state.collections = payload;
-        // console.log("collections: ", state.collections);
-        // state.filtered = payload;
+      .addCase(BROWSE.fulfilled, (state, action) => {
+        const { success = false } = action.payload || {};
+
+        state.collections = state.filtered = action.payload;
+        state.totalPages =
+          Math.ceil((action.payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
         state.isLoading = false;
       })
 
@@ -232,5 +257,10 @@ export const {
   SETSOURCES,
   SetShowMODAL,
   RESET,
+  /**
+   * for pagination
+   */
+  SetMaxPage,
+  SetActivePAGE,
 } = reduxSlice.actions;
 export default reduxSlice.reducer;

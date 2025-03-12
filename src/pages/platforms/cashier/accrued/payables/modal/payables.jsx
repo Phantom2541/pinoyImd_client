@@ -25,7 +25,9 @@ export default function ModalCreate() {
   const { collections = [] } = useSelector(({ providers }) => providers);
   const { token, activePlatform } = useSelector(({ auth }) => auth);
 
-  const [form, setForm] = useState(selected || { range: ["", ""] });
+  const [form, setForm] = useState(selected || { range: ["", ""] }, {
+    patient: null,
+  });
 
   useEffect(() => {
     setForm(selected || { range: ["", ""] });
@@ -91,29 +93,28 @@ export default function ModalCreate() {
         {form.orOption === "Particular" ? (
           <>
             <br />
-            <SearchUser />
+            <SearchUser
+              setPatient={(user) => setForm({ ...form, patient: user })}
+            />
           </>
         ) : form.orOption === "Supplier" ? (
           <CustomSelect
-            choices={Array.isArray(collections) ? collections : []}
-            label={"Supplier"}
-            values={"_id"}
-            texts={"name"}
+            choices={
+              Array.isArray(collections)
+                ? collections
+                    .map((item) => ({
+                      value: item._id, // Ensure _id exists
+                      label: item.name?.trim(), // Use `name`, trim whitespace
+                    }))
+                    .filter((item) => item.label) // Remove items with empty or undefined labels
+                : []
+            }
+            label="Supplier"
+            values="value"
+            texts="label"
             onChange={(e) => setForm({ ...form, supplier: e })}
           />
         ) : null}{" "}
-        {/* Ensures nothing is displayed if no selection is made */}
-        {/* Supplier
-        <CustomSelect
-          choices={Array.isArray(collections) ? collections : []}
-          label={"Supplier"}
-          values={"_id"}
-          texts={"name"}
-          onChange={(e) => setForm({ ...form, supplier: e })}
-        />
-
-        <SearchUser /> for user
-        <SearchUser /> */}
         <MDBInput
           label="Amount"
           type="number"

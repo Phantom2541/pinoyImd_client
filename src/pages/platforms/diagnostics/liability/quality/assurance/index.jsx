@@ -1,39 +1,20 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody } from "mdbreact";
-import CardHeader from "./header";
-import CardTables from "./body";
+import TableLoading from "../../../../../../components/tableLoading";
+import Header from "./header";
+import Body from "./body";
 import Modal from "./modal";
-import Pagination from "../../../../../../components/pagination";
-import TableRowCount from "../../../../../../components/pagination/rows";
-import { SetPAGE } from "../../../../../../services/redux/slices/liability/assurances";
-
+import Footer from "./footer";
 const Assurances = () => {
-  const { totalPages, page, isLoading } = useSelector(
-      ({ assurances }) => assurances
-    ),
-    dispatch = useDispatch();
-  // { maxPage } = useSelector(({ auth }) => auth),
-
-  const setPage = (page) => dispatch(SetPAGE(page));
+  const { isLoading } = useSelector(({ assurances }) => assurances);
 
   return (
     <>
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-        <CardHeader />
-        <MDBCardBody>
-          <CardTables />
-        </MDBCardBody>
-
-        <div className="mb-auto d-flex justify-content-between align-items-center px-4">
-          <TableRowCount />
-          <Pagination
-            isLoading={isLoading}
-            total={totalPages}
-            page={page}
-            setPage={setPage}
-          />
-        </div>
+        <Header />
+        <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
+        <Footer />
       </MDBCard>
       <Modal />
     </>
