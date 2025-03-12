@@ -32,7 +32,8 @@ import {
   serology,
   chemistry,
   preferences,
-} from "./slices/results";
+  validator,
+} from "./slices/diagnostics";
 
 import { access, liabilities, controls, assurances } from "./slices/liability";
 
@@ -50,6 +51,7 @@ const store = configureStore({
     access,
     users,
     preferences,
+    validator,
     physicians,
     menus,
     services,

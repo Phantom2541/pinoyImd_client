@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
+import { MDBView } from "mdbreact";
 import {
   RESET,
   INSOURCE,
-  SetCREATE,
+  SetSOURCE,
+  ToggleModal,
 } from "../../../../../services/redux/slices/assets/providers";
 import Search from "../../../../../components/searchables/sources";
+import Swal from "sweetalert2";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,6 +28,24 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
 
+  const setSource = (source) => {
+    const { name, companyName } = source;
+    Swal.fire({
+      title: `${name} ${companyName}`,
+      text: `Do you want to register him as a new provider?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, register it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(SetSOURCE(source));
+        dispatch(ToggleModal());
+      }
+    });
+  };
+
   return (
     <MDBView
       cascade
@@ -37,17 +56,7 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <Search sources={collections} />
-
-          <MDBBtn
-            size="sm"
-            className="px-2"
-            rounded
-            color="success"
-            onClick={() => dispatch(SetCREATE())}
-          >
-            <MDBIcon icon="plus" />
-          </MDBBtn>
+          <Search setSource={setSource} />
         </div>
       </div>
     </MDBView>

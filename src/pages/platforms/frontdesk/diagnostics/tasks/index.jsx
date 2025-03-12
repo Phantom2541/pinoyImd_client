@@ -8,12 +8,40 @@ import Header from "./headers";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
 
+/**
+ * For refrences to the following deals
+ */
+import {
+  BROWSE,
+  RESET as PREFRESET,
+} from "./../../../../../services/redux/slices/diagnostics/laboratory/preferences";
+import {
+  BROWSE as HEADS,
+  RESET as HEADSRESET,
+} from "./../../../../../services/redux/slices/assets/persons/heads";
+import ResultEntry from "./modal";
+
 export default function Tasks() {
-  const [searchKey, setSearchKey] = useState(""),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    [searchKey, setSearchKey] = useState(""),
     [page, setPage] = useState(1),
     { message, isSuccess, isLoading } = useSelector(({ deals }) => deals),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  //Initial Browse
+  useEffect(() => {
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
+      dispatch(HEADS({ token, branchId: activePlatform?.branchId }));
+    }
+
+    return () => {
+      dispatch(RESET());
+      dispatch(PREFRESET());
+      dispatch(HEADSRESET());
+    };
+  }, [token, dispatch, activePlatform]);
 
   //Toast for errors or success
   useEffect(() => {
@@ -45,6 +73,7 @@ export default function Tasks() {
           </>
         )}
       </MDBCardBody>
+      <ResultEntry />
     </MDBCard>
   );
 }
