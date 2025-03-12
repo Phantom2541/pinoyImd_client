@@ -106,6 +106,18 @@ export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
   }
 });
 
+export const REGISTER_GHOST_COMPANY = createAsyncThunk(
+  `${name}/REGISTER_GHOST_COMPANY`,
+  async ({ token, data }, thunkAPI) => {
+    try {
+      return await axioKit.save(name, data, token, "register_ghost_company");
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
 export const UPDATE = createAsyncThunk(
   `${name}/update`,
   async (form, thunkAPI) => {
@@ -289,6 +301,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
+      .addCase(REGISTER_GHOST_COMPANY.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(REGISTER_GHOST_COMPANY.fulfilled, (state, { payload }) => {
+        const { payload: data } = payload;
+        const index = state.collections.findIndex(
+          ({ _id }) => data._id === _id
+        );
+
+        state.collections[index] = data;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(REGISTER_GHOST_COMPANY.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
       })

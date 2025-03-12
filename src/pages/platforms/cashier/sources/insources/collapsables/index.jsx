@@ -22,6 +22,7 @@ import { SAVE } from "../../../../../../services/redux/slices/assets/persons/phy
 import Swal from "sweetalert2";
 import CollapseTable from "./table";
 import { collapse } from "../../../../../../services/utilities";
+import Modal from "./modal";
 
 export default function MenuCollapse() {
   /**
@@ -33,6 +34,8 @@ export default function MenuCollapse() {
     ),
     [insources, setInsources] = useState([]),
     [selected, setSelected] = useState({}),
+    [ghostCompany, setGhostCompany] = useState({}),
+    [show, setShow] = useState(false),
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),
     dispatch = useDispatch();
@@ -44,6 +47,8 @@ export default function MenuCollapse() {
       setInsources(collections || []);
     }
   }, [collections, didSearch, searchResults]);
+
+  const toggle = () => setShow(!show);
 
   const handleTag = (physician) => {
     const { isPhysician, physicianId, isGhost = false } = physician;
@@ -171,6 +176,25 @@ export default function MenuCollapse() {
       }
     });
   };
+
+  const registerGhostCompany = (insource) => {
+    const { name } = insource;
+    Swal.fire({
+      title: name,
+      text: "This company is not registered. Would you like to register it and assign it as your client?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Register it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setGhostCompany(insource);
+        toggle();
+      }
+    });
+  };
   // If there is no client, it means a ghost.
   return (
     <MDBContainer
@@ -180,63 +204,64 @@ export default function MenuCollapse() {
       fluid
     >
       {insources?.length > 0 ? (
-        insources?.map(
-          (
-            {
-              clients,
-              _id,
-              membership = "",
-              name: ghostName,
-              subName: ghostSubName,
-            },
-            index
-          ) => {
-            const isGhost = clients?._id ? false : true;
-            const { name, companyName } = clients || "";
-            const affiliated = clients?.affiliated || [];
+        insources?.map((insource, index) => {
+          const {
+            clients,
+            _id,
+            membership = "",
+            name: ghostName,
+            subName: ghostSubName,
+          } = insource;
+          const isGhost = clients?._id ? false : true;
+          const { name, companyName } = clients || "";
+          const affiliated = clients?.affiliated || [];
 
-            const baseName = isGhost ? ghostName : name;
-            const baseSubname = isGhost ? ghostSubName : companyName;
+          const baseName = isGhost ? ghostName : name;
+          const baseSubname = isGhost ? ghostSubName : companyName;
 
-            const { color, border } = collapse.getStyle(
-              index,
-              activeId,
-              didHoverId
-            );
+          const { color, border } = collapse.getStyle(
+            index,
+            activeId,
+            didHoverId
+          );
 
-            return (
-              <MDBCard
-                key={`staffs-${index}`}
-                style={{
-                  boxShadow: "0px 0px 0px 0px",
-                  backgroundColor: "white",
+          return (
+            <MDBCard
+              key={`staffs-${index}`}
+              style={{
+                boxShadow: "0px 0px 0px 0px",
+                backgroundColor: "white",
+              }}
+            >
+              <MDBCollapseHeader
+                onMouseLeave={() => setDidHoverId(-1)}
+                onMouseEnter={() => setDidHoverId(index)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  if (isGhost) return registerGhostCompany(insource);
                 }}
+                className={border}
+                title={isGhost && "Unregistered company"}
+                style={{ borderRadius: "50%" }}
               >
-                <MDBCollapseHeader
-                  onMouseLeave={() => setDidHoverId(-1)}
-                  onMouseEnter={() => setDidHoverId(index)}
-                  onClick={(event) => event.stopPropagation()}
-                  className={border}
-                  title={isGhost && "Unregistered company"}
-                  style={{ borderRadius: "50%" }}
-                >
-                  <label className={`d-flex justify-content-between ${color} `}>
-                    <span className="d-flex align-items-center transition-all">
-                      {index + 1}. {baseName} {baseSubname}{" "}
-                      {isGhost ? (
-                        <span
-                          style={{ fontSize: "20px" }}
-                          className="ml-2"
-                          role="img"
-                          aria-label="ghost"
-                        >
-                          👻
-                        </span>
-                      ) : (
-                        ""
-                      )}
-                      {membership ? ` | ${membership}` : ""}
-                      {(activeId === index || didHoverId === index) && (
+                <label className={`d-flex justify-content-between ${color} `}>
+                  <span className="d-flex align-items-center transition-all">
+                    {index + 1}. {baseName} {baseSubname}{" "}
+                    {isGhost ? (
+                      <span
+                        style={{ fontSize: "20px" }}
+                        className="ml-2"
+                        role="img"
+                        aria-label="ghost"
+                      >
+                        👻
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                    {membership ? ` | ${membership}` : ""}
+                    {(activeId === index || didHoverId === index) &&
+                      !isGhost && (
                         <>
                           <MDBPopover
                             placement="bottom"
@@ -278,66 +303,69 @@ export default function MenuCollapse() {
                           </MDBPopover>
                         </>
                       )}
-                    </span>
-                    <small
-                      className="d-flex justify-content-between"
+                  </span>
+                  <small
+                    className="d-flex justify-content-between"
+                    onClick={() => {
+                      setActiveId((prev) => (prev === index ? -1 : index));
+                      setSelected({
+                        branchId: clients?._id,
+                        providerId: _id,
+                      });
+                    }}
+                  >
+                    <MDBBtn
+                      size="sm"
+                      color="white"
+                      rounded
+                      className="m-0 p-0 transition-all "
                       onClick={() => {
-                        setActiveId((prev) => (prev === index ? -1 : index));
-                        setSelected({
-                          branchId: clients?._id,
-                          providerId: _id,
-                        });
+                        if (isGhost) return registerGhostCompany(insource);
+                      }}
+                      style={{
+                        width: activeId === index ? "1.5rem" : "2rem",
                       }}
                     >
-                      <MDBBtn
-                        size="sm"
-                        color="white"
-                        rounded
-                        className="m-0 p-0 transition-all "
+                      <i
                         style={{
-                          width: activeId === index ? "1.5rem" : "2rem",
+                          rotate: `${activeId === index ? 0 : 90}deg`,
                         }}
-                      >
-                        <i
-                          style={{
-                            rotate: `${activeId === index ? 0 : 90}deg`,
-                          }}
-                          className="fa fa-angle-down transition-all "
-                        />
-                      </MDBBtn>
-                    </small>
-                  </label>
-                </MDBCollapseHeader>
-                <MDBCollapse
-                  id={`collapse-${index}`}
-                  className="mb-2 border border-black"
-                  isOpen={index === activeId}
-                >
-                  <div className="mt-2 mr-3 ml-3 d-flex justify-content-between align-items-center">
-                    <span>Physician List</span>
-                    <div className="d-flex align-items-center">
-                      <span>Tag Physician</span>
-                      <Search
-                        setPhysician={handleTag}
-                        setRegister={handleRegister}
+                        className="fa fa-angle-down transition-all "
                       />
-                    </div>
-                  </div>
-                  <MDBCardBody className="pt-2">
-                    <CollapseTable
-                      affiliated={affiliated}
-                      providerId={_id}
-                      BranchId={clients?._id}
+                    </MDBBtn>
+                  </small>
+                </label>
+              </MDBCollapseHeader>
+              <MDBCollapse
+                id={`collapse-${index}`}
+                className="mb-2 border border-black"
+                isOpen={index === activeId && !isGhost}
+              >
+                <div className="mt-2 mr-3 ml-3 d-flex justify-content-between align-items-center">
+                  <span>Physician List</span>
+                  <div className="d-flex align-items-center">
+                    <span>Tag Physician</span>
+                    <Search
+                      setPhysician={handleTag}
+                      setRegister={handleRegister}
                     />
-                  </MDBCardBody>
-                </MDBCollapse>
-              </MDBCard>
-            );
-          }
-        )
+                  </div>
+                </div>
+                <MDBCardBody className="pt-2">
+                  <CollapseTable
+                    affiliated={affiliated}
+                    providerId={_id}
+                    BranchId={clients?._id}
+                  />
+                </MDBCardBody>
+              </MDBCollapse>
+            </MDBCard>
+          );
+        })
       ) : (
         <p>No record</p>
       )}
+      <Modal toggle={toggle} show={show} selected={ghostCompany} />
     </MDBContainer>
   );
 }
