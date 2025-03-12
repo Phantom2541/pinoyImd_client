@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
 import { axioKit, harvestTask } from "../../../../../../../services/utilities";
-import { generateClaimStub } from "../../../../../../../services/utilities";
 import { REFORM } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
 const PrimaryFooter = ({ sale, setEdit }) => {
@@ -11,7 +10,6 @@ const PrimaryFooter = ({ sale, setEdit }) => {
     dispatch = useDispatch();
 
   const generateTask = async (sale) => {
-    localStorage.setItem("claimStub", JSON.stringify(sale));
     const { _id, cart, customerId, ssx } = sale;
     let RequestForm = { customer: sale?.customerId };
     const task = harvestTask(cart);
@@ -115,8 +113,8 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
   const preAnalytical = async (sale) => {
     console.log("preAnalytical", sale);
-    
-  }
+    console.log("undone task", "preAnalytical");
+  };
 
   return (
     <MDBBtnGroup className="sales-card-footer w-100">
@@ -131,17 +129,6 @@ const PrimaryFooter = ({ sale, setEdit }) => {
         <MDBIcon icon="pencil-alt" />
       </MDBBtn>
       <MDBBtn
-        type="button"
-        onClick={() => generateClaimStub(sale)}
-        title="View Claim Stub"
-        className="m-0 "
-        size="sm"
-        color="primary"
-      >
-        <MDBIcon icon="receipt" />
-      </MDBBtn>
-
-       <MDBBtn
         type="button"
         onClick={() => preAnalytical(sale)}
         title="Pre-Analytical Supply Dispense"

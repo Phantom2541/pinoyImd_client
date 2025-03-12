@@ -4,20 +4,29 @@ import { axioKit } from "../../../utilities";
 const name = "liability/assurance";
 
 const initialState = {
+  // collections: [],
+  // filter: [],
+  // paginated: [],
+  // isSuccess: false,
+  // isLoading: false,
+  // message: "",
+
+  // // Bread attributes
+  // selected: {}, // assurance
+  // totalPages: 0,
+  // page: 0,
+  // willCreate: false,
+  // maxPage: 5,
+  // showModal: false,
+
   collections: [],
-  filter: [],
-  paginated: [],
+  filtered: [],
+  maxPage: 5,
+  totalPages: 0,
+  activePage: 1,
   isSuccess: false,
   isLoading: false,
   message: "",
-
-  // Bread attributes
-  selected: {}, // assurance
-  totalPages: 0,
-  page: 0,
-  showModal: false,
-  willCreate: false,
-  maxPage: 5,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -213,7 +222,14 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetCREATE, SetEDIT, SetFILTER, SetPAGE, RESET } =
-  reduxSlice.actions;
+export const {
+  SetCREATE,
+  SetEDIT,
+  SetFILTER,
+  SetPAGE,
+  SetMaxPage,
+  SetActivePAGE,
+  RESET,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

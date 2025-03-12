@@ -21,6 +21,7 @@ const Header = () => {
     dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("Service:", service);
     if (token && activePlatform?.branchId && year && month && service) {
       dispatch(
         BROWSE({

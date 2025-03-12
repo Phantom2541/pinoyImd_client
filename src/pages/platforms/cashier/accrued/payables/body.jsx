@@ -10,8 +10,18 @@ import { fullName } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 const Tables = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ payables }) => payables),
+    { filtered, activePage, maxPage } = useSelector(({ payables }) => payables),
     dispatch = useDispatch();
+
+  /**
+   * Pagination: Calculate the start and end index for the current page
+   */
+  // console.log("Filtered: ", filtered);
+
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
   const handleDelete = (_id) => {
     Swal.fire({
@@ -56,14 +66,14 @@ const Tables = () => {
         </tr>
       </thead>
       <tbody>
-        {!collections?.length && (
+        {!paginatedData?.length && (
           <tr>
             <td colSpan={5} style={{ textAlign: "center" }}>
               No Data
             </td>
           </tr>
         )}
-        {collections?.map((payable, index) => {
+        {paginatedData?.map((payable, index) => {
           const {
             _id,
             fsId,

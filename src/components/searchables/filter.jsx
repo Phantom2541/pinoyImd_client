@@ -27,7 +27,7 @@ export default function Search({ setFiltered }) {
           spellCheck={false}
         />
         <button type="submit">
-          <MDBIcon fas icon="search" className="search-icon" />
+          <MDBIcon icon="search" className="search-icon" />
         </button>
       </div>
     </div>

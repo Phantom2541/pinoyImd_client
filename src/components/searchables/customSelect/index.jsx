@@ -35,12 +35,14 @@ import {
  */
 export default function CustomSelect({
   choices = [],
-  preValue = "",
+  preValue = "", //for string
+  preValues = [], //for array
   onChange = () => {},
   getObject = false,
   label,
   values,
   texts,
+  _key = "",
   className = "",
   inputClassName = "",
   disableAll = false,
@@ -82,10 +84,17 @@ export default function CustomSelect({
     onChange(selectedItem);
   };
 
+  const handleChecked = (value) => {
+    if (multiple) {
+      return preValues.includes(value);
+    }
+    return String(preValue) === String(value);
+  };
   return (
     <MDBSelect
       label={!hideLabel && label}
       getValue={handleSelection}
+      key={JSON.stringify(preValues)}
       className={className}
       multiple={multiple}
       color="primary"
@@ -100,7 +109,9 @@ export default function CustomSelect({
             <MDBSelectOption
               id={`${label}-${value}`}
               disabled={handleChoiceDisabling(value, choice)}
-              checked={preValue ? String(value) === String(preValue) : false}
+              checked={
+                preValue || preValues.length > 0 ? handleChecked(value) : false
+              }
               key={`${label}-${index}`}
               value={value || "--"}
             >

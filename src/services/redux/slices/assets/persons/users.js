@@ -4,7 +4,8 @@ import { axioKit } from "../../../../utilities";
 const name = "assets/persons/users";
 
 const initialState = {
-  collectionsUsers: [],
+  collections: [],
+  filtered: [],
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -30,9 +31,9 @@ export const BROWSE = createAsyncThunk(
 
 export const GETPATIENTS = createAsyncThunk(
   `${name}/patients`,
-  ({ token, query }, thunkAPI) => {
+  ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/patients`, token, query);
+      return axioKit.universal(`${name}/patients`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -89,9 +90,9 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, { payload, success }) => {
-        console.log("payload", payload);
-        // state.collections = payload.payload;
-        state.collectionsUsers = payload;
+        // console.log("payload", payload);
+        state.collections = payload.payload;
+        // state.collectionsUsers = payload;
         state.isLoading = false;
         state.message = success;
       })
@@ -108,9 +109,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(GETPATIENTS.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        //console.log('payload',payload);
-
-        state.collections = payload;
+        state.filtered = payload;
         state.isLoading = false;
       })
       .addCase(GETPATIENTS.rejected, (state, action) => {

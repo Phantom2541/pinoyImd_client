@@ -6,7 +6,7 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/results/laboratory/electrolyte"; // Adjusted slice for Electrolytes
+} from "../../../services/redux/slices/diagnostics/laboratory/electrolyte"; // Adjusted slice for Electrolytes
 
 const dayNames = [
   "Sunday",
@@ -33,7 +33,7 @@ const formatTime = (hours, minutes) => {
 export default function ElectrolytesPrint() {
   const [electrolytes, setElectrolytes] = useState([]),
     { collections } = useSelector(({ electrolyte }) => electrolyte),
-        { token, activePlatform } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
     dispatch = useDispatch();

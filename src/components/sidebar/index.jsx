@@ -96,7 +96,9 @@ export default function SideNavigation({
         logo={logo}
         bg="https://mdbootstrap.com/img/Photos/Others/sidenav2.jpg"
         mask="strong"
-        href="/dashboard"
+        href={`/${activePlatform.platform}/${
+          activePlatform.platform === "manager" ? "dashboard" : "bulletin"
+        }`}
         fixed
         breakWidth={breakWidth}
         triggerOpening={triggerOpening}

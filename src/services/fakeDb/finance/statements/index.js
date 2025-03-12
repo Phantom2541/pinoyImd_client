@@ -1,5 +1,7 @@
 import collections from "./collections.json";
-
+/**
+ * financial statement ID
+ */
 const Statements = {
   collections: [...collections],
   find: (pk) => collections.find(({ id }) => id === Number(pk)),
