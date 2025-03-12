@@ -136,6 +136,16 @@ export const reduxSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
+    /**
+     *  for pagination
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -146,9 +156,10 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action;
-        state.collections = payload;
+        console.log("Payload: ", payload);
+        state.collections = payload.payload;
         state.filter = payload;
-        state.paginated = payload;
+        // state.paginated = payload;
         state.isSuccess = true;
         state.isLoading = false;
       })
