@@ -21,6 +21,7 @@ const Printout = ({ task }) => {
     signatories,
   } = task;
   console.log("task", task);
+
   const { activePlatform, company, auth } = useSelector(({ auth }) => auth);
 
   console.log("activePlatform", activePlatform);
