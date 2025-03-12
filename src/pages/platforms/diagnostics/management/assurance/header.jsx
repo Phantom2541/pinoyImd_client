@@ -6,12 +6,12 @@ import {
   SearchTemplates as Templates,
   SearchYear as Year,
   SearchMonth as Month,
-} from "../../../../../../components/searchables";
+} from "./../../../../../components/searchables";
 import {
   RESET,
   BROWSE,
   SetCREATE,
-} from "../../../../../../services/redux/slices/liability/controls";
+} from "./../../../../../services/redux/slices/liability/assurances";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
@@ -21,6 +21,7 @@ const Header = () => {
     dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("Service:", service);
     if (token && activePlatform?.branchId && year && month && service) {
       dispatch(
         BROWSE({
@@ -43,7 +44,7 @@ const Header = () => {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">Controls </span>
+        <span className="white-text mx-3 text-nowrap mt-0">Assurances </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">

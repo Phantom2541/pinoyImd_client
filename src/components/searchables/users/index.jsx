@@ -91,7 +91,7 @@ export default function Search({ setPatient, setRegister = () => {} }) {
       <Notification didSearch={didSearch} />
       <div className={`searchable-search ${didSearch && "active"}`}>
         <div className="searchable-search-suggestions">
-          {!patients?.length ? (
+          {!patients.length ? (
             <small
               className={didHover ? "text-success" : ""}
               onClick={handleRegister}

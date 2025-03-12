@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 import { Statements } from "../../../../fakeDb";
-
 const name = "finance/journals/payments";
 
 const initialState = {

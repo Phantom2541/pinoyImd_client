@@ -113,9 +113,9 @@ export default function CustomSelect({
                 preValue || preValues.length > 0 ? handleChecked(value) : false
               }
               key={`${label}-${index}`}
-              value={value}
+              value={value || "--"}
             >
-              {text}
+              {text || "--"}
             </MDBSelectOption>
           );
         })}

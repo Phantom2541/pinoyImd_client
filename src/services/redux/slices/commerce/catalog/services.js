@@ -6,11 +6,11 @@ const name = "commerce/catalog/services";
 const initialState = {
   collections: [],
   filtered: [],
-  maxPage: 5,
-  totalPages: 0,
-  activePage: 1,
+  maxPage: 5, // for max page
+  totalPages: 0, // for pages
+  activePage: 1, // for active page
   isSuccess: false,
-  isLoading: false,
+  isLoading: false, // for loading
   message: "",
 };
 

@@ -1,38 +1,39 @@
 import React from "react";
-// import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-// import {
-//   DESTROY,
-//   SetEDIT,
-// } from "../../../../../../services/redux/slices/liability/assurances";
-// import Swal from "sweetalert2";
-// import { Services } from "../../../../../../services/fakeDb";
+import {
+  DESTROY,
+  SetEDIT,
+} from "./../../../../../services/redux/slices/liability/assurances";
+import Swal from "sweetalert2";
+import { Services } from "./../../../../../services/fakeDb";
 
 const Tables = () => {
-  // const { token } = useSelector(({ auth }) => auth),
-  // { paginated } = useSelector(({ assurances }) => assurances),
-  // dispatch = useDispatch();
+  const { token } = useSelector(({ auth }) => auth),
+    { paginated } = useSelector(({ assurances }) => assurances),
+    dispatch = useDispatch();
 
-  // const handleDelete = (_id) => {
-  //   Swal.fire({
-  //     title: "Are you sure?",
-  //     text: "You won't be able to revert this!",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "Yes, delete it!",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       dispatch(DESTROY({ token, data: { _id } }));
-  //     }
-  //   });
-  // };
+  const handleDelete = (_id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(DESTROY({ token, data: { _id } }));
+      }
+    });
+  };
 
   return (
     <MDBTable responsive hover bordered>
       <thead>
         <tr>
+          <th>#</th>
           <th>Service ID</th>
           <th>Abnormal</th>
           <th>High</th>
@@ -40,16 +41,16 @@ const Tables = () => {
           <th>Created At</th>
         </tr>
       </thead>
-      {/* <tbody>
+      <tbody>
         {!paginated.length && <tr>No data</tr>}
         {paginated.map((assurance, index) => {
           return (
             <tr key={index}>
+              <td>{index + 1}</td>
               <td>{Services.getName(assurance?.serviceId)}</td>
               <td>{assurance?.abnormal}</td>
               <td>{assurance?.high}</td>
               <td>{assurance?.normal}</td>
-              <td>{control?.createdAt}</td>
               <td>
                 {new Date(assurance?.createdAt).toLocaleDateString("en-GB", {
                   month: "short",
@@ -68,7 +69,7 @@ const Tables = () => {
             </tr>
           );
         })}
-      </tbody> */}
+      </tbody>
     </MDBTable>
   );
 };

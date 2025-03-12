@@ -11,11 +11,7 @@ import { Payments, Vouchers } from "./summary";
 export default function Deals() {
   const { isLoading } = useSelector(({ deals }) => deals);
   return (
-    <MDBContainer
-      className="d-flex"
-      fluid
-      // style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-    >
+    <MDBContainer className="d-flex" fluid>
       <div className=" py-1 rounded flex-1 ml-2 px-2">
         <MDBCard narrow style={{ minHeight: "75vh" }}>
           <Header />

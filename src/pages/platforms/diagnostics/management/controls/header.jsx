@@ -6,12 +6,12 @@ import {
   SearchTemplates as Templates,
   SearchYear as Year,
   SearchMonth as Month,
-} from "../../../../../../components/searchables";
+} from "./../../../../../components/searchables";
 import {
   RESET,
   BROWSE,
   SetCREATE,
-} from "../../../../../../services/redux/slices/liability/assurances";
+} from "./../../../../../services/redux/slices/liability/controls";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
@@ -43,7 +43,7 @@ const Header = () => {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">Assurances </span>
+        <span className="white-text mx-3 text-nowrap mt-0">Controls </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">

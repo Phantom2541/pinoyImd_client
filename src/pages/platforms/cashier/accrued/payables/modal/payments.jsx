@@ -15,7 +15,7 @@ import {
   SAVE,
   UPDATE,
   SetCloseModal,
-} from "../../../../../../services/redux/slices/finance/journals/payables.js";
+} from "../../../../../../services/redux/slices/finance/journals/payables";
 import { Statements } from "../../../../../../services/fakeDb";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";

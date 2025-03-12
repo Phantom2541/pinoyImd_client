@@ -6,7 +6,7 @@ import {
   BROWSE,
   SetCREATE,
   SetFILTERByCategories,
-} from "../../../../../services/redux/slices/finance/journals/payments.js";
+} from "../../../../../services/redux/slices/finance/journals/payments";
 import {
   SearchMonth as Month,
   SearchYear as Year,
