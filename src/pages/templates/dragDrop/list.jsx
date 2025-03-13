@@ -17,6 +17,7 @@ const List = ({
   handleDragStart,
   removeID,
   hasDrag,
+  disabled = false,
   tableName = "",
   removeBy = "",
   title = "Selected Roles",
@@ -56,7 +57,7 @@ const List = ({
                   }
                 >
                   <MDBListGroupItem
-                    draggable
+                    draggable={!disabled}
                     onDragEnd={handleDragEnd}
                     onDragStart={(event) => {
                       handleDragStart(event, role, index, tableName);
