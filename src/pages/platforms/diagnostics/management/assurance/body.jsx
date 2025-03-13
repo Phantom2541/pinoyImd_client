@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
   DESTROY,
-  SetEDIT,
+  // SetEDIT,
 } from "./../../../../../services/redux/slices/liability/assurances";
 import Swal from "sweetalert2";
 // import { Services } from "../../../../../../services/fakeDb";
