@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBContainer, MDBSpinner, MDBTypography } from "mdbreact";
+import { MDBCard, MDBSpinner, MDBCardBody } from "mdbreact";
 
 import Header from "./headers";
-import Card from "./card";
+import Body from "./body";
 import "./style.css";
-// import { fullNameSearch } from "../../../../../services/utilities";
 import {
   INSOURCE,
   SETSOURCES,
@@ -13,14 +12,8 @@ import {
 } from "../../../../../services/redux/slices/assets/providers.js";
 
 export default function Sales() {
-  const [searchKey, setSearchKey] = useState([]),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections: sources } = useSelector(({ providers }) => providers),
-    [sales, setSales] = useState([]),
-    [view, setView] = useState("All"),
-    { collections, isLoading } = useSelector(
-      ({ taskGenerator }) => taskGenerator
-    ),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { isLoading } = useSelector(({ taskGenerator }) => taskGenerator),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -42,8 +35,6 @@ export default function Sales() {
           .then(({ payload }) => {
             // Assuming the response contains the source data in 'payload'
             const sourceData = payload.payload;
-            console.log("Fetching source data:", sourceData);
-
             // Store the fetched data in localStorage for future use
             localStorage.setItem(
               `source_${branchId}`,
@@ -62,37 +53,18 @@ export default function Sales() {
     }
   }, [token, dispatch, activePlatform]);
 
-  useEffect(() => {
-    console.log("sources", sources);
-  }, [sources]);
-
-  useEffect(() => {
-    setSales(collections);
-  }, [collections]);
-
   return (
-    <MDBContainer fluid>
-      <Header
-        length={sales?.length}
-        view={view}
-        setView={setView}
-        searchKey={searchKey}
-        setSearchKey={setSearchKey}
-      />
-      <div className="sales-card-wrapper mt-3">
-        {!sales?.length && !isLoading && (
-          <MDBTypography noteColor="info" note>
-            Sales are emptys
-          </MDBTypography>
-        )}
+    <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+      <Header />
+      <MDBCardBody>
         {isLoading ? (
           <div className="text-center mt-5">
             <MDBSpinner />
           </div>
         ) : (
-          sales?.map((sale, index) => <Card item={sale} index={index} />)
+          <Body />
         )}
-      </div>
-    </MDBContainer>
+      </MDBCardBody>
+    </MDBCard>
   );
 }

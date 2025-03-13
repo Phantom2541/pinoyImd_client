@@ -9,6 +9,7 @@ const Year = () => {
   return (
     <select
       className="browser-default custom-select"
+      style={{ width: "100px", marginRight: "40px" }}
       value={year}
       onChange={handleChange}
     >

@@ -50,7 +50,7 @@ const Printout = ({ sale, forms, ssx }) => {
           fontSize: "12px", // Smaller text for better fit
         }}
       >
-        {Object.keys(forms).map((key, index) => {
+        {Object?.keys(forms)?.map((key, index) => {
           const FormComponent = formComponents[key];
           return (
             <div
