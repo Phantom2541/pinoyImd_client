@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { Line } from "react-chartjs-2";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
-import { Chart } from "chart.js/auto";
 
 const calculateStats = (data) => {
   if (!data.length) return { mean: 0, stdDev: 0 };
