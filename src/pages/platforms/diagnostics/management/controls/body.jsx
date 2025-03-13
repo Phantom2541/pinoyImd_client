@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
@@ -7,12 +7,22 @@ import {
 } from "./../../../../../services/redux/slices/liability/controls";
 import Swal from "sweetalert2";
 
-import { Services } from "./../../../../../services/fakeDb";
-// import { handlePagination } from "../../../../../../services/utilities";
 const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { paginated } = useSelector(({ controls }) => controls),
+    { collections, activePage, maxPage } = useSelector(
+      ({ controls }) => controls
+    ),
     dispatch = useDispatch();
+
+  const [hoveredRow, setHoveredRow] = useState(null); // Track hovered row index
+
+  /**
+   * Pagination: Calculate the start and end index for the current page
+   */
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = collections.slice(startIndex, endIndex); // Get only items for the active page
 
   const handleDelete = (_id) => {
     Swal.fire({
@@ -34,34 +44,64 @@ const Tables = () => {
     <MDBTable responsive hover bordered style={{ minHeight: "300px" }}>
       <thead>
         <tr>
-          <th>Service ID</th>
-          <th>Abnormal</th>
-          <th>High</th>
+          <th>#</th>
+          <th>Lo</th>
           <th>Normal</th>
-          <th>Created At</th>
+          <th>Hi</th>
         </tr>
       </thead>
       <tbody>
-        {!paginated.length && <tr>No Data</tr>}
-        {paginated.map((control, index) => (
-          <tr key={index}>
-            <td style={{ minHeight: "30px" }}>
-              {Services.getName(control?.serviceId)}
+        {!paginatedData?.length && (
+          <tr>
+            <td colSpan={4} style={{ textAlign: "center" }}>
+              No data found
             </td>
-            <td>{control?.abnormal}</td>
-            <td>{control?.high}</td>
-            <td>{control?.normal}</td>
+          </tr>
+        )}
+        {paginatedData?.map((control, index) => (
+          <tr
+            key={index}
+            onMouseEnter={() => setHoveredRow(index)}
+            onMouseLeave={() => setHoveredRow(null)}
+            style={{
+              backgroundColor: hoveredRow === index ? "#ff4d4d" : "transparent", // Instant red background on hover
+              color: hoveredRow === index ? "white" : "inherit", // White text for contrast
+            }}
+          >
+            {/* Always show the Date column */}
             <td>
               {new Date(control?.createdAt).toLocaleDateString("en-GB", {
-                month: "short",
                 day: "2-digit",
-                year: "numeric",
               })}
             </td>
-            <td>
-              <button onClick={() => dispatch(SetEDIT(control))}>Edit</button>
-              <button onClick={() => handleDelete(control._id)}>Delete</button>
-            </td>
+
+            {/* Hovered row with Edit/Delete buttons */}
+            {hoveredRow === index ? (
+              <td
+                colSpan={3}
+                style={{ textAlign: "center", backgroundColor: "#ff4d4d" }}
+              >
+                <button
+                  onClick={() => dispatch(SetEDIT(control))}
+                  style={{ marginRight: "10px", padding: "5px 10px" }}
+                >
+                  ✏️ Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(control._id)}
+                  style={{ color: "red", padding: "5px 10px" }}
+                >
+                  🗑️ Delete
+                </button>
+              </td>
+            ) : (
+              // Default row (normal display)
+              <>
+                <td>{control?.lo}</td>
+                <td>{control?.norm}</td>
+                <td>{control?.hi}</td>
+              </>
+            )}
           </tr>
         ))}
       </tbody>

@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
   DESTROY,
-  SetEDIT,
+  // SetEDIT,
 } from "./../../../../../services/redux/slices/liability/assurances";
 import Swal from "sweetalert2";
-import { Services } from "./../../../../../services/fakeDb";
+// import { Services } from "../../../../../../services/fakeDb";
 
 const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { paginated } = useSelector(({ assurances }) => assurances),
+    { collections } = useSelector(({ assurances }) => assurances),
     dispatch = useDispatch();
 
   const handleDelete = (_id) => {
@@ -29,6 +29,8 @@ const Tables = () => {
     });
   };
 
+  console.log("Collections: ", collections);
+
   return (
     <MDBTable responsive hover bordered>
       <thead>
@@ -42,8 +44,8 @@ const Tables = () => {
         </tr>
       </thead>
       <tbody>
-        {!paginated.length && <tr>No data</tr>}
-        {paginated.map((assurance, index) => {
+        {/* {!collections?.length && <tr>No data</tr>}
+        {collections?.map((assurance, index) => {
           return (
             <tr key={index}>
               <td>{index + 1}</td>
@@ -68,7 +70,7 @@ const Tables = () => {
               </td>
             </tr>
           );
-        })}
+        })} */}
       </tbody>
     </MDBTable>
   );

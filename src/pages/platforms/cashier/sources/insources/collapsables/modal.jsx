@@ -1,72 +1,97 @@
 import React, { useState, useEffect } from "react";
-import { MDBModal, MDBModalBody, MDBIcon, MDBModalHeader } from "mdbreact";
-import { Services } from "../../../../../../services/fakeDb";
-import DataTable from "../../../../../../components/dataTable";
-import { capitalize, globalSearch } from "../../../../../../services/utilities";
+import {
+  MDBModal,
+  MDBModalBody,
+  MDBIcon,
+  MDBModalHeader,
+  MDBBtn,
+  MDBRow,
+  MDBCol,
+  MDBInput,
+} from "mdbreact";
+import AddressSelect from "../../../../../../components/searchables/addressSelect";
+import { useDispatch, useSelector } from "react-redux";
+import { REGISTER_GHOST_COMPANY } from "../../../../../../services/redux/slices/assets/providers";
+const _form = {
+  name: "",
+  companyName: "",
+  address: {
+    region: "REGION III (CENTRAL LUZON)",
+    province: "NUEVA ECIJA",
+    city: "GENERAL TINIO (PAPAYA)",
+    barangay: "Pias",
+  },
+};
 
-export default function Modal({ show, toggle, handlePick }) {
-  const [services, setServices] = useState([]);
+export default function Modal({ show, toggle, selected }) {
+  const { activePlatform, token } = useSelector(({ auth }) => auth),
+    [form, setForm] = useState(_form),
+    dispatch = useDispatch();
 
   useEffect(() => {
-    setServices(Services.collections);
-  }, []);
-
-  const handleSearch = async (willSearch, key) => {
-    if (willSearch) {
-      setServices(globalSearch(Services.collections, key));
-    } else {
-      setServices(Services.collections);
+    if (show) {
+      const { branch } = activePlatform;
+      const { companyId } = branch;
+      const { name, _id } = companyId;
+      setForm((prev) => ({
+        ...prev,
+        name: selected.name,
+        companyName: name,
+        companyId: _id,
+        providerId: selected._id,
+      }));
     }
+  }, [show, selected, activePlatform]);
+
+  const handleSubmit = () => {
+    dispatch(
+      REGISTER_GHOST_COMPANY({
+        token,
+        data: { branch: form, providerID: form.providerId },
+      })
+    );
   };
 
   return (
-    <MDBModal size="lg" isOpen={show} toggle={toggle} backdrop>
+    <MDBModal size="md" isOpen={show} toggle={toggle} backdrop>
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
       >
-        <MDBIcon icon="flask" className="mr-2" />
-        Add a Service
+        <MDBIcon icon="building" className="mr-2" />
+        {form.name} register as your new client
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
-        <DataTable
-          minHeight="0px"
-          title="Services Available"
-          array={services}
-          actions={[
-            {
-              _icon: "share",
-              _function: handlePick,
-              _haveSelect: true,
-              _allowMultiple: true,
-              _shouldReset: true,
-            },
-          ]}
-          tableHeads={[
-            {
-              _text: "Name",
-            },
-            {
-              _text: "Department",
-            },
-          ]}
-          tableBodies={[
-            {
-              _key: "name",
-              _format: (data, { abbreviation }) => (
-                <>
-                  <p className="fw-bold mb-1">{capitalize(data)}</p>
-                  <p className="mb-0">{abbreviation.toUpperCase()}</p>
-                </>
-              ),
-            },
-            {
-              _key: "department",
-              _format: capitalize,
-            },
-          ]}
-          handleSearch={handleSearch}
+        <MDBRow>
+          <MDBCol>
+            <MDBInput label="Name" required value={form.name} />
+          </MDBCol>
+          <MDBCol>
+            <MDBInput
+              label="Comapny Name"
+              required
+              value={form.companyName}
+              readOnly
+            />
+          </MDBCol>
+        </MDBRow>
+        <AddressSelect
+          handleChange={(_, value) =>
+            setForm((prev) => ({
+              ...prev,
+              address: { ...prev.address, ...value },
+            }))
+          }
+          address={form.address}
         />
+        <MDBBtn
+          className="float-right mt-3"
+          rounded
+          color="info"
+          onClick={handleSubmit}
+        >
+          Register
+        </MDBBtn>
       </MDBModalBody>
     </MDBModal>
   );

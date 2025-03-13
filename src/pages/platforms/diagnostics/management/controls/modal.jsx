@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -11,20 +11,34 @@ import {
 } from "mdbreact";
 import {
   SAVE,
+  TOGGLE,
   UPDATE,
 } from "../../../../../services/redux/slices/liability/controls";
 
 import { Services } from "../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
+
 import { useToasts } from "react-toast-notifications";
 
-export default function Modal({ show, toggle, selected, willCreate }) {
-  const { isLoading } = useSelector(({ controls }) => controls),
+export default function Modal() {
+  const { isLoading, showModal, willCreate, selected } = useSelector(
+      ({ controls }) => controls
+    ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected),
+    [form, setForm] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    if (willCreate)
+      setForm({
+        ...selected,
+        userId: auth._id,
+        branchId: activePlatform.branchId,
+      });
+    else setForm(selected);
+  }, [willCreate, selected]);
 
   // Set form data kapag nagbukas ng modal
   // useEffect(() => {
@@ -33,13 +47,13 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   // Handle update function
   const handleUpdate = () => {
-    toggle();
-
     // Check if object has changed
     if (isEqual(form, selected)) {
-      return addToast("No changes found, skipping update.", {
+      addToast("No changes found, skipping update.", {
         appearance: "info",
       });
+      dispatch(TOGGLE());
+      return;
     }
 
     dispatch(
@@ -57,7 +71,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         data: form,
         token,
       })
-    ).then(() => toggle()); // Close modal after successful save
+    );
   };
 
   // Handle form submit
@@ -76,25 +90,22 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     setForm({
       ...form,
       [key]: Number(value),
-      userId: auth._id,
-      branchId: activePlatform.branchId,
     });
+    console.log("Form", form);
   };
 
   // Fix: Return correct form value
   const handleValue = (key) => {
-    console.log("key", key);
-
+    // console.log("key", key);
     // form?.[key] || "";
   };
 
   // Handle modal close
-  const handleClose = () => toggle();
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop size="sm">
+    <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
       <MDBModalHeader
-        toggle={handleClose}
+        toggle={() => dispatch(TOGGLE())}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
@@ -112,25 +123,26 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
           {/* Input fields */}
           <MDBInput
-            label="Abnormal"
+            label="Low"
             type="number"
-            value={handleValue("abnormal")}
+            value={form.lo}
             required
-            onChange={(e) => handleChange("abnormal", e.target.value)}
+            onChange={(e) => handleChange("lo", e.target.value)}
+          />
+
+          <MDBInput
+            label="Normal"
+            type="number"
+            value={form.norm}
+            required
+            onChange={(e) => handleChange("norm", e.target.value)}
           />
           <MDBInput
             label="High"
             type="number"
-            value={handleValue("high")}
+            value={form.hi}
             required
-            onChange={(e) => handleChange("high", e.target.value)}
-          />
-          <MDBInput
-            label="Normal"
-            type="number"
-            value={handleValue("normal")}
-            required
-            onChange={(e) => handleChange("normal", e.target.value)}
+            onChange={(e) => handleChange("hi", e.target.value)}
           />
 
           {/* Submit button */}
