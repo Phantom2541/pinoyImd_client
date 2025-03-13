@@ -193,7 +193,7 @@ export default function MenuCollapse() {
           .then((branch) => {
             dispatch(SetBRANCHES(branch.payload));
           })
-          .catch((error) => {
+          .catch((_) => {
             Swal.fire(
               "Error",
               "Failed to register physician. Please try again.",

@@ -24,9 +24,7 @@ const Insources = () => {
         <MDBCardBody>
           {isLoading ? <TableLoading /> : <Collapsable />}
         </MDBCardBody>
-
         <Modal />
-
         <div className="mb-auto d-flex justify-content-between align-items-center px-4">
           <TableRowCount disablePageSelect={false} />
           <Pagination
