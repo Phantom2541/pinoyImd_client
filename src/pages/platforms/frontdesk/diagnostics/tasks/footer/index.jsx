@@ -1,24 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import TableRowCount from "../../../../../../components/pagination/rows";
 import Pagination from "../../../../../../components/pagination";
+import {
+  SetMaxPage,
+  SetActivePAGE,
+} from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
-const Footer = ({ page, setPage }) => {
-  const { collections, isLoading } = useSelector(({ sales }) => sales),
+const Footer = () => {
+  const { isLoading, activePage, totalPages } = useSelector(
+      ({ validator }) => validator
+    ),
     { maxPage } = useSelector(({ auth }) => auth),
-    [totalPages, setTotalPages] = useState(1);
+    dispatch = useDispatch();
 
   useEffect(() => {
-    if (collections.length > 0) {
-      let totalPages = Math.floor(collections.length / maxPage);
-      if (collections.length % maxPage > 0) totalPages += 1;
-      setTotalPages(totalPages);
+    dispatch(SetMaxPage(maxPage));
+  }, [dispatch, maxPage]);
 
-      if (page > totalPages) {
-        setPage(totalPages);
-      }
+  const handlePageChange = (action) => {
+    const newPage = activePage + (action ? 1 : -1);
+    if (newPage >= 1 && newPage <= totalPages) {
+      dispatch(SetActivePAGE(newPage));
     }
-  }, [collections, page, setPage, maxPage]);
+  };
 
   return (
     <div className="d-flex justify-content-between align-items-center px-4">
@@ -26,8 +31,8 @@ const Footer = ({ page, setPage }) => {
       <Pagination
         isLoading={isLoading}
         total={totalPages}
-        page={page}
-        setPage={setPage}
+        page={activePage}
+        setPage={handlePageChange}
       />
     </div>
   );
