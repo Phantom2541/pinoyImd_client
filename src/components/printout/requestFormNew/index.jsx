@@ -90,13 +90,14 @@ const Printout = ({ sale, forms, ssx }) => {
         })}
       </div>
     </div>
-  );
+  ); 
 };
 
 export default function TaskPrintout() {
   const [sale, setSale] = useState(null);
   const [forms, setForms] = useState(null);
   const [ssx, setSsx] = useState(null);
+  
 
   useEffect(() => {
     setSale(JSON.parse(localStorage.getItem("RequestForm")))
