@@ -7,7 +7,7 @@ import Header from "./header";
 
 export default function DealCollapse() {
   const { maxPage } = useSelector(({ auth }) => auth),
-    { filtered, activePage, activeDeal } = useSelector(
+    { filtered, activePage, activeCOLAPSE } = useSelector(
       ({ validator }) => validator
     );
 
@@ -17,7 +17,7 @@ export default function DealCollapse() {
         return (
           <MDBCard key={`deal-${index}`}>
             <Header deal={deal} index={index} />
-            <MDBCollapse id={`collapse-${index}`} isOpen={index === activeDeal}>
+            <MDBCollapse id={`collapse-${index}`} isOpen={index === activeCOLAPSE}>
               <MDBCardBody className="pt-0">
                 <Body forms={deal.forms} />
               </MDBCardBody>

@@ -46,7 +46,7 @@ const Forms = ({ form, obj, index }) => {
     department,
   };
 
-  const handeEntry = (task) => dispatch(SetTASK(task));
+  const handeEntry = () => dispatch(SetTASK({task,form}));
 
   return (
     <tr key={task.key} className={`${hasDone && "table-active"}`}>
@@ -64,7 +64,7 @@ const Forms = ({ form, obj, index }) => {
       <td>
         <MDBBtnGroup>
           <MDBBtn
-            onClick={() => handeEntry(task)}
+            onClick={() => handeEntry()}
             color={hasDone ? "info" : "primary"}
             size="sm"
             className="py-1 px-2 m-0"

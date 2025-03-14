@@ -9,10 +9,7 @@ import {
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 export default function Chemistry() {
-  const { task } = useSelector(({ validator }) => validator),
-    { collections: preferences } = useSelector(
-      ({ preferences }) => preferences
-    ),
+  const { task, preferences } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
   const { packages = {}, key: mapKey, patient } = task;

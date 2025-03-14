@@ -12,6 +12,18 @@ import { currency, globalSearch } from "../../../services/utilities";
 import Notification from "./notifications";
 import "../style.css";
 
+/**
+ * A Search component that allows the user to search for a menu item by name.
+ * The component will make an API call to search for menu items and render a list of results below the search input.
+ * The user can select a menu item from the list and the setMenu callback will be called with the selected menu item.
+ * The component also renders a button to register a new menu item if no menu item record is found with the search key.
+ * The setRegister callback will be called with the search key when the button is clicked.
+ *
+ * @param {function} setMenu - A callback function that will be called when a menu item is selected from the list.
+ * @param {function} setRegister - A callback function that will be called when the button to register a new menu item is clicked.
+ *
+ * @returns {JSX.Element} user
+ */
 export default function Search({ setMenu, setRegister }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ menus }) => menus),

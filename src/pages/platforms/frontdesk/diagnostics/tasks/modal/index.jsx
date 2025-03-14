@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  MDBModal,
-  MDBModalBody,
-  MDBModalHeader,
-  MDBAlert,
-} from "mdbreact";
+import { MDBModal, MDBModalBody, MDBModalHeader, MDBAlert } from "mdbreact";
 import Patient from "./patient";
 import { formColor } from "./../../../../../../services/utilities";
-import {TOGGLE} from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import { TOGGLE } from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import BodySwitcher from "./bodySwitcher";
 
 import Footer from "./footer.jsx";
 export default function Modal() {
-  const 
-    { selected, task, showModal } = useSelector(({ validator }) => validator),
+  const { selected, task, showModal } = useSelector(
+      ({ validator }) => validator
+    ),
     dispatch = useDispatch();
 
   return (
@@ -23,16 +19,19 @@ export default function Modal() {
         toggle={() => dispatch(TOGGLE())}
         className="light-blue darken-3 white-text"
       >
-        <Patient patient={selected.customerId} />
+        <Patient patient={selected?.customerId} />
       </MDBModalHeader>
       <MDBModalBody className="mb-0 text-center">
-        <MDBAlert color={formColor(task.form)} className="text-uppercase fw-bold">
+        <MDBAlert
+          color={formColor(task.form)}
+          className="text-uppercase fw-bold"
+        >
           <h5 style={{ letterSpacing: "30px" }} className="mb-0">
             {task.form}
           </h5>
         </MDBAlert>
-        <BodySwitcher  />
-       <Footer />
+        <BodySwitcher />
+        <Footer />
       </MDBModalBody>
     </MDBModal>
   );

@@ -82,7 +82,7 @@ const Footer = () => {
     <div className="text-center mb-1-half border-top pt-2">
     <textarea
       placeholder="Remarks"
-      value={task.remarks}
+      value={task?.remarks}
       onChange={(e) =>
         dispatch(SetTASK({ ...task, remarks: e.target.value }))
       }
