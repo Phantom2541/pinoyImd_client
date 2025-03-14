@@ -19,6 +19,7 @@ const Headers = ({ searchKey }) => {
         TASKS({
           token,
           key: {
+            department: ["LAB"],
             branchId: activePlatform?.branchId,
             createdAt: new Date().setHours(0, 0, 0, 0),
           },

@@ -94,7 +94,7 @@ export default function Search({ setMenu, setRegister }) {
   };
 
   return (
-    <div className="searchable-search-cotaniner ">
+    <div className=" d-flex align-items-center " style={{ width: "85%" }}>
       <Notification didSearch={match.length > 0} />
       <div className={`searchable-search  ${match.length > 0 && "active"}`}>
         <div className="searchable-search-suggestions">

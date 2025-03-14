@@ -5,16 +5,15 @@ import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { axioKit, harvestTask } from "../../../../../../../services/utilities";
 import { REFORM } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
-const PrimaryFooter = ({ sale, setEdit }) => {
+const PrimaryFooter = ({ deal, setEdit }) => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  const generateTask = async (sale) => {
-    const { _id, cart, customerId, ssx } = sale;
-    let RequestForm = { customer: sale?.customerId };
+  const generateTask = async () => {
+    const { _id, cart, customerId, ssx } = deal;
+    let RequestForm = { customer: deal?.customerId };
     const task = harvestTask(cart);
-    const forms = Object.keys(task).length;
-
+    const forms = Object.keys(task);
     for (const key in task) {
       const lowercaseKey = key.toLowerCase();
       RequestForm[lowercaseKey] = task[key];
@@ -88,7 +87,8 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
       localStorage.setItem("RequestForm", JSON.stringify(RequestForm));
     }
-
+    console.log("RequestForm", RequestForm);
+    
     // working request form but not showing anything
     window.open(
       "/printout/request/form",
@@ -103,16 +103,21 @@ const PrimaryFooter = ({ sale, setEdit }) => {
           _id,
           ssx,
           lol: auth._id,
-          renderedBy: auth._id,
-          renderedAt: new Date().toLocaleString(),
+          rendered: [
+            {
+              department: "LAB",
+              renderedBy: auth._id,
+              renderedAt: new Date().toLocaleString(),
+            },
+          ],
           forms,
         },
       })
     );
   };
 
-  const preAnalytical = async (sale) => {
-    console.log("preAnalytical", sale);
+  const preAnalytical = async (deal) => {
+    console.log("preAnalytical", deal);
     console.log("undone task", "preAnalytical");
   };
 
@@ -130,7 +135,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       </MDBBtn>
       <MDBBtn
         type="button"
-        onClick={() => preAnalytical(sale)}
+        onClick={() => preAnalytical(deal)}
         title="Pre-Analytical Supply Dispense"
         className="m-0 "
         size="sm"
@@ -140,7 +145,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       </MDBBtn>
       <MDBBtn
         type="button"
-        onClick={() => generateTask(sale)}
+        onClick={() => generateTask()}
         className="m-0 "
         title="Generate Task"
         size="sm"

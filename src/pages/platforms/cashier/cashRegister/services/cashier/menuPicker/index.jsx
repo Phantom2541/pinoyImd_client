@@ -22,7 +22,7 @@ export default function Menus({ patronPresent }) {
         <thead>
           <tr>
             <th colSpan="3" className="bg-white">
-              <div className="d-flex justify-content-center">
+              <div className="d-flex justify-content-center align-items-center">
                 <SearchMenu
                   setMenu={handleADDtoCart}
                   // setRegister={setRegister}

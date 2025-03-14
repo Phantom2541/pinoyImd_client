@@ -15,17 +15,22 @@ const healthyClient = {
   },
 };
 
-//  ;
-
 const initialState = {
+  /**
+   * Support tables
+   */
+  heads: [],
+  preferences: [],
+  //   attributes,
   collections: [],
   filtered: [],
+  deal: {},
   selected: {},
   task: {},
-  preferences: [],
   showModal: false,
-  maxPage: 1,
+  maxPage: 5,
   activePage: 1,
+  activeDeal: -1,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -70,6 +75,25 @@ export const PREFERENCES = createAsyncThunk(
     }
   }
 );
+export const HEADS = createAsyncThunk(
+  `assets/persons/heads/browse`,
+  ({ token, branchId }, thunkAPI) => {
+    try {
+      return axioKit.universal(`assets/persons/heads/browse`, token, {
+        branchId,
+      });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const reduxSlice = createSlice({
   name,
@@ -78,8 +102,13 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+    SetDEAL: (state, { payload }) => {
+      const { deal, activeDeal } = payload;
+      state.deal = deal;
+      state.activeDeal = activeDeal;
+    },
     SetSELECTED: (state, { payload }) => {
-      console.log("selected", payload);
+      console.log("deal", payload);
 
       state.selected = payload;
       state.showModal = true;
@@ -105,6 +134,9 @@ export const reduxSlice = createSlice({
     },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -141,17 +173,34 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+      .addCase(HEADS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(HEADS.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.heads = payload;
+        state.isLoading = false;
+      })
+      .addCase(HEADS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
       });
   },
 });
 
 export const {
+  SetDEAL,
   SetSELECTED,
   SetTASK,
   SetMODAL,
   SetHEALTHY,
   SetMaxPage,
   SetActivePAGE,
+  TOGGLE,
   RESET,
 } = reduxSlice.actions;
 
