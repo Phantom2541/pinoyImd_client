@@ -16,7 +16,7 @@ import Microscopic from "./microscopic";
 const tabs = ["PHYSICAL", "CHEMICAL", "MICROSCOPIC"],
   components = [Physical, Chemical, Microscopic];
 
-export default function Urinalysis({ task, setTask }) {
+export default function Urinalysis() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
@@ -41,7 +41,7 @@ export default function Urinalysis({ task, setTask }) {
             {components.map((Component, index) => {
               return (
                 <MDBTabPane key={`component-${index}`} tabId={index}>
-                  <Component task={task} setTask={setTask} />
+                  <Component  />
                 </MDBTabPane>
               );
             })}

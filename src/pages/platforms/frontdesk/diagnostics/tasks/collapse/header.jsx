@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { SetDEAL } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetSELECTED } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { Categories } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBCollapseHeader, MDBIcon } from "mdbreact";
 import {
@@ -13,7 +13,7 @@ import {
 } from "../../../../../../services/utilities";
 
 const Header = ({ deal, index }) => {
-  const { activeDeal } = useSelector(({ validator }) => validator),
+  const { activeCOLAPSE } = useSelector(({ validator }) => validator),
     { customerId, category, source } = deal,
     history = useHistory(),
     dispatch = useDispatch(),
@@ -55,10 +55,10 @@ const Header = ({ deal, index }) => {
       <i
         onClick={() =>
           dispatch(
-            SetDEAL({ deal, activeDeal: activeDeal === index ? -1 : index })
+            SetSELECTED({ deal, activeCOLAPSE: activeCOLAPSE === index ? -1 : index })
           )
         }
-        style={{ rotate: `${activeDeal === index ? 0 : 90}deg` }}
+        style={{ rotate: `${activeCOLAPSE === index ? 0 : 90}deg` }}
         className="fa fa-angle-down transition-all"
       />
     </MDBCollapseHeader>
