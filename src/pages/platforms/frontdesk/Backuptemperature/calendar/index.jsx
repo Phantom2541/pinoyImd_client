@@ -108,8 +108,8 @@ export default function Calendar({ month, year }) {
           const isPresent = date.toDateString() === today.toDateString();
           const isFuture = date > today;
 
-          console.log("Checking temperatures data:", temps);
-          console.log("Date to compare:", date.toDateString());
+          // console.log("Checking temperatures data:", temps);
+          // console.log("Date to compare:", date.toDateString());
 
           // Ensure temps is an array before running `.find()`
           const entry = Array.isArray(temps)
