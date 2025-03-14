@@ -9,7 +9,7 @@ import { useToasts } from "react-toast-notifications";
 import Modal from "./modal";
 import { currency, fullName } from "../../../../../services/utilities";
 
-import { Liabilities } from "../../../../../services/fakeDb";
+import { Statements } from "../../../../../services/fakeDb";
 import {
   MDBBtn,
   MDBCard,
@@ -26,7 +26,7 @@ export default function Accrued() {
     [willCreate, setWillCreate] = useState(true),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess } = useSelector(
-      ({ liabilities }) => liabilities
+      ({ obligations }) => obligations
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -129,7 +129,7 @@ export default function Accrued() {
             </thead>
             <tbody>
               {accrued?.map((liability, index) => {
-                const statement = Liabilities.find(liability?.fsId);
+                const statement = Statements.find(liability?.fsId);
                 //console.log(liability);
 
                 return (

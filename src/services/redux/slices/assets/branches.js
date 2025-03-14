@@ -31,11 +31,9 @@ export const BROWSE = createAsyncThunk(
 );
 export const SEARCH = createAsyncThunk(
   `${name}/search`,
-  ({ token, companyId }, thunkAPI) => {
+  ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/search`, token, {
-        companyId: companyId,
-      });
+      return axioKit.universal(`${name}/search`, token, { searchKey: key });
     } catch (error) {
       const message =
         (error.response &&

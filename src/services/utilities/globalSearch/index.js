@@ -1,5 +1,5 @@
-const globalSearch = (collection, key) => {
-  if (!key) return "key is required!";
+const globalSearch = (collection, key = "") => {
+  if (!key) return [];
   key = key?.toUpperCase(); // Normalize search key
 
   return collection.filter((obj) => {

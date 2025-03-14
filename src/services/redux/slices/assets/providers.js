@@ -5,6 +5,7 @@ const name = "assets/providers";
 
 const initialState = {
   collections: [],
+  // enrolled: [],
   searchResults: [],
   isSuccess: false,
   isLoading: false,
@@ -13,9 +14,35 @@ const initialState = {
   totalPages: 0,
   page: 0,
   showModal: false,
+  showCompanyModal: false,
   willCreate: false,
   maxPage: 5,
 };
+export const BROWSE = createAsyncThunk(
+  `${name}/browse`,
+  async ({ key, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${name}/browse`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
+export const GETENROLLED = createAsyncThunk(
+  `${name}/enrollements`,
+  async ({ key, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${name}/enrollements`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
 
 export const OUTSOURCE = createAsyncThunk(
   `${name}/browse`,
@@ -79,6 +106,18 @@ export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
   }
 });
 
+export const REGISTER_GHOST_COMPANY = createAsyncThunk(
+  `${name}/REGISTER_GHOST_COMPANY`,
+  async ({ token, data }, thunkAPI) => {
+    try {
+      return await axioKit.save(name, data, token, "register_ghost_company");
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
 export const UPDATE = createAsyncThunk(
   `${name}/update`,
   async (form, thunkAPI) => {
@@ -114,6 +153,16 @@ export const reduxSlice = createSlice({
   name,
   initialState,
   reducers: {
+    ToggleDidSearch: (state) => {
+      state.didSearch = !state.didSearch;
+    },
+    SetSOURCE: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+    },
+    ToggleModal: (state) => {
+      state.showCompanyModal = !state.showCompanyModal;
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -179,6 +228,21 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      .addCase(GETENROLLED.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(GETENROLLED.fulfilled, (state, { payload }) => {
+        const { payload: data } = payload;
+        state.enrolled = data;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(GETENROLLED.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
+
       .addCase(OUTSOURCE.pending, (state) => {
         state.isLoading = true;
       })
@@ -194,6 +258,7 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
+
       .addCase(INSOURCE.pending, (state) => {
         state.isLoading = true;
       })
@@ -236,6 +301,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
+      .addCase(REGISTER_GHOST_COMPANY.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(REGISTER_GHOST_COMPANY.fulfilled, (state, { payload }) => {
+        const { payload: data } = payload;
+        const index = state.collections.findIndex(
+          ({ _id }) => data._id === _id
+        );
+
+        state.collections[index] = data;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(REGISTER_GHOST_COMPANY.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
       })
@@ -287,6 +369,9 @@ export const {
   SetPAGE,
   SETSOURCES,
   SetSEARCHRESULTS,
+  ToggleModal,
+  ToggleDidSearch,
+  SetSOURCE,
   SetBRANCHES,
   RESET,
 } = reduxSlice.actions;

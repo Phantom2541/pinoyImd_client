@@ -28,15 +28,15 @@ export default function CollapseTable({ menu }) {
     setLabTests(filteredLabTests);
   }, [menu]);
 
-  const handlePrint = (labTest) => {
-    localStorage.setItem("taskPrintout", JSON.stringify(labTest));
-    console.log("labTest", labTest);
-    
-    // window.open(
-    //   "/printout/task",
-    //   "Task Printout",
-    //   "top=100px,left=100px,width=1050px,height=750px"
-    // );
+  const handlePrint = (task) => {
+    console.log("taskPrintout", task);
+
+    localStorage.setItem("taskPrintout", JSON.stringify(task));
+    window.open(
+      "/printout/task",
+      "Task Printout",
+      "top=100px,left=100px,width=1050px,height=750px"
+    );
   };
 
   const { customerId, physicianId, source, category, _id } = menu;

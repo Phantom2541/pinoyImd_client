@@ -6,7 +6,7 @@ import Months from "../../../services/fakeDb/calendar/months";
 import {
   BROWSE,
   RESET,
-} from "../../../services/redux/slices/results/laboratory/serology"; // Updated slice for Serology
+} from "../../../services/redux/slices/diagnostics/laboratory/serology"; // Updated slice for Serology
 import { Services } from "../../../services/fakeDb";
 
 const dayNames = [
@@ -35,7 +35,7 @@ const formatTime = (hours, minutes) => {
 export default function SerologyPrint() {
   const [serology, setSerology] = useState([]),
     { collections } = useSelector(({ serology }) => serology),
-        { token, activePlatform } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [month, setMonth] = useState(""),
     [year, setYear] = useState(""),
     dispatch = useDispatch();

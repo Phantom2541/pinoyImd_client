@@ -38,7 +38,7 @@ export default function Body() {
       }}
       fluid
     >
-      {paginatedData.map((service, index) => {
+      {paginatedData?.map((service, index) => {
         const actualIndex = startIndex + index; // Get the real index in filtered array
         const { color, border } = collapse.getStyle(
           actualIndex,

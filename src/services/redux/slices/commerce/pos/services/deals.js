@@ -19,6 +19,7 @@ const initialState = {
     isEmpty: true,
   },
   showModal: false,
+  willCreate: false,
   totalPages: 0,
   maxPage: 1,
   activePage: 1,
@@ -141,24 +142,6 @@ export const YEARLY = createAsyncThunk(
   }
 );
 
-export const TASKS = createAsyncThunk(
-  `${name}/tasks`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${name}/tasks`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const SAVE = createAsyncThunk(
   `${name}/save`,
   ({ data, token }, thunkAPI) => {
@@ -177,18 +160,22 @@ export const SAVE = createAsyncThunk(
   }
 );
 
+/**
+ * Automatic generate URL.
+ */
 export const LABRESULT = createAsyncThunk(
-  `${name}/labresult`,
+  `${name}/results`,
   ({ token, data }, thunkAPI) => {
     try {
+      // \diagnostics\laboratory\result\miscellaneous
       return axioKit.save(
-        `results/${
+        `diagnostics/${
           data.department === "LAB"
             ? "laboratory"
             : data.department === "RAD"
             ? "radiology"
             : "clinic"
-        }/${data.form.toLowerCase()}`,
+        }/result/${data.form.toLowerCase()}`,
         data,
         token
       );
@@ -253,6 +240,8 @@ export const reduxSlice = createSlice({
     },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
+      state.showModal = true;
+      state.willCreate = false;
     },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
@@ -271,6 +260,13 @@ export const reduxSlice = createSlice({
       if (payload?.resetCollections) state.collections = [];
     },
   },
+  /**
+   * Handles extra actions not handled by the reducer itself.
+   *
+   * @param {Object} builder - The builder object from `createSlice`.
+   *
+   * @returns {Object} The extra reducers.
+   */
   extraReducers: (builder) => {
     builder
       .addCase(BROWSE.pending, (state) => {
@@ -430,23 +426,6 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
-      .addCase(TASKS.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(TASKS.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
-        state.isLoading = false;
-      })
-      .addCase(TASKS.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
