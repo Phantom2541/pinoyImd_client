@@ -8,7 +8,7 @@ import {
 } from "./../../../../../services/redux/slices/liability/assurances";
 const Footer = () => {
   const { isLoading, totalPages, activePage } = useSelector(
-      ({ menus }) => menus
+      ({ assurances }) => assurances
     ),
     { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();

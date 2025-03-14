@@ -89,7 +89,6 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetCREATE: (state, { payload }) => {
-      console.log("payload", payload);
       state.selected = {
         lo: "",
         norm: "",

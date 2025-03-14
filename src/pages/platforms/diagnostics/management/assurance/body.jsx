@@ -1,18 +1,27 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBTable } from "mdbreact";
+import { MDBTable, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
   DESTROY,
-  // SetEDIT,
+  SetEDIT,
 } from "./../../../../../services/redux/slices/liability/assurances";
 import Swal from "sweetalert2";
-// import { Services } from "../../../../../../services/fakeDb";
+import { fullName } from "../../../../../services/utilities";
 
 const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ assurances }) => assurances),
+    { collections, activePage, maxPage } = useSelector(
+      ({ assurances }) => assurances
+    ),
     dispatch = useDispatch();
 
+  /**
+   * Pagination: Calculate the start and end index for the current page
+   */
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = collections.slice(startIndex, endIndex); // Get only
   const handleDelete = (_id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -29,48 +38,57 @@ const Tables = () => {
     });
   };
 
-  console.log("Collections: ", collections);
-
   return (
     <MDBTable responsive hover bordered>
       <thead>
         <tr>
           <th>#</th>
-          <th>Service ID</th>
-          <th>Abnormal</th>
-          <th>High</th>
-          <th>Normal</th>
-          <th>Created At</th>
+          <th>Performer</th>
+          <th>Lo</th>
+          <th>Norm</th>
+          <th>Hi</th>
+          <th style={{ textAlign: "center", width: "19%" }}>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {/* {!collections?.length && <tr>No data</tr>}
-        {collections?.map((assurance, index) => {
+        {!paginatedData?.length && <tr>No data</tr>}
+        {paginatedData?.map((assurance, index) => {
           return (
             <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{Services.getName(assurance?.serviceId)}</td>
-              <td>{assurance?.abnormal}</td>
-              <td>{assurance?.high}</td>
-              <td>{assurance?.normal}</td>
               <td>
                 {new Date(assurance?.createdAt).toLocaleDateString("en-GB", {
-                  month: "short",
                   day: "2-digit",
-                  year: "numeric",
                 })}
               </td>
-              <td>
-                <button onClick={() => dispatch(SetEDIT(assurance))}>
-                  Edit
-                </button>
-                <button onClick={() => handleDelete(assurance._id)}>
-                  Delete
-                </button>
+              <td>{fullName(assurance?.userId?.fullName)}</td>
+              <td>{assurance?.lo}</td>
+              <td>{assurance?.norm}</td>
+              <td>{assurance?.hi}</td>
+              <td style={{ textAlign: "center" }}>
+                <MDBBtnGroup>
+                  <MDBBtn
+                    size="sm"
+                    rounded
+                    color="success"
+                    onClick={() => dispatch(SetEDIT(assurance))}
+                    style={{ marginRight: "20px", borderRadius: "50px" }}
+                  >
+                    Edit
+                  </MDBBtn>
+                  <MDBBtn
+                    size="sm"
+                    rounded
+                    color="danger"
+                    onClick={() => handleDelete(assurance._id)}
+                    style={{ borderRadius: "50px" }}
+                  >
+                    Delete
+                  </MDBBtn>
+                </MDBBtnGroup>
               </td>
             </tr>
           );
-        })} */}
+        })}
       </tbody>
     </MDBTable>
   );
