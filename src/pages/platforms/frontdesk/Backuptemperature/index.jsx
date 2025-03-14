@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MDBCard, MDBContainer, MDBBtn, MDBIcon } from "mdbreact";
+import Calendar from "./calendar";
 import {
   BROWSE,
   RESET,
@@ -99,6 +100,7 @@ export default function Temperature() {
             <MDBIcon icon="print" />
           </MDBBtn>
         </div>
+        <Calendar month={month} year={year} />
       </MDBCard>
     </MDBContainer>
   );
