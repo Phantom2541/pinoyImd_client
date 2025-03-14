@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -12,6 +12,7 @@ import {
 import {
   SAVE,
   UPDATE,
+  TOGGLE,
 } from "../../../../../services/redux/slices/liability/assurances";
 
 import { Services } from "../../../../../services/fakeDb";
@@ -20,28 +21,32 @@ import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
-  const { show, toggle, selected, willCreate, isLoading } = useSelector(
+  const { isLoading, showModal, willCreate, selected } = useSelector(
       ({ assurances }) => assurances
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected),
+    [form, setForm] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  // Set form data kapag nagbukas ng modal
-  // useEffect(() => {
-  //   setForm(selected);
-  // }, [selected]);
+  useEffect(() => {
+    if (willCreate)
+      setForm({
+        ...selected,
+        userId: auth._id,
+        branchId: activePlatform.branchId,
+      });
+    else setForm(selected);
+  }, [willCreate, selected, auth._id, activePlatform.branchId]);
 
-  // Handle update function
   const handleUpdate = () => {
-    toggle();
-
     // Check if object has changed
     if (isEqual(form, selected)) {
-      return addToast("No changes found, skipping update.", {
+      addToast("No changes found, skipping update.", {
         appearance: "info",
       });
+      dispatch(TOGGLE());
+      return;
     }
 
     dispatch(
@@ -59,7 +64,7 @@ export default function Modal() {
         data: form,
         token,
       })
-    ).then(() => toggle()); // Close modal after successful save
+    );
   };
 
   // Handle form submit
@@ -78,21 +83,14 @@ export default function Modal() {
     setForm({
       ...form,
       [key]: Number(value),
-      userId: auth._id,
-      branchId: activePlatform.branchId,
     });
+    console.log("Form", form);
   };
 
-  // Fix: Return correct form value
-  const handleValue = (key) => form[key] || "";
-
-  // Handle modal close
-  const handleClose = () => toggle();
-
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop size="sm">
+    <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
       <MDBModalHeader
-        toggle={handleClose}
+        toggle={() => dispatch(TOGGLE())}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
@@ -110,25 +108,25 @@ export default function Modal() {
 
           {/* Input fields */}
           <MDBInput
-            label="Abnormal"
+            label="Low"
             type="number"
-            value={handleValue("abnormal")}
+            value={form.lo}
             required
-            onChange={(e) => handleChange("abnormal", e.target.value)}
-          />
-          <MDBInput
-            label="High"
-            type="number"
-            value={handleValue("high")}
-            required
-            onChange={(e) => handleChange("high", e.target.value)}
+            onChange={(e) => handleChange("lo", e.target.value)}
           />
           <MDBInput
             label="Normal"
             type="number"
-            value={handleValue("normal")}
+            value={form.norm}
             required
-            onChange={(e) => handleChange("normal", e.target.value)}
+            onChange={(e) => handleChange("norm", e.target.value)}
+          />
+          <MDBInput
+            label="Normal"
+            type="number"
+            value={form.hi}
+            required
+            onChange={(e) => handleChange("hi", e.target.value)}
           />
 
           {/* Submit button */}

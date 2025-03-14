@@ -51,6 +51,11 @@ const frontdesk = [
         component: Reports,
       },
       {
+        name: "Temperature",
+        path: "/temperature",
+        component: Temperature,
+      },
+      {
         name: "Quality Assurance(QA)",
         path: "/management/external",
         component: Assurance,
