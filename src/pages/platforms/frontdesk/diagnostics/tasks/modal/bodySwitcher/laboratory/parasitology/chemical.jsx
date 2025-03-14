@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import {
   MDBCol,
   MDBRow,
@@ -10,17 +12,16 @@ import {
 
 const phs = ["5.0", "6.0", "6.5", "7.0", "7.5", "8.0", "8.5"],
   occults = ["Negative", "Positive"];
-export default function Chemical({ task, setTask }) {
+export default function Chemical() {
+  const { ce } = useSelector(({ validator }) => validator.task),
+    dispatch = useDispatch();
+
   const handleSelectChange = (index, value) => {
-    const _ce = [...task.ce];
+    const _ce = [...ce];
     _ce[index] = value;
 
-    setTask({
-      ...task,
-      ce: _ce,
-    });
+    dispatch(SetPARAMS({ key: "ce", value: _ce }));
   };
-  const { ce } = task;
   return (
     <MDBRow>
       <MDBCol md="6">
