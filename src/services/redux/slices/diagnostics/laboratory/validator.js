@@ -21,16 +21,20 @@ const initialState = {
    */
   heads: [],
   preferences: [],
+  /**
+   *  Active forms
+   */
+  selected: {}, // Deal
+  task:{}, // per form
+  params: {},
+
   //   attributes,
   collections: [],
   filtered: [],
-  deal: {},
-  selected: {},
-  task: {},
   showModal: false,
   maxPage: 5,
   activePage: 1,
-  activeDeal: -1,
+  activeCOLAPSE: -1,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -102,20 +106,17 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
-    SetDEAL: (state, { payload }) => {
-      const { deal, activeDeal } = payload;
-      state.deal = deal;
-      state.activeDeal = activeDeal;
-    },
     SetSELECTED: (state, { payload }) => {
-      console.log("deal", payload);
-
-      state.selected = payload;
-      state.showModal = true;
+      const {activeCOLAPSE, selected} = payload
+      state.selected = selected;
+      state.activeCOLAPSE = activeCOLAPSE;
     },
     SetTASK: (state, { payload }) => {
       state.task = payload;
-      state.showModal = true;
+    },
+    SetPARAMS: (state, { payload }) => {
+      state.params = payload; 
+
     },
     SetHEALTHY: (state, { payload }) => {
       console.log("templates", payload);
