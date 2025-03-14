@@ -17,7 +17,7 @@ export default function Cashier() {
       window.open(
         "/printout/claimstub",
         "Claim Stub",
-        "top=100px,left=100px,width=550px,height=750px"
+        "top=100px,left=100px,width=550px,height=750px" 
       );
     }
   }, [transaction, isSuccess, activePlatform]);

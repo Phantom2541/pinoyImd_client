@@ -108,7 +108,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(GETPATIENTS.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+        const { payload } = action.payload; 
         state.filtered = payload;
         state.isLoading = false;
       })
