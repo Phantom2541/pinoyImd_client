@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Calendar from "./calendar";
 import { MDBCard, MDBContainer, MDBBtn, MDBIcon } from "mdbreact";
 import {
   BROWSE,
   RESET,
 } from "../../../../services/redux/slices/monitoring/temperature";
-import "./index.css";
+import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Calendar as calendar } from "../../../../services/fakeDb";
 import Swal from "sweetalert2"; // Import Swal for notifications
@@ -100,7 +99,6 @@ export default function Temperature() {
             <MDBIcon icon="print" />
           </MDBBtn>
         </div>
-        <Calendar month={month} year={year} />
       </MDBCard>
     </MDBContainer>
   );
