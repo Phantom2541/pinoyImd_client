@@ -23,7 +23,7 @@ export default function Modal() {
         toggle={() => dispatch(TOGGLE())}
         className="light-blue darken-3 white-text"
       >
-        <Patient patient={selected.customerId} />
+        <Patient patient={selected?.customerId} />
       </MDBModalHeader>
       <MDBModalBody className="mb-0 text-center">
         <MDBAlert color={formColor(task.form)} className="text-uppercase fw-bold">

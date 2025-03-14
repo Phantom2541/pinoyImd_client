@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   MDBTabContent,
   MDBTabPane,
@@ -16,7 +16,6 @@ import Rci from "./rci";
 import Platelet from "./platelet";
 import ClottingFactor from "./clottingFactor";
 import SpecialTest from "./speciaTest";
-import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const tabs = {
   58: {
@@ -43,12 +42,10 @@ const tabs = {
 
 export default function Hematology() {
   const { task } = useSelector(({ validator }) => validator),
-    [activeTab, setActiveTab] = useState("CELL COUNT"),
-    dispatch = useDispatch();
+    [activeTab, setActiveTab] = useState("CELL COUNT");
 
   const { packages = [] } = task;
 
-  const setTask = (value) => dispatch(SetTASK(value));
 
   return (
     <MDBContainer>
@@ -78,7 +75,7 @@ export default function Hematology() {
 
               return components.map((Component, index) => (
                 <MDBTabPane key={`component-${index}`} tabId={names[index]}>
-                  <Component task={task} setTask={setTask} />
+                  <Component  />
                 </MDBTabPane>
               ));
             })}

@@ -8,9 +8,8 @@ import {
 } from "./../../../../../../services/utilities";
 
 export default function Patient() {
-  const { deal } = useSelector(({ validator }) => validator);
-
-  const { fullName = {}, isMale, dob } = deal.customerId;
+  const { customerId } = useSelector(({ validator }) => validator.selected); 
+  const { fullName = {}, isMale, dob } = customerId;
 
   return (
     <>

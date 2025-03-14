@@ -107,15 +107,31 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetSELECTED: (state, { payload }) => {
-      const {activeCOLAPSE, selected} = payload
-      state.selected = selected;
+      const {activeCOLAPSE, deal} = payload
+      state.selected = {...deal};
       state.activeCOLAPSE = activeCOLAPSE;
     },
     SetTASK: (state, { payload }) => {
-      state.task = payload;
+      const { form, task } = payload;
+      console.log("SetTASK", payload);
+
+      state.task = task;
+      if (form === "Urinalysis") {
+        state.params= { pe: [2, 0, 1, 1],
+          ce: [0, 0, 0, 0, 0, 0, 0, 0],
+          me: [1, 0, 0, 0, 0, 0],};
+      } else if (form === "Parasitology") {
+        state.params= { pe: [0, 0],
+          me: [0, 0, 0],
+          remarks: "NO OVA OR INTESTINAL PARASITE SEEN",};
+      }
+      state.showModal = true;
     },
     SetPARAMS: (state, { payload }) => {
-      state.params = payload; 
+      console.log("SetPARAMS", payload);
+
+      const {key, value} = payload
+      state.params = {...state.params, [key]: value}; 
 
     },
     SetHEALTHY: (state, { payload }) => {
@@ -194,9 +210,10 @@ export const reduxSlice = createSlice({
 });
 
 export const {
-  SetDEAL,
   SetSELECTED,
   SetTASK,
+  SetPARAMS,
+  SetFILTERED,
   SetMODAL,
   SetHEALTHY,
   SetMaxPage,

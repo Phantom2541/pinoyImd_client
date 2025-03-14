@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import {
   Diffcount as DiffCount,
@@ -14,7 +16,10 @@ const _dc = {
   f: 0,
 };
 
-export default function Diffcount({ task, setTask }) {
+export default function Diffcount() {
+  const {task} = useSelector(({validator}) => validator),
+    dispatch = useDispatch();
+    
   const { dc = _dc } = task,
     { Preferences } = Cellcount,
     { Category } = DiffCount;
@@ -25,11 +30,7 @@ export default function Diffcount({ task, setTask }) {
       diff = { ...dc };
 
     diff[name] = _value;
-
-    setTask({
-      ...task,
-      dc: diff,
-    });
+dispatch(SetPARAMS({ key: "dc", value: diff }));
   };
 
   return (

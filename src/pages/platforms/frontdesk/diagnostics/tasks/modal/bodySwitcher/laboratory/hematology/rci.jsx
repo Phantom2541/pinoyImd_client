@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import {
   Cellcount,
@@ -6,8 +8,9 @@ import {
 } from "./../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
 
-export default function Rci({ task, setTask }) {
-  const { rci = [] } = task,
+export default function Rci() {
+   const {rci} = useSelector(({validator}) => validator.task),
+    dispatch = useDispatch(),
     { Preferences } = Cellcount,
     { Category } = RCI;
 
@@ -22,11 +25,7 @@ export default function Rci({ task, setTask }) {
     while (_rci.length < 4) {
       _rci.push(0);
     }
-
-    setTask({
-      ...task,
-      rci: _rci,
-    });
+dispatch(SetPARAMS({ key: "rci", value: _rci }));
   };
 
   return (

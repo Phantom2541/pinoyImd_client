@@ -1,14 +1,16 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 
-export default function Platelet({ task, setTask }) {
-  const { apc = 0 } = task;
+export default function Platelet() {
+   const {apc} = useSelector(({validator}) => validator.task),
+    dispatch = useDispatch();
+
 
   const handleChange = (e) =>
-    setTask({
-      ...task,
-      apc: parseFloat(e.target.value),
-    });
+    dispatch(SetPARAMS({ key: "apc", value: parseFloat(e.target.value) }));
+
 
   return (
     <MDBTable hover responsive className="mb-0">
