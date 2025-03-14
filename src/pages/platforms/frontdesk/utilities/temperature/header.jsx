@@ -1,60 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Calendar from "./calendar";
-import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
+import { MDBView, MDBIcon, MDBBtn } from "mdbreact";
 import {
-  BROWSE,
-  RESET,
+  setMonth,
+  setYear,
 } from "../../../../../services/redux/slices/monitoring/temperature";
 import { Calendar as calendar } from "../../../../../services/fakeDb";
 import CustomSelect from "../../../../../components/searchables/customSelect";
 import "./style.css";
-import Swal from "sweetalert2"; // Import Swal for notifications
-const today = new Date();
 
 const Header = () => {
-  const [month, setMonth] = useState(today.getMonth()),
-    [year, setYear] = useState(today.getFullYear()),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, isLoading } = useSelector(
-      ({ temperatures }) => temperatures
-    ), // Adjust selector for ledger data
-    dispatch = useDispatch();
+  const dispatch = useDispatch(),
+    { month, year } = useSelector(({ temperatures }) => temperatures);
 
-  useEffect(() => {
-    if (token && activePlatform?.branchId && year && month) {
-      dispatch(
-        BROWSE({
-          token,
-          key: {
-            branchId: activePlatform?.branchId,
-            start: new Date(year, month, 0),
-            end: new Date(year, month + 1, 0, 23, 59, 59, 999),
-          },
-        })
-      ).then((result) => {
-        if (!result.payload || !result.payload?.length) {
-          Swal.fire({
-            icon: "warning",
-            title: "Ledger Empty",
-            text: "No data found for this month. Please generate the ledger.",
-            confirmButtonText: "Okay",
-          });
-        }
-      });
-    }
+  // Siguraduhin na defined ang calendar.Months bago ito gamitin
+  const monthsArray = calendar?.Months || [];
 
-    return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform, month, year]);
+  // I-check kung ang format ay array ng { value, label } o array ng strings
+  const isObjectFormat =
+    monthsArray.length > 0 && typeof monthsArray[0] === "object";
 
-  const handlePrint = () => {
-    localStorage.setItem("temperature", JSON.stringify(collections));
-    window.open(
-      "/printout/TempGraph",
-      "Temperature Graph",
-      "top=100px,left=100px,width=1050px,height=750px" // size of page that will open
-    );
-  };
+  // Kunin ang pangalan ng buwan
+  const monthLabel = isObjectFormat
+    ? monthsArray.find((m) => m.value === month)?.label || month
+    : monthsArray[month - 1] || month;
 
   return (
     <MDBView
@@ -62,49 +31,49 @@ const Header = () => {
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex align-items-center justify-content-between">
-        <div className="d-flex ">
+        <div className="d-flex">
           <CustomSelect
-            className="ledger-select"
-            value={month}
-            onChange={(value) => setMonth(Number(value))}
+            className="m-0 p-0 calendar mr-4"
+            value={monthLabel}
+            onChange={(value) => {
+              if (isObjectFormat) {
+                const selectedMonth = monthsArray.find(
+                  (m) => m.label === value
+                );
+                dispatch(setMonth(selectedMonth?.value || month));
+              } else {
+                dispatch(setMonth(monthsArray.indexOf(value) + 1));
+              }
+            }}
             inputClassName="m-0 p-0"
-            preValue={month}
-            choices={calendar.Months.map((month, index) => ({
-              values: index,
-              texts: month,
-            }))}
-            disabled={isLoading}
+            preValue={monthLabel}
+            choices={
+              isObjectFormat ? monthsArray.map((m) => m.label) : monthsArray
+            }
           />
-
           <CustomSelect
-            className="ledger-select ml-2"
+            className="m-0 p-0 calendar"
             value={year}
-            onChange={(value) => setYear(Number(value))}
+            onChange={(value) => dispatch(setYear(value))}
             inputClassName="m-0 p-0"
             preValue={year}
-            choices={calendar.Years?.map((year) => ({
-              values: year,
-              texts: year,
-            }))}
-            disabled={isLoading}
+            choices={calendar.Years}
           />
         </div>
       </div>
-
       <div className="d-flex align-items-center">
-        <span className="white-text mx-3 text-nowrap mt-0">Calendars </span>
+        {/* <span className="white-text mx-3 text-nowrap mt-0">Print </span> */}
         <MDBBtn
           type="submit"
-          disabled={isLoading}
+          // disabled={isLoading}
           color="info"
           className="mb-2"
           rounded
-          onClick={() => handlePrint("PRINT")}
+          // onClick={() => handlePrint("PRINT")}
         >
           <MDBIcon icon="print" />
         </MDBBtn>
       </div>
-      <Calendar month={month} year={year} />
     </MDBView>
   );
 };
