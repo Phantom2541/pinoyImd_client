@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../../utilities";
 
-const name = "commerce/sales";
+const url = "commerce/sales";
 
 const initialState = {
   collections: [],
@@ -15,10 +15,10 @@ const initialState = {
 };
 
 export const PREANALYTICAL = createAsyncThunk(
-  `${name}`,
+  `${url}`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, key);
+      return axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -32,10 +32,10 @@ export const PREANALYTICAL = createAsyncThunk(
   }
 );
 export const ANALYTICAL = createAsyncThunk(
-  `${name}/tasks`,
+  `${url}/tasks`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/tasks`, token, key);
+      return axioKit.universal(`${url}/tasks`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -50,10 +50,10 @@ export const ANALYTICAL = createAsyncThunk(
 );
 
 export const POSTANALYTICAL = createAsyncThunk(
-  `${name}/tagging`,
+  `${url}/tagging`,
   ({ key, token }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/tagging`, token, key);
+      return axioKit.universal(`${url}/tagging`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -67,10 +67,10 @@ export const POSTANALYTICAL = createAsyncThunk(
   }
 );
 export const REFORM = createAsyncThunk(
-  `${name}/update`,
+  `${url}/update`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.update(name, data, token);
+      return axioKit.update(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -84,10 +84,10 @@ export const REFORM = createAsyncThunk(
   }
 );
 export const SAVE = createAsyncThunk(
-  `${name}/save`,
+  `${url}/save`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(name, data, token);
+      return axioKit.save(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -102,7 +102,7 @@ export const SAVE = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     SETSOURCE: (state, { payload }) => {

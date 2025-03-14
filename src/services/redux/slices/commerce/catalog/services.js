@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const name = "commerce/catalog/services";
+const url = "commerce/catalog/services";
 
 const initialState = {
   collections: [],
@@ -24,29 +24,24 @@ const initialState = {
  * @param {Object} thunkAPI - The thunk API object.
  * @returns {Promise<Object>} The response data or an error message.
  */
-export const BROWSE = createAsyncThunk(
-  `${name}`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${name}/browse`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
+  try {
+    return axioKit.universal(`${url}/browse`, token, key);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
 
-      return thunkAPI.rejectWithValue(message);
-    }
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 export const SAVE = createAsyncThunk(
-  `${name}/save`,
+  `${url}/save`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(name, data, token);
+      return axioKit.save(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -60,9 +55,9 @@ export const SAVE = createAsyncThunk(
   }
 );
 
-export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
+export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
-    return axioKit.update(name, form.data, form.token);
+    return axioKit.update(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -74,7 +69,7 @@ export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
 });
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     SetSERVICES: (state, { payload }) => {
@@ -83,7 +78,7 @@ export const reduxSlice = createSlice({
       // Create a copy before sorting to avoid modifying frozen state
       const sortedCollections = [...collections].sort((a, b) => {
         // Customize sorting logic as needed
-        return a.name.localeCompare(b.name); // Example: Sorting alphabetically by 'name' property
+        return a.url.localeCompare(b.url); // Example: Sorting alphabetically by 'url' property
       });
 
       state.collections = sortedCollections;

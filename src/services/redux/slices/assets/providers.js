@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "assets/providers";
+const url = "assets/providers";
 
 const initialState = {
   collections: [],
@@ -19,10 +19,10 @@ const initialState = {
   maxPage: 5,
 };
 export const BROWSE = createAsyncThunk(
-  `${name}/browse`,
+  `${url}/browse`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/browse`, token, key);
+      return await axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -32,10 +32,10 @@ export const BROWSE = createAsyncThunk(
 );
 
 export const GETENROLLED = createAsyncThunk(
-  `${name}/enrollements`,
+  `${url}/enrollements`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/enrollements`, token, key);
+      return await axioKit.universal(`${url}/enrollements`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -45,10 +45,10 @@ export const GETENROLLED = createAsyncThunk(
 );
 
 export const OUTSOURCE = createAsyncThunk(
-  `${name}/browse`,
+  `${url}/browse`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/browse`, token, key);
+      return await axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -58,10 +58,10 @@ export const OUTSOURCE = createAsyncThunk(
 );
 
 export const INSOURCE = createAsyncThunk(
-  `${name}/insource`,
+  `${url}/insource`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/insource`, token, key);
+      return await axioKit.universal(`${url}/insource`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -71,10 +71,10 @@ export const INSOURCE = createAsyncThunk(
 );
 
 export const TIEUPS = createAsyncThunk(
-  `${name}/tieups`,
+  `${url}/tieups`,
   async ({ token, key }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/tieups`, token, key);
+      return await axioKit.universal(`${url}/tieups`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -83,22 +83,19 @@ export const TIEUPS = createAsyncThunk(
   }
 );
 
-export const LIST = createAsyncThunk(
-  `${name}/list`,
-  async (token, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/list`, token);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
+export const LIST = createAsyncThunk(`${url}/list`, async (token, thunkAPI) => {
   try {
-    return await axioKit.save(name, form.data, form.token);
+    return await axioKit.universal(`${url}/list`, token);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || error.message || error.toString()
+    );
+  }
+});
+
+export const SAVE = createAsyncThunk(`${url}/save`, async (form, thunkAPI) => {
+  try {
+    return await axioKit.save(url, form.data, form.token);
   } catch (error) {
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || error.message || error.toString()
@@ -107,10 +104,10 @@ export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
 });
 
 export const REGISTER_GHOST_COMPANY = createAsyncThunk(
-  `${name}/REGISTER_GHOST_COMPANY`,
+  `${url}/REGISTER_GHOST_COMPANY`,
   async ({ token, data }, thunkAPI) => {
     try {
-      return await axioKit.save(name, data, token, "register_ghost_company");
+      return await axioKit.save(url, data, token, "register_ghost_company");
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -119,10 +116,10 @@ export const REGISTER_GHOST_COMPANY = createAsyncThunk(
   }
 );
 export const UPDATE = createAsyncThunk(
-  `${name}/update`,
+  `${url}/update`,
   async (form, thunkAPI) => {
     try {
-      return await axioKit.update(name, form.data, form.token);
+      return await axioKit.update(url, form.data, form.token);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -132,10 +129,10 @@ export const UPDATE = createAsyncThunk(
 );
 
 export const DESTROY = createAsyncThunk(
-  `${name}/destroy`,
+  `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.destroy(name, data, token);
+      return axioKit.destroy(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -150,7 +147,7 @@ export const DESTROY = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     ToggleDidSearch: (state) => {
