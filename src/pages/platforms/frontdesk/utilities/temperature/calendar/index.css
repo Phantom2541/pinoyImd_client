@@ -85,11 +85,16 @@
   color: white;
   transition: 300ms ease;
 }
-
 .pos-ledger-calendar .pos-ledger-calendar-daily div small.sunday {
   background-color: #ff3547;
 }
-
+.pos-ledger-calendar .pos-ledger-calendar-daily div small.future {
+  background-color: #e7dfe0;
+}
+/* When both "sunday" and "future" classes are present */
+.pos-ledger-calendar .pos-ledger-calendar-daily div small.sunday.future {
+  background-color: #f798a3;
+}
 .pos-ledger-calendar .pos-ledger-calendar-daily div:hover small,
 .pos-ledger-calendar .pos-ledger-calendar-daily div:hover small.sunday {
   background-color: #007bff;
@@ -98,9 +103,4 @@
 .pos-ledger-calendar .pos-ledger-calendar-daily div span {
   font-size: 12px;
   font-weight: 550;
-  min-height: 30px;
-}
-
-.pos-ledger-calendar .pos-ledger-calendar-daily div small.future {
-  background-color: hsl(50, 92%, 47%);
 }

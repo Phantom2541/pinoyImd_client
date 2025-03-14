@@ -1,54 +1,162 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { useLocation, useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import "./index.css";
 import { generateCalendar } from "../../../../../../services/utilities";
-import WeekHeader from "./weekHeader";
-import Indicator from "./indicator";
-import "./style.css";
+import {
+  SAVE,
+  UPDATE,
+} from "../../../../../../services/redux/slices/monitoring/temperature";
+import { useSelector, useDispatch } from "react-redux";
+import { MDBIcon } from "mdbreact";
+import Swal from "sweetalert2";
+
+const today = new Date();
 
 export default function Calendar() {
-  const { census, month = 2, year = 2025 } = useSelector(({ sales }) => sales);
-  const { pathname } = useLocation();
-  const history = useHistory();
-  const today = new Date();
+  // Redux state for month & year
+  const { collections, month, year } = useSelector(
+    (state) => state.temperatures
+  );
+  const { token, activePlatform, auth } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
-  const handleClick = (num, txt, isFuture, isEmpty) => {
-    if (isFuture || isEmpty) {
-      history.push(pathname);
-      return;
+  const [temps, setTemps] = useState([]);
+
+  // Update temps when collections change
+  useEffect(() => {
+    setTemps(Array.isArray(collections) ? collections : []);
+  }, [collections]);
+
+  const room = async (meridiem, entry) => {
+    const { value: temp } = await Swal.fire({
+      title: `Input Room ${meridiem} Temp`,
+      input: "number",
+      inputLabel: `*Only 2 decimals`,
+      inputPlaceholder: "Enter temperature",
+      inputAttributes: { step: "0.01" },
+    });
+
+    if (temp) {
+      dispatch(
+        entry
+          ? UPDATE({
+              data: {
+                _id: entry._id,
+                branchId: activePlatform?.branchId,
+                userId: auth._id,
+                [meridiem]: { room: temp, ref: entry?.[meridiem]?.ref },
+              },
+              token,
+            })
+          : SAVE({
+              data: {
+                branchId: activePlatform?.branchId,
+                userId: auth._id,
+                [meridiem]: { room: temp, ref: entry?.[meridiem]?.ref },
+              },
+              token,
+            })
+      );
+      Swal.fire(`Entered Room ${meridiem} Temp: ${temp}`);
     }
-
-    const modalTitle = new Date(year, month, num).toDateString();
-    const startDate = new Date(year, month, num).setHours(0, 0, 0, 0);
-    const endDate = new Date(year, month, num).setHours(23, 59, 59, 999);
-    const queryParams = new URLSearchParams({
-      dailyFilter: 1,
-      startDate,
-      endDate,
-      modalTitle,
-    }).toString();
-
-    history.push(`${pathname}?${queryParams}`);
   };
 
   return (
-    <div className="pos-ledger-calendar p-3">
-      <WeekHeader />
+    <div className="pos-ledger-calendar">
+      <div className="pos-ledger-calendar-header"></div>
+      <div className="pos-ledger-calendar-weeks">
+        <div>Sun</div> <div>Mon</div> <div>Tue</div> <div>Wed</div>
+        <div>Thu</div> <div>Fri</div> <div>Sat</div>
+      </div>
+
       <div className="pos-ledger-calendar-daily">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => {
-          const { sales = [] } = census?.daily?.[txt] || {};
-          const isEmpty = sales.length === 0;
           const date = new Date(txt);
+          const isPresent = date.toDateString() === today.toDateString();
           const isFuture = date > today;
-          const week = txt.slice(0, 3);
+
+          // Find matching entry from Redux state
+          const entry = Array.isArray(temps)
+            ? temps.find(
+                (entry) =>
+                  entry?.createdAt &&
+                  new Date(entry.createdAt).toDateString() ===
+                    date.toDateString()
+              )
+            : undefined;
 
           return (
             <div
+              style={{
+                backgroundColor: isPresent ? "lightgreen" : "",
+                minHeight: "100px",
+              }}
+              className={`${!num && "empty"}`}
               key={`pos-calendar-${index}`}
-              onClick={() => handleClick(num, txt, isFuture, isEmpty)}
             >
-              <Indicator num={num} week={week} isFuture={isFuture} />
-              {num && !isFuture && <span>Put your value here</span>}
+              {num && (
+                <>
+                  <small
+                    className={`${date.getDay() === 0 && "sunday"} ${
+                      isFuture && "future"
+                    }`}
+                  >
+                    {num}
+                  </small>
+                  <span>
+                    {!isFuture && (
+                      <>
+                        <span style={{ textAlign: "left" }}>Room</span>
+                        <span className="separator">|</span>
+                        <span className="ref">Ref</span>
+                        <br />
+                        {entry ? (
+                          <>
+                            <span>
+                              {entry?.AM?.room}
+                              <MDBIcon
+                                icon={entry?.AM?.room ? "pencil-alt" : "plus"}
+                                onClick={() => room("AM", entry)}
+                              />
+                            </span>
+                            |
+                            <span>
+                              {entry?.AM?.ref} &nbsp;
+                              <MDBIcon
+                                icon={entry?.AM?.ref ? "pencil-alt" : "plus"}
+                                onClick={() => room("AM", entry)}
+                              />
+                              <strong>AM</strong>
+                            </span>
+                            <hr />
+                            <span>
+                              {entry?.PM?.room}
+                              <MDBIcon
+                                icon={entry?.PM?.room ? "pencil-alt" : "plus"}
+                                onClick={() => room("PM", entry)}
+                              />
+                            </span>
+                            |
+                            <span>
+                              {entry?.PM?.ref} &nbsp;
+                              <MDBIcon
+                                icon={entry?.PM?.ref ? "pencil-alt" : "plus"}
+                                onClick={() => room("PM", entry)}
+                              />
+                              <strong>PM</strong>
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <MDBIcon icon="plus" onClick={() => room("AM")} />
+                            &nbsp; &nbsp;|&nbsp;
+                            <MDBIcon icon="plus" onClick={() => room("PM")} />
+                          </>
+                        )}
+                      </>
+                    )}
+                  </span>
+                </>
+              )}
             </div>
           );
         })}
