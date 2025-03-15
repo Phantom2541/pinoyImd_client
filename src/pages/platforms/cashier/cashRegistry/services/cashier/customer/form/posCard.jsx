@@ -70,7 +70,8 @@ export default function PosCard() {
       };
     }
   }, [token, dispatch, activePlatform]);
-
+  console.log("poscustomer", customer);
+  
   const {
       dob,
       _id,

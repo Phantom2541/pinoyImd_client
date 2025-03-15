@@ -6,13 +6,13 @@ import {
   currency,
 } from "../../../../../../../services/utilities";
 import { Categories, Payments } from "../../../../../../../services/fakeDb";
-import { SAVE } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { UPDATE as PATIENTUPDATE } from "../../../../../../../services/redux/slices/assets/persons/users";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Months from "../../../../../../../services/fakeDb/calendar/months";
-import { RESET } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
+import { RESET, SAVE, SETCART } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import { removeUndefinedValues } from "../../../../../../../services/utilities";
+import { useToasts } from "react-toast-notifications";
 
 export default function Summary() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -26,10 +26,12 @@ export default function Summary() {
       ssx,
       authorizedBy,
       department,
+      
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
     // [cash, setCash] = useState(0),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
   const { gross = 0, discount = 0 } = computeGD(cart, category, privilege),
@@ -118,12 +120,16 @@ export default function Summary() {
 
     const data = removeUndefinedValues(_data);
 
-    dispatch(
-      SAVE({
-        token,
-        data,
-      })
-    );
+    dispatch(SAVE({token, data}))
+      .then(() => {
+    dispatch(SETCART());
+    addToast("Transaction completed successfully", { appearance: "info" });
+
+  })
+  .catch((error) => {
+    addToast("Transaction failed", { appearance: "error" });
+  });
+
     return dispatch(RESET());
   };
 

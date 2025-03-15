@@ -18,7 +18,6 @@ export default function Card({ item, index }) {
       renderedAt,
       physicianId = {},
       source: forwardedBy = {},
-      cart,
       _id,
     } = deal,
     { fullName: fullname = {} } = customerId,
@@ -27,10 +26,11 @@ export default function Card({ item, index }) {
   useEffect(() => {
     setDeal(item);
   }, [item]);
-
+  console.log("deal", item);
+  
   const handlePin = () => {
     return (
-      <span className={`sales-card-num ${item.rendered && "rendered"}`}>
+      <span className={`sales-card-num ${item.rendered?.length > 0 && "rendered"}`}>
         {deal.page} {index + 1}
       </span>
     );
@@ -49,7 +49,7 @@ export default function Card({ item, index }) {
         </p>
         <div className="sales-card-body">
           <div className="d-flex">
-            {cart?.map((menu) => (
+            {item?.cart?.map((menu) => (
               <MDBBadge key={menu.referenceId} className="mx-1">
                 {menu?.abbreviation}
               </MDBBadge>
