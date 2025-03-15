@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "assets/companies";
+const url = "assets/companies";
 
 const initialState = {
   collections: [],
@@ -11,10 +11,10 @@ const initialState = {
 };
 
 export const BROWSE = createAsyncThunk(
-  `${name}/browse`,
+  `${url}/browse`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, key);
+      return axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -29,10 +29,10 @@ export const BROWSE = createAsyncThunk(
 );
 
 export const VENDORS = createAsyncThunk(
-  `${name}/vendors`,
+  `${url}/vendors`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/vendors`, token, key);
+      return axioKit.universal(`${url}/vendors`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -47,10 +47,10 @@ export const VENDORS = createAsyncThunk(
 );
 
 export const OUTSOURCE = createAsyncThunk(
-  `${name}/outsource`,
+  `${url}/outsource`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/outsource`, token, key);
+      return axioKit.universal(`${url}/outsource`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -65,10 +65,10 @@ export const OUTSOURCE = createAsyncThunk(
 );
 
 export const GETBRANCHES = createAsyncThunk(
-  `${name}/getBranches`,
+  `${url}/getBranches`,
   ({ token }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/getBranches`, token);
+      return axioKit.universal(`${url}/getBranches`, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -83,10 +83,10 @@ export const GETBRANCHES = createAsyncThunk(
 );
 
 export const SAVE = createAsyncThunk(
-  `${name}/save`,
+  `${url}/save`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(name, data, token);
+      return axioKit.save(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -101,10 +101,10 @@ export const SAVE = createAsyncThunk(
 );
 
 export const UPDATE = createAsyncThunk(
-  `${name}/update`,
+  `${url}/update`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.update(name, data, token);
+      return axioKit.update(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -118,10 +118,10 @@ export const UPDATE = createAsyncThunk(
   }
 );
 export const DESTROY = createAsyncThunk(
-  `${name}/destroy`,
+  `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.destroy(name, data, token);
+      return axioKit.destroy(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -135,7 +135,7 @@ export const DESTROY = createAsyncThunk(
   }
 );
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     RESET: (state) => {

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const name = "commerce/pos/services/deals";
+const url = "commerce/pos/services/deals";
 const healthyClient = {
   urinalysis: {
     pe: [2, 0, 1, 1],
@@ -25,7 +25,7 @@ const initialState = {
    *  Active forms
    */
   selected: {}, // Deal
-  task:{}, // per form
+  task: {}, // per form
   params: {},
 
   //   attributes,
@@ -41,10 +41,10 @@ const initialState = {
 };
 
 export const TASKS = createAsyncThunk(
-  `${name}/tasks`,
+  `${url}/tasks`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/tasks`, token, key);
+      return axioKit.universal(`${url}/tasks`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -100,15 +100,15 @@ export const HEADS = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
     SetSELECTED: (state, { payload }) => {
-      const {activeCOLAPSE, deal} = payload
-      state.selected = {...deal};
+      const { activeCOLAPSE, deal } = payload;
+      state.selected = { ...deal };
       state.activeCOLAPSE = activeCOLAPSE;
     },
     SetTASK: (state, { payload }) => {
@@ -117,22 +117,25 @@ export const reduxSlice = createSlice({
 
       state.task = task;
       if (form === "Urinalysis") {
-        state.params= { pe: [2, 0, 1, 1],
+        state.params = {
+          pe: [2, 0, 1, 1],
           ce: [0, 0, 0, 0, 0, 0, 0, 0],
-          me: [1, 0, 0, 0, 0, 0],};
+          me: [1, 0, 0, 0, 0, 0],
+        };
       } else if (form === "Parasitology") {
-        state.params= { pe: [0, 0],
+        state.params = {
+          pe: [0, 0],
           me: [0, 0, 0],
-          remarks: "NO OVA OR INTESTINAL PARASITE SEEN",};
+          remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
+        };
       }
       state.showModal = true;
     },
     SetPARAMS: (state, { payload }) => {
       console.log("SetPARAMS", payload);
 
-      const {key, value} = payload
-      state.params = {...state.params, [key]: value}; 
-
+      const { key, value } = payload;
+      state.params = { ...state.params, [key]: value };
     },
     SetHEALTHY: (state, { payload }) => {
       console.log("templates", payload);

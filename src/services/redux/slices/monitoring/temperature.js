@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "monitorings/temperatures";
+const url = "monitorings/temperatures";
 
 const initialState = {
   month: new Date().getMonth() + 1, // Month as a number (1-12)
@@ -13,11 +13,11 @@ const initialState = {
 };
 
 export const BROWSE = createAsyncThunk(
-  `${name}/browse`,
+  `${url}/browse`,
   async ({ token, key }, thunkAPI) => {
     try {
       console.log("📡 Calling API with key:", key);
-      const response = await axioKit.universal(`${name}/browse`, token, key);
+      const response = await axioKit.universal(`${url}/browse`, token, key);
 
       // Check kung ano ang structure ng response
       console.log("✅ Raw API Response:", response);
@@ -35,10 +35,10 @@ export const BROWSE = createAsyncThunk(
 );
 
 export const SEARCH = createAsyncThunk(
-  `${name}/search`,
+  `${url}/search`,
   async ({ token, companyId }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/search`, token, { companyId });
+      return await axioKit.universal(`${url}/search`, token, { companyId });
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message || error.toString());
     }
@@ -46,10 +46,10 @@ export const SEARCH = createAsyncThunk(
 );
 
 export const SAVE = createAsyncThunk(
-  `${name}/save`,
+  `${url}/save`,
   async ({ data, token }, thunkAPI) => {
     try {
-      return await axioKit.save(name, data, token);
+      return await axioKit.save(url, data, token);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message || error.toString());
     }
@@ -57,10 +57,10 @@ export const SAVE = createAsyncThunk(
 );
 
 export const UPDATE = createAsyncThunk(
-  `${name}/update`,
+  `${url}/update`,
   async ({ data, token }, thunkAPI) => {
     try {
-      return await axioKit.update(name, data, token);
+      return await axioKit.update(url, data, token);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message || error.toString());
     }
@@ -68,10 +68,10 @@ export const UPDATE = createAsyncThunk(
 );
 
 export const DESTROY = createAsyncThunk(
-  `${name}/destroy`,
+  `${url}/destroy`,
   async ({ data, token }, thunkAPI) => {
     try {
-      return await axioKit.destroy(name, data, token);
+      return await axioKit.destroy(url, data, token);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message || error.toString());
     }
@@ -79,7 +79,7 @@ export const DESTROY = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     setMonth: (state, action) => {

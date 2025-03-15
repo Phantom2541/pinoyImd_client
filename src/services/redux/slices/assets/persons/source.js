@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const name = "assets/sources";
+const url = "assets/sources";
 
 const initialState = {
   collections: [],
@@ -11,10 +11,10 @@ const initialState = {
 };
 
 export const BROWSE = createAsyncThunk(
-  `${name}/browse`,
+  `${url}/browse`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, { key });
+      return axioKit.universal(`${url}/browse`, token, { key });
     } catch (error) {
       const message =
         (error.response &&
@@ -28,9 +28,9 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
-export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
+export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   try {
-    return axioKit.save(name, form.data, form.token);
+    return axioKit.save(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -41,9 +41,9 @@ export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
   }
 });
 
-export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
+export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
-    return axioKit.update(name, form.data, form.token);
+    return axioKit.update(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -54,9 +54,9 @@ export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
   }
 });
 
-export const DESTROY = createAsyncThunk(`${name}/destroy`, (form, thunkAPI) => {
+export const DESTROY = createAsyncThunk(`${url}/destroy`, (form, thunkAPI) => {
   try {
-    return axioKit.destroy(name, form.data, form.token);
+    return axioKit.destroy(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -68,7 +68,7 @@ export const DESTROY = createAsyncThunk(`${name}/destroy`, (form, thunkAPI) => {
 });
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     RESET: (state) => {

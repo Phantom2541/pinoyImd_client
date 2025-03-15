@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const name = "assets/tieups/companies";
+const url = "assets/tieups/companies";
 
 const initialState = {
   collections: [],
@@ -10,10 +10,10 @@ const initialState = {
   message: "",
 };
 
-export const BROWSE = createAsyncThunk(`${name}/browse`, (item, thunkAPI) => {
+export const BROWSE = createAsyncThunk(`${url}/browse`, (item, thunkAPI) => {
   const { token, data } = item;
   try {
-    return axioKit.universal(`${name}/browse`, token, data);
+    return axioKit.universal(`${url}/browse`, token, data);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -25,10 +25,10 @@ export const BROWSE = createAsyncThunk(`${name}/browse`, (item, thunkAPI) => {
 });
 
 export const SAVE = createAsyncThunk(
-  `${name}/save`,
+  `${url}/save`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(name, data, token);
+      return axioKit.save(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -43,10 +43,10 @@ export const SAVE = createAsyncThunk(
 );
 
 export const UPDATE = createAsyncThunk(
-  `${name}/update`,
+  `${url}/update`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.update(name, data, token);
+      return axioKit.update(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -61,7 +61,7 @@ export const UPDATE = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     RESET: (state) => {
