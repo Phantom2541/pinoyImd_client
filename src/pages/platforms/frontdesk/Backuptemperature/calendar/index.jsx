@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
-import { generateCalendar } from "../../../../../../services/utilities";
+import { generateCalendar } from "../../../../../services/utilities";
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../services/redux/slices/monitoring/temperature";
+} from "../../../../../services/redux/slices/monitoring/temperature";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBIcon } from "mdbreact";
 import Swal from "sweetalert2";
 
 const today = new Date();
 
-export default function Calendar() {
-  // Redux state for month & year
-  const { collections, month, year } = useSelector(
-    (state) => state.temperatures
-  );
-  const { token, activePlatform, auth } = useSelector((state) => state.auth);
+export default function Calendar({ month, year }) {
+  const { collections } = useSelector(({ temperatures }) => temperatures);
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
+  const [temps, setTemps] = useState([]);
   const dispatch = useDispatch();
 
-  const [temps, setTemps] = useState([]);
-
-  // Update temps when collections change
+  // Ensure `collections` is always an array
   useEffect(() => {
-    setTemps(Array.isArray(collections) ? collections : []);
+    if (Array.isArray(collections)) {
+      setTemps(collections);
+    } else {
+      setTemps([]); // Avoid errors if collections is not an array
+    }
   }, [collections]);
 
   const room = async (meridiem, entry) => {
@@ -60,11 +60,45 @@ export default function Calendar() {
     }
   };
 
+  const ref = async (meridiem, entry) => {
+    const { value: temp } = await Swal.fire({
+      title: `Input Ref ${meridiem} Temp`,
+      input: "number",
+      inputLabel: `*Only 2 decimals`,
+      inputPlaceholder: "Enter temperature",
+      inputAttributes: { step: "0.01" },
+    });
+
+    if (temp) {
+      dispatch(
+        entry
+          ? UPDATE({
+              data: {
+                _id: entry._id,
+                branchId: activePlatform?.branchId,
+                userId: auth._id,
+                [meridiem]: { ref: temp, room: entry?.[meridiem]?.room },
+              },
+              token,
+            })
+          : SAVE({
+              data: {
+                branchId: activePlatform?.branchId,
+                userId: auth._id,
+                [meridiem]: { ref: temp, room: entry?.[meridiem]?.room },
+              },
+              token,
+            })
+      );
+      Swal.fire(`Entered Ref ${meridiem} Temp: ${temp}`);
+    }
+  };
+
   return (
     <div className="pos-ledger-calendar">
       <div className="pos-ledger-calendar-header"></div>
       <div className="pos-ledger-calendar-weeks">
-        <div>Sun</div> <div>Mon</div> <div>Tue</div> <div>Wed</div>
+        <div>Sun</div> <div>Mon</div> <div>Tue</div> <div>Wed</div>{" "}
         <div>Thu</div> <div>Fri</div> <div>Sat</div>
       </div>
 
@@ -74,14 +108,18 @@ export default function Calendar() {
           const isPresent = date.toDateString() === today.toDateString();
           const isFuture = date > today;
 
-          // Find matching entry from Redux state
+          // console.log("Checking temperatures data:", temps);
+          // console.log("Date to compare:", date.toDateString());
+
+          // Ensure temps is an array before running `.find()`
           const entry = Array.isArray(temps)
-            ? temps.find(
-                (entry) =>
-                  entry?.createdAt &&
+            ? temps.find((entry) => {
+                if (!entry?.createdAt) return false;
+                return (
                   new Date(entry.createdAt).toDateString() ===
-                    date.toDateString()
-              )
+                  date.toDateString()
+                );
+              })
             : undefined;
 
           return (
@@ -111,6 +149,7 @@ export default function Calendar() {
                         <br />
                         {entry ? (
                           <>
+                            {/* Morning Entries */}
                             <span>
                               {entry?.AM?.room}
                               <MDBIcon
@@ -123,11 +162,12 @@ export default function Calendar() {
                               {entry?.AM?.ref} &nbsp;
                               <MDBIcon
                                 icon={entry?.AM?.ref ? "pencil-alt" : "plus"}
-                                onClick={() => room("AM", entry)}
+                                onClick={() => ref("AM", entry)}
                               />
                               <strong>AM</strong>
                             </span>
                             <hr />
+                            {/* Evening Entries */}
                             <span>
                               {entry?.PM?.room}
                               <MDBIcon
@@ -140,16 +180,24 @@ export default function Calendar() {
                               {entry?.PM?.ref} &nbsp;
                               <MDBIcon
                                 icon={entry?.PM?.ref ? "pencil-alt" : "plus"}
-                                onClick={() => room("PM", entry)}
+                                onClick={() => ref("PM", entry)}
                               />
                               <strong>PM</strong>
                             </span>
                           </>
                         ) : (
                           <>
-                            <MDBIcon icon="plus" onClick={() => room("AM")} />
+                            <MDBIcon icon="plus" onClick={() => room("AM")} />{" "}
                             &nbsp; &nbsp;|&nbsp;
-                            <MDBIcon icon="plus" onClick={() => room("PM")} />
+                            <MDBIcon icon="plus" onClick={() => ref("AM")} />
+                            <br />
+                            <hr />
+                            <MDBIcon
+                              icon="plus"
+                              onClick={() => room("PM")}
+                            />{" "}
+                            &nbsp; &nbsp;|&nbsp;
+                            <MDBIcon icon="plus" onClick={() => ref("PM")} />
                           </>
                         )}
                       </>

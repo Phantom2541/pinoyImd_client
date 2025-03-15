@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBCol, MDBRow } from "mdbreact";
 import CustomSelect from "./../../../../../../../../../components/searchables/customSelect";
 import {
@@ -8,18 +10,14 @@ import {
   PH,
 } from "./../../../../../../../../../services/fakeDb";
 
-export default function Physical({ task, setTask }) {
+export default function Physical() {
+  const {pe} = useSelector(({validator}) => validator.task),
+    dispatch = useDispatch();
   const handleSelectChange = (index, value) => {
-    const _pe = [...task.pe];
+    const _pe = [...pe];
     _pe[index] = value;
-
-    setTask({
-      ...task,
-      pe: _pe,
-    });
+dispatch(SetPARAMS({ key: "pe", value: _pe }));
   };
-
-  const { pe } = task;
 
   const physicalSelects = [
     {

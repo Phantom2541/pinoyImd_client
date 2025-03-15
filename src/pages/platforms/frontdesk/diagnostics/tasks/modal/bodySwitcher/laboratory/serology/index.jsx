@@ -1,24 +1,29 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import { Services } from "./../../../../../../../../../services/fakeDb";
 import {
   findReference,
   referenceColor,
 } from "./../../../../../../../../../services/utilities";
-import { useSelector } from "react-redux";
 
-export default function Serology({ task, setTask }) {
-  const { collections: preferences } = useSelector(
-    ({ preferences }) => preferences
-  );
+export default function Serology() {
+  const { task, preferences, selected } = useSelector(
+      ({ validator }) => validator
+    ),
+    dispatch = useDispatch();
 
-  const { packages = {}, key: mapKey, patient } = task;
+  const { packages = {}, key: mapKey } = task;
+  const { customerId: patient } = selected;
 
   const handleChange = (e) =>
-    setTask({
-      ...task,
-      packages: { ...packages, [e.target.name]: Number(e.target.value) },
-    });
+    dispatch(
+      SetPARAMS({
+        ...task,
+        packages: { ...packages, [e.target.name]: Number(e.target.value) },
+      })
+    );
 
   return (
     <MDBTable hover responsive className="mb-0">

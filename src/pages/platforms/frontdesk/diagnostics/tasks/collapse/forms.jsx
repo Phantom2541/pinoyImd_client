@@ -5,13 +5,11 @@ import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-const Forms = ({ form, obj, index, miscIndex = 0, menu }) => {
-  const { collections } = useSelector(({ preferences }) => preferences),
+const Forms = ({ form, obj, index }) => {
+  const { preferences } = useSelector(({ validator }) => validator),
     { activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
   const { packages, hasDone = false, remarks = "", signatories = [] } = obj;
-
-  const { customerId, physicianId, source, category, _id } = menu;
 
   const handlePrint = (task) => {
     localStorage.setItem("taskPrintout", JSON.stringify(task));
@@ -43,17 +41,12 @@ const Forms = ({ form, obj, index, miscIndex = 0, menu }) => {
     key: `${form}-${index}`,
     form,
     generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
-    patient: customerId,
-    source: source || {},
     hasDone,
-    category,
-    id: _id,
     remarks,
     department,
-    miscIndex,
   };
 
-  const handeEntry = (task) => dispatch(SetTASK(task));
+  const handeEntry = () => dispatch(SetTASK({task,form}));
 
   return (
     <tr key={task.key} className={`${hasDone && "table-active"}`}>
@@ -71,7 +64,7 @@ const Forms = ({ form, obj, index, miscIndex = 0, menu }) => {
       <td>
         <MDBBtnGroup>
           <MDBBtn
-            onClick={() => handeEntry(task)}
+            onClick={() => handeEntry()}
             color={hasDone ? "info" : "primary"}
             size="sm"
             className="py-1 px-2 m-0"
@@ -87,9 +80,8 @@ const Forms = ({ form, obj, index, miscIndex = 0, menu }) => {
                   handlePrint({
                     ...task,
                     branchId: activePlatform?.branch,
-                    referral: physicianId || {},
                     services: Services.whereIn(_packages),
-                    preferences: collections,
+                    preferences,
                     signatories,
                     isPrint: true,
                   })

@@ -38,12 +38,7 @@ export default function Modal() {
         branchId: activePlatform.branchId,
       });
     else setForm(selected);
-  }, [willCreate, selected]);
-
-  // Set form data kapag nagbukas ng modal
-  // useEffect(() => {
-  //   setForm(selected);
-  // }, [selected]);
+  }, [willCreate, selected, auth._id, activePlatform.branchId]);
 
   // Handle update function
   const handleUpdate = () => {
@@ -93,14 +88,6 @@ export default function Modal() {
     });
     console.log("Form", form);
   };
-
-  // Fix: Return correct form value
-  const handleValue = (key) => {
-    // console.log("key", key);
-    // form?.[key] || "";
-  };
-
-  // Handle modal close
 
   return (
     <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">

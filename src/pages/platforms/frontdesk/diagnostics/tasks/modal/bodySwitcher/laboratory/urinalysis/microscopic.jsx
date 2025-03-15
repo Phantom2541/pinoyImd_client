@@ -1,4 +1,7 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+
 import { MDBCol, MDBRow } from "mdbreact";
 import CustomSelect from "./../../../../../../../../../components/searchables/customSelect";
 import {
@@ -6,18 +9,15 @@ import {
   MicroscopicResultInWord,
 } from "./../../../../../../../../../services/fakeDb";
 
-export default function Microscopic({ task, setTask }) {
+export default function Microscopic() {
+   const {me} = useSelector(({validator}) => validator.task),
+    dispatch = useDispatch();
   const handleSelectChange = (index, value) => {
-    const _me = [...task.me];
+    const _me = [...me];
     _me[index] = value;
+dispatch(SetPARAMS({ key: "me", value: _me }));
 
-    setTask({
-      ...task,
-      me: _me,
-    });
   };
-
-  const { me } = task;
 
   const microscopicSelects = [
     "Pus Cells",

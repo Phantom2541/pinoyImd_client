@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import {
   getAge,
   getDevelopment,
@@ -6,10 +7,9 @@ import {
   fullName as nameFormatter,
 } from "./../../../../../../services/utilities";
 
-export default function Patient({ patient }) {
-  // const { patient } = useSelector(({ validator }) => validator);
-
-  const { fullName = {}, isMale, dob } = patient;
+export default function Patient() {
+  const { customerId } = useSelector(({ validator }) => validator.selected); 
+  const { fullName = {}, isMale, dob } = customerId;
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "liability/controls";
+const url = "liability/controls";
 
 const initialState = {
   collections: [], // incase one query only
@@ -28,10 +28,10 @@ const initialState = {
 
 // Async thunks
 export const BROWSE = createAsyncThunk(
-  `${name}/browse`,
+  `${url}/browse`,
   async ({ token, params }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/browse`, token, params);
+      return await axioKit.universal(`${url}/browse`, token, params);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message
@@ -40,9 +40,9 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
-export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
+export const SAVE = createAsyncThunk(`${url}/save`, async (form, thunkAPI) => {
   try {
-    return await axioKit.save(name, form.data, form.token);
+    return await axioKit.save(url, form.data, form.token);
   } catch (error) {
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || error.message
@@ -51,10 +51,10 @@ export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
 });
 
 export const UPDATE = createAsyncThunk(
-  `${name}/update`,
+  `${url}/update`,
   async (form, thunkAPI) => {
     try {
-      return await axioKit.update(name, form.data, form.token);
+      return await axioKit.update(url, form.data, form.token);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message
@@ -64,10 +64,10 @@ export const UPDATE = createAsyncThunk(
 );
 
 export const DESTROY = createAsyncThunk(
-  `${name}/destroy`,
+  `${url}/destroy`,
   async ({ data, token }, thunkAPI) => {
     try {
-      return await axioKit.destroy(name, data, token);
+      return await axioKit.destroy(url, data, token);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message
@@ -78,7 +78,7 @@ export const DESTROY = createAsyncThunk(
 
 // Redux slice
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     SetEDIT: (state, { payload }) => {
@@ -89,7 +89,6 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetCREATE: (state, { payload }) => {
-      console.log("payload", payload);
       state.selected = {
         lo: "",
         norm: "",

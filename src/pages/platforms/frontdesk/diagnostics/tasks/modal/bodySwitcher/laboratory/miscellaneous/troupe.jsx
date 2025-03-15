@@ -1,19 +1,15 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBInput } from "mdbreact";
 
-export default function Troupe({ task, setTask }) {
-  const { troupe = {} } = task;
+export default function Troupe() {
+  const { troupe = {} } = useSelector(({ validator }) => validator.task),
+    dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setTask({
-      ...task,
-      troupe: {
-        ...troupe,
-        [name]: value,
-      },
-    });
+    dispatch(SetPARAMS({ key: "troupe", value: { ...troupe, [name]: value } }));
   };
 
   return (

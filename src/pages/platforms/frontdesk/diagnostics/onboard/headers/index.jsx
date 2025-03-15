@@ -10,7 +10,7 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator.js";
 
-export default function Header({ length, view, setView }) {
+export default function Header({ view, setView }) {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ taskGenerator }) => taskGenerator),
     [status, setStatus] = useState("All"),

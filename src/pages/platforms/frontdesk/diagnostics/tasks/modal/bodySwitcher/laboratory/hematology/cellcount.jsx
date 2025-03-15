@@ -1,10 +1,14 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import { Cellcount as CellCount } from "./../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
 
-export default function Cellcount({ task, setTask }) {
-  const { patient, cc = [] } = task,
+export default function Cellcount() {
+  const {task, selected} = useSelector(({validator}) => validator),
+    dispatch = useDispatch();
+  const {  cc = [] } = task,
     { Preferences, Abbreviation, Title } = CellCount;
 
   const handleChange = (e) => {
@@ -24,11 +28,7 @@ export default function Cellcount({ task, setTask }) {
     while (_cells.length < 4) {
       _cells.push(0);
     }
-
-    setTask({
-      ...task,
-      cc: _cells,
-    });
+dispatch(SetPARAMS({ key: "cc", value: _cells }));
   };
 
   return (
@@ -43,7 +43,7 @@ export default function Cellcount({ task, setTask }) {
       <tbody>
         {(!!cc.length ? cc : [0, 0, 0, 0]).map((cell, index) => {
           const { lo, hi, unit } =
-            Preferences[patient.isMale ? "Male" : "Female"][
+            Preferences[selected.customerId.isMale ? "Male" : "Female"][
               Abbreviation[index]
             ];
 
