@@ -2,13 +2,13 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { capitalize } from "lodash";
 import { MDBTable, MDBIcon, MDBBadge } from "mdbreact";
-import { currency, fullName } from "../../../../../../services/utilities";
-import { Categories } from "../../../../../../services/fakeDb";
+import { currency, fullName } from "../../../../../../../services/utilities";
+import { Categories } from "../../../../../../../services/fakeDb";
 import {
   SetTOTAL,
   SetFILTERED,
   SetSELECTED,
-} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+} from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const Tables = () => {
   const {
