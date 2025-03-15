@@ -38,7 +38,7 @@ const _form = {
   email: "",
 };
 
-export default function Patient() {
+export default function Patient({setActiveIndex}) {
   const { token } = useSelector(({ auth }) => auth),
     { customer } = useSelector(({ pos }) => pos),
     [form, setForm] = useState(_form),
@@ -68,7 +68,7 @@ export default function Patient() {
             token,
           })
         ).then(({ payload }) => {
-        dispatch(SETPATIENT(payload));
+        dispatch(SETPATIENT(payload.payload));
       })
     } else {
       // create
@@ -82,10 +82,11 @@ export default function Patient() {
           token,
         })
       ).then(({ payload }) => {
-        dispatch(SETPATIENT(payload));
+        dispatch(SETPATIENT(payload.payload));
       })
     }
-
+    // setForm(_form);
+    setActiveIndex(0);
   };
 
   return (
