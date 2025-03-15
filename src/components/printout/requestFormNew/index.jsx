@@ -4,7 +4,7 @@ import {
   Chemistry,
   Hematology,
   Urinalysis,
-  Parasitology,
+  // Parasitology,
   Serology,
 } from "./logs";
 // import { Services } from "../../services/fakeDb";
@@ -13,7 +13,7 @@ const formComponents = {
   Chemistry,
   Hematology,
   Urinalysis,
-  Parasitology,
+  // Parasitology,
   Serology,
 };
 

@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import {
   MDBSelect,
   MDBSelectInput,
@@ -6,7 +8,9 @@ import {
   MDBSelectOption,
 } from "mdbreact";
 
-export default function Pregnancy({ task, setTask }) {
+export default function Pregnancy() {
+  const { task } = useSelector(({ validator }) => validator),
+    dispatch = useDispatch();
   const { specimen } = task;
 
   // fix this
@@ -14,7 +18,7 @@ export default function Pregnancy({ task, setTask }) {
 
   return (
     <MDBSelect
-      getValue={(e) => setTask({ ...task, specimen: e[0] })}
+      getValue={(e) => dispatch(SetPARAMS({ ...task, specimen: e[0] }))}
       className="colorful-select dropdown-primary hidden-md-down"
     >
       <MDBSelectInput

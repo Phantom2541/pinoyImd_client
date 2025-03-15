@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 
 const _troupe = {
@@ -6,18 +8,15 @@ const _troupe = {
   esr: 0,
 };
 
-export default function SpecialTest({ task, setTask }) {
-  const { troupe = _troupe, packages } = task,
-    { retic, esr } = troupe;
+export default function SpecialTest() {
+  const { troupe = _troupe, packages } = useSelector(
+      ({ validator }) => validator.task
+    ),
+    dispatch = useDispatch();
+  const { retic, esr } = troupe;
 
   const handleChange = (key, value) =>
-    setTask({
-      ...task,
-      troupe: {
-        ...troupe,
-        [key]: Number(value),
-      },
-    });
+    dispatch(SetPARAMS({ key: "troupe", value: { ...troupe, [key]: value } }));
 
   return (
     <MDBTable hover responsive className="mb-0">

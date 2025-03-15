@@ -84,10 +84,10 @@ export default function POS() {
       <div className="pos-card">
         <div className="pos-card-body">
           <section className={`${activeIndex === 0 && "active"}`}>
-            <PosCard />
+            <PosCard  />
           </section>
           <section className={`${activeIndex === 1 && "active"}`}>
-            <Patient />
+            <Patient setActiveIndex={setActiveIndex} />
           </section>
         </div>
       </div>

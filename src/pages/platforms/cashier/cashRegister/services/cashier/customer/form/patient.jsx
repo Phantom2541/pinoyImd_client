@@ -13,6 +13,9 @@ import {
 } from "../../../../../../../../services/redux/slices/assets/persons/users";
 import { useDispatch, useSelector } from "react-redux";
 import { isEqual } from "lodash";
+import {
+  SETPATIENT,
+} from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 
 const _form = {
   fullName: {
@@ -35,18 +38,15 @@ const _form = {
   email: "",
 };
 
-export default function Patient() {
-  const [form, setForm] = useState(_form),
-    { token } = useSelector(({ auth }) => auth),
+export default function Patient({setActiveIndex}) {
+  const { token } = useSelector(({ auth }) => auth),
     { customer } = useSelector(({ pos }) => pos),
+    [form, setForm] = useState(_form),
     dispatch = useDispatch();
 
   // inject searched name if no match
   useEffect(() => {
-    setForm((prev) => ({
-      ...prev,
-      fullName: { ...customer },
-    }));
+    setForm(customer);
   }, [customer]);
 
   // update form for selected user
@@ -67,7 +67,9 @@ export default function Patient() {
             data: form,
             token,
           })
-        );
+        ).then(({ payload }) => {
+        dispatch(SETPATIENT(payload.payload));
+      })
     } else {
       // create
       dispatch(
@@ -79,10 +81,12 @@ export default function Patient() {
           },
           token,
         })
-      );
+      ).then(({ payload }) => {
+        dispatch(SETPATIENT(payload.payload));
+      })
     }
-
-    setForm(_form);
+    // setForm(_form);
+    setActiveIndex(0);
   };
 
   return (
@@ -267,7 +271,7 @@ export default function Patient() {
         color={_id ? "info" : "primary"}
         className="float-right mt-2"
       >
-        {_id ? "Update" : "Create"}
+        {_id ? "Update" : "Register"}
       </MDBBtn>
     </form>
   );

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const name = "assets/persons/users";
+const url = "assets/persons/users";
 
 const initialState = {
   collections: [],
@@ -11,45 +11,9 @@ const initialState = {
   message: "",
 };
 
-export const BROWSE = createAsyncThunk(
-  `${name}`,
-  ({ key, token }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${name}/browse`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const GETPATIENTS = createAsyncThunk(
-  `${name}/patients`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${name}/patients`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
+export const BROWSE = createAsyncThunk(`${url}`, ({ key, token }, thunkAPI) => {
   try {
-    return axioKit.save(name, form.data, form.token);
+    return axioKit.universal(`${url}/browse`, token, key);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -60,9 +24,40 @@ export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
   }
 });
 
-export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
+export const GETPATIENTS = createAsyncThunk(
+  `${url}/patients`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/patients`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   try {
-    return axioKit.update(name, form.data, form.token);
+    return axioKit.save(url, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -74,7 +69,7 @@ export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
 });
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     RESET: (state) => {
@@ -108,7 +103,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(GETPATIENTS.fulfilled, (state, action) => {
-        const { payload } = action.payload; 
+        const { payload } = action.payload;
         state.filtered = payload;
         state.isLoading = false;
       })
@@ -125,6 +120,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+        
         state.message = success;
         state.collections.unshift(payload);
         state.isSuccess = true;

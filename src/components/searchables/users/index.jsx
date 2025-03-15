@@ -147,6 +147,6 @@ export default function Search({ setPatient, setRegister = () => {} }) {
           />
         </button>
       </div>
-    </div>
+    </div> 
   );
 }
