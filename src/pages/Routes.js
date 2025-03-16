@@ -18,7 +18,8 @@ export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
 
   const renderSidebars = () => {
-    const platforms = Sidebars[activePlatform?.platform];
+    const platforms = Sidebars[activePlatform?.platform?.toLowerCase()];
+    console.log(platforms);
     if (!Array.isArray(platforms)) return "";
     var basePath = "";
     const sideBars = [];
@@ -61,11 +62,12 @@ export default function Routes() {
     });
     return sideBars;
   };
+  const { platform = "" } = activePlatform;
+
   return (
     <Switch>
-      {!activePlatform?.platform && (
-        <Route exact path={`/dashboard`} component={UnsetApply} />
-      )}
+      {!platform && <Route exact path={`/dashboard`} component={UnsetApply} />}
+
       {renderSidebars()}
 
       {/* {Sidebars[activePlatform?.platform]?.map(
