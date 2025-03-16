@@ -11,6 +11,7 @@ import TableRowCount from "../../../../../../components/pagination/rows";
 import TableLoading from "../../../../../../components/tableLoading/index.jsx";
 import Header from "../header.jsx";
 import helpers from "../helpers.js";
+import "../styles.css";
 
 export default function Chems() {
   const [chems, setChems] = useState([]),
@@ -89,7 +90,7 @@ export default function Chems() {
         <MDBCardBody className="pb-0">
           {!isLoading ? (
             <MDBTable className="responsive" bordered>
-              <thead>
+              <thead className="sticky ">
                 <tr>
                   <th>#</th>
                   <th>Name</th>

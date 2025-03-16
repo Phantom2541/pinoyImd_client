@@ -19,6 +19,8 @@ import {
 } from "../../../../../../services/fakeDb";
 import Header from "../header";
 import TableLoading from "../../../../../../components/tableLoading";
+import "../styles.css";
+
 import helpers from "../helpers";
 const { dayNames, formatTime, groupByDay, isWeekDays } = helpers;
 
@@ -121,7 +123,7 @@ export default function Chems() {
         <MDBCardBody className="pb-0">
           {!isLoading ? (
             <MDBTable className="responsive" bordered>
-              <thead>
+              <thead className="sticky">
                 <tr>
                   <th>#</th>
                   <th>Name</th>

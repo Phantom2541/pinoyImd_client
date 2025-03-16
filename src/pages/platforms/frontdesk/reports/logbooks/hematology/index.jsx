@@ -9,6 +9,8 @@ import { MDBCard, MDBCardBody, MDBTable } from "mdbreact";
 import TableRowCount from "../../../../../../components/pagination/rows";
 import Header from "../header";
 import TableLoading from "../../../../../../components/tableLoading";
+import "../styles.css";
+
 import helpers from "../helpers";
 const { groupByDay, formatTime, isWeekDays, dayNames } = helpers;
 
@@ -108,14 +110,7 @@ export default function Chems() {
         <MDBCardBody className="pb-0">
           {!isLoading ? (
             <MDBTable className="responsive" bordered>
-              <thead
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  background: "white",
-                  zIndex: 999,
-                }}
-              >
+              <thead className="sticky">
                 <tr>
                   <th>#</th>
                   <th>Name</th>
