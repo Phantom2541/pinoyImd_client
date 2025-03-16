@@ -73,8 +73,6 @@ export default function Platforms() {
     }
   };
 
-  console.log("platform index running");
-
   return (
     <div className="app">
       <SideNavigation

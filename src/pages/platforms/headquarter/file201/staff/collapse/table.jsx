@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBCol, MDBRow, MDBIcon, MDBBadge, MDBAnimation } from "mdbreact";
+import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Roles } from "../../../../../../services/fakeDb";
@@ -9,7 +9,10 @@ import {
   SETOnHotSEAT,
   SetUPDATE_TRACKER,
 } from "../../../../../../services/redux/slices/assets/persons/personnels";
+import { currency } from "../../../../../../services/utilities";
 
+const isNumericString = (str) =>
+  typeof str === "string" && Number.isFinite(Number(str));
 function EditableField({
   label,
   fieldName,
@@ -21,12 +24,16 @@ function EditableField({
   handleCancel,
   value,
   children,
+  isMoney = true,
 }) {
   // const isEditing = editField === fieldName;
   const { fieldName: fieldNameUpdate, isLoading } = updateTracker;
   const isEditing = value ? editField === fieldName : true;
+  const formattedValue = Number(value) && isMoney ? currency(value) : value;
+  console.log(isNumericString(value), value);
+  // const isEditing = true;
   return (
-    <div className="editable-field ">
+    <div className="editable-field d-flex align-items-center mt-1 ">
       <strong
         style={{ fontSize: "0.9rem", color: "#757575" }}
         className="text-nowrap"
@@ -42,9 +49,7 @@ function EditableField({
           >
             <div className="mr-1">
               {isLoading && fieldNameUpdate === fieldName ? (
-                <MDBAnimation type="rotateOut" infinite>
-                  <MDBIcon fas icon="spinner" />
-                </MDBAnimation>
+                <MDBIcon icon="spinner" pulse />
               ) : (
                 <MDBIcon
                   icon="check"
@@ -66,7 +71,9 @@ function EditableField({
           )}
         </div>
       ) : (
-        <span onClick={() => setEditField(fieldName)}>{value || "N/A"}</span>
+        <span onClick={() => setEditField(fieldName)}>
+          {formattedValue || "N/A"}
+        </span>
       )}
     </div>
   );
@@ -153,6 +160,7 @@ export default function CollapseTable({
             saveField={saveField}
             handleCancel={handleCancel}
             value={employment?.hos}
+            isMoney={false}
           >
             <input
               type="number"

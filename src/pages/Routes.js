@@ -18,11 +18,11 @@ export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
 
   const renderSidebars = () => {
-    const platforms = Sidebars[activePlatform?.platform];
+    const platforms = Sidebars[activePlatform?.platform?.toLowerCase()];
+    console.log(platforms);
     if (!Array.isArray(platforms)) return "";
     var basePath = "";
     const sideBars = [];
-    console.log("runing");
 
     platforms.forEach((element, index) => {
       const { children, component, path = "" } = element;
