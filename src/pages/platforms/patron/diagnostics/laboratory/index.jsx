@@ -50,7 +50,6 @@ export default function Laboratories() {
 
     handleSearch();
   }, [searchKey, collections]);
-  console.log(companies);
 
   return (
     <MDBContainer>
