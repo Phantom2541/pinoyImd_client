@@ -44,6 +44,8 @@ const Header = () => {
 
   const handlePrint = () => {
     localStorage.setItem("temperature", JSON.stringify(collections));
+    console.log("collections: ", collections);
+
     window.open(
       "/printout/TempGraph",
       "Temperature Graph",
@@ -85,6 +87,7 @@ const Header = () => {
         color="info"
         className="mb-2"
         rounded
+        // onClick={() => handlePrint}
         onClick={handlePrint}
       >
         <MDBIcon icon="print" />
