@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "roles";
+const name = "diagnostics/laboratory/result/serology";
 
 const initialState = {
   collections: [],
@@ -10,10 +10,10 @@ const initialState = {
   message: "",
 };
 
-export const BROWSE = createAsyncThunk(`${url}/browse`, (items, thunkAPI) => {
-  const { entity, token, data } = items;
+export const BROWSE = createAsyncThunk(`${name}/browse`, (items, thunkAPI) => {
+  const { token, data } = items;
   try {
-    return axioKit.universal(`${entity}/browse`, token, data);
+    return axioKit.universal(`${name}/browse`, token, data);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -25,10 +25,10 @@ export const BROWSE = createAsyncThunk(`${url}/browse`, (items, thunkAPI) => {
 });
 
 export const SAVE = createAsyncThunk(
-  `${url}/save`,
+  `${name}/save`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(url, data, token);
+      return axioKit.save(name, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -43,10 +43,10 @@ export const SAVE = createAsyncThunk(
 );
 
 export const UPDATE = createAsyncThunk(
-  `${url}/update`,
+  `${name}/update`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.update(url, data, token);
+      return axioKit.update(name, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -61,7 +61,7 @@ export const UPDATE = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name: url,
+  name: name,
   initialState,
   reducers: {
     RESET: (state) => {

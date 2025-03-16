@@ -1,153 +1,53 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   BROWSE,
   RESET,
 } from "./../../../../../../services/redux/slices/diagnostics/laboratory/chemistry.js";
 import { fullName, getAge } from "../../../../../../services/utilities";
-import {
-  MDBCard,
-  MDBCardBody,
-  MDBCardHeader,
-  MDBTable,
-  MDBBtn,
-  MDBBtnGroup,
-  MDBIcon,
-  MDBView,
-} from "mdbreact";
+import { MDBCard, MDBCardBody, MDBTable } from "mdbreact";
 import TableRowCount from "../../../../../../components/pagination/rows";
-import Months from "../../../../../../services/fakeDb/calendar/months";
-import Years from "../../../../../../services/fakeDb/calendar/years";
+
 import TableLoading from "../../../../../../components/tableLoading/index.jsx";
-
-const today = new Date();
-
-const addZero = (i) => {
-  if (i < 10) {
-    i = "0" + i;
-  }
-  return i;
-};
-
-const dayNames = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
-// Function to convert 24-hour time to 12-hour time with AM/PM
-const formatTime = (hours, minutes) => {
-  let period = "AM";
-  if (hours >= 12) {
-    period = "PM";
-    hours = hours > 12 ? hours - 12 : hours; // Convert to 12-hour format
-  } else if (hours === 0) {
-    hours = 12; // Handle midnight (00:00)
-  }
-  return `${addZero(hours)}:${addZero(minutes)} ${period}`;
-};
+import Header from "../header.jsx";
+import helpers from "../helpers.js";
 
 export default function Chems() {
   const [chems, setChems] = useState([]),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
-    // { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, isLoading } = useSelector(({ chemistry }) => chemistry),
-    { search, pathname } = useLocation(),
-    query = new URLSearchParams(search),
-    month = query.get("month"),
-    year = query.get("year"),
-    focusedDay = query.get("focusedDay"),
-    history = useHistory(),
-    dispatch = useDispatch();
-
-  useEffect(() => {
-    if (token && activePlatform?.branchId) {
-      dispatch(
-        BROWSE({
-          data: {
-            branch: activePlatform?.branchId,
-            year: year || today.getFullYear(),
-            month: month || today.getMonth() + 1,
-          },
-          token,
-        })
-      );
-    }
-    return () => RESET();
-  }, [activePlatform, dispatch, token, month, year]);
-
-  useEffect(() => {
-    const params = new URLSearchParams({
-      month: today.getMonth() + 1, // Add 1 to match human-readable month format
-      year: today.getFullYear(),
-    });
-    history.push(`${pathname}?${params.toString()}`);
-  }, []);
+    { collections, isLoading } = useSelector(({ chemistry }) => chemistry);
 
   useEffect(() => {
     setChems(collections);
   }, [collections]);
 
-  // Function to group chems by the day they were created
-  const groupByDay = (chemistryData) => {
-    return chemistryData.reduce((acc, chem) => {
-      const createdAt = new Date(chem.createdAt); // assuming createdAt field exists
-      const day = createdAt.getDate();
-
-      if (!acc[day]) {
-        acc[day] = [];
-      }
-      acc[day].push(chem);
-      return acc;
-    }, {});
-  };
-
   // Group the chems by day
-  const groupedChems = groupByDay(chems);
-
-  // Create an array for day names
+  const groupedChems = helpers.groupByDay(chems);
 
   const renderGroupedChems = () => {
     return Object.keys(groupedChems).map((day) => {
       const sampleChem = groupedChems[day][0]; // Get one chem item to determine the date
       const d = new Date(sampleChem.createdAt); // Use createdAt to get the correct day
-      const dayOfWeek = dayNames[d.getDay()]; // Get the day of the week
+      const dayOfWeek = helpers.dayNames[d.getDay()]; // Get the day of the week
       const chems = groupedChems[day];
-      const isWeekDays = dayOfWeek !== "Sunday" && dayOfWeek !== "Saturday";
       return (
         <React.Fragment key={day}>
           <tr>
-            <td colSpan="2">
-              <strong className={isWeekDays ? "text-success" : "text-danger"}>
-                {dayOfWeek} ({day}) {/* Display the day of the week */}
+            <td colSpan="18">
+              <strong
+                className={
+                  helpers.isWeekDays(dayOfWeek) ? "text-success" : "text-danger"
+                }
+              >
+                {dayOfWeek} ({day})
               </strong>
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
           </tr>
           {chems.map((chem, index) => {
             const { customerId, packages, createdAt } = chem;
             const chemDate = new Date(createdAt);
             const h = chemDate.getHours();
             const m = chemDate.getMinutes();
-            const timeFormatted = formatTime(h, m); // Format time to standard time
+            const timeFormatted = helpers.formatTime(h, m); // Format time to standard time
 
             return (
               <tr key={chem._id}>
@@ -181,119 +81,10 @@ export default function Chems() {
     });
   };
 
-  const selectToday = () => {
-    const params = new URLSearchParams({
-      month: today.getMonth() + 1, // Add 1 to match human-readable month format
-      year: today.getFullYear(),
-    });
-    history.push(`${pathname}?${params.toString()}`);
-  };
-
-  const isTodaySelected =
-    Number(month) === today.getMonth() && Number(year) === today.getFullYear();
-
-  const prev = (clearFocused = true) => {
-    let _month = Number(month) === 1 ? 12 : Number(month) - 1, // Adjust the month to be 1-based
-      _year = Number(month) === 1 ? Number(year) - 1 : Number(year);
-
-    const params = new URLSearchParams({
-      month: _month,
-      year: _year,
-      ...(!clearFocused && { focusedDay }),
-    });
-
-    history.push(`${pathname}?${params.toString()}`);
-
-    if (!clearFocused) dispatch(RESET({ resetCollections: true }));
-  };
-
-  const next = (clearFocused = true) => {
-    let _month = Number(month) === 12 ? 1 : Number(month) + 1, // Adjust the month to be 1-based
-      _year = Number(month) === 12 ? Number(year) + 1 : Number(year);
-
-    const params = new URLSearchParams({
-      month: _month,
-      year: _year,
-      ...(!clearFocused && { focusedDay }),
-    });
-
-    history.push(`${pathname}?${params.toString()}`);
-
-    if (!clearFocused) dispatch(RESET({ resetCollections: true }));
-  };
-
-  const disablePrevOnLastChoice = () => {
-    if (Number(month) === 0 && Number(year) === Years[0]) return true;
-    return false;
-  };
-
-  const disableNextOnLastChoice = () => {
-    if (Number(month) === 11 && Number(year) === Years[Years.length - 1])
-      return true;
-    return false;
-  };
-  const handlePrint = () => {
-    localStorage.setItem("month", JSON.stringify(month));
-    localStorage.setItem("year", JSON.stringify(year));
-    window.open(
-      "/printout/chem",
-      "Chemistry Logbook",
-      "top=100px,left=100px,width=1050px,height=750px" // size of page that will open
-    );
-  };
-
   return (
     <>
       <MDBCard narrow>
-        <MDBView
-          cascade
-          className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
-        >
-          <div>
-            <i>Chemistry</i>
-            <MDBBtnGroup className="ml-2">
-              <MDBBtn
-                onClick={selectToday}
-                size="sm"
-                color="white"
-                className="z-depth-0"
-                disabled={isTodaySelected}
-              >
-                TODAY
-              </MDBBtn>
-              <MDBBtn
-                onClick={prev}
-                disabled={disablePrevOnLastChoice()}
-                size="sm"
-                color="white"
-                className="z-depth-0"
-              >
-                <MDBIcon icon="angle-left" />
-              </MDBBtn>
-              <MDBBtn
-                onClick={next}
-                disabled={disableNextOnLastChoice()}
-                size="sm"
-                color="white"
-                className="z-depth-0"
-              >
-                <MDBIcon icon="angle-right" />
-              </MDBBtn>
-            </MDBBtnGroup>
-          </div>
-          <div
-            className="d-flex align-items-center"
-            style={{ marginRight: "11rem" }}
-          >
-            <h5 className="mr-2" style={{ fontWeight: 300 }}>
-              {year}
-            </h5>
-            <h5 style={{ fontWeight: 400 }}> {Months[month - 1]}</h5>
-          </div>
-          <MDBBtn color="primary" size="sm" onClick={handlePrint}>
-            <MDBIcon icon="print" /> Print
-          </MDBBtn>
-        </MDBView>
+        <Header BROWSE={BROWSE} RESET={RESET} title={"Chemistrys"} />
 
         <MDBCardBody className="pb-0">
           {!isLoading ? (

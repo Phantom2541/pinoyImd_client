@@ -19,8 +19,7 @@ export default function Routes() {
 
   const renderSidebars = () => {
     const platforms = Sidebars[activePlatform?.platform?.toLowerCase()];
-    console.log(platforms);
-    if (!Array.isArray(platforms)) return "";
+    if (!Array.isArray(platforms)) return "Ooops.. platforms must be array";
     var basePath = "";
     const sideBars = [];
 
@@ -69,29 +68,6 @@ export default function Routes() {
       {!platform && <Route exact path={`/dashboard`} component={UnsetApply} />}
 
       {renderSidebars()}
-
-      {/* {Sidebars[activePlatform?.platform]?.map(
-        ({ path, component, children }, index) => {
-          if (children)
-            return children.map((child, cIndex) => (
-              <Route
-                key={`route-${index}-${cIndex}`}
-                exact
-                path={`${path}${child.path}`}
-                component={child.component || NotExisting}
-              />
-            ));
-
-          return (
-            <Route
-              key={`route-${index}`}
-              exact
-              path={path}
-              component={component || NotExisting}
-            />
-          );
-        }
-      )} */}
 
       <Route path="/profile" exact component={Profile} />
 
