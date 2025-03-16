@@ -21,3 +21,17 @@
 .custom-header {
   border: none !important;
 }
+
+.spin {
+  display: inline-block; /* Ensures proper rotation */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(100deg);
+  }
+}

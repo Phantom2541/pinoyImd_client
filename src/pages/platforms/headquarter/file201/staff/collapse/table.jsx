@@ -1,25 +1,30 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
+import { useDispatch, useSelector } from "react-redux";
+import { MDBCol, MDBRow, MDBIcon, MDBBadge, MDBAnimation } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Roles } from "../../../../../../services/fakeDb";
 import AccessModal from "./accessModal";
-import { SETOnHotSEAT } from "../../../../../../services/redux/slices/assets/persons/personnels";
+import {
+  SETOnHotSEAT,
+  SetUPDATE_TRACKER,
+} from "../../../../../../services/redux/slices/assets/persons/personnels";
 
 function EditableField({
   label,
   fieldName,
   editField,
   setEditField,
+  updateTracker,
   errors,
   saveField,
   handleCancel,
   value,
   children,
 }) {
-  const isEditing = editField === fieldName;
-
+  // const isEditing = editField === fieldName;
+  const { fieldName: fieldNameUpdate, isLoading } = updateTracker;
+  const isEditing = value ? editField === fieldName : true;
   return (
     <div className="editable-field ">
       <strong
@@ -29,18 +34,33 @@ function EditableField({
         {label}:
       </strong>
       {isEditing ? (
-        <div className="input-inline ml-2">
+        <div className="input-inline ml-2 position-relative">
           {children}
-          <MDBIcon
-            icon="check"
-            className="icon-inline"
-            onClick={() => saveField(fieldName)}
-          />
-          <MDBIcon
-            icon="times"
-            className="icon-inline cancel"
-            onClick={() => handleCancel()}
-          />
+          <div
+            className="d-flex"
+            style={{ position: "absolute", right: "0.3rem" }}
+          >
+            <div className="mr-1">
+              {isLoading && fieldNameUpdate === fieldName ? (
+                <MDBAnimation type="rotateOut" infinite>
+                  <MDBIcon fas icon="spinner" />
+                </MDBAnimation>
+              ) : (
+                <MDBIcon
+                  icon="check"
+                  className="icon-inline"
+                  onClick={() => saveField(fieldName, fieldName)}
+                />
+              )}
+            </div>
+            <div style={{ width: "25px" }} className="bg-white">
+              <MDBIcon
+                icon="times"
+                className="icon-inline cancel"
+                onClick={() => handleCancel()}
+              />
+            </div>
+          </div>
           {errors[fieldName] && (
             <div className="invalid-feedback">{errors[fieldName].message}</div>
           )}
@@ -59,7 +79,8 @@ export default function CollapseTable({
   _id,
   onSubmit,
 }) {
-  const [editField, setEditField] = useState(null),
+  const { updateTracker } = useSelector(({ personnels }) => personnels),
+    [editField, setEditField] = useState(null),
     [show, setShow] = useState(false),
     [selected, setSelected] = useState({}),
     dispatch = useDispatch();
@@ -91,11 +112,12 @@ export default function CollapseTable({
     resetData();
   }, [resetData]);
 
-  const saveField = handleSubmit((data) => {
+  const saveField = handleSubmit((data, fieldName) => {
     onSubmit({
       _id,
       ...data,
     });
+    dispatch(SetUPDATE_TRACKER(fieldName));
     setEditField(null);
   });
 
@@ -112,12 +134,13 @@ export default function CollapseTable({
   };
 
   const { access = [] } = staff || {};
-
+  const { soe, hos, pc, designation } = employment || {};
+  const hasContract = soe && hos && pc && designation;
   return (
     <>
       <MDBRow>
         <MDBCol md={4}>
-          <h5>Employment</h5>
+          <h5>Contract</h5>
           <hr />
           <EditableField
             label="Hours of Service"
@@ -125,6 +148,7 @@ export default function CollapseTable({
             editField={editField}
             setEditField={setEditField}
             register={register}
+            updateTracker={updateTracker}
             errors={errors}
             saveField={saveField}
             handleCancel={handleCancel}
@@ -132,6 +156,9 @@ export default function CollapseTable({
           >
             <input
               type="number"
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
               {...register("employmentHor")}
               className={`form-control form-control-sm ${
                 errors.employmentHor ? "is-invalid" : ""
@@ -143,6 +170,7 @@ export default function CollapseTable({
             fieldName="employmentSoe"
             editField={editField}
             setEditField={setEditField}
+            updateTracker={updateTracker}
             register={register}
             errors={errors}
             saveField={saveField}
@@ -151,9 +179,12 @@ export default function CollapseTable({
           >
             <select
               {...register("employmentSoe")}
-              className={`form-control form-control-sm ${
+              className={`form-control form-control-sm no-arrow ${
                 errors.employmentSoe ? "is-invalid" : ""
               }`}
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
             >
               <option value="Contractual">Contractual</option>
               <option value="Reliever">Reliever</option>
@@ -166,6 +197,7 @@ export default function CollapseTable({
             fieldName="employmentDesignation"
             editField={editField}
             setEditField={setEditField}
+            updateTracker={updateTracker}
             register={register}
             errors={errors}
             saveField={saveField}
@@ -177,6 +209,9 @@ export default function CollapseTable({
               className={`form-control form-control-sm ${
                 errors.employmentDesignation ? "is-invalid" : ""
               }`}
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
             >
               <option />
               {Roles.collections.map((role) => (
@@ -189,6 +224,7 @@ export default function CollapseTable({
             fieldName="employmentPc"
             editField={editField}
             setEditField={setEditField}
+            updateTracker={updateTracker}
             register={register}
             errors={errors}
             saveField={saveField}
@@ -206,6 +242,9 @@ export default function CollapseTable({
               className={`form-control form-control-sm ${
                 errors.employmentPc ? "is-invalid" : ""
               }`}
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
             >
               <option value={1}>Bi Monthly</option>
               <option value={2}>Monthly</option>
@@ -221,6 +260,7 @@ export default function CollapseTable({
             label="Monthly Rate"
             fieldName="rateMonthly"
             editField={editField}
+            updateTracker={updateTracker}
             setEditField={setEditField}
             register={register}
             errors={errors}
@@ -230,6 +270,9 @@ export default function CollapseTable({
           >
             <input
               type="number"
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
               {...register("rateMonthly")}
               className={`form-control form-control-sm ${
                 errors.rateMonthly ? "is-invalid" : ""
@@ -241,6 +284,7 @@ export default function CollapseTable({
             label="COLA"
             fieldName="rateCola"
             editField={editField}
+            updateTracker={updateTracker}
             setEditField={setEditField}
             register={register}
             errors={errors}
@@ -250,6 +294,9 @@ export default function CollapseTable({
           >
             <input
               type="number"
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
               {...register("rateCola")}
               className={`form-control form-control-sm ${
                 errors.rateCola ? "is-invalid" : ""
@@ -260,6 +307,7 @@ export default function CollapseTable({
           <EditableField
             label="Daily Rate"
             fieldName="rateDaily"
+            updateTracker={updateTracker}
             editField={editField}
             setEditField={setEditField}
             register={register}
@@ -270,6 +318,9 @@ export default function CollapseTable({
           >
             <input
               type="number"
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
               {...register("rateDaily")}
               className={`form-control form-control-sm ${
                 errors.rateDaily ? "is-invalid" : ""
@@ -283,6 +334,7 @@ export default function CollapseTable({
           <hr />
           <EditableField
             label="PH"
+            updateTracker={updateTracker}
             fieldName="contributionPh"
             editField={editField}
             setEditField={setEditField}
@@ -294,6 +346,9 @@ export default function CollapseTable({
           >
             <input
               type="number"
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
               {...register("contributionPh")}
               className={`form-control form-control-sm ${
                 errors.contributionPh ? "is-invalid" : ""
@@ -308,12 +363,16 @@ export default function CollapseTable({
             setEditField={setEditField}
             register={register}
             errors={errors}
+            updateTracker={updateTracker}
             saveField={saveField}
             handleCancel={handleCancel}
             value={contribution?.pi}
           >
             <input
               type="number"
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
               {...register("contributionPi")}
               className={`form-control form-control-sm ${
                 errors.contributionPi ? "is-invalid" : ""
@@ -327,6 +386,7 @@ export default function CollapseTable({
             editField={editField}
             setEditField={setEditField}
             register={register}
+            updateTracker={updateTracker}
             errors={errors}
             saveField={saveField}
             handleCancel={handleCancel}
@@ -334,6 +394,9 @@ export default function CollapseTable({
           >
             <input
               type="number"
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
               {...register("contributionSss")}
               className={`form-control form-control-sm ${
                 errors.contributionSss ? "is-invalid" : ""
@@ -372,16 +435,22 @@ export default function CollapseTable({
           ) : (
             <>
               <p className="text-center">No access</p>
-              <p className="text-center">
-                <span
-                  className="text-primary font-weight-bold"
-                  style={{ cursor: "pointer" }}
-                  onClick={handleOnHotSeat}
-                >
-                  Click here
-                </span>{" "}
-                to grant access
-              </p>
+              {hasContract ? (
+                <p className="text-center">
+                  <span
+                    className="text-primary font-weight-bold mr-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={handleOnHotSeat}
+                  >
+                    Click here
+                  </span>
+                  to grant access
+                </p>
+              ) : (
+                <small className="text-warning">
+                  A contract must be set first before you can add access.
+                </small>
+              )}
             </>
           )}
         </MDBCol>

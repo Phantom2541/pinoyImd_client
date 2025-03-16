@@ -22,6 +22,7 @@ export default function Routes() {
     if (!Array.isArray(platforms)) return "";
     var basePath = "";
     const sideBars = [];
+    console.log("runing");
 
     platforms.forEach((element, index) => {
       const { children, component, path = "" } = element;
@@ -61,11 +62,12 @@ export default function Routes() {
     });
     return sideBars;
   };
+  const { platform = "" } = activePlatform;
+
   return (
     <Switch>
-      {!activePlatform?.platform && (
-        <Route exact path={`/dashboard`} component={UnsetApply} />
-      )}
+      {!platform && <Route exact path={`/dashboard`} component={UnsetApply} />}
+
       {renderSidebars()}
 
       {/* {Sidebars[activePlatform?.platform]?.map(

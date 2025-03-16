@@ -21,7 +21,7 @@ export default function MenuCollapse({ staffs, page }) {
   const { maxPage, token } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
 
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     dispatch(
       UPDATE({
         data: {
@@ -74,7 +74,9 @@ export default function MenuCollapse({ staffs, page }) {
                   : "bg-white"
               } ${activeId === index ? "custom-header" : ""}`}
               style={{ borderRadius: "50%" }}
-              onClick={() => setActiveId(prev => (prev === index ? -1 : index))}
+              onClick={() =>
+                setActiveId((prev) => (prev === index ? -1 : index))
+              }
             >
               <label className="d-flex justify-content-between">
                 {/* {index + 1}. {user && `${fullName(user?.fullName)}`}
