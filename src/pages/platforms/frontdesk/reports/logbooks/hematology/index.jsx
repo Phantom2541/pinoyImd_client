@@ -108,7 +108,14 @@ export default function Chems() {
         <MDBCardBody className="pb-0">
           {!isLoading ? (
             <MDBTable className="responsive" bordered>
-              <thead>
+              <thead
+                style={{
+                  position: "sticky",
+                  top: 0,
+                  background: "white",
+                  zIndex: 999,
+                }}
+              >
                 <tr>
                   <th>#</th>
                   <th>Name</th>
