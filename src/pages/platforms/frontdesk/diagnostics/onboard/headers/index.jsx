@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { MDBView } from "mdbreact";
 
-import Search from "./search";
 import Sourcing from "./sourcing.jsx";
 import Status from "./status.jsx";
 
@@ -10,15 +10,9 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator.js";
 
-export default function Header({
-  length,
-  view,
-  setView,
-  searchKey,
-  setSearchKey,
-  didSearch,
-}) {
+export default function Header({ view, setView }) {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ taskGenerator }) => taskGenerator),
     [status, setStatus] = useState("All"),
     dispatch = useDispatch();
 
@@ -41,23 +35,23 @@ export default function Header({
     };
   }, [token, dispatch, activePlatform, auth]);
 
-  useEffect(() => {
-    console.log("status", status);
-  }, [status]);
-
   return (
-    <div className="d-flex justify-content-between align-items-center">
-      <div className="d-flex align-items-center">
+    <MDBView
+      cascade
+      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+    >
+      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+        <span className="white-text mx-3 text-nowrap mt-0">
+          Total - {collections.length}
+        </span>
+      </div>
+
+      <div className="text-right d-flex items-center">
         <span className="mr-3 font-weight-bold">Status:</span>
         <Status setStatus={setStatus} />
         <span className="mx-3 font-weight-bold">Sources:</span>
-        <Sourcing onChange={setView} length={length} view={view} />
+        <Sourcing onChange={setView} view={view} />
       </div>
-      <Search
-        searchKey={searchKey}
-        setSearchKey={setSearchKey}
-        didSearch={didSearch}
-      />
-    </div>
+    </MDBView>
   );
 }

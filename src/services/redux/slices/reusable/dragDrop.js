@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../utilities";
+import { createSlice } from "@reduxjs/toolkit";
 
-const name = "results/preferences";
+const url = "results/preferences";
 const DEFAULT_ROLES = [
   { name: "Admin", _id: "1" },
   { name: "User", _id: "2" },
@@ -18,7 +17,7 @@ const initialState = {
 };
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     SetCollections: (state, action) => {

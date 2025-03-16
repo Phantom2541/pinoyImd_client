@@ -8,6 +8,7 @@ import Pagination from "../../../../../components/pagination";
 import TableRowCount from "../../../../../components/pagination/rows";
 import { SetPAGE } from "../../../../../services/redux/slices/assets/providers";
 import TableLoading from "../../../../../components/tableLoading";
+import Modal from "./modal";
 const Insources = () => {
   const { totalPages, page, isLoading } = useSelector(
       ({ providers }) => providers
@@ -23,7 +24,7 @@ const Insources = () => {
         <MDBCardBody>
           {isLoading ? <TableLoading /> : <Collapsable />}
         </MDBCardBody>
-
+        <Modal />
         <div className="mb-auto d-flex justify-content-between align-items-center px-4">
           <TableRowCount disablePageSelect={false} />
           <Pagination

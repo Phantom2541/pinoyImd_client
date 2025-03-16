@@ -17,13 +17,58 @@ import UnsetApply from "./platforms/guest/apply";
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
 
+  const renderSidebars = () => {
+    const platforms = Sidebars[activePlatform?.platform];
+    if (!Array.isArray(platforms)) return "";
+    var basePath = "";
+    const sideBars = [];
+
+    platforms.forEach((element, index) => {
+      const { children, component, path = "" } = element;
+      basePath = path;
+
+      const renderChildren = (c, parentPath = "") => {
+        if (!c.children) return;
+        c.children.forEach((child, index) => {
+          const childBasePath = `${parentPath}${child.path}`;
+
+          sideBars.push(
+            <Route
+              key={`route-${index}-${childBasePath}`}
+              exact
+              path={childBasePath}
+              component={child.component || NotExisting}
+            />
+          );
+
+          renderChildren(child, childBasePath);
+        });
+      };
+
+      if (children) {
+        renderChildren(element, path);
+      }
+      if (!children) {
+        sideBars.push(
+          <Route
+            key={`route-${index}-${path}`}
+            exact
+            path={basePath}
+            component={component || NotExisting}
+          />
+        );
+      }
+    });
+    return sideBars;
+  };
   return (
     <Switch>
       {!activePlatform?.platform && (
         <Route exact path={`/dashboard`} component={UnsetApply} />
       )}
+      {renderSidebars()}
 
-      {Sidebars[activePlatform?.platform]?.map(
+      {/* {Sidebars[activePlatform?.platform]?.map(
         ({ path, component, children }, index) => {
           if (children)
             return children.map((child, cIndex) => (
@@ -44,7 +89,7 @@ export default function Routes() {
             />
           );
         }
-      )}
+      )} */}
 
       <Route path="/profile" exact component={Profile} />
 

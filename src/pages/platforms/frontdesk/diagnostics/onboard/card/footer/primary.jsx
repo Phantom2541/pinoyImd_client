@@ -3,20 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
 import { axioKit, harvestTask } from "../../../../../../../services/utilities";
-import { generateClaimStub } from "../../../../../../../services/utilities";
 import { REFORM } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
-const PrimaryFooter = ({ sale, setEdit }) => {
+const PrimaryFooter = ({ deal, setEdit }) => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  const generateTask = async (sale) => {
-    localStorage.setItem("claimStub", JSON.stringify(sale));
-    const { _id, cart, customerId, ssx } = sale;
-    let RequestForm = { customer: sale?.customerId };
+  const generateTask = async () => {
+    const { _id, cart, customerId, ssx } = deal;
+    let RequestForm = { customer: deal?.customerId };
     const task = harvestTask(cart);
-    const forms = Object.keys(task).length;
-
+      localStorage.setItem("task", JSON.stringify(task));
+      localStorage.setItem("ssx", JSON.stringify(ssx));
+    
+    const forms = Object.keys(task);
     for (const key in task) {
       const lowercaseKey = key.toLowerCase();
       RequestForm[lowercaseKey] = task[key];
@@ -90,14 +90,14 @@ const PrimaryFooter = ({ sale, setEdit }) => {
 
       localStorage.setItem("RequestForm", JSON.stringify(RequestForm));
     }
-
+    
     // working request form but not showing anything
     window.open(
       "/printout/request/form",
       "Request Form",
-      "top=100px,left=100px,width=1050px,height=750px"
+      "top=100px,left=100px,width=1050px,height=750px" 
     );
-
+    
     dispatch(
       REFORM({
         token,
@@ -105,18 +105,23 @@ const PrimaryFooter = ({ sale, setEdit }) => {
           _id,
           ssx,
           lol: auth._id,
-          renderedBy: auth._id,
-          renderedAt: new Date().toLocaleString(),
+          rendered: [
+            {
+              department: "LAB",
+              renderedBy: auth._id,
+              renderedAt: new Date().toLocaleString(),
+            },
+          ],
           forms,
         },
       })
     );
   };
 
-  const preAnalytical = async (sale) => {
-    console.log("preAnalytical", sale);
-    
-  }
+  const preAnalytical = async (deal) => {
+    console.log("preAnalytical", deal);
+    console.log("undone task", "preAnalytical");
+  };
 
   return (
     <MDBBtnGroup className="sales-card-footer w-100">
@@ -132,18 +137,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       </MDBBtn>
       <MDBBtn
         type="button"
-        onClick={() => generateClaimStub(sale)}
-        title="View Claim Stub"
-        className="m-0 "
-        size="sm"
-        color="primary"
-      >
-        <MDBIcon icon="receipt" />
-      </MDBBtn>
-
-       <MDBBtn
-        type="button"
-        onClick={() => preAnalytical(sale)}
+        onClick={() => preAnalytical(deal)}
         title="Pre-Analytical Supply Dispense"
         className="m-0 "
         size="sm"
@@ -153,7 +147,7 @@ const PrimaryFooter = ({ sale, setEdit }) => {
       </MDBBtn>
       <MDBBtn
         type="button"
-        onClick={() => generateTask(sale)}
+        onClick={() => generateTask()}
         className="m-0 "
         title="Generate Task"
         size="sm"

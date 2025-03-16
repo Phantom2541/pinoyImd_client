@@ -4,7 +4,7 @@ import { useLocation, useHistory } from "react-router-dom";
 import {
   BROWSE,
   RESET,
-} from "../../../../../../services/redux/slices/results/laboratory/chemistry";
+} from "./../../../../../../services/redux/slices/diagnostics/laboratory/chemistry.js";
 import { fullName, getAge } from "../../../../../../services/utilities";
 import {
   MDBCard,

@@ -1,58 +1,40 @@
 import React from "react";
-// import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-// import {
-//   DESTROY,
-//   SetEDIT,
-// } from "../../../../../../services/redux/slices/liability/assurances";
-import Swal from "sweetalert2";
-// import { Services } from "../../../../../../services/fakeDb";
 
-const Tables = () => {
-  // const { token } = useSelector(({ auth }) => auth),
-  //   { paginated } = useSelector(({ assurances }) => assurances),
-  //   dispatch = useDispatch();
+const Body = () => {
+  const { filtered, activePage, maxPage } = useSelector(
+    ({ services }) => services
+  );
 
-  const handleDelete = (_id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // dispatch(DESTROY({ token, data: { _id } }));
-        alert(_id);
-      }
-    });
-  };
+  /**
+   * Pagination: Calculate the start and end index for the current page
+   */
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
   return (
     <MDBTable responsive hover bordered>
       <thead>
         <tr>
           <th>#</th>
-          <th>Name</th>
-          <th>aka</th>
-          <th>Action</th>
+          <th>Service</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Tom</td>
-          <td>Kuya TOM </td>
-          <td>
-            <button>Edit</button>
-            <button onClick={() => handleDelete(1)}>Delete</button>
-          </td>
-        </tr>
+        {paginatedData?.map((service, index) => (
+          <tr>
+            <td key={index}>{index + 1}</td>
+            <td>{service.name}</td>
+            <td>{service.Description} </td>
+          </tr>
+        ))}
       </tbody>
     </MDBTable>
   );
 };
 
-export default Tables;
+export default Body;

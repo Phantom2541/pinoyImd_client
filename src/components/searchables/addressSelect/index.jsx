@@ -15,7 +15,9 @@ export default function AddressSelect({
       case "region":
         _address.region = value;
         _address.province = Philippines.initialProvince(value);
-        _address.city = Philippines.initialCity(_address.province);
+        const city = Philippines.initialCity(_address.province);
+        _address.city = city;
+
         break;
 
       case "province":
@@ -47,7 +49,7 @@ export default function AddressSelect({
           ))}
         </select>
       </div>
-      <div className="patient-form">
+      <div className="patient-form mt-3">
         <span>Province</span>
         <select
           value={address.province}
@@ -60,7 +62,7 @@ export default function AddressSelect({
           ))}
         </select>
       </div>
-      <div className="patient-form">
+      <div className="patient-form  mt-3">
         <span>City/Municipality</span>
         <select
           value={address?.city}
@@ -73,7 +75,7 @@ export default function AddressSelect({
           ))}
         </select>
       </div>
-      <div className="patient-form">
+      <div className="patient-form  mt-3">
         <span>Barangay</span>
         <select
           value={address?.barangay}

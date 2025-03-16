@@ -7,8 +7,10 @@ import Tagging from "./body/tagging";
 import Show from "./body/show";
 
 export default function Card({ item, index }) {
+  console.log("item", item);
+  
   const { collections: sources } = useSelector(({ providers }) => providers),
-    [sale, setSale] = useState({}),
+    [deal, setDeal] = useState({}),
     [edit, setEdit] = useState(false);
   const {
       customerId = {},
@@ -16,27 +18,22 @@ export default function Card({ item, index }) {
       renderedAt,
       physicianId = {},
       source: forwardedBy = {},
-      cart,
       _id,
-    } = sale,
+    } = deal,
     { fullName: fullname = {} } = customerId,
     source = sources.find(({ vendors }) => vendors?._id === forwardedBy?._id);
 
   useEffect(() => {
-    setSale(item);
+    setDeal(item);
   }, [item]);
-
+  console.log("deal", item);
+  
   const handlePin = () => {
     return (
-      <span className={`sales-card-num ${renderedAt && "rendered"}`}>
-        {sale.page}
+      <span className={`sales-card-num ${item.rendered?.length > 0 && "rendered"}`}>
+        {deal.page} {index + 1}
       </span>
     );
-    // return (
-    //   <span className={`sales-card-num ${true && "deleted"}`}>
-    //     <MDBIcon icon="trash-alt" />
-    //   </span>
-    // );
   };
 
   return (
@@ -46,11 +43,13 @@ export default function Card({ item, index }) {
         <p className="line-clamp">
           {fullname.lname},
           <br />
-          <small>{fullname.fname} {fullname.mname}</small>
+          <small>
+            {fullname.fname} {fullname.mname}
+          </small>
         </p>
         <div className="sales-card-body">
           <div className="d-flex">
-            {cart?.map((menu) => (
+            {item?.cart?.map((menu) => (
               <MDBBadge key={menu.referenceId} className="mx-1">
                 {menu?.abbreviation}
               </MDBBadge>
@@ -82,7 +81,7 @@ export default function Card({ item, index }) {
         {edit ? (
           <SecondaryFooter setEdit={setEdit} />
         ) : (
-          <PrimaryFooter sale={sale} setEdit={setEdit} />
+          <PrimaryFooter deal={deal} setEdit={setEdit} />
         )}
       </div>
     </>

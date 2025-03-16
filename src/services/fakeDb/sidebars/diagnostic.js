@@ -2,7 +2,7 @@ const diagnostic = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/clinical/bulletin",
   },
   {
     name: "POS", // Transactions || Point Of Sales

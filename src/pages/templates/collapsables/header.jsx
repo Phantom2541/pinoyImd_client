@@ -23,7 +23,6 @@ const Header = () => {
     setComponent(value);
 
     const template = Templates.getComponentIndex(value);
-
     dispatch(SetByTEMPLATES(template));
   };
 

@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 const choices = ["All", "Inhouse", "Insource", "Outsource"];
 
-const Sourcing = ({ onChange, length, view }) => {
+const Sourcing = ({ onChange, view }) => {
   const { isLoading } = useSelector(({ sales }) => sales);
 
   const handleChange = (value) => onChange(value);
@@ -27,10 +27,6 @@ const Sourcing = ({ onChange, length, view }) => {
           );
         })}
       </select>
-      <div className="d-flex justify-content-center align-items-center ml-3 fw-bold">
-        <span>Total - </span>
-        <h4 className="mb-0 ml-3"> {length}</h4>
-      </div>
     </div>
   );
 };

@@ -6,7 +6,6 @@ const Services = ({ template, service, setService }) => {
 
   const handleChange = (e) => {
     e.preventDefault();
-    console.log(Number(e.target.value));
 
     setService(Number(e.target.value));
   };

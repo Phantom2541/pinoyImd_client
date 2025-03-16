@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import "./style.css";
 import { MDBIcon } from "mdbreact";
 
 export default function Card({ hasDone, name }) {

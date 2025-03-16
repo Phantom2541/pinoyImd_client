@@ -1,31 +1,24 @@
 import React from "react";
+import { Services } from "../../../../services/fakeDb";
 
-const ChemistryTests = [
-  "Blood Urea Nitrogen (BUN)",
-  "Creatinine",
-  "Glucose",
-  "Cholesterol",
-  "Triglycerides",
-  "HDL",
-  "LDL",
-  "Uric Acid",
-  "SGOT (AST)",
-  "SGPT (ALT)",
-  "Albumin",
-  "Globulin",
-  "A/G Ratio",
-];
+const Chemistry = ({ data = {} }) => {
+  console.log("data:", data);
 
-const Chemistry = () => {
+  // Convert object keys to an array (assuming keys are test names)
+  const testList = Object.keys(data);
+
+  // If no tests are provided, return nothing
+  if (!testList.length) return null;
+
   return (
     <div style={{ fontSize: "12px", fontFamily: "Helvetica, sans-serif" }}>
       <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Chemistry</div>
-      {ChemistryTests.map((test, index) => (
+      {testList.map((test, index) => (
         <div
           key={index}
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <span>{test}</span>
+          <span>{Services.find(test)?.abbreviation}</span>
           <span
             style={{ borderBottom: "1px dotted black", minWidth: "50px" }}
           ></span>

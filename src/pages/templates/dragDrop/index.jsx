@@ -10,6 +10,7 @@ import {
 const DragDrop = () => {
   const { clusters, collections } = useSelector(({ dragDrop }) => dragDrop),
     [hasDrag, setHasDrag] = useState(false),
+    [disabled, setDisabled] = useState(false),
     [removeID, setRemoveID] = useState(-1),
     [removeBy, setRemoveBy] = useState(""),
     [addID, setAddID] = useState(-1),
@@ -30,6 +31,7 @@ const DragDrop = () => {
     setHasDrag(true);
     setRemoveID(index);
     setRemoveBy(title);
+    setDisabled(true);
     setTimeout(() => {
       const _collections = [...collections];
       setRemoveID(-1);
@@ -92,12 +94,15 @@ const DragDrop = () => {
         const _collections = [...collections];
         _collections.splice(removeIndex, 0, role);
         dispatch(setter(_collections));
+        setDisabled(false);
       }, 200);
     } else {
       dispatch(setter([role, ...collections]));
     }
     setAddID(role._id);
   };
+
+  console.log("isDisabled:", disabled);
 
   return (
     <MDBAnimation type="bounceInDown">
@@ -109,6 +114,7 @@ const DragDrop = () => {
               addID={addID}
               removeID={removeID}
               removeBy={removeBy}
+              disabled={disabled}
               hasDrag={hasDrag}
               title="List"
               tableName="List"
@@ -117,6 +123,7 @@ const DragDrop = () => {
             />
             <List
               collections={clusters}
+              disabled={disabled}
               removeID={removeID}
               removeBy={removeBy}
               addID={addID}

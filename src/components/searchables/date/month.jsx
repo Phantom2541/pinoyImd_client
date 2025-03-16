@@ -18,7 +18,7 @@ const Month = ({ month, setMonth }) => {
   return (
     <select
       className="browser-default custom-select"
-      style={{ width: "100px", marginRight: "10px" }}
+      style={{ width: "100px", marginRight: "20px" }}
       value={month}
       onChange={(event) => setMonth(parseInt(event.target.value))} // Extract the value properly
     >

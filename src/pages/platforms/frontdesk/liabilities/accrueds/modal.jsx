@@ -17,7 +17,7 @@ import { SAVE } from "../../../../../services/redux/slices/liability/liabilities
 import { capitalize, fullName } from "../../../../../services/utilities";
 import { GETPATIENTS } from "../../../../../services/redux/slices/assets/persons/users";
 import { OUTSOURCE } from "../../../../../services/redux/slices/assets/providers";
-import { Liabilities } from "../../../../../services/fakeDb";
+import { Statements } from "../../../../../services/fakeDb";
 
 // declare your expected items
 const _form = {
@@ -155,13 +155,11 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               className="form-control"
             >
               <option></option>
-              {Liabilities?.whereCategory("expenses").map(
-                (statement, index) => (
-                  <option key={`statement-${index}`} value={statement.id}>
-                    {statement?.title}
-                  </option>
-                )
-              )}
+              {Statements?.whereCategory("expenses").map((statement, index) => (
+                <option key={`statement-${index}`} value={statement.id}>
+                  {statement?.title}
+                </option>
+              ))}
             </select>
           </>
           <MDBRow>

@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "assets/providers";
+const url = "assets/providers";
 
 const initialState = {
   collections: [],
+  // enrolled: [],
   searchResults: [],
   isSuccess: false,
   isLoading: false,
@@ -13,15 +14,41 @@ const initialState = {
   totalPages: 0,
   page: 0,
   showModal: false,
+  showCompanyModal: false,
   willCreate: false,
   maxPage: 5,
 };
-
-export const OUTSOURCE = createAsyncThunk(
-  `${name}/browse`,
+export const BROWSE = createAsyncThunk(
+  `${url}/browse`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/browse`, token, key);
+      return await axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
+export const GETENROLLED = createAsyncThunk(
+  `${url}/enrollements`,
+  async ({ key, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/enrollements`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
+export const OUTSOURCE = createAsyncThunk(
+  `${url}/browse`,
+  async ({ key, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -31,10 +58,10 @@ export const OUTSOURCE = createAsyncThunk(
 );
 
 export const INSOURCE = createAsyncThunk(
-  `${name}/insource`,
+  `${url}/insource`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/insource`, token, key);
+      return await axioKit.universal(`${url}/insource`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -44,10 +71,10 @@ export const INSOURCE = createAsyncThunk(
 );
 
 export const TIEUPS = createAsyncThunk(
-  `${name}/tieups`,
+  `${url}/tieups`,
   async ({ token, key }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${name}/tieups`, token, key);
+      return await axioKit.universal(`${url}/tieups`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -56,22 +83,9 @@ export const TIEUPS = createAsyncThunk(
   }
 );
 
-export const LIST = createAsyncThunk(
-  `${name}/list`,
-  async (token, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${name}/list`, token);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
-export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
+export const LIST = createAsyncThunk(`${url}/list`, async (token, thunkAPI) => {
   try {
-    return await axioKit.save(name, form.data, form.token);
+    return await axioKit.universal(`${url}/list`, token);
   } catch (error) {
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || error.message || error.toString()
@@ -79,11 +93,33 @@ export const SAVE = createAsyncThunk(`${name}/save`, async (form, thunkAPI) => {
   }
 });
 
+export const SAVE = createAsyncThunk(`${url}/save`, async (form, thunkAPI) => {
+  try {
+    return await axioKit.save(url, form.data, form.token);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || error.message || error.toString()
+    );
+  }
+});
+
+export const REGISTER_GHOST_COMPANY = createAsyncThunk(
+  `${url}/REGISTER_GHOST_COMPANY`,
+  async ({ token, data }, thunkAPI) => {
+    try {
+      return await axioKit.save(url, data, token, "register_ghost_company");
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
 export const UPDATE = createAsyncThunk(
-  `${name}/update`,
+  `${url}/update`,
   async (form, thunkAPI) => {
     try {
-      return await axioKit.update(name, form.data, form.token);
+      return await axioKit.update(url, form.data, form.token);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -93,10 +129,10 @@ export const UPDATE = createAsyncThunk(
 );
 
 export const DESTROY = createAsyncThunk(
-  `${name}/destroy`,
+  `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.destroy(name, data, token);
+      return axioKit.destroy(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -111,9 +147,20 @@ export const DESTROY = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
+    ToggleDidSearch: (state, { payload }) => {
+      console.log("toggle didSearch");
+      state.didSearch = payload;
+    },
+    SetSOURCE: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+    },
+    ToggleModal: (state) => {
+      state.showCompanyModal = !state.showCompanyModal;
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -179,6 +226,21 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      .addCase(GETENROLLED.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(GETENROLLED.fulfilled, (state, { payload }) => {
+        const { payload: data } = payload;
+        state.enrolled = data;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(GETENROLLED.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
+
       .addCase(OUTSOURCE.pending, (state) => {
         state.isLoading = true;
       })
@@ -194,6 +256,7 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
+
       .addCase(INSOURCE.pending, (state) => {
         state.isLoading = true;
       })
@@ -236,6 +299,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
+      .addCase(REGISTER_GHOST_COMPANY.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(REGISTER_GHOST_COMPANY.fulfilled, (state, { payload }) => {
+        const { payload: data } = payload;
+        const index = state.collections.findIndex(
+          ({ _id }) => data._id === _id
+        );
+
+        state.collections[index] = data;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(REGISTER_GHOST_COMPANY.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
       })
@@ -287,6 +367,9 @@ export const {
   SetPAGE,
   SETSOURCES,
   SetSEARCHRESULTS,
+  ToggleModal,
+  ToggleDidSearch,
+  SetSOURCE,
   SetBRANCHES,
   RESET,
 } = reduxSlice.actions;

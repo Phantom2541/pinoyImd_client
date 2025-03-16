@@ -12,6 +12,7 @@ import { ENDPOINT, PresetUser } from "../../../../services/utilities";
 
 export default function CompanyCard({
   company = {},
+  _key = "",
   isFavorite = false,
   setFavorite = () => {},
   placeholder = false,
@@ -30,7 +31,7 @@ export default function CompanyCard({
   };
 
   return (
-    <MDBCard>
+    <MDBCard key={_key}>
       <MDBCardImage
         position="top"
         alt={name}
@@ -61,7 +62,7 @@ export default function CompanyCard({
             Apply
           </MDBBtn>
           <MDBBtn
-            onClick={toggleBell}
+            // onClick={toggleBell}
             color={isFavorite ? "primary" : "grey"}
             size="sm"
             outline

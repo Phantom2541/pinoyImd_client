@@ -1,36 +1,38 @@
 import React from "react";
-import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
-// import {
-//   FecalColor,
-//   Consistency,
-//   MicroscopicInRange,
-// } from "../../../../services/fakeDb";
 
-const Fecalysis = ({ fecalysis }) => {
-  const tableRows = [
-    ["color", "sg", "ph"],
-    ["sugar", "protein", "leucocyte", "nitrate", "bacteria", "blood"],
-    ["wbc", "rbc", "ec", "au", "mt", "bact"],
-  ].map((item, index) => (
-    <tr key={index}>
-      <td>{item.join(", ")}</td>
-      <td
-        style={{
-          fontWeight: index === tableRows.length - 1 ? "bold" : "normal",
-        }}
-      ></td>
-    </tr>
-  ));
+const FecalysisData = [
+  ["Color", "Consistency", "Mucus"],
+  ["Occult Blood", "Fat Globules", "Starch Granules"],
+  ["Ova and Parasites", "Cysts", "Trophozoites"],
+  ["White Blood Cells", "Red Blood Cells", "Yeast Cells", "Undigested Food"],
+];
 
+const Fecalysis = () => {
   return (
-    <MDBTable>
-      <MDBTableHead>
-        <tr>
-          <th>Urinalysis</th>
-        </tr>
-      </MDBTableHead>
-      <MDBTableBody>{tableRows}</MDBTableBody>
-    </MDBTable>
+    <div style={{ fontSize: "12px", fontFamily: "Helvetica, sans-serif" }}>
+      <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Fecalysis</div>
+      {FecalysisData.map((group, index) => (
+        <div key={index} style={{ marginBottom: "5px" }}>
+          {group.map((test, subindex) => (
+            <div
+              key={subindex}
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <span>{test}</span>
+              <span
+                style={{ borderBottom: "1px dotted black", minWidth: "50px" }}
+              ></span>
+            </div>
+          ))}
+          {/* Add a separator except for the last group */}
+          {index !== FecalysisData.length - 1 && (
+            <div
+              style={{ borderTop: "1px solid black", margin: "5px 0" }}
+            ></div>
+          )}
+        </div>
+      ))}
+    </div>
   );
 };
 

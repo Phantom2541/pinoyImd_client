@@ -1,75 +1,25 @@
-import React, { useState } from "react";
-import {
-  MDBBadge,
-  MDBCard,
-  MDBCardBody,
-  MDBCollapse,
-  MDBCollapseHeader,
-  MDBContainer,
-  MDBIcon,
-} from "mdbreact";
+import React from "react";
 import { useSelector } from "react-redux";
-import {
-  capitalize,
-  fullName,
-  getAge,
-  getGenderIcon,
-  handlePagination,
-  sourceColor,
-} from "../../../../../../services/utilities";
-import CollapseTable from "./table";
-import { Categories } from "../../../../../../services/fakeDb";
-import { useHistory } from "react-router-dom";
+import { MDBCard, MDBCardBody, MDBCollapse, MDBContainer } from "mdbreact";
+import { handlePagination } from "../../../../../../services/utilities";
+import Body from "./body";
+import Header from "./header";
 
-export default function TasksCollapse({ page }) {
-  const [activeId, setActiveId] = useState(-1),
-    { maxPage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ deals }) => deals),
-    history = useHistory();
+export default function DealCollapse() {
+  const { maxPage } = useSelector(({ auth }) => auth),
+    { filtered, activePage, activeCOLAPSE } = useSelector(
+      ({ validator }) => validator
+    );
 
   return (
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
-      {handlePagination(collections, page, maxPage).map((menu, index) => {
-        const { customerId, category, source, _id = "" } = menu,
-          categoryName =
-            category === "walkin"
-              ? "Walkin"
-              : Categories.find(({ abbr }) => abbr === category)?.name;
-
+      {handlePagination(filtered, activePage, maxPage).map((deal, index) => {
         return (
-          <MDBCard key={_id}>
-            <MDBCollapseHeader>
-              {index + 1}. {getGenderIcon(customerId?.isMale)}{" "}
-              {fullName(customerId?.fullName)} |
-              <span style={{ color: "blue" }}>{getAge(customerId?.dob)}</span>
-              <MDBBadge color={sourceColor(categoryName)} className="mx-2">
-                {categoryName}
-              </MDBBadge>
-              <MDBBadge
-                onClick={() =>
-                  history.push(
-                    `/transactions/reports?patient=${customerId?._id}`
-                  )
-                }
-                color="info"
-                className="px-2"
-              >
-                <MDBIcon icon="eye" />
-              </MDBBadge>
-              {source && (
-                <MDBBadge color="warning">{capitalize(source?.name)}</MDBBadge>
-              )}
-              <i
-                onClick={() =>
-                  setActiveId((prev) => (prev === index ? -1 : index))
-                }
-                style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
-                className="fa fa-angle-down transition-all"
-              />
-            </MDBCollapseHeader>
-            <MDBCollapse id={`collapse-${index}`} isOpen={index === activeId}>
+          <MDBCard key={`deal-${index}`}>
+            <Header deal={deal} index={index} />
+            <MDBCollapse id={`collapse-${index}`} isOpen={index === activeCOLAPSE}>
               <MDBCardBody className="pt-0">
-                <CollapseTable menu={menu} />
+                <Body forms={deal.forms} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>
