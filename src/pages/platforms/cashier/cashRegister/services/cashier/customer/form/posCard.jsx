@@ -71,7 +71,7 @@ export default function PosCard() {
     }
   }, [token, dispatch, activePlatform]);
   console.log("poscustomer", customer);
-  
+
   const {
       dob,
       _id,
@@ -213,8 +213,7 @@ export default function PosCard() {
             <MDBCol>
               <div className="pos-card-details">
                 <span>Address:</span>
-                {console.log("address", address)}
-                
+
                 <p>{fullAddress(address)}</p>
               </div>
             </MDBCol>
