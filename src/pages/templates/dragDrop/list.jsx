@@ -16,6 +16,8 @@ const List = ({
   addID,
   handleDragStart,
   removeID,
+  hasDrag,
+  disabled = false,
   tableName = "",
   removeBy = "",
   title = "Selected Roles",
@@ -55,13 +57,13 @@ const List = ({
                   }
                 >
                   <MDBListGroupItem
-                    draggable
+                    draggable={!disabled}
                     onDragEnd={handleDragEnd}
                     onDragStart={(event) => {
                       handleDragStart(event, role, index, tableName);
                     }}
                     hover
-                    className="cursor-pointer"
+                    className={hasDrag ? "curor-grab" : "cursor-pointer"}
                   >
                     {role.name}
                   </MDBListGroupItem>

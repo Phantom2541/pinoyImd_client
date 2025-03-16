@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../../utilities";
 
-const name = "commerce/pos/services/deals";
+const url = "commerce/pos/services/deals";
 
 const initialState = {
   collections: [],
-  catalogs: [],
   transaction: { _id: "default" },
   totalPatient: 0,
+  filtered: [],
   // this is used for ledger
   census: {
     daily: {},
@@ -18,35 +18,36 @@ const initialState = {
     patients: 0,
     isEmpty: true,
   },
+  showModal: false,
+  willCreate: false,
+  totalPages: 0,
+  maxPage: 1,
+  activePage: 1,
+  selected: {},
   isSuccess: false,
   isLoading: false,
   censusLoading: false, // dedicated loader for celsus
   message: "",
 };
 
-export const BROWSE = createAsyncThunk(
-  `${name}`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${name}/browse`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
+  try {
+    return axioKit.universal(`${url}/browse`, token, key);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
 
-      return thunkAPI.rejectWithValue(message);
-    }
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 export const CASHIER = createAsyncThunk(
-  `${name}/cashier`,
+  `${url}/cashier`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/cashier`, token, key);
+      return axioKit.universal(`${url}/cashier`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -61,10 +62,10 @@ export const CASHIER = createAsyncThunk(
 );
 
 export const TRACKER = createAsyncThunk(
-  `${name}/tracker`,
+  `${url}/tracker`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/tracker`, token, key);
+      return axioKit.universal(`${url}/tracker`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -79,10 +80,10 @@ export const TRACKER = createAsyncThunk(
 );
 
 export const CENSUS = createAsyncThunk(
-  `${name}/ledger`,
+  `${url}/ledger`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/ledger`, token, key);
+      return axioKit.universal(`${url}/ledger`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -97,10 +98,10 @@ export const CENSUS = createAsyncThunk(
 );
 
 export const OLDLEDGER = createAsyncThunk(
-  `${name}/oldledger`,
+  `${url}/oldledger`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/oldledger`, token, key);
+      return axioKit.universal(`${url}/oldledger`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -115,11 +116,11 @@ export const OLDLEDGER = createAsyncThunk(
 );
 
 export const YEARLY = createAsyncThunk(
-  `${name}/yearly`,
+  `${url}/yearly`,
   ({ token, branchId, year }, thunkAPI) => {
     //console.log("branchId", branchId);
     try {
-      return axioKit.universal(`${name}/yearly`, token, {
+      return axioKit.universal(`${url}/yearly`, token, {
         branchId,
         year,
       });
@@ -136,29 +137,11 @@ export const YEARLY = createAsyncThunk(
   }
 );
 
-export const TASKS = createAsyncThunk(
-  `${name}/tasks`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${name}/tasks`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const SAVE = createAsyncThunk(
-  `${name}/save`,
+  `${url}/save`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(name, data, token);
+      return axioKit.save(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -172,18 +155,22 @@ export const SAVE = createAsyncThunk(
   }
 );
 
+/**
+ * Automatic generate URL.
+ */
 export const LABRESULT = createAsyncThunk(
-  `${name}/labresult`,
+  `${url}/results`,
   ({ token, data }, thunkAPI) => {
     try {
+      // \diagnostics\laboratory\result\miscellaneous
       return axioKit.save(
-        `results/${
+        `diagnostics/${
           data.department === "LAB"
             ? "laboratory"
             : data.department === "RAD"
             ? "radiology"
             : "clinic"
-        }/${data.form.toLowerCase()}`,
+        }/result/${data.form.toLowerCase()}`,
         data,
         token
       );
@@ -201,10 +188,10 @@ export const LABRESULT = createAsyncThunk(
 );
 
 export const UPDATE = createAsyncThunk(
-  `${name}/update`,
+  `${url}/update`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.update(name, data, token);
+      return axioKit.update(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -219,10 +206,10 @@ export const UPDATE = createAsyncThunk(
 );
 
 export const MANAGERUPDATE = createAsyncThunk(
-  `${name}/managerUpdate`,
+  `${url}/managerUpdate`,
   ({ key, token }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/managerUpdate`, token, key);
+      return axioKit.universal(`${url}/managerUpdate`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -237,9 +224,30 @@ export const MANAGERUPDATE = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
+    SetTOTAL: (state, { payload }) => {
+      state.total = payload;
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+      state.willCreate = false;
+    },
+    SetMODAL: (state) => {
+      state.showModal = !state.showModal;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
@@ -247,6 +255,13 @@ export const reduxSlice = createSlice({
       if (payload?.resetCollections) state.collections = [];
     },
   },
+  /**
+   * Handles extra actions not handled by the reducer itself.
+   *
+   * @param {Object} builder - The builder object from `createSlice`.
+   *
+   * @returns {Object} The extra reducers.
+   */
   extraReducers: (builder) => {
     builder
       .addCase(BROWSE.pending, (state) => {
@@ -406,23 +421,6 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
-      .addCase(TASKS.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(TASKS.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
-        state.isLoading = false;
-      })
-      .addCase(TASKS.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -508,6 +506,14 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const {
+  SetTOTAL,
+  SetFILTERED,
+  SetSELECTED,
+  SetMODAL,
+  SetMaxPage,
+  SetActivePAGE,
+  RESET,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit, ENDPOINT } from "../../../../utilities";
 import { Policy } from "../../../../fakeDb";
 
-const name = "auth",
+const url = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
   token = localStorage.getItem("token") || "",
   email = localStorage.getItem("email") || "",
@@ -28,7 +28,7 @@ const initialState = {
   branches: [], // list of connected branches
   access: [], // list of accessible platforms
   company: {
-    name: "Pinoy iMD",
+    url: "Pinoy iMD",
     subname: "Medical Diagnostic Center",
   },
   isCeo: false,
@@ -40,7 +40,7 @@ const initialState = {
 };
 
 export const SETACTIVEPLATFORM = createAsyncThunk(
-  `${name}/setActivePlatform`,
+  `${url}/setActivePlatform`,
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.update(`assets/persons/users`, data, token);
@@ -57,7 +57,7 @@ export const SETACTIVEPLATFORM = createAsyncThunk(
   }
 );
 export const CHANGEPASSWORD = createAsyncThunk(
-  `${name}/changePassword`,
+  `${url}/changePassword`,
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.changePassword(data, token);
@@ -75,7 +75,7 @@ export const CHANGEPASSWORD = createAsyncThunk(
 );
 
 export const LOGIN = createAsyncThunk(
-  `${name}/login`,
+  `${url}/login`,
   ({ email, password }, thunkAPI) => {
     try {
       return axioKit.login(email, password);
@@ -93,7 +93,7 @@ export const LOGIN = createAsyncThunk(
 );
 
 export const VALIDATEREFRESH = createAsyncThunk(
-  `${name}/validateRefresh`,
+  `${url}/validateRefresh`,
   (token, thunkAPI) => {
     try {
       return axioKit.validateRefresh(token);
@@ -111,7 +111,7 @@ export const VALIDATEREFRESH = createAsyncThunk(
 );
 
 export const UPDATE = createAsyncThunk(
-  `${name}/update`,
+  `${url}/update`,
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.update("assets/persons/users", data, token);
@@ -128,7 +128,7 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
-export const UPLOAD = createAsyncThunk(`${name}/upload`, (form, thunkAPI) => {
+export const UPLOAD = createAsyncThunk(`${url}/upload`, (form, thunkAPI) => {
   try {
     return axioKit.upload(form.data, form.token, (progress) => {
       thunkAPI.dispatch(
@@ -146,7 +146,7 @@ export const UPLOAD = createAsyncThunk(`${name}/upload`, (form, thunkAPI) => {
 });
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     UPLOADBAR: (state, data) => {
@@ -324,6 +324,8 @@ export const reduxSlice = createSlice({
           (branch) => branch._id === auth.activePlatform.branchId
         );
 
+        console.log(branch);
+
         const _access = access
           .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
           .map((a) => a.platform);
@@ -333,7 +335,7 @@ export const reduxSlice = createSlice({
           ...auth.activePlatform,
           branch,
           access: [..._access],
-          ...department,
+          department,
         };
 
         state.branches = branches;

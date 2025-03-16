@@ -43,7 +43,7 @@ export default function Chemistry({ task, fontSize }) {
       </thead>
       <tbody>
         {Object.entries(packages).map(([fk, value], index) => {
-          const { name, preference } = services.find(
+          const { name, preference } = services?.find(
               ({ id }) => id === Number(fk)
             ),
             nameUppercase = name.toUpperCase(),

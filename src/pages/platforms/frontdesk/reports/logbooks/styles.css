@@ -1,0 +1,6 @@
+.sticky {
+  position: sticky !important;
+  top: 55px;
+  background: white;
+  zindex: 9999 !important;
+}

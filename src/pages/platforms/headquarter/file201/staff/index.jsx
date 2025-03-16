@@ -17,8 +17,8 @@ import TableRowCount from "../../../../../components/pagination/rows";
 
 export default function Staffs() {
   const [staffs, setStaffs] = useState([]),
-    [selected, setSelected] = useState({}),
-    [showModal, setShowModal] = useState(false),
+    // [selected, setSelected] = useState({}),
+    // [showModal, setShowModal] = useState(false),
     [searchKey, setSearchKey] = useState(""),
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
@@ -51,7 +51,7 @@ export default function Staffs() {
   }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
-  useEffect(() => {    
+  useEffect(() => {
     setStaffs(collections);
   }, [collections]);
 
@@ -60,11 +60,11 @@ export default function Staffs() {
 
   //Trigger for update
   const handleUpdate = (selected) => {
-    setSelected(selected);
+    // setSelected(selected);
     if (willCreate) {
       setWillCreate(false);
     }
-    setShowModal(true);
+    // setShowModal(true);
   };
 
   //Trigger for create
@@ -72,7 +72,7 @@ export default function Staffs() {
     if (!willCreate) {
       setWillCreate(true);
     }
-    setShowModal(true);
+    // setShowModal(true);
   };
 
   //Toast for errors or success

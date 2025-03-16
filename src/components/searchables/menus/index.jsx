@@ -5,13 +5,25 @@ import { MDBIcon } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
   BROWSE as MENUS,
-  SetFILTERED,
+  SetCOLLECTIONS,
   RESET as MENUSRESET,
 } from "../../../services/redux/slices/commerce/catalog/menus";
 import { currency, globalSearch } from "../../../services/utilities";
 import Notification from "./notifications";
 import "../style.css";
 
+/**
+ * A Search component that allows the user to search for a menu item by name.
+ * The component will make an API call to search for menu items and render a list of results below the search input.
+ * The user can select a menu item from the list and the setMenu callback will be called with the selected menu item.
+ * The component also renders a button to register a new menu item if no menu item record is found with the search key.
+ * The setRegister callback will be called with the search key when the button is clicked.
+ *
+ * @param {function} setMenu - A callback function that will be called when a menu item is selected from the list.
+ * @param {function} setRegister - A callback function that will be called when the button to register a new menu item is clicked.
+ *
+ * @returns {JSX.Element} user
+ */
 export default function Search({ setMenu, setRegister }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ menus }) => menus),
@@ -22,6 +34,7 @@ export default function Search({ setMenu, setRegister }) {
 
   const inputRef = useRef(null); // Reference to the input field
 
+  // initial values
   useEffect(() => {
     if (token && activePlatform.branchId) {
       const branchId = activePlatform.branchId;
@@ -33,7 +46,7 @@ export default function Search({ setMenu, setRegister }) {
         // If menus are found in localStorage, use them (parse back to an object)
         const menus = JSON.parse(storedMenus);
         // You can dispatch the menus here if needed
-        dispatch(SetFILTERED(menus)); // Optionally dispatch to update the store if necessary
+        dispatch(SetCOLLECTIONS(menus)); // Optionally dispatch to update the store if necessary
       } else {
         // If no data in localStorage, make the server request
         dispatch(MENUS({ key: { branchId }, token }))
@@ -93,7 +106,7 @@ export default function Search({ setMenu, setRegister }) {
   };
 
   return (
-    <div className="searchable-search-cotaniner ">
+    <div className=" d-flex align-items-center " style={{ width: "85%" }}>
       <Notification didSearch={match.length > 0} />
       <div className={`searchable-search  ${match.length > 0 && "active"}`}>
         <div className="searchable-search-suggestions">

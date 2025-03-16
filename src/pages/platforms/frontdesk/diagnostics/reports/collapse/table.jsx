@@ -28,8 +28,10 @@ export default function CollapseTable({ menu }) {
     setLabTests(filteredLabTests);
   }, [menu]);
 
-  const handlePrint = (labTest) => {
-    localStorage.setItem("taskPrintout", JSON.stringify(labTest));
+  const handlePrint = (task) => {
+    console.log("taskPrintout", task);
+
+    localStorage.setItem("taskPrintout", JSON.stringify(task));
     window.open(
       "/printout/task",
       "Task Printout",

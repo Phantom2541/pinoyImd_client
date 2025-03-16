@@ -24,7 +24,7 @@ export default function Sales() {
     [total, setTotal] = useState(0),
     [daily, setDaily] = useState({}),
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ sales }) => sales),
+    { collections } = useSelector(({ deals }) => deals),
     // { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     // { collections } = useSelector(({ sales }) => sales),
     dispatch = useDispatch();

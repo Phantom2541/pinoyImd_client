@@ -1,8 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
-
-const name = "commerce/pos/services/deals";
+// import _ from "lodash";
+const defaultCustomer = {
+  fullName: {
+    fname: "",
+    mname: "",
+    lname: "",
+    suffix: "",
+  },
+  address: {
+    region: "REGION III (CENTRAL LUZON)",
+    province: "NUEVA ECIJA",
+    city: "CABANATUAN CITY",
+    barangay: "",
+    street: "",
+  },
+  dob: "",
+  isMale: false,
+  mobile: "",
+  privilege: 0,
+  email: "",
+};
+const url = "commerce/pos/services/deals";
 const defaultState = {
   branchId: JSON.parse(localStorage.getItem("auth"))?.branchId || undefined,
   cashierId: JSON.parse(localStorage.getItem("auth"))?._id || undefined,
@@ -15,6 +35,7 @@ const defaultState = {
   privilege: 0,
   payment: "cash",
   cash: 0,
+  amount: 0,
   hasDiscount: false,
   discount: 0,
   authorizedBy: undefined,
@@ -40,10 +61,10 @@ const initialState = {
 };
 
 export const CASHIER = createAsyncThunk(
-  `${name}/cashier`,
+  `${url}/cashier`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/cashier`, token, key);
+      return axioKit.universal(`${url}/cashier`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -58,10 +79,10 @@ export const CASHIER = createAsyncThunk(
 );
 
 export const SAVE = createAsyncThunk(
-  `${name}/save`,
+  `${url}/save`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(name, data, token);
+      return axioKit.save(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -76,10 +97,10 @@ export const SAVE = createAsyncThunk(
 );
 
 export const TAGGING = createAsyncThunk(
-  `${name}/tagging`,
+  `${url}/tagging`,
   ({ key, token }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/tagging`, token, key);
+      return axioKit.universal(`${url}/tagging`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -93,10 +114,10 @@ export const TAGGING = createAsyncThunk(
   }
 );
 export const CHECKOUT = createAsyncThunk(
-  `${name}/checkout`,
+  `${url}/checkout`,
   ({ key, token }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/checkout`, token, key);
+      return axioKit.universal(`${url}/checkout`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -111,7 +132,7 @@ export const CHECKOUT = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     SETMENUS: (state, { payload }) => {
@@ -121,17 +142,27 @@ export const reduxSlice = createSlice({
     SETSSX: (state, { payload }) => {
       state.ssx = payload;
     },
+    SETCART: (state, { payload }) => {
+      state.cart = [];
+    },
     SETCASHIER: (state, { payload }) => {
-      state.cashierId = payload.cashierId;
+      state.cashierId = payload.cashierId; 
       state.branchId = payload.branchId;
     },
-    SETPATIENT: (state, { payload }) => {
+    SETPATIENT: (state, { payload }) => { 
       state.customer = payload;
       state.customerId = payload?._id;
-    },
+    }, 
     SETSEARCHKEY: (state, { payload }) => {
-      state.customer = payload;
-    },
+    state.customer = {
+      ...defaultCustomer,
+      fullName: {
+        fname: payload.fname,
+        mname: payload.mname || "",
+        lname: payload.lname
+      }
+    };
+  },
     SETCATEGORY: (state, { payload }) => {
       state.category = payload;
     },
@@ -183,7 +214,7 @@ export const reduxSlice = createSlice({
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
-
+      state.amount = 0;
       if (payload?.resetCollections) state.collections = [];
     },
   },
@@ -226,6 +257,7 @@ export const reduxSlice = createSlice({
 
 export const {
   SETSSX,
+  SETCART,
   SETMENUS,
   SETCASHIER,
   SETAUTHORIZEDBY,

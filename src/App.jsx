@@ -18,11 +18,11 @@ import {
   SeroLog,
 } from "./components/printout";
 
+import Payslip from "./pages/platforms/manager/responsibilities/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 import "./App.css";
 import "./animations.css";
-import Payslip from "./pages/platforms/manager/responsibilities/payslip";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),

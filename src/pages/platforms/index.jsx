@@ -53,7 +53,7 @@ export default function Platforms() {
 
   useEffect(() => {
     if (windowWidth > breakWidth) {
-      setDynamicLeftPadding("240px");
+      setDynamicLeftPadding("250px"); // 150
     } else {
       setDynamicLeftPadding("0");
     }
@@ -88,7 +88,7 @@ export default function Platforms() {
           className="white-skin"
         />
         <main
-          style={{ paddingLeft: dynamicLeftPadding, margin: "8rem 6% 6rem" }}
+          style={{ paddingLeft: dynamicLeftPadding, margin: "5rem 1% 6rem" }}
         >
           <Login show={show} />
           <Routes />

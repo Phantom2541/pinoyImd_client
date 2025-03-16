@@ -17,34 +17,57 @@ import UnsetApply from "./platforms/guest/apply";
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
 
-  return (
-    <Switch>
-      {!activePlatform?.platform && (
-        <Route exact path={`/dashboard`} component={UnsetApply} />
-      )}
+  const renderSidebars = () => {
+    const platforms = Sidebars[activePlatform?.platform?.toLowerCase()];
+    if (!Array.isArray(platforms)) return "Ooops.. platforms must be array";
+    var basePath = "";
+    const sideBars = [];
 
-      {Sidebars[activePlatform?.platform]?.map(
-        ({ path, component, children }, index) => {
-          if (children)
-            return children.map((child, cIndex) => (
-              <Route
-                key={`route-${index}-${cIndex}`}
-                exact
-                path={`${path}${child.path}`}
-                component={child.component || NotExisting}
-              />
-            ));
+    platforms.forEach((element, index) => {
+      const { children, component, path = "" } = element;
+      basePath = path;
 
-          return (
+      const renderChildren = (c, parentPath = "") => {
+        if (!c.children) return;
+        c.children.forEach((child, index) => {
+          const childBasePath = `${parentPath}${child.path}`;
+
+          sideBars.push(
             <Route
-              key={`route-${index}`}
+              key={`route-${index}-${childBasePath}`}
               exact
-              path={path}
-              component={component || NotExisting}
+              path={childBasePath}
+              component={child.component || NotExisting}
             />
           );
-        }
-      )}
+
+          renderChildren(child, childBasePath);
+        });
+      };
+
+      if (children) {
+        renderChildren(element, path);
+      }
+      if (!children) {
+        sideBars.push(
+          <Route
+            key={`route-${index}-${path}`}
+            exact
+            path={basePath}
+            component={component || NotExisting}
+          />
+        );
+      }
+    });
+    return sideBars;
+  };
+  const { platform = "" } = activePlatform;
+
+  return (
+    <Switch>
+      {!platform && <Route exact path={`/dashboard`} component={UnsetApply} />}
+
+      {renderSidebars()}
 
       <Route path="/profile" exact component={Profile} />
 

@@ -11,7 +11,6 @@ import { PresetImage } from "../../../services/utilities";
 
 export default function Profile() {
   const { auth, isPatient, image } = useSelector(({ auth }) => auth);
-
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>

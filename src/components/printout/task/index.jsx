@@ -21,13 +21,13 @@ const Printout = ({ task }) => {
     signatories,
   } = task;
   console.log("task", task);
+
   const { activePlatform, company, auth } = useSelector(({ auth }) => auth);
 
-console.log(activePlatform);
-console.log(company);
-console.log(auth);
+  console.log("activePlatform", activePlatform);
+  console.log("company", company);
+  console.log("auth", auth);
 
-  
   return (
     <div style={{ width: "100vw", height: "100vh", backgroundColor: "white" }}>
       <div

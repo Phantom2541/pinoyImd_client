@@ -2,7 +2,7 @@ const laboratory = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/diagnostic/bulettin",
   },
   {
     name: "POS", // Transactions || Point Of Sales

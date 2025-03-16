@@ -1,30 +1,36 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const name = "liability/assurance";
+const url = "liability/assurance";
 
 const initialState = {
-  collections: [],
   filter: [],
   paginated: [],
-  isSuccess: false,
-  isLoading: false,
-  message: "",
 
   // Bread attributes
   selected: {}, // assurance
-  totalPages: 0,
   page: 0,
-  showModal: false,
   willCreate: false,
+  showModal: false,
+
+  /**
+   * pagination
+   */
+  collections: [],
+  filtered: [],
   maxPage: 5,
+  totalPages: 0,
+  activePage: 1,
+  isSuccess: false,
+  isLoading: false,
+  message: "",
 };
 
 export const BROWSE = createAsyncThunk(
-  `${name}`,
+  `${url}`,
   ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, params);
+      return axioKit.universal(`${url}/browse`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -38,9 +44,9 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
-export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
+export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   try {
-    return axioKit.save(name, form.data, form.token);
+    return axioKit.save(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -51,9 +57,9 @@ export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
   }
 });
 
-export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
+export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
-    return axioKit.update(name, form.data, form.token);
+    return axioKit.update(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -65,10 +71,10 @@ export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
 });
 
 export const DESTROY = createAsyncThunk(
-  `${name}/destroy`,
+  `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.destroy(name, data, token);
+      return axioKit.destroy(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -83,7 +89,7 @@ export const DESTROY = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     SetEDIT: (state, { payload }) => {
@@ -92,7 +98,12 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetCREATE: (state, { payload }) => {
-      state.selected = payload;
+      state.selected = {
+        lo: "",
+        norm: "",
+        hi: "",
+        serviceId: payload.serviceId,
+      };
       state.willCreate = true;
       state.showModal = true;
     },
@@ -127,6 +138,19 @@ export const reduxSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
+    /**
+     *  for pagination
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -136,11 +160,12 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload } = action;
-        state.collections = payload;
-        state.filter = payload;
-        state.paginated = payload;
-        state.isSuccess = true;
+        const { success } = action.payload;
+        state.collections = state.filtered = action.payload; // Fix typo
+        state.totalPages =
+          Math.ceil(action.payload.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -154,9 +179,7 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action;
-        state.message = success;
+      .addCase(SAVE.fulfilled, (state, { payload }) => {
         state.collections.unshift(payload);
         state.showModal = false;
         state.isSuccess = true;
@@ -213,7 +236,18 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetCREATE, SetEDIT, SetFILTER, SetPAGE, RESET } =
-  reduxSlice.actions;
+export const {
+  SetCREATE,
+  SetEDIT,
+  SetFILTER,
+  SetPAGE,
+  /**
+   * for pagination
+   */
+  SetMaxPage,
+  SetActivePAGE,
+  TOGGLE,
+  RESET,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

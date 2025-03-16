@@ -18,22 +18,21 @@ import {
 import { Menus, Services } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
-import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 import {
   Assurance,
   Controls,
-} from "../../../pages/platforms/diagnostics/liability/quality";
+} from "../../../pages/platforms/diagnostics/management";
 
 const frontdesk = [
   {
-    name: "Dashboard",
+    name: "bulletin board",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/frontdesk/bulletin",
     component: Dashboard,
   },
   {
     name: "Diagnostics",
-    path: "/transactions",
+    path: "/diagnostics",
     icon: "cogs",
     children: [
       {
@@ -50,6 +49,38 @@ const frontdesk = [
         name: "Reports",
         path: "/reports",
         component: Reports,
+      },
+      {
+        name: "Temperature",
+        path: "/temperature",
+        component: Temperature,
+      },
+      {
+        name: "Quality Assurance(QA)",
+        path: "/management/external",
+        component: Assurance,
+      },
+      {
+        name: "Quality Control(QC)",
+        path: "/management/internal",
+        component: Controls,
+      },
+      {
+        name: "Quality Management",
+        icon: "tv",
+        path: "/quality",
+        children: [
+          {
+            name: "Quality Assurance(QA)",
+            path: "/management/external",
+            component: Assurance,
+          },
+          {
+            name: "Quality Control(QC)",
+            path: "/management/internal",
+            component: Controls,
+          },
+        ],
       },
     ],
   },
@@ -73,49 +104,6 @@ const frontdesk = [
         name: "examinations",
         path: "/services",
         component: Services,
-      },
-    ],
-  },
-  {
-    name: "Liability",
-    icon: "tv",
-    path: "/liability",
-    children: [
-      /**
-       * obligation for services or goods received but not yet paid for by the accounting period's en
-       * Electric bill
-       * Water bill
-       * WIFI bill
-       * Rental
-       */
-      {
-        name: "Accrued",
-        title: "stocks",
-        path: "/accrued",
-        component: Accrued,
-      },
-      /**
-       * an obligation that has already been settled or fulfilled
-       * Paid Electric bill
-       * Paid Water bill
-       * Salary
-       * Voucher / petty cash
-       * etc.
-       */
-      {
-        name: "Settled",
-        title: "stocks",
-        path: "/settled",
-      },
-      {
-        name: "Q A",
-        path: "/quality/assurance",
-        component: Assurance,
-      },
-      {
-        name: "Q C",
-        path: "/quality/controls",
-        component: Controls,
       },
     ],
   },
@@ -160,6 +148,12 @@ const frontdesk = [
     name: "Market",
     path: "/market",
     icon: "list",
+    children: [
+      {
+        name: "Products",
+        path: "/products",
+      },
+    ],
   },
   {
     name: "Merchandise",

@@ -1,32 +1,35 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const name = "assets/persons/personnels";
+const url = "assets/persons/personnels";
 
 const initialState = {
   collections: [],
   personnel: {},
-/**
- * Responsible for access control
- */
-    _id: "",
-    staff: {},
-    contract: {},
-    access: [], // Permissions or features that are available
-    granted: [], // Permissions that have been acquired or activated or stock
-    queued: [], // permissions are lined up for activation.
-    revoked: [], // Permissions that have been removed or denied
-  
+  /**
+   * Responsible for access control
+   */
+  _id: "",
+  staff: {},
+  contract: {},
+  access: [], // Permissions or features that are available
+  granted: [], // Permissions that have been acquired or activated or stock
+  queued: [], // permissions are lined up for activation.
+  revoked: [], // Permissions that have been removed or denied
+  updateTracker: {
+    isLoading: false,
+    fieldName: "",
+  },
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
 export const BROWSE = createAsyncThunk(
-  `${name}`,
+  `${url}`,
   ({ token, branchId, status }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/browse`, token, { branchId, status });
+      return axioKit.universal(`${url}/browse`, token, { branchId, status });
     } catch (error) {
       const message =
         (error.response &&
@@ -41,10 +44,10 @@ export const BROWSE = createAsyncThunk(
 );
 
 export const PAYROLL = createAsyncThunk(
-  `${name}/payroll`,
+  `${url}/payroll`,
   ({ token, branchId }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/payroll`, token, { branchId });
+      return axioKit.universal(`${url}/payroll`, token, { branchId });
     } catch (error) {
       const message =
         (error.response &&
@@ -59,10 +62,10 @@ export const PAYROLL = createAsyncThunk(
 );
 
 export const USER = createAsyncThunk(
-  `${name}/user`,
+  `${url}/user`,
   ({ token, branchId, userId }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/user`, token, { branchId, userId });
+      return axioKit.universal(`${url}/user`, token, { branchId, userId });
     } catch (error) {
       const message =
         (error.response &&
@@ -77,10 +80,10 @@ export const USER = createAsyncThunk(
 );
 
 export const EMPLOYEES = createAsyncThunk(
-  `${name}/employees`,
+  `${url}/employees`,
   ({ token, branch }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/employees`, token, { branch });
+      return axioKit.universal(`${url}/employees`, token, { branch });
     } catch (error) {
       const message =
         (error.response &&
@@ -94,9 +97,9 @@ export const EMPLOYEES = createAsyncThunk(
   }
 );
 
-export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
+export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   try {
-    return axioKit.save(name, form.data, form.token);
+    return axioKit.save(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -108,10 +111,10 @@ export const SAVE = createAsyncThunk(`${name}/save`, (form, thunkAPI) => {
 });
 
 export const UPDATE_ACCESS = createAsyncThunk(
-  `${name}/UPDATE_ACCESS`,
+  `${url}/UPDATE_ACCESS`,
   (form, thunkAPI) => {
     try {
-      return axioKit.save(name, form.data, form.token, "update-access");
+      return axioKit.save(url, form.data, form.token, "update-access");
     } catch (error) {
       const message =
         (error.response &&
@@ -125,9 +128,9 @@ export const UPDATE_ACCESS = createAsyncThunk(
   }
 );
 
-export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
+export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
-    return axioKit.update(name, form.data, form.token);
+    return axioKit.update(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -139,10 +142,10 @@ export const UPDATE = createAsyncThunk(`${name}/update`, (form, thunkAPI) => {
 });
 
 export const APPLICATION = createAsyncThunk(
-  `${name}/application`,
+  `${url}/application`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.universal(`${name}/application`, token, {
+      return axioKit.universal(`${url}/application`, token, {
         auth: data?._id,
       });
     } catch (error) {
@@ -159,7 +162,7 @@ export const APPLICATION = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name,
+  name: url,
   initialState,
   reducers: {
     UPDATEACCESS: (state, data) => {
@@ -167,7 +170,7 @@ export const reduxSlice = createSlice({
       const { _id, access, isNew = false } = data.payload,
         { collections } = state;
 
-      const index = collections.findIndex(item => item._id === _id);
+      const index = collections.findIndex((item) => item._id === _id);
 
       const personnelAccess = [...collections[index].access];
 
@@ -176,8 +179,8 @@ export const reduxSlice = createSlice({
       if (isNew) {
         newAccess = personnelAccess.concat(access);
       } else {
-        newAccess = personnelAccess.map(pAccess => {
-          if (access.find(_access => _access._id === pAccess._id)) {
+        newAccess = personnelAccess.map((pAccess) => {
+          if (access.find((_access) => _access._id === pAccess._id)) {
             return {
               ...pAccess,
               status: !pAccess.status,
@@ -189,6 +192,9 @@ export const reduxSlice = createSlice({
       }
 
       state.collections[index].access = newAccess;
+    },
+    SetUPDATE_TRACKER: (state, data) => {
+      state.updateTracker.fieldName = data.payload;
     },
     SETOnHotSEAT: (state, { payload }) => {
       // set default values
@@ -225,9 +231,9 @@ export const reduxSlice = createSlice({
       state.message = "";
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(UPDATE_ACCESS.pending, state => {
+      .addCase(UPDATE_ACCESS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -236,15 +242,17 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         const { staffID, accessChanges } = payload;
         const { deleted, added } = accessChanges;
-        const index = state.collections.findIndex(item => item._id === staffID);
+        const index = state.collections.findIndex(
+          (item) => item._id === staffID
+        );
 
         const staff = state.collections[index];
         var StaffAccess = [...staff.access];
 
         if (deleted.length > 0) {
-          deleted.forEach(element => {
+          deleted.forEach((element) => {
             const index = StaffAccess.findIndex(
-              item => item._id === element._id
+              (item) => item._id === element._id
             );
             //console.log(index);
             StaffAccess.splice(index, 1);
@@ -268,7 +276,7 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(BROWSE.pending, state => {
+      .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -283,7 +291,7 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(APPLICATION.pending, state => {
+      .addCase(APPLICATION.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -299,7 +307,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(PAYROLL.pending, state => {
+      .addCase(PAYROLL.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -315,7 +323,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(USER.pending, state => {
+      .addCase(USER.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -331,7 +339,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(EMPLOYEES.pending, state => {
+      .addCase(EMPLOYEES.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -347,7 +355,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(SAVE.pending, state => {
+      .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -365,8 +373,8 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, state => {
-        state.isLoading = true;
+      .addCase(UPDATE.pending, (state) => {
+        state.updateTracker.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -374,23 +382,32 @@ export const reduxSlice = createSlice({
         const { success, payload } = action;
 
         const index = state.collections.findIndex(
-          item => item._id === payload._id
+          (item) => item._id === payload._id
         );
         const oldPersonnel = { ...state.collections[index] };
         state.collections[index] = { ...oldPersonnel, ...payload };
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.updateTracker = {
+          fieldName: "",
+          isLoading: false,
+        };
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.isUpdating = false;
       });
   },
 });
 
-export const { SETOnHotSEAT, SETQUEUED, SETREVOKED, UPDATEACCESS, RESET } =
-  reduxSlice.actions;
+export const {
+  SETOnHotSEAT,
+  SETQUEUED,
+  SETREVOKED,
+  UPDATEACCESS,
+  RESET,
+  SetUPDATE_TRACKER,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

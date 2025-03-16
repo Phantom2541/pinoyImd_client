@@ -14,7 +14,6 @@ import {
   capitalize,
   isImageValid,
 } from "../../services/utilities";
-
 export default function SideNavigation({
   triggerOpening,
   breakWidth,
@@ -41,7 +40,7 @@ export default function SideNavigation({
 
   useEffect(() => {
     if (activePlatform) {
-      setLinks(Sidebars[activePlatform.platform] || []);
+      setLinks(Sidebars[activePlatform.platform?.toLowerCase()] || []);
     }
   }, [activePlatform]);
 
@@ -96,7 +95,9 @@ export default function SideNavigation({
         logo={logo}
         bg="https://mdbootstrap.com/img/Photos/Others/sidenav2.jpg"
         mask="strong"
-        href="/dashboard"
+        href={`/${activePlatform.platform}/${
+          activePlatform.platform === "manager" ? "dashboard" : "bulletin"
+        }`}
         fixed
         breakWidth={breakWidth}
         triggerOpening={triggerOpening}

@@ -35,11 +35,14 @@ export default function CollapseTable({ menu }) {
 
   const handlePrint = (labTest) => {
     localStorage.setItem("taskPrintout", JSON.stringify(labTest));
-    window.open(
-      "/printout/task",
-      "Task Printout",
-      "top=100px,left=100px,width=1050px,height=750px" // size of the page that will open
-    );
+
+    console.log("labTest",labTest);
+    
+    // window.open(
+    //   "/printout/task",
+    //   "Task Printout",
+    //   "top=100px,left=100px,width=1050px,height=750px" // size of the page that will open
+    // );
   };
 
   const { customerId, physicianId, source, category, _id } = menu;
