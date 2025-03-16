@@ -92,6 +92,7 @@ export default function Routes() {
       )} */}
 
       <Route path="/profile" exact component={Profile} />
+      <Route path="/apply" exact component={UnsetApply} />
 
       <Route component={NotFound} />
     </Switch>

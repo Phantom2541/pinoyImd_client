@@ -1,3 +1,4 @@
+import UnsetApply from "../../../pages/platforms/guest/apply";
 import Dashboard from "../../../pages/platforms/patron/dashboard";
 import Laboratories from "../../../pages/platforms/patron/diagnostics/laboratory";
 import Radiologies from "../../../pages/platforms/patron/diagnostics/radiology";
@@ -32,6 +33,12 @@ const patron = [
     name: "History",
     path: "/history",
     icon: "user-tie",
+  },
+  {
+    name: "Apply",
+    path: "/apply",
+    icon: "paper-plane",
+    component: UnsetApply,
   },
   {
     name: "Diagnostics",
