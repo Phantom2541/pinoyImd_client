@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const url = "monitorings/temperatures";
+const url = "diagnostics/laboratory/monitoring/temperatures";
 
 const initialState = {
-  month: new Date().getMonth() + 1, // Month as a number (1-12)
+  month: new Date().getMonth(), // Month as a number (1-12)
   year: new Date().getFullYear(),
   collections: [],
   isSuccess: false,
@@ -16,19 +16,12 @@ export const BROWSE = createAsyncThunk(
   `${url}/browse`,
   async ({ token, key }, thunkAPI) => {
     try {
-      console.log("📡 Calling API with key:", key);
+      // console.log("Calling API with key:", key);
       const response = await axioKit.universal(`${url}/browse`, token, key);
-
-      // Check kung ano ang structure ng response
-      console.log("✅ Raw API Response:", response);
-
-      if (!response || response.length === 0) {
-        console.warn("⚠️ Warning: No data received from API");
-      }
-
-      return response || []; // Ensure collections is always an array
+      // console.log("API Response:", response);
+      return response || []; // Ensure default array
     } catch (error) {
-      console.error("❌ API Fetch Error:", error);
+      console.error("API Fetch Error:", error);
       return thunkAPI.rejectWithValue(error.message || error.toString());
     }
   }
@@ -101,18 +94,11 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        console.log("🔥 BROWSE.fulfilled: Fetched Data:", action.payload);
-
-        if (!action.payload || action.payload.length === 0) {
-          console.warn("⚠️ Warning: collections array is empty!");
-        }
-
-        state.collections = action.payload || []; // Ensure it's always an array
+        // console.log("payload: ", action.payload);
+        state.collections = action.payload;
         state.isLoading = false;
       })
-
       .addCase(BROWSE.rejected, (state, action) => {
-        console.error("BROWSE Fetch Failed:", action.error.message);
         state.message = action.error.message;
         state.isLoading = false;
       })
