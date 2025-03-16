@@ -148,6 +148,12 @@ const frontdesk = [
     name: "Market",
     path: "/market",
     icon: "list",
+    children: [
+      {
+        name: "Products",
+        path: "/products",
+      },
+    ],
   },
   {
     name: "Merchandise",

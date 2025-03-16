@@ -14,7 +14,6 @@ import {
   capitalize,
   isImageValid,
 } from "../../services/utilities";
-
 export default function SideNavigation({
   triggerOpening,
   breakWidth,
