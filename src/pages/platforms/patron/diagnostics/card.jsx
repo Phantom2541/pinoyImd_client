@@ -9,14 +9,17 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { ENDPOINT, PresetUser } from "../../../../services/utilities";
+import Modal from "./modal";
 
 export default function CompanyCard({
   company = {},
+  _key = "",
   isFavorite = false,
   setFavorite = () => {},
   placeholder = false,
 }) {
-  const [shakeBell, setShakeBell] = useState(false);
+  const [shakeBell, setShakeBell] = useState(false),
+    [show, setShow] = useState(false);
 
   const { name, subName = "", _id } = company;
 
@@ -30,7 +33,7 @@ export default function CompanyCard({
   };
 
   return (
-    <MDBCard>
+    <MDBCard key={_key}>
       <MDBCardImage
         position="top"
         alt={name}
@@ -57,11 +60,16 @@ export default function CompanyCard({
       </MDBCardBody>
       {!placeholder && (
         <MDBCardBody className="d-flex">
-          <MDBBtn color="primary" size="sm" className="w-75">
+          <MDBBtn
+            color="primary"
+            size="sm"
+            className="w-75"
+            onClick={() => setShow(true)}
+          >
             Apply
           </MDBBtn>
           <MDBBtn
-            onClick={toggleBell}
+            // onClick={toggleBell}
             color={isFavorite ? "primary" : "grey"}
             size="sm"
             outline
@@ -70,6 +78,7 @@ export default function CompanyCard({
           </MDBBtn>
         </MDBCardBody>
       )}
+      <Modal show={show} toggle={() => setShow(!show)} selected={company} />
     </MDBCard>
   );
 }
