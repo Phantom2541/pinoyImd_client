@@ -14,10 +14,12 @@ import {
   MDBBtn,
   MDBBtnGroup,
   MDBIcon,
+  MDBView,
 } from "mdbreact";
 import TableRowCount from "../../../../../../components/pagination/rows";
 import Months from "../../../../../../services/fakeDb/calendar/months";
 import Years from "../../../../../../services/fakeDb/calendar/years";
+import TableLoading from "../../../../../../components/tableLoading/index.jsx";
 
 const today = new Date();
 
@@ -54,7 +56,7 @@ export default function Chems() {
   const [chems, setChems] = useState([]),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     // { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ chemistry }) => chemistry),
+    { collections, isLoading } = useSelector(({ chemistry }) => chemistry),
     { search, pathname } = useLocation(),
     query = new URLSearchParams(search),
     month = query.get("month"),
@@ -64,14 +66,13 @@ export default function Chems() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && activePlatform?._id) {
+    if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
-          entity: "results/laboratory/chemistry/logbook",
           data: {
             branch: activePlatform?.branchId,
-            month,
-            year,
+            year: year || today.getFullYear(),
+            month: month || today.getMonth() + 1,
           },
           token,
         })
@@ -79,6 +80,14 @@ export default function Chems() {
     }
     return () => RESET();
   }, [activePlatform, dispatch, token, month, year]);
+
+  useEffect(() => {
+    const params = new URLSearchParams({
+      month: today.getMonth() + 1, // Add 1 to match human-readable month format
+      year: today.getFullYear(),
+    });
+    history.push(`${pathname}?${params.toString()}`);
+  }, []);
 
   useEffect(() => {
     setChems(collections);
@@ -108,19 +117,33 @@ export default function Chems() {
       const sampleChem = groupedChems[day][0]; // Get one chem item to determine the date
       const d = new Date(sampleChem.createdAt); // Use createdAt to get the correct day
       const dayOfWeek = dayNames[d.getDay()]; // Get the day of the week
-      // setChemsPrint(groupedChems);
+      const chems = groupedChems[day];
+      const isWeekDays = dayOfWeek !== "Sunday" && dayOfWeek !== "Saturday";
       return (
         <React.Fragment key={day}>
           <tr>
-            <td colSpan="18">
-              <strong>
+            <td colSpan="2">
+              <strong className={isWeekDays ? "text-success" : "text-danger"}>
                 {dayOfWeek} ({day}) {/* Display the day of the week */}
               </strong>
             </td>
-          </tr>
-          {groupedChems[day].map((chem, index) => {
-            const { customerId, packages, createdAt } = chem;
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
 
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          {chems.map((chem, index) => {
+            const { customerId, packages, createdAt } = chem;
             const chemDate = new Date(createdAt);
             const h = chemDate.getHours();
             const m = chemDate.getMinutes();
@@ -130,7 +153,7 @@ export default function Chems() {
               <tr key={chem._id}>
                 <td>{index + 1}</td>
                 <td>
-                  <h6>{fullName(customerId.fullName)}</h6>
+                  <h6>{fullName(customerId?.fullName || {})}</h6>
                   <span>
                     {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
                   </span>
@@ -222,9 +245,13 @@ export default function Chems() {
   return (
     <>
       <MDBCard narrow>
-        <MDBCardHeader>
-          <div className="d-flex align-items-center justify-content-between">
-            <MDBBtnGroup>
+        <MDBView
+          cascade
+          className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <i>Chemistry</i>
+            <MDBBtnGroup className="ml-2">
               <MDBBtn
                 onClick={selectToday}
                 size="sm"
@@ -253,108 +280,49 @@ export default function Chems() {
                 <MDBIcon icon="angle-right" />
               </MDBBtn>
             </MDBBtnGroup>
-            <strong className="cursor-pointer h3-responsive">{year}</strong>
-            &nbsp;
-            <strong className="cursor-pointer h3-responsive">
-              {Months[month - 1]}{" "}
-              {/* Subtract 1 to display the correct month name */}
-            </strong>
-            {/* Print Button */}
-            <MDBBtn color="primary" size="sm" onClick={handlePrint}>
-              <MDBIcon icon="print" /> Print
-            </MDBBtn>
           </div>
-          <h3>Chemistry</h3>
-        </MDBCardHeader>
+          <div
+            className="d-flex align-items-center"
+            style={{ marginRight: "11rem" }}
+          >
+            <h5 className="mr-2" style={{ fontWeight: 300 }}>
+              {year}
+            </h5>
+            <h5 style={{ fontWeight: 400 }}> {Months[month - 1]}</h5>
+          </div>
+          <MDBBtn color="primary" size="sm" onClick={handlePrint}>
+            <MDBIcon icon="print" /> Print
+          </MDBBtn>
+        </MDBView>
+
         <MDBCardBody className="pb-0">
-          <MDBTable className="responsive">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Time</th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  RBS
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  FBS
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  SGPT
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  SGOT
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  Chole
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  Trigly
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  HDL
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  LDL
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  BUN
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  CREA
-                </th>
-                <th
-                  style={{
-                    transform: "skewX(10deg)",
-                  }}
-                >
-                  BUA
-                </th>
-                <th>Remarks</th>
-              </tr>
-            </thead>
-            <tbody>{renderGroupedChems()}</tbody>
-          </MDBTable>
+          {!isLoading ? (
+            <MDBTable className="responsive" bordered>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Time</th>
+                  <th>RBS</th>
+                  <th>FBS</th>
+                  <th>SGPT</th>
+                  <th>SGOT</th>
+                  <th>Chole</th>
+                  <th>Trigly</th>
+                  <th>HDL</th>
+                  <th>LDL</th>
+                  <th>BUN</th>
+                  <th>CREA</th>
+                  <th>BUA</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody>{renderGroupedChems()}</tbody>
+            </MDBTable>
+          ) : (
+            <TableLoading />
+          )}
+
           <div className="d-flex justify-content-between align-items-center px-4">
             <TableRowCount />
           </div>

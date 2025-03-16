@@ -63,14 +63,13 @@ export default function Chems() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && activePlatform?._id) {
+    if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
-          entity: "results/laboratory/electrolyte/logbook",
           data: {
             branch: activePlatform?.branchId,
-            month,
-            year,
+            month: today.getMonth() + 1,
+            year: today.getFullYear(),
           },
           token,
         })
