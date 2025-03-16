@@ -150,8 +150,9 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
-    ToggleDidSearch: (state) => {
-      state.didSearch = !state.didSearch;
+    ToggleDidSearch: (state, { payload }) => {
+      console.log("toggle didSearch");
+      state.didSearch = payload;
     },
     SetSOURCE: (state, { payload }) => {
       state.selected = payload;

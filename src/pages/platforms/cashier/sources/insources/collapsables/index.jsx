@@ -33,6 +33,7 @@ export default function MenuCollapse() {
     } else {
       setInsources(collections || []);
     }
+    console.log("search in insource", searchResults, didSearch);
   }, [collections, didSearch, searchResults]);
 
   const toggle = () => setShow(!show);
@@ -283,6 +284,7 @@ export default function MenuCollapse() {
                   <div className="d-flex align-items-center">
                     <span>Tag Physician</span>
                     <Search
+                      clientID={clients._id}
                       setPhysician={handleTag}
                       setRegister={handleRegister}
                     />

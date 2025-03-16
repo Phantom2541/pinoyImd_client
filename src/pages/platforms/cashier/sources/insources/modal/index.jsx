@@ -13,6 +13,7 @@ import {
 
 import {
   ToggleModal,
+  ToggleDidSearch,
   SAVE,
 } from "../../../../../../services/redux/slices/assets/providers";
 import CustomSelect from "../../../../../../components/searchables/customSelect";
@@ -82,7 +83,7 @@ export default function Modal() {
         },
       })
     );
-
+    dispatch(ToggleDidSearch(false));
     dispatch(ToggleModal());
   };
   const categoryHasChecked = (category) => form.category.includes(category);
@@ -106,8 +107,6 @@ export default function Modal() {
         : _category,
     }));
   };
-
-  console.log(showCompanyModal);
 
   // use for direct values like strings and numbers
   const { name = "", companyName = "" } = selected || {};
