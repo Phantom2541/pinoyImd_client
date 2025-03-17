@@ -4,41 +4,41 @@ import { capitalize } from "lodash";
 import {
   currency,
   fullName,
-  axioKit,
+  // axioKit,
 } from "./../../../../../../services/utilities";
 import { Categories } from "./../../../../../../services/fakeDb";
 import {
   MANAGERUPDATE,
-  RESET,
+  // RESET,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
 import { MDBCardBody, MDBTable, MDBIcon, MDBBadge } from "mdbreact";
 
 export const Tables = () => {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+  const { token, auth } = useSelector(({ auth }) => auth),
     { collections, filtered, maxPage, activePage } = useSelector(
       ({ deals }) => deals
     ),
     [view, setView] = useState("all"),
     dispatch = useDispatch();
 
-  useEffect(() => {
-    const today = new Date();
-    axioKit
-      .universal("finance/pre-calculated-daily-sale/find", token, {
-        month: Months[today.getMonth()],
-        day: today.getDate(),
-        year: today.getFullYear(),
-        cashier: auth._id,
-        branch: activePlatform?.branchId,
-      })
-      .catch((error) => {
-        console.error("Error fetching daily sale:", error);
-      });
+  // useEffect(() => {
+  //   const today = new Date();
+  //   axioKit
+  //     .universal("finance/pre-calculated-daily-sale/find", token, {
+  //       month: Months[today.getMonth()],
+  //       day: today.getDate(),
+  //       year: today.getFullYear(),
+  //       cashier: auth._id,
+  //       branch: activePlatform?.branchId,
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching daily sale:", error);
+  //     });
 
-    return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform, auth]);
+  //   return () => dispatch(RESET());
+  // }, [token, dispatch, activePlatform, auth]);
 
   useEffect(() => {
     if (!!collections.length) {

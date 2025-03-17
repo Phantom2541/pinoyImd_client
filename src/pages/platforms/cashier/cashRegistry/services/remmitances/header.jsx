@@ -12,11 +12,27 @@ import {
 import "./style.css";
 
 // const today = new Date();
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 const Header = () => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { month, year } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
+
+  console.log("activePlatform", activePlatform);
 
   useEffect(() => {
     if (token && activePlatform?.branchId && year && month) {
@@ -25,14 +41,15 @@ const Header = () => {
           token,
           key: {
             branchId: activePlatform?.branchId,
-            start: new Date(year, month, 1), // First day of the month
-            end: new Date(year, month + 1, 0, 23, 59, 59, 999), // Last day of the month
+            month: monthNames[month],
+            year,
+            cashier: auth?._id,
           },
         })
       );
     }
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform, month, year]);
+  }, [token, dispatch, activePlatform, month, year, auth]);
 
   return (
     <MDBView

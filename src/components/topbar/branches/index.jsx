@@ -25,7 +25,12 @@ export default function Branches() {
     const data = {
       _id: auth._id,
       email: auth.email,
-      activePlatform: { ...activePlatform, branchId, access: [..._access] },
+      activePlatform: {
+        ...activePlatform,
+        branchId,
+        position: branchId.posotion,
+        access: [..._access],
+      },
     };
 
     dispatch(SETACTIVEPLATFORM({ data, token }));

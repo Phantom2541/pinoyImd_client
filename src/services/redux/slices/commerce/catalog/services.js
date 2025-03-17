@@ -78,7 +78,7 @@ export const reduxSlice = createSlice({
       // Create a copy before sorting to avoid modifying frozen state
       const sortedCollections = [...collections].sort((a, b) => {
         // Customize sorting logic as needed
-        return a.url.localeCompare(b.url); // Example: Sorting alphabetically by 'url' property
+        return a.name.localeCompare(b.name); // Example: Sorting alphabetically by 'url' property
       });
 
       state.collections = sortedCollections;

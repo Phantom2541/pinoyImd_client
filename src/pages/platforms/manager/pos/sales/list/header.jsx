@@ -23,7 +23,6 @@ const Header = () => {
   const [total, setTotal] = useState(0);
   const [patient, setPatient] = useState(0);
   const [cashiers, setCashiers] = useState([]);
-  const [selectedCashier, setSelectedCashier] = useState("");
   const { addToast } = useToasts();
   const dispatch = useDispatch();
 

@@ -13,6 +13,7 @@ const url = "auth",
 const initialState = {
   auth: {}, // user details
   activePlatform, // active platform for sidebar and routes
+  position: undefined,
   token,
   email, // email for login detection
   image: "", // user image
@@ -192,6 +193,7 @@ export const reduxSlice = createSlice({
         //console.log("_access", _access);
         state.activePlatform = {
           branch,
+          position: branch.position,
           branchId: payload.activePlatform.branchId,
           ...payload.activePlatform,
           access: [..._access],
@@ -250,6 +252,7 @@ export const reduxSlice = createSlice({
         state.activePlatform = {
           ...auth.activePlatform,
           branch,
+          position: branch.position,
           access: [..._access],
           ...department,
         };
@@ -295,6 +298,7 @@ export const reduxSlice = createSlice({
         state.activePlatform = {
           ...payload.activePlatform,
           branch,
+          position: branch.position,
         };
         state.isLoading = false;
         state.isSuccess = true;
@@ -332,6 +336,7 @@ export const reduxSlice = createSlice({
         state.activePlatform = {
           ...auth.activePlatform,
           branch,
+          position: branch.position,
           access: [..._access],
           ...department,
         };

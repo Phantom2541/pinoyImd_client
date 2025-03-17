@@ -1,52 +1,22 @@
 import React from "react";
-import "./style.css";
-import { generateCalendar } from "../../../../../../../services/utilities";
 import { useSelector } from "react-redux";
-import WeekHeader from "./wigets/weekHeader";
-import Indicator from "./wigets/indicator";
-import Card from "./wigets/Card";
-
-const today = new Date();
+import { generateCalendar } from "../../../../../../../services/utilities";
+import WeekHeader from "./weekHeader";
+import Card from "./card";
+import "./style.css";
 
 export default function Calendar() {
-  const { census, isLoading, month, year } = useSelector(
+  const { collections, month, year } = useSelector(
     ({ remittances }) => remittances
   );
-  // { grossSales, patients } = collections;
 
   return (
-    <div className="pos-ledger-calendar p-3">
+    <div className="calendar-template p-3">
       <WeekHeader />
-      <div className="pos-ledger-calendar-daily">
+      <div className="calendar-body">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => {
-          const { sales = [], total = 0 } = census?.daily[txt] ?? {},
-            date = new Date(txt),
-            week = txt.slice(0, 3),
-            isPresent =
-              date.getDate() === today.getDate() &&
-              date.getMonth() === today.getMonth() &&
-              date.getFullYear() === today.getFullYear(),
-            isFuture = date > today ? true : false;
-
-          return (
-            <div
-              style={{
-                backgroundColor: isPresent && "lightgreen",
-              }}
-              className={`${!num && "empty"}`}
-              key={`pos-calendar-${index}`}
-            >
-              <Indicator num={num} week={week} isFuture={isFuture} />
-              {num && (
-                <Card
-                  isFuture={isFuture}
-                  isLoading={isLoading}
-                  sales={sales}
-                  total={total}
-                />
-              )}
-            </div>
-          );
+          const item = collections.find(({ date }) => date.day === num);
+          return <Card key={index} num={num} txt={txt} item={item} />;
         })}
       </div>
     </div>
