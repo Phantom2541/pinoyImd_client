@@ -16,8 +16,11 @@ const initialState = {
     patients: 0,
     isEmpty: true,
   },
+  day: 1,
   month: today.getMonth(),
   year: today.getFullYear(),
+  title: "",
+  showModal: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -76,6 +79,23 @@ export const UPDATE = createAsyncThunk(
     }
   }
 );
+export const FLOATINGCASH = createAsyncThunk(
+  `${url}/floatingCash`,
+  ({ token, data }, thunkAPI) => {
+    try {
+      return axioKit.save(`${url}`, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const reduxSlice = createSlice({
   name: url,
@@ -86,6 +106,22 @@ export const reduxSlice = createSlice({
     },
     SetYEAR: (state, { payload }) => {
       state.year = payload;
+    },
+    TOGGLE: (state, { payload }) => {
+      if (state.showModal) {
+        state.showModal = false;
+      } else {
+        const { key, value } = payload;
+        if (key === "open") {
+          state.title = "Floating Cash";
+        } else if (key === "close") {
+          state.title = "Closing Cash Register";
+        } else {
+          state.title = "Menu Census";
+        }
+        state.day = value;
+        state.showModal = true;
+      }
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -99,8 +135,9 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+        console.log("📡 Calling API with payload:", payload);
+
         state.collections = payload;
         state.isLoading = false;
       })
@@ -152,6 +189,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetMONTH, SetYEAR, RESET } = reduxSlice.actions;
+export const { SetMONTH, SetYEAR, TOGGLE, RESET } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

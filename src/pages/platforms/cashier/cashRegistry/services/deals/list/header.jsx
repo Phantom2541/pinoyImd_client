@@ -1,15 +1,18 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
-import { currency, globalSearch } from "../../../../../../services/utilities";
+import {
+  currency,
+  globalSearch,
+} from "../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
-import { FilterCollections } from "../../../../../../components/searchables";
+import { FilterCollections } from "../../../../../../../components/searchables";
 import {
   CASHIER,
   SetFILTERED,
   // setVIEW,
   RESET,
-} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+} from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, filtered, total, message, isSuccess } = useSelector(

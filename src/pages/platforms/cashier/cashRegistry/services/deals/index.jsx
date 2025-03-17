@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CashRegister from "../cashierOld/pos";
 import { MDBCard, MDBCardBody, MDBContainer } from "mdbreact";
-import Header from "./header";
-import Body from "./body";
-import Footer from "./footer";
+import Header from "./list/header";
+import Body from "./list/body";
+import Footer from "./list/footer";
 import TableLoading from "../../../../../../components/tableLoading";
 import { Payments, Vouchers } from "./summary";
 
