@@ -10,3 +10,4 @@ export { default as SearchCustom } from "./customSelect";
 export { default as SearchAddress } from "./addressSelect";
 export { default as SearchProviders } from "./providers";
 export { default as FilterCollections } from "./filter";
+export { default as FilterProducts } from "./filterProducts";

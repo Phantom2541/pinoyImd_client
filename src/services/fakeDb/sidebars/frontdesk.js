@@ -22,6 +22,7 @@ import {
   Assurance,
   Controls,
 } from "../../../pages/platforms/diagnostics/management";
+import Products from "../../../pages/platforms/frontdesk/market/products";
 
 const frontdesk = [
   {
@@ -54,16 +55,6 @@ const frontdesk = [
         name: "Temperature",
         path: "/temperature",
         component: Temperature,
-      },
-      {
-        name: "Quality Assurance(QA)",
-        path: "/management/external",
-        component: Assurance,
-      },
-      {
-        name: "Quality Control(QC)",
-        path: "/management/internal",
-        component: Controls,
       },
       {
         name: "Quality Management",
@@ -152,6 +143,7 @@ const frontdesk = [
       {
         name: "Products",
         path: "/products",
+        component: Products,
       },
     ],
   },
