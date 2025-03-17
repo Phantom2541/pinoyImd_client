@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "results/laboratory/urinalysis/logbook";
+const name = "diagnostics/laboratory/result/urinalysis";
 
 const initialState = {
   collections: [],
@@ -11,10 +11,10 @@ const initialState = {
 };
 
 export const BROWSE = createAsyncThunk(
-  `${url}/browse`,
+  `${name}/browse`,
   ({ token, data }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, data);
+      return axioKit.universal(`${name}/browse`, token, data);
     } catch (error) {
       const message =
         (error.response &&
@@ -29,10 +29,10 @@ export const BROWSE = createAsyncThunk(
 );
 
 export const SAVE = createAsyncThunk(
-  `${url}/save`,
+  `${name}/save`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(url, data, token);
+      return axioKit.save(name, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -47,10 +47,10 @@ export const SAVE = createAsyncThunk(
 );
 
 export const UPDATE = createAsyncThunk(
-  `${url}/update`,
+  `${name}/update`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.update(url, data, token);
+      return axioKit.update(name, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -65,7 +65,7 @@ export const UPDATE = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name: url,
+  name: name,
   initialState,
   reducers: {
     RESET: (state) => {
