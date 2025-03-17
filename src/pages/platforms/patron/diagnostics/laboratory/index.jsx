@@ -27,7 +27,7 @@ export default function Laboratories() {
   //console.log("unused variable setFavorites", setFavorites);
 
   useEffect(() => {
-    setFavorites('sample')
+    setFavorites("sample");
     setCompanies(collections);
   }, [collections]);
 
@@ -55,12 +55,13 @@ export default function Laboratories() {
     <MDBContainer>
       <MDBRow className="mb-3">
         <MDBCol size="6" className="d-flex align-items-center">
-          <MDBTypography variant="h2">Laboratories</MDBTypography>
+          <MDBTypography>Laboratories</MDBTypography>
         </MDBCol>
         {!isLoading && (
           <MDBCol size="6">
             <MDBInput
               onChange={(e) => setSearchKey(e.target.value)}
+              value={searchKey}
               type="search"
               label="Search by Company name"
             />
@@ -93,13 +94,13 @@ export default function Laboratories() {
         </MDBAlert>
       )}
       {/* if companies have value, it will display */}
-      {Boolean(companies.length) && (
+      {companies.length > 0 && (
         <MDBRow>
-          {companies.map((company) => (
+          {companies.map((company, index) => (
             <MDBCol md="3" key={company._id} className="p-2">
               <CompanyCard
                 company={company}
-                isFavorite={setFavorites([...favorites, company._id])}
+                // isFavorite={setFavorites([...favorites, company._id])}
               />
             </MDBCol>
           ))}

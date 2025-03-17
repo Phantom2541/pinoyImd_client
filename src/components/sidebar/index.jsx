@@ -14,7 +14,6 @@ import {
   capitalize,
   isImageValid,
 } from "../../services/utilities";
-
 export default function SideNavigation({
   triggerOpening,
   breakWidth,
@@ -41,7 +40,7 @@ export default function SideNavigation({
 
   useEffect(() => {
     if (activePlatform) {
-      setLinks(Sidebars[activePlatform.platform] || []);
+      setLinks(Sidebars[activePlatform.platform?.toLowerCase()] || []);
     }
   }, [activePlatform]);
 

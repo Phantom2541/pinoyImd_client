@@ -26,7 +26,7 @@ import Notification from "./notification";
  *
  * @returns {JSX.Element} users
  */
-export default function Search({ setPhysician, setRegister, clientId }) {
+export default function Search({ setPhysician, setRegister, clientID }) {
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
     { collections, isLoading } = useSelector(({ physicians }) => physicians),
@@ -47,13 +47,17 @@ export default function Search({ setPhysician, setRegister, clientId }) {
   // The function then dispatches the GETPATIENTS action with the token and the formatted
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
+
   useEffect(() => {
     setPhysicians(collections || []);
   }, [collections]);
+
   const debouncedSearch = debounce((searchKey) => {
     const key = formatNameToObj(searchKey);
-    dispatch(FILTER({ token, key }));
+    dispatch(RESET());
+    dispatch(FILTER({ token, key: { ...key, clientID } }));
   }, 1000);
+
   const handleChange = (e) => {
     const _searchKey = e.target.value;
     setSearchKey(_searchKey);

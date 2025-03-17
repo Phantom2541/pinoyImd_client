@@ -48,7 +48,6 @@ export default function Platforms() {
     // OR, if not using React Router, use:
     window.location.href = redirectURL;
   };
-
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>

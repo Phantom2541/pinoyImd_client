@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import { axioKit, globalSearch } from "../../../utilities";
 
-const url = "assets/persons/physicians";
+const url = "procurements/product";
 
 const initialState = {
   collections: [],
@@ -12,27 +12,9 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(
   `${url}/browse`,
-  ({ token, branchId }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${url}/browse`, token, { branchId });
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const FILTER = createAsyncThunk(
-  `${url}/filter`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/filter`, token, key);
+      return axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -46,11 +28,11 @@ export const FILTER = createAsyncThunk(
   }
 );
 
-export const TIEUPS = createAsyncThunk(
-  `${url}/tieups`,
+export const VENDORS = createAsyncThunk(
+  `${url}/vendors`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/tieups`, token, key);
+      return axioKit.universal(`${url}/vendors`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -64,52 +46,114 @@ export const TIEUPS = createAsyncThunk(
   }
 );
 
-export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
-  try {
-    return axioKit.save(url, form.data, form.token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const OUTSOURCE = createAsyncThunk(
+  `${url}/outsource`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/outsource`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
-  try {
-    return axioKit.update(url, form.data, form.token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const GETBRANCHES = createAsyncThunk(
+  `${url}/getBranches`,
+  ({ token }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/getBranches`, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const DESTROY = createAsyncThunk(`${url}/destroy`, (form, thunkAPI) => {
-  try {
-    return axioKit.destroy(url, form.data, form.token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const SAVE = createAsyncThunk(
+  `${url}/save`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
+
+export const UPDATE = createAsyncThunk(
+  `${url}/update`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const DESTROY = createAsyncThunk(
+  `${url}/destroy`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.destroy(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetFILTERED: (state, { payload }) => {
+      // Always create a new array before filtering
+      const collectionsCopy = state.collections.map((item) =>
+        JSON.parse(JSON.stringify(item))
+      );
+      const filtered = globalSearch(collectionsCopy, payload);
+      state.filtered = filtered;
+
+      // Dispatch the action instead of calling it as a function
+      state.totalPages = Math.ceil(filtered.length / state.maxPage);
+
+      state.isSuccess = true;
+    },
     RESET: (state) => {
       state.isSuccess = false;
-      state.collections = [];
       state.message = "";
     },
   },
@@ -121,8 +165,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
+        state.collections = action.payload;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -130,31 +173,47 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(FILTER.pending, (state) => {
+
+      .addCase(VENDORS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(FILTER.fulfilled, (state, { payload }) => {
-        state.collections = payload.payload;
+      .addCase(VENDORS.fulfilled, (state, action) => {
+        state.collections = action.payload;
         state.isLoading = false;
       })
-      .addCase(FILTER.rejected, (state, action) => {
+      .addCase(VENDORS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(TIEUPS.pending, (state) => {
+
+      .addCase(OUTSOURCE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(TIEUPS.fulfilled, (state, action) => {
-        const { payload } = action;
-        state.collections = payload;
+      .addCase(OUTSOURCE.fulfilled, (state, action) => {
+        state.collections = action.payload;
         state.isLoading = false;
       })
-      .addCase(TIEUPS.rejected, (state, action) => {
+      .addCase(OUTSOURCE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(GETBRANCHES.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GETBRANCHES.fulfilled, (state, action) => {
+        state.collections = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(GETBRANCHES.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -168,12 +227,7 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        payload?.length > 0 &&
-          payload.map((data) =>
-            //kasi pwede siyang mag add ng madaming physicians kaya minap ko kasi array yung return niya
-            state.collections.tieups.unshift(data)
-          );
-
+        state.collections.unshift(payload);
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -190,7 +244,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.tieups.findIndex(
+        const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
 
@@ -228,6 +282,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { SetFILTERED, RESET } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

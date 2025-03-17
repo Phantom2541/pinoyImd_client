@@ -18,8 +18,8 @@ export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
 
   const renderSidebars = () => {
-    const platforms = Sidebars[activePlatform?.platform];
-    if (!Array.isArray(platforms)) return "";
+    const platforms = Sidebars[activePlatform?.platform?.toLowerCase()];
+    if (!Array.isArray(platforms)) return "Ooops.. platforms must be array";
     var basePath = "";
     const sideBars = [];
 
@@ -61,35 +61,13 @@ export default function Routes() {
     });
     return sideBars;
   };
+  const { platform = "" } = activePlatform;
+
   return (
     <Switch>
-      {!activePlatform?.platform && (
-        <Route exact path={`/dashboard`} component={UnsetApply} />
-      )}
+      {!platform && <Route exact path={`/dashboard`} component={UnsetApply} />}
+
       {renderSidebars()}
-
-      {/* {Sidebars[activePlatform?.platform]?.map(
-        ({ path, component, children }, index) => {
-          if (children)
-            return children.map((child, cIndex) => (
-              <Route
-                key={`route-${index}-${cIndex}`}
-                exact
-                path={`${path}${child.path}`}
-                component={child.component || NotExisting}
-              />
-            ));
-
-          return (
-            <Route
-              key={`route-${index}`}
-              exact
-              path={path}
-              component={component || NotExisting}
-            />
-          );
-        }
-      )} */}
 
       <Route path="/profile" exact component={Profile} />
 
