@@ -13,6 +13,7 @@ const Footer = () => {
       >
         <MDBIcon icon="pencil-alt" />
       </MDBBtn>
+
       <MDBBtn
         type="button"
         onClick={() => false}
@@ -23,6 +24,7 @@ const Footer = () => {
       >
         <MDBIcon icon="cog" spin />
       </MDBBtn>
+
       <MDBBtn
         type="button"
         onClick={() => false}
