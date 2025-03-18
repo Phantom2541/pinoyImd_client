@@ -75,21 +75,8 @@ const Header = () => {
       cascade
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <div style={{ width: "20rem" }} className="m-0 p-0">
-        <CustomSelect
-          choices={cashiers.map((cashier) => ({
-            fullName: fullName(cashier?.fullName),
-            _id: cashier._id,
-          }))}
-          className="m-0 p-0"
-          preValue="Select a cashier"
-          inputClassName="m-0 p-0 text-white"
-          onChange={(value) => dispatch(SetFilterByCASHIER(value))}
-          texts="fullName"
-          values={"_id"}
-        />
-      </div>
-      {/* <select
+      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+        <select
           className="form-control mr-3 bg-light"
           onChange={(e) => dispatch(SetFilterByCASHIER(e.target.value))} // setSelectedCashier(e.target.value)}
         >
@@ -99,7 +86,8 @@ const Header = () => {
               {fullName(cashier?.fullName)}
             </option>
           ))}
-        </select> */}
+        </select>
+      </div>
       <div className="d-flex align-items-center">
         <FilterCollections setFiltered={(key) => handleFiltered(key)} />
       </div>
