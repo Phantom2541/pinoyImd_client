@@ -10,6 +10,7 @@ import {
   Utilities,
   Remmitances,
 } from "../../../pages/platforms/cashier";
+
 import {
   Tablestemplate,
   Collapsable,

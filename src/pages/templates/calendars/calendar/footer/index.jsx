@@ -1,5 +1,5 @@
+import React from "react";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
-
 const Footer = () => {
   return (
     <MDBBtnGroup className="sales-card-footer w-100">
@@ -13,6 +13,7 @@ const Footer = () => {
       >
         <MDBIcon icon="pencil-alt" />
       </MDBBtn>
+
       <MDBBtn
         type="button"
         onClick={() => false}
@@ -23,6 +24,7 @@ const Footer = () => {
       >
         <MDBIcon icon="cog" spin />
       </MDBBtn>
+
       <MDBBtn
         type="button"
         onClick={() => false}
