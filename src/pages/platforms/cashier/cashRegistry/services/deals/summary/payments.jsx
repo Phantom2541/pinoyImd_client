@@ -1,11 +1,15 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
+import { AUTOSELECT } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 export default function Payments() {
   const { total, collections } = useSelector(({ deals }) => deals);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true),
+    { selected } = useSelector(({ remittances }) => remittances),
+    dispatch = useDispatch();
 
   localStorage.setItem("payments", JSON.stringify(collections));
   console.log(collections);
@@ -20,6 +24,10 @@ export default function Payments() {
       { cash: 0, gcash: 0, vouchers: 0, pending: 0 }
     );
   }, [collections]);
+
+  useEffect(() => {
+    dispatch(AUTOSELECT());
+  }, [dispatch]);
 
   return (
     <MDBCard className="shadow-sm mb-2 ">
@@ -39,7 +47,9 @@ export default function Payments() {
         <MDBCardBody className="pt-2">
           <div className="d-flex justify-content-between">
             <span>Floating Cash:</span>
-            <strong className="text-warning">₱0.00</strong>
+            <strong className="text-warning">
+              {currency(selected?.open?.sum)}
+            </strong>
           </div>
           <div className="d-flex justify-content-between border-bottom py-2">
             <span>Cash :</span>

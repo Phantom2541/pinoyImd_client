@@ -14,13 +14,14 @@ import {
 } from "mdbreact";
 import {
   TOGGLE,
-  FLOATINGCASH,
-} from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
-import { Denominations, Policy } from "../../../../../../services/fakeDb";
+  SAVE,
+  UPDATE as CLOSINGCASH,
+} from "./../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import { Denominations, Policy } from "./../../../../../../../services/fakeDb";
 import {
   currency,
   removeUndefinedValues,
-} from "../../../../../../services/utilities";
+} from "./../../../../../../../services/utilities";
 
 const billPositions = {
   20: "0px 0px",
@@ -33,28 +34,20 @@ const billPositions = {
 
 const coinPositions = {
   1: "-178px -325px",
-  5: "-235px -317px",
-  10: "-304px -315px",
-  20: "-372px -315px",
+  5: "-232px -315px",
+  10: "-295px -312px",
+  20: "-363px -310px",
 };
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+const coinSize = {
+  1: "55px",
+  5: "68px",
+  10: "70px",
+  20: "75px",
+};
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { month, year, day, showModal, title } = useSelector(
+    { month, year, day, showModal, title, selected } = useSelector(
       ({ remittances }) => remittances
     ),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
@@ -71,7 +64,7 @@ export default function Modal() {
 
   const coinImage = `${process.env.PUBLIC_URL}/assets/denominations.png`;
 
-  const getBillStyle = (bill) => ({
+  const getBillimg = (bill) => ({
     width: "300px",
     height: "126px",
     backgroundImage: `url(${coinImage})`,
@@ -80,9 +73,9 @@ export default function Modal() {
     display: "block",
   });
 
-  const getCoinStyle = (coin) => ({
-    width: "60px",
-    height: "60px",
+  const getCoinIMG = (coin) => ({
+    width: coinSize[coin],
+    height: coinSize[coin],
     backgroundImage: `url(${coinImage})`,
     backgroundPosition: coinPositions[coin] || "0px 0px",
     backgroundSize: "500px auto",
@@ -115,44 +108,56 @@ export default function Modal() {
   };
 
   const handleSubmit = () => {
-    const department = Policy.getDepartment(activePlatform.position);
     const _floating = removeUndefinedValues(floating);
-
-    dispatch(
-      FLOATINGCASH({
-        token,
-        data: {
-          date: {
-            month: monthNames[month],
-            year,
-            day,
-          },
-          opening: {
-            time: new Date().toLocaleTimeString("en-PH", {
+    if (!selected._id) {
+      dispatch(
+        SAVE({
+          token,
+          data: {
+            date: new Date().toLocaleString("en-US", {
               timeZone: "Asia/Manila",
-              hour12: false,
             }),
-            ..._floating,
-            sum,
+            opening: {
+              ..._floating,
+              sum,
+            },
+            cashier: auth._id,
+            branch: activePlatform?.branchId,
+            department: Policy.getDepartment(activePlatform.position),
           },
-          cashier: auth._id,
-          branch: activePlatform?.branchId,
-          department,
-        },
-      })
-    );
+        })
+      );
+    } else {
+      dispatch(
+        CLOSINGCASH({
+          token,
+          data: {
+            closing: {
+              time: new Date().toLocaleTimeString("en-PH", {
+                timeZone: "Asia/Manila",
+                hour12: false,
+              }),
+              ..._floating,
+              sum, // floating is included
+            },
+            gross: selected.gross,
+            _id: selected._id,
+          },
+        })
+      );
+    }
     dispatch(TOGGLE());
   };
 
   return (
     <MDBModal
       isOpen={showModal}
-      toggle={() => dispatch(TOGGLE())}
+      toggle={() => dispatch(TOGGLE({ key: "open" }))}
       size="lg"
       backdrop
     >
       <MDBModalHeader
-        toggle={() => dispatch(TOGGLE())}
+        toggle={() => dispatch(TOGGLE({ key: "open" }))}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="calendar-alt" className="mr-2" />
@@ -183,7 +188,7 @@ export default function Modal() {
                     <tr key={`row-${idx}`}>
                       <td className="text-center">
                         <div
-                          style={getBillStyle(Number(bill1))}
+                          style={getBillimg(Number(bill1))}
                           title={currency(bill1)}
                         />
                       </td>
@@ -202,7 +207,7 @@ export default function Modal() {
                       <td className="text-center">
                         {bill2 && (
                           <div
-                            style={getBillStyle(Number(bill2))}
+                            style={getBillimg(Number(bill2))}
                             title={currency(bill2)}
                           />
                         )}
@@ -232,7 +237,7 @@ export default function Modal() {
         <MDBRow>
           {Object.keys(coinPositions).map((coin) => (
             <MDBCol key={coin} md="3" className="text-center">
-              <div style={getCoinStyle(Number(coin))}></div>
+              <div style={getCoinIMG(Number(coin))} title={currency(coin)} />
               <input
                 type="number"
                 min={0}

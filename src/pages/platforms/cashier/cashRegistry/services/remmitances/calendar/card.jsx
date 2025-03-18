@@ -17,23 +17,27 @@ const Card = ({ txt, num, index, item = {} }) => {
     >
       <Indicator num={num} week={week} isFuture={isFuture} />
       <div className="d-flex items-center">
-        <div className="sales-card-info mr-4">
-          {opening > 0 && (
-            <h6 className="mb-1">Floating Cash: {currency(opening)}</h6>
+        <div className="sales-card-info mr-4 mt-3">
+          {opening?.sum > 0 && (
+            <h6 className="mb-1" title="Floating Cash">
+              FC: {currency(opening.sum)}
+            </h6>
           )}
           {totalSales > 0 && (
-            <h6 className="mb-1">Sales: {currency(totalSales)}</h6>
+            <h6 className="mb-1" style={{ whiteSpace: "nowrap" }}>
+              Sales: {currency(totalSales)}
+            </h6>
           )}
           {expenses > 0 && (
-            <h6 className="mb-1">Remitted: {currency(expenses)}</h6>
+            <h6 className="mb-1" style={{ whiteSpace: "nowrap" }}>
+              Remitted: {currency(expenses)}
+            </h6>
           )}
         </div>
       </div>
-      {!isFuture && <Footer num={num} />}
+      {!isFuture && <Footer num={num} item={item} />}
     </div>
   );
 };
 
 export default Card;
-
-// const coinImage = `${process.env.PUBLIC_URL}/assets/denominations.png`;

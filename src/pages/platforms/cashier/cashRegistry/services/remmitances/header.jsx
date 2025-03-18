@@ -11,38 +11,25 @@ import {
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import "./style.css";
 
-// const today = new Date();
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { month, year } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
 
-  console.log("activePlatform", activePlatform);
-
   useEffect(() => {
     if (token && activePlatform?.branchId && year && month) {
+      const startDate = new Date(year, month, 1);
+      startDate.setUTCHours(0, 0, 0, 0);
+      const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+      endDate.setUTCHours(23, 59, 59, 999);
+
       dispatch(
         BROWSE({
           token,
           key: {
-            branchId: activePlatform?.branchId,
-            month: monthNames[month],
-            year,
+            branch: activePlatform?.branchId,
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
             cashier: auth?._id,
           },
         })

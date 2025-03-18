@@ -16,11 +16,13 @@ const initialState = {
     patients: 0,
     isEmpty: true,
   },
+  selected: {},
   day: 1,
   month: today.getMonth(),
   year: today.getFullYear(),
   title: "",
   showModal: false,
+  showCensus: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -79,11 +81,11 @@ export const UPDATE = createAsyncThunk(
     }
   }
 );
-export const FLOATINGCASH = createAsyncThunk(
-  `${url}/floatingCash`,
-  ({ token, data }, thunkAPI) => {
+export const AUTOSELECT = createAsyncThunk(
+  `${url}/autoSelect`,
+  ({ token }, thunkAPI) => {
     try {
-      return axioKit.save(`${url}`, data, token);
+      return axioKit.universal(`${url}/autoSelect`, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -107,20 +109,33 @@ export const reduxSlice = createSlice({
     SetYEAR: (state, { payload }) => {
       state.year = payload;
     },
-    TOGGLE: (state, { payload }) => {
-      if (state.showModal) {
-        state.showModal = false;
+    SetSELECTED: (state, { payload }) => {
+      const { key, value } = payload;
+      if (key === "census") {
+        state.showCensus = true;
       } else {
-        const { key, value } = payload;
-        if (key === "open") {
-          state.title = "Floating Cash";
-        } else if (key === "close") {
-          state.title = "Closing Cash Register";
-        } else {
-          state.title = "Menu Census";
-        }
-        state.day = value;
         state.showModal = true;
+        state.title = "Menu Census";
+        // state.day = value;
+      }
+      state.selected = value;
+    },
+    TOGGLE: (state, { payload = {} }) => {
+      const { key, value } = payload;
+      if (key === "census") {
+        state.showCensus = false;
+      } else {
+        if (state.showModal) state.showModal = false;
+        else {
+          if (key === "open") {
+            state.title = "Floating Cash";
+            state.showModal = true;
+          } else {
+            state.title = "Closing Cash Register";
+            state.showModal = true;
+          }
+          state.day = value;
+        }
       }
     },
     RESET: (state) => {
@@ -189,6 +204,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetMONTH, SetYEAR, TOGGLE, RESET } = reduxSlice.actions;
+export const { SetMONTH, SetYEAR, TOGGLE, SetSELECTED, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

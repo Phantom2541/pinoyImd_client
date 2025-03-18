@@ -15,7 +15,12 @@ export default function Calendar() {
       <WeekHeader />
       <div className="calendar-body">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => {
-          const item = collections.find(({ date }) => date.day === num);
+          const item = collections.find(({ createdAt }) => {
+            if (!createdAt) return false; // Avoid errors if createdAt is undefined
+
+            const date = new Date(createdAt); // Convert if it's a string
+            return date.getDate() === num;
+          });
           return <Card key={index} num={num} txt={txt} item={item} />;
         })}
       </div>

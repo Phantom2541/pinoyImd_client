@@ -9,8 +9,11 @@ import { Categories, Payments } from "../../../../../../../services/fakeDb";
 import { UPDATE as PATIENTUPDATE } from "../../../../../../../services/redux/slices/assets/persons/users";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import Months from "../../../../../../../services/fakeDb/calendar/months";
-import { RESET, SAVE, SETCART } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
+import {
+  RESET,
+  SAVE,
+  SETCART,
+} from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import { removeUndefinedValues } from "../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 
@@ -26,7 +29,6 @@ export default function Summary() {
       ssx,
       authorizedBy,
       department,
-      
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
@@ -44,15 +46,9 @@ export default function Summary() {
 
     const cash = Number(e.target.amount.value);
 
-    const today = new Date();
-
     const _data = {
       // exact date used for pre calculated daily sale
-      date: {
-        month: Months[today.getMonth()],
-        day: today.getDate(),
-        year: today.getFullYear(),
-      },
+      date: new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }),
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
       authorizedBy: authorizedBy || undefined,
@@ -120,15 +116,14 @@ export default function Summary() {
 
     const data = removeUndefinedValues(_data);
 
-    dispatch(SAVE({token, data}))
+    dispatch(SAVE({ token, data }))
       .then(() => {
-    dispatch(SETCART());
-    addToast("Transaction completed successfully", { appearance: "info" });
-
-  })
-  .catch((error) => {
-    addToast("Transaction failed", { appearance: "error" });
-  });
+        dispatch(SETCART());
+        addToast("Transaction completed successfully", { appearance: "info" });
+      })
+      .catch((error) => {
+        addToast("Transaction failed", { appearance: "error" });
+      });
 
     return dispatch(RESET());
   };
