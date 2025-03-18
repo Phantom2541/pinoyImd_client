@@ -1,5 +1,5 @@
+import React from "react";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
-
 const Footer = () => {
   return (
     <MDBBtnGroup className="sales-card-footer w-100">

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
-import { Roles } from "../../../../../../services/fakeDb";
+import { Policy } from "../../../../../../services/fakeDb";
 import AccessModal from "./accessModal";
 import {
   SETOnHotSEAT,
@@ -24,14 +24,18 @@ function EditableField({
   handleCancel,
   value,
   children,
+  isUpdate = false,
   isMoney = true,
 }) {
   // const isEditing = editField === fieldName;
   const { fieldName: fieldNameUpdate, isLoading } = updateTracker;
-  const isEditing = value ? editField === fieldName : true;
+  const isDepartment = label === "Department";
+  const isEditing = isDepartment
+    ? true
+    : value
+    ? editField === fieldName || isUpdate
+    : true;
   const formattedValue = Number(value) && isMoney ? currency(value) : value;
-  console.log(isNumericString(value), value);
-  // const isEditing = true;
   return (
     <div className="editable-field d-flex align-items-center mt-1 ">
       <strong
@@ -43,29 +47,31 @@ function EditableField({
       {isEditing ? (
         <div className="input-inline ml-2 position-relative">
           {children}
-          <div
-            className="d-flex"
-            style={{ position: "absolute", right: "0.3rem" }}
-          >
-            <div className="mr-1">
-              {isLoading && fieldNameUpdate === fieldName ? (
-                <MDBIcon icon="spinner" pulse />
-              ) : (
+          {!isDepartment && (
+            <div
+              className="d-flex"
+              style={{ position: "absolute", right: "0.3rem" }}
+            >
+              <div className="mr-1">
+                {isLoading && fieldNameUpdate === fieldName ? (
+                  <MDBIcon icon="spinner" pulse />
+                ) : (
+                  <MDBIcon
+                    icon="check"
+                    className="icon-inline"
+                    onClick={() => saveField(fieldName, fieldName)}
+                  />
+                )}
+              </div>
+              <div style={{ width: "25px" }} className="bg-white">
                 <MDBIcon
-                  icon="check"
-                  className="icon-inline"
-                  onClick={() => saveField(fieldName, fieldName)}
+                  icon="times"
+                  className="icon-inline cancel"
+                  onClick={() => handleCancel()}
                 />
-              )}
+              </div>
             </div>
-            <div style={{ width: "25px" }} className="bg-white">
-              <MDBIcon
-                icon="times"
-                className="icon-inline cancel"
-                onClick={() => handleCancel()}
-              />
-            </div>
-          </div>
+          )}
           {errors[fieldName] && (
             <div className="invalid-feedback">{errors[fieldName].message}</div>
           )}
@@ -97,7 +103,9 @@ export default function CollapseTable({
     register,
     handleSubmit,
     formState: { errors },
+    watch,
     reset,
+    setValue,
   } = useForm();
 
   const resetData = useCallback(() => {
@@ -139,10 +147,32 @@ export default function CollapseTable({
     setSelected(staff);
     toggle();
   };
-
+  const {
+    getDepartment,
+    getDefaultDesignation,
+    isValidDesignationForDepartment,
+  } = Policy;
   const { access = [] } = staff || {};
   const { soe, hos, pc, designation } = employment || {};
   const hasContract = soe && hos && pc && designation;
+  const department = watch("employmentDepartment");
+  const baseDepartment = department || getDepartment(designation);
+  const departmentHasChange =
+    department !== getDepartment(employment.designation) && department
+      ? true
+      : false;
+
+  useEffect(() => {
+    if (
+      !isValidDesignationForDepartment(employment?.designation, baseDepartment)
+    ) {
+      setValue("employmentDesignation", getDefaultDesignation(baseDepartment));
+    }
+
+    if (!baseDepartment) {
+      setValue("employmentDepartment", "DEFAULT");
+    }
+  }, [employment?.designation, baseDepartment, setValue, baseDepartment]);
   return (
     <>
       <MDBRow>
@@ -201,6 +231,36 @@ export default function CollapseTable({
             </select>
           </EditableField>
           <EditableField
+            label="Department"
+            fieldName="employmentDepartment"
+            editField={editField}
+            setEditField={setEditField}
+            updateTracker={updateTracker}
+            register={register}
+            errors={errors}
+            saveField={saveField}
+            handleCancel={handleCancel}
+            value={getDepartment(employment?.designation)}
+          >
+            <select
+              {...register("employmentDepartment")}
+              className={`form-control form-control-sm ${
+                errors.employmentDesignation ? "is-invalid" : ""
+              }`}
+              value={department || getDepartment(employment?.designation)}
+              style={{
+                paddingRight: "55px", // Para may space bago icons
+              }}
+            >
+              <option />
+              {Policy.collections.map(({ department }, index) => (
+                <option key={index} value={department}>
+                  {department}
+                </option>
+              ))}
+            </select>
+          </EditableField>
+          <EditableField
             label="Designation"
             fieldName="employmentDesignation"
             editField={editField}
@@ -209,8 +269,9 @@ export default function CollapseTable({
             register={register}
             errors={errors}
             saveField={saveField}
+            isUpdate={departmentHasChange}
             handleCancel={handleCancel}
-            value={Roles.findById(employment?.designation)?.display_name}
+            value={Policy.getPosition(employment?.designation)}
           >
             <select
               {...register("employmentDesignation")}
@@ -222,9 +283,11 @@ export default function CollapseTable({
               }}
             >
               <option />
-              {Roles.collections.map((role) => (
-                <option value={role.id}>{role.display_name}</option>
-              ))}
+              {Policy.getPositions(department || "DEFAULT").map(
+                ({ display_name, id }) => (
+                  <option value={id}>{display_name}</option>
+                )
+              )}
             </select>
           </EditableField>
           <EditableField
