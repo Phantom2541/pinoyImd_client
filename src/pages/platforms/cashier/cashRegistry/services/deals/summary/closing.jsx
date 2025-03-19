@@ -65,7 +65,8 @@ export default function Vouchers() {
     }
   }, [collections]); // Re-run if collections change
 
-  const handleActivePage = (page) => setActivePage(page);
+  const handleActivePage = (page) =>
+    setActivePage(activePage === page ? "close" : page);
   const handleSubmit = () => {
     const data = {
       _id: selected._id,
