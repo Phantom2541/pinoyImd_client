@@ -57,7 +57,6 @@ export default function MenuCollapse({ staffs, page }) {
     >
       {handlePagination(staffs, page, maxPage).map((staff, index) => {
         const { user, contract, status, rate, contribution, _id } = staff;
-
         const role = Roles.findById(
           Number(contract?.designation)
         )?.display_name;

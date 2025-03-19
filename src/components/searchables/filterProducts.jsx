@@ -1,0 +1,35 @@
+import React, { useMemo } from "react";
+import { debounce } from "lodash";
+import { MDBIcon } from "mdbreact";
+import "./style.css";
+
+export default function Search({ setFiltered }) {
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((key) => {
+        setFiltered(key);
+      }, 500),
+    [setFiltered]
+  ); // dependencies
+
+  const handleChange = (value) => {
+    // Debounced search trigger
+    if (value) debouncedSearch(value);
+  };
+
+  return (
+    <div className="searchable-search-cotaniner ">
+      <div className={`searchable-search`}>
+        <input
+          placeholder="Search products..."
+          onChange={({ target }) => handleChange(target.value)}
+          autoCorrect="off"
+          spellCheck={false}
+        />
+        <button type="submit">
+          <MDBIcon icon="search" className="search-icon" />
+        </button>
+      </div>
+    </div>
+  );
+}

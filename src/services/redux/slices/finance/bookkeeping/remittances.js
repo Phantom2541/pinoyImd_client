@@ -16,8 +16,13 @@ const initialState = {
     patients: 0,
     isEmpty: true,
   },
+  selected: {},
+  day: 1,
   month: today.getMonth(),
   year: today.getFullYear(),
+  title: "",
+  showModal: false,
+  showCensus: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -76,6 +81,23 @@ export const UPDATE = createAsyncThunk(
     }
   }
 );
+export const AUTOSELECT = createAsyncThunk(
+  `${url}/autoSelect`,
+  ({ token }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/autoSelect`, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const reduxSlice = createSlice({
   name: url,
@@ -86,6 +108,35 @@ export const reduxSlice = createSlice({
     },
     SetYEAR: (state, { payload }) => {
       state.year = payload;
+    },
+    SetSELECTED: (state, { payload }) => {
+      const { key, value } = payload;
+      if (key === "census") {
+        state.showCensus = true;
+      } else {
+        state.showModal = true;
+        state.title = "Menu Census";
+        // state.day = value;
+      }
+      state.selected = value;
+    },
+    TOGGLE: (state, { payload = {} }) => {
+      const { key, value } = payload;
+      if (key === "census") {
+        state.showCensus = false;
+      } else {
+        if (state.showModal) state.showModal = false;
+        else {
+          if (key === "open") {
+            state.title = "Floating Cash";
+            state.showModal = true;
+          } else {
+            state.title = "Closing Cash Register";
+            state.showModal = true;
+          }
+          state.day = value;
+        }
+      }
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -99,8 +150,9 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+        console.log("📡 Calling API with payload:", payload);
+
         state.collections = payload;
         state.isLoading = false;
       })
@@ -152,6 +204,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetMONTH, SetYEAR, RESET } = reduxSlice.actions;
+export const { SetMONTH, SetYEAR, TOGGLE, SetSELECTED, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

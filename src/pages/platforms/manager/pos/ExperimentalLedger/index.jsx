@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Calendar from "./calendar";
-import { MDBBtn, MDBProgress, MDBTypography } from "mdbreact";
+import { useSelector } from "react-redux";
+import { useLocation, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { MDBBtn, MDBProgress, MDBTypography } from "mdbreact";
+import Calendar from "./calendar";
 import Months from "../../../../../services/fakeDb/calendar/months";
-import { useLocation, useHistory } from "react-router-dom";
 import FocusedSale from "./focused";
 
 const today = new Date();

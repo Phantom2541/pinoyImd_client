@@ -1,0 +1,284 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { capitalize } from "lodash";
+import {
+  currency,
+  fullName,
+  // axioKit,
+} from "./../../../../../../services/utilities";
+import { Categories } from "./../../../../../../services/fakeDb";
+import {
+  MANAGERUPDATE,
+  // RESET,
+} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import Swal from "sweetalert2";
+import Months from "../../../../../../services/fakeDb/calendar/months";
+import { MDBCardBody, MDBTable, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
+import "./style.css";
+
+export const Tables = () => {
+  const { token, auth } = useSelector(({ auth }) => auth),
+    { collections, filtered, maxPage, activePage } = useSelector(
+      ({ deals }) => deals
+    ),
+    [total, setTotal] = useState(0),
+    [patient, setPatient] = useState(0),
+    [didHoverID, setDidHoverID] = useState(-1),
+    [view, setView] = useState("all"),
+    dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   const today = new Date();
+  //   axioKit
+  //     .universal("finance/pre-calculated-daily-sale/find", token, {
+  //       month: Months[today.getMonth()],
+  //       day: today.getDate(),
+  //       year: today.getFullYear(),
+  //       cashier: auth._id,
+  //       branch: activePlatform?.branchId,
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching daily sale:", error);
+  //     });
+
+  //   return () => dispatch(RESET());
+  // }, [token, dispatch, activePlatform, auth]);
+
+  useEffect(() => {
+    const validTransactions = filtered.filter((item) => !item.deletedAt);
+    setTotal(validTransactions.reduce((a, b) => a + b.amount, 0));
+    setPatient(validTransactions.length);
+  }, [filtered]);
+
+  useEffect(() => {
+    if (!!collections.length) {
+      setView("all");
+    }
+  }, [collections, view]);
+
+  const handleDelete = async ({ _id }) => {
+    const { value: remarks } = await Swal.fire({
+      title: "Are you sure?",
+      text: "Please, specify a reason.",
+      input: "text",
+      inputPlaceholder: "Remarks",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Proceed",
+      inputValidator: (value) => {
+        if (!value) {
+          return "You need to write something!";
+        }
+      },
+    });
+
+    if (remarks) {
+      const today = new Date();
+      dispatch(
+        MANAGERUPDATE({
+          token,
+          key: {
+            _id,
+            remarks,
+            cash: 0,
+            amount: 0,
+            month: Months[today.getMonth()],
+            day: today.getDate(),
+            year: today.getFullYear(),
+            deletedAt: today.toLocaleString(),
+          },
+        })
+      );
+    }
+  };
+
+  const handleEdit = async (deal) => {
+    const { discount, amount } = deal;
+
+    const originalAmount = discount ? discount + amount : amount;
+    const message =
+      amount === originalAmount
+        ? `Amount is ${amount}`
+        : `discounted Amount: ${amount} : Original Amount: ${originalAmount}`;
+
+    const { value } = await Swal.fire({
+      title: "Input New Amount",
+      input: "number",
+      inputLabel: message,
+      inputAttributes: {
+        min: "0",
+        max: originalAmount.toString(),
+      },
+    });
+
+    if (!value) return; // If user cancels or inputs nothing, do nothing
+
+    if (value > originalAmount) {
+      return Swal.fire({
+        icon: "error",
+        title: "Invalid Amount",
+        text: `The amount must not exceed ${originalAmount}`,
+      });
+    }
+
+    if (value <= originalAmount) {
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Updated!",
+      });
+
+      dispatch(
+        MANAGERUPDATE({
+          token,
+          key: {
+            _id: deal._id,
+            amount: value,
+            discount: originalAmount - value,
+            authorizedBy: auth._id,
+          },
+        })
+      );
+    }
+  };
+
+  /**
+   * Pagination: Calculate the start and end index for the current page
+   */
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+
+  return (
+    <MDBCardBody>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          marginTop: "-1.4rem",
+        }}
+      >
+        <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+          {currency(total)}
+        </p>
+        <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
+        <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+          @ {patient} Patient/s
+        </p>
+      </div>
+
+      <MDBTable style={{ marginTop: "-5px" }}>
+        <thead>
+          <tr style={{ marginTop: "-5rem" }}>
+            <th>Patient</th>
+            <th>Physician</th>
+            <th>Amount</th>
+            <th>Services</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedData?.map((deal, index) => {
+            const isDeleted = !!deal.deletedAt;
+            const isDiscounted = deal.discount > 0;
+            const isHover = index === didHoverID;
+            return (
+              <tr
+                onMouseEnter={() => setDidHoverID(index)}
+                onMouseLeave={() => setDidHoverID(-1)}
+                key={`sales-${index + 1}`}
+                className={`transition-all ${isHover && "danger text-white"}`}
+                style={{
+                  backgroundColor: isDeleted
+                    ? "#ffcccc"
+                    : isDiscounted
+                    ? "#ccffcc"
+                    : "transparent",
+                }}
+              >
+                {/* <td>{index + 1}.</td> */}
+                <td>
+                  <h6>{fullName(deal.customerId.fullName)}</h6>
+                  <MDBBadge color="info" className="mr-2">
+                    {capitalize(
+                      deal.category === "walkin"
+                        ? deal.category
+                        : Categories.find(({ abbr }) => abbr === deal.category)
+                            .name
+                    )}
+                  </MDBBadge>
+                  @ {new Date(deal.createdAt).toLocaleTimeString()}
+                </td>
+                <td>
+                  {deal.physicianId?.fullName.lname && (
+                    <h6>Dr. {deal.physicianId.fullName.lname}</h6>
+                  )}
+                  <p>{deal.source?.companyName || deal.source?.name}</p>
+                </td>
+                <td style={{ fontWeight: 400 }}>
+                  <p>
+                    {currency(deal.amount)}
+                    {isHover && (
+                      <MDBBtn
+                        size="sm"
+                        style={{ marginTop: "-0.5rem" }}
+                        color="primary"
+                        rounded
+                        onClick={() => handleEdit(deal)}
+                        className="p-1 mx-2"
+                        title="Edit Sales Amount"
+                      >
+                        <MDBIcon icon="pencil-alt" />
+                      </MDBBtn>
+                    )}
+                  </p>
+                  {isDiscounted && (
+                    <p style={{ color: "red" }}>{currency(deal.discount)}</p>
+                  )}
+                </td>
+                <td>
+                  {deal.cart?.map((menu) => (
+                    <MDBBadge
+                      key={menu.referenceId}
+                      className="mx-1"
+                      color="success"
+                    >
+                      {menu?.abbreviation}
+                    </MDBBadge>
+                  ))}
+                </td>
+                <td>
+                  {!isHover ? (
+                    deal.remarks
+                  ) : (
+                    <MDBIcon
+                      icon="trash"
+                      className="mr-2 mt-2"
+                      title="Delete Sales"
+                      onClick={() => handleDelete(deal)}
+                    />
+                  )}
+                </td>
+                {/* <td>
+                  {!isDeleted && (
+                    <MDBIcon
+                      icon="trash"
+                      className="mr-2"
+                      title="Delete Sales"
+                      onClick={() => handleDelete(deal)}
+                    />
+                  )}
+                </td> */}
+              </tr>
+            );
+          })}
+        </tbody>
+      </MDBTable>
+    </MDBCardBody>
+  );
+};
+
+export default Tables;

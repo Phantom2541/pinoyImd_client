@@ -7,8 +7,6 @@ import Tagging from "./body/tagging";
 import Show from "./body/show";
 
 export default function Card({ item, index }) {
-  console.log("item", item);
-  
   const { collections: sources } = useSelector(({ providers }) => providers),
     [deal, setDeal] = useState({}),
     [edit, setEdit] = useState(false);
@@ -27,10 +25,12 @@ export default function Card({ item, index }) {
     setDeal(item);
   }, [item]);
   console.log("deal", item);
-  
+
   const handlePin = () => {
     return (
-      <span className={`sales-card-num ${item.rendered?.length > 0 && "rendered"}`}>
+      <span
+        className={`sales-card-num ${item.rendered?.length > 0 && "rendered"}`}
+      >
         {deal.page} {index + 1}
       </span>
     );

@@ -10,6 +10,7 @@ import {
   Utilities,
   Remmitances,
 } from "../../../pages/platforms/cashier";
+
 import {
   Tablestemplate,
   Collapsable,
@@ -28,10 +29,6 @@ import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
 // //import Outsource from "../../../pages/platforms/manager/provider";
 // import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 
-// const cashier = [
-//   {
-//     name: "bulletin",
-
 const cashier = [
   {
     name: "Bulletin",
@@ -40,7 +37,7 @@ const cashier = [
     component: Bulletin,
   },
   {
-    name: "Cashier",
+    name: "Cash Register",
     path: "/cashier",
     icon: "money-bill",
     children: [
@@ -129,29 +126,35 @@ const cashier = [
         icon: "receipt",
       },
       /**
-       * statement of Account (Sendout)
+       * Receivables  from sales vouchers
+       * from daily sales
+       * to be included as a SOA of insource
        */
       {
-        name: "Statement of Account",
-        path: "/soa",
-        icon: "balance-scale",
-        children: [
-          {
-            name: "Outsource", // Sendout
-            path: "/outsource",
-            icon: "truck",
-          },
-          {
-            name: "Insource", // Receivables  from sales vouchers
-            path: "/insource",
-            icon: "warehouse",
-          },
-        ],
+        name: "Insource",
+        path: "/insource",
+        icon: "warehouse",
       },
+      /**
+       * statement of Account (Sendout)
+       */
+      // {
+      //   name: "Statement of Account",
+      //   path: "/soa",
+      //   icon: "balance-scale",
+      //   children: [
+      //     {
+      //       name: "Outsource", // Sendout
+      //       path: "/outsource",
+      //       icon: "truck",
+      //     },
+      //   ],
+      // },
     ],
   },
+  //viewing only
   {
-    name: "Services Catalog", //viewing only
+    name: "Services Catalog",
     path: "/catalogs",
     icon: "clipboard-list",
     children: [
@@ -169,8 +172,9 @@ const cashier = [
       },
     ],
   },
+  //viewing only
   {
-    name: "Sources", //viewing only
+    name: "Sources",
     path: "/sources",
     icon: "cogs",
     children: [
@@ -200,8 +204,11 @@ const cashier = [
       },
     ],
   },
+  /**
+   * For refereces of new components
+   */
   {
-    name: "Templates ", //viewing only
+    name: "Templates ",
     path: "/templates ",
     icon: "list",
     children: [

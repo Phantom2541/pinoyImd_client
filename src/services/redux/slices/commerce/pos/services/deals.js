@@ -21,7 +21,7 @@ const initialState = {
   showModal: false,
   willCreate: false,
   totalPages: 0,
-  maxPage: 1,
+  maxPage: 5,
   activePage: 1,
   selected: {},
   isSuccess: false,
@@ -233,6 +233,11 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+    SetFilterByCASHIER: (state, { payload }) => {
+      state.filtered = state.collections.filter(
+        (item) => item.cashierId._id === payload
+      );
+    },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;
@@ -270,8 +275,12 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -303,14 +312,18 @@ export const reduxSlice = createSlice({
       })
       .addCase(MANAGERUPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
-          { _id, deletedAt, amount } = payload;
+          { _id, deletedAt, amount, discount, authorizedBy } = payload;
 
         const index = state.collections.findIndex((c) => c._id === _id);
 
-        if (deletedAt) {
-          state.collections.splice(index, 1);
-        } else {
-          state.collections[index].amount = amount;
+        if (index !== -1) {
+          state.collections[index] = {
+            ...state.collections[index],
+            amount,
+            discount, // Ensure discount is also updated
+            deletedAt, // Keep track of deletion status
+            authorizedBy, // Keep track of deletion status
+          };
         }
 
         state.message = success;
@@ -509,6 +522,7 @@ export const reduxSlice = createSlice({
 export const {
   SetTOTAL,
   SetFILTERED,
+  SetFilterByCASHIER,
   SetSELECTED,
   SetMODAL,
   SetMaxPage,

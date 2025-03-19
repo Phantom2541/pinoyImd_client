@@ -36,9 +36,9 @@ import {
 } from "./slices/diagnostics";
 
 import { access, liabilities, controls, assurances } from "./slices/liability";
-
 import { remittances, payables, payments, payrolls } from "./slices/finance";
 import temperatures from "./slices/monitoring/temperature";
+import products from "./slices/market/products";
 
 const store = configureStore({
   reducer: {
@@ -78,6 +78,7 @@ const store = configureStore({
     controls,
     assurances,
     dragDrop,
+    products,
   },
 });
 
