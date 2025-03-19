@@ -37,16 +37,16 @@ const billPositions = {
 };
 
 const coinPositions = {
-  1: "-178px -325px",
-  5: "-232px -315px",
-  10: "-295px -312px",
-  20: "-363px -310px",
+  1: "-182px -324px",
+  5: "-235px -317px",
+  10: "-300px -314px",
+  20: "-368px -310px",
 };
 const coinSize = {
-  1: "55px",
-  5: "68px",
-  10: "70px",
-  20: "75px",
+  1: "51px",
+  5: "60px",
+  10: "64px",
+  20: "68px",
 };
 
 export default function Modal() {
@@ -173,7 +173,7 @@ export default function Modal() {
         <MDBRow>
           <MDBCol md="12">
             <h5 className="text-center font-weight-bold">Bills</h5>
-            <MDBTable bordered small>
+            <MDBTable style={{ border: "none !important" }}>
               <MDBTableHead>
                 <tr>
                   <th>Denomination</th>
@@ -268,7 +268,14 @@ export default function Modal() {
         <MDBRow style={{ marginTop: "-0.5rem" }}>
           {Object.keys(coinPositions).map((coin) => (
             <MDBCol key={coin} md="3" className="d-flex align-items-center">
-              <div style={getCoinIMG(Number(coin))} title={currency(coin)} />
+              <MDBCard className="coins-radius">
+                <MDBCardBody className="m-0 p-0 coins-radius">
+                  <div
+                    style={getCoinIMG(Number(coin))}
+                    title={currency(coin)}
+                  />
+                </MDBCardBody>
+              </MDBCard>
               <MDBInput
                 type="number"
                 min={0}
@@ -284,7 +291,7 @@ export default function Modal() {
         </MDBRow>
 
         <div className="text-right mt-3">
-          <MDBBtn color="primary" onClick={handleSubmit}>
+          <MDBBtn color="primary" onClick={handleSubmit} rounded>
             <MDBIcon icon="check" className="mr-2" /> Submit
           </MDBBtn>
         </div>
