@@ -47,16 +47,27 @@ const coinSize = {
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { month, year, day, showModal, title, selected } = useSelector(
+    { showModal, title, selected } = useSelector(
       ({ remittances }) => remittances
     ),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
     [sum, setSum] = useState(0),
+    [coh, setCoh] = useState(0),
     dispatch = useDispatch();
 
   useEffect(() => {
     calculateSum(floating);
   }, [floating]);
+  useEffect(() => {
+    let _coh = 0;
+    if (selected.gross) {
+      let _sum = selected?.opening?.sum || 0;
+      const _gross = selected?.gross || 0;
+      let _expenses = selected?.expenses || 0;
+      _coh = _sum + _gross - _expenses;
+    }
+    setCoh(_coh);
+  }, [selected]);
 
   useEffect(() => {
     setFloating({ bills: {}, coins: {} });
@@ -158,11 +169,30 @@ export default function Modal() {
     >
       <MDBModalHeader
         toggle={() => dispatch(TOGGLE({ key: "open" }))}
-        className="light-blue darken-3 white-text"
+        className="light-blue darken-3 white-text d-flex justify-content-between align-items-center"
       >
-        <MDBIcon icon="calendar-alt" className="mr-2" />
-        {title || "Floating Cash"} {sum > 0 && ` : (${currency(sum)})`}
+        <div className="d-flex align-items-center">
+          <MDBIcon icon="calendar-alt" className="mr-2" />
+          <span>
+            {title || "Floating Cash"} {sum > 0 && ` : (${currency(sum)})`}
+          </span>
+        </div>
+
+        {title.trim() === "Closing Cash Register" && (
+          <span
+            className={
+              sum < coh
+                ? "text-danger" // 🔴 Shortage
+                : sum > coh
+                ? "text-warning" // 🟡 Overage
+                : "text-success" // ✅ Balanced
+            }
+          >
+            COH: {currency(coh)}
+          </span>
+        )}
       </MDBModalHeader>
+
       <MDBModalBody className="mb-0">
         <MDBRow>
           <MDBCol md="12">
@@ -250,9 +280,12 @@ export default function Modal() {
             </MDBCol>
           ))}
         </MDBRow>
-
         <div className="text-right mt-3">
-          <MDBBtn color="primary" onClick={handleSubmit}>
+          <MDBBtn
+            color="primary"
+            onClick={handleSubmit}
+            disabled={title.trim() === "Closing Cash Register" && sum !== coh} // disable submit if no cash input
+          >
             <MDBIcon icon="check" className="mr-2" /> Submit
           </MDBBtn>
         </div>

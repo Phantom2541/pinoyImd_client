@@ -5,7 +5,7 @@ import { currency } from "../../../../../../../services/utilities";
 
 export default function Vouchers() {
   const { total } = useSelector(({ deals }) => deals),
-    [isOpen, setIsOpen] = useState(true);
+    [isOpen, setIsOpen] = useState(false);
   return (
     <MDBCard className="shadow-sm">
       <MDBCollapseHeader style={{ borderRadius: "50%" }} className="bg-light">

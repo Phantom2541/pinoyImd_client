@@ -25,6 +25,14 @@ import {
 } from "../../../pages/platforms/diagnostics/management";
 import Products from "../../../pages/platforms/frontdesk/market/products";
 
+import {
+  Tablestemplate,
+  Collapsable,
+  Calendar,
+  DragDrop,
+  Search,
+} from "../../../pages/templates";
+
 const frontdesk = [
   {
     name: "bulletin board",
@@ -116,7 +124,6 @@ const frontdesk = [
       },
     ],
   },
-
   {
     name: "Purchases",
     path: "/purchases",
@@ -269,6 +276,46 @@ const frontdesk = [
         name: "Tieup",
         path: "/tieup",
         // component: Source,
+      },
+    ],
+  },
+  /**
+   * For refereces of new components
+   */
+  {
+    name: "Templates ",
+    path: "/templates ",
+    icon: "list",
+    children: [
+      {
+        name: "Tables",
+        path: "/tables",
+        component: Tablestemplate,
+        icon: "table",
+      },
+      {
+        name: "Collapsables",
+        path: "/collapsables",
+        component: Collapsable,
+        icon: "align-justify",
+      },
+      {
+        name: "Calendars",
+        path: "/calendars",
+        component: Calendar,
+        icon: "calendar-alt",
+      },
+      {
+        name: "DragDrop",
+        path: "/DragDrop",
+        component: DragDrop,
+        icon: "calendar-alt",
+      },
+      {
+        name: "Search",
+        path: "/search",
+        component: Search,
+        icon: "calendar-alt",
       },
     ],
   },

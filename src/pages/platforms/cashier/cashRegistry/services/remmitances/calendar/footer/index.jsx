@@ -14,7 +14,7 @@ const Footer = ({ num, item = {} }) => {
     dispatch(SetSELECTED({ key: "census", value: item }));
   const handleClose = () =>
     dispatch(SetSELECTED({ key: "close", value: item }));
-  const { opening, closing } = item;
+  const { opening, gross, collector } = item;
 
   return (
     <MDBBtnGroup className="sales-card-footer w-100">
@@ -23,7 +23,7 @@ const Footer = ({ num, item = {} }) => {
         className="m-0"
         size="sm"
         color={opening ? "danger" : "primary"}
-        disabled={opening}
+        disabled={!!opening}
         title="Open Cash Register"
         onClick={() => handleOpening()}
       >
@@ -36,6 +36,7 @@ const Footer = ({ num, item = {} }) => {
         color="primary"
         title="Census"
         onClick={() => handleCensus()}
+        disabled={!opening}
       >
         <MDBIcon icon="bars" />
       </MDBBtn>
@@ -43,12 +44,12 @@ const Footer = ({ num, item = {} }) => {
         type="button"
         className="m-0 "
         size="sm"
-        color={closing ? "danger" : "primary"}
-        disabled={closing}
-        title="Close Cash Register"
+        color={gross < 0 ? "danger" : "primary"}
+        title="Close Cash Register, to unlock, declaire a census"
         onClick={() => handleClose()}
+        disabled={!gross || collector}
       >
-        <MDBIcon icon="exchange-alt" spin />
+        <MDBIcon icon="exchange-alt" />
       </MDBBtn>
     </MDBBtnGroup>
   );
