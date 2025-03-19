@@ -14,14 +14,11 @@ import {
   SetFilterByCASHIER,
   RESET,
 } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
+import CustomSelect from "../../../../../../components/searchables/customSelect";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
-  const { collections, filtered, message, isSuccess } = useSelector(
-    ({ deals }) => deals
-  );
-  const [total, setTotal] = useState(0);
-  const [patient, setPatient] = useState(0);
+  const { collections, message, isSuccess } = useSelector(({ deals }) => deals);
   const [cashiers, setCashiers] = useState([]);
   const { addToast } = useToasts();
   const dispatch = useDispatch();
@@ -59,12 +56,6 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const validTransactions = filtered.filter((item) => !item.deletedAt);
-    setTotal(validTransactions.reduce((a, b) => a + b.amount, 0));
-    setPatient(validTransactions.length);
-  }, [filtered]);
-
-  useEffect(() => {
     if (!collections || collections.length === 0) return;
 
     // Remove duplicate cashier IDs and filter out deleted records
@@ -85,14 +76,8 @@ const Header = () => {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          <h5>{`${currency(total)} @ ${patient} Patient/s`}</h5>
-        </span>
-      </div>
-      <div className="d-flex align-items-center">
-        {/* Cashier Selection Dropdown */}
         <select
-          className="form-control mr-3"
+          className="form-control mr-3 bg-light"
           onChange={(e) => dispatch(SetFilterByCASHIER(e.target.value))} // setSelectedCashier(e.target.value)}
         >
           <option value="">Select Cashier</option>
@@ -102,7 +87,8 @@ const Header = () => {
             </option>
           ))}
         </select>
-        {/* Filter Input */}
+      </div>
+      <div className="d-flex align-items-center">
         <FilterCollections setFiltered={(key) => handleFiltered(key)} />
       </div>
     </MDBView>

@@ -11,6 +11,9 @@ import {
   MDBBtn,
   MDBRow,
   MDBCol,
+  MDBCard,
+  MDBInput,
+  MDBCardBody,
 } from "mdbreact";
 import {
   TOGGLE,
@@ -22,27 +25,28 @@ import {
   currency,
   removeUndefinedValues,
 } from "./../../../../../../../services/utilities";
+import "./style.css";
 
 const billPositions = {
-  20: "0px 0px",
-  50: "-300px 0px",
+  20: "-2px -3px",
+  50: "-302px 0px",
   100: "0px -126px",
-  200: "-300px -126px",
-  500: "0px -248px",
-  1000: "-300px -248px",
+  200: "-310px -127px",
+  500: "0px -253px",
+  1000: "-308px -253px",
 };
 
 const coinPositions = {
-  1: "-178px -325px",
-  5: "-232px -315px",
-  10: "-295px -312px",
-  20: "-363px -310px",
+  1: "-182px -324px",
+  5: "-235px -317px",
+  10: "-300px -314px",
+  20: "-368px -310px",
 };
 const coinSize = {
-  1: "55px",
-  5: "68px",
-  10: "70px",
-  20: "75px",
+  1: "51px",
+  5: "60px",
+  10: "64px",
+  20: "68px",
 };
 
 export default function Modal() {
@@ -80,7 +84,9 @@ export default function Modal() {
     height: "126px",
     backgroundImage: `url(${coinImage})`,
     backgroundPosition: billPositions[bill] || "0px 0px",
-    backgroundSize: "600px auto",
+    backgroundSize: "610px auto",
+    backgroundRepeat: "no-repeat",
+
     display: "block",
   });
 
@@ -197,7 +203,7 @@ export default function Modal() {
         <MDBRow>
           <MDBCol md="12">
             <h5 className="text-center font-weight-bold">Bills</h5>
-            <MDBTable bordered small>
+            <MDBTable style={{ border: "none !important" }}>
               <MDBTableHead>
                 <tr>
                   <th>Denomination</th>
@@ -217,41 +223,66 @@ export default function Modal() {
                   .map(([bill1, bill2], idx) => (
                     <tr key={`row-${idx}`}>
                       <td className="text-center">
-                        <div
-                          style={getBillimg(Number(bill1))}
-                          title={currency(bill1)}
-                        />
+                        <MDBCard>
+                          <MDBCardBody
+                            style={{ backGroundColor: "transparent" }}
+                            className="p-0 m"
+                          >
+                            <div
+                              style={getBillimg(Number(bill1))}
+                              title={currency(bill1)}
+                            />
+                          </MDBCardBody>
+                        </MDBCard>
                       </td>
-                      <td className="p-0">
-                        <input
+                      <td
+                        className=" d-flex align-items-center "
+                        style={{ height: "9.2rem" }}
+                      >
+                        <MDBInput
                           type="number"
                           min={0}
                           className="w-100 text-center"
                           required
-                          value={floating.bills[bill1] || ""}
+                          value={String(floating.bills[bill1] || 0)}
                           onChange={(e) =>
-                            handleInputChange("bills", bill1, e.target.value)
+                            handleInputChange(
+                              "bills",
+                              bill1,
+                              Number(e.target.value)
+                            )
                           }
                         />
                       </td>
                       <td className="text-center">
                         {bill2 && (
-                          <div
-                            style={getBillimg(Number(bill2))}
-                            title={currency(bill2)}
-                          />
+                          <MDBCard>
+                            <MDBCardBody className="m-0 p-0">
+                              <div
+                                style={getBillimg(Number(bill2))}
+                                title={currency(bill2)}
+                              />
+                            </MDBCardBody>
+                          </MDBCard>
                         )}
                       </td>
-                      <td className="p-0">
+                      <td
+                        className=" d-flex align-items-center"
+                        style={{ height: "9.2rem" }}
+                      >
                         {bill2 && (
-                          <input
+                          <MDBInput
                             type="number"
                             min={0}
                             className="w-100 text-center"
                             required
-                            value={floating.bills[bill2] || ""}
+                            value={String(floating.bills[bill2] || 0)}
                             onChange={(e) =>
-                              handleInputChange("bills", bill2, e.target.value)
+                              handleInputChange(
+                                "bills",
+                                bill2,
+                                Number(e.target.value)
+                              )
                             }
                           />
                         )}
@@ -263,18 +294,26 @@ export default function Modal() {
           </MDBCol>
         </MDBRow>
 
-        <h5 className="text-center font-weight-bold mt-4">Coins</h5>
-        <MDBRow>
+        <h5 className="text-center font-weight-bold mt-1">Coins</h5>
+        <MDBRow style={{ marginTop: "-0.5rem" }}>
           {Object.keys(coinPositions).map((coin) => (
-            <MDBCol key={coin} md="3" className="text-center">
-              <div style={getCoinIMG(Number(coin))} title={currency(coin)} />
-              <input
+            <MDBCol key={coin} md="3" className="d-flex align-items-center">
+              <MDBCard className="coins-radius">
+                <MDBCardBody className="m-0 p-0 coins-radius">
+                  <div
+                    style={getCoinIMG(Number(coin))}
+                    title={currency(coin)}
+                  />
+                </MDBCardBody>
+              </MDBCard>
+              <MDBInput
                 type="number"
                 min={0}
-                className="w-100 text-center mt-2"
-                value={floating.coins[coin] || ""}
+                className="text-center mt-2"
+                value={String(floating.coins[coin] || 0)}
+                style={{ width: "6rem" }}
                 onChange={(e) =>
-                  handleInputChange("coins", coin, e.target.value)
+                  handleInputChange("coins", coin, Number(e.target.value))
                 }
               />
             </MDBCol>
