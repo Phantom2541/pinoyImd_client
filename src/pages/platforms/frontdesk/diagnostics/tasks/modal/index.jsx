@@ -23,11 +23,11 @@ export default function Modal() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0 text-center">
         <MDBAlert
-          color={formColor(task.form)}
+          color={formColor(task?.form)}
           className="text-uppercase fw-bold"
         >
           <h5 style={{ letterSpacing: "30px" }} className="mb-0">
-            {task.form}
+            {task?.form}
           </h5>
         </MDBAlert>
         <BodySwitcher />

@@ -113,7 +113,7 @@ export const reduxSlice = createSlice({
     },
     SetTASK: (state, { payload }) => {
       const { form, task } = payload;
-      console.log("SetTASK", payload);
+      console.log("SetTASK", payload);  
 
       state.task = task;
       if (form === "Urinalysis") {

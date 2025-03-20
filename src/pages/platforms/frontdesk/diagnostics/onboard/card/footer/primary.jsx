@@ -37,6 +37,7 @@ const PrimaryFooter = ({ deal, setEdit }) => {
           await axioKit.save(
             "/diagnostics/laboratory/result/miscellaneous",
             {
+              _id,
               packages: buntisPresent,
               saleId: _id,
               customerId: customerId?._id,
@@ -55,6 +56,7 @@ const PrimaryFooter = ({ deal, setEdit }) => {
         //console.log("single form");
 
         const newArr = tests.map((test) => ({
+          _id,
           packages: [test],
           saleId: _id,
           customerId: customerId?._id,
@@ -120,7 +122,6 @@ const PrimaryFooter = ({ deal, setEdit }) => {
 
   const preAnalytical = async (deal) => {
     console.log("preAnalytical", deal);
-    console.log("undone task", "preAnalytical");
   };
 
   return (
