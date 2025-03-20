@@ -33,7 +33,7 @@ export default function Search({ setSource = () => {} }) {
       ({ providers }) => providers
     ),
     [results, setResults] = useState([]),
-    [searchInDB, setSearchInDB] = useState(false),
+    // [searchInDB, setSearchInDB] = useState(false),
     [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
     dispatch = useDispatch();
@@ -66,24 +66,22 @@ export default function Search({ setSource = () => {} }) {
     // search result from redux
     const searchResultProviders = globalSearch(providerCollections, searchKey);
     // console.log(searchResultProviders);
-
     dispatch(SetSEARCHRESULTS(searchResultProviders));
-    setSearchInDB(false);
-    if (searchResultProviders.length === 0) {
-      dispatch(ToggleDidSearch());
-      dispatch(SEARCH({ token, key: searchKey }));
-      setSearchInDB(true);
-    }
+    // setSearchInDB(false);
+    // if (searchResultProviders.length === 0) {
+    dispatch(SEARCH({ token, key: searchKey }));
+    // setSearchInDB(true);
+    // }
   }, 1000);
 
   const handleChange = (e) => {
     const _searchKey = e.target.value;
     setSearchKey(_searchKey);
     setDidSearch(_searchKey ? true : false);
+    dispatch(ToggleDidSearch(_searchKey ? true : false));
+
     return debouncedSearch(_searchKey);
   };
-
-  console.log(searchInDB);
 
   const handleSelect = (selected) => {
     setSource(selected);
@@ -103,9 +101,7 @@ export default function Search({ setSource = () => {} }) {
   return (
     <div className="d-flex align-items-center">
       <Notification didSearch={didSearch} />
-      <div
-        className={`searchable-search ${didSearch && searchInDB && "active"}`}
-      >
+      <div className={`searchable-search ${didSearch && "active"}`}>
         <div className="searchable-search-suggestions">
           {!results?.length ? (
             <div>

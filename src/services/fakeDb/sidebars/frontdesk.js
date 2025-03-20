@@ -18,10 +18,20 @@ import {
 import { Menus, Services } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
 import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
+
 import {
   Assurance,
   Controls,
 } from "../../../pages/platforms/diagnostics/management";
+import Products from "../../../pages/platforms/frontdesk/market/products";
+
+import {
+  Tablestemplate,
+  Collapsable,
+  Calendar,
+  DragDrop,
+  Search,
+} from "../../../pages/templates";
 
 const frontdesk = [
   {
@@ -54,16 +64,6 @@ const frontdesk = [
         name: "Temperature",
         path: "/temperature",
         component: Temperature,
-      },
-      {
-        name: "Quality Assurance(QA)",
-        path: "/management/external",
-        component: Assurance,
-      },
-      {
-        name: "Quality Control(QC)",
-        path: "/management/internal",
-        component: Controls,
       },
       {
         name: "Quality Management",
@@ -124,7 +124,6 @@ const frontdesk = [
       },
     ],
   },
-
   {
     name: "Purchases",
     path: "/purchases",
@@ -148,6 +147,13 @@ const frontdesk = [
     name: "Market",
     path: "/market",
     icon: "list",
+    children: [
+      {
+        name: "Products",
+        path: "/products",
+        component: Products,
+      },
+    ],
   },
   {
     name: "Merchandise",
@@ -270,6 +276,46 @@ const frontdesk = [
         name: "Tieup",
         path: "/tieup",
         // component: Source,
+      },
+    ],
+  },
+  /**
+   * For refereces of new components
+   */
+  {
+    name: "Templates ",
+    path: "/templates ",
+    icon: "list",
+    children: [
+      {
+        name: "Tables",
+        path: "/tables",
+        component: Tablestemplate,
+        icon: "table",
+      },
+      {
+        name: "Collapsables",
+        path: "/collapsables",
+        component: Collapsable,
+        icon: "align-justify",
+      },
+      {
+        name: "Calendars",
+        path: "/calendars",
+        component: Calendar,
+        icon: "calendar-alt",
+      },
+      {
+        name: "DragDrop",
+        path: "/DragDrop",
+        component: DragDrop,
+        icon: "calendar-alt",
+      },
+      {
+        name: "Search",
+        path: "/search",
+        component: Search,
+        icon: "calendar-alt",
       },
     ],
   },

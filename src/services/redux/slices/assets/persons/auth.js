@@ -13,6 +13,7 @@ const url = "auth",
 const initialState = {
   auth: {}, // user details
   activePlatform, // active platform for sidebar and routes
+  position: undefined,
   token,
   email, // email for login detection
   image: "", // user image
@@ -189,13 +190,13 @@ export const reduxSlice = createSlice({
         const { contract = { designation: -1 } } = branch || {};
         const department = Policy.getDepartment(contract.designation) || {};
 
-        //console.log("_access", _access);
         state.activePlatform = {
           branch,
+          position: contract.designation,
           branchId: payload.activePlatform.branchId,
           ...payload.activePlatform,
           access: [..._access],
-          ...department,
+          department,
         };
         state.showModal = false;
         state.message = success;
@@ -238,25 +239,29 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload,
           { token, auth, branches, isCeo, access, isPatient } = payload;
         const { activePlatform } = auth;
-        const { branchId } = activePlatform;
-        const branch = branches.find((branch) => branch._id === branchId);
-        const _access = access
-          .filter(({ branchId: bID }) => bID === branchId)
-          .map((a) => a.platform);
+        if (activePlatform) {
+          const { branchId } = activePlatform;
+          const _access = access
+            .filter(({ branchId: bID }) => bID === branchId)
+            .map((a) => a.platform);
 
-        const { contract = { designation: -1 } } = branch || {};
-        const department = Policy.getDepartment(contract.designation) || {};
+          const branch = branches.find((branch) => branch._id === branchId);
+          const { contract = { designation: -1 } } = branch || {};
+          const department = Policy.getDepartment(contract.designation) || {};
+          const role = Policy.getRole(contract.designation) || {};
 
-        state.activePlatform = {
-          ...auth.activePlatform,
-          branch,
-          access: [..._access],
-          ...department,
-        };
-
+          state.activePlatform = {
+            ...auth.activePlatform,
+            branch,
+            access: [..._access],
+            department,
+            role,
+            position: contract.designation,
+          };
+          state.company = branch?.companyId;
+        }
         state.isPatient = isPatient;
         state.isCeo = isCeo;
-        state.company = branch?.companyId;
         state.token = token;
         state.email = auth.email;
         state.auth = auth;
@@ -286,15 +291,17 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const branch = state.branches.find(
-          (branch) => branch._id === payload.activePlatform.branchId
+          ({ _id }) => _id === payload.activePlatform.branchId
         );
 
+        const { contract = { designation: -1 } } = branch || {};
         state.message = success;
         state.auth = payload;
         state.email = payload.email;
         state.activePlatform = {
           ...payload.activePlatform,
           branch,
+          position: contract.designation,
         };
         state.isLoading = false;
         state.isSuccess = true;
@@ -312,36 +319,39 @@ export const reduxSlice = createSlice({
       })
       .addCase(VALIDATEREFRESH.fulfilled, (state, action) => {
         const { payload } = action.payload,
-          { auth, branches, isCeo, isPatient, company, access } = payload;
+          { auth, branches, isPatient, access } = payload;
 
-        state.image = `${ENDPOINT}${profileUrl}/profile.jpg`;
-        state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
-        state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
-        state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
-        state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
-        state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
-        const branch = branches.find(
-          (branch) => branch._id === auth.activePlatform.branchId
-        );
+        const { activePlatform } = auth;
 
-        const _access = access
-          .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
-          .map((a) => a.platform);
-        const { contract = { designation: -1 } } = branch || {};
-        const department = Policy.getDepartment(contract.designation) || {};
-        state.activePlatform = {
-          ...auth.activePlatform,
-          branch,
-          access: [..._access],
-          ...department,
-        };
+        if (activePlatform) {
+          const branch = branches.find(
+            (branch) => branch._id === activePlatform.branchId
+          );
 
-        state.branches = branches;
+          const _access = access
+            .filter(({ branchId }) => branchId === activePlatform.branchId)
+            .map((a) => a.platform);
+          const { contract = { designation: -1 } } = branch || {};
+          const department = Policy.getDepartment(contract.designation) || {};
+          const role = Policy.getRole(contract.designation) || {};
+
+          state.activePlatform = {
+            ...activePlatform,
+            branch,
+            access: [..._access],
+            department,
+            role,
+            position: contract.designation,
+          };
+          state.company = branch?.companyId;
+        }
+        /**
+         * this will control the topbar selections
+         */
         state.isPatient = isPatient;
-        state.company = company;
+        // lookup for active platform
+        state.branches = branches;
         state.access = access;
-        state.company = branch?.companyId;
-        state.isCeo = isCeo;
         state.auth = auth;
         state.email = auth.email;
         state.isLoading = false;

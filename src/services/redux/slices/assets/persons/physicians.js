@@ -109,6 +109,7 @@ export const reduxSlice = createSlice({
   reducers: {
     RESET: (state) => {
       state.isSuccess = false;
+      state.collections = [];
       state.message = "";
     },
   },

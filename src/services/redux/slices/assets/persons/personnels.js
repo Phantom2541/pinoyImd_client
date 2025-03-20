@@ -16,7 +16,10 @@ const initialState = {
   granted: [], // Permissions that have been acquired or activated or stock
   queued: [], // permissions are lined up for activation.
   revoked: [], // Permissions that have been removed or denied
-
+  updateTracker: {
+    isLoading: false,
+    fieldName: "",
+  },
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -189,6 +192,9 @@ export const reduxSlice = createSlice({
       }
 
       state.collections[index].access = newAccess;
+    },
+    SetUPDATE_TRACKER: (state, data) => {
+      state.updateTracker.fieldName = data.payload;
     },
     SETOnHotSEAT: (state, { payload }) => {
       // set default values
@@ -368,7 +374,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.updateTracker.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -382,17 +388,26 @@ export const reduxSlice = createSlice({
         state.collections[index] = { ...oldPersonnel, ...payload };
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.updateTracker = {
+          fieldName: "",
+          isLoading: false,
+        };
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.isUpdating = false;
       });
   },
 });
 
-export const { SETOnHotSEAT, SETQUEUED, SETREVOKED, UPDATEACCESS, RESET } =
-  reduxSlice.actions;
+export const {
+  SETOnHotSEAT,
+  SETQUEUED,
+  SETREVOKED,
+  UPDATEACCESS,
+  RESET,
+  SetUPDATE_TRACKER,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

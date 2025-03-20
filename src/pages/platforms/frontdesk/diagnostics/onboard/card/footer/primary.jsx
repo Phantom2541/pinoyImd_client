@@ -13,9 +13,9 @@ const PrimaryFooter = ({ deal, setEdit }) => {
     const { _id, cart, customerId, ssx } = deal;
     let RequestForm = { customer: deal?.customerId };
     const task = harvestTask(cart);
-      localStorage.setItem("task", JSON.stringify(task));
-      localStorage.setItem("ssx", JSON.stringify(ssx));
-    
+    localStorage.setItem("task", JSON.stringify(task));
+    localStorage.setItem("ssx", JSON.stringify(ssx));
+
     const forms = Object.keys(task);
     for (const key in task) {
       const lowercaseKey = key.toLowerCase();
@@ -92,14 +92,14 @@ const PrimaryFooter = ({ deal, setEdit }) => {
 
       localStorage.setItem("RequestForm", JSON.stringify(RequestForm));
     }
-    
+
     // working request form but not showing anything
     window.open(
       "/printout/request/form",
       "Request Form",
-      "top=100px,left=100px,width=1050px,height=750px" 
+      "top=100px,left=100px,width=1050px,height=750px"
     );
-    
+
     dispatch(
       REFORM({
         token,
@@ -125,7 +125,7 @@ const PrimaryFooter = ({ deal, setEdit }) => {
   };
 
   return (
-    <MDBBtnGroup className="sales-card-footer w-100">
+    <MDBBtnGroup className="sales-card-footer w-100 d-flex flex-row">
       <MDBBtn
         type="button"
         className="m-0"

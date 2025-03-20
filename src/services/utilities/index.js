@@ -4,8 +4,6 @@ import Banner from "./banner";
 import handlePagination from "./pagination";
 import fullName from "./fullName";
 import calculateDiff from "./calculateDiff";
-import Male from "../../assets/male.jpg";
-import Female from "../../assets/female.jpg";
 import FailedBanner from "../../assets/failedBanner.jpg";
 import FailedLogo from "../../assets/failedLogo.png";
 import PresetUser from "../../assets/default.jpg";
@@ -49,6 +47,10 @@ import nickname from "./nickname";
 import paymentBadge from "./paymentBadge";
 import removeUndefinedValues from "./dataCleaner";
 import collapse from "./collapse";
+import Male from "../../assets/male.jpg";
+import Female from "../../assets/female.jpg";
+import PresetIMD from "../../assets/iMD.jpg";
+
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -111,4 +113,5 @@ export {
   PresetUser,
   formatNameToObj,
   removeUndefinedValues,
+  PresetIMD,
 };

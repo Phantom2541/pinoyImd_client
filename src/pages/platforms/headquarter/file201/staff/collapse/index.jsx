@@ -21,7 +21,7 @@ export default function MenuCollapse({ staffs, page }) {
   const { maxPage, token } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
 
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     dispatch(
       UPDATE({
         data: {
@@ -57,7 +57,6 @@ export default function MenuCollapse({ staffs, page }) {
     >
       {handlePagination(staffs, page, maxPage).map((staff, index) => {
         const { user, contract, status, rate, contribution, _id } = staff;
-
         const role = Roles.findById(
           Number(contract?.designation)
         )?.display_name;
@@ -74,7 +73,9 @@ export default function MenuCollapse({ staffs, page }) {
                   : "bg-white"
               } ${activeId === index ? "custom-header" : ""}`}
               style={{ borderRadius: "50%" }}
-              onClick={() => setActiveId(prev => (prev === index ? -1 : index))}
+              onClick={() =>
+                setActiveId((prev) => (prev === index ? -1 : index))
+              }
             >
               <label className="d-flex justify-content-between">
                 {/* {index + 1}. {user && `${fullName(user?.fullName)}`}
@@ -93,13 +94,8 @@ export default function MenuCollapse({ staffs, page }) {
             </MDBCollapseHeader>
             <MDBCollapse
               id={`collapse-${index}`}
-              className="mb-2"
+              className="mb-2 border border-black"
               isOpen={index === activeId}
-              style={{
-                borderBottom: "1px solid black",
-                borderRight: "1px solid black",
-                borderLeft: "1px solid black",
-              }}
             >
               <MDBCardBody className="pt-2">
                 <CollapseTable

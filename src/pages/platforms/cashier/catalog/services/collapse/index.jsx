@@ -16,10 +16,10 @@ export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(
     ({ services }) => services
   );
-
   /**
    * Pagination: Calculate the start and end index for the current page
    */
+
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;

@@ -105,7 +105,7 @@ export default function Login({ show, toggle = null }) {
         toggle={email ? null : toggle}
         className={`${email ? "mx-auto" : "light-blue darken-3 white-text"}`}
       >
-        {email ? (
+        {auth ? (
           <img
             loading="eager"
             src={image}
