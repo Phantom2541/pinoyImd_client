@@ -8,15 +8,13 @@ import {
 import { Statements } from "../../../../../services/fakeDb";
 import { fullName } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
+import TableLoading from "../../../../../components/tableLoading";
 const Tables = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage } = useSelector(({ payables }) => payables),
+    { filtered, activePage, maxPage, isLoading } = useSelector(
+      ({ payables }) => payables
+    ),
     dispatch = useDispatch();
-
-  /**
-   * Pagination: Calculate the start and end index for the current page
-   */
-  // console.log("Filtered: ", filtered);
 
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -45,108 +43,112 @@ const Tables = () => {
   };
 
   return (
-    <MDBTable responsive hover bordered>
-      <thead>
-        <tr>
-          <th rowSpan={2}>#</th>
-          <th rowSpan={2}>Particular</th>
-          <th rowSpan={2}>Statement</th>
-          <th colSpan={2} style={{ textAlign: "center" }}>
-            Range
-          </th>
-          <th rowSpan={2}>Due Date</th>
-          <th rowSpan={2}>Amount</th>
-          <th rowSpan={2} style={{ textAlign: "center" }}>
-            Actions
-          </th>
-        </tr>
-        <tr>
-          <th>Start</th>
-          <th>End</th>
-        </tr>
-      </thead>
-      <tbody>
-        {!paginatedData?.length && (
-          <tr>
-            <td colSpan={5} style={{ textAlign: "center" }}>
-              No Data
-            </td>
-          </tr>
-        )}
-        {paginatedData?.map((payable, index) => {
-          const {
-            _id,
-            fsId,
-            range = [],
-            amount,
-            particular,
-            due,
-            supplier,
-          } = payable;
-          const [start = "", end = ""] = Array.isArray(range) ? range : [];
-          return (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>
-                {particular && fullName(particular.fullName)}
-                {supplier && supplier.name}
-              </td>
-              <td>{Statements?.getName(fsId)}</td>
-              <td>
-                {start
-                  ? new Date(start).toLocaleDateString("en-GB", {
-                      month: "short",
-                      day: "2-digit",
-                      year: "numeric",
-                    })
-                  : ""}
-              </td>
-              <td>
-                {end
-                  ? new Date(end).toLocaleDateString("en-GB", {
-                      month: "short",
-                      day: "2-digit",
-                      year: "numeric",
-                    })
-                  : ""}
-              </td>
-              <td>
-                {due
-                  ? new Date(due).toLocaleDateString("en-GB", {
-                      month: "short",
-                      day: "2-digit",
-                      year: "numeric",
-                    })
-                  : ""}
-              </td>
-              <th>{amount}</th>
-              <td style={{ textAlign: "center" }}>
-                <MDBBtnGroup>
-                  <MDBBtn
-                    size="sm"
-                    rounded
-                    color="success"
-                    onClick={() => dispatch(SetPAYMENTS(payable))}
-                    style={{ marginRight: "20px", borderRadius: "50px" }}
-                  >
-                    Pay
-                  </MDBBtn>
-                  <MDBBtn
-                    size="sm"
-                    rounded
-                    color="danger"
-                    onClick={() => handleDelete(_id)}
-                    style={{ borderRadius: "50px" }}
-                  >
-                    Update
-                  </MDBBtn>
-                </MDBBtnGroup>
-              </td>
+    <>
+      {!isLoading ? (
+        <MDBTable responsive hover bordered>
+          <thead>
+            <tr>
+              <th rowSpan={2}>#</th>
+              <th rowSpan={2}>Particular</th>
+              <th rowSpan={2}>Statement</th>
+              <th colSpan={2} style={{ textAlign: "center" }}>
+                Range
+              </th>
+              <th rowSpan={2}>Due Date</th>
+              <th rowSpan={2}>Amount</th>
+              <th rowSpan={2} style={{ textAlign: "center" }}>
+                Actions
+              </th>
             </tr>
-          );
-        })}
-      </tbody>
-    </MDBTable>
+            <tr>
+              <th>Start</th>
+              <th>End</th>
+            </tr>
+          </thead>
+          <tbody>
+            {!paginatedData?.length && (
+              <tr>
+                <td colSpan={5} style={{ textAlign: "center" }}>
+                  No Data
+                </td>
+              </tr>
+            )}
+            {paginatedData?.map((payable, index) => {
+              const {
+                _id,
+                fsId,
+                range = [],
+                amount,
+                particular,
+                due,
+                supplier,
+              } = payable;
+              const [start = "", end = ""] = Array.isArray(range) ? range : [];
+              return (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>
+                    {particular && fullName(particular.fullName)}
+                    {supplier && supplier.name}
+                  </td>
+                  <td>{Statements?.getName(fsId)}</td>
+                  <td>
+                    {start
+                      ? new Date(start).toLocaleDateString("en-GB", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                        })
+                      : ""}
+                  </td>
+                  <td>
+                    {end
+                      ? new Date(end).toLocaleDateString("en-GB", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                        })
+                      : ""}
+                  </td>
+                  <td>
+                    {due
+                      ? new Date(due).toLocaleDateString("en-GB", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                        })
+                      : ""}
+                  </td>
+                  <th>{amount}</th>
+                  <td style={{ textAlign: "center" }}>
+                    <MDBBtnGroup>
+                      <MDBBtn
+                        size="sm"
+                        rounded
+                        color="success"
+                        onClick={() => dispatch(SetPAYMENTS(payable))}
+                      >
+                        Pay
+                      </MDBBtn>
+                      <MDBBtn
+                        size="sm"
+                        rounded
+                        color="danger"
+                        onClick={() => handleDelete(_id)}
+                      >
+                        Update
+                      </MDBBtn>
+                    </MDBBtnGroup>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </MDBTable>
+      ) : (
+        <TableLoading />
+      )}
+    </>
   );
 };
 

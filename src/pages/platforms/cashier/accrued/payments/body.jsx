@@ -7,9 +7,10 @@ import {
 } from "../../../../../services/redux/slices/finance/journals/payments.js";
 import Swal from "sweetalert2";
 import { Statements } from "../../../../../services/fakeDb";
+import TableLoading from "../../../../../components/tableLoading/index.jsx";
 const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ payments }) => payments),
+    { filtered, isLoading } = useSelector(({ payments }) => payments),
     dispatch = useDispatch();
 
   const handleDelete = (_id) => {
@@ -29,63 +30,69 @@ const Tables = () => {
   };
 
   return (
-    <MDBTable responsive hover bordered>
-      <thead>
-        <tr>
-          <th style={{ height: "20px" }}>#</th>
-          <th>Name</th>
-          <th colSpan={3}>Deduction</th>
-          <th colSpan={4}>Earnings</th>
-          <th>Net</th>
-          <th>Created At</th>
-        </tr>
-        <tr>
-          <th></th>
-          <th></th>
-          <th>Cash on Advance</th>
-          <th>Absent</th>
-          <th>Loan</th>
-          <th>Holiday</th>
-          <th>Rate</th>
-          <th>Cola</th>
-          <th>Overtime</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {!filtered.length && (
-          <tr>
-            <td colSpan={12} style={{ textAlign: "center" }}>
-              No Data
-            </td>
-          </tr>
-        )}
-        {filtered.map(
-          ({ _id, fsId, breakdown, createdAt, ...payment }, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{Statements.getName(fsId)}</td>
-              <td>{breakdown?.deduction?.ca}</td>
-              <td>{breakdown?.deduction?.absent}</td>
-              <td>{breakdown?.deduction?.loan}</td>
-              <td>{breakdown?.earn?.holiday}</td>
-              <td>{breakdown?.earn?.rate}</td>
-              <td>{breakdown?.earn?.cola}</td>
-              <td>{breakdown?.earn?.overtime}</td>
-              <td>{breakdown?.net}</td>
-              <td>
-                {new Date(createdAt).toLocaleDateString("en-GB", {
-                  month: "short",
-                  day: "2-digit",
-                  year: "numeric",
-                })}
-              </td>
+    <>
+      {!isLoading ? (
+        <MDBTable responsive hover bordered>
+          <thead>
+            <tr>
+              <th style={{ height: "20px" }}>#</th>
+              <th>Name</th>
+              <th colSpan={3}>Deduction</th>
+              <th colSpan={4}>Earnings</th>
+              <th>Net</th>
+              <th>Created At</th>
             </tr>
-          )
-        )}
-      </tbody>
-    </MDBTable>
+            <tr>
+              <th></th>
+              <th></th>
+              <th>Cash on Advance</th>
+              <th>Absent</th>
+              <th>Loan</th>
+              <th>Holiday</th>
+              <th>Rate</th>
+              <th>Cola</th>
+              <th>Overtime</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {!filtered.length && (
+              <tr>
+                <td colSpan={12} style={{ textAlign: "center" }}>
+                  No Data
+                </td>
+              </tr>
+            )}
+            {filtered.map(
+              ({ _id, fsId, breakdown, createdAt, ...payment }, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{Statements.getName(fsId)}</td>
+                  <td>{breakdown?.deduction?.ca}</td>
+                  <td>{breakdown?.deduction?.absent}</td>
+                  <td>{breakdown?.deduction?.loan}</td>
+                  <td>{breakdown?.earn?.holiday}</td>
+                  <td>{breakdown?.earn?.rate}</td>
+                  <td>{breakdown?.earn?.cola}</td>
+                  <td>{breakdown?.earn?.overtime}</td>
+                  <td>{breakdown?.net}</td>
+                  <td>
+                    {new Date(createdAt).toLocaleDateString("en-GB", {
+                      month: "short",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
+                  </td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </MDBTable>
+      ) : (
+        <TableLoading />
+      )}
+    </>
   );
 };
 

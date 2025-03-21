@@ -8,18 +8,20 @@ import Footer from "./footer";
 
 export default function Payables() {
   return (
-    <MDBAnimation type="bounceInDown">
-      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-        <TopHeader />
-        <MDBCardBody>
-          <Body />
-        </MDBCardBody>
-        <Footer />
-      </MDBCard>
+    <>
+      <MDBAnimation type="bounceInDown">
+        <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+          <TopHeader />
+          <MDBCardBody>
+            <Body />
+          </MDBCardBody>
+          <Footer />
+        </MDBCard>
+      </MDBAnimation>
       {/* Modal for Payables */}
       <PayablesModal />
       {/* Modal for Payments */}
       <PaymentsModal />
-    </MDBAnimation>
+    </>
   );
 }
