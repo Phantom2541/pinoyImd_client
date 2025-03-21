@@ -130,31 +130,28 @@ export const reduxSlice = createSlice({
       const { key, value } = payload;
       if (key === "census") {
         state.showCensus = true;
-      } else {
+      } else if (key === "close") {
         state.showModal = true;
-        state.title = " Closing Cash Register";
-        // state.day = value;
+        state.title = "Closing Cash Register";
       }
       state.selected = value;
     },
     TOGGLE: (state, { payload = {} }) => {
       const { key, value } = payload;
       if (key === "census") {
-        state.showCensus = false;
-      } else {
-        if (state.showModal) state.showModal = false;
-        else {
-          if (key === "open") {
-            state.title = "Floating Cash";
-            state.showModal = true;
-          } else {
-            state.title = "Closing Cash Register";
-            state.showModal = true;
-          }
-          state.day = value;
-        }
+        state.showCensus = !state.showCensus;
+        return;
+      }
+      state.showModal = !state.showModal;
+
+      if (value) {
+        state.title =
+          key === "open" ? "Floating Cash" : "Closing Cash Register";
+        state.day = value;
+        state.showModal = true;
       }
     },
+
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -183,11 +180,16 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, data } = action.payload;
+
         state.message = success;
-        state.collections.unshift(payload);
+        state.collections.unshift(data);
+        state.selected = data;
+        state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
+        console.log("SAVE.fulfilled floatingcash", data);
+        localStorage.setItem("floatingcash", JSON.stringify(data));
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;

@@ -4,13 +4,8 @@ import { axioKit } from "../../../../utilities";
 const url = "finance/journals/payables";
 
 const initialState = {
-  // collections: [],
-  // isSuccess: false,
-  // isLoading: false,
-
   selected: {},
   amount: [],
-  // totalPages: 0,
   page: 0,
   showPayablesModal: false,
   showPaymentModal: false,

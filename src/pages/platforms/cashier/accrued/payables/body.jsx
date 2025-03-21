@@ -8,20 +8,18 @@ import {
 import { Statements } from "../../../../../services/fakeDb";
 import { fullName } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
+
 const Tables = () => {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage } = useSelector(({ payables }) => payables),
-    dispatch = useDispatch();
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
+  const { filtered, activePage, maxPage } = useSelector(
+    ({ payables }) => payables
+  );
+  const dispatch = useDispatch();
 
-  /**
-   * Pagination: Calculate the start and end index for the current page
-   */
-  // console.log("Filtered: ", filtered);
-
-  const itemsPerPage = maxPage; // Number of items per page
+  const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = filtered.slice(startIndex, endIndex);
 
   const handleDelete = (_id) => {
     Swal.fire({
@@ -66,14 +64,14 @@ const Tables = () => {
         </tr>
       </thead>
       <tbody>
-        {!paginatedData?.length && (
+        {!paginatedData.length && (
           <tr>
-            <td colSpan={5} style={{ textAlign: "center" }}>
+            <td colSpan={8} style={{ textAlign: "center" }}>
               No Data
             </td>
           </tr>
         )}
-        {paginatedData?.map((payable, index) => {
+        {paginatedData.map((payable, index) => {
           const {
             _id,
             fsId,
@@ -83,13 +81,21 @@ const Tables = () => {
             due,
             supplier,
           } = payable;
-          const [start = "", end = ""] = Array.isArray(range) ? range : [];
+          const [start, end] = range;
+          const dueDate = due ? new Date(due) : null;
+          const today = new Date();
+          const isToday = dueDate?.toDateString() === today.toDateString();
+          const isPastDue = dueDate && dueDate < today;
+
           return (
-            <tr key={index}>
+            <tr
+              key={_id}
+              style={isPastDue ? { backgroundColor: "#ffcccc" } : {}}
+            >
               <td>{index + 1}</td>
               <td>
-                {particular && fullName(particular.fullName)}
-                {supplier && supplier.name}
+                {particular?.fullName ? fullName(particular.fullName) : ""}
+                {supplier ? ` ${supplier.name} - ${supplier.subname}` : ""}
               </td>
               <td>{Statements?.getName(fsId)}</td>
               <td>
@@ -110,9 +116,14 @@ const Tables = () => {
                     })
                   : ""}
               </td>
-              <td>
-                {due
-                  ? new Date(due).toLocaleDateString("en-GB", {
+              <td
+                style={{
+                  color: isToday ? "orange" : isPastDue ? "red" : "black",
+                  fontWeight: isPastDue ? "bold" : "normal",
+                }}
+              >
+                {dueDate
+                  ? dueDate.toLocaleDateString("en-GB", {
                       month: "short",
                       day: "2-digit",
                       year: "numeric",

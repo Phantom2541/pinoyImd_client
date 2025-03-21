@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
-import TopHeader from "./header";
+import Header from "./header";
 import Body from "./body";
 import PayablesModal from "./modal/payables";
 import PaymentsModal from "./modal/payments";
@@ -10,15 +10,13 @@ export default function Payables() {
   return (
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-        <TopHeader />
+        <Header />
         <MDBCardBody>
           <Body />
         </MDBCardBody>
         <Footer />
       </MDBCard>
-      {/* Modal for Payables */}
       <PayablesModal />
-      {/* Modal for Payments */}
       <PaymentsModal />
     </MDBAnimation>
   );
