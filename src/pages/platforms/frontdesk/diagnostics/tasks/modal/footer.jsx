@@ -7,13 +7,14 @@ import {
   SetTASK,
   SetMODAL,
   SetHEALTHY,
-} from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+} from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const Footer = () => {
   const { token, auth } = useSelector(({ auth }) => auth),
    { success, task, heads } = useSelector((validator) => validator),
    dispatch = useDispatch();
-
+  console.log("tasksadas", task);
+  
   useEffect(() => {
     if (success) {
       dispatch(SetMODAL(false));
