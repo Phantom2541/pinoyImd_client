@@ -42,8 +42,8 @@ const componentMap = {
 };
 
 export default function BodySwitcher() {
-  const {form} = useSelector(({validator}) => validator.task);
+  const { task } = useSelector(({ validator }) => validator);
   
-  const Component = componentMap[form] || Blank;
+  const Component = componentMap[task.form] || Blank;
   return <Component  />;
 }

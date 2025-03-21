@@ -11,7 +11,7 @@ export default function DealCollapse() {
       ({ validator }) => validator
     );
 
-  return (
+  return ( 
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
       {handlePagination(filtered, activePage, maxPage).map((deal, index) => {
         return (

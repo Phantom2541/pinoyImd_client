@@ -46,7 +46,9 @@ const Forms = ({ form, obj, index }) => {
     department,
   };
 
-  const handeEntry = () => dispatch(SetTASK({task,form}));
+  const handeEntry = () => {    
+    dispatch(SetTASK({ task, form }));
+  }
 
   return (
     <tr key={task.key} className={`${hasDone && "table-active"}`}>

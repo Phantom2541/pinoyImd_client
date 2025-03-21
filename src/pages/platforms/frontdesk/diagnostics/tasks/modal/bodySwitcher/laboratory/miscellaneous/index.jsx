@@ -24,7 +24,7 @@ export default function Miscellaneous() {
 
   const { packages = [], specimen = "" } = task;
 
-  const setTask = (value) => dispatch(SetTASK(value));
+  const setTask = (value) => dispatch(SetTASK({ task: value }));
   return (
     <MDBContainer>
       {/* Default is 1, hide all the tab button
