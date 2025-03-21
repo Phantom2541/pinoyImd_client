@@ -9,7 +9,8 @@ import {
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 export default function Chemistry() {
-  const { task, preferences } = useSelector(({ validator }) => validator),
+  const { task, preferences } = useSelector(({ validator }) => validator
+  ),
     dispatch = useDispatch();
 
   const { packages = {}, key: mapKey, patient } = task;
@@ -22,7 +23,7 @@ export default function Chemistry() {
     
     if (_name !== 16)
       return dispatch(
-        SetTASK({task:{
+        SetTASK({form: task?.form,task:{
           ...task,
           packages: { ...packages, [name]: _value },
         }})
@@ -35,7 +36,7 @@ export default function Chemistry() {
       chr = Number((chole / _value).toFixed(2));
     
     dispatch(
-      SetTASK({task:{
+      SetTASK({form: task?.form,task:{
         ...task,
         packages: {
           ...packages,
@@ -47,7 +48,6 @@ export default function Chemistry() {
       }})
     );
   };
-  console.log("preferences", preferences);
 
   return (
     <MDBTable hover responsive className="mb-0">

@@ -34,6 +34,8 @@ export default function CollapseTable({ menu }) {
   }, [menu]);
 
   const handlePrint = (labTest) => {
+    console.log("labTest", labTest);
+    
     localStorage.setItem("taskPrintout", JSON.stringify(labTest));
 
     console.log("labTest",labTest);
@@ -80,7 +82,8 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
-
+    console.log("tasasdasdasdasdask",task);
+    
     return (
       <tr key={task.key} className={`${hasDone && "table-active"}`}>
         <td className="fw-bold">{capitalize(department)}</td>

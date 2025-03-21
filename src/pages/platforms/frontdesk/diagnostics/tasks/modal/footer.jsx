@@ -7,13 +7,14 @@ import {
   SetTASK,
   SetMODAL,
   SetHEALTHY,
-} from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+} from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const Footer = () => {
   const { token, auth } = useSelector(({ auth }) => auth),
-   { success, task, heads } = useSelector((validator) => validator),
+   { success, task, heads } = useSelector(({validator}) => validator),
    dispatch = useDispatch();
-
+  console.log("tasksadas", task);
+  
   useEffect(() => {
     if (success) {
       dispatch(SetMODAL(false));
@@ -40,35 +41,35 @@ const Footer = () => {
   };
 
   const handleSave = (hasDone) => {
-    // const { form, department } = task;
+    const { form, department } = task;
     console.log("tasks", task);
     
-    // //returns id
-    // const findSignatoryId = (indentifier) =>
-    //     heads.find(({ section }) => section === indentifier)?.user?._id;
+    //returns id
+    const findSignatoryId = (indentifier) =>
+        heads.find(({ section }) => section === indentifier)?.user?._id;
 
-    // const head = findSignatoryId(form.toLowerCase()),
-    //   // kulang pa to
-    //   //patholist or radiologist
-    //   sub = findSignatoryId(
-    //     department === "LAB" ? "pathologist" : "radiologist"
-    //   );
+    const head = findSignatoryId(form.toLowerCase()),
+      // kulang pa to
+      //patholist or radiologist
+      sub = findSignatoryId(
+        department === "LAB" ? "pathologist" : "radiologist"
+      );
 
-    // /**
-    //  * Automatic generate URL.
-    //  */
-    // dispatch(
-    //   LABRESULT({
-    //     token,
-    //     data: {
-    //       ...task,
-    //       //if meant to save, just copy current state in db
-    //       hasDone: true,
-    //       signatories: [head, sub, auth._id],
-    //     },
-    //   })
-    // );
-    // dispatch(SetMODAL(false));
+    /**
+     * Automatic generate URL.
+     */
+    dispatch(
+      LABRESULT({
+        token,
+        data: {
+          ...task,
+          //if meant to save, just copy current state in db
+          hasDone: true,
+          signatories: [head, sub, auth._id],
+        },
+      })
+    );
+    dispatch(SetMODAL(false));
   };
   const generateHealthyStats = () => {
     /**
@@ -85,7 +86,7 @@ const Footer = () => {
       placeholder="Remarks"
       value={task?.remarks}
       onChange={(e) =>
-        dispatch(SetTASK({task:{ ...task, remarks: e.target.value }}))
+        dispatch(SetTASK({form: task?.form, task:{ ...task, remarks: e.target.value }}))
       }
       className="w-100"
     />
