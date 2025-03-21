@@ -17,14 +17,16 @@ export default function Electrolyte() {
 
   const { packages = {}, key: mapKey, patient } = task;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target,
+  const handleChange = (target) => {
+    const { name, value } = target,
       _value = Number(value);
 
     return dispatch(
       SetTASK({
-        ...task,
-        packages: { ...packages, [name]: _value },
+        task: {
+          ...task,
+          packages: { ...packages, [name]: _value },
+        }
       })
     );
   };
@@ -69,7 +71,7 @@ export default function Electrolyte() {
                   }}
                   name={key}
                   value={String(value)}
-                  onChange={handleChange}
+                  onChange={(e)=>handleChange(e.target)}
                   className="w-100 text-center fw-bold"
                 />
               </td>

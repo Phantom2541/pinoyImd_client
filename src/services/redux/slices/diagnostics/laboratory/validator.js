@@ -116,6 +116,9 @@ export const reduxSlice = createSlice({
       console.log("SetTASK", payload);  
 
       state.task = task;
+
+      console.log("state.task", state.task);
+      
       if (form === "Urinalysis") {
         state.params = {
           pe: [2, 0, 1, 1],
@@ -143,7 +146,6 @@ export const reduxSlice = createSlice({
       state.task = { ...state.task, ...healthyClient[payload] };
       console.log(healthyClient[payload]);
 
-      console.log("task", state.task);
     },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;

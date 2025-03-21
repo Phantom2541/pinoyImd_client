@@ -14,17 +14,18 @@ export default function Chemistry() {
 
   const { packages = {}, key: mapKey, patient } = task;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target,
+  const handleChange = (target) => {
+    const { name, value } = target,
       _name = Number(name),
       _value = Number(value);
-
+    
+    
     if (_name !== 16)
       return dispatch(
-        SetTASK({
+        SetTASK({task:{
           ...task,
           packages: { ...packages, [name]: _value },
-        })
+        }})
       );
 
     const chole = packages["14"],
@@ -32,9 +33,9 @@ export default function Chemistry() {
       ldl = chole - (tg / 5 + _value),
       vldl = tg / 5,
       chr = Number((chole / _value).toFixed(2));
-
+    
     dispatch(
-      SetTASK({
+      SetTASK({task:{
         ...task,
         packages: {
           ...packages,
@@ -43,7 +44,7 @@ export default function Chemistry() {
           18: vldl,
           19: chr,
         },
-      })
+      }})
     );
   };
   console.log("preferences", preferences);
@@ -74,14 +75,6 @@ export default function Chemistry() {
               preference,
               preferences
             );
-          console.log("lo", lo);
-          console.log("hi", hi);
-          console.log("warn", warn);
-          console.log("alert", alert);
-          console.log("critical", critical);
-          console.log("units", units);
-          console.log("_id", _id);
-
           return (
             <tr key={`${mapKey}-${index}`}>
               <td className="fw-bold py-1" title={name || abbreviation}>
@@ -95,7 +88,7 @@ export default function Chemistry() {
                   }}
                   name={key}
                   value={String(value)}
-                  onChange={handleChange}
+                  onChange={(e)=>handleChange(e.target)}
                   className="w-100 text-center fw-bold"
                 />
               </td>

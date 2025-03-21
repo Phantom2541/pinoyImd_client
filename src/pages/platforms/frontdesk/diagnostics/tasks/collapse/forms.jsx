@@ -46,10 +46,7 @@ const Forms = ({ form, obj, index }) => {
     department,
   };
 
-  const handeEntry = () => {
-    console.log("Task", task);
-    console.log("Form", form);
-    
+  const handeEntry = () => {    
     dispatch(SetTASK({ task, form }));
   }
 

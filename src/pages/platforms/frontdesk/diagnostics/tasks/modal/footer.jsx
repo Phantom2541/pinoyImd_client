@@ -40,42 +40,43 @@ const Footer = () => {
   };
 
   const handleSave = (hasDone) => {
-    const { form, department } = task;
+    // const { form, department } = task;
+    console.log("tasks", task);
+    
+    // //returns id
+    // const findSignatoryId = (indentifier) =>
+    //     heads.find(({ section }) => section === indentifier)?.user?._id;
 
-    //returns id
-    const findSignatoryId = (indentifier) =>
-        heads.find(({ section }) => section === indentifier)?.user?._id;
+    // const head = findSignatoryId(form.toLowerCase()),
+    //   // kulang pa to
+    //   //patholist or radiologist
+    //   sub = findSignatoryId(
+    //     department === "LAB" ? "pathologist" : "radiologist"
+    //   );
 
-    const head = findSignatoryId(form.toLowerCase()),
-      // kulang pa to
-      //patholist or radiologist
-      sub = findSignatoryId(
-        department === "LAB" ? "pathologist" : "radiologist"
-      );
-
-    /**
-     * Automatic generate URL.
-     */
-    dispatch(
-      LABRESULT({
-        token,
-        data: {
-          ...task,
-          //if meant to save, just copy current state in db
-          hasDone: true,
-          signatories: [head, sub, auth._id],
-        },
-      })
-    );
-    dispatch(SetMODAL(false));
+    // /**
+    //  * Automatic generate URL.
+    //  */
+    // dispatch(
+    //   LABRESULT({
+    //     token,
+    //     data: {
+    //       ...task,
+    //       //if meant to save, just copy current state in db
+    //       hasDone: true,
+    //       signatories: [head, sub, auth._id],
+    //     },
+    //   })
+    // );
+    // dispatch(SetMODAL(false));
   };
   const generateHealthyStats = () => {
     /**
      * render time too long
      */
 
-    if (task.form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
-    else if (task.form === "Parasitology") dispatch(SetHEALTHY("parasitology"));
+    if (task?.form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
+    else if (task?.form === "Parasitology") dispatch(SetHEALTHY("parasitology"));
   };
 
   return (
@@ -84,7 +85,7 @@ const Footer = () => {
       placeholder="Remarks"
       value={task?.remarks}
       onChange={(e) =>
-        dispatch(SetTASK({ ...task, remarks: e.target.value }))
+        dispatch(SetTASK({task:{ ...task, remarks: e.target.value }}))
       }
       className="w-100"
     />
@@ -99,7 +100,7 @@ const Footer = () => {
       <MDBBtnGroup>
         <MDBBtn
           onClick={() => {
-            if (task.form === "Hematology") return computeHemaDiff(true);
+            if (task?.form === "Hematology") return computeHemaDiff(true);
 
             handleSave(true);
           }}
@@ -109,7 +110,7 @@ const Footer = () => {
         </MDBBtn>
         <MDBBtn
           onClick={() => {
-            if (task.form === "Hematology") return computeHemaDiff(false);
+            if (task?.form === "Hematology") return computeHemaDiff(false);
 
             handleSave(false);
           }}
