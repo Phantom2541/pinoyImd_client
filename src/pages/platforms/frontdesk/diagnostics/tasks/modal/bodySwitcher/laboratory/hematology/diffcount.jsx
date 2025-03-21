@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import {
   Diffcount as DiffCount,
@@ -30,6 +30,7 @@ export default function Diffcount() {
       diff = { ...dc };
 
     diff[name] = _value;
+    dispatch(SetTASK({form: task?.form, task:{ ...task, dc: diff }}));
 dispatch(SetPARAMS({ key: "dc", value: diff }));
   };
 

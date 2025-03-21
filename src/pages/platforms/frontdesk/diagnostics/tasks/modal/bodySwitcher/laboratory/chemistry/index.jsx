@@ -9,7 +9,8 @@ import {
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 export default function Chemistry() {
-  const { task, preferences } = useSelector(({ validator }) => validator),
+  const { task, preferences } = useSelector(({ validator }) => validator
+  ),
     dispatch = useDispatch();
 
   const { packages = {}, key: mapKey, patient } = task;
@@ -47,7 +48,6 @@ export default function Chemistry() {
       }})
     );
   };
-  console.log("preferences", preferences);
 
   return (
     <MDBTable hover responsive className="mb-0">

@@ -10,6 +10,9 @@ export default function Header({
   referral,
   task,
 }) {
+  console.log("patient", patient);
+  
+
   const { fullName: pFull, isMale = false, dob = "" } = patient,
     { fullName: rFull } = referral,
     { companyName = "", name = "" } = source;

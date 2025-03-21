@@ -12,12 +12,14 @@ const Forms = ({ form, obj, index }) => {
   const { packages, hasDone = false, remarks = "", signatories = [] } = obj;
 
   const handlePrint = (task) => {
+    console.log("taskPrintout", task);
+    
     localStorage.setItem("taskPrintout", JSON.stringify(task));
-    window.open(
-      "/printout/task",
-      "Task Printout",
-      "top=100px,left=100px,width=1050px,height=750px" // size of the page that will open
-    );
+    // window.open(
+    //   "/printout/task",
+    //   "Task Printout",
+    //   "top=100px,left=100px,width=1050px,height=750px" // size of the page that will open
+    // );
   };
 
   // Find the template that contains this form
