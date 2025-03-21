@@ -6,7 +6,7 @@ import {
   DESTROY,
 } from "../../../../../services/redux/slices/finance/journals/payables";
 import { Statements } from "../../../../../services/fakeDb";
-import { fullName } from "../../../../../services/utilities";
+import { currency, fullName } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 
 const Tables = () => {
@@ -47,20 +47,13 @@ const Tables = () => {
       <thead>
         <tr>
           <th rowSpan={2}>#</th>
-          <th rowSpan={2}>Particular</th>
+          <th rowSpan={2}>Particular/Vendor</th>
           <th rowSpan={2}>Statement</th>
-          <th colSpan={2} style={{ textAlign: "center" }}>
-            Range
-          </th>
           <th rowSpan={2}>Due Date</th>
           <th rowSpan={2}>Amount</th>
           <th rowSpan={2} style={{ textAlign: "center" }}>
             Actions
           </th>
-        </tr>
-        <tr>
-          <th>Start</th>
-          <th>End</th>
         </tr>
       </thead>
       <tbody>
@@ -75,13 +68,13 @@ const Tables = () => {
           const {
             _id,
             fsId,
-            range = [],
             amount,
             particular,
             due,
             supplier,
+            hasPaid,
+            payor,
           } = payable;
-          const [start, end] = range;
           const dueDate = due ? new Date(due) : null;
           const today = new Date();
           const isToday = dueDate?.toDateString() === today.toDateString();
@@ -90,35 +83,28 @@ const Tables = () => {
           return (
             <tr
               key={_id}
-              style={isPastDue ? { backgroundColor: "#ffcccc" } : {}}
+              style={
+                isPastDue && !hasPaid ? { backgroundColor: "#ffcccc" } : {}
+              }
             >
               <td>{index + 1}</td>
               <td>
-                {particular?.fullName ? fullName(particular.fullName) : ""}
-                {supplier ? ` ${supplier.name} - ${supplier.subname}` : ""}
+                {particular && fullName(particular)}
+                {supplier &&
+                  (supplier.vendors?.length > 0
+                    ? `${supplier.vendors.name} - ${supplier.vendors.subname}`
+                    : `${supplier.name} - ${supplier.subname}`)}
               </td>
               <td>{Statements?.getName(fsId)}</td>
-              <td>
-                {start
-                  ? new Date(start).toLocaleDateString("en-GB", {
-                      month: "short",
-                      day: "2-digit",
-                      year: "numeric",
-                    })
-                  : ""}
-              </td>
-              <td>
-                {end
-                  ? new Date(end).toLocaleDateString("en-GB", {
-                      month: "short",
-                      day: "2-digit",
-                      year: "numeric",
-                    })
-                  : ""}
-              </td>
               <td
                 style={{
-                  color: isToday ? "orange" : isPastDue ? "red" : "black",
+                  color: !hasPaid
+                    ? isToday
+                      ? "orange"
+                      : isPastDue
+                      ? "red"
+                      : "black"
+                    : "black",
                   fontWeight: isPastDue ? "bold" : "normal",
                 }}
               >
@@ -130,28 +116,33 @@ const Tables = () => {
                     })
                   : ""}
               </td>
-              <th>{amount}</th>
+              <th>{currency(amount)}</th>
               <td style={{ textAlign: "center" }}>
-                <MDBBtnGroup>
-                  <MDBBtn
-                    size="sm"
-                    rounded
-                    color="success"
-                    onClick={() => dispatch(SetPAYMENTS(payable))}
-                    style={{ marginRight: "20px", borderRadius: "50px" }}
-                  >
-                    Pay
-                  </MDBBtn>
-                  <MDBBtn
-                    size="sm"
-                    rounded
-                    color="danger"
-                    onClick={() => handleDelete(_id)}
-                    style={{ borderRadius: "50px" }}
-                  >
-                    Update
-                  </MDBBtn>
-                </MDBBtnGroup>
+                {!hasPaid && (
+                  <MDBBtnGroup>
+                    <MDBBtn
+                      size="sm"
+                      rounded
+                      color="success"
+                      onClick={() => dispatch(SetPAYMENTS(payable))}
+                      style={{ marginRight: "20px", borderRadius: "50px" }}
+                    >
+                      Pay
+                    </MDBBtn>
+                    {!isPastDue && (
+                      <MDBBtn
+                        size="sm"
+                        rounded
+                        color="danger"
+                        onClick={() => handleDelete(_id)}
+                        style={{ borderRadius: "50px" }}
+                      >
+                        Update
+                      </MDBBtn>
+                    )}
+                  </MDBBtnGroup>
+                )}
+                {hasPaid && <span>Payor : {fullName(payor?.fullName)}</span>}
               </td>
             </tr>
           );
