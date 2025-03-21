@@ -458,24 +458,42 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
-        const identifer = payload?.form === "Miscellaneous" ? "saleId" : "_id";
+    const { success, payload } = action.payload;
+    console.log("action.payload", action);
 
-        const index = state.collections.findIndex(
-          (item) => item._id === payload[identifer]
-        );
+    state.message = success;
+    const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
 
-        if (identifer === "saleId") {
-          state.collections[index].miscellaneous[payload?.miscIndex] = payload;
+    // Find the index of the collection item based on the identifier
+    const index = state.collections.findIndex(
+        (item) => item._id === payload[identifier]
+    );
+
+    // Ensure the index is valid
+    if (index !== -1) {
+        if (identifier === "saleId") {
+            // Update miscellaneous item at the correct index
+            if (state.collections[index]?.miscellaneous) {
+                state.collections[index].miscellaneous[payload?.miscIndex] = payload;
+            }
         } else {
-          state.collections[index][String(payload.form).toLowerCase()] =
-            payload;
-        }
+            const form = payload.form?.toLowerCase(); // Ensure form is lowercase
+            console.log("form", form);
+            console.log("index", index);
+            console.log("state.collections", state.collections[index]);
 
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
+            // Ensure collections[index] exists before modifying it
+            if (state.collections[index]) {
+                state.collections[index][form] = payload;
+            }
+        }
+    } else {
+        console.warn("Item not found in collections:", payload);
+    }
+
+    state.isSuccess = true;
+    state.isLoading = false;
+})
       .addCase(LABRESULT.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;

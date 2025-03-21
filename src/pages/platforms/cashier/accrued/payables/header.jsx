@@ -8,7 +8,7 @@ import {
   SetPAYABLES,
 } from "../../../../../services/redux/slices/finance/journals/payables";
 import {
-  BROWSE as PROVIDERBROWSE,
+  BROWSE as PROVIDERS,
   RESET as PROVIDERRESET,
 } from "../../../../../services/redux/slices/assets/providers";
 // import { SearchUser } from "../../../../../components/searchables";
@@ -25,11 +25,16 @@ export default function TopHeader() {
           token,
           key: {
             branch: activePlatform?.branchId,
+            year: new Date().getFullYear(),
+            month: new Date().getMonth() + 1,
           },
         })
       );
       dispatch(
-        PROVIDERBROWSE({ token, key: { branch: activePlatform?.branchId } })
+        PROVIDERS({
+          token,
+          key: { clients: activePlatform?.branchId, category: "utilities" },
+        })
       );
     }
     return () => {

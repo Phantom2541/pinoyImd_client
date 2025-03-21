@@ -30,10 +30,33 @@ export default function PaymentModal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
 
   const [form, setForm] = useState(selected);
+  const [penalty, setPenalty] = useState(0);
 
   useEffect(() => {
     setForm(selected);
+    checkPastDue();
   }, [selected, willCreate, showPaymentModal]);
+
+  // Check if payment is past due
+  const checkPastDue = () => {
+    if (selected?.due) {
+      const dueDate = new Date(selected.due);
+      const today = new Date();
+      if (dueDate < today) {
+        setPenalty(0); // Default penalty value
+      }
+    }
+  };
+
+  // Handle input changes
+  const handleChange = (key, value) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      [key]: key === "orOption" ? value : Number(value),
+      userId: auth._id,
+      branchId: activePlatform.branchId,
+    }));
+  };
 
   // Handle update function
   const handleUpdate = () => {
@@ -56,18 +79,15 @@ export default function PaymentModal() {
     willCreate ? handleCreate() : handleUpdate();
   };
 
-  // Handle change in inputs
-  const handleChange = (key, value) => {
-    setForm((prevForm) => ({
-      ...prevForm,
-      [key]: key === "orOption" ? value : Number(value),
-      userId: auth._id,
-      branchId: activePlatform.branchId,
-    }));
-  };
-
   // Handle modal close
   const handleClose = () => dispatch(SetCloseModal(false));
+
+  // Format currency
+  const formatCurrency = (amount) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "PHP",
+    }).format(amount);
 
   return (
     <MDBModal
@@ -89,16 +109,15 @@ export default function PaymentModal() {
               <form onSubmit={handleSubmit}>
                 {/* Supplier Name */}
                 <MDBTypography
-                  // tag="h2"
                   variant="h4-responsive"
                   className="text-center mb-3"
                 >
                   <small>Supplier: </small>
-                  <strong> {selected?.supplier?.name || "N/A"}</strong>
+                  <strong>{selected?.supplier?.name || "N/A"}</strong>
                 </MDBTypography>
+
                 {/* Statement */}
                 <MDBTypography
-                  // tag="h6"
                   variant="h4-responsive"
                   className="text-center mb-3"
                 >
@@ -107,84 +126,48 @@ export default function PaymentModal() {
                     {Statements?.getName(selected?.fsId) || "N/A"}
                   </strong>
                 </MDBTypography>
+
                 {/* Payment Method Dropdown */}
                 <select
-                  className="browser-default custom-select"
+                  className="browser-default custom-select mb-3"
                   value={form.orOption || ""}
-                  onChange={(e) => {
-                    // console.log("New Value Selected:", e.target.value); // Debugging log
-                    setForm({ ...form, orOption: e.target.value });
-                  }}
+                  onChange={(e) => handleChange("orOption", e.target.value)}
                 >
                   <option value="" disabled>
-                    Select
+                    Select Payment Method
                   </option>
                   <option value="Cash">Cash</option>
                   <option value="Cheque">Cheque</option>
                   <option value="Gcash">Gcash</option>
                   <option value="Transfer">Transfer</option>
                 </select>
-                {/* Conditionally render the correct input based on selection */}
-                {form.orOption === "Cash" ? (
-                  <>
-                    <br />
-                    <MDBInput
-                      type="number"
-                      step="0.01"
-                      // value={}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          amount: e.target.value,
-                        })
-                      }
-                      style={{
-                        width: "50%",
-                        margin: "0 auto",
-                        display: "block",
-                      }}
-                    />
-                  </>
-                ) : form.orOption === "Cheque" ? (
-                  <>
-                    <br />
-                    <h1>Cheque</h1>
-                  </>
-                ) : form.orOption === "Gcash" ? (
-                  <>
-                    <br />
-                    <h1>Gcash</h1>
-                  </>
-                ) : form.orOption === "Transfer" ? (
-                  <>
-                    <br />
-                    <h1>Transfer</h1>
-                  </>
-                ) : null}{" "}
-                {/* Payment Method Dropdown */}
-                {/* <div className="mb-3">
-                  <label className="font-weight-bold">
-                    Select Payment Method
-                  </label>
-                  <select
-                    className="browser-default custom-select"
-                    value={form.paymentMethod || ""}
-                    onChange={(e) =>
-                      handleChange("paymentMethod", e.target.value)
-                    }
-                  >
-                    <option value="" disabled>
-                      Select Payment Method
-                    </option>
-                    <option value="Cash">Cash</option>
-                    <option value="Cheque">Cheque</option>
-                    <option value="Gcash">Gcash</option>
-                    <option value="Transfer">Transfer</option>
-                  </select>
-                </div> */}
+
+                {/* Conditional Payment Method Fields */}
+                {form.orOption && (
+                  <div className="text-center mt-3">
+                    {form.orOption === "Cash" && (
+                      <MDBInput
+                        label="Enter Amount"
+                        type="number"
+                        step="0.01"
+                        value={form.amount || ""}
+                        onChange={(e) => handleChange("amount", e.target.value)}
+                      />
+                    )}
+                    {form.orOption === "Cheque" && (
+                      <h5>Cheque Payment Selected</h5>
+                    )}
+                    {form.orOption === "Gcash" && (
+                      <h5>Gcash Payment Selected</h5>
+                    )}
+                    {form.orOption === "Transfer" && (
+                      <h5>Transfer Payment Selected</h5>
+                    )}
+                  </div>
+                )}
+
                 {/* Due Date */}
                 <MDBTypography
-                  tag="h2"
                   variant="h4-responsive"
                   className="text-center mt-4"
                 >
@@ -197,26 +180,29 @@ export default function PaymentModal() {
                       })
                     : "N/A"}
                 </MDBTypography>
-                {/* Amount Input (Conditional) */}
-                {form.orOption === "Partial" ? (
+
+                {/* Penalty Input if Past Due */}
+                {selected?.due && new Date(selected.due) < new Date() && (
                   <MDBInput
-                    label="Amount"
+                    label="Penalty Amount"
                     type="number"
-                    value={form.amount || ""}
-                    onChange={(e) => handleChange("amount", e.target.value)}
+                    step="0.01"
+                    value={penalty}
+                    onChange={(e) => setPenalty(Number(e.target.value))}
                     className="mt-3"
                   />
-                ) : (
-                  <MDBTypography
-                    tag="h4"
-                    variant="h4-responsive"
-                    className="text-center mt-3"
-                  >
-                    <strong>
-                      Expenses Amount: {selected?.amount || "N/A"}
-                    </strong>
-                  </MDBTypography>
                 )}
+
+                {/* Amount Display */}
+                <MDBTypography
+                  variant="h4-responsive"
+                  className="text-center mt-3"
+                >
+                  <strong>
+                    Expenses Amount: {formatCurrency(selected?.amount || 0)}
+                  </strong>
+                </MDBTypography>
+
                 {/* Submit Button */}
                 <div className="text-center mt-4">
                   <MDBBtn

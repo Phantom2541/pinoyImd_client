@@ -9,17 +9,18 @@ import { Statements } from "../../../../../services/fakeDb";
 import { fullName } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import TableLoading from "../../../../../components/tableLoading";
-const Tables = () => {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage, isLoading } = useSelector(
-      ({ payables }) => payables
-    ),
-    dispatch = useDispatch();
 
-  const itemsPerPage = maxPage; // Number of items per page
+const Tables = () => {
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
+  const { filtered, activePage, maxPage, isLoading } = useSelector(
+    ({ payables }) => payables
+  );
+  const dispatch = useDispatch();
+
+  const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = filtered.slice(startIndex, endIndex);
 
   const handleDelete = (_id) => {
     Swal.fire({

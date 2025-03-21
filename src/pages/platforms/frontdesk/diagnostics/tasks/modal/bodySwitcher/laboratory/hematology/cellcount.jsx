@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import { Cellcount as CellCount } from "./../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
@@ -12,6 +12,8 @@ export default function Cellcount() {
     { Preferences, Abbreviation, Title } = CellCount;
 
   const handleChange = (e) => {
+    console.log("taskssadasdasdas", task);
+    
     const { name, value } = e.target,
       _name = Number(name),
       // _value = parseFloat(value),
@@ -28,7 +30,11 @@ export default function Cellcount() {
     while (_cells.length < 4) {
       _cells.push(0);
     }
-dispatch(SetPARAMS({ key: "cc", value: _cells }));
+    console.log("cc",task.cc);
+    console.log("_cells",_cells);
+    dispatch(SetTASK({form: task?.form, task:{ ...task, cc: _cells }}));
+    
+    dispatch(SetPARAMS({ key: "cc", value: _cells }));
   };
 
   return (
