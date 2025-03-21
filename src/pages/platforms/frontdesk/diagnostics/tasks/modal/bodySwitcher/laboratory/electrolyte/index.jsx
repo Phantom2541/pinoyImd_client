@@ -23,6 +23,7 @@ export default function Electrolyte() {
 
     return dispatch(
       SetTASK({
+        form: task?.form,
         task: {
           ...task,
           packages: { ...packages, [name]: _value },

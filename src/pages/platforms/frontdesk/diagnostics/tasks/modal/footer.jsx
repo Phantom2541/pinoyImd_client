@@ -86,7 +86,7 @@ const Footer = () => {
       placeholder="Remarks"
       value={task?.remarks}
       onChange={(e) =>
-        dispatch(SetTASK({task:{ ...task, remarks: e.target.value }}))
+        dispatch(SetTASK({form: task?.form, task:{ ...task, remarks: e.target.value }}))
       }
       className="w-100"
     />

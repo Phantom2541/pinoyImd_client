@@ -22,7 +22,7 @@ export default function Chemistry() {
     
     if (_name !== 16)
       return dispatch(
-        SetTASK({task:{
+        SetTASK({form: task?.form,task:{
           ...task,
           packages: { ...packages, [name]: _value },
         }})
@@ -35,7 +35,7 @@ export default function Chemistry() {
       chr = Number((chole / _value).toFixed(2));
     
     dispatch(
-      SetTASK({task:{
+      SetTASK({form: task?.form,task:{
         ...task,
         packages: {
           ...packages,
