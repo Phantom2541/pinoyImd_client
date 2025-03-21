@@ -6,7 +6,11 @@ import {
   DESTROY,
 } from "../../../../../services/redux/slices/finance/journals/payables";
 import { Statements } from "../../../../../services/fakeDb";
-import { fullName } from "../../../../../services/utilities";
+import {
+  currency,
+  dateFormat,
+  fullName,
+} from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import TableLoading from "../../../../../components/tableLoading";
 
@@ -49,7 +53,6 @@ const Tables = () => {
         <MDBTable responsive hover bordered>
           <thead>
             <tr>
-              <th rowSpan={2}>#</th>
               <th rowSpan={2}>Particular</th>
               <th rowSpan={2}>Statement</th>
               <th colSpan={2} style={{ textAlign: "center" }}>
@@ -87,40 +90,15 @@ const Tables = () => {
               const [start = "", end = ""] = Array.isArray(range) ? range : [];
               return (
                 <tr key={index}>
-                  <td>{index + 1}</td>
                   <td>
                     {particular && fullName(particular.fullName)}
                     {supplier && supplier.name}
                   </td>
                   <td>{Statements?.getName(fsId)}</td>
-                  <td>
-                    {start
-                      ? new Date(start).toLocaleDateString("en-GB", {
-                          month: "short",
-                          day: "2-digit",
-                          year: "numeric",
-                        })
-                      : ""}
-                  </td>
-                  <td>
-                    {end
-                      ? new Date(end).toLocaleDateString("en-GB", {
-                          month: "short",
-                          day: "2-digit",
-                          year: "numeric",
-                        })
-                      : ""}
-                  </td>
-                  <td>
-                    {due
-                      ? new Date(due).toLocaleDateString("en-GB", {
-                          month: "short",
-                          day: "2-digit",
-                          year: "numeric",
-                        })
-                      : ""}
-                  </td>
-                  <th>{amount}</th>
+                  <td>{start ? dateFormat(start) : ""}</td>
+                  <td>{end ? dateFormat(end) : ""}</td>
+                  <td>{due ? dateFormat(due) : ""}</td>
+                  <th>{currency(amount)}</th>
                   <td style={{ textAlign: "center" }}>
                     <MDBBtnGroup>
                       <MDBBtn

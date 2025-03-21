@@ -17,9 +17,9 @@ export default function Payables() {
           </MDBCardBody>
           <Footer />
         </MDBCard>
-        <PayablesModal />
-        <PaymentsModal />
       </MDBAnimation>
+      <PayablesModal />
+      <PaymentsModal />
     </>
   );
 }
