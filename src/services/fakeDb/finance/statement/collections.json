@@ -1,177 +1,177 @@
 [
   {
     "id": 1,
-    "title": "Service income",
-    "abbreviation": "SI",
-    "meaning": "Amount of income earned from services rendered of a service concern business",
+    "title": "Service Revenue",
+    "abbreviation": "SR",
+    "meaning": "Income generated from services rendered, such as laboratory tests, medical consultations, and diagnostics.",
     "category": "income",
     "profitable": true
   },
   {
-    "id": 2,
-    "title": "Professional Fee/ Payable",
-    "abbreviation": "PF/P",
-    "meaning": "Amounts due to the employees for lisence  they have rendered",
-    "category": "liabilities",
-    "profitable": false
-  },
-  {
-    "id": 3,
-    "title": "Salary",
-    "abbreviation": "salary",
-    "meaning": "Amounts due to the employees for their jobs",
-    "category": "liabilities",
-    "profitable": false
-  },
-  {
-    "id": 4,
-    "title": "Water/ Utilities Expense",
-    "abbreviation": "W/UE",
-    "meaning": null,
-    "category": "expenses",
-    "profitable": false
-  },
-  {
     "id": 5,
-    "title": "Electricity/ Utilities Expense",
-    "abbreviation": "E/UE",
-    "meaning": null,
-    "category": "expenses",
-    "profitable": false
-  },
-  {
-    "id": 6,
-    "title": "Taxes and Licenses Expense",
-    "abbreviation": "TL/E",
-    "meaning": null,
-    "category": "expenses",
-    "profitable": false
-  },
-  {
-    "id": 7,
-    "title": "Transportation Expense",
-    "abbreviation": "TE",
-    "meaning": null,
-    "category": "expenses",
-    "profitable": false
-  },
-  {
-    "id": 8,
-    "title": "Representation & Entertainment Expense",
-    "abbreviation": "RE/E",
-    "meaning": null,
-    "category": "expenses",
-    "profitable": false
-  },
-  {
-    "id": 9,
     "title": "Accumulated Depreciation",
     "abbreviation": "AD",
-    "meaning": null,
+    "meaning": "Total reduction in the value of fixed assets (e.g., medical equipment, office tools) due to wear and tear over time.",
     "category": "assets",
     "profitable": false
   },
   {
+    "id": 6,
+    "title": "Accounts Receivable",
+    "abbreviation": "A/R",
+    "meaning": "Amounts owed by clients for services provided on credit.",
+    "category": "assets",
+    "profitable": true
+  },
+  {
+    "id": 7,
+    "title": "Notes Receivable",
+    "abbreviation": "N/R",
+    "meaning": "Formal promissory notes from clients promising future payment.",
+    "category": "assets",
+    "profitable": true
+  },
+  {
     "id": 10,
-    "title": "Doubtful Accounts Expense",
-    "abbreviation": "DA/E",
-    "meaning": null,
-    "category": "expenses",
+    "title": "Accounts Payable",
+    "abbreviation": "A/P",
+    "meaning": "Outstanding obligations to suppliers and service providers, including purchased medical supplies or outsourced services.",
+    "category": "liabilities",
     "profitable": false
   },
   {
     "id": 11,
-    "title": "Insurance Expense",
-    "abbreviation": "I/E",
-    "meaning": null,
-    "category": "expenses",
+    "title": "Notes Payable",
+    "abbreviation": "N/P",
+    "meaning": "Formal loan agreements or promissory notes for business financing, such as bank loans or equipment installment payments.",
+    "category": "liabilities",
     "profitable": false
   },
   {
     "id": 12,
-    "title": "Miscellaneous Expense",
-    "abbreviation": "M/E",
-    "meaning": null,
-    "category": "expenses",
+    "title": "Professional Fees Payable",
+    "abbreviation": "PF/P",
+    "meaning": "Compensation owed to licensed professionals, such as doctors and medical technologists, for their services.",
+    "category": "liabilities",
     "profitable": false
   },
   {
     "id": 13,
-    "title": "Account Payable",
-    "abbreviation": "A/P",
-    "meaning": null,
+    "title": "Salaries Payable",
+    "abbreviation": "SP",
+    "meaning": "Unpaid salaries of employees within a payroll period.",
     "category": "liabilities",
-    "profitable": false
-  },
-  {
-    "id": 14,
-    "title": "Note Payable",
-    "abbreviation": "N/P",
-    "meaning": null,
-    "category": "liabilities",
-    "profitable": true
-  },
-  {
-    "id": 15,
-    "title": "Cable/ Utilities Expense",
-    "abbreviation": "C/UE",
-    "meaning": null,
-    "category": "expenses",
-    "profitable": false
-  },
-  {
-    "id": 16,
-    "title": "Outsource Expense",
-    "abbreviation": "OE",
-    "meaning": null,
-    "category": "expenses",
-    "profitable": false
-  },
-  {
-    "id": 17,
-    "title": "Phone/ Utilities Expense",
-    "abbreviation": "P/UE",
-    "meaning": null,
-    "category": "expenses",
-    "profitable": false
-  },
-  {
-    "id": 18,
-    "title": "Medical Inventories Expense",
-    "abbreviation": "M/SE",
-    "meaning": null,
-    "category": "expenses",
-    "profitable": false
-  },
-  {
-    "id": 19,
-    "title": "Repair /Maintenace Expense",
-    "abbreviation": "R/ME",
-    "meaning": null,
-    "category": "expenses",
     "profitable": false
   },
   {
     "id": 20,
-    "title": "Solicitation",
-    "abbreviation": "Gft",
-    "meaning": "Customer request financial support.",
+    "title": "Utilities Expense - Water",
+    "abbreviation": "UE-W",
+    "meaning": "Costs related to water consumption in business operations.",
     "category": "expenses",
     "profitable": false
   },
   {
     "id": 21,
-    "title": "INTERNET/ Utilities Expense",
-    "abbreviation": "I/UE",
-    "meaning": null,
+    "title": "Utilities Expense - Electricity",
+    "abbreviation": "UE-E",
+    "meaning": "Electricity expenses incurred for business operations.",
     "category": "expenses",
     "profitable": false
   },
   {
     "id": 22,
-    "title": "Office Inventories Expense",
-    "abbreviation": "OIE",
-    "meaning": "The supplies that have been used during the accounting period should be reported in the income statement account Inventories Expense. Basically, supplies are assets until they are used. When they are used, they become an expense",
+    "title": "Utilities Expense - Telephone",
+    "abbreviation": "UE-T",
+    "meaning": "Costs associated with telephone and communication services.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 23,
+    "title": "Utilities Expense - Wi-Fi & Internet Services",
+    "abbreviation": "UE-I",
+    "meaning": "Expenses related to broadband, Wi-Fi, and mobile data plans for business operations.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 24,
+    "title": "Rental Expense",
+    "abbreviation": "RE",
+    "meaning": "Payments for leased office, laboratory, or clinic space.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 25,
+    "title": "Taxes and Licenses Expense",
+    "abbreviation": "TL/E",
+    "meaning": "Government fees for business permits, licenses, and taxation.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 26,
+    "title": "Transportation Expense",
+    "abbreviation": "TE",
+    "meaning": "Travel costs related to business activities, including employee transport allowances.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 27,
+    "title": "Representation and Entertainment Expense",
+    "abbreviation": "REE",
+    "meaning": "Expenses for business meetings, sponsorships, and client hospitality.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 28,
+    "title": "Allowance for Doubtful Accounts",
+    "abbreviation": "ADA",
+    "meaning": "Expected losses from unpaid receivables due to customer defaults.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 29,
+    "title": "Insurance Expense",
+    "abbreviation": "IE",
+    "meaning": "Premium payments for business-related insurance, such as property, liability, or health coverage.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 30,
+    "title": "Miscellaneous Expense",
+    "abbreviation": "ME",
+    "meaning": "Minor business expenses that do not fall under other specific categories.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 31,
+    "title": "Outsourcing Expense",
+    "abbreviation": "OE",
+    "meaning": "Payments to third-party service providers, such as contract healthcare workers or administrative support.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 32,
+    "title": "Medical Supplies Expense",
+    "abbreviation": "MSE",
+    "meaning": "Costs of medical and laboratory supplies consumed in operations.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 33,
+    "title": "Charitable Contributions and Donations",
+    "abbreviation": "CCD",
+    "meaning": "Monetary or in-kind donations for community projects or outreach programs.",
     "category": "expenses",
     "profitable": false
   }

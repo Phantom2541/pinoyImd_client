@@ -49,6 +49,107 @@ const Tables = () => {
 
   return (
     <>
+      {/* <MDBTable responsive hover bordered>
+      <thead>
+        <tr>
+          <th rowSpan={2}>#</th>
+          <th rowSpan={2}>Particular/Vendor</th>
+          <th rowSpan={2}>Statement</th>
+          <th rowSpan={2}>Due Date</th>
+          <th rowSpan={2}>Amount</th>
+          <th rowSpan={2} style={{ textAlign: "center" }}>
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {!paginatedData.length && (
+          <tr>
+            <td colSpan={8} style={{ textAlign: "center" }}>
+              No Data
+            </td>
+          </tr>
+        )}
+        {paginatedData.map((payable, index) => {
+          const {
+            _id,
+            fsId,
+            amount,
+            particular,
+            due,
+            supplier,
+            hasPaid,
+            payor,
+          } = payable;
+          const dueDate = due ? new Date(due) : null;
+          const today = new Date();
+          const isToday = dueDate?.toDateString() === today.toDateString();
+          const isPastDue = dueDate && dueDate < today;
+
+          return (
+            <tr
+              key={_id}
+              style={
+                isPastDue && !hasPaid ? { backgroundColor: "#ffcccc" } : {}
+              }
+            >
+              <td>{index + 1}</td>
+              <td>
+                {particular && fullName(particular)}
+                {supplier &&
+                  (supplier.vendors?.length > 0
+                    ? `${supplier.vendors.name} - ${supplier.vendors.subname}`
+                    : `${supplier.name} - ${supplier.subname}`)}
+              </td>
+              <td>{Statements?.getName(fsId)}</td>
+              <td
+                style={{
+                  color: !hasPaid
+                    ? isToday
+                      ? "orange"
+                      : isPastDue
+                      ? "red"
+                      : "black"
+                    : "black",
+                  fontWeight: isPastDue ? "bold" : "normal",
+                }}
+              >
+                {dueDate
+                  ? dueDate.toLocaleDateString("en-GB", {
+                      month: "short",
+                      day: "2-digit",
+                      year: "numeric",
+                    })
+                  : ""}
+              </td>
+              <th>{currency(amount)}</th>
+              <td style={{ textAlign: "center" }}>
+                {!hasPaid && (
+                  <MDBBtnGroup>
+                    <MDBBtn
+                      size="sm"
+                      rounded
+                      color="success"
+                      onClick={() => dispatch(SetPAYMENTS(payable))}
+                      style={{ marginRight: "20px", borderRadius: "50px" }}
+                    >
+                      Pay
+                    </MDBBtn>
+                    {!isPastDue && (
+                      <MDBBtn
+                        size="sm"
+                        rounded
+                        color="danger"
+                        onClick={() => handleDelete(_id)}
+                        style={{ borderRadius: "50px" }}
+                      >
+                        Update
+                      </MDBBtn>
+                    )}
+                  </MDBBtnGroup>
+                )}
+                {hasPaid && <span>Payor : {fullName(payor?.fullName)}</span>}
+              </td> */}
       {!isLoading ? (
         <MDBTable responsive hover bordered>
           <thead>
