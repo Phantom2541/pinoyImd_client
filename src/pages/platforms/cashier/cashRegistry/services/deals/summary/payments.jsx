@@ -8,7 +8,7 @@ import { AUTOSELECT } from "../../../../../../../services/redux/slices/finance/b
 export default function Payments() {
   const { total, collections } = useSelector(({ deals }) => deals),
     { auth, activePlatform, token } = useSelector(({ auth }) => auth),
-    { opening = {} } = useSelector(({ remittances }) => remittances.selected),
+    { selected } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(true),
     [sum, setSum] = useState(0);
@@ -25,8 +25,8 @@ export default function Payments() {
   }, [collections]);
 
   useEffect(() => {
-    setSum(opening?.sum);
-  }, [opening]);
+    setSum(selected?.opening?.sum);
+  }, [selected]);
 
   useEffect(() => {
     const options = {
