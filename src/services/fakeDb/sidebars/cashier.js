@@ -74,7 +74,7 @@ const cashier = [
        */
       {
         name: "Accounts Payable (A/P)",
-        path: "/accrued",
+        path: "/payables",
         icon: "file-invoice-dollar",
         title: "Outstanding payments for suppliers and utilities.",
         component: Payables,
