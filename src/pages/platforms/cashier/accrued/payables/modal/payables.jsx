@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   SAVE,
   SetCloseModal,
+  UPDATE,
 } from "../../../../../../services/redux/slices/finance/journals/payables";
 import {
   MDBModal,
@@ -12,16 +13,20 @@ import {
   MDBRow,
   MDBCol,
   MDBBtn,
+  MDBIcon,
 } from "mdbreact";
 import { Statements } from "../../../../../../services/fakeDb";
 import CustomSelect from "../../../../../../components/searchables/customSelect";
 import { SearchUser } from "../../../../../../components/searchables";
+import util from "../util";
 
 export default function ModalCreate() {
   const dispatch = useDispatch();
-  const { showPayablesModal, selected } = useSelector(
-    ({ payables }) => payables
-  );
+  const {
+    showPayablesModal,
+    selected,
+    willCreate = false,
+  } = useSelector(({ payables }) => payables);
   const { collections } = useSelector(({ providers }) => providers);
   const { token, activePlatform } = useSelector(({ auth }) => auth);
 
@@ -44,9 +49,28 @@ export default function ModalCreate() {
       range: form.range || ["", ""],
     };
 
-    dispatch(SAVE({ data: formData, token }));
+    const { supplier, particular } = formData || {};
+
+    if (willCreate) {
+      dispatch(SAVE({ data: formData, token }));
+    } else {
+      dispatch(
+        UPDATE({
+          data: {
+            ...formData,
+            supplier: supplier?._id,
+            particular: particular?._id,
+          },
+          token,
+        })
+      );
+    }
     handleClose();
   };
+
+  const { particular = {}, supplier = {} } = form || {};
+
+  console.log("form", form.due);
 
   return (
     <MDBModal
@@ -59,7 +83,14 @@ export default function ModalCreate() {
         toggle={handleClose}
         className="light-blue darken-3 white-text"
       >
-        Payables
+        {willCreate ? (
+          "Payables"
+        ) : (
+          <>
+            <MDBIcon icon="pencil-alt" className="mr-2" />
+            {util.getVendorOrParticular(particular, supplier)}
+          </>
+        )}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <CustomSelect
@@ -71,24 +102,27 @@ export default function ModalCreate() {
               : []
           }
           label={"Expense Account"}
+          preValue={form.fsId}
           values={"id"}
           texts={"title"}
           onChange={(value) => setForm({ ...form, fsId: Number(value) })}
         />
-        <select
-          className="browser-default custom-select"
-          value={form.orOption || ""}
-          onChange={(e) => {
-            // console.log("New Value Selected:", e.target.value); // Debugging log
-            setForm({ ...form, orOption: e.target.value });
-          }}
-        >
-          <option value="" disabled>
-            Select
-          </option>
-          <option value="Particular">Particular</option>
-          <option value="Supplier">Supplier</option>
-        </select>
+        {willCreate && (
+          <select
+            className="browser-default custom-select"
+            value={form.orOption || ""}
+            onChange={(e) => {
+              // console.log("New Value Selected:", e.target.value); // Debugging log
+              setForm({ ...form, orOption: e.target.value });
+            }}
+          >
+            <option value="" disabled>
+              Select
+            </option>
+            <option value="Particular">Particular</option>
+            <option value="Supplier">Supplier</option>
+          </select>
+        )}
         {/* Conditionally render the correct input based on selection */}
         {form.orOption === "Particular" ? (
           <>
@@ -123,48 +157,52 @@ export default function ModalCreate() {
             setForm({ ...form, amount: Number(target.value) })
           }
         />
-        <h5>
-          <b>Range</b>
-        </h5>
-        <MDBRow>
-          <MDBCol>
-            <MDBInput
-              label="Date From"
-              type="date"
-              value={form.range?.[0] || ""}
-              onChange={({ target }) =>
-                setForm({
-                  ...form,
-                  range: [target.value, form.range?.[1] || ""],
-                })
-              }
-            />
-          </MDBCol>
-          <MDBCol>
-            <MDBInput
-              label="Date To"
-              type="date"
-              value={form.range?.[1] || ""}
-              onChange={({ target }) =>
-                setForm({
-                  ...form,
-                  range: [form.range?.[0] || "", target.value],
-                })
-              }
-            />
-          </MDBCol>
-        </MDBRow>
+        {willCreate && (
+          <>
+            <h5>
+              <b>Range</b>
+            </h5>
+            <MDBRow>
+              <MDBCol>
+                <MDBInput
+                  label="Date From"
+                  type="date"
+                  value={form.range?.[0] || ""}
+                  onChange={({ target }) =>
+                    setForm({
+                      ...form,
+                      range: [target.value, form.range?.[1] || ""],
+                    })
+                  }
+                />
+              </MDBCol>
+              <MDBCol>
+                <MDBInput
+                  label="Date To"
+                  type="date"
+                  value={form.range?.[1] || ""}
+                  onChange={({ target }) =>
+                    setForm({
+                      ...form,
+                      range: [form.range?.[0] || "", target.value],
+                    })
+                  }
+                />
+              </MDBCol>
+            </MDBRow>
+          </>
+        )}
         <h5>
           <b>Due Date</b>
         </h5>
         <MDBInput
           label="Due Date"
           type="date"
-          value={form.due || ""}
+          value={form.due ? new Date(form.due).toISOString().split("T")[0] : ""}
           onChange={({ target }) => setForm({ ...form, due: target.value })}
         />
-        <MDBBtn color="primary" onClick={handleSave}>
-          Save
+        <MDBBtn color="primary" className="float-right" onClick={handleSave}>
+          {willCreate ? "Save" : "Update"}
         </MDBBtn>
       </MDBModalBody>
     </MDBModal>
