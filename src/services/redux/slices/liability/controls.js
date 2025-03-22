@@ -164,22 +164,44 @@ export const reduxSlice = createSlice({
       // UPDATE
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
       })
-      .addCase(UPDATE.fulfilled, (state, { payload }) => {
+      .addCase(UPDATE.fulfilled, (state, action) => {
+        const { success, payload } = action;
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-        if (index !== -1) {
-          state.collections[index] = payload;
-        }
+
+        state.collections[index] = payload;
         state.showModal = false;
+        state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
       })
-      .addCase(UPDATE.rejected, (state, { payload }) => {
-        state.message = payload;
+      .addCase(UPDATE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
         state.isLoading = false;
       })
+      // .addCase(UPDATE.pending, (state) => {
+      //   state.isLoading = true;
+      // })
+      // .addCase(UPDATE.fulfilled, (state, { payload }) => {
+      //   const index = state.collections.findIndex(
+      //     (item) => item._id === payload._id
+      //   );
+      //   if (index !== -1) {
+      //     state.collections[index] = payload;
+      //   }
+      //   state.showModal = false;
+      //   state.isSuccess = true;
+      //   state.isLoading = false;
+      // })
+      // .addCase(UPDATE.rejected, (state, { payload }) => {
+      //   state.message = payload;
+      //   state.isLoading = false;
+      // })
 
       // DESTROY
       .addCase(DESTROY.pending, (state) => {

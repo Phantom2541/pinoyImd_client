@@ -30,7 +30,7 @@ export default function Modal({
   willCreate,
   selected,
 }) {
-  const { isLoading } = useSelector(({ personnels }) => personnels),
+  const { isLoading } = useSelector(({ preferences }) => preferences),
     [form, setForm] = useState({
       lo: 0,
       hi: 0,
@@ -182,14 +182,16 @@ export default function Modal({
                 >
                   <MDBSelectInput selected="Category" />
                   <MDBSelectOptions>
-                    {References.preferences[preference].map((choice, index) => (
-                      <MDBSelectOption
-                        key={`choice-${index}`}
-                        value={String(index)}
-                      >
-                        {choice}
-                      </MDBSelectOption>
-                    ))}
+                    {References.preferences[preference]?.map(
+                      (choice, index) => (
+                        <MDBSelectOption
+                          key={`choice-${index}`}
+                          value={String(index)}
+                        >
+                          {choice}
+                        </MDBSelectOption>
+                      )
+                    )}
                   </MDBSelectOptions>
                 </MDBSelect>
               )}

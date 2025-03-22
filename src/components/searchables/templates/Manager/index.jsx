@@ -1,5 +1,5 @@
 import React from "react";
-import { Templates as templates } from "./../../../services/fakeDb";
+import { Templates as templates } from "../../../../services/fakeDb";
 
 const Templates = ({ setTemplate }) => {
   const template = templates.collections.find(
