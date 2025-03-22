@@ -5,14 +5,9 @@ import {
   MDBModal,
   MDBModalBody,
   MDBModalHeader,
-  MDBTypography,
   MDBInput,
-  MDBContainer,
   MDBCard,
   MDBCardBody,
-  MDBBadge,
-  MDBRow,
-  MDBCol,
   MDBIcon,
 } from "mdbreact";
 import {
@@ -49,13 +44,9 @@ export default function PaymentModal() {
   const [form, setForm] = useState(selected);
   const [penalty, setPenalty] = useState(0);
 
+  // Check if payment is past due
   useEffect(() => {
     setForm(selected);
-    checkPastDue();
-  }, [selected, willCreate, showPaymentModal]);
-
-  // Check if payment is past due
-  const checkPastDue = () => {
     if (selected?.due) {
       const dueDate = new Date(selected.due);
       const today = new Date();
@@ -63,7 +54,7 @@ export default function PaymentModal() {
         setPenalty(0); // Default penalty value
       }
     }
-  };
+  }, [selected, willCreate]);
 
   // Handle input changes
   const handleChange = (key, value) => {
@@ -174,6 +165,7 @@ export default function PaymentModal() {
                         height: index === 3 ? "2.8rem" : "3.5rem",
                       }}
                       src={img}
+                      alt={text}
                     />
                   </MDBCard>
                 ))}
