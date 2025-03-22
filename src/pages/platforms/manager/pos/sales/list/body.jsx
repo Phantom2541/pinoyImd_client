@@ -4,6 +4,7 @@ import { capitalize } from "lodash";
 import {
   currency,
   fullName,
+  getGenderIcon,
   // axioKit,
 } from "./../../../../../../services/utilities";
 import { Categories } from "./../../../../../../services/fakeDb";
@@ -13,7 +14,14 @@ import {
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
-import { MDBCardBody, MDBTable, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
+import {
+  MDBCardBody,
+  MDBTable,
+  MDBIcon,
+  MDBBadge,
+  MDBBtn,
+  MDBBtnGroup,
+} from "mdbreact";
 import "./style.css";
 
 export const Tables = () => {
@@ -201,7 +209,10 @@ export const Tables = () => {
               >
                 {/* <td>{index + 1}.</td> */}
                 <td>
-                  <h6>{fullName(deal.customerId.fullName)}</h6>
+                  <h6>
+                    {getGenderIcon(deal.customerId.isMale)}{" "}
+                    {fullName(deal.customerId.fullName)}
+                  </h6>
                   <MDBBadge color="info" className="mr-2">
                     {capitalize(
                       deal.category === "walkin"
@@ -219,25 +230,11 @@ export const Tables = () => {
                   <p>{deal.source?.companyName || deal.source?.name}</p>
                 </td>
                 <td style={{ fontWeight: 400 }}>
-                  <p>
-                    {currency(deal.amount)}
-                    {isHover && (
-                      <MDBBtn
-                        size="sm"
-                        style={{ marginTop: "-0.5rem" }}
-                        color="primary"
-                        rounded
-                        onClick={() => handleEdit(deal)}
-                        className="p-1 mx-2"
-                        title="Edit Sales Amount"
-                      >
-                        <MDBIcon icon="pencil-alt" />
-                      </MDBBtn>
-                    )}
-                  </p>
+                  <p style={{ fontWeight: 500 }}>{currency(deal.amount)}</p>
                   {isDiscounted && (
                     <p style={{ color: "red" }}>{currency(deal.discount)}</p>
                   )}
+                  <p>{currency(deal.cash)}</p>
                 </td>
                 <td>
                   {deal.cart?.map((menu) => (
@@ -254,12 +251,35 @@ export const Tables = () => {
                   {!isHover ? (
                     deal.remarks
                   ) : (
-                    <MDBIcon
-                      icon="trash"
-                      className="mr-2 mt-2"
-                      title="Delete Sales"
-                      onClick={() => handleDelete(deal)}
-                    />
+                    <>
+                      <MDBBtnGroup>
+                        <MDBBtn
+                          size="sm"
+                          color="primary"
+                          rounded
+                          onClick={() => handleEdit(deal)}
+                          title="Edit Sales Amount"
+                        >
+                          <MDBIcon icon="pencil-alt" />
+                        </MDBBtn>
+                        <MDBBtn
+                          size="sm"
+                          color="danger"
+                          rounded
+                          onClick={() => handleDelete(deal)}
+                          title="Delete Sales"
+                        >
+                          <MDBIcon icon="trash" />
+                        </MDBBtn>
+                      </MDBBtnGroup>
+                      {/* 
+                      <MDBIcon
+                        icon="trash"
+                        className="mr-2 mt-2"
+                        title="Delete Sales"
+                        onClick={() => handleDelete(deal)}
+                      /> */}
+                    </>
                   )}
                 </td>
                 {/* <td>

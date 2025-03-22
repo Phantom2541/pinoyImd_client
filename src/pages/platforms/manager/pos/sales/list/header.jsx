@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
-import {
-  currency,
-  fullName,
-  globalSearch,
-} from "./../../../../../../services/utilities";
+import { fullName, globalSearch } from "./../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { FilterCollections } from "./../../../../../../components/searchables";
 import {
@@ -14,7 +10,6 @@ import {
   SetFilterByCASHIER,
   RESET,
 } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
-import CustomSelect from "../../../../../../components/searchables/customSelect";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
