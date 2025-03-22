@@ -19,14 +19,14 @@ const { troupe } = task;
         label="Method"
         name="method"
         type="text"
-        value={troupe.method || ""}
+        value={troupe?.method || ""}
         onChange={handleChange}
       />
       <MDBInput
         label="Kit"
         name="kit"
         type="text"
-        value={troupe.kit || ""}
+        value={troupe?.kit || ""}
         onChange={handleChange}
       />
       <MDBInput
