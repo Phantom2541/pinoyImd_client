@@ -10,9 +10,9 @@ import {
 import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 export default function Vouchers() {
-  const { collections, total } = useSelector(({ deals }) => deals),
+  const { token } = useSelector(({ auth }) => auth),
+    { collections, total } = useSelector(({ deals }) => deals),
     { selected } = useSelector(({ remittances }) => remittances),
-    { token } = useSelector(({ auth }) => auth),
     [isOpen, setIsOpen] = useState(true),
     [menuCensus, setMenuCensus] = useState([]), // Menus Census for display
     [serviceCensus, setServiceCensus] = useState([]), // Services Census for display

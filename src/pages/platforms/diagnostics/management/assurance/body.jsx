@@ -22,6 +22,7 @@ const Tables = () => {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = collections.slice(startIndex, endIndex); // Get only
+
   const handleDelete = (_id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -39,7 +40,7 @@ const Tables = () => {
   };
 
   return (
-    <MDBTable responsive hover bordered>
+    <MDBTable responsive hover bordered className="text-center">
       <thead>
         <tr>
           <th>#</th>
@@ -51,9 +52,14 @@ const Tables = () => {
         </tr>
       </thead>
       <tbody>
-        {!paginatedData?.length && <tr>No data</tr>}
-        {paginatedData?.map((assurance, index) => {
-          return (
+        {!paginatedData?.length ? (
+          <tr>
+            <td colSpan="6" className="text-center text-muted p-4">
+              <strong>No data available</strong>
+            </td>
+          </tr>
+        ) : (
+          paginatedData.map((assurance, index) => (
             <tr key={index}>
               <td>
                 {new Date(assurance?.createdAt).toLocaleDateString("en-GB", {
@@ -71,7 +77,7 @@ const Tables = () => {
                     rounded
                     color="success"
                     onClick={() => dispatch(SetEDIT(assurance))}
-                    style={{ marginRight: "20px", borderRadius: "50px" }}
+                    style={{ marginRight: "10px", borderRadius: "50px" }}
                   >
                     Edit
                   </MDBBtn>
@@ -87,8 +93,8 @@ const Tables = () => {
                 </MDBBtnGroup>
               </td>
             </tr>
-          );
-        })}
+          ))
+        )}
       </tbody>
     </MDBTable>
   );

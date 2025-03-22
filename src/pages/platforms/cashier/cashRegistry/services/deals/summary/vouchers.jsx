@@ -1,11 +1,39 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapseHeader, MDBCollapse } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
+import { Statements } from "../../../../../../../services/fakeDb";
+import { Daily } from "./../../../../../../../services/redux/slices/finance/journals/payments";
 
 export default function Vouchers() {
-  const { total } = useSelector(({ deals }) => deals),
-    [isOpen, setIsOpen] = useState(false);
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { filtered } = useSelector(({ payments }) => payments),
+    [isOpen, setIsOpen] = useState(false),
+    [total, setTotal] = useState(0),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    if (token) {
+      const date = new Date().toISOString().split("T")[0];
+      dispatch(
+        Daily({
+          token,
+          key: {
+            branchId: activePlatform.branchId,
+            payor: auth._id,
+            date,
+          },
+        })
+      );
+    }
+  }, [token, dispatch, activePlatform.branchId, auth._id]);
+
+  useEffect(() => {
+    let amount = 0;
+    filtered?.forEach((voucher) => (amount += voucher.amount));
+    setTotal(amount);
+  }, [filtered]);
+
   return (
     <MDBCard className="shadow-sm">
       <MDBCollapseHeader style={{ borderRadius: "50%" }} className="bg-light">
@@ -22,22 +50,17 @@ export default function Vouchers() {
       </MDBCollapseHeader>
       <MDBCollapse isOpen={isOpen}>
         <MDBCardBody>
-          <div className="d-flex justify-content-between">
-            <span>Electric Bill:</span>
-            <strong className="text-warning">₱0.00</strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Water Bill :</span>
-            <strong className="text-primary">₱0.00</strong>
-          </div>
-          {/* <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Wifi Bill :</span>
-            <strong className="text-primary">₱0.00</strong>
-          </div> */}
-          {/* <div className="d-flex justify-content-between border-bottom py-2">
-          <span>Miscellanious :</span>
-          <strong className="text-danger">₱0.00</strong>
-        </div> */}
+          {filtered?.map((voucher) => (
+            <div
+              className="d-flex justify-content-between border-bottom py-2"
+              key={`voucher-${voucher._id}`}
+            >
+              <span>{Statements.getName(voucher.fsId)}</span>
+              <strong className="text-primary">
+                {currency(voucher.amount)}
+              </strong>
+            </div>
+          ))}
           <hr />
           <div className="d-flex justify-content-between border-bottom pb-2">
             <span>Total Received:</span>
@@ -45,12 +68,6 @@ export default function Vouchers() {
           </div>
         </MDBCardBody>
       </MDBCollapse>
-      {/* <MDBCardFooter className="bg-light border-top pt-3">
-        <div className="d-flex justify-content-between">
-          <span>Total:</span>
-          <strong className="text-primary">{currency(total)}</strong>
-        </div>
-      </MDBCardFooter> */}
     </MDBCard>
   );
 }
