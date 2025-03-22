@@ -47,8 +47,6 @@ export default function Summary() {
     const cash = Number(e.target.amount.value);
 
     const _data = {
-      // exact date used for pre calculated daily sale
-      date: new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }),
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
       authorizedBy: authorizedBy || undefined,

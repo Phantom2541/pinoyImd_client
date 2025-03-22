@@ -47,13 +47,16 @@ export default function PatientCart({
   privilegeIndex,
   saleId = "",
 }) {
+  console.log("cart", cart);
+  console.log("gross", gross);
+  
   return (
     <>
       <div style={{ height: "300px", overflow: "auto" }}>
         <MDBTable className="text-center border mb-0" responsive hover>
           <thead>
             <tr>
-              <th className="text-left py-1">Service</th>
+              <th className="text-left py-1">Servisssce</th>
               <th className="py-1">SRP</th>
               <th className="py-1">UP</th>
               <th />

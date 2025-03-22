@@ -183,7 +183,6 @@ export default function MenuCollapse() {
           .then((physician) => {
             const { _id: physicianId } = physician;
             // Dispatch TagPHYSICIAN action
-            console.log("selected", selected);
             return dispatch(
               TagPHYSICIAN({
                 data: { physicianId, providerId, branchId },

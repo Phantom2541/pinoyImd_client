@@ -43,7 +43,7 @@ export default function Card({ item, index }) {
         <p className="line-clamp">
           {fullname.lname},
           <br />
-          <small>
+          <small> 
             {fullname.fname} {fullname.mname}
           </small>
         </p>

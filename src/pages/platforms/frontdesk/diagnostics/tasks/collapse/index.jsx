@@ -11,15 +11,16 @@ export default function DealCollapse() {
       ({ validator }) => validator
     );
 
-  return (
+  return ( 
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
       {handlePagination(filtered, activePage, maxPage).map((deal, index) => {
+        
         return (
           <MDBCard key={`deal-${index}`}>
             <Header deal={deal} index={index} />
             <MDBCollapse id={`collapse-${index}`} isOpen={index === activeCOLAPSE}>
               <MDBCardBody className="pt-0">
-                <Body forms={deal.forms} />
+                <Body customer={deal.customerId} forms={deal.forms} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

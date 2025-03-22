@@ -5,18 +5,25 @@ import { useToasts } from "react-toast-notifications";
 import {
   RESET,
   BROWSE,
+  SetFILTERED,
   SetPAYABLES,
 } from "../../../../../services/redux/slices/finance/journals/payables";
 import {
-  BROWSE as PROVIDERBROWSE,
+  BROWSE as PROVIDERS,
   RESET as PROVIDERRESET,
 } from "../../../../../services/redux/slices/assets/providers";
 // import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess } = useSelector(({ payables }) => payables),
+    { filtered, message, isSuccess, collections } = useSelector(
+      ({ payables }) => payables
+    ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(SetFILTERED(collections));
+  }, [collections]);
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -25,11 +32,16 @@ export default function TopHeader() {
           token,
           key: {
             branch: activePlatform?.branchId,
+            year: new Date().getFullYear(),
+            month: new Date().getMonth() + 1,
           },
         })
       );
       dispatch(
-        PROVIDERBROWSE({ token, key: { branch: activePlatform?.branchId } })
+        PROVIDERS({
+          token,
+          key: { clients: activePlatform?.branchId, category: "utilities" },
+        })
       );
     }
     return () => {

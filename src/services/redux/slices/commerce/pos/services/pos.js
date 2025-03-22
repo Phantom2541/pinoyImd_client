@@ -146,23 +146,23 @@ export const reduxSlice = createSlice({
       state.cart = [];
     },
     SETCASHIER: (state, { payload }) => {
-      state.cashierId = payload.cashierId; 
+      state.cashierId = payload.cashierId;
       state.branchId = payload.branchId;
     },
-    SETPATIENT: (state, { payload }) => { 
+    SETPATIENT: (state, { payload }) => {
       state.customer = payload;
       state.customerId = payload?._id;
-    }, 
+    },
     SETSEARCHKEY: (state, { payload }) => {
-    state.customer = {
-      ...defaultCustomer,
-      fullName: {
-        fname: payload.fname,
-        mname: payload.mname || "",
-        lname: payload.lname
-      }
-    };
-  },
+      state.customer = {
+        ...defaultCustomer,
+        fullName: {
+          fname: payload.fname,
+          mname: payload.mname || "",
+          lname: payload.lname,
+        },
+      };
+    },
     SETCATEGORY: (state, { payload }) => {
       state.category = payload;
     },
@@ -215,6 +215,9 @@ export const reduxSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
       state.amount = 0;
+      state.cart = [];
+      state.cash = 0;
+      state.customer = {};
       if (payload?.resetCollections) state.collections = [];
     },
   },

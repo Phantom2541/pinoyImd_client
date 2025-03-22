@@ -10,11 +10,11 @@ export default function Header({
   referral,
   task,
 }) {
-  const { fullName: pFull, isMale = false, dob = "" } = patient,
-    { fullName: rFull } = referral,
-    { companyName = "", name = "" } = source;
+  console.log("patient", patient);
+  
 
-  const categoryWidth = companyName && rFull ? "30%" : "64.2%";
+  const { fullName: pFull, isMale = false, dob = "" } = patient;
+  const categoryWidth = source && referral ? "30%" : "64.2%";
 
   return (
     <div className="px-1">
@@ -49,9 +49,9 @@ export default function Header({
 
       <MDBRow>
         <MDBCol style={{ alignItems: "baseline" }} className="text-left">
-          {rFull ? (
+          {referral ? (
             <span style={{ width: categoryWidth }}>
-              Referral: Dr. {rFull.lname}
+              Referral: Dr. {referral?.fullName.lname}
             </span>
           ) : (
             <span style={{ width: categoryWidth }}>
@@ -63,9 +63,9 @@ export default function Header({
           )}
         </MDBCol>
         <MDBCol className="text-right">
-          {companyName && (
+          {source && (
             <span>
-              Source: {companyName}, {name}
+              Source: {source?.companyName}, {source?.name}
             </span>
           )}
         </MDBCol>

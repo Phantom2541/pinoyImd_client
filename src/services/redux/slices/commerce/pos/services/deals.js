@@ -234,9 +234,13 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetFilterByCASHIER: (state, { payload }) => {
-      state.filtered = state.collections.filter(
-        (item) => item.cashierId._id === payload
-      );
+      if (payload === "all") {
+        state.filtered = state.collections;
+      } else {
+        state.filtered = state.collections.filter(
+          (item) => item.cashierId._id === payload
+        );
+      }
     },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
@@ -315,16 +319,13 @@ export const reduxSlice = createSlice({
           { _id, deletedAt, amount, discount, authorizedBy } = payload;
 
         const index = state.collections.findIndex((c) => c._id === _id);
-
-        if (index !== -1) {
-          state.collections[index] = {
-            ...state.collections[index],
-            amount,
-            discount, // Ensure discount is also updated
-            deletedAt, // Keep track of deletion status
-            authorizedBy, // Keep track of deletion status
-          };
-        }
+        state.collections[index] = {
+          ...state.collections[index],
+          amount,
+          discount, // Ensure discount is also updated
+          deletedAt, // Keep track of deletion status
+          authorizedBy, // Keep track of deletion status
+        };
 
         state.message = success;
         state.isSuccess = true;
@@ -459,18 +460,37 @@ export const reduxSlice = createSlice({
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        state.message = success;
-        const identifer = payload?.form === "Miscellaneous" ? "saleId" : "_id";
+        console.log("action.payload", action);
 
+        state.message = success;
+        const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
+
+        // Find the index of the collection item based on the identifier
         const index = state.collections.findIndex(
-          (item) => item._id === payload[identifer]
+          (item) => item._id === payload[identifier]
         );
 
-        if (identifer === "saleId") {
-          state.collections[index].miscellaneous[payload?.miscIndex] = payload;
+        // Ensure the index is valid
+        if (index !== -1) {
+          if (identifier === "saleId") {
+            // Update miscellaneous item at the correct index
+            if (state.collections[index]?.miscellaneous) {
+              state.collections[index].miscellaneous[payload?.miscIndex] =
+                payload;
+            }
+          } else {
+            const form = payload.form?.toLowerCase(); // Ensure form is lowercase
+            console.log("form", form);
+            console.log("index", index);
+            console.log("state.collections", state.collections[index]);
+
+            // Ensure collections[index] exists before modifying it
+            if (state.collections[index]) {
+              state.collections[index][form] = payload;
+            }
+          }
         } else {
-          state.collections[index][String(payload.form).toLowerCase()] =
-            payload;
+          console.warn("Item not found in collections:", payload);
         }
 
         state.isSuccess = true;

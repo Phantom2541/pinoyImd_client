@@ -1,10 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
+import { Services } from "../../../../../services/fakeDb/index";
 
 const url = "diagnostics/laboratory/preferences";
 
 const initialState = {
   collections: [],
+  filtered: [],
+  activePage: 1,
+  maxPage: 5,
+  template: "",
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -76,6 +81,17 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetTEMPLATE: (state, action) => {
+      state.template = action.payload;
+
+      if (state.template === -1) {
+        state.filtered = [...state.collections];
+      } else {
+        state.filtered = state.collections.filter(
+          (item) => item.template === state.template
+        );
+      }
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -90,7 +106,15 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload;
+        const _services = Services.collections.map((service) => {
+          const references = payload.filter(
+            ({ serviceId }) => serviceId === service.id
+          );
+          return { ...service, references };
+        });
+
+        state.collections = [..._services];
+        state.filtered = [..._services];
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -162,6 +186,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { RESET, SetTEMPLATE } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

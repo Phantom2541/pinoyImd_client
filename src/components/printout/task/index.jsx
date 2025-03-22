@@ -81,7 +81,7 @@ export default function TaskPrintout() {
   useEffect(() => {
     setTask(JSON.parse(localStorage.getItem("taskPrintout")));
 
-    return () => localStorage.removeItem("taskPrintout");
+    // return () => localStorage.removeItem("taskPrintout");
   }, []);
 
   if (task?._id) return <Printout task={task} />;

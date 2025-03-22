@@ -23,14 +23,26 @@ const Printout = ({ sale, forms, ssx }) => {
   const { updatedAt, customer, referral, category } = sale;
 
   return (
-    <div style={{ width: "100vw", height: "100vh", backgroundColor: "white" }}>
+    <div
+      style={{
+        width: "100vw",
+        height: "50vh", // Adjusted height for half long bond paper
+        backgroundColor: "white",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "10px", // Added padding for proper spacing
+        overflow: "auto", // Ensure all content is visible
+      }}
+    >
       <div
         style={{
           width: "600px",
           cursor: "default",
           fontFamily: "Helvetica, sans-serif",
           letterSpacing: "-0.5px",
-          fontSize: "16px",
+          fontSize: "14px", // Reduced font size for better fit
         }}
       >
         <Header
@@ -45,11 +57,13 @@ const Printout = ({ sale, forms, ssx }) => {
       {/* Updated layout */}
       <div
         style={{
-          display: "flex", // Display forms side by side
-          flexWrap: "wrap", // Allow wrapping if needed
-          gap: "5px", // Reduce spacing for better fit
-          padding: "5px", // Reduced padding for a tighter fit
-          fontSize: "12px", // Smaller text for better fit
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "3px",
+          padding: "3px",
+          fontSize: "10px",
+          maxHeight: "calc(50vh - 100px)", // Ensure content fits in half bond paper
+          overflowY: "auto", // Enable scrolling for long content
         }}
       >
         {Object?.keys(forms)?.map((key, index) => {
@@ -58,12 +72,12 @@ const Printout = ({ sale, forms, ssx }) => {
             <div
               key={index}
               style={{
-                minWidth: "250px", // Smaller width
-                flex: "1",
-                padding: "5px", // Reduce padding
-                border: "1px solid #ddd", // Light border
-                borderRadius: "3px", // Smaller border radius
+                width: "100%", // Allow full width to fit all content
+                padding: "5px",
+                border: "1px solid #ddd",
+                borderRadius: "2px",
                 backgroundColor: "#fff",
+                fontSize: "10px",
               }}
             >
               <div
@@ -71,17 +85,17 @@ const Printout = ({ sale, forms, ssx }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   borderBottom: "1px solid #ccc",
-                  paddingBottom: "3px",
-                  marginBottom: "5px",
+                  paddingBottom: "2px",
+                  marginBottom: "3px",
                   fontWeight: "bold",
-                  fontSize: "12px", // Smaller font
+                  fontSize: "10px",
                 }}
               >
                 <span>{key}</span>
                 <span>{forms[key]?.price}</span>
               </div>
               {FormComponent && (
-                <div style={{ fontSize: "10px", padding: "2px" }}>
+                <div style={{ fontSize: "9px", padding: "2px", whiteSpace: "pre-wrap" }}>
                   <FormComponent data={forms[key]} />
                 </div>
               )}
@@ -98,11 +112,10 @@ export default function TaskPrintout() {
   const [forms, setForms] = useState(null);
   const [ssx, setSsx] = useState(null);
   
-
   useEffect(() => {
-    setSale(JSON.parse(localStorage.getItem("RequestForm")))
-    setForms(JSON.parse(localStorage.getItem("task")))
-    setSsx(localStorage.getItem("ssx"))
+    setSale(JSON.parse(localStorage.getItem("RequestForm")));
+    setForms(JSON.parse(localStorage.getItem("task")));
+    setSsx(localStorage.getItem("ssx"));
   }, []);
 
   // Ensure data has been loaded before rendering
@@ -112,4 +125,3 @@ export default function TaskPrintout() {
 
   return <Printout sale={sale} forms={forms} ssx={ssx} />;
 }
-

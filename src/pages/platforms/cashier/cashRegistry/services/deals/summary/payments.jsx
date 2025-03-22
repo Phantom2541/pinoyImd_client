@@ -1,18 +1,25 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
+import {
+  MDBAnimation,
+  MDBCard,
+  MDBCardBody,
+  MDBCollapse,
+  MDBCollapseHeader,
+  MDBProgress,
+} from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
 import { AUTOSELECT } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import SummaryLoading from "./loading";
 
 export default function Payments() {
-  const { total, collections } = useSelector(({ deals }) => deals);
-  const [isOpen, setIsOpen] = useState(true),
+  const { total, collections, isLoading } = useSelector(({ deals }) => deals),
+    { auth, activePlatform, token } = useSelector(({ auth }) => auth),
     { selected } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
-
-  localStorage.setItem("payments", JSON.stringify(collections));
-  console.log(collections);
+  const [isOpen, setIsOpen] = useState(true),
+    [sum, setSum] = useState(0);
 
   // Optimize calculations using useMemo
   const paymentTotals = useMemo(() => {
@@ -26,8 +33,22 @@ export default function Payments() {
   }, [collections]);
 
   useEffect(() => {
-    dispatch(AUTOSELECT());
-  }, [dispatch]);
+    setSum(selected?.opening?.sum);
+  }, [selected]);
+
+  useEffect(() => {
+    const date = new Date().toISOString().split("T")[0];
+    dispatch(
+      AUTOSELECT({
+        token,
+        key: {
+          branch: activePlatform.branchId,
+          cashier: auth._id,
+          date,
+        },
+      })
+    );
+  }, [activePlatform, auth, token, dispatch]);
 
   return (
     <MDBCard className="shadow-sm mb-2 ">
@@ -45,47 +66,51 @@ export default function Payments() {
       </MDBCollapseHeader>
       <MDBCollapse isOpen={isOpen}>
         <MDBCardBody className="pt-2">
-          <div className="d-flex justify-content-between">
-            <span>Floating Cash:</span>
-            <strong className="text-warning">
-              {currency(selected?.open?.sum)}
-            </strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Cash :</span>
-            <strong className="text-primary">
-              {currency(paymentTotals.cash)}
-            </strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Gcash :</span>
-            <strong className="text-primary">
-              {currency(paymentTotals.gcash)}
-            </strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Vouchers :</span>
-            <strong className="text-primary">
-              {currency(paymentTotals.vouchers)}
-            </strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Downpayment:</span>
-            <strong className="text-danger">
-              {currency(paymentTotals.pending)}
-            </strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Balance:</span>
-            <strong className="text-danger">
-              {currency(paymentTotals.pending)}
-            </strong>
-          </div>
-          <hr />
-          <div className="d-flex justify-content-between border-bottom pb-2">
-            <span>Total :</span>
-            <strong className="text-success">{currency(total)}</strong>
-          </div>
+          {!isLoading ? (
+            <>
+              <div className="d-flex justify-content-between">
+                <span>Floating Cash:</span>
+                <strong className="text-warning">{currency(sum)}</strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Cash :</span>
+                <strong className="text-primary">
+                  {currency(paymentTotals.cash)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Gcash :</span>
+                <strong className="text-primary">
+                  {currency(paymentTotals.gcash)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Vouchers :</span>
+                <strong className="text-primary">
+                  {currency(paymentTotals.vouchers)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Downpayment:</span>
+                <strong className="text-danger">
+                  {currency(paymentTotals.pending)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Balance:</span>
+                <strong className="text-danger">
+                  {currency(paymentTotals.pending)}
+                </strong>
+              </div>
+              <hr />
+              <div className="d-flex justify-content-between border-bottom pb-2">
+                <span>Total :</span>
+                <strong className="text-success">{currency(total)}</strong>
+              </div>{" "}
+            </>
+          ) : (
+            <SummaryLoading />
+          )}
         </MDBCardBody>
       </MDBCollapse>
     </MDBCard>

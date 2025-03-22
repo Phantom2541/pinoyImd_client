@@ -4,13 +4,8 @@ import { axioKit } from "../../../../utilities";
 const url = "finance/journals/payables";
 
 const initialState = {
-  // collections: [],
-  // isSuccess: false,
-  // isLoading: false,
-
   selected: {},
   amount: [],
-  // totalPages: 0,
   page: 0,
   showPayablesModal: false,
   showPaymentModal: false,
@@ -115,10 +110,18 @@ export const reduxSlice = createSlice({
       state.showPayablesModal = true;
     },
 
+    SetUpdate: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showPayablesModal = true;
+    },
+
     /* Modal for Create */
     SetCloseModal: (state) => {
       state.showPayablesModal = false;
       state.showPaymentModal = false;
+      state.selected = {};
+      state.willCreate = true;
     },
 
     SetCREATE: (state, { payload }) => {
@@ -133,6 +136,10 @@ export const reduxSlice = createSlice({
         }
       }
       state.filter = page;
+    },
+
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -208,9 +215,10 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-        if (index !== -1) {
-          state.collections[index] = payload;
-        }
+
+        console.log(index);
+
+        state.collections[index] = payload;
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -245,6 +253,7 @@ export const reduxSlice = createSlice({
 export const {
   SetBUY,
   SetEDIT,
+  SetUpdate,
   SetCloseModal,
   SetCREATE,
   SetPAYABLES,
@@ -254,9 +263,7 @@ export const {
   SETSOURCES,
   SetShowMODAL,
   RESET,
-  /**
-   * for pagination
-   */
+  SetFILTERED,
   SetMaxPage,
   SetActivePAGE,
 } = reduxSlice.actions;

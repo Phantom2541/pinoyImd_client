@@ -51,20 +51,37 @@ const coinSize = {
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { month, year, day, showModal, title, selected } = useSelector(
+    { showModal, title, selected, month, year, day } = useSelector(
       ({ remittances }) => remittances
     ),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
     [sum, setSum] = useState(0),
+    [coh, setCoh] = useState(0),
+    [schedule, setSchedule] = useState("morning"),
+    [position, setPosition] = useState(0),
+    [location, setLocation] = useState("reception"),
     dispatch = useDispatch();
 
   useEffect(() => {
     calculateSum(floating);
   }, [floating]);
+  useEffect(() => {
+    let _coh = 0;
+    if (selected?.gross) {
+      let _sum = selected?.opening?.sum || 0;
+      const _gross = selected?.gross || 0;
+      let _expenses = selected?.expenses || 0;
+      _coh = _sum + _gross - _expenses;
+    }
+    setCoh(_coh);
+  }, [selected]);
 
   useEffect(() => {
-    setFloating({ bills: {}, coins: {} });
-  }, [showModal]);
+    let denominations = { bills: {}, coins: {} };
+    if (title === "Closing Cash Register")
+      denominations = { ...selected?.closing };
+    setFloating(denominations);
+  }, [showModal, title, selected]);
 
   const coinImage = `${process.env.PUBLIC_URL}/assets/denominations.png`;
 
@@ -101,32 +118,39 @@ export default function Modal() {
   };
 
   const calculateSum = (data) => {
+    if (!data) return; // Ensure data is not null or undefined
+    const bills = data.bills || {}; // Default to empty object if undefined
+    const coins = data.coins || {};
+
     const total =
-      Object.entries(data.bills).reduce(
+      Object.entries(bills).reduce(
         (acc, [denom, qty]) => acc + parseInt(denom) * qty,
         0
       ) +
-      Object.entries(data.coins).reduce(
+      Object.entries(coins).reduce(
         (acc, [denom, qty]) => acc + parseInt(denom) * qty,
         0
       );
+
     setSum(total);
   };
 
   const handleSubmit = () => {
     const _floating = removeUndefinedValues(floating);
-    if (!selected._id) {
+    if (!selected?._id) {
+      let date = new Date(Date.UTC(year, month, day));
       dispatch(
         SAVE({
           token,
           data: {
-            date: new Date().toLocaleString("en-US", {
-              timeZone: "Asia/Manila",
-            }),
+            date,
             opening: {
               ..._floating,
               sum,
             },
+            position,
+            location,
+            shift: schedule,
             cashier: auth._id,
             branch: activePlatform?.branchId,
             department: Policy.getDepartment(activePlatform.position),
@@ -164,11 +188,30 @@ export default function Modal() {
     >
       <MDBModalHeader
         toggle={() => dispatch(TOGGLE({ key: "open" }))}
-        className="light-blue darken-3 white-text"
+        className="d-flex align-items-center justify-content-between darken-3 light-blue white-text"
       >
-        <MDBIcon icon="calendar-alt" className="mr-2" />
-        {title || "Floating Cash"} {sum > 0 && ` : (${currency(sum)})`}
+        <div className="d-flex align-items-center">
+          <MDBIcon icon="calendar-alt" className="mr-2" />
+          <span>
+            {title || "Floating Cash"} {sum > 0 && ` : (${currency(sum)})`}
+          </span>
+        </div>
+
+        {title === "Closing Cash Register" && (
+          <span
+            className={
+              sum < coh
+                ? "text-danger" // 🔴 Shortage
+                : sum > coh
+                ? "text-warning" // 🟡 Overage
+                : "text-success" // ✅ Balanced
+            }
+          >
+            COH: {currency(coh)}
+          </span>
+        )}
       </MDBModalHeader>
+
       <MDBModalBody className="mb-0">
         <MDBRow>
           <MDBCol md="12">
@@ -206,15 +249,15 @@ export default function Modal() {
                         </MDBCard>
                       </td>
                       <td
-                        className=" d-flex align-items-center "
+                        className="d-flex align-items-center"
                         style={{ height: "9.2rem" }}
                       >
                         <MDBInput
                           type="number"
                           min={0}
-                          className="w-100 text-center"
+                          className="text-center w-100"
                           required
-                          value={String(floating.bills[bill1] || 0)}
+                          value={String(floating?.bills?.[bill1] || 0)}
                           onChange={(e) =>
                             handleInputChange(
                               "bills",
@@ -237,16 +280,16 @@ export default function Modal() {
                         )}
                       </td>
                       <td
-                        className=" d-flex align-items-center"
+                        className="d-flex align-items-center"
                         style={{ height: "9.2rem" }}
                       >
                         {bill2 && (
                           <MDBInput
                             type="number"
                             min={0}
-                            className="w-100 text-center"
+                            className="text-center w-100"
                             required
-                            value={String(floating.bills[bill2] || 0)}
+                            value={String(floating?.bills?.[bill2] || 0)}
                             onChange={(e) =>
                               handleInputChange(
                                 "bills",
@@ -280,7 +323,7 @@ export default function Modal() {
                 type="number"
                 min={0}
                 className="text-center mt-2"
-                value={String(floating.coins[coin] || 0)}
+                value={String(floating?.coins?.[coin] || 0)}
                 style={{ width: "6rem" }}
                 onChange={(e) =>
                   handleInputChange("coins", coin, Number(e.target.value))
@@ -289,9 +332,45 @@ export default function Modal() {
             </MDBCol>
           ))}
         </MDBRow>
+        <div>
+          {title === "Opening Cash Register" && (
+            <div className="d-flex align-items-center mt-3">
+              <span className="font-weight-bold mr-2">Shift:</span>
+              <select
+                className="browser-default custom-select mr-3"
+                value={schedule}
+                onChange={(e) => setSchedule(e.target.value)}
+                title="shift"
+                style={{ width: "auto" }}
+              >
+                <option value="morning">morning</option>
+                <option value="afternoon">afternoon</option>
+                <option value="night">Night</option>
+              </select>
+              <MDBInput
+                type="text"
+                label="Cashier Position"
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                className="ml-3"
+                style={{ width: "10rem" }}
+              />
+              <MDBInput
+                type="text"
+                label="Cashier Position"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="ml-3"
+                style={{ width: "10rem" }}
+              />
+            </div>
+          )}
 
-        <div className="text-right mt-3">
-          <MDBBtn color="primary" onClick={handleSubmit} rounded>
+          <MDBBtn
+            color="primary"
+            onClick={handleSubmit}
+            disabled={title === "Closing Cash Register" && sum !== coh}
+          >
             <MDBIcon icon="check" className="mr-2" /> Submit
           </MDBBtn>
         </div>
