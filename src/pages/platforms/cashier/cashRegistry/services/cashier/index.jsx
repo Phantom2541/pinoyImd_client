@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Customer from "./customer";
 import Purchase from "./purchase";
 import Summary from "./summary";
-import { useSelector } from "react-redux";
 import "./style.css";
 import { MDBCol, MDBRow } from "mdbreact";
 import {
@@ -14,15 +13,19 @@ import {
 import Denominations from "./../remmitances/modal/denominations";
 
 export default function Cashier() {
-  const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
-    { transaction, isSuccess } = useSelector(({ deals }) => deals),
-    { selected } = useSelector(({ remittances }) => remittances),
-    dispatch = useDispatch();
+  const { activePlatform, token, auth } = useSelector(({ auth }) => auth);
+  const { transaction, isSuccess } = useSelector(({ deals }) => deals);
+  const { selected } = useSelector(({ remittances }) => remittances);
+  const dispatch = useDispatch();
+  const hasFetched = useRef(false);
+
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     const _selected = JSON.parse(localStorage?.getItem("floatingcash"));
     if (_selected) {
       dispatch(SetSELECTED({ value: _selected }));
-      console.log("selected", _selected);
     } else {
       const options = {
         timeZone: "Asia/Manila",
@@ -43,15 +46,16 @@ export default function Cashier() {
           },
         })
       ).then(({ payload }) => {
-        if (payload !== null)
+        if (payload !== null) {
           localStorage.setItem("floatingcash", JSON.stringify(payload));
-        else {
+          dispatch(SetSELECTED({ value: payload }));
+        } else {
           dispatch(TOGGLE({ key: "open", value: new Date().getUTCDate() }));
         }
       });
     }
-  }, [activePlatform, auth, token, selected, dispatch]);
-  // transaction printout
+  }, [activePlatform, auth, token, dispatch]);
+
   useEffect(() => {
     if (transaction?._id !== "default" && isSuccess) {
       localStorage.setItem("claimStub", JSON.stringify(transaction));
@@ -61,7 +65,7 @@ export default function Cashier() {
         "top=100px,left=100px,width=550px,height=750px"
       );
     }
-  }, [transaction, isSuccess, activePlatform]);
+  }, [transaction, isSuccess]);
 
   return (
     <MDBRow

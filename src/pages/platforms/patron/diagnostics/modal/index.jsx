@@ -22,7 +22,6 @@ const _form = {
 };
 
 export default function Modal({ show, toggle, selected }) {
-  console.log("selected", selected);
   return (
     <MDBModal size="md" isOpen={show} toggle={toggle} backdrop>
       <MDBModalHeader
