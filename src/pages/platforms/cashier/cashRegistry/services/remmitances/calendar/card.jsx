@@ -35,7 +35,6 @@ const Card = ({ txt, num, index, item = {} }) => {
               {label}: {currency(value)}
             </h6>
           ))}
-
         {gross > 0 && (
           <>
             <hr className="my-1" />
@@ -47,7 +46,6 @@ const Card = ({ txt, num, index, item = {} }) => {
             </h6>
           </>
         )}
-
         {expenses > 0 && (
           <>
             <hr className="my-1" />
@@ -59,7 +57,6 @@ const Card = ({ txt, num, index, item = {} }) => {
             </h6>
           </>
         )}
-
         {/* 🟢 Show COH only if transactions exist */}
         {!!closing && (
           <>

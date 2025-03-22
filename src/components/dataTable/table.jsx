@@ -2,6 +2,7 @@ import React from "react";
 import { MDBIcon, MDBTable } from "mdbreact";
 import { handlePagination } from "../../services/utilities";
 import { useSelector } from "react-redux";
+import TableLoading from "../tableLoading";
 
 export default function Table({
   getPage,
@@ -121,12 +122,11 @@ export default function Table({
                     const keyExists = item?.hasOwnProperty(_key);
 
                     // if key does not exist and is set to be required by isEmpty, return key not found
-                    if (!keyExists && !_isEmpty)
-                      return <i>Key not found</i>;
+                    if (!keyExists && !_isEmpty) return <i>Key not found</i>;
 
                     // if key does not exist but is set to be optional, simply return nothing
-                    if(!keyExists && _isEmpty) return ""
-                    
+                    if (!keyExists && _isEmpty) return "";
+
                     const value = item[_key];
 
                     const globalIndex = (page - 1) * maxPage + index,
@@ -159,7 +159,7 @@ export default function Table({
           <tr className="text-center">
             <td colSpan={tableBodies.length + 1}>
               {isLoading ? (
-                <MDBIcon icon="spinner" pulse />
+                <TableLoading />
               ) : (
                 <i>
                   No {search ? "matching" : "recent"} records&nbsp;

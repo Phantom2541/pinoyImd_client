@@ -38,7 +38,7 @@ export default function Census() {
   useEffect(() => {
     let isMounted = true; // ✅ Track if component is mounted
 
-    if (selected.census) {
+    if (selected?.census) {
       setCensus(selected.census);
       setPatients(selected.patients);
       setGross(selected.gross);
@@ -112,7 +112,7 @@ export default function Census() {
       }
     };
 
-    if (selected.createdAt) fetchCensus();
+    if (selected?.createdAt) fetchCensus();
 
     return () => {
       isMounted = false; // ✅ Cleanup to prevent memory leak
@@ -243,7 +243,7 @@ export default function Census() {
       </MDBModalBody>
 
       <MDBCardBody>
-        {!selected.census && (
+        {!selected?.census && (
           <MDBBtn
             className="w-100"
             color="primary"
