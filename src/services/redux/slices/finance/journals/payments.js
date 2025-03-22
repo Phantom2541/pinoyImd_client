@@ -64,6 +64,19 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
+export const Daily = createAsyncThunk(
+  `${url}/daily`,
+  async ({ token, key }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/daily`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
@@ -186,7 +199,19 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
+      .addCase(Daily.pending, (state) => {
+        state.isLoading = true;
+      })
 
+      .addCase(Daily.fulfilled, (state, { payload }) => {
+        state.filtered = payload;
+        state.isLoading = false;
+      })
+
+      .addCase(Daily.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

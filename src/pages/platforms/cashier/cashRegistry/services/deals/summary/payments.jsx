@@ -29,17 +29,7 @@ export default function Payments() {
   }, [selected]);
 
   useEffect(() => {
-    const options = {
-      timeZone: "Asia/Manila",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    };
-    const formatter = new Intl.DateTimeFormat("en-CA", options);
-    const date = formatter.format(new Date());
-
-    console.log("date", date); // Output: YYYY-MM-DD in Philippine Standard Time
-
+    const date = new Date().toISOString().split("T")[0];
     dispatch(
       AUTOSELECT({
         token,
