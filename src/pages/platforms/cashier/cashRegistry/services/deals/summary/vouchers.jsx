@@ -1,42 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapseHeader, MDBCollapse } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
 import { Statements } from "../../../../../../../services/fakeDb";
-import { Daily } from "./../../../../../../../services/redux/slices/finance/journals/payments";
 import SummaryLoading from "./loading";
 
 export default function Vouchers() {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { filtered = [], isLoading } = useSelector(({ payments }) => payments),
+  const { filtered = [], isLoading } = useSelector(({ payments }) => payments),
     [isOpen, setIsOpen] = useState(true),
-    [total, setTotal] = useState(0),
-    dispatch = useDispatch();
+    [total, setTotal] = useState(0);
 
-  // useEffect(() => {
-  //   if (token) {
-  //     const date = new Date().toISOString().split("T")[0];
-  //     dispatch(
-  //       Daily({
-  //         token,
-  //         key: {
-  //           branchId: activePlatform.branchId,
-  //           payor: auth._id,
-  //           date,
-  //         },
-  //       })
-  //     );
-  //   }
-  // }, [token, dispatch, activePlatform.branchId, auth._id]);
-
-  //commented by darrel
-  // useEffect(() => {
-  //   let amount = 0;
-  //   filtered?.forEach((voucher) => {
-  //     amount += voucher.amount;
-  //   });
-  //   setTotal(amount);
-  // }, [filtered]);
   useEffect(() => {
     if (filtered.length > 0) {
       const amount =
