@@ -25,7 +25,7 @@ export default function Index() {
   useEffect(() => {
     if (token && activePlatform?.branchId)
       dispatch(TIEUPS({ data: { branch: activePlatform?.branchId }, token }));
-
+    // dispatch(TIEUPS({ token, key: { branch: activePlatform?.branchId } }));
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
 
@@ -103,9 +103,11 @@ export default function Index() {
         tableBodies={[
           {
             _key: "name",
+            _format: (name) => <strong>{name}</strong>,
           },
           {
             _key: "subName",
+            _format: (subName) => <em>{subName || ""}</em>,
           },
         ]}
         handleSearch={handleSearch}

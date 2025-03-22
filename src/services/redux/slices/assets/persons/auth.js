@@ -328,7 +328,7 @@ export const reduxSlice = createSlice({
           (branch) => branch._id === auth.activePlatform.branchId
         );
 
-        console.log(branch);
+        // console.log(branch);
 
         const _access = access
           .filter(({ branchId }) => branchId === auth.activePlatform.branchId)
