@@ -29,7 +29,7 @@ export default function CashRegister() {
     [discount, setDiscount] = useState(0),
     [cart, setCart] = useState([]),
     { message, isSuccess } = useSelector(({ sales }) => sales),
-    { selected: patient,  showModal: show } = useSelector(({ deals }) => deals),
+    { selected: patient, showModal: show } = useSelector(({ deals }) => deals),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -60,13 +60,14 @@ export default function CashRegister() {
 
   useEffect(() => {
     cart.map((menu) => {
-      const {
-        gross: compGross = 0,
-        discount = 0,
-      } = computeGD(menu, categoryIndex, privilegeIndex);
+      const { gross: compGross = 0, discount = 0 } = computeGD(
+        menu,
+        categoryIndex,
+        privilegeIndex
+      );
       setGross(compGross);
       setDiscount(discount);
-    })
+    });
   }, [cart, categoryIndex, privilegeIndex]);
 
   const toggleCheckout = () => setDidCheckout(!didCheckout);
@@ -80,13 +81,13 @@ export default function CashRegister() {
     );
 
   return (
-    <MDBModal isOpen={show} toggle={SetMODAL} backdrop size="fluid">
+    <MDBModal isOpen={show} toggle={SetMODAL} size="fluid">
       <MDBModalHeader
-        toggle={SetMODAL}
+        toggle={() => dispatch(SetMODAL())}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="cash-register" className="mr-2" />
-        Point of Saleszxczxczxcz
+        Point of Sales
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <MDBRow>

@@ -458,25 +458,26 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
-    const { success, payload } = action.payload;
-    console.log("action.payload", action);
+        const { success, payload } = action.payload;
+        console.log("action.payload", action);
 
-    state.message = success;
-    const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
+        state.message = success;
+        const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
 
-    // Find the index of the collection item based on the identifier
-    const index = state.collections.findIndex(
-        (item) => item._id === payload[identifier]
-    );
+        // Find the index of the collection item based on the identifier
+        const index = state.collections.findIndex(
+          (item) => item._id === payload[identifier]
+        );
 
-    // Ensure the index is valid
-    if (index !== -1) {
-        if (identifier === "saleId") {
+        // Ensure the index is valid
+        if (index !== -1) {
+          if (identifier === "saleId") {
             // Update miscellaneous item at the correct index
             if (state.collections[index]?.miscellaneous) {
-                state.collections[index].miscellaneous[payload?.miscIndex] = payload;
+              state.collections[index].miscellaneous[payload?.miscIndex] =
+                payload;
             }
-        } else {
+          } else {
             const form = payload.form?.toLowerCase(); // Ensure form is lowercase
             console.log("form", form);
             console.log("index", index);
@@ -484,16 +485,16 @@ export const reduxSlice = createSlice({
 
             // Ensure collections[index] exists before modifying it
             if (state.collections[index]) {
-                state.collections[index][form] = payload;
+              state.collections[index][form] = payload;
             }
+          }
+        } else {
+          console.warn("Item not found in collections:", payload);
         }
-    } else {
-        console.warn("Item not found in collections:", payload);
-    }
 
-    state.isSuccess = true;
-    state.isLoading = false;
-})
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
       .addCase(LABRESULT.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
