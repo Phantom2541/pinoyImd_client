@@ -131,7 +131,7 @@ export const UPDATE = createAsyncThunk(
 
 export const UPLOAD = createAsyncThunk(`${url}/upload`, (form, thunkAPI) => {
   try {
-    return axioKit.upload(form.data, form.token, (progress) => {
+    return axioKit.upload(form.data, form.token, progress => {
       thunkAPI.dispatch(
         UPLOADBAR(Math.round((progress.loaded * 100) / progress.total))
       );
@@ -163,15 +163,15 @@ export const reduxSlice = createSlice({
     MAXPAGE: (state, data) => {
       state.maxPage = data.payload;
     },
-    RESET: (state) => {
+    RESET: state => {
       state.isSuccess = false;
       state.loginSuccess = false;
       state.message = "";
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(SETACTIVEPLATFORM.pending, (state) => {
+      .addCase(SETACTIVEPLATFORM.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -179,13 +179,13 @@ export const reduxSlice = createSlice({
       .addCase(SETACTIVEPLATFORM.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const branch = state.branches.find(
-          (branch) => branch._id === payload.activePlatform.branchId
+          branch => branch._id === payload.activePlatform.branchId
         );
         const _access = state.access
           .filter(
             ({ branchId }) => branchId === payload.activePlatform.branchId
           )
-          .map((a) => a.platform);
+          .map(a => a.platform);
 
         const { contract = { designation: -1 } } = branch || {};
         const department = Policy.getDepartment(contract.designation) || {};
@@ -208,7 +208,7 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(CHANGEPASSWORD.pending, (state) => {
+      .addCase(CHANGEPASSWORD.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -230,7 +230,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(LOGIN.pending, (state) => {
+      .addCase(LOGIN.pending, state => {
         state.isLoading = true;
         state.loginSuccess = false;
         state.message = "";
@@ -243,9 +243,9 @@ export const reduxSlice = createSlice({
           const { branchId } = activePlatform;
           const _access = access
             .filter(({ branchId: bID }) => bID === branchId)
-            .map((a) => a.platform);
+            .map(a => a.platform);
 
-          const branch = branches.find((branch) => branch._id === branchId);
+          const branch = branches.find(branch => branch._id === branchId);
           const { contract = { designation: -1 } } = branch || {};
           const department = Policy.getDepartment(contract.designation) || {};
           const role = Policy.getRole(contract.designation) || {};
@@ -283,7 +283,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, (state) => {
+      .addCase(UPDATE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -312,7 +312,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(VALIDATEREFRESH.pending, (state) => {
+      .addCase(VALIDATEREFRESH.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -325,12 +325,12 @@ export const reduxSlice = createSlice({
 
         if (activePlatform) {
           const branch = branches.find(
-            (branch) => branch._id === activePlatform.branchId
+            branch => branch._id === activePlatform.branchId
           );
 
           const _access = access
             .filter(({ branchId }) => branchId === activePlatform.branchId)
-            .map((a) => a.platform);
+            .map(a => a.platform);
           const { contract = { designation: -1 } } = branch || {};
           const department = Policy.getDepartment(contract.designation) || {};
           const role = Policy.getRole(contract.designation) || {};
@@ -344,6 +344,12 @@ export const reduxSlice = createSlice({
             position: contract.designation,
           };
           state.company = branch?.companyId;
+          state.image = `${ENDPOINT}${profileUrl}/profile.jpg`;
+          state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
+          state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
+          state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
+          state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
+          state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         }
         /**
          * this will control the topbar selections
@@ -362,7 +368,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPLOAD.pending, (state) => {
+      .addCase(UPLOAD.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
