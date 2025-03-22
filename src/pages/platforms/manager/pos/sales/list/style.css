@@ -1,0 +1,7 @@
+.borderLess {
+  border: none !important;
+}
+
+.danger {
+  background-color: #fe3447 !important;
+}

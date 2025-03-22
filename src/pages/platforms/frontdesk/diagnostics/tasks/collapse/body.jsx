@@ -2,7 +2,8 @@ import React from "react";
 import { MDBTable } from "mdbreact";
 import Forms from "./forms";
 
-export default function Body({ forms }) {
+export default function Body({ customer, forms }) {
+  
   return (
     <>
       <MDBTable small hover responsive>
@@ -24,7 +25,7 @@ export default function Body({ forms }) {
               );
             }
 
-            return <Forms key={key} form={key} obj={value} index={index} />;
+            return <Forms key={key} form={key} obj={value} customer={customer} index={index} />;
           })}
         </tbody>
       </MDBTable>

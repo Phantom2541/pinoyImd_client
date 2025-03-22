@@ -6,10 +6,10 @@ import Header from "./list/header";
 import Body from "./list/body";
 import Footer from "./list/footer";
 import TableLoading from "../../../../../../components/tableLoading";
-import { Payments, Vouchers } from "./summary";
+import { Closing, Payments, Vouchers } from "./summary";
 
 export default function Deals() {
-  const { isLoading } = useSelector(({ deals }) => deals);
+  const { isLoading } = useSelector(({ deals }) => deals);   
   return (
     <MDBContainer className="d-flex" fluid>
       <div className=" py-1 rounded flex-1 ml-2 px-2">
@@ -23,6 +23,7 @@ export default function Deals() {
       <div style={{ width: "300px", marginLeft: "10px" }}>
         <Payments />
         <Vouchers />
+        <Closing />
       </div>
     </MDBContainer>
   );

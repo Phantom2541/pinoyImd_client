@@ -5,13 +5,15 @@ import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-const Forms = ({ form, obj, index }) => {
+const Forms = ({ form, obj, index, customer, }) => {
   const { preferences } = useSelector(({ validator }) => validator),
     { activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
   const { packages, hasDone = false, remarks = "", signatories = [] } = obj;
 
   const handlePrint = (task) => {
+    console.log("taskPrintout", task);
+    
     localStorage.setItem("taskPrintout", JSON.stringify(task));
     window.open(
       "/printout/task",
@@ -36,17 +38,22 @@ const Forms = ({ form, obj, index }) => {
     ? packages
     : Object.keys(packages).map((k) => Number(k));
 
+  
   const task = {
     ...obj,
     key: `${form}-${index}`,
     form,
+    patient: customer,
     generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
     hasDone,
     remarks,
     department,
   };
 
-  const handeEntry = () => dispatch(SetTASK({task,form}));
+  const handeEntry = () => {    
+    dispatch(SetTASK({ task, form }));
+  }
+    console.log("tasasdasdasdasdask",task);
 
   return (
     <tr key={task.key} className={`${hasDone && "table-active"}`}>

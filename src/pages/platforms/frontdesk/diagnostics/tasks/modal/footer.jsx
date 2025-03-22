@@ -7,13 +7,14 @@ import {
   SetTASK,
   SetMODAL,
   SetHEALTHY,
-} from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+} from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const Footer = () => {
   const { token, auth } = useSelector(({ auth }) => auth),
-   { success, task, heads } = useSelector((validator) => validator),
+   { success, task, heads } = useSelector(({validator}) => validator),
    dispatch = useDispatch();
-
+  console.log("tasksadas", task);
+  
   useEffect(() => {
     if (success) {
       dispatch(SetMODAL(false));
@@ -41,7 +42,8 @@ const Footer = () => {
 
   const handleSave = (hasDone) => {
     const { form, department } = task;
-
+    console.log("tasks", task);
+    
     //returns id
     const findSignatoryId = (indentifier) =>
         heads.find(({ section }) => section === indentifier)?.user?._id;
@@ -74,8 +76,8 @@ const Footer = () => {
      * render time too long
      */
 
-    if (task.form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
-    else if (task.form === "Parasitology") dispatch(SetHEALTHY("parasitology"));
+    if (task?.form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
+    else if (task?.form === "Parasitology") dispatch(SetHEALTHY("parasitology"));
   };
 
   return (
@@ -84,7 +86,7 @@ const Footer = () => {
       placeholder="Remarks"
       value={task?.remarks}
       onChange={(e) =>
-        dispatch(SetTASK({ ...task, remarks: e.target.value }))
+        dispatch(SetTASK({form: task?.form, task:{ ...task, remarks: e.target.value }}))
       }
       className="w-100"
     />
@@ -99,7 +101,7 @@ const Footer = () => {
       <MDBBtnGroup>
         <MDBBtn
           onClick={() => {
-            if (task.form === "Hematology") return computeHemaDiff(true);
+            if (task?.form === "Hematology") return computeHemaDiff(true);
 
             handleSave(true);
           }}
@@ -109,7 +111,7 @@ const Footer = () => {
         </MDBBtn>
         <MDBBtn
           onClick={() => {
-            if (task.form === "Hematology") return computeHemaDiff(false);
+            if (task?.form === "Hematology") return computeHemaDiff(false);
 
             handleSave(false);
           }}

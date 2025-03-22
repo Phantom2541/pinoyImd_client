@@ -16,7 +16,7 @@ const Gross = ({ searchKey, searchValue }) => {
         ?.filter((model) => model[searchKey] === searchValue)
         .reduce((tot, { amount }) => tot + amount, 0)
     );
-  }, [searchValue]);
+  }, [searchValue, catalogs, searchKey]);
 
   return (
     <div>

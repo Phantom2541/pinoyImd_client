@@ -24,7 +24,8 @@ const Header = () => {
   //Initial CASHIER
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
-      const today = new Date().setHours(0, 0, 0, 0); //date and time today starting from 00:00 AM
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); //date and time today starting from 00:00 AM
 
       dispatch(
         CASHIER({

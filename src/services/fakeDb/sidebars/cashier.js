@@ -11,14 +11,6 @@ import {
   Remmitances,
 } from "../../../pages/platforms/cashier";
 
-import {
-  Tablestemplate,
-  Collapsable,
-  Calendar,
-  DragDrop,
-  Search,
-} from "../../../pages/templates";
-
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
 import Receivables from "../../../pages/platforms/cashier/accrued/receivables";
 import Payments from "../../../pages/platforms/cashier/accrued/payments";
@@ -29,39 +21,40 @@ import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
 // //import Outsource from "../../../pages/platforms/manager/provider";
 // import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 
-// const cashier = [
-//   {
-//     name: "bulletin",
-
 const cashier = [
   {
     name: "Bulletin",
     icon: "tachometer-alt",
     path: "/cashier/bulletin",
+    title: "news and updates",
     component: Bulletin,
   },
   {
-    name: "Cashier",
+    name: "Cash Register",
     path: "/cashier",
     icon: "money-bill",
+    title: "cash register",
     children: [
       {
         name: "pos", // Point Of Sales
         path: "/pos",
         icon: "shopping-cart",
+        title: "point of sales",
         component: Cashier,
       },
       {
         name: "Deals",
         path: "/deals",
-        component: Deals,
         icon: "handshake",
+        title: "Census of services deals of the day",
+        component: Deals,
       },
       {
         name: "Remmitances",
         path: "/remmitances",
-        component: Remmitances,
         icon: "money-check",
+        title: "Ledger of daily remittances",
+        component: Remmitances,
       },
     ],
   },
@@ -69,19 +62,22 @@ const cashier = [
     name: "Accrued", // liabilities
     path: "/accrued",
     icon: "tv",
+    title: "liabilities and obligations",
     children: [
       /**
        * obligation for services or goods received but not yet paid for by the accounting period's en
+       *  unpaid bills (Water, Electricity, etc.)
        * Electric bill
        * Water bill
        * WIFI bill
        * Rental
        */
       {
-        name: "Accrued",
-        title: "stocks",
-        path: "/accrued",
-        // component: Accrued,
+        name: "Accounts Payable (A/P)",
+        path: "/payables",
+        icon: "file-invoice-dollar",
+        title: "Outstanding payments for suppliers and utilities.",
+        component: Payables,
       },
       /**
        * an obligation that has already been settled or fulfilled
@@ -93,25 +89,19 @@ const cashier = [
        */
       {
         name: "Settled",
-        title: "stocks",
-        // path: "/settled",
-      },
-      /**
-       * unpaid bills (Water, Electricity, etc.)
-       * Liabilities
-       */
-      {
-        name: "Payables",
-        path: "/payables",
-        component: Payables,
-        icon: "file-invoice-dollar",
+        path: "/settled",
+        icon: "dollar-sign",
+        title: "Settled payments for suppliers and utilities.",
+        // component: Accrued,
       },
       /**
        * Collections from vouchers
        */
       {
-        name: "Receivables",
+        name: "Accounts Receivable (A/R)",
         path: "/receivables",
+        icon: "money-bill",
+        title: "Unpaid invoices from corporate accounts or HMOs",
         component: Receivables,
       },
       {
@@ -126,115 +116,97 @@ const cashier = [
       {
         name: "Vouchers",
         path: "/vouchers",
-        component: Vouchers,
         icon: "receipt",
+        title: "Vouchers from daily sales",
+        component: Vouchers,
+      },
+      /**
+       * Receivables  from sales vouchers
+       * from daily sales
+       * to be included as a SOA of insource
+       */
+      {
+        name: "SOA",
+        path: "/soa",
+        icon: "warehouse",
+        title: "Insource from monthly sales",
+        // component: Insources,
       },
       /**
        * statement of Account (Sendout)
        */
-      {
-        name: "Statement of Account",
-        path: "/soa",
-        icon: "balance-scale",
-        children: [
-          {
-            name: "Outsource", // Sendout
-            path: "/outsource",
-            icon: "truck",
-          },
-          {
-            name: "Insource", // Receivables  from sales vouchers
-            path: "/insource",
-            icon: "warehouse",
-          },
-        ],
-      },
+      // {
+      //   name: "Statement of Account",
+      //   path: "/soa",
+      //   icon: "balance-scale",
+      //   children: [
+      //     {
+      //       name: "Outsource", // Sendout
+      //       path: "/outsource",
+      //       icon: "truck",
+      //     },
+      //   ],
+      // },
     ],
   },
+  //viewing only
   {
-    name: "Services Catalog", //viewing only
-    path: "/catalogs",
-    icon: "clipboard-list",
-    children: [
-      {
-        name: "Menus",
-        path: "/menus",
-        component: Menus,
-        icon: "utensils",
-      },
-      {
-        name: "Services",
-        path: "/services",
-        component: Services,
-        icon: "list",
-      },
-    ],
-  },
-  {
-    name: "Sources", //viewing only
+    name: "Sources",
     path: "/sources",
     icon: "cogs",
+    title: "sources",
     children: [
       {
         name: "Outsources",
         path: "/outsources",
-        component: Outsources,
         icon: "truck",
+        title:
+          "List of Companies that provide services that are not yet available",
+        component: Outsources,
       },
       {
         name: "Insources",
         path: "/insources",
-        component: Insources,
         icon: "warehouse",
+        title: "List of Companies who send out their services",
+        component: Insources,
       },
       {
         name: "Utilities",
         path: "/utilities",
-        component: Utilities,
         icon: "tools",
+        title: "List of Company that provides Utilities or supports",
+        component: Utilities,
       },
       {
         name: "Suppliers",
         path: "/suppliers",
-        // component: Suppliers,
         icon: "handshake",
+        title: "List of company that provides supplies",
+        // component: Suppliers,
       },
     ],
   },
+  //viewing only
   {
-    name: "Templates ", //viewing only
-    path: "/templates ",
-    icon: "list",
+    name: "Services Catalog",
+    path: "/catalogs",
+    icon: "clipboard-list",
+    title: "services catalog",
     children: [
       {
-        name: "Tables",
-        path: "/tables",
-        component: Tablestemplate,
-        icon: "table",
+        name: "Menus",
+        path: "/menus",
+        icon: "utensils",
+        title: "Menus",
+        component: Menus,
       },
       {
-        name: "Collapsables",
-        path: "/collapsables",
-        component: Collapsable,
-        icon: "align-justify",
-      },
-      {
-        name: "Calendars",
-        path: "/calendars",
-        component: Calendar,
-        icon: "calendar-alt",
-      },
-      {
-        name: "DragDrop",
-        path: "/DragDrop",
-        component: DragDrop,
-        icon: "calendar-alt",
-      },
-      {
-        name: "Search",
-        path: "/search",
-        component: Search,
-        icon: "calendar-alt",
+        name: "Services",
+        path: "/services",
+        icon: "list",
+        title: "Services",
+        component: Services,
       },
     ],
   },

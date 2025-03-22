@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import {
   MDBSelect,
   MDBSelectInput,
@@ -25,6 +25,7 @@ export default function ClottingFactor() {
     const arr = [...troupe[key]];
 
     arr[index] = value;
+    dispatch(SetTASK({form: task?.form, task:{ ...task, troupe: { ...troupe, [key]: arr } }}));
 dispatch(SetPARAMS({ key: "troupe", value: { ...troupe, [key]: arr } }));
   };
 

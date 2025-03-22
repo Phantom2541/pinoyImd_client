@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Calendar as calendar } from "../../../../../../services/fakeDb";
@@ -10,39 +10,30 @@ import {
   SetYEAR,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import "./style.css";
-
-// const today = new Date();
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+import { currency } from "../../../../../../services/utilities";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { month, year } = useSelector(({ remittances }) => remittances),
+    { month, year, collections } = useSelector(
+      ({ remittances }) => remittances
+    ),
+    [coh, setCoh] = useState(0),
     dispatch = useDispatch();
-
-  console.log("activePlatform", activePlatform);
 
   useEffect(() => {
     if (token && activePlatform?.branchId && year && month) {
+      const startDate = new Date(year, month, 1);
+      startDate.setUTCHours(0, 0, 0, 0);
+      const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+      endDate.setUTCHours(23, 59, 59, 999);
+
       dispatch(
         BROWSE({
           token,
           key: {
-            branchId: activePlatform?.branchId,
-            month: monthNames[month],
-            year,
+            branch: activePlatform?.branchId,
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
             cashier: auth?._id,
           },
         })
@@ -51,6 +42,20 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, month, year, auth]);
 
+  useEffect(() => {
+    if (collections) {
+      let gross = 0;
+      collections.forEach((collection) => {
+        if (!collection?.collector && collection.gross) {
+          let _expenses = collection?.expenses || 0;
+          let _gross = collection.gross || 0;
+          gross += _gross - _expenses;
+        }
+      });
+      setCoh(gross);
+    }
+  }, [collections]);
+
   return (
     <MDBView
       cascade
@@ -58,7 +63,12 @@ const Header = () => {
     >
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex ">
-          <span className="white-text mx-3 text-nowrap mt-0">Remittances</span>
+          <span className="white-text mx-3 text-nowrap mt-0">
+            Remittances{" "}
+            {coh > 0 && (
+              <span style={{ color: "green" }}> COH:({currency(coh)})</span>
+            )}
+          </span>
         </div>
       </div>
 

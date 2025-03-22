@@ -3,7 +3,7 @@ import { MDBCard, MDBContainer } from "mdbreact";
 import "./style.css";
 import Header from "./header";
 import Calendar from "./calendar";
-import Modal from "./modal";
+import { Denomination, Census } from "./modal";
 
 export default function Remmitances() {
   return (
@@ -12,7 +12,8 @@ export default function Remmitances() {
         <Header />
         <Calendar />
       </MDBCard>
-      <Modal />
+      <Denomination />
+      <Census />
     </MDBContainer>
   );
 }

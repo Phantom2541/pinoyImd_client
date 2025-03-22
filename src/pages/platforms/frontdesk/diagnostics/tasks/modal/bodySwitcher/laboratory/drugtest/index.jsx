@@ -37,7 +37,7 @@ export default function Drugtest() {
   const { met, thc } = task;
 
   const handleSelectChange = (name, value) =>
-    dispatch(SetTASK({ ...task, [name]: value }));
+    dispatch(SetTASK({form: task?.form, task: { ...task, [name]: value } }));
 
   return (
     <MDBContainer>

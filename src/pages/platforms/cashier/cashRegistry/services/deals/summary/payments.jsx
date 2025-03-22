@@ -1,14 +1,17 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
+import { AUTOSELECT } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 export default function Payments() {
-  const { total, collections } = useSelector(({ deals }) => deals);
-  const [isOpen, setIsOpen] = useState(true);
-
-  localStorage.setItem("payments", JSON.stringify(collections));
-  console.log(collections);
+  const { total, collections } = useSelector(({ deals }) => deals),
+    { auth, activePlatform, token } = useSelector(({ auth }) => auth),
+    { selected } = useSelector(({ remittances }) => remittances),
+    dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(true),
+    [sum, setSum] = useState(0);
 
   // Optimize calculations using useMemo
   const paymentTotals = useMemo(() => {
@@ -20,6 +23,34 @@ export default function Payments() {
       { cash: 0, gcash: 0, vouchers: 0, pending: 0 }
     );
   }, [collections]);
+
+  useEffect(() => {
+    setSum(selected?.opening?.sum);
+  }, [selected]);
+
+  useEffect(() => {
+    const options = {
+      timeZone: "Asia/Manila",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    };
+    const formatter = new Intl.DateTimeFormat("en-CA", options);
+    const date = formatter.format(new Date());
+
+    console.log("date", date); // Output: YYYY-MM-DD in Philippine Standard Time
+
+    dispatch(
+      AUTOSELECT({
+        token,
+        key: {
+          branch: activePlatform.branchId,
+          cashier: auth._id,
+          date,
+        },
+      })
+    );
+  }, [activePlatform, auth, token, dispatch]);
 
   return (
     <MDBCard className="shadow-sm mb-2 ">
@@ -39,7 +70,7 @@ export default function Payments() {
         <MDBCardBody className="pt-2">
           <div className="d-flex justify-content-between">
             <span>Floating Cash:</span>
-            <strong className="text-warning">₱0.00</strong>
+            <strong className="text-warning">{currency(sum)}</strong>
           </div>
           <div className="d-flex justify-content-between border-bottom py-2">
             <span>Cash :</span>

@@ -13,13 +13,17 @@ import {
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
-import { MDBCardBody, MDBTable, MDBIcon, MDBBadge } from "mdbreact";
+import { MDBCardBody, MDBTable, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
+import "./style.css";
 
 export const Tables = () => {
   const { token, auth } = useSelector(({ auth }) => auth),
     { collections, filtered, maxPage, activePage } = useSelector(
       ({ deals }) => deals
     ),
+    [total, setTotal] = useState(0),
+    [patient, setPatient] = useState(0),
+    [didHoverID, setDidHoverID] = useState(-1),
     [view, setView] = useState("all"),
     dispatch = useDispatch();
 
@@ -39,6 +43,12 @@ export const Tables = () => {
 
   //   return () => dispatch(RESET());
   // }, [token, dispatch, activePlatform, auth]);
+
+  useEffect(() => {
+    const validTransactions = filtered.filter((item) => !item.deletedAt);
+    setTotal(validTransactions.reduce((a, b) => a + b.amount, 0));
+    setPatient(validTransactions.length);
+  }, [filtered]);
 
   useEffect(() => {
     if (!!collections.length) {
@@ -85,7 +95,6 @@ export const Tables = () => {
   };
 
   const handleEdit = async (deal) => {
-    console.log("deal", deal);
     const { discount, amount } = deal;
 
     const originalAmount = discount ? discount + amount : amount;
@@ -144,25 +153,44 @@ export const Tables = () => {
 
   return (
     <MDBCardBody>
-      <MDBTable>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          marginTop: "-1.4rem",
+        }}
+      >
+        <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+          {currency(total)}
+        </p>
+        <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
+        <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+          @ {patient} Patient/s
+        </p>
+      </div>
+
+      <MDBTable style={{ marginTop: "-5px" }}>
         <thead>
-          <tr>
-            <th>#</th>
+          <tr style={{ marginTop: "-5rem" }}>
             <th>Patient</th>
             <th>Physician</th>
             <th>Amount</th>
             <th>Services</th>
             <th>Remarks</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {paginatedData?.map((deal, index) => {
             const isDeleted = !!deal.deletedAt;
             const isDiscounted = deal.discount > 0;
+            const isHover = index === didHoverID;
             return (
               <tr
+                onMouseEnter={() => setDidHoverID(index)}
+                onMouseLeave={() => setDidHoverID(-1)}
                 key={`sales-${index + 1}`}
+                className={`transition-all ${isHover && "danger text-white"}`}
                 style={{
                   backgroundColor: isDeleted
                     ? "#ffcccc"
@@ -171,18 +199,18 @@ export const Tables = () => {
                     : "transparent",
                 }}
               >
-                <td>{index + 1}.</td>
+                {/* <td>{index + 1}.</td> */}
                 <td>
                   <h6>{fullName(deal.customerId.fullName)}</h6>
-                  <small>
+                  <MDBBadge color="info" className="mr-2">
                     {capitalize(
                       deal.category === "walkin"
                         ? deal.category
                         : Categories.find(({ abbr }) => abbr === deal.category)
                             .name
                     )}
-                    @ {new Date(deal.createdAt).toLocaleTimeString()}
-                  </small>
+                  </MDBBadge>
+                  @ {new Date(deal.createdAt).toLocaleTimeString()}
                 </td>
                 <td>
                   {deal.physicianId?.fullName.lname && (
@@ -190,27 +218,51 @@ export const Tables = () => {
                   )}
                   <p>{deal.source?.companyName || deal.source?.name}</p>
                 </td>
-                <td>
+                <td style={{ fontWeight: 400 }}>
                   <p>
                     {currency(deal.amount)}
-                    <MDBIcon
-                      title="Edit Sales Amount"
-                      onClick={() => handleEdit(deal)}
-                      icon="pencil-alt"
-                      className="ml-1"
-                    />
+                    {isHover && (
+                      <MDBBtn
+                        size="sm"
+                        style={{ marginTop: "-0.5rem" }}
+                        color="primary"
+                        rounded
+                        onClick={() => handleEdit(deal)}
+                        className="p-1 mx-2"
+                        title="Edit Sales Amount"
+                      >
+                        <MDBIcon icon="pencil-alt" />
+                      </MDBBtn>
+                    )}
                   </p>
-                  <p style={{ color: "red" }}>{currency(deal.discount)}</p>
+                  {isDiscounted && (
+                    <p style={{ color: "red" }}>{currency(deal.discount)}</p>
+                  )}
                 </td>
                 <td>
                   {deal.cart?.map((menu) => (
-                    <MDBBadge key={menu.referenceId} className="mx-1">
+                    <MDBBadge
+                      key={menu.referenceId}
+                      className="mx-1"
+                      color="success"
+                    >
                       {menu?.abbreviation}
                     </MDBBadge>
                   ))}
                 </td>
-                <td>{deal.remarks}</td>
                 <td>
+                  {!isHover ? (
+                    deal.remarks
+                  ) : (
+                    <MDBIcon
+                      icon="trash"
+                      className="mr-2 mt-2"
+                      title="Delete Sales"
+                      onClick={() => handleDelete(deal)}
+                    />
+                  )}
+                </td>
+                {/* <td>
                   {!isDeleted && (
                     <MDBIcon
                       icon="trash"
@@ -219,7 +271,7 @@ export const Tables = () => {
                       onClick={() => handleDelete(deal)}
                     />
                   )}
-                </td>
+                </td> */}
               </tr>
             );
           })}
