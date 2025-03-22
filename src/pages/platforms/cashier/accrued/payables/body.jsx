@@ -118,6 +118,8 @@ const Tables = () => {
                     : ""}
                 </td>
                 <th>{currency(amount)}</th>
+
+                <th>{currency(amount)}</th>
                 <td style={{ textAlign: "center" }}>
                   {!hasPaid && (
                     <MDBBtnGroup>

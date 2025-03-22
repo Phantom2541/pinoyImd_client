@@ -10,15 +10,32 @@ import {
   MDBContainer,
   MDBCard,
   MDBCardBody,
+  MDBBadge,
+  MDBRow,
+  MDBCol,
+  MDBIcon,
 } from "mdbreact";
 import {
   SAVE,
   UPDATE,
   SetCloseModal,
 } from "../../../../../../services/redux/slices/finance/journals/payables";
+import "./style.css";
 import { Statements } from "../../../../../../services/fakeDb";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
+import cash from "../../../../../../assets/paymentMethods/cash.png";
+import transfer from "../../../../../../assets/paymentMethods/transfer.png";
+import gcash from "../../../../../../assets/paymentMethods/gcash.png";
+import cheque from "../../../../../../assets/paymentMethods/cheque.png";
+import { dateFormat } from "../../../../../../services/utilities";
+
+const paymentMethods = [
+  { text: "Cash", img: cash },
+  { text: "Gcash", img: gcash },
+  { text: "Transfer", img: transfer },
+  { text: "Check", img: cheque },
+];
 
 export default function PaymentModal() {
   const dispatch = useDispatch();
@@ -90,134 +107,139 @@ export default function PaymentModal() {
     }).format(amount);
 
   return (
-    <MDBModal
-      isOpen={showPaymentModal}
-      toggle={handleClose}
-      backdrop={false}
-      size="md"
-    >
+    <MDBModal isOpen={showPaymentModal} toggle={handleClose} backdrop size="md">
       <MDBModalHeader
         toggle={handleClose}
         className="light-blue darken-3 white-text text-center w-100"
       >
-        Payments
+        <MDBIcon icon="money-bill-wave-alt" className="mr-2" /> Payments
       </MDBModalHeader>
       <MDBModalBody>
-        <MDBContainer>
-          <MDBCard className="shadow-3">
-            <MDBCardBody>
-              <form onSubmit={handleSubmit}>
-                {/* Supplier Name */}
-                <MDBTypography
-                  variant="h4-responsive"
-                  className="text-center mb-3"
-                >
-                  <small>Supplier: </small>
-                  <strong>{selected?.supplier?.name || "N/A"}</strong>
-                </MDBTypography>
+        <MDBCard>
+          <MDBCardBody className="dashed-border-payment">
+            <form onSubmit={handleSubmit}>
+              {/* Supplier Name */}
+              <div className="d-flex align-items-center">
+                <h6 className="grey-text" style={{ marginRight: "2rem" }}>
+                  Supplier:
+                </h6>
+                <h5 style={{ fontWeight: 500 }}>
+                  {selected?.supplier?.name || "N/A"}
+                </h5>
+              </div>
+              <div className="d-flex align-items-center">
+                <h6 className="grey-text mr-2">Statements:</h6>
+                <h5 style={{ fontWeight: 500 }}>
+                  {Statements?.getName(selected?.fsId) || "N/A"}
+                </h5>
+              </div>
 
-                {/* Statement */}
-                <MDBTypography
-                  variant="h4-responsive"
-                  className="text-center mb-3"
-                >
-                  <small>Statements: </small>
-                  <strong>
-                    {Statements?.getName(selected?.fsId) || "N/A"}
-                  </strong>
-                </MDBTypography>
+              {/* <select
+            className="browser-default custom-select mb-3 mt-2"
+            value={form.orOption || ""}
+            onChange={(e) => handleChange("orOption", e.target.value)}
+          >
+            <option value="" disabled>
+              Select Payment Method
+            </option>
+            <option value="Cash">Cash</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Gcash">Gcash</option>
+            <option value="Transfer">Transfer</option>
+          </select> */}
 
-                {/* Payment Method Dropdown */}
-                <select
-                  className="browser-default custom-select mb-3"
-                  value={form.orOption || ""}
-                  onChange={(e) => handleChange("orOption", e.target.value)}
-                >
-                  <option value="" disabled>
-                    Select Payment Method
-                  </option>
-                  <option value="Cash">Cash</option>
-                  <option value="Cheque">Cheque</option>
-                  <option value="Gcash">Gcash</option>
-                  <option value="Transfer">Transfer</option>
-                </select>
-
-                {/* Conditional Payment Method Fields */}
-                {form.orOption && (
-                  <div className="text-center mt-3">
-                    {form.orOption === "Cash" && (
-                      <MDBInput
-                        label="Enter Amount"
-                        type="number"
-                        step="0.01"
-                        value={form.amount || ""}
-                        onChange={(e) => handleChange("amount", e.target.value)}
-                      />
-                    )}
-                    {form.orOption === "Cheque" && (
-                      <h5>Cheque Payment Selected</h5>
-                    )}
-                    {form.orOption === "Gcash" && (
-                      <h5>Gcash Payment Selected</h5>
-                    )}
-                    {form.orOption === "Transfer" && (
-                      <h5>Transfer Payment Selected</h5>
-                    )}
-                  </div>
-                )}
-
-                {/* Due Date */}
-                <MDBTypography
-                  variant="h4-responsive"
-                  className="text-center mt-4"
-                >
-                  Due Date:{" "}
-                  {selected?.due
-                    ? new Date(selected.due).toLocaleDateString("en-US", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      })
-                    : "N/A"}
-                </MDBTypography>
-
-                {/* Penalty Input if Past Due */}
-                {selected?.due && new Date(selected.due) < new Date() && (
-                  <MDBInput
-                    label="Penalty Amount"
-                    type="number"
-                    step="0.01"
-                    value={penalty}
-                    onChange={(e) => setPenalty(Number(e.target.value))}
-                    className="mt-3"
-                  />
-                )}
-
-                {/* Amount Display */}
-                <MDBTypography
-                  variant="h4-responsive"
-                  className="text-center mt-3"
-                >
-                  <strong>
-                    Expenses Amount: {formatCurrency(selected?.amount || 0)}
-                  </strong>
-                </MDBTypography>
-
-                {/* Submit Button */}
-                <div className="text-center mt-4">
-                  <MDBBtn
-                    type="submit"
-                    disabled={isLoading}
-                    color="info"
-                    rounded
+              <h6 className="mt-2 grey-text">Payment Methods:</h6>
+              <div className="d-flex align-items-center justify-content-center ">
+                {paymentMethods.map(({ img, text }, index) => (
+                  <MDBCard
+                    onClick={() => handleChange("orOption", text)}
+                    className={`mr-2 d-flex align-items-center justify-content-center cursor-pointer ${
+                      text === form.orOption
+                        ? "active-payment-method"
+                        : "payment-method"
+                    }`}
+                    style={
+                      index === 3
+                        ? {
+                            height: "3.6rem",
+                            width: "6rem ",
+                            border: "red 2px solid black",
+                          }
+                        : {}
+                    }
                   >
-                    {isLoading ? "Processing..." : "Pay"}
-                  </MDBBtn>
+                    <img
+                      style={{
+                        width: index === 3 ? "5rem" : "6rem",
+                        height: index === 3 ? "2.8rem" : "3.5rem",
+                      }}
+                      src={img}
+                    />
+                  </MDBCard>
+                ))}
+              </div>
+
+              {form.orOption === "Cash" && (
+                <MDBInput
+                  label="Enter Amount"
+                  type="number"
+                  className="mt-2"
+                  step="0.01"
+                  value={form.amount || ""}
+                  onChange={(e) => handleChange("amount", e.target.value)}
+                />
+              )}
+
+              {/* Conditional Payment Method Fields */}
+              {/* {form.orOption && (
+                <div className="text-center mt-3">
+                  
+                  {form.orOption === "Cheque" && (
+                    <MDBBadge color="warning">CHEQUE</MDBBadge>
+                  )}
+                  {form.orOption === "Gcash" && <h5>Gcash </h5>}
+                  {form.orOption === "Transfer" && <h5>Transfer </h5>}
                 </div>
-              </form>
-            </MDBCardBody>
-          </MDBCard>
-        </MDBContainer>
+              )} */}
+
+              <div className="d-flex align-items-center mt-4">
+                <h6 style={{ marginRight: "68.4px" }} className="grey-text">
+                  Due Date:
+                </h6>
+                <h5 style={{ fontWeight: 500 }}>
+                  {selected?.due ? dateFormat(selected.due) : "N/A"}
+                </h5>
+              </div>
+
+              {/* Penalty Input if Past Due */}
+              {selected?.due && new Date(selected.due) < new Date() && (
+                <MDBInput
+                  label="Penalty Amount"
+                  type="number"
+                  step="0.01"
+                  value={penalty}
+                  onChange={(e) => setPenalty(Number(e.target.value))}
+                  className="mt-3"
+                />
+              )}
+
+              {/* Amount Display */}
+              <div className="d-flex align-items-center">
+                <h6 className="grey-text mr-1">Expenses Amount:</h6>
+                <h5 style={{ fontWeight: 500 }}>
+                  {formatCurrency(selected?.amount || 0)}
+                </h5>
+              </div>
+
+              {/* Submit Button */}
+              <div className="text-center mt-4">
+                <MDBBtn type="submit" disabled={isLoading} color="info" rounded>
+                  {isLoading ? "Processing..." : "Pay"}
+                </MDBBtn>
+              </div>
+            </form>
+          </MDBCardBody>
+        </MDBCard>
       </MDBModalBody>
     </MDBModal>
   );
