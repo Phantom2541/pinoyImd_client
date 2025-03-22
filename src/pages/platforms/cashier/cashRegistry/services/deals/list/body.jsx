@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { capitalize } from "lodash";
-import {
-  MDBTable,
-  MDBIcon,
-  MDBBadge,
-  MDBBtnGroup,
-  MDBBtn,
-  MDBCard,
-} from "mdbreact";
+import { MDBTable, MDBIcon, MDBBadge, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
   currency,
   fullName,
   getGenderIcon,
+  paymentMethod,
 } from "../../../../../../../services/utilities";
 import { Categories } from "../../../../../../../services/fakeDb";
 import {
@@ -20,7 +14,6 @@ import {
   SetFILTERED,
   SetSELECTED,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
-import utils from "./utils";
 
 const Tables = () => {
   const {
@@ -111,7 +104,7 @@ const Tables = () => {
         </thead>
         <tbody>
           {filtered?.map((deal, index) => {
-            const { img, text, style } = utils.paymentMethod(deal.payment);
+            const { img, text, style } = paymentMethod.getImage(deal.payment);
             return (
               <tr
                 key={`deals-${index + 1}`}
@@ -161,31 +154,10 @@ const Tables = () => {
                     />
                   </div>
                   <h6 title="Cash"> {currency(deal.cash)}</h6>
-                  {/* {deal.payment}: */}
-                  {/* <MDBCard className="ml-1" title="bank transfer"> */}
-
-                  {/* </MDBCard> */}
-                  {/* <MDBIcon
-                      icon="receipt"
-                      className="ml-1"
-                      title="Print Reciept"
-                      onClick={() => handleView(deal)}
-                    /> */}
                 </td>
 
                 <td>
-                  {/* {didHoverID === index ? (
-                    <MDBBtn size="sm" color="info">
-                      <MDBIcon icon="print" />
-                    </MDBBtn>
-                  ) : ( */}
                   <>
-                    {/* {deal.cart?.map((menu) => (
-                      <MDBBadge key={menu.referenceId} className="mx-1">
-                        {menu?.abbreviation}
-                      </MDBBadge>
-                    ))} */}
-
                     {didHoverID === index && (
                       <div className="d-flex justify-content-center">
                         <MDBBtnGroup>
@@ -220,15 +192,6 @@ const Tables = () => {
                       </MDBBadge>
                     ))}
                   </>
-                  {/* )} */}
-
-                  {/* <MDBIcon
-                    icon="plus"
-                    className="mr-2 cursor-pointer"
-                    style={{ color: "blue" }}
-                    title="Add"
-                    onClick={() => handleCashRegister(deal)}
-                  /> */}
                 </td>
               </tr>
             );

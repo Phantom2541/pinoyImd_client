@@ -2,9 +2,12 @@ import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 import { currency } from "./../../../../../../services/utilities";
+import SummaryLoading from "../../../../cashier/cashRegistry/services/deals/summary/loading";
 
 export default function Payments() {
-  const { collections } = useSelector(({ deals }) => deals);
+  const { filtered: collections, isLoading } = useSelector(
+    ({ deals }) => deals
+  );
   const [isOpen, setIsOpen] = useState(true);
 
   // Optimize calculations using useMemo
@@ -48,39 +51,47 @@ export default function Payments() {
         </MDBCollapseHeader>
         <MDBCollapse isOpen={isOpen}>
           <MDBCardBody className="pt-2">
-            <div className="d-flex justify-content-between border-bottom py-2">
-              <span>Cash :</span>
-              <strong className="text-primary">
-                {currency(paymentTotals.cash)}
-              </strong>
-            </div>
-            <div className="d-flex justify-content-between border-bottom py-2">
-              <span>Gcash :</span>
-              <strong className="text-primary">
-                {currency(paymentTotals.gcash)}
-              </strong>
-            </div>
-            <div className="d-flex justify-content-between border-bottom py-2">
-              <span>Vouchers :</span>
-              <strong className="text-primary">
-                {currency(paymentTotals.vouchers)}
-              </strong>
-            </div>
-            <div className="d-flex justify-content-between border-bottom py-2">
-              <span>Downpayment:</span>
-              <strong className="text-danger">
-                {currency(paymentTotals.pending)}
-              </strong>
-            </div>
-            <div className="d-flex justify-content-between border-bottom py-2">
-              <span>Discount:</span>
-              <strong className="text-danger">{currency(totalDiscount)}</strong>
-            </div>
-            <hr />
-            <div className="d-flex justify-content-between border-bottom pb-2">
-              <span>Gross Sales :</span>
-              <strong className="text-info">{currency(grossSales)}</strong>
-            </div>
+            {!isLoading ? (
+              <>
+                <div className="d-flex justify-content-between border-bottom py-2">
+                  <span>Cash :</span>
+                  <strong className="text-primary">
+                    {currency(paymentTotals.cash)}
+                  </strong>
+                </div>
+                <div className="d-flex justify-content-between border-bottom py-2">
+                  <span>Gcash :</span>
+                  <strong className="text-primary">
+                    {currency(paymentTotals.gcash)}
+                  </strong>
+                </div>
+                <div className="d-flex justify-content-between border-bottom py-2">
+                  <span>Vouchers :</span>
+                  <strong className="text-primary">
+                    {currency(paymentTotals.vouchers)}
+                  </strong>
+                </div>
+                <div className="d-flex justify-content-between border-bottom py-2">
+                  <span>Downpayment:</span>
+                  <strong className="text-danger">
+                    {currency(paymentTotals.pending)}
+                  </strong>
+                </div>
+                <div className="d-flex justify-content-between border-bottom py-2">
+                  <span>Discount:</span>
+                  <strong className="text-danger">
+                    {currency(totalDiscount)}
+                  </strong>
+                </div>
+                <hr />
+                <div className="d-flex justify-content-between border-bottom pb-2">
+                  <span>Gross Sales :</span>
+                  <strong className="text-info">{currency(grossSales)}</strong>
+                </div>
+              </>
+            ) : (
+              <SummaryLoading />
+            )}
           </MDBCardBody>
         </MDBCollapse>
       </MDBCard>

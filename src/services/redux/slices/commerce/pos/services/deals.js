@@ -234,9 +234,13 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetFilterByCASHIER: (state, { payload }) => {
-      state.filtered = state.collections.filter(
-        (item) => item.cashierId._id === payload
-      );
+      if (payload === "all") {
+        state.filtered = state.collections;
+      } else {
+        state.filtered = state.collections.filter(
+          (item) => item.cashierId._id === payload
+        );
+      }
     },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
@@ -315,16 +319,13 @@ export const reduxSlice = createSlice({
           { _id, deletedAt, amount, discount, authorizedBy } = payload;
 
         const index = state.collections.findIndex((c) => c._id === _id);
-
-        if (index !== -1) {
-          state.collections[index] = {
-            ...state.collections[index],
-            amount,
-            discount, // Ensure discount is also updated
-            deletedAt, // Keep track of deletion status
-            authorizedBy, // Keep track of deletion status
-          };
-        }
+        state.collections[index] = {
+          ...state.collections[index],
+          amount,
+          discount, // Ensure discount is also updated
+          deletedAt, // Keep track of deletion status
+          authorizedBy, // Keep track of deletion status
+        };
 
         state.message = success;
         state.isSuccess = true;

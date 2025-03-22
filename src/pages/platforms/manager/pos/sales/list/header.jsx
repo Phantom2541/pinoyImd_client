@@ -51,6 +51,9 @@ const Header = () => {
   };
 
   useEffect(() => {
+    dispatch(SetFILTERED(collections));
+  }, [dispatch, collections]);
+  useEffect(() => {
     if (!collections || collections.length === 0) return;
 
     // Remove duplicate cashier IDs and filter out deleted records
@@ -75,7 +78,10 @@ const Header = () => {
           className="form-control mr-3 bg-light"
           onChange={(e) => dispatch(SetFilterByCASHIER(e.target.value))} // setSelectedCashier(e.target.value)}
         >
-          <option value="">Select Cashier</option>
+          <option value="" disabled>
+            Select Cashier
+          </option>
+          <option value={"all"}>All</option>
           {cashiers.map((cashier) => (
             <option key={cashier._id} value={cashier._id}>
               {fullName(cashier?.fullName)}

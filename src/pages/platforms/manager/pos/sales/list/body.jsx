@@ -5,6 +5,7 @@ import {
   currency,
   fullName,
   getGenderIcon,
+  paymentMethod,
   // axioKit,
 } from "./../../../../../../services/utilities";
 import { Categories } from "./../../../../../../services/fakeDb";
@@ -178,7 +179,7 @@ export const Tables = () => {
         </p>
       </div>
 
-      <MDBTable style={{ marginTop: "-5px" }}>
+      <MDBTable style={{ marginTop: "-5px" }} hover>
         <thead>
           <tr style={{ marginTop: "-5rem" }}>
             <th>Patient</th>
@@ -193,26 +194,26 @@ export const Tables = () => {
             const isDeleted = !!deal.deletedAt;
             const isDiscounted = deal.discount > 0;
             const isHover = index === didHoverID;
+            const { img, style, text } = paymentMethod.getImage(deal.payment);
+
             return (
               <tr
                 onMouseEnter={() => setDidHoverID(index)}
                 onMouseLeave={() => setDidHoverID(-1)}
                 key={`sales-${index + 1}`}
-                className={`transition-all ${isHover && "danger text-white"}`}
                 style={{
                   backgroundColor: isDeleted
                     ? "#ffcccc"
                     : isDiscounted
                     ? "#ccffcc"
-                    : "transparent",
+                    : "",
                 }}
               >
-                {/* <td>{index + 1}.</td> */}
                 <td>
-                  <h6>
-                    {getGenderIcon(deal.customerId.isMale)}{" "}
-                    {fullName(deal.customerId.fullName)}
-                  </h6>
+                  <div className="d-flex align-items-center">
+                    <h6>{getGenderIcon(deal.customerId.isMale)} </h6>
+                    <h6>{fullName(deal.customerId.fullName)}</h6>
+                  </div>
                   <MDBBadge color="info" className="mr-2">
                     {capitalize(
                       deal.category === "walkin"
@@ -230,7 +231,25 @@ export const Tables = () => {
                   <p>{deal.source?.companyName || deal.source?.name}</p>
                 </td>
                 <td style={{ fontWeight: 400 }}>
-                  <p style={{ fontWeight: 500 }}>{currency(deal.amount)}</p>
+                  <div className="d-flex align-items-center">
+                    <h6
+                      className="mt-2"
+                      style={{ fontWeight: 600 }}
+                      title="Amount"
+                    >
+                      {currency(deal.amount)}
+                    </h6>
+                    <img
+                      src={img}
+                      alt={text}
+                      className="ml-1"
+                      title={text}
+                      style={{
+                        ...style,
+                      }}
+                    />
+                  </div>
+                  {/* <p style={{ fontWeight: 500 }}>{currency(deal.amount)}</p> */}
                   {isDiscounted && (
                     <p style={{ color: "red" }}>{currency(deal.discount)}</p>
                   )}
@@ -238,11 +257,7 @@ export const Tables = () => {
                 </td>
                 <td>
                   {deal.cart?.map((menu) => (
-                    <MDBBadge
-                      key={menu.referenceId}
-                      className="mx-1"
-                      color="success"
-                    >
+                    <MDBBadge key={menu.referenceId} className="mx-1">
                       {menu?.abbreviation}
                     </MDBBadge>
                   ))}
@@ -253,45 +268,42 @@ export const Tables = () => {
                   ) : (
                     <>
                       <MDBBtnGroup>
-                        <MDBBtn
-                          size="sm"
-                          color="primary"
-                          rounded
-                          onClick={() => handleEdit(deal)}
-                          title="Edit Sales Amount"
-                        >
-                          <MDBIcon icon="pencil-alt" />
-                        </MDBBtn>
-                        <MDBBtn
-                          size="sm"
-                          color="danger"
-                          rounded
-                          onClick={() => handleDelete(deal)}
-                          title="Delete Sales"
-                        >
-                          <MDBIcon icon="trash" />
-                        </MDBBtn>
+                        {!isDeleted ? (
+                          <>
+                            <MDBBtn
+                              size="sm"
+                              color="danger"
+                              rounded
+                              onClick={() => handleDelete(deal)}
+                              title="Delete Sale"
+                            >
+                              <MDBIcon icon="trash" />
+                            </MDBBtn>
+                            <MDBBtn
+                              size="sm"
+                              color="primary"
+                              rounded
+                              onClick={() => handleEdit(deal)}
+                              title="Edit Sales Amount"
+                            >
+                              <MDBIcon icon="pencil-alt" />
+                            </MDBBtn>
+                          </>
+                        ) : (
+                          <MDBBtn
+                            size="sm"
+                            color="warning"
+                            rounded
+                            onClick={() => handleDelete(deal)}
+                            title="Revert Sale"
+                          >
+                            <MDBIcon fas icon="sync-alt" />
+                          </MDBBtn>
+                        )}
                       </MDBBtnGroup>
-                      {/* 
-                      <MDBIcon
-                        icon="trash"
-                        className="mr-2 mt-2"
-                        title="Delete Sales"
-                        onClick={() => handleDelete(deal)}
-                      /> */}
                     </>
                   )}
                 </td>
-                {/* <td>
-                  {!isDeleted && (
-                    <MDBIcon
-                      icon="trash"
-                      className="mr-2"
-                      title="Delete Sales"
-                      onClick={() => handleDelete(deal)}
-                    />
-                  )}
-                </td> */}
               </tr>
             );
           })}
