@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -16,24 +16,50 @@ import {
 import { fullName } from "../../../../../../../services/utilities";
 
 export default function RevertSale() {
-  const { token, formSubmmited, auth } = useSelector(({ auth }) => auth),
-    { showRevertModal: show, selected } = useSelector(({ deals }) => deals),
+  const { token, auth } = useSelector(({ auth }) => auth),
+    {
+      showRevertModal: show,
+      selected,
+      formSubmitted,
+      message = "",
+      isSuccess,
+    } = useSelector(({ deals }) => deals),
     [password, setPassword] = useState(""),
     [isLocked, setIsLocked] = useState(true),
+    [haveMessage, setHaveMessage] = useState(false),
     dispatch = useDispatch();
-
   const toggle = () => dispatch(ToggleRevertModal());
-  const { customerId } = selected;
 
+  useEffect(() => {
+    if (show) {
+      setHaveMessage(false);
+      setPassword("");
+    }
+  }, [show]);
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess && show) {
+      toggle();
+    }
+  }, [formSubmitted, isSuccess, dispatch, show]);
+
+  useEffect(() => {
+    if (message) {
+      setHaveMessage(true);
+    }
+  }, [message]);
+
+  const { customerId } = selected;
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
       REVERT_SALE({
-        data: { user: { _id: auth._id, password }, sale: selected },
+        data: { user: { _id: auth._id, password }, saleID: selected._id },
         token,
       })
     );
   };
+
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
       <MDBModalHeader
@@ -47,7 +73,7 @@ export default function RevertSale() {
         <form onSubmit={handleSubmit}>
           <MDBTypography
             variant="h2"
-            noteColor="danger"
+            noteColor="warning"
             note
             noteTitle="Reauthentication: "
           >
@@ -57,20 +83,32 @@ export default function RevertSale() {
           <MDBInput
             label="Password"
             value={password}
+            required
             onChange={(e) => setPassword(e.target.value)}
-            type="password"
+            type={isLocked ? "password" : "text"}
             icon={isLocked ? "lock" : "unlock"}
             onIconMouseEnter={() => setIsLocked(false)}
             onIconMouseLeave={() => setIsLocked(true)}
           />
+
+          {haveMessage && (
+            <MDBTypography
+              variant="h2"
+              noteColor="danger"
+              note
+              noteTitle="Incorrect password: "
+            >
+              For security reasons, please verify your credentials carefully.
+            </MDBTypography>
+          )}
           <MDBBtn
             className="float-right"
             rounded
             color="info"
             type="submit"
-            disabled={formSubmmited}
+            disabled={formSubmitted}
           >
-            Verify {formSubmmited && <MDBIcon icon="spinner" pulse />}
+            Verify {formSubmitted && <MDBIcon icon="spinner" pulse />}
           </MDBBtn>
         </form>
       </MDBModalBody>
