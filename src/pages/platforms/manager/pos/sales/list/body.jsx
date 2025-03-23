@@ -11,6 +11,7 @@ import {
 import { Categories } from "./../../../../../../services/fakeDb";
 import {
   MANAGERUPDATE,
+  SetREVERT,
   // RESET,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
@@ -152,6 +153,10 @@ export const Tables = () => {
     }
   };
 
+  const handleRevert = (deal) => {
+    dispatch(SetREVERT(deal));
+  };
+
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -211,8 +216,8 @@ export const Tables = () => {
               >
                 <td>
                   <div className="d-flex align-items-center">
-                    <h6>{getGenderIcon(deal.customerId.isMale)} </h6>
-                    <h6>{fullName(deal.customerId.fullName)}</h6>
+                    <h6>{getGenderIcon(deal.customerId?.isMale)} </h6>
+                    <h6>{fullName(deal.customerId?.fullName)}</h6>
                   </div>
                   <MDBBadge color="info" className="mr-2">
                     {capitalize(
@@ -294,7 +299,7 @@ export const Tables = () => {
                             size="sm"
                             color="warning"
                             rounded
-                            onClick={() => handleDelete(deal)}
+                            onClick={() => handleRevert(deal)}
                             title="Revert Sale"
                           >
                             <MDBIcon fas icon="sync-alt" />
