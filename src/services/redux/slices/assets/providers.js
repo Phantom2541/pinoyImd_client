@@ -5,18 +5,24 @@ const url = "assets/providers";
 
 const initialState = {
   collections: [],
+  paginated: [],
   // enrolled: [],
   searchResults: [],
   isSuccess: false,
   isLoading: false,
   didSearch: false,
   selected: {},
-  totalPages: 0,
   page: 0,
   showModal: false,
   showCompanyModal: false,
   willCreate: false,
+  /**
+   * Footer
+   */
+  filtered: [],
   maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
 };
 export const BROWSE = createAsyncThunk(
   `${url}/browse`,
@@ -31,11 +37,11 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
-export const GETENROLLED = createAsyncThunk(
-  `${url}/enrollements`,
+export const OUTSOURCE = createAsyncThunk(
+  `${url}/outsource`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${url}/enrollements`, token, key);
+      return await axioKit.universal(`${url}/outsource`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -44,11 +50,24 @@ export const GETENROLLED = createAsyncThunk(
   }
 );
 
-export const OUTSOURCE = createAsyncThunk(
-  `${url}/browse`,
+// export const UTILITIES = createAsyncThunk(
+//   `${url}/browse`,
+//   async ({ key, token }, thunkAPI) => {
+//     try {
+//       return await axioKit.universal(`${url}/browse`, token, key);
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(
+//         error.response?.data?.message || error.message || error.toString()
+//       );
+//     }
+//   }
+// );
+
+export const GETENROLLED = createAsyncThunk(
+  `${url}/enrollements`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${url}/browse`, token, key);
+      return await axioKit.universal(`${url}/enrollements`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -219,6 +238,18 @@ export const reduxSlice = createSlice({
     SETSOURCES: (state, { payload }) => {
       state.collections = payload;
     },
+    /**
+     *  Footer
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      console.log("payload", payload);
+
+      state.activePage = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -231,6 +262,7 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(GETENROLLED.fulfilled, (state, { payload }) => {
+        console.log(payload);
         const { payload: data } = payload;
         state.enrolled = data;
         state.isSuccess = true;
@@ -245,13 +277,20 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(OUTSOURCE.fulfilled, (state, { payload }) => {
+        // console.log("payload: ", payload);
+
         const { payload: data } = payload;
         state.collections = data;
         state.filter = data;
         state.paginated = data;
+
+        state.paginated = state.filtered = data;
+        state.totalPages = Math.ceil(data.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = true;
         state.isLoading = false;
       })
+
       .addCase(OUTSOURCE.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
@@ -371,6 +410,8 @@ export const {
   ToggleDidSearch,
   SetSOURCE,
   SetBRANCHES,
+  SetMaxPage,
+  SetActivePAGE,
   RESET,
 } = reduxSlice.actions;
 export default reduxSlice.reducer;

@@ -1,20 +1,23 @@
 import React from "react";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
-import TopHeader from "./header";
-import TableLoading from "../../../../../components/tableLoading";
-import CardBody from "./body";
+
+import Body from "./body";
+import Header from "./header";
 import Footer from "./footer";
-import { useSelector } from "react-redux";
-export default function Outsources() {
-  const { isLoading } = useSelector(({ providers }) => providers);
+import TableLoading from "../../../../../components/tableLoading";
+
+const Index = () => {
+  const isLoading = false;
 
   return (
     <MDBAnimation type="bounceInDown">
-      <MDBCard narrow className="pb-3" style={{ minHeight: 600 }}>
-        <TopHeader />
-        <MDBCardBody>{isLoading ? <TableLoading /> : <CardBody />}</MDBCardBody>
+      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+        <Header />
+        <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
         <Footer />
       </MDBCard>
     </MDBAnimation>
   );
-}
+};
+
+export default Index;

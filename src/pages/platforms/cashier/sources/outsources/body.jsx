@@ -1,73 +1,52 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-import {
-  DESTROY,
-  SetEDIT,
-} from "../../../../../services/redux/slices/assets/providers";
-import { fullName } from "../../../../../services/utilities";
-import Swal from "sweetalert2";
 
-const Tables = () => {
-  const { token } = useSelector(({ auth }) => auth),
-    { paginated } = useSelector(({ providers }) => providers),
-    dispatch = useDispatch();
+const Body = () => {
+  const { paginated, activePage, maxPage } = useSelector(
+    ({ providers }) => providers
+  );
 
-  const handleDelete = (_id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { _id } }));
-      }
-    });
-  };
+  /**
+   * Pagination: Calculate the start and end index for the current page
+   */
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = paginated.slice(startIndex, endIndex); // Get only items for the active page
 
   return (
-    <MDBTable responsive hover bordered style={{ minHeight: "300px" }}>
+    <MDBTable responsive hover bordered>
       <thead>
-        <tr>
+        <tr className="text-center">
           <th>#</th>
-          <th>Company Name</th>
-          <th>Contact Person</th>
+          <th>Name</th>
+          <th colSpan="4">Hotline</th>
+        </tr>
+        <tr className="text-center">
+          <th colSpan="2"></th>
+          <th>Hotline Name</th>
+          <th>Contact</th>
+          <th>Description</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {!paginated?.length && (
-          <tr>
-            <td colSpan="2">No data</td>
-          </tr>
-        )}
-        {paginated?.map(({ vendors, name, subName, ao }, index) => {
+        {paginatedData?.map((provider, index) => {
+          const { name, subName, hotlineName, contactNumber, description } =
+            provider;
           return (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>
-                {vendors
-                  ? `${vendors.companyName} ${vendors.name}`
-                  : `${name} ${subName || ""}`}
+                {subName ? `${subName}, ` : ""} {name}
               </td>
-
-              <td>
-                {fullName(ao?.fullName)} <br /> {ao?.email} <br /> {ao?.mobile}
-              </td>
-              <td>
-                <button
-                  onClick={() =>
-                    dispatch(SetEDIT(vendors || { name, subName }))
-                  }
-                >
-                  Edit
-                </button>
-                <button onClick={() => handleDelete(vendors?._id || name)}>
-                  Delete
+              <td>{hotlineName || "--"}</td>
+              <td>{contactNumber || "--"}</td>
+              <td>{description || "--"}</td>
+              <td className="text-center" style={{ width: "200px" }}>
+                <button className="btn btn-primary rounded">
+                  <i className="fas fa-phone-alt"></i> Call
                 </button>
               </td>
             </tr>
@@ -78,4 +57,4 @@ const Tables = () => {
   );
 };
 
-export default Tables;
+export default Body;
