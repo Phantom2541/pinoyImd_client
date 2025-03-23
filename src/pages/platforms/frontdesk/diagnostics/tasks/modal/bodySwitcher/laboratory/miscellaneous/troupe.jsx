@@ -9,7 +9,7 @@ export default function Troupe() {
 const { troupe } = task;
   const handleChange = (e) => {
     const { name, value } = e.target;
-     dispatch(SetTASK({form: task?.form, task:{ ...task,  troupe: {[name]: value}  }}));
+     dispatch(SetTASK({form: task?.form, task:{ ...task,  troupe: {...troupe, [name]: value}  }}));
     dispatch(SetPARAMS({ key: "troupe", value: { ...troupe, [name]: value } }));
   };
 
@@ -33,14 +33,14 @@ const { troupe } = task;
         label="Lot Number"
         name="lot"
         type="text"
-        value={troupe.lot || ""}
+        value={troupe?.lot || ""}
         onChange={handleChange}
       />
       <MDBInput
         label="Expiry"
         name="expiry"
         type="text"
-        value={troupe.expiry || ""}
+        value={troupe?.expiry || ""}
         onChange={handleChange}
       />
     </>
