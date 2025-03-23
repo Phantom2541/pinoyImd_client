@@ -1,22 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-// import CustomSelect from "../../../../../components/searchables/customSelect";
-// import { Templates, Services } from "../../../../../services/fakeDb";
 import {
-  OUTSOURCE,
   RESET,
+  OUTSOURCE,
 } from "../../../../../services/redux/slices/assets/providers";
 import SearchProviders from "../../../../../components/searchables/providers";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { paginated } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
-
-  // const { maxPage } = useSelector(({ auth }) => auth),
-  //   { collections } = useSelector(({ services }) => services),
-  //   [component, setComponent] = useState(""),
-  //   dispatch = useDispatch();
 
   useEffect(() => {
     // console.log("Outside if");
@@ -32,7 +24,6 @@ const Header = () => {
     }
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
-  //initial values
 
   return (
     <MDBView
@@ -40,9 +31,7 @@ const Header = () => {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          {paginated.length} Outsources
-        </span>
+        <span className="white-text mx-3 text-nowrap mt-0">Outsources </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
