@@ -3,15 +3,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
   SetPAYMENTS,
-  DESTROY,
+  SetUpdate,
 } from "../../../../../services/redux/slices/finance/journals/payables";
 import { Statements } from "../../../../../services/fakeDb";
-import { currency, fullName } from "../../../../../services/utilities";
+import {
+  currency,
+  dateFormat,
+  fullName,
+} from "../../../../../services/utilities";
 import Swal from "sweetalert2";
+import util from "./util";
+import TableLoading from "../../../../../components/tableLoading";
 
 const Tables = () => {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
-  const { filtered, activePage, maxPage } = useSelector(
+  const { filtered, activePage, maxPage, isLoading } = useSelector(
     ({ payables }) => payables
   );
   const dispatch = useDispatch();
@@ -21,137 +26,125 @@ const Tables = () => {
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex);
 
-  const handleDelete = (_id) => {
+  const handleUpdate = (payable) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You want to update this provider?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, update it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(
-          DESTROY({
-            token,
-            data: { _id, branch: activePlatform.branchId, user: auth._id },
-          })
-        );
+        dispatch(SetUpdate(payable));
       }
     });
   };
 
   return (
     <>
-      <MDBTable responsive hover bordered>
-        <thead>
-          <tr>
-            <th rowSpan={2}>#</th>
-            <th rowSpan={2}>Particular/Vendor</th>
-            <th rowSpan={2}>Statement</th>
-            <th rowSpan={2}>Due Date</th>
-            <th rowSpan={2}>Amount</th>
-            <th rowSpan={2} style={{ textAlign: "center" }}>
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {!paginatedData.length && (
+      {!isLoading ? (
+        <MDBTable responsive hover bordered>
+          <thead>
             <tr>
-              <td colSpan={8} style={{ textAlign: "center" }}>
-                No Data
-              </td>
+              <th rowSpan={2}>#</th>
+              <th rowSpan={2}>Particular/Vendor</th>
+              <th rowSpan={2}>Statement</th>
+              <th rowSpan={2}>Due Date</th>
+              <th rowSpan={2}>Amount</th>
+              <th rowSpan={2} style={{ textAlign: "center" }}>
+                Actions
+              </th>
             </tr>
-          )}
-          {paginatedData.map((payable, index) => {
-            const {
-              _id,
-              fsId,
-              amount,
-              particular,
-              due,
-              supplier,
-              hasPaid,
-              payor,
-            } = payable;
-            const dueDate = due ? new Date(due) : null;
-            const today = new Date();
-            const isToday = dueDate?.toDateString() === today.toDateString();
-            const isPastDue = dueDate && dueDate < today;
-
-            return (
-              <tr
-                key={_id}
-                style={
-                  isPastDue && !hasPaid ? { backgroundColor: "#ffcccc" } : {}
-                }
-              >
-                <td>{index + 1}</td>
-                <td>
-                  {particular && fullName(particular)}
-                  {supplier &&
-                    (supplier.vendors?.length > 0
-                      ? `${supplier.vendors.name} - ${supplier.vendors.subname}`
-                      : `${supplier.name} - ${supplier.subname}`)}
+          </thead>
+          <tbody>
+            {!paginatedData.length && (
+              <tr>
+                <td colSpan={8} style={{ textAlign: "center" }}>
+                  No Data
                 </td>
-                <td>{Statements?.getName(fsId)}</td>
-                <td
-                  style={{
-                    color: !hasPaid
-                      ? isToday
-                        ? "orange"
-                        : isPastDue
-                        ? "red"
-                        : "black"
-                      : "black",
-                    fontWeight: isPastDue ? "bold" : "normal",
-                  }}
+              </tr>
+            )}
+            {paginatedData.map((payable, index) => {
+              const {
+                _id,
+                fsId,
+                amount,
+                particular,
+                due,
+                supplier,
+                hasPaid,
+                payor,
+              } = payable;
+              const { vendors = {} } = supplier || {};
+              const dueDate = due ? new Date(due) : null;
+              const today = new Date();
+              const isToday =
+                dueDate?.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0);
+              const isPastDue = dueDate && dueDate > today;
+
+              return (
+                <tr
+                  key={_id}
+                  style={
+                    isPastDue && !hasPaid ? { backgroundColor: "#ffcccc" } : {}
+                  }
                 >
-                  {dueDate
-                    ? dueDate.toLocaleDateString("en-GB", {
-                        month: "short",
-                        day: "2-digit",
-                        year: "numeric",
-                      })
-                    : ""}
-                </td>
-                <th>{currency(amount)}</th>
+                  <td>{index + 1}</td>
+                  <td>{util.getVendorOrParticular(particular, supplier)}</td>
+                  <td>{Statements?.getName(fsId)}</td>
+                  <td
+                    style={{
+                      color: !hasPaid
+                        ? isToday
+                          ? "orange"
+                          : isPastDue
+                          ? "red"
+                          : "black"
+                        : "black",
+                      fontWeight: isPastDue ? "bold" : "normal",
+                    }}
+                  >
+                    {dueDate ? dateFormat(dueDate) : ""}
+                  </td>
+                  <th>{currency(amount)}</th>
 
-                <th>{currency(amount)}</th>
-                <td style={{ textAlign: "center" }}>
-                  {!hasPaid && (
-                    <MDBBtnGroup>
-                      <MDBBtn
-                        size="sm"
-                        rounded
-                        color="success"
-                        onClick={() => dispatch(SetPAYMENTS(payable))}
-                        style={{ marginRight: "20px", borderRadius: "50px" }}
-                      >
-                        Pay
-                      </MDBBtn>
-                      {!isPastDue && (
+                  <td style={{ textAlign: "center" }}>
+                    {!hasPaid && (
+                      <MDBBtnGroup>
                         <MDBBtn
                           size="sm"
                           rounded
-                          color="danger"
-                          onClick={() => handleDelete(_id)}
-                          style={{ borderRadius: "50px" }}
+                          color="warning"
+                          onClick={() => dispatch(SetPAYMENTS(payable))}
                         >
-                          Update
+                          Pay
                         </MDBBtn>
-                      )}
-                    </MDBBtnGroup>
-                  )}
-                  {hasPaid && <span>Payor : {fullName(payor?.fullName)}</span>}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </MDBTable>
+                        {!isPastDue && (
+                          <MDBBtn
+                            size="sm"
+                            rounded
+                            color="info"
+                            onClick={() => handleUpdate(payable)}
+                          >
+                            Update
+                          </MDBBtn>
+                        )}
+                      </MDBBtnGroup>
+                    )}
+                    {hasPaid && (
+                      <span>Payor : {fullName(payor?.fullName)}</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </MDBTable>
+      ) : (
+        <TableLoading />
+      )}
     </>
   );
 };

@@ -144,9 +144,14 @@ export default function CollapseTable({
           },
           {
             _key: "department",
-            _format: (data, { template }) =>
-              Templates.collectionsfind(({ department }) => department === data)
-                .components[template],
+            _format: (data, { template }) => {
+              const matchedTemplate = Templates.collections?.find(
+                ({ department }) => department === data
+              );
+              const component =
+                matchedTemplate?.components?.[template] || "N/A";
+              return component;
+            },
           },
           {
             _key: "preference",

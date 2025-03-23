@@ -5,7 +5,7 @@ const url = "finance/journals/payments";
 
 const initialState = {
   collections: [],
-  filtered: [],
+  filtered: ["loading"],
   isSuccess: false,
   isLoading: false,
   paginated: [], // paginated the filtered
@@ -56,6 +56,19 @@ export const UPDATE = createAsyncThunk(
   async (form, thunkAPI) => {
     try {
       return await axioKit.update(url, form.data, form.token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
+export const Daily = createAsyncThunk(
+  `${url}/daily`,
+  async ({ token, key }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/daily`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -115,7 +128,7 @@ export const reduxSlice = createSlice({
           state.page = state.totalPages;
         }
       }
-      state.filtered = page;
+      // state.filtered = page;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -186,7 +199,19 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
+      .addCase(Daily.pending, (state) => {
+        state.isLoading = true;
+      })
 
+      .addCase(Daily.fulfilled, (state, { payload }) => {
+        state.filtered = payload;
+        state.isLoading = false;
+      })
+
+      .addCase(Daily.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

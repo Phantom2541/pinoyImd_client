@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBAnimation,
   MDBBtn,
@@ -8,53 +8,60 @@ import {
   MDBIcon,
   MDBInput,
   MDBRow,
+  MDBSelect,
+  MDBSelectInput,
+  MDBSelectOption,
+  MDBSelectOptions,
 } from "mdbreact";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  CUSTOMALERT,
+  REGISTER,
+} from "../../../services/redux/slices/assets/persons/users";
+import { Suffixes } from "../../../services/fakeDb";
 
 export default function Register() {
   const [isLocked, setIsLocked] = useState({
-    password: true,
-    confirmPassword: true,
-  });
+      password: true,
+      confirmPassword: true,
+    }),
+    { message, isLoading, isSuccess } = useSelector(({ users }) => users),
+    [suffix, setSuffix] = useState("NONE"),
+    dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    // //console.log("test");
-    // document.getElementById("registration-form").reset();
-
-    const { password, confirmPassword } = e.target;
-
-    //console.log(email);
+    const { email, password, confirmPassword, fname, mname, lname } = e.target;
+    const fullName = {
+      fname: fname.value,
+      mname: mname.value,
+      lname: lname.value,
+      suffix: suffix,
+    };
 
     if (password.value === confirmPassword.value) {
-      // dispatch(
-      //   SAVE({
-      //     email: email.value,
-      //     password: password.value,
-      //     role: "64834b49033916fc83e236c5",
-      //     wasBanned: true,
-      //     banned: {
-      //       at: new Date().toLocaleString(),
-      //       for: "Account is still being processed.",
-      //       by: "647dd2a5dced91b0b39444b3",
-      //     },
-      //   })
-      // );
+      dispatch(
+        REGISTER({
+          email: email.value,
+          password: password.value,
+          fullName,
+        })
+      );
     } else {
-      // dispatch(CUSTOMALERT("Passwords does not match."));
+      dispatch(CUSTOMALERT("Passwords does not match."));
     }
   };
 
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     // let task = "register reset not working";
-  //     document.getElementById("registration-form").reset();
-  //   }
-  // }, [isSuccess]);
+  useEffect(() => {
+    if (isSuccess) {
+      document.getElementById("registration-form").reset();
+    }
+  }, [isSuccess]);
 
   return (
     <MDBRow className="flex-center pt-5 mt-3">
-      <MDBCol md="6" className="text-center text-md-left mb-5">
+      <MDBCol md="4" className="text-center text-md-left mb-5">
         <MDBAnimation type="fadeInLeft">
           <div className="white-text">
             <h1 className="h1-responsive font-weight-bold">
@@ -74,7 +81,7 @@ export default function Register() {
           </div>
         </MDBAnimation>
       </MDBCol>
-      <MDBCol md="6" className="col-xl-5 offset-xl-1">
+      <MDBCol md="7" className=" offset-xl-1">
         <MDBAnimation type="fadeInRight">
           <form
             onSubmit={handleSubmit}
@@ -85,12 +92,71 @@ export default function Register() {
               <MDBCardBody>
                 <div className="text-center">
                   <h3 className="white-text">
-                    <MDBIcon icon="user-plus" className="white-text" /> Register
+                    <MDBIcon icon="user" className="white-text" /> Register
                   </h3>
                   <hr className="hr-light" />
                 </div>
+                <MDBRow>
+                  <MDBCol md="6">
+                    <MDBInput
+                      className="white-text"
+                      label="First Name"
+                      icon="user"
+                      type="text"
+                      labelClass="white-text"
+                      iconClass="white-text"
+                      name="fname"
+                      required
+                    />
+                  </MDBCol>
+                  <MDBCol md="6">
+                    <MDBInput
+                      className="white-text"
+                      label="Middle Name"
+                      icon="user"
+                      type="text"
+                      labelClass="white-text"
+                      iconClass="white-text"
+                      name="mname"
+                    />
+                  </MDBCol>
+                  <MDBCol md="6">
+                    <MDBInput
+                      className="white-text"
+                      label="Last Name"
+                      icon="user"
+                      type="text"
+                      labelClass="white-text"
+                      iconClass="white-text"
+                      name="lname"
+                      required
+                    />
+                  </MDBCol>
+                  <MDBCol md="6">
+                    <MDBSelect
+                      getValue={value => setSuffix(value[0])}
+                      label={"Suffix"}
+                      labelClass="white-text"
+                      className={`colorful-select dropdown-primary  hidden-md-down white-text`}
+                    >
+                      <MDBSelectInput
+                        name="suffix"
+                        className="white-text"
+                        selected={`NONE`}
+                      />
+                      <MDBSelectOptions>
+                        {Suffixes.map(sfx => (
+                          <MDBSelectOption key={sfx} value={sfx}>
+                            {sfx}
+                          </MDBSelectOption>
+                        ))}
+                      </MDBSelectOptions>
+                    </MDBSelect>
+                  </MDBCol>
+                </MDBRow>
 
                 <MDBInput
+                  className="white-text"
                   label="E-mail Address"
                   icon="envelope"
                   type="email"
@@ -98,9 +164,9 @@ export default function Register() {
                   iconClass="white-text"
                   name="email"
                   required
-                  disabled
                 />
                 <MDBInput
+                  className="white-text"
                   label="Password"
                   minLength={8}
                   icon={isLocked.password ? "lock" : "unlock"}
@@ -115,9 +181,9 @@ export default function Register() {
                   iconClass="white-text"
                   name="password"
                   required
-                  disabled
                 />
                 <MDBInput
+                  className="white-text"
                   label="Confirm your password"
                   minLength={8}
                   icon={isLocked.confirmPassword ? "lock" : "unlock"}
@@ -132,7 +198,6 @@ export default function Register() {
                   iconClass="white-text"
                   name="confirmPassword"
                   required
-                  disabled
                 />
 
                 <MDBInput
@@ -141,10 +206,9 @@ export default function Register() {
                   type="checkbox"
                   id="agreement"
                   required
-                  disabled
                 />
 
-                {/* {message && (
+                {message && (
                   <div
                     className={`alert alert-${
                       isSuccess ? "success" : "warning"
@@ -152,18 +216,16 @@ export default function Register() {
                   >
                     {message}
                   </div>
-                )} */}
+                )}
 
                 <div className="text-center mt-4">
                   <MDBBtn
-                    // disabled={isLoading}
-                    disabled
+                    disabled={isLoading}
                     type="submit"
                     color="light-blue"
                     rounded
                   >
-                    {/* {isLoading ? <MDBIcon icon="spinner" pulse /> : "Sign up"} */}
-                    Sign up
+                    {isLoading ? <MDBIcon icon="spinner" spin /> : "Sign up"}
                   </MDBBtn>
                   <hr className="hr-light mb-3 mt-4" />
 
