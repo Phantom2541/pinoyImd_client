@@ -8,13 +8,13 @@ import {
 import "./style.css";
 
 export default function CustomSelect({
-  collections = [],
+  collections = [], // choices
   preValue = "",
   preValues = [],
   getObject = false,
   label,
-  keys,
-  values,
+  keys, // old values
+  values, // old texts
   className = "",
   inputClassName = "",
   disableAll = false,

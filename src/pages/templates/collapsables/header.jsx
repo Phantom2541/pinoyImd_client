@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import CustomSelect from "../../../components/searchables/customSelect";
-import { Templates, Services } from "../../../services/fakeDb";
+import { Templates } from "../../../services/fakeDb";
+import { SearchServices as Services } from "../../../components/searchables";
 import {
   SetSERVICES,
   SetByTEMPLATES,
@@ -44,8 +45,9 @@ const Header = () => {
             onChange={(value) => handleComponent(value)}
             inputClassName="m-0 p-0"
             preValue={component}
-            choices={Templates.getComponents("LAB")}
+            collections={Templates.getComponents("LAB")}
           />
+          {/* <Services template={template} setService={setService} /> */}
         </div>
       </div>
     </MDBView>
