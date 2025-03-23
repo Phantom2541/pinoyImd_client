@@ -8,11 +8,11 @@ import {
 import Swal from "sweetalert2";
 
 const Tables = () => {
-  const { token } = useSelector(({ auth }) => auth),
-    { collections, activePage, maxPage } = useSelector(
-      ({ controls }) => controls
-    ),
-    dispatch = useDispatch();
+  const { token } = useSelector(({ auth }) => auth);
+  const { collections, activePage, maxPage } = useSelector(
+    ({ controls }) => controls
+  );
+  const dispatch = useDispatch();
 
   const [hoveredRow, setHoveredRow] = useState(null); // Track hovered row index
 
@@ -41,19 +41,19 @@ const Tables = () => {
   };
 
   return (
-    <MDBTable responsive hover bordered style={{ minHeight: "300px" }}>
-      <thead>
+    <MDBTable responsive hover bordered className="table-sm">
+      <thead className="table-light">
         <tr>
-          <th>#</th>
-          <th>Lo</th>
-          <th>Normal</th>
-          <th>Hi</th>
+          <th className="text-center px-2 py-1">#</th>
+          <th className="text-center px-2 py-1">Lo</th>
+          <th className="text-center px-2 py-1">Normal</th>
+          <th className="text-center px-2 py-1">Hi</th>
         </tr>
       </thead>
       <tbody>
         {!paginatedData?.length && (
           <tr>
-            <td colSpan={4} style={{ textAlign: "center" }}>
+            <td colSpan={4} className="text-center">
               No data found
             </td>
           </tr>
@@ -63,43 +63,39 @@ const Tables = () => {
             key={index}
             onMouseEnter={() => setHoveredRow(index)}
             onMouseLeave={() => setHoveredRow(null)}
-            style={{
-              backgroundColor: hoveredRow === index ? "#ff4d4d" : "transparent", // Instant red background on hover
-              color: hoveredRow === index ? "white" : "inherit", // White text for contrast
-            }}
+            className={hoveredRow === index ? "table-danger text-white" : ""}
           >
-            {/* Always show the Date column */}
-            <td>
+            {/* ✅ Isinama ang Date column sa danger hover effect */}
+            <td
+              className={`text-center align-middle ${
+                hoveredRow === index ? "bg-danger text-white" : ""
+              }`}
+            >
               {new Date(control?.createdAt).toLocaleDateString("en-GB", {
                 day: "2-digit",
               })}
             </td>
 
-            {/* Hovered row with Edit/Delete buttons */}
             {hoveredRow === index ? (
-              <td
-                colSpan={3}
-                style={{ textAlign: "center", backgroundColor: "#ff4d4d" }}
-              >
+              <td colSpan={3} className="text-center bg-danger text-white">
                 <button
                   onClick={() => dispatch(SetEDIT(control))}
-                  style={{ marginRight: "10px", padding: "5px 10px" }}
+                  className="btn btn-light btn-sm me-2"
                 >
                   ✏️ Edit
                 </button>
                 <button
                   onClick={() => handleDelete(control._id)}
-                  style={{ color: "red", padding: "5px 10px" }}
+                  className="btn btn-light btn-sm"
                 >
                   🗑️ Delete
                 </button>
               </td>
             ) : (
-              // Default row (normal display)
               <>
-                <td>{control?.lo}</td>
-                <td>{control?.norm}</td>
-                <td>{control?.hi}</td>
+                <td className="text-center align-middle">{control?.lo}</td>
+                <td className="text-center align-middle">{control?.norm}</td>
+                <td className="text-center align-middle">{control?.hi}</td>
               </>
             )}
           </tr>

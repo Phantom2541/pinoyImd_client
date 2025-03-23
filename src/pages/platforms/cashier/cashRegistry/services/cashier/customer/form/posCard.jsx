@@ -112,11 +112,7 @@ export default function PosCard() {
             onChange={({ target }) => handleCategory(Number(target.value))}
           >
             {Categories.map(({ name, color }, index) => (
-              <option
-                value={index}
-                key={`category-${index}`}
-                style={{ backgroundColor: color }}
-              >
+              <option value={index} key={`category-${index}`} style={{ color }}>
                 {name}
               </option>
             ))}

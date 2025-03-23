@@ -103,7 +103,7 @@ export default function PaymentModal() {
         toggle={handleClose}
         className="light-blue darken-3 white-text text-center w-100"
       >
-        <MDBIcon icon="money-bill-wave-alt" className="mr-2" /> Payments
+        <MDBIcon icon="money-bill-wave-alt" className="mr-2" /> Payment
       </MDBModalHeader>
       <MDBModalBody>
         <MDBCard>
@@ -125,24 +125,11 @@ export default function PaymentModal() {
                 </h5>
               </div>
 
-              {/* <select
-            className="browser-default custom-select mb-3 mt-2"
-            value={form.orOption || ""}
-            onChange={(e) => handleChange("orOption", e.target.value)}
-          >
-            <option value="" disabled>
-              Select Payment Method
-            </option>
-            <option value="Cash">Cash</option>
-            <option value="Cheque">Cheque</option>
-            <option value="Gcash">Gcash</option>
-            <option value="Transfer">Transfer</option>
-          </select> */}
-
               <h6 className="mt-2 grey-text">Payment Methods:</h6>
               <div className="d-flex align-items-center justify-content-center ">
                 {paymentMethods.map(({ img, text }, index) => (
                   <MDBCard
+                    key={index}
                     onClick={() => handleChange("orOption", text)}
                     className={`mr-2 d-flex align-items-center justify-content-center cursor-pointer ${
                       text === form.orOption
@@ -181,18 +168,6 @@ export default function PaymentModal() {
                   onChange={(e) => handleChange("amount", e.target.value)}
                 />
               )}
-
-              {/* Conditional Payment Method Fields */}
-              {/* {form.orOption && (
-                <div className="text-center mt-3">
-                  
-                  {form.orOption === "Cheque" && (
-                    <MDBBadge color="warning">CHEQUE</MDBBadge>
-                  )}
-                  {form.orOption === "Gcash" && <h5>Gcash </h5>}
-                  {form.orOption === "Transfer" && <h5>Transfer </h5>}
-                </div>
-              )} */}
 
               <div className="d-flex align-items-center mt-4">
                 <h6 style={{ marginRight: "68.4px" }} className="grey-text">

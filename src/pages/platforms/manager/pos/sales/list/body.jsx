@@ -4,16 +4,29 @@ import { capitalize } from "lodash";
 import {
   currency,
   fullName,
+  getGenderIcon,
+  paymentMethod,
   // axioKit,
 } from "./../../../../../../services/utilities";
 import { Categories } from "./../../../../../../services/fakeDb";
 import {
   MANAGERUPDATE,
+  SetDISCOUNT,
+  SetREVERT,
   // RESET,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
-import { MDBCardBody, MDBTable, MDBIcon, MDBBadge, MDBBtn } from "mdbreact";
+import discount from "../../../../../../assets/discount.png";
+import tendered from "../../../../../../assets/tendered.png";
+import {
+  MDBCardBody,
+  MDBTable,
+  MDBIcon,
+  MDBBadge,
+  MDBBtn,
+  MDBBtnGroup,
+} from "mdbreact";
 import "./style.css";
 
 export const Tables = () => {
@@ -95,52 +108,57 @@ export const Tables = () => {
   };
 
   const handleEdit = async (deal) => {
-    const { discount, amount } = deal;
+    dispatch(SetDISCOUNT(deal));
+    // const { discount, amount } = deal;
 
-    const originalAmount = discount ? discount + amount : amount;
-    const message =
-      amount === originalAmount
-        ? `Amount is ${amount}`
-        : `discounted Amount: ${amount} : Original Amount: ${originalAmount}`;
+    // const originalAmount = discount ? discount + amount : amount;
+    // const message =
+    //   amount === originalAmount
+    //     ? `Amount is ${amount}`
+    //     : `discounted Amount: ${amount} : Original Amount: ${originalAmount}`;
 
-    const { value } = await Swal.fire({
-      title: "Input New Amount",
-      input: "number",
-      inputLabel: message,
-      inputAttributes: {
-        min: "0",
-        max: originalAmount.toString(),
-      },
-    });
+    // const { value } = await Swal.fire({
+    //   title: "Input New Amount",
+    //   input: "number",
+    //   inputLabel: message,
+    //   inputAttributes: {
+    //     min: "0",
+    //     max: originalAmount.toString(),
+    //   },
+    // });
 
-    if (!value) return; // If user cancels or inputs nothing, do nothing
+    // if (!value) return; // If user cancels or inputs nothing, do nothing
 
-    if (value > originalAmount) {
-      return Swal.fire({
-        icon: "error",
-        title: "Invalid Amount",
-        text: `The amount must not exceed ${originalAmount}`,
-      });
-    }
+    // if (value > originalAmount) {
+    //   return Swal.fire({
+    //     icon: "error",
+    //     title: "Invalid Amount",
+    //     text: `The amount must not exceed ${originalAmount}`,
+    //   });
+    // }
 
-    if (value <= originalAmount) {
-      Swal.fire({
-        icon: "success",
-        title: "Successfully Updated!",
-      });
+    // if (value <= originalAmount) {
+    //   Swal.fire({
+    //     icon: "success",
+    //     title: "Successfully Updated!",
+    //   });
 
-      dispatch(
-        MANAGERUPDATE({
-          token,
-          key: {
-            _id: deal._id,
-            amount: value,
-            discount: originalAmount - value,
-            authorizedBy: auth._id,
-          },
-        })
-      );
-    }
+    //   dispatch(
+    //     MANAGERUPDATE({
+    //       token,
+    //       key: {
+    //         _id: deal._id,
+    //         amount: value,
+    //         discount: originalAmount - value,
+    //         authorizedBy: auth._id,
+    //       },
+    //     })
+    //   );
+    // }
+  };
+
+  const handleRevert = (deal) => {
+    dispatch(SetREVERT(deal));
   };
 
   /**
@@ -170,7 +188,7 @@ export const Tables = () => {
         </p>
       </div>
 
-      <MDBTable style={{ marginTop: "-5px" }}>
+      <MDBTable style={{ marginTop: "-5px" }} hover>
         <thead>
           <tr style={{ marginTop: "-5rem" }}>
             <th>Patient</th>
@@ -185,23 +203,26 @@ export const Tables = () => {
             const isDeleted = !!deal.deletedAt;
             const isDiscounted = deal.discount > 0;
             const isHover = index === didHoverID;
+            const { img, style, text } = paymentMethod.getImage(deal.payment);
+
             return (
               <tr
                 onMouseEnter={() => setDidHoverID(index)}
                 onMouseLeave={() => setDidHoverID(-1)}
                 key={`sales-${index + 1}`}
-                className={`transition-all ${isHover && "danger text-white"}`}
                 style={{
                   backgroundColor: isDeleted
                     ? "#ffcccc"
                     : isDiscounted
                     ? "#ccffcc"
-                    : "transparent",
+                    : "",
                 }}
               >
-                {/* <td>{index + 1}.</td> */}
                 <td>
-                  <h6>{fullName(deal.customerId.fullName)}</h6>
+                  <div className="d-flex align-items-center">
+                    <h6>{getGenderIcon(deal.customerId?.isMale)} </h6>
+                    <h6>{fullName(deal.customerId?.fullName)}</h6>
+                  </div>
                   <MDBBadge color="info" className="mr-2">
                     {capitalize(
                       deal.category === "walkin"
@@ -219,33 +240,59 @@ export const Tables = () => {
                   <p>{deal.source?.companyName || deal.source?.name}</p>
                 </td>
                 <td style={{ fontWeight: 400 }}>
-                  <p>
-                    {currency(deal.amount)}
-                    {isHover && (
-                      <MDBBtn
-                        size="sm"
-                        style={{ marginTop: "-0.5rem" }}
-                        color="primary"
-                        rounded
-                        onClick={() => handleEdit(deal)}
-                        className="p-1 mx-2"
-                        title="Edit Sales Amount"
-                      >
-                        <MDBIcon icon="pencil-alt" />
-                      </MDBBtn>
-                    )}
-                  </p>
+                  <div className="d-flex align-items-center">
+                    <h6
+                      className="mt-2"
+                      style={{ fontWeight: 600 }}
+                      title="Amount"
+                    >
+                      {currency(deal.amount)}
+                    </h6>
+                    <img
+                      src={img}
+                      alt={text}
+                      className="ml-1"
+                      title={text}
+                      style={{
+                        ...style,
+                      }}
+                    />
+                  </div>
+                  {/* <p style={{ fontWeight: 500 }}>{currency(deal.amount)}</p> */}
                   {isDiscounted && (
-                    <p style={{ color: "red" }}>{currency(deal.discount)}</p>
+                    <p
+                      style={{ color: "red", marginTop: "-0.2rem" }}
+                      title="Discount"
+                      className="d-flex align-items-center"
+                    >
+                      {currency(deal.discount)}
+                      <img
+                        alt="Discount"
+                        className="ml-3"
+                        src={discount}
+                        title="Discount"
+                        style={{ height: "1.4rem" }}
+                      />{" "}
+                    </p>
                   )}
+                  <p
+                    style={{ marginTop: "-0.5rem" }}
+                    title="Tendered"
+                    className="d-flex align-items-center"
+                  >
+                    {currency(deal.cash)}
+                    <img
+                      alt="tendered"
+                      className="ml-2"
+                      src={tendered}
+                      title="Tendered"
+                      style={{ height: "2rem" }}
+                    />{" "}
+                  </p>
                 </td>
                 <td>
                   {deal.cart?.map((menu) => (
-                    <MDBBadge
-                      key={menu.referenceId}
-                      className="mx-1"
-                      color="success"
-                    >
+                    <MDBBadge key={menu.referenceId} className="mx-1">
                       {menu?.abbreviation}
                     </MDBBadge>
                   ))}
@@ -254,24 +301,46 @@ export const Tables = () => {
                   {!isHover ? (
                     deal.remarks
                   ) : (
-                    <MDBIcon
-                      icon="trash"
-                      className="mr-2 mt-2"
-                      title="Delete Sales"
-                      onClick={() => handleDelete(deal)}
-                    />
+                    <>
+                      <MDBBtnGroup>
+                        {!isDeleted ? (
+                          <>
+                            <MDBBtn
+                              size="sm"
+                              color="danger"
+                              rounded
+                              onClick={() => handleDelete(deal)}
+                              title="Delete Sale"
+                            >
+                              <MDBIcon icon="trash" />
+                            </MDBBtn>
+                            <MDBBtn
+                              size="sm"
+                              color="primary"
+                              rounded
+                              onClick={() => handleEdit(deal)}
+                              title="Edit Sales Amount"
+                            >
+                              <MDBIcon icon="pencil-alt" />
+                            </MDBBtn>
+                          </>
+                        ) : (
+                          <div style={{ width: "8.4rem" }}>
+                            <MDBBtn
+                              size="sm"
+                              color="warning"
+                              rounded
+                              onClick={() => handleRevert(deal)}
+                              title="Revert Sale"
+                            >
+                              <MDBIcon fas icon="sync-alt" />
+                            </MDBBtn>
+                          </div>
+                        )}
+                      </MDBBtnGroup>
+                    </>
                   )}
                 </td>
-                {/* <td>
-                  {!isDeleted && (
-                    <MDBIcon
-                      icon="trash"
-                      className="mr-2"
-                      title="Delete Sales"
-                      onClick={() => handleDelete(deal)}
-                    />
-                  )}
-                </td> */}
               </tr>
             );
           })}

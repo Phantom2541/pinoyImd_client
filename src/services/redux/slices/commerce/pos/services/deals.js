@@ -7,6 +7,7 @@ const initialState = {
   collections: [],
   transaction: { _id: "default" },
   totalPatient: 0,
+  formSubmitted: false,
   filtered: [],
   // this is used for ledger
   census: {
@@ -19,6 +20,8 @@ const initialState = {
     isEmpty: true,
   },
   showModal: false,
+  showRevertModal: false,
+  showDiscountModal: false,
   willCreate: false,
   totalPages: 0,
   maxPage: 5,
@@ -205,6 +208,24 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
+export const REVERT_SALE = createAsyncThunk(
+  `${url}/REVERT_SALE`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "revert_sale");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const MANAGERUPDATE = createAsyncThunk(
   `${url}/managerUpdate`,
   ({ key, token }, thunkAPI) => {
@@ -233,10 +254,31 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+
+    SetREVERT: (state, { payload }) => {
+      state.selected = payload;
+      state.showRevertModal = true;
+    },
+    SetDISCOUNT: (state, { payload }) => {
+      state.selected = payload;
+      state.showDiscountModal = true;
+    },
+    ToggleDiscountModal: (state) => {
+      state.showDiscountModal = !state.showDiscountModal;
+      state.selected = {};
+    },
+    ToggleRevertModal: (state) => {
+      state.showRevertModal = !state.showRevertModal;
+      state.selected = {};
+    },
     SetFilterByCASHIER: (state, { payload }) => {
-      state.filtered = state.collections.filter(
-        (item) => item.cashierId._id === payload
-      );
+      if (payload === "all") {
+        state.filtered = state.collections;
+      } else {
+        state.filtered = state.collections.filter(
+          (item) => item.cashierId._id === payload
+        );
+      }
     },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
@@ -256,6 +298,8 @@ export const reduxSlice = createSlice({
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
+      state.isLoading = false;
+      state.formSubmitted = false;
 
       if (payload?.resetCollections) state.collections = [];
     },
@@ -306,7 +350,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(MANAGERUPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -315,25 +359,42 @@ export const reduxSlice = createSlice({
           { _id, deletedAt, amount, discount, authorizedBy } = payload;
 
         const index = state.collections.findIndex((c) => c._id === _id);
-
-        if (index !== -1) {
-          state.collections[index] = {
-            ...state.collections[index],
-            amount,
-            discount, // Ensure discount is also updated
-            deletedAt, // Keep track of deletion status
-            authorizedBy, // Keep track of deletion status
-          };
-        }
+        state.collections[index] = {
+          ...state.collections[index],
+          amount,
+          discount, // Ensure discount is also updated
+          deletedAt, // Keep track of deletion status
+          authorizedBy, // Keep track of deletion status
+        };
 
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(MANAGERUPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
+      })
+      .addCase(REVERT_SALE.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(REVERT_SALE.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        const index = state.collections.findIndex(({ _id }) => _id === payload);
+        const { deletedAt, remarks, ...rest } = { ...state.collections[index] };
+        state.collections[index] = rest;
+        state.formSubmitted = false;
+        state.message = success;
+        state.isSuccess = true;
+      })
+      .addCase(REVERT_SALE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+        state.isSuccess = false;
       })
 
       .addCase(TRACKER.pending, (state) => {
@@ -458,25 +519,26 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
-    const { success, payload } = action.payload;
-    console.log("action.payload", action);
+        const { success, payload } = action.payload;
+        console.log("action.payload", action);
 
-    state.message = success;
-    const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
+        state.message = success;
+        const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
 
-    // Find the index of the collection item based on the identifier
-    const index = state.collections.findIndex(
-        (item) => item._id === payload[identifier]
-    );
+        // Find the index of the collection item based on the identifier
+        const index = state.collections.findIndex(
+          (item) => item._id === payload[identifier]
+        );
 
-    // Ensure the index is valid
-    if (index !== -1) {
-        if (identifier === "saleId") {
+        // Ensure the index is valid
+        if (index !== -1) {
+          if (identifier === "saleId") {
             // Update miscellaneous item at the correct index
             if (state.collections[index]?.miscellaneous) {
-                state.collections[index].miscellaneous[payload?.miscIndex] = payload;
+              state.collections[index].miscellaneous[payload?.miscIndex] =
+                payload;
             }
-        } else {
+          } else {
             const form = payload.form?.toLowerCase(); // Ensure form is lowercase
             console.log("form", form);
             console.log("index", index);
@@ -484,16 +546,16 @@ export const reduxSlice = createSlice({
 
             // Ensure collections[index] exists before modifying it
             if (state.collections[index]) {
-                state.collections[index][form] = payload;
+              state.collections[index][form] = payload;
             }
+          }
+        } else {
+          console.warn("Item not found in collections:", payload);
         }
-    } else {
-        console.warn("Item not found in collections:", payload);
-    }
 
-    state.isSuccess = true;
-    state.isLoading = false;
-})
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
       .addCase(LABRESULT.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -542,9 +604,14 @@ export const {
   SetFILTERED,
   SetFilterByCASHIER,
   SetSELECTED,
+  SetREVERT,
+  SetDISCOUNT,
+  ToggleDiscountModal,
   SetMODAL,
   SetMaxPage,
   SetActivePAGE,
+  ToggleRevertModal,
+
   RESET,
 } = reduxSlice.actions;
 

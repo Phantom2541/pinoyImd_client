@@ -5,13 +5,12 @@ import {
   DESTROY,
   SetEDIT,
 } from "../../../../../services/redux/slices/assets/providers";
-import { fullName } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 
 const Tables = () => {
-  const { token } = useSelector(({ auth }) => auth),
-    { paginated } = useSelector(({ providers }) => providers),
-    dispatch = useDispatch();
+  const { token } = useSelector(({ auth }) => auth);
+  const { paginated } = useSelector(({ providers }) => providers);
+  const dispatch = useDispatch();
 
   const handleDelete = (_id) => {
     Swal.fire({
@@ -23,9 +22,7 @@ const Tables = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { _id } }));
-      }
+      if (result.isConfirmed) dispatch(DESTROY({ token, data: { _id } }));
     });
   };
 
@@ -40,24 +37,24 @@ const Tables = () => {
         </tr>
       </thead>
       <tbody>
-        {!paginated?.length && (
-          <tr>
-            <td colSpan="2">No data</td>
-          </tr>
-        )}
-        {paginated?.map(({ vendors, name, subName, ao }, index) => {
-          return (
+        {paginated?.length ? (
+          paginated.map(({ vendors, name, subName, ao }, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>
-                {vendors
-                  ? `${vendors.companyName} ${vendors.name}`
-                  : `${name} ${subName || ""}`}
+                {vendors ? (
+                  <span>
+                    {vendors.companyName} {vendors.name}
+                  </span>
+                ) : (
+                  <span>
+                    {name} {subName || ""}
+                  </span>
+                )}
               </td>
-
-              <td>
+              {/* <td>
                 {fullName(ao?.fullName)} <br /> {ao?.email} <br /> {ao?.mobile}
-              </td>
+              </td> */}
               <td>
                 <button
                   onClick={() =>
@@ -71,8 +68,14 @@ const Tables = () => {
                 </button>
               </td>
             </tr>
-          );
-        })}
+          ))
+        ) : (
+          <tr>
+            <td colSpan="4" className="text-center">
+              No data
+            </td>
+          </tr>
+        )}
       </tbody>
     </MDBTable>
   );
