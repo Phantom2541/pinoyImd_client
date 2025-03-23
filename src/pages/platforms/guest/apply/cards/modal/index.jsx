@@ -120,7 +120,7 @@ export default function ApplicationModal({
       .split(" ")
       .map(word => word[0])
       .join("")}-${Math.floor(Math.random() * 100)}`;
-    alert(role);
+    // alert(role);
     dispatch(
       SAVE({
         data: {

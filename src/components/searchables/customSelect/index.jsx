@@ -5,57 +5,45 @@ import {
   MDBSelectOptions,
   MDBSelectOption,
 } from "mdbreact";
+import "./style.css";
 
-/**
- * A React component for a custom MDBSelect
- *
- * @param {array} choices - An array of objects. Each object should have at least
- * two properties: values and texts. The value property is the value that will
- * be sent to the onChange function, and the text property is the text that will
- * be displayed in the select options.
- * @param {string} preValue - The value that will be selected by default.
- * @param {function} onChange - A function that will be called with the selected
- * value(s) as its argument.
- * @param {boolean} getObject - If true, the onChange function will be called with
- * an object from the choices array instead of the value.
- * @param {string} label - The label of the select input.
- * @param {string} values - The property name of the value in the choices objects.
- * @param {string} texts - The property name of the text in the choices objects.
- * @param {string} className - The class name of the MDBSelect component.
- * @param {string} inputClassName - The class name of the MDBSelectInput component.
- * @param {boolean} disableAll - If true, all options will be disabled.
- * @param {boolean} multiple - If true, the select will allow multiple values to be
- * selected.
- * @param {boolean} disabledAllExceptSelected - If true, all options except the
- * selected one will be disabled.
- * @param {object} disableByKey - An object with keys and values that will be used
- * to disable options. If the value of an option matches the value of a key in
- * this object, the option will be disabled.
- * @param {boolean} disableSearch - If true, the search bar will be disabled.
- */
 export default function CustomSelect({
-  choices = [],
-  preValue = "", //for string
-  preValues = [], //for array
-  onChange = () => {},
+  collections = [],
+  preValue = "",
+  preValues = [],
   getObject = false,
   label,
+  keys,
   values,
-  texts,
-  _key = "",
   className = "",
   inputClassName = "",
   disableAll = false,
   hideLabel = false,
   multiple = false,
-  disabledAllExceptSelected = false,
+  blacklisted = false,
+  whitelisted = false,
   disableByKey = {},
   disableSearch = false,
+  onChange = () => {},
 }) {
   const handleChoiceDisabling = (value, obj) => {
     if (disableAll) return true;
-    if (disabledAllExceptSelected && value !== preValue) return true;
 
+    if (whitelisted) {
+      // If whitelisted, allow only pre-selected values and disable them
+      if (preValue && String(preValue) === String(value)) return true;
+      if (preValues.length > 0 && preValues.map(String).includes(String(value)))
+        return true;
+    }
+
+    if (blacklisted) {
+      // If blacklisted, disable everything except pre-selected values
+      if (preValue && String(preValue) !== String(value)) return true;
+      if (preValues.length > 0 && preValues.map(String).includes(String(value)))
+        return true;
+    }
+
+    // Check for specific keys in disableByKey
     if (Object.keys(disableByKey).length) {
       return Object.entries(disableByKey).some(
         ([key, val]) => obj[key] === val
@@ -65,19 +53,20 @@ export default function CustomSelect({
     return false;
   };
 
-  const handleSearchDisabling = () => !disableSearch && choices.length > 9;
+  const handleSearchDisabling = () => !disableSearch && collections.length > 9;
 
   const handleSelection = (array) => {
+    if (array.length === 0) return;
     if (multiple) {
       const selectedItems = getObject
-        ? choices.filter((c) => array.includes(String(c[values] || c)))
+        ? collections.filter((c) => array.includes(String(c[keys] || c)))
         : array;
       return onChange(selectedItems);
     }
 
     const selectedItem = getObject
-      ? choices.find(
-          (choice) => String(choice[values] || choice) === String(array[0])
+      ? collections.find(
+          (choice) => String(choice[keys] || choice) === String(array[0])
         )
       : array[0];
 
@@ -86,10 +75,22 @@ export default function CustomSelect({
 
   const handleChecked = (value) => {
     if (multiple) {
-      return preValues.includes(value);
+      // If multiple selection is enabled, check against preValues
+      if (whitelisted) {
+        console.log(
+          "whitelisted",
+          preValues.map(String).includes(String(value))
+        );
+
+        return preValues.map(String).includes(String(value));
+      }
+      return preValues.map(String).includes(String(value));
     }
+
+    // If not multiple, fallback to standard single selection check
     return String(preValue) === String(value);
   };
+
   return (
     <MDBSelect
       label={!hideLabel && label}
@@ -101,21 +102,37 @@ export default function CustomSelect({
     >
       <MDBSelectInput className={inputClassName} selected={preValue} />
       <MDBSelectOptions search={handleSearchDisabling()}>
-        {choices.map((choice, index) => {
-          const value = String(choice[values] || choice);
-          const text = choice[texts] || choice;
+        {collections.map((choice, index) => {
+          const key = keys ? String(choice[keys]) : choice;
+          let value = choice[values] || choice;
+
+          if (typeof value === "object") {
+            console.warn(
+              `%c[CustomSelect] Invalid Value:`,
+              "color: orange; font-weight: bold;",
+              "The display value is an object. Please ensure the 'values' prop is correctly provided."
+            );
+            value = "Invalid Value";
+          }
+
+          if (multiple && !keys) {
+            console.warn(
+              `%c[CustomSelect] Missing 'keys' Prop:`,
+              "color: red; font-weight: bold;",
+              "Multiple selection is enabled, but no 'keys' prop is provided. Ensure 'keys' is set to properly identify options."
+            );
+          }
 
           return (
             <MDBSelectOption
-              id={`${label}-${value}`}
-              disabled={handleChoiceDisabling(value, choice)}
-              checked={
-                preValue || preValues.length > 0 ? handleChecked(value) : false
-              }
               key={`${label}-${index}`}
-              value={value || "--"}
+              className={
+                handleChoiceDisabling(key, choice) && "custom-select-disabled"
+              }
+              checked={handleChecked(key)} // Now correctly checks whitelisted items
+              value={key || "--"}
             >
-              {text || "--"}
+              {value || "--"}
             </MDBSelectOption>
           );
         })}

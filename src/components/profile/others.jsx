@@ -9,11 +9,13 @@ import {
 import VerificationCode from "./verify";
 import { useToasts } from "react-toast-notifications";
 import ChangePassword from "./changePassword";
+import { useHistory } from "react-router";
 
 export default function ProfileOthers() {
   const { isLoading, auth } = useSelector(({ auth }) => auth),
     { addToast } = useToasts(),
     [verify, setVerify] = useState(false),
+    history = useHistory(),
     [changePass, setChangePass] = useState(false);
 
   return (
@@ -21,6 +23,9 @@ export default function ProfileOthers() {
       <MDBDropdown dropright disabled={isLoading}>
         <MDBDropdownToggle>Others</MDBDropdownToggle>
         <MDBDropdownMenu>
+          <MDBDropdownItem onClick={() => history.push("/apply")}>
+            Apply to other company
+          </MDBDropdownItem>
           <MDBDropdownItem onClick={() => setChangePass(true)}>
             Change Password
           </MDBDropdownItem>

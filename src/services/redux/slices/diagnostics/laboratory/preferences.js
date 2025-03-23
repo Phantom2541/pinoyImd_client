@@ -6,6 +6,7 @@ const url = "diagnostics/laboratory/preferences";
 
 const initialState = {
   collections: [],
+  cluster: [],
   filtered: [],
   activePage: 1,
   maxPage: 5,
@@ -81,16 +82,18 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
-    SetTEMPLATE: (state, action) => {
-      state.template = action.payload;
+    SetCLUSTER: (state, { payload }) => {
+      state.template = payload;
+      state.filtered = state.cluster =
+        payload === -1
+          ? [...state.collections]
+          : state.collections.filter((item) => item.template === payload);
+    },
 
-      if (state.template === -1) {
-        state.filtered = [...state.collections];
-      } else {
-        state.filtered = state.collections.filter(
-          (item) => item.template === state.template
-        );
-      }
+    SetFILTERED: (state, { payload }) => {
+      console.log("SetFILTERED payload", payload);
+
+      state.filtered = [...payload];
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -106,15 +109,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        const _services = Services.collections.map((service) => {
-          const references = payload.filter(
-            ({ serviceId }) => serviceId === service.id
-          );
-          return { ...service, references };
-        });
+        const services = [...Services.collections]
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((service) => {
+            const references = payload.filter(
+              ({ serviceId }) => serviceId === service.id
+            );
+            return { ...service, references };
+          });
 
-        state.collections = [..._services];
-        state.filtered = [..._services];
+        state.cluster = state.filtered = state.collections = [...services];
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -186,6 +190,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SetTEMPLATE } = reduxSlice.actions;
+export const { RESET, SetFILTERED, SetCLUSTER } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

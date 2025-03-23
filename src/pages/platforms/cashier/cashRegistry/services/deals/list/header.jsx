@@ -63,9 +63,10 @@ const Header = () => {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
+        <i>Patient List</i>
+        {/* <span className="white-text mx-3 text-nowrap mt-0">
           <h5>{`${currency(total)} @ ${filtered?.length} Patient/s`}</h5>
-        </span>
+        </span> */}
       </div>
       <div>
         <div className="text-right d-flex items-center">

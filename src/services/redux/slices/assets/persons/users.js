@@ -55,6 +55,19 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   }
 });
 
+export const REGISTER = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
+  try {
+    return axioKit.save(url, form);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
     return axioKit.update(url, form.data, form.token);
@@ -72,14 +85,17 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
-    RESET: (state) => {
+    CUSTOMALERT: (state, data) => {
+      state.message = data.payload;
+    },
+    RESET: state => {
       state.isSuccess = false;
       state.message = "";
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(BROWSE.pending, (state) => {
+      .addCase(BROWSE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -97,7 +113,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(GETPATIENTS.pending, (state) => {
+      .addCase(GETPATIENTS.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -113,14 +129,14 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(SAVE.pending, (state) => {
+      .addCase(SAVE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        
+
         state.message = success;
         state.collections.unshift(payload);
         state.isSuccess = true;
@@ -132,7 +148,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, (state) => {
+      .addCase(UPDATE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -140,7 +156,7 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
-          (item) => item._id === payload._id
+          item => item._id === payload._id
         );
 
         state.collections[index] = payload;
@@ -153,9 +169,27 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       });
+    // .addCase(REGISTER.pending, state => {
+    //   state.isLoading = true;
+    //   state.isSuccess = false;
+    //   state.message = "";
+    // })
+    // .addCase(REGISTER.fulfilled, (state, action) => {
+    //   const { success, payload } = action.payload;
+
+    //   state.message = success;
+    //   state.collections.unshift(payload);
+    //   state.isSuccess = true;
+    //   state.isLoading = false;
+    // })
+    // .addCase(REGISTER.rejected, (state, action) => {
+    //   const { error } = action;
+    //   state.message = error.message;
+    //   state.isLoading = false;
+    // });
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { RESET, CUSTOMALERT } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
