@@ -25,8 +25,6 @@ const Header = () => {
 
   const handleTemplate = (template) => dispatch(SetCLUSTER(template));
   const handleChange = (service) => {
-    console.log("handleChange service", service);
-
     dispatch(SetFILTERED(service));
   };
 
@@ -51,7 +49,7 @@ const Header = () => {
           multiple={true}
           // preValues={[5, 46]}
           // whitelisted={true}
-          // getObject={true}
+          getObject={true}
           values="name"
           label="Service"
           preValue="Service"

@@ -5,7 +5,6 @@ import {
   DESTROY,
   SetEDIT,
 } from "../../../../../services/redux/slices/assets/providers";
-import { fullName } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 
 const Tables = () => {

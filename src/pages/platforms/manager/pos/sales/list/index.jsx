@@ -6,6 +6,7 @@ import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import TableLoading from "../../../../../../components/tableLoading";
+import RevertSale from "./revert";
 export default function Sales() {
   const { isLoading } = useSelector(({ deals }) => deals);
   return (
@@ -16,6 +17,7 @@ export default function Sales() {
         {isLoading ? <TableLoading /> : <Body />}
         <Footer />
       </MDBCard>
+      <RevertSale />
     </>
   );
 }

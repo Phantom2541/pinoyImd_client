@@ -7,6 +7,7 @@ const initialState = {
   collections: [],
   transaction: { _id: "default" },
   totalPatient: 0,
+  formSubmitted: false,
   filtered: [],
   // this is used for ledger
   census: {
@@ -19,6 +20,7 @@ const initialState = {
     isEmpty: true,
   },
   showModal: false,
+  showRevertModal: false,
   willCreate: false,
   totalPages: 0,
   maxPage: 5,
@@ -205,6 +207,24 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
+export const REVERT_SALE = createAsyncThunk(
+  `${url}/REVERT_SALE`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "revert_sale");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const MANAGERUPDATE = createAsyncThunk(
   `${url}/managerUpdate`,
   ({ key, token }, thunkAPI) => {
@@ -232,6 +252,15 @@ export const reduxSlice = createSlice({
     },
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
+    },
+
+    SetREVERT: (state, { payload }) => {
+      state.selected = payload;
+      state.showRevertModal = true;
+    },
+    ToggleRevertModal: (state) => {
+      state.showRevertModal = !state.showRevertModal;
+      state.selected = {};
     },
     SetFilterByCASHIER: (state, { payload }) => {
       if (payload === "all") {
@@ -332,6 +361,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(MANAGERUPDATE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(REVERT_SALE.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(REVERT_SALE.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        const index = state.collections.findIndex(({ _id }) => _id === payload);
+        const { deletedAt, ...rest } = { ...state.collections[index] };
+        state.collections[index] = rest;
+        state.formSubmitted = false;
+      })
+      .addCase(REVERT_SALE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -544,9 +590,12 @@ export const {
   SetFILTERED,
   SetFilterByCASHIER,
   SetSELECTED,
+  SetREVERT,
   SetMODAL,
   SetMaxPage,
   SetActivePAGE,
+  ToggleRevertModal,
+
   RESET,
 } = reduxSlice.actions;
 
