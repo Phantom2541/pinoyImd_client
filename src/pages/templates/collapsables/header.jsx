@@ -45,7 +45,7 @@ const Header = () => {
             onChange={(value) => handleComponent(value)}
             inputClassName="m-0 p-0"
             preValue={component}
-            collections={Templates.getComponents("LAB")}
+            choices={Templates.getComponents("LAB")}
           />
           {/* <Services template={template} setService={setService} /> */}
         </div>
