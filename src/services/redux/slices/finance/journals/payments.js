@@ -5,7 +5,7 @@ const url = "finance/journals/payments";
 
 const initialState = {
   collections: [],
-  filtered: [],
+  filtered: ["loading"],
   isSuccess: false,
   isLoading: false,
   paginated: [], // paginated the filtered
@@ -128,7 +128,7 @@ export const reduxSlice = createSlice({
           state.page = state.totalPages;
         }
       }
-      state.filtered = page;
+      // state.filtered = page;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;

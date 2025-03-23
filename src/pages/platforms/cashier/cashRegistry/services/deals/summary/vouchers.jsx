@@ -1,41 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapseHeader, MDBCollapse } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
 import { Statements } from "../../../../../../../services/fakeDb";
-import { Daily } from "./../../../../../../../services/redux/slices/finance/journals/payments";
+import SummaryLoading from "./loading";
 
 export default function Vouchers() {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ payments }) => payments),
-    [isOpen, setIsOpen] = useState(false),
-    [total, setTotal] = useState(0),
-    dispatch = useDispatch();
+  const { filtered = [], isLoading } = useSelector(({ payments }) => payments),
+    [isOpen, setIsOpen] = useState(true),
+    [total, setTotal] = useState(0);
 
   useEffect(() => {
-    if (token) {
-      const date = new Date().toISOString().split("T")[0];
-      dispatch(
-        Daily({
-          token,
-          key: {
-            branchId: activePlatform.branchId,
-            payor: auth._id,
-            date,
-          },
-        })
-      );
+    if (filtered.length > 0) {
+      const amount =
+        filtered?.reduce((sum, voucher) => sum + voucher.amount, 0) || 0;
+      setTotal(amount);
     }
-  }, [token, dispatch, activePlatform.branchId, auth._id]);
-
-  useEffect(() => {
-    let amount = 0;
-    filtered?.forEach((voucher) => (amount += voucher.amount));
-    setTotal(amount);
   }, [filtered]);
 
   return (
-    <MDBCard className="shadow-sm">
+    <MDBCard className="shadow-sm mb-2">
       <MDBCollapseHeader style={{ borderRadius: "50%" }} className="bg-light">
         <div className="d-flex justify-content-between align-items-center">
           <small className="text-uppercase font-weight-bold text-center text-primary">
@@ -50,22 +34,27 @@ export default function Vouchers() {
       </MDBCollapseHeader>
       <MDBCollapse isOpen={isOpen}>
         <MDBCardBody>
-          {filtered?.map((voucher) => (
-            <div
-              className="d-flex justify-content-between border-bottom py-2"
-              key={`voucher-${voucher._id}`}
-            >
-              <span>{Statements.getName(voucher.fsId)}</span>
-              <strong className="text-primary">
-                {currency(voucher.amount)}
-              </strong>
-            </div>
-          ))}
-          <hr />
-          <div className="d-flex justify-content-between border-bottom pb-2">
-            <span>Total Received:</span>
-            <strong className="text-success">{currency(total)}</strong>
-          </div>
+          {!isLoading ? (
+            <>
+              {filtered?.map((voucher) => (
+                <div
+                  className="d-flex justify-content-between border-bottom py-2"
+                  key={`voucher-${voucher._id}`}
+                >
+                  <span>{Statements.getName(voucher.fsId)}</span>
+                  <strong className="text-primary">
+                    {currency(voucher.amount)}
+                  </strong>
+                </div>
+              ))}
+              <div className="d-flex justify-content-between border-bottom pb-2 mt-3">
+                <span>Total Received:</span>
+                <strong className="text-success">{currency(total)}</strong>
+              </div>
+            </>
+          ) : (
+            <SummaryLoading rowCount={2} />
+          )}
         </MDBCardBody>
       </MDBCollapse>
     </MDBCard>

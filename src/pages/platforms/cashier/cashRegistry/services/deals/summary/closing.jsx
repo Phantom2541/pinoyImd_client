@@ -8,12 +8,13 @@ import {
   MDBBtn,
 } from "mdbreact";
 import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import SummaryLoading from "./loading";
 
 export default function Vouchers() {
   const { token } = useSelector(({ auth }) => auth),
-    { collections, total } = useSelector(({ deals }) => deals),
+    { collections, total, isLoading } = useSelector(({ deals }) => deals),
     { selected } = useSelector(({ remittances }) => remittances),
-    [isOpen, setIsOpen] = useState(true),
+    [isOpen, setIsOpen] = useState(false),
     [menuCensus, setMenuCensus] = useState([]), // Menus Census for display
     [serviceCensus, setServiceCensus] = useState([]), // Services Census for display
     [menuSave, setMenuSave] = useState([]), // Save Menus (_id, count)
@@ -112,20 +113,28 @@ export default function Vouchers() {
           </MDBCollapseHeader>
           <MDBCollapse isOpen={activePage === "menus"}>
             <MDBCardBody>
-              {menuCensus.length > 0 ? (
-                <ul className="list-group">
-                  {menuCensus.map(({ _id, abbreviation, count }) => (
-                    <li
-                      key={_id}
-                      className="list-group-item d-flex justify-content-between"
-                    >
-                      <span>{abbreviation}</span>
-                      <strong className="text-primary">Count: {count}</strong>
-                    </li>
-                  ))}
-                </ul>
+              {!isLoading ? (
+                <>
+                  {menuCensus.length > 0 ? (
+                    <ul className="list-group">
+                      {menuCensus.map(({ _id, abbreviation, count }) => (
+                        <li
+                          key={_id}
+                          className="list-group-item d-flex justify-content-between"
+                        >
+                          <span>{abbreviation}</span>
+                          <strong className="text-primary">
+                            Count: {count}
+                          </strong>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted">No menu items found.</p>
+                  )}
+                </>
               ) : (
-                <p className="text-muted">No menu items found.</p>
+                <SummaryLoading />
               )}
             </MDBCardBody>
           </MDBCollapse>
@@ -144,20 +153,28 @@ export default function Vouchers() {
           </MDBCollapseHeader>
           <MDBCollapse isOpen={activePage === "services"}>
             <MDBCardBody>
-              {serviceCensus.length > 0 ? (
-                <ul className="list-group">
-                  {serviceCensus.map(({ _id, count }) => (
-                    <li
-                      key={_id}
-                      className="list-group-item d-flex justify-content-between"
-                    >
-                      <span>Service ID: {_id}</span>
-                      <strong className="text-primary">Count: {count}</strong>
-                    </li>
-                  ))}
-                </ul>
+              {!isLoading ? (
+                <>
+                  {serviceCensus.length > 0 ? (
+                    <ul className="list-group">
+                      {serviceCensus.map(({ _id, count }) => (
+                        <li
+                          key={_id}
+                          className="list-group-item d-flex justify-content-between"
+                        >
+                          <span>Service ID: {_id}</span>
+                          <strong className="text-primary">
+                            Count: {count}
+                          </strong>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted">No services found.</p>
+                  )}
+                </>
               ) : (
-                <p className="text-muted">No services found.</p>
+                <SummaryLoading />
               )}
             </MDBCardBody>
           </MDBCollapse>
