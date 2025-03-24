@@ -152,7 +152,11 @@ export default function Census() {
         <MDBIcon icon="calendar-alt" className="mr-2" />
         Census
       </MDBModalHeader>
-
+      {!selected && (
+        <p className="font-weight-bold text-danger">
+          Please declare your floating cash before proceeding with the census.
+        </p>
+      )}
       {/* Modal Body */}
       <MDBModalBody className="mb-0">
         {/* Summary Section */}
@@ -243,7 +247,7 @@ export default function Census() {
       </MDBModalBody>
 
       <MDBCardBody>
-        {!selected?.census && (
+        {!!selected && (
           <MDBBtn
             className="w-100"
             color="primary"

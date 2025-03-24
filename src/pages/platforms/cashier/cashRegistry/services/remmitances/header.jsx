@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Calendar as calendar } from "../../../../../../services/fakeDb";
-import CustomSelect from "../../../../../../components/searchables/customSelect";
+import { Select } from "../../../../../../components/customizable";
 import {
   BROWSE,
   RESET,
@@ -73,7 +73,7 @@ const Header = () => {
       </div>
 
       <div className="d-flex align-items-center">
-        <CustomSelect
+        <Select
           className="m-0 p-0 calendar mr-4"
           value={calendar.Months[month]}
           onChange={(value) =>
@@ -83,7 +83,7 @@ const Header = () => {
           preValue={calendar.Months[month]}
           choices={calendar.Months}
         />
-        <CustomSelect
+        <Select
           value={year}
           inputClassName="m-0 p-0"
           preValue={year}

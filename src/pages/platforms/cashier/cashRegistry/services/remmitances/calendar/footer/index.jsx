@@ -22,8 +22,9 @@ const Footer = ({ num, item = {} }) => {
         type="button"
         className="m-0"
         size="sm"
-        color={opening ? "danger" : "primary"}
-        disabled={!!opening}
+        color={!opening ? "primary" : "danger"}
+        disabled={!!opening && Object.keys(opening).length > 0}
+        // disabled={!opening}
         title="Open Cash Register"
         onClick={() => handleOpening()}
       >

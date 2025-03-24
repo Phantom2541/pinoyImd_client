@@ -16,7 +16,7 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { Statements } from "../../../../../../services/fakeDb";
-import CustomSelect from "../../../../../../components/searchables/customSelect";
+import { Select } from "../../../../../../components/customizable";
 import { SearchUser } from "../../../../../../components/searchables";
 import util from "../util";
 
@@ -93,7 +93,7 @@ export default function ModalCreate() {
         )}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
-        <CustomSelect
+        <Select
           choices={
             Array.isArray(Statements?.collections)
               ? Statements.collections.filter(
@@ -132,7 +132,7 @@ export default function ModalCreate() {
             />
           </>
         ) : form.orOption === "Supplier" ? (
-          <CustomSelect
+          <Select
             choices={
               Array.isArray(collections)
                 ? collections

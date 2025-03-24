@@ -141,7 +141,8 @@ export default function Search({ setMenu, setRegister }) {
                         <span className="description text-dark">
                           {description}
                         </span>
-                      )}
+                      )}{" "}
+                      |{" "}
                       {abbreviation && (
                         <span className="abbreviation text-dark ">
                           {abbreviation}

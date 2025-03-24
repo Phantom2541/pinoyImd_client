@@ -2,7 +2,7 @@ import React from "react";
 import { MDBInput, MDBRow, MDBCol, MDBSwitch } from "mdbreact";
 import { getAge, validateContact } from "../../../../../../services/utilities";
 import { Privileges, Suffixes } from "../../../../../../services/fakeDb";
-import CustomSelect from "../../../../../../components/searchables/customSelect";
+import { Select } from "../../../../../../components/customizable";
 
 export default function PersonalInformation({ handleChange, form }) {
   const { fullName, dob, mobile, isMale, privilege } = form;
@@ -48,7 +48,7 @@ export default function PersonalInformation({ handleChange, form }) {
         </MDBCol>
 
         <MDBCol md="3">
-          <CustomSelect
+          <Select
             label="Suffix"
             preValue={fullName.suffix || "None"}
             choices={Suffixes.map((str) => ({ str }))}
@@ -77,7 +77,7 @@ export default function PersonalInformation({ handleChange, form }) {
           />
         </MDBCol>
         <MDBCol md="3">
-          <CustomSelect
+          <Select
             disableByKey={{
               str: getAge(dob, true) < 60 ? "Senior Citizen" : "",
             }}

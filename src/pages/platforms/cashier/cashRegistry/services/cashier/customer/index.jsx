@@ -22,10 +22,7 @@ export default function POS() {
   //   if (customer?._id && activeIndex === 1) setActiveIndex(0);
   // }, [customer, activeIndex]);
 
-  const handleCustomer = (customer) => {
-    console.log("customer", customer);
-    dispatch(SETPATIENT(customer))
-  };
+  const handleCustomer = (customer) => dispatch(SETPATIENT(customer));
 
   const handleRegister = (customer) => {
     if (isLoading) return;
@@ -87,7 +84,7 @@ export default function POS() {
       <div className="pos-card">
         <div className="pos-card-body">
           <section className={`${activeIndex === 0 && "active"}`}>
-            <PosCard  />
+            <PosCard />
           </section>
           <section className={`${activeIndex === 1 && "active"}`}>
             <Patient setActiveIndex={setActiveIndex} />

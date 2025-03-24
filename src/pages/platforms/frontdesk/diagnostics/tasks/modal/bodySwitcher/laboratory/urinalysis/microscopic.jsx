@@ -3,20 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 import { MDBCol, MDBRow } from "mdbreact";
-import CustomSelect from "./../../../../../../../../../components/searchables/customSelect";
+import { Select } from "./../../../../../../../../../components/customizable";
 import {
   MicroscopicInRange,
   MicroscopicResultInWord,
 } from "./../../../../../../../../../services/fakeDb";
 
 export default function Microscopic() {
-   const {me} = useSelector(({validator}) => validator.task),
+  const { me } = useSelector(({ validator }) => validator.task),
     dispatch = useDispatch();
   const handleSelectChange = (index, value) => {
     const _me = [...me];
     _me[index] = value;
-dispatch(SetPARAMS({ key: "me", value: _me }));
-
+    dispatch(SetPARAMS({ key: "me", value: _me }));
   };
 
   const microscopicSelects = [
@@ -36,7 +35,7 @@ dispatch(SetPARAMS({ key: "me", value: _me }));
 
         return (
           <MDBCol key={`${label}-${index}`} md="6">
-            <CustomSelect
+            <Select
               disableSearch
               choices={choices.map((u, i) => ({ str: u, index: i }))}
               label={label}

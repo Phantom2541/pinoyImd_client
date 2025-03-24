@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-// import CustomSelect from "../../../../../components/searchables/customSelect";
+// import { Select } from "../../../../../components/customizable";
 // import { Templates, Services } from "../../../../../services/fakeDb";
 import {
   OUTSOURCE,
