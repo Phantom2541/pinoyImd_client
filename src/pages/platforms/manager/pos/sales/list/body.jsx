@@ -220,8 +220,8 @@ export const Tables = () => {
               >
                 <td>
                   <div className="d-flex align-items-center">
-                    <h6>{getGenderIcon(deal.customerId?.isMale)} </h6>
-                    <h6>{fullName(deal.customerId?.fullName)}</h6>
+                    <h6>{getGenderIcon(deal?.customerId?.isMale)} </h6>
+                    <h6>{fullName(deal?.customerId?.fullName)}</h6>
                   </div>
                   <MDBBadge color="info" className="mr-2">
                     {capitalize(
