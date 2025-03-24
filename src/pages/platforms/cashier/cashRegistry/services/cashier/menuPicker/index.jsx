@@ -63,8 +63,7 @@ export default function Menus({ patronPresent }) {
               <tr key={_id}>
                 <td className="text-left">
                   <span>
-                    {description ? `${description} - ` : ""}
-                    {abbreviation}
+                    {description} | {abbreviation}
                   </span>
                   <small className="d-block">
                     {/* Check if there are no packages */}

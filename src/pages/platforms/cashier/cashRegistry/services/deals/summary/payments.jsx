@@ -105,8 +105,10 @@ export default function Payments() {
               <hr />
               <div className="d-flex justify-content-between border-bottom pb-2">
                 <span>Total :</span>
-                <strong className="text-success">{currency(total)}</strong>
-              </div>{" "}
+                <strong className="text-success">
+                  {currency(total + sum)}
+                </strong>
+              </div>
             </>
           ) : (
             <SummaryLoading />

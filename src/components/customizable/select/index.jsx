@@ -7,7 +7,7 @@ import {
 } from "mdbreact";
 import "./style.css";
 
-export default function CustomSelect({
+export default function Select({
   collections = [], // choices
   preValue = "",
   preValues = [],
@@ -108,7 +108,7 @@ export default function CustomSelect({
 
           if (typeof value === "object") {
             console.warn(
-              `%c[CustomSelect] Invalid Value:`,
+              `%c[Select] Invalid Value:`,
               "color: orange; font-weight: bold;",
               "The display value is an object. Please ensure the 'values' prop is correctly provided."
             );
@@ -117,7 +117,7 @@ export default function CustomSelect({
 
           if (multiple && !keys) {
             console.warn(
-              `%c[CustomSelect] Missing 'keys' Prop:`,
+              `%c[Select] Missing 'keys' Prop:`,
               "color: red; font-weight: bold;",
               "Multiple selection is enabled, but no 'keys' prop is provided. Ensure 'keys' is set to properly identify options."
             );

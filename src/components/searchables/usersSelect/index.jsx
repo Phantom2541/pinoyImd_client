@@ -1,7 +1,7 @@
 import { MDBInput } from "mdbreact";
 import React, { useRef, useEffect, useState } from "react";
 import "./style.css";
-import CustomSelect from "../customSelect";
+import { Select } from "../../customizable/select";
 
 const USERS = [
   { _id: 1, name: "Darrel" },
