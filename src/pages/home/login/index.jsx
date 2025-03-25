@@ -90,7 +90,6 @@ export default function Login({ show, toggle = null }) {
       </>
     );
   };
-
   return (
     <MDBModal
       size={email ? "sm" : "md"}

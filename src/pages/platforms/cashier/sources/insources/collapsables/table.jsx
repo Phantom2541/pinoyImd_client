@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBadge,
@@ -9,6 +9,8 @@ import {
   MDBTableBody,
   MDBTableHead,
 } from "mdbreact";
+import "./styles.css";
+
 import { fullName } from "../../../../../../services/utilities";
 import { UntagPHYSICIAN } from "../../../../../../services/redux/slices/assets/branches";
 import { SetBRANCHES } from "../../../../../../services/redux/slices/assets/providers";
@@ -20,6 +22,7 @@ import {
 
 export default function CollapseTable({ BranchId, affiliated, providerId }) {
   const { token } = useSelector(({ auth }) => auth),
+    [selected, setSelected] = useState(-1),
     dispatch = useDispatch();
 
   const handleUntag = (physicianId) => {
@@ -43,6 +46,12 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
   };
   const handleGhostUpdate = (user) => {
     dispatch(UPDATEGHOST(user));
+  };
+
+  const handleUpdate = () => {
+    // const { specialization, newSpecialization } = selected;
+    // if (specialization === newSpecialization){
+    // }
   };
 
   return (
@@ -73,22 +82,59 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
                 <div className="d-flex flex-column">
                   {user ? fullName(user?.fullName) : fullName(ghostName)}
                 </div>
-                <MDBBadge>{specialization}</MDBBadge>
+                {_id === selected?._id ? (
+                  <div className="d-flex align-items-center position-relative">
+                    <input
+                      value={selected.newSpecialization}
+                      onChange={({ target }) =>
+                        setSelected({
+                          ...selected,
+                          newSpecialization: target.value,
+                        })
+                      }
+                      className="mt-2 form-control form-control-sm specialization-input"
+                    />
+                    <div className="specialization-icon mt-2">
+                      <MDBIcon
+                        icon="check"
+                        style={{
+                          color: "blue",
+                          fontSize: "1rem",
+                          marginRight: "10px",
+                          marginLeft: "7px",
+                        }}
+                        className="cursor-pointer"
+                      />
+                      <MDBIcon
+                        onClick={() => setSelected({})}
+                        icon="times"
+                        className="cursor-pointer"
+                        style={{ color: "red", fontSize: "1rem" }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <MDBBadge
+                    title="Click me to update"
+                    className="cursor-pointer"
+                    onClick={() =>
+                      setSelected({
+                        _id,
+                        specialization,
+                        user,
+                        newSpecialization: specialization,
+                      })
+                    }
+                  >
+                    {specialization}
+                  </MDBBadge>
+                )}
               </td>
               <td>{user?.isMale ? "Male" : "Female"}</td>
               <td>{user?.mobile}</td>
               <td>
                 <MDBBtnGroup>
-                  {user ? (
-                    <MDBBtn
-                      color="info"
-                      rounded
-                      size="sm"
-                      onClick={() => handleEdit(physician)}
-                    >
-                      <MDBIcon icon="user-times" className="mr-2" /> Edit
-                    </MDBBtn>
-                  ) : (
+                  {!user && (
                     <>
                       <MDBBtn
                         color="success"

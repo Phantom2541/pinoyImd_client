@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBRow, MDBCol } from "mdbreact";
 import { Services } from "./../../../../../../../../../../services/fakeDb";
-import CustomSelect from "./../../../../../../../../../../components/searchables/customSelect";
+import { Select } from "./../../../../../../../../../../components/customizable";
 
 export default function Cluster({ task, setTask }) {
   const { packages = [], results = {} } = task;
@@ -16,7 +16,7 @@ export default function Cluster({ task, setTask }) {
 
         return (
           <MDBCol key={`cluster-${index}`}>
-            <CustomSelect
+            <Select
               inputClassName={results[fk] && "text-danger"}
               choices={[
                 {

@@ -8,6 +8,7 @@ import {
   MDBIcon,
   MDBMask,
   MDBProgress,
+  MDBTypography,
   MDBView,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
@@ -79,65 +80,81 @@ export default function Logo() {
   };
 
   return (
-    <div style={{ width: "230px" }} className="mx-auto">
-      <MDBCard>
-        <MDBCardBody>
-          <MDBView hover>
-            <img
-              src={
-                preview ||
-                `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.name}/logo.png`
-              }
-              className="img-fluid"
-              alt={company?.name || "Default Logo"}
-              onError={(e) => (e.target.src = FailedLogo)}
-            />
-            <MDBMask overlay="grey-strong d-flex align-items-center">
-              <MDBBtnGroup className="mx-auto">
-                <MDBBtn
-                  disabled={isLoading}
-                  color="warning"
-                  size="sm"
-                  onClick={handleDownload}
-                >
-                  <MDBIcon icon="download" />
-                </MDBBtn>
-                <label className="btn btn-sm btn-primary" htmlFor="upload-logo">
-                  <MDBIcon icon="upload" />
-                </label>
-              </MDBBtnGroup>
-              <input
-                id="upload-logo"
-                type="file"
-                className="d-none"
-                accept=".png"
-                onChange={(e) => handleChange(e.target.files[0])}
+    <>
+      <div style={{ width: "31rem" }} className="mx-auto">
+        <MDBTypography
+          variant="h6"
+          noteColor="warning"
+          className="mt-2 "
+          note
+          noteTitle={"Description: "}
+        >
+          Hover over the logo to upload or download a new one.
+        </MDBTypography>
+      </div>
+      <div style={{ width: "230px" }} className="mx-auto">
+        <MDBCard>
+          <MDBCardBody>
+            <MDBView hover>
+              <img
+                src={
+                  preview ||
+                  `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.name}/logo.png`
+                }
+                className="img-fluid"
+                alt={company?.name || "Default Logo"}
+                onError={(e) => (e.target.src = FailedLogo)}
               />
-            </MDBMask>
-          </MDBView>
-          <hr />
-          {array
-            .sort(() => Math.random() - 0.5)
-            .map((index, i) => (
-              <div
-                key={`sampleSidebar-${index}`}
-                style={{
-                  width: `${index * 10 + 100}px`,
-                }}
-              >
-                <MDBAnimation
-                  type="fadeIn"
-                  infinite
-                  delay={`${i + 1}00ms`}
-                  duration="2500ms"
+              <MDBMask overlay="grey-strong d-flex align-items-center">
+                <MDBBtnGroup className="mx-auto">
+                  <MDBBtn
+                    disabled={isLoading}
+                    color="warning"
+                    size="sm"
+                    onClick={handleDownload}
+                  >
+                    <MDBIcon icon="download" />
+                  </MDBBtn>
+                  <label
+                    className="btn btn-sm btn-primary"
+                    htmlFor="upload-logo"
+                  >
+                    <MDBIcon icon="upload" />
+                  </label>
+                </MDBBtnGroup>
+                <input
+                  id="upload-logo"
+                  type="file"
+                  className="d-none"
+                  accept=".png"
+                  onChange={(e) => handleChange(e.target.files[0])}
+                />
+              </MDBMask>
+            </MDBView>
+            <hr />
+            {array
+              .sort(() => Math.random() - 0.5)
+              .map((index, i) => (
+                <div
+                  key={`sampleSidebar-${index}`}
+                  style={{
+                    width: `${index * 10 + 100}px`,
+                  }}
                 >
-                  <MDBProgress color="light" value={100} />
-                </MDBAnimation>
-                <br />
-              </div>
-            ))}
-        </MDBCardBody>
-      </MDBCard>
-    </div>
+                  <MDBAnimation
+                    type="fadeIn"
+                    infinite
+                    delay={`${i + 1}00ms`}
+                    duration="2500ms"
+                  >
+                    <MDBProgress color="light" value={100} />
+                  </MDBAnimation>
+                  <br />
+                </div>
+              ))}
+          </MDBCardBody>
+        </MDBCard>
+      </div>
+    </>
   );
 }

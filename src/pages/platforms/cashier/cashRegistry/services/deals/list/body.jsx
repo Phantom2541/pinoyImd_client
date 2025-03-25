@@ -97,7 +97,7 @@ const Tables = () => {
         <thead>
           <tr>
             <th>Patient Name</th>
-            <th>Physician</th>
+            <th>Source</th>
             <th>Amount</th>
             <th className="text-center">Services</th>
           </tr>
@@ -127,12 +127,11 @@ const Tables = () => {
                   @ {new Date(deal?.createdAt).toLocaleTimeString()}
                 </td>
                 <td>
-                  <h6>
+                  <h6>{deal.source?.companyName}</h6>
+                  <p>
                     {deal.physicianId?.fullName.lname &&
                       `Dr. ${deal.physicianId.fullName.lname}`}
-                  </h6>
-
-                  <p>{deal.source?.companyName}</p>
+                  </p>
                 </td>
                 <td className="cursor-pointer" onClick={() => handleView(deal)}>
                   <div className="d-flex align-items-center">

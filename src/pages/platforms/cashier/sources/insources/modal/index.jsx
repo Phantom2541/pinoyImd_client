@@ -16,7 +16,7 @@ import {
   ToggleDidSearch,
   SAVE,
 } from "../../../../../../services/redux/slices/assets/providers";
-import CustomSelect from "../../../../../../components/searchables/customSelect";
+import { Select } from "../../../../../../components/customizable";
 import Search from "../../../../../../components/searchables/ao";
 import Swal from "sweetalert2";
 import Checkbox from "./checkbox";
@@ -138,7 +138,7 @@ export default function Modal() {
           />
           <MDBRow>
             <MDBCol>
-              <CustomSelect
+              <Select
                 choices={MembershipOptions}
                 label={"Membership"}
                 onChange={(value) => setForm({ ...form, membership: value })}
@@ -150,7 +150,7 @@ export default function Modal() {
           </MDBRow>
           <MDBRow>
             <MDBCol>
-              <CustomSelect
+              <Select
                 label={"Monthly Cut off"}
                 choices={new Array(30).fill("").map((_, i) => i + 1)}
                 onChange={(value) =>

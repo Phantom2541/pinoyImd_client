@@ -1,14 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import {
-  MDBAnimation,
-  MDBCard,
-  MDBCardBody,
-  MDBCollapse,
-  MDBCollapseHeader,
-  MDBProgress,
-} from "mdbreact";
+import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
 import { AUTOSELECT } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import SummaryLoading from "./loading";
@@ -105,8 +98,10 @@ export default function Payments() {
               <hr />
               <div className="d-flex justify-content-between border-bottom pb-2">
                 <span>Total :</span>
-                <strong className="text-success">{currency(total)}</strong>
-              </div>{" "}
+                <strong className="text-success">
+                  {currency(total + sum)}
+                </strong>
+              </div>
             </>
           ) : (
             <SummaryLoading />

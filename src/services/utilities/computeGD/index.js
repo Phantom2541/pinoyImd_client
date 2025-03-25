@@ -7,7 +7,8 @@ const individual = (menu, abbr, privilege) => {
 
   const { isPromo, promo = 0, discountable } = menu;
 
-  const gross = menu[abbr],
+  const _abbr = ["opd", "bp", "mc", "sc"].includes(abbr) ? "opd" : abbr;
+  const gross = menu[_abbr],
     up = (gross * 80) / 100;
 
   if (privilege === 4) {

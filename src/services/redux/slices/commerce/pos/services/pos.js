@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../../utilities";
+import { axioKit, getAge } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
 // import _ from "lodash";
 const defaultCustomer = {
@@ -152,7 +152,10 @@ export const reduxSlice = createSlice({
     SETPATIENT: (state, { payload }) => {
       state.customer = payload;
       state.customerId = payload?._id;
+      const isSenior = getAge(payload.dob, true) > 59; // Use payload instead of customer
+      state.privilege = payload.privilege || (isSenior ? 2 : 0);
     },
+
     SETSEARCHKEY: (state, { payload }) => {
       state.customer = {
         ...defaultCustomer,
