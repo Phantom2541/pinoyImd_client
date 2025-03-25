@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBCollapseHeader,
   MDBIcon,
@@ -8,6 +8,15 @@ import {
   MDBBtn,
 } from "mdbreact";
 import { collapse } from "../../../../../../services/utilities";
+import { Input } from "../../../../../../components/customizable";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  UPDATE,
+  RESET,
+} from "../../../../../../services/redux/slices/assets/branches";
+import { useToasts } from "react-toast-notifications";
+
+import { SetBRANCHES } from "../../../../../../services/redux/slices/assets/providers";
 
 const Header = ({
   insource,
@@ -20,6 +29,18 @@ const Header = ({
   didHoverId,
   index,
 }) => {
+  const { token } = useSelector(({ auth }) => auth),
+    { formSubmitted, isSuccess } = useSelector(({ branches }) => branches),
+    [update, setUpdate] = useState({}),
+    { addToast } = useToasts(),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      dispatch(RESET());
+    }
+  }, [dispatch, formSubmitted, isSuccess]);
+
   const {
     clients,
     _id,
@@ -28,15 +49,39 @@ const Header = ({
     subName: ghostSubName,
   } = insource;
   const isGhost = clients?._id ? false : true;
-
   const { name, companyName } = clients || "";
-
   const baseName = isGhost ? ghostName : name;
   const baseSubname = isGhost ? ghostSubName : companyName;
 
   const { color, border } = collapse.getStyle(index, activeId, didHoverId);
 
   const isPopOver = (activeId === index || didHoverId === index) && !isGhost;
+
+  const isEditable = !clients?.companyId && !clients?.isVerified && !isGhost;
+
+  const handleUpdateClient = () => {
+    const { newName, name } = update;
+    if (name.toLowerCase() === newName.toLowerCase()) {
+      setUpdate({});
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
+    dispatch(UPDATE({ data: { ...update, name: newName }, token }))
+      .then(({ payload: branch }) => {
+        dispatch(
+          SetBRANCHES({
+            branch,
+            providerId: _id,
+            isUpdateBranch: true,
+          })
+        );
+
+        setUpdate({}); // Reset state after update
+      })
+      .catch((error) => console.error("Update Error:", error));
+  };
+
   return (
     <MDBCollapseHeader
       onMouseLeave={() => setDidHoverId(-1)}
@@ -54,64 +99,85 @@ const Header = ({
       style={{ borderRadius: "50%" }}
     >
       <label className={`d-flex justify-content-between ${color} `}>
-        <span className="d-flex align-items-center transition-all">
-          {index + 1}. {baseName} {baseSubname}{" "}
-          {isGhost ? (
-            <span
-              style={{ fontSize: "20px" }}
-              className="ml-2"
-              role="img"
-              aria-label="ghost"
-            >
-              👻
-            </span>
-          ) : (
-            ""
-          )}
-          {membership ? ` | ${membership}` : ""}
-          {isPopOver && (
-            <>
-              <MDBPopover
-                placement="bottom"
-                popover
-                clickable
-                id={`popover-${index}`}
+        {update._id !== clients._id ? (
+          <span className="d-flex align-items-center transition-all">
+            {index + 1}. {baseName} {baseSubname}{" "}
+            {isGhost ? (
+              <span
+                style={{ fontSize: "20px" }}
+                className="ml-2"
+                role="img"
+                aria-label="ghost"
               >
-                <MDBBtn
-                  className="m-0 p-0 ml-2"
-                  rounded
-                  color="light"
-                  onClick={() => setActiveId(index)}
-                  style={{
-                    width: "1.8rem",
-                    boxShadow: "0px 0px 0px 0px",
-                  }}
+                👻
+              </span>
+            ) : (
+              ""
+            )}
+            {membership ? ` | ${membership}` : ""}
+            {isPopOver && (
+              <>
+                <MDBPopover
+                  placement="bottom"
+                  popover
+                  clickable
+                  id={`popover-${index}`}
                 >
-                  <i className="fa fa-ellipsis-h"></i>
-                </MDBBtn>
-                <div>
-                  <MDBPopoverHeader className="text-center">
-                    Actions
-                  </MDBPopoverHeader>
-                  <MDBPopoverBody className="d-flex flex-column m-0 p-0">
-                    <MDBBtn size="sm" color="primary">
-                      <MDBIcon icon="pencil-alt" className="mr-2" />
-                      Update
-                    </MDBBtn>
-                    <MDBBtn
-                      size="sm"
-                      color="danger"
-                      onClick={() => handleUntag(_id)}
-                    >
-                      <MDBIcon icon="unlink" className="mr-2" />
-                      Untag
-                    </MDBBtn>
-                  </MDBPopoverBody>
-                </div>
-              </MDBPopover>
-            </>
-          )}
-        </span>
+                  <MDBBtn
+                    className="m-0 p-0 ml-2"
+                    rounded
+                    color="light"
+                    onClick={() => setActiveId(index)}
+                    style={{
+                      width: "1.8rem",
+                      boxShadow: "0px 0px 0px 0px",
+                    }}
+                  >
+                    <i className="fa fa-ellipsis-h"></i>
+                  </MDBBtn>
+                  <div>
+                    <MDBPopoverHeader className="text-center">
+                      Actions
+                    </MDBPopoverHeader>
+                    <MDBPopoverBody className="d-flex flex-column m-0 p-0">
+                      {isEditable && (
+                        <MDBBtn
+                          size="sm"
+                          color="primary"
+                          onClick={() =>
+                            setUpdate({ ...clients, newName: clients.name })
+                          }
+                        >
+                          <MDBIcon icon="pencil-alt" className="mr-2" />
+                          Update
+                        </MDBBtn>
+                      )}
+                      <MDBBtn
+                        size="sm"
+                        color="danger"
+                        onClick={() => handleUntag(_id)}
+                      >
+                        <MDBIcon icon="unlink" className="mr-2" />
+                        Untag
+                      </MDBBtn>
+                    </MDBPopoverBody>
+                  </div>
+                </MDBPopover>
+              </>
+            )}
+          </span>
+        ) : (
+          <Input
+            className="mt-2 form-control form-control-sm"
+            _key={"newName"}
+            selected={update}
+            formSubmitted={formSubmitted}
+            isSuccess={isSuccess}
+            onChange={(value) => setUpdate({ ...update, newName: value })}
+            handleCheck={handleUpdateClient}
+            handleClose={() => setUpdate({})}
+          />
+        )}
         <small
           className="d-flex justify-content-between"
           onClick={() => {

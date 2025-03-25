@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBadge,
@@ -15,16 +15,23 @@ import { fullName } from "../../../../../../services/utilities";
 import { UntagPHYSICIAN } from "../../../../../../services/redux/slices/assets/branches";
 import { SetBRANCHES } from "../../../../../../services/redux/slices/assets/providers";
 import { UPDATE as UPDATEGHOST } from "../../../../../../services/redux/slices/assets/persons/physicians";
-import {
-  UPDATE as UPDATEUSER,
-  SAVE,
-} from "../../../../../../services/redux/slices/assets/persons/users";
+import { SAVE } from "../../../../../../services/redux/slices/assets/persons/users";
+import { Input } from "../../../../../../components/customizable";
+import { RESET } from "../../../../../../services/redux/slices/assets/persons/physicians";
+import { useToasts } from "react-toast-notifications";
 
 export default function CollapseTable({ BranchId, affiliated, providerId }) {
   const { token } = useSelector(({ auth }) => auth),
+    { formSubmitted, isSuccess } = useSelector(({ physicians }) => physicians),
     [selected, setSelected] = useState(-1),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      dispatch(RESET());
+    }
+  }, [formSubmitted, isSuccess, dispatch]);
   const handleUntag = (physicianId) => {
     dispatch(
       UntagPHYSICIAN({
@@ -41,17 +48,39 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
   const handleRegister = (user) => {
     dispatch(SAVE({ ...user, token }));
   };
-  const handleEdit = (user) => {
-    dispatch(UPDATEUSER(user));
-  };
+
   const handleGhostUpdate = (user) => {
     dispatch(UPDATEGHOST(user));
   };
-
   const handleUpdate = () => {
-    // const { specialization, newSpecialization } = selected;
-    // if (specialization === newSpecialization){
-    // }
+    const { newSpecialization, specialization } = selected;
+    if (newSpecialization.toLowerCase() === specialization.toLowerCase()) {
+      setSelected({});
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
+    dispatch(
+      UPDATEGHOST({
+        data: { _id: selected._id, specialization: newSpecialization },
+        token,
+      })
+    )
+      .then(({ payload: physician }) => {
+        const { _id: physicianId } = physician;
+
+        dispatch(
+          SetBRANCHES({
+            physicianId,
+            affiliated: physician,
+            providerId,
+            isUpdatePhysician: true,
+          })
+        );
+
+        setSelected({}); // Reset state after update
+      })
+      .catch((error) => console.error("Update Error:", error));
   };
 
   return (
@@ -83,35 +112,19 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
                   {user ? fullName(user?.fullName) : fullName(ghostName)}
                 </div>
                 {_id === selected?._id ? (
-                  <div className="d-flex align-items-center position-relative">
-                    <input
-                      value={selected.newSpecialization}
-                      onChange={({ target }) =>
-                        setSelected({
-                          ...selected,
-                          newSpecialization: target.value,
-                        })
+                  <div style={{ width: "13rem" }}>
+                    <Input
+                      _key={"newSpecialization"}
+                      className="mt-2 form-control form-control-sm"
+                      formSubmitted={formSubmitted}
+                      isSuccess={isSuccess}
+                      selected={selected}
+                      onChange={(value) =>
+                        setSelected({ ...selected, newSpecialization: value })
                       }
-                      className="mt-2 form-control form-control-sm specialization-input"
+                      handleCheck={handleUpdate}
+                      handleClose={() => setSelected({})}
                     />
-                    <div className="specialization-icon mt-2">
-                      <MDBIcon
-                        icon="check"
-                        style={{
-                          color: "blue",
-                          fontSize: "1rem",
-                          marginRight: "10px",
-                          marginLeft: "7px",
-                        }}
-                        className="cursor-pointer"
-                      />
-                      <MDBIcon
-                        onClick={() => setSelected({})}
-                        icon="times"
-                        className="cursor-pointer"
-                        style={{ color: "red", fontSize: "1rem" }}
-                      />
-                    </div>
                   </div>
                 ) : (
                   <MDBBadge

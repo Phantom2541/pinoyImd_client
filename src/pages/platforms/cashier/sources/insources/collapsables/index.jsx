@@ -196,7 +196,7 @@ export default function MenuCollapse() {
                   <div className="d-flex align-items-center">
                     <span>Tag Physician</span>
                     <Search
-                      clientID={clients._id}
+                      clientID={clients?._id}
                       setPhysician={handleTag}
                       setRegister={handleRegister}
                     />
