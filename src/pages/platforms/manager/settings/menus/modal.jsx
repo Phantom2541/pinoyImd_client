@@ -20,7 +20,7 @@ import {
   UPDATE,
   SAVE,
 } from "../../../../../services/redux/slices/commerce/catalog/menus";
-import { Contracts, SRP, Others } from "./component";
+import { Contracts, SRP, Others, Expenses } from "./component";
 
 // declare your expected items
 const _form = {
@@ -43,7 +43,12 @@ const _form = {
     onPromo: false,
     hasReseco: false,
   },
-  tabs = ["Suggested Retail Price", "Insourcing", "Others"];
+  tabs = [
+    "Suggested Retail Price",
+    "Insourcing/Contracts",
+    "Expenses",
+    "Others",
+  ];
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ personnels }) => personnels),
     { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -166,7 +171,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <MDBTabContent activeItem={activeTab}>
             <SRP handleValue={handleValue} handleChange={handleChange} />
           </MDBTabContent>
-
           <MDBTabContent activeItem={activeTab}>
             <Contracts
               form={form}
@@ -174,7 +178,9 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               handleChange={handleChange}
             />
           </MDBTabContent>
-
+          <MDBTabContent activeItem={activeTab}>
+            <Expenses handleValue={handleValue} handleChange={handleChange} />
+          </MDBTabContent>
           <MDBTabContent activeItem={activeTab}>
             <Others handleValue={handleValue} handleChange={handleChange} />
           </MDBTabContent>

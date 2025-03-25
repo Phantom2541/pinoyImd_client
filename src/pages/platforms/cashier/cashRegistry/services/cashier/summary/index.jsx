@@ -73,7 +73,6 @@ export default function Summary() {
             packages = [],
             _id,
             isNew,
-            // up: soldUp,
             discount: soldDiscount,
           } = menu,
           {
@@ -114,16 +113,18 @@ export default function Summary() {
 
     const data = removeUndefinedValues(_data);
 
-    dispatch(SAVE({ token, data }))
-      .then(() => {
-        dispatch(SETCART());
-        addToast("Transaction completed successfully", { appearance: "info" });
-      })
-      .catch((error) => {
-        addToast("Transaction failed", { appearance: "error" });
-      });
+    console.log("data", data);
 
-    return dispatch(RESET());
+    // dispatch(SAVE({ token, data }))
+    //   .then(() => {
+    //     dispatch(SETCART());
+    //     addToast("Transaction completed successfully", { appearance: "info" });
+    //   })
+    //   .catch((error) => {
+    //     addToast("Transaction failed", { appearance: "error" });
+    //   });
+
+    // return dispatch(RESET());
   };
 
   return (

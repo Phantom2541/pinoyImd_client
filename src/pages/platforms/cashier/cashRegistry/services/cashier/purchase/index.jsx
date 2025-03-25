@@ -53,14 +53,17 @@ export default function Menus({ patronPresent }) {
               </td>
             </tr>
           )}
-          {cart.map((menu) => {
-            const { _id, description, abbreviation, packages } = menu;
+          {cart.map((item) => {
+            const { _id, description, abbreviation, packages } = item;
+
+            console.log("category", category, "privilege", privilege);
+
             const {
               gross = 0,
               up = 0,
               title = "",
               color = "",
-            } = computeGD(menu, category, privilege);
+            } = computeGD(item, category, privilege);
 
             return (
               <tr key={_id}>

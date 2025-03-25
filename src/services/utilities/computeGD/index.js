@@ -1,6 +1,10 @@
 import { Categories } from "../../fakeDb";
 
 const individual = (menu, abbr, privilege) => {
+  console.log("menu", menu);
+  console.log("abbr", abbr);
+  console.log("privilege", privilege);
+
   const { isPromo, promo = 0, discountable } = menu;
 
   const _abbr = ["opd", "bp", "mc", "sc"].includes(abbr) ? "opd" : abbr;
@@ -50,6 +54,8 @@ const individual = (menu, abbr, privilege) => {
 
 const computeGD = (menu, categoryIndex, privilege) => {
   const category = Categories[categoryIndex] || {}; // Ensure category is always an object
+  console.log("category", category);
+
   const abbr = category.abbr || ""; // Fallback to an empty string if undefined
 
   if (!Array.isArray(menu)) return individual(menu, abbr, privilege);
