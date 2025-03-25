@@ -8,38 +8,6 @@ export default function SRP({ handleChange, handleValue }) {
         <MDBCol md="4">
           <MDBInput
             type="number"
-            label="Expenses"
-            value={handleValue("expenses")}
-            onChange={(e) =>
-              handleChange("expenses", e.target.value.toLowerCase())
-            }
-            className="mb-0"
-          />
-        </MDBCol>
-        <MDBCol md="4">
-          <MDBInput
-            type="number"
-            label="Capital"
-            value={handleValue("capital")}
-            onChange={(e) =>
-              handleChange("capital", e.target.value.toLowerCase())
-            }
-            className="mb-0"
-          />
-        </MDBCol>
-      </MDBRow>
-      <MDBRow>
-        <MDBCol md="4">
-          <MDBInput
-            type="number"
-            label="Refund"
-            value={handleValue("refund")}
-            onChange={(e) => handleChange("refund", e.target.value)}
-          />
-        </MDBCol>
-        <MDBCol md="4">
-          <MDBInput
-            type="number"
             label="SRP ( OPD/Walkin ) "
             value={handleValue("opd")}
             onChange={(e) => handleChange("opd", e.target.value)}
@@ -78,6 +46,15 @@ export default function SRP({ handleChange, handleValue }) {
           />
         </MDBCol>
       </MDBRow>
+      <MDBCol md="6">
+        <MDBInput
+          type="number"
+          label="Health Maintenance Organization"
+          value={handleValue("hmo")}
+          onChange={(e) => handleChange("hmo", e.target.value.toLowerCase())}
+          className="mb-0"
+        />
+      </MDBCol>
     </MDBTabPane>
   );
 }

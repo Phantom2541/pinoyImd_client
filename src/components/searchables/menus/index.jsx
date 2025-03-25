@@ -142,15 +142,8 @@ export default function Search({ setMenu, setRegister }) {
                           {description}
                         </span>
                       )}
-                      {abbreviation && (
-                        <span className="abbreviation text-dark ">
-                          {abbreviation}
-                        </span>
-                      )}
                     </span>
-                    <span className="ml-3 text-dark">
-                      {opd ? currency(opd) : "N/A"}
-                    </span>
+                    <span className="ml-3 text-dark">{abbreviation}</span>
                   </div>
                 </li>
               );
