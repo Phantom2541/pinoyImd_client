@@ -224,7 +224,7 @@ export default function Sales() {
           // {
           //   _key: "source",
           //   _isEmpty: true,
-          //   _format: ({ companyName = "" }) => <>{companyName}</>,
+          //   _format: ({ displayname = "" }) => <>{displayname}</>,
           // },
         ]}
         handleSearch={handleSearch}

@@ -1,4 +1,4 @@
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup } from "mdbreact";
 import { LABRESULT } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
@@ -11,10 +11,10 @@ import {
 
 const Footer = () => {
   const { token, auth } = useSelector(({ auth }) => auth),
-   { success, task, heads } = useSelector(({validator}) => validator),
-   dispatch = useDispatch();
-  console.log("tasksadas", task);
-  
+    { success, task, heads } = useSelector(({ validator }) => validator),
+    dispatch = useDispatch();
+  // console.log("tasksadas", task);
+
   useEffect(() => {
     if (success) {
       dispatch(SetMODAL(false));
@@ -42,11 +42,11 @@ const Footer = () => {
 
   const handleSave = (hasDone) => {
     const { form, department } = task;
-    console.log("tasks", task);
-    
+    // console.log("tasks", task);
+
     //returns id
     const findSignatoryId = (indentifier) =>
-        heads.find(({ section }) => section === indentifier)?.user?._id;
+      heads.find(({ section }) => section === indentifier)?.user?._id;
 
     const head = findSignatoryId(form.toLowerCase()),
       // kulang pa to
@@ -77,51 +77,57 @@ const Footer = () => {
      */
 
     if (task?.form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
-    else if (task?.form === "Parasitology") dispatch(SetHEALTHY("parasitology"));
+    else if (task?.form === "Parasitology")
+      dispatch(SetHEALTHY("parasitology"));
   };
 
   return (
     <div className="text-center mb-1-half border-top pt-2">
-    <textarea
-      placeholder="Remarks"
-      value={task?.remarks}
-      onChange={(e) =>
-        dispatch(SetTASK({form: task?.form, task:{ ...task, remarks: e.target.value }}))
-      }
-      className="w-100"
-    />
-    <div className="d-flex justify-content-between my-2">
-      <MDBBtn
-        className={`${!generateHealthyStats && "invisible"}`}
-        onClick={generateHealthyStats}
-        color="success"
-      >
-        Healthy client
-      </MDBBtn>
-      <MDBBtnGroup>
+      <textarea
+        placeholder="Remarks"
+        value={task?.remarks}
+        onChange={(e) =>
+          dispatch(
+            SetTASK({
+              form: task?.form,
+              task: { ...task, remarks: e.target.value },
+            })
+          )
+        }
+        className="w-100"
+      />
+      <div className="d-flex justify-content-between my-2">
         <MDBBtn
-          onClick={() => {
-            if (task?.form === "Hematology") return computeHemaDiff(true);
-
-            handleSave(true);
-          }}
+          className={`${!generateHealthyStats && "invisible"}`}
+          onClick={generateHealthyStats}
           color="success"
         >
-          post
+          Healthy client
         </MDBBtn>
-        <MDBBtn
-          onClick={() => {
-            if (task?.form === "Hematology") return computeHemaDiff(false);
+        <MDBBtnGroup>
+          <MDBBtn
+            onClick={() => {
+              if (task?.form === "Hematology") return computeHemaDiff(true);
 
-            handleSave(false);
-          }}
-          color="info"
-        >
-          save
-        </MDBBtn>
-      </MDBBtnGroup>
+              handleSave(true);
+            }}
+            color="success"
+          >
+            post
+          </MDBBtn>
+          <MDBBtn
+            onClick={() => {
+              if (task?.form === "Hematology") return computeHemaDiff(false);
+
+              handleSave(false);
+            }}
+            color="info"
+          >
+            save
+          </MDBBtn>
+        </MDBBtnGroup>
+      </div>
     </div>
-  </div>
   );
 };
 

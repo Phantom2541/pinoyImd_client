@@ -11,13 +11,12 @@ import {
   capitalize,
   handlePagination,
 } from "../../../../../../services/utilities";
-// import { References } from "../../../../../../services/fakeDb/index";
 import CollapseTable from "./table";
 
 export default function ServiceCollapse() {
-  const [activeId, setActiveId] = useState(0),
-    { maxPage } = useSelector(({ auth }) => auth),
-    { filtered, activePage } = useSelector(({ preferences }) => preferences);
+  const { maxPage } = useSelector(({ auth }) => auth),
+    { filtered, activePage } = useSelector(({ preferences }) => preferences),
+    [activeId, setActiveId] = useState(0);
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">

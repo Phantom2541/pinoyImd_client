@@ -5,6 +5,7 @@ const url = "assets/branches";
 
 const initialState = {
   collections: [],
+  formSubmitted: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -139,6 +140,8 @@ export const reduxSlice = createSlice({
   reducers: {
     RESET: (state) => {
       state.isSuccess = false;
+      state.formSubmitted = false;
+      state.isSuccess = false;
       state.message = "";
     },
   },
@@ -192,25 +195,27 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
+        if (state.collections.length > 0) {
+          const index = state.collections.findIndex(
+            (item) => item._id === payload._id
+          );
 
-        state.collections[index] = payload;
+          state.collections[index] = payload;
+        }
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;

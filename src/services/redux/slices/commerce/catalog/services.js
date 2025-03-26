@@ -1,11 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
+import { Services } from "../../../../../services/fakeDb/index";
 
 const url = "commerce/catalog/services";
 
 const initialState = {
+  /**
+   * for search and custom select.
+   */
   collections: [],
   filtered: [],
+  cluster: [],
+  template: "",
+  /**
+   * for pagination
+   */
   maxPage: 5, // for max page
   totalPages: 0, // for pages
   activePage: 1, // for active page
@@ -72,11 +81,23 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetCLUSTER: (state, { payload }) => {
+      state.template = payload;
+      state.filtered = state.cluster =
+        payload === -1
+          ? [...state.collections]
+          : state.collections.filter((item) => item.template === payload);
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = [...payload];
+    },
     SetSERVICES: (state, { payload }) => {
-      const { collections, maxPage } = payload;
+      const { filtered, maxPage } = payload;
+
+      // console.log("collections: ", filtered);
 
       // Create a copy before sorting to avoid modifying frozen state
-      const sortedCollections = [...collections].sort((a, b) => {
+      const sortedCollections = [...filtered].sort((a, b) => {
         // Customize sorting logic as needed
         return a.name.localeCompare(b.name); // Example: Sorting alphabetically by 'url' property
       });
@@ -126,10 +147,25 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
+      // .addCase(BROWSE.fulfilled, (state, action) => {
+      //   const { payload, success } = action.payload;
+      //   state.isSuccess = success;
+      //   state.collections = payload;
+      //   state.isLoading = false;
+      // })
+
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload, success } = action.payload;
-        state.isSuccess = success;
-        state.collections = payload;
+        const { payload } = action.payload;
+        const services = [...Services.collections]
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((service) => {
+            const references = payload.filter(
+              ({ serviceId }) => serviceId === service.id
+            );
+            return { ...service, references };
+          });
+
+        state.cluster = state.filtered = state.collections = [...services];
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -179,7 +215,14 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetSERVICES, SetByTEMPLATES, SetMaxPage, SetActivePAGE, RESET } =
-  reduxSlice.actions;
+export const {
+  SetSERVICES,
+  SetByTEMPLATES,
+  SetMaxPage,
+  SetActivePAGE,
+  SetFILTERED,
+  SetCLUSTER,
+  RESET,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

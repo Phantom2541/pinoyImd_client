@@ -15,13 +15,12 @@ const login = async (email, password) =>
        * Clear the local storage first
        */
       localStorage.clear();
-      const { payload } = data;
-      localStorage.setItem("token", payload.token);
-      localStorage.setItem("email", payload.auth.email);
-      localStorage.setItem(
-        "activePlatform",
-        payload.auth?.activePlatform.platform
-      );
+      const { token, auth } = data.payload;
+      localStorage.setItem("token", token);
+      localStorage.setItem("email", auth.email);
+      localStorage.setItem("auth", JSON.stringify(auth));
+      localStorage.setItem("activePlatform", auth?.activePlatform.platform);
+
       return data;
     })
     .catch(({ response }) => {

@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   MDBModal,
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
   MDBBtn,
-  MDBRow,
-  MDBCol,
-  MDBInput,
 } from "mdbreact";
 
-const _form = {
-  name: "",
-  companyName: "",
-  address: {
-    region: "REGION III (CENTRAL LUZON)",
-    province: "NUEVA ECIJA",
-    city: "GENERAL TINIO (PAPAYA)",
-    barangay: "Pias",
-  },
-};
+// const _form = {
+//   name: "",
+//   displayname: "",
+//   address: {
+//     region: "REGION III (CENTRAL LUZON)",
+//     province: "NUEVA ECIJA",
+//     city: "GENERAL TINIO (PAPAYA)",
+//     barangay: "Pias",
+//   },
+// };
 
 export default function Modal({ show, toggle, selected }) {
   return (

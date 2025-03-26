@@ -29,22 +29,30 @@ export default function Summary() {
       ssx,
       authorizedBy,
       department,
+      membership,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState(0),
-    // [cash, setCash] = useState(0),
+    [cash, setCash] = useState(0),
+    [loading, setLoading] = useState(false),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  const { gross = 0, discount = 0 } = computeGD(cart, category, privilege),
+  const { gross = 0, discount = 0 } = computeGD(
+      cart,
+      category,
+      privilege,
+      membership
+    ),
     amount = gross - discount,
     { abbr = undefined } = Categories[category],
     paymentOptions = Payments[abbr];
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
 
-    const cash = Number(e.target.amount.value);
+    if (loading) return; // Prevent multiple clicks
+    setLoading(true); // Disable button while saving
 
     const _data = {
       physicianId: physicianId?.physician || undefined,
@@ -54,7 +62,7 @@ export default function Summary() {
       branchId: activePlatform.branchId,
       customerId: customer._id,
       cashierId: auth._id,
-      category: category === 0 ? "walkin" : abbr,
+      category: category === 0 ? "wi" : abbr,
       payment: paymentOptions[payment],
       cash,
       amount,
@@ -73,13 +81,9 @@ export default function Summary() {
             packages = [],
             _id,
             isNew,
-            // up: soldUp,
             discount: soldDiscount,
           } = menu,
-          {
-            up,
-            // , discount
-          } = computeGD(menu, category, privilege);
+          { up } = computeGD(menu, category, privilege, membership);
 
         return {
           capital,
@@ -103,8 +107,6 @@ export default function Summary() {
       });
 
     if (customer?.privilege !== privilege && privilege !== 4)
-      // 4 : special discount
-      // a Special occasion of privilege
       dispatch(
         PATIENTUPDATE({
           token,
@@ -114,16 +116,18 @@ export default function Summary() {
 
     const data = removeUndefinedValues(_data);
 
-    dispatch(SAVE({ token, data }))
-      .then(() => {
-        dispatch(SETCART());
-        addToast("Transaction completed successfully", { appearance: "info" });
-      })
-      .catch((error) => {
-        addToast("Transaction failed", { appearance: "error" });
-      });
-
-    return dispatch(RESET());
+    try {
+      await dispatch(SAVE({ token, data })).unwrap(); // Ensure save completes before proceeding
+      dispatch(SETCART());
+      addToast("Transaction completed successfully", { appearance: "info" });
+    } catch (error) {
+      addToast("Transaction failed", { appearance: "error" });
+    } finally {
+      setLoading(false); // Re-enable the button after transaction
+      setCash(0);
+      setPayment(0);
+      dispatch(RESET());
+    }
   };
 
   return (
@@ -169,9 +173,10 @@ export default function Summary() {
               <input
                 type="number"
                 min={amount}
-                // onChange={({ target }) => setCash(Number(target.value))}
+                value={cash}
+                onChange={({ target }) => setCash(Number(target.value))}
                 placeholder="Amount in Peso"
-                required
+                required={!membership}
                 name="amount"
               />
             </td>

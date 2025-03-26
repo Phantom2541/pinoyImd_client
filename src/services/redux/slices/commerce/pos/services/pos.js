@@ -1,7 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../../utilities";
+import { axioKit, getAge } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
 // import _ from "lodash";
+const url = "commerce/pos/services/deals";
+// Get data once
+const authData = JSON.parse(localStorage.getItem("auth")) || {};
+const { branch } = JSON.parse(localStorage.getItem("activePlatform")) || {};
 const defaultCustomer = {
   fullName: {
     fname: "",
@@ -10,9 +14,9 @@ const defaultCustomer = {
     suffix: "",
   },
   address: {
-    region: "REGION III (CENTRAL LUZON)",
-    province: "NUEVA ECIJA",
-    city: "CABANATUAN CITY",
+    region: branch?.address?.region,
+    province: branch?.address?.province,
+    city: branch?.address?.city,
     barangay: "",
     street: "",
   },
@@ -22,10 +26,9 @@ const defaultCustomer = {
   privilege: 0,
   email: "",
 };
-const url = "commerce/pos/services/deals";
 const defaultState = {
-  branchId: JSON.parse(localStorage.getItem("auth"))?.branchId || undefined,
-  cashierId: JSON.parse(localStorage.getItem("auth"))?._id || undefined,
+  branchId: authData?.branchId || undefined,
+  cashierId: authData?._id || undefined,
   transaction: { _id: "default" },
   customerId: { _id: "default" },
   customer: {},
@@ -42,6 +45,7 @@ const defaultState = {
   gross: 0,
   physicianId: undefined,
   sourceId: undefined,
+  membership: undefined,
   cart: [],
   isPickup: true,
   isPrint: true,
@@ -152,7 +156,10 @@ export const reduxSlice = createSlice({
     SETPATIENT: (state, { payload }) => {
       state.customer = payload;
       state.customerId = payload?._id;
+      const isSenior = getAge(payload.dob, true) > 59; // Use payload instead of customer
+      state.privilege = payload.privilege || (isSenior ? 2 : 0);
     },
+
     SETSEARCHKEY: (state, { payload }) => {
       state.customer = {
         ...defaultCustomer,
@@ -185,7 +192,9 @@ export const reduxSlice = createSlice({
       state.physicianId = payload;
     },
     SETSOURCE: (state, { payload }) => {
-      state.sourceId = payload;
+      const { _id, membership } = payload;
+      state.sourceId = _id;
+      state.membership = membership;
     },
     ADDTOCART: (state, { payload }) => {
       const index = state.cart.findIndex((item) => item._id === payload._id);

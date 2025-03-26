@@ -107,6 +107,8 @@ const cashier = [
       {
         name: "Payments",
         path: "/payments",
+        icon: "dollar-sign",
+        title: "List of payments made.",
         component: Payments,
       },
       /**
@@ -184,6 +186,13 @@ const cashier = [
         icon: "handshake",
         title: "List of company that provides supplies",
         // component: Suppliers,
+      },
+      {
+        name: "Hotlines",
+        path: "/hotlines",
+        icon: "phone",
+        title: "List of Hotlines",
+        // component: Hotlines,
       },
     ],
   },

@@ -20,7 +20,7 @@ import {
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../services/utilities";
-import CustomSelect from "../../../../../components/searchables/customSelect";
+import { Select } from "../../../../../components/customizable";
 // declare your expected items
 const _form = {
   user: "",
@@ -150,7 +150,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         <form onSubmit={handleSubmit}>
           <MDBRow>
             <MDBCol md="12">
-              <CustomSelect
+              <Select
                 choices={department}
                 onChange={handleDepartmentChange}
                 preValue={selected.department ? selected.department : ""}
@@ -163,7 +163,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           </MDBRow>
           <MDBRow>
             <MDBCol md={"12"} className="mb-3">
-              <CustomSelect
+              <Select
                 choices={sections}
                 onChange={handleSectionChange}
                 preValue={selected.section && selected.section}
@@ -177,7 +177,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
           <MDBRow>
             <MDBCol md="12">
-              <CustomSelect
+              <Select
                 choices={crews.map((crew) => ({
                   _id: crew?.user?._id,
                   fullName: fullName(crew?.user?.fullName),
