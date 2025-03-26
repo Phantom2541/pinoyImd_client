@@ -28,9 +28,9 @@ const _form = {
     suffix: "",
   },
   address: {
-    region: branch.address.region,
-    province: branch.address.province,
-    city: branch.address.city,
+    region: branch?.address.region,
+    province: branch?.address.province,
+    city: branch?.address.city,
     barangay: "",
     street: "",
   },
