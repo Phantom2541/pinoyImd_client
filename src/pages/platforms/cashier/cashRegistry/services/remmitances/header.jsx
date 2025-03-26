@@ -23,9 +23,9 @@ const Header = () => {
   useEffect(() => {
     if (token && activePlatform?.branchId && year && month) {
       const startDate = new Date(year, month, 1);
-      startDate.setUTCHours(0, 0, 0, 0);
+      startDate.setHours(0, 0, 0, 0);
       const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
-      endDate.setUTCHours(23, 59, 59, 999);
+      endDate.setHours(23, 59, 59, 999);
 
       dispatch(
         BROWSE({
