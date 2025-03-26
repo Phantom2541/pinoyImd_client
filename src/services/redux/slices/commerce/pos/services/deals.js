@@ -158,6 +158,37 @@ export const SAVE = createAsyncThunk(
   }
 );
 
+export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(url, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const UPDATE_INFO = createAsyncThunk(
+  `${url}/UPDATE_INFO`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "update_info");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 /**
  * Automatic generate URL.
  */
@@ -177,24 +208,6 @@ export const LABRESULT = createAsyncThunk(
         data,
         token
       );
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const UPDATE = createAsyncThunk(
-  `${url}/update`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -511,6 +524,30 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+
+      .addCase(UPDATE_INFO.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE_INFO.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const index = state.collections.findIndex(
+          ({ _id }) => _id === payload._id
+        );
+        state.collections[index] = {
+          ...state.collections[index],
+          ...payload,
+        };
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE_INFO.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
       })
 
       .addCase(LABRESULT.pending, (state) => {

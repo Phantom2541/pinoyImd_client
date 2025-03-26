@@ -10,6 +10,7 @@ import {
   SetFilterByCASHIER,
   RESET,
 } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { INSOURCE } from "../../../../../../services/redux/slices/assets/providers";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
@@ -34,6 +35,10 @@ const Header = () => {
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, auth]);
+
+  useEffect(() => {
+    dispatch(INSOURCE({ token, key: { vendors: activePlatform?.branchId } }));
+  }, [dispatch, activePlatform]);
 
   useEffect(() => {
     if (message) {

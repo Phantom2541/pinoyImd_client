@@ -1,5 +1,5 @@
 const Categories = [
-  { name: "Walkin", abbr: "opd", color: "green" },
+  { name: "Walkin", abbr: "walkin", color: "green" },
   { name: "Out Patient Department", abbr: "opd", color: "green" },
   { name: "Emergency Room", abbr: "er", color: "blue" },
   { name: "Charity Ward", abbr: "cw", color: "blue" },
