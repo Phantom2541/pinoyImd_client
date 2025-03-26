@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { REGISTER_GHOST_COMPANY } from "../../../../../../services/redux/slices/assets/providers";
 const _form = {
   name: "",
-  companyName: "",
+  displayname: "",
   address: {
     region: "REGION III (CENTRAL LUZON)",
     province: "NUEVA ECIJA",
@@ -36,7 +36,7 @@ export default function Modal({ show, toggle, selected }) {
       setForm((prev) => ({
         ...prev,
         name: selected.name,
-        companyName: name,
+        displayname: name,
         companyId: _id,
         providerId: selected._id,
       }));
@@ -70,7 +70,7 @@ export default function Modal({ show, toggle, selected }) {
             <MDBInput
               label="Comapny Name"
               required
-              value={form.companyName}
+              value={form.displayname}
               readOnly
             />
           </MDBCol>

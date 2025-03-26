@@ -51,7 +51,7 @@ const Tables = () => {
               <td>{index + 1}</td>
               <td>
                 {vendors
-                  ? `${vendors.companyName} ${vendors.name}`
+                  ? `${vendors.displayname} ${vendors.name}`
                   : `${name} ${subName || ""}`}
               </td>
 

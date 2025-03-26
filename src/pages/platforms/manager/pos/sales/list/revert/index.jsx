@@ -28,7 +28,7 @@ export default function RevertSale() {
     [isLocked, setIsLocked] = useState(true),
     [haveMessage, setHaveMessage] = useState(false),
     dispatch = useDispatch();
-  const toggle = () => dispatch(ToggleRevertModal());
+  const toggle = () => dispatch(ToggleRevertModal({}));
 
   useEffect(() => {
     if (show) {
@@ -41,7 +41,7 @@ export default function RevertSale() {
     if (!formSubmitted && isSuccess && show) {
       toggle();
     }
-  }, [formSubmitted, isSuccess, dispatch, show]);
+  }, [formSubmitted, isSuccess, dispatch, show, toggle]);
 
   useEffect(() => {
     if (message) {

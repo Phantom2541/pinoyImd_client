@@ -1,29 +1,39 @@
-import { Categories } from "../../fakeDb";
+import { Categories, Memberships } from "../../fakeDb";
 
-const individual = (menu, abbr, privilege) => {
-  console.log("menu", menu);
-  console.log("abbr", abbr);
-  console.log("privilege", privilege);
-
+const individual = (menu, category, privilege, membership) => {
   const { isPromo, promo = 0, discountable } = menu;
 
-  const _abbr = ["opd", "bp", "mc", "sc"].includes(abbr) ? "opd" : abbr;
-  const gross = menu[_abbr],
-    up = (gross * 80) / 100;
+  const _abbr = ["wi", "bp", "mc", "is"].includes(category) ? "opd" : category;
+  const gross = menu[_abbr];
+  let up = (gross * 80) / 100;
 
-  if (privilege === 4) {
-    const _up = promo > 0 ? promo : up;
+  if (membership && category === "is") {
+    const dr = Memberships.find((m) => m.value === membership)?.discount || 0;
+    const discount = gross * dr;
+    up = gross - discount;
 
     return {
       gross,
-      up: _up,
-      discount: gross - _up,
+      up,
+      discount,
+      color: "success",
+      title: "Member Discount",
+    };
+  }
+
+  if (privilege === 4) {
+    up = promo > 0 ? promo : up;
+
+    return {
+      gross,
+      up,
+      discount: gross - up,
       color: "info",
       title: "Special Discount",
     };
   }
 
-  if (abbr === "opd" && isPromo)
+  if (category === "opd" && isPromo)
     return {
       gross,
       up: promo,
@@ -52,13 +62,14 @@ const individual = (menu, abbr, privilege) => {
   };
 };
 
-const computeGD = (menu, categoryIndex, privilege) => {
+const computeGD = (menu, categoryIndex, privilege, membership) => {
   const category = Categories[categoryIndex] || {}; // Ensure category is always an object
   console.log("category", category);
 
   const abbr = category.abbr || ""; // Fallback to an empty string if undefined
 
-  if (!Array.isArray(menu)) return individual(menu, abbr, privilege);
+  if (!Array.isArray(menu))
+    return individual(menu, abbr, privilege, membership);
 
   const accumulator = {
     gross: 0,
@@ -66,7 +77,7 @@ const computeGD = (menu, categoryIndex, privilege) => {
   };
 
   for (const item of menu) {
-    const { gross, discount } = individual(item, abbr, privilege);
+    const { gross, discount } = individual(item, abbr, privilege, membership);
     accumulator.gross += gross;
     accumulator.discount += discount;
   }

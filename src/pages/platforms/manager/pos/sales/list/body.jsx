@@ -30,7 +30,7 @@ import {
 import "./style.css";
 
 export const Tables = () => {
-  const { token, auth } = useSelector(({ auth }) => auth),
+  const { token } = useSelector(({ auth }) => auth),
     { collections, filtered, maxPage, activePage } = useSelector(
       ({ deals }) => deals
     ),
@@ -237,7 +237,7 @@ export const Tables = () => {
                   {deal.physicianId?.fullName.lname && (
                     <h6>Dr. {deal.physicianId.fullName.lname}</h6>
                   )}
-                  <p>{deal.source?.companyName || deal.source?.name}</p>
+                  <p>{deal.source?.displayname || deal.source?.name}</p>
                 </td>
                 <td style={{ fontWeight: 400 }}>
                   <div className="d-flex align-items-center">

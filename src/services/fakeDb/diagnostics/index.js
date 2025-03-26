@@ -12,6 +12,5 @@ export { default as FecalColor } from "./fecalColor";
 export { default as Cellcount } from "./cellCount";
 export { default as Diffcount } from "./diffCount";
 export { default as Rci } from "./rciCount";
-export { default as Categories } from "./categories";
 export { default as References } from "./references";
 export { default as Templates } from "./templates";

@@ -109,7 +109,7 @@ export default function Modal() {
   };
 
   // use for direct values like strings and numbers
-  const { name = "", companyName = "" } = selected || {};
+  const { name = "", displayname = "" } = selected || {};
   return (
     <MDBModal isOpen={showCompanyModal} toggle={toggle} size="md" backdrop>
       <MDBModalHeader
@@ -118,7 +118,7 @@ export default function Modal() {
       >
         <h5>
           <MDBIcon className="mr-2" icon="tag" />
-          Tag {`${name} ${companyName}`}
+          Tag {`${name} ${displayname}`}
         </h5>
         <h5
           style={{

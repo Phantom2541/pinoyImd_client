@@ -115,7 +115,7 @@ export default function Search({ setSource = () => {} }) {
                   : "External provider, not in your records"}
               </span>
               {results?.map((result) => {
-                const { _id, name, isGhost = false, companyName } = result;
+                const { _id, name, isGhost = false, displayname } = result;
 
                 return (
                   <li
@@ -133,7 +133,7 @@ export default function Search({ setSource = () => {} }) {
                       className="mr-2"
                       style={{ color: "blue" }}
                     />
-                    <small>{`${name} ${companyName}`}</small>
+                    <small>{`${name} ${displayname}`}</small>
                   </li>
                 );
               })}

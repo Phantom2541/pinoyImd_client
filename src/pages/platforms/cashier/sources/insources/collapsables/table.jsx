@@ -41,18 +41,18 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
   const handleRegister = (user) => {
     dispatch(SAVE({ ...user, token }));
   };
-  const handleEdit = (user) => {
-    dispatch(UPDATEUSER(user));
-  };
+  // const handleEdit = (user) => {
+  //   dispatch(UPDATEUSER(user));
+  // };
   const handleGhostUpdate = (user) => {
     dispatch(UPDATEGHOST(user));
   };
 
-  const handleUpdate = () => {
-    // const { specialization, newSpecialization } = selected;
-    // if (specialization === newSpecialization){
-    // }
-  };
+  // const handleUpdate = () => {
+  //   // const { specialization, newSpecialization } = selected;
+  //   // if (specialization === newSpecialization){
+  //   // }
+  // };
 
   return (
     <MDBTable striped bordered>

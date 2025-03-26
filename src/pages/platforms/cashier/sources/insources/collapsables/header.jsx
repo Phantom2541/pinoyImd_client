@@ -29,10 +29,10 @@ const Header = ({
   } = insource;
   const isGhost = clients?._id ? false : true;
 
-  const { name, companyName } = clients || "";
+  const { name, displayname } = clients || "";
 
   const baseName = isGhost ? ghostName : name;
-  const baseSubname = isGhost ? ghostSubName : companyName;
+  const baseSubname = isGhost ? ghostSubName : displayname;
 
   const { color, border } = collapse.getStyle(index, activeId, didHoverId);
 

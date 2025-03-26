@@ -13,7 +13,7 @@ const EditModal = () => {
     <Modal isOpen={showModal} toggle={closeModal} backdrop={false}>
       <ModalHeader>Edit Vendor</ModalHeader>
       <ModalBody>
-        <p>Editing: {selected?.companyName || selected?.name}</p>
+        <p>Editing: {selected?.displayname || selected?.name}</p>
         {/* Add form fields here */}
       </ModalBody>
       <ModalFooter>

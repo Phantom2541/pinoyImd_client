@@ -10,6 +10,7 @@ import {
 } from "../../../../../../../../services/utilities";
 import {
   Categories,
+  Memberships,
   Privileges,
 } from "../../../../../../../../services/fakeDb";
 import {
@@ -88,7 +89,12 @@ export default function PosCard() {
       sources?.find((source) => source._id.toString() === _id.toString())
         ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
     setPhysicians(_physicians); // Update the physicians list based on the filtered data
-    dispatch(SETSOURCE({ _id })); // Dispatch the selected source
+    // Dispatch the selected source
+    // if membership is not null
+    const membership = sources.find(
+      (source) => source._id.toString() === _id
+    )?.membership;
+    dispatch(SETSOURCE({ _id, membership }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
 
@@ -157,10 +163,10 @@ export default function PosCard() {
             onChange={({ target }) => handleSource(target.value)}
           >
             <option value="">None</option>
-            {/* vendors : note if not register, will show the tempory details */}
-            {sources?.map(({ _id, name, subName }) => (
-              <option key={_id} value={_id}>
-                {name?.toUpperCase()} {subName?.toUpperCase()}
+            {sources?.map(({ _id, clients, membership }) => (
+              <option key={_id} value={_id} title={membership}>
+                {Memberships.find(({ value }) => value === membership)?.emoji}
+                {clients?.displayname}
               </option>
             ))}
           </select>
