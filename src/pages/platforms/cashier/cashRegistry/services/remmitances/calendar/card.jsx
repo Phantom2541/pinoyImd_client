@@ -41,6 +41,7 @@ const Card = ({ txt, num, index, item = {} }) => {
               {label}: {currency(value)}
             </h6>
           ))}
+
         {/* 🟢 Show COH only if transactions exist */}
         {!!closing && (
           <>

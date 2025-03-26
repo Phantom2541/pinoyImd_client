@@ -26,13 +26,15 @@ export default function Cashier() {
     if (_selected) {
       dispatch(SetSELECTED({ value: _selected }));
     } else {
-      const options = {
-        timeZone: "Asia/Manila",
+      /**
+       * get local time of users
+       * Format: YYYY-MM-DD
+       */
+      const date = new Date().toLocaleDateString(undefined, {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
-      };
-      const date = new Date(options);
+      });
 
       dispatch(
         AUTOSELECT({

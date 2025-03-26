@@ -15,7 +15,7 @@ const Input = ({
     if (!formSubmitted && isSuccess) {
       handleClose();
     }
-  }, [formSubmitted, isSuccess]);
+  }, [formSubmitted, isSuccess, handleClose]);
   return (
     <div className="d-flex align-items-center customizable-input-container">
       <input

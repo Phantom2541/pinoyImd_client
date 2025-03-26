@@ -127,7 +127,7 @@ const Tables = () => {
                   @ {new Date(deal?.createdAt).toLocaleTimeString()}
                 </td>
                 <td>
-                  <h6>{deal.source?.companyName}</h6>
+                  <h6>{deal.source?.displayname}</h6>
                   <p>
                     {deal.physicianId?.fullName.lname &&
                       `Dr. ${deal.physicianId.fullName.lname}`}

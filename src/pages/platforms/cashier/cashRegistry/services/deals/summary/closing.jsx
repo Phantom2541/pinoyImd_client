@@ -9,6 +9,7 @@ import {
 } from "mdbreact";
 import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import SummaryLoading from "./loading";
+import { Services } from "../../../../../../../services/fakeDb";
 
 export default function Vouchers() {
   const { token } = useSelector(({ auth }) => auth),
@@ -122,10 +123,8 @@ export default function Vouchers() {
                           key={_id}
                           className="list-group-item d-flex justify-content-between"
                         >
-                          <span>{abbreviation}</span>
-                          <strong className="text-primary">
-                            Count: {count}
-                          </strong>
+                          <span>{abbreviation}</span> :
+                          <strong className="text-primary">{count}</strong>
                         </li>
                       ))}
                     </ul>
@@ -162,10 +161,8 @@ export default function Vouchers() {
                           key={_id}
                           className="list-group-item d-flex justify-content-between"
                         >
-                          <span>Service ID: {_id}</span>
-                          <strong className="text-primary">
-                            Count: {count}
-                          </strong>
+                          <span>{Services.getAbbr(_id) || _id}</span> :
+                          <strong className="text-primary">{count}</strong>
                         </li>
                       ))}
                     </ul>

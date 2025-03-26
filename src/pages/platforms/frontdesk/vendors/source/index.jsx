@@ -54,7 +54,7 @@ export default function Source() {
                   <tr>
                     <td>{index + 1}</td>
                     <td>
-                      {source?.clients?.companyName}\{source?.clients?.name}
+                      {source?.clients?.displayname}\{source?.clients?.name}
                     </td>
                     <td>{fullAddress(source?.clients?.address)}</td>
                   </tr>

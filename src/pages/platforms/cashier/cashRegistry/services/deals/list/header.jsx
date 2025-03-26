@@ -19,8 +19,11 @@ const Header = () => {
   //Initial CASHIER
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); //date and time today starting from 00:00 AM
+      const date = new Date().toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
 
       dispatch(
         CASHIER({
@@ -28,7 +31,7 @@ const Header = () => {
           key: {
             branchId: activePlatform?.branchId,
             cashierId: auth._id,
-            date: today,
+            date,
           },
         })
       );

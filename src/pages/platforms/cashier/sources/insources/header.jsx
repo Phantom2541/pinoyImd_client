@@ -29,9 +29,9 @@ const Header = () => {
   }, [token, activePlatform, dispatch]);
 
   const setSource = (source) => {
-    const { name, companyName } = source;
+    const { name, displayname } = source;
     Swal.fire({
-      title: `${name} ${companyName}`,
+      title: `${name} ${displayname}`,
       text: `Do you want to register him as a new provider?`,
       icon: "question",
       showCancelButton: true,

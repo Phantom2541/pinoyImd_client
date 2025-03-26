@@ -147,7 +147,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               return (
                 <option
                   key={`company-${index}`}
-                  value={`${branch._id}-${branch.companyName}`}
+                  value={`${branch._id}-${branch.displayname}`}
                 >
                   {branch.name}
                 </option>

@@ -25,7 +25,10 @@ export default function Discount() {
     } = useSelector(({ deals }) => deals),
     [newAmount, setNewAmount] = useState(0),
     dispatch = useDispatch();
-  const toggle = () => dispatch(ToggleDiscountModal());
+  const toggle = React.useCallback(
+    () => dispatch(ToggleDiscountModal()),
+    [dispatch]
+  );
 
   useEffect(() => {
     if (show) {
@@ -37,7 +40,7 @@ export default function Discount() {
     if (!formSubmitted && isSuccess && show) {
       toggle();
     }
-  }, [formSubmitted, isSuccess, dispatch, show]);
+  }, [formSubmitted, isSuccess, dispatch, show, toggle]);
 
   const { discount, amount, _id, customerId } = selected;
   const originalAmount = discount ? discount + amount : amount;

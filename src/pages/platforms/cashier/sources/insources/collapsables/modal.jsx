@@ -18,7 +18,7 @@ import {
 } from "../../../../../../services/redux/slices/assets/providers";
 const _form = {
   name: "",
-  companyName: "",
+  displayname: "",
   address: {
     region: "REGION III (CENTRAL LUZON)",
     province: "NUEVA ECIJA",
@@ -45,6 +45,7 @@ export default function Modal({ show, toggle, selected }) {
       setForm((prev) => ({
         ...prev,
         name: selected.name,
+        displayname: selected.displayname,
         providerId: selected._id,
       }));
     }
@@ -84,6 +85,14 @@ export default function Modal({ show, toggle, selected }) {
         <MDBRow>
           <MDBCol>
             <MDBInput label="Name" required value={form.name} />
+          </MDBCol>
+          <MDBCol>
+            <MDBInput
+              label="Branch Display name"
+              required
+              value={form.displayname}
+              readOnly
+            />
           </MDBCol>
         </MDBRow>
         <AddressSelect
