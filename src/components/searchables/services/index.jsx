@@ -1,6 +1,5 @@
 import React from "react";
 import { Services as ServicesSchema } from "./../../../services/fakeDb";
-
 const Services = ({ template, service, setService }) => {
   const services = ServicesSchema.filterByTemplate(template);
 

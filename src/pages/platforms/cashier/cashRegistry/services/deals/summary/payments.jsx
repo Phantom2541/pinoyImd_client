@@ -4,9 +4,10 @@ import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
 import { AUTOSELECT } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import SummaryLoading from "./loading";
 
 export default function Payments() {
-  const { total, collections } = useSelector(({ deals }) => deals),
+  const { total, collections, isLoading } = useSelector(({ deals }) => deals),
     { auth, activePlatform, token } = useSelector(({ auth }) => auth),
     { selected } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
@@ -29,16 +30,15 @@ export default function Payments() {
   }, [selected]);
 
   useEffect(() => {
-    const options = {
-      timeZone: "Asia/Manila",
+    /**
+     * get local time of users
+     * Format: YYYY-MM-DD
+     */
+    const date = new Date().toLocaleDateString(undefined, {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-    };
-    const formatter = new Intl.DateTimeFormat("en-CA", options);
-    const date = formatter.format(new Date());
-
-    console.log("date", date); // Output: YYYY-MM-DD in Philippine Standard Time
+    });
 
     dispatch(
       AUTOSELECT({
@@ -68,45 +68,53 @@ export default function Payments() {
       </MDBCollapseHeader>
       <MDBCollapse isOpen={isOpen}>
         <MDBCardBody className="pt-2">
-          <div className="d-flex justify-content-between">
-            <span>Floating Cash:</span>
-            <strong className="text-warning">{currency(sum)}</strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Cash :</span>
-            <strong className="text-primary">
-              {currency(paymentTotals.cash)}
-            </strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Gcash :</span>
-            <strong className="text-primary">
-              {currency(paymentTotals.gcash)}
-            </strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Vouchers :</span>
-            <strong className="text-primary">
-              {currency(paymentTotals.vouchers)}
-            </strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Downpayment:</span>
-            <strong className="text-danger">
-              {currency(paymentTotals.pending)}
-            </strong>
-          </div>
-          <div className="d-flex justify-content-between border-bottom py-2">
-            <span>Balance:</span>
-            <strong className="text-danger">
-              {currency(paymentTotals.pending)}
-            </strong>
-          </div>
-          <hr />
-          <div className="d-flex justify-content-between border-bottom pb-2">
-            <span>Total :</span>
-            <strong className="text-success">{currency(total)}</strong>
-          </div>
+          {!isLoading ? (
+            <>
+              <div className="d-flex justify-content-between">
+                <span>Floating Cash:</span>
+                <strong className="text-warning">{currency(sum)}</strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Cash :</span>
+                <strong className="text-primary">
+                  {currency(paymentTotals.cash)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Gcash :</span>
+                <strong className="text-primary">
+                  {currency(paymentTotals.gcash)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Vouchers :</span>
+                <strong className="text-primary">
+                  {currency(paymentTotals.vouchers)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Downpayment:</span>
+                <strong className="text-danger">
+                  {currency(paymentTotals.pending)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2">
+                <span>Balance:</span>
+                <strong className="text-danger">
+                  {currency(paymentTotals.pending)}
+                </strong>
+              </div>
+              <hr />
+              <div className="d-flex justify-content-between border-bottom pb-2">
+                <span>Total :</span>
+                <strong className="text-success">
+                  {currency(total + sum)}
+                </strong>
+              </div>
+            </>
+          ) : (
+            <SummaryLoading />
+          )}
         </MDBCardBody>
       </MDBCollapse>
     </MDBCard>

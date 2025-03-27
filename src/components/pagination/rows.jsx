@@ -12,7 +12,7 @@ export default function TableRowCount({ disablePageSelect }) {
   const { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  const handleChange = option => dispatch(MAXPAGE(Number(option[0])));
+  const handleChange = (option) => dispatch(MAXPAGE(Number(option[0])));
 
   return (
     <MDBSelect

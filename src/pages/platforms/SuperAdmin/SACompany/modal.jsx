@@ -17,7 +17,7 @@ import {
 import { BROWSE } from "../../../../services/redux/slices/assets/persons/users";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import CustomSelect from "../../../../components/searchables/customSelect";
+import { Select } from "../../../../components/customizable";
 import { fullName } from "../../../../services/utilities";
 
 // declare your expected items
@@ -181,7 +181,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           </MDBRow>
           <MDBRow>
             <MDBCol md="6">
-              <CustomSelect
+              <Select
                 choices={category}
                 preValue={selected.category && selected.category}
                 label="Category"
@@ -191,7 +191,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               />
             </MDBCol>
             <MDBCol md="6">
-              <CustomSelect
+              <Select
                 choices={users}
                 onChange={handleChangeCeo}
                 preValue={selected._id ? fullName(selected?.ceo?.fullName) : ""}

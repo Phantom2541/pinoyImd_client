@@ -238,9 +238,8 @@ export const reduxSlice = createSlice({
       .addCase(LOGIN.fulfilled, (state, action) => {
         const { success, payload } = action.payload,
           { token, auth, branches, isCeo, access, isPatient } = payload;
-        const { activePlatform } = auth;
-        if (activePlatform) {
-          const { branchId } = activePlatform;
+        const { branchId } = auth.activePlatform;
+        if (branchId) {
           const _access = access
             .filter(({ branchId: bID }) => bID === branchId)
             .map((a) => a.platform);
@@ -250,7 +249,7 @@ export const reduxSlice = createSlice({
           const department = Policy.getDepartment(contract.designation) || {};
           const role = Policy.getRole(contract.designation) || {};
 
-          state.activePlatform = {
+          const activePlatform = {
             ...auth.activePlatform,
             branch,
             access: [..._access],
@@ -258,6 +257,11 @@ export const reduxSlice = createSlice({
             role,
             position: contract.designation,
           };
+          localStorage.setItem(
+            "activePlatform",
+            JSON.stringify(activePlatform)
+          );
+          state.activePlatform = activePlatform;
           state.company = branch?.companyId;
         }
         state.isPatient = isPatient;
@@ -344,6 +348,12 @@ export const reduxSlice = createSlice({
             position: contract.designation,
           };
           state.company = branch?.companyId;
+          state.image = `${ENDPOINT}${profileUrl}/profile.jpg`;
+          state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
+          state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
+          state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
+          state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
+          state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         }
         /**
          * this will control the topbar selections

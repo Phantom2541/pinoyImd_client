@@ -8,13 +8,17 @@ import {
   MDBRow,
   MDBCol,
   MDBInput,
+  MDBTypography,
 } from "mdbreact";
 import AddressSelect from "../../../../../../components/searchables/addressSelect";
 import { useDispatch, useSelector } from "react-redux";
-import { REGISTER_GHOST_COMPANY } from "../../../../../../services/redux/slices/assets/providers";
+import {
+  REGISTER_GHOST_COMPANY,
+  RESET,
+} from "../../../../../../services/redux/slices/assets/providers";
 const _form = {
   name: "",
-  companyName: "",
+  displayname: "",
   address: {
     region: "REGION III (CENTRAL LUZON)",
     province: "NUEVA ECIJA",
@@ -24,24 +28,28 @@ const _form = {
 };
 
 export default function Modal({ show, toggle, selected }) {
-  const { activePlatform, token } = useSelector(({ auth }) => auth),
+  const { token } = useSelector(({ auth }) => auth),
+    { formSubmitted, isSuccess } = useSelector(({ providers }) => providers),
     [form, setForm] = useState(_form),
     dispatch = useDispatch();
 
   useEffect(() => {
+    if (show && !formSubmitted && isSuccess) {
+      dispatch(RESET());
+      toggle();
+    }
+  }, [show, formSubmitted, isSuccess, dispatch, toggle]);
+
+  useEffect(() => {
     if (show) {
-      const { branch } = activePlatform;
-      const { companyId } = branch;
-      const { name, _id } = companyId;
       setForm((prev) => ({
         ...prev,
         name: selected.name,
-        companyName: name,
-        companyId: _id,
+        displayname: selected.displayname,
         providerId: selected._id,
       }));
     }
-  }, [show, selected, activePlatform]);
+  }, [show, selected]);
 
   const handleSubmit = () => {
     dispatch(
@@ -59,18 +67,30 @@ export default function Modal({ show, toggle, selected }) {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="building" className="mr-2" />
-        {form.name} register as your new client
+        {form.name} <br />
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
+        <div style={{ marginBottom: "-1rem", marginTop: "-1rem" }}>
+          <MDBTypography
+            variant="h6"
+            noteColor="warning"
+            className="mt-2 text-black-50"
+            note
+            noteTitle={"Register: "}
+          >
+            as your new provider
+          </MDBTypography>
+        </div>
+
         <MDBRow>
           <MDBCol>
             <MDBInput label="Name" required value={form.name} />
           </MDBCol>
           <MDBCol>
             <MDBInput
-              label="Comapny Name"
+              label="Branch Display name"
               required
-              value={form.companyName}
+              value={form.displayname}
               readOnly
             />
           </MDBCol>
@@ -88,9 +108,11 @@ export default function Modal({ show, toggle, selected }) {
           className="float-right mt-3"
           rounded
           color="info"
+          disabled={formSubmitted}
           onClick={handleSubmit}
         >
           Register
+          {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
         </MDBBtn>
       </MDBModalBody>
     </MDBModal>

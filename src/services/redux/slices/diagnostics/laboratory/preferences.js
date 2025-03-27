@@ -1,10 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
+import { Services } from "../../../../../services/fakeDb/index";
 
 const url = "diagnostics/laboratory/preferences";
 
 const initialState = {
   collections: [],
+  cluster: [],
+  filtered: [],
+  activePage: 1,
+  maxPage: 5,
+  template: "",
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -76,6 +82,19 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetCLUSTER: (state, { payload }) => {
+      state.template = payload;
+      state.filtered = state.cluster =
+        payload === -1
+          ? [...state.collections]
+          : state.collections.filter((item) => item.template === payload);
+    },
+
+    SetFILTERED: (state, { payload }) => {
+      console.log("SetFILTERED payload", payload);
+
+      state.filtered = [...payload];
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -90,7 +109,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload;
+        const services = [...Services.collections]
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((service) => {
+            const references = payload.filter(
+              ({ serviceId }) => serviceId === service.id
+            );
+            return { ...service, references };
+          });
+
+        state.cluster = state.filtered = state.collections = [...services];
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -162,6 +190,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { RESET, SetFILTERED, SetCLUSTER } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

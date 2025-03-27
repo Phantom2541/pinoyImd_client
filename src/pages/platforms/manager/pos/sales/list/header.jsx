@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
-import {
-  currency,
-  fullName,
-  globalSearch,
-} from "./../../../../../../services/utilities";
+import { fullName, globalSearch } from "./../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { FilterCollections } from "./../../../../../../components/searchables";
 import {
@@ -14,7 +10,7 @@ import {
   SetFilterByCASHIER,
   RESET,
 } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
-import CustomSelect from "../../../../../../components/searchables/customSelect";
+import { INSOURCE } from "../../../../../../services/redux/slices/assets/providers";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
@@ -41,6 +37,10 @@ const Header = () => {
   }, [token, dispatch, activePlatform, auth]);
 
   useEffect(() => {
+    dispatch(INSOURCE({ token, key: { vendors: activePlatform?.branchId } }));
+  }, [dispatch, activePlatform]);
+
+  useEffect(() => {
     if (message) {
       addToast(message, {
         appearance: isSuccess ? "success" : "error",
@@ -55,6 +55,9 @@ const Header = () => {
     dispatch(SetFILTERED(_filtered));
   };
 
+  useEffect(() => {
+    dispatch(SetFILTERED(collections));
+  }, [dispatch, collections]);
   useEffect(() => {
     if (!collections || collections.length === 0) return;
 
@@ -80,7 +83,10 @@ const Header = () => {
           className="form-control mr-3 bg-light"
           onChange={(e) => dispatch(SetFilterByCASHIER(e.target.value))} // setSelectedCashier(e.target.value)}
         >
-          <option value="">Select Cashier</option>
+          <option value="" disabled>
+            Select Cashier
+          </option>
+          <option value={"all"}>All</option>
           {cashiers.map((cashier) => (
             <option key={cashier._id} value={cashier._id}>
               {fullName(cashier?.fullName)}

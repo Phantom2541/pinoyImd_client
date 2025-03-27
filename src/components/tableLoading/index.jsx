@@ -14,7 +14,7 @@ function TableLoading() {
               <td key={`presetCol-${rI}`}>
                 <div
                   style={{
-                    width: `${num * 200 + 100}px`,
+                    width: `${num * 150 + 100}px`,
                     maxWidth: "100%", // para sa pending
                   }}
                 >

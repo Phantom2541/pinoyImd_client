@@ -48,13 +48,17 @@ export default function Census() {
 
     const fetchCensus = async () => {
       try {
+        console.log("📡 Calling API with key:", selected);
+        const date = new Date(selected.createdAt).toISOString().split("T")[0];
+        console.log("📡 Calling API with date:", date);
+
         const { payload } = await dispatch(
           CASHIER({
             token,
             key: {
               branchId: activePlatform?.branchId,
               cashierId: auth._id,
-              date: new Date(selected.createdAt).toISOString().split("T")[0],
+              date,
             },
           })
         );
@@ -137,6 +141,11 @@ export default function Census() {
     dispatch(CENSUS({ token, data }));
     dispatch(TOGGLE({ key: "census" }));
   };
+
+  const censusDate = selected?.createdAt
+    ? new Date(selected.createdAt).toISOString().split("T")[0]
+    : "N/A";
+
   return (
     <MDBModal
       isOpen={showCensus}
@@ -150,9 +159,13 @@ export default function Census() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="calendar-alt" className="mr-2" />
-        Census
+        Census : {censusDate}
       </MDBModalHeader>
-
+      {!selected && (
+        <p className="font-weight-bold text-danger">
+          Please declare your floating cash before proceeding with the census.
+        </p>
+      )}
       {/* Modal Body */}
       <MDBModalBody className="mb-0">
         {/* Summary Section */}
@@ -243,7 +256,7 @@ export default function Census() {
       </MDBModalBody>
 
       <MDBCardBody>
-        {!selected?.census && (
+        {!!selected && (
           <MDBBtn
             className="w-100"
             color="primary"

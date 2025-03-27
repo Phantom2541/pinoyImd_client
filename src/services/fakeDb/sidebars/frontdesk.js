@@ -48,22 +48,20 @@ const frontdesk = [
       {
         name: "Onboarding",
         path: "/onboarding",
+        icon: "tv",
         component: Onboard,
       },
       {
         name: "Tasks",
         path: "/task",
+        icon: "clipboard-list",
         component: Tasks,
       },
       {
         name: "Reports",
         path: "/reports",
+        icon: "file-alt",
         component: Reports,
-      },
-      {
-        name: "Temperature",
-        path: "/temperature",
-        component: Temperature,
       },
       {
         name: "Quality Management",
@@ -73,12 +71,20 @@ const frontdesk = [
           {
             name: "Quality Assurance(QA)",
             path: "/management/external",
+            icon: "check-circle",
             component: Assurance,
           },
           {
             name: "Quality Control(QC)",
             path: "/management/internal",
+            icon: "balance-scale",
             component: Controls,
+          },
+          {
+            name: "Temperature",
+            path: "/temperature",
+            icon: "thermometer-half",
+            component: Temperature,
           },
         ],
       },
@@ -95,6 +101,7 @@ const frontdesk = [
       {
         name: "Menus",
         path: "/menus",
+        icon: "bars",
         component: Menus,
       },
       /**
@@ -103,6 +110,7 @@ const frontdesk = [
       {
         name: "examinations",
         path: "/services",
+        icon: "list",
         component: Services,
       },
     ],
@@ -115,11 +123,13 @@ const frontdesk = [
       {
         name: "Account",
         title: "stocks",
+        icon: "dollar-sign",
         path: "/account",
       },
       {
         name: "Billing",
         title: "stocks",
+        icon: "file-invoice",
         path: "/billing",
       },
     ],
@@ -132,14 +142,17 @@ const frontdesk = [
       {
         name: "Request",
         path: "/request",
+        icon: "shopping-cart",
       },
       {
         name: "Received",
         path: "/received",
+        icon: "truck-loading",
       },
       {
         name: "Completed",
         path: "/completed",
+        icon: "check-circle",
       },
     ],
   },
@@ -151,6 +164,7 @@ const frontdesk = [
       {
         name: "Products",
         path: "/products",
+        icon: "cogs",
         component: Products,
       },
     ],
@@ -163,14 +177,17 @@ const frontdesk = [
       {
         name: "Products",
         path: "/products",
+        icon: "cogs",
       },
       {
         name: "Machines",
         path: "/machines",
+        icon: "laptop-code",
       },
       {
         name: "Stocks",
         path: "/stocks",
+        icon: "box",
       },
     ],
   },
@@ -187,52 +204,43 @@ const frontdesk = [
           {
             name: "Chemistry",
             path: "/chemistry",
+            icon: "flask",
             component: Chemistry,
           },
           {
             name: "Electrolytes",
             path: "/Electrolyte",
+            icon: "vials",
             component: Electrolyte,
           },
           {
             name: "Hematology",
             path: "/hematology",
+            icon: "blood",
             component: Hematology,
           },
           {
             name: "Urinalysis",
             path: "/urinalysis",
+            icon: "toilet-paper",
             component: Urinalysis,
           },
           {
             name: "Fecalysis",
             path: "/fecalysis",
+            icon: "smile",
             component: Fecalysis,
           },
           {
             name: "Serology",
             path: "/serology",
+            icon: "microscope",
             component: Serology,
           },
           {
             name: "Miscellaneous",
             path: "/miscellaneous",
-          },
-        ],
-      },
-      {
-        name: "Utilities",
-        path: "/utilities",
-        icon: "tools",
-        children: [
-          {
-            name: "Temperature",
-            path: "/temperature",
-            component: Temperature,
-          },
-          {
-            name: "Quality Control",
-            path: "/qc",
+            icon: "list",
           },
         ],
       },

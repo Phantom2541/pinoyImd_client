@@ -17,7 +17,7 @@ export default function Head() {
     y = d.getFullYear();
   return (
     <>
-      <Banner company={branch.companyName} branch={branch.name} />
+      <Banner company={branch.displayname} branch={branch.name} />
       <br />
       <br />
       <h5>

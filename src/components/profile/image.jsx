@@ -30,12 +30,12 @@ export default function ProfileImage() {
     }
   }, [progressBar, file, dispatch, addToast]);
 
-  const handleError = (message) =>
+  const handleError = message =>
     addToast(message, {
       appearance: "warning",
     });
 
-  const handleImageChange = (e) => {
+  const handleImageChange = e => {
     const file = e.target.files[0];
 
     if (!isJpegOrJpgFile(file))
@@ -43,7 +43,7 @@ export default function ProfileImage() {
 
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = e => {
       const img = new Image();
       img.src = e.target.result;
 
@@ -69,7 +69,7 @@ export default function ProfileImage() {
     reader.readAsDataURL(file);
   };
 
-  const handleUpload = (base64) => {
+  const handleUpload = base64 => {
     const byteString = atob(base64.split(",")[1]);
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
@@ -105,7 +105,7 @@ export default function ProfileImage() {
             }}
             tag="img"
             src={image}
-            onError={(e) => (e.target.src = PresetImage(auth.isMale))}
+            onError={e => (e.target.src = PresetImage(auth.isMale))}
             alt={`preview-${auth._id}`}
             className="z-depth-1 mb-3 mx-auto rounded"
           />

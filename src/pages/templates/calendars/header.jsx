@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Calendar as calendar } from "../../../services/fakeDb";
 import Search from "../../../components/searchables/users";
-import CustomSelect from "../../../components/searchables/customSelect";
+import { Select } from "../../../components/customizable";
 import "./style.css";
 
 const today = new Date();
@@ -46,7 +46,7 @@ const Header = () => {
     >
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex ">
-          <CustomSelect
+          <Select
             className="m-0 p-0 calendar mr-4"
             value={month}
             onChange={(value) => setMonth(value)}
@@ -54,7 +54,7 @@ const Header = () => {
             preValue={month}
             choices={calendar.Months}
           />
-          <CustomSelect
+          <Select
             value={year}
             inputClassName="m-0 p-0"
             preValue={year}

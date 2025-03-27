@@ -14,11 +14,12 @@ const Templates = ({ setTemplate }) => {
   };
 
   return (
-    <div style={{ position: "absolute", left: 120 }}>
+    <div>
       <select className="browser-default custom-select" onChange={handleChange}>
         <option value="" disabled>
           Choose a template
         </option>
+        <option value={-1}>Show All</option>
         {components.map((template, index) => (
           <option key={template} value={index}>
             {template}

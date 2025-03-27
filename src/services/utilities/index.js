@@ -50,7 +50,7 @@ import collapse from "./collapse";
 import Male from "../../assets/male.jpg";
 import Female from "../../assets/female.jpg";
 import PresetIMD from "../../assets/iMD.jpg";
-
+import paymentMethod from "./paymentMethod";
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -77,6 +77,7 @@ export {
   ENDPOINT,
   axioKit,
   socket,
+  paymentMethod,
   handlePagination,
   fullName,
   calculateDiff,

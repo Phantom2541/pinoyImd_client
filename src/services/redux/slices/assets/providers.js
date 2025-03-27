@@ -5,18 +5,25 @@ const url = "assets/providers";
 
 const initialState = {
   collections: [],
+  paginated: [],
   // enrolled: [],
+  formSubmitted: false,
   searchResults: [],
   isSuccess: false,
   isLoading: false,
   didSearch: false,
   selected: {},
-  totalPages: 0,
   page: 0,
   showModal: false,
   showCompanyModal: false,
   willCreate: false,
+  /**
+   * Footer
+   */
+  filtered: [],
   maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
 };
 export const BROWSE = createAsyncThunk(
   `${url}/browse`,
@@ -31,11 +38,11 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
-export const GETENROLLED = createAsyncThunk(
-  `${url}/enrollements`,
+export const OUTSOURCE = createAsyncThunk(
+  `${url}/outsource`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${url}/enrollements`, token, key);
+      return await axioKit.universal(`${url}/outsource`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -44,11 +51,24 @@ export const GETENROLLED = createAsyncThunk(
   }
 );
 
-export const OUTSOURCE = createAsyncThunk(
-  `${url}/browse`,
+// export const UTILITIES = createAsyncThunk(
+//   `${url}/browse`,
+//   async ({ key, token }, thunkAPI) => {
+//     try {
+//       return await axioKit.universal(`${url}/browse`, token, key);
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(
+//         error.response?.data?.message || error.message || error.toString()
+//       );
+//     }
+//   }
+// );
+
+export const GETENROLLED = createAsyncThunk(
+  `${url}/enrollements`,
   async ({ key, token }, thunkAPI) => {
     try {
-      return await axioKit.universal(`${url}/browse`, token, key);
+      return await axioKit.universal(`${url}/enrollements`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -160,6 +180,7 @@ export const reduxSlice = createSlice({
     },
     ToggleModal: (state) => {
       state.showCompanyModal = !state.showCompanyModal;
+      state.isSuccess = false;
     },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
@@ -172,31 +193,53 @@ export const reduxSlice = createSlice({
       state.didSearch = true;
     },
     SetBRANCHES: (state, { payload }) => {
-      const { affiliated = {}, providerId = "", physicianId = "" } = payload;
+      const {
+        branch = {},
+        affiliated = {},
+        providerId = "",
+        physicianId = "",
+        isUpdatePhysician = false,
+        isUpdateBranch = false,
+      } = payload;
+
       const index = state.collections.findIndex((e) => e._id === providerId);
-      if (index < 0) return console.log("provider not found");
-      const provider = { ...state.collections[index] };
 
-      const { clients = {} } = provider || {};
-
-      const affiliateds = [...clients?.affiliated];
-      if (physicianId) {
-        const affiliatedIndex = affiliateds.findIndex(
-          (e) => e._id === physicianId
-        );
-        console.log(affiliatedIndex);
-        affiliateds.splice(affiliatedIndex, 1);
+      if (isUpdateBranch) {
+        // manipulate clients updating
+        state.collections[index] = {
+          ...state.collections[index],
+          clients: { ...branch },
+        };
       } else {
-        affiliateds.unshift(affiliated);
-      }
+        //manipulate affiliateds
+        if (index < 0) return console.log("provider not found");
+        const provider = { ...state.collections[index] };
 
-      state.collections[index] = {
-        ...provider,
-        clients: { ...clients, affiliated: affiliateds },
-      };
-      state.selected = payload;
-      state.willCreate = false;
-      state.showModal = true;
+        const { clients = {} } = provider || {};
+
+        const affiliateds = [...clients?.affiliated];
+        if (physicianId) {
+          const affiliatedIndex = affiliateds.findIndex(
+            (e) => e._id === physicianId
+          );
+          if (isUpdatePhysician) {
+            affiliateds[affiliatedIndex] = affiliated;
+          } else {
+            affiliateds.splice(affiliatedIndex, 1);
+          }
+        } else {
+          affiliateds.unshift(affiliated);
+        }
+
+        state.collections[index] = {
+          ...provider,
+          clients: { ...clients, affiliated: affiliateds },
+        };
+
+        state.selected = payload;
+        state.willCreate = false;
+        state.showModal = true;
+      }
     },
     SetCREATE: (state, { payload }) => {
       state.selected = payload;
@@ -219,8 +262,22 @@ export const reduxSlice = createSlice({
     SETSOURCES: (state, { payload }) => {
       state.collections = payload;
     },
+    /**
+     *  Footer
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      console.log("payload", payload);
+
+      state.activePage = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
+      state.isLoading = false;
+      state.formSubmitted = false;
       state.message = "";
     },
   },
@@ -231,6 +288,7 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(GETENROLLED.fulfilled, (state, { payload }) => {
+        console.log(payload);
         const { payload: data } = payload;
         state.enrolled = data;
         state.isSuccess = true;
@@ -245,13 +303,20 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(OUTSOURCE.fulfilled, (state, { payload }) => {
+        // console.log("payload: ", payload);
+
         const { payload: data } = payload;
         state.collections = data;
         state.filter = data;
         state.paginated = data;
+
+        state.paginated = state.filtered = data;
+        state.totalPages = Math.ceil(data.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = true;
         state.isLoading = false;
       })
+
       .addCase(OUTSOURCE.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
@@ -303,7 +368,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(REGISTER_GHOST_COMPANY.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
       })
       .addCase(REGISTER_GHOST_COMPANY.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
@@ -313,11 +378,11 @@ export const reduxSlice = createSlice({
 
         state.collections[index] = data;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(REGISTER_GHOST_COMPANY.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
@@ -371,6 +436,8 @@ export const {
   ToggleDidSearch,
   SetSOURCE,
   SetBRANCHES,
+  SetMaxPage,
+  SetActivePAGE,
   RESET,
 } = reduxSlice.actions;
 export default reduxSlice.reducer;

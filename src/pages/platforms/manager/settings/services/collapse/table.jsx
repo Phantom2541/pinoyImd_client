@@ -7,14 +7,12 @@ import Modal from "./modal";
 import Swal from "sweetalert2";
 import { DESTROY } from "../../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 
-export default function CollapseTable({ id, preference }) {
-  const [references, setReferences] = useState([]),
+export default function CollapseTable({ id, references, preference }) {
+  const { token } = useSelector(({ auth }) => auth),
     [showButton, setShowButton] = useState(false),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
     [selected, setSelected] = useState({}),
-    { token } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
 
   const toggleModal = () => setShowModal(!showModal);
@@ -41,30 +39,12 @@ export default function CollapseTable({ id, preference }) {
     });
   };
 
-  useEffect(() => {
-    setReferences(collections.filter(({ serviceId }) => serviceId === id));
-  }, [collections, id]);
-
-  useEffect(() => {
-    const max = {
-      development: 9,
-      gender: 2,
-      equal: 1,
-    };
-
-    if (references.length === max[preference]) {
-      setShowButton(false);
-    } else {
-      setShowButton(true);
-    }
-  }, [preference, references]);
-
   return (
     <>
       <MDBTable responsive hover className="text-center">
         <thead>
           <tr>
-            {preference && preference !== "equal" && (
+            {preference !== "equal" && (
               <th rowSpan={2}>{capitalize(preference)}</th>
             )}
             <th colSpan={2}>Reference Value</th>
@@ -110,7 +90,7 @@ export default function CollapseTable({ id, preference }) {
 
             return (
               <tr key={`reference-${index}`}>
-                {preference && preference !== "equal" && (
+                {preference !== "equal" && (
                   <td>
                     {preference === "gender"
                       ? isMale
