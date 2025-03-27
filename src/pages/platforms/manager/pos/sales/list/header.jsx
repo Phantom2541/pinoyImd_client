@@ -22,14 +22,18 @@ const Header = () => {
   // Initial Fetch for Collections
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
-      const today = new Date();
+      const createdAt = new Date().toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
 
       dispatch(
         BROWSE({
           token,
           key: {
             branchId: activePlatform?.branchId,
-            createdAt: today,
+            createdAt,
           },
         })
       );
@@ -39,7 +43,7 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(INSOURCE({ token, key: { vendors: activePlatform?.branchId } }));
-  }, [dispatch, activePlatform]);
+  }, [dispatch, activePlatform, token]);
 
   useEffect(() => {
     if (message) {
