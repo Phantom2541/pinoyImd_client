@@ -38,7 +38,6 @@ const Header = () => {
   const setRegister = (user) => {
     console.log("user", user);
   };
-  console.log("yearrrrr", year);
   return (
     <MDBView
       cascade

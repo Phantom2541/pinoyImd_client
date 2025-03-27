@@ -7,15 +7,15 @@ const today = new Date();
 const initialState = {
   collections: [],
   // this is used for ledger
-  census: {
-    daily: {},
-    grossSales: 0,
-    menus: {},
-    services: {},
-    expenses: 0,
-    patients: 0,
-    isEmpty: true,
-  },
+  // census: {
+  //   daily: {},
+  //   grossSales: 0,
+  //   menus: {},
+  //   services: {},
+  //   expenses: 0,
+  //   patients: 0,
+  //   isEmpty: true,
+  // },
   selected: {},
   day: 1,
   month: today.getMonth(),
@@ -136,6 +136,9 @@ export const reduxSlice = createSlice({
       }
       state.selected = value;
     },
+    SetActiveDATE: (state, { payload }) => {
+      state.day = payload;
+    },
     TOGGLE: (state, { payload = {} }) => {
       const { key, value } = payload;
       if (key === "census") {
@@ -235,7 +238,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload } = action;
         const index = state.collections.findIndex(
           (item) => item?._id === payload._id
         );
@@ -253,7 +256,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetMONTH, SetYEAR, TOGGLE, SetSELECTED, RESET } =
+export const { SetMONTH, SetYEAR, TOGGLE, SetSELECTED, SetActiveDATE, RESET } =
   reduxSlice.actions;
 
 export default reduxSlice.reducer;

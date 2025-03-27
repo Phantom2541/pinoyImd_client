@@ -21,7 +21,8 @@ const Header = () => {
   // Initial Fetch for Collections
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
-      const today = new Date().setHours(0, 0, 0, 0);
+      const today = new Date();
+
       dispatch(
         BROWSE({
           token,
