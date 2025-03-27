@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { MDBBadge } from "mdbreact";
+import { MDBBadge, MDBCard, MDBCardBody, MDBView } from "mdbreact";
 import { currency, fullName } from "../../../../../services/utilities";
 import Month from "../../../../../services/fakeDb/calendar/months";
+import SummaryLoading from "../../../cashier/cashRegistry/services/deals/summary/loading";
 
 export default function Summary() {
   const { month, year, day } = useSelector(({ remittances }) => remittances);
-  const { collections } = useSelector(({ deals }) => deals);
+  const { collections, isLoading } = useSelector(({ deals }) => deals);
   const [selectedCashier, setSelectedCashier] = useState("");
 
   const currentDate = new Date(year, month, day);
@@ -17,7 +18,7 @@ export default function Summary() {
     const salesMap = {};
     const deletedCashiers = new Set();
 
-    collections?.forEach(({ cashierId, amount, createdAt, isDeleted }) => {
+    collections.forEach(({ cashierId, amount, createdAt, isDeleted }) => {
       if (!cashierId || !createdAt) return;
       const createdDate = new Date(createdAt);
 
@@ -82,69 +83,99 @@ export default function Summary() {
   }, [day, month, year, collections, selectedCashier]);
 
   return (
-    <div className="bg-white rounded p-1 mt-2">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-bold">Daily Summary</h2>
-        <span
-          className={
-            isSunday ? "text-red-600 text-sm" : "text-gray-600 text-sm"
-          }
-        >
-          {activeDate}
-        </span>
-      </div>
-
-      {/* Only show cashier selection if there's more than one */}
-      {showCashierSelect && (
-        <div className="mt-2">
-          <label className="text-sm font-semibold">Cashier:</label>
-          <select
-            className="ml-2 border rounded p-1"
-            value={selectedCashier}
-            onChange={(e) => setSelectedCashier(e.target.value)}
+    <MDBCard narrow>
+      <MDBView
+        cascade
+        className="gradient-card-header custom-header bg-success narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      >
+        <i className="text-lg font-bold ">Daily Summary</i>
+      </MDBView>
+      <MDBCardBody className="m-0 p-1">
+        <div className="flex justify-between items-center">
+          <span
+            className={
+              isSunday ? "text-red-600 text-sm" : "text-gray-600 text-sm"
+            }
           >
-            <option value="">All Cashiers</option>
-            {cashierSales.map(({ id, name, gross, isDeleted }) => (
-              <option
-                key={id}
-                value={id}
-                className={isDeleted ? "text-red-600" : ""}
-              >
-                {name} - {currency(gross)}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+            {activeDate}
+          </span>
 
-      {cluster.length > 0 ? (
-        <>
-          <ol className="mt-2 list-decimal list-inside">
-            {cluster.map(({ customerId, amount, createdAt, cart }, index) => (
-              <li key={index} className="p-2 border-b">
-                <div className="font-bold">
-                  {fullName(customerId?.fullName || "Unknown Customer")}
-                </div>
-                <div className="text-gray-500 text-sm">
-                  {new Date(createdAt).toLocaleTimeString()}
-                </div>
-                <div className="text-blue-600">{currency(amount)}</div>
-                <div className="text-blue-600">
-                  {cart.map((i) => (
-                    <MDBBadge key={i.id} color="primary">
-                      {i?.menuId?.abbreviation}
-                    </MDBBadge>
+          {/* Only show cashier selection if there's more than one */}
+          {!isLoading ? (
+            <div>
+              {/* {showCashierSelect && ( */}
+              <div
+                className="mt-2"
+                style={{
+                  position: "sticky",
+                  zIndex: 2,
+                  opacity: showCashierSelect ? 1 : 0,
+                  marginBottom: !showCashierSelect && "-4.5rem",
+                }}
+              >
+                <label className="text-sm font-semibold">Cashier:</label>
+                <select
+                  className="ml-2 border rounded p-1"
+                  value={selectedCashier}
+                  onChange={(e) => setSelectedCashier(e.target.value)}
+                >
+                  <option value="">All Cashiers</option>
+                  {cashierSales.map(({ id, name, gross, isDeleted }) => (
+                    <option
+                      key={id}
+                      value={id}
+                      className={isDeleted ? "text-red-600" : ""}
+                    >
+                      {name} - {currency(gross)}
+                    </option>
                   ))}
-                </div>
-              </li>
-            ))}
-          </ol>
-          <hr />
-          <p className="mt-2 font-bold text-right">Total: {currency(total)}</p>
-        </>
-      ) : (
-        <p className="text-gray-500">No collections found for this date.</p>
-      )}
-    </div>
+                </select>
+              </div>
+              {/* )} */}
+              {cluster.length > 0 ? (
+                <>
+                  <ol className="mt-2 list-decimal list-inside">
+                    {cluster.map(
+                      ({ customerId, amount, createdAt, cart }, index) => (
+                        <li key={index} className="p-2 border-b">
+                          <div className="font-bold">
+                            {fullName(
+                              customerId?.fullName || "Unknown Customer"
+                            )}
+                          </div>
+                          <div className="text-gray-500 text-sm">
+                            {new Date(createdAt).toLocaleTimeString()}
+                          </div>
+                          <div className="text-blue-600">
+                            {currency(amount)}
+                          </div>
+                          <div className="text-blue-600">
+                            {cart.map((i) => (
+                              <MDBBadge key={i.id} color="primary">
+                                {i?.menuId?.abbreviation}
+                              </MDBBadge>
+                            ))}
+                          </div>
+                        </li>
+                      )
+                    )}
+                  </ol>
+                  <hr />
+                  <p className="mt-2 font-bold text-right">
+                    Total: {currency(total)}
+                  </p>
+                </>
+              ) : (
+                <p className="text-gray-500">
+                  No collections found for this date.
+                </p>
+              )}
+            </div>
+          ) : (
+            <SummaryLoading rowCount={10} />
+          )}
+        </div>
+      </MDBCardBody>
+    </MDBCard>
   );
 }

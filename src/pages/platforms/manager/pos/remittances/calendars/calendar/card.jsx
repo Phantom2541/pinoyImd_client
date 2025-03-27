@@ -22,7 +22,9 @@ const Card = ({ txt, num, index, items = [] }) => {
 
   return (
     <div
-      className={`calendar-card ${num ? "" : "opacity-0 pointer-events-none"}`}
+      className={`calendar-card  ${
+        num ? "cursor-pointer" : "opacity-0 pointer-events-none"
+      }`}
       key={`pos-calendar-${index}`}
       onClick={handleDate}
     >
@@ -34,10 +36,10 @@ const Card = ({ txt, num, index, items = [] }) => {
               gross > 0 && (
                 <div
                   key={i}
-                  className="sales-card-info mb-1 d-flex justify-content-between"
+                  className="manager-remmitance-info mb-1 d-flex justify-content-between"
                   onClick={() => collector || handleRemittance(_id)}
                 >
-                  <strong>{cashier?.fullName?.fname}</strong>
+                  {cashier?.fullName?.fname}
                   <span style={{ color: collector ? "" : "green" }}>
                     {currency(gross)}
                   </span>
@@ -47,8 +49,9 @@ const Card = ({ txt, num, index, items = [] }) => {
         </div>
         <hr />
         {totalGross > 0 && (
-          <div className="sales-card-total text-end mt-2">
-            <strong>Total Gross: {currency(totalGross)}</strong>
+          <div className="manager-remmitance-total text-end mt-2">
+            <h6 className="title"> Total Gross:</h6>
+            <strong> {currency(totalGross)}</strong>
           </div>
         )}
       </div>

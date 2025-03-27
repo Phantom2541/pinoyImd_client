@@ -25,9 +25,9 @@ export default function Calendar() {
   }, new Map());
 
   return (
-    <div className="calendar-template p-3">
+    <div className="calendar-template">
       <WeekHeader />
-      <div className="calendar-body">
+      <div className="calendar-bodys">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => (
           <Card
             key={index}

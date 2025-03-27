@@ -38,15 +38,13 @@ export default function Remmitances() {
   }, [token, dispatch, activePlatform, month, year]);
 
   return (
-    <div className="d-flex">
+    <div className="d-flex ">
       <div style={{ width: "300px" }}>
         <Summary />
       </div>
-      <div className="bg-white py-1 rounded flex-1 ml-2 px-2">
-        <MDBRow className="w-100 mx-auto">
-          <Calendar />
-        </MDBRow>
-      </div>
+      <MDBRow className="w-100 mx-auto">
+        <Calendar />
+      </MDBRow>
     </div>
   );
 }
