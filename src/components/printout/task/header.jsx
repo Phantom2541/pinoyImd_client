@@ -51,7 +51,7 @@ export default function Header({
         <MDBCol style={{ alignItems: "baseline" }} className="text-left">
           {referral ? (
             <span style={{ width: categoryWidth }}>
-              Referral: Dr. {referral?.fullName.lname}
+              Referral: Dr. {referral?.fullName?.lname}
             </span>
           ) : (
             <span style={{ width: categoryWidth }}>

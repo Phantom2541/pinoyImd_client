@@ -38,7 +38,7 @@ dispatch(SetPARAMS({ key: "me", value: _me }));
           <MDBCol key={`${label}-${index}`} md="6">
             <CustomSelect
               disableSearch
-              choices={choices.map((u, i) => ({ str: u, index: i }))}
+              collections={choices}
               label={label}
               preValue={String(me[index])}
               texts="str"

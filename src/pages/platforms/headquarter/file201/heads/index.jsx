@@ -201,7 +201,7 @@ export default function Heads() {
                 <img
                   alt={data.email || "Default Image"}
                   id="signature"
-                  src={`${ENDPOINT}/public/patron/${data?.email}/signature.png`}
+                  src={`${ENDPOINT}/public/users/${data?.email}/signature.png`}
                   onError={(e) => (e.target.src = "")}
                   height={50}
                   width={50}

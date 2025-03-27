@@ -32,7 +32,8 @@ export default function Urinalysis({ fontSize, task }) {
       null,
       null,
     ];
-
+    console.log(pe, ce, me);
+    
   return (
     <MDBTable hover bordered responsive className="mb-0">
       <thead className="text-center">

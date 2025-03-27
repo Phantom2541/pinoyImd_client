@@ -148,7 +148,7 @@ export default function ApplicationModal({
     // return (
     //   <>
     //     <iframe
-    //       src={`${ENDPOINT}/public/patron/${auth.email}/Smart Care/General Tinio Branch/Applications/Resume.pdf`}
+    //       src={`${ENDPOINT}/public/users/${auth.email}/Smart Care/General Tinio Branch/Applications/Resume.pdf`}
     //       alt={auth.email}
     //       className="mx-auto rounded img-max img-fluid mb-1"
     //       onError={(e) => (e.target.src = PresetUser)}

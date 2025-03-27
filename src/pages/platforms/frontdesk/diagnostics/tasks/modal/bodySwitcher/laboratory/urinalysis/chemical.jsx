@@ -31,7 +31,7 @@ dispatch(SetPARAMS({ key: "ce", value: _ce }));
       {chemSelects.map((label, index) => (
         <MDBCol md="6" key={`${label}-${index}`}>
           <CustomSelect
-            choices={ResultInRange.map((u, i) => ({ str: u, index: i }))}
+            collections={ResultInRange}
             label={label}
             preValue={String(ce[index])}
             texts="str"

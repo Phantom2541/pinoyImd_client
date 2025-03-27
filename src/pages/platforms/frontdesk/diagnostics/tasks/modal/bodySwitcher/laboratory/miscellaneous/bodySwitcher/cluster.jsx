@@ -18,7 +18,7 @@ export default function Cluster({ task, setTask }) {
           <MDBCol key={`cluster-${index}`}>
             <CustomSelect
               inputClassName={results[fk] && "text-danger"}
-              choices={[
+              collections={[
                 {
                   str: "NON-REACTIVE",
                   index: 0,

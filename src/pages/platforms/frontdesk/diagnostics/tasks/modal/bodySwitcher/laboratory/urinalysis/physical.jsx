@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBCol, MDBRow } from "mdbreact";
 import CustomSelect from "./../../../../../../../../../components/searchables/customSelect";
 import {
@@ -11,12 +11,14 @@ import {
 } from "./../../../../../../../../../services/fakeDb";
 
 export default function Physical() {
-  const {pe} = useSelector(({validator}) => validator.task),
+  const {task} = useSelector(({validator}) => validator),
     dispatch = useDispatch();
+  const { pe } = task;
   const handleSelectChange = (index, value) => {
     const _pe = [...pe];
     _pe[index] = value;
 dispatch(SetPARAMS({ key: "pe", value: _pe }));
+dispatch(SetTASK({task:{...task, pe:[...pe, _pe] }}));
   };
 
   const physicalSelects = [
@@ -37,13 +39,12 @@ dispatch(SetPARAMS({ key: "pe", value: _pe }));
       choices: PH,
     },
   ];
-
   return (
     <MDBRow className="text-left">
-      {physicalSelects.map(({ label, choices }, index) => (
+      {physicalSelects.map(({ label, choices }, index) =>(
         <MDBCol md="6" key={`${label}-${index}`}>
           <CustomSelect
-            choices={choices.map((u, i) => ({ str: u, index: i }))}
+            collections={choices}
             label={label}
             preValue={String(pe[index])}
             texts="str"
