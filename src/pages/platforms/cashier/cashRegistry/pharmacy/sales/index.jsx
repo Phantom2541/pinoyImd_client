@@ -169,7 +169,7 @@ export default function Sales() {
                           <h6>Dr. {sale.physicianId.fullName.lname}</h6>
                         )}
                       </h6>
-                      <p>{sale.source?.companyName}</p>
+                      <p>{sale.source?.displayname}</p>
                     </td>
                     <td>
                       <h6>{currency(sale.amount)}</h6>

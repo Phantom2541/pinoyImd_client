@@ -138,12 +138,12 @@ export default function Modal() {
   const handleSubmit = () => {
     const _floating = removeUndefinedValues(floating);
     if (!selected?._id) {
-      let date = new Date(Date.UTC(year, month, day));
+      let createdAt = new Date(Date.UTC(year, month, day));
       dispatch(
         SAVE({
           token,
           data: {
-            date,
+            createdAt,
             opening: {
               ..._floating,
               sum,
@@ -179,11 +179,21 @@ export default function Modal() {
     dispatch(TOGGLE());
   };
 
+  const increaseQuantity = (type, denomination) => {
+    setFloating((prev) => ({
+      ...prev,
+      [type]: {
+        ...prev[type],
+        [denomination]: (prev[type]?.[denomination] || 0) + 1,
+      },
+    }));
+  };
+
   return (
     <MDBModal
       isOpen={showModal}
       toggle={() => dispatch(TOGGLE({ key: "open" }))}
-      size="lg"
+      size="xl"
       backdrop
     >
       <MDBModalHeader
@@ -214,7 +224,7 @@ export default function Modal() {
 
       <MDBModalBody className="mb-0">
         <MDBRow>
-          <MDBCol md="12">
+          <MDBCol md="10">
             <h5 className="text-center font-weight-bold">Bills</h5>
             <MDBTable style={{ border: "none !important" }}>
               <MDBTableHead>
@@ -236,7 +246,9 @@ export default function Modal() {
                   .map(([bill1, bill2], idx) => (
                     <tr key={`row-${idx}`}>
                       <td className="text-center">
-                        <MDBCard>
+                        <MDBCard
+                          onClick={() => increaseQuantity("bills", bill1)}
+                        >
                           <MDBCardBody
                             style={{ backGroundColor: "transparent" }}
                             className="p-0 m"
@@ -269,7 +281,9 @@ export default function Modal() {
                       </td>
                       <td className="text-center">
                         {bill2 && (
-                          <MDBCard>
+                          <MDBCard
+                            onClick={() => increaseQuantity("bills", bill2)}
+                          >
                             <MDBCardBody className="m-0 p-0">
                               <div
                                 style={getBillimg(Number(bill2))}
@@ -305,67 +319,75 @@ export default function Modal() {
               </MDBTableBody>
             </MDBTable>
           </MDBCol>
-        </MDBRow>
-
-        <h5 className="text-center font-weight-bold mt-1">Coins</h5>
-        <MDBRow style={{ marginTop: "-0.5rem" }}>
-          {Object.keys(coinPositions).map((coin) => (
-            <MDBCol key={coin} md="3" className="d-flex align-items-center">
-              <MDBCard className="coins-radius">
-                <MDBCardBody className="m-0 p-0 coins-radius">
-                  <div
-                    style={getCoinIMG(Number(coin))}
-                    title={currency(coin)}
+          <MDBCol md="2">
+            <h5 className="text-center font-weight-bold mt-1">Coins</h5>
+            <div className="d-flex flex-column align-items-center">
+              {Object.keys(coinPositions).map((coin) => (
+                <div key={coin} className="d-flex align-items-center mb-3">
+                  <MDBCard
+                    className="coins-radius"
+                    onClick={() => increaseQuantity("coins", coin)}
+                  >
+                    <MDBCardBody className="m-0 p-0 coins-radius">
+                      <div
+                        style={getCoinIMG(Number(coin))}
+                        title={currency(coin)}
+                      />
+                    </MDBCardBody>
+                  </MDBCard>
+                  <MDBInput
+                    type="number"
+                    min={0}
+                    className="text-center ml-3"
+                    value={String(floating?.coins?.[coin] || 0)}
+                    style={{ width: "6rem" }}
+                    onChange={(e) =>
+                      handleInputChange("coins", coin, Number(e.target.value))
+                    }
                   />
-                </MDBCardBody>
-              </MDBCard>
-              <MDBInput
-                type="number"
-                min={0}
-                className="text-center mt-2"
-                value={String(floating?.coins?.[coin] || 0)}
-                style={{ width: "6rem" }}
-                onChange={(e) =>
-                  handleInputChange("coins", coin, Number(e.target.value))
-                }
-              />
-            </MDBCol>
-          ))}
-        </MDBRow>
-        <div>
-          {title === "Opening Cash Register" && (
-            <div className="d-flex align-items-center mt-3">
-              <span className="font-weight-bold mr-2">Shift:</span>
-              <select
-                className="browser-default custom-select mr-3"
-                value={schedule}
-                onChange={(e) => setSchedule(e.target.value)}
-                title="shift"
-                style={{ width: "auto" }}
-              >
-                <option value="morning">morning</option>
-                <option value="afternoon">afternoon</option>
-                <option value="night">Night</option>
-              </select>
-              <MDBInput
-                type="text"
-                label="Cashier Position"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
-                className="ml-3"
-                style={{ width: "10rem" }}
-              />
-              <MDBInput
-                type="text"
-                label="Cashier Position"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="ml-3"
-                style={{ width: "10rem" }}
-              />
+                </div>
+              ))}
             </div>
-          )}
+          </MDBCol>
+        </MDBRow>
+        <div
+          className="d-flex align-items-center justify-content-between mt-3"
+          style={{ flexWrap: "nowrap", gap: "10px", width: "100%" }}
+        >
+          <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+            {title === "Floating Cash" && (
+              <>
+                <span className="font-weight-bold">Shift:</span>
+                <select
+                  className="browser-default custom-select"
+                  value={schedule}
+                  onChange={(e) => setSchedule(e.target.value)}
+                  title="shift"
+                  style={{ width: "auto" }}
+                >
+                  <option value="morning">morning</option>
+                  <option value="afternoon">afternoon</option>
+                  <option value="night">Night</option>
+                </select>
+                <MDBInput
+                  type="text"
+                  label="Cashier Position"
+                  value={position}
+                  onChange={(e) => setPosition(e.target.value)}
+                  style={{ minWidth: "10rem" }}
+                />
+                <MDBInput
+                  type="text"
+                  label="Location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  style={{ minWidth: "10rem" }}
+                />
+              </>
+            )}
+          </div>
 
+          {/* Button always at the end */}
           <MDBBtn
             color="primary"
             onClick={handleSubmit}

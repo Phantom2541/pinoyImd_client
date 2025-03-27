@@ -17,7 +17,16 @@ export default function Deals() {
 
   useEffect(() => {
     if (token) {
-      const date = new Date().toISOString().split("T")[0];
+      /**
+       * get local time of users
+       * Format: YYYY-MM-DD
+       */
+      const date = new Date().toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+
       dispatch(
         Daily({
           token,

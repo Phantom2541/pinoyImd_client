@@ -1,0 +1,150 @@
+import React, { useState, useMemo } from "react";
+import { useSelector } from "react-redux";
+import { MDBBadge } from "mdbreact";
+import { currency, fullName } from "../../../../../services/utilities";
+import Month from "../../../../../services/fakeDb/calendar/months";
+
+export default function Summary() {
+  const { month, year, day } = useSelector(({ remittances }) => remittances);
+  const { collections } = useSelector(({ deals }) => deals);
+  const [selectedCashier, setSelectedCashier] = useState("");
+
+  const currentDate = new Date(year, month, day);
+  const activeDate = `${Month[month]} ${day}, ${year}`;
+  const isSunday = currentDate.getDay() === 0;
+
+  const cashierSales = useMemo(() => {
+    const salesMap = {};
+    const deletedCashiers = new Set();
+
+    collections?.forEach(({ cashierId, amount, createdAt, isDeleted }) => {
+      if (!cashierId || !createdAt) return;
+      const createdDate = new Date(createdAt);
+
+      if (
+        createdDate.getDate() === day &&
+        createdDate.getMonth() === month &&
+        createdDate.getFullYear() === year
+      ) {
+        const cashierKey = cashierId._id;
+
+        if (isDeleted) {
+          deletedCashiers.add(cashierKey);
+          return;
+        }
+
+        if (!salesMap[cashierKey]) {
+          salesMap[cashierKey] = {
+            id: cashierId._id,
+            name: fullName(cashierId.fullName || "Unknown Cashier"),
+            gross: 0,
+            isDeleted: false,
+          };
+        }
+        salesMap[cashierKey].gross += amount;
+      }
+    });
+
+    deletedCashiers.forEach((id) => {
+      if (!salesMap[id]) {
+        salesMap[id] = {
+          id,
+          name: "Deleted Cashier",
+          gross: 0,
+          isDeleted: true,
+        };
+      }
+    });
+
+    return Object.values(salesMap).sort((a, b) => b.gross - a.gross);
+  }, [collections, day, month, year]);
+
+  const showCashierSelect = cashierSales.length > 1; // Hide dropdown if only one cashier exists
+
+  const { cluster, total } = useMemo(() => {
+    const filtered =
+      collections?.filter(({ createdAt, cashierId }) => {
+        if (!createdAt || !cashierId) return false;
+        const createdDate = new Date(createdAt);
+
+        return (
+          createdDate.getDate() === day &&
+          createdDate.getMonth() === month &&
+          createdDate.getFullYear() === year &&
+          (selectedCashier === "" || cashierId._id === selectedCashier)
+        );
+      }) || [];
+
+    const totalAmount = filtered.reduce((sum, { amount }) => sum + amount, 0);
+    console.log("filtered", filtered);
+
+    return { cluster: filtered, total: totalAmount };
+  }, [day, month, year, collections, selectedCashier]);
+
+  return (
+    <div className="bg-white rounded p-1 mt-2">
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-bold">Daily Summary</h2>
+        <span
+          className={
+            isSunday ? "text-red-600 text-sm" : "text-gray-600 text-sm"
+          }
+        >
+          {activeDate}
+        </span>
+      </div>
+
+      {/* Only show cashier selection if there's more than one */}
+      {showCashierSelect && (
+        <div className="mt-2">
+          <label className="text-sm font-semibold">Cashier:</label>
+          <select
+            className="ml-2 border rounded p-1"
+            value={selectedCashier}
+            onChange={(e) => setSelectedCashier(e.target.value)}
+          >
+            <option value="">All Cashiers</option>
+            {cashierSales.map(({ id, name, gross, isDeleted }) => (
+              <option
+                key={id}
+                value={id}
+                className={isDeleted ? "text-red-600" : ""}
+              >
+                {name} - {currency(gross)}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {cluster.length > 0 ? (
+        <>
+          <ol className="mt-2 list-decimal list-inside">
+            {cluster.map(({ customerId, amount, createdAt, cart }, index) => (
+              <li key={index} className="p-2 border-b">
+                <div className="font-bold">
+                  {fullName(customerId?.fullName || "Unknown Customer")}
+                </div>
+                <div className="text-gray-500 text-sm">
+                  {new Date(createdAt).toLocaleTimeString()}
+                </div>
+                <div className="text-blue-600">{currency(amount)}</div>
+                <div className="text-blue-600">
+                  {cart.map((i) => (
+                    <MDBBadge key={i.id} color="primary">
+                      {i?.menuId?.abbreviation}
+                    </MDBBadge>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ol>
+          <hr />
+          <p className="mt-2 font-bold text-right">Total: {currency(total)}</p>
+        </>
+      ) : (
+        <p className="text-gray-500">No collections found for this date.</p>
+      )}
+    </div>
+  );
+}

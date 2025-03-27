@@ -12,6 +12,7 @@ import {
   MDBProgress,
   MDBRow,
   MDBTable,
+  MDBTypography,
   MDBView,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
@@ -85,6 +86,15 @@ export default function Banner() {
 
   return (
     <div style={{ width: "850px" }} className="mx-auto">
+      <MDBTypography
+        variant="h6"
+        noteColor="warning"
+        className="mt-2 "
+        note
+        noteTitle={"Description: "}
+      >
+        Hover over the banner to upload or download a new one.
+      </MDBTypography>
       <MDBCard>
         <MDBCardBody>
           <MDBView hover>

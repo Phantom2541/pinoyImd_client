@@ -7,6 +7,7 @@ const initialState = {
   collections: [],
   paginated: [],
   // enrolled: [],
+  formSubmitted: false,
   searchResults: [],
   isSuccess: false,
   isLoading: false,
@@ -179,6 +180,7 @@ export const reduxSlice = createSlice({
     },
     ToggleModal: (state) => {
       state.showCompanyModal = !state.showCompanyModal;
+      state.isSuccess = false;
     },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
@@ -191,31 +193,53 @@ export const reduxSlice = createSlice({
       state.didSearch = true;
     },
     SetBRANCHES: (state, { payload }) => {
-      const { affiliated = {}, providerId = "", physicianId = "" } = payload;
+      const {
+        branch = {},
+        affiliated = {},
+        providerId = "",
+        physicianId = "",
+        isUpdatePhysician = false,
+        isUpdateBranch = false,
+      } = payload;
+
       const index = state.collections.findIndex((e) => e._id === providerId);
-      if (index < 0) return console.log("provider not found");
-      const provider = { ...state.collections[index] };
 
-      const { clients = {} } = provider || {};
-
-      const affiliateds = [...clients?.affiliated];
-      if (physicianId) {
-        const affiliatedIndex = affiliateds.findIndex(
-          (e) => e._id === physicianId
-        );
-        console.log(affiliatedIndex);
-        affiliateds.splice(affiliatedIndex, 1);
+      if (isUpdateBranch) {
+        // manipulate clients updating
+        state.collections[index] = {
+          ...state.collections[index],
+          clients: { ...branch },
+        };
       } else {
-        affiliateds.unshift(affiliated);
-      }
+        //manipulate affiliateds
+        if (index < 0) return console.log("provider not found");
+        const provider = { ...state.collections[index] };
 
-      state.collections[index] = {
-        ...provider,
-        clients: { ...clients, affiliated: affiliateds },
-      };
-      state.selected = payload;
-      state.willCreate = false;
-      state.showModal = true;
+        const { clients = {} } = provider || {};
+
+        const affiliateds = [...clients?.affiliated];
+        if (physicianId) {
+          const affiliatedIndex = affiliateds.findIndex(
+            (e) => e._id === physicianId
+          );
+          if (isUpdatePhysician) {
+            affiliateds[affiliatedIndex] = affiliated;
+          } else {
+            affiliateds.splice(affiliatedIndex, 1);
+          }
+        } else {
+          affiliateds.unshift(affiliated);
+        }
+
+        state.collections[index] = {
+          ...provider,
+          clients: { ...clients, affiliated: affiliateds },
+        };
+
+        state.selected = payload;
+        state.willCreate = false;
+        state.showModal = true;
+      }
     },
     SetCREATE: (state, { payload }) => {
       state.selected = payload;
@@ -252,6 +276,8 @@ export const reduxSlice = createSlice({
     },
     RESET: (state) => {
       state.isSuccess = false;
+      state.isLoading = false;
+      state.formSubmitted = false;
       state.message = "";
     },
   },
@@ -342,7 +368,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(REGISTER_GHOST_COMPANY.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
       })
       .addCase(REGISTER_GHOST_COMPANY.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
@@ -352,11 +378,11 @@ export const reduxSlice = createSlice({
 
         state.collections[index] = data;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(REGISTER_GHOST_COMPANY.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;

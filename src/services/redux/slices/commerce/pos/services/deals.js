@@ -21,6 +21,7 @@ const initialState = {
   },
   showModal: false,
   showRevertModal: false,
+  showDiscountModal: false,
   willCreate: false,
   totalPages: 0,
   maxPage: 5,
@@ -157,6 +158,37 @@ export const SAVE = createAsyncThunk(
   }
 );
 
+export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(url, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const UPDATE_INFO = createAsyncThunk(
+  `${url}/UPDATE_INFO`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "update_info");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 /**
  * Automatic generate URL.
  */
@@ -176,24 +208,6 @@ export const LABRESULT = createAsyncThunk(
         data,
         token
       );
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const UPDATE = createAsyncThunk(
-  `${url}/update`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(url, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -258,6 +272,14 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.showRevertModal = true;
     },
+    SetDISCOUNT: (state, { payload }) => {
+      state.selected = payload;
+      state.showDiscountModal = true;
+    },
+    ToggleDiscountModal: (state) => {
+      state.showDiscountModal = !state.showDiscountModal;
+      state.selected = {};
+    },
     ToggleRevertModal: (state) => {
       state.showRevertModal = !state.showRevertModal;
       state.selected = {};
@@ -289,6 +311,8 @@ export const reduxSlice = createSlice({
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
+      state.isLoading = false;
+      state.formSubmitted = false;
 
       if (payload?.resetCollections) state.collections = [];
     },
@@ -339,7 +363,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(MANAGERUPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -358,12 +382,12 @@ export const reduxSlice = createSlice({
 
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(MANAGERUPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(REVERT_SALE.pending, (state) => {
         state.formSubmitted = true;
@@ -371,16 +395,19 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(REVERT_SALE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+        const { payload, success } = action.payload;
         const index = state.collections.findIndex(({ _id }) => _id === payload);
-        const { deletedAt, ...rest } = { ...state.collections[index] };
+        const { deletedAt, remarks, ...rest } = { ...state.collections[index] };
         state.collections[index] = rest;
         state.formSubmitted = false;
+        state.message = success;
+        state.isSuccess = true;
       })
       .addCase(REVERT_SALE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
+        state.isSuccess = false;
       })
 
       .addCase(TRACKER.pending, (state) => {
@@ -499,6 +526,30 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
+      .addCase(UPDATE_INFO.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE_INFO.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const index = state.collections.findIndex(
+          ({ _id }) => _id === payload._id
+        );
+        state.collections[index] = {
+          ...state.collections[index],
+          ...payload,
+        };
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE_INFO.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+
       .addCase(LABRESULT.pending, (state) => {
         // state.isLoading = true;
         state.isSuccess = false;
@@ -591,6 +642,8 @@ export const {
   SetFilterByCASHIER,
   SetSELECTED,
   SetREVERT,
+  SetDISCOUNT,
+  ToggleDiscountModal,
   SetMODAL,
   SetMaxPage,
   SetActivePAGE,

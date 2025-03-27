@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { CustomSelect } from "../../../../../components/searchables";
+import { Select } from "../../../../../components/customizable";
 import { SearchTemplates as Templates } from "../../../../../components/searchables";
 import {
   BROWSE,
@@ -39,7 +39,7 @@ const Header = () => {
       </div>
       <div className="d-flex align-items-center" style={{ width: "30rem" }}>
         <Templates setTemplate={handleTemplate} />
-        <CustomSelect
+        <Select
           // CSS
           className="m-0 p-0 ml-4 text-white w-100 mdb-custom-select"
           inputClassName="text-white m-0 p-0"

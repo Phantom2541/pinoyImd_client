@@ -6,6 +6,7 @@ const Card = ({ txt, num, index }) => {
   const today = new Date();
   const dateCell = new Date(txt);
   const isFuture = dateCell > today;
+  const isToday = dateCell.toDateString() === today.toDateString();
   const week = txt?.slice(0, 3);
 
   return (
@@ -13,7 +14,7 @@ const Card = ({ txt, num, index }) => {
       className={`calendar-card ${num ? "" : "opacity-0 pointer-events-none"}`}
       key={`pos-calendar-${index}`}
     >
-      <Indicator num={num} week={week} isFuture={isFuture} />
+      <Indicator num={num} week={week} isFuture={isFuture} isToday={isToday} />
       <div className="sales-card-body">
         <div className="d-flex"></div>
         <div className="d-flex items-center">

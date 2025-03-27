@@ -6,7 +6,7 @@ const url = "assets/persons/physicians";
 const initialState = {
   collections: [],
   isSuccess: false,
-  isLoading: false,
+  formSubmitted: false,
   message: "",
 };
 
@@ -15,6 +15,24 @@ export const BROWSE = createAsyncThunk(
   ({ token, branchId }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, { branchId });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const SEARCH = createAsyncThunk(
+  `${url}/SEARCH`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/search`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -79,6 +97,7 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
 
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
+    console.log("running again");
     return axioKit.update(url, form.data, form.token);
   } catch (error) {
     const message =
@@ -109,6 +128,7 @@ export const reduxSlice = createSlice({
   reducers: {
     RESET: (state) => {
       state.isSuccess = false;
+      state.formSubmitted = false;
       state.collections = [];
       state.message = "";
     },
@@ -126,6 +146,22 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(SEARCH.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SEARCH.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = payload;
+        state.isLoading = false;
+      })
+      .addCase(SEARCH.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -184,25 +220,28 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.tieups.findIndex(
-          (item) => item._id === payload._id
-        );
+        if (state.collections.length > 0) {
+          const index = state?.collections?.tieups?.findIndex(
+            (item) => item?._id === payload?._id
+          );
 
-        state.collections[index] = payload;
+          state.collections[index] = payload;
+        }
+
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
+        state.message = error?.message || "";
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;

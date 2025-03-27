@@ -15,7 +15,6 @@ import Denominations from "./../remmitances/modal/denominations";
 export default function Cashier() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth);
   const { transaction, isSuccess } = useSelector(({ deals }) => deals);
-  const { selected } = useSelector(({ remittances }) => remittances);
   const dispatch = useDispatch();
   const hasFetched = useRef(false);
 
@@ -27,14 +26,15 @@ export default function Cashier() {
     if (_selected) {
       dispatch(SetSELECTED({ value: _selected }));
     } else {
-      const options = {
-        timeZone: "Asia/Manila",
+      /**
+       * get local time of users
+       * Format: YYYY-MM-DD
+       */
+      const date = new Date().toLocaleDateString(undefined, {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
-      };
-      const formatter = new Intl.DateTimeFormat("en-CA", options);
-      const date = formatter.format(new Date());
+      });
 
       dispatch(
         AUTOSELECT({

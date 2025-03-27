@@ -23,7 +23,7 @@ export default function TasksCollapse({
     // week = date.slice(0, 3),
     // complete = date.slice(4),
     history = useHistory();
-  console.log("task", task);
+  // console.log("task", task);
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">

@@ -13,7 +13,9 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos.js";
 
 export default function Menus({ patronPresent }) {
-  const { category, privilege, cart } = useSelector(({ pos }) => pos),
+  const { category, privilege, cart, membership } = useSelector(
+      ({ pos }) => pos
+    ),
     dispatch = useDispatch();
 
   const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
@@ -53,14 +55,17 @@ export default function Menus({ patronPresent }) {
               </td>
             </tr>
           )}
-          {cart.map((menu) => {
-            const { _id, description, abbreviation, packages } = menu;
+          {cart.map((item) => {
+            const { _id, description, abbreviation, packages } = item;
+
+            console.log("category", category, "privilege", privilege);
+
             const {
               gross = 0,
               up = 0,
               title = "",
               color = "",
-            } = computeGD(menu, category, privilege);
+            } = computeGD(item, category, privilege, membership);
 
             return (
               <tr key={_id}>

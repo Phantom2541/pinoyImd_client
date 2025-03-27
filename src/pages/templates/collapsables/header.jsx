@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import CustomSelect from "../../../components/searchables/customSelect";
+import { Select } from "../../../components/customizable";
 import { Templates } from "../../../services/fakeDb";
 import { SearchServices as Services } from "../../../components/searchables";
 import {
@@ -39,13 +39,13 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <CustomSelect
+          <Select
             className="m-0 p-0 calendar mr-4"
             value={component}
             onChange={(value) => handleComponent(value)}
             inputClassName="m-0 p-0"
             preValue={component}
-            collections={Templates.getComponents("LAB")}
+            choices={Templates.getComponents("LAB")}
           />
           {/* <Services template={template} setService={setService} /> */}
         </div>

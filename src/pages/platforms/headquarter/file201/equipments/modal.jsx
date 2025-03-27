@@ -16,7 +16,7 @@ import {
 } from "../../../../../services/redux/slices/assets/procurements";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import CustomSelect from "../../../../../components/searchables/customSelect";
+import { Select } from "../../../../../components/customizable";
 
 // declare your expected items
 const _form = {
@@ -217,7 +217,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               />
             </MDBCol>
             <MDBCol md="6">
-              <CustomSelect
+              <Select
                 choices={status}
                 onChange={handleStatusChange}
                 label={"Status"}
@@ -229,7 +229,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           </MDBRow>
           <MDBRow>
             <MDBCol md="6">
-              <CustomSelect
+              <Select
                 onChange={handleAccuqiredChange}
                 label={"Accuqired"}
                 choices={accuqired}
@@ -239,7 +239,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               />
             </MDBCol>{" "}
             <MDBCol md="6">
-              <CustomSelect
+              <Select
                 label={"Category"}
                 onChange={handleCategoryChange}
                 choices={category}

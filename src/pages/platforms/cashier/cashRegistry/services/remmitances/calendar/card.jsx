@@ -24,39 +24,24 @@ const Card = ({ txt, num, index, item = {} }) => {
         {[
           { label: "FC", value: opening.sum },
           { label: "Sales", value: gross },
+          {
+            label: "Total",
+            value: gross ? gross + opening.sum : 0,
+            cn: "font-weight-bold",
+          },
+          { label: "Expenses", value: expenses, cn: "text-danger" },
         ]
           .filter(({ value }) => value > 0)
-          .map(({ label, value }, idx) => (
+          .map(({ label, value, cn }, idx) => (
             <h6
               key={idx}
-              className="mb-0 text-right"
+              className={`mb-0 text-right ${cn}`}
               style={{ whiteSpace: "nowrap" }}
             >
               {label}: {currency(value)}
             </h6>
           ))}
-        {gross > 0 && (
-          <>
-            <hr className="my-1" />
-            <h6
-              className="mb-0 text-right font-weight-bold"
-              style={{ whiteSpace: "nowrap" }}
-            >
-              Total: {currency(gross + (opening.sum || 0))}
-            </h6>
-          </>
-        )}
-        {expenses > 0 && (
-          <>
-            <hr className="my-1" />
-            <h6
-              className="mb-0 text-right text-danger"
-              style={{ whiteSpace: "nowrap" }}
-            >
-              Expenses: {currency(expenses)}
-            </h6>
-          </>
-        )}
+
         {/* 🟢 Show COH only if transactions exist */}
         {!!closing && (
           <>

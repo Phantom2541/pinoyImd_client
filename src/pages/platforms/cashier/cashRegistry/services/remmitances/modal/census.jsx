@@ -25,10 +25,9 @@ import { CASHIER } from "../../../../../../../services/redux/slices/commerce/pos
 export default function Census() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { showCensus, selected } = useSelector(({ remittances }) => remittances),
+    { collections } = useSelector(({ menus }) => menus),
     [census, setCensus] = useState({ menus: [], services: [] }),
     [collapsed, setCollapsed] = useState({ menus: false, services: false }),
-    [menuCensus, setMenuCensus] = useState([]), // Menus Census for display
-    [serviceCensus, setServiceCensus] = useState([]), // Services Census for display
     [patients, setPatients] = useState(0),
     [gross, setGross] = useState(0),
     [breakdown, setBreakdown] = useState({}),
@@ -37,8 +36,8 @@ export default function Census() {
 
   useEffect(() => {
     let isMounted = true; // ✅ Track if component is mounted
-
-    if (selected?.census) {
+    // if already saved
+    if (selected?.census && selected?.census?.menus.length > 0) {
       setCensus(selected.census);
       setPatients(selected.patients);
       setGross(selected.gross);
@@ -46,15 +45,17 @@ export default function Census() {
       return; // ✅ Prevent unnecessary API call
     }
 
+    // if census is not saved then, fetched to deals
     const fetchCensus = async () => {
       try {
+        const date = new Date(selected.createdAt).toISOString().split("T")[0];
         const { payload } = await dispatch(
           CASHIER({
             token,
             key: {
               branchId: activePlatform?.branchId,
               cashierId: auth._id,
-              date: new Date(selected.createdAt).toISOString().split("T")[0],
+              date,
             },
           })
         );
@@ -66,43 +67,43 @@ export default function Census() {
         if (payload?.payload) {
           const _patient = payload.payload?.length;
           setPatients(_patient);
-          const menuCountMap = {}; // { menuId: { _id, abbreviation, count } }
-          const serviceCountMap = {}; // { serviceId: { _id, count } }
+
+          const menuCountMap = {}; // { menuId: count }
+          const serviceCountMap = {}; // { serviceId: count }
+          const paymentSummary = {};
 
           setGross(payload.payload.reduce((acc, item) => acc + item.amount, 0));
-          const paymentSummary = {};
+
           payload.payload.forEach(({ cart, amount, payment }) => {
+            // Payment Breakdown
             if (payment && amount) {
               if (!paymentSummary[payment]) {
                 paymentSummary[payment] = 0;
               }
               paymentSummary[payment] += amount;
             }
+
             cart.forEach(({ menuId, packages }) => {
               // Count Menus
-              if (menuId) {
-                const { _id, abbreviation } = menuId;
-                if (!menuCountMap[_id]) {
-                  menuCountMap[_id] = { _id, abbreviation, count: 0 };
-                }
-                menuCountMap[_id].count += 1;
+              if (menuId?._id) {
+                menuCountMap[menuId._id] = (menuCountMap[menuId._id] || 0) + 1;
               }
+
               // Count Services
               packages.forEach((serviceId) => {
-                if (!serviceCountMap[serviceId]) {
-                  serviceCountMap[serviceId] = { _id: serviceId, count: 0 };
-                }
-                serviceCountMap[serviceId].count += 1;
+                serviceCountMap[serviceId] =
+                  (serviceCountMap[serviceId] || 0) + 1;
               });
             });
           });
 
+          console.log("menuCountMap", menuCountMap);
+          console.log("serviceCountMap", serviceCountMap);
+
           if (isMounted) {
-            setMenuCensus(Object.values(menuCountMap)); // ✅ Show menu abbreviations
-            setServiceCensus(Object.values(serviceCountMap)); // ✅ Show service IDs
             setCensus({
-              menus: Object.values(menuCountMap),
-              services: Object.values(serviceCountMap),
+              menus: menuCountMap, // {10:2, 5:1}
+              services: serviceCountMap, // {20:3, 15:2}
             });
             setBreakdown(paymentSummary);
           }
@@ -125,10 +126,7 @@ export default function Census() {
   const handleSubmit = () => {
     const data = {
       _id: selected._id,
-      census: {
-        menus: menuCensus,
-        services: serviceCensus,
-      },
+      census,
       breakdown,
       patients,
       gross,
@@ -137,6 +135,11 @@ export default function Census() {
     dispatch(CENSUS({ token, data }));
     dispatch(TOGGLE({ key: "census" }));
   };
+
+  const censusDate = selected?.createdAt
+    ? new Date(selected.createdAt).toISOString().split("T")[0]
+    : "N/A";
+
   return (
     <MDBModal
       isOpen={showCensus}
@@ -150,9 +153,13 @@ export default function Census() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="calendar-alt" className="mr-2" />
-        Census
+        Census : {censusDate}
       </MDBModalHeader>
-
+      {!selected && (
+        <p className="font-weight-bold text-danger">
+          Please declare your floating cash before proceeding with the census.
+        </p>
+      )}
       {/* Modal Body */}
       <MDBModalBody className="mb-0">
         {/* Summary Section */}
@@ -195,16 +202,26 @@ export default function Census() {
           {
             label: "Menus",
             key: "menus",
-            data: census.menus,
+            data: Object.entries(census.menus).map(([id, count]) => ({
+              _id: id,
+              abbreviation: collections.find(({ _id }) => _id === id)
+                ?.abbreviation, // Assuming you have a function to get the menu name
+              // abbreviation: id,
+              count,
+            })),
             columns: ["Test", "Count"],
             accessor: (item) => [item.abbreviation, item.count],
           },
           {
             label: "Services",
             key: "services",
-            data: census.services,
+            data: Object.entries(census.services).map(([id, count]) => ({
+              _id: id,
+              name: Services.getName(id),
+              count,
+            })),
             columns: ["Service", "Count"],
-            accessor: (item) => [Services.getName(item._id), item.count],
+            accessor: (item) => [item.name, item.count],
           },
         ].map(({ label, key, data, columns, accessor }) => (
           <div key={key} className="mb-2">
@@ -243,7 +260,7 @@ export default function Census() {
       </MDBModalBody>
 
       <MDBCardBody>
-        {!selected?.census && (
+        {!!selected && (
           <MDBBtn
             className="w-100"
             color="primary"

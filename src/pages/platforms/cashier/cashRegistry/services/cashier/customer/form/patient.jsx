@@ -13,10 +13,13 @@ import {
 } from "../../../../../../../../services/redux/slices/assets/persons/users";
 import { useDispatch, useSelector } from "react-redux";
 import { isEqual } from "lodash";
-import {
-  SETPATIENT,
-} from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
+import { SETPATIENT } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 
+/**
+ * if user is not in quest, use branch address
+ * else use user quest addres
+ */
+const { branch } = JSON.parse(localStorage.getItem("activePlatform")) || {};
 const _form = {
   fullName: {
     fname: "",
@@ -25,9 +28,9 @@ const _form = {
     suffix: "",
   },
   address: {
-    region: "REGION III (CENTRAL LUZON)",
-    province: "NUEVA ECIJA",
-    city: "CABANATUAN CITY",
+    region: branch?.address.region,
+    province: branch?.address.province,
+    city: branch?.address.city,
     barangay: "",
     street: "",
   },
@@ -38,7 +41,7 @@ const _form = {
   email: "",
 };
 
-export default function Patient({setActiveIndex}) {
+export default function Patient({ setActiveIndex }) {
   const { token } = useSelector(({ auth }) => auth),
     { customer } = useSelector(({ pos }) => pos),
     [form, setForm] = useState(_form),
@@ -46,15 +49,12 @@ export default function Patient({setActiveIndex}) {
 
   // inject searched name if no match
   useEffect(() => {
-    setForm(customer);
+    if (customer) setForm(customer);
   }, [customer]);
 
   // update form for selected user
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
-
-  const { fullName, _id, dob, privilege, mobile, isMale, address, email } =
-    form;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -68,8 +68,8 @@ export default function Patient({setActiveIndex}) {
             token,
           })
         ).then(({ payload }) => {
-        dispatch(SETPATIENT(payload.payload));
-      })
+          dispatch(SETPATIENT(payload.payload));
+        });
     } else {
       // create
       dispatch(
@@ -83,11 +83,14 @@ export default function Patient({setActiveIndex}) {
         })
       ).then(({ payload }) => {
         dispatch(SETPATIENT(payload.payload));
-      })
+      });
     }
     // setForm(_form);
     setActiveIndex(0);
   };
+
+  const { fullName, _id, dob, privilege, mobile, isMale, address, email } =
+    form;
 
   return (
     <form onSubmit={handleSubmit}>

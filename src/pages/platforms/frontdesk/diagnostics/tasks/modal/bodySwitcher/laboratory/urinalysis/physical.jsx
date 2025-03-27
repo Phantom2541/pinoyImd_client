@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBCol, MDBRow } from "mdbreact";
-import CustomSelect from "./../../../../../../../../../components/searchables/customSelect";
+import { Select } from "./../../../../../../../../../components/customizable";
 import {
   Transparency,
   UrineColors,
@@ -43,7 +43,7 @@ dispatch(SetTASK({task:{...task, pe:[...pe, _pe] }}));
     <MDBRow className="text-left">
       {physicalSelects.map(({ label, choices }, index) =>(
         <MDBCol md="6" key={`${label}-${index}`}>
-          <CustomSelect
+          <Select
             collections={choices}
             label={label}
             preValue={String(pe[index])}
