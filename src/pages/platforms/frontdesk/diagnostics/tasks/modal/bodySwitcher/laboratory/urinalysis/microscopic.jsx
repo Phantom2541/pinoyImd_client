@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 import { MDBCol, MDBRow } from "mdbreact";
 import { Select } from "./../../../../../../../../../components/customizable";
@@ -10,12 +10,15 @@ import {
 } from "./../../../../../../../../../services/fakeDb";
 
 export default function Microscopic() {
-  const { me } = useSelector(({ validator }) => validator.task),
+  const { task } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
+  const { me } = task;
   const handleSelectChange = (index, value) => {
     const _me = [...me];
-    _me[index] = value;
+    _me[index] = Number(value);
     dispatch(SetPARAMS({ key: "me", value: _me }));
+    dispatch(SetTASK({ task: { ...task, me: _me } }));
+    
   };
 
   const microscopicSelects = [
@@ -35,7 +38,7 @@ export default function Microscopic() {
 
         return (
           <MDBCol key={`${label}-${index}`} md="6">
-            <Select
+            {/* <Select
               disableSearch
               collections={choices}
               label={label}
@@ -43,7 +46,19 @@ export default function Microscopic() {
               texts="str"
               values="index"
               onChange={(e) => handleSelectChange(index, Number(e))}
-            />
+            /> */}
+            <label htmlFor="">{ label}</label>
+             <select value={me[index]} className="form-control mb-2" onChange={(e) => handleSelectChange(index, e.target.value)}>
+            <option ></option>
+            {choices.map((choice, i) => {
+              
+             return (
+
+              <option key={i} value={i}>
+                {choice}
+              </option>
+            )})}  
+          </select>
           </MDBCol>
         );
       })}
