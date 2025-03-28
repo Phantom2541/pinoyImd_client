@@ -24,7 +24,10 @@ export default function CollapseTable({ menu }) {
         return components.filter((component) => menu[component.toLowerCase()]);
       }
     );
-
+    console.log("menu", menu);
+    console.log("filteredLabTests", filteredLabTests);
+    console.log("Templates.collections", Templates.collections);
+    
     setLabTests(filteredLabTests);
   }, [menu]);
 
@@ -65,7 +68,7 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
-
+    
     return (
       <tr key={task.key} className={`${hasDone && "table-active"}`}>
         <td className="fw-bold">{capitalize(department)}</td>
@@ -137,6 +140,7 @@ export default function CollapseTable({ menu }) {
         </thead>
         <tbody>
           {labTests?.map((_labTest, index) => {
+            
             const labTest = menu[_labTest.toLowerCase()];
 
             if (!labTest)
