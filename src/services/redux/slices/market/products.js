@@ -1,20 +1,36 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, globalSearch } from "../../../utilities";
+import { axioKit } from "../../../utilities";
 
 const url = "procurements/product";
 
 const initialState = {
+  filter: [],
+  paginated: [],
+
+  // Bread attributes
+  selected: {}, // assurance
+  page: 0,
+  willCreate: false,
+  showModal: false,
+
+  /**
+   * pagination
+   */
   collections: [],
+  filtered: [],
+  maxPage: 5,
+  totalPages: 0,
+  activePage: 1,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
 export const BROWSE = createAsyncThunk(
-  `${url}/browse`,
-  ({ token, key }, thunkAPI) => {
+  `${url}`,
+  ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, key);
+      return axioKit.universal(`${url}/browse`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -28,95 +44,32 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
-export const VENDORS = createAsyncThunk(
-  `${url}/vendors`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${url}/vendors`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
+  try {
+    return axioKit.save(url, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
 
-      return thunkAPI.rejectWithValue(message);
-    }
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
-export const OUTSOURCE = createAsyncThunk(
-  `${url}/outsource`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${url}/outsource`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
+  try {
+    return axioKit.update(url, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
 
-      return thunkAPI.rejectWithValue(message);
-    }
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
-export const GETBRANCHES = createAsyncThunk(
-  `${url}/getBranches`,
-  ({ token }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${url}/getBranches`, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const SAVE = createAsyncThunk(
-  `${url}/save`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.save(url, data, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const UPDATE = createAsyncThunk(
-  `${url}/update`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(url, data, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
@@ -139,33 +92,80 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
-    SetFILTERED: (state, { payload }) => {
-      // Always create a new array before filtering
-      const collectionsCopy = state.collections.map((item) =>
-        JSON.parse(JSON.stringify(item))
-      );
-      const filtered = globalSearch(collectionsCopy, payload);
-      state.filtered = filtered;
-
-      // Dispatch the action instead of calling it as a function
-      state.totalPages = Math.ceil(filtered.length / state.maxPage);
-
-      state.isSuccess = true;
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
     },
-    RESET: (state) => {
+    SetCREATE: (state, { payload }) => {
+      state.selected = {
+        lo: "",
+        norm: "",
+        hi: "",
+        serviceId: payload.serviceId,
+      };
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetFILTER: (state, { payload }) => {
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPages = Math.floor(payload.length / maxPage);
+        if (payload.length % maxPage > 0) totalPages += 1;
+        state.totalPages = totalPages;
+        if (page > totalPages) {
+          state.page = totalPages;
+        }
+      }
+      state.filter = payload;
+    },
+    SetPagination: state => {
+      // {
+      //   payload;
+      // }getPage
+      const { page, max } = state;
+      // if (getPage) return array;
+
+      state.paginated = state.filter.slice(
+        (page - 1) * max,
+        max + (page - 1) * max
+      );
+    },
+    SetPAGE: (state, { payload }) => {
+      state.page = payload;
+    },
+    RESET: state => {
       state.isSuccess = false;
       state.message = "";
     },
+    /**
+     *  for pagination
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+    TOGGLE: state => {
+      state.showModal = !state.showModal;
+    },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(BROWSE.pending, (state) => {
+      .addCase(BROWSE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        state.collections = action.payload;
+        const { success } = action.payload;
+        state.collections = state.filtered = action.payload; // Fix typo
+        state.totalPages =
+          Math.ceil(action.payload.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -174,60 +174,14 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(VENDORS.pending, (state) => {
+      .addCase(SAVE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(VENDORS.fulfilled, (state, action) => {
-        state.collections = action.payload;
-        state.isLoading = false;
-      })
-      .addCase(VENDORS.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
-      .addCase(OUTSOURCE.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(OUTSOURCE.fulfilled, (state, action) => {
-        state.collections = action.payload;
-        state.isLoading = false;
-      })
-      .addCase(OUTSOURCE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
-      .addCase(GETBRANCHES.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(GETBRANCHES.fulfilled, (state, action) => {
-        state.collections = action.payload;
-        state.isLoading = false;
-      })
-      .addCase(GETBRANCHES.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
-      .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
+      .addCase(SAVE.fulfilled, (state, { payload }) => {
         state.collections.unshift(payload);
+        state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -237,18 +191,19 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, (state) => {
+      .addCase(UPDATE.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload } = action;
         const index = state.collections.findIndex(
-          (item) => item._id === payload._id
+          item => item._id === payload._id
         );
 
         state.collections[index] = payload;
+        state.showModal = false;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -258,17 +213,16 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(DESTROY.pending, (state) => {
+      .addCase(DESTROY.pending, state => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success } = action;
         const index = state.collections.findIndex(
-          (item) => item._id === payload
+          item => item?._id === action.payload
         );
-
         state.collections.splice(index, 1);
         state.message = success;
         state.isSuccess = true;
@@ -282,6 +236,18 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetFILTERED, RESET } = reduxSlice.actions;
+export const {
+  SetCREATE,
+  SetEDIT,
+  SetFILTER,
+  SetPAGE,
+  /**
+   * for pagination
+   */
+  SetMaxPage,
+  SetActivePAGE,
+  TOGGLE,
+  RESET,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;
