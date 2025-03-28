@@ -89,7 +89,7 @@ export default function Vouchers() {
       <MDBCollapseHeader style={{ borderRadius: "50%" }} className="bg-light">
         <div className="d-flex justify-content-between align-items-center">
           <small className="text-uppercase font-weight-bold text-center text-primary">
-            End-of-Shift Reconciliation
+            End-of-Shift Summary
           </small>
           <i
             onClick={() => setIsOpen(!isOpen)}

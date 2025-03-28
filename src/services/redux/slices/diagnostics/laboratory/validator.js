@@ -116,21 +116,21 @@ export const reduxSlice = createSlice({
       console.log("task", task);
 
       state.task = task;
-      if (form === "Urinalysis") {
-        state.params = {
-          pe: [2, 0, 1, 1],
-          ce: [0, 0, 0, 0, 0, 0, 0, 0],
-          me: [1, 0, 0, 0, 0, 0],
-        };
-      } else if (form === "Parasitology") {
-        state.params = {
-          pe: [0, 0],
-          me: [0, 0, 0],
-          remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
-        };
-      } else {
-        state.params = task.packages;
-      }
+      // if (form === "Urinalysis") {
+      //   state.params = {
+      //     pe: [2, 0, 1, 1],
+      //     ce: [0, 0, 0, 0, 0, 0, 0, 0],
+      //     me: [1, 0, 0, 0, 0, 0],
+      //   };
+      // } else if (form === "Parasitology") {
+      //   state.params = {
+      //     pe: [0, 0],
+      //     me: [0, 0, 0],
+      //     remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
+      //   };
+      // } else {
+      //   state.params = task.packages;
+      // }
       state.showModal = true;
     },
     /**
@@ -150,6 +150,7 @@ export const reduxSlice = createSlice({
 
       state.task = { ...state.task, ...healthyClient[payload] };
       console.log(healthyClient[payload]);
+      console.log(state.task);
     },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;

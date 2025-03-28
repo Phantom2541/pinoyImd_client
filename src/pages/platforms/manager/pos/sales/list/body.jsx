@@ -6,15 +6,17 @@ import {
   fullName,
   getGenderIcon,
   paymentMethod,
-  // axioKit,
 } from "./../../../../../../services/utilities";
 import { Categories } from "./../../../../../../services/fakeDb";
 import {
   MANAGERUPDATE,
   SetDISCOUNT,
+  RESET,
   SetREVERT,
-  // RESET,
+  UPDATE_INFO,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { useToasts } from "react-toast-notifications";
+
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
 import discount from "../../../../../../assets/discount.png";
@@ -28,34 +30,28 @@ import {
   MDBBtnGroup,
 } from "mdbreact";
 import "./style.css";
+import { Select } from "../../../../../../components/customizable";
+import PickPhysician from "../../../../../../components/searchables/physicians/pickPhysician";
 
 export const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { collections, filtered, maxPage, activePage } = useSelector(
-      ({ deals }) => deals
-    ),
+    { collections, filtered, maxPage, activePage, formSubmitted, isSuccess } =
+      useSelector(({ deals }) => deals),
+    { collections: sources } = useSelector(({ providers }) => providers),
     [total, setTotal] = useState(0),
+    [selected, setSelected] = useState({}),
     [patient, setPatient] = useState(0),
     [didHoverID, setDidHoverID] = useState(-1),
     [view, setView] = useState("all"),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const today = new Date();
-  //   axioKit
-  //     .universal("finance/pre-calculated-daily-sale/find", token, {
-  //       month: Months[today.getMonth()],
-  //       day: today.getDate(),
-  //       year: today.getFullYear(),
-  //       cashier: auth._id,
-  //       branch: activePlatform?.branchId,
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching daily sale:", error);
-  //     });
-
-  //   return () => dispatch(RESET());
-  // }, [token, dispatch, activePlatform, auth]);
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      dispatch(RESET());
+      setSelected({});
+    }
+  }, [dispatch, formSubmitted, isSuccess]);
 
   useEffect(() => {
     const validTransactions = filtered.filter((item) => !item.deletedAt);
@@ -109,58 +105,31 @@ export const Tables = () => {
 
   const handleEdit = async (deal) => {
     dispatch(SetDISCOUNT(deal));
-    // const { discount, amount } = deal;
-
-    // const originalAmount = discount ? discount + amount : amount;
-    // const message =
-    //   amount === originalAmount
-    //     ? `Amount is ${amount}`
-    //     : `discounted Amount: ${amount} : Original Amount: ${originalAmount}`;
-
-    // const { value } = await Swal.fire({
-    //   title: "Input New Amount",
-    //   input: "number",
-    //   inputLabel: message,
-    //   inputAttributes: {
-    //     min: "0",
-    //     max: originalAmount.toString(),
-    //   },
-    // });
-
-    // if (!value) return; // If user cancels or inputs nothing, do nothing
-
-    // if (value > originalAmount) {
-    //   return Swal.fire({
-    //     icon: "error",
-    //     title: "Invalid Amount",
-    //     text: `The amount must not exceed ${originalAmount}`,
-    //   });
-    // }
-
-    // if (value <= originalAmount) {
-    //   Swal.fire({
-    //     icon: "success",
-    //     title: "Successfully Updated!",
-    //   });
-
-    //   dispatch(
-    //     MANAGERUPDATE({
-    //       token,
-    //       key: {
-    //         _id: deal._id,
-    //         amount: value,
-    //         discount: originalAmount - value,
-    //         authorizedBy: auth._id,
-    //       },
-    //     })
-    //   );
-    // }
   };
 
   const handleRevert = (deal) => {
     dispatch(SetREVERT(deal));
   };
 
+  const handleUpdate = (updatedKey, newKey) => {
+    //updated key, new key is the new value updated
+    const { _id } = selected;
+    const oldValue = selected[updatedKey] || "";
+    const newValue = selected[newKey] || "";
+
+    if (oldValue.toLowerCase() === newValue.toLowerCase()) {
+      setSelected({});
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
+    dispatch(
+      UPDATE_INFO({
+        data: { _id, [updatedKey]: selected[newKey], updatedKey },
+        token,
+      })
+    );
+  };
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -192,7 +161,7 @@ export const Tables = () => {
         <thead>
           <tr style={{ marginTop: "-5rem" }}>
             <th>Patient</th>
-            <th>Physician</th>
+            <th>Physician/Source</th>
             <th>Amount</th>
             <th>Services</th>
             <th>Remarks</th>
@@ -203,6 +172,7 @@ export const Tables = () => {
             const isDeleted = !!deal.deletedAt;
             const isDiscounted = deal.discount > 0;
             const isHover = index === didHoverID;
+            const source = deal.source?.companyName || deal.source?.name;
             const { img, style, text } = paymentMethod.getImage(deal.payment);
 
             return (
@@ -223,22 +193,211 @@ export const Tables = () => {
                     <h6>{getGenderIcon(deal?.customerId?.isMale)} </h6>
                     <h6>{fullName(deal?.customerId?.fullName)}</h6>
                   </div>
-                  <MDBBadge color="info" className="mr-2">
-                    {capitalize(
-                      deal.category === "walkin"
-                        ? deal.category
-                        : Categories.find(({ abbr }) => abbr === deal.category)
-                            .name
-                    )}
-                  </MDBBadge>
+                  {selected._id === deal._id &&
+                  selected?.updatedKey === "category" ? (
+                    <div
+                      style={{ width: "17rem", marginBottom: "-0.7rem" }}
+                      className="mt-2 d-flex align-items-center"
+                    >
+                      <Select
+                        label={"Category"}
+                        onChange={(value) =>
+                          setSelected({ ...selected, newCategory: value })
+                        }
+                        whitelisted
+                        className="m-0 p-0"
+                        collections={Categories}
+                        preValue={deal.category}
+                        keys={"abbr"}
+                        values={"name"}
+                      />
+                      {!formSubmitted ? (
+                        <MDBIcon
+                          icon="check"
+                          className="mr-2 ml-2 cursor-pointer"
+                          onClick={() =>
+                            handleUpdate("category", "newCategory")
+                          }
+                          style={{ fontSize: "1rem", color: "blue" }}
+                        />
+                      ) : (
+                        <MDBIcon
+                          icon="spinner"
+                          className="ml-2"
+                          pulse
+                          style={{
+                            color: "black",
+                            fontSize: "1rem",
+                            marginRight: "10px",
+                          }}
+                        />
+                      )}
+
+                      <MDBIcon
+                        icon="times"
+                        className="cursor-pointer "
+                        onClick={() => setSelected({})}
+                        style={{ fontSize: "1rem", color: "red" }}
+                      />
+                    </div>
+                  ) : (
+                    <MDBBadge
+                      color="info"
+                      className="mr-2 cursor-pointer"
+                      onClick={() =>
+                        setSelected({ ...deal, updatedKey: "category" })
+                      }
+                    >
+                      {capitalize(
+                        deal.category === "walkin"
+                          ? deal.category
+                          : Categories.find(
+                              ({ abbr }) => abbr === deal.category
+                            ).name
+                      )}
+                    </MDBBadge>
+                  )}
                   @ {new Date(deal.createdAt).toLocaleTimeString()}
                 </td>
                 <td>
-                  {deal.physicianId?.fullName.lname && (
-                    <h6>Dr. {deal.physicianId.fullName.lname}</h6>
+                  {selected._id === deal._id &&
+                  selected.updatedKey === "physician" ? (
+                    <div
+                      className="d-flex align-items-center"
+                      style={{ marginBottom: "-0.5rem" }}
+                    >
+                      <div style={{ width: "15rem" }}>
+                        <PickPhysician
+                          label="Physician"
+                          onClick={(value) =>
+                            setSelected({
+                              ...selected,
+                              newPhysician: value?.user?._id,
+                            })
+                          }
+                        />
+                      </div>
+                      {!formSubmitted ? (
+                        selected.physicianId !== selected.newPhysician && (
+                          <MDBIcon
+                            icon="check"
+                            className="mr-2 ml-2 cursor-pointer"
+                            title="Update Physician"
+                            onClick={() =>
+                              handleUpdate("physicianId", "newPhysician")
+                            }
+                            style={{ fontSize: "1rem", color: "blue" }}
+                          />
+                        )
+                      ) : (
+                        <MDBIcon
+                          icon="spinner"
+                          className="ml-2"
+                          pulse
+                          style={{
+                            color: "black",
+                            fontSize: "1rem",
+                            marginRight: "10px",
+                          }}
+                        />
+                      )}
+
+                      <MDBIcon
+                        icon="times"
+                        title="Close"
+                        className="cursor-pointer "
+                        onClick={() => setSelected({})}
+                        style={{ fontSize: "1rem", color: "red" }}
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <small className="mr-1 grey-text">Physician:</small>
+                      {deal?.physicianId?.fullName?.lname ? (
+                        <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
+                      ) : (
+                        <h6
+                          className="cursor-pointer"
+                          onClick={() =>
+                            setSelected({ ...deal, updatedKey: "physician" })
+                          }
+                        >
+                          N/A
+                        </h6>
+                      )}
+                    </div>
                   )}
-                  <p>{deal.source?.displayname || deal.source?.name}</p>
+
+                  {selected?._id === deal?._id &&
+                  selected.updatedKey === "source" ? (
+                    <div
+                      style={{
+                        width: "17rem",
+                        marginBottom: "-0.7rem",
+                      }}
+                      className="mt-2 d-flex align-items-center"
+                    >
+                      <Select
+                        label={"Source"}
+                        onChange={(value) =>
+                          setSelected({ ...selected, newSource: value })
+                        }
+                        whitelisted
+                        className="m-0 p-0 mt-3"
+                        collections={sources.map(({ clients }) => ({
+                          _id: clients._id,
+                          text: `${clients?.displayname?.toUpperCase()} ${clients?.name?.toUpperCase()}`,
+                        }))}
+                        preValue={deal.source}
+                        keys={"_id"}
+                        values={"text"}
+                      />
+                      {!formSubmitted ? (
+                        <MDBIcon
+                          icon="check"
+                          className="mr-2 ml-2 cursor-pointer"
+                          onClick={() => handleUpdate("source", "newSource")}
+                          style={{ fontSize: "1rem", color: "blue" }}
+                        />
+                      ) : (
+                        <MDBIcon
+                          icon="spinner"
+                          className="ml-2"
+                          pulse
+                          style={{
+                            color: "black",
+                            fontSize: "1rem",
+                            marginRight: "10px",
+                          }}
+                        />
+                      )}
+
+                      <MDBIcon
+                        icon="times"
+                        className="cursor-pointer "
+                        onClick={() => setSelected({})}
+                        style={{ fontSize: "1rem", color: "red" }}
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <small className="mr-1 grey-text">Source:</small>
+                      {source ? (
+                        <h6>{source}</h6>
+                      ) : (
+                        <h6
+                          className="cursor-pointer"
+                          onClick={() =>
+                            setSelected({ ...deal, updatedKey: "source" })
+                          }
+                        >
+                          N/A
+                        </h6>
+                      )}
+                    </div>
+                  )}
                 </td>
+
                 <td style={{ fontWeight: 400 }}>
                   <div className="d-flex align-items-center">
                     <h6
@@ -272,7 +431,7 @@ export const Tables = () => {
                         src={discount}
                         title="Discount"
                         style={{ height: "1.4rem" }}
-                      />{" "}
+                      />
                     </p>
                   )}
                   <p
@@ -287,7 +446,7 @@ export const Tables = () => {
                       src={tendered}
                       title="Tendered"
                       style={{ height: "2rem" }}
-                    />{" "}
+                    />
                   </p>
                 </td>
                 <td>

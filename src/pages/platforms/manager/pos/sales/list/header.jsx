@@ -10,6 +10,7 @@ import {
   SetFilterByCASHIER,
   RESET,
 } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { INSOURCE } from "../../../../../../services/redux/slices/assets/providers";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
@@ -21,19 +22,28 @@ const Header = () => {
   // Initial Fetch for Collections
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
-      const today = new Date().setHours(0, 0, 0, 0);
+      const createdAt = new Date().toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+
       dispatch(
         BROWSE({
           token,
           key: {
             branchId: activePlatform?.branchId,
-            createdAt: today,
+            createdAt,
           },
         })
       );
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, auth]);
+
+  useEffect(() => {
+    dispatch(INSOURCE({ token, key: { vendors: activePlatform?.branchId } }));
+  }, [dispatch, activePlatform, token]);
 
   useEffect(() => {
     if (message) {
