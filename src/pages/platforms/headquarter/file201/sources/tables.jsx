@@ -38,7 +38,7 @@ const Tables = ({ vendors }) => {
           return (
             <tr key={index}>
               <td>{index + 1}.</td>
-              <td>{clients?.companyName}</td>
+              <td>{clients?.displayname}</td>
               <td>{clients?.name}</td>
               <td>{clients?.contacts?.mobile}</td>
               <td>{clients?.contacts?.email}</td>

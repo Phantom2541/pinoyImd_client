@@ -11,10 +11,14 @@ import {
 import { Categories } from "./../../../../../../services/fakeDb";
 import {
   MANAGERUPDATE,
+  SetDISCOUNT,
+  SetREVERT,
   // RESET,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
 import Months from "../../../../../../services/fakeDb/calendar/months";
+import discount from "../../../../../../assets/discount.png";
+import tendered from "../../../../../../assets/tendered.png";
 import {
   MDBCardBody,
   MDBTable,
@@ -26,7 +30,7 @@ import {
 import "./style.css";
 
 export const Tables = () => {
-  const { token, auth } = useSelector(({ auth }) => auth),
+  const { token } = useSelector(({ auth }) => auth),
     { collections, filtered, maxPage, activePage } = useSelector(
       ({ deals }) => deals
     ),
@@ -104,52 +108,57 @@ export const Tables = () => {
   };
 
   const handleEdit = async (deal) => {
-    const { discount, amount } = deal;
+    dispatch(SetDISCOUNT(deal));
+    // const { discount, amount } = deal;
 
-    const originalAmount = discount ? discount + amount : amount;
-    const message =
-      amount === originalAmount
-        ? `Amount is ${amount}`
-        : `discounted Amount: ${amount} : Original Amount: ${originalAmount}`;
+    // const originalAmount = discount ? discount + amount : amount;
+    // const message =
+    //   amount === originalAmount
+    //     ? `Amount is ${amount}`
+    //     : `discounted Amount: ${amount} : Original Amount: ${originalAmount}`;
 
-    const { value } = await Swal.fire({
-      title: "Input New Amount",
-      input: "number",
-      inputLabel: message,
-      inputAttributes: {
-        min: "0",
-        max: originalAmount.toString(),
-      },
-    });
+    // const { value } = await Swal.fire({
+    //   title: "Input New Amount",
+    //   input: "number",
+    //   inputLabel: message,
+    //   inputAttributes: {
+    //     min: "0",
+    //     max: originalAmount.toString(),
+    //   },
+    // });
 
-    if (!value) return; // If user cancels or inputs nothing, do nothing
+    // if (!value) return; // If user cancels or inputs nothing, do nothing
 
-    if (value > originalAmount) {
-      return Swal.fire({
-        icon: "error",
-        title: "Invalid Amount",
-        text: `The amount must not exceed ${originalAmount}`,
-      });
-    }
+    // if (value > originalAmount) {
+    //   return Swal.fire({
+    //     icon: "error",
+    //     title: "Invalid Amount",
+    //     text: `The amount must not exceed ${originalAmount}`,
+    //   });
+    // }
 
-    if (value <= originalAmount) {
-      Swal.fire({
-        icon: "success",
-        title: "Successfully Updated!",
-      });
+    // if (value <= originalAmount) {
+    //   Swal.fire({
+    //     icon: "success",
+    //     title: "Successfully Updated!",
+    //   });
 
-      dispatch(
-        MANAGERUPDATE({
-          token,
-          key: {
-            _id: deal._id,
-            amount: value,
-            discount: originalAmount - value,
-            authorizedBy: auth._id,
-          },
-        })
-      );
-    }
+    //   dispatch(
+    //     MANAGERUPDATE({
+    //       token,
+    //       key: {
+    //         _id: deal._id,
+    //         amount: value,
+    //         discount: originalAmount - value,
+    //         authorizedBy: auth._id,
+    //       },
+    //     })
+    //   );
+    // }
+  };
+
+  const handleRevert = (deal) => {
+    dispatch(SetREVERT(deal));
   };
 
   /**
@@ -211,8 +220,8 @@ export const Tables = () => {
               >
                 <td>
                   <div className="d-flex align-items-center">
-                    <h6>{getGenderIcon(deal.customerId.isMale)} </h6>
-                    <h6>{fullName(deal.customerId.fullName)}</h6>
+                    <h6>{getGenderIcon(deal?.customerId?.isMale)} </h6>
+                    <h6>{fullName(deal?.customerId?.fullName)}</h6>
                   </div>
                   <MDBBadge color="info" className="mr-2">
                     {capitalize(
@@ -228,7 +237,7 @@ export const Tables = () => {
                   {deal.physicianId?.fullName.lname && (
                     <h6>Dr. {deal.physicianId.fullName.lname}</h6>
                   )}
-                  <p>{deal.source?.companyName || deal.source?.name}</p>
+                  <p>{deal.source?.displayname || deal.source?.name}</p>
                 </td>
                 <td style={{ fontWeight: 400 }}>
                   <div className="d-flex align-items-center">
@@ -251,9 +260,35 @@ export const Tables = () => {
                   </div>
                   {/* <p style={{ fontWeight: 500 }}>{currency(deal.amount)}</p> */}
                   {isDiscounted && (
-                    <p style={{ color: "red" }}>{currency(deal.discount)}</p>
+                    <p
+                      style={{ color: "red", marginTop: "-0.2rem" }}
+                      title="Discount"
+                      className="d-flex align-items-center"
+                    >
+                      {currency(deal.discount)}
+                      <img
+                        alt="Discount"
+                        className="ml-3"
+                        src={discount}
+                        title="Discount"
+                        style={{ height: "1.4rem" }}
+                      />{" "}
+                    </p>
                   )}
-                  <p>{currency(deal.cash)}</p>
+                  <p
+                    style={{ marginTop: "-0.5rem" }}
+                    title="Tendered"
+                    className="d-flex align-items-center"
+                  >
+                    {currency(deal.cash)}
+                    <img
+                      alt="tendered"
+                      className="ml-2"
+                      src={tendered}
+                      title="Tendered"
+                      style={{ height: "2rem" }}
+                    />{" "}
+                  </p>
                 </td>
                 <td>
                   {deal.cart?.map((menu) => (
@@ -290,15 +325,17 @@ export const Tables = () => {
                             </MDBBtn>
                           </>
                         ) : (
-                          <MDBBtn
-                            size="sm"
-                            color="warning"
-                            rounded
-                            onClick={() => handleDelete(deal)}
-                            title="Revert Sale"
-                          >
-                            <MDBIcon fas icon="sync-alt" />
-                          </MDBBtn>
+                          <div style={{ width: "8.4rem" }}>
+                            <MDBBtn
+                              size="sm"
+                              color="warning"
+                              rounded
+                              onClick={() => handleRevert(deal)}
+                              title="Revert Sale"
+                            >
+                              <MDBIcon fas icon="sync-alt" />
+                            </MDBBtn>
+                          </div>
                         )}
                       </MDBBtnGroup>
                     </>

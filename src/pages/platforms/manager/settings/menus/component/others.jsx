@@ -1,8 +1,8 @@
 import React from "react";
-import { MDBRow, MDBCol, MDBTabPane } from "mdbreact";
+import { MDBRow, MDBCol, MDBTabPane, MDBInput } from "mdbreact";
 export default function Others({ handleChange, handleValue }) {
   return (
-    <MDBTabPane tabId={"menu-2"}>
+    <MDBTabPane tabId={"menu-3"}>
       <MDBRow>
         <MDBCol md="6">
           <label>Is Profile </label>
@@ -47,6 +47,14 @@ export default function Others({ handleChange, handleValue }) {
             <option value={false}> False</option>
             <option value={true}> True</option>
           </select>
+        </MDBCol>
+        <MDBCol md="4">
+          <MDBInput
+            type="number"
+            label="Refund"
+            value={handleValue("refund")}
+            onChange={(e) => handleChange("refund", e.target.value)}
+          />
         </MDBCol>
       </MDBRow>
     </MDBTabPane>

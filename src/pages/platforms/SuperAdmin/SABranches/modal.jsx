@@ -67,7 +67,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       SAVE({
         data: {
           ...form,
-          companyName: activePlatform.companyId?.name,
+          displayname: activePlatform.companyId?.name,
           companyId: activePlatform.companyId?._id,
         },
         token,

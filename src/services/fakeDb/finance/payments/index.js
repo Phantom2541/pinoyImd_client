@@ -1,14 +1,15 @@
 const Payments = {
-  walkin: ["cash", "gcash", "cheque", "downpayment", "voucher"],
+  wi: ["cash", "gcash", "cheque", "downpayment", "voucher"], // walkin
   opd: ["cash", "gcash", "cheque", "downpayment"],
   er: ["cash", "gcash", "cheque", "voucher"], // Credit: Note Receivable
   cw: ["cash", "gcash", "cheque", "voucher"], // credit: [patient, company]
   pw: ["cash", "gcash", "cheque", "voucher"], // private ward
-  hmo: ["voucher"], // need SOA
-  sc: ["cash", "gcash", "voucher"],
-  ssc: ["cash", "gcash", "voucher"],
   promo: ["cash", "gcash", "cheque"],
-  vp: ["cash", "gcash", "cheque"], // vendor price | 5% discount from srp
+  hmo: ["voucher"], // need SOA
+  is: ["cash", "gcash", "voucher"], // vendor price | 5% and up discount from srp
+  bp: ["cash", "gcash"], // business permit
+  mc: ["cash", "gcash"], // medical clearance
+  sc: ["cash", "gcash"], // surgical clearance
 };
 
 export default Payments;

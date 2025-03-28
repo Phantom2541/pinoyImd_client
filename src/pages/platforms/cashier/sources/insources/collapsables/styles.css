@@ -7,6 +7,10 @@
   flex-grow: 1;
 }
 
+.specialization-input {
+  width: 12rem !important;
+}
+
 .icon-inline {
   margin-left: 8px;
   color: #007bff;

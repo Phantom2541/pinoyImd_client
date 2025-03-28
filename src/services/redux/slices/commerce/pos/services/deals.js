@@ -7,6 +7,7 @@ const initialState = {
   collections: [],
   transaction: { _id: "default" },
   totalPatient: 0,
+  formSubmitted: false,
   filtered: [],
   // this is used for ledger
   census: {
@@ -19,6 +20,8 @@ const initialState = {
     isEmpty: true,
   },
   showModal: false,
+  showRevertModal: false,
+  showDiscountModal: false,
   willCreate: false,
   totalPages: 0,
   maxPage: 5,
@@ -205,6 +208,24 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
+export const REVERT_SALE = createAsyncThunk(
+  `${url}/REVERT_SALE`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "revert_sale");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const MANAGERUPDATE = createAsyncThunk(
   `${url}/managerUpdate`,
   ({ key, token }, thunkAPI) => {
@@ -233,6 +254,23 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+
+    SetREVERT: (state, { payload }) => {
+      state.selected = payload;
+      state.showRevertModal = true;
+    },
+    SetDISCOUNT: (state, { payload }) => {
+      state.selected = payload;
+      state.showDiscountModal = true;
+    },
+    ToggleDiscountModal: (state) => {
+      state.showDiscountModal = !state.showDiscountModal;
+      state.selected = {};
+    },
+    ToggleRevertModal: (state) => {
+      state.showRevertModal = !state.showRevertModal;
+      state.selected = {};
+    },
     SetFilterByCASHIER: (state, { payload }) => {
       if (payload === "all") {
         state.filtered = state.collections;
@@ -260,6 +298,8 @@ export const reduxSlice = createSlice({
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
+      state.isLoading = false;
+      state.formSubmitted = false;
 
       if (payload?.resetCollections) state.collections = [];
     },
@@ -310,7 +350,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(MANAGERUPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -329,12 +369,32 @@ export const reduxSlice = createSlice({
 
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(MANAGERUPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
+      })
+      .addCase(REVERT_SALE.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(REVERT_SALE.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        const index = state.collections.findIndex(({ _id }) => _id === payload);
+        const { deletedAt, remarks, ...rest } = { ...state.collections[index] };
+        state.collections[index] = rest;
+        state.formSubmitted = false;
+        state.message = success;
+        state.isSuccess = true;
+      })
+      .addCase(REVERT_SALE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+        state.isSuccess = false;
       })
 
       .addCase(TRACKER.pending, (state) => {
@@ -544,9 +604,14 @@ export const {
   SetFILTERED,
   SetFilterByCASHIER,
   SetSELECTED,
+  SetREVERT,
+  SetDISCOUNT,
+  ToggleDiscountModal,
   SetMODAL,
   SetMaxPage,
   SetActivePAGE,
+  ToggleRevertModal,
+
   RESET,
 } = reduxSlice.actions;
 

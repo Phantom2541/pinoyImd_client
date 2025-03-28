@@ -21,7 +21,7 @@ import {
   RESET,
 } from "../../../../services/redux/slices/assets/companies";
 
-export default function Modal({ show, toggle, companyName }) {
+export default function Modal({ show, toggle, displayname }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess } = useSelector(
       ({ companies }) => companies
@@ -31,11 +31,11 @@ export default function Modal({ show, toggle, companyName }) {
     dispatch = useDispatch();
 
   useEffect(() => {
-    companyName &&
-      dispatch(VENDORS({ token, key: { name: capitalize(companyName) } }));
+    displayname &&
+      dispatch(VENDORS({ token, key: { name: capitalize(displayname) } }));
 
     return () => dispatch(RESET());
-  }, [companyName, dispatch, token]);
+  }, [displayname, dispatch, token]);
 
   useEffect(() => {
     if (collections.length > 0) {
@@ -86,7 +86,7 @@ export default function Modal({ show, toggle, companyName }) {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {capitalize(companyName)}
+        {capitalize(displayname)}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <MDBRow>

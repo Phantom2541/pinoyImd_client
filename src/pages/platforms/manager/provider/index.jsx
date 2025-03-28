@@ -92,8 +92,8 @@ export default function Outsource() {
                   <tr>
                     <td>{index + 1}</td>
                     <td>
-                      {source?.vendors?.companyName
-                        ? source?.vendors?.companyName
+                      {source?.vendors?.displayname
+                        ? source?.vendors?.displayname
                         : source?.vendors?.companyId.name}
                       \{source?.vendors?.name}
                     </td>
@@ -106,7 +106,7 @@ export default function Outsource() {
         </MDBCardBody>
       </MDBCard>
 
-      <Modal show={showModal} companyName={name} toggle={toggle} />
+      <Modal show={showModal} displayname={name} toggle={toggle} />
     </MDBContainer>
   );
 }

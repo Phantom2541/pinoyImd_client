@@ -8,11 +8,11 @@ import Swal from "sweetalert2";
 import { DESTROY } from "../../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 
 export default function CollapseTable({ id, references, preference }) {
-  const [showButton, setShowButton] = useState(false),
+  const { token } = useSelector(({ auth }) => auth),
+    [showButton, setShowButton] = useState(false),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
     [selected, setSelected] = useState({}),
-    { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const toggleModal = () => setShowModal(!showModal);

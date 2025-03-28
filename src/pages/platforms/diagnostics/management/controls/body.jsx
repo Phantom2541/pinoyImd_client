@@ -65,7 +65,6 @@ const Tables = () => {
             onMouseLeave={() => setHoveredRow(null)}
             className={hoveredRow === index ? "table-danger text-white" : ""}
           >
-            {/* ✅ Isinama ang Date column sa danger hover effect */}
             <td
               className={`text-center align-middle ${
                 hoveredRow === index ? "bg-danger text-white" : ""
@@ -82,13 +81,27 @@ const Tables = () => {
                   onClick={() => dispatch(SetEDIT(control))}
                   className="btn btn-light btn-sm me-2"
                 >
-                  ✏️ Edit
+                  <span
+                    role="img"
+                    aria-label="edit emoji"
+                    aria-labelledby="edit-emoji"
+                  >
+                    ✏️{" "}
+                  </span>{" "}
+                  Edit
                 </button>
                 <button
                   onClick={() => handleDelete(control._id)}
                   className="btn btn-light btn-sm"
                 >
-                  🗑️ Delete
+                  <span
+                    role="img"
+                    aria-label="delete emoji"
+                    aria-labelledby="delete-emoji"
+                  >
+                    🗑️{" "}
+                  </span>
+                  Delete
                 </button>
               </td>
             ) : (

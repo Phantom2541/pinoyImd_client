@@ -10,18 +10,23 @@ export default function Calendar() {
     ({ remittances }) => remittances
   );
 
+  // console.log("collections", collections);
+  const dateMap = new Map(
+    collections
+      .filter(({ createdAt }) => createdAt) // Filter out null/undefined dates
+      .map(({ createdAt, ...rest }) => [
+        new Date(createdAt).getUTCDate(),
+        { createdAt, ...rest },
+      ])
+  );
+
   return (
     <div className="calendar-template p-3">
       <WeekHeader />
       <div className="calendar-body">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => {
-          const item = collections.find(({ createdAt }) => {
-            if (!createdAt) return false; // Avoid errors if createdAt is undefined
-
-            const date = new Date(createdAt); // Convert if it's a string
-            return date.getDate() === num;
-          });
-          return <Card key={index} num={num} txt={txt} item={item} />;
+          const item = dateMap.get(num) || {}; // Default to an empty object instead of null
+          return <Card key={num} num={num} txt={txt} item={item} />;
         })}
       </div>
     </div>
