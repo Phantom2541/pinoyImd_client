@@ -161,9 +161,14 @@ export default function Summary() {
                     )}
                   </ol>
                   <hr />
-                  <p className="mt-2 font-bold text-right">
-                    Total: {currency(total)}
-                  </p>
+                  <div className="flex justify-between items-center w-full">
+                    <p className="font-bold flex-1 text-left">
+                      {cluster.length} Patient/s
+                    </p>
+                    <p className="font-bold flex-1 text-right">{`Total: ${currency(
+                      total
+                    )}`}</p>
+                  </div>
                 </>
               ) : (
                 <p className="text-gray-500">

@@ -174,5 +174,13 @@
     "meaning": "Monetary or in-kind donations for community projects or outreach programs.",
     "category": "expenses",
     "profitable": false
+  },
+  {
+    "id": 34,
+    "title": "Sales Commissions Expense",
+    "abbreviation": "SCE",
+    "meaning": "Payments for commissions earned from sales or services provided to clients.",
+    "category": "expenses",
+    "profitable": false
   }
 ]
