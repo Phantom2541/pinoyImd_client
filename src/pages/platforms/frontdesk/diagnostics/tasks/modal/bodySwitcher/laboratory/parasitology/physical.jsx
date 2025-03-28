@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 import {
   MDBCol,
@@ -29,14 +29,23 @@ const colors = [
     "Watery Mucoid",
   ];
 
+
 export default function Physical() {
-  const { pe } = useSelector(({ validator }) => validator.task),
+  const {task} = useSelector(({validator}) => validator),
     dispatch = useDispatch();
+  const { pe } = task;
   const handleSelectChange = (index, value) => {
+    console.log("index", index);
+    console.log("value", Number(value));
+    
     const _pe = [...pe];
     _pe[index] = value;
-    dispatch(SetPARAMS({ key: "pe", value: _pe }));
+    console.log("_pe", _pe);
+    
+dispatch(SetPARAMS({ key: "pe", value: _pe }));
+dispatch(SetTASK({task:{...task, pe: _pe }}));
   };
+
 
   return (
     <MDBRow>

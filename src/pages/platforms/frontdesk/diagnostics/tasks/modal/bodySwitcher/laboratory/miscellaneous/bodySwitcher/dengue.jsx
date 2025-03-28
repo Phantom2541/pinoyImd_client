@@ -25,7 +25,7 @@ export default function Dengue({ task, setTask }) {
         <MDBCol>
           <Select
             inputClassName={results.ns1 && "text-danger"}
-            choices={choices}
+            collections={choices}
             label="NS1 Antigen"
             preValue={String(results.ns1)}
             texts="str"
@@ -37,7 +37,7 @@ export default function Dengue({ task, setTask }) {
       <MDBCol>
         <Select
           inputClassName={results.igg && "text-danger"}
-          choices={choices}
+          collections={choices}
           label="Antibody IgG"
           preValue={String(results.igg)}
           texts="str"
@@ -48,7 +48,7 @@ export default function Dengue({ task, setTask }) {
       <MDBCol>
         <Select
           inputClassName={results.igm && "text-danger"}
-          choices={choices}
+          collection={choices}
           label="Antibody IgM"
           preValue={String(results.igm)}
           texts="str"

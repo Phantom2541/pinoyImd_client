@@ -15,7 +15,7 @@ const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
             left: "50%",
             transform: "translate(-50%, -50%)",
           }}
-          src={`${ENDPOINT}/public/patron/${person?.email}/signature.png`}
+          src={`${ENDPOINT}/public/users/${person?.email}/signature.png`}
           alt={person?.email || "signature"}
         />
       )}

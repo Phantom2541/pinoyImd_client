@@ -26,7 +26,7 @@ const Card = ({ txt, num, index, item = {} }) => {
           { label: "Sales", value: gross },
           {
             label: "Total",
-            value: gross ? +opening.sum : 0,
+            value: gross ? gross + opening.sum : 0,
             cn: "font-weight-bold",
           },
           { label: "Expenses", value: expenses, cn: "text-danger" },

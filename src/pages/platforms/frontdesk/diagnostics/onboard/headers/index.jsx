@@ -18,12 +18,18 @@ export default function Header({ view, setView }) {
 
   //Initial Browse and Fetch Data
   useEffect(() => {
+    const date = new Date().toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+
     if (token && activePlatform?.branchId && auth._id) {
       dispatch(
         BROWSE({
           key: {
             branchId: activePlatform?.branchId,
-            createdAt: new Date().setHours(0, 0, 0, 0),
+            createdAt: date,
           },
           token,
         })

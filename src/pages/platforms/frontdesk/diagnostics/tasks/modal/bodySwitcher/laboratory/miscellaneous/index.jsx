@@ -24,15 +24,15 @@ export default function Miscellaneous() {
 
   const { packages = [], specimen = "" } = task;
 
-  const setTask = (value) => dispatch(SetTASK({form: task?.form, task: value }));
+  const setTask = (value) => dispatch(SetTASK({ form: task?.form, task: value }));
+
+  // ✅ Corrected way to check if packages include 146 or 11
+  const hasSpecialPackage = packages.some((pkg) => [146, 11].includes(pkg));
+
   return (
     <MDBContainer>
-      {/* Default is 1, hide all the tab button
-        146=ogtt,
-        11=hba1c
-      */}
-
-      {!packages.includes(146, 11) && (
+      {/* If no special package, show the tab buttons */}
+      {!hasSpecialPackage && (
         <MDBNav color="primary" tabs className="nav-justified">
           <MDBNavItem>
             <MDBNavLink
@@ -59,28 +59,25 @@ export default function Miscellaneous() {
 
       <MDBCard>
         <MDBCardBody>
-          {!packages.includes(146, 11) && (
+          {!hasSpecialPackage && (
             <MDBCardTitle className="text-left mt-3">Description</MDBCardTitle>
           )}
           <MDBTabContent activeItem={activeTab} className="pt-0">
             <MDBTabPane tabId="results">
-              {!packages.includes(146, 11) && (
+              {!hasSpecialPackage && (
                 <MDBInput
                   className="mt-0"
                   label="Specimen"
                   value={specimen}
-                  onChange={(e) =>
-                    setTask({ ...task, specimen: e.target.value })
-                  }
+                  onChange={(e) => setTask({ ...task, specimen: e.target.value })}
                 />
               )}
               <BodySwitcher task={task} setTask={setTask} />
             </MDBTabPane>
             <MDBTabPane tabId="kit">
-              {packages.includes(146, 11) && (
+              {hasSpecialPackage ? (
                 <Category task={task} setTask={setTask} />
-              )}
-              {!packages.includes(146, 11) && (
+              ) : (
                 <Troupe task={task} setTask={setTask} />
               )}
             </MDBTabPane>
