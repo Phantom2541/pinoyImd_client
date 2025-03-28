@@ -15,6 +15,7 @@ function safeParseJSON(item) {
 
 const authData = safeParseJSON(localStorage.getItem("auth"));
 const activePlatform = safeParseJSON(localStorage.getItem("activePlatform"));
+const branch = activePlatform?.branch || {};
 
 
 const defaultCustomer = {
