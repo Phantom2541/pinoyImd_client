@@ -4,6 +4,7 @@ import {
   MDBSelectInput,
   MDBSelectOptions,
   MDBSelectOption,
+  MDBIcon,
 } from "mdbreact";
 import "./style.css";
 
@@ -25,7 +26,10 @@ export default function Select({
   whitelisted = false,
   disableByKey = {},
   disableSearch = false,
+  formSubmitted = false,
   onChange = () => {},
+  handleCheck = () => {},
+  handleClose = () => {},
 }) {
   // console.log("collections", collections);
 
@@ -56,17 +60,23 @@ export default function Select({
 
     if (whitelisted) {
       if (preValue && String(preValue) === String(value)) return true;
-      if (preValues.length > 0 && preValues.map(String).includes(String(value)))
+      if (
+        preValues?.length > 0 &&
+        preValues.map(String).includes(String(value))
+      )
         return true;
     }
 
     if (blacklisted) {
       if (preValue && String(preValue) !== String(value)) return true;
-      if (preValues.length > 0 && preValues.map(String).includes(String(value)))
+      if (
+        preValues?.length > 0 &&
+        preValues.map(String).includes(String(value))
+      )
         return true;
     }
 
-    if (Object.keys(disableByKey).length) {
+    if (Object.keys(disableByKey)?.length) {
       return Object.entries(disableByKey).some(
         ([key, val]) => obj[key] === val
       );
@@ -78,29 +88,30 @@ export default function Select({
   const handleSearchDisabling = () => !disableSearch && collections.length > 9;
 
   const handleSelection = (array) => {
-    if (array.length === 0) return;
-    if (soloUpdate) {
-      // If soloUpdate is true, only update a single selected item
-      const selectedItem = getObject
-        ? collections.find(
-            (choice) => String(choice[keys] || choice) === String(array[0])
-          )
-        : array[0];
-      return onChange(selectedItem);
-    }
+    //comment by darrel
+    // if (array.length === 0) return;
+    console.log("selected");
+    // If soloUpdate is true, only update a single selected item
+
     if (multiple) {
       const selectedItems = getObject
-        ? collections.filter((c) => array.includes(String(c[keys] || c)))
+        ? collections?.filter((c) => array.includes(String(c[keys] || c)))
         : array;
 
       setSelectedValue(selectedItems);
       return onChange(selectedItems);
     }
+    const selectedItem = getObject
+      ? collections?.find(
+          (choice) => String(choice[keys] || choice) === String(array[0])
+        )
+      : array[0];
+    return onChange(selectedItem);
   };
 
   const handleChecked = (value) => {
     return multiple
-      ? preValues.includes(value)
+      ? preValues?.includes(value)
       : String(preValue) === String(value);
 
     // const selectedItem = getObject
@@ -134,49 +145,88 @@ export default function Select({
   };
 
   return (
-    <MDBSelect
-      label={!hideLabel && label}
-      getValue={handleSelection}
-      key={JSON.stringify(preValues)}
-      className={className}
-      multiple={multiple}
-      color="primary"
-    >
-      {/* ✅ Ensure the selected value is displayed properly */}
-      <MDBSelectInput className={inputClassName} selected={getSelectedText()} />
+    <div className="d-flex align-items-center">
+      <MDBSelect
+        label={!hideLabel && label}
+        getValue={handleSelection}
+        key={JSON.stringify(preValues)}
+        className={className}
+        multiple={multiple}
+        color="primary"
+      >
+        {/* ✅ Ensure the selected value is displayed properly */}
+        <MDBSelectInput
+          className={inputClassName}
+          selected={getSelectedText()}
+        />
 
-      <MDBSelectOptions search={handleSearchDisabling()}>
-        {collections.map((choice, index) => {
-          const key = keys ? String(choice[keys]) : choice;
-          let value = values.includes(".")
-            ? getNestedValue(choice, values)
-            : choice[values] || choice;
+        <MDBSelectOptions search={handleSearchDisabling()}>
+          {collections.map((choice, index) => {
+            const key = keys ? String(choice[keys]) : choice;
+            let value = values?.includes(".")
+              ? getNestedValue(choice, values)
+              : choice[values] || choice;
 
-          if (typeof value === "object") {
-            console.warn(
-              "%c[Select] Invalid Value:",
-              "color: orange; font-weight: bold;",
-              "Ensure 'values' prop is correctly provided."
+            if (typeof value === "object") {
+              console.warn(
+                "%c[Select] Invalid Value:",
+                "color: orange; font-weight: bold;",
+                "Ensure 'values' prop is correctly provided."
+              );
+              value = "Invalid Value";
+            }
+
+            return (
+              <MDBSelectOption
+                key={`${label}-${index}`}
+                className={
+                  handleChoiceDisabling(key, choice)
+                    ? "custom-select-disabled"
+                    : ""
+                }
+                checked={handleChecked(key)}
+                value={key || "--"}
+              >
+                {value || "--"}
+              </MDBSelectOption>
             );
-            value = "Invalid Value";
-          }
-
-          return (
-            <MDBSelectOption
-              key={`${label}-${index}`}
-              className={
-                handleChoiceDisabling(key, choice)
-                  ? "custom-select-disabled"
-                  : ""
-              }
-              checked={handleChecked(key)}
-              value={key || "--"}
-            >
-              {value || "--"} {handleChecked(key) ? "✔️" : "❌"}
-            </MDBSelectOption>
-          );
-        })}
-      </MDBSelectOptions>
-    </MDBSelect>
+          })}
+        </MDBSelectOptions>
+      </MDBSelect>
+      {soloUpdate && (
+        <div className="d-flex align-items-center ml-2">
+          {!formSubmitted ? (
+            <MDBIcon
+              icon="check"
+              onClick={handleCheck}
+              style={{
+                color: "blue",
+                fontSize: "1rem",
+                marginRight: "10px",
+                marginLeft: "7px",
+              }}
+              className="cursor-pointer"
+            />
+          ) : (
+            <MDBIcon
+              icon="spinner"
+              pulse
+              style={{
+                color: "black",
+                fontSize: "1rem",
+                marginRight: "10px",
+                marginLeft: "10px",
+              }}
+            />
+          )}
+          <MDBIcon
+            icon="times"
+            onClick={() => handleClose()}
+            className="cursor-pointer"
+            style={{ color: "red", fontSize: "1rem" }}
+          />
+        </div>
+      )}
+    </div>
   );
 }

@@ -2,12 +2,21 @@ import React, { useEffect, useState } from "react";
 import { MDBCard, MDBCardBody, MDBCollapse, MDBContainer } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchPhysicians as Search } from "../../../../../../components/searchables";
-import { TagPHYSICIAN } from "../../../../../../services/redux/slices/assets/branches";
+import {
+  TagPHYSICIAN,
+  UPDATE,
+  RESET as RESET_BRANCH,
+} from "../../../../../../services/redux/slices/assets/branches";
+
 import {
   SetBRANCHES,
+  SPECIFIC_UPDATE,
+  RESET,
   DESTROY,
 } from "../../../../../../services/redux/slices/assets/providers";
 import { SAVE } from "../../../../../../services/redux/slices/assets/persons/physicians";
+import { useToasts } from "react-toast-notifications";
+
 import Swal from "sweetalert2";
 import CollapseTable from "./table";
 import { fullName } from "../../../../../../services/utilities";
@@ -16,15 +25,24 @@ import Header from "./header";
 
 export default function MenuCollapse() {
   const { token } = useSelector(({ auth }) => auth),
-    { collections, searchResults, didSearch } = useSelector(
-      ({ providers }) => providers
-    ),
+    {
+      collections,
+      searchResults,
+      didSearch,
+      formSubmitted,
+      isSuccess,
+      message,
+    } = useSelector(({ providers }) => providers),
+    { formSubmitted: formSubmittedBranch, isSuccess: isSuccessBranch } =
+      useSelector(({ branches }) => branches),
     [insources, setInsources] = useState([]),
     [selected, setSelected] = useState({}),
+    [update, setUpdate] = useState({}),
     [ghostCompany, setGhostCompany] = useState({}),
     [show, setShow] = useState(false),
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,8 +51,29 @@ export default function MenuCollapse() {
     } else {
       setInsources(collections || []);
     }
-    console.log("search in insource", searchResults, didSearch);
   }, [collections, didSearch, searchResults]);
+
+  useEffect(() => {
+    if (message) {
+      addToast(message, {
+        appearance: isSuccess ? "success" : "error",
+      });
+    }
+    return () => dispatch(RESET());
+  }, [isSuccess, message, addToast, dispatch]);
+
+  useEffect(() => {
+    if (!formSubmittedBranch && isSuccessBranch) {
+      dispatch(RESET_BRANCH());
+    }
+  }, [dispatch, formSubmittedBranch, isSuccessBranch]);
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      setUpdate({});
+      dispatch(RESET_BRANCH());
+    }
+  }, [dispatch, formSubmitted, isSuccess]);
 
   const toggle = () => setShow(!show);
 
@@ -154,6 +193,48 @@ export default function MenuCollapse() {
   };
   // If there is no client, it means a ghost.
 
+  const handleUpdateClient = () => {
+    const { newName, displayname, providerID } = update;
+    if (displayname.toLowerCase() === newName.toLowerCase()) {
+      setUpdate({});
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
+    dispatch(UPDATE({ data: { ...update, displayname: newName }, token }))
+      .then(({ payload: branch }) => {
+        dispatch(
+          SetBRANCHES({
+            branch,
+            providerId: providerID,
+            isUpdateBranch: true,
+          })
+        );
+
+        setUpdate({}); // Reset state after update
+      })
+      .catch((error) => console.error("Update Error:", error));
+  };
+
+  const handleUpdate = () => {
+    const { providerID, updatedKey, newKey } = update;
+    const oldValue = update[updatedKey] || "";
+    const newValue = update[newKey] || "";
+
+    if (String(oldValue)?.toLowerCase() === String(newValue)?.toLowerCase()) {
+      setUpdate({});
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
+    dispatch(
+      SPECIFIC_UPDATE({
+        data: { _id: providerID, [updatedKey]: update[newKey], updatedKey },
+        token,
+      })
+    );
+  };
+
   return (
     <MDBContainer
       style={{
@@ -182,8 +263,14 @@ export default function MenuCollapse() {
                 didHoverId={didHoverId}
                 setDidHoverId={setDidHoverId}
                 setSelected={setSelected}
+                update={update}
+                setUpdate={setUpdate}
+                handleUpdate={(isSpecific = true) =>
+                  isSpecific ? handleUpdate() : handleUpdateClient()
+                }
                 handleUntag={handleUntag}
                 registerGhostCompany={registerGhostCompany}
+                formSubmitted={formSubmitted || formSubmittedBranch}
                 insource={insource}
               />
               <MDBCollapse

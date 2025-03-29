@@ -148,6 +148,24 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
+export const SPECIFIC_UPDATE = createAsyncThunk(
+  `${url}/SPECIFIC_UPDATE`,
+  async (form, thunkAPI) => {
+    try {
+      return await axioKit.update(
+        url,
+        form.data,
+        form.token,
+        "specific_update"
+      );
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
@@ -400,6 +418,26 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
+      })
+
+      .addCase(SPECIFIC_UPDATE.pending, (state) => {
+        state.formSubmitted = true;
+      })
+      .addCase(SPECIFIC_UPDATE.fulfilled, (state, { payload }) => {
+        const { payload: data, success } = payload;
+        const { updatedKey, _id } = data;
+        const index = state.collections.findIndex((item) => item._id === _id);
+        state.collections[index] = {
+          ...state.collections[index],
+          [updatedKey]: data[updatedKey],
+        };
+        state.isSuccess = true;
+        state.formSubmitted = false;
+        state.message = success;
+      })
+      .addCase(SPECIFIC_UPDATE.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;

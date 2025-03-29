@@ -5,7 +5,8 @@ const Input = ({
   className = "form-control",
   formSubmitted = false,
   isSuccess = false,
-  _key,
+  _key, //this key is for value
+  type = "text",
   selected = {},
   onChange = () => {},
   handleCheck = () => {},
@@ -21,6 +22,7 @@ const Input = ({
       <input
         className={className}
         value={selected[_key] || ""}
+        type={type}
         onChange={({ target }) => onChange(target.value, _key)}
       />
       <div className="customizable-input-icons mt-2">
