@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { FilterProducts } from "../../../../../components/searchables";
 import { MDBView } from "mdbreact";
 import {
-  SetFILTERED,
+  SetFILTER,
   BROWSE,
   RESET,
 } from "../../../../../services/redux/slices/market/products";
@@ -31,7 +31,7 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <FilterProducts setFiltered={(key) => dispatch(SetFILTERED(key))} />
+          <FilterProducts setFiltered={key => dispatch(SetFILTER(key))} />
         </div>
       </div>
     </MDBView>

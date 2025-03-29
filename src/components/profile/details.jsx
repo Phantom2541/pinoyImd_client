@@ -16,10 +16,11 @@ export default function Details({
   curraddress,
   setCurraddress,
 }) {
+  console.log("form", form);
   return (
     <form onSubmit={handleSubmit}>
       <MDBRow>
-        <MDBCol md="4" className="pr-0">
+        <MDBCol md="3" className="pr-0">
           <MDBInput
             type="text"
             value={form.fullName?.fname}
@@ -33,7 +34,7 @@ export default function Details({
             disabled
           />
         </MDBCol>
-        <MDBCol md="4" className="px-0">
+        <MDBCol md="3" className="px-0">
           <MDBInput
             type="text"
             value={form.fullName?.mname}
@@ -47,7 +48,7 @@ export default function Details({
             disabled
           />
         </MDBCol>
-        <MDBCol md="4" className="pl-0">
+        <MDBCol md="3" className="pl-0">
           <MDBInput
             type="text"
             value={form.fullName?.lname}
@@ -59,6 +60,14 @@ export default function Details({
             }
             label="Last name"
             disabled
+          />
+        </MDBCol>
+        <MDBCol md="3" className="pl-0">
+          <MDBInput
+            type="text"
+            value={form?.alias}
+            onChange={(e) => handleChange("alias", e.target.value)}
+            label="Alias"
           />
         </MDBCol>
       </MDBRow>

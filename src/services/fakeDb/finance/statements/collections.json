@@ -57,10 +57,10 @@
   },
   {
     "id": 13,
-    "title": "Salaries Payable",
+    "title": "Salaries Expenses",
     "abbreviation": "SP",
     "meaning": "Unpaid salaries of employees within a payroll period.",
-    "category": "liabilities",
+    "category": "expenses",
     "profitable": false
   },
   {
@@ -140,7 +140,7 @@
     "title": "Insurance Expense",
     "abbreviation": "IE",
     "meaning": "Premium payments for business-related insurance, such as property, liability, or health coverage.",
-    "category": "expenses",
+    "category": "liability",
     "profitable": false
   },
   {
@@ -182,5 +182,37 @@
     "meaning": "Payments for commissions earned from sales or services provided to clients.",
     "category": "expenses",
     "profitable": false
+  },
+  {
+    "id": 40,
+    "title": "Capital",
+    "abbreviation": "CAP",
+    "meaning": "Initial investment in the business or project.",
+    "category": "capital",
+    "profitable": false
+  },
+  {
+    "id": 41,
+    "title": "Retained Earnings",
+    "abbreviation": "RE",
+    "meaning": "Accumulated profit or loss from previous years.",
+    "category": "capital",
+    "profitable": true
+  },
+  {
+    "id": 42,
+    "title": "Capital Withdrawals",
+    "abbreviation": "CW",
+    "meaning": "Money withdrawn from the business or project.",
+    "category": "capital",
+    "profitable": false
+  },
+  {
+    "id": 43,
+    "title": "Capital Deposits",
+    "abbreviation": "CD",
+    "meaning": "Money deposited into the business or project.",
+    "category": "capital",
+    "profitable": true
   }
 ]

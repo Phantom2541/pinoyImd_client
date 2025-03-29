@@ -407,5 +407,70 @@
         "display_name": "Chief Auxillary"
       }
     ]
+  },
+  {
+    "department": "security",
+    "code": "SECURITY",
+    "positions": [
+      {
+        "id": 105,
+        "name": "security",
+        "display_name": "Security"
+      },
+      {
+        "id": 106,
+        "name": "security head",
+        "display_name": "Security Head"
+      },
+      {
+        "id": 107,
+        "name": "guard",
+        "display_name": "Guard"
+      },
+      {
+        "id": 108,
+        "name": "driver",
+        "display_name": "Driver"
+      },
+      {
+        "id": 109,
+        "name": "security supervisor",
+        "display_name": "Security Supervisor"
+      },
+      {
+        "id": 110,
+        "name": "chief security",
+        "display_name": "Chief Security"
+      }
+    ]
+  },
+  {
+    "department": "Board of Directors",
+    "code": "BOARD",
+    "positions": [
+      {
+        "id": 115,
+        "name": "Chairman",
+        "display_name": "Head ng Board"
+      },
+      {
+        "id": 116,
+        "name": "Vice Chairman",
+        "display_name": "Vice Chairman",
+        "description": "Pangalawang namumuno"
+      },
+      {
+        "id": 117,
+        "name": "Board Member",
+        "display_name": "Board Member",
+        "description": "Mga miyembro ng lupon"
+      },
+      {
+        "id": 118,
+        "name": "Stock Holder",
+        "display_name": "Stock Holder",
+        "description": "Owns shares in the company."
+      }
+    ]
   }
 ]

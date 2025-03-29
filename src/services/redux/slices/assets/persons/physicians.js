@@ -126,6 +126,9 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetPHYSICIANS: (state, { payload }) => {
+      state.collections = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.formSubmitted = false;
@@ -267,6 +270,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { SetPHYSICIANS, RESET } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

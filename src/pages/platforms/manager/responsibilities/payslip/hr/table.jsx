@@ -20,26 +20,8 @@ export default function Table() {
     // total
     [totDeduc, setTotDeduc] = useState(0),
     [totEarn, setTotEarn] = useState(0);
-
+  console.log("payslip", payslip);
   //comment for darrel
-  // useEffect(() => {
-  //   if (payslip) {
-  //     setCola(rate.cola / 2);
-  //     setHoliday(payroll[0]?.breakdown?.income?.holiday);
-  //     setOTn(payroll[0]?.breakdown?.income?.overtime.number * rate.daily);
-  //     setBonus(payroll[0]?.breakdown?.income?.bonus);
-
-  //     setAbsent(payroll[0]?.breakdown?.Deduction?.absent * rate.daily);
-  //     setCa(payroll[0]?.breakdown?.Deduction?.ca);
-  //     setSss(payroll[0]?.breakdown?.Deduction?.sss);
-  //     setLoan(payroll[0]?.breakdown?.Deduction?.loan);
-  //     setPh(payroll[0]?.breakdown?.Deduction?.ph);
-  //     setPi(Number(payroll[0]?.breakdown?.Deduction?.pi));
-
-  //     setTotEarn(cola + oTn + holiday + bonus);
-  //     setTotDeduc(absent + ca + sss + loan + ph + pi);
-  //   }
-  // }, [payslip, payroll[0]]);
 
   // //console.log("earnings", totEarn);
 
@@ -49,20 +31,17 @@ export default function Table() {
   const _payroll = payroll[0];
   useEffect(() => {
     if (payslip) {
-      const { breakdown = {} } = payroll[0] || {};
-      const { income = {}, Deduction = {} } = breakdown || {};
-      const { holiday: _holiday, overtime = {}, bonus } = income;
-      setCola(rate.cola / 2);
-      setHoliday(_holiday);
-      setOTn(overtime.number * rate.daily);
-      setBonus(income?.bonus);
+      setCola(rate.cola);
+      setHoliday(payroll[0]?.breakdown?.earn?.holiday);
+      setOTn(payroll[0]?.breakdown?.earn?.overtime.number * rate.daily);
+      setBonus(payroll[0]?.breakdown?.earn?.bonus);
 
-      setAbsent(Deduction?.absent * rate.daily);
-      setCa(Deduction?.ca);
-      setSss(Deduction?.sss);
-      setLoan(Deduction?.loan);
-      setPh(Deduction?.ph);
-      setPi(Number(Deduction?.pi));
+      setAbsent(payroll[0]?.breakdown?.deduction?.absent * rate.daily);
+      setCa(payroll[0]?.breakdown?.deduction?.ca);
+      setSss(payroll[0]?.breakdown?.deduction?.sss);
+      setLoan(payroll[0]?.breakdown?.deduction?.loan);
+      setPh(payroll[0]?.breakdown?.deduction?.ph);
+      setPi(Number(payroll[0]?.breakdown?.deduction?.pi));
 
       setTotEarn(cola + oTn + holiday + bonus);
       setTotDeduc(absent + ca + sss + loan + ph + pi);
@@ -99,7 +78,7 @@ export default function Table() {
         <tbody>
           <tr>
             <td className="py-0 ">Rate</td>
-            <td className="py-0 ">{currency(rate.monthly / 2)}</td>
+            <td className="py-0 ">{currency(rate.monthly)}</td>
             <td className="py-0 ">Cash Advance</td>
             <td className="py-0 "> {currency(ca)} </td>
           </tr>

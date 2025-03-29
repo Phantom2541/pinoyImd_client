@@ -13,7 +13,7 @@ const Body = () => {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = paginated.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = paginated?.slice(startIndex, endIndex); // Get only items for the active page
 
   return (
     <MDBTable responsive hover bordered>

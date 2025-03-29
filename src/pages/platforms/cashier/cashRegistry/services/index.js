@@ -2,7 +2,7 @@
 export { default as Cashier } from "./cashier";
 export { default as Deals } from "./deals";
 export { default as Ledger } from "./ledger";
-export { default as Remmitances } from "./remmitances";
+export { default as Remittances } from "./remittances";
 
 /**
  * next assignments

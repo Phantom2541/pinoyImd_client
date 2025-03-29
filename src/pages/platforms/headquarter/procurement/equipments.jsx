@@ -6,7 +6,7 @@ import {
   MDBTableHead,
 } from "mdbreact";
 import React, { useEffect, useState } from "react";
-import TopHeader from "../../../../components/topHeader";
+import TopHeader from "../../../../components/header/body";
 import { useDispatch, useSelector } from "react-redux";
 import { BROWSE } from "../../../../services/redux/slices/assets/procurements";
 import { dateFormat } from "../../../../services/utilities";
