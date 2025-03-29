@@ -148,7 +148,7 @@ export default function Select({
       <MDBSelectOptions search={handleSearchDisabling()}>
         {collections.map((choice, index) => {
           const key = keys ? String(choice[keys]) : choice;
-          let value = values.includes(".")
+          let value = values?.includes(".")
             ? getNestedValue(choice, values)
             : choice[values] || choice;
 

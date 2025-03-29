@@ -37,14 +37,14 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          {/* <Select
+          <Select
             className="m-0 p-0 calendar mr-4"
             value={component}
             onChange={(value) => handleComponent(value)}
             inputClassName="m-0 p-0"
             preValue={component}
             collections={Templates.getComponents("LAB")}
-          /> */}
+          />
         </div>
       </div>
     </MDBView>
