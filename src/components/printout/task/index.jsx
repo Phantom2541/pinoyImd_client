@@ -24,9 +24,6 @@ const Printout = ({ task }) => {
 
   const { activePlatform, company, auth } = useSelector(({ auth }) => auth);
 
-  console.log("activePlatform", activePlatform);
-  console.log("company", company);
-  console.log("auth", auth);
 
   return (
     <div style={{ width: "100vw", height: "100vh", backgroundColor: "white" }}>

@@ -9,6 +9,8 @@ import {
 } from "mdbreact";
 import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import SummaryLoading from "./loading";
+import { Services } from "../../../../../../../services/fakeDb";
+import { useToasts } from "react-toast-notifications";
 
 export default function Vouchers() {
   const { token } = useSelector(({ auth }) => auth),
@@ -21,6 +23,7 @@ export default function Vouchers() {
     [serviceSave, setServiceSave] = useState([]), // Save Services (_id, count)
     [activePage, setActivePage] = useState("menus"),
     [breakdown, setBreakdown] = useState({}),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -69,6 +72,10 @@ export default function Vouchers() {
   const handleActivePage = (page) =>
     setActivePage(activePage === page ? "close" : page);
   const handleSubmit = () => {
+    if (!selected) {
+      alert("Please set a floating cash first.");
+      return;
+    }
     const data = {
       _id: selected._id,
       census: {
@@ -80,7 +87,12 @@ export default function Vouchers() {
       // expenses: 735,
       gross: total,
     };
-    dispatch(CENSUS({ token, data }));
+
+    dispatch(CENSUS({ token, data })).then(() => {
+      addToast("End-of-Shift Summary saved successfully.", {
+        appearance: "success",
+      });
+    });
   };
 
   return (
@@ -88,7 +100,7 @@ export default function Vouchers() {
       <MDBCollapseHeader style={{ borderRadius: "50%" }} className="bg-light">
         <div className="d-flex justify-content-between align-items-center">
           <small className="text-uppercase font-weight-bold text-center text-primary">
-            End-of-Shift Reconciliation
+            End-of-Shift Summary
           </small>
           <i
             onClick={() => setIsOpen(!isOpen)}
@@ -122,10 +134,8 @@ export default function Vouchers() {
                           key={_id}
                           className="list-group-item d-flex justify-content-between"
                         >
-                          <span>{abbreviation}</span>
-                          <strong className="text-primary">
-                            Count: {count}
-                          </strong>
+                          <span>{abbreviation}</span> :
+                          <strong className="text-primary">{count}</strong>
                         </li>
                       ))}
                     </ul>
@@ -162,10 +172,8 @@ export default function Vouchers() {
                           key={_id}
                           className="list-group-item d-flex justify-content-between"
                         >
-                          <span>Service ID: {_id}</span>
-                          <strong className="text-primary">
-                            Count: {count}
-                          </strong>
+                          <span>{Services.getAbbr(_id) || _id}</span> :
+                          <strong className="text-primary">{count}</strong>
                         </li>
                       ))}
                     </ul>

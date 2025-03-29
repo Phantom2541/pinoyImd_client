@@ -1,5 +1,4 @@
-import Contracts from "./contracts";
-import SRP from "./srp";
-import Others from "./others";
-
-export { Contracts, SRP, Others };
+export { default as SRP } from "./srp";
+export { default as Expenses } from "./expenses";
+export { default as Contracts } from "./contracts";
+export { default as Others } from "./others";

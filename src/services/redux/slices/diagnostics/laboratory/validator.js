@@ -113,39 +113,44 @@ export const reduxSlice = createSlice({
     },
     SetTASK: (state, { payload }) => {
       const { form, task } = payload;
-      console.log("SetTASK", payload);  
+      console.log("task", task);
 
       state.task = task;
-
-      console.log("state.task", state.task);
-      
-      if (form === "Urinalysis") {
-        state.params = {
-          pe: [2, 0, 1, 1],
-          ce: [0, 0, 0, 0, 0, 0, 0, 0],
-          me: [1, 0, 0, 0, 0, 0],
-        };
-      } else if (form === "Parasitology") {
-        state.params = {
-          pe: [0, 0],
-          me: [0, 0, 0],
-          remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
-        };
-      }
+      // if (form === "Urinalysis") {
+      //   state.params = {
+      //     pe: [2, 0, 1, 1],
+      //     ce: [0, 0, 0, 0, 0, 0, 0, 0],
+      //     me: [1, 0, 0, 0, 0, 0],
+      //   };
+      // } else if (form === "Parasitology") {
+      //   state.params = {
+      //     pe: [0, 0],
+      //     me: [0, 0, 0],
+      //     remarks: "NO OVA OR INTESTINAL PARASITE SEEN",
+      //   };
+      // } else {
+      //   state.params = task.packages;
+      // }
       state.showModal = true;
     },
+    /**
+     * for U/A, CBC, Feca
+     */
     SetPARAMS: (state, { payload }) => {
-      console.log("SetPARAMS", payload);
-
       const { key, value } = payload;
       state.params = { ...state.params, [key]: value };
     },
+    SetPackages: (state, { payload }) => {
+      console.log("SetPARAMS payload", payload);
+
+      state.params = payload;
+    },
     SetHEALTHY: (state, { payload }) => {
-      console.log("templates", payload);
+      // console.log("templates", payload);
 
       state.task = { ...state.task, ...healthyClient[payload] };
       console.log(healthyClient[payload]);
-
+      console.log(state.task);
     },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
@@ -218,6 +223,7 @@ export const {
   SetSELECTED,
   SetTASK,
   SetPARAMS,
+  SetPackages,
   SetFILTERED,
   SetMODAL,
   SetHEALTHY,

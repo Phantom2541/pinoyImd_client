@@ -13,7 +13,7 @@ import {
   MDBRow,
   MDBCol,
 } from "mdbreact";
-import CustomSelect from "./../../../../../../../../../components/searchables/customSelect";
+import { Select } from "./../../../../../../../../../components/customizable";
 import Troupe from "./troupe";
 import Picture from "./picture";
 import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
@@ -37,7 +37,7 @@ export default function Drugtest() {
   const { met, thc } = task;
 
   const handleSelectChange = (name, value) =>
-    dispatch(SetTASK({form: task?.form, task: { ...task, [name]: value } }));
+    dispatch(SetTASK({ form: task?.form, task: { ...task, [name]: value } }));
 
   return (
     <MDBContainer>
@@ -81,7 +81,7 @@ export default function Drugtest() {
             <MDBTabPane tabId="results">
               <MDBRow className="text-left">
                 <MDBCol>
-                  <CustomSelect
+                  <Select
                     inputClassName={met && "text-danger"}
                     choices={choices}
                     label="Methamphetamine"
@@ -92,7 +92,7 @@ export default function Drugtest() {
                   />
                 </MDBCol>
                 <MDBCol>
-                  <CustomSelect
+                  <Select
                     inputClassName={thc && "text-danger"}
                     choices={choices}
                     label="Tetrahydrocannabinol"

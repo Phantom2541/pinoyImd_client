@@ -95,6 +95,13 @@
 .calendar-template .calendar-template-daily div small.sunday.future {
   background-color: #f798a3;
 }
+.calendar-template .calendar-template-daily div small.today {
+  background-color: #2e9b20;
+}
+/* When both "sunday" and "today" classes are present */
+.calendar-template .calendar-template-daily div small.sunday.today {
+  background-color: #3ce466;
+}
 .calendar-template .calendar-template-daily div:hover small,
 .calendar-template .calendar-template-daily div:hover small.sunday {
   background-color: #007bff;

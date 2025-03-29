@@ -11,6 +11,7 @@ export default function Chemistry({ task, fontSize }) {
   const style = { fontSize: `${fontSize}px` },
     { packages, services, patient, preferences } = task;
 
+
   return (
     <MDBTable hover striped bordered responsive className="mb-0 text-center">
       <thead>
@@ -46,7 +47,7 @@ export default function Chemistry({ task, fontSize }) {
           const { name, preference } = services?.find(
               ({ id }) => id === Number(fk)
             ),
-            nameUppercase = name.toUpperCase(),
+            nameUppercase = name?.toUpperCase(),
             reference = findReference(
               fk,
               patient?.isMale,
@@ -71,7 +72,7 @@ export default function Chemistry({ task, fontSize }) {
               </td>
               <td style={{ ...style, color }} className="py-0 fw-bold">
                 {indicators}
-                {Number.isInteger(value) ? value : value.toFixed(2)}
+                {Number.isInteger(value) ? value : value?.toFixed(2)}
               </td>
               <td style={style} className="py-0">
                 {!lo ? `< ${hi}` : `${lo} - ${hi}`} {units}

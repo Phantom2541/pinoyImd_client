@@ -45,7 +45,7 @@ export default function ApplicationModal({
 
   const handleToggle = () => setVisibility(!visibility);
 
-  const handleApplication = e => {
+  const handleApplication = (e) => {
     e.preventDefault();
     if (!!company.branches.length) {
       // console.log({
@@ -58,7 +58,7 @@ export default function ApplicationModal({
     }
   };
 
-  const handleDepartment = e => {
+  const handleDepartment = (e) => {
     const { value } = e.target;
     setDepartment(value);
     console.log(Policy.getPositions(value));
@@ -66,7 +66,7 @@ export default function ApplicationModal({
     setPositions(Policy.getPositions(value));
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setApplication({
       ...application,
@@ -76,7 +76,7 @@ export default function ApplicationModal({
 
   const handleFile = (e, name) => {
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = (e) => {
       let image = new Image();
       image.src = e.target.result;
       image.onload = function () {
@@ -107,17 +107,17 @@ export default function ApplicationModal({
 
   const handleSubmit = () => {
     const _company = company?.branches.find(
-      branch => branch._id === application.branchId
+      (branch) => branch._id === application.branchId
     );
     const role = Policy.getDepartment(application.designation);
     alert(role);
     return;
-    const id = `${_company.companyName
+    const id = `${_company.displayname
       .split(" ")
-      .map(word => word[0])
+      .map((word) => word[0])
       .join("")}-${_company.name
       .split(" ")
-      .map(word => word[0])
+      .map((word) => word[0])
       .join("")}-${Math.floor(Math.random() * 100)}`;
     dispatch(
       SAVE({
@@ -148,7 +148,7 @@ export default function ApplicationModal({
     // return (
     //   <>
     //     <iframe
-    //       src={`${ENDPOINT}/public/patron/${auth.email}/Smart Care/General Tinio Branch/Applications/Resume.pdf`}
+    //       src={`${ENDPOINT}/public/users/${auth.email}/Smart Care/General Tinio Branch/Applications/Resume.pdf`}
     //       alt={auth.email}
     //       className="mx-auto rounded img-max img-fluid mb-1"
     //       onError={(e) => (e.target.src = PresetUser)}
@@ -186,9 +186,9 @@ export default function ApplicationModal({
                 <option value="" selected>
                   Select a branch
                 </option>
-                {company.branches?.map(branch => {
+                {company.branches?.map((branch) => {
                   const disabler = collections?.find(
-                    catalog => catalog.branch._id === branch._id
+                    (catalog) => catalog.branch._id === branch._id
                   );
                   return (
                     <option
@@ -257,7 +257,7 @@ export default function ApplicationModal({
                 Personal Data Sheet
               </label>
               <input
-                onChange={e => handleFile(e, "dataSheet.docx")}
+                onChange={(e) => handleFile(e, "dataSheet.docx")}
                 type="file"
                 id="upload-personal-data-sheet"
                 className="d-none"
@@ -276,7 +276,7 @@ export default function ApplicationModal({
                 type="file"
                 id="upload-resume"
                 className="d-none"
-                onChange={e => handleFile(e, "Resume.pdf")}
+                onChange={(e) => handleFile(e, "Resume.pdf")}
                 accept=".pdf"
               />
             </MDBCol>
@@ -292,7 +292,7 @@ export default function ApplicationModal({
                 type="file"
                 id="upload-application"
                 className="d-none"
-                onChange={e => handleFile(e, "AppLetter.docx")}
+                onChange={(e) => handleFile(e, "AppLetter.docx")}
                 accept="image/*"
               />
             </MDBCol>

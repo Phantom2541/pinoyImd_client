@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBIcon, MDBBtn } from "mdbreact";
 import { Calendar as calendar } from "../../../../../services/fakeDb";
-import CustomSelect from "../../../../../components/searchables/customSelect";
+import { Select } from "../../../../../components/customizable";
 import "./style.css";
 import {
   setMonth,
@@ -60,7 +60,7 @@ const Header = () => {
     >
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex">
-          <CustomSelect
+          <Select
             className="m-0 p-0 calendar mr-4"
             value={monthLabel}
             onChange={(value) => {
@@ -75,7 +75,7 @@ const Header = () => {
               isObjectFormat ? monthsArray.map((m) => m.label) : monthsArray
             }
           />
-          <CustomSelect
+          <Select
             className="m-0 p-0 calendar"
             value={year}
             onChange={(value) => dispatch(setYear(value))}

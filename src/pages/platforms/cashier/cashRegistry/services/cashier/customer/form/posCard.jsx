@@ -10,6 +10,7 @@ import {
 } from "../../../../../../../../services/utilities";
 import {
   Categories,
+  Memberships,
   Privileges,
 } from "../../../../../../../../services/fakeDb";
 import {
@@ -79,8 +80,7 @@ export default function PosCard() {
       address,
       privilege: userPrivilege = 0,
     } = customer,
-    didSelect = Boolean(_id),
-    isSenior = getAge(dob, true) > 59; // detect if not a valid senior
+    didSelect = Boolean(_id);
 
   const handleCategory = (category) => dispatch(SETCATEGORY(category));
   const handlePrivilege = (privilege) => dispatch(SETPRIVILEGE(privilege));
@@ -89,7 +89,12 @@ export default function PosCard() {
       sources?.find((source) => source._id.toString() === _id.toString())
         ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
     setPhysicians(_physicians); // Update the physicians list based on the filtered data
-    dispatch(SETSOURCE({ _id })); // Dispatch the selected source
+    // Dispatch the selected source
+    // if membership is not null
+    const membership = sources.find(
+      (source) => source._id.toString() === _id
+    )?.membership;
+    dispatch(SETSOURCE({ _id, membership }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
 
@@ -125,28 +130,32 @@ export default function PosCard() {
             value={privilege}
             onChange={({ target }) => handlePrivilege(Number(target.value))}
           >
-            {/* auto remove Senior Citizen from choices if not a valid senior */}
-            {Privileges.filter((_, i) => isSenior || i !== 2).map(
-              (privilege, index) => {
-                let disabled = false,
-                  // if privilegeIndex is greater than 0, disable all other choices
-                  alreadyQualified = userPrivilege > 0;
+            {Privileges.map((privilege, index) => {
+              let disabled = false;
 
-                if (alreadyQualified) disabled = true;
-
-                return (
-                  <option
-                    disabled={disabled}
-                    key={`privilege-${index}`}
-                    value={index}
-                  >
-                    {privilege}
-                  </option>
-                );
+              // If already has a privilege, disable other choices
+              if (userPrivilege > 0 && userPrivilege !== index) {
+                disabled = true;
               }
-            )}
+
+              // Ensure only valid seniors can select "Senior Citizen" (index 2)
+              if (index === 2 && userPrivilege !== 2) {
+                disabled = true;
+              }
+
+              return (
+                <option
+                  disabled={disabled}
+                  key={`privilege-${index}`}
+                  value={index}
+                >
+                  {privilege}
+                </option>
+              );
+            })}
           </select>
         </div>
+
         <div className="patient-form">
           <span>Source</span>
           <select
@@ -154,10 +163,10 @@ export default function PosCard() {
             onChange={({ target }) => handleSource(target.value)}
           >
             <option value="">None</option>
-            {/* vendors : note if not register, will show the tempory details */}
-            {sources?.map(({ _id, name, subName }) => (
-              <option key={_id} value={_id}>
-                {name?.toUpperCase()} {subName?.toUpperCase()}
+            {sources?.map(({ _id, clients, membership }) => (
+              <option key={_id} value={_id} title={membership}>
+                {Memberships.find(({ value }) => value === membership)?.emoji}
+                {clients?.displayname}
               </option>
             ))}
           </select>

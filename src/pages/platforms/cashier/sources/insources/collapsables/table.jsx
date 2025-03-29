@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBadge,
@@ -9,19 +9,29 @@ import {
   MDBTableBody,
   MDBTableHead,
 } from "mdbreact";
+import "./styles.css";
+
 import { fullName } from "../../../../../../services/utilities";
 import { UntagPHYSICIAN } from "../../../../../../services/redux/slices/assets/branches";
 import { SetBRANCHES } from "../../../../../../services/redux/slices/assets/providers";
 import { UPDATE as UPDATEGHOST } from "../../../../../../services/redux/slices/assets/persons/physicians";
-import {
-  UPDATE as UPDATEUSER,
-  SAVE,
-} from "../../../../../../services/redux/slices/assets/persons/users";
+import { SAVE } from "../../../../../../services/redux/slices/assets/persons/users";
+import { Input } from "../../../../../../components/customizable";
+import { RESET } from "../../../../../../services/redux/slices/assets/persons/physicians";
+import { useToasts } from "react-toast-notifications";
 
 export default function CollapseTable({ BranchId, affiliated, providerId }) {
   const { token } = useSelector(({ auth }) => auth),
+    { formSubmitted, isSuccess } = useSelector(({ physicians }) => physicians),
+    [selected, setSelected] = useState(-1),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      dispatch(RESET());
+    }
+  }, [formSubmitted, isSuccess, dispatch]);
   const handleUntag = (physicianId) => {
     dispatch(
       UntagPHYSICIAN({
@@ -38,11 +48,39 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
   const handleRegister = (user) => {
     dispatch(SAVE({ ...user, token }));
   };
-  const handleEdit = (user) => {
-    dispatch(UPDATEUSER(user));
-  };
+
   const handleGhostUpdate = (user) => {
     dispatch(UPDATEGHOST(user));
+  };
+  const handleUpdate = () => {
+    const { newSpecialization, specialization } = selected;
+    if (newSpecialization.toLowerCase() === specialization.toLowerCase()) {
+      setSelected({});
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
+    dispatch(
+      UPDATEGHOST({
+        data: { _id: selected._id, specialization: newSpecialization },
+        token,
+      })
+    )
+      .then(({ payload: physician }) => {
+        const { _id: physicianId } = physician;
+
+        dispatch(
+          SetBRANCHES({
+            physicianId,
+            affiliated: physician,
+            providerId,
+            isUpdatePhysician: true,
+          })
+        );
+
+        setSelected({}); // Reset state after update
+      })
+      .catch((error) => console.error("Update Error:", error));
   };
 
   return (
@@ -73,22 +111,43 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
                 <div className="d-flex flex-column">
                   {user ? fullName(user?.fullName) : fullName(ghostName)}
                 </div>
-                <MDBBadge>{specialization}</MDBBadge>
+                {_id === selected?._id ? (
+                  <div style={{ width: "13rem" }}>
+                    <Input
+                      _key={"newSpecialization"}
+                      className="mt-2 form-control form-control-sm"
+                      formSubmitted={formSubmitted}
+                      isSuccess={isSuccess}
+                      selected={selected}
+                      onChange={(value) =>
+                        setSelected({ ...selected, newSpecialization: value })
+                      }
+                      handleCheck={handleUpdate}
+                      handleClose={() => setSelected({})}
+                    />
+                  </div>
+                ) : (
+                  <MDBBadge
+                    title="Click me to update"
+                    className="cursor-pointer"
+                    onClick={() =>
+                      setSelected({
+                        _id,
+                        specialization,
+                        user,
+                        newSpecialization: specialization,
+                      })
+                    }
+                  >
+                    {specialization}
+                  </MDBBadge>
+                )}
               </td>
               <td>{user?.isMale ? "Male" : "Female"}</td>
               <td>{user?.mobile}</td>
               <td>
                 <MDBBtnGroup>
-                  {user ? (
-                    <MDBBtn
-                      color="info"
-                      rounded
-                      size="sm"
-                      onClick={() => handleEdit(physician)}
-                    >
-                      <MDBIcon icon="user-times" className="mr-2" /> Edit
-                    </MDBBtn>
-                  ) : (
+                  {!user && (
                     <>
                       <MDBBtn
                         color="success"

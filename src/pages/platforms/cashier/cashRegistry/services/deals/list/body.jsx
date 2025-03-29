@@ -14,6 +14,9 @@ import {
   SetFILTERED,
   SetSELECTED,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { Select } from "../../../../../../../components/customizable";
+import { SetSOURCE } from "../../../../../../../services/redux/slices/assets/providers.js";
+import { SetPHYSICIANS } from "../../../../../../../services/redux/slices/assets/persons/physicians.js";
 
 const Tables = () => {
   const {
@@ -22,6 +25,8 @@ const Tables = () => {
       total,
       view = "all",
     } = useSelector(({ deals }) => deals),
+    { collections: providers } = useSelector(({ providers }) => providers),
+    { collections: physicians } = useSelector(({ physicians }) => physicians),
     [didHoverID, setDidHoverID] = useState(-1),
     dispatch = useDispatch();
 
@@ -61,7 +66,14 @@ const Tables = () => {
       })
     );
   };
-
+  const handleSource = (e) => {
+    const { value } = e.target;
+    dispatch(SetSOURCE(value));
+    const _physicians =
+      providers?.find((source) => source._id.toString() === value.toString())
+        ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
+    SetPHYSICIANS(_physicians); // Update the physicians list based on the filtered data
+  };
   const generateStub = (deal) => ({
     ...deal,
     customer: {
@@ -97,14 +109,14 @@ const Tables = () => {
         <thead>
           <tr>
             <th>Patient Name</th>
-            <th>Physician</th>
+            <th>Source</th>
             <th>Amount</th>
             <th className="text-center">Services</th>
           </tr>
         </thead>
         <tbody>
           {filtered?.map((deal, index) => {
-            const { img, text, style } = paymentMethod.getImage(deal.payment);
+            const { img, text, style } = paymentMethod?.getImage(deal.payment);
             return (
               <tr
                 key={`deals-${index + 1}`}
@@ -127,12 +139,24 @@ const Tables = () => {
                   @ {new Date(deal?.createdAt).toLocaleTimeString()}
                 </td>
                 <td>
-                  <h6>
+                  <Select
+                    soloUpdate={true}
+                    keys="_id"
+                    values="clients.displayname"
+                    collections={providers}
+                    onChange={(e) => handleSource(e)}
+                  />
+                  {/* <h6>{deal.source?.displayname}</h6>
+                  <p>
                     {deal.physicianId?.fullName.lname &&
                       `Dr. ${deal.physicianId.fullName.lname}`}
-                  </h6>
-
-                  <p>{deal.source?.companyName}</p>
+                  </p> */}
+                  <Select
+                    soloUpdate={true}
+                    keys="_id"
+                    values="clients.displayname"
+                    collections={physicians}
+                  />
                 </td>
                 <td className="cursor-pointer" onClick={() => handleView(deal)}>
                   <div className="d-flex align-items-center">

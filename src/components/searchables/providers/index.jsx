@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { debounce } from "lodash";
+// import { debounce } from "lodash";
 import {
   // GETENROLLED,
   RESET,
@@ -23,7 +23,7 @@ export default function Search({ setEnrolled, setRegister = () => {} }) {
     const searchKey = _searchKey.split(",");
     const query = {
       vendors: activePlatform?.branchId,
-      companyName: searchKey[0],
+      displayname: searchKey[0],
       name: searchKey[1] ? searchKey[1] : "",
     };
     console.log("query", query);

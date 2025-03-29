@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetPackages } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import { Services } from "./../../../../../../../../../services/fakeDb";
 import {
@@ -9,22 +9,22 @@ import {
 } from "./../../../../../../../../../services/utilities";
 
 export default function Serology() {
-  const { task, preferences, selected } = useSelector(
+  const { task, preferences, selected, params } = useSelector(
       ({ validator }) => validator
     ),
     dispatch = useDispatch();
 
-  const { packages = {}, key: mapKey } = task;
+  console.log("params", params);
+
+  const { key: mapKey } = task;
   const { customerId: patient } = selected;
 
-  const handleChange = (e) =>
-    dispatch(
-      SetPARAMS({
-        ...task,
-        packages: { ...packages, [e.target.name]: Number(e.target.value) },
-      })
-    );
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log("value", value, name);
 
+    dispatch(SetPackages({ ...params, [name]: Number(value) }));
+  };
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>
@@ -42,7 +42,7 @@ export default function Serology() {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(packages).map(([key, value], index) => {
+        {Object.entries(params).map(([key, value], index) => {
           const { preference, abbreviation, name } = Services.find(key),
             { lo, hi, warn, alert, critical, units, _id } = findReference(
               key,

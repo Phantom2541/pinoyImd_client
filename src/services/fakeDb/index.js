@@ -8,6 +8,8 @@ import {
   Denominations,
   Services,
   Suffixes,
+  Categories,
+  Memberships,
 } from "./finance";
 import Developer from "./developer";
 import {
@@ -25,7 +27,6 @@ import {
   Cellcount,
   Diffcount,
   Rci,
-  Categories,
   References,
   Templates,
 } from "./diagnostics";
@@ -56,6 +57,7 @@ export {
   References,
   Templates,
   Categories,
+  Memberships,
   Privileges,
   Payments,
   Philippines,

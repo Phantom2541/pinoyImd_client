@@ -44,7 +44,7 @@ const Tables = () => {
               <td>
                 {vendors ? (
                   <span>
-                    {vendors.companyName} {vendors.name}
+                    {vendors.displayname} {vendors.name}
                   </span>
                 ) : (
                   <span>

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-// import CustomSelect from "../../../../../components/searchables/customSelect";
+// import { Select } from "../../../../../components/customizable";
 // import { Templates, Services } from "../../../../../services/fakeDb";
 import {
   OUTSOURCE,
@@ -13,13 +13,8 @@ const Header = () => {
     { paginated } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
-  // const { maxPage } = useSelector(({ auth }) => auth),
-  //   { collections } = useSelector(({ services }) => services),
-  //   [component, setComponent] = useState(""),
-  //   dispatch = useDispatch();
-
+  //initial values
   useEffect(() => {
-    // console.log("Outside if");
     if (token && activePlatform?.branchId) {
       dispatch(
         OUTSOURCE({
@@ -32,7 +27,6 @@ const Header = () => {
     }
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
-  //initial values
 
   return (
     <MDBView
@@ -41,7 +35,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {paginated.length} Outsources
+          {paginated?.length} Outsources
         </span>
       </div>
       <div>

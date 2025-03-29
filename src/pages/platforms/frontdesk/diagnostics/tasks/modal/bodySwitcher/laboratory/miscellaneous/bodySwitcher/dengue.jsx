@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBRow, MDBCol } from "mdbreact";
-import CustomSelect from "./../../../../../../../../../../components/searchables/customSelect";
+import { Select } from "./../../../../../../../../../../components/customizable";
 
 const choices = [
   {
@@ -23,9 +23,9 @@ export default function Dengue({ task, setTask }) {
     <MDBRow className="text-left">
       {packages.includes(77) && (
         <MDBCol>
-          <CustomSelect
+          <Select
             inputClassName={results.ns1 && "text-danger"}
-            choices={choices}
+            collections={choices}
             label="NS1 Antigen"
             preValue={String(results.ns1)}
             texts="str"
@@ -35,9 +35,9 @@ export default function Dengue({ task, setTask }) {
         </MDBCol>
       )}
       <MDBCol>
-        <CustomSelect
+        <Select
           inputClassName={results.igg && "text-danger"}
-          choices={choices}
+          collections={choices}
           label="Antibody IgG"
           preValue={String(results.igg)}
           texts="str"
@@ -46,9 +46,9 @@ export default function Dengue({ task, setTask }) {
         />
       </MDBCol>
       <MDBCol>
-        <CustomSelect
+        <Select
           inputClassName={results.igm && "text-danger"}
-          choices={choices}
+          collection={choices}
           label="Antibody IgM"
           preValue={String(results.igm)}
           texts="str"

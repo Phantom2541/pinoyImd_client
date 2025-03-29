@@ -17,7 +17,6 @@ import Equipments from "../../../pages/platforms/headquarter/file201/equipments"
 import Payrolls from "../../../pages/platforms/manager/responsibilities/payroll";
 //import Assurance from "../../../pages/platforms/manager/responsibilities/liability/quality/assurance";
 // Controls from "../../../pages/platforms/manager/responsibilities/liability/quality/controls";
-import Sales from "../../../pages/platforms/manager/pos/sales";
 // import Ledger from "../../../pages/platforms/manager/pos/ledger";
 // import newLedger from "../../../pages/platforms/cashier/pos/newledger";
 import Employees from "../../../pages/platforms/headquarter/file201/employees";
@@ -26,8 +25,11 @@ import Branches from "../../../pages/platforms/manager/branches";
 import Providers from "../../../pages/platforms/manager/provider";
 import SABranches from "../../../pages/platforms/SuperAdmin/SABranches";
 import SACompany from "../../../pages/platforms/SuperAdmin/SACompany";
-import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
-import Remmitances from "../../../pages/platforms/manager/pos/remittances";
+import {
+  Remittances,
+  Sales,
+  ExperimentalLedger,
+} from "../../../pages/platforms/manager/businessOperations";
 
 const manager = [
   {
@@ -176,8 +178,8 @@ const manager = [
     ],
   },
   {
-    name: "POS",
-    path: "/pos",
+    name: "Business Operations",
+    path: "/operations",
     icon: "cogs",
     children: [
       {
@@ -186,9 +188,9 @@ const manager = [
         component: Sales,
       },
       {
-        name: "Remmitances",
-        path: "/remmitances",
-        component: Remmitances,
+        name: "Remittances",
+        path: "/remittances",
+        component: Remittances,
       },
       {
         name: "Ledger",

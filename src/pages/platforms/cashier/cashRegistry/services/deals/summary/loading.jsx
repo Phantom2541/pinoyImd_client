@@ -6,6 +6,7 @@ const SummaryLoading = ({ rowCount = 5 }) => {
     <>
       {new Array(rowCount).fill("").map((_, index) => (
         <MDBAnimation
+          key={index}
           type="flash"
           infinite
           className="mt-2"
