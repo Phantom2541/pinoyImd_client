@@ -24,6 +24,7 @@ export default function TasksCollapse({
     // complete = date.slice(4),
     history = useHistory();
   // console.log("task", task);
+console.log("task", task);
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
@@ -49,22 +50,27 @@ export default function TasksCollapse({
               color="info"
               className="px-2 cursor-pointer"
             >
-              <MDBIcon icon="eye" />
+              <MDBIcon icon="info" />
             </MDBBadge>
             {task.source && (
               <MDBBadge color="warning">{task.source?.name}</MDBBadge>
             )}
-            <i
-              style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
-              className="fa fa-angle-down transition-all ml-2"
-            />
+            {task.rendered.length !== 0 &&
+
+              <i
+                style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
+                className="fa fa-angle-down transition-all ml-2"
+              />
+            }
           </span>
         </MDBCollapseHeader>
+        {task.rendered.length !== 0 &&
         <MDBCollapse id={`collapse-${_id}`} isOpen={isActive}>
           <MDBCardBody className="pt-0">
             <Table menu={task} />
           </MDBCardBody>
-        </MDBCollapse>
+          </MDBCollapse>
+        }
       </MDBCard>
     </MDBContainer>
   );
