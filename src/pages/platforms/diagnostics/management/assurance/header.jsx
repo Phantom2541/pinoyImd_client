@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 import {
@@ -12,12 +12,16 @@ import {
   BROWSE,
   SetCREATE,
 } from "./../../../../../services/redux/slices/liability/assurances";
+
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
     [month, setMonth] = useState(new Date().getMonth() + 1),
     [template, setTemplate] = useState(1),
     [service, setService] = useState(1),
+    memoizedSetService = useCallback((value) => {
+      setService(value);
+    }, []),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -44,11 +48,15 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">Assurances </span>
+        <Templates setTemplate={setTemplate} />
+        <Services
+          template={template}
+          service={service}
+          setService={memoizedSetService}
+        />
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <Services template={template} setService={setService} />
-          <Templates setTemplate={setTemplate} />
           <Month month={month} setMonth={setMonth} />
           <Year year={year} setYear={setYear} />
           <MDBBtn

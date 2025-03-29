@@ -26,7 +26,7 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((service, index) => (
-          <tr>
+          <tr key={index}>
             <td key={index}>{index + 1}</td>
             <td>{service.name}</td>
             <td>{service.Description} </td>

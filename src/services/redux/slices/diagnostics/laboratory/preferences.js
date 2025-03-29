@@ -91,7 +91,7 @@ export const reduxSlice = createSlice({
     },
 
     SetFILTERED: (state, { payload }) => {
-      console.log("SetFILTERED payload", payload);
+      // console.log("SetFILTERED payload", payload);
 
       state.filtered = [...payload];
     },
