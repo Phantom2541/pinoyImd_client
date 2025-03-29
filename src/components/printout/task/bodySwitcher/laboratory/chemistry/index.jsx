@@ -11,7 +11,6 @@ export default function Chemistry({ task, fontSize }) {
   const style = { fontSize: `${fontSize}px` },
     { packages, services, patient, preferences } = task;
 
-  console.log("Chemistry task", task);
 
   return (
     <MDBTable hover striped bordered responsive className="mb-0 text-center">
@@ -48,7 +47,7 @@ export default function Chemistry({ task, fontSize }) {
           const { name, preference } = services?.find(
               ({ id }) => id === Number(fk)
             ),
-            nameUppercase = name.toUpperCase(),
+            nameUppercase = name?.toUpperCase(),
             reference = findReference(
               fk,
               patient?.isMale,

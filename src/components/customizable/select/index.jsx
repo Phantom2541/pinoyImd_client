@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBSelect,
   MDBSelectInput,
@@ -35,16 +35,44 @@ export default function Select({
       .reduce((acc, key) => (acc && acc[key] ? acc[key] : ""), obj);
   };
 
+  // const handleChoiceDisabling = (value, obj) => {
+  //   if (disableAll) return true;
+  //   if (whitelisted && (preValue === value || preValues.includes(value)))
+  //     return true;
+  //   if (blacklisted && (!preValues.includes(value) || preValue !== value))
+  //     return true;
+  //   return (
+  //     Object.keys(disableByKey).length &&
+  //     Object.entries(disableByKey).some(([key, val]) => obj[key] === val)
+  //   );
+  const [selectedValue, setSelectedValue] = useState(preValue || preValues);
+
+  useEffect(() => {
+    setSelectedValue(preValue || preValues);
+  }, [preValue, preValues]);
+
   const handleChoiceDisabling = (value, obj) => {
     if (disableAll) return true;
-    if (whitelisted && (preValue === value || preValues.includes(value)))
-      return true;
-    if (blacklisted && (!preValues.includes(value) || preValue !== value))
-      return true;
-    return (
-      Object.keys(disableByKey).length &&
-      Object.entries(disableByKey).some(([key, val]) => obj[key] === val)
-    );
+
+    if (whitelisted) {
+      if (preValue && String(preValue) === String(value)) return true;
+      if (preValues.length > 0 && preValues.map(String).includes(String(value)))
+        return true;
+    }
+
+    if (blacklisted) {
+      if (preValue && String(preValue) !== String(value)) return true;
+      if (preValues.length > 0 && preValues.map(String).includes(String(value)))
+        return true;
+    }
+
+    if (Object.keys(disableByKey).length) {
+      return Object.entries(disableByKey).some(
+        ([key, val]) => obj[key] === val
+      );
+    }
+
+    return false;
   };
 
   const handleSearchDisabling = () => !disableSearch && collections.length > 9;
@@ -64,6 +92,8 @@ export default function Select({
       const selectedItems = getObject
         ? collections.filter((c) => array.includes(String(c[keys] || c)))
         : array;
+
+      setSelectedValue(selectedItems);
       return onChange(selectedItems);
     }
   };
@@ -72,6 +102,35 @@ export default function Select({
     return multiple
       ? preValues.includes(value)
       : String(preValue) === String(value);
+
+    // const selectedItem = getObject
+    //   ? collections.find(
+    //       (choice) => String(choice[keys] || choice) === String(array[0])
+    //     )
+    //   : array[0];
+
+    // setSelectedValue(selectedItem);
+    // onChange(selectedItem);
+  };
+
+  const getSelectedText = () => {
+    if (multiple) {
+      return preValues
+        .map((val) =>
+          getObject
+            ? collections.find((c) => String(c[keys]) === String(val))?.[
+                values
+              ] || val
+            : val
+        )
+        .join(", ");
+    }
+
+    return getObject
+      ? collections.find((c) => String(c[keys]) === String(preValue))?.[
+          values
+        ] || preValue
+      : preValue;
   };
 
   return (
@@ -83,7 +142,9 @@ export default function Select({
       multiple={multiple}
       color="primary"
     >
-      <MDBSelectInput className={inputClassName} selected={preValue} />
+      {/* ✅ Ensure the selected value is displayed properly */}
+      <MDBSelectInput className={inputClassName} selected={getSelectedText()} />
+
       <MDBSelectOptions search={handleSearchDisabling()}>
         {collections.map((choice, index) => {
           const key = keys ? String(choice[keys]) : choice;
