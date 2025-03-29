@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Services as ServicesSchema } from "./../../../services/fakeDb";
-import { CustomSelect } from "../../../components/searchables";
+import { Select } from "../../../components/customizable";
 
 const Services = ({ template, service, setService }) => {
   useEffect(() => {
@@ -16,7 +16,7 @@ const Services = ({ template, service, setService }) => {
 
   return (
     <div style={{ position: "absolute", left: 350, bottom: -15, width: 300 }}>
-      <CustomSelect
+      <Select
         collections={services}
         keys={["id"]}
         values={["name"]}
