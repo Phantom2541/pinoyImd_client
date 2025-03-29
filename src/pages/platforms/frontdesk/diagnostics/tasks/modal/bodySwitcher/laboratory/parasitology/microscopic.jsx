@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 import {
   MDBCol,
@@ -32,13 +32,17 @@ const hpfs = [
   bacterias = ["+1", "+2", "+3", "+4"],
   cells = ["RARE", "FEW", "MODERATE", "PLENTY"];
 
+
 export default function Microscopic() {
-  const { me } = useSelector(({ validator }) => validator.task),
+  const { task } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
+  const { me } = task;
   const handleSelectChange = (index, value) => {
     const _me = [...me];
-    _me[index] = value;
+    _me[index] = Number(value);
     dispatch(SetPARAMS({ key: "me", value: _me }));
+    dispatch(SetTASK({ task: { ...task, me: _me } }));
+    
   };
 
   return (
