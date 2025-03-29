@@ -27,7 +27,7 @@ export default function Calendar() {
   return (
     <div className="calendar-template">
       <WeekHeader />
-      <div className="calendar-bodys">
+      <div className="calendar-bodys w-100">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => (
           <Card key={index} num={num} txt={txt} items={items.get(num) || []} />
         ))}
