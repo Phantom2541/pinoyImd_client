@@ -45,10 +45,10 @@ export default function Select({
   //     Object.keys(disableByKey).length &&
   //     Object.entries(disableByKey).some(([key, val]) => obj[key] === val)
   //   );
-  const [selectedValue, setSelectedValue] = useState(preValue || preValues);
+  const [selectedValue, setSelectedValue] = useState("");
 
   useEffect(() => {
-    setSelectedValue(preValue || preValues);
+    setSelectedValue(preValues.length > 0 ? preValues : preValue);
   }, [preValue, preValues]);
 
   const handleChoiceDisabling = (value, obj) => {
