@@ -92,12 +92,9 @@ export const reduxSlice = createSlice({
       state.filtered = [...payload];
     },
     SetSERVICES: (state, { payload }) => {
-      const { filtered, maxPage } = payload;
-
-      // console.log("collections: ", filtered);
-
+      const { collections, maxPage } = payload;
       // Create a copy before sorting to avoid modifying frozen state
-      const sortedCollections = [...filtered].sort((a, b) => {
+      const sortedCollections = [...collections]?.sort((a, b) => {
         // Customize sorting logic as needed
         return a.name.localeCompare(b.name); // Example: Sorting alphabetically by 'url' property
       });
