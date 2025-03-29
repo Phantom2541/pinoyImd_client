@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   // MDBBtn,
@@ -13,7 +13,7 @@ import {
 import {
   SAVE,
   // UPDATE,
-} from "../../../../../services/redux/slices/liability/liabilities";
+} from "../../../../../services/redux/slices/finance/journals/payments";
 // import { isEqual } from "lodash";
 import { currency } from "../../../../../services/utilities";
 
@@ -34,6 +34,22 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     [totEarn, setTotEarn] = useState(),
     dispatch = useDispatch();
 
+  const payCycle = Number(selected?.contract?.pc);
+
+  const handleCalc = useCallback(
+    monthly => {
+      switch (payCycle) {
+        case 1:
+          return monthly / 2;
+        case 2:
+          return monthly * 1;
+        default:
+          return monthly * 3;
+      }
+    },
+    [payCycle] // Now it's a simple variable
+  );
+
   useEffect(() => {
     if (form) {
       setTotDeduc(
@@ -45,28 +61,50 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           selected?.contribution?.pi
       );
       setTotEarn(
-        selected?.rate?.monthly / 2 +
-          selected?.rate?.cola / 2 +
+        handleCalc(selected?.rate?.monthly) +
+          handleCalc(selected?.rate?.cola) +
           Number(form?.holiday) +
           Number((form?.overtime / 8) * selected?.rate?.daily) +
           Number(form?.bonus)
       );
     }
-  }, [form, selected]);
+  }, [form, selected, handleCalc]);
 
   const handleSubmit = () => {
+    const breakdown = {
+      deduction: {
+        ca: form.ca,
+        absent: form.absent,
+        loan: form.loan,
+        ph: selected?.contribution?.ph,
+        sss: selected?.contribution?.sss,
+        pi: selected?.contribution?.pi,
+      },
+      earn: {
+        holiday: form.holiday,
+        overtime: form.overtime,
+        bonus: form.bonus,
+        rate: handleCalc(selected?.rate?.monthly),
+        cola: handleCalc(selected?.rate?.cola),
+      },
+      net: totEarn - totDeduc,
+    };
+    console.log({
+      breakdown,
+      particular: selected?.user?._id,
+      userId: auth._id,
+      branchId: selected?.branch._id,
+      fsId: 3,
+    });
     //console.log(selected);
     dispatch(
       SAVE({
         data: {
-          ...form,
+          breakdown,
           particular: selected?.user?._id,
           userId: auth._id,
           branchId: selected?.branch._id,
           fsId: 3,
-          net: totEarn - totDeduc,
-          rate: selected?.rate?.monthly / 2,
-          cola: selected?.rate?.cola / 2,
         },
         token,
       })
@@ -75,7 +113,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   };
 
   // use for direct values like strings and numbers
-  const handleValue = (key) =>
+  const handleValue = key =>
     willCreate ? form[key] : form[key] || selected[key];
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
@@ -108,25 +146,25 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <tbody>
             <tr>
               <td>Rate</td>
-              <td>{currency(selected?.rate?.monthly / 2)}</td>
+              <td>{currency(handleCalc(selected?.rate?.monthly))}</td>
               <td>Cash Advance</td>
               <td>
                 <input
                   name="ca"
                   value={handleValue("ca")}
-                  onChange={(e) => handleChange("ca", e.target.value)}
+                  onChange={e => handleChange("ca", e.target.value)}
                   className="form-control"
                 />
               </td>
             </tr>
             <tr>
               <td>Cola</td>
-              <td>{currency(selected?.rate?.cola / 2)}</td>
+              <td>{currency(handleCalc(selected?.rate?.cola))}</td>
               <td>Absent (day)</td>
               <td>
                 <input
                   value={handleValue("absent")}
-                  onChange={(e) => handleChange("absent", e.target.value)}
+                  onChange={e => handleChange("absent", e.target.value)}
                   className="form-control"
                 />
               </td>
@@ -136,7 +174,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <td>
                 <input
                   value={handleValue("holiday")}
-                  onChange={(e) => handleChange("holiday", e.target.value)}
+                  onChange={e => handleChange("holiday", e.target.value)}
                   className="form-control"
                 />
               </td>
@@ -144,7 +182,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <td>
                 <input
                   value={handleValue("loan")}
-                  onChange={(e) => handleChange("loan", e.target.value)}
+                  onChange={e => handleChange("loan", e.target.value)}
                   className="form-control"
                 />
               </td>
@@ -154,7 +192,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <td>
                 <input
                   value={handleValue("overtime")}
-                  onChange={(e) => handleChange("overtime", e.target.value)}
+                  onChange={e => handleChange("overtime", e.target.value)}
                   className="form-control"
                 />
               </td>
@@ -166,7 +204,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <td>
                 <input
                   value={handleValue("bonus")}
-                  onChange={(e) => handleChange("bonus", e.target.value)}
+                  onChange={e => handleChange("bonus", e.target.value)}
                   className="form-control"
                 />
               </td>
