@@ -56,6 +56,7 @@ export default function Deals() {
 
       if (storedSource) {
         const sourceData = JSON.parse(storedSource);
+
         dispatch(SetSOURCE(sourceData));
       } else {
         dispatch(INSOURCE({ token, key: { vendors: activePlatform.branchId } }))
@@ -110,7 +111,7 @@ export default function Deals() {
   return (
     <MDBContainer className="d-flex" fluid>
       <div className=" py-1 rounded flex-1 ml-2 px-2">
-        <MDBCard narrow style={{ minHeight: "75vh" }}>
+        <MDBCard narrow>
           <Header />
           <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
           <Footer />
