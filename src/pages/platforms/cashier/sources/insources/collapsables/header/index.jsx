@@ -75,7 +75,7 @@ const Header = ({
               style={{ fontSize: "0.7rem" }}
               className={!isWhiteColor && "grey-text"}
             >
-              Branch:
+              Branch
             </small>
             {update.updatedKey === "branch" &&
             update.providerID === _id &&
@@ -112,7 +112,7 @@ const Header = ({
               style={{ fontSize: "0.7rem" }}
               className={!isWhiteColor && "grey-text"}
             >
-              Membership:
+              Membership
             </small>
             {update?.updatedKey === "membership" &&
             update?.providerID === _id ? (
@@ -155,7 +155,7 @@ const Header = ({
               style={{ fontSize: "0.7rem" }}
               className={!isWhiteColor && "grey-text"}
             >
-              Monthly Cutoff:
+              Monthly Cutoff
             </small>
             {update?.updatedKey === "cutoff" && update?.providerID === _id ? (
               <div style={{ width: "6rem" }}>
@@ -197,7 +197,7 @@ const Header = ({
               style={{ fontSize: "0.7rem" }}
               className={!isWhiteColor && "grey-text"}
             >
-              Credit:
+              Credit
             </small>
             {update.updatedKey === "credit" && update?.providerID === _id ? (
               <div style={{ width: "9rem" }}>
