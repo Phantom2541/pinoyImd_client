@@ -89,16 +89,6 @@ export default function Calendar({
   }, [month, year]);
 
   useEffect(() => {
-    // only fetch if the year and month is NOT a future
-    // console.log("showProgress", showProgress);
-    // console.log("isSelectedMonthAndYearFuture", isSelectedMonthAndYearFuture);
-    // console.log("month", month);
-    // console.log("year", year);
-    // console.log("token", token);
-    // console.log("activePlatform", activePlatform);
-    // console.log("auth", auth);
-    // console.log("showPopUp", showPopUp);
-    // console.log("showProgress", showProgress);
     if (
       isSelectedMonthAndYearFuture &&
       activePlatform?._id &&

@@ -254,7 +254,7 @@ export const reduxSlice = createSlice({
           state.page = state.totalPages;
         }
       }
-      state.filter = page;
+      state.filtered = page;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -307,11 +307,11 @@ export const reduxSlice = createSlice({
 
         const { payload: data } = payload;
         state.collections = data;
-        state.filter = data;
+        state.filtered = data;
         state.paginated = data;
 
         state.paginated = state.filtered = data;
-        state.totalPages = Math.ceil(data.length / state.maxPage) || 1;
+        state.totalPages = Math.ceil(data?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = true;
         state.isLoading = false;

@@ -19,6 +19,7 @@ const paymentMethods = [
     style: { height: "2.6rem" },
   },
   { text: "Cheque", img: cheque, style: { height: "1.3rem" } },
+  { text: "Voucher", img: cheque, style: { height: "1.3rem" } },
 ];
 
 const paymentMethod = {

@@ -1,7 +1,10 @@
 import React from "react";
 import Indicator from "./indicator";
 import Footer from "./footer";
-import { currency } from "../../../../../../../services/utilities";
+import {
+  currency,
+  paymentMethod,
+} from "../../../../../../../services/utilities";
 
 const Card = ({ txt, num, index, item = {} }) => {
   const today = new Date();
@@ -9,9 +12,18 @@ const Card = ({ txt, num, index, item = {} }) => {
   const isFuture = dateCell > today;
   const week = txt?.slice(0, 3);
 
-  const { opening = {}, expenses = 0, gross = 0, collector, closing } = item;
+  const {
+    opening = {},
+    expenses = 0,
+    gross = 0,
+    collector,
+    closing,
+    breakdown,
+  } = item;
   const net = (opening.sum || 0) + gross - expenses;
   const isRemitted = !!collector;
+
+  console.log("breakdown", breakdown);
 
   return (
     <div
@@ -55,6 +67,16 @@ const Card = ({ txt, num, index, item = {} }) => {
             >
               {isRemitted ? "Remitted" : "COH"}: {currency(net)}
             </h6>
+            {breakdown &&
+              Object.entries(breakdown)?.map(([key, value]) => (
+                <span key={key} className="text-white">
+                  {paymentMethod[key] || "💰"}{" "}
+                  {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                  <strong className="text-info">
+                    ₱{value.toLocaleString()}
+                  </strong>
+                </span>
+              ))}
           </>
         )}
       </div>

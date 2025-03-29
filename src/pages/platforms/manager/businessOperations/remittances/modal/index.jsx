@@ -1,19 +1,9 @@
 import React from "react";
 import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
-import { capitalize, currency } from "../../../../../services/utilities";
-import { Denominations } from "../../../../../services/fakeDb";
+import { capitalize, currency } from "../../../../../../services/utilities";
+import { Denominations } from "../../../../../../services/fakeDb";
 
-export default function RemmitanceForm({ title }) {
-  //   return (
-  //     <div className="rounded border">
-  //       <div className="px-1"><strong>{capitalize(title)} Balance</strong></div>
-  //       <div className="border-top px-1">Bills</div>
-  //       <div className='d-flex bg-danger'>
-  //       <div>100</div><div><MDBInput type='number' size='sm' className='py-0' /></div>
-  //       </div>
-  //       <div className="border-top px-1">Coins</div>
-  //     </div>
-  //   );
+export default function Remittances({ title }) {
   return (
     <MDBTable bordered small>
       <MDBTableHead>

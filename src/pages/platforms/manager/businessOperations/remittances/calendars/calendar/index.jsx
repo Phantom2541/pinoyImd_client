@@ -13,7 +13,7 @@ export default function Calendar() {
   } = useSelector(({ remittances }) => remittances);
 
   // Group collections by date
-  const dateMap = collections.reduce((acc, { createdAt, ...rest }) => {
+  const items = collections.reduce((acc, { createdAt, ...rest }) => {
     if (createdAt) {
       const date = new Date(createdAt).getUTCDate();
       if (!acc.has(date)) {
@@ -29,12 +29,7 @@ export default function Calendar() {
       <WeekHeader />
       <div className="calendar-bodys">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => (
-          <Card
-            key={index}
-            num={num}
-            txt={txt}
-            items={dateMap.get(num) || []}
-          />
+          <Card key={index} num={num} txt={txt} items={items.get(num) || []} />
         ))}
       </div>
     </div>

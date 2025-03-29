@@ -25,7 +25,7 @@ export default function Calendar({ month, year }) {
       <div className="pos-ledger-calendar">
         <div className="pos-ledger-calendar-header">
           <span>
-            <strong>FINANCIAL PERFORMANE</strong>
+            <strong>FINANCIAL PERFORMANCE</strong>
             <small>Expenses</small> - {currency(expenses)}
           </span>
           <span>

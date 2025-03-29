@@ -8,6 +8,16 @@ import Footer from "./list/footer";
 import TableLoading from "../../../../../../components/tableLoading";
 import { Closing, Payments, Vouchers } from "./summary";
 import { Daily } from "../../../../../../services/redux/slices/finance/journals/payments";
+import {
+  INSOURCE,
+  SETSOURCES,
+  RESET,
+  SetSOURCE,
+} from "../../../../../../services/redux/slices/assets/providers.js";
+import {
+  BROWSE,
+  SetPHYSICIANS,
+} from "../../../../../../services/redux/slices/assets/persons/physicians.js";
 
 export default function Deals() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
@@ -16,7 +26,7 @@ export default function Deals() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token) {
+    if (token && activePlatform.branchId) {
       /**
        * get local time of users
        * Format: YYYY-MM-DD
@@ -37,6 +47,63 @@ export default function Deals() {
           },
         })
       );
+      /**
+       * Fetch source provider from the server and store it in localStorage
+       * this data is not slow moving info
+       */
+      const branchId = activePlatform.branchId;
+      const storedSource = localStorage.getItem(`source_${branchId}`);
+
+      if (storedSource) {
+        const sourceData = JSON.parse(storedSource);
+        dispatch(SetSOURCE(sourceData));
+      } else {
+        dispatch(INSOURCE({ token, key: { vendors: activePlatform.branchId } }))
+          .then(({ payload }) => {
+            const sourceData = payload.payload;
+            console.log("sourceData", sourceData);
+
+            localStorage.setItem(
+              `source_${branchId}`,
+              JSON.stringify(sourceData)
+            );
+          })
+          .catch((error) => {
+            console.error("Error fetching source data:", error);
+          });
+      }
+
+      /**
+       * Fetch physicians from the server and store it in localStorage
+       * this data is not slow moving info
+       */
+      // const storedPhysicians = localStorage.getItem(`physicians_${branchId}`);
+
+      // if (storedPhysicians) {
+      //   console.log("storedPhysicians", storedPhysicians);
+
+      //   const physicians = JSON.parse(storedPhysicians);
+      //   dispatch(SetPHYSICIANS(physicians));
+      // } else {
+      //   console.log("branchId", branchId);
+      //   dispatch(BROWSE({ token, key: { branchId } }))
+      //     .then(({ payload }) => {
+      //       console.log("payload", payload);
+
+      //       const physicians = payload.payload;
+      //       localStorage.setItem(
+      //         `physicians_${branchId}`,
+      //         JSON.stringify(physicians)
+      //       );
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error fetching physicians data:", error);
+      //     });
+      // }
+
+      return () => {
+        dispatch(RESET());
+      };
     }
   }, [token, dispatch, activePlatform.branchId, auth._id]);
 

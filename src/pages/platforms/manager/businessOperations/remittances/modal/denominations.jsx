@@ -19,13 +19,13 @@ import {
   TOGGLE,
   SAVE,
   UPDATE as CLOSINGCASH,
-} from "./../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
-import { Denominations, Policy } from "./../../../../../../../services/fakeDb";
+} from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import { Denominations, Policy } from "../../../../../../services/fakeDb";
 import {
   currency,
   removeUndefinedValues,
-} from "./../../../../../../../services/utilities";
-import "./style.css";
+} from "../../../../../../services/utilities";
+// import "./style.css";
 
 const billPositions = {
   20: "-2px -3px",

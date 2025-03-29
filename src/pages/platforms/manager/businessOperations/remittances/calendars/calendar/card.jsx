@@ -2,8 +2,10 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import Indicator from "./indicator";
 import { currency } from "../../../../../../../services/utilities";
-import { SetActiveDATE } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
-// import Denomination from "./denominations";
+import {
+  SetActiveDATE,
+  SetSELECTED,
+} from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 const Card = ({ txt, num, index, items = [] }) => {
   const dispatch = useDispatch();
@@ -15,7 +17,8 @@ const Card = ({ txt, num, index, items = [] }) => {
   // Compute total gross
   const totalGross = items.reduce((sum, { gross }) => sum + (gross || 0), 0);
   const handleRemittance = (_id) => {
-    console.log("_id :", _id);
+    const selected = items.find(({ _id: id }) => id === _id);
+    if (selected) dispatch(SetSELECTED({ key: "remit", value: selected }));
   };
 
   const handleDate = () => dispatch(SetActiveDATE(num));
@@ -55,7 +58,6 @@ const Card = ({ txt, num, index, items = [] }) => {
           </div>
         )}
       </div>
-      {/* <Denomination num={num} /> */}
     </div>
   );
 };

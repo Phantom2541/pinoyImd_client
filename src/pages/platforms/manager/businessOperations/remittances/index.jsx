@@ -3,20 +3,19 @@ import { useSelector, useDispatch } from "react-redux";
 import Summary from "./summary";
 import { MDBRow } from "mdbreact";
 import Calendar from "./calendars";
+import Denomination from "./modal/denominations";
+
 import {
   BROWSE,
   RESET,
 } from "./../../../../../services/redux/slices/commerce/pos/services/deals";
 
-export default function Remmitances() {
+export default function Remittances() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { month, year } = useSelector(({ remittances }) => remittances),
-    // { collections } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("activePlatform", activePlatform);
-
     if (token && activePlatform?.branchId && year && month) {
       const createdAt = new Date(year, month, 1);
       createdAt.setHours(0, 0, 0, 0);
@@ -45,6 +44,7 @@ export default function Remmitances() {
       <MDBRow className="w-100 mx-auto">
         <Calendar />
       </MDBRow>
+      <Denomination />
     </div>
   );
 }

@@ -88,18 +88,22 @@ export default function Summary() {
         cascade
         className="gradient-card-header custom-header bg-success narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
       >
-        <i className="text-lg font-bold ">Daily Summary</i>
-      </MDBView>
-      <MDBCardBody className="m-0 p-1">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center font-bold text-lg">
           <span
             className={
               isSunday ? "text-red-600 text-sm" : "text-gray-600 text-sm"
             }
           >
-            {activeDate}
+            {new Date(activeDate).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+            })}
           </span>
-
+          <span className="text-right m-lg-3">SUMMARY</span>
+        </div>
+      </MDBView>
+      <MDBCardBody className="m-0 p-1">
+        <div className="flex justify-between items-center">
           {/* Only show cashier selection if there's more than one */}
           {!isLoading ? (
             <div>
@@ -150,8 +154,8 @@ export default function Summary() {
                             {currency(amount)}
                           </div>
                           <div className="text-blue-600">
-                            {cart.map((i) => (
-                              <MDBBadge key={i.id} color="primary">
+                            {cart.map((i, index) => (
+                              <MDBBadge key={i.id ?? index} color="primary">
                                 {i?.menuId?.abbreviation}
                               </MDBBadge>
                             ))}
