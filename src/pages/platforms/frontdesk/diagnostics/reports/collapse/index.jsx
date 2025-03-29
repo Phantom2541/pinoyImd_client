@@ -53,9 +53,9 @@ console.log("task", task);
               <MDBIcon icon="info" />
             </MDBBadge>
             {task.source && (
-              <MDBBadge color="warning">{task.source?.name}</MDBBadge>
+              <MDBBadge color="warning">{task?.source?.name}</MDBBadge>
             )}
-            {task.rendered.length !== 0 &&
+            {task?.rendered?.length !== 0 &&
 
               <i
                 style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
