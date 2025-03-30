@@ -27,7 +27,7 @@ export default function Vouchers() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (collections.length > 0) {
+    if (collections.length > 0 && !isLoading) {
       const menuCountMap = {}; // { menuId: { _id, abbreviation, count } }
       const serviceCountMap = {}; // { serviceId: { _id, count } }
       const paymentSummary = {};
@@ -67,7 +67,7 @@ export default function Vouchers() {
         Object.values(serviceCountMap).map(({ _id, count }) => ({ _id, count }))
       ); // Save only service _id & count
     }
-  }, [collections]); // Re-run if collections change
+  }, [collections, isLoading]); // Re-run if collections change
 
   const handleActivePage = (page) =>
     setActivePage(activePage === page ? "close" : page);

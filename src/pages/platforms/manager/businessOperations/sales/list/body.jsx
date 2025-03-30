@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { capitalize, get } from "lodash";
+import { capitalize } from "lodash";
 import {
   currency,
+  Deals,
   fullName,
   getGenderIcon,
-  getPhysicianGenderIcon,
   paymentMethod,
 } from "./../../../../../../services/utilities";
 import { Categories } from "./../../../../../../services/fakeDb";
@@ -14,7 +14,6 @@ import {
   SetDISCOUNT,
   RESET,
   SetREVERT,
-  UPDATE_INFO,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 
@@ -32,7 +31,6 @@ import {
 } from "mdbreact";
 import "./style.css";
 import { Select } from "../../../../../../components/customizable";
-import PickPhysician from "../../../../../../components/searchables/physicians/pickPhysician";
 
 export const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
@@ -113,56 +111,17 @@ export const Tables = () => {
   };
 
   const handleUpdate = async (updatedKey, newKey, deal = {}) => {
-    const { physicianId = {} } = deal || {};
-    const { _id } = selected;
-    const baseUpdateKey = updatedKey.split(".")[0];
-    const oldValue = get(selected, updatedKey);
-    const newValue = selected[newKey] || "";
-
-    if (oldValue?.toLowerCase() === newValue?.toLowerCase()) {
-      setSelected({});
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-
-    var physicianIsReset = false;
-
-    if (baseUpdateKey === "source" && oldValue !== newValue && physicianId) {
-      const affiliatedOfNewSource = getPhysicians(newValue);
-      const physicianIsExist = affiliatedOfNewSource.some(
-        ({ value }) => value === physicianId._id
-      );
-
-      if (!physicianIsExist) {
-        const result = await Swal.fire({
-          icon: "warning",
-          title: "Physician Not Affiliated",
-          text: "The physician in this deal is not affiliated with the newly selected source. If you confirm, the physician will be removed.",
-          showCancelButton: true,
-          confirmButtonText: "Confirm",
-          cancelButtonText: "Cancel",
-        });
-
-        if (!result.isConfirmed) {
-          return;
-        }
-
-        physicianIsReset = true;
-      }
-    }
-
-    dispatch(
-      UPDATE_INFO({
-        data: {
-          _id,
-          [baseUpdateKey]: selected[newKey],
-          updatedKey: baseUpdateKey,
-          ...(physicianIsReset && { physicianId: "", resetPhysician: true }),
-        },
-        token,
-      })
-    );
+    Deals.specificUpdate({
+      updatedKey,
+      newKey,
+      selected,
+      deal,
+      setSelected,
+      token,
+      sources,
+      dispatch,
+      addToast,
+    });
   };
 
   /**
@@ -172,26 +131,6 @@ export const Tables = () => {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
-
-  const getPhysicians = (sourceID) => {
-    const physicians =
-      [...sources].find(({ clients }) => clients._id === sourceID)?.clients
-        ?.affiliated || [];
-
-    const physiciansFormmated =
-      physicians?.length > 0
-        ? [...physicians]?.map(({ user }) => ({
-            value: user._id,
-            text: (
-              <>
-                {getPhysicianGenderIcon(user?.isMale)}
-                {fullName(user?.fullName)}
-              </>
-            ),
-          }))
-        : [];
-    return physiciansFormmated;
-  };
 
   return (
     <MDBCardBody>
@@ -369,7 +308,11 @@ export const Tables = () => {
                         }
                         whitelisted
                         className="m-0 p-0 mt-3"
-                        collections={getPhysicians(deal?.source?._id)}
+                        // collections={getPhysicians(deal?.source?._id)}
+                        collections={Deals.getPhysicians(
+                          deal?.source._id,
+                          sources
+                        )}
                         preValue={deal.physicianId?._id}
                         formSubmitted={formSubmitted}
                         keys={"value"}
