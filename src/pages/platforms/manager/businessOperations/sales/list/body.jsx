@@ -161,7 +161,7 @@ export const Tables = () => {
         <thead>
           <tr style={{ marginTop: "-5rem" }}>
             <th>Patient</th>
-            <th>Physician/Source</th>
+            <th>Source/Physician</th>
             <th>Amount</th>
             <th>Services</th>
             <th>Remarks</th>
@@ -169,12 +169,13 @@ export const Tables = () => {
         </thead>
         <tbody>
           {paginatedData?.map((deal, index) => {
+            const { source } = deal;
             const isDeleted = !!deal.deletedAt;
             const isDiscounted = deal.discount > 0;
             const isHover = index === didHoverID;
-            const source = deal.source?.companyName || deal.source?.name;
+            const sourceName = deal.source?.companyName || deal.source?.name;
             const { img, style, text } = paymentMethod.getImage(deal.payment);
-
+            console.log(source);
             return (
               <tr
                 onMouseEnter={() => setDidHoverID(index)}
@@ -260,74 +261,6 @@ export const Tables = () => {
                   @ {new Date(deal.createdAt).toLocaleTimeString()}
                 </td>
                 <td>
-                  {selected._id === deal._id &&
-                  selected.updatedKey === "physician" ? (
-                    <div
-                      className="d-flex align-items-center"
-                      style={{ marginBottom: "-0.5rem" }}
-                    >
-                      <div style={{ width: "15rem" }}>
-                        <PickPhysician
-                          label="Physician"
-                          onClick={(value) =>
-                            setSelected({
-                              ...selected,
-                              newPhysician: value?.user?._id,
-                            })
-                          }
-                        />
-                      </div>
-                      {!formSubmitted ? (
-                        selected.physicianId !== selected.newPhysician && (
-                          <MDBIcon
-                            icon="check"
-                            className="mr-2 ml-2 cursor-pointer"
-                            title="Update Physician"
-                            onClick={() =>
-                              handleUpdate("physicianId", "newPhysician")
-                            }
-                            style={{ fontSize: "1rem", color: "blue" }}
-                          />
-                        )
-                      ) : (
-                        <MDBIcon
-                          icon="spinner"
-                          className="ml-2"
-                          pulse
-                          style={{
-                            color: "black",
-                            fontSize: "1rem",
-                            marginRight: "10px",
-                          }}
-                        />
-                      )}
-
-                      <MDBIcon
-                        icon="times"
-                        title="Close"
-                        className="cursor-pointer "
-                        onClick={() => setSelected({})}
-                        style={{ fontSize: "1rem", color: "red" }}
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <small className="mr-1 grey-text">Physician:</small>
-                      {deal?.physicianId?.fullName?.lname ? (
-                        <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
-                      ) : (
-                        <h6
-                          className="cursor-pointer"
-                          onClick={() =>
-                            setSelected({ ...deal, updatedKey: "physician" })
-                          }
-                        >
-                          N/A
-                        </h6>
-                      )}
-                    </div>
-                  )}
-
                   {selected?._id === deal?._id &&
                   selected.updatedKey === "source" ? (
                     <div
@@ -346,7 +279,7 @@ export const Tables = () => {
                         className="m-0 p-0 mt-3"
                         collections={sources.map(({ clients }) => ({
                           _id: clients._id,
-                          text: `${clients?.displayname?.toUpperCase()} ${clients?.name?.toUpperCase()}`,
+                          text: `${clients?.displayname?.toUpperCase()}`,
                         }))}
                         preValue={deal.source}
                         keys={"_id"}
@@ -382,13 +315,96 @@ export const Tables = () => {
                   ) : (
                     <div>
                       <small className="mr-1 grey-text">Source:</small>
-                      {source ? (
-                        <h6>{source}</h6>
+                      {sourceName ? (
+                        <h6>{sourceName}</h6>
                       ) : (
                         <h6
                           className="cursor-pointer"
                           onClick={() =>
                             setSelected({ ...deal, updatedKey: "source" })
+                          }
+                        >
+                          N/A
+                        </h6>
+                      )}
+                    </div>
+                  )}
+
+                  {selected._id === deal._id &&
+                  selected.updatedKey === "physician" ? (
+                    <Select
+                      label={"Source"}
+                      onChange={(value) =>
+                        setSelected({ ...selected, newSource: value })
+                      }
+                      whitelisted
+                      className="m-0 p-0 mt-3"
+                      collections={sources.map(({ clients }) => ({
+                        _id: clients._id,
+                        text: `${clients?.displayname?.toUpperCase()}`,
+                      }))}
+                      preValue={deal.source}
+                      keys={"_id"}
+                      values={"text"}
+                    />
+                  ) : (
+                    // <div
+                    //   className="d-flex align-items-center"
+                    //   style={{ marginBottom: "-0.5rem" }}
+                    // >
+                    //   <div style={{ width: "15rem" }}>
+                    //     <PickPhysician
+                    //       label="Physician"
+                    //       onClick={(value) =>
+                    //         setSelected({
+                    //           ...selected,
+                    //           newPhysician: value?.user?._id,
+                    //         })
+                    //       }
+                    //     />
+                    //   </div>
+                    //   {!formSubmitted ? (
+                    //     selected.physicianId !== selected.newPhysician && (
+                    //       <MDBIcon
+                    //         icon="check"
+                    //         className="mr-2 ml-2 cursor-pointer"
+                    //         title="Update Physician"
+                    //         onClick={() =>
+                    //           handleUpdate("physicianId", "newPhysician")
+                    //         }
+                    //         style={{ fontSize: "1rem", color: "blue" }}
+                    //       />
+                    //     )
+                    //   ) : (
+                    //     <MDBIcon
+                    //       icon="spinner"
+                    //       className="ml-2"
+                    //       pulse
+                    //       style={{
+                    //         color: "black",
+                    //         fontSize: "1rem",
+                    //         marginRight: "10px",
+                    //       }}
+                    //     />
+                    //   )}
+
+                    //   <MDBIcon
+                    //     icon="times"
+                    //     title="Close"
+                    //     className="cursor-pointer "
+                    //     onClick={() => setSelected({})}
+                    //     style={{ fontSize: "1rem", color: "red" }}
+                    //   />
+                    // </div>
+                    <div>
+                      <small className="mr-1 grey-text">Physician:</small>
+                      {deal?.physicianId?.fullName?.lname ? (
+                        <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
+                      ) : (
+                        <h6
+                          className="cursor-pointer"
+                          onClick={() =>
+                            setSelected({ ...deal, updatedKey: "physician" })
                           }
                         >
                           N/A
