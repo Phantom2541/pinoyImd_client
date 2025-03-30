@@ -17,7 +17,7 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import CashRegister from "./pos";
 import Patron from "./modal";
-import "./index.css";
+import "./style.css";
 import { useToasts } from "react-toast-notifications";
 import { fullNameSearch } from "../../../../../services/utilities";
 

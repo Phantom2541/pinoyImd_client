@@ -16,8 +16,9 @@ import {
 // import Search from "../../../../../../services/utilities/search";
 import { Categories } from "../../../../../../../services/fakeDb";
 
-export default function CashierMenu({ categoryIndex, handlePicker }) {
+export default function CashierMenu({ handlePicker }) {
   const [menus, setMenus] = useState([]),
+    { selected } = useSelector(({ deals }) => deals),
     [page, setPage] = useState([]),
     [totalPages, setTotalPages] = useState(),
     { collections, message, isSuccess, isLoading } = useSelector(
@@ -27,7 +28,11 @@ export default function CashierMenu({ categoryIndex, handlePicker }) {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  const { abbr, name } = Categories[categoryIndex];
+  const { abbr, name } = Categories.find(
+    ({ abbr }) => abbr === selected.category
+  );
+  console.log("categories", Categories);
+  console.log("selected", selected);
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -104,12 +109,15 @@ export default function CashierMenu({ categoryIndex, handlePicker }) {
             },
             {
               _key: abbr,
-              _format: (data) =>
+              _format: (data) => {
+                console.log("data", data);
+
                 data ? (
                   currency(data)
                 ) : (
                   <i>This item has no price for {name}.</i>
-                ),
+                );
+              },
             },
             {
               _key: abbr,

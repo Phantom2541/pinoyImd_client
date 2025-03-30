@@ -32,14 +32,9 @@ const _form = {
   privilege: 0,
 };
 
-export default function Patron({
-  show,
-  toggle,
-  selected,
-  willCreate,
-  searchKey,
-}) {
+export default function Patron({ show, toggle, willCreate, searchKey }) {
   const { token } = useSelector(({ auth }) => auth),
+    { selected } = useSelector(({ deals }) => deals),
     [form, setForm] = useState(_form),
     { addToast } = useToasts(),
     dispatch = useDispatch();
