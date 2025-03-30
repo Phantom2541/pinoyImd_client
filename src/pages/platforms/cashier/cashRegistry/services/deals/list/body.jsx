@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { capitalize } from "lodash";
+import { capitalize, get } from "lodash";
 import { MDBTable, MDBIcon, MDBBadge, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
   currency,
   fullName,
   getGenderIcon,
+  getPhysicianGenderIcon,
   paymentMethod,
 } from "../../../../../../../services/utilities";
 import { Categories } from "../../../../../../../services/fakeDb";
@@ -20,7 +21,7 @@ import { useToasts } from "react-toast-notifications";
 import { Select } from "../../../../../../../components/customizable";
 import { SetSOURCE } from "../../../../../../../services/redux/slices/assets/providers.js";
 import { SetPHYSICIANS } from "../../../../../../../services/redux/slices/assets/persons/physicians.js";
-import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician.jsx";
+import Swal from "sweetalert2";
 
 const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
@@ -80,14 +81,14 @@ const Tables = () => {
       })
     );
   };
-  const handleSource = (e) => {
-    const { value } = e.target;
-    dispatch(SetSOURCE(value));
-    const _physicians =
-      providers?.find((source) => source._id.toString() === value.toString())
-        ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
-    SetPHYSICIANS(_physicians); // Update the physicians list based on the filtered data
-  };
+  // const handleSource = (e) => {
+  //   const { value } = e.target;
+  //   dispatch(SetSOURCE(value));
+  //   const _physicians =
+  //     providers?.find((source) => source._id.toString() === value.toString())
+  //       ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
+  //   SetPHYSICIANS(_physicians); // Update the physicians list based on the filtered data
+  // };
   const generateStub = (deal) => ({
     ...deal,
     customer: {
@@ -101,24 +102,76 @@ const Tables = () => {
     cart: deal.cart,
   });
 
-  const handleUpdate = (updatedKey, newKey) => {
+  const handleUpdate = async (updatedKey, newKey, deal = {}) => {
+    const { physicianId = {} } = deal || {};
     //updated key, new key is the new value updated
     const { _id } = selected;
-    const oldValue = selected[updatedKey] || "";
+    const baseUpdateKey = updatedKey.split(".")[0];
+    const oldValue = get(selected, updatedKey) || "";
     const newValue = selected[newKey] || "";
-
     if (oldValue.toLowerCase() === newValue.toLowerCase()) {
       setSelected({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
+    var physicianIsReset = false;
+
+    if (baseUpdateKey === "source" && oldValue !== newValue && physicianId) {
+      const affiliatedOfNewSource = getPhysicians(newValue);
+      const physicianIsExist = affiliatedOfNewSource.some(
+        ({ value }) => value === physicianId._id
+      );
+
+      if (!physicianIsExist) {
+        const result = await Swal.fire({
+          icon: "warning",
+          title: "Physician Not Affiliated",
+          text: "The physician in this deal is not affiliated with the newly selected source. If you confirm, the physician will be removed.",
+          showCancelButton: true,
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
+        });
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        physicianIsReset = true;
+      }
+    }
+
     dispatch(
       UPDATE_INFO({
-        data: { _id, [updatedKey]: selected[newKey], updatedKey },
+        data: {
+          _id,
+          [baseUpdateKey]: selected[newKey],
+          updatedKey: baseUpdateKey,
+          ...(physicianIsReset && { physicianId: "", resetPhysician: true }),
+        },
         token,
       })
     );
+  };
+
+  const getPhysicians = (sourceID) => {
+    const physicians =
+      [...providers].find(({ clients }) => clients._id === sourceID)?.clients
+        ?.affiliated || [];
+
+    const physiciansFormmated =
+      physicians?.length > 0
+        ? [...physicians]?.map(({ user }) => ({
+            value: user._id,
+            text: (
+              <>
+                {getPhysicianGenderIcon(user?.isMale)}
+                {fullName(user?.fullName)}
+              </>
+            ),
+          }))
+        : [];
+    return physiciansFormmated;
   };
 
   return (
@@ -208,74 +261,6 @@ const Tables = () => {
                   @ {new Date(deal?.createdAt).toLocaleTimeString()}
                 </td>
                 <td>
-                  {selected._id === deal._id &&
-                  selected.updatedKey === "physician" ? (
-                    <div
-                      className="d-flex align-items-center"
-                      style={{ marginBottom: "-0.5rem" }}
-                    >
-                      <div style={{ width: "15rem" }}>
-                        <PickPhysician
-                          label="Physician"
-                          onClick={(value) =>
-                            setSelected({
-                              ...selected,
-                              newPhysician: value?.user?._id,
-                            })
-                          }
-                        />
-                      </div>
-                      {!formSubmitted ? (
-                        selected.physicianId !== selected.newPhysician && (
-                          <MDBIcon
-                            icon="check"
-                            className="mr-2 ml-2 cursor-pointer"
-                            title="Update Physician"
-                            onClick={() =>
-                              handleUpdate("physicianId", "newPhysician")
-                            }
-                            style={{ fontSize: "1rem", color: "blue" }}
-                          />
-                        )
-                      ) : (
-                        <MDBIcon
-                          icon="spinner"
-                          className="ml-2"
-                          pulse
-                          style={{
-                            color: "black",
-                            fontSize: "1rem",
-                            marginRight: "10px",
-                          }}
-                        />
-                      )}
-
-                      <MDBIcon
-                        icon="times"
-                        title="Close"
-                        className="cursor-pointer "
-                        onClick={() => setSelected({})}
-                        style={{ fontSize: "1rem", color: "red" }}
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <small className="mr-1 grey-text">Physician:</small>
-                      {deal?.physicianId?.fullName?.lname ? (
-                        <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
-                      ) : (
-                        <h6
-                          className="cursor-pointer"
-                          onClick={() =>
-                            setSelected({ ...deal, updatedKey: "physician" })
-                          }
-                        >
-                          N/A
-                        </h6>
-                      )}
-                    </div>
-                  )}
-
                   {selected?._id === deal?._id &&
                   selected.updatedKey === "source" ? (
                     <div
@@ -290,14 +275,16 @@ const Tables = () => {
                         onChange={(value) =>
                           setSelected({ ...selected, newSource: value })
                         }
-                        handleCheck={() => handleUpdate("source", "newSource")}
+                        handleCheck={() =>
+                          handleUpdate("source._id", "newSource", deal)
+                        }
                         handleClose={() => setSelected({})}
                         whitelisted
                         soloUpdate
                         className="m-0 p-0 mt-3"
                         collections={providers.map(({ clients }) => ({
                           _id: clients._id,
-                          text: `${clients?.displayname?.toUpperCase()} ${clients?.name?.toUpperCase()}`,
+                          text: `${clients?.displayname?.toUpperCase()}`,
                         }))}
                         preValue={source?._id}
                         formSubmitted={formSubmitted}
@@ -316,6 +303,54 @@ const Tables = () => {
                       >
                         {source?.displayname || "N/A"}
                       </h6>
+                    </div>
+                  )}
+
+                  {selected._id === deal._id &&
+                  selected.updatedKey === "physician" ? (
+                    <div
+                      className="d-flex align-items-center"
+                      style={{ marginBottom: "-0.5rem", width: "19rem" }}
+                    >
+                      <Select
+                        label={"Physician"}
+                        onChange={(value) =>
+                          setSelected({ ...selected, newPhysician: value })
+                        }
+                        handleCheck={() =>
+                          handleUpdate("physicianId._id", "newPhysician")
+                        }
+                        handleClose={() => setSelected({})}
+                        whitelisted
+                        soloUpdate
+                        className="m-0 p-0 mt-3"
+                        collections={getPhysicians(source._id)}
+                        preValue={deal?.physicianId?._id}
+                        formSubmitted={formSubmitted}
+                        keys={"value"}
+                        values={"text"}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => {
+                        if (!deal?.source)
+                          return addToast(
+                            "Please add a source before adding a physician.",
+                            {
+                              appearance: "warning",
+                            }
+                          );
+                        setSelected({ ...deal, updatedKey: "physician" });
+                      }}
+                    >
+                      <small className="mr-1 grey-text">Physician:</small>
+                      {deal?.physicianId?.fullName?.lname ? (
+                        <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
+                      ) : (
+                        <h6 className="cursor-pointer">N/A</h6>
+                      )}
                     </div>
                   )}
                 </td>

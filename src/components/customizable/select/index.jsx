@@ -145,12 +145,12 @@ export default function Select({
   };
 
   return (
-    <div className="d-flex align-items-center">
+    <div className="d-flex align-items-center w-100">
       <MDBSelect
         label={!hideLabel && label}
         getValue={handleSelection}
         key={JSON.stringify(preValues)}
-        className={className}
+        className={`${className} w-100`}
         multiple={multiple}
         color="primary"
       >
@@ -173,7 +173,7 @@ export default function Select({
                 "color: orange; font-weight: bold;",
                 "Ensure 'values' prop is correctly provided."
               );
-              value = "Invalid Value";
+              // value = "Invalid Value";
             }
 
             return (

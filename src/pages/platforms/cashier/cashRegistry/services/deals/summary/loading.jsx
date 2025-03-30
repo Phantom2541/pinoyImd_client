@@ -9,13 +9,14 @@ const SummaryLoading = ({ rowCount = 5 }) => {
           key={index}
           type="flash"
           infinite
-          className="mt-2"
-          delay={`${2 + index}00ms`}
-          duration="3000ms"
+          className="mt-3"
+          delay={`${5 + index}00ms`}
+          duration="5000ms"
         >
           <MDBProgress
             color="light"
             value={3000}
+            animated
             id="progress-table"
             key={index}
           ></MDBProgress>

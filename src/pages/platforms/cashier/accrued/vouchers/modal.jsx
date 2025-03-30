@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -6,116 +6,127 @@ import {
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBRow,
-  MDBCol,
   MDBInput,
+  MDBTypography,
 } from "mdbreact";
-import { UPDATE } from "../../../../../services/redux/slices/assets/persons/users";
+import {
+  SAVE,
+  UPDATE,
+} from "../../../../../../services/redux/slices/liability/assurances";
+
+import { Services } from "./../../../../../../services/fakeDb";
+
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-// declare your expected items
-const _form = {
-  fullName: {},
-  prc: {},
-};
 
-export default function Modal({ show, toggle, selected, willCreate, users }) {
-  const { isLoading } = useSelector(({ personnels }) => personnels),
-    { token } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(_form),
+export default function Modal() {
+  const { show, toggle, selected, willCreate, isLoading } = useSelector(
+      ({ assurances }) => assurances
+    ),
+    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  // Handle update function
   const handleUpdate = () => {
     toggle();
-    const data = {
-      fullName: {
-        fname: selected.user?.fullName.fname,
-        mname: selected.user?.fullName.mname,
-        lname: selected.user?.fullName.lname,
-        suffix: selected.user?.fullName.suffix,
-        postnominal: form.postnominal,
-      },
-      prc: {
-        id: form.id,
-        from: form.from,
-        to: form.to,
-      },
-    };
-    //console.log("data", data);
-    // check if object has changed
-    if (isEqual(form, selected))
+
+    // Check if object has changed
+    if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
+    }
 
     dispatch(
       UPDATE({
-        data: { ...data, _id: selected.user?._id },
+        data: { ...form, _id: selected._id },
         token,
       })
     );
+  };
 
-    setForm(_form);
+  // Handle create function
+  const handleCreate = () => {
+    dispatch(
+      SAVE({
+        data: form,
+        token,
+      })
+    ).then(() => toggle()); // Close modal after successful save
   };
+
+  // Handle form submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (willCreate) {
+      return handleCreate();
+    }
+
+    handleUpdate();
+  };
+
+  // Handle change sa inputs
   const handleChange = (key, value) => {
-    setForm({ ...form, [key]: value });
+    setForm({
+      ...form,
+      [key]: Number(value),
+      userId: auth._id,
+      branchId: activePlatform.branchId,
+    });
   };
+
+  // Fix: Return correct form value
+  const handleValue = (key) => form[key] || "";
+
+  // Handle modal close
+  const handleClose = () => toggle();
+
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
+    <MDBModal isOpen={show} toggle={toggle} backdrop size="sm">
       <MDBModalHeader
-        toggle={toggle}
+        toggle={handleClose}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} {selected.name || "a Staff"}
+        {willCreate ? "Create" : "Update"} Controls
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
-        <form onSubmit={handleUpdate}>
-          <MDBRow>
-            <MDBCol md="12">
-              <MDBInput
-                type="text"
-                label="Post nominal"
-                value={users.fullName?.postnominal}
-                onChange={(e) => handleChange("postnominal", e.target.value)}
-                required
-                icon="user-shield"
-              />
-            </MDBCol>
-          </MDBRow>
-          <MDBRow>
-            <MDBCol md="12">
-              <MDBInput
-                type="text"
-                label="Lisences #"
-                value={users.prc?.id}
-                onChange={(e) => handleChange("id", e.target.value)}
-                required
-                icon="user-shield"
-              />
-            </MDBCol>
-            <MDBCol md="12">
-              <MDBInput
-                type="date"
-                label="Lisences from"
-                value={users.prc?.id}
-                onChange={(e) => handleChange("from", e.target.value)}
-                required
-                icon="user-shield"
-              />
-            </MDBCol>
-            <MDBCol md="12">
-              <MDBInput
-                type="date"
-                label="Lisences to"
-                value={users.prc?.id}
-                onChange={(e) => handleChange("to", e.target.value)}
-                required
-                icon="user-shield"
-              />
-            </MDBCol>
-          </MDBRow>
+        <form onSubmit={handleSubmit}>
+          <MDBTypography
+            tag="h4"
+            variant="h4-responsive"
+            className="text-center"
+          >
+            {Services.getName(selected?.serviceId)}
+          </MDBTypography>
+
+          {/* Input fields */}
+          <MDBInput
+            label="Abnormal"
+            type="number"
+            value={handleValue("abnormal")}
+            required
+            onChange={(e) => handleChange("abnormal", e.target.value)}
+          />
+          <MDBInput
+            label="High"
+            type="number"
+            value={handleValue("high")}
+            required
+            onChange={(e) => handleChange("high", e.target.value)}
+          />
+          <MDBInput
+            label="Normal"
+            type="number"
+            value={handleValue("normal")}
+            required
+            onChange={(e) => handleChange("normal", e.target.value)}
+          />
+
+          {/* Submit button */}
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"
@@ -124,7 +135,7 @@ export default function Modal({ show, toggle, selected, willCreate, users }) {
               className="mb-2"
               rounded
             >
-              {willCreate ? "submit" : "update"}
+              {willCreate ? "Submit" : "Update"}
             </MDBBtn>
           </div>
         </form>
