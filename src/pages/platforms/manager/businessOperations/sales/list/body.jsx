@@ -354,6 +354,7 @@ export const Tables = () => {
                     </div>
                   ) : (
                     <div
+                      className="cursor-pointer"
                       onClick={() => {
                         if (!deal?.source)
                           return addToast(
