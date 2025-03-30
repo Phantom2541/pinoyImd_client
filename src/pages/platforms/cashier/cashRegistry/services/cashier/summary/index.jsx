@@ -54,7 +54,7 @@ export default function Summary() {
     if (loading) return; // Prevent multiple clicks
     setLoading(true); // Disable button while saving
 
-    const _data = {
+    let data = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
       authorizedBy: authorizedBy || undefined,
@@ -114,7 +114,7 @@ export default function Summary() {
         })
       );
 
-    const data = removeUndefinedValues(_data);
+    data = removeUndefinedValues(data);
 
     try {
       await dispatch(SAVE({ token, data })).unwrap(); // Ensure save completes before proceeding
