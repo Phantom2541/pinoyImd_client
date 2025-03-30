@@ -64,7 +64,7 @@ const individual = (menu, category, privilege, membership) => {
 
 const computeGD = (menu, categoryIndex, privilege, membership) => {
   const category = Categories[categoryIndex] || {}; // Ensure category is always an object
-  console.log("category", category);
+  // console.log("category", category);
 
   const abbr = category.abbr || ""; // Fallback to an empty string if undefined
 
