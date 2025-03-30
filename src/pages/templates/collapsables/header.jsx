@@ -11,7 +11,7 @@ import {
 
 const Header = () => {
   const { maxPage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ services }) => services),
+    { filtered } = useSelector(({ services }) => services),
     [component, setComponent] = useState(""),
     dispatch = useDispatch();
 
@@ -35,7 +35,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Services
+          {filtered.length} Services
         </span>
       </div>
       <div>
@@ -43,7 +43,7 @@ const Header = () => {
           <Select
             className="m-0 p-0  mr-4 "
             value={component}
-            onChange={(value) => handleComponent(value)}
+            onChange={(value) => handleComponent(value || "LAB")}
             inputClassName="m-0 p-0 text-white"
             preValue={component}
             collections={Templates.getComponents("LAB")}
