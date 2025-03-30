@@ -23,13 +23,11 @@ export default function CashRegister() {
   const [didCheckout, setDidCheckout] = useState(false),
     [categoryIndex, setCategoryIndex] = useState(0),
     [privilegeIndex, setPrivilegeIndex] = useState(0),
-    [sourceVendor, setSourceVendor] = useState(""),
-    [physicianId, setPhysicianId] = useState(""),
     [gross, setGross] = useState(0),
     [discount, setDiscount] = useState(0),
     [cart, setCart] = useState([]),
     { message, isSuccess } = useSelector(({ sales }) => sales),
-    { selected: patient, showModal: show } = useSelector(({ deals }) => deals),
+    { selected: deals, showModal: show } = useSelector(({ deals }) => deals),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -45,8 +43,7 @@ export default function CashRegister() {
   }, [isSuccess, message, addToast, dispatch]);
 
   useEffect(() => {
-    const { category, privilege, soldCart = [] } = patient;
-
+    const { category, privilege, soldCart = [] } = deals;
     if (!!soldCart.length) setCart(soldCart);
 
     if (category)
@@ -56,29 +53,38 @@ export default function CashRegister() {
           : Categories.findIndex(({ abbr }) => abbr === category)
       );
     if (privilege) setPrivilegeIndex(privilege);
-  }, [patient]);
+  }, [deals]);
 
   useEffect(() => {
-    cart.map((menu) => {
+    let totalGross = 0;
+    let totalDiscount = 0;
+
+    cart.forEach((menu) => {
       const { gross: compGross = 0, discount = 0 } = computeGD(
         menu,
         categoryIndex,
         privilegeIndex
       );
-      setGross(compGross);
-      setDiscount(discount);
+      totalGross += compGross;
+      totalDiscount += discount;
     });
+
+    setGross(totalGross);
+    setDiscount(totalDiscount);
   }, [cart, categoryIndex, privilegeIndex]);
 
   const toggleCheckout = () => setDidCheckout(!didCheckout);
 
-  const handlePicker = (selected) =>
+  const handlePicker = (selected) => {
+    console.log("handlePicker selected", selected);
+
     setCart((prev) =>
       removeRedundantPackages(
         { ...selected, referenceId: selected._id, isNew: true },
         prev
       )
     );
+  };
 
   return (
     <MDBModal isOpen={show} toggle={SetMODAL} size="fluid">
@@ -91,36 +97,25 @@ export default function CashRegister() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <MDBRow>
-          {!didCheckout && (
-            <CashierMenu
-              handlePicker={handlePicker}
-              categoryIndex={categoryIndex}
-            />
-          )}
+          {!didCheckout && <CashierMenu handlePicker={handlePicker} />}
           <CashierPatient
-            setSourceVendor={setSourceVendor}
             gross={gross}
             discount={discount}
             cart={cart}
             setCart={setCart}
             categoryIndex={categoryIndex}
-            patient={patient}
+            patient={deals}
             setCategoryIndex={setCategoryIndex}
             privilegeIndex={privilegeIndex}
             setPrivilegeIndex={setPrivilegeIndex}
-            setPhysicianId={setPhysicianId}
             didCheckout={didCheckout}
             toggleCheckout={toggleCheckout}
           />
           {didCheckout && (
             <CashierPayment
-              patient={patient}
+              Id
               cart={cart}
-              privilegeIndex={privilegeIndex}
-              sourceVendor={sourceVendor}
               toggleModal={SetMODAL}
-              physicianId={physicianId}
-              categoryIndex={categoryIndex}
               gross={gross}
               discount={discount}
             />

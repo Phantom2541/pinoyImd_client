@@ -71,9 +71,8 @@ const Tables = () => {
   const handleCashRegister = (selected) => {
     dispatch(
       SetSELECTED({
-        ...selected.customerId,
-        category: selected.category,
-        saleId: selected._id,
+        ...selected,
+        cart: [], // clean and transfer to soldcart for reference
         soldCart: selected.cart,
       })
     );
