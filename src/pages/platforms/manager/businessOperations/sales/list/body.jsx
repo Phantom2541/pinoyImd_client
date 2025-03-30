@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { capitalize } from "lodash";
+import { capitalize, get } from "lodash";
 import {
   currency,
   fullName,
@@ -115,7 +115,8 @@ export const Tables = () => {
   const handleUpdate = (updatedKey, newKey) => {
     //updated key, new key is the new value updated
     const { _id } = selected;
-    const oldValue = selected[updatedKey] || "";
+    const baseUpdateKey = updatedKey.split(".")[0]; //example source._id para malaman kung ano yung inupdate mmagiging source nalang yung output niyan
+    const oldValue = get(selected, updatedKey);
     const newValue = selected[newKey] || "";
 
     if (oldValue.toLowerCase() === newValue.toLowerCase()) {
@@ -126,7 +127,11 @@ export const Tables = () => {
     }
     dispatch(
       UPDATE_INFO({
-        data: { _id, [updatedKey]: selected[newKey], updatedKey },
+        data: {
+          _id,
+          [baseUpdateKey]: selected[newKey],
+          updatedKey: baseUpdateKey,
+        },
         token,
       })
     );
@@ -156,7 +161,6 @@ export const Tables = () => {
             ),
           }))
         : [];
-    console.log("physiciansFormmated", physiciansFormmated);
     return physiciansFormmated;
   };
 
@@ -301,8 +305,10 @@ export const Tables = () => {
                           _id: clients._id,
                           text: `${clients?.displayname?.toUpperCase()}`,
                         }))}
-                        preValue={deal.source}
-                        handleCheck={() => handleUpdate("source", "newSource")}
+                        preValue={deal?.source?._id}
+                        handleCheck={() =>
+                          handleUpdate("source._id", "newSource")
+                        }
                         handleClose={() => setSelected({})}
                         soloUpdate
                         formSubmitted={formSubmitted}
@@ -316,9 +322,7 @@ export const Tables = () => {
                       <h6
                         className="cursor-pointer"
                         onClick={() =>
-                          setSelected(
-                            sourceName ? {} : { ...deal, updatedKey: "source" }
-                          )
+                          setSelected({ ...deal, updatedKey: "source" })
                         }
                       >
                         {sourceName || "N/A"}
@@ -337,38 +341,35 @@ export const Tables = () => {
                         whitelisted
                         className="m-0 p-0 mt-3"
                         collections={getPhysicians(deal?.source?._id)}
-                        preValue={deal.physicianId}
+                        preValue={deal.physicianId?._id}
                         formSubmitted={formSubmitted}
                         keys={"value"}
                         values={"text"}
                         soloUpdate
                         handleClose={() => setSelected({})}
                         handleCheck={() =>
-                          handleUpdate("physicianId", "newPhysician")
+                          handleUpdate("physicianId._id", "newPhysician")
                         }
                       />
                     </div>
                   ) : (
-                    <div>
+                    <div
+                      onClick={() => {
+                        if (!deal?.source)
+                          return addToast(
+                            "Please add a source before adding a physician.",
+                            {
+                              appearance: "warning",
+                            }
+                          );
+                        setSelected({ ...deal, updatedKey: "physician" });
+                      }}
+                    >
                       <small className="mr-1 grey-text">Physician:</small>
                       {deal?.physicianId?.fullName?.lname ? (
                         <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
                       ) : (
-                        <h6
-                          className="cursor-pointer"
-                          onClick={() => {
-                            if (!deal?.source)
-                              return addToast(
-                                "Please add a source before adding a physician.",
-                                {
-                                  appearance: "warning",
-                                }
-                              );
-                            setSelected({ ...deal, updatedKey: "physician" });
-                          }}
-                        >
-                          N/A
-                        </h6>
+                        <h6 className="cursor-pointer">N/A</h6>
                       )}
                     </div>
                   )}
