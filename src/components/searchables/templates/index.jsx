@@ -2,7 +2,7 @@ import React from "react";
 import { Templates as templates } from "./../../../services/fakeDb";
 
 const Templates = ({ setTemplate }) => {
-  const template = templates.collections.find(
+  const template = templates?.collections?.find(
     ({ department }) => department === "LAB"
   );
 

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Select } from "../../../components/customizable";
-import { Templates } from "../../../services/fakeDb";
-import { SearchServices as Services } from "../../../components/searchables";
+import { Templates, Services } from "../../../services/fakeDb";
+import { SearchServices } from "../../../components/searchables";
 import {
   SetSERVICES,
   SetByTEMPLATES,
@@ -17,15 +17,16 @@ const Header = () => {
 
   //initial values
   useEffect(() => {
-    dispatch(SetSERVICES({ collections: Services.collections, maxPage }));
+    dispatch(SetSERVICES({ collections: Services?.collections, maxPage }));
   }, [dispatch, maxPage]);
 
   const handleComponent = (value) => {
     setComponent(value);
-
     const template = Templates.getComponentIndex(value);
     dispatch(SetByTEMPLATES(template));
   };
+
+  console.log("templates", Templates.getComponents("LAB"));
 
   return (
     <MDBView
@@ -40,12 +41,12 @@ const Header = () => {
       <div>
         <div className="text-right d-flex items-center">
           <Select
-            className="m-0 p-0 calendar mr-4"
+            className="m-0 p-0  mr-4 "
             value={component}
             onChange={(value) => handleComponent(value)}
-            inputClassName="m-0 p-0"
+            inputClassName="m-0 p-0 text-white"
             preValue={component}
-            choices={Templates.getComponents("LAB")}
+            collections={Templates.getComponents("LAB")}
           />
           {/* <Services template={template} setService={setService} /> */}
         </div>
