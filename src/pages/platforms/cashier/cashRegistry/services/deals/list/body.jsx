@@ -21,7 +21,7 @@ import { useToasts } from "react-toast-notifications";
 import { Select } from "../../../../../../../components/customizable";
 import { SetSOURCE } from "../../../../../../../services/redux/slices/assets/providers.js";
 import { SetPHYSICIANS } from "../../../../../../../services/redux/slices/assets/persons/physicians.js";
-import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician.jsx";
+import Swal from "sweetalert2";
 
 const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
@@ -82,14 +82,14 @@ const Tables = () => {
       })
     );
   };
-  const handleSource = (e) => {
-    const { value } = e.target;
-    dispatch(SetSOURCE(value));
-    const _physicians =
-      providers?.find((source) => source._id.toString() === value.toString())
-        ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
-    SetPHYSICIANS(_physicians); // Update the physicians list based on the filtered data
-  };
+  // const handleSource = (e) => {
+  //   const { value } = e.target;
+  //   dispatch(SetSOURCE(value));
+  //   const _physicians =
+  //     providers?.find((source) => source._id.toString() === value.toString())
+  //       ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
+  //   SetPHYSICIANS(_physicians); // Update the physicians list based on the filtered data
+  // };
   const generateStub = (deal) => ({
     ...deal,
     customer: {
@@ -103,25 +103,52 @@ const Tables = () => {
     cart: deal.cart,
   });
 
-  const handleUpdate = (updatedKey, newKey) => {
+  const handleUpdate = async (updatedKey, newKey, deal = {}) => {
+    const { physicianId = {} } = deal || {};
     //updated key, new key is the new value updated
     const { _id } = selected;
     const baseUpdateKey = updatedKey.split(".")[0];
     const oldValue = get(selected, updatedKey) || "";
     const newValue = selected[newKey] || "";
-
     if (oldValue.toLowerCase() === newValue.toLowerCase()) {
       setSelected({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
+    var physicianIsReset = false;
+
+    if (baseUpdateKey === "source" && oldValue !== newValue && physicianId) {
+      const affiliatedOfNewSource = getPhysicians(newValue);
+      const physicianIsExist = affiliatedOfNewSource.some(
+        ({ value }) => value === physicianId._id
+      );
+
+      if (!physicianIsExist) {
+        const result = await Swal.fire({
+          icon: "warning",
+          title: "Physician Not Affiliated",
+          text: "The physician in this deal is not affiliated with the newly selected source. If you confirm, the physician will be removed.",
+          showCancelButton: true,
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
+        });
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        physicianIsReset = true;
+      }
+    }
+
     dispatch(
       UPDATE_INFO({
         data: {
           _id,
           [baseUpdateKey]: selected[newKey],
           updatedKey: baseUpdateKey,
+          ...(physicianIsReset && { physicianId: "", resetPhysician: true }),
         },
         token,
       })
@@ -250,7 +277,7 @@ const Tables = () => {
                           setSelected({ ...selected, newSource: value })
                         }
                         handleCheck={() =>
-                          handleUpdate("source._id", "newSource")
+                          handleUpdate("source._id", "newSource", deal)
                         }
                         handleClose={() => setSelected({})}
                         whitelisted

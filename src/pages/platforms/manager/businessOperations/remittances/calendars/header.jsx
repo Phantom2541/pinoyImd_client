@@ -33,8 +33,6 @@ const Header = () => {
 
   useEffect(() => {
     if (remittances) {
-      console.log("remittances", remittances);
-
       const totalRemitted = remittances
         .filter((item) => !item.deleted)
         .reduce((acc, item) => acc + (item?.closing?.sum || 0), 0);

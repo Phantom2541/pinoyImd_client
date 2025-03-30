@@ -112,30 +112,59 @@ export const Tables = () => {
     dispatch(SetREVERT(deal));
   };
 
-  const handleUpdate = (updatedKey, newKey) => {
-    //updated key, new key is the new value updated
+  const handleUpdate = async (updatedKey, newKey, deal = {}) => {
+    const { physicianId = {} } = deal || {};
     const { _id } = selected;
-    const baseUpdateKey = updatedKey.split(".")[0]; //example source._id para malaman kung ano yung inupdate mmagiging source nalang yung output niyan
+    const baseUpdateKey = updatedKey.split(".")[0];
     const oldValue = get(selected, updatedKey);
     const newValue = selected[newKey] || "";
 
-    if (oldValue.toLowerCase() === newValue.toLowerCase()) {
+    if (oldValue?.toLowerCase() === newValue?.toLowerCase()) {
       setSelected({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
+
+    var physicianIsReset = false;
+
+    if (baseUpdateKey === "source" && oldValue !== newValue && physicianId) {
+      const affiliatedOfNewSource = getPhysicians(newValue);
+      const physicianIsExist = affiliatedOfNewSource.some(
+        ({ value }) => value === physicianId._id
+      );
+
+      if (!physicianIsExist) {
+        const result = await Swal.fire({
+          icon: "warning",
+          title: "Physician Not Affiliated",
+          text: "The physician in this deal is not affiliated with the newly selected source. If you confirm, the physician will be removed.",
+          showCancelButton: true,
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
+        });
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        physicianIsReset = true;
+      }
+    }
+
     dispatch(
       UPDATE_INFO({
         data: {
           _id,
           [baseUpdateKey]: selected[newKey],
           updatedKey: baseUpdateKey,
+          ...(physicianIsReset && { physicianId: "", resetPhysician: true }),
         },
         token,
       })
     );
   };
+
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -307,7 +336,7 @@ export const Tables = () => {
                         }))}
                         preValue={deal?.source?._id}
                         handleCheck={() =>
-                          handleUpdate("source._id", "newSource")
+                          handleUpdate("source._id", "newSource", deal)
                         }
                         handleClose={() => setSelected({})}
                         soloUpdate
