@@ -5,6 +5,7 @@ import {
   currency,
   fullName,
   getGenderIcon,
+  getPhysicianGenderIcon,
   paymentMethod,
 } from "./../../../../../../services/utilities";
 import { Categories } from "./../../../../../../services/fakeDb";
@@ -138,6 +139,27 @@ export const Tables = () => {
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
+  const getPhysicians = (sourceID) => {
+    const physicians =
+      [...sources].find(({ clients }) => clients._id === sourceID)?.clients
+        ?.affiliated || [];
+
+    const physiciansFormmated =
+      physicians?.length > 0
+        ? [...physicians]?.map(({ user }) => ({
+            value: user._id,
+            text: (
+              <>
+                {getPhysicianGenderIcon(user?.isMale)}
+                {fullName(user?.fullName)}
+              </>
+            ),
+          }))
+        : [];
+    console.log("physiciansFormmated", physiciansFormmated);
+    return physiciansFormmated;
+  };
+
   return (
     <MDBCardBody>
       <div
@@ -169,13 +191,11 @@ export const Tables = () => {
         </thead>
         <tbody>
           {paginatedData?.map((deal, index) => {
-            const { source } = deal;
             const isDeleted = !!deal.deletedAt;
             const isDiscounted = deal.discount > 0;
             const isHover = index === didHoverID;
-            const sourceName = deal.source?.companyName || deal.source?.name;
+            const sourceName = deal.source?.displayname || deal.source?.name;
             const { img, style, text } = paymentMethod.getImage(deal.payment);
-            console.log(source);
             return (
               <tr
                 onMouseEnter={() => setDidHoverID(index)}
@@ -282,120 +302,53 @@ export const Tables = () => {
                           text: `${clients?.displayname?.toUpperCase()}`,
                         }))}
                         preValue={deal.source}
+                        handleCheck={() => handleUpdate("source", "newSource")}
+                        handleClose={() => setSelected({})}
+                        soloUpdate
+                        formSubmitted={formSubmitted}
                         keys={"_id"}
                         values={"text"}
-                      />
-                      {!formSubmitted ? (
-                        <MDBIcon
-                          icon="check"
-                          className="mr-2 ml-2 cursor-pointer"
-                          onClick={() => handleUpdate("source", "newSource")}
-                          style={{ fontSize: "1rem", color: "blue" }}
-                        />
-                      ) : (
-                        <MDBIcon
-                          icon="spinner"
-                          className="ml-2"
-                          pulse
-                          style={{
-                            color: "black",
-                            fontSize: "1rem",
-                            marginRight: "10px",
-                          }}
-                        />
-                      )}
-
-                      <MDBIcon
-                        icon="times"
-                        className="cursor-pointer "
-                        onClick={() => setSelected({})}
-                        style={{ fontSize: "1rem", color: "red" }}
                       />
                     </div>
                   ) : (
                     <div>
                       <small className="mr-1 grey-text">Source:</small>
-                      {sourceName ? (
-                        <h6>{sourceName}</h6>
-                      ) : (
-                        <h6
-                          className="cursor-pointer"
-                          onClick={() =>
-                            setSelected({ ...deal, updatedKey: "source" })
-                          }
-                        >
-                          N/A
-                        </h6>
-                      )}
+                      <h6
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setSelected(
+                            sourceName ? {} : { ...deal, updatedKey: "source" }
+                          )
+                        }
+                      >
+                        {sourceName || "N/A"}
+                      </h6>
                     </div>
                   )}
 
                   {selected._id === deal._id &&
                   selected.updatedKey === "physician" ? (
-                    <Select
-                      label={"Source"}
-                      onChange={(value) =>
-                        setSelected({ ...selected, newSource: value })
-                      }
-                      whitelisted
-                      className="m-0 p-0 mt-3"
-                      collections={sources.map(({ clients }) => ({
-                        _id: clients._id,
-                        text: `${clients?.displayname?.toUpperCase()}`,
-                      }))}
-                      preValue={deal.source}
-                      keys={"_id"}
-                      values={"text"}
-                    />
+                    <div style={{ width: "19rem" }}>
+                      <Select
+                        label={"Physician"}
+                        onChange={(value) =>
+                          setSelected({ ...selected, newPhysician: value })
+                        }
+                        whitelisted
+                        className="m-0 p-0 mt-3"
+                        collections={getPhysicians(deal?.source?._id)}
+                        preValue={deal.physicianId}
+                        formSubmitted={formSubmitted}
+                        keys={"value"}
+                        values={"text"}
+                        soloUpdate
+                        handleClose={() => setSelected({})}
+                        handleCheck={() =>
+                          handleUpdate("physicianId", "newPhysician")
+                        }
+                      />
+                    </div>
                   ) : (
-                    // <div
-                    //   className="d-flex align-items-center"
-                    //   style={{ marginBottom: "-0.5rem" }}
-                    // >
-                    //   <div style={{ width: "15rem" }}>
-                    //     <PickPhysician
-                    //       label="Physician"
-                    //       onClick={(value) =>
-                    //         setSelected({
-                    //           ...selected,
-                    //           newPhysician: value?.user?._id,
-                    //         })
-                    //       }
-                    //     />
-                    //   </div>
-                    //   {!formSubmitted ? (
-                    //     selected.physicianId !== selected.newPhysician && (
-                    //       <MDBIcon
-                    //         icon="check"
-                    //         className="mr-2 ml-2 cursor-pointer"
-                    //         title="Update Physician"
-                    //         onClick={() =>
-                    //           handleUpdate("physicianId", "newPhysician")
-                    //         }
-                    //         style={{ fontSize: "1rem", color: "blue" }}
-                    //       />
-                    //     )
-                    //   ) : (
-                    //     <MDBIcon
-                    //       icon="spinner"
-                    //       className="ml-2"
-                    //       pulse
-                    //       style={{
-                    //         color: "black",
-                    //         fontSize: "1rem",
-                    //         marginRight: "10px",
-                    //       }}
-                    //     />
-                    //   )}
-
-                    //   <MDBIcon
-                    //     icon="times"
-                    //     title="Close"
-                    //     className="cursor-pointer "
-                    //     onClick={() => setSelected({})}
-                    //     style={{ fontSize: "1rem", color: "red" }}
-                    //   />
-                    // </div>
                     <div>
                       <small className="mr-1 grey-text">Physician:</small>
                       {deal?.physicianId?.fullName?.lname ? (
@@ -403,9 +356,16 @@ export const Tables = () => {
                       ) : (
                         <h6
                           className="cursor-pointer"
-                          onClick={() =>
-                            setSelected({ ...deal, updatedKey: "physician" })
-                          }
+                          onClick={() => {
+                            if (!deal?.source)
+                              return addToast(
+                                "Please add a source before adding a physician.",
+                                {
+                                  appearance: "warning",
+                                }
+                              );
+                            setSelected({ ...deal, updatedKey: "physician" });
+                          }}
                         >
                           N/A
                         </h6>
