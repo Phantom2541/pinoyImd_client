@@ -59,7 +59,7 @@ export default function MenuCollapse() {
         appearance: isSuccess ? "success" : "error",
       });
     }
-    return () => dispatch(RESET());
+    // return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
 
   useEffect(() => {

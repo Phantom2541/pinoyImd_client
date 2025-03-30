@@ -110,13 +110,9 @@ export default function CashierMenu({ handlePicker }) {
             {
               _key: abbr,
               _format: (data) => {
-                console.log("data", data);
-
-                data ? (
-                  currency(data)
-                ) : (
-                  <i>This item has no price for {name}.</i>
-                );
+                return data
+                  ? currency(data)
+                  : `This item has no price for ${name}.`;
               },
             },
             {
