@@ -16,3 +16,7 @@ select.custom-select-disabled {
 .custom-select-disabled input[type="checkbox"]:checked + label::before {
   opacity: 1 !important;
 }
+
+.selectSearchInput {
+  color: black !important;
+}

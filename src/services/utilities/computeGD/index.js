@@ -3,7 +3,9 @@ import { Categories, Memberships } from "../../fakeDb";
 const individual = (menu, category, privilege, membership) => {
   const { isPromo, promo = 0, discountable } = menu;
 
-  const _abbr = ["wi", "bp", "mc", "is"].includes(category) ? "opd" : category;
+  const _abbr = ["wi", "bp", "mc", "is", "sc"].includes(category)
+    ? "opd"
+    : category;
   const gross = menu[_abbr];
   let up = (gross * 80) / 100;
 
@@ -64,7 +66,7 @@ const individual = (menu, category, privilege, membership) => {
 
 const computeGD = (menu, categoryIndex, privilege, membership) => {
   const category = Categories[categoryIndex] || {}; // Ensure category is always an object
-  console.log("category", category);
+  // console.log("category", category);
 
   const abbr = category.abbr || ""; // Fallback to an empty string if undefined
 

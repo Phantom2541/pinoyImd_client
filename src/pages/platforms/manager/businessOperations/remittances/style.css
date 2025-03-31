@@ -1,0 +1,12 @@
+.summary-scrollbar::-webkit-scrollbar {
+  width: 7px;
+}
+
+.summary-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(200, 200, 200, 255);
+  border-radius: 4px;
+}
+
+.summary-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}

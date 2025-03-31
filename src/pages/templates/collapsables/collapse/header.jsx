@@ -5,7 +5,7 @@ import { Templates } from "../../../../services/fakeDb";
 const Header = ({ service, isOpen, textColor, index, setActiveId }) => {
   const { name, abbreviation, template } = service;
   return (
-    <label className={`d-flex justify-content-between ${textColor} `}>
+    <div className={`d-flex justify-content-between ${textColor} `}>
       {index + 1}. {name} {abbreviation}
       <div className="d-flex">
         <small className="mr-2 mt-1">
@@ -25,7 +25,7 @@ const Header = ({ service, isOpen, textColor, index, setActiveId }) => {
           />
         </MDBBtn>
       </div>
-    </label>
+    </div>
   );
 };
 

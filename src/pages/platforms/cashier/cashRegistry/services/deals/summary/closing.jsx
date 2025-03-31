@@ -10,6 +10,7 @@ import {
 import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import SummaryLoading from "./loading";
 import { Services } from "../../../../../../../services/fakeDb";
+import { useToasts } from "react-toast-notifications";
 
 export default function Vouchers() {
   const { token } = useSelector(({ auth }) => auth),
@@ -22,10 +23,11 @@ export default function Vouchers() {
     [serviceSave, setServiceSave] = useState([]), // Save Services (_id, count)
     [activePage, setActivePage] = useState("menus"),
     [breakdown, setBreakdown] = useState({}),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (collections.length > 0) {
+    if (collections.length > 0 && !isLoading) {
       const menuCountMap = {}; // { menuId: { _id, abbreviation, count } }
       const serviceCountMap = {}; // { serviceId: { _id, count } }
       const paymentSummary = {};
@@ -65,11 +67,15 @@ export default function Vouchers() {
         Object.values(serviceCountMap).map(({ _id, count }) => ({ _id, count }))
       ); // Save only service _id & count
     }
-  }, [collections]); // Re-run if collections change
+  }, [collections, isLoading]); // Re-run if collections change
 
   const handleActivePage = (page) =>
     setActivePage(activePage === page ? "close" : page);
   const handleSubmit = () => {
+    if (!selected) {
+      alert("Please set a floating cash first.");
+      return;
+    }
     const data = {
       _id: selected._id,
       census: {
@@ -81,7 +87,12 @@ export default function Vouchers() {
       // expenses: 735,
       gross: total,
     };
-    dispatch(CENSUS({ token, data }));
+
+    dispatch(CENSUS({ token, data })).then(() => {
+      addToast("End-of-Shift Summary saved successfully.", {
+        appearance: "success",
+      });
+    });
   };
 
   return (

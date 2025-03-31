@@ -5,7 +5,7 @@ import {
   UPDATE,
 } from "../../../../../services/redux/slices/assets/persons/applicants";
 import { MDBCard, MDBCardBody } from "mdbreact";
-import TopHeader from "../../../../../components/topHeader";
+import TopHeader from "../../../../../components/header/body";
 import Table from "./table";
 import Swal from "sweetalert2";
 import { fullName, globalSearch } from "../../../../../services/utilities";
@@ -35,7 +35,7 @@ const Applicants = () => {
     setApplicants(filteredApplicants);
   }, [category, collections]);
   //
-  const handleApprove = applicant => {
+  const handleApprove = (applicant) => {
     const { user } = applicant;
     Swal.fire({
       title: "Are you sure?",
@@ -45,7 +45,7 @@ const Applicants = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, approve it!",
-    }).then(result => {
+    }).then((result) => {
       if (result.isConfirmed) {
         dispatch(
           UPDATE({
@@ -63,7 +63,7 @@ const Applicants = () => {
     });
   };
 
-  const handleReject = applicant => {
+  const handleReject = (applicant) => {
     Swal.fire({
       title: "Enter your reason",
       input: "textarea",
@@ -72,13 +72,13 @@ const Applicants = () => {
       showCancelButton: true,
       reverseButtons: true,
       confirmButtonText: "Deny",
-      preConfirm: value => {
+      preConfirm: (value) => {
         if (!value) {
           Swal.showValidationMessage("Reason is required");
         }
         return value;
       },
-    }).then(result => {
+    }).then((result) => {
       if (result.isConfirmed) {
         const reason = result.value;
         dispatch(

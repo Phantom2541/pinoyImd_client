@@ -1,5 +1,5 @@
+import React, { useState, useEffect } from "react";
 import { MDBBtn } from "mdbreact";
-import React, { useState } from "react";
 import {
   capitalize,
   computeGD,
@@ -32,7 +32,7 @@ export default function Summary() {
       membership,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
-    [payment, setPayment] = useState(0),
+    [payment, setPayment] = useState("cash"),
     [cash, setCash] = useState(0),
     [loading, setLoading] = useState(false),
     { addToast } = useToasts(),
@@ -46,7 +46,7 @@ export default function Summary() {
     ),
     amount = gross - discount,
     { abbr = undefined } = Categories[category],
-    paymentOptions = Payments[abbr];
+    providedPaymentOptions = Payments[abbr];
 
   const handleCheckout = async (e) => {
     e.preventDefault();
@@ -54,7 +54,7 @@ export default function Summary() {
     if (loading) return; // Prevent multiple clicks
     setLoading(true); // Disable button while saving
 
-    const _data = {
+    let data = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
       authorizedBy: authorizedBy || undefined,
@@ -63,13 +63,13 @@ export default function Summary() {
       customerId: customer._id,
       cashierId: auth._id,
       category: category === 0 ? "wi" : abbr,
-      payment: paymentOptions[payment],
+      payment,
       cash,
       amount,
       discount,
       isPickup,
       department,
-      privilege: privilege,
+      privilege,
       customer,
       cashier: auth?.fullName,
       isPrint: true,
@@ -114,7 +114,7 @@ export default function Summary() {
         })
       );
 
-    const data = removeUndefinedValues(_data);
+    data = removeUndefinedValues(data);
 
     try {
       await dispatch(SAVE({ token, data })).unwrap(); // Ensure save completes before proceeding
@@ -158,10 +158,10 @@ export default function Summary() {
             <td className="p-0">
               <select
                 value={payment}
-                onChange={({ target }) => setPayment(Number(target.value))}
+                onChange={({ target }) => setPayment(target.value)}
               >
-                {paymentOptions?.map((payment, index) => (
-                  <option key={`${abbr}-${index}`} value={index}>
+                {providedPaymentOptions?.map((payment, index) => (
+                  <option key={`${abbr}-${index}`} value={payment}>
                     {capitalize(payment)}
                   </option>
                 ))}
@@ -170,15 +170,19 @@ export default function Summary() {
           </tr>
           <tr>
             <td colSpan="2">
-              <input
-                type="number"
-                min={amount}
-                value={cash}
-                onChange={({ target }) => setCash(Number(target.value))}
-                placeholder="Amount in Peso"
-                required={!membership}
-                name="amount"
-              />
+              {["cash", "downpayment"].includes(payment) ? (
+                <input
+                  type="number"
+                  min={amount}
+                  value={cash}
+                  onChange={({ target }) => setCash(Number(target.value))}
+                  placeholder="Amount in Peso"
+                  required
+                  name="amount"
+                />
+              ) : (
+                <span>No cash input needed</span>
+              )}
             </td>
           </tr>
           <tr>
@@ -208,7 +212,7 @@ export default function Summary() {
       </table>
       <MDBBtn
         type="submit"
-        // disabled={!patronPresent || !cart.length}
+        disabled={!customer || !cart.length}
         className="m-0 w-100 fw-bold mt-4"
         color="success"
       >

@@ -45,6 +45,18 @@ export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
+export const VOUCHERS = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
+  try {
+    return axioKit.universal(`${url}/vouchers`, token, key);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 export const CASHIER = createAsyncThunk(
   `${url}/cashier`,

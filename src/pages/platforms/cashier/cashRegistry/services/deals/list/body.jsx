@@ -4,6 +4,7 @@ import { capitalize } from "lodash";
 import { MDBTable, MDBIcon, MDBBadge, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
   currency,
+  Deals,
   fullName,
   getGenderIcon,
   paymentMethod,
@@ -12,18 +13,34 @@ import { Categories } from "../../../../../../../services/fakeDb";
 import {
   SetTOTAL,
   SetFILTERED,
+  RESET,
   SetSELECTED,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { useToasts } from "react-toast-notifications";
+import { Select } from "../../../../../../../components/customizable";
 
 const Tables = () => {
-  const {
+  const { token } = useSelector(({ auth }) => auth),
+    {
       collections,
       filtered,
+      formSubmitted,
+      isSuccess,
       total,
       view = "all",
     } = useSelector(({ deals }) => deals),
+    { collections: providers } = useSelector(({ providers }) => providers),
+    [selected, setSelected] = useState({}),
     [didHoverID, setDidHoverID] = useState(-1),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      dispatch(RESET());
+      setSelected({});
+    }
+  }, [dispatch, formSubmitted, isSuccess]);
 
   //Set fetched data for mapping
   useEffect(() => {
@@ -54,14 +71,20 @@ const Tables = () => {
   const handleCashRegister = (selected) => {
     dispatch(
       SetSELECTED({
-        ...selected.customerId,
-        category: selected.category,
-        saleId: selected._id,
+        ...selected,
+        cart: [], // clean and transfer to soldcart for reference
         soldCart: selected.cart,
       })
     );
   };
-
+  // const handleSource = (e) => {
+  //   const { value } = e.target;
+  //   dispatch(SetSOURCE(value));
+  //   const _physicians =
+  //     providers?.find((source) => source._id.toString() === value.toString())
+  //       ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
+  //   SetPHYSICIANS(_physicians); // Update the physicians list based on the filtered data
+  // };
   const generateStub = (deal) => ({
     ...deal,
     customer: {
@@ -74,6 +97,20 @@ const Tables = () => {
     cashier: deal.cashierId?.fullName,
     cart: deal.cart,
   });
+
+  const handleUpdate = async (updatedKey, newKey, deal = {}) => {
+    Deals.specificUpdate({
+      updatedKey,
+      newKey,
+      selected,
+      deal,
+      setSelected,
+      token,
+      sources: providers,
+      dispatch,
+      addToast,
+    });
+  };
 
   return (
     <>
@@ -93,18 +130,19 @@ const Tables = () => {
           @ {filtered.length} Patient/s
         </p>
       </div>
-      <MDBTable responsive hover>
+      <MDBTable hover>
         <thead>
           <tr>
             <th>Patient Name</th>
-            <th>Source</th>
+            <th>Physician/Source</th>
             <th>Amount</th>
             <th className="text-center">Services</th>
           </tr>
         </thead>
         <tbody>
           {filtered?.map((deal, index) => {
-            const { img, text, style } = paymentMethod.getImage(deal.payment);
+            const { img, text, style } = paymentMethod?.getImage(deal.payment);
+            const { source = {} } = deal || [];
             return (
               <tr
                 key={`deals-${index + 1}`}
@@ -116,22 +154,144 @@ const Tables = () => {
                     {getGenderIcon(deal?.customerId?.isMale)}{" "}
                     {fullName(deal?.customerId?.fullName)}
                   </h6>
-                  <MDBBadge color="info" className="mr-2">
-                    {capitalize(
-                      deal?.category === "walkin"
-                        ? deal?.category
-                        : Categories.find(({ abbr }) => abbr === deal?.category)
-                            .name
-                    )}
-                  </MDBBadge>
+                  {selected._id === deal._id &&
+                  selected?.updatedKey === "category" ? (
+                    <div
+                      style={{ width: "17rem" }}
+                      className="mt-3 d-flex align-items-center"
+                    >
+                      <Select
+                        label={"Category"}
+                        onChange={(value) =>
+                          setSelected({ ...selected, newCategory: value })
+                        }
+                        handleCheck={() =>
+                          handleUpdate("category", "newCategory")
+                        }
+                        handleClose={() => setSelected({})}
+                        formSubmitted={formSubmitted}
+                        soloUpdate
+                        whitelisted
+                        className="m-0 p-0"
+                        collections={Categories}
+                        preValue={deal.category}
+                        keys={"abbr"}
+                        values={"name"}
+                      />
+                    </div>
+                  ) : (
+                    <MDBBadge
+                      color="info"
+                      className="mr-2 cursor-pointer"
+                      onClick={() =>
+                        setSelected({ ...deal, updatedKey: "category" })
+                      }
+                    >
+                      {capitalize(
+                        deal.category === "walkin"
+                          ? deal.category
+                          : Categories.find(
+                              ({ abbr }) => abbr === deal.category
+                            ).name
+                      )}
+                    </MDBBadge>
+                  )}
                   @ {new Date(deal?.createdAt).toLocaleTimeString()}
                 </td>
                 <td>
-                  <h6>{deal.source?.displayname}</h6>
-                  <p>
-                    {deal.physicianId?.fullName.lname &&
-                      `Dr. ${deal.physicianId.fullName.lname}`}
-                  </p>
+                  {selected?._id === deal?._id &&
+                  selected.updatedKey === "source" ? (
+                    <div
+                      style={{
+                        width: "17rem",
+                        marginBottom: "-0.7rem",
+                      }}
+                      className="mt-2 d-flex align-items-center"
+                    >
+                      <Select
+                        label={"Source"}
+                        onChange={(value) =>
+                          setSelected({ ...selected, newSource: value })
+                        }
+                        handleCheck={() =>
+                          handleUpdate("source._id", "newSource", deal)
+                        }
+                        handleClose={() => setSelected({})}
+                        whitelisted
+                        soloUpdate
+                        className="m-0 p-0 mt-3"
+                        collections={providers.map(({ clients }) => ({
+                          _id: clients._id,
+                          text: `${clients?.displayname?.toUpperCase()}`,
+                        }))}
+                        preValue={source?._id}
+                        formSubmitted={formSubmitted}
+                        keys={"_id"}
+                        values={"text"}
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <small className="mr-1 grey-text">Source:</small>
+                      <h6
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setSelected({ ...deal, updatedKey: "source" })
+                        }
+                      >
+                        {source?.displayname || "N/A"}
+                      </h6>
+                    </div>
+                  )}
+
+                  {selected._id === deal._id &&
+                  selected.updatedKey === "physician" ? (
+                    <div
+                      className="d-flex align-items-center"
+                      style={{ marginBottom: "-0.5rem", width: "19rem" }}
+                    >
+                      <Select
+                        label={"Physician"}
+                        onChange={(value) =>
+                          setSelected({ ...selected, newPhysician: value })
+                        }
+                        handleCheck={() =>
+                          handleUpdate("physicianId._id", "newPhysician")
+                        }
+                        handleClose={() => setSelected({})}
+                        whitelisted
+                        soloUpdate
+                        className="m-0 p-0 mt-3"
+                        // collections={getPhysicians(source._id)}
+                        collections={Deals.getPhysicians(source._id, providers)}
+                        preValue={deal?.physicianId?._id}
+                        formSubmitted={formSubmitted}
+                        keys={"value"}
+                        values={"text"}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => {
+                        if (!deal?.source)
+                          return addToast(
+                            "Please add a source before adding a physician.",
+                            {
+                              appearance: "warning",
+                            }
+                          );
+                        setSelected({ ...deal, updatedKey: "physician" });
+                      }}
+                    >
+                      <small className="mr-1 grey-text">Physician:</small>
+                      {deal?.physicianId?.fullName?.lname ? (
+                        <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
+                      ) : (
+                        <h6 className="cursor-pointer">N/A</h6>
+                      )}
+                    </div>
+                  )}
                 </td>
                 <td className="cursor-pointer" onClick={() => handleView(deal)}>
                   <div className="d-flex align-items-center">

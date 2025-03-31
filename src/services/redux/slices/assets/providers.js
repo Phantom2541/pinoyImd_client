@@ -148,6 +148,24 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
+export const SPECIFIC_UPDATE = createAsyncThunk(
+  `${url}/SPECIFIC_UPDATE`,
+  async (form, thunkAPI) => {
+    try {
+      return await axioKit.update(
+        url,
+        form.data,
+        form.token,
+        "specific_update"
+      );
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
@@ -175,7 +193,7 @@ export const reduxSlice = createSlice({
       state.didSearch = payload;
     },
     SetSOURCE: (state, { payload }) => {
-      state.selected = payload;
+      state.collections = payload;
       state.showModal = true;
     },
     ToggleModal: (state) => {
@@ -254,7 +272,7 @@ export const reduxSlice = createSlice({
           state.page = state.totalPages;
         }
       }
-      state.filter = page;
+      state.filtered = page;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -307,11 +325,11 @@ export const reduxSlice = createSlice({
 
         const { payload: data } = payload;
         state.collections = data;
-        state.filter = data;
+        state.filtered = data;
         state.paginated = data;
 
         state.paginated = state.filtered = data;
-        state.totalPages = Math.ceil(data.length / state.maxPage) || 1;
+        state.totalPages = Math.ceil(data?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = true;
         state.isLoading = false;
@@ -400,6 +418,26 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
+      })
+
+      .addCase(SPECIFIC_UPDATE.pending, (state) => {
+        state.formSubmitted = true;
+      })
+      .addCase(SPECIFIC_UPDATE.fulfilled, (state, { payload }) => {
+        const { payload: data, success } = payload;
+        const { updatedKey, _id } = data;
+        const index = state.collections.findIndex((item) => item._id === _id);
+        state.collections[index] = {
+          ...state.collections[index],
+          [updatedKey]: data[updatedKey],
+        };
+        state.isSuccess = true;
+        state.formSubmitted = false;
+        state.message = success;
+      })
+      .addCase(SPECIFIC_UPDATE.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;

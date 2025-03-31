@@ -1,9 +1,10 @@
 const paymentBadge = (payment) => {
   const options = {
-    cash: 'default',
-    gcash: 'primary',
-    cheque: 'info',
-    credit: 'warning',
+    cash: "default",
+    gcash: "primary",
+    cheque: "info",
+    credit: "warning",
+    voucher: "secondary",
   };
 
   return options[payment];
