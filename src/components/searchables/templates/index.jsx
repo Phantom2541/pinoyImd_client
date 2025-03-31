@@ -2,7 +2,7 @@ import React from "react";
 import { Templates as templates } from "./../../../services/fakeDb";
 
 const Templates = ({ setTemplate }) => {
-  const template = templates.collections.find(
+  const template = templates?.collections?.find(
     ({ department }) => department === "LAB"
   );
 
@@ -14,7 +14,7 @@ const Templates = ({ setTemplate }) => {
   };
 
   return (
-    <div>
+    <div style={{ position: "absolute", left: 200, bottom: 7, width: 130 }}>
       <select className="browser-default custom-select" onChange={handleChange}>
         <option value="" disabled>
           Choose a template

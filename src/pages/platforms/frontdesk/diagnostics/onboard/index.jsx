@@ -16,26 +16,22 @@ export default function Sales() {
     { isLoading } = useSelector(({ taskGenerator }) => taskGenerator),
     dispatch = useDispatch();
 
+  /**
+   * Fetch source provider from the server and store it in localStorage
+   * this data is not slow moving info
+   */
   useEffect(() => {
     if (token && activePlatform.branchId) {
       const branchId = activePlatform.branchId;
-
-      // Check if the source data for the specific branchId is already in localStorage
       const storedSource = localStorage.getItem(`source_${branchId}`);
 
       if (storedSource) {
-        // If source data is found in localStorage, use it (parse back to an object)
         const sourceData = JSON.parse(storedSource);
-
-        // Optionally dispatch the source data to update the store
         dispatch(SETSOURCES(sourceData));
       } else {
-        // If no data in localStorage, make the server request
         dispatch(INSOURCE({ token, key: { vendors: activePlatform.branchId } }))
           .then(({ payload }) => {
-            // Assuming the response contains the source data in 'payload'
             const sourceData = payload.payload;
-            // Store the fetched data in localStorage for future use
             localStorage.setItem(
               `source_${branchId}`,
               JSON.stringify(sourceData)
@@ -46,7 +42,6 @@ export default function Sales() {
           });
       }
 
-      // Cleanup function
       return () => {
         dispatch(RESET());
       };

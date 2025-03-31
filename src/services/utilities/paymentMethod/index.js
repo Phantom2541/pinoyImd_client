@@ -2,6 +2,7 @@ import cash from "../../../assets/paymentMethods/cash.png";
 import transfer from "../../../assets/paymentMethods/transfer.png";
 import gcash from "../../../assets/paymentMethods/gcash.png";
 import cheque from "../../../assets/paymentMethods/cheque.png";
+import voucher from "../../../assets/paymentMethods/voucher.png";
 const paymentMethods = [
   {
     text: "Cash",
@@ -19,6 +20,7 @@ const paymentMethods = [
     style: { height: "2.6rem" },
   },
   { text: "Cheque", img: cheque, style: { height: "1.3rem" } },
+  { text: "Voucher", img: voucher, style: { height: "1.3rem" } },
 ];
 
 const paymentMethod = {

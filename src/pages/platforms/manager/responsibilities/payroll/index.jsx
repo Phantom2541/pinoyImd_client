@@ -35,7 +35,7 @@ export default function Payrolls() {
     { collections, message, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
-    PaySlip = useSelector(({ liabilities }) => liabilities.isSuccess),
+    PaySlip = useSelector(({ payments }) => payments.isSuccess),
     { addToast } = useToasts(),
     dispatch = useDispatch();
   //Initial Browse
@@ -71,12 +71,13 @@ export default function Payrolls() {
   //   setPersonnels(collections);
   // };
 
-  const handleToggle = (model) => {
+  const handleToggle = model => {
     setShowModal(true);
     setSelected(model);
   };
 
-  const handlePayslip = (model) => {
+  const handlePayslip = model => {
+    console.log("model", model);
     localStorage.setItem("payslip", JSON.stringify(model));
 
     window.open(
@@ -117,7 +118,7 @@ export default function Payrolls() {
                   ({ createdAt }) => getDate(createdAt) <= 15
                 );
 
-                let katapusan = payroll?.find((payslip) => {
+                let katapusan = payroll?.find(payslip => {
                   if (Number(contract?.pc) === 1) {
                     if (getDate(payslip.createdAt) > 15) {
                       return payslip;

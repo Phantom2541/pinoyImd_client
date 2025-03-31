@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import {
   MDBCol,
   MDBSelect,
@@ -11,21 +12,18 @@ import { Privileges } from "../../../../../../../../services/fakeDb";
 export default function PatientPrivileges({
   patientAge,
   patientPrivilege,
-  privilegeIndex,
   setPrivilegeIndex,
   didCheckout,
 }) {
+  const { selected } = useSelector(({ deals }) => deals);
+
   return (
     <MDBCol md="6">
       <MDBSelect
         getValue={(e) => setPrivilegeIndex(Number(e[0]))}
         className="colorful-select dropdown-primary mt-2 hidden-md-down"
       >
-        <MDBSelectInput
-          selected={
-            privilegeIndex > 0 ? Privileges[privilegeIndex] : "Privilege"
-          }
-        />
+        <MDBSelectInput selected={Privileges[selected.privilege]} />
         <MDBSelectOptions>
           {Privileges.map((privilege, index) => (
             <MDBSelectOption

@@ -10,7 +10,7 @@ import {
   SetSELECTED,
   TOGGLE,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
-import Denominations from "./../remmitances/modal/denominations";
+import Denominations from "../remittances/modal/denominations";
 
 export default function Cashier() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth);

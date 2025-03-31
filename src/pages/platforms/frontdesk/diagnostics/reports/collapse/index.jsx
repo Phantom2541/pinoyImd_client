@@ -55,13 +55,12 @@ export default function TasksCollapse({
             {task.source && (
               <MDBBadge color="warning">{task?.source?.name}</MDBBadge>
             )}
-            {/* {!task?.rendered && */}
-
-            <i
-              style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
-              className="fa fa-angle-down transition-all ml-2"
-            />
-            {/* } */}
+            {!!task.rendered && (
+              <i
+                style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
+                className="fa fa-angle-down transition-all ml-2"
+              />
+            )}
           </span>
         </MDBCollapseHeader>
         {/* {task.rendered.length !== 0 && ( */}

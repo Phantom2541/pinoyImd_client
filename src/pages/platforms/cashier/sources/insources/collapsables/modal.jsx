@@ -16,6 +16,7 @@ import {
   REGISTER_GHOST_COMPANY,
   RESET,
 } from "../../../../../../services/redux/slices/assets/providers";
+
 const _form = {
   name: "",
   displayname: "",

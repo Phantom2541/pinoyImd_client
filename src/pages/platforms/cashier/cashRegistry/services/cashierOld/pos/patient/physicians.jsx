@@ -10,7 +10,10 @@ import { useSelector } from "react-redux";
 import { properFullname } from "../../../../../../../../services/utilities";
 
 export default function PatientPhysicians({ setPhysicianId, didCheckout }) {
-  const { collections } = useSelector(({ physicians }) => physicians);
+  const { collections } = useSelector(({ physicians }) => physicians),
+    { selected } = useSelector(({ deals }) => deals);
+
+  // console.log("PatientPhysicians selected :", selected.physicianId);
 
   return (
     <MDBCol md="6">
@@ -18,7 +21,9 @@ export default function PatientPhysicians({ setPhysicianId, didCheckout }) {
         getValue={(e) => setPhysicianId(e[0])}
         className="colorful-select dropdown-primary mt-0 hidden-md-down"
       >
-        <MDBSelectInput selected="Physician" />
+        <MDBSelectInput
+          selected={properFullname(selected?.physicianId?.fullName)}
+        />
         <MDBSelectOptions>
           <MDBSelectOption value="">Physician</MDBSelectOption>
           {collections.map(({ user }, index) => (

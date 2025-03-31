@@ -53,7 +53,6 @@ export default function PickPhysician({
   // The function then dispatches the GETPATIENTS action with the token and the formatted
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
-  console.log(activePlatform);
   useEffect(() => {
     setUsers(collections);
   }, [collections]);
@@ -85,95 +84,97 @@ export default function PickPhysician({
   };
 
   return (
-    <div className="position-relative">
-      {selected._id ? (
-        <div className="d-flex align-items-center">
-          <div>
-            <small className="grey-text">
-              {label}:
-              <MDBIcon
-                icon="times"
-                onClick={() => {
-                  setSelected({});
-                  onClick({});
-                }}
-                title="Remove selected physician"
-                style={{
-                  color: "red",
-                  cursor: "pointer",
-                  marginTop: "-2rem",
-                  fontSize: "0.8rem",
-                  marginLeft: "5px",
-                }}
-              />
-            </small>
+    <>
+      <div className="position-relative">
+        {selected._id ? (
+          <div className="d-flex align-items-center">
+            <div>
+              <small className="grey-text">
+                {label}:
+                <MDBIcon
+                  icon="times"
+                  onClick={() => {
+                    setSelected({});
+                    onClick({});
+                  }}
+                  title="Remove selected physician"
+                  style={{
+                    color: "red",
+                    cursor: "pointer",
+                    marginTop: "-2rem",
+                    fontSize: "0.8rem",
+                    marginLeft: "5px",
+                  }}
+                />
+              </small>
 
-            <h6 className="d-flex align-items-center">
-              <strong>{fullName(selected?.user?.fullName)}</strong>
-            </h6>
-          </div>
-        </div>
-      ) : (
-        <>
-          <MDBInput
-            disabled={isLoading}
-            label={label}
-            style={{ width: "100%" }}
-            type="search"
-            value={searchKey}
-            onChange={handleChange}
-            placeholder="Search..."
-            autoCorrect="off"
-            spellCheck={false}
-          />
-          {didSearch && (
-            <div className="physician-search-results">
-              {isLoading ? (
-                new Array(5).fill("").map((_, index) => (
-                  <MDBAnimation
-                    key={index}
-                    className="p-1 ml-2 mr-2 mt-1"
-                    type="flash"
-                    infinite
-                    delay={`${index + 1}00ms`}
-                    duration="3000ms"
-                  >
-                    <MDBProgress
-                      color="light"
-                      value={3000}
-                      id="progress-table"
-                    ></MDBProgress>
-                  </MDBAnimation>
-                ))
-              ) : (
-                <>
-                  {users.length === 0 && (
-                    <h6 className="text-center mt-2">
-                      No users Found. Try another keywords
-                    </h6>
-                  )}
-                  <ul>
-                    {users?.map((physician) => {
-                      const { user } = physician;
-                      const { _id, fullName: fullname } = user;
-                      return (
-                        <li
-                          onClick={() => handleSelect(physician)}
-                          key={_id}
-                          className="text-dark text-nowrap"
-                        >
-                          {getGenderIcon(user.gender)} {fullName(fullname)} |{" "}
-                          {getAge(user.dob)}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </>
-              )}
+              <h6 className="d-flex align-items-center">
+                <strong>{fullName(selected?.user?.fullName)}</strong>
+              </h6>
             </div>
-          )}
-        </>
-      )}
-    </div>
+          </div>
+        ) : (
+          <>
+            <MDBInput
+              disabled={isLoading}
+              label={label}
+              style={{ width: "100%" }}
+              type="search"
+              value={searchKey}
+              onChange={handleChange}
+              placeholder="Search..."
+              autoCorrect="off"
+              spellCheck={false}
+            />
+            {didSearch && (
+              <div className="physician-search-results">
+                {isLoading ? (
+                  new Array(5).fill("").map((_, index) => (
+                    <MDBAnimation
+                      key={index}
+                      className="p-1 ml-2 mr-2 mt-1"
+                      type="flash"
+                      infinite
+                      delay={`${index + 1}00ms`}
+                      duration="3000ms"
+                    >
+                      <MDBProgress
+                        color="light"
+                        value={3000}
+                        id="progress-table"
+                      ></MDBProgress>
+                    </MDBAnimation>
+                  ))
+                ) : (
+                  <>
+                    {users.length === 0 && (
+                      <h6 className="text-center mt-2">
+                        No users Found. Try another keywords
+                      </h6>
+                    )}
+                    <ul>
+                      {users?.map((physician) => {
+                        const { user } = physician;
+                        const { _id, fullName: fullname } = user;
+                        return (
+                          <li
+                            onClick={() => handleSelect(physician)}
+                            key={_id}
+                            className="text-dark text-nowrap"
+                          >
+                            {getGenderIcon(user.gender)} {fullName(fullname)} |{" "}
+                            {getAge(user.dob)}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 }
