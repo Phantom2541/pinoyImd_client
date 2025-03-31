@@ -28,11 +28,11 @@ export default function CashierMenu({ handlePicker }) {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  const { abbr, name } = Categories.find(
-    ({ abbr }) => abbr === selected.category
-  );
-  console.log("categories", Categories);
-  console.log("selected", selected);
+  const _abbr = ["wi", "bp", "mc", "is", "sc"].includes(selected.category)
+    ? "opd"
+    : selected.category;
+
+  const { abbr, name } = Categories.find(({ abbr }) => abbr === _abbr);
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
