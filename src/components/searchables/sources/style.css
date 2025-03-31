@@ -1,0 +1,181 @@
+.sources-search-cotaniner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 350px;
+}
+
+.sources-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+  border-radius: 50px;
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+}
+
+.sources-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  margin-inline: 5px;
+}
+
+.sources-search input::placeholder {
+  font-style: italic;
+  color: hsl(0, 0%, 60%);
+  letter-spacing: 0.5px;
+}
+
+.sources-search button {
+  border: none;
+  background-color: #007bff;
+  color: white;
+  padding: 0.3rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.sources-search button:active {
+  transform: scale(0.95);
+}
+
+.sources-search button:hover {
+  background-color: hsl(221.25, 70.8%, 61.1%);
+}
+
+.sources-search.active {
+  border-radius: 0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+/* Suggestions Design */
+.sources-search .sources-search-suggestions {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, 100%);
+  background-color: #fff;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 3px 4px 1px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+.sources-search.active .sources-search-suggestions {
+  display: block;
+}
+
+.sources-search .sources-search-suggestions::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: -1px 0 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.sources-search .sources-search-suggestions small {
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.sources-search .sources-search-suggestions ul {
+  list-style-type: none;
+  padding: 0;
+  padding-inline: 5px;
+  margin: 0;
+  text-align: left;
+  font-weight: 400;
+  font-size: 0.9rem;
+  max-height: 15rem;
+  overflow-y: auto;
+}
+
+.sources-search .sources-search-suggestions ul li {
+  padding: 5px 5px;
+  color: black !important;
+}
+
+.sources-search .sources-search-suggestions ul li:hover {
+  background-color: hsl(207, 90%, 56%);
+  color: white !important;
+  display: block;
+  cursor: pointer;
+  box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* End of Search Design */
+
+.sources-wrapper {
+  height: 100vh;
+  width: 100%;
+  background-color: white;
+}
+
+/* instruction search */
+.sources-instruction {
+  position: relative;
+  margin-right: 10px;
+}
+
+.sources-instruction input {
+  background-color: green;
+  display: block;
+}
+
+.sources-instruction div {
+  position: absolute;
+  top: -20%;
+  left: 0;
+  transform: translate(-46.5%, -85%);
+  width: 19rem;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 5px;
+  text-align: center;
+  border-radius: 5px;
+  z-index: 99999;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 300ms ease-in;
+}
+
+.sources-instruction:hover div {
+  visibility: visible;
+  opacity: 1;
+}
+
+.sources-instruction div::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 25px;
+  height: 15px;
+  transform: translate(-50%, 98.16%) rotate(180deg);
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: -1;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.sources-instruction div p {
+  font-weight: bold;
+  margin: 0;
+}
+
+.sources-instruction div i {
+  font-size: 0.8rem;
+}

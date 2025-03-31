@@ -13,6 +13,7 @@ import {
   SPECIFIC_UPDATE,
   RESET,
   DESTROY,
+  SetREGISTER,
 } from "../../../../../../services/redux/slices/assets/providers";
 import { SAVE } from "../../../../../../services/redux/slices/assets/persons/physicians";
 import { useToasts } from "react-toast-notifications";
@@ -20,7 +21,6 @@ import { useToasts } from "react-toast-notifications";
 import Swal from "sweetalert2";
 import CollapseTable from "./table";
 import { fullName } from "../../../../../../services/utilities";
-import Modal from "./modal";
 import Header from "./header";
 
 export default function MenuCollapse() {
@@ -38,8 +38,6 @@ export default function MenuCollapse() {
     [insources, setInsources] = useState([]),
     [selected, setSelected] = useState({}),
     [update, setUpdate] = useState({}),
-    [ghostCompany, setGhostCompany] = useState({}),
-    [show, setShow] = useState(false),
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),
     { addToast } = useToasts(),
@@ -74,8 +72,6 @@ export default function MenuCollapse() {
       dispatch(RESET_BRANCH());
     }
   }, [dispatch, formSubmitted, isSuccess]);
-
-  const toggle = () => setShow(!show);
 
   const handleTag = (physician) => {
     const { isPhysician, physicianId, isGhost = false } = physician;
@@ -186,12 +182,10 @@ export default function MenuCollapse() {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        setGhostCompany(insource);
-        toggle();
+        dispatch(SetREGISTER(insource));
       }
     });
   };
-  // If there is no client, it means a ghost.
 
   const handleUpdateClient = () => {
     const { newName, displayname, providerID } = update;
@@ -303,7 +297,7 @@ export default function MenuCollapse() {
       ) : (
         <p>No record</p>
       )}
-      <Modal toggle={toggle} show={show} selected={ghostCompany} />
+      {/* <Modal toggle={toggle} show={show} selected={ghostCompany} /> */}
     </MDBContainer>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   MDBModal,
   MDBModalBody,
@@ -13,7 +13,8 @@ import {
 import AddressSelect from "../../../../../../components/searchables/addressSelect";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  REGISTER_GHOST_COMPANY,
+  REGISTER_BRANCH,
+  ToggleRegister,
   RESET,
 } from "../../../../../../services/redux/slices/assets/providers";
 
@@ -28,11 +29,20 @@ const _form = {
   },
 };
 
-export default function Modal({ show, toggle, selected }) {
-  const { token } = useSelector(({ auth }) => auth),
-    { formSubmitted, isSuccess } = useSelector(({ providers }) => providers),
+export default function Modal() {
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    {
+      formSubmitted,
+      isSuccess,
+      selected,
+      showRegisterModal: show,
+    } = useSelector(({ providers }) => providers),
     [form, setForm] = useState(_form),
     dispatch = useDispatch();
+
+  const toggle = useCallback(() => {
+    dispatch(ToggleRegister());
+  }, []);
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -45,18 +55,24 @@ export default function Modal({ show, toggle, selected }) {
     if (show) {
       setForm((prev) => ({
         ...prev,
-        name: selected.name,
-        displayname: selected.displayname,
-        providerId: selected._id,
+        name: selected?.name,
+        displayname: selected?.displayname,
+        providerId: selected?._id,
       }));
     }
   }, [show, selected]);
 
   const handleSubmit = () => {
+    const { branchId } = activePlatform;
+
     dispatch(
-      REGISTER_GHOST_COMPANY({
+      REGISTER_BRANCH({
         token,
-        data: { branch: form, providerID: form.providerId },
+        data: {
+          branch: form,
+          providerID: form?.providerId || "",
+          vendors: branchId,
+        },
       })
     );
   };
@@ -68,7 +84,7 @@ export default function Modal({ show, toggle, selected }) {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="building" className="mr-2" />
-        {form.name} <br />
+        {form.name || form.displayname} <br />
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <div style={{ marginBottom: "-1rem", marginTop: "-1rem" }}>
@@ -85,16 +101,26 @@ export default function Modal({ show, toggle, selected }) {
 
         <MDBRow>
           <MDBCol>
-            <MDBInput label="Name" required value={form.name} />
-          </MDBCol>
-          <MDBCol>
             <MDBInput
               label="Branch Display name"
               required
               value={form.displayname}
-              readOnly
+              onChange={({ target }) =>
+                setForm({ ...form, displayname: target.value })
+              }
             />
           </MDBCol>
+          {form?.providerID && (
+            <MDBCol>
+              <MDBInput
+                label="Name"
+                value={form.name}
+                onChange={({ target }) =>
+                  setForm({ ...form, name: target.value })
+                }
+              />
+            </MDBCol>
+          )}
         </MDBRow>
         <AddressSelect
           handleChange={(_, value) =>
