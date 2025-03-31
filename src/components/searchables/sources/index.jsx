@@ -35,7 +35,7 @@ export default function Search({
     { collections, isLoading, isSuccess } = useSelector(
       ({ branches }) => branches
     ),
-    { collections: providerCollections, searchResults } = useSelector(
+    { collections: providerCollections = [], searchResults } = useSelector(
       ({ providers }) => providers
     ),
     [results, setResults] = useState([]),
@@ -58,11 +58,11 @@ export default function Search({
   // The function then dispatches the GETPATIENTS action with the token and the formatted
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
-
+  console.log(providerCollections, "providerCollections");
   useEffect(() => {
-    const removeExisting = collections.filter(
+    const removeExisting = collections?.filter(
       (item) =>
-        !providerCollections.some(
+        !providerCollections?.some(
           ({ clients = { _id: "" } }) => clients?._id === item?._id
         )
     );

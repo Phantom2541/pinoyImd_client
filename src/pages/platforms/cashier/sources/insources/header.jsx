@@ -36,7 +36,7 @@ const Header = () => {
   const setSource = (source) => {
     const { name, displayname } = source;
     Swal.fire({
-      title: `${name} ${displayname}`,
+      title: `${name || ""} ${displayname || ""}`,
       text: `Do you want to register him as a new provider?`,
       icon: "question",
       showCancelButton: true,

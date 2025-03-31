@@ -194,7 +194,7 @@ export const reduxSlice = createSlice({
       state.didSearch = payload;
     },
     SetSOURCE: (state, { payload }) => {
-      state.collections = payload;
+      state.selected = payload;
       state.showModal = true;
     },
     ToggleModal: (state) => {
