@@ -126,7 +126,7 @@ const Tables = () => {
         </p>
         <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
         <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
-          @ {filtered.length} Patient/s
+          @ {collections.length} Patient/s
         </p>
       </div>
       <MDBTable hover>
@@ -139,221 +139,237 @@ const Tables = () => {
           </tr>
         </thead>
         <tbody>
-          {filtered?.map((deal, index) => {
-            const { img, text, style } = paymentMethod?.getImage(deal.payment);
-            const { source = {} } = deal || [];
-            return (
-              <tr
-                key={`deals-${index + 1}`}
-                onMouseEnter={() => setDidHoverID(index)}
-                onMouseLeave={() => setDidHoverID(-1)}
-              >
-                <td>
-                  <h6>
-                    {getGenderIcon(deal?.customerId?.isMale)}{" "}
-                    {fullName(deal?.customerId?.fullName)}
-                  </h6>
-                  {selected._id === deal._id &&
-                  selected?.updatedKey === "category" ? (
-                    <div
-                      style={{ width: "17rem" }}
-                      className="mt-3 d-flex align-items-center"
-                    >
-                      <Select
-                        label={"Category"}
-                        onChange={(value) =>
-                          setSelected({ ...selected, newCategory: value })
-                        }
-                        handleCheck={() =>
-                          handleUpdate("category", "newCategory")
-                        }
-                        handleClose={() => setSelected({})}
-                        formSubmitted={formSubmitted}
-                        soloUpdate
-                        whitelisted
-                        className="m-0 p-0"
-                        collections={Categories}
-                        preValue={deal.category}
-                        keys={"abbr"}
-                        values={"name"}
-                      />
-                    </div>
-                  ) : (
-                    <MDBBadge
-                      color="info"
-                      className="mr-2 cursor-pointer"
-                      onClick={() =>
-                        setSelected({ ...deal, updatedKey: "category" })
-                      }
-                    >
-                      {capitalize(
-                        deal.category === "walkin"
-                          ? deal.category
-                          : Categories.find(
-                              ({ abbr }) => abbr === deal.category
-                            ).name
-                      )}
-                    </MDBBadge>
-                  )}
-                  @ {new Date(deal?.createdAt).toLocaleTimeString()}
-                </td>
-                <td>
-                  {selected?._id === deal?._id &&
-                  selected.updatedKey === "source" ? (
-                    <div
-                      style={{
-                        width: "17rem",
-                        marginBottom: "-0.7rem",
-                      }}
-                      className="mt-2 d-flex align-items-center"
-                    >
-                      <Select
-                        label={"Source"}
-                        onChange={(value) =>
-                          setSelected({ ...selected, newSource: value })
-                        }
-                        handleCheck={() =>
-                          handleUpdate("source._id", "newSource", deal)
-                        }
-                        handleClose={() => setSelected({})}
-                        whitelisted
-                        soloUpdate
-                        className="m-0 p-0 mt-3"
-                        collections={providers.map(({ clients }) => ({
-                          _id: clients._id,
-                          text: `${clients?.displayname?.toUpperCase()}`,
-                        }))}
-                        preValue={source?._id}
-                        formSubmitted={formSubmitted}
-                        keys={"_id"}
-                        values={"text"}
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <small className="mr-1 grey-text">Source:</small>
-                      <h6
-                        className="cursor-pointer"
+          {filtered.length > 0 ? (
+            filtered?.map((deal, index) => {
+              const { img, text, style } = paymentMethod?.getImage(
+                deal.payment
+              );
+              const { source = {} } = deal || [];
+              return (
+                <tr
+                  key={`deals-${index + 1}`}
+                  onMouseEnter={() => setDidHoverID(index)}
+                  onMouseLeave={() => setDidHoverID(-1)}
+                >
+                  <td>
+                    <h6>
+                      {getGenderIcon(deal?.customerId?.isMale)}{" "}
+                      {fullName(deal?.customerId?.fullName)}
+                    </h6>
+                    {selected._id === deal._id &&
+                    selected?.updatedKey === "category" ? (
+                      <div
+                        style={{ width: "17rem" }}
+                        className="mt-3 d-flex align-items-center"
+                      >
+                        <Select
+                          label={"Category"}
+                          onChange={(value) =>
+                            setSelected({ ...selected, newCategory: value })
+                          }
+                          handleCheck={() =>
+                            handleUpdate("category", "newCategory")
+                          }
+                          handleClose={() => setSelected({})}
+                          formSubmitted={formSubmitted}
+                          soloUpdate
+                          whitelisted
+                          className="m-0 p-0"
+                          collections={Categories}
+                          preValue={deal.category}
+                          keys={"abbr"}
+                          values={"name"}
+                        />
+                      </div>
+                    ) : (
+                      <MDBBadge
+                        color="info"
+                        className="mr-2 cursor-pointer"
                         onClick={() =>
-                          setSelected({ ...deal, updatedKey: "source" })
+                          setSelected({ ...deal, updatedKey: "category" })
                         }
                       >
-                        {source?.displayname || "N/A"}
-                      </h6>
-                    </div>
-                  )}
-
-                  {selected._id === deal._id &&
-                  selected.updatedKey === "physician" ? (
-                    <div
-                      className="d-flex align-items-center"
-                      style={{ marginBottom: "-0.5rem", width: "19rem" }}
-                    >
-                      <Select
-                        label={"Physician"}
-                        onChange={(value) =>
-                          setSelected({ ...selected, newPhysician: value })
-                        }
-                        handleCheck={() =>
-                          handleUpdate("physicianId._id", "newPhysician")
-                        }
-                        handleClose={() => setSelected({})}
-                        whitelisted
-                        soloUpdate
-                        className="m-0 p-0 mt-3"
-                        // collections={getPhysicians(source._id)}
-                        collections={Deals.getPhysicians(source._id, providers)}
-                        preValue={deal?.physicianId?._id}
-                        formSubmitted={formSubmitted}
-                        keys={"value"}
-                        values={"text"}
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => {
-                        if (!deal?.source)
-                          return addToast(
-                            "Please add a source before adding a physician.",
-                            {
-                              appearance: "warning",
-                            }
-                          );
-                        setSelected({ ...deal, updatedKey: "physician" });
-                      }}
-                    >
-                      <small className="mr-1 grey-text">Physician:</small>
-                      {deal?.physicianId?.fullName?.lname ? (
-                        <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
-                      ) : (
-                        <h6 className="cursor-pointer">N/A</h6>
-                      )}
-                    </div>
-                  )}
-                </td>
-                <td className="cursor-pointer" onClick={() => handleView(deal)}>
-                  <div className="d-flex align-items-center">
-                    <h6
-                      className="mt-2"
-                      style={{ fontWeight: 600 }}
-                      title="Amount"
-                    >
-                      {currency(deal.amount)}
-                    </h6>
-                    <img
-                      src={img}
-                      alt={text}
-                      className="ml-1"
-                      title={text}
-                      style={{
-                        ...style,
-                      }}
-                    />
-                  </div>
-                  <h6 title="Cash"> {currency(deal.cash)}</h6>
-                </td>
-
-                <td>
-                  <>
-                    {didHoverID === index && (
-                      <div className="d-flex justify-content-center">
-                        <MDBBtnGroup>
-                          <MDBBtn
-                            size="sm"
-                            color="success"
-                            title="Add new service"
-                            rounded
-                            onClick={() => handleCashRegister(deal)}
-                          >
-                            <MDBIcon icon="plus" />
-                          </MDBBtn>
-                          <MDBBtn
-                            size="sm"
-                            color="info"
-                            rounded
-                            title="Print receipt."
-                            onClick={() => handleView(deal)}
-                          >
-                            <MDBIcon icon="print" />
-                          </MDBBtn>
-                        </MDBBtnGroup>
+                        {capitalize(
+                          deal.category === "walkin"
+                            ? deal.category
+                            : Categories.find(
+                                ({ abbr }) => abbr === deal.category
+                              ).name
+                        )}
+                      </MDBBadge>
+                    )}
+                    @ {new Date(deal?.createdAt).toLocaleTimeString()}
+                  </td>
+                  <td>
+                    {selected?._id === deal?._id &&
+                    selected.updatedKey === "source" ? (
+                      <div
+                        style={{
+                          width: "17rem",
+                          marginBottom: "-0.7rem",
+                        }}
+                        className="mt-2 d-flex align-items-center"
+                      >
+                        <Select
+                          label={"Source"}
+                          onChange={(value) =>
+                            setSelected({ ...selected, newSource: value })
+                          }
+                          handleCheck={() =>
+                            handleUpdate("source._id", "newSource", deal)
+                          }
+                          handleClose={() => setSelected({})}
+                          whitelisted
+                          soloUpdate
+                          className="m-0 p-0 mt-3"
+                          collections={providers.map(({ clients }) => ({
+                            _id: clients._id,
+                            text: `${clients?.displayname?.toUpperCase()}`,
+                          }))}
+                          preValue={source?._id}
+                          formSubmitted={formSubmitted}
+                          keys={"_id"}
+                          values={"text"}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <small className="mr-1 grey-text">Source:</small>
+                        <h6
+                          className="cursor-pointer"
+                          onClick={() =>
+                            setSelected({ ...deal, updatedKey: "source" })
+                          }
+                        >
+                          {source?.displayname || "N/A"}
+                        </h6>
                       </div>
                     )}
-                    {deal.cart?.map((menu) => (
-                      <MDBBadge
-                        key={menu.referenceId}
-                        className="mx-1 "
-                        style={{ opacity: index === didHoverID ? 0 : 1 }}
+
+                    {selected._id === deal._id &&
+                    selected.updatedKey === "physician" ? (
+                      <div
+                        className="d-flex align-items-center"
+                        style={{ marginBottom: "-0.5rem", width: "19rem" }}
                       >
-                        {menu?.abbreviation}
-                      </MDBBadge>
-                    ))}
-                  </>
-                </td>
-              </tr>
-            );
-          })}
+                        <Select
+                          label={"Physician"}
+                          onChange={(value) =>
+                            setSelected({ ...selected, newPhysician: value })
+                          }
+                          handleCheck={() =>
+                            handleUpdate("physicianId._id", "newPhysician")
+                          }
+                          handleClose={() => setSelected({})}
+                          whitelisted
+                          soloUpdate
+                          className="m-0 p-0 mt-3"
+                          // collections={getPhysicians(source._id)}
+                          collections={Deals.getPhysicians(
+                            source._id,
+                            providers
+                          )}
+                          preValue={deal?.physicianId?._id}
+                          formSubmitted={formSubmitted}
+                          keys={"value"}
+                          values={"text"}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => {
+                          if (!deal?.source)
+                            return addToast(
+                              "Please add a source before adding a physician.",
+                              {
+                                appearance: "warning",
+                              }
+                            );
+                          setSelected({ ...deal, updatedKey: "physician" });
+                        }}
+                      >
+                        <small className="mr-1 grey-text">Physician:</small>
+                        {deal?.physicianId?.fullName?.lname ? (
+                          <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
+                        ) : (
+                          <h6 className="cursor-pointer">N/A</h6>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                  <td
+                    className="cursor-pointer"
+                    onClick={() => handleView(deal)}
+                  >
+                    <div className="d-flex align-items-center">
+                      <h6
+                        className="mt-2"
+                        style={{ fontWeight: 600 }}
+                        title="Amount"
+                      >
+                        {currency(deal.amount)}
+                      </h6>
+                      <img
+                        src={img}
+                        alt={text}
+                        className="ml-1"
+                        title={text}
+                        style={{
+                          ...style,
+                        }}
+                      />
+                    </div>
+                    <h6 title="Cash"> {currency(deal.cash)}</h6>
+                  </td>
+
+                  <td>
+                    <>
+                      {didHoverID === index && (
+                        <div className="d-flex justify-content-center">
+                          <MDBBtnGroup>
+                            <MDBBtn
+                              size="sm"
+                              color="success"
+                              title="Add new service"
+                              rounded
+                              onClick={() => handleCashRegister(deal)}
+                            >
+                              <MDBIcon icon="plus" />
+                            </MDBBtn>
+                            <MDBBtn
+                              size="sm"
+                              color="info"
+                              rounded
+                              title="Print receipt."
+                              onClick={() => handleView(deal)}
+                            >
+                              <MDBIcon icon="print" />
+                            </MDBBtn>
+                          </MDBBtnGroup>
+                        </div>
+                      )}
+                      {deal.cart?.map((menu) => (
+                        <MDBBadge
+                          key={menu.referenceId}
+                          className="mx-1 "
+                          style={{ opacity: index === didHoverID ? 0 : 1 }}
+                        >
+                          {menu?.abbreviation}
+                        </MDBBadge>
+                      ))}
+                    </>
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan={4} className="text-center">
+                No patiend record.
+              </td>
+            </tr>
+          )}
         </tbody>
       </MDBTable>
     </>

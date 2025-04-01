@@ -31,7 +31,7 @@ export default function Select({
   handleCheck = () => {},
   handleClose = () => {},
 }) {
-  // console.log("collections", collections);
+  console.log("collections", collections);
 
   const getNestedValue = (obj, path) => {
     return path

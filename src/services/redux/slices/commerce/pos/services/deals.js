@@ -310,11 +310,13 @@ export const reduxSlice = createSlice({
         );
       }
     },
+
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;
       state.willCreate = false;
     },
+
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
@@ -326,6 +328,7 @@ export const reduxSlice = createSlice({
       state.activePage = payload;
     },
     RESET: (state, { payload = {} }) => {
+      state.filtered = [];
       state.isSuccess = false;
       state.message = "";
       state.isLoading = false;

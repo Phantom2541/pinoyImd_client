@@ -1,15 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../../utilities";
+import { Services } from "../../../../../fakeDb";
 
 const url = "commerce/pos/services/deals";
 
 const initialState = {
   collections: [],
+  inhouse: [],
+  outsource: [],
   _id: "default",
   source: "",
   physician: "",
   transaction: { _id: "default" },
   isSuccess: false,
+  show: false,
   isLoading: false,
   message: "",
 };
@@ -100,6 +104,34 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    TOGGLE: (state) => {
+      state.show = !state.show;
+    },
+
+    SetSELECTED: (state, { payload }) => {
+      console.log("selected", payload);
+      const list = payload.cart.flatMap((item) => item.packages || []);
+      const _inhouse = Services.whereIn(list);
+      state.inhouse = _inhouse;
+      state.outsource = [];
+      state.selected = payload;
+      state.show = true;
+    },
+    SetINHOUSE: (state, { payload }) => {
+      const index = state.outsource.findIndex((item) => item.id === payload.id);
+      if (index > -1) {
+        state.outsource.splice(index, 1);
+      }
+      state.inhouse.push(payload);
+    },
+    SetOUTSOURCE: (state, { payload }) => {
+      const index = state.inhouse.findIndex((item) => item.id === payload.id);
+      if (index > -1) {
+        state.inhouse.splice(index, 1);
+      }
+      state.outsource.push(payload);
+    },
+
     SETSOURCE: (state, { payload }) => {
       state.source = payload.source;
       state._id = payload._id;
@@ -206,6 +238,14 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SETSOURCE, SETPHYSICIAN } = reduxSlice.actions;
+export const {
+  RESET,
+  SETSOURCE,
+  SETPHYSICIAN,
+  SetSELECTED,
+  TOGGLE,
+  SetOUTSOURCE,
+  SetINHOUSE,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

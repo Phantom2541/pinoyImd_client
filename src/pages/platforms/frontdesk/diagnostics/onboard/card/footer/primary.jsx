@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
 import { axioKit, harvestTask } from "../../../../../../../services/utilities";
 import { REFORM } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
+import { SetSELECTED } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
 const PrimaryFooter = ({ deal, setEdit }) => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -37,7 +38,6 @@ const PrimaryFooter = ({ deal, setEdit }) => {
           await axioKit.save(
             "/diagnostics/laboratory/result/miscellaneous",
             {
-              
               packages: buntisPresent,
               saleId: _id,
               customerId: customerId?._id,
@@ -124,38 +124,41 @@ const PrimaryFooter = ({ deal, setEdit }) => {
   };
 
   return (
-    <MDBBtnGroup className="sales-card-footer w-100 d-flex flex-row">
-      <MDBBtn
-        type="button"
-        className="m-0"
-        size="sm"
-        color="primary"
-        title="Edit"
-        onClick={() => setEdit(true)}
-      >
-        <MDBIcon icon="pencil-alt" />
-      </MDBBtn>
-      <MDBBtn
-        type="button"
-        onClick={() => preAnalytical(deal)}
-        title="Pre-Analytical Supply Dispense"
-        className="m-0 "
-        size="sm"
-        color="primary"
-      >
-        <MDBIcon icon="cog" spin />
-      </MDBBtn>
-      <MDBBtn
-        type="button"
-        onClick={() => generateTask()}
-        className="m-0 "
-        title="Generate Task"
-        size="sm"
-        color="primary"
-      >
-        <MDBIcon icon="user-injured" />
-      </MDBBtn>
-    </MDBBtnGroup>
+    <>
+      <MDBBtnGroup className="sales-card-footer w-100 d-flex flex-row">
+        <MDBBtn
+          type="button"
+          className="m-0"
+          size="sm"
+          color="primary"
+          title="Edit"
+          onClick={() => setEdit(true)}
+        >
+          <MDBIcon icon="pencil-alt" />
+        </MDBBtn>
+        <MDBBtn
+          type="button"
+          onClick={() => preAnalytical(deal)}
+          title="Pre-Analytical Supply Dispense"
+          className="m-0 "
+          size="sm"
+          color="primary"
+        >
+          <MDBIcon icon="cog" spin />
+        </MDBBtn>
+        <MDBBtn
+          type="button"
+          // onClick={() => generateTask()}
+          onClick={() => dispatch(SetSELECTED(deal))}
+          className="m-0 "
+          title="Generate Task"
+          size="sm"
+          color="primary"
+        >
+          <MDBIcon icon="user-injured" />
+        </MDBBtn>
+      </MDBBtnGroup>
+    </>
   );
 };
 
