@@ -3,16 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 // import { Select } from "../../../../components/customizable";
 // import { Templates, Services } from "../../../services/fakeDb";
-import {
-  VOUCHERS
-} from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import { VOUCHERS } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 const Header = () => {
-  const { maxPage, token, activePlatform, auth } = useSelector(({ auth }) => auth),
+  const { maxPage, token, activePlatform, auth } = useSelector(
+      ({ auth }) => auth
+    ),
     { collections } = useSelector(({ services }) => services),
     [component, setComponent] = useState(""),
     dispatch = useDispatch();
-    const month=2,
-    year=2025;
+  const month = 2,
+    year = 2025;
 
   // initial values
   useEffect(() => {
@@ -20,10 +20,17 @@ const Header = () => {
     startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
     endDate.setHours(23, 59, 59, 999);
-    dispatch(VOUCHERS({ token,key:{branch:activePlatform.branchId, 
-      cashier:auth._id, 
-       startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),} }));
+    dispatch(
+      VOUCHERS({
+        token,
+        key: {
+          branch: activePlatform.branchId,
+          cashier: auth._id,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        },
+      })
+    );
   }, [dispatch, maxPage]);
 
   // const handleComponent = (value) => {

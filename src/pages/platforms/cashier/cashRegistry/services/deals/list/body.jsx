@@ -41,7 +41,6 @@ const Tables = () => {
       setSelected({});
     }
   }, [dispatch, formSubmitted, isSuccess]);
-
   //Set fetched data for mapping
   useEffect(() => {
     if (!!collections.length) {

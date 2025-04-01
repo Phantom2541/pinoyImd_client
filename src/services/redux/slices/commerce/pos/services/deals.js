@@ -45,18 +45,23 @@ export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
-export const VOUCHERS = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
-  try {
-    return axioKit.universal(`${url}/vouchers`, token, key);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const VOUCHERS = createAsyncThunk(
+  `${url}vOUCHERS`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/vouchers`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const CASHIER = createAsyncThunk(
   `${url}/cashier`,
@@ -353,6 +358,24 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(VOUCHERS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(VOUCHERS.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(VOUCHERS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

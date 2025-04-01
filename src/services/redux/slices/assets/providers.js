@@ -318,7 +318,6 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(GETENROLLED.fulfilled, (state, { payload }) => {
-        console.log(payload);
         const { payload: data } = payload;
         state.enrolled = data;
         state.isSuccess = true;
