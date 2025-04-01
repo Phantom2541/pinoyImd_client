@@ -91,7 +91,7 @@ export default function AddressSelect({
       {/* <h6 className="mb-0">{label}</h6>
       <MDBRow>
         <MDBCol md={size}>
-          <CustomSelect
+          <Select
             choices={Philippines.Regions}
             preValue={address.region}
             onChange={(e) => handleAddress("region", e)}
@@ -102,7 +102,7 @@ export default function AddressSelect({
           />
         </MDBCol>
         <MDBCol md={size}>
-          <CustomSelect
+          <Select
             choices={Philippines.Provinces(address.region)}
             preValue={address.province}
             onChange={(e) => handleAddress("province", e)}
@@ -113,7 +113,7 @@ export default function AddressSelect({
           />
         </MDBCol>
         <MDBCol md={size}>
-          <CustomSelect
+          <Select
             choices={Philippines.Cities(address.province)}
             preValue={address.city}
             onChange={(e) => handleAddress("city", e)}
@@ -124,7 +124,7 @@ export default function AddressSelect({
           />
         </MDBCol>
         <MDBCol md={size}>
-          <CustomSelect
+          <Select
             choices={Philippines.Barangays(address.city)}
             preValue={address.barangay}
             onChange={(e) => handleAddress("barangay", e === "none" ? "" : e)}

@@ -169,6 +169,7 @@ export const reduxSlice = createSlice({
       .addCase(SEARCH.fulfilled, (state, action) => {
         state.collections = action.payload;
         state.isLoading = false;
+        state.isSuccess = true;
       })
       .addCase(SEARCH.rejected, (state, action) => {
         const { error } = action;

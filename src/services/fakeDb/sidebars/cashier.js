@@ -8,7 +8,7 @@ import {
   Insources,
   Outsources,
   Utilities,
-  Remmitances,
+  Remittances,
 } from "../../../pages/platforms/cashier";
 
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
@@ -17,7 +17,7 @@ import Payments from "../../../pages/platforms/cashier/accrued/payments";
 import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
 // import SOA from "../../../pages/platforms/cashier/accrued/soa";
 // import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
-// import Remmitances from "../../../pages/platforms/manager/pos/remittances";
+// import Remittances from "../../../pages/platforms/manager/pos/remittances";
 // //import Outsource from "../../../pages/platforms/manager/provider";
 // import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 
@@ -50,11 +50,11 @@ const cashier = [
         component: Deals,
       },
       {
-        name: "Remmitances",
-        path: "/remmitances",
+        name: "Remittances",
+        path: "/remittances",
         icon: "money-check",
         title: "Ledger of daily remittances",
-        component: Remmitances,
+        component: Remittances,
       },
     ],
   },

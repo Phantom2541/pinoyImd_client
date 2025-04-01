@@ -10,18 +10,18 @@ export default function Payments() {
   const { total, collections, isLoading } = useSelector(({ deals }) => deals),
     { auth, activePlatform, token } = useSelector(({ auth }) => auth),
     { selected } = useSelector(({ remittances }) => remittances),
+    [isOpen, setIsOpen] = useState(true),
+    [sum, setSum] = useState(0),
     dispatch = useDispatch();
-  const [isOpen, setIsOpen] = useState(true),
-    [sum, setSum] = useState(0);
 
   // Optimize calculations using useMemo
   const paymentTotals = useMemo(() => {
-    return collections.reduce(
+    return collections?.reduce(
       (acc, payment) => {
         acc[payment.payment] = (acc[payment.payment] || 0) + payment.amount;
         return acc;
       },
-      { cash: 0, gcash: 0, vouchers: 0, pending: 0 }
+      { cash: 0, gcash: 0, voucher: 0, pending: 0 }
     );
   }, [collections]);
 
@@ -72,7 +72,9 @@ export default function Payments() {
             <>
               <div className="d-flex justify-content-between">
                 <span>Floating Cash:</span>
-                <strong className="text-warning">{currency(sum)}</strong>
+                <strong className="text-warning">
+                  {selected ? currency(sum) : "-"}
+                </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Cash :</span>
@@ -89,7 +91,7 @@ export default function Payments() {
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Vouchers :</span>
                 <strong className="text-primary">
-                  {currency(paymentTotals.vouchers)}
+                  {currency(paymentTotals.voucher)}
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2">

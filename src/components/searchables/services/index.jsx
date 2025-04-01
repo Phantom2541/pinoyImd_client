@@ -1,31 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Services as ServicesSchema } from "./../../../services/fakeDb";
+import { Select } from "../../../components/customizable";
+
 const Services = ({ template, service, setService }) => {
+  useEffect(() => {
+    const services = ServicesSchema.filterByTemplate(template);
+    setService(services.length > 0 ? services[0].id : null);
+  }, [template, setService]); // ✅ Now, no ESLint warning
+
   const services = ServicesSchema.filterByTemplate(template);
 
-  const handleChange = (e) => {
-    e.preventDefault();
-
-    setService(Number(e.target.value));
+  const handleChange = (value) => {
+    setService(Number(value)); // Update selected service
   };
 
   return (
-    <div style={{ position: "absolute", left: 320, width: 200 }}>
-      <select
-        defaultValue=""
-        className="browser-default custom-select"
+    <div style={{ position: "absolute", left: 350, bottom: -15, width: 300 }}>
+      <Select
+        collections={services}
+        keys={["id"]}
+        values={["name"]}
+        preValue={service}
         onChange={handleChange}
-        value={service}
-      >
-        <option value="" disabled>
-          Choose a service
-        </option>
-        {services.map(({ id, name }) => (
-          <option key={id} value={id}>
-            {name}
-          </option>
-        ))}
-      </select>
+        label="Choose a service"
+        disableSearch={services.length < 10}
+        inputClassName="text-white"
+      />
     </div>
   );
 };

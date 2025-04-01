@@ -51,7 +51,7 @@ export default function Modal() {
     dispatch = useDispatch();
 
   const toggle = () => dispatch(ToggleModal());
-
+  console.log("modal", selected);
   useEffect(() => {
     if (showCompanyModal) {
       setForm(_form);
@@ -108,6 +108,8 @@ export default function Modal() {
     }));
   };
 
+  console.log("form", form);
+
   // use for direct values like strings and numbers
   const { name = "", displayname = "" } = selected || {};
   return (
@@ -139,11 +141,11 @@ export default function Modal() {
           <MDBRow>
             <MDBCol>
               <Select
-                choices={MembershipOptions}
+                collections={MembershipOptions}
                 label={"Membership"}
                 onChange={(value) => setForm({ ...form, membership: value })}
-                texts={"text"}
-                values={"value"}
+                values={"text"}
+                keys={"value"}
                 preValue={form.membership}
               />
             </MDBCol>
@@ -152,7 +154,7 @@ export default function Modal() {
             <MDBCol>
               <Select
                 label={"Monthly Cut off"}
-                choices={new Array(30).fill("").map((_, i) => i + 1)}
+                collections={new Array(30).fill("").map((_, i) => i + 1)}
                 onChange={(value) =>
                   setForm({ ...form, cutoff: Number(value) })
                 }

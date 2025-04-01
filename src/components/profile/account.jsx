@@ -49,6 +49,7 @@ export default function Account() {
       email: "",
       dob: "",
       mobile: "",
+      alias: "",
       isMale: false,
     }),
     [activeTab, setActiveTab] = useState(0),
@@ -76,6 +77,7 @@ export default function Account() {
             dob: auth.dob,
             isMale: auth.isMale,
             mobile: auth.mobile,
+            alias: auth.alias,
           }),
         1000
       );

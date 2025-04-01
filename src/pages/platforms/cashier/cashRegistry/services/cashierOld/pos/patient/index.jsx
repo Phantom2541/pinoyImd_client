@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCardTitle, MDBCol, MDBRow } from "mdbreact";
 import {
   getAge,
@@ -12,21 +13,24 @@ import PatientPhysicians from "./physicians";
 import PatientCart from "./cart";
 
 export default function CashierPatient({
-  setSourceVendor,
+  // setSourceVendor,
   gross,
   discount,
   cart,
   setCart,
   categoryIndex,
-  patient,
   setCategoryIndex,
   privilegeIndex,
   setPrivilegeIndex,
-  setPhysicianId,
+  // setPhysicianId,
   didCheckout,
   toggleCheckout,
 }) {
-  const { fullName, isMale, dob, privilege } = patient;
+  const { selected } = useSelector(({ deals }) => deals);
+  const { fullName, isMale, dob, privilege, _id, physicianId } =
+    selected.customerId;
+
+  console.log("CashierPatient selected", selected);
 
   return (
     <MDBCol md="5" className={didCheckout ? "pr-0 offset-md-2" : "pl-0"}>
@@ -64,17 +68,11 @@ export default function CashierPatient({
               privilegeIndex={privilegeIndex}
               setPrivilegeIndex={setPrivilegeIndex}
             />
-            <PatientSources
-              didCheckout={didCheckout}
-              setSourceVendor={setSourceVendor}
-            />
-            <PatientPhysicians
-              didCheckout={didCheckout}
-              setPhysicianId={setPhysicianId}
-            />
+            <PatientSources didCheckout={didCheckout} />
+            <PatientPhysicians didCheckout={didCheckout} />
           </MDBRow>
           <PatientCart
-            saleId={patient.saleId}
+            saleId={_id}
             gross={gross}
             discount={discount}
             cart={cart}

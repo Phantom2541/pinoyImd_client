@@ -91,10 +91,10 @@ export default function PosCard() {
     setPhysicians(_physicians); // Update the physicians list based on the filtered data
     // Dispatch the selected source
     // if membership is not null
-    const membership = sources.find(
+    const { membership, clients } = sources.find(
       (source) => source._id.toString() === _id
-    )?.membership;
-    dispatch(SETSOURCE({ _id, membership }));
+    );
+    dispatch(SETSOURCE({ _id: clients?._id, membership }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
 

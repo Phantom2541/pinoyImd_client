@@ -6,6 +6,7 @@ import {
   INSOURCE,
   SetSOURCE,
   ToggleModal,
+  SetREGISTER,
 } from "../../../../../services/redux/slices/assets/providers";
 import Search from "../../../../../components/searchables/sources";
 import Swal from "sweetalert2";
@@ -28,10 +29,14 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
 
+  const handleRegister = (displayname = "") => {
+    dispatch(SetREGISTER({ displayname }));
+  };
+
   const setSource = (source) => {
     const { name, displayname } = source;
     Swal.fire({
-      title: `${name} ${displayname}`,
+      title: `${name || ""} ${displayname || ""}`,
       text: `Do you want to register him as a new provider?`,
       icon: "question",
       showCancelButton: true,
@@ -56,7 +61,7 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <Search setSource={setSource} />
+          <Search setSource={setSource} handleRegister={handleRegister} />
         </div>
       </div>
     </MDBView>

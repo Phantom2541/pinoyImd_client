@@ -9,6 +9,7 @@ import TableRowCount from "../../../../../components/pagination/rows";
 import { SetPAGE } from "../../../../../services/redux/slices/assets/providers";
 import TableLoading from "../../../../../components/tableLoading";
 import Modal from "./modal";
+import RegisterBranch from "./registerBranch";
 const Insources = () => {
   const { totalPages, page, isLoading } = useSelector(
       ({ providers }) => providers
@@ -16,15 +17,15 @@ const Insources = () => {
     dispatch = useDispatch();
 
   const setPage = (page) => dispatch(SetPAGE(page));
-
   return (
     <>
       <MDBCard narrow className="pb-3 mt-3" style={{ minHeight: "600px" }}>
         <TopHeader />
         <MDBCardBody>
-          {isLoading ? <TableLoading /> : <Collapsable />}
+          {!isLoading ? <Collapsable /> : <TableLoading />}
         </MDBCardBody>
         <Modal />
+        <RegisterBranch />
         <div className="mb-auto d-flex justify-content-between align-items-center px-4">
           <TableRowCount disablePageSelect={false} />
           <Pagination

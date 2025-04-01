@@ -21,6 +21,7 @@ const Text = ({ title, value, className }) => {
   return (
     <div className={`d-flex justify-content-between ${className}`}>
       <span>{title}</span>
+
       <span className="fw-bold text-right">{value}</span>
     </div>
   );
@@ -40,6 +41,7 @@ const Stub = ({ sale }) => {
       cart = [],
     } = sale,
     { fullName, address } = customer;
+  console.log("address", customer);
 
   return (
     <div
@@ -60,7 +62,7 @@ const Stub = ({ sale }) => {
         title="Name"
         value={capitalize(`${fullName.fname.split(" ")[0]} ${fullName.lname}`)}
       />
-      <Text title="Address" value={fullAddress(address)} />
+      <Text title="Address" value={address} />
       {privilege !== 0 && (
         <Text title="Privilege" value={Privileges[privilege] || "-"} />
       )}
@@ -113,9 +115,14 @@ const Stub = ({ sale }) => {
       </MDBTable>
       <Hr />
       <Text title="Total" value={currency(amount)} />
-      <Text title={capitalize(payment)} value={currency(cash)} />
+      <Text
+        title={capitalize(payment)}
+        value={payment === "cash" ? currency(cash) : currency(amount)}
+      />
       <Text title="Discount" value={currency(discount)} />
-      <Text title="Change" value={currency(cash - amount)} />
+      {payment === "cash" && (
+        <Text title="Change" value={currency(cash - amount)} />
+      )}
       <Hr />
       <Text
         title="Cashier"

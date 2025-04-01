@@ -12,7 +12,8 @@ import {
   SetSEARCHRESULTS,
   ToggleDidSearch,
 } from "../../../services/redux/slices/assets/providers";
-
+import "./style.css";
+import SummaryLoading from "../../../pages/platforms/cashier/cashRegistry/services/deals/summary/loading";
 /**
  * A Search component that allows the user to search for a patient by last name, first name, and middle name.
  * The component will make an API call to search for patients and render a list of results below the search input.
@@ -26,13 +27,19 @@ import {
  * @returns {JSX.Element} users
  */
 
-export default function Search({ setSource = () => {} }) {
+export default function Search({
+  setSource = () => {},
+  handleRegister = () => {},
+}) {
   const { token } = useSelector((state) => state.auth),
-    { collections, isLoading } = useSelector(({ branches }) => branches),
-    { collections: providerCollections } = useSelector(
+    { collections, isLoading, isSuccess } = useSelector(
+      ({ branches }) => branches
+    ),
+    { collections: providerCollections = [], searchResults } = useSelector(
       ({ providers }) => providers
     ),
     [results, setResults] = useState([]),
+    [isFetch, setIsFetch] = useState(true),
     // [searchInDB, setSearchInDB] = useState(false),
     [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
@@ -51,16 +58,23 @@ export default function Search({ setSource = () => {} }) {
   // The function then dispatches the GETPATIENTS action with the token and the formatted
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
-
+  console.log(providerCollections, "providerCollections");
   useEffect(() => {
-    const removeExisting = collections.filter(
+    const removeExisting = collections?.filter(
       (item) =>
-        !providerCollections.some(
+        !providerCollections?.some(
           ({ clients = { _id: "" } }) => clients?._id === item?._id
         )
     );
     setResults(removeExisting || []);
   }, [collections, providerCollections]);
+
+  useEffect(() => {
+    if (!isLoading && isSuccess) {
+      setIsFetch(false);
+      dispatch(RESET());
+    }
+  }, [isSuccess, isLoading, dispatch]);
 
   const debouncedSearch = debounce((searchKey) => {
     // search result from redux
@@ -72,6 +86,7 @@ export default function Search({ setSource = () => {} }) {
     dispatch(SEARCH({ token, key: searchKey }));
     // setSearchInDB(true);
     // }
+    setIsFetch(true);
   }, 1000);
 
   const handleChange = (e) => {
@@ -101,47 +116,69 @@ export default function Search({ setSource = () => {} }) {
   return (
     <div className="d-flex align-items-center">
       <Notification didSearch={didSearch} />
-      <div className={`searchable-search ${didSearch && "active"}`}>
-        <div className="searchable-search-suggestions">
-          {!results?.length ? (
+      <div className={`sources-search ${didSearch && "active"}`}>
+        <div className="sources-search-suggestions">
+          {!results?.length && !isFetch ? (
             <div>
-              <small>No Company Found In Database...</small>
+              <small className="grey-text">
+                No branch found In Database...
+              </small>
+              {searchResults.length <= 0 && (
+                <h6 className="text-dark">
+                  <p>
+                    <span
+                      className="text-primary mr-1 cursor-pointer"
+                      onClick={() => {
+                        handleRegister(searchKey);
+                        setDidSearch(false);
+                        setSearchKey("");
+                      }}
+                      style={{ textDecoration: "underline" }}
+                    >
+                      Click here
+                    </span>
+                    to register a branch
+                  </p>
+                </h6>
+              )}
             </div>
           ) : (
             <ul>
-              <span className="text-dark mb-2 text-nowrap">
+              <span className="grey-text mb-2 text-nowrap">
                 {isLoading
                   ? "Searching from database"
-                  : "External provider, not in your records"}
+                  : !isFetch && "External provider, not in your records"}
               </span>
-              {results?.map((result) => {
-                const { _id, name, isGhost = false, displayname } = result;
+              {!isLoading ? (
+                <>
+                  {results?.map((result) => {
+                    const { _id, name, isGhost = false, displayname } = result;
+                    const _name = `${name || ""}  ${displayname || ""}`;
 
-                return (
-                  <li
-                    onClick={() => handleSelect(result)}
-                    key={_id}
-                    className="d-flex text-dark"
-                    title={
-                      isGhost
-                        ? "This is a ghost physician not register as a user"
-                        : ""
-                    }
-                  >
-                    <MDBIcon
-                      icon="database"
-                      className="mr-2"
-                      style={{ color: "blue" }}
-                    />
-                    <small>{`${name} ${displayname}`}</small>
-                  </li>
-                );
-              })}
+                    return (
+                      <li
+                        onClick={() => handleSelect(result)}
+                        key={_id}
+                        className="d-flex"
+                        title={
+                          isGhost
+                            ? "This is a ghost physician not register as a user"
+                            : ""
+                        }
+                      >
+                        <MDBIcon icon="database" className="mr-2 mt-1" />
+                        <small>{_name}</small>
+                      </li>
+                    );
+                  })}
+                </>
+              ) : (
+                <SummaryLoading className={"mt-2"} rowCount={4} />
+              )}
             </ul>
           )}
         </div>
         <input
-          disabled={isLoading}
           value={searchKey}
           onChange={handleChange}
           placeholder="Search..."
@@ -151,12 +188,11 @@ export default function Search({ setSource = () => {} }) {
         <button
           type="submit"
           onClick={handleSubmit}
-          className={didSearch && !isLoading ? "bg-danger" : "bg-primary"}
+          className={didSearch ? "bg-danger" : "bg-primary"}
           rounded
         >
           <MDBIcon
-            pulse={isLoading}
-            icon={isLoading ? "spinner" : didSearch ? "times" : "search"}
+            icon={didSearch ? "times" : "search"}
             className="search-icon"
           />
         </button>
