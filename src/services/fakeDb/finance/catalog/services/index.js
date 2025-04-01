@@ -53,11 +53,40 @@ const Services = {
     return departments.length > 0 ? uniqueDepartments : ["unknown department"];
   },
   getTemplates: (pks, department) => {
-    const templates = collections.filter(({ id }) => pks.includes(id)).map(({ template }) => template);
-    const uniqueTemplates = [...new Set(templates)]; // Remove duplicates by converting to a Set and back to an array
-    const names = Templates.whereTemplate(uniqueTemplates,department )
-    return names;
-  }
+    const cluster = collections.filter(({ id }) => pks.includes(id));
+    const templates = cluster.map(({ template }) => template);
+    const uniqueTemplates = [...new Set(templates)]; // Remove duplicates
+
+    const result = {}; // This will hold the final object to return
+
+    uniqueTemplates.forEach((id) => {
+      const key = Templates.getComponentName(id, department);
+      let values = cluster
+        .filter(({ template }) => template === id)
+        .map(({ id }) => id) // Array of ids
+        .sort((a, b) => a - b);
+
+      // Logic for switch to return object for specific cases
+      switch (key) {
+        case "Chemistry":
+        case "Electrolyte":
+        case "Serology":
+          // Create an object where each id is a key with empty string as value
+          values = values.reduce((acc, curr) => {
+            acc[curr] = ""; // Set each id as key with empty string value
+            return acc;
+          }, {});
+          result[key] = values; // Add the object to the result
+          break;
+        default:
+          // For other cases, assign the array of ids
+          result[key] = values; // Add the array to the result
+          break;
+      }
+    });
+
+    return result; // Return the final object instead of an array of objects
+  },
 };
 
 export default Services;

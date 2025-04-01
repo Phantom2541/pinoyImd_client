@@ -13,9 +13,10 @@ import {
   REFORM,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
-import { axioKit, harvestTask } from "../../../../../../services/utilities";
+import { axioKit } from "../../../../../../services/utilities";
 
 import Body from "./list";
+import { Services } from "../../../../../../services/fakeDb";
 
 export default function Modal() {
   const { auth, token, activePlatform } = useSelector(({ auth }) => auth),
@@ -25,123 +26,151 @@ export default function Modal() {
       inhouse,
       outsource,
     } = useSelector(({ taskGenerator }) => taskGenerator),
-    [outSource, setOutSource] = useState(""),
+    [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
   const toggle = () => dispatch(TOGGLE());
 
   const getIDS = (collections) => collections.map(({ id }) => id);
+
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
-    const outsourceIDS = getIDS(outsource);
-    console.log("inhouseIDS", inhouseIDS);
-    console.log("outsourceIDS", outsourceIDS);
+    const _outsource = getIDS(outsource);
+    const department = activePlatform.department;
+    const _inhouse = Services.getTemplates(
+      inhouseIDS,
+      department === "laboratory" ? "LAB" : "RAD"
+    );
 
-    // const { _id, cart, customerId, ssx } = deal;
-    // let RequestForm = { customer: deal?.customerId };
-    // const task = harvestTask(cart);
-    // localStorage.setItem("task", JSON.stringify(task));
-    // localStorage.setItem("ssx", JSON.stringify(ssx));
+    const { _id, customerId, ssx } = deal;
 
-    // const forms = Object.keys(task);
-    // for (const key in task) {
-    //   const lowercaseKey = key.toLowerCase();
-    //   RequestForm[lowercaseKey] = task[key];
+    localStorage.setItem(
+      "inhouse",
+      JSON.stringify({ deal, forms: { ..._inhouse } })
+    );
+    localStorage.setItem("ssx", JSON.stringify(ssx));
 
-    //   if (key === "Miscellaneous") {
-    //     // const buntisTests = [68, 69, 70, 131, 97]; // HIV, RPR, HBsAg, HAV, HCV
-    //     const buntisTests = []; // HIV, RPR, HBsAg, HAV, HCV //removed 131
-    //     var tests = task[key];
-    //     // Check if all elements to remove are present in the array
-    //     const buntisPresent = tests.filter((test) =>
-    //       buntisTests.includes(test)
-    //     );
-    //     //console.log("Miscellaneous");
-    //     if (!!buntisPresent.length) {
-    //       //console.log("buntisPresent");
+    const forms = Object.keys(_inhouse);
 
-    //       tests = tests.filter((item) => !buntisTests.includes(item));
-    //       await axioKit.save(
-    //         "/diagnostics/laboratory/result/miscellaneous",
-    //         {
-    //           packages: buntisPresent,
-    //           saleId: _id,
-    //           customerId: customerId?._id,
-    //           branchId: activePlatform.branchId,
-    //           buntis: true,
-    //         },
-    //         token
-    //       );
-    //       return; // added a return to stop from double query
-    //     }
+    const saveRequest = async (url, data) => {
+      try {
+        await axioKit.save(url, data, token);
+      } catch (error) {
+        console.error("Error saving request:", error);
+      }
+    };
 
-    //     // Solo form:
-    //     // 1. Preg test (67),
-    //     // 2. Dengue Duo (77),
-    //     // 3. Blood Typing (66)
-    //     //console.log("single form");
+    for (const key in _inhouse) {
+      const lowercaseKey = key.toLowerCase();
 
-    //     const newArr = tests.map((test) => ({
-    //       packages: [test],
-    //       saleId: _id,
-    //       customerId: customerId?._id,
-    //       branchId: activePlatform.branchId,
-    //       _buntis: false,
-    //     }));
+      const requestData = {
+        packages: _inhouse[key],
+        _id,
+        customerId: customerId?._id,
+        branchId: activePlatform.branchId,
+      };
 
-    //     axioKit.save(
-    //       "/diagnostics/laboratory/result/miscellaneous",
-    //       newArr,
-    //       token
-    //     );
+      switch (key) {
+        case "Miscellaneous":
+          const buntisTests = []; // HIV, RPR, HBsAg, HAV, HCV
+          let tests = _inhouse[key];
 
-    //     continue;
-    //   }
-    //   const department =
-    //     key === "ECG" || key === "X-ray"
-    //       ? "radiology"
-    //       : key === "Examination" || key === "Certicifate"
-    //       ? "clinic"
-    //       : "laboratory";
+          const buntisPresent = tests.filter((test) =>
+            buntisTests.includes(test)
+          );
+          if (buntisPresent.length) {
+            tests = tests.filter((item) => !buntisTests.includes(item));
 
-    //   axioKit.save(
-    //     `/diagnostics/${department}/result/${lowercaseKey}`,
-    //     {
-    //       packages: task[key],
-    //       _id,
-    //       customerId: customerId?._id,
-    //       branchId: activePlatform.branchId,
-    //     },
-    //     token
-    //   );
+            // Save buntisPresent if present
+            await saveRequest("/diagnostics/laboratory/result/miscellaneous", {
+              packages: buntisPresent,
+              saleId: _id,
+              customerId: customerId?._id,
+              branchId: activePlatform.branchId,
+              buntis: true,
+            });
+            console.log("results test", tests);
+            return; // Stop further queries if buntisPresent is saved
+          }
 
-    //   localStorage.setItem("RequestForm", JSON.stringify(RequestForm));
-    // }
+          // Solo form processing
+          const soloForms = tests.map((test) => ({
+            packages: [test],
+            saleId: _id,
+            customerId: customerId?._id,
+            branchId: activePlatform.branchId,
+            _buntis: false,
+          }));
 
-    // // working request form but not showing anything
-    // window.open(
-    //   "/printout/request/form",
-    //   "Request Form",
-    //   "top=100px,left=100px,width=1050px,height=750px"
-    // );
+          await saveRequest(
+            "/diagnostics/laboratory/result/miscellaneous",
+            soloForms
+          );
+          break;
 
-    // dispatch(
-    //   REFORM({
-    //     token,
-    //     data: {
-    //       _id,
-    //       ssx,
-    //       lol: auth._id,
-    //       rendered: [
-    //         {
-    //           department: "LAB",
-    //           renderedBy: auth._id,
-    //           renderedAt: new Date().toLocaleString(),
-    //         },
-    //       ],
-    //       forms,
-    //     },
-    //   })
-    // );
+        case "ECG":
+        case "X-ray":
+          // Radiology department handling
+          await saveRequest(
+            `/diagnostics/${department}/result/${lowercaseKey}`,
+            requestData
+          );
+          break;
+
+        case "Examination":
+        case "Certificate":
+          // Clinic department handling
+          await saveRequest(
+            `/diagnostics/${department}/result/${lowercaseKey}`,
+            requestData
+          );
+          break;
+
+        default:
+          // Default case for other departments
+          await saveRequest(
+            `/diagnostics/${department}/result/${lowercaseKey}`,
+            requestData
+          );
+          break;
+      }
+    }
+
+    // Open the printout request form window
+    window.open(
+      "/printout/request/form",
+      "Request Form",
+      "top=100px,left=100px,width=1050px,height=750px"
+    );
+
+    const data = {
+      _id,
+      ssx,
+      lol: auth._id,
+      rendered: [
+        {
+          department: "LAB",
+          renderedBy: auth._id,
+          renderedAt: new Date().toLocaleString(),
+        },
+      ],
+      forms,
+      ...(outSourceId && { outsource: outSourceId }),
+    };
+
+    if (outSourceId) {
+      await saveRequest(`/commerce/pos/services/dealOutSources`, {
+        dealId: deal._id,
+        servicesId: _outsource,
+      });
+    }
+
+    dispatch(
+      REFORM({
+        token,
+        data,
+      })
+    );
+    dispatch(TOGGLE());
   };
 
   return (
@@ -162,7 +191,7 @@ export default function Modal() {
             management.
           </MDBTypography>
 
-          <Body outSource={outSource} setOutSource={setOutSource} />
+          <Body outSource={outSourceId} setOutSource={setOutSourceId} />
           <MDBBtn
             className="float-right mt-3 mb-3"
             color="primary"
