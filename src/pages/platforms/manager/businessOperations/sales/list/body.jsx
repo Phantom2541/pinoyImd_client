@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { capitalize } from "lodash";
 import {
   currency,
+  Deals,
   fullName,
   getGenderIcon,
   paymentMethod,
@@ -13,7 +14,6 @@ import {
   SetDISCOUNT,
   RESET,
   SetREVERT,
-  UPDATE_INFO,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 
@@ -31,7 +31,6 @@ import {
 } from "mdbreact";
 import "./style.css";
 import { Select } from "../../../../../../components/customizable";
-import PickPhysician from "../../../../../../components/searchables/physicians/pickPhysician";
 
 export const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
@@ -111,25 +110,20 @@ export const Tables = () => {
     dispatch(SetREVERT(deal));
   };
 
-  const handleUpdate = (updatedKey, newKey) => {
-    //updated key, new key is the new value updated
-    const { _id } = selected;
-    const oldValue = selected[updatedKey] || "";
-    const newValue = selected[newKey] || "";
-
-    if (oldValue.toLowerCase() === newValue.toLowerCase()) {
-      setSelected({});
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-    dispatch(
-      UPDATE_INFO({
-        data: { _id, [updatedKey]: selected[newKey], updatedKey },
-        token,
-      })
-    );
+  const handleUpdate = async (updatedKey, newKey, deal = {}) => {
+    Deals.specificUpdate({
+      updatedKey,
+      newKey,
+      selected,
+      deal,
+      setSelected,
+      token,
+      sources,
+      dispatch,
+      addToast,
+    });
   };
+
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -161,7 +155,7 @@ export const Tables = () => {
         <thead>
           <tr style={{ marginTop: "-5rem" }}>
             <th>Patient</th>
-            <th>Physician/Source</th>
+            <th>Source/Physician</th>
             <th>Amount</th>
             <th>Services</th>
             <th>Remarks</th>
@@ -172,9 +166,8 @@ export const Tables = () => {
             const isDeleted = !!deal.deletedAt;
             const isDiscounted = deal.discount > 0;
             const isHover = index === didHoverID;
-            const source = deal.source?.companyName || deal.source?.name;
+            const sourceName = deal.source?.displayname || deal.source?.name;
             const { img, style, text } = paymentMethod.getImage(deal.payment);
-
             return (
               <tr
                 onMouseEnter={() => setDidHoverID(index)}
@@ -260,74 +253,6 @@ export const Tables = () => {
                   @ {new Date(deal.createdAt).toLocaleTimeString()}
                 </td>
                 <td>
-                  {selected._id === deal._id &&
-                  selected.updatedKey === "physician" ? (
-                    <div
-                      className="d-flex align-items-center"
-                      style={{ marginBottom: "-0.5rem" }}
-                    >
-                      <div style={{ width: "15rem" }}>
-                        <PickPhysician
-                          label="Physician"
-                          onClick={(value) =>
-                            setSelected({
-                              ...selected,
-                              newPhysician: value?.user?._id,
-                            })
-                          }
-                        />
-                      </div>
-                      {!formSubmitted ? (
-                        selected.physicianId !== selected.newPhysician && (
-                          <MDBIcon
-                            icon="check"
-                            className="mr-2 ml-2 cursor-pointer"
-                            title="Update Physician"
-                            onClick={() =>
-                              handleUpdate("physicianId", "newPhysician")
-                            }
-                            style={{ fontSize: "1rem", color: "blue" }}
-                          />
-                        )
-                      ) : (
-                        <MDBIcon
-                          icon="spinner"
-                          className="ml-2"
-                          pulse
-                          style={{
-                            color: "black",
-                            fontSize: "1rem",
-                            marginRight: "10px",
-                          }}
-                        />
-                      )}
-
-                      <MDBIcon
-                        icon="times"
-                        title="Close"
-                        className="cursor-pointer "
-                        onClick={() => setSelected({})}
-                        style={{ fontSize: "1rem", color: "red" }}
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <small className="mr-1 grey-text">Physician:</small>
-                      {deal?.physicianId?.fullName?.lname ? (
-                        <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
-                      ) : (
-                        <h6
-                          className="cursor-pointer"
-                          onClick={() =>
-                            setSelected({ ...deal, updatedKey: "physician" })
-                          }
-                        >
-                          N/A
-                        </h6>
-                      )}
-                    </div>
-                  )}
-
                   {selected?._id === deal?._id &&
                   selected.updatedKey === "source" ? (
                     <div
@@ -346,53 +271,78 @@ export const Tables = () => {
                         className="m-0 p-0 mt-3"
                         collections={sources.map(({ clients }) => ({
                           _id: clients._id,
-                          text: `${clients?.displayname?.toUpperCase()} ${clients?.name?.toUpperCase()}`,
+                          text: `${clients?.displayname?.toUpperCase()}`,
                         }))}
-                        preValue={deal.source}
+                        preValue={deal?.source?._id}
+                        handleCheck={() =>
+                          handleUpdate("source._id", "newSource", deal)
+                        }
+                        handleClose={() => setSelected({})}
+                        soloUpdate
+                        formSubmitted={formSubmitted}
                         keys={"_id"}
                         values={"text"}
-                      />
-                      {!formSubmitted ? (
-                        <MDBIcon
-                          icon="check"
-                          className="mr-2 ml-2 cursor-pointer"
-                          onClick={() => handleUpdate("source", "newSource")}
-                          style={{ fontSize: "1rem", color: "blue" }}
-                        />
-                      ) : (
-                        <MDBIcon
-                          icon="spinner"
-                          className="ml-2"
-                          pulse
-                          style={{
-                            color: "black",
-                            fontSize: "1rem",
-                            marginRight: "10px",
-                          }}
-                        />
-                      )}
-
-                      <MDBIcon
-                        icon="times"
-                        className="cursor-pointer "
-                        onClick={() => setSelected({})}
-                        style={{ fontSize: "1rem", color: "red" }}
                       />
                     </div>
                   ) : (
                     <div>
                       <small className="mr-1 grey-text">Source:</small>
-                      {source ? (
-                        <h6>{source}</h6>
+                      <h6
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setSelected({ ...deal, updatedKey: "source" })
+                        }
+                      >
+                        {sourceName || "N/A"}
+                      </h6>
+                    </div>
+                  )}
+
+                  {selected._id === deal._id &&
+                  selected.updatedKey === "physician" ? (
+                    <div style={{ width: "19rem" }}>
+                      <Select
+                        label={"Physician"}
+                        onChange={(value) =>
+                          setSelected({ ...selected, newPhysician: value })
+                        }
+                        whitelisted
+                        className="m-0 p-0 mt-3"
+                        // collections={getPhysicians(deal?.source?._id)}
+                        collections={Deals.getPhysicians(
+                          deal?.source._id,
+                          sources
+                        )}
+                        preValue={deal.physicianId?._id}
+                        formSubmitted={formSubmitted}
+                        keys={"value"}
+                        values={"text"}
+                        soloUpdate
+                        handleClose={() => setSelected({})}
+                        handleCheck={() =>
+                          handleUpdate("physicianId._id", "newPhysician")
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => {
+                        if (!deal?.source)
+                          return addToast(
+                            "Please add a source before adding a physician.",
+                            {
+                              appearance: "warning",
+                            }
+                          );
+                        setSelected({ ...deal, updatedKey: "physician" });
+                      }}
+                    >
+                      <small className="mr-1 grey-text">Physician:</small>
+                      {deal?.physicianId?.fullName?.lname ? (
+                        <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
                       ) : (
-                        <h6
-                          className="cursor-pointer"
-                          onClick={() =>
-                            setSelected({ ...deal, updatedKey: "source" })
-                          }
-                        >
-                          N/A
-                        </h6>
+                        <h6 className="cursor-pointer">N/A</h6>
                       )}
                     </div>
                   )}

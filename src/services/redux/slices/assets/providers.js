@@ -15,6 +15,7 @@ const initialState = {
   selected: {},
   page: 0,
   showModal: false,
+  showRegisterModal: false,
   showCompanyModal: false,
   willCreate: false,
   /**
@@ -123,11 +124,11 @@ export const SAVE = createAsyncThunk(`${url}/save`, async (form, thunkAPI) => {
   }
 });
 
-export const REGISTER_GHOST_COMPANY = createAsyncThunk(
-  `${url}/REGISTER_GHOST_COMPANY`,
+export const REGISTER_BRANCH = createAsyncThunk(
+  `${url}/REGISTER_BRANCH`,
   async ({ token, data }, thunkAPI) => {
     try {
-      return await axioKit.save(url, data, token, "register_ghost_company");
+      return await axioKit.save(url, data, token, "register_branch");
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -193,7 +194,7 @@ export const reduxSlice = createSlice({
       state.didSearch = payload;
     },
     SetSOURCE: (state, { payload }) => {
-      state.collections = payload;
+      state.selected = payload;
       state.showModal = true;
     },
     ToggleModal: (state) => {
@@ -264,6 +265,14 @@ export const reduxSlice = createSlice({
       state.willCreate = true;
       state.showModal = true;
     },
+    SetREGISTER: (state, { payload }) => {
+      state.selected = payload;
+      state.showRegisterModal = true;
+    },
+    ToggleRegister: (state) => {
+      state.showRegisterModal = !state.showRegisterModal;
+      state.selected = {};
+    },
     SetFILTER: (state, { payload }) => {
       const { page, maxPage } = payload;
       if (page.length > 0) {
@@ -273,6 +282,9 @@ export const reduxSlice = createSlice({
         }
       }
       state.filtered = page;
+    },
+    RESET_COLLECTIONS: (state) => {
+      state.didSearch = false;
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
@@ -306,7 +318,6 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(GETENROLLED.fulfilled, (state, { payload }) => {
-        console.log(payload);
         const { payload: data } = payload;
         state.enrolled = data;
         state.isSuccess = true;
@@ -385,20 +396,25 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
-      .addCase(REGISTER_GHOST_COMPANY.pending, (state) => {
+      .addCase(REGISTER_BRANCH.pending, (state) => {
         state.formSubmitted = true;
       })
-      .addCase(REGISTER_GHOST_COMPANY.fulfilled, (state, { payload }) => {
+      .addCase(REGISTER_BRANCH.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
-        const index = state.collections.findIndex(
-          ({ _id }) => data._id === _id
-        );
+        const { isGhostProvider } = data;
+        if (isGhostProvider) {
+          const index = state.collections.findIndex(
+            ({ _id }) => data._id === _id
+          );
 
-        state.collections[index] = data;
+          state.collections[index] = data;
+        } else {
+          state.collections.unshift(data);
+        }
         state.isSuccess = true;
         state.formSubmitted = false;
       })
-      .addCase(REGISTER_GHOST_COMPANY.rejected, (state, { payload }) => {
+      .addCase(REGISTER_BRANCH.rejected, (state, { payload }) => {
         state.message = payload;
         state.formSubmitted = false;
       })
@@ -472,6 +488,9 @@ export const {
   SetSEARCHRESULTS,
   ToggleModal,
   ToggleDidSearch,
+  RESET_COLLECTIONS,
+  SetREGISTER,
+  ToggleRegister,
   SetSOURCE,
   SetBRANCHES,
   SetMaxPage,

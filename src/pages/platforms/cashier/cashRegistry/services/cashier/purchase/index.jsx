@@ -57,9 +57,6 @@ export default function Menus({ patronPresent }) {
           )}
           {cart.map((item) => {
             const { _id, description, abbreviation, packages } = item;
-
-            console.log("category", category, "privilege", privilege);
-
             const {
               gross = 0,
               up = 0,

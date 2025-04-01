@@ -26,7 +26,6 @@ export default function Search({ setEnrolled, setRegister = () => {} }) {
       displayname: searchKey[0],
       name: searchKey[1] ? searchKey[1] : "",
     };
-    console.log("query", query);
   };
 
   const handleSelect = (user) => {

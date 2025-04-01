@@ -12,7 +12,9 @@ const TemplatetUtils = {
    * @returns {Array} Array of component names
    */
   getComponents: (key) => {
-    const department = templates.find(({ department }) => department === key);
+    const department = templates.find(
+      ({ department }) => department.toLowerCase() === key.toLowerCase()
+    );
     return department
       ? [...department.components].sort((a, b) => a.localeCompare(b))
       : [];

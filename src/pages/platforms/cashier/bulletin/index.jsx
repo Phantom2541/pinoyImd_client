@@ -14,7 +14,7 @@ import { Sales, OutSource, InSource, Utilities } from "./wigets";
 import Transactions from "./transactions";
 import { OutSources, InSources } from "./sources";
 import { Expenses, Purchases } from "./calendars";
-import Vouchers from "../accrued/vouchers";
+// import Vouchers from "../accrued/vouchers";
 
 export default function Dashboard() {
   return (
@@ -41,7 +41,7 @@ export default function Dashboard() {
           <Expenses />
           <Sales />
           <Purchases />
-          <Vouchers />
+          {/* <Vouchers /> */}
         </MDBRow>
       </section>
       <section>

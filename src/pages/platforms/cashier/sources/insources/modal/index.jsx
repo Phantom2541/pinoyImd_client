@@ -51,7 +51,7 @@ export default function Modal() {
     dispatch = useDispatch();
 
   const toggle = () => dispatch(ToggleModal());
-
+  console.log("modal", selected);
   useEffect(() => {
     if (showCompanyModal) {
       setForm(_form);
@@ -146,7 +146,6 @@ export default function Modal() {
                 onChange={(value) => setForm({ ...form, membership: value })}
                 values={"text"}
                 keys={"value"}
-                soloUpdate
                 preValue={form.membership}
               />
             </MDBCol>
@@ -156,7 +155,6 @@ export default function Modal() {
               <Select
                 label={"Monthly Cut off"}
                 collections={new Array(30).fill("").map((_, i) => i + 1)}
-                soloUpdate
                 onChange={(value) =>
                   setForm({ ...form, cutoff: Number(value) })
                 }

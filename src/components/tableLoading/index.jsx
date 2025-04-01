@@ -25,6 +25,7 @@ function TableLoading() {
                     duration="3000ms"
                   >
                     <MDBProgress
+                      animated
                       color="light"
                       value={3000}
                       id="progress-table"

@@ -27,35 +27,36 @@ export default function Vouchers() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (collections.length > 0) {
+    if (collections.length > 0 && !isLoading) {
       const menuCountMap = {}; // { menuId: { _id, abbreviation, count } }
       const serviceCountMap = {}; // { serviceId: { _id, count } }
       const paymentSummary = {};
-      collections.forEach(({ cart, amount, payment }) => {
-        if (payment && amount) {
-          if (!paymentSummary[payment]) {
-            paymentSummary[payment] = 0;
-          }
-          paymentSummary[payment] += amount;
-        }
-        cart.forEach(({ menuId, packages }) => {
-          // Count Menus
-          const { _id, abbreviation } = menuId;
-          if (!menuCountMap[_id]) {
-            menuCountMap[_id] = { _id, abbreviation, count: 0 };
-          }
-          menuCountMap[_id].count += 1;
-
-          // Count Services (Extract from packages)
-          packages.forEach((serviceId) => {
-            if (!serviceCountMap[serviceId]) {
-              serviceCountMap[serviceId] = { _id: serviceId, count: 0 };
+      collections ??
+        [].forEach(({ cart, amount, payment }) => {
+          if (payment && amount) {
+            if (!paymentSummary[payment]) {
+              paymentSummary[payment] = 0;
             }
-            serviceCountMap[serviceId].count += 1;
+            paymentSummary[payment] += amount;
+          }
+          cart.forEach(({ menuId, packages }) => {
+            // Count Menus
+            const { _id, abbreviation } = menuId;
+            if (!menuCountMap[_id]) {
+              menuCountMap[_id] = { _id, abbreviation, count: 0 };
+            }
+            menuCountMap[_id].count += 1;
+
+            // Count Services (Extract from packages)
+            packages.forEach((serviceId) => {
+              if (!serviceCountMap[serviceId]) {
+                serviceCountMap[serviceId] = { _id: serviceId, count: 0 };
+              }
+              serviceCountMap[serviceId].count += 1;
+            });
           });
+          setBreakdown(paymentSummary);
         });
-        setBreakdown(paymentSummary);
-      });
 
       // Set display and save data separately
       setMenuCensus(Object.values(menuCountMap)); // Show menu abbreviations
@@ -67,7 +68,7 @@ export default function Vouchers() {
         Object.values(serviceCountMap).map(({ _id, count }) => ({ _id, count }))
       ); // Save only service _id & count
     }
-  }, [collections]); // Re-run if collections change
+  }, [collections, isLoading]); // Re-run if collections change
 
   const handleActivePage = (page) =>
     setActivePage(activePage === page ? "close" : page);
