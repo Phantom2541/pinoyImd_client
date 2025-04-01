@@ -43,15 +43,6 @@ const Header = ({ deal, index }) => {
       >
         <MDBIcon icon="eye" />
       </MDBBadge>
-      <MDBBadge
-        onClick={() =>
-          history.push(`/transactions/reports?patient=${customerId?._id}`)
-        }
-        color="info"
-        className="px-2"
-      >
-        <MDBIcon icon="eye" />
-      </MDBBadge>
       <i
         onClick={() =>
           dispatch(

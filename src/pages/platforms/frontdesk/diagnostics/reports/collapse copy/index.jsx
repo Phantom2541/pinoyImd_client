@@ -1,24 +1,44 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
+import React from "react";
+import {
+  MDBContainer,
+  MDBBadge,
+  MDBCard,
+  MDBCardBody,
+  MDBCollapse,
+  MDBCollapseHeader,
+  MDBIcon,
+} from "mdbreact";
+import { dateFormat, sourceColor,axioKit, harvestTask } from "../../../../../../services/utilities";
+import Table from "./table";
+import { useHistory } from "react-router";
+import { Services } from "../../../../../../services/fakeDb";
+import { useDispatch,  useSelector } from "react-redux";
 
-import { axioKit, harvestTask } from "../../../../../../../services/utilities";
-import { REFORM } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-import { SetSELECTED } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-import { Services } from "../../../../../../../services/fakeDb";
+import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
-const PrimaryFooter = ({ deal, setEdit }) => {
-  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+export default function TasksCollapse({
+  task,
+  number,
+  setActiveCollapse,
+  isActive,
+}) {
+  const { _id, category } = task,
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    history = useHistory(),
     dispatch = useDispatch();
+    
 
+  const hasRenderedItems = task.rendered && task.rendered.length !== 0;
   const generateTask = async () => {
-    const { _id, cart, customerId, ssx } = deal;
-
-    const packages = cart.flatMap((item) => item.packages);
-
-    const template = Services.getTemplates(packages, "LAB");
-
-    let RequestForm = { customer: deal?.customerId };
+    alert("lol ginagawa ko pa wait kalang ")
+    console.log("task", task);
+    
+    const { _id, cart, customerId, ssx } = task;
+     const packages = cart.flatMap((item) => item.packages);
+    
+        const template = Services.getTemplates(packages, "LAB")
+        
+    let RequestForm = { customer: task?.customerId };
     const task = harvestTask(cart);
     localStorage.setItem("task", JSON.stringify(task));
     localStorage.setItem("ssx", JSON.stringify(ssx));
@@ -44,6 +64,7 @@ const PrimaryFooter = ({ deal, setEdit }) => {
           await axioKit.save(
             "/diagnostics/laboratory/result/miscellaneous",
             {
+              
               packages: buntisPresent,
               saleId: _id,
               customerId: customerId?._id,
@@ -119,54 +140,56 @@ const PrimaryFooter = ({ deal, setEdit }) => {
               renderedAt: new Date().toLocaleString(),
             },
           ],
-          template,
           forms,
         },
       })
     );
   };
-
-  const preAnalytical = async (deal) => {
-    console.log("preAnalytical", deal);
-  };
-
   return (
-    <>
-      <MDBBtnGroup className="sales-card-footer w-100 d-flex flex-row">
-        <MDBBtn
-          type="button"
-          className="m-0"
-          size="sm"
-          color="primary"
-          title="Edit"
-          onClick={() => setEdit(true)}
+    <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
+      <MDBCard>
+        <MDBCollapseHeader
+          onClick={() => hasRenderedItems && setActiveCollapse(_id)}
+          className="d-flex align-items-center justify-content-between"
         >
-          <MDBIcon icon="pencil-alt" />
-        </MDBBtn>
-        <MDBBtn
-          type="button"
-          onClick={() => preAnalytical(deal)}
-          title="Pre-Analytical Supply Dispense"
-          className="m-0 "
-          size="sm"
-          color="primary"
-        >
-          <MDBIcon icon="cog" spin />
-        </MDBBtn>
-        <MDBBtn
-          type="button"
-          // onClick={() => generateTask()}
-          onClick={() => dispatch(SetSELECTED(deal))}
-          className="m-0 "
-          title="Generate Task"
-          size="sm"
-          color="primary"
-        >
-          <MDBIcon icon="user-injured" />
-        </MDBBtn>
-      </MDBBtnGroup>
-    </>
-  );
-};
+          <span>
+            {number}.{dateFormat(task?.createdAt)}
+          </span>
 
-export default PrimaryFooter;
+          <span>
+            <MDBBadge color={sourceColor(category)} className="mx-2">
+              {category}
+            </MDBBadge>
+            {!hasRenderedItems && (
+              <MDBBadge
+                onClick={() =>
+                  generateTask()
+                }
+                color="info"
+                className="px-2 cursor-pointer"
+              >
+                <MDBIcon icon="sync-alt" />
+              </MDBBadge>
+            )}
+            {task.source && (
+              <MDBBadge color="warning">{task?.source?.name}</MDBBadge>
+            )}
+            {hasRenderedItems && (
+              <i
+                style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
+                className="fa fa-angle-down transition-all ml-2"
+              />
+            )}
+          </span>
+        </MDBCollapseHeader>
+        {hasRenderedItems && (
+          <MDBCollapse id={`collapse-${_id}`} isOpen={isActive}>
+            <MDBCardBody className="pt-0">
+              <Table menu={task} />
+            </MDBCardBody>
+          </MDBCollapse>
+        )}
+      </MDBCard>
+    </MDBContainer>
+  );
+}

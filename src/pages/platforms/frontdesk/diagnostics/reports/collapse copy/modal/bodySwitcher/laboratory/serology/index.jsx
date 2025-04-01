@@ -1,45 +1,39 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { SetPackages, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
-import { Services } from "./../../../../../../../../../services/fakeDb";
+import { Services } from "../../../../../../../../../../services/fakeDb";
 import {
   findReference,
   referenceColor,
-} from "./../../../../../../../../../services/utilities";
+} from "../../../../../../../../../../services/utilities";
+import { useSelector } from "react-redux";
 
-export default function Serology() {
-  const { task, preferences, selected, params } = useSelector(
-      ({ validator }) => validator
-    ),
-    dispatch = useDispatch();
+export default function Serology({ task, setTask }) {
+  const { collections: preferences } = useSelector(
+    ({ preferences }) => preferences
+  );
 
-  console.log("params", params);
   const { packages = {}, key: mapKey, patient } = task;
-  // const { key: mapKey } = task;
-  // const { customerId: patient } = selected;
 
-  const handleChange = (target) => {
-    const { name, value } = target;
-    console.log("value", value, name);
+  const handleChange = (e) =>
+    setTask({
+      ...task,
+      packages: { ...packages, [e.target.name]: Number(e.target.value) },
+    });
 
-    dispatch(SetPackages({ ...params, [name]: Number(value) }));
-    dispatch(SetTASK({form: task.form, task:{ ...task, packages: { ...packages, [name]: Number(value) } }}));
-  };
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>
         <tr>
-          <th colSpan={2} className="py-1" />
-          <th className="text-center py-1" colSpan={2}>
-            Reference
+          <th className="py-1" colSpan={2} />
+          <th className="py-1" colSpan={2}>
+            Reference Value
           </th>
         </tr>
         <tr>
-          <th className="py-1">Service</th>
+          <th className="py-1">Services</th>
           <th className="py-1">Result</th>
-          <th className="py-1">Value</th>
-          <th className="py-1">Units</th>
+          <th className="py-1">Range</th>
+          <th className="py-1">Unit</th>
         </tr>
       </thead>
       <tbody>
@@ -52,6 +46,7 @@ export default function Serology() {
               preference,
               preferences
             );
+
           return (
             <tr key={`${mapKey}-${index}`}>
               <td className="fw-bold py-1" title={name || abbreviation}>
@@ -65,7 +60,7 @@ export default function Serology() {
                   }}
                   name={key}
                   value={String(value)}
-                  onChange={(e)=>handleChange(e.target)}
+                  onChange={handleChange}
                   className="w-100 text-center fw-bold"
                 />
               </td>
@@ -77,7 +72,7 @@ export default function Serology() {
               ) : (
                 <>
                   <td colSpan={2} className="py-1">
-                    No reference found, please inform the admin first
+                    No reference found, please inform the admin first.
                   </td>
                 </>
               )}

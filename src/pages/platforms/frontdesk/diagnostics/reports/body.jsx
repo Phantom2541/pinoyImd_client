@@ -29,7 +29,7 @@ export default function Body({ patient }) {
     );
 
   return (
-    <MDBContainer className=" mt-3 px-0" fluid>
+    <MDBContainer className=" " fluid>
       {collections.map((task, index) => (
         <Collapse
           key={task?._id}

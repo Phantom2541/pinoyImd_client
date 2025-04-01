@@ -1,5 +1,5 @@
 import collections from "./collections.json";
-
+import Templates from "../../../diagnostics/templates/index.js";
 const prioritizedSort = () => {
   const prefOrder = ["development", "equal", "gender", ""];
 
@@ -52,6 +52,12 @@ const Services = {
     // Return the array of departments or ["unknown department"] if no departments were found
     return departments.length > 0 ? uniqueDepartments : ["unknown department"];
   },
+  getTemplates: (pks, department) => {
+    const templates = collections.filter(({ id }) => pks.includes(id)).map(({ template }) => template);
+    const uniqueTemplates = [...new Set(templates)]; // Remove duplicates by converting to a Set and back to an array
+    const names = Templates.whereTemplate(uniqueTemplates,department )
+    return names;
+  }
 };
 
 export default Services;
