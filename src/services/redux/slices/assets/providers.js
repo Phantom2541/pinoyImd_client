@@ -283,6 +283,9 @@ export const reduxSlice = createSlice({
       }
       state.filtered = page;
     },
+    RESET_COLLECTIONS: (state) => {
+      state.didSearch = false;
+    },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
@@ -486,6 +489,7 @@ export const {
   SetSEARCHRESULTS,
   ToggleModal,
   ToggleDidSearch,
+  RESET_COLLECTIONS,
   SetREGISTER,
   ToggleRegister,
   SetSOURCE,

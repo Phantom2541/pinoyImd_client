@@ -6,6 +6,7 @@ import {
   INSOURCE,
   SetSOURCE,
   ToggleModal,
+  RESET_COLLECTIONS,
   SetREGISTER,
 } from "../../../../../services/redux/slices/assets/providers";
 import Search from "../../../../../components/searchables/sources";
@@ -47,6 +48,8 @@ const Header = () => {
       if (result.isConfirmed) {
         dispatch(SetSOURCE(source));
         dispatch(ToggleModal());
+      } else {
+        dispatch(RESET_COLLECTIONS());
       }
     });
   };
