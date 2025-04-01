@@ -77,14 +77,16 @@ export default function Modal() {
     );
   };
 
+  const isGhost = selected?.providerID ? true : false;
+
   return (
     <MDBModal size="md" isOpen={show} toggle={toggle} backdrop>
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
       >
-        <MDBIcon icon="building" className="mr-2" />
-        {form.name || form.displayname} <br />
+        <MDBIcon icon="code-branch" className="mr-2" />
+        {isGhost ? "Register Ghost Branch" : "Register Branch"}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <div style={{ marginBottom: "-1rem", marginTop: "-1rem" }}>
@@ -93,9 +95,9 @@ export default function Modal() {
             noteColor="warning"
             className="mt-2 text-black-50"
             note
-            noteTitle={"Register: "}
+            noteTitle={"Notice: "}
           >
-            as your new provider
+            This branch will be registered and set as your new provider.
           </MDBTypography>
         </div>
 
