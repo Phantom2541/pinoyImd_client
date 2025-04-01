@@ -4,8 +4,20 @@ import { Services } from "../../../../../fakeDb";
 // import _ from "lodash";
 const url = "commerce/pos/services/deals";
 // Get data once
-const authData = JSON.parse(localStorage.getItem("auth")) || {};
-const { branch } = JSON.parse(localStorage.getItem("activePlatform")) || {};
+function safeParseJSON(item) {
+  try {
+    return JSON.parse(item) || {};
+  } catch (error) {
+    console.error("Invalid JSON:", item, error);
+    return {};
+  }
+}
+
+const authData = safeParseJSON(localStorage.getItem("auth"));
+const activePlatform = safeParseJSON(localStorage.getItem("activePlatform"));
+const branch = activePlatform?.branch || {};
+
+
 const defaultCustomer = {
   fullName: {
     fname: "",
@@ -56,11 +68,9 @@ const defaultState = {
 };
 
 const initialState = {
-  // if needed but empty, then it will be updated from the database
-  menus: JSON.parse(localStorage.getItem("menus")) || [],
-  sources: JSON.parse(localStorage.getItem("sources")) || [],
-  physicians: JSON.parse(localStorage.getItem("physicians")) || [],
-  // needed every time
+   menus: safeParseJSON(localStorage.getItem("menus")),
+  sources: safeParseJSON(localStorage.getItem("sources")),
+  physicians: safeParseJSON(localStorage.getItem("physicians")),
   ...defaultState,
 };
 
