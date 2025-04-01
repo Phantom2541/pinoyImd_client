@@ -58,7 +58,6 @@ export default function Search({
   // The function then dispatches the GETPATIENTS action with the token and the formatted
   // search key as arguments. The GETPATIENTS action will make the API call to search
   // for patients and update the state with the result.
-  console.log(providerCollections, "providerCollections");
   useEffect(() => {
     const removeExisting = collections?.filter(
       (item) =>
@@ -79,13 +78,8 @@ export default function Search({
   const debouncedSearch = debounce((searchKey) => {
     // search result from redux
     const searchResultProviders = globalSearch(providerCollections, searchKey);
-    // console.log(searchResultProviders);
     dispatch(SetSEARCHRESULTS(searchResultProviders));
-    // setSearchInDB(false);
-    // if (searchResultProviders.length === 0) {
     dispatch(SEARCH({ token, key: searchKey }));
-    // setSearchInDB(true);
-    // }
     setIsFetch(true);
   }, 1000);
 

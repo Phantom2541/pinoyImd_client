@@ -5,9 +5,10 @@ import Body from "./body";
 import Header from "./header";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
+import { useSelector } from "react-redux";
 
 const Index = () => {
-  const isLoading = false;
+  const { isLoading } = useSelector(({ providers }) => providers);
 
   return (
     <MDBAnimation type="bounceInDown">
