@@ -73,8 +73,8 @@ const TemplatetUtils = {
       components.some((comp) => componentList.includes(comp))
     ),
   whereTemplate: (templateList, department) => {
-     const {components} = templates.find(({ department: dep }) => dep === department);
-  return  templateList.map(index => components[index]).filter(value => value !== undefined && value !== "");
+    const {components} = templates.find(({ department: dep }) => dep === department);
+    return  templateList.map(index => components[index]).filter(value => value !== undefined && value !== "");
 
   },
   
