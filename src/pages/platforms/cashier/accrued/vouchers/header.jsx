@@ -1,24 +1,21 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fullName } from "../../../../../services/utilities";
 import {
   VOUCHERS,
   SetFilterByCASHIER,
+  OnMoved,
   RESET,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import CalendarHeader from "../../../../../components/header/calendars";
 
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { collections, filterByCashier, cashiers } = useSelector(
+  const { collections, filterByCashier, cashiers, month, year } = useSelector(
     ({ deals }) => deals
   );
   const dispatch = useDispatch();
-
-  const month = 2,
-    year = 2025;
-
   // Fetch vouchers
   useEffect(() => {
     const startDate = new Date(year, month, 1);
@@ -49,6 +46,12 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
+          <CalendarHeader
+            month={month}
+            year={year}
+            prev={() => dispatch(OnMoved("prev"))}
+            next={() => dispatch(OnMoved("next"))}
+          />
           {/* Regular HTML select for Cashiers Dropdown */}
           <label htmlFor="cashier-select" className="mr-2">
             Select Cashier

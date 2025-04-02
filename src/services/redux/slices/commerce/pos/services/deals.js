@@ -4,6 +4,8 @@ import { axioKit, fullName } from "../../../../../utilities";
 const url = "commerce/pos/services/deals";
 
 const initialState = {
+  month: new Date().getMonth(), // Month as a number (1-12)
+  year: new Date().getFullYear(),
   collections: [],
   transaction: { _id: "default" },
   totalPatient: 0,
@@ -21,6 +23,7 @@ const initialState = {
     patients: 0,
     isEmpty: true,
   },
+
   showModal: false,
   showRevertModal: false,
   showDiscountModal: false,
@@ -334,6 +337,24 @@ export const reduxSlice = createSlice({
       state.activePage = payload;
       console.log("Set ActivePage", payload);
     },
+    OnMoved: (state, { payload }) => {
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+
     RESET: (state, { payload = {} }) => {
       state.filtered = [];
       state.isSuccess = false;
@@ -707,7 +728,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   ToggleRevertModal,
-
+  OnMoved,
   RESET,
 } = reduxSlice.actions;
 
