@@ -81,6 +81,32 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    // for template use only
+    SetCOLLECTIONS: (state, { payload }) => {
+      const { collections, maxPage } = payload;
+      const sortedCollections = [...collections]?.sort((a, b) => {
+        // Customize sorting logic as needed
+        return a.name.localeCompare(b.name); // Example: Sorting alphabetically by 'url' property
+      });
+
+      if (sortedCollections.length > 0) {
+        let totalPages = Math.floor(sortedCollections.length / maxPage);
+        if (sortedCollections.length % maxPage > 0) totalPages += 1;
+        state.totalPages = totalPages;
+
+        if (state.activePage > totalPages) {
+          state.activePage = totalPages;
+        }
+      }
+
+      console.log("sorted Collections", sortedCollections);
+
+      state.collections = [...sortedCollections];
+      state.filtered = [...sortedCollections];
+      state.maxPage = maxPage;
+      state.isSuccess = true;
+      state.isLoading = false;
+    },
     SetCLUSTER: (state, { payload }) => {
       state.template = payload;
       state.filtered = state.cluster =
@@ -114,6 +140,7 @@ export const reduxSlice = createSlice({
       }
 
       state.isSuccess = true;
+      state.isLoading = false;
     },
     SetByTEMPLATES: (state, { payload }) => {
       state.filtered = state.collections.filter(
@@ -213,6 +240,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetCOLLECTIONS,
   SetSERVICES,
   SetByTEMPLATES,
   SetMaxPage,

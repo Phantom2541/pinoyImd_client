@@ -31,7 +31,7 @@ export default function Select({
   handleCheck = () => {},
   handleClose = () => {},
 }) {
-  console.log("collections", collections);
+  // console.log("Select collections", collections);
 
   const getNestedValue = (obj, path) => {
     return path
@@ -90,7 +90,7 @@ export default function Select({
   const handleSelection = (array) => {
     //comment by darrel
     // if (array.length === 0) return;
-    console.log("selected");
+    // console.log("selected");
     // If soloUpdate is true, only update a single selected item
 
     if (multiple) {

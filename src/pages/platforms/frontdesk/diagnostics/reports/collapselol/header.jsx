@@ -1,11 +1,21 @@
 import React from "react";
 import { MDBCollapseHeader, MDBBadge, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { axioKit, dateFormat, sourceColor, harvestTask } from "../../../../../../services/utilities";
+import {
+  axioKit,
+  dateFormat,
+  sourceColor,
+  harvestTask,
+} from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
 import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
-export default function TaskHeader({ task, number, setActiveCollapse, isActive }) {
+export default function TaskHeader({
+  task,
+  number,
+  setActiveCollapse,
+  isActive,
+}) {
   const { _id, category, source, cart, customerId, ssx } = task;
   const hasRenderedItems = task.rendered && task.rendered.length !== 0;
 
@@ -17,7 +27,7 @@ export default function TaskHeader({ task, number, setActiveCollapse, isActive }
     console.log("Task Data:", task);
 
     const packages = cart.flatMap((item) => item.packages);
-    const template = Services.getTemplates(packages, "LAB");
+    // const template = Services.getTemplates(packages, "LAB");
 
     let requestForm = { customer: customerId };
     const harvestedTask = harvestTask(cart);
@@ -62,7 +72,13 @@ export default function TaskHeader({ task, number, setActiveCollapse, isActive }
         data: {
           _id,
           ssx,
-          rendered: [{ department: "LAB", renderedBy: auth._id, renderedAt: new Date().toLocaleString() }],
+          rendered: [
+            {
+              department: "LAB",
+              renderedBy: auth._id,
+              renderedAt: new Date().toLocaleString(),
+            },
+          ],
           forms,
         },
       })
@@ -70,19 +86,30 @@ export default function TaskHeader({ task, number, setActiveCollapse, isActive }
   };
 
   return (
-    <MDBCollapseHeader onClick={() => hasRenderedItems && setActiveCollapse(_id)} className="d-flex align-items-center justify-content-between">
-      <span>{number}. {dateFormat(task?.createdAt)}</span>
+    <MDBCollapseHeader
+      onClick={() => hasRenderedItems && setActiveCollapse(_id)}
+      className="d-flex align-items-center justify-content-between"
+    >
       <span>
-        <MDBBadge color={sourceColor(category)} className="mx-2">{category}</MDBBadge>
+        {number}. {dateFormat(task?.createdAt)}
+      </span>
+      <span>
+        <MDBBadge color={sourceColor(category)} className="mx-2">
+          {category}
+        </MDBBadge>
         {!hasRenderedItems && (
-          <MDBBadge onClick={() => generateTask()} color="info" className="px-2 cursor-pointer">
+          <MDBBadge
+            onClick={() => generateTask()}
+            color="info"
+            className="px-2 cursor-pointer"
+          >
             <MDBIcon icon="sync-alt" />
           </MDBBadge>
         )}
         {source && <MDBBadge color="warning">{source?.name}</MDBBadge>}
         {hasRenderedItems && (
-          <i 
-            style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }} 
+          <i
+            style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
             className="fa fa-angle-down transition-all ml-2"
           />
         )}

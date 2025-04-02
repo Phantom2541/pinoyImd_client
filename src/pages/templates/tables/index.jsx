@@ -1,13 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
-
-import Body from "./body";
-import Header from "./header";
-import Footer from "./footer";
 import TableLoading from "../../../components/tableLoading";
+import Header from "./header";
+import Body from "./body";
+import Footer from "./footer";
 
 const Index = () => {
-  const isLoading = false;
+  const { isLoading } = useSelector(({ services }) => services);
 
   return (
     <MDBAnimation type="bounceInDown">

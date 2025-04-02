@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
-// import { Select } from "../../../../components/customizable";
-// import { Templates, Services } from "../../../services/fakeDb";
+import { fullName } from "../../../../../services/utilities";
 import {
   VOUCHERS,
+  SetFilterByCASHIER,
   RESET,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
-      ({ auth }) => auth
-    ),
-    { collections } = useSelector(({ services }) => services),
-    [component, setComponent] = useState(""),
-    dispatch = useDispatch();
+    ({ auth }) => auth
+  );
+  const { collections, filterByCashier, cashiers } = useSelector(
+    ({ deals }) => deals
+  );
+  const dispatch = useDispatch();
+
   const month = 2,
     year = 2025;
 
-  // initial values
+  // Fetch vouchers
   useEffect(() => {
     const startDate = new Date(year, month, 1);
     startDate.setHours(0, 0, 0, 0);
@@ -36,20 +38,10 @@ const Header = () => {
     );
 
     return () => dispatch(RESET());
-  }, [dispatch, maxPage]);
-
-  // const handleComponent = (value) => {
-  //   setComponent(value);
-
-  //   const template = Templates.getComponentIndex(value);
-  //   dispatch(SetByTEMPLATES(template));
-  // };
+  }, [dispatch, maxPage, activePlatform, auth._id, year, month]);
 
   return (
-    <MDBView
-      cascade
-      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
-    >
+    <div className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
           {collections.length} Services
@@ -57,17 +49,28 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          {/* <Select
-            className="m-0 p-0 calendar mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
-            inputClassName="m-0 p-0"
-            preValue={component}
-            collections={Templates.getComponents("LAB")}
-          /> */}
+          {/* Regular HTML select for Cashiers Dropdown */}
+          <label htmlFor="cashier-select" className="mr-2">
+            Select Cashier
+          </label>
+          <select
+            id="cashier-select"
+            className="custom-select"
+            value={filterByCashier}
+            onChange={(e) => dispatch(SetFilterByCASHIER(e.target.value))}
+          >
+            <option value="">Select a cashier</option>
+            <option value="all">Select a all</option>
+
+            {cashiers.map((cashier) => (
+              <option key={cashier._id} value={cashier._id}>
+                {cashier.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
-    </MDBView>
+    </div>
   );
 };
 
