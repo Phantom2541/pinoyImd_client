@@ -2,7 +2,7 @@ import React from "react";
 import { MDBBtn, MDBIcon, MDBBtnGroup } from "mdbreact";
 import { Calendar as calendar } from "../../../services/fakeDb";
 
-const CalendarHeader = ({ month, year, prev, next, reset }) => {
+const CalendarPicker = ({ month, year, prev, next, reset }) => {
   const today = new Date();
   const currentMonth = today.getMonth(); // 0-based index (Jan = 0)
   const currentYear = today.getFullYear();
@@ -75,4 +75,4 @@ const CalendarHeader = ({ month, year, prev, next, reset }) => {
   );
 };
 
-export default CalendarHeader;
+export default CalendarPicker;
