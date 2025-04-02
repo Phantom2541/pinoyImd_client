@@ -14,22 +14,23 @@ const Body = () => {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
-
   return (
     <MDBTable responsive hover bordered>
       <thead>
         <tr>
           <th>#</th>
           <th>Service</th>
-          <th>Description</th>
+          <th>Abbreviation</th>
+          <th>Specimen</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((service, index) => (
           <tr key={index}>
-            <td key={index}>{index + 1}</td>
+            <td key={index}>{index + startIndex + 1}</td>
             <td>{service.name}</td>
-            <td>{service.Description} </td>
+            <td>{service.abbreviation} </td>
+            <td>{service.specimen}</td>
           </tr>
         ))}
       </tbody>

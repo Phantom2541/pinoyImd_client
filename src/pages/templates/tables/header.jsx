@@ -4,19 +4,25 @@ import { MDBView } from "mdbreact";
 import { Select } from "../../../components/customizable";
 import { Templates, Services } from "../../../services/fakeDb";
 import {
-  SetSERVICES,
+  SetCOLLECTIONS,
   SetByTEMPLATES,
 } from "../../../services/redux/slices/commerce/catalog/services";
 const Header = () => {
   const { maxPage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ services }) => services),
+    { filtered } = useSelector(({ services }) => services),
     [component, setComponent] = useState(""),
+    [services, setServices] = useState([]),
     dispatch = useDispatch();
 
   //initial values
   useEffect(() => {
-    dispatch(SetSERVICES({ collections: Services.collections, maxPage }));
+    if (maxPage)
+      dispatch(SetCOLLECTIONS({ collections: Services.collections, maxPage }));
   }, [dispatch, maxPage]);
+
+  useEffect(() => {
+    if (filtered) setServices(filtered);
+  }, [filtered]);
 
   const handleComponent = (value) => {
     setComponent(value);
@@ -32,7 +38,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Services
+          {services.length} Services
         </span>
       </div>
       <div>
