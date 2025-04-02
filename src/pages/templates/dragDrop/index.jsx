@@ -102,8 +102,6 @@ const DragDrop = () => {
     setAddID(role._id);
   };
 
-  console.log("isDisabled:", disabled);
-
   return (
     <MDBAnimation type="bounceInDown">
       <MDBCard>

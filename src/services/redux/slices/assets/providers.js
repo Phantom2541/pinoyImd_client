@@ -39,19 +39,6 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
-export const OUTSOURCE = createAsyncThunk(
-  `${url}/outsource`,
-  async ({ key, token }, thunkAPI) => {
-    try {
-      return await axioKit.universal(`${url}/outsource`, token, key);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message || error.toString()
-      );
-    }
-  }
-);
-
 // export const UTILITIES = createAsyncThunk(
 //   `${url}/browse`,
 //   async ({ key, token }, thunkAPI) => {
@@ -83,6 +70,19 @@ export const INSOURCE = createAsyncThunk(
   async ({ key, token }, thunkAPI) => {
     try {
       return await axioKit.universal(`${url}/insource`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
+export const OUTSOURCE = createAsyncThunk(
+  `${url}/outsource`,
+  async ({ key, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/outsource`, token, key);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -197,6 +197,7 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.showModal = true;
     },
+
     ToggleModal: (state) => {
       state.showCompanyModal = !state.showCompanyModal;
       state.isSuccess = false;
@@ -332,8 +333,6 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(OUTSOURCE.fulfilled, (state, { payload }) => {
-        // console.log("payload: ", payload);
-
         const { payload: data } = payload;
         state.collections = data;
         state.filtered = data;
@@ -486,6 +485,7 @@ export const {
   SetPAGE,
   SETSOURCES,
   SetSEARCHRESULTS,
+
   ToggleModal,
   ToggleDidSearch,
   RESET_COLLECTIONS,

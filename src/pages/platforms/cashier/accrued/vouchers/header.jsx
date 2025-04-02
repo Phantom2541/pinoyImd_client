@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 // import { Select } from "../../../../components/customizable";
 // import { Templates, Services } from "../../../services/fakeDb";
-import { VOUCHERS } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import {
+  VOUCHERS,
+  RESET,
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
       ({ auth }) => auth
@@ -31,6 +34,8 @@ const Header = () => {
         },
       })
     );
+
+    return () => dispatch(RESET());
   }, [dispatch, maxPage]);
 
   // const handleComponent = (value) => {

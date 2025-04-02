@@ -12,7 +12,9 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess } = useSelector(({ deals }) => deals),
+    { collections, message, isSuccess, isLoading } = useSelector(
+      ({ deals }) => deals
+    ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -65,7 +67,10 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <FilterCollections setFiltered={(key) => handleFilletered(key)} />
+          <FilterCollections
+            setFiltered={(key) => handleFilletered(key)}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </MDBView>

@@ -1,4 +1,5 @@
 import React from "react";
+import { MDBRow, MDBCol } from "mdbreact";
 
 const FecalysisData = [
   ["Color", "Consistency", "Mucus"],
@@ -14,21 +15,30 @@ const Fecalysis = () => {
       {FecalysisData.map((group, index) => (
         <div key={index} style={{ marginBottom: "5px" }}>
           {group.map((test, subindex) => (
-            <div
-              key={subindex}
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <span>{test}</span>
-              <span
-                style={{ borderBottom: "1px dotted black", minWidth: "50px" }}
-              ></span>
-            </div>
+            <MDBRow key={subindex}>
+              <MDBCol md="3">
+                <span>{test}</span>
+              </MDBCol>
+              <MDBCol md="4">
+                <span
+                  style={{
+                    borderBottom: "1px dotted black",
+                    display: "inline-block", // Ensures it's treated like a block-level element
+                    width: "100%", // Make sure it occupies the available width
+                  }}
+                ></span>
+              </MDBCol>
+            </MDBRow>
           ))}
           {/* Add a separator except for the last group */}
           {index !== FecalysisData.length - 1 && (
-            <div
-              style={{ borderTop: "1px solid black", margin: "5px 0" }}
-            ></div>
+            <MDBRow>
+              <MDBCol md="7">
+                <div
+                  style={{ borderTop: "1px solid black", margin: "5px 0" }}
+                ></div>
+              </MDBCol>
+            </MDBRow>
           )}
         </div>
       ))}
