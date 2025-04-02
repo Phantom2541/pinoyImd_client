@@ -13,7 +13,6 @@ import {
   SetINHOUSE,
   SetOUTSOURCE,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-import { useToasts } from "react-toast-notifications";
 
 const Body = ({ setOutSource, outSource }) => {
   const dispatch = useDispatch();
@@ -21,8 +20,7 @@ const Body = ({ setOutSource, outSource }) => {
       ({ taskGenerator }) => taskGenerator
     ),
     { collections } = useSelector(({ providers }) => providers),
-    [outSources, setOutSources] = useState([]),
-    { addToast } = useToasts();
+    [outSources, setOutSources] = useState([]);
 
   useEffect(() => {
     const _outSources = collections.map(({ vendors }) => ({

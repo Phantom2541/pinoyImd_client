@@ -18,6 +18,17 @@ const formComponents = {
   Serology,
 };
 
+const getComponents = (key) => {
+  switch (key) {
+    case "Chemistry":
+    case "Electrolyte":
+    case "Serology":
+      return formComponents["Chemistry"];
+    default:
+      return formComponents[key];
+  }
+};
+
 const Printout = ({ deal, forms, ssx }) => {
   const { updatedAt, customerId: customer, referral, category } = deal;
 
@@ -45,7 +56,7 @@ const Printout = ({ deal, forms, ssx }) => {
 
       <MDBRow>
         {Object?.keys(forms)?.map((key, index) => {
-          const FormComponent = formComponents[key];
+          const FormComponent = getComponents(key);
           return (
             <MDBCol md="2">
               <div
@@ -93,8 +104,6 @@ export default function TaskPrintout() {
 
   useEffect(() => {
     const { forms, deal } = JSON.parse(localStorage.getItem("inhouse"));
-    console.log("deal", deal);
-    console.log("forms", forms);
     setSale(deal);
     setForms(forms);
     setSsx(localStorage.getItem("ssx"));

@@ -26,6 +26,7 @@ export default function Modal() {
       inhouse,
       outsource,
     } = useSelector(({ taskGenerator }) => taskGenerator),
+    { collections } = useSelector(({ providers }) => providers),
     [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
   const toggle = () => dispatch(TOGGLE());
@@ -42,10 +43,21 @@ export default function Modal() {
     );
 
     const { _id, customerId, ssx } = deal;
-
+    //sent out company
+    const sentOut = [...collections].find(
+      ({ vendors }) => vendors._id === outSourceId
+    );
     localStorage.setItem(
       "inhouse",
       JSON.stringify({ deal, forms: { ..._inhouse } })
+    );
+    localStorage.setItem(
+      "outsource_request",
+      JSON.stringify({
+        deal: { ...deal, ssx },
+        sentOut,
+        outsources: outsource,
+      })
     );
     localStorage.setItem("ssx", JSON.stringify(ssx));
 
@@ -138,9 +150,17 @@ export default function Modal() {
     // Open the printout request form window
     window.open(
       "/printout/request/form",
-      "Request Form",
+      "RequestForm", // Window name 1
       "top=100px,left=100px,width=1050px,height=750px"
     );
+
+    if (outSourceId && outsource.length > 0) {
+      window.open(
+        "/printout/request/outsource",
+        "OutsourceRequestForm", // Unique window name 2
+        "top=100px,left=0px,width=1050px,height=750px"
+      );
+    }
 
     const data = {
       _id,
