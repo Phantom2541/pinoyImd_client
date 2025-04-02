@@ -29,8 +29,8 @@ const Header = () => {
       VOUCHERS({
         token,
         key: {
-          branch: activePlatform.branchId,
-          cashier: auth._id,
+          branchId: activePlatform.branchId,
+          cashierId: auth._id,
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
         },
@@ -38,7 +38,7 @@ const Header = () => {
     );
 
     return () => dispatch(RESET());
-  }, [dispatch, maxPage, activePlatform, auth._id, year, month]);
+  }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
   return (
     <div className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
@@ -59,7 +59,9 @@ const Header = () => {
             value={filterByCashier}
             onChange={(e) => dispatch(SetFilterByCASHIER(e.target.value))}
           >
-            <option value="">Select a cashier</option>
+            <option value="" disabled>
+              Select a cashier
+            </option>
             <option value="all">Select a all</option>
 
             {cashiers.map((cashier) => (

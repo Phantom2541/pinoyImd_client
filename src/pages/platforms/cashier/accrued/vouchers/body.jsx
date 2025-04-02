@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-import { fullName } from "../../../../../services/utilities";
+import { dateFormat, fullName } from "../../../../../services/utilities";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals);
@@ -37,14 +37,12 @@ const Body = () => {
         {paginatedData?.map((service, index) => {
           const {
             customerId,
-            cashierId,
             source,
             category,
             amount,
             discount,
             privilege,
             createdAt,
-            rendered,
           } = service;
 
           return (
@@ -57,7 +55,7 @@ const Body = () => {
               <td>{amount}</td>
               <td>{discount}</td>
               <td>{privilege}</td>
-              <td>{createdAt}</td>
+              <td>{dateFormat(createdAt)}</td>
             </tr>
           );
         })}

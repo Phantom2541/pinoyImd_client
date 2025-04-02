@@ -4,10 +4,10 @@ import Cluster from "./cluster";
 import Dengue from "./dengue";
 import Pregnancy from "./pregnancy";
 import Ogtt from "./ogtt";
-import Glucose from "./hba1c";
+import HBa1c from "./hba1c";
 
 const packageComponentMap = {
-  11: Glucose,
+  11: HBa1c,
   66: BloodTyping,
   67: Pregnancy,
   68: Cluster, // HIV
@@ -23,8 +23,5 @@ export default function BodySwitcher({ task, setTask }) {
   const Component = task?.packages?.find((pkg) => packageComponentMap[pkg])
     ? packageComponentMap[task.packages.find((pkg) => packageComponentMap[pkg])]
     : Cluster;
-
-  console.log("BodySwitcher task:", task.packages);
-
   return <Component task={task} setTask={setTask} />;
 }
