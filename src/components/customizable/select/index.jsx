@@ -8,14 +8,39 @@ import {
 } from "mdbreact";
 import "./style.css";
 
+/**
+ * A customizable select component with support for single and multiple selections, search, and more.
+ *
+ * @param {array} [collections=[]] - An array of objects to be used as options.
+ * @param {string|number} [preValue=""] - The pre-selected value.
+ * @param {array} [preValues=[]] - The pre-selected values.
+ * @param {boolean} [getObject=false] - Whether to return the selected object or value.
+ * @param {string} [label] - The label text.
+ * @param {string} [keys] - The key to use for the value.
+ * @param {string} [values] - The key to use for the text.
+ * @param {string} [className=""] - The class name to apply to the wrapper element.
+ * @param {string} [inputClassName=""] - The class name to apply to the input element.
+ * @param {boolean} [disableAll=false] - Whether to disable all options.
+ * @param {boolean} [hideLabel=false] - Whether to hide the label.
+ * @param {boolean} [multiple=false] - Whether to allow multiple selections.
+ * @param {boolean} [soloUpdate=false] - Whether to update a single selected item only.
+ * @param {boolean} [blacklisted=false] - Whether to disable all options except the pre-selected ones.
+ * @param {boolean} [whitelisted=false] - Whether to disable all options except the pre-selected ones.
+ * @param {object} [disableByKey={}] - An object containing key-value pairs to disable options based on.
+ * @param {boolean} [disableSearch=false] - Whether to disable the search feature.
+ * @param {boolean} [formSubmitted=false] - Whether the form has been submitted.
+ * @param {function} [onChange=() => {}] - The function to call when the selected value changes.
+ * @param {function} [handleCheck=() => {}] - The function to call when the check icon is clicked.
+ * @param {function} [handleClose=() => {}] - The function to call when the close icon is clicked.
+ */
 export default function Select({
   collections = [],
   preValue = "",
   preValues = [],
   getObject = false,
   label,
-  keys,
-  values,
+  keys, // old name values
+  values, // old name texts
   className = "",
   inputClassName = "",
   disableAll = false,
@@ -31,29 +56,13 @@ export default function Select({
   handleCheck = () => {},
   handleClose = () => {},
 }) {
-  // console.log("Select collections", collections);
+  console.log("Select collections", collections);
 
   const getNestedValue = (obj, path) => {
     return path
       .split(".")
       .reduce((acc, key) => (acc && acc[key] ? acc[key] : ""), obj);
   };
-
-  // const handleChoiceDisabling = (value, obj) => {
-  //   if (disableAll) return true;
-  //   if (whitelisted && (preValue === value || preValues.includes(value)))
-  //     return true;
-  //   if (blacklisted && (!preValues.includes(value) || preValue !== value))
-  //     return true;
-  //   return (
-  //     Object.keys(disableByKey).length &&
-  //     Object.entries(disableByKey).some(([key, val]) => obj[key] === val)
-  //   );
-  const [selectedValue, setSelectedValue] = useState("");
-
-  useEffect(() => {
-    setSelectedValue(preValues.length > 0 ? preValues : preValue);
-  }, [preValue, preValues]);
 
   const handleChoiceDisabling = (value, obj) => {
     if (disableAll) return true;
@@ -98,7 +107,6 @@ export default function Select({
         ? collections?.filter((c) => array.includes(String(c[keys] || c)))
         : array;
 
-      setSelectedValue(selectedItems);
       return onChange(selectedItems);
     }
     const selectedItem = getObject
@@ -120,7 +128,6 @@ export default function Select({
     //     )
     //   : array[0];
 
-    // setSelectedValue(selectedItem);
     // onChange(selectedItem);
   };
 
@@ -169,11 +176,10 @@ export default function Select({
 
             if (typeof value === "object") {
               console.warn(
-                "%c[Select] Invalid Value:",
+                "%c[Select] Invalid Values:",
                 "color: orange; font-weight: bold;",
                 "Ensure 'values' prop is correctly provided."
               );
-              // value = "Invalid Value";
             }
 
             return (

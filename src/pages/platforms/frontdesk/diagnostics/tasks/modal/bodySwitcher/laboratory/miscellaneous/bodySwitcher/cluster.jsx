@@ -29,10 +29,10 @@ export default function Cluster({ task, setTask }) {
                 },
               ]}
               label={abbreviation || name}
-              preValue={String(results[fk] || 0)}
-              texts="str"
-              values="index"
+              keys="index"
+              values="str"
               onChange={(e) => handleSelectChange(fk, Number(e))}
+              preValue={String(results[fk] || 0)}
             />
           </MDBCol>
         );
