@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../../utilities";
+import { axioKit, fullName } from "../../../../../utilities";
 
 const url = "commerce/pos/services/deals";
 
@@ -9,6 +9,8 @@ const initialState = {
   totalPatient: 0,
   formSubmitted: false,
   filtered: [],
+  filterByCashier: "all",
+  cashiers: [],
   // this is used for ledger
   census: {
     daily: {},
@@ -46,7 +48,7 @@ export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
   }
 });
 export const VOUCHERS = createAsyncThunk(
-  `${url}vOUCHERS`,
+  `${url}/vouchers`,
   ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/vouchers`, token, key);
@@ -302,13 +304,15 @@ export const reduxSlice = createSlice({
       state.selected = {};
     },
     SetFilterByCASHIER: (state, { payload }) => {
-      if (payload === "all") {
-        state.filtered = state.collections;
-      } else {
-        state.filtered = state.collections.filter(
-          (item) => item.cashierId._id === payload
-        );
-      }
+      if (payload !== state.filterByCashier)
+        if (payload === "all") {
+          state.filtered = state.collections;
+        } else {
+          state.filtered = state.collections.filter(
+            ({ cashierId }) => cashierId._id.toString() === payload.toString()
+          );
+        }
+      state.filterByCashier = payload;
     },
 
     SetSELECTED: (state, { payload }) => {
@@ -323,9 +327,12 @@ export const reduxSlice = createSlice({
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
       state.activePage = 1;
+
+      console.log("Set MaxPage", state.maxPage);
     },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
+      console.log("Set ActivePage", payload);
     },
     RESET: (state, { payload = {} }) => {
       state.filtered = [];
@@ -374,6 +381,20 @@ export const reduxSlice = createSlice({
       .addCase(VOUCHERS.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
         state.collections = state.filtered = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+
+        const uniqueCashiers = [
+          ...new Map(
+            payload.map(({ cashierId }) => [
+              cashierId._id,
+              { _id: cashierId._id, name: fullName(cashierId?.fullName) },
+            ])
+          ).values(),
+        ];
+
+        state.cashiers = uniqueCashiers;
 
         state.isSuccess = success;
         state.isLoading = false;
