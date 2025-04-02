@@ -23,6 +23,7 @@ import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 import "./App.css";
 import "./animations.css";
+import RequestOutSource from "./components/printout/requestOutSource";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),
@@ -41,6 +42,11 @@ export default function App() {
       <Route path="/printout/FAQ" exact component={FAQ} />
       <Route path="/printout/claimstub" exact component={ClaimStub} />
       <Route path="/printout/request/form" exact component={RequestForm} />
+      <Route
+        path="/printout/request/outsource"
+        exact
+        component={RequestOutSource}
+      />
       <Route path="/printout/TempGraph" exact component={TempGraph} />
 
       {/* Logbooks */}
