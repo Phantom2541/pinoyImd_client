@@ -6,7 +6,7 @@ import {
   OnMoved,
   RESET,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import CalendarHeader from "../../../../../components/header/calendars";
+import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
@@ -46,7 +46,7 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <CalendarHeader
+          <CalendarPicker
             month={month}
             year={year}
             prev={() => dispatch(OnMoved("prev"))}
