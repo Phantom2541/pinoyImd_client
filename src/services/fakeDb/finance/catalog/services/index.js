@@ -23,7 +23,7 @@ const Services = {
     return this.find(pk)?.name || `No name found for: ${pk}`;
   },
   getAbbr: function (pk) {
-    return this.find(pk)?.abbreviation || `No abbr found for`;
+    return this.find(pk)?.abbreviation || `No abbr found for ( ${pk})`;
   },
 
   whereIn: (cluster) => collections?.filter(({ id }) => cluster?.includes(id)),

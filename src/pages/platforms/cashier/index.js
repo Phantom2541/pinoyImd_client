@@ -1,4 +1,4 @@
-import { Cashier, Deals, Sales, Remittances, Ledger } from "./cashRegistry";
+import { Cashier, Deals, Sales, Remittances } from "./cashRegistry";
 import { Menus, Services } from "./catalog";
 import { Insources, Outsources, Utilities } from "./sources";
 export {
@@ -6,7 +6,6 @@ export {
   Deals,
   Sales,
   Remittances,
-  Ledger,
   Menus,
   Services,
   Insources,

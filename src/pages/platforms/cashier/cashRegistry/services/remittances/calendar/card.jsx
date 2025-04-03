@@ -58,7 +58,7 @@ const Card = ({ txt, num, index, item = {} }) => {
         {!!closing && (
           <>
             <hr className="my-1" />
-            <h6
+            {/* <h6
               className="mb-0 text-right font-weight-bold"
               style={{
                 whiteSpace: "nowrap",
@@ -66,17 +66,34 @@ const Card = ({ txt, num, index, item = {} }) => {
               }}
             >
               {isRemitted ? "Remitted" : "COH"}: {currency(net)}
-            </h6>
+            </h6> */}
             {breakdown &&
-              Object.entries(breakdown)?.map(([key, value]) => (
-                <span key={key} className="text-white">
-                  {paymentMethod[key] || "💰"}{" "}
-                  {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
-                  <strong className="text-info">
-                    ₱{value.toLocaleString()}
-                  </strong>
-                </span>
-              ))}
+              Object.entries(breakdown).map(([key, value]) => {
+                const paymentData = paymentMethod.getImage(key); // Get payment method data
+                return (
+                  <div
+                    key={key}
+                    className="d-flex align-items-center text-white"
+                  >
+                    {paymentData?.img ? (
+                      <img
+                        src={paymentData.img} // ✅ Use an <img> tag
+                        alt={key}
+                        className="mr-2"
+                        style={{ width: 24, height: 24 }} // Adjust size if needed
+                      />
+                    ) : (
+                      "💰"
+                    )}
+                    <span>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                      <strong className="text-info">
+                        ₱{value.toLocaleString()}
+                      </strong>
+                    </span>
+                  </div>
+                );
+              })}
           </>
         )}
       </div>
