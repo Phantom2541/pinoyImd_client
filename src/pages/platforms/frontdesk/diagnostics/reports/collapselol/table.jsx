@@ -64,11 +64,21 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
-    
+
     return (
-      <tr key={task.key} className={`${hasDone && "table-active"}`}>
-        <td className="fw-bold">{capitalize(department)}</td>
-        <td>{form}</td>
+      <tr key={task.key}>
+        {/* remove by darrel className={`${hasDone && "table-active"}`} */}
+        <td className="fw-bold">
+          {capitalize(department)}{" "}
+          {hasDone && (
+            <MDBBadge color="success" className="ml-2">
+              Done
+            </MDBBadge>
+          )}
+        </td>
+        <td>
+          {form} {hasDone && <MDBIcon icon="check" className="ml-1" />}
+        </td>
         <td>
           {Services.whereIn(_packages).map(({ abbreviation }, index) => (
             <MDBBadge
@@ -79,18 +89,21 @@ export default function CollapseTable({ menu }) {
               {abbreviation}
             </MDBBadge>
           ))}
+
+          {hasDone && <MDBIcon icon="check" className="ml-1" />}
         </td>
         <td>
           <MDBBtnGroup>
             <MDBBtn
               title="Modal"
+              rounded
               onClick={() => {
                 setTask(task);
                 toggleModal();
               }}
               color={hasDone ? "info" : "primary"}
               size="sm"
-              className="py-1 px-2 m-0"
+              className="py-1 px-3 m-0"
             >
               <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
             </MDBBtn>
@@ -99,6 +112,7 @@ export default function CollapseTable({ menu }) {
               signatories[1] &&
               hasDone && (
                 <MDBBtn
+                  rounded
                   onClick={() =>
                     handlePrint({
                       ...task,
@@ -112,7 +126,7 @@ export default function CollapseTable({ menu }) {
                   }
                   color="warning"
                   size="sm"
-                  className="py-1 px-2 m-0"
+                  className="py-1 px-3 m-0"
                 >
                   <MDBIcon icon="print" />
                 </MDBBtn>
@@ -125,7 +139,7 @@ export default function CollapseTable({ menu }) {
 
   return (
     <>
-      <MDBTable small hover responsive>
+      <MDBTable small hover responsive bordered className="w-100">
         <thead>
           <tr>
             <th>Department</th>
@@ -136,7 +150,6 @@ export default function CollapseTable({ menu }) {
         </thead>
         <tbody>
           {labTests?.map((_labTest, index) => {
-            
             const labTest = menu[_labTest.toLowerCase()];
 
             if (!labTest)

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBContainer,MDBCard, MDBCardHeader,MDBCardBody } from "mdbreact";
+import { MDBContainer, MDBCard, MDBCardHeader, MDBCardBody } from "mdbreact";
 import {
   BROWSE,
   RESET as PREFRESET,
@@ -26,13 +26,11 @@ export default function Tasks() {
 
   return (
     <MDBContainer fluid>
-      <MDBCard>
-      <MDBCardHeader >
-          <Header setPatient={setPatient} patient={patient} />
-        </MDBCardHeader>
+      <MDBCard narrow>
+        <Header setPatient={setPatient} patient={patient} />
         <MDBCardBody>
-        <Body patient={patient} />
-      </MDBCardBody>  
+          <Body patient={patient} />
+        </MDBCardBody>
       </MDBCard>
     </MDBContainer>
   );

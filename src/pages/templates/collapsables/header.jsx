@@ -26,8 +26,6 @@ const Header = () => {
     dispatch(SetByTEMPLATES(template));
   };
 
-  console.log("templates", Templates.getComponents("LAB"));
-
   return (
     <MDBView
       cascade

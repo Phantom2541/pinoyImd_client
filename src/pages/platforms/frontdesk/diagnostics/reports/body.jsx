@@ -2,9 +2,11 @@ import { MDBContainer, MDBSpinner, MDBTypography } from "mdbreact";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Collapse from "./collapselol";
+import TableLoading from "../../../../../components/tableLoading";
 
 export default function Body({ patient }) {
   const [activeCollapse, setActiveCollapse] = useState(""),
+    [didHoverID, setDidHoverID] = useState(-1),
     { collections, isLoading } = useSelector(({ deals }) => deals);
 
   if (!patient?._id)
@@ -14,12 +16,7 @@ export default function Body({ patient }) {
       </MDBTypography>
     );
 
-  if (isLoading)
-    return (
-      <div className="text-center  ">
-        <MDBSpinner />
-      </div>
-    );
+  if (isLoading) return <TableLoading />;
 
   if (!collections.length)
     return (
@@ -29,16 +26,19 @@ export default function Body({ patient }) {
     );
 
   return (
-    <MDBContainer >
+    <>
       {collections.map((task, index) => (
         <Collapse
           key={task?._id}
           task={task}
+          didHoverID={didHoverID}
+          setDidHoverID={setDidHoverID}
           number={index + 1}
           setActiveCollapse={setActiveCollapse}
+          activeCollapse={activeCollapse}
           isActive={activeCollapse === task?._id}
         />
       ))}
-    </MDBContainer>
+    </>
   );
 }
