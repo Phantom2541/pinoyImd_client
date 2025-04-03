@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   VOUCHERS,
-  SetFilterByCASHIER,
   SetFilterBySOURCE,
   OnMoved,
   RESET,
@@ -13,14 +12,7 @@ const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const {
-      collections,
-      filterByCashier,
-      filterBySource,
-      cashiers,
-      month,
-      year,
-    } = useSelector(({ deals }) => deals),
+  const { collections, month, year } = useSelector(({ deals }) => deals),
     [sources, setSources] = React.useState([]),
     dispatch = useDispatch();
   // Fetch vouchers

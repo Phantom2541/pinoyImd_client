@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, fullName } from "../../../../../utilities";
+import { axioKit } from "../../../../../utilities";
 
 const url = "commerce/pos/services/deals";
 
