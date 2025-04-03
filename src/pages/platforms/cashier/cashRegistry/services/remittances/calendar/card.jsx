@@ -58,15 +58,7 @@ const Card = ({ txt, num, index, item = {} }) => {
         {!!closing && (
           <>
             <hr className="my-1" />
-            {/* <h6
-              className="mb-0 text-right font-weight-bold"
-              style={{
-                whiteSpace: "nowrap",
-                color: isRemitted ? "inherit" : "green", // 🟢 Green only for COH, regular if remitted
-              }}
-            >
-              {isRemitted ? "Remitted" : "COH"}: {currency(net)}
-            </h6> */}
+            <h6>BREAK DOWN</h6>
             {breakdown &&
               Object.entries(breakdown).map(([key, value]) => {
                 const paymentData = paymentMethod.getImage(key); // Get payment method data
@@ -94,6 +86,16 @@ const Card = ({ txt, num, index, item = {} }) => {
                   </div>
                 );
               })}
+            <hr />
+            <h6
+              className="mb-0 text-right font-weight-bold"
+              style={{
+                whiteSpace: "nowrap",
+                color: isRemitted ? "inherit" : "green", // 🟢 Green only for COH, regular if remitted
+              }}
+            >
+              {isRemitted ? "Remitted" : "GROSS"}: {currency(net)}
+            </h6>
           </>
         )}
       </div>
