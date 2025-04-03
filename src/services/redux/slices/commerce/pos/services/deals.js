@@ -143,7 +143,6 @@ export const OLDLEDGER = createAsyncThunk(
 export const YEARLY = createAsyncThunk(
   `${url}/yearly`,
   ({ token, branchId, year }, thunkAPI) => {
-    //console.log("branchId", branchId);
     try {
       return axioKit.universal(`${url}/yearly`, token, {
         branchId,
@@ -319,7 +318,6 @@ export const reduxSlice = createSlice({
     },
 
     SetFilterBySOURCE: (state, { payload }) => {
-      console.log("PAYLOAD", payload);
       if (payload !== state.filterBySource)
         if (payload === "all") {
           state.filtered = state.collections;
@@ -343,12 +341,9 @@ export const reduxSlice = createSlice({
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
       state.activePage = 1;
-
-      console.log("Set MaxPage", state.maxPage);
     },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
-      console.log("Set ActivePage", payload);
     },
     OnMoved: (state, { payload }) => {
       if (payload === "next") {
@@ -545,7 +540,6 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(CENSUS.fulfilled, (state, action) => {
-        // //console.log("payload-census", action.payload.census);
         const { sales = [], ...rest } = action.payload.census;
 
         const daily = sales?.reduce((daily, { createdAt, amount, ...rest }) => {
@@ -554,8 +548,6 @@ export const reduxSlice = createSlice({
 
           obj.sales.push({ createdAt, amount, ...rest });
           obj.total += amount;
-          // //console.log("daily", daily);
-
           return daily;
         }, {});
 
@@ -659,8 +651,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log("action.payload", action);
-
         state.message = success;
         const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
 
@@ -679,10 +669,6 @@ export const reduxSlice = createSlice({
             }
           } else {
             const form = payload.form?.toLowerCase(); // Ensure form is lowercase
-            console.log("form", form);
-            console.log("index", index);
-            console.log("state.collections", state.collections[index]);
-
             // Ensure collections[index] exists before modifying it
             if (state.collections[index]) {
               state.collections[index][form] = payload;

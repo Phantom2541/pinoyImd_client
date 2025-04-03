@@ -49,7 +49,6 @@ const Header = () => {
         ).values(),
       ];
     setSources(uniqueSource);
-    console.log("uniqueSource :", uniqueSource);
   }, [collections]);
 
   return (
@@ -78,8 +77,8 @@ const Header = () => {
             </option>
             <option value="all">Select a all</option>
 
-            {sources.map((source) => (
-              <option key={source?._id} value={source?._id}>
+            {sources?.map((source, index) => (
+              <option key={`source-${index}`} value={source?._id}>
                 {source?.name}
               </option>
             ))}
