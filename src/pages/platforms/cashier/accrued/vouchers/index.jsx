@@ -2,7 +2,7 @@ import React from "react";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 
 import Header from "./header";
-import Body from "./body";
+import Body from "./collapse";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
 

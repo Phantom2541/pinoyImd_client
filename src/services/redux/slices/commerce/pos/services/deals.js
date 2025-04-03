@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, fullName } from "../../../../../utilities";
+import { axioKit } from "../../../../../utilities";
 
 const url = "commerce/pos/services/deals";
 
@@ -143,7 +143,6 @@ export const OLDLEDGER = createAsyncThunk(
 export const YEARLY = createAsyncThunk(
   `${url}/yearly`,
   ({ token, branchId, year }, thunkAPI) => {
-    //console.log("branchId", branchId);
     try {
       return axioKit.universal(`${url}/yearly`, token, {
         branchId,
@@ -318,6 +317,18 @@ export const reduxSlice = createSlice({
       state.filterByCashier = payload;
     },
 
+    SetFilterBySOURCE: (state, { payload }) => {
+      if (payload !== state.filterBySource)
+        if (payload === "all") {
+          state.filtered = state.collections;
+        } else {
+          state.filtered = state.collections.filter(
+            ({ source }) => source?._id.toString() === payload.toString()
+          );
+        }
+      state.filterBySource = payload;
+    },
+
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;
@@ -330,12 +341,9 @@ export const reduxSlice = createSlice({
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
       state.activePage = 1;
-
-      console.log("Set MaxPage", state.maxPage);
     },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
-      console.log("Set ActivePage", payload);
     },
     OnMoved: (state, { payload }) => {
       if (payload === "next") {
@@ -406,16 +414,25 @@ export const reduxSlice = createSlice({
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
 
-        const uniqueCashiers = [
-          ...new Map(
-            payload.map(({ cashierId }) => [
-              cashierId._id,
-              { _id: cashierId._id, name: fullName(cashierId?.fullName) },
-            ])
-          ).values(),
-        ];
+        // const uniqueCashiers = [
+        //   ...new Map(
+        //     payload.map(({ cashierId }) => [
+        //       cashierId._id,
+        //       { _id: cashierId._id, name: fullName(cashierId?.fullName) },
+        //     ])
+        //   ).values(),
+        // ];
 
-        state.cashiers = uniqueCashiers;
+        // const uniqueSource = [
+        //   ...new Map(
+        //     payload.map(({ source }) => [
+        //       source._id,
+        //       { _id: source._id, name: source?.displayname },
+        //     ])
+        //   ).values(),
+        // ];
+
+        // state.cashiers = uniqueSource;
 
         state.isSuccess = success;
         state.isLoading = false;
@@ -524,7 +541,6 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(CENSUS.fulfilled, (state, action) => {
-        // //console.log("payload-census", action.payload.census);
         const { sales = [], ...rest } = action.payload.census;
 
         const daily = sales?.reduce((daily, { createdAt, amount, ...rest }) => {
@@ -533,8 +549,6 @@ export const reduxSlice = createSlice({
 
           obj.sales.push({ createdAt, amount, ...rest });
           obj.total += amount;
-          // //console.log("daily", daily);
-
           return daily;
         }, {});
 
@@ -715,6 +729,7 @@ export const {
   SetTOTAL,
   SetFILTERED,
   SetFilterByCASHIER,
+  SetFilterBySOURCE,
   SetSELECTED,
   SetREVERT,
   SetDISCOUNT,

@@ -51,7 +51,7 @@ const coinSize = {
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { showModal, title, selected, month, year, day } = useSelector(
+    { showModal, title, selected } = useSelector(
       ({ remittances }) => remittances
     ),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),

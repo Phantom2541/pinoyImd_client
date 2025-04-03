@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-import { dateFormat, fullName } from "../../../../../services/utilities";
+import {
+  currency,
+  dateFormat,
+  fullName,
+} from "../../../../../services/utilities";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals);
@@ -52,9 +56,9 @@ const Body = () => {
               {/* <td>{fullName(cashierId?.fullName)}</td> */}
               <td>{source?.displayname}</td>
               <td>{category}</td>
-              <td>{amount}</td>
-              <td>{discount}</td>
-              <td>{privilege}</td>
+              <td>{currency(amount)}</td>
+              <td>{currency(discount)}</td>
+              <td>{currency(privilege)}</td>
               <td>{dateFormat(createdAt)}</td>
             </tr>
           );

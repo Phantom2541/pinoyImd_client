@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   VOUCHERS,
-  SetFilterByCASHIER,
+  SetFilterBySOURCE,
   OnMoved,
   RESET,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
@@ -12,10 +12,9 @@ const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { collections, filterByCashier, cashiers, month, year } = useSelector(
-    ({ deals }) => deals
-  );
-  const dispatch = useDispatch();
+  const { collections, month, year } = useSelector(({ deals }) => deals),
+    [sources, setSources] = React.useState([]),
+    dispatch = useDispatch();
   // Fetch vouchers
   useEffect(() => {
     const startDate = new Date(year, month, 1);
@@ -37,39 +36,50 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
+  //Filtering Cashier ID
+  useEffect(() => {
+    let uniqueSource = [];
+    if (collections.length > 0)
+      uniqueSource = [
+        ...new Map(
+          collections.map(({ source }) => [
+            source?._id || "undefined",
+            { _id: source?._id, name: source?.displayname || "" },
+          ])
+        ).values(),
+      ];
+    setSources(uniqueSource);
+  }, [collections]);
+
   return (
     <div className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Services
-        </span>
+      <div
+        className="d-flex justify-items-center ml-2"
+        style={{ width: "20rem" }}
+      >
+        <CalendarPicker
+          month={month}
+          year={year}
+          prev={() => dispatch(OnMoved("prev"))}
+          next={() => dispatch(OnMoved("next"))}
+        />
       </div>
       <div>
-        <div className="text-right d-flex items-center">
-          <CalendarPicker
-            month={month}
-            year={year}
-            prev={() => dispatch(OnMoved("prev"))}
-            next={() => dispatch(OnMoved("next"))}
-          />
-          {/* Regular HTML select for Cashiers Dropdown */}
-          <label htmlFor="cashier-select" className="mr-2">
-            Select Cashier
-          </label>
+        <div className="text-right d-flex items-center ">
           <select
             id="cashier-select"
-            className="custom-select"
-            value={filterByCashier}
-            onChange={(e) => dispatch(SetFilterByCASHIER(e.target.value))}
+            className="custom-select mr-2"
+            value={sources}
+            onChange={(e) => dispatch(SetFilterBySOURCE(e.target.value))}
           >
             <option value="" disabled>
               Select a cashier
             </option>
             <option value="all">Select a all</option>
 
-            {cashiers.map((cashier) => (
-              <option key={cashier._id} value={cashier._id}>
-                {cashier.name}
+            {sources?.map((source, index) => (
+              <option key={`source-${index}`} value={source?._id}>
+                {source?.name}
               </option>
             ))}
           </select>
