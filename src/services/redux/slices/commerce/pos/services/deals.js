@@ -318,6 +318,19 @@ export const reduxSlice = createSlice({
       state.filterByCashier = payload;
     },
 
+    SetFilterBySOURCE: (state, { payload }) => {
+      console.log("PAYLOAD", payload);
+      if (payload !== state.filterBySource)
+        if (payload === "all") {
+          state.filtered = state.collections;
+        } else {
+          state.filtered = state.collections.filter(
+            ({ source }) => source?._id.toString() === payload.toString()
+          );
+        }
+      state.filterBySource = payload;
+    },
+
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;
@@ -406,16 +419,25 @@ export const reduxSlice = createSlice({
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
 
-        const uniqueCashiers = [
-          ...new Map(
-            payload.map(({ cashierId }) => [
-              cashierId._id,
-              { _id: cashierId._id, name: fullName(cashierId?.fullName) },
-            ])
-          ).values(),
-        ];
+        // const uniqueCashiers = [
+        //   ...new Map(
+        //     payload.map(({ cashierId }) => [
+        //       cashierId._id,
+        //       { _id: cashierId._id, name: fullName(cashierId?.fullName) },
+        //     ])
+        //   ).values(),
+        // ];
 
-        state.cashiers = uniqueCashiers;
+        // const uniqueSource = [
+        //   ...new Map(
+        //     payload.map(({ source }) => [
+        //       source._id,
+        //       { _id: source._id, name: source?.displayname },
+        //     ])
+        //   ).values(),
+        // ];
+
+        // state.cashiers = uniqueSource;
 
         state.isSuccess = success;
         state.isLoading = false;
@@ -720,6 +742,7 @@ export const {
   SetTOTAL,
   SetFILTERED,
   SetFilterByCASHIER,
+  SetFilterBySOURCE,
   SetSELECTED,
   SetREVERT,
   SetDISCOUNT,
