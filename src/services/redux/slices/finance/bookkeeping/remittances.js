@@ -201,7 +201,8 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(AUTOSELECT.fulfilled, (state, { payload }) => {
+      .addCase(AUTOSELECT.fulfilled, (state, action) => {
+        const { payload } = action.payload;
         state.selected = payload;
         state.isSuccess = true;
         state.isLoading = false;
