@@ -20,12 +20,13 @@ import { useToasts } from "react-toast-notifications";
 import { Select } from "../../../../../../../components/customizable";
 
 const Tables = () => {
-  const { token } = useSelector(({ auth }) => auth),
+  const { token, maxPage } = useSelector(({ auth }) => auth),
     {
       collections,
       filtered,
       formSubmitted,
       isSuccess,
+      activePage,
       total,
       view = "all",
     } = useSelector(({ deals }) => deals),
@@ -76,14 +77,7 @@ const Tables = () => {
       })
     );
   };
-  // const handleSource = (e) => {
-  //   const { value } = e.target;
-  //   dispatch(SetSOURCE(value));
-  //   const _physicians =
-  //     providers?.find((source) => source._id.toString() === value.toString())
-  //       ?.clients?.affiliated || []; // Ensure that `affiliated` is safe to access
-  //   SetPHYSICIANS(_physicians); // Update the physicians list based on the filtered data
-  // };
+
   const generateStub = (deal) => ({
     ...deal,
     customer: {
@@ -110,6 +104,11 @@ const Tables = () => {
       addToast,
     });
   };
+
+  const itemsPerPage = maxPage;
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex);
 
   return (
     <>
@@ -139,8 +138,8 @@ const Tables = () => {
           </tr>
         </thead>
         <tbody>
-          {filtered.length > 0 ? (
-            filtered?.map((deal, index) => {
+          {paginatedData.length > 0 ? (
+            paginatedData?.map((deal, index) => {
               const { img, text, style } = paymentMethod?.getImage(
                 deal.payment
               );

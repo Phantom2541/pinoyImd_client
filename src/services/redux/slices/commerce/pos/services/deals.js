@@ -451,6 +451,7 @@ export const reduxSlice = createSlice({
       .addCase(CASHIER.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.collections = payload;
+        state.totalPages = payload.length;
         state.isLoading = false;
       })
       .addCase(CASHIER.rejected, (state, action) => {
