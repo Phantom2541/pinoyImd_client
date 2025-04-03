@@ -138,12 +138,10 @@ export default function Modal() {
   const handleSubmit = () => {
     const _floating = removeUndefinedValues(floating);
     if (!selected?._id) {
-      let createdAt = new Date(Date.UTC(year, month, day));
       dispatch(
         SAVE({
           token,
           data: {
-            createdAt,
             opening: {
               ..._floating,
               sum,

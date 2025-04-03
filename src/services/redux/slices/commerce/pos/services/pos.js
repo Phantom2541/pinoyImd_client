@@ -17,7 +17,6 @@ const authData = safeParseJSON(localStorage.getItem("auth"));
 const activePlatform = safeParseJSON(localStorage.getItem("activePlatform"));
 const branch = activePlatform?.branch || {};
 
-
 const defaultCustomer = {
   fullName: {
     fname: "",
@@ -68,7 +67,7 @@ const defaultState = {
 };
 
 const initialState = {
-   menus: safeParseJSON(localStorage.getItem("menus")),
+  menus: safeParseJSON(localStorage.getItem("menus")),
   sources: safeParseJSON(localStorage.getItem("sources")),
   physicians: safeParseJSON(localStorage.getItem("physicians")),
   ...defaultState,
