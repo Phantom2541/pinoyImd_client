@@ -57,8 +57,6 @@ export default function Deals() {
         dispatch(INSOURCE({ token, key: { vendors: activePlatform.branchId } }))
           .then(({ payload }) => {
             const sourceData = payload.payload;
-            console.log("sourceData", sourceData);
-
             localStorage.setItem(
               `source_${branchId}`,
               JSON.stringify(sourceData)

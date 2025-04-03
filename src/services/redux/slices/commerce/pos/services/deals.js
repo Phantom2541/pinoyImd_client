@@ -434,6 +434,7 @@ export const reduxSlice = createSlice({
       .addCase(CASHIER.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.collections = payload;
+        state.totalPages = payload.length;
         state.isLoading = false;
       })
       .addCase(CASHIER.rejected, (state, action) => {
@@ -637,8 +638,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log("action.payload", action);
-
         state.message = success;
         const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
 
@@ -657,10 +656,6 @@ export const reduxSlice = createSlice({
             }
           } else {
             const form = payload.form?.toLowerCase(); // Ensure form is lowercase
-            console.log("form", form);
-            console.log("index", index);
-            console.log("state.collections", state.collections[index]);
-
             // Ensure collections[index] exists before modifying it
             if (state.collections[index]) {
               state.collections[index][form] = payload;

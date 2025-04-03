@@ -98,9 +98,6 @@ export const reduxSlice = createSlice({
           state.activePage = totalPages;
         }
       }
-
-      console.log("sorted Collections", sortedCollections);
-
       state.collections = [...sortedCollections];
       state.filtered = [...sortedCollections];
       state.maxPage = maxPage;
