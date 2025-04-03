@@ -1,11 +1,12 @@
 import React from "react";
-import { MDBCollapseHeader, MDBBadge, MDBIcon } from "mdbreact";
+import { MDBCollapseHeader, MDBBadge, MDBIcon, MDBBtn } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import {
   axioKit,
   dateFormat,
   sourceColor,
   harvestTask,
+  collapse,
 } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
 import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
@@ -13,8 +14,11 @@ import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/ser
 export default function TaskHeader({
   task,
   number,
+  didHoverID,
+  setDidHoverID,
   setActiveCollapse,
   isActive,
+  activeCollapse,
 }) {
   const { _id, category, source, cart, customerId, ssx } = task;
   const hasRenderedItems = task.rendered && task.rendered.length !== 0;
@@ -85,18 +89,82 @@ export default function TaskHeader({
     );
   };
 
+  const { color, border } = collapse.getStyle(
+    String(_id),
+    String(activeCollapse),
+    String(didHoverID)
+  );
+  console.log("border", border);
   return (
     <MDBCollapseHeader
-      onClick={() => hasRenderedItems && setActiveCollapse(_id)}
-      className="d-flex align-items-center justify-content-between"
+      onMouseLeave={() => setDidHoverID(-1)}
+      onMouseEnter={() => setDidHoverID(_id)}
+      className={`${border} ${color}`}
+      style={{ cursor: "default" }}
     >
-      <span>
-        {number}. {dateFormat(task?.createdAt)}
-      </span>
-      <span>
-        <MDBBadge color={sourceColor(category)} className="mx-2">
-          {category}
-        </MDBBadge>
+      <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center">
+          <span>
+            {number}. {dateFormat(task?.createdAt)}
+          </span>
+          <span>
+            <MDBBadge
+              color={sourceColor(category)}
+              className="mx-2"
+              style={{ fontSize: "0.7rem" }}
+            >
+              {category}
+            </MDBBadge>
+
+            {source && <MDBBadge color="warning">{source?.name}</MDBBadge>}
+          </span>
+        </div>
+        <div className="d-flex align-items-center">
+          {!hasRenderedItems && (
+            <MDBBtn
+              size="sm"
+              style={{ width: "2rem", height: "1.4rem" }}
+              rounded
+              className="m-0 p-0"
+              onClick={() => generateTask()}
+              color="info"
+            >
+              <MDBIcon icon="sync-alt" />
+            </MDBBtn>
+          )}
+          {hasRenderedItems && (
+            <MDBBtn
+              size="sm"
+              color="white"
+              rounded
+              onClick={() =>
+                hasRenderedItems &&
+                setActiveCollapse((prev) => (prev === _id ? "" : _id))
+              }
+              className="m-0 p-0 transition-all "
+              style={{ width: isActive ? "1.5rem" : "2rem", height: "1.4rem" }}
+            >
+              <i
+                style={{ rotate: `${isActive ? 0 : 90}deg` }}
+                className="fa fa-angle-down transition-all "
+              />
+            </MDBBtn>
+          )}
+        </div>
+      </div>
+      {/* <div className="d-flex align-items-center">
+        <span>
+          {number}. {dateFormat(task?.createdAt)}
+        </span>
+        <span>
+          <MDBBadge color={sourceColor(category)} className="mx-2">
+            {category}
+          </MDBBadge>
+
+          {source && <MDBBadge color="warning">{source?.name}</MDBBadge>}
+        </span>
+      </div>
+      <div>
         {!hasRenderedItems && (
           <MDBBadge
             onClick={() => generateTask()}
@@ -106,14 +174,13 @@ export default function TaskHeader({
             <MDBIcon icon="sync-alt" />
           </MDBBadge>
         )}
-        {source && <MDBBadge color="warning">{source?.name}</MDBBadge>}
         {hasRenderedItems && (
           <i
             style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
             className="fa fa-angle-down transition-all ml-2"
           />
         )}
-      </span>
+      </div> */}
     </MDBCollapseHeader>
   );
 }
