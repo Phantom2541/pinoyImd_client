@@ -9,6 +9,7 @@ import {
   Outsources,
   Utilities,
   Remittances,
+  Hotlines,
 } from "../../../pages/platforms/cashier";
 
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
@@ -192,7 +193,7 @@ const cashier = [
         path: "/hotlines",
         icon: "phone",
         title: "List of Hotlines",
-        // component: Hotlines,
+        component: Hotlines,
       },
     ],
   },
