@@ -45,7 +45,7 @@ export default function Modal() {
     const { _id, customerId, ssx } = deal;
     //sent out company
     const sentOut = [...collections].find(
-      ({ vendors }) => vendors._id === outSourceId
+      ({ vendors }) => vendors?._id === outSourceId
     );
     localStorage.setItem(
       "inhouse",
@@ -160,6 +160,10 @@ export default function Modal() {
         "OutsourceRequestForm", // Unique window name 2
         "top=100px,left=0px,width=1050px,height=750px"
       );
+      await saveRequest(`/commerce/pos/services/dealOutSources`, {
+        dealId: deal._id,
+        servicesId: _outsource,
+      });
     }
 
     const data = {
@@ -176,13 +180,6 @@ export default function Modal() {
       forms,
       ...(outSourceId && { outsource: outSourceId }),
     };
-
-    if (outSourceId) {
-      await saveRequest(`/commerce/pos/services/dealOutSources`, {
-        dealId: deal._id,
-        servicesId: _outsource,
-      });
-    }
 
     dispatch(
       REFORM({

@@ -2,7 +2,7 @@ import React from "react";
 
 const WeekHeader = () => {
   return (
-    <div className="calendar-template-weeks">
+    <div className="cashier-remittance-calendar-weeks">
       {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
         <div key={day}>{day}</div>
       ))}

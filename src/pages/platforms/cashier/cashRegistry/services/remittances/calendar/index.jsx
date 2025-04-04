@@ -19,11 +19,11 @@ export default function Calendar() {
         { createdAt, ...rest },
       ])
   );
-
+  // calendar-template
   return (
-    <div className="calendar-template p-3">
+    <div className="cashier-remittance-calendar p-3">
       <WeekHeader />
-      <div className="calendar-body">
+      <div className="cashier-calendar-remittance-body">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => {
           const item = dateMap.get(num) || {}; // Default to an empty object instead of null
           return <Card key={num} num={num} txt={txt} item={item} />;
