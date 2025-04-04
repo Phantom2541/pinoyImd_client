@@ -4,7 +4,7 @@ import axios from "axios";
  * Destroy function.
  *
  * @param {string} entity - Base route of the API.
- * @param {Array<any>|object} data - Information that will be stored in the database.
+ * @param {Array<any>|object} id - Information that will be stored in the database.
  * @param {string} token - Authorization Token.
  * @returns {{ success: boolean, payload: Array<any>|object }} - The result object containing success and payload.
  */

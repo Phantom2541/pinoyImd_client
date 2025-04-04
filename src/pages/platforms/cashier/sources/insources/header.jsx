@@ -5,7 +5,7 @@ import {
   RESET,
   INSOURCE,
   SetSOURCE,
-  ToggleModal,
+  TOGGLE,
   RESET_COLLECTIONS,
   SetREGISTER,
 } from "../../../../../services/redux/slices/assets/providers";
@@ -47,7 +47,7 @@ const Header = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(SetSOURCE(source));
-        dispatch(ToggleModal());
+        dispatch(TOGGLE());
       } else {
         dispatch(RESET_COLLECTIONS());
       }
