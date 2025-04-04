@@ -1,64 +1,78 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
-  MDBIcon,
 } from "mdbreact";
-import { useSelector } from "react-redux";
-import {
-  capitalize,
-  currency,
-  handlePagination,
-} from "../../../../../../services/utilities";
-import CollapseTable from "./table";
 
-export default function MenuCollapse({
-  menus,
-  page,
-  resetSearch,
-  searchKey,
-  handleUpdate,
-}) {
-  const [activeId, setActiveId] = useState(-1),
-    { maxPage } = useSelector(({ auth }) => auth);
+import CollapsableBody from "./body";
+import CollapsableHeader from "./header";
+import { collapse } from "../../../../../../services/utilities";
+
+export default function Body() {
+  const { filtered, activePage, maxPage } = useSelector(
+    ({ services }) => services
+  );
+
+  /**
+   * Pagination: Calculate the start and end index for the current page
+   */
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+
+  /**
+   * Active states
+   */
+  const [activeId, setActiveId] = useState(-1);
+  const [didHoverId, setDidHoverId] = useState(-1);
 
   return (
-    <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
-      {handlePagination(menus, page, maxPage).map((menu, index) => {
-        const { description, abbreviation, opd, packages, _id } = menu;
+    <MDBContainer
+      style={{
+        minHeight: "300px",
+      }}
+      fluid
+    >
+      {paginatedData?.map((service, index) => {
+        const actualIndex = startIndex + index; // Get the real index in filtered array
+        const { color, border } = collapse.getStyle(
+          actualIndex,
+          activeId,
+          didHoverId
+        );
+
         return (
-          <MDBCard key={`menus-${index}`}>
-            <MDBCollapseHeader>
-              {index + 1}. {description && `${capitalize(description)} | `}
-              {abbreviation && `${abbreviation.toUpperCase()}`} - &nbsp;
-              <span className="text-primary">{currency(opd)}</span>
-              <i
-                style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
-                className="fa fa-angle-down transition-all"
-                onClick={() =>
-                  setActiveId((prev) => (prev === index ? -1 : index))
-                }
-              />
-              <MDBIcon
-                icon="pencil-alt"
-                style={{ color: `red` }}
-                onClick={() => handleUpdate(menu)}
+          <MDBCard
+            key={`service-${actualIndex}`}
+            style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
+          >
+            <MDBCollapseHeader
+              className={border}
+              onMouseLeave={() => setDidHoverId(-1)}
+              onMouseEnter={() => setDidHoverId(actualIndex)}
+              style={{ borderRadius: "50%" }}
+            >
+              <CollapsableHeader
+                service={service}
+                isOpen={activeId === actualIndex}
+                textColor={color}
+                setActiveId={setActiveId}
+                index={actualIndex}
               />
             </MDBCollapseHeader>
-            <MDBCollapse id={`collapse-${index}`} isOpen={index === activeId}>
-              <MDBCardBody className="pt-0">
-                <CollapseTable
-                  searchKey={searchKey}
-                  resetSearch={resetSearch}
-                  setActiveId={setActiveId}
-                  packages={packages}
-                  menuId={_id}
-                  menuDescription={description}
-                  menuAbbreviation={abbreviation}
-                />
+
+            <MDBCollapse
+              id={`collapse-${actualIndex}`}
+              className="mb-2 border border-black"
+              isOpen={actualIndex === activeId}
+            >
+              <MDBCardBody className="pt-2">
+                <CollapsableBody service={service} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>
