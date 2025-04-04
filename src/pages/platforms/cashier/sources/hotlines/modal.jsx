@@ -14,14 +14,12 @@ import {
   TOGGLE,
 } from "./../../../../../services/redux/slices/assets/providers";
 
-import { Services } from "./../../../../../services/fakeDb";
-
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { showModal, toggle, selected, willCreate, isLoading } = useSelector(
+    { showModal, selected, willCreate, isLoading } = useSelector(
       ({ providers }) => providers
     ),
     [form, setForm] = useState(selected),
@@ -37,7 +35,7 @@ export default function Modal() {
         category: "hotline",
       });
     }
-  }, [showModal, selected]);
+  }, [showModal, selected, auth, activePlatform]);
 
   // Handle update function
   const handleUpdate = () => {
