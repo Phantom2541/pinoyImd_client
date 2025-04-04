@@ -18,7 +18,7 @@ const Body = () => {
       <MDBRow>
         {collections?.map((sale, index) => (
           <MDBCol md="4" key={index}>
-            <Card index={index} item={sale} />
+            <Card index={collections.length - 1 - index} item={sale} />
           </MDBCol>
         ))}
       </MDBRow>

@@ -26,7 +26,7 @@ const Card = ({ txt, num, index, item = {} }) => {
   console.log("breakdown", breakdown);
 
   return (
-    <div>
+    <div className="position-relative">
       <div
         className={`cashier-rermmitance-calendar-card ${
           num ? "" : "opacity-0 pointer-events-none"
@@ -69,23 +69,23 @@ const Card = ({ txt, num, index, item = {} }) => {
 
           {/* 🟢 Show COH only if transactions exist */}
           {!!closing && (
-            <>
+            <div className="mb-3">
               <hr className="my-1" />
               <h6 style={{ fontSize: "0.8rem" }}>BREAK DOWN</h6>
-              {/* {breakdown &&
+              {breakdown &&
                 Object.entries(breakdown).map(([key, value]) => {
                   const paymentData = paymentMethod.getImage(key); // Get payment method data
                   return (
                     <div
                       key={key}
-                      className="d-flex align-items-center text-white"
+                      className="d-flex align-items-center text-white justify-content-between"
                     >
                       {paymentData?.img ? (
                         <img
                           src={paymentData.img} // ✅ Use an <img> tag
                           alt={key}
                           className="mr-2"
-                          style={{ width: 24, height: 24 }} // Adjust size if needed
+                          style={paymentData.style} // Adjust size if needed
                         />
                       ) : (
                         "💰"
@@ -98,7 +98,7 @@ const Card = ({ txt, num, index, item = {} }) => {
                       </span>
                     </div>
                   );
-                })} */}
+                })}
               {/* <hr /> */}
               <div style={{ position: "absolute", bottom: 0 }}>
                 <h6
@@ -111,7 +111,7 @@ const Card = ({ txt, num, index, item = {} }) => {
                   {isRemitted ? "Remitted" : "GROSS"}: {currency(net)}
                 </h6>
               </div>
-            </>
+            </div>
           )}
         </div>
 

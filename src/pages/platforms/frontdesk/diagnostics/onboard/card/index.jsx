@@ -43,7 +43,7 @@ export default function Card({ item, index }) {
         <p className="line-clamp">
           {fullname.lname},
           <br />
-          <small> 
+          <small>
             {fullname.fname} {fullname.mname}
           </small>
         </p>
@@ -81,7 +81,10 @@ export default function Card({ item, index }) {
         {edit ? (
           <SecondaryFooter setEdit={setEdit} />
         ) : (
-          <PrimaryFooter deal={deal} setEdit={setEdit} />
+          <PrimaryFooter
+            deal={{ ...deal, patientNo: index + 1 }}
+            setEdit={setEdit}
+          />
         )}
       </div>
     </>
