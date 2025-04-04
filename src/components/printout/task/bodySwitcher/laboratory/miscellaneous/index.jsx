@@ -4,14 +4,9 @@ import Troupe from "./troupe";
 import Category from "./category";
 
 export default function Miscellaneous({ task, fontSize }) {
-  const { specimen, packages = [] } = task; // Ensure `packages` is always an array
+  const { specimen, packages } = task;
   const style = { fontSize: `${fontSize}rem` };
-
-  const hasCategory = packages.includes(146);
-  const hasTroupe = packages.includes(11);
-  const hasBloodTyping = packages.includes(66);
-  const hasSpecialPackage = packages.some((pkg) => [146, 11].includes(pkg));
-
+  //console.log(fontSize);
   return (
     <div
       style={{
@@ -20,33 +15,35 @@ export default function Miscellaneous({ task, fontSize }) {
         minHeight: "300px",
       }}
     >
-      {!hasSpecialPackage && (
+      {!packages.includes(146, 11) && (
         <label className="mt-2 ml-5" style={style}>
           <h6>
             Specimen :
             <strong>
               <b>
-                <u>{String(specimen || "N/A").toUpperCase()}</u>
+                <u>{String(specimen).toUpperCase()}</u>
               </b>
             </strong>
           </h6>
         </label>
       )}
-
       <BodySwitcher task={task} fontSize={fontSize} />
-
-      {hasCategory && (
+      {packages.includes(146) ? (
         <>
           <hr />
           <Category task={task} fontSize={fontSize} />
         </>
-      )}
-
-      {!hasCategory && !hasBloodTyping && !hasTroupe && (
-        <>
-          <hr />
-          <Troupe task={task} fontSize={fontSize} />
-        </>
+      ) : (
+        !packages.includes(66) && (
+          <>
+            {!packages.includes(11) && (
+              <>
+                <hr />
+                <Troupe task={task} fontSize={fontSize} />
+              </>
+            )}
+          </>
+        )
       )}
     </div>
   );

@@ -67,7 +67,7 @@ export default function Miscellaneous() {
           )}
           <MDBTabContent activeItem={activeTab} className="pt-0">
             <MDBTabPane tabId="results">
-              {!hasSpecialPackage && (
+              {!packages.includes(146) && (
                 <MDBInput
                   className="mt-0"
                   label="Specimen"
