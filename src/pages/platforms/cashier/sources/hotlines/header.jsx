@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
+import {  MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
 import {
   FILTERBYCATEGORY,

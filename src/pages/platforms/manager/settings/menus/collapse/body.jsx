@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBtn } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { capitalize, globalSearch } from "../../../../../../services/utilities";
-import { Templates } from "../../../../../../services/fakeDb";
+import { capitalize } from "../../../../../../services/utilities";
+import { Services, Templates } from "../../../../../../services/fakeDb";
 import { UPDATE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
 import Swal from "sweetalert2";
 import Modal from "./modal";
@@ -23,18 +23,18 @@ export default function CollapseTable({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setServices(packages || []);
+    setServices(Services.whereIn(packages));
   }, [packages]);
 
   const toggleModal = () => setShowModal((prev) => !prev);
 
-  const handleSearch = (willSearch, key) => {
-    if (willSearch) {
-      setServices(globalSearch(packages, key));
-    } else {
-      setServices(packages || []);
-    }
-  };
+  // const handleSearch = (willSearch, key) => {
+  //   if (willSearch) {
+  //     setServices(globalSearch(packages, key));
+  //   } else {
+  //     setServices(packages || []);
+  //   }
+  // };
 
   const handlePick = (selected) => {
     const combined = [...new Set([...selected, ...packages])];
@@ -89,7 +89,9 @@ export default function CollapseTable({
       }
     });
   };
-
+  console.log("packages", packages);
+  console.log("services", services);
+  
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-2">
