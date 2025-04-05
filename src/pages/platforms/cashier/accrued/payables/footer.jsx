@@ -7,7 +7,7 @@ import {
   SetActivePAGE,
 } from "../../../../../services/redux/slices/finance/journals/payables";
 const Footer = () => {
-  const { isLoading, totalPages, activePage } = useSelector(
+  const { isLoading, totalPages, activePage, filtered } = useSelector(
       ({ payables }) => payables
     ),
     { maxPage } = useSelector(({ auth }) => auth),
@@ -27,6 +27,9 @@ const Footer = () => {
   return (
     <div className="mb-auto d-flex justify-content-between align-items-center px-4">
       <TableRowCount disablePageSelect={false} />
+      <span className="white-text mx-3 text-nowrap mt-0">
+        {filtered.length} fetched
+      </span>
       <Pagination
         isLoading={isLoading}
         total={totalPages}
