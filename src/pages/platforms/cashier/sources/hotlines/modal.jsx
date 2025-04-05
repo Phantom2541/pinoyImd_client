@@ -46,8 +46,6 @@ export default function Modal() {
         appearance: "info",
       });
     }
-
-    setForm(removeUndefinedValues(form));
     dispatch(
       UPDATE({
         data: { ...form, _id: selected._id },
@@ -58,6 +56,11 @@ export default function Modal() {
 
   // Handle create function
   const handleCreate = () => {
+    if (Object.keys(form).length === 0) {
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
     dispatch(
       SAVE({
         data: form,
@@ -69,6 +72,7 @@ export default function Modal() {
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    setForm(removeUndefinedValues(form));
     willCreate ? handleCreate() : handleUpdate();
   };
 
