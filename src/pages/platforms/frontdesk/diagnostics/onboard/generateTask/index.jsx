@@ -37,6 +37,8 @@ export default function Modal() {
     }
   }, [show]);
 
+  console.log(deal);
+
   const getIDS = (collections) => collections.map(({ id }) => id);
 
   const generateTask = async () => {

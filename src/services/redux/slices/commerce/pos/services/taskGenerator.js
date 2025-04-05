@@ -224,7 +224,9 @@ export const reduxSlice = createSlice({
           (item) => item._id === payload._id
         );
 
-        state.collections[index] = payload;
+        const oldCollections = state.collections[index];
+
+        state.collections[index] = { ...oldCollections, ...payload };
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
