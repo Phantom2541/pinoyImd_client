@@ -59,7 +59,6 @@ const Body = () => {
             <td>{service.number} </td>
             <td>{service.address}</td>
             <td className="text-center">
-              {" "}
               <button
                 onClick={() => handleEdit(service)}
                 className="btn btn-sm btn-primary"

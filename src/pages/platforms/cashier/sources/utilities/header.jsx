@@ -1,41 +1,50 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
+import { Search } from "../../../../../components/searchables";
 import {
-  RESET,
-  OUTSOURCE,
+  FILTERBYCATEGORY,
+  ResetFILTER,
+  SetCREATE,
+  SetFILTER,
 } from "../../../../../services/redux/slices/assets/providers";
-import SearchProviders from "../../../../../components/searchables/providers";
+
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { filtered } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
-
+  //initial values
   useEffect(() => {
-    // console.log("Outside if");
-    if (token && activePlatform?.branchId) {
+    if (token) {
       dispatch(
-        OUTSOURCE({
+        FILTERBYCATEGORY({
           token,
-          key: {
-            clients: activePlatform?.branchId,
-          },
+          keys: { clients: activePlatform?.branchId, category: "utilities" },
         })
       );
     }
-    return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
+  const handleAdd = (key) => dispatch(SetCREATE({ displayname: key }));
+  const handleFiltered = (items) => dispatch(SetFILTER(items));
 
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">Outsources </span>
+        <span className="white-text mx-3 text-nowrap mt-0">
+          {filtered.length} Utilities
+        </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <SearchProviders />
+          <Search
+            collection={filtered}
+            handleFiltered={handleFiltered}
+            handleAdd={handleAdd}
+            reset={() => dispatch(ResetFILTER())}
+          />
         </div>
       </div>
     </MDBView>
