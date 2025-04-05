@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable } from "mdbreact";
+import Swal from "sweetalert2";
 import {
   SetSELECTED,
   DESTROY,
@@ -18,7 +19,21 @@ const Body = () => {
     console.log("SetSelected service :", service);
   };
 
-  const handleDelete = (_id) => dispatch(DESTROY({ data: { _id }, token }));
+  const handleDelete = (_id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(DESTROY({ token, data: { _id } }));
+      }
+    });
+  };
 
   /**
    * Pagination: Calculate the start and end index for the current page

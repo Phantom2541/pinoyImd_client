@@ -284,14 +284,21 @@ export const reduxSlice = createSlice({
       state.selected = {};
     },
     SetFILTER: (state, { payload }) => {
-      const { page, maxPage } = payload;
-      if (page.length > 0) {
-        state.totalPages = Math.ceil(payload.length / maxPage);
+      if (payload.length > 0) {
+        state.totalPages = Math.ceil(payload.length / state.maxPage);
         if (state.page > state.totalPages) {
           state.page = state.totalPages;
         }
       }
-      state.filtered = page;
+      state.filtered = payload;
+    },
+    ResetFILTER: (state) => {
+      const { collections } = state;
+      state.totalPages = Math.ceil(collections.length / state.maxPage);
+      if (state.page > state.totalPages) {
+        state.page = state.totalPages;
+      }
+      state.filtered = collections;
     },
     RESET_COLLECTIONS: (state) => {
       state.didSearch = false;
@@ -519,10 +526,10 @@ export const {
   SetSELECTED,
   SetCREATE,
   SetFILTER,
+  ResetFILTER,
   SetPAGE,
   SETSOURCES,
   SetSEARCHRESULTS,
-
   ToggleDidSearch,
   RESET_COLLECTIONS,
   SetREGISTER,

@@ -16,6 +16,7 @@ import {
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
+import { removeUndefinedValues } from "../../../../../services/utilities";
 
 export default function Modal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
@@ -46,6 +47,7 @@ export default function Modal() {
       });
     }
 
+    setForm(removeUndefinedValues(form));
     dispatch(
       UPDATE({
         data: { ...form, _id: selected._id },
@@ -67,21 +69,15 @@ export default function Modal() {
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (willCreate) {
-      return handleCreate();
-    }
-
-    handleUpdate();
+    willCreate ? handleCreate() : handleUpdate();
   };
 
   // Handle change sa inputs
-  const handleChange = (key, value) => {
+  const handleChange = (key, value) =>
     setForm({
       ...form,
       [key]: value,
     });
-  };
 
   return (
     <MDBModal
@@ -111,14 +107,12 @@ export default function Modal() {
             label="Address"
             type="string"
             value={form?.address}
-            required
             onChange={(e) => handleChange("address", e.target.value)}
           />
           <MDBInput
             label="Phone Number"
             type="string"
             value={form?.number}
-            required
             onChange={(e) => handleChange("number", e.target.value)}
           />
 

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
 import { fullName, globalSearch } from "./../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
-import { FilterCollections } from "./../../../../../../components/searchables";
+import { Search } from "./../../../../../../components/searchables";
 import {
   BROWSE,
   SetFILTERED,
@@ -100,7 +100,7 @@ const Header = () => {
         </select>
       </div>
       <div className="d-flex align-items-center">
-        <FilterCollections setFiltered={(key) => handleFiltered(key)} />
+        <Search setFiltered={(key) => handleFiltered(key)} />
       </div>
     </MDBView>
   );

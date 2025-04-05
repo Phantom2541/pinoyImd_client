@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FilterCollections } from "../../../../../components/searchables";
+import { Search } from "../../../../../components/searchables";
 import { MDBView } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
@@ -44,9 +44,7 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <FilterCollections
-            setFiltered={(key) => dispatch(SetFILTERED(key))}
-          />
+          <Search setFiltered={(key) => dispatch(SetFILTERED(key))} />
         </div>
       </div>
     </MDBView>
