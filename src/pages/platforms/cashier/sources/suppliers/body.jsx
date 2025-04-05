@@ -1,12 +1,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable } from "mdbreact";
-import Swal from "sweetalert2";
 import {
   SetSELECTED,
   DESTROY,
 } from "../../../../../services/redux/slices/assets/providers";
-
+import Swal from "sweetalert2";
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
     { filtered, activePage, maxPage } = useSelector(
@@ -34,7 +33,6 @@ const Body = () => {
       }
     });
   };
-
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -61,13 +59,13 @@ const Body = () => {
             <td>{service.number} </td>
             <td>{service.address}</td>
             <td className="text-center">
+              {" "}
               <button
                 onClick={() => handleEdit(service)}
                 className="btn btn-sm btn-primary"
               >
                 Edit
               </button>
-
               <button
                 onClick={() => handleDelete(service._id)}
                 className="btn btn-sm btn-danger"
