@@ -45,7 +45,7 @@ export default function Modal() {
     const { _id, customerId, ssx } = deal;
     //sent out company
     const sentOut = [...collections].find(
-      ({ vendors }) => vendors._id === outSourceId
+      ({ vendors }) => vendors?._id === outSourceId
     );
     localStorage.setItem(
       "inhouse",

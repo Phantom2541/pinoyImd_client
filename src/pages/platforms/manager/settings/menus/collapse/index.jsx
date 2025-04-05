@@ -12,9 +12,9 @@ import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse } from "../../../../../../services/utilities";
 
-export default function Body() {
+export default function Body({menus,page,resetSearch,searchKey,handleUpdate}) {
   const { filtered, activePage, maxPage } = useSelector(
-    ({ services }) => services
+    ({ menus }) => menus
   );
 
   /**
@@ -23,7 +23,7 @@ export default function Body() {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = menus.slice(startIndex, endIndex); // Get only items for the active page
 
   /**
    * Active states
