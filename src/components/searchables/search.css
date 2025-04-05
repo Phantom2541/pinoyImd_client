@@ -16,6 +16,10 @@
   padding: 12px;
 }
 
+.search-container:hover {
+  box-shadow: 0 0 0 3px gray;
+}
+
 .search-container:focus-within {
   border: 1px solid white;
   box-shadow: 0 0 0 4px #339933;
