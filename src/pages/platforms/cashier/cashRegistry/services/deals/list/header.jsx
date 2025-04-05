@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
 import { globalSearch } from "../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
-import { FilterCollections } from "../../../../../../../components/searchables";
+import { Search } from "../../../../../../../components/searchables";
 import {
   CASHIER,
   SetFILTERED,
@@ -67,7 +67,7 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <FilterCollections
+          <Search
             setFiltered={(key) => handleFilletered(key)}
             isLoading={isLoading}
           />

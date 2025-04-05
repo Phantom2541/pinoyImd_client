@@ -5,25 +5,19 @@ import { useToasts } from "react-toast-notifications";
 import {
   RESET,
   BROWSE,
-  SetFILTERED,
   SetPAYABLES,
 } from "../../../../../services/redux/slices/finance/journals/payables";
 import {
   BROWSE as PROVIDERS,
   RESET as PROVIDERRESET,
 } from "../../../../../services/redux/slices/assets/providers";
+import Search from "../../../../../components/searchables/filter";
 // import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess, collections } = useSelector(
-      ({ payables }) => payables
-    ),
+    { filtered, message, isSuccess } = useSelector(({ payables }) => payables),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(SetFILTERED(collections));
-  }, [collections]);
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -82,6 +76,7 @@ export default function TopHeader() {
           >
             <MDBIcon icon="plus" />
           </MDBBtn>
+          <Search />
         </div>
       </div>
     </MDBView>

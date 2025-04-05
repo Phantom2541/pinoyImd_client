@@ -7,45 +7,51 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
+  MDBTypography,
 } from "mdbreact";
 import {
   SAVE,
   UPDATE,
   TOGGLE,
-} from "./../../../../../services/redux/slices/assets/providers";
+} from "../../../../../services/redux/slices/assets/providers";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import { removeUndefinedValues } from "../../../../../services/utilities";
 
 export default function Modal() {
-  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { showModal, selected, willCreate, isLoading } = useSelector(
+  const { showModal, selected, willCreate, isLoading } = useSelector(
       ({ providers }) => providers
     ),
+    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  //Listener
   useEffect(() => {
     if (showModal) {
       setForm({
         ...selected,
+        userId: auth._id,
+        clients: activePlatform.branchId,
+        category: "supplier",
       });
     }
   }, [showModal, selected, auth, activePlatform]);
-
   // Handle update function
   const handleUpdate = () => {
+    TOGGLE();
+
     // Check if object has changed
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
+
     dispatch(
       UPDATE({
-        data: { ...form },
+        data: { ...form, _id: selected._id },
         token,
       })
     );
@@ -53,73 +59,65 @@ export default function Modal() {
 
   // Handle create function
   const handleCreate = () => {
-    if (Object.keys(form).length === 0) {
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
     dispatch(
       SAVE({
-        data: {
-          ...form,
-          userId: auth._id,
-          clients: activePlatform.branchId,
-          category: "hotline",
-        },
+        data: form,
         token,
       })
-    );
+    ).then(() => TOGGLE()); // Close modal after successful save
+    //console.log("Add Button : ", form);
   };
 
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    setForm(removeUndefinedValues(form));
     willCreate ? handleCreate() : handleUpdate();
   };
 
   // Handle change sa inputs
-  const handleChange = (key, value) =>
+  const handleChange = (key, value) => {
     setForm({
       ...form,
       [key]: value,
     });
+  };
 
   return (
-    <MDBModal
-      isOpen={showModal}
-      toggle={() => dispatch(TOGGLE())}
-      backdrop
-      size="sm"
-    >
+    <MDBModal isOpen={showModal} TOGGLE={TOGGLE} backdrop size="sm">
       <MDBModalHeader
         toggle={() => dispatch(TOGGLE())}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Hotline
+        {willCreate ? "Create" : "Update"} Supplier
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
+          <MDBTypography
+            tag="h4"
+            variant="h4-responsive"
+            className="text-center"
+          ></MDBTypography>
+
           {/* Input fields */}
           <MDBInput
             label="Name"
             type="string"
             value={form?.displayname}
             required
-            onChange={({ target }) => handleChange("displayname", target.value)}
+            onChange={(e) => handleChange("displayname", e.target.value)}
           />
           <MDBInput
-            label="Address"
-            type="string"
-            value={form?.address}
-            onChange={(e) => handleChange("address", e.target.value)}
-          />
-          <MDBInput
-            label="Phone Number"
+            label="Number"
             type="string"
             value={form?.number}
             onChange={(e) => handleChange("number", e.target.value)}
+          />
+          <MDBInput
+            label="address"
+            type="string"
+            value={form?.address}
+            onChange={(e) => handleChange("address", e.target.value)}
           />
 
           {/* Submit button */}
