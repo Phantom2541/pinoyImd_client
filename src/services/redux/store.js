@@ -36,7 +36,13 @@ import {
 } from "./slices/diagnostics";
 
 import { access, liabilities, controls, assurances } from "./slices/liability";
-import { remittances, payables, payments, payrolls } from "./slices/finance";
+import {
+  remittances,
+  payables,
+  payments,
+  payrolls,
+  ledger,
+} from "./slices/finance";
 import temperatures from "./slices/monitoring/temperature";
 import products from "./slices/market/products";
 
@@ -50,6 +56,7 @@ const store = configureStore({
     personnels,
     access,
     users,
+    ledger,
     preferences,
     validator,
     physicians,
