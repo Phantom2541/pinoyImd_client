@@ -1,0 +1,22 @@
+.search-container {
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 2.5rem;
+  box-sizing: border-box;
+  transition: border 0.3s ease;
+}
+
+.search {
+  border-radius: 4px;
+  border: none;
+  height: 100%;
+  width: 15rem;
+  outline: none;
+  margin: 0;
+  padding: 12px;
+}
+
+.search-container:focus-within {
+  border: 1px solid white;
+  box-shadow: 0 0 0 4px #339933;
+}

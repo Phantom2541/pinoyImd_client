@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
+import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
 import {
   FILTERBYCATEGORY,
@@ -44,9 +44,17 @@ const Header = () => {
           <Search
             collection={filtered}
             handleFiltered={handleFiltered}
-            handleAdd={handleAdd}
             reset={() => dispatch(ResetFILTER())}
           />
+          <MDBBtn
+            size="sm"
+            color="white"
+            rounded
+            className="px-2 ml-3"
+            onClick={handleAdd}
+          >
+            <MDBIcon icon="plus" />
+          </MDBBtn>
         </div>
       </div>
     </MDBView>

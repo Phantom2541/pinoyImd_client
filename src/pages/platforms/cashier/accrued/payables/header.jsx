@@ -11,7 +11,7 @@ import {
   BROWSE as PROVIDERS,
   RESET as PROVIDERRESET,
 } from "../../../../../services/redux/slices/assets/providers";
-import Search from "../../../../../components/searchables/filter";
+import Search from "../../../../../components/searchables/search";
 // import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
