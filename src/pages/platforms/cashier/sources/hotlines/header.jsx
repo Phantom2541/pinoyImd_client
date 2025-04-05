@@ -45,16 +45,8 @@ const Header = () => {
             collection={filtered}
             handleFiltered={handleFiltered}
             reset={() => dispatch(ResetFILTER())}
+            handleAdd={handleAdd}
           />
-          <MDBBtn
-            size="sm"
-            color="white"
-            rounded
-            className="px-2 ml-3"
-            onClick={handleAdd}
-          >
-            <MDBIcon icon="plus" />
-          </MDBBtn>
         </div>
       </div>
     </MDBView>
