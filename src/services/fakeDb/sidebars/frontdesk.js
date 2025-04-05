@@ -147,21 +147,22 @@ const frontdesk = [
     ],
   },
   {
-    name: "Statement",
+    name: "Outsource",
     icon: "tv",
-    path: "/statement",
+    path: "/outsource",
     children: [
       {
-        name: "Account",
+        name: "Statement of Account",
         title: "stocks",
-        icon: "dollar-sign",
-        path: "/account",
+        icon: "balance-scale",
+        path: "/soa",
       },
+
       {
-        name: "Billing",
+        name: "Onboarding",
         title: "stocks",
         icon: "file-invoice",
-        path: "/billing",
+        path: "/onboarding",
       },
     ],
   },
