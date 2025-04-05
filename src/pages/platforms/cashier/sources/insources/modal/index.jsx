@@ -12,7 +12,7 @@ import {
 } from "mdbreact";
 
 import {
-  ToggleModal,
+  TOGGLE,
   ToggleDidSearch,
   SAVE,
 } from "../../../../../../services/redux/slices/assets/providers";
@@ -50,7 +50,7 @@ export default function Modal() {
     [form, setForm] = useState(_form),
     dispatch = useDispatch();
 
-  const toggle = () => dispatch(ToggleModal());
+  const toggle = () => dispatch(TOGGLE());
   console.log("modal", selected);
   useEffect(() => {
     if (showCompanyModal) {
@@ -84,7 +84,7 @@ export default function Modal() {
       })
     );
     dispatch(ToggleDidSearch(false));
-    dispatch(ToggleModal());
+    dispatch(TOGGLE());
   };
   const categoryHasChecked = (category) => form.category.includes(category);
 

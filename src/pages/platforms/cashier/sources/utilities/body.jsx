@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
   DESTROY,
-  SetEDIT,
+  SetSELECTED,
 } from "../../../../../services/redux/slices/assets/providers";
 import Swal from "sweetalert2";
 
@@ -58,7 +58,7 @@ const Tables = () => {
               <td>
                 <button
                   onClick={() =>
-                    dispatch(SetEDIT(vendors || { name, subName }))
+                    dispatch(SetSELECTED(vendors || { name, subName }))
                   }
                 >
                   Edit

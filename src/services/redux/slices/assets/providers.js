@@ -38,6 +38,18 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+export const FILTERBYCATEGORY = createAsyncThunk(
+  `${url}/filterbycategory`,
+  async ({ keys, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/filterbycategory`, token, keys);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
 
 // export const UTILITIES = createAsyncThunk(
 //   `${url}/browse`,
@@ -138,9 +150,9 @@ export const REGISTER_BRANCH = createAsyncThunk(
 );
 export const UPDATE = createAsyncThunk(
   `${url}/update`,
-  async (form, thunkAPI) => {
+  async ({ data, token }, thunkAPI) => {
     try {
-      return await axioKit.update(url, form.data, form.token);
+      return await axioKit.update(url, data, token);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -197,12 +209,9 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.showModal = true;
     },
+    SetSELECTED: (state, { payload }) => {
+      console.log("SetSELECTED payload", payload);
 
-    ToggleModal: (state) => {
-      state.showCompanyModal = !state.showCompanyModal;
-      state.isSuccess = false;
-    },
-    SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
       state.showModal = true;
@@ -275,14 +284,21 @@ export const reduxSlice = createSlice({
       state.selected = {};
     },
     SetFILTER: (state, { payload }) => {
-      const { page, maxPage } = payload;
-      if (page.length > 0) {
-        state.totalPages = Math.ceil(payload.length / maxPage);
+      if (payload.length > 0) {
+        state.totalPages = Math.ceil(payload.length / state.maxPage);
         if (state.page > state.totalPages) {
           state.page = state.totalPages;
         }
       }
-      state.filtered = page;
+      state.filtered = payload;
+    },
+    ResetFILTER: (state) => {
+      const { collections } = state;
+      state.totalPages = Math.ceil(collections.length / state.maxPage);
+      if (state.page > state.totalPages) {
+        state.page = state.totalPages;
+      }
+      state.filtered = collections;
     },
     RESET_COLLECTIONS: (state) => {
       state.didSearch = false;
@@ -304,6 +320,9 @@ export const reduxSlice = createSlice({
       console.log("payload", payload);
 
       state.activePage = payload;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -388,8 +407,10 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
         state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.isSuccess = true;
         state.isLoading = false;
+        state.showModal = false;
       })
       .addCase(SAVE.rejected, (state, { payload }) => {
         state.message = payload;
@@ -421,12 +442,13 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(UPDATE.fulfilled, (state, { payload }) => {
-        const index = state.collections.findIndex(
+        const index = state.filtered.findIndex(
           (item) => item._id === payload._id
         );
         if (index !== -1) {
-          state.collections[index] = payload;
+          state.filtered[index] = payload;
         }
+        state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -466,6 +488,8 @@ export const reduxSlice = createSlice({
         );
 
         state.collections.splice(index, 1);
+        const ind = state.filtered.findIndex((item) => item._id === payload);
+        state.filtered.splice(ind, 1);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -474,23 +498,43 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+      .addCase(FILTERBYCATEGORY.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(FILTERBYCATEGORY.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(FILTERBYCATEGORY.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
       });
   },
 });
 
 export const {
-  SetEDIT,
+  SetSELECTED,
   SetCREATE,
   SetFILTER,
+  ResetFILTER,
   SetPAGE,
   SETSOURCES,
   SetSEARCHRESULTS,
-
-  ToggleModal,
   ToggleDidSearch,
   RESET_COLLECTIONS,
   SetREGISTER,
   ToggleRegister,
+  TOGGLE,
   SetSOURCE,
   SetBRANCHES,
   SetMaxPage,

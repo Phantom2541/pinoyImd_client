@@ -40,6 +40,7 @@ import generateCalendar from "./generateCalendar";
 import fullNameSearch from "./fullNameSearch";
 import dateFormat from "./dateFormat";
 import getTime from "./getTime";
+import getBday from "./getBday";
 import getWeekend from "./getWeekend";
 import isClosingTime from "./isClosingTime";
 import generateClaimStub from "./generateClaimStub";
@@ -81,6 +82,7 @@ export {
   paymentMethod,
   Deals,
   handlePagination,
+  getBday,
   fullName,
   calculateDiff,
   isJpegOrJpgFile,

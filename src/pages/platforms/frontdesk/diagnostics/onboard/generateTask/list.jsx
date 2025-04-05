@@ -23,10 +23,12 @@ const Body = ({ setOutSource, outSource }) => {
     [outSources, setOutSources] = useState([]);
 
   useEffect(() => {
-    const _outSources = collections.map(({ vendors }) => ({
-      text: vendors?.displayname || vendors?.name || "a",
-      value: vendors?._id || "a",
-    }));
+    const _outSources = collections
+      .filter(({ vendors }) => vendors)
+      .map(({ vendors }) => ({
+        text: vendors?.displayname || vendors?.name || "a",
+        value: vendors?._id || "a",
+      }));
 
     setOutSources(_outSources);
   }, [collections]);
@@ -88,7 +90,6 @@ const Body = ({ setOutSource, outSource }) => {
   const handleDragOver = (e) => {
     e.preventDefault();
   };
-
   const List = ({ collections, title }) => {
     return (
       <MDBCol

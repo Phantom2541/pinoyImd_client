@@ -148,11 +148,13 @@ export default function Modal() {
     }
 
     // Open the printout request form window
-    window.open(
-      "/printout/request/form",
-      "RequestForm", // Window name 1
-      "top=100px,left=100px,width=1050px,height=750px"
-    );
+    if (inhouse.length > 0) {
+      window.open(
+        "/printout/request/form",
+        "RequestForm", // Window name 1
+        "top=100px,left=100px,width=1050px,height=750px"
+      );
+    }
 
     if (outSourceId && outsource.length > 0) {
       window.open(
@@ -160,6 +162,10 @@ export default function Modal() {
         "OutsourceRequestForm", // Unique window name 2
         "top=100px,left=0px,width=1050px,height=750px"
       );
+      await saveRequest(`/commerce/pos/services/dealOutSources`, {
+        dealId: deal._id,
+        servicesId: _outsource,
+      });
     }
 
     const data = {
@@ -176,13 +182,6 @@ export default function Modal() {
       forms,
       ...(outSourceId && { outsource: outSourceId }),
     };
-
-    if (outSourceId) {
-      await saveRequest(`/commerce/pos/services/dealOutSources`, {
-        dealId: deal._id,
-        servicesId: _outsource,
-      });
-    }
 
     dispatch(
       REFORM({

@@ -1,4 +1,4 @@
-import cash from "../../../assets/paymentMethods/cash.png";
+import cash from "../../../assets/paymentMethods/cash-edited.png";
 import transfer from "../../../assets/paymentMethods/transfer.png";
 import gcash from "../../../assets/paymentMethods/gcash.png";
 import cheque from "../../../assets/paymentMethods/cheque.png";
