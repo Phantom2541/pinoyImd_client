@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SAVE,
-  SetCloseModal,
+  TOGGLE,
   UPDATE,
 } from "../../../../../../services/redux/slices/finance/journals/payables";
 import {
@@ -39,7 +39,7 @@ export default function ModalCreate() {
   }, [showPayablesModal, selected]);
 
   const handleClose = () => {
-    dispatch(SetCloseModal(false));
+    dispatch(TOGGLE(false));
   };
 
   const handleSave = () => {
@@ -70,7 +70,7 @@ export default function ModalCreate() {
 
   const { particular = {}, supplier = {} } = form || {};
 
-  console.log("form", form.due);
+  console.log("form", form);
 
   return (
     <MDBModal
@@ -94,17 +94,17 @@ export default function ModalCreate() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <Select
-          choices={
+          collections={
             Array.isArray(Statements?.collections)
               ? Statements.collections.filter(
                   (statement) => statement?.category === "expenses"
                 )
               : []
           }
-          label={"Expense Account"}
+          label={"Financial Statement"}
           preValue={form.fsId}
-          values={"id"}
-          texts={"title"}
+          keys={"id"}
+          values={"title"}
           onChange={(value) => setForm({ ...form, fsId: Number(value) })}
         />
         {willCreate && (
@@ -133,7 +133,7 @@ export default function ModalCreate() {
           </>
         ) : form.orOption === "Supplier" ? (
           <Select
-            choices={
+            collections={
               Array.isArray(collections)
                 ? collections
                     .map((item) => ({
@@ -144,8 +144,8 @@ export default function ModalCreate() {
                 : []
             }
             label="Supplier"
-            values="value"
-            texts="label"
+            keys="value"
+            values="label"
             onChange={(e) => setForm({ ...form, supplier: e })}
           />
         ) : null}{" "}
@@ -157,7 +157,7 @@ export default function ModalCreate() {
             setForm({ ...form, amount: Number(target.value) })
           }
         />
-        {willCreate && (
+        {willCreate && form.fsId === 31 && (
           <>
             <h5>
               <b>Range</b>
@@ -192,9 +192,6 @@ export default function ModalCreate() {
             </MDBRow>
           </>
         )}
-        <h5>
-          <b>Due Date</b>
-        </h5>
         <MDBInput
           label="Due Date"
           type="date"
