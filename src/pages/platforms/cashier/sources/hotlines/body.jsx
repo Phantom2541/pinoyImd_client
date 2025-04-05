@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBTable } from "mdbreact";
+import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
@@ -16,7 +16,7 @@ const Body = () => {
 
   const handleEdit = (service) => {
     dispatch(SetSELECTED(service));
-    console.log("SetSelected service :", service);
+    //console.log("SetSelected service :", service);
   };
 
   const handleDelete = (_id) => {
@@ -50,7 +50,7 @@ const Body = () => {
           <th>Name</th>
           <th>Number</th>
           <th>Address</th>
-          <th>Actions</th>
+          <th className="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -61,19 +61,24 @@ const Body = () => {
             <td>{service.number} </td>
             <td>{service.address}</td>
             <td className="text-center">
-              <button
-                onClick={() => handleEdit(service)}
-                className="btn btn-sm btn-primary"
-              >
-                Edit
-              </button>
-
-              <button
-                onClick={() => handleDelete(service._id)}
-                className="btn btn-sm btn-danger"
-              >
-                Delete
-              </button>
+              <MDBBtnGroup>
+                <MDBBtn
+                  size="sm"
+                  rounded
+                  color="primary"
+                  onClick={() => handleEdit(service)}
+                >
+                  <MDBIcon icon="pencil-alt" />
+                </MDBBtn>
+                <MDBBtn
+                  onClick={() => handleDelete(service._id)}
+                  size="sm"
+                  rounded
+                  color="danger"
+                >
+                  <MDBIcon icon="trash" />
+                </MDBBtn>
+              </MDBBtnGroup>
             </td>
           </tr>
         ))}

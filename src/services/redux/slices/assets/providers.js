@@ -51,19 +51,6 @@ export const FILTERBYCATEGORY = createAsyncThunk(
   }
 );
 
-// export const UTILITIES = createAsyncThunk(
-//   `${url}/browse`,
-//   async ({ key, token }, thunkAPI) => {
-//     try {
-//       return await axioKit.universal(`${url}/browse`, token, key);
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(
-//         error.response?.data?.message || error.message || error.toString()
-//       );
-//     }
-//   }
-// );
-
 export const GETENROLLED = createAsyncThunk(
   `${url}/enrollements`,
   async ({ key, token }, thunkAPI) => {
@@ -140,7 +127,7 @@ export const REGISTER_BRANCH = createAsyncThunk(
   `${url}/REGISTER_BRANCH`,
   async ({ token, data }, thunkAPI) => {
     try {
-      return await axioKit.save(url, data, token, "register_branch");
+      return axioKit.save(url, data, token, "register_branch");
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -152,7 +139,7 @@ export const UPDATE = createAsyncThunk(
   `${url}/update`,
   async ({ data, token }, thunkAPI) => {
     try {
-      return await axioKit.update(url, data, token);
+      return axioKit.update(url, data, token);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()
@@ -165,12 +152,7 @@ export const SPECIFIC_UPDATE = createAsyncThunk(
   `${url}/SPECIFIC_UPDATE`,
   async (form, thunkAPI) => {
     try {
-      return await axioKit.update(
-        url,
-        form.data,
-        form.token,
-        "specific_update"
-      );
+      return axioKit.update(url, form.data, form.token, "specific_update");
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || error.toString()

@@ -5,10 +5,10 @@ import Pagination from "../../../../../components/pagination";
 import {
   SetMaxPage,
   SetActivePAGE,
-} from "../../../../../services/redux/slices/finance/journals/payables";
+} from "../../../../../services/redux/slices/assets/providers";
 const Footer = () => {
-  const { isLoading, totalPages, activePage, filtered } = useSelector(
-      ({ payables }) => payables
+  const { isLoading, totalPages, activePage } = useSelector(
+      ({ providers }) => providers
     ),
     { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
@@ -27,9 +27,6 @@ const Footer = () => {
   return (
     <div className="mb-auto d-flex justify-content-between align-items-center px-4">
       <TableRowCount disablePageSelect={false} />
-      <span className="white-text mx-3 text-nowrap mt-0">
-        {filtered.length} fetched
-      </span>
       <Pagination
         isLoading={isLoading}
         total={totalPages}

@@ -120,9 +120,6 @@ export const reduxSlice = createSlice({
     },
     SetSELECTED: (state, { payload }) => {
       const { key, value } = payload;
-
-      console.log("payload", payload);
-
       if (key === "census") {
         state.showCensus = true;
       } else if (key === "close") {

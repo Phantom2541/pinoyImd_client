@@ -56,7 +56,7 @@ const Services = {
     const cluster = collections.filter(({ id }) => pks.includes(id));
     const templates = cluster.map(({ template }) => template);
     const uniqueTemplates = [...new Set(templates)]; // Remove duplicates
-
+    console.log("unique templates", uniqueTemplates);
     const result = {}; // This will hold the final object to return
 
     uniqueTemplates.forEach((id) => {
