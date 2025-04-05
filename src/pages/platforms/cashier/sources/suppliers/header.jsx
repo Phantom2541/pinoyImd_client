@@ -1,34 +1,32 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
+import { MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
 import {
   FILTERBYCATEGORY,
+  SetCREATE,
   SetFILTER,
   ResetFILTER,
-  SetCREATE,
 } from "../../../../../services/redux/slices/assets/providers";
-
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { filtered } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
-  // Fetch hotlines on component mount and update filtered services based on the category
+  //initial values
   useEffect(() => {
     if (token) {
       dispatch(
         FILTERBYCATEGORY({
           token,
-          keys: { clients: activePlatform?.branchId, category: "hotline" },
+          keys: { clients: activePlatform?.branchId, category: "supplier" },
         })
       );
     }
-  }, [dispatch, token, activePlatform]);
-
-  // Handle Add function - make sure service is not empty before dispatching
+  }, [token, activePlatform, dispatch]);
   const handleAdd = (key) => dispatch(SetCREATE({ displayname: key }));
   const handleFiltered = (items) => dispatch(SetFILTER(items));
+
   return (
     <MDBView
       cascade
@@ -36,7 +34,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered.length} hotlines
+          {filtered.length} Suppliers
         </span>
       </div>
       <div>
@@ -44,17 +42,9 @@ const Header = () => {
           <Search
             collection={filtered}
             handleFiltered={handleFiltered}
+            handleAdd={handleAdd}
             reset={() => dispatch(ResetFILTER())}
           />
-          <MDBBtn
-            size="sm"
-            color="white"
-            rounded
-            className="px-2 ml-3"
-            onClick={handleAdd}
-          >
-            <MDBIcon icon="plus" />
-          </MDBBtn>
         </div>
       </div>
     </MDBView>

@@ -10,6 +10,7 @@ import {
   Utilities,
   Remittances,
   Hotlines,
+  Suppliers,
 } from "../../../pages/platforms/cashier";
 
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
@@ -156,7 +157,7 @@ const cashier = [
         path: "/suppliers",
         icon: "handshake",
         title: "List of company that provides supplies",
-        // component: Suppliers,
+        component: Suppliers,
       },
       {
         name: "Hotlines",

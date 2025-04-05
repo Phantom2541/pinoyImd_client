@@ -10,7 +10,7 @@ import {
   SetMONTH,
 } from "../../../../../services/redux/slices/finance/journals/payables";
 
-import Search from "../../../../../components/searchables/filter";
+import Search from "../../../../../components/searchables";
 import CalendarPicker from "../../../../../components/header/calendars";
 // import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {

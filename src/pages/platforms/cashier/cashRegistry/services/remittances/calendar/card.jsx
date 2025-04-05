@@ -5,8 +5,8 @@ import {
   currency,
   paymentMethod,
 } from "../../../../../../../services/utilities";
-
-const Card = ({ txt, num, index, item = {} }) => {
+import { MDBAnimation, MDBProgress } from "mdbreact";
+const Card = ({ txt, num, index, item = {}, isLoading = false }) => {
   const today = new Date();
   const dateCell = new Date(txt);
   const isFuture = dateCell > today;
@@ -23,99 +23,124 @@ const Card = ({ txt, num, index, item = {} }) => {
   const net = (opening.sum || 0) + gross - expenses;
   const isRemitted = !!collector;
 
-  console.log("breakdown", breakdown);
-
   return (
     <div className="position-relative">
       <div
         className={`cashier-rermmitance-calendar-card ${
-          num ? "" : "opacity-0 pointer-events-none"
-        }`}
+          !isFuture && net && "sale"
+        } ${num ? "" : "opacity-0 pointer-events-none"}`}
         key={`pos-calendar-${index}`}
       >
         <Indicator num={num} week={week} isFuture={isFuture} />
 
-        <div className="sales-card-info mt-3">
-          {[
-            { label: "FC", value: opening.sum },
-            { label: "Sales", value: gross },
-            {
-              label: "Total",
-              value: gross ? gross + opening.sum : 0,
-              cn: "font-weight-bold",
-            },
-            { label: "Expenses", value: 20, cn: "text-danger" },
-          ]
-            .filter(({ value }) => value > 0)
-            .map(({ label, value, cn }, idx) => (
-              <div
-                key={idx}
-                className="d-flex align-items-center justify-content-between"
-              >
-                <h6
-                  className={`mb-0 text-right ${cn}`}
-                  style={{ whiteSpace: "nowrap" }}
-                >
-                  {label}:
-                </h6>
-                <h6
-                  className={`mb-0 text-right ${cn}`}
-                  style={{ whiteSpace: "nowrap" }}
-                >
-                  {currency(value)}
-                </h6>
-              </div>
-            ))}
-
-          {/* 🟢 Show COH only if transactions exist */}
-          {!!closing && (
-            <div className="mb-3">
-              <hr className="my-1" />
-              <h6 style={{ fontSize: "0.8rem" }}>BREAK DOWN</h6>
-              {breakdown &&
-                Object.entries(breakdown).map(([key, value]) => {
-                  const paymentData = paymentMethod.getImage(key); // Get payment method data
-                  return (
-                    <div
-                      key={key}
-                      className="d-flex align-items-center text-white justify-content-between"
+        {!isLoading ? (
+          <>
+            {" "}
+            <div className="sales-card-info mt-3">
+              {[
+                { label: "FC", value: opening.sum, title: "Floating Cash" },
+                { label: "Sales", value: gross },
+                {
+                  label: "Total",
+                  value: gross ? gross + opening.sum : 0,
+                  cn: "font-weight-bold",
+                },
+                { label: "Expenses", value: expenses, cn: "text-danger" },
+              ]
+                .filter(({ value }) => value > 0)
+                .map(({ label, value, cn, title = "" }, idx) => (
+                  <div
+                    key={idx}
+                    title={title}
+                    className="d-flex align-items-center justify-content-between"
+                  >
+                    <h6
+                      className={`mb-0 text-right ${cn}`}
+                      style={{ whiteSpace: "nowrap" }}
                     >
-                      {paymentData?.img ? (
-                        <img
-                          src={paymentData.img} // ✅ Use an <img> tag
-                          alt={key}
-                          className="mr-2"
-                          style={paymentData.style} // Adjust size if needed
-                        />
-                      ) : (
-                        "💰"
-                      )}
-                      <span>
-                        {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
-                        <strong className="text-info">
-                          ₱{value.toLocaleString()}
-                        </strong>
-                      </span>
-                    </div>
-                  );
-                })}
-              {/* <hr /> */}
-              <div style={{ position: "absolute", bottom: 0 }}>
-                <h6
-                  className="mb-0 text-right font-weight-bold"
-                  style={{
-                    whiteSpace: "nowrap",
-                    color: isRemitted ? "inherit" : "green", // 🟢 Green only for COH, regular if remitted
-                  }}
-                >
-                  {isRemitted ? "Remitted" : "GROSS"}: {currency(net)}
-                </h6>
-              </div>
-            </div>
-          )}
-        </div>
+                      {label}:
+                    </h6>
+                    <h6
+                      className={`mb-0 text-right ${cn}`}
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      {currency(value)}
+                    </h6>
+                  </div>
+                ))}
 
-        {!isFuture && !isRemitted && <Footer num={num} item={item} />}
+              {/* 🟢 Show COH only if transactions exist */}
+              {!!closing && (
+                <div style={{ marginBottom: "1.8rem" }}>
+                  <div className="cashier-remittance-breakdown">
+                    <hr className="my-1" />
+
+                    {breakdown &&
+                      Object.entries(breakdown).map(([key, value]) => {
+                        const paymentData = paymentMethod.getImage(key); // Get payment method data
+                        const { img, style, text = "" } = paymentData;
+                        return (
+                          <div
+                            key={key}
+                            title={text}
+                            className="d-flex align-items-center text-white justify-content-between"
+                          >
+                            {paymentData?.img ? (
+                              <img
+                                src={img} // ✅ Use an <img> tag
+                                alt={key}
+                                className="mr-2"
+                                style={style} // Adjust size if needed
+                              />
+                            ) : (
+                              "💰"
+                            )}
+                            <span>
+                              {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                              <strong className="text-dark">
+                                ₱{value.toLocaleString()}
+                              </strong>
+                            </span>
+                          </div>
+                        );
+                      })}
+                  </div>
+                  {/* <hr /> */}
+                  <div
+                    className="cashier-remittance-total"
+                    style={{
+                      position: "absolute",
+                      bottom: "0rem",
+                    }}
+                  >
+                    <h6
+                      className="mb-0 text-right font-weight-bold"
+                      style={{
+                        whiteSpace: "nowrap",
+                        color: isRemitted ? "inherit" : "green", // 🟢 Green only for COH, regular if remitted
+                      }}
+                    >
+                      {isRemitted ? "Remitted" : "GROSS"}: {currency(net)}
+                    </h6>
+                  </div>
+                </div>
+              )}
+            </div>
+            {!isFuture && !isRemitted && <Footer num={num} item={item} />}
+          </>
+        ) : (
+          <div>
+            <MDBAnimation
+              type="fadeIn"
+              infinite
+              delay={`100ms`}
+              duration="3000ms"
+              className="mt-3"
+            >
+              <MDBProgress animated color="light" value={3000}></MDBProgress>
+            </MDBAnimation>
+          </div>
+        )}
       </div>
     </div>
   );

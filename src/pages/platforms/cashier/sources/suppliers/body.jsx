@@ -1,12 +1,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import Swal from "sweetalert2";
+import { MDBTable } from "mdbreact";
 import {
   SetSELECTED,
   DESTROY,
 } from "../../../../../services/redux/slices/assets/providers";
-
+import Swal from "sweetalert2";
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
     { filtered, activePage, maxPage } = useSelector(
@@ -34,7 +33,6 @@ const Body = () => {
       }
     });
   };
-
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -50,7 +48,7 @@ const Body = () => {
           <th>Name</th>
           <th>Number</th>
           <th>Address</th>
-          <th className="text-center">Actions</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -61,24 +59,19 @@ const Body = () => {
             <td>{service.number} </td>
             <td>{service.address}</td>
             <td className="text-center">
-              <MDBBtnGroup>
-                <MDBBtn
-                  size="sm"
-                  rounded
-                  color="primary"
-                  onClick={() => handleEdit(service)}
-                >
-                  <MDBIcon icon="pencil-alt" />
-                </MDBBtn>
-                <MDBBtn
-                  onClick={() => handleDelete(service._id)}
-                  size="sm"
-                  rounded
-                  color="danger"
-                >
-                  <MDBIcon icon="trash" />
-                </MDBBtn>
-              </MDBBtnGroup>
+              {" "}
+              <button
+                onClick={() => handleEdit(service)}
+                className="btn btn-sm btn-primary"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(service._id)}
+                className="btn btn-sm btn-danger"
+              >
+                Delete
+              </button>
             </td>
           </tr>
         ))}
