@@ -31,9 +31,6 @@ export default function Modal() {
     if (showModal) {
       setForm({
         ...selected,
-        userId: auth._id,
-        clients: activePlatform.branchId,
-        category: "hotline",
       });
     }
   }, [showModal, selected, auth, activePlatform]);
@@ -46,11 +43,9 @@ export default function Modal() {
         appearance: "info",
       });
     }
-
-    setForm(removeUndefinedValues(form));
     dispatch(
       UPDATE({
-        data: { ...form, _id: selected._id },
+        data: { ...form },
         token,
       })
     );
@@ -58,17 +53,28 @@ export default function Modal() {
 
   // Handle create function
   const handleCreate = () => {
+    if (Object.keys(form).length === 0) {
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
     dispatch(
       SAVE({
-        data: form,
+        data: {
+          ...form,
+          userId: auth._id,
+          clients: activePlatform.branchId,
+          category: "hotline",
+        },
         token,
       })
-    ).then(() => TOGGLE()); // Close modal after successful save
+    );
   };
 
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    setForm(removeUndefinedValues(form));
     willCreate ? handleCreate() : handleUpdate();
   };
 
