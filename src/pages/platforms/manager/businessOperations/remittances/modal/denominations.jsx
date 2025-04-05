@@ -168,17 +168,6 @@ export default function Modal() {
       });
   };
 
-  const increaseQuantity = (type, denomination) => {
-    setFloating((prev) => ({
-      ...prev,
-      [type]: {
-        ...prev[type],
-        [denomination]: (prev[type]?.[denomination] || 0) + 1,
-      },
-    }));
-  };
-
-  console.log("selected", selected);
   return (
     <MDBModal
       isOpen={showModal}
@@ -234,9 +223,7 @@ export default function Modal() {
                   .map(([bill1, bill2], idx) => (
                     <tr key={`row-${idx}`}>
                       <td className="text-center">
-                        <MDBCard
-                          onClick={() => increaseQuantity("bills", bill1)}
-                        >
+                        <MDBCard>
                           <MDBCardBody
                             style={{ backGroundColor: "transparent" }}
                             className="p-0 m"
@@ -257,7 +244,7 @@ export default function Modal() {
                           min={0}
                           className="text-center w-100"
                           readOnly
-                          value={String(floating?.bills[bill1] || 0)}
+                          value={String(floating?.bills[bill1] || "") || ""}
                           onChange={(e) =>
                             handleInputChange(
                               "bills",
@@ -269,12 +256,10 @@ export default function Modal() {
                       </td>
                       <td className="text-center">
                         {bill2 && (
-                          <MDBCard
-                            onClick={() => increaseQuantity("bills", bill2)}
-                          >
+                          <MDBCard>
                             <MDBCardBody className="m-0 p-0">
                               <div
-                                style={getBillimg(Number(bill2))}
+                                style={getBillimg(Number(bill2)) || ""}
                                 title={currency(bill2)}
                               />
                             </MDBCardBody>
@@ -291,7 +276,7 @@ export default function Modal() {
                             min={0}
                             className="text-center w-100"
                             readOnly
-                            value={String(floating?.bills?.[bill2] || 0)}
+                            value={String(floating?.bills?.[bill2] || 0) || ""}
                             onChange={(e) =>
                               handleInputChange(
                                 "bills",
@@ -312,10 +297,7 @@ export default function Modal() {
             <div className="d-flex flex-column align-items-center ">
               {Object.keys(coinPositions).map((coin) => (
                 <div key={coin} className="d-flex align-items-center mb-3">
-                  <MDBCard
-                    className="coins-radius"
-                    onClick={() => increaseQuantity("coins", coin)}
-                  >
+                  <MDBCard className="coins-radius">
                     <MDBCardBody className="m-0 p-0 coins-radius">
                       <div
                         style={getCoinIMG(Number(coin))}
