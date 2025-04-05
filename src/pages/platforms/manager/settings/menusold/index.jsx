@@ -15,53 +15,47 @@ import Pagination from "../../../../../components/pagination";
 import Swal from "sweetalert2";
 
 export default function Menus() {
-  const [menus, setMenus] = useState([]),
-    [selected, setSelected] = useState({}),
-    [showModal, setShowModal] = useState(false),
-    [searchKey, setSearchKey] = useState(""),
-    [page, setPage] = useState(1),
-    [totalPages, setTotalPages] = useState(1),
-    [willCreate, setWillCreate] = useState(true),
-    [visible, setVisible] = useState(false),
-    { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, isLoading } = useSelector(
-      ({ menus }) => menus
-    ),
-    { addToast } = useToasts(),
-    dispatch = useDispatch();
+  const [menus, setMenus] = useState([]);
+  const [selected, setSelected] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const [searchKey, setSearchKey] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [willCreate, setWillCreate] = useState(true);
+  const [visible, setVisible] = useState(false);
+
+  const { token, activePlatform, maxPage } = useSelector(({ auth }) => auth);
+  const { collections, message, isSuccess, isLoading } = useSelector(({ menus }) => menus);
+  const { addToast } = useToasts();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (menus.length > 0) {
-      let totalPages = Math.floor(menus.length / maxPage);
-      if (menus.length % maxPage > 0) totalPages += 1;
-      setTotalPages(totalPages);
-
-      if (page > totalPages) {
-        setPage(totalPages);
+      const calculatedPages = Math.ceil(menus.length / maxPage);
+      setTotalPages(calculatedPages);
+      if (page > calculatedPages) {
+        setPage(calculatedPages);
       }
     }
   }, [menus, page, maxPage]);
 
-  //Initial Browse
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
     }
-
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform]);
 
-  //Set fetched data for mapping
   useEffect(() => {
     if (!!collections && visible !== false) {
       Swal.fire({
         title: "Newly registered company",
-        text: "it seems that your company is newly registered, you need to create menus",
+        text: "It seems your company is newly registered. You need to create menus.",
         icon: "info",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        cancelButtonText: "Remined me later",
+        cancelButtonText: "Remind me later",
         confirmButtonText: "Yes, continue",
       }).then((result) => {
         if (result.isConfirmed) {
@@ -69,44 +63,33 @@ export default function Menus() {
         }
       });
     }
-
     return () => setMenus(collections);
   }, [collections, visible, isSuccess]);
 
-  //Modal toggle
-  const toggleModal = () => setShowModal(!showModal);
-
-  //Trigger for update
-  const handleUpdate = (selected) => {
-    setSelected(selected);
-    if (willCreate) {
-      setWillCreate(false);
-    }
-    setShowModal(true);
-  };
-
-  //Trigger for create
-  const handleCreate = () => {
-    if (!willCreate) {
-      setWillCreate(true);
-    }
-    setShowModal(true);
-  };
-
-  //Toast for errors or success
   useEffect(() => {
     if (message) {
       addToast(message, {
         appearance: isSuccess ? "success" : "error",
       });
     }
-
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
 
+  const toggleModal = () => setShowModal(!showModal);
+
+  const handleUpdate = (selected) => {
+    setSelected(selected);
+    setWillCreate(false);
+    setShowModal(true);
+  };
+
+  const handleCreate = () => {
+    setWillCreate(true);
+    setShowModal(true);
+  };
+
   const resetSearch = () => setSearchKey("");
 
-  //Search function
   const handleSearch = async () => {
     if (searchKey) {
       setSearchKey("");
@@ -119,24 +102,20 @@ export default function Menus() {
         input: "text",
         confirmButtonText: "Search",
         inputValidator: (value) => {
-          if (!value) {
-            return "You need to write something!";
-          }
+          if (!value) return "You need to write something!";
         },
       });
 
       if (search) {
         const value = search.toUpperCase();
-
         setSearchKey(value);
         setMenus(globalSearch(collections, value));
       }
     }
   };
 
-  const handleGenerate = async () => {
-    setVisible(!visible);
-  };
+  const handleGenerate = () => setVisible(!visible);
+
   return (
     <>
       <MDBCard narrow>
@@ -145,8 +124,7 @@ export default function Menus() {
           className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
         >
           <span className="white-text mx-3">
-            {menus.length}&nbsp;
-            {searchKey ? `Matches with ${searchKey}` : "Available Menus"}
+            {menus.length} {searchKey ? `Matches with ${searchKey}` : "Available Menus"}
           </span>
           <div className="text-right">
             <MDBBtn
@@ -181,10 +159,11 @@ export default function Menus() {
               size="sm"
               className="px-2"
             >
-              <MDBIcon icon={"arrow-down"} className="mt-0" />
+              <MDBIcon icon="arrow-down" className="mt-0" />
             </MDBBtn>
           </div>
         </MDBView>
+
         <MDBCardBody className="pb-0">
           <MenuCollapse
             menus={menus}
@@ -195,7 +174,6 @@ export default function Menus() {
           />
           <div className="d-flex justify-content-between align-items-center px-4">
             <TableRowCount />
-
             <Pagination
               isLoading={isLoading}
               total={totalPages}
@@ -205,6 +183,7 @@ export default function Menus() {
           </div>
         </MDBCardBody>
       </MDBCard>
+
       <Modal
         selected={selected}
         willCreate={willCreate}
