@@ -17,14 +17,14 @@ import {
 } from "mdbreact";
 import {
   TOGGLE,
-  SAVE,
-  UPDATE as CLOSINGCASH,
+  SetLEDGER,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
-import { Denominations, Policy } from "../../../../../../services/fakeDb";
 import {
-  currency,
-  removeUndefinedValues,
-} from "../../../../../../services/utilities";
+  SAVE,
+  RESET,
+} from "../../../../../../services/redux/slices/finance/bookkeeping/ledger";
+import { Denominations } from "../../../../../../services/fakeDb";
+import { currency, paymentMethod } from "../../../../../../services/utilities";
 // import "./style.css";
 
 const billPositions = {
@@ -51,9 +51,10 @@ const coinSize = {
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { showModal, title, selected, month, year, day } = useSelector(
+    { showModal, title, selected } = useSelector(
       ({ remittances }) => remittances
     ),
+    { isLoading, isSuccess } = useSelector(({ ledger }) => ledger),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
     [sum, setSum] = useState(0),
     [coh, setCoh] = useState(0),
@@ -65,6 +66,13 @@ export default function Modal() {
   useEffect(() => {
     calculateSum(floating);
   }, [floating]);
+
+  useEffect(() => {
+    if (showModal && !isLoading && isSuccess) {
+      dispatch(TOGGLE());
+      dispatch(RESET());
+    }
+  }, [showModal, isLoading, isSuccess, dispatch]);
   useEffect(() => {
     let _coh = 0;
     if (selected?.gross) {
@@ -77,10 +85,11 @@ export default function Modal() {
   }, [selected]);
 
   useEffect(() => {
-    let denominations = { bills: {}, coins: {} };
-    if (title === "Closing Cash Register")
+    if (showModal) {
+      let denominations = { bills: {}, coins: {} };
       denominations = { ...selected?.closing };
-    setFloating(denominations);
+      setFloating(denominations);
+    }
   }, [showModal, title, selected]);
 
   const coinImage = `${process.env.PUBLIC_URL}/assets/denominations.png`;
@@ -134,66 +143,36 @@ export default function Modal() {
 
     setSum(total);
   };
-
   const handleSubmit = () => {
-    const _floating = removeUndefinedValues(floating);
-    if (!selected?._id) {
-      let createdAt = new Date(Date.UTC(year, month, day));
-      dispatch(
-        SAVE({
-          token,
-          data: {
-            createdAt,
-            opening: {
-              ..._floating,
-              sum,
-            },
-            position,
-            location,
-            shift: schedule,
-            cashier: auth._id,
-            branch: activePlatform?.branchId,
-            department: Policy.getDepartment(activePlatform.position),
-          },
-        })
-      );
-    } else {
-      dispatch(
-        CLOSINGCASH({
-          token,
-          data: {
-            closing: {
-              time: new Date().toLocaleTimeString("en-PH", {
-                timeZone: "Asia/Manila",
-                hour12: false,
-              }),
-              ..._floating,
-              sum, // floating is included
-            },
-            gross: selected.gross,
-            _id: selected._id,
-          },
-        })
-      );
-    }
-    dispatch(TOGGLE());
-  };
+    const { gross, breakdown, _id } = selected;
 
-  const increaseQuantity = (type, denomination) => {
-    setFloating((prev) => ({
-      ...prev,
-      [type]: {
-        ...prev[type],
-        [denomination]: (prev[type]?.[denomination] || 0) + 1,
-      },
-    }));
+    dispatch(
+      SAVE({
+        token,
+        data: {
+          remittanceID: _id,
+          branchId: activePlatform?.branchId,
+          userId: auth._id,
+          fsid: 1,
+          amount: gross,
+          breakdown,
+        },
+      })
+    )
+      .then(({ payload }) => {
+        const { payload: data } = payload;
+        dispatch(SetLEDGER(data)); // depende sa structure ng res
+      })
+      .catch((err) => {
+        console.error("Error saving remittance:", err);
+      });
   };
 
   return (
     <MDBModal
       isOpen={showModal}
       toggle={() => dispatch(TOGGLE({ key: "open" }))}
-      size="xl"
+      size="fluid"
       backdrop
     >
       <MDBModalHeader
@@ -202,9 +181,7 @@ export default function Modal() {
       >
         <div className="d-flex align-items-center">
           <MDBIcon icon="calendar-alt" className="mr-2" />
-          <span>
-            {title || "Floating Cash"} {sum > 0 && ` : (${currency(sum)})`}
-          </span>
+          <span>Remittance {sum > 0 && ` : (${currency(sum)})`}</span>
         </div>
 
         {title === "Closing Cash Register" && (
@@ -224,7 +201,7 @@ export default function Modal() {
 
       <MDBModalBody className="mb-0">
         <MDBRow>
-          <MDBCol md="10">
+          <MDBCol md="8">
             <h5 className="text-center font-weight-bold">Bills</h5>
             <MDBTable style={{ border: "none !important" }}>
               <MDBTableHead>
@@ -246,9 +223,7 @@ export default function Modal() {
                   .map(([bill1, bill2], idx) => (
                     <tr key={`row-${idx}`}>
                       <td className="text-center">
-                        <MDBCard
-                          onClick={() => increaseQuantity("bills", bill1)}
-                        >
+                        <MDBCard>
                           <MDBCardBody
                             style={{ backGroundColor: "transparent" }}
                             className="p-0 m"
@@ -268,8 +243,8 @@ export default function Modal() {
                           type="number"
                           min={0}
                           className="text-center w-100"
-                          required
-                          value={String(floating?.bills?.[bill1] || 0)}
+                          readOnly
+                          value={String(floating?.bills[bill1] || "") || ""}
                           onChange={(e) =>
                             handleInputChange(
                               "bills",
@@ -281,12 +256,10 @@ export default function Modal() {
                       </td>
                       <td className="text-center">
                         {bill2 && (
-                          <MDBCard
-                            onClick={() => increaseQuantity("bills", bill2)}
-                          >
+                          <MDBCard>
                             <MDBCardBody className="m-0 p-0">
                               <div
-                                style={getBillimg(Number(bill2))}
+                                style={getBillimg(Number(bill2)) || ""}
                                 title={currency(bill2)}
                               />
                             </MDBCardBody>
@@ -302,8 +275,8 @@ export default function Modal() {
                             type="number"
                             min={0}
                             className="text-center w-100"
-                            required
-                            value={String(floating?.bills?.[bill2] || 0)}
+                            readOnly
+                            value={String(floating?.bills?.[bill2] || 0) || ""}
                             onChange={(e) =>
                               handleInputChange(
                                 "bills",
@@ -321,13 +294,10 @@ export default function Modal() {
           </MDBCol>
           <MDBCol md="2">
             <h5 className="text-center font-weight-bold mt-1">Coins</h5>
-            <div className="d-flex flex-column align-items-center">
+            <div className="d-flex flex-column align-items-center ">
               {Object.keys(coinPositions).map((coin) => (
                 <div key={coin} className="d-flex align-items-center mb-3">
-                  <MDBCard
-                    className="coins-radius"
-                    onClick={() => increaseQuantity("coins", coin)}
-                  >
+                  <MDBCard className="coins-radius">
                     <MDBCardBody className="m-0 p-0 coins-radius">
                       <div
                         style={getCoinIMG(Number(coin))}
@@ -339,6 +309,7 @@ export default function Modal() {
                     type="number"
                     min={0}
                     className="text-center ml-3"
+                    readOnly
                     value={String(floating?.coins?.[coin] || 0)}
                     style={{ width: "6rem" }}
                     onChange={(e) =>
@@ -347,6 +318,47 @@ export default function Modal() {
                   />
                 </div>
               ))}
+            </div>
+          </MDBCol>
+          <MDBCol md="2">
+            <h5 className="text-center fw-bold">Break Down</h5>
+            <div className="mt-5">
+              {selected.breakdown &&
+                Object.entries(selected.breakdown).map(([key, value]) => {
+                  const paymentData = paymentMethod.getImage(key); // Get payment method data
+                  const { img, style, text = "" } = paymentData;
+                  return (
+                    <div
+                      key={key}
+                      title={text}
+                      className="d-flex align-items-center text-white justify-content-between mt-2"
+                    >
+                      {paymentData?.img ? (
+                        <img
+                          src={img} // ✅ Use an <img> tag
+                          alt={key}
+                          className="mr-2"
+                          style={{ ...style, height: "1.1rem" }} // Adjust size if needed
+                        />
+                      ) : (
+                        "💰"
+                      )}
+                      <span>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                        <strong className="text-dark">
+                          ₱{value.toLocaleString()}
+                        </strong>
+                      </span>
+                    </div>
+                  );
+                })}
+              <hr />
+              <div className="d-flex justify-content-between align-items-center">
+                <h5>Gross:</h5>
+                <h5>
+                  <strong>{currency(selected?.gross)}</strong>
+                </h5>
+              </div>
             </div>
           </MDBCol>
         </MDBRow>
@@ -390,10 +402,12 @@ export default function Modal() {
           {/* Button always at the end */}
           <MDBBtn
             color="primary"
+            style={{ marginTop: "-2rem" }}
             onClick={handleSubmit}
-            disabled={title === "Closing Cash Register" && sum !== coh}
+            disabled={isLoading}
           >
             <MDBIcon icon="check" className="mr-2" /> Submit
+            {isLoading && <MDBIcon icon="spinner" pulse className="ml-2" />}
           </MDBBtn>
         </div>
       </MDBModalBody>
