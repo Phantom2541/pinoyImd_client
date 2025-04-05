@@ -13,7 +13,7 @@ import {
   SetINHOUSE,
   SetOUTSOURCE,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-
+import dragAndDrop from "../../../../../../assets/drag-and-drop.png";
 const Body = ({ setOutSource, outSource }) => {
   const dispatch = useDispatch();
   const { inhouse, outsource } = useSelector(
@@ -115,6 +115,10 @@ const Body = ({ setOutSource, outSource }) => {
       collections.map((item, index) => (
         <MDBListGroupItem
           key={index}
+          style={{
+            borderTop: "1px solid #ccc",
+            borderBottom: "1px solid #ccc",
+          }}
           className="cursor-pointer"
           draggable
           onDragStart={(e) => handleDragStart(e, item, lowerTitle)}
@@ -128,18 +132,23 @@ const Body = ({ setOutSource, outSource }) => {
         className={isOutsource && !outSource ? "text-start" : "text-center"}
         style={{
           display: "flex",
+          border: "none",
+          height: "50vh",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
         {isOutsource && !outSource ? (
-          <p>
-            You need to select an{" "}
-            <span className="text-primary">outsource</span> to activate the drag
-            and drop
-          </p>
+          <h6>
+            You need to select an
+            <span className="text-primary"> outsource</span> <br />
+            to activate the drag and drop
+          </h6>
         ) : (
-          "Drag and Drop Services Here..."
+          <div className="d-flex flex-column">
+            <p>Drag and Drop Services Here...</p>
+            <img src={dragAndDrop} alt="No image" style={{ height: "12rem" }} />
+          </div>
         )}
       </MDBListGroupItem>
     );
@@ -154,11 +163,16 @@ const Body = ({ setOutSource, outSource }) => {
             <span style={{ fontWeight: 500 }}>{title}</span>
             {isOutsource && renderSelect()}
           </MDBCardHeader>
-          <MDBCardBody className="m-0 p-0 dragDrop">
+          <MDBCardBody
+            className="m-0 p-0 dragDrop"
+            style={{
+              minHeight: !isOutsource ? "24.5rem" : "24rem",
+              border: "1px solid #ccc",
+            }}
+          >
             <MDBListGroup
               style={{
-                maxHeight: "30rem",
-                minHeight: "10rem",
+                maxHeight: !isOutsource ? "24.5rem" : "24rem",
                 overflowY: "auto",
               }}
               className="summary-scrollbar"

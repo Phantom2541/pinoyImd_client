@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBBtn,
   MDBModal,
@@ -30,6 +30,12 @@ export default function Modal() {
     [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
   const toggle = () => dispatch(TOGGLE());
+
+  useEffect(() => {
+    if (show) {
+      setOutSourceId("");
+    }
+  }, [show]);
 
   const getIDS = (collections) => collections.map(({ id }) => id);
 
