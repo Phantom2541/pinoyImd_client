@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "finance/bookkeeping/remittances";
+const url = "finance/bookkeeping/ledgers";
 const today = new Date();
 
 const initialState = {
@@ -41,6 +41,24 @@ export const SAVE = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const LEDGER = createAsyncThunk(
+  `${url}/leddger`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, token, "ledger");
     } catch (error) {
       const message =
         (error.response &&
@@ -118,25 +136,7 @@ export const reduxSlice = createSlice({
       console.log("SetYEAR payload", payload);
       state.year = payload;
     },
-    SetLEDGER: (state, { payload }) => {
-      const index = state.collections.findIndex(
-        ({ _id }) => _id === payload._id
-      );
-      const oldRemittance = { ...state.collections[index] };
-      state.collections[index] = { ...oldRemittance, ...payload };
-    },
-    SetSELECTED: (state, { payload }) => {
-      const { key, value } = payload;
-      if (key === "census") {
-        state.showCensus = true;
-      } else if (key === "close") {
-        state.showModal = true;
-        state.title = "Closing Cash Register";
-      } else if (key === "remit") {
-        state.showModal = true;
-      }
-      state.selected = value;
-    },
+
     SetActiveDATE: (state, { payload }) => {
       state.day = payload;
     },
@@ -192,8 +192,6 @@ export const reduxSlice = createSlice({
         state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
-        console.log("SAVE.fulfilled floatingcash", data);
-        localStorage.setItem("floatingcash", JSON.stringify(data));
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
@@ -258,14 +256,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const {
-  SetMONTH,
-  SetYEAR,
-  TOGGLE,
-  SetSELECTED,
-  SetActiveDATE,
-  RESET,
-  SetLEDGER,
-} = reduxSlice.actions;
+export const { SetMONTH, SetYEAR, TOGGLE, SetActiveDATE, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

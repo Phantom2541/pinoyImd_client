@@ -33,6 +33,8 @@ const Card = ({ txt, num, index, items = [] }) => {
       .join(", ");
   };
 
+  console.log("items", items);
+
   return (
     <div
       className={`calendar-card  ${
@@ -58,7 +60,7 @@ const Card = ({ txt, num, index, items = [] }) => {
                     title={handleTitle(breakdown)}
                     style={{ position: "relative", zIndex: 999 }}
                   >
-                    {cashier?.fullName?.fname}
+                    {cashier?.alias}
                     <span style={{ color: collector ? "" : "green" }}>
                       {currency(gross)}
                     </span>

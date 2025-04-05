@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { debounce } from "lodash";
 import "./search.css";
 import { globalSearch } from "../../services/utilities";
@@ -9,6 +9,7 @@ export default function Search({
   handleFiltered,
   reset,
   handleAdd,
+  withCreate = false,
 }) {
   const debouncedSearch = useMemo(() => {
     return debounce((key) => {
@@ -39,15 +40,11 @@ export default function Search({
           spellCheck={false}
         />
       </div>
-      <MDBBtn
-        size="sm"
-        color="white"
-        rounded
-        className="px-2 ml-3"
-        onClick={handleAdd}
-      >
-        <MDBIcon icon="plus" />
-      </MDBBtn>
+      {withCreate && (
+        <MDBBtn onClick={handleAdd} size="sm" color="primary">
+          <MDBIcon icon="plus" />
+        </MDBBtn>
+      )}
     </div>
   );
 }

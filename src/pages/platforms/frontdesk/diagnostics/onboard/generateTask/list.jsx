@@ -147,7 +147,7 @@ const Body = ({ setOutSource, outSource }) => {
         ) : (
           <div className="d-flex flex-column">
             <p>Drag and Drop Services Here...</p>
-            <img src={dragAndDrop} alt="No image" style={{ height: "12rem" }} />
+            <img src={dragAndDrop} alt="No Data" style={{ height: "12rem" }} />
           </div>
         )}
       </MDBListGroupItem>
