@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBTable } from "mdbreact";
+import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup, MDBBadge } from "mdbreact";
+import { Input } from "../../../../../components/customizable";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
   DESTROY,
 } from "../../../../../services/redux/slices/assets/providers";
+
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
     { filtered, activePage, maxPage } = useSelector(
       ({ providers }) => providers
     ),
+    [selected, setSelected] = useState(null), // Initialize with null instead of -1
     dispatch = useDispatch();
 
   const handleEdit = (service) => {
-    dispatch(SetSELECTED(service));
-    //console.log("SetSelected service :", service);
+    dispatch(SetSELECTED(service)); // Dispatch to redux
+    setSelected(service); // Update the local selected state
   };
 
   const handleDelete = (_id) => {
@@ -33,6 +36,7 @@ const Body = () => {
       }
     });
   };
+
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -47,34 +51,60 @@ const Body = () => {
         <tr>
           <th>#</th>
           <th>Name</th>
+          <th>Cut Off</th>
           <th>Number</th>
           <th>Address</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((service, index) => (
-          <tr key={index}>
-            <td key={index}>{index + startIndex + 1}</td>
-            <td>{service.displayname}</td>
-            <td>{service.number} </td>
-            <td>{service.address}</td>
-            <td className="text-center">
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={() => handleEdit(service)}
-              >
-                Edit
-              </button>
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={() => handleDelete(service._id)}
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        ))}
+        {paginatedData?.map((service, index) => {
+          const { _id, displayname, cutoff, abbr, number, address } = service;
+          return (
+            <tr key={index}>
+              <td>{index + startIndex + 1}</td>
+              <td style={{ fontWeight: 400 }}>
+                <div>{displayname}</div>
+                {_id === selected?._id ? (
+                  <div style={{ width: "13rem" }}>
+                    <Input className="mt-2 form-control form-control-sm" />
+                  </div>
+                ) : (
+                  <MDBBadge
+                    title="Click me to update"
+                    className="cursor-pointer"
+                    onClick={() => handleEdit(service)} // Update selected when clicked
+                  >
+                    {abbr}
+                  </MDBBadge>
+                )}
+              </td>
+              <td>{cutoff}</td>
+              <td>{number} </td>
+              <td>{address}</td>
+              <td className="text-center">
+                <MDBBtnGroup>
+                  <MDBBtn
+                    size="sm"
+                    rounded
+                    color="primary"
+                    onClick={() => handleEdit(service)} // Ensure setSelected is used
+                  >
+                    <MDBIcon icon="pencil-alt" />
+                  </MDBBtn>
+                  <MDBBtn
+                    onClick={() => handleDelete(service._id)}
+                    size="sm"
+                    rounded
+                    color="danger"
+                  >
+                    <MDBIcon icon="trash" />
+                  </MDBBtn>
+                </MDBBtnGroup>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </MDBTable>
   );

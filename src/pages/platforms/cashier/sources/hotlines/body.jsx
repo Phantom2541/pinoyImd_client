@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
+import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable, MDBBadge } from "mdbreact";
+import { Input } from "../../../../../components/customizable";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
@@ -12,10 +13,12 @@ const Body = () => {
     { filtered, activePage, maxPage } = useSelector(
       ({ providers }) => providers
     ),
+    [selected, setSelected] = useState(-1),
     dispatch = useDispatch();
 
   const handleEdit = (service) => {
     dispatch(SetSELECTED(service));
+    setSelected(service);
     //console.log("SetSelected service :", service);
   };
 
@@ -54,34 +57,51 @@ const Body = () => {
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((service, index) => (
-          <tr key={index}>
-            <td key={index}>{index + startIndex + 1}</td>
-            <td>{service.displayname}</td>
-            <td>{service.number} </td>
-            <td>{service.address}</td>
-            <td className="text-center">
-              <MDBBtnGroup>
-                <MDBBtn
-                  size="sm"
-                  rounded
-                  color="primary"
-                  onClick={() => handleEdit(service)}
-                >
-                  <MDBIcon icon="pencil-alt" />
-                </MDBBtn>
-                <MDBBtn
-                  onClick={() => handleDelete(service._id)}
-                  size="sm"
-                  rounded
-                  color="danger"
-                >
-                  <MDBIcon icon="trash" />
-                </MDBBtn>
-              </MDBBtnGroup>
-            </td>
-          </tr>
-        ))}
+        {paginatedData?.map((service, index) => {
+          const { _id, abbr, displayname, number, address } = service;
+          return (
+            <tr key={index}>
+              <td key={index}>{index + startIndex + 1}</td>
+              <td style={{ fontWeight: 400 }}>
+                <div>{displayname}</div>
+                {_id === selected?._id ? (
+                  <div style={{ width: "13rem" }}>
+                    <Input className="mt-2 form-control form-control-sm" />
+                  </div>
+                ) : (
+                  <MDBBadge
+                    title="Click me to update"
+                    className="cursor-pointer"
+                  >
+                    {abbr}
+                  </MDBBadge>
+                )}
+              </td>
+              <td>{number} </td>
+              <td>{address}</td>
+              <td className="text-center">
+                <MDBBtnGroup>
+                  <MDBBtn
+                    size="sm"
+                    rounded
+                    color="primary"
+                    onClick={() => handleEdit(service)}
+                  >
+                    <MDBIcon icon="pencil-alt" />
+                  </MDBBtn>
+                  <MDBBtn
+                    onClick={() => handleDelete(service._id)}
+                    size="sm"
+                    rounded
+                    color="danger"
+                  >
+                    <MDBIcon icon="trash" />
+                  </MDBBtn>
+                </MDBBtnGroup>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </MDBTable>
   );

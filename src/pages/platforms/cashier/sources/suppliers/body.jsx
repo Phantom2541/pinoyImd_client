@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBTable } from "mdbreact";
+import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup, MDBBadge } from "mdbreact";
+import { Input } from "../../../../../components/customizable";
+
 import {
   SetSELECTED,
   DESTROY,
@@ -11,10 +13,12 @@ const Body = () => {
     { filtered, activePage, maxPage } = useSelector(
       ({ providers }) => providers
     ),
+    [selected, setSelected] = useState(-1),
     dispatch = useDispatch();
 
   const handleEdit = (service) => {
     dispatch(SetSELECTED(service));
+    setSelected(service);
     //console.log("SetSelected service :", service);
   };
 
@@ -52,28 +56,52 @@ const Body = () => {
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((service, index) => (
-          <tr key={index}>
-            <td key={index}>{index + startIndex + 1}</td>
-            <td>{service.displayname}</td>
-            <td>{service.number} </td>
-            <td>{service.address}</td>
-            <td className="text-center">
-              <button
-                onClick={() => handleEdit(service)}
-                className="btn btn-sm btn-primary"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(service._id)}
-                className="btn btn-sm btn-danger"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        ))}
+        {paginatedData?.map((service, index) => {
+          const { _id, displayname, abbr, number, address } = service;
+
+          return (
+            <tr key={index}>
+              <td key={index}>{index + startIndex + 1}</td>
+              <td style={{ fontWeight: 400 }}>
+                <div>{displayname}</div>
+                {_id === selected?._id ? (
+                  <div style={{ width: "13rem" }}>
+                    <Input className="mt-2 form-control form-control-sm" />
+                  </div>
+                ) : (
+                  <MDBBadge
+                    title="Click me to update"
+                    className="cursor-pointer"
+                  >
+                    {abbr}
+                  </MDBBadge>
+                )}
+              </td>
+              <td>{number} </td>
+              <td>{address}</td>
+              <td className="text-center">
+                <MDBBtnGroup>
+                  <MDBBtn
+                    size="sm"
+                    rounded
+                    color="primary"
+                    onClick={() => handleEdit(service)}
+                  >
+                    <MDBIcon icon="pencil-alt" />
+                  </MDBBtn>
+                  <MDBBtn
+                    onClick={() => handleDelete(service._id)}
+                    size="sm"
+                    rounded
+                    color="danger"
+                  >
+                    <MDBIcon icon="trash" />
+                  </MDBBtn>
+                </MDBBtnGroup>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </MDBTable>
   );
