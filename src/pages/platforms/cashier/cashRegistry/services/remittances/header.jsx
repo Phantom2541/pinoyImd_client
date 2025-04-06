@@ -6,8 +6,8 @@ import { MDBView } from "mdbreact";
 import {
   BROWSE,
   RESET,
+  ResetDATE,
   SetMONTH,
-  SetYEAR,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import "./style.css";
 import { currency } from "../../../../../../services/utilities";
@@ -57,16 +57,6 @@ const Header = () => {
     }
   }, [collections]);
 
-  const reset = () => {
-    const _month = new Date().getMonth();
-    const _year = new Date().getFullYear();
-    dispatch(SetMONTH(_month));
-    dispatch(SetYEAR(_year));
-  };
-
-  const prev = () => dispatch(SetMONTH(month - 1));
-  const next = () => dispatch(SetMONTH(month + 1));
-
   return (
     <MDBView
       cascade
@@ -85,31 +75,11 @@ const Header = () => {
 
       <div className="d-flex align-items-center">
         <Calendars
-          prev={prev}
-          next={next}
-          reset={reset}
+          moved={(next) => dispatch(SetMONTH(next))}
+          reset={() => dispatch(ResetDATE())}
           month={month}
           year={year}
         />
-
-        {/* <Select
-          className="m-0 p-0 calendar mr-4"
-          value={calendar.Months[month]}
-          onChange={(value) =>
-            dispatch(SetMONTH(calendar.Months.indexOf(value)))
-          }
-          inputClassName="m-0 p-0"
-          preValue={calendar.Months[month]}
-          choices={calendar.Months}
-        />
-        <Select
-          value={year}
-          inputClassName="m-0 p-0"
-          preValue={year}
-          onChange={(value) => dispatch(SetYEAR(value))}
-          className="m-0 p-0   calendar"
-          choices={calendar.Years}
-        /> */}
       </div>
     </MDBView>
   );

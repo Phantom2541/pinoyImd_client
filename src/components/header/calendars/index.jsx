@@ -4,7 +4,7 @@ import { Calendar as calendar } from "../../../services/fakeDb";
 
 const CalendarPicker = ({ month, year, moved, reset }) => {
   const today = new Date();
-  const currentMonth = today.getMonth(); // 0-based index (Jan = 0)
+  const currentMonth = today.getMonth() + 1; // 0-based index (Jan = 0)
   const currentYear = today.getFullYear();
 
   // Check if the displayed month/year is the current one

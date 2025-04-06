@@ -20,7 +20,6 @@ export default function Calendar() {
       ])
   );
   // calendar-template
-
   return (
     <div className="cashier-remittance-calendar p-3">
       <WeekHeader />

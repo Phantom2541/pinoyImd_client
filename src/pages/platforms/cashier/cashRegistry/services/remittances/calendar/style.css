@@ -196,11 +196,6 @@
 .cashier-rermmitance-calendar-card:hover .cashier-remittance-total {
   margin-bottom: 2rem;
 }
-.vertical-text {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  font-size: 0.5rem !important;
-}
 
 .cashier-calendar-remittance-body
   .cashier-rermmitance-calendar-card.sale:hover {

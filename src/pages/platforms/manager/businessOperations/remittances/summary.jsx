@@ -60,7 +60,6 @@ export default function Summary() {
 
     return Object.values(salesMap).sort((a, b) => b.gross - a.gross);
   }, [collections, day, month, year]);
-
   const showCashierSelect = cashierSales.length > 0; // Hide dropdown if only one cashier exists
   const { cluster, total } = useMemo(() => {
     const filtered =
@@ -71,7 +70,7 @@ export default function Summary() {
 
         const matchesDate =
           createdDate.getDate() === day &&
-          createdDate.getMonth() === month &&
+          createdDate.getMonth() === month - 1 &&
           createdDate.getFullYear() === year;
 
         const matchesCashier = selectedCashier

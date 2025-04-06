@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../../utilities";
 
 const url = "commerce/pos/services/deals";
+const today = new Date();
 
 const initialState = {
   month: new Date().getMonth() + 1, // Month as a number (1-12)
@@ -371,6 +372,10 @@ export const reduxSlice = createSlice({
       state.formSubmitted = false;
 
       if (payload?.resetCollections) state.collections = [];
+    },
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
     },
   },
   /**
