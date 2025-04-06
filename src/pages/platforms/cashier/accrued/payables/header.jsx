@@ -58,8 +58,7 @@ export default function TopHeader() {
         <CalendarPicker
           month={month}
           year={year}
-          prev={() => dispatch(SetMONTH("prev"))}
-          next={() => dispatch(SetMONTH("next"))}
+          moved={(next) => dispatch(SetMONTH(next))}
         />
       </div>
       <div>

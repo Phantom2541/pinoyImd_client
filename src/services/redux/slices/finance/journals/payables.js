@@ -96,14 +96,14 @@ export const reduxSlice = createSlice({
   reducers: {
     SetPAYMENTS: (state, { payload }) => {
       state.selected = payload;
-      state.willCreate = true;
       state.showPaymentModal = true;
       state.showPayablesModal = false;
+      state.willCreate = true;
     },
-
     SetPAYABLES: (state) => {
       state.showPaymentModal = false;
       state.showPayablesModal = true;
+      state.willCreate = true;
     },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
@@ -118,11 +118,11 @@ export const reduxSlice = createSlice({
     },
 
     /* Modal for Create */
-    SetCloseModal: (state) => {
+    TOGGLE: (state) => {
       state.showPayablesModal = false;
       state.showPaymentModal = false;
       state.selected = {};
-      state.willCreate = true;
+      state.willCreate = false;
     },
 
     SetCREATE: (state, { payload }) => {
@@ -259,7 +259,7 @@ export const {
   SetBUY,
   SetEDIT,
   SetUpdate,
-  SetCloseModal,
+  TOGGLE,
   SetCREATE,
   SetPAYABLES,
   SetPAYMENTS,

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { debounce } from "lodash";
 import "./search.css";
 import { globalSearch } from "../../services/utilities";
