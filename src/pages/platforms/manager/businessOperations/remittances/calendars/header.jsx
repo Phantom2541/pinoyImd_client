@@ -5,7 +5,7 @@ import "./style.css";
 import {
   BROWSE,
   SetMONTH,
-  SetYEAR,
+  ResetDATE,
   RESET,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import { Calendars } from "./../../../../../../components/header";
@@ -42,8 +42,8 @@ const Header = () => {
 
   useEffect(() => {
     if (token && activePlatform?.branchId && year !== null && month !== null) {
-      const startDate = new Date(year, month, 1);
-      const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59, 999);
 
       dispatch(
         BROWSE({
@@ -58,16 +58,6 @@ const Header = () => {
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, month, year]);
-
-  const reset = () => {
-    const _month = new Date().getMonth();
-    const _year = new Date().getFullYear();
-    dispatch(SetMONTH(_month));
-    dispatch(SetYEAR(_year));
-  };
-
-  const prev = () => dispatch(SetMONTH(month - 1));
-  const next = () => dispatch(SetMONTH(month + 1));
 
   // Determine balance status and style for remittance only
   let remittedClass = "";
@@ -91,10 +81,9 @@ const Header = () => {
     >
       <Calendars
         month={month}
+        moved={(action) => dispatch(SetMONTH(action))}
         year={year}
-        prev={prev}
-        next={next}
-        reset={reset}
+        reset={() => dispatch(ResetDATE())}
       />
 
       <div className="d-flex align-items-center">

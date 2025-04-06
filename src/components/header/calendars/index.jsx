@@ -4,7 +4,7 @@ import { Calendar as calendar } from "../../../services/fakeDb";
 
 const CalendarPicker = ({ month, year, moved, reset }) => {
   const today = new Date();
-  const currentMonth = today.getMonth(); // 0-based index (Jan = 0)
+  const currentMonth = today.getMonth() + 1; // 0-based index (Jan = 0)
   const currentYear = today.getFullYear();
 
   // Check if the displayed month/year is the current one
@@ -31,7 +31,7 @@ const CalendarPicker = ({ month, year, moved, reset }) => {
           <MDBIcon icon="angle-left" style={{ fontSize: "1rem" }} />
         </MDBBtn>
         <MDBBtn color="white" style={{ fontSize: "0.9rem" }} className="m-0">
-          {calendar.Months[month]}&nbsp;
+          {calendar.Months[month - 1]}&nbsp;
           {year}
         </MDBBtn>
         <MDBBtn

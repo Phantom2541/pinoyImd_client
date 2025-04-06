@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
-
+import moment from "moment";
 const url = "finance/journals/payables";
 
 const initialState = {
@@ -16,7 +16,7 @@ const initialState = {
    */
   collections: [],
   filtered: [],
-  month: new Date().getMonth(), // 0-based index (Jan = 0)
+  month: new Date().getMonth() + 1, // 0-based index (Jan = 0)
   year: new Date().getFullYear(),
   maxPage: 5,
   totalPages: 0,
@@ -143,10 +143,6 @@ export const reduxSlice = createSlice({
     SETSOURCES: (state, { payload }) => {
       state.collections = payload;
     },
-    RESET: (state) => {
-      state.isSuccess = false;
-      state.message = "";
-    },
     SetMONTH: (state, { payload }) => {
       if (payload === "prev") {
         state.month = state.month === 0 ? 11 : state.month - 1;
@@ -165,6 +161,12 @@ export const reduxSlice = createSlice({
     },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
+    },
+    RESET: (state) => {
+      state.month = moment().month();
+      state.year = moment().year();
+      state.isSuccess = false;
+      state.message = "";
     },
   },
   extraReducers: (builder) => {

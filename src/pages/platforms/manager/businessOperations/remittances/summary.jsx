@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { MDBBadge, MDBCard, MDBCardBody, MDBView } from "mdbreact";
 import { currency, fullName } from "../../../../../services/utilities";
@@ -17,6 +17,7 @@ export default function Summary() {
   const cashierSales = useMemo(() => {
     const salesMap = {};
     const deletedCashiers = new Set();
+    setSelectedCashier("");
 
     collections.forEach(({ cashierId, amount, createdAt, isDeleted }) => {
       if (!cashierId || !createdAt) return;
@@ -59,20 +60,24 @@ export default function Summary() {
 
     return Object.values(salesMap).sort((a, b) => b.gross - a.gross);
   }, [collections, day, month, year]);
-
   const showCashierSelect = cashierSales.length > 0; // Hide dropdown if only one cashier exists
   const { cluster, total } = useMemo(() => {
     const filtered =
       collections?.filter(({ createdAt, cashierId }) => {
-        if (!createdAt || !cashierId) return false;
+        if (!createdAt) return false;
+
         const createdDate = new Date(createdAt);
 
-        return (
+        const matchesDate =
           createdDate.getDate() === day &&
-          createdDate.getMonth() === month &&
-          createdDate.getFullYear() === year &&
-          (selectedCashier === "" || cashierId._id === selectedCashier)
-        );
+          createdDate.getMonth() === month - 1 &&
+          createdDate.getFullYear() === year;
+
+        const matchesCashier = selectedCashier
+          ? cashierId?._id === selectedCashier
+          : true;
+
+        return matchesDate && matchesCashier;
       }) || [];
 
     const totalAmount = filtered.reduce((sum, { amount }) => sum + amount, 0);

@@ -17,9 +17,10 @@ export default function Remittances() {
 
   useEffect(() => {
     if (token && activePlatform?.branchId && year && month) {
-      const createdAt = new Date(year, month, 1);
+      const createdAt = new Date(year, month - 1, 1);
       createdAt.setHours(0, 0, 0, 0);
-      const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+      // createdAt.setHours(createdAt.getHours() - 8);
+      const endDate = new Date(year, month, 0, 23, 59, 59, 999);
       endDate.setHours(23, 59, 59, 999);
 
       dispatch(

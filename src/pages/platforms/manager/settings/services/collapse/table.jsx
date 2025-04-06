@@ -38,6 +38,7 @@ export default function CollapseTable({ id, references, preference }) {
         );
       }
     });
+    setShowButton(false);
   };
 
   return (

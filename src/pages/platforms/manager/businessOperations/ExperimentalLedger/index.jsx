@@ -145,7 +145,7 @@ export default function ExperimentalLedger() {
     if (showPopUp) setShowPopUp(false);
 
     const params = new URLSearchParams({
-      month: today.getMonth(),
+      month: today.getMonth() + 1,
       year: today.getFullYear(),
     });
 

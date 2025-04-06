@@ -24,8 +24,12 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/ledger";
 import { Denominations } from "../../../../../../services/fakeDb";
-import { currency, paymentMethod } from "../../../../../../services/utilities";
-import "../style.css";
+import {
+  currency,
+  fullName,
+  paymentMethod,
+} from "../../../../../../services/utilities";
+// import "./style.css";
 
 const billPositions = {
   20: "-2px -3px",
@@ -87,11 +91,12 @@ export default function Modal() {
   useEffect(() => {
     if (showModal) {
       let denominations = { bills: {}, coins: {} };
-      denominations = { ...selected?.closing };
+      const { bills = {}, coins = {} } = selected?.closing || {};
+      denominations = { bills, coins };
       setFloating(denominations);
     }
   }, [showModal, title, selected]);
-
+  console.log("floating", floating);
   const coinImage = `${process.env.PUBLIC_URL}/assets/denominations.png`;
 
   const getBillimg = (bill) => ({
@@ -167,7 +172,7 @@ export default function Modal() {
         console.error("Error saving remittance:", err);
       });
   };
-
+  console.log("selected", selected);
   return (
     <MDBModal
       isOpen={showModal}
@@ -179,24 +184,23 @@ export default function Modal() {
         toggle={() => dispatch(TOGGLE({ key: "open" }))}
         className="d-flex align-items-center justify-content-between darken-3 light-blue white-text"
       >
-        <div className="d-flex align-items-center">
-          <MDBIcon icon="calendar-alt" className="mr-2" />
-          <span>Remittance {sum > 0 && ` : (${currency(sum)})`}</span>
+        <div
+          className="d-flex align-items-center justify-content-between "
+          style={{ width: "60vw" }}
+        >
+          <div className="mr-5">
+            <MDBIcon icon="user" className="mr-2" />
+            <span style={{ fontSize: "1.4rem" }}>
+              {fullName(selected?.cashier?.fullName)}
+            </span>
+          </div>
+          <div className="d-flex align-items-center ">
+            <MDBIcon icon="calendar-alt" className="mr-2" />
+            <span style={{ fontSize: "1.4rem", fontWeight: "400" }}>
+              Remittance ({currency(sum || 0)})
+            </span>
+          </div>
         </div>
-
-        {title === "Closing Cash Register" && (
-          <span
-            className={
-              sum < coh
-                ? "text-danger" // 🔴 Shortage
-                : sum > coh
-                ? "text-warning" // 🟡 Overage
-                : "text-success" // ✅ Balanced
-            }
-          >
-            COH: {currency(coh)}
-          </span>
-        )}
       </MDBModalHeader>
 
       <MDBModalBody className="mb-0">
@@ -276,7 +280,7 @@ export default function Modal() {
                             min={0}
                             className="text-center w-100"
                             readOnly
-                            value={String(floating?.bills?.[bill2] || 0) || ""}
+                            value={String(floating?.bills?.[bill2] || "") || ""}
                             onChange={(e) =>
                               handleInputChange(
                                 "bills",
@@ -310,7 +314,7 @@ export default function Modal() {
                     min={0}
                     className="text-center ml-3"
                     readOnly
-                    value={String(floating?.coins?.[coin] || 0)}
+                    value={String(floating?.coins?.[coin] || "")}
                     style={{ width: "6rem" }}
                     onChange={(e) =>
                       handleInputChange("coins", coin, Number(e.target.value))

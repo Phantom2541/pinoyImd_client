@@ -30,7 +30,7 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
       );
     }
     return () => RESET();
-  }, [activePlatform, dispatch, token, month, year]);
+  }, [activePlatform, dispatch, token, month, year, RESET]);
 
   useEffect(() => {
     const params = new URLSearchParams({

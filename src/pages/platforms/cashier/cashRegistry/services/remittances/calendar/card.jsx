@@ -36,7 +36,6 @@ const Card = ({ txt, num, index, item = {}, isLoading = false }) => {
 
         {!isLoading ? (
           <>
-            {" "}
             <div className="sales-card-info mt-3">
               {[
                 { label: "FC", value: opening.sum, title: "Floating Cash" },

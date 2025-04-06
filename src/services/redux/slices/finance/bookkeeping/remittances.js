@@ -8,7 +8,7 @@ const initialState = {
   collections: [],
   selected: {},
   day: 1,
-  month: today.getMonth(),
+  month: today.getMonth() + 1,
   year: today.getFullYear(),
   title: "",
   showModal: false,
@@ -111,12 +111,21 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetMONTH: (state, { payload }) => {
-      console.log("SetMONTH payload", payload);
-      state.month = payload;
-    },
-    SetYEAR: (state, { payload }) => {
-      console.log("SetYEAR payload", payload);
-      state.year = payload;
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
     },
     SetLEDGER: (state, { payload }) => {
       const index = state.collections.findIndex(
@@ -158,7 +167,12 @@ export const reduxSlice = createSlice({
 
     RESET: (state) => {
       state.isSuccess = false;
+
       state.message = "";
+    },
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
     },
   },
   extraReducers: (builder) => {
@@ -263,6 +277,7 @@ export const {
   SetYEAR,
   TOGGLE,
   SetSELECTED,
+  ResetDATE,
   SetActiveDATE,
   RESET,
   SetLEDGER,
