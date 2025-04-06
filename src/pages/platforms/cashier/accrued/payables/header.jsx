@@ -59,6 +59,7 @@ export default function TopHeader() {
           month={month}
           year={year}
           moved={(next) => dispatch(SetMONTH(next))}
+          reset={() => dispatch(RESET())}
         />
       </div>
       <div>

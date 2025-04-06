@@ -31,7 +31,7 @@ const CalendarPicker = ({ month, year, moved, reset }) => {
           <MDBIcon icon="angle-left" style={{ fontSize: "1rem" }} />
         </MDBBtn>
         <MDBBtn color="white" style={{ fontSize: "0.9rem" }} className="m-0">
-          {calendar.Months[month]}&nbsp;
+          {calendar.Months[month - 1]}&nbsp;
           {year}
         </MDBBtn>
         <MDBBtn

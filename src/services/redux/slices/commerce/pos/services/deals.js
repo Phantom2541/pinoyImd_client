@@ -4,7 +4,7 @@ import { axioKit } from "../../../../../utilities";
 const url = "commerce/pos/services/deals";
 
 const initialState = {
-  month: new Date().getMonth(), // Month as a number (1-12)
+  month: new Date().getMonth() + 1, // Month as a number (1-12)
   year: new Date().getFullYear(),
   collections: [],
   transaction: { _id: "default" },
@@ -345,7 +345,7 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
-    OnMoved: (state, { payload }) => {
+    SetMONTH: (state, { payload }) => {
       if (payload === "next") {
         if (state.month === 12) {
           state.month = 1;
@@ -738,7 +738,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   ToggleRevertModal,
-  OnMoved,
+  SetMONTH,
   RESET,
 } = reduxSlice.actions;
 

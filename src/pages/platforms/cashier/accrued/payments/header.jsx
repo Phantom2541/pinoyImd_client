@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
+import { MDBView } from "mdbreact";
 import {
-  // RESET,
+  RESET,
   BROWSE,
-  SetCREATE,
+  SetMONTH,
   SetFILTERByCategories,
 } from "../../../../../services/redux/slices/finance/journals/payments";
-import {
-  SearchMonth as Month,
-  SearchYear as Year,
-  Statements,
-} from "./components";
+import { Statements } from "./components";
+import CalendarPicker from "../../../../../components/header/calendars";
 
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    [year, setYear] = useState(new Date().getFullYear()),
-    [month, setMonth] = useState(new Date().getMonth()),
+    { month, year } = useSelector(({ payments }) => payments),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,23 +42,17 @@ export default function TopHeader() {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">Payments </span>
+        <CalendarPicker
+          month={month}
+          year={year}
+          moved={(next) => dispatch(SetMONTH(next))}
+          reset={() => dispatch(RESET())}
+        />
       </div>
+      <span className="white-text mx-3 text-nowrap mt-0">Payments </span>
       <div>
         <div className="text-right d-flex items-center">
           <Statements setCategories={handleCategories} />
-          {/* <Templates setTemplate={setTemplate} /> */}
-          <Month month={month} setMonth={setMonth} />
-          <Year year={year} setYear={setYear} />
-          <MDBBtn
-            size="sm"
-            className="px-3"
-            rounded
-            color="Secondary"
-            onClick={() => dispatch(SetCREATE({}))}
-          >
-            <MDBIcon icon="plus" />
-          </MDBBtn>
         </div>
       </div>
     </MDBView>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { MDBBtn, MDBIcon, MDBTable, MDBBtnGroup } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { capitalize } from "../../../../../../services/utilities";
@@ -37,6 +37,7 @@ export default function CollapseTable({ id, references, preference }) {
         );
       }
     });
+    setShowButton(false);
   };
 
   return (

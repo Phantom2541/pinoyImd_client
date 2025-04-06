@@ -5,7 +5,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
-    "chart.js": "^3.9.1",
+    "chart.js": "^4.4.0",
     "draft-js": "^0.11.7",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
