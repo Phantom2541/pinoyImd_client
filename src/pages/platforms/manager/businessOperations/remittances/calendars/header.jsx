@@ -91,6 +91,10 @@ const Header = () => {
     >
       <Calendars
         month={month}
+        moved={(action) => {
+          if (action === "prev") return prev();
+          next();
+        }}
         year={year}
         prev={prev}
         next={next}
