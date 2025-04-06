@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { MDBBtn, MDBIcon, MDBTable, MDBBtnGroup } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { capitalize } from "../../../../../../services/utilities";
@@ -18,6 +18,7 @@ export default function CollapseTable({ id, references, preference }) {
   const toggleModal = () => setShowModal(!showModal);
 
   const toggleRemove = (reference) => {
+    setShowButton(false);
     //console.log("reference", reference);
     Swal.fire({
       title: "Are you sure?",

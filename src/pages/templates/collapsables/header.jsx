@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Select } from "../../../components/customizable";
 import { Templates, Services } from "../../../services/fakeDb";
-import { SearchServices } from "../../../components/searchables";
+// import { SearchServices } from "../../../components/searchables";
 import {
   SetSERVICES,
   SetByTEMPLATES,

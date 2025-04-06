@@ -25,7 +25,7 @@ import {
 } from "../../../../../../services/redux/slices/finance/bookkeeping/ledger";
 import { Denominations } from "../../../../../../services/fakeDb";
 import { currency, paymentMethod } from "../../../../../../services/utilities";
-// import "./style.css";
+import "../style.css";
 
 const billPositions = {
   20: "-2px -3px",

@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS,SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 
 export default function Platelet() {

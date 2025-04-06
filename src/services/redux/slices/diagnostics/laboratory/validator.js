@@ -112,7 +112,7 @@ export const reduxSlice = createSlice({
       state.activeCOLAPSE = activeCOLAPSE;
     },
     SetTASK: (state, { payload }) => {
-      const { form, task } = payload;
+      const { task } = payload;
       console.log("task", task);
 
       state.task = task;

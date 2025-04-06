@@ -21,16 +21,16 @@ export default function CompanyCard({
   const [shakeBell, setShakeBell] = useState(false),
     [show, setShow] = useState(false);
 
-  const { name, subName = "", _id } = company;
+  const { name, subName = "" } = company;
 
   useEffect(() => {
     if (shakeBell) setTimeout(() => setShakeBell(false), 550);
   }, [shakeBell]);
 
-  const toggleBell = () => {
-    if (!isFavorite) setShakeBell(true);
-    setFavorite(_id);
-  };
+  // const toggleBell = () => {
+  //   if (!isFavorite) setShakeBell(true);
+  //   setFavorite(_id);
+  // };
 
   return (
     <MDBCard key={_key}>

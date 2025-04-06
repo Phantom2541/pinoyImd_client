@@ -27,7 +27,7 @@ export default function CashierPatient({
   toggleCheckout,
 }) {
   const { selected } = useSelector(({ deals }) => deals);
-  const { fullName, isMale, dob, privilege, _id, physicianId } =
+  const { fullName, isMale, dob, privilege, _id } =
     selected.customerId;
 
   console.log("CashierPatient selected", selected);

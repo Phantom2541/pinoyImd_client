@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { capitalize, currency, fullAddress } from "../../../services/utilities";
+import { capitalize, currency } from "../../../services/utilities";
 import { Developer, Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";

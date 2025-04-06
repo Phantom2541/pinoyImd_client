@@ -14,18 +14,18 @@ export default function Search({ setEnrolled, setRegister = () => {} }) {
   const [searchKey, setSearchKey] = useState(""),
     [didSearch, setDidSearch] = useState(false),
     { enrolled, isLoading } = useSelector(({ providers }) => providers),
-    { activePlatform } = useSelector((state) => state.auth),
+    // { activePlatform } = useSelector((state) => state.auth),
     dispatch = useDispatch();
 
   const handleChange = (e) => {
-    const _searchKey = e.target.value;
-    setSearchKey(_searchKey);
-    const searchKey = _searchKey.split(",");
-    const query = {
-      vendors: activePlatform?.branchId,
-      displayname: searchKey[0],
-      name: searchKey[1] ? searchKey[1] : "",
-    };
+    // const _searchKey = e.target.value;
+    // setSearchKey(_searchKey);
+    // const searchKey = _searchKey.split(",");
+    // const query = {
+    //   vendors: activePlatform?.branchId,
+    //   displayname: searchKey[0],
+    //   name: searchKey[1] ? searchKey[1] : "",
+    // };
   };
 
   const handleSelect = (user) => {

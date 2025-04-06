@@ -9,7 +9,7 @@ import { MDBCard, MDBCardBody, MDBTable } from "mdbreact";
 import TableRowCount from "../../../../../../components/pagination/rows";
 import Header from "../header";
 import TableLoading from "../../../../../../components/tableLoading";
-import "../styles.css";
+import "../styles.css"; 
 
 import helpers from "../helpers";
 const { dayNames, formatTime, groupByDay, isWeekDays } = helpers;

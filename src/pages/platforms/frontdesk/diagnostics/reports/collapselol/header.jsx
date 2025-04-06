@@ -8,7 +8,7 @@ import {
   harvestTask,
   collapse,
 } from "../../../../../../services/utilities";
-import { Services } from "../../../../../../services/fakeDb";
+// import { Services } from "../../../../../../services/fakeDb";
 import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
 export default function TaskHeader({
@@ -30,7 +30,7 @@ export default function TaskHeader({
     alert("Processing task generation...");
     console.log("Task Data:", task);
 
-    const packages = cart.flatMap((item) => item.packages);
+    // const packages = cart.flatMap((item) => item.packages);
     // const template = Services.getTemplates(packages, "LAB");
 
     let requestForm = { customer: customerId };
