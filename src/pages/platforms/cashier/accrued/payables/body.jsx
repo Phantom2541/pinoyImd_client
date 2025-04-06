@@ -77,7 +77,6 @@ const Tables = () => {
                 hasPaid,
                 payor,
               } = payable;
-              const { vendors = {} } = supplier || {};
               const dueDate = due ? new Date(due) : null;
               const today = new Date();
               const isToday =

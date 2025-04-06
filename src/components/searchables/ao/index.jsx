@@ -28,6 +28,7 @@ import "../style.css";
  */
 export default function Search({
   setUser = () => {},
+  displayWithLabel = true,
   label = "Please set a label",
 }) {
   const { collections, isLoading } = useSelector(({ users }) => users),
@@ -84,7 +85,7 @@ export default function Search({
     <div className="position-relative">
       {selected._id ? (
         <h6 className="d-flex align-items-center">
-          {label}:
+          {displayWithLabel && `${label}:`}
           <strong className="ml-1">{fullName(selected.fullName)}</strong>
           <MDBIcon
             icon="times"
