@@ -8,7 +8,7 @@ const initialState = {
   collections: [],
   selected: {},
   day: 1,
-  month: today.getMonth(),
+  month: today.getMonth() + 1,
   year: today.getFullYear(),
   title: "",
   showModal: false,
