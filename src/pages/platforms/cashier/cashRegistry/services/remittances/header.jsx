@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-// import { Calendar as calendar } from "../../../../../../services/fakeDb";
-// import { Select } from "../../../../../../components/customizable";
 import {
   BROWSE,
   RESET,
