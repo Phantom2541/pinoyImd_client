@@ -13,7 +13,7 @@ import {
   SetINHOUSE,
   SetOUTSOURCE,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-
+import dragAndDrop from "../../../../../../assets/drag-and-drop.png";
 const Body = ({ setOutSource, outSource }) => {
   const dispatch = useDispatch();
   const { inhouse, outsource } = useSelector(
@@ -91,65 +91,93 @@ const Body = ({ setOutSource, outSource }) => {
     e.preventDefault();
   };
   const List = ({ collections, title }) => {
+    const isOutsource = title === "Outsource";
+    const lowerTitle = title.toLowerCase();
+
+    const renderSelect = () => (
+      <select
+        value={outSource}
+        onChange={({ target }) => setOutSource(target.value)}
+        className="form-control form-control-sm ml-2 text-primary"
+      >
+        <option value="" disabled={!!outSource}>
+          Select outsource
+        </option>
+        {outSources.map(({ text, value }, index) => (
+          <option key={index} value={value}>
+            {text}
+          </option>
+        ))}
+      </select>
+    );
+
+    const renderListItems = () =>
+      collections.map((item, index) => (
+        <MDBListGroupItem
+          key={index}
+          style={{
+            borderTop: "1px solid #ccc",
+            borderBottom: "1px solid #ccc",
+          }}
+          className="cursor-pointer"
+          draggable
+          onDragStart={(e) => handleDragStart(e, item, lowerTitle)}
+        >
+          {item.name}
+        </MDBListGroupItem>
+      ));
+
+    const renderEmptyState = () => (
+      <MDBListGroupItem
+        className={isOutsource && !outSource ? "text-start" : "text-center"}
+        style={{
+          display: "flex",
+          border: "none",
+          height: "50vh",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {isOutsource && !outSource ? (
+          <h6>
+            You need to select an
+            <span className="text-primary"> outsource</span> <br />
+            to activate the drag and drop
+          </h6>
+        ) : (
+          <div className="d-flex flex-column">
+            <p>Drag and Drop Services Here...</p>
+            <img src={dragAndDrop} alt="No Data" style={{ height: "12rem" }} />
+          </div>
+        )}
+      </MDBListGroupItem>
+    );
+
     return (
       <MDBCol
-        onDrop={(e) => handleDrop(e, title.toLowerCase())}
+        onDrop={(e) => handleDrop(e, lowerTitle)}
         onDragOver={handleDragOver}
       >
         <MDBCard className="dragDrop">
           <MDBCardHeader className="bg-light dragDrop d-flex justify-content-between align-items-center">
             <span style={{ fontWeight: 500 }}>{title}</span>
-            {title === "Outsource" && (
-              <select
-                value={outSource}
-                onChange={({ target }) => setOutSource(target.value)}
-                className="form-control form-control-sm ml-2 m-0 p-0  text-primary"
-                style={{ marginBottom: "-5rem !important" }}
-              >
-                <option value={""} disabled={outSource ? true : false}>
-                  Select outsource
-                </option>
-                {outSources.map(({ text, value }, index) => (
-                  <option key={index} value={value}>
-                    {text}
-                  </option>
-                ))}
-              </select>
-            )}
+            {isOutsource && renderSelect()}
           </MDBCardHeader>
-          <MDBCardBody className="m-0 p-0 dragDrop">
+          <MDBCardBody
+            className="m-0 p-0 dragDrop"
+            style={{
+              minHeight: !isOutsource ? "24.5rem" : "24rem",
+              border: "1px solid #ccc",
+            }}
+          >
             <MDBListGroup
-              style={{ maxHeight: "25rem", overflowY: "auto" }}
+              style={{
+                maxHeight: !isOutsource ? "24.5rem" : "24rem",
+                overflowY: "auto",
+              }}
               className="summary-scrollbar"
             >
-              {collections.length > 0 ? (
-                collections.map((item, index) => (
-                  <MDBListGroupItem
-                    key={index}
-                    className="cursor-pointer"
-                    draggable
-                    onDragStart={(e) =>
-                      handleDragStart(e, item, title.toLowerCase())
-                    }
-                  >
-                    {item.name}
-                  </MDBListGroupItem>
-                ))
-              ) : (
-                <MDBListGroupItem
-                  className={!outSource ? "text-start" : "text-center"}
-                >
-                  {!outSource && title === "Outsource" ? (
-                    <p>
-                      You need to select a{" "}
-                      <span className="text-primary">outsource</span> to
-                      activate the drag and drop
-                    </p>
-                  ) : (
-                    "No Record"
-                  )}
-                </MDBListGroupItem>
-              )}
+              {collections.length > 0 ? renderListItems() : renderEmptyState()}
             </MDBListGroup>
           </MDBCardBody>
         </MDBCard>

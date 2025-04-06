@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { Calendar as calendar } from "../../../../../../services/fakeDb";
-import { Select } from "../../../../../../components/customizable";
+// import { Calendar as calendar } from "../../../../../../services/fakeDb";
+// import { Select } from "../../../../../../components/customizable";
 import {
   BROWSE,
   RESET,
@@ -11,6 +11,7 @@ import {
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import "./style.css";
 import { currency } from "../../../../../../services/utilities";
+import { Calendars } from "../../../../../../components/header";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -56,6 +57,16 @@ const Header = () => {
     }
   }, [collections]);
 
+  const reset = () => {
+    const _month = new Date().getMonth();
+    const _year = new Date().getFullYear();
+    dispatch(SetMONTH(_month));
+    dispatch(SetYEAR(_year));
+  };
+
+  const prev = () => dispatch(SetMONTH(month - 1));
+  const next = () => dispatch(SetMONTH(month + 1));
+
   return (
     <MDBView
       cascade
@@ -73,7 +84,15 @@ const Header = () => {
       </div>
 
       <div className="d-flex align-items-center">
-        <Select
+        <Calendars
+          prev={prev}
+          next={next}
+          reset={reset}
+          month={month}
+          year={year}
+        />
+
+        {/* <Select
           className="m-0 p-0 calendar mr-4"
           value={calendar.Months[month]}
           onChange={(value) =>
@@ -90,7 +109,7 @@ const Header = () => {
           onChange={(value) => dispatch(SetYEAR(value))}
           className="m-0 p-0   calendar"
           choices={calendar.Years}
-        />
+        /> */}
       </div>
     </MDBView>
   );

@@ -4,22 +4,22 @@ import { MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
 import {
   FILTERBYCATEGORY,
-  ResetFILTER,
   SetCREATE,
   SetFILTER,
+  ResetFILTER,
 } from "../../../../../services/redux/slices/assets/providers";
-
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { filtered } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
+
   //initial values
   useEffect(() => {
     if (token) {
       dispatch(
         FILTERBYCATEGORY({
           token,
-          keys: { clients: activePlatform?.branchId, category: "utilities" },
+          keys: { clients: activePlatform?.branchId, category: "supplier" },
         })
       );
     }
@@ -34,7 +34,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered.length} Utilities
+          {filtered.length} Suppliers
         </span>
       </div>
       <div>

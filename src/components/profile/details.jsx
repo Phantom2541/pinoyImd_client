@@ -102,9 +102,7 @@ export default function Details({
           <Select
             label="Suffix"
             preValue={form.fullName?.suffix || "None"}
-            choices={Suffixes.map((str) => ({ str }))}
-            texts="str"
-            values="str"
+            collections={Suffixes}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,

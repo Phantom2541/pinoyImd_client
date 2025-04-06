@@ -4,8 +4,8 @@ import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./body";
-import Modal from "./modal";
 import Footer from "./footer";
+import Modal from "./modal";
 
 const Index = () => {
   const { isLoading } = useSelector(({ providers }) => providers);

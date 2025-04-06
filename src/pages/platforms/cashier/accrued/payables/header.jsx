@@ -1,30 +1,27 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
+import { MDBView } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
   RESET,
   BROWSE,
-  SetFILTERED,
   SetPAYABLES,
+  SetFILTERED,
+  SetMONTH,
 } from "../../../../../services/redux/slices/finance/journals/payables";
-import {
-  BROWSE as PROVIDERS,
-  RESET as PROVIDERRESET,
-} from "../../../../../services/redux/slices/assets/providers";
+
+import { Search } from "../../../../../components/searchables";
+import CalendarPicker from "../../../../../components/header/calendars";
 // import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess, collections } = useSelector(
+    { filtered, message, isSuccess, month, year } = useSelector(
       ({ payables }) => payables
     ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(SetFILTERED(collections));
-  }, [collections]);
-
+  // initial values
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       dispatch(
@@ -32,23 +29,16 @@ export default function TopHeader() {
           token,
           key: {
             branch: activePlatform?.branchId,
-            year: new Date().getFullYear(),
-            month: new Date().getMonth() + 1,
+            year,
+            month,
           },
-        })
-      );
-      dispatch(
-        PROVIDERS({
-          token,
-          key: { clients: activePlatform?.branchId, category: "utilities" },
         })
       );
     }
     return () => {
       dispatch(RESET());
-      dispatch(PROVIDERRESET());
     };
-  }, [token, activePlatform, dispatch]);
+  }, [token, activePlatform, dispatch, month, year]);
 
   useEffect(() => {
     message &&
@@ -65,23 +55,19 @@ export default function TopHeader() {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered.length} Payables
-        </span>
+        <CalendarPicker
+          month={month}
+          year={year}
+          moved={(next) => dispatch(SetMONTH(next))}
+        />
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <MDBBtn
-            size="sm"
-            className="px-3"
-            rounded
-            color="Secondary"
-            onClick={() => {
-              dispatch(SetPAYABLES());
-            }}
-          >
-            <MDBIcon icon="plus" />
-          </MDBBtn>
+          <Search
+            collections={filtered}
+            handleFiltered={(items) => dispatch(SetFILTERED(items))}
+            handleAdd={(key) => dispatch(SetPAYABLES(key))}
+          />
         </div>
       </div>
     </MDBView>

@@ -11,12 +11,13 @@ const initialState = {
   showPaymentModal: false,
   showCreateModal: false,
   willCreate: false,
-  // maxPage: 5,
   /**
    * for pagination
    */
   collections: [],
   filtered: [],
+  month: new Date().getMonth(), // 0-based index (Jan = 0)
+  year: new Date().getFullYear(),
   maxPage: 5,
   totalPages: 0,
   activePage: 1,
@@ -95,14 +96,14 @@ export const reduxSlice = createSlice({
   reducers: {
     SetPAYMENTS: (state, { payload }) => {
       state.selected = payload;
-      state.willCreate = true;
       state.showPaymentModal = true;
       state.showPayablesModal = false;
+      state.willCreate = true;
     },
-
     SetPAYABLES: (state) => {
       state.showPaymentModal = false;
       state.showPayablesModal = true;
+      state.willCreate = true;
     },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
@@ -117,28 +118,23 @@ export const reduxSlice = createSlice({
     },
 
     /* Modal for Create */
-    SetCloseModal: (state) => {
+    TOGGLE: (state) => {
       state.showPayablesModal = false;
       state.showPaymentModal = false;
       state.selected = {};
-      state.willCreate = true;
+      state.willCreate = false;
     },
 
     SetCREATE: (state, { payload }) => {
       state.showPayablesModal = payload;
     },
-    SetFILTER: (state, { payload }) => {
-      const { page, maxPage } = payload;
-      if (page.length > 0) {
-        state.totalPages = Math.ceil(payload.length / maxPage);
+    SetFILTERED: (state, { payload }) => {
+      if (payload.length > 0) {
+        state.totalPages = Math.ceil(payload.length / state.maxPage);
         if (state.page > state.totalPages) {
           state.page = state.totalPages;
         }
       }
-      state.filter = page;
-    },
-
-    SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
     SetPAGE: (state, { payload }) => {
@@ -150,6 +146,15 @@ export const reduxSlice = createSlice({
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
+    },
+    SetMONTH: (state, { payload }) => {
+      if (payload === "prev") {
+        state.month = state.month === 0 ? 11 : state.month - 1;
+        if (state.month === 11) state.year -= 1;
+      } else if (payload === "next") {
+        state.month = state.month === 11 ? 0 : state.month + 1;
+        if (state.month === 0) state.year += 1;
+      }
     },
     /**
      * for pagination
@@ -254,16 +259,16 @@ export const {
   SetBUY,
   SetEDIT,
   SetUpdate,
-  SetCloseModal,
+  TOGGLE,
   SetCREATE,
   SetPAYABLES,
   SetPAYMENTS,
-  SetFILTER,
   SetPAGE,
   SETSOURCES,
   SetShowMODAL,
   RESET,
   SetFILTERED,
+  SetMONTH,
   SetMaxPage,
   SetActivePAGE,
 } = reduxSlice.actions;
