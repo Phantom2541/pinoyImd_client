@@ -1,4 +1,5 @@
 import React from "react";
+import { MDBRow, MDBCol } from "mdbreact";
 
 const UrinalysisData = [
   ["Color", "SG", "pH"],
@@ -16,25 +17,37 @@ const UrinalysisData = [
 const Urinalysis = () => {
   return (
     <div style={{ fontSize: "12px", fontFamily: "Helvetica, sans-serif" }}>
-      <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Urinalysis</div>
       {UrinalysisData.map((group, index) => (
         <div key={index} style={{ marginBottom: "5px" }}>
           {group.map((test, subindex) => (
-            <div
+            <MDBRow
               key={subindex}
-              style={{ display: "flex", justifyContent: "space-between" }}
+              style={{ display: "flex", alignItems: "center" }}
             >
-              <span>{test}</span>
-              <span
-                style={{ borderBottom: "1px dotted black", minWidth: "50px" }}
-              ></span>
-            </div>
+              <MDBCol md="4">
+                <span>{test} </span>
+              </MDBCol>
+              <MDBCol md="4">
+                <span
+                  style={{
+                    borderBottom: "1px dotted black",
+                    display: "block",
+                    flexGrow: 1, // Allows it to expand naturally
+                    minHeight: "1em", // Ensures consistent height
+                  }}
+                ></span>
+              </MDBCol>
+            </MDBRow>
           ))}
           {/* Add a separator except for the last group */}
           {index !== UrinalysisData.length - 1 && (
-            <div
-              style={{ borderTop: "1px solid black", margin: "5px 0" }}
-            ></div>
+            <MDBRow>
+              <MDBCol md="8">
+                <div
+                  style={{ borderTop: "1px solid black", margin: "5px 0" }}
+                ></div>
+              </MDBCol>
+            </MDBRow>
           )}
         </div>
       ))}

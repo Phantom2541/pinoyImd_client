@@ -24,11 +24,14 @@ export default function Miscellaneous() {
 
   const { packages = [], specimen = "" } = task;
 
-  const setTask = (value) => dispatch(SetTASK({ form: task?.form, task: value }));
-
+  const setTask = (value) =>
+    dispatch(SetTASK({ form: task?.form, task: value }));
+    console.log("packages", packages);
+    
   // ✅ Corrected way to check if packages include 146 or 11
   const hasSpecialPackage = packages.some((pkg) => [146, 11].includes(pkg));
-
+  console.log("hasSpecialPackage", hasSpecialPackage);
+  
   return (
     <MDBContainer>
       {/* If no special package, show the tab buttons */}
@@ -64,12 +67,14 @@ export default function Miscellaneous() {
           )}
           <MDBTabContent activeItem={activeTab} className="pt-0">
             <MDBTabPane tabId="results">
-              {!hasSpecialPackage && (
+              {!packages.includes(146) && (
                 <MDBInput
                   className="mt-0"
                   label="Specimen"
                   value={specimen}
-                  onChange={(e) => setTask({ ...task, specimen: e.target.value })}
+                  onChange={(e) =>
+                    setTask({ ...task, specimen: e.target.value })
+                  }
                 />
               )}
               <BodySwitcher task={task} setTask={setTask} />

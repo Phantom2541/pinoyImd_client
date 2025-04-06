@@ -1,61 +1,91 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
-// import { Select } from "../../../../components/customizable";
-// import { Templates, Services } from "../../../services/fakeDb";
 import {
-  VOUCHERS
+  VOUCHERS,
+  SetFilterBySOURCE,
+  SetMONTH,
+  RESET,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import CalendarPicker from "../../../../../components/header/calendars";
+
 const Header = () => {
-  const { maxPage, token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ services }) => services),
-    [component, setComponent] = useState(""),
+  const { maxPage, token, activePlatform, auth } = useSelector(
+    ({ auth }) => auth
+  );
+  const { collections, month, year } = useSelector(({ deals }) => deals),
+    [sources, setSources] = React.useState([]),
     dispatch = useDispatch();
-    const month=2,
-    year=2025;
-
-  // initial values
+  // Fetch vouchers
   useEffect(() => {
-    const startDate = new Date(year, month, 1);
+    const startDate = new Date(year, month - 1, 1);
     startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
     endDate.setHours(23, 59, 59, 999);
-    dispatch(VOUCHERS({ token,key:{branch:activePlatform.branchId, 
-      cashier:auth._id, 
-       startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),} }));
-  }, [dispatch, maxPage]);
+    dispatch(
+      VOUCHERS({
+        token,
+        key: {
+          branchId: activePlatform.branchId,
+          cashierId: auth._id,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        },
+      })
+    );
 
-  // const handleComponent = (value) => {
-  //   setComponent(value);
+    return () => dispatch(RESET());
+  }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
-  //   const template = Templates.getComponentIndex(value);
-  //   dispatch(SetByTEMPLATES(template));
-  // };
+  //Filtering Cashier ID
+  useEffect(() => {
+    let uniqueSource = [];
+    if (collections.length > 0)
+      uniqueSource = [
+        ...new Map(
+          collections.map(({ source }) => [
+            source?._id || "undefined",
+            { _id: source?._id, name: source?.displayname || "" },
+          ])
+        ).values(),
+      ];
+    setSources(uniqueSource);
+  }, [collections]);
 
   return (
-    <MDBView
-      cascade
-      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
-    >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Services
-        </span>
+    <div className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
+      <div
+        className="d-flex justify-items-center ml-2"
+        style={{ width: "20rem" }}
+      >
+        <CalendarPicker
+          month={month}
+          year={year}
+          moved={(next) => dispatch(SetMONTH(next))}
+          reset={() => dispatch(RESET())}
+        />
       </div>
       <div>
-        <div className="text-right d-flex items-center">
-          {/* <Select
-            className="m-0 p-0 calendar mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
-            inputClassName="m-0 p-0"
-            preValue={component}
-            collections={Templates.getComponents("LAB")}
-          /> */}
+        <div className="text-right d-flex items-center ">
+          <select
+            id="cashier-select"
+            className="custom-select mr-2"
+            value={sources}
+            onChange={(e) => dispatch(SetFilterBySOURCE(e.target.value))}
+          >
+            <option value="" disabled>
+              Select a cashier
+            </option>
+            <option value="all">Select a all</option>
+
+            {sources?.map((source, index) => (
+              <option key={`source-${index}`} value={source?._id}>
+                {source?.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
-    </MDBView>
+    </div>
   );
 };
 

@@ -1,44 +1,44 @@
 import { MDBContainer, MDBSpinner, MDBTypography } from "mdbreact";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import Collapse from "./collapse";
+import Collapse from "./collapselol";
+import TableLoading from "../../../../../components/tableLoading";
 
 export default function Body({ patient }) {
   const [activeCollapse, setActiveCollapse] = useState(""),
+    [didHoverID, setDidHoverID] = useState(-1),
     { collections, isLoading } = useSelector(({ deals }) => deals);
 
   if (!patient?._id)
     return (
-      <MDBTypography note noteColor="info" className="mt-3">
+      <MDBTypography note noteColor="info" className="">
         Look for a patient first.
       </MDBTypography>
     );
 
-  if (isLoading)
-    return (
-      <div className="text-center  mt-5">
-        <MDBSpinner />
-      </div>
-    );
+  if (isLoading) return <TableLoading />;
 
   if (!collections.length)
     return (
-      <MDBTypography note noteColor="warning" className="mt-3">
+      <MDBTypography note noteColor="warning" className="">
         This patient has no records.
       </MDBTypography>
     );
 
   return (
-    <MDBContainer className=" mt-3 px-0" fluid>
+    <>
       {collections.map((task, index) => (
         <Collapse
           key={task?._id}
           task={task}
+          didHoverID={didHoverID}
+          setDidHoverID={setDidHoverID}
           number={index + 1}
           setActiveCollapse={setActiveCollapse}
+          activeCollapse={activeCollapse}
           isActive={activeCollapse === task?._id}
         />
       ))}
-    </MDBContainer>
+    </>
   );
 }

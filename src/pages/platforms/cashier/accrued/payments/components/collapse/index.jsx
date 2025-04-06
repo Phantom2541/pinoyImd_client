@@ -59,7 +59,7 @@ export default function Body() {
                   }}
                 >
                   <MDBCardBody className="pt-2">
-                    <CollapsableBody breakdown={breakdown} />
+                    {/* <CollapsableBody breakdown={breakdown} /> */}
                   </MDBCardBody>
                 </MDBCollapse>
               </MDBCard>

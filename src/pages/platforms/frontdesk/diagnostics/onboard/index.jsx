@@ -6,10 +6,11 @@ import Header from "./headers";
 import Body from "./body";
 import "./style.css";
 import {
-  INSOURCE,
+  OUTSOURCE,
   SETSOURCES,
   RESET,
 } from "../../../../../services/redux/slices/assets/providers.js";
+import GenerateTask from "./generateTask/index.jsx";
 
 export default function Sales() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -23,17 +24,19 @@ export default function Sales() {
   useEffect(() => {
     if (token && activePlatform.branchId) {
       const branchId = activePlatform.branchId;
-      const storedSource = localStorage.getItem(`source_${branchId}`);
+      const storedSource = localStorage.getItem(`outsource_${branchId}`);
 
       if (storedSource) {
         const sourceData = JSON.parse(storedSource);
         dispatch(SETSOURCES(sourceData));
       } else {
-        dispatch(INSOURCE({ token, key: { vendors: activePlatform.branchId } }))
+        dispatch(
+          OUTSOURCE({ token, key: { clients: activePlatform.branchId } })
+        )
           .then(({ payload }) => {
             const sourceData = payload.payload;
             localStorage.setItem(
-              `source_${branchId}`,
+              `outsource_${branchId}`,
               JSON.stringify(sourceData)
             );
           })
@@ -59,6 +62,7 @@ export default function Sales() {
         ) : (
           <Body />
         )}
+        <GenerateTask />
       </MDBCardBody>
     </MDBCard>
   );

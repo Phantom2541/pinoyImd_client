@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 import { Statements } from "../../../../fakeDb";
+import moment from "moment";
 const url = "finance/journals/payments";
 
 const initialState = {
@@ -9,8 +10,9 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   paginated: [], // paginated the filtered
-
   selected: {},
+  month: new Date().getMonth() + 1, // 0-based index (Jan = 0)
+  year: new Date().getFullYear(),
   totalPages: 0,
   page: 0,
   showModal: false,
@@ -130,20 +132,32 @@ export const reduxSlice = createSlice({
       }
       // state.filtered = page;
     },
+    SetMONTH: (state, { payload }) => {
+      let { month } = state;
+      if (payload === "prev") {
+        state.month = month === 0 ? 11 : month - 1;
+        if (month === 11) state.year -= 1;
+      } else if (payload === "next") {
+        state.month = month === 11 ? 0 : month + 1;
+        if (month === 0) state.year += 1;
+      }
+    },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
     SETSOURCES: (state, { payload }) => {
       state.collections = payload;
     },
-    RESET: state => {
+    RESET: (state) => {
+      state.month = moment().month() + 1;
+      state.year = moment().year();
       state.isSuccess = false;
       state.message = "";
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(BROWSE.pending, state => {
+      .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
       })
 
@@ -158,7 +172,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(LIST.pending, state => {
+      .addCase(LIST.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(LIST.fulfilled, (state, { payload }) => {
@@ -169,7 +183,7 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
-      .addCase(SAVE.pending, state => {
+      .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
@@ -182,12 +196,12 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, state => {
+      .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(UPDATE.fulfilled, (state, { payload }) => {
         const index = state.collections.findIndex(
-          item => item._id === payload._id
+          (item) => item._id === payload._id
         );
         if (index !== -1) {
           state.collections[index] = payload;
@@ -199,7 +213,7 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
-      .addCase(Daily.pending, state => {
+      .addCase(Daily.pending, (state) => {
         state.isLoading = true;
       })
 
@@ -212,14 +226,16 @@ export const reduxSlice = createSlice({
         state.message = payload;
         state.isLoading = false;
       })
-      .addCase(DESTROY.pending, state => {
+      .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(item => item._id === payload);
+        const index = state.collections.findIndex(
+          (item) => item._id === payload
+        );
 
         state.collections.splice(index, 1);
         state.message = success;
@@ -242,6 +258,7 @@ export const {
   SetFILTERByCategories,
   SetPAGE,
   SETSOURCES,
+  SetMONTH,
   RESET,
 } = reduxSlice.actions;
 export default reduxSlice.reducer;

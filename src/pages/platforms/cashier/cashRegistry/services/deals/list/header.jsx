@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
 import { globalSearch } from "../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
-import { FilterCollections } from "../../../../../../../components/searchables";
+import { Search } from "../../../../../../../components/searchables";
 import {
   CASHIER,
   SetFILTERED,
@@ -12,7 +12,9 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess } = useSelector(({ deals }) => deals),
+    { collections, message, isSuccess, isLoading } = useSelector(
+      ({ deals }) => deals
+    ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -65,7 +67,10 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <FilterCollections setFiltered={(key) => handleFilletered(key)} />
+          <Search
+            setFiltered={(key) => handleFilletered(key)}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </MDBView>

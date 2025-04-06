@@ -4,11 +4,15 @@ import { axioKit } from "../../../../../utilities";
 const url = "commerce/pos/services/deals";
 
 const initialState = {
+  month: new Date().getMonth() + 1, // Month as a number (1-12)
+  year: new Date().getFullYear(),
   collections: [],
   transaction: { _id: "default" },
   totalPatient: 0,
   formSubmitted: false,
   filtered: [],
+  filterByCashier: "all",
+  cashiers: [],
   // this is used for ledger
   census: {
     daily: {},
@@ -19,6 +23,7 @@ const initialState = {
     patients: 0,
     isEmpty: true,
   },
+
   showModal: false,
   showRevertModal: false,
   showDiscountModal: false,
@@ -45,18 +50,23 @@ export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
-export const VOUCHERS = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
-  try {
-    return axioKit.universal(`${url}/vouchers`, token, key);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const VOUCHERS = createAsyncThunk(
+  `${url}/vouchers`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/vouchers`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const CASHIER = createAsyncThunk(
   `${url}/cashier`,
@@ -133,7 +143,6 @@ export const OLDLEDGER = createAsyncThunk(
 export const YEARLY = createAsyncThunk(
   `${url}/yearly`,
   ({ token, branchId, year }, thunkAPI) => {
-    //console.log("branchId", branchId);
     try {
       return axioKit.universal(`${url}/yearly`, token, {
         branchId,
@@ -297,19 +306,35 @@ export const reduxSlice = createSlice({
       state.selected = {};
     },
     SetFilterByCASHIER: (state, { payload }) => {
-      if (payload === "all") {
-        state.filtered = state.collections;
-      } else {
-        state.filtered = state.collections.filter(
-          (item) => item.cashierId._id === payload
-        );
-      }
+      if (payload !== state.filterByCashier)
+        if (payload === "all") {
+          state.filtered = state.collections;
+        } else {
+          state.filtered = state.collections.filter(
+            ({ cashierId }) => cashierId._id.toString() === payload.toString()
+          );
+        }
+      state.filterByCashier = payload;
     },
+
+    SetFilterBySOURCE: (state, { payload }) => {
+      if (payload !== state.filterBySource)
+        if (payload === "all") {
+          state.filtered = state.collections;
+        } else {
+          state.filtered = state.collections.filter(
+            ({ source }) => source?._id.toString() === payload.toString()
+          );
+        }
+      state.filterBySource = payload;
+    },
+
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;
       state.willCreate = false;
     },
+
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
@@ -320,7 +345,26 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
+    SetMONTH: (state, { payload }) => {
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+
     RESET: (state, { payload = {} }) => {
+      state.filtered = [];
       state.isSuccess = false;
       state.message = "";
       state.isLoading = false;
@@ -358,6 +402,47 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
+      .addCase(VOUCHERS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(VOUCHERS.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+
+        // const uniqueCashiers = [
+        //   ...new Map(
+        //     payload.map(({ cashierId }) => [
+        //       cashierId._id,
+        //       { _id: cashierId._id, name: fullName(cashierId?.fullName) },
+        //     ])
+        //   ).values(),
+        // ];
+
+        // const uniqueSource = [
+        //   ...new Map(
+        //     payload.map(({ source }) => [
+        //       source._id,
+        //       { _id: source._id, name: source?.displayname },
+        //     ])
+        //   ).values(),
+        // ];
+
+        // state.cashiers = uniqueSource;
+
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(VOUCHERS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
       .addCase(CASHIER.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -366,6 +451,7 @@ export const reduxSlice = createSlice({
       .addCase(CASHIER.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.collections = payload;
+        state.totalPages = payload.length;
         state.isLoading = false;
       })
       .addCase(CASHIER.rejected, (state, action) => {
@@ -455,7 +541,6 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(CENSUS.fulfilled, (state, action) => {
-        // //console.log("payload-census", action.payload.census);
         const { sales = [], ...rest } = action.payload.census;
 
         const daily = sales?.reduce((daily, { createdAt, amount, ...rest }) => {
@@ -464,8 +549,6 @@ export const reduxSlice = createSlice({
 
           obj.sales.push({ createdAt, amount, ...rest });
           obj.total += amount;
-          // //console.log("daily", daily);
-
           return daily;
         }, {});
 
@@ -569,8 +652,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log("action.payload", action);
-
         state.message = success;
         const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
 
@@ -589,10 +670,6 @@ export const reduxSlice = createSlice({
             }
           } else {
             const form = payload.form?.toLowerCase(); // Ensure form is lowercase
-            console.log("form", form);
-            console.log("index", index);
-            console.log("state.collections", state.collections[index]);
-
             // Ensure collections[index] exists before modifying it
             if (state.collections[index]) {
               state.collections[index][form] = payload;
@@ -652,6 +729,7 @@ export const {
   SetTOTAL,
   SetFILTERED,
   SetFilterByCASHIER,
+  SetFilterBySOURCE,
   SetSELECTED,
   SetREVERT,
   SetDISCOUNT,
@@ -660,7 +738,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   ToggleRevertModal,
-
+  SetMONTH,
   RESET,
 } = reduxSlice.actions;
 

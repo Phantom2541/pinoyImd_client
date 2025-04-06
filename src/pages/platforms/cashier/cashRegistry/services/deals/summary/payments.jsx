@@ -16,7 +16,7 @@ export default function Payments() {
 
   // Optimize calculations using useMemo
   const paymentTotals = useMemo(() => {
-    return collections.reduce(
+    return collections?.reduce(
       (acc, payment) => {
         acc[payment.payment] = (acc[payment.payment] || 0) + payment.amount;
         return acc;

@@ -8,5 +8,5 @@ export { default as SearchMenu } from "./menus";
 export { default as SearchPhysicians } from "./physicians";
 export { default as SearchAddress } from "./addressSelect";
 export { default as SearchProviders } from "./providers";
-export { default as FilterCollections } from "./filter";
+export { default as Search } from "./search";
 export { default as FilterProducts } from "./filterProducts";

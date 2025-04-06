@@ -24,10 +24,6 @@ export default function CollapseTable({ menu }) {
         return components.filter((component) => menu[component.toLowerCase()]);
       }
     );
-    console.log("menu", menu);
-    console.log("filteredLabTests", filteredLabTests);
-    console.log("Templates.collections", Templates.collections);
-    
     setLabTests(filteredLabTests);
   }, [menu]);
 

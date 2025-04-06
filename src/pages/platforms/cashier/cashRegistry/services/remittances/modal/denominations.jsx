@@ -51,7 +51,7 @@ const coinSize = {
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { showModal, title, selected, month, year, day } = useSelector(
+    { showModal, title, selected } = useSelector(
       ({ remittances }) => remittances
     ),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
@@ -138,12 +138,10 @@ export default function Modal() {
   const handleSubmit = () => {
     const _floating = removeUndefinedValues(floating);
     if (!selected?._id) {
-      let createdAt = new Date(Date.UTC(year, month, day));
       dispatch(
         SAVE({
           token,
           data: {
-            createdAt,
             opening: {
               ..._floating,
               sum,

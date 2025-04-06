@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TRACKER } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { fullName, getAge } from "../../../../../services/utilities";
 import { SearchUser } from "../../../../../components/searchables";
-
+import { MDBView } from "mdbreact";
 export default function Header({ patient, setPatient }) {
   const { _id, dob, fullName: fullname } = patient,
     { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -30,12 +30,15 @@ export default function Header({ patient, setPatient }) {
   const onRegister = (key) => console.log("key", key);
 
   return (
-    <div className="d-flex align-items-center justify-content-between">
-      <h3 className="mb-0">
+    <MDBView
+      cascade
+      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+    >
+      <span className="mb-0">
         {_id ? fullName(fullname) : "Tracker"}
         {_id && getAge(dob)}
-      </h3>
+      </span>
       <SearchUser setPatient={selectPatient} onRegister={onRegister} />
-    </div>
+    </MDBView>
   );
 }

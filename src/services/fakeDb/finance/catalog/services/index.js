@@ -1,5 +1,5 @@
 import collections from "./collections.json";
-
+import Templates from "../../../diagnostics/templates/index.js";
 const prioritizedSort = () => {
   const prefOrder = ["development", "equal", "gender", ""];
 
@@ -23,7 +23,7 @@ const Services = {
     return this.find(pk)?.name || `No name found for: ${pk}`;
   },
   getAbbr: function (pk) {
-    return this.find(pk)?.abbreviation || `No abbr found for`;
+    return this.find(pk)?.abbreviation || `No abbr found for ( ${pk})`;
   },
 
   whereIn: (cluster) => collections?.filter(({ id }) => cluster?.includes(id)),
@@ -51,6 +51,41 @@ const Services = {
 
     // Return the array of departments or ["unknown department"] if no departments were found
     return departments.length > 0 ? uniqueDepartments : ["unknown department"];
+  },
+  getTemplates: (pks, department) => {
+    const cluster = collections.filter(({ id }) => pks.includes(id));
+    const templates = cluster.map(({ template }) => template);
+    const uniqueTemplates = [...new Set(templates)]; // Remove duplicates
+    console.log("unique templates", uniqueTemplates);
+    const result = {}; // This will hold the final object to return
+
+    uniqueTemplates.forEach((id) => {
+      const key = Templates.getComponentName(id, department);
+      let values = cluster
+        .filter(({ template }) => template === id)
+        .map(({ id }) => id) // Array of ids
+        .sort((a, b) => a - b);
+
+      // Logic for switch to return object for specific cases
+      switch (key) {
+        case "Chemistry":
+        case "Electrolyte":
+        case "Serology":
+          // Create an object where each id is a key with empty string as value
+          values = values.reduce((acc, curr) => {
+            acc[curr] = ""; // Set each id as key with empty string value
+            return acc;
+          }, {});
+          result[key] = values; // Add the object to the result
+          break;
+        default:
+          // For other cases, assign the array of ids
+          result[key] = values; // Add the array to the result
+          break;
+      }
+    });
+
+    return result; // Return the final object instead of an array of objects
   },
 };
 

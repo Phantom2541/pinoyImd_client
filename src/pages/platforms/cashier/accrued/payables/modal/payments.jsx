@@ -13,7 +13,7 @@ import {
 import {
   SAVE,
   UPDATE,
-  SetCloseModal,
+  TOGGLE,
 } from "../../../../../../services/redux/slices/finance/journals/payables";
 import "./style.css";
 import { Statements } from "../../../../../../services/fakeDb";
@@ -88,7 +88,7 @@ export default function PaymentModal() {
   };
 
   // Handle modal close
-  const handleClose = () => dispatch(SetCloseModal(false));
+  const handleClose = () => dispatch(TOGGLE(false));
 
   // Format currency
   const formatCurrency = (amount) =>

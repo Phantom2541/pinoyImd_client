@@ -12,7 +12,7 @@ export default function Modal() {
       ({ validator }) => validator
     ),
     dispatch = useDispatch();
-console.log("task lol", task);
+  // console.log("task lol", task);
 
   return (
     <MDBModal size="lg" isOpen={showModal} toggle={TOGGLE} backdrop>

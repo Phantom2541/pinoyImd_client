@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Select } from "../../../components/customizable";
 import { Templates, Services } from "../../../services/fakeDb";
-import { SearchServices } from "../../../components/searchables";
 import {
   SetSERVICES,
   SetByTEMPLATES,
@@ -25,8 +24,6 @@ const Header = () => {
     const template = Templates.getComponentIndex(value);
     dispatch(SetByTEMPLATES(template));
   };
-
-  console.log("templates", Templates.getComponents("LAB"));
 
   return (
     <MDBView

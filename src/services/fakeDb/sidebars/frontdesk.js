@@ -91,7 +91,7 @@ const frontdesk = [
     ],
   },
   {
-    name: "Services", //viewing only
+    name: "Catalogs", //viewing only
     path: "/offers",
     icon: "list",
     children: [
@@ -108,29 +108,61 @@ const frontdesk = [
        *  a single service
        */
       {
-        name: "examinations",
+        name: "Services",
         path: "/services",
         icon: "list",
         component: Services,
       },
+      {
+        name: "Products",
+        path: "/products",
+        icon: "cogs",
+        component: Products,
+      },
+      {
+        name: "Consumables",
+        icon: "tv",
+        path: "/consumables",
+        children: [
+          {
+            name: "Preanalytical",
+            path: "/preanalytical",
+            icon: "check-circle",
+            component: Assurance,
+          },
+          {
+            name: "Analytical",
+            path: "Analytical",
+            icon: "balance-scale",
+            component: Controls,
+          },
+          {
+            name: "Postanalytical",
+            path: "/postanalytical",
+            icon: "thermometer-half",
+            component: Temperature,
+          },
+        ],
+      },
     ],
   },
   {
-    name: "Statement",
+    name: "Outsource",
     icon: "tv",
-    path: "/statement",
+    path: "/outsource",
     children: [
       {
-        name: "Account",
+        name: "Statement of Account",
         title: "stocks",
-        icon: "dollar-sign",
-        path: "/account",
+        icon: "balance-scale",
+        path: "/soa",
       },
+
       {
-        name: "Billing",
+        name: "Onboarding",
         title: "stocks",
         icon: "file-invoice",
-        path: "/billing",
+        path: "/onboarding",
       },
     ],
   },
@@ -156,19 +188,19 @@ const frontdesk = [
       },
     ],
   },
-  {
-    name: "Market",
-    path: "/market",
-    icon: "list",
-    children: [
-      {
-        name: "Products",
-        path: "/products",
-        icon: "cogs",
-        component: Products,
-      },
-    ],
-  },
+  // {
+  //   name: "Market",
+  //   path: "/market",
+  //   icon: "list",
+  //   children: [
+  //     {
+  //       name: "Products",
+  //       path: "/products",
+  //       icon: "cogs",
+  //       component: Products,
+  //     },
+  //   ],
+  // },
   {
     name: "Merchandise",
     path: "/merchandise",

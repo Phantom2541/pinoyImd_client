@@ -3,7 +3,6 @@ import {
   MDBCard,
   MDBCardBody,
   MDBCollapse,
-  MDBCollapseHeader,
   MDBContainer,
   MDBIcon,
 } from "mdbreact";
@@ -13,7 +12,7 @@ import {
   currency,
   handlePagination,
 } from "../../../../../../services/utilities";
-import CollapseTable from "./table";
+import CollapseTable from "./body";
 
 export default function MenuCollapse({
   menus,
@@ -22,33 +21,56 @@ export default function MenuCollapse({
   searchKey,
   handleUpdate,
 }) {
-  const [activeId, setActiveId] = useState(-1),
-    { maxPage } = useSelector(({ auth }) => auth);
+  const [activeId, setActiveId] = useState(-1);
+  const { maxPage } = useSelector(({ auth }) => auth);
+
+  const paginatedMenus = handlePagination(menus, page, maxPage);
+
+  const toggleCollapse = (index) => {
+    setActiveId((prev) => (prev === index ? -1 : index));
+  };
 
   return (
-    <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
-      {handlePagination(menus, page, maxPage).map((menu, index) => {
+    <MDBContainer fluid style={{ minHeight: "300px" }}>
+      {paginatedMenus.map((menu, index) => {
         const { description, abbreviation, opd, packages, _id } = menu;
+        const isOpen = index === activeId;
+
         return (
-          <MDBCard key={`menus-${index}`}>
-            <MDBCollapseHeader>
-              {index + 1}. {description && `${capitalize(description)} | `}
-              {abbreviation && `${abbreviation.toUpperCase()}`} - &nbsp;
-              <span className="text-primary">{currency(opd)}</span>
-              <i
-                style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
-                className="fa fa-angle-down transition-all"
-                onClick={() =>
-                  setActiveId((prev) => (prev === index ? -1 : index))
-                }
-              />
-              <MDBIcon
-                icon="pencil-alt"
-                style={{ color: `red` }}
-                onClick={() => handleUpdate(menu)}
-              />
-            </MDBCollapseHeader>
-            <MDBCollapse id={`collapse-${index}`} isOpen={index === activeId}>
+          <MDBCard key={`menu-${_id}`} className="mb-2">
+            <div
+              onClick={() => toggleCollapse(index)}
+              className="d-flex justify-content-between align-items-center p-3 bg-light border-bottom"
+              style={{ cursor: "pointer" }}
+            >
+              <div>
+                <strong>{index + 1}.</strong>{" "}
+                {description && `${capitalize(description)} | `}
+                {abbreviation?.toUpperCase()} -{" "}
+                <span className="text-primary">{currency(opd)}</span>
+              </div>
+              <div className="d-flex align-items-center gap-2">
+                <MDBIcon
+                  icon="pencil-alt"
+                  title="Edit Menus"
+                  className="mr-3"
+                  style={{ color: "red", cursor: "pointer" }}
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent collapse toggle
+                    handleUpdate(menu);
+                  }}
+                />
+                <MDBIcon
+                  icon="angle-down"
+                  className={`transition-all`}
+                  style={{
+                    transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.3s ease-in-out",
+                  }}
+                />
+              </div>
+            </div>
+            <MDBCollapse isOpen={isOpen}>
               <MDBCardBody className="pt-0">
                 <CollapseTable
                   searchKey={searchKey}

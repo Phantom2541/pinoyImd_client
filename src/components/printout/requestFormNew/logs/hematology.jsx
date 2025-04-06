@@ -1,3 +1,4 @@
+import { MDBCol, MDBRow } from "mdbreact";
 import React from "react";
 
 const HematologyGroups = [
@@ -10,24 +11,32 @@ const HematologyGroups = [
 const Hematology = () => {
   return (
     <div style={{ fontSize: "12px", fontFamily: "Helvetica, sans-serif" }}>
-      <div style={{ fontWeight: "bold", marginBottom: "5px" }}>Hematology</div>
       {HematologyGroups.map((group, index) => (
         <div key={index} style={{ marginBottom: "5px" }}>
           {group.map((test, subIndex) => (
-            <div
-              key={subIndex}
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <span>{test}</span>
-              <span
-                style={{ borderBottom: "1px dotted black", minWidth: "50px" }}
-              ></span>
-            </div>
+            <MDBRow key={subIndex}>
+              <MDBCol md="3">
+                <span>{test}</span>
+              </MDBCol>
+              <MDBCol md="4">
+                <span
+                  style={{
+                    borderBottom: "1px dotted black",
+                    display: "inline-block", // Ensures it's treated like a block-level element
+                    width: "100%", // Make sure it occupies the available width
+                  }}
+                ></span>
+              </MDBCol>
+            </MDBRow>
           ))}
           {index !== HematologyGroups.length - 1 && (
-            <div
-              style={{ borderTop: "1px solid black", marginTop: "5px" }}
-            ></div>
+            <MDBRow>
+              <MDBCol md="7">
+                <div
+                  style={{ borderTop: "1px solid black", marginTop: "5px" }}
+                ></div>
+              </MDBCol>
+            </MDBRow>
           )}
         </div>
       ))}

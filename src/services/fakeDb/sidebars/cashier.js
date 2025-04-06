@@ -9,6 +9,8 @@ import {
   Outsources,
   Utilities,
   Remittances,
+  Hotlines,
+  Suppliers,
 } from "../../../pages/platforms/cashier";
 
 import Payables from "../../../pages/platforms/cashier/accrued/payables";
@@ -80,21 +82,6 @@ const cashier = [
         component: Payables,
       },
       /**
-       * an obligation that has already been settled or fulfilled
-       * Paid Electric bill
-       * Paid Water bill
-       * Salary
-       * Voucher / petty cash
-       * etc.
-       */
-      {
-        name: "Settled",
-        path: "/settled",
-        icon: "dollar-sign",
-        title: "Settled payments for suppliers and utilities.",
-        // component: Accrued,
-      },
-      /**
        * Collections from vouchers
        */
       {
@@ -112,6 +99,18 @@ const cashier = [
         component: Payments,
       },
       /**
+       * Receivables  from sales vouchers
+       * from daily sales
+       * to be included as a SOA of insource
+       */
+      {
+        name: "Statement of Account",
+        path: "/soa",
+        icon: "balance-scale",
+        title: "Insource from monthly sales",
+        // component: Insources,
+      },
+      /**
        * Personal Vouchers
        * from daily sales
        */
@@ -122,33 +121,6 @@ const cashier = [
         title: "Vouchers from daily sales",
         component: Vouchers,
       },
-      /**
-       * Receivables  from sales vouchers
-       * from daily sales
-       * to be included as a SOA of insource
-       */
-      {
-        name: "SOA",
-        path: "/soa",
-        icon: "warehouse",
-        title: "Insource from monthly sales",
-        // component: Insources,
-      },
-      /**
-       * statement of Account (Sendout)
-       */
-      // {
-      //   name: "Statement of Account",
-      //   path: "/soa",
-      //   icon: "balance-scale",
-      //   children: [
-      //     {
-      //       name: "Outsource", // Sendout
-      //       path: "/outsource",
-      //       icon: "truck",
-      //     },
-      //   ],
-      // },
     ],
   },
   //viewing only
@@ -185,14 +157,14 @@ const cashier = [
         path: "/suppliers",
         icon: "handshake",
         title: "List of company that provides supplies",
-        // component: Suppliers,
+        component: Suppliers,
       },
       {
         name: "Hotlines",
         path: "/hotlines",
         icon: "phone",
         title: "List of Hotlines",
-        // component: Hotlines,
+        component: Hotlines,
       },
     ],
   },

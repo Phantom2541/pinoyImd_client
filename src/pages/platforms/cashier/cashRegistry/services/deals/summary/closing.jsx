@@ -11,6 +11,7 @@ import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookk
 import SummaryLoading from "./loading";
 import { Services } from "../../../../../../../services/fakeDb";
 import { useToasts } from "react-toast-notifications";
+import _ from "lodash";
 
 export default function Vouchers() {
   const { token } = useSelector(({ auth }) => auth),
@@ -19,25 +20,28 @@ export default function Vouchers() {
     [isOpen, setIsOpen] = useState(false),
     [menuCensus, setMenuCensus] = useState([]), // Menus Census for display
     [serviceCensus, setServiceCensus] = useState([]), // Services Census for display
-    [menuSave, setMenuSave] = useState([]), // Save Menus (_id, count)
-    [serviceSave, setServiceSave] = useState([]), // Save Services (_id, count)
     [activePage, setActivePage] = useState("menus"),
     [breakdown, setBreakdown] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  // console.log("collections", collections);
+
   useEffect(() => {
-    if (collections.length > 0 && !isLoading) {
+    if (collections && collections.length > 0 && !isLoading) {
       const menuCountMap = {}; // { menuId: { _id, abbreviation, count } }
-      const serviceCountMap = {}; // { serviceId: { _id, count } }
+      const serviceCountMap = {}; // {  [_id]: count }
       const paymentSummary = {};
+
       collections.forEach(({ cart, amount, payment }) => {
+        // <-- FIXED!
         if (payment && amount) {
           if (!paymentSummary[payment]) {
             paymentSummary[payment] = 0;
           }
           paymentSummary[payment] += amount;
         }
+
         cart.forEach(({ menuId, packages }) => {
           // Count Menus
           const { _id, abbreviation } = menuId;
@@ -47,25 +51,18 @@ export default function Vouchers() {
           menuCountMap[_id].count += 1;
 
           // Count Services (Extract from packages)
-          packages.forEach((serviceId) => {
-            if (!serviceCountMap[serviceId]) {
-              serviceCountMap[serviceId] = { _id: serviceId, count: 0 };
+          packages.forEach((id) => {
+            if (!serviceCountMap[id]) {
+              serviceCountMap[id] = 0;
             }
-            serviceCountMap[serviceId].count += 1;
+            serviceCountMap[id] += 1;
           });
         });
-        setBreakdown(paymentSummary);
       });
 
-      // Set display and save data separately
+      setBreakdown(paymentSummary);
       setMenuCensus(Object.values(menuCountMap)); // Show menu abbreviations
-      setServiceCensus(Object.values(serviceCountMap)); // Show service IDs
-      setMenuSave(
-        Object.values(menuCountMap).map(({ _id, count }) => ({ _id, count }))
-      ); // Save only menu _id & count
-      setServiceSave(
-        Object.values(serviceCountMap).map(({ _id, count }) => ({ _id, count }))
-      ); // Save only service _id & count
+      setServiceCensus(serviceCountMap); // Show service IDs
     }
   }, [collections, isLoading]); // Re-run if collections change
 
@@ -76,10 +73,16 @@ export default function Vouchers() {
       alert("Please set a floating cash first.");
       return;
     }
+
+    const menus = menuCensus.reduce((acc, { _id, count }) => {
+      acc[_id] = count;
+      return acc;
+    }, {});
+
     const data = {
       _id: selected._id,
       census: {
-        menus: menuCensus,
+        menus,
         services: serviceCensus,
       },
       breakdown,
@@ -165,17 +168,21 @@ export default function Vouchers() {
             <MDBCardBody>
               {!isLoading ? (
                 <>
-                  {serviceCensus.length > 0 ? (
+                  {serviceCensus && Object.keys(serviceCensus).length > 0 ? (
                     <ul className="list-group">
-                      {serviceCensus.map(({ _id, count }) => (
-                        <li
-                          key={_id}
-                          className="list-group-item d-flex justify-content-between"
-                        >
-                          <span>{Services.getAbbr(_id) || _id}</span> :
-                          <strong className="text-primary">{count}</strong>
-                        </li>
-                      ))}
+                      {Object.entries(serviceCensus).map(
+                        ([key, count], index) => (
+                          <li
+                            key={index}
+                            className="list-group-item d-flex justify-content-between"
+                          >
+                            <span>
+                              {Services.getAbbr(key) || `Service #${key}`}
+                            </span>
+                            :<strong className="text-primary">{count}</strong>
+                          </li>
+                        )
+                      )}
                     </ul>
                   ) : (
                     <p className="text-muted">No services found.</p>
@@ -195,7 +202,7 @@ export default function Vouchers() {
                 size="sm"
                 rounded
                 onClick={handleSubmit}
-                disabled={menuSave.length === 0 && serviceSave.length === 0} // Prevent submit if no data
+                disabled={!!menuCensus ? false : true} // Prevent submit if no data
               >
                 <strong>Submit</strong>
               </MDBBtn>

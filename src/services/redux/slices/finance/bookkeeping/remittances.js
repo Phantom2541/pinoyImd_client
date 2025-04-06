@@ -118,11 +118,15 @@ export const reduxSlice = createSlice({
       console.log("SetYEAR payload", payload);
       state.year = payload;
     },
+    SetLEDGER: (state, { payload }) => {
+      const index = state.collections.findIndex(
+        ({ _id }) => _id === payload._id
+      );
+      const oldRemittance = { ...state.collections[index] };
+      state.collections[index] = { ...oldRemittance, ...payload };
+    },
     SetSELECTED: (state, { payload }) => {
       const { key, value } = payload;
-
-      console.log("payload", payload);
-
       if (key === "census") {
         state.showCensus = true;
       } else if (key === "close") {
@@ -201,7 +205,8 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(AUTOSELECT.fulfilled, (state, { payload }) => {
+      .addCase(AUTOSELECT.fulfilled, (state, action) => {
+        const { payload } = action.payload;
         state.selected = payload;
         state.isSuccess = true;
         state.isLoading = false;
@@ -253,7 +258,14 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetMONTH, SetYEAR, TOGGLE, SetSELECTED, SetActiveDATE, RESET } =
-  reduxSlice.actions;
+export const {
+  SetMONTH,
+  SetYEAR,
+  TOGGLE,
+  SetSELECTED,
+  SetActiveDATE,
+  RESET,
+  SetLEDGER,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

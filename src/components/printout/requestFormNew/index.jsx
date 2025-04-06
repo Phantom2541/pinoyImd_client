@@ -4,23 +4,33 @@ import {
   Chemistry,
   Hematology,
   Urinalysis,
-  // Parasitology,
+  Parasitology,
   Serology,
 } from "./logs";
+import { MDBCol, MDBRow } from "mdbreact";
 // import { Services } from "../../services/fakeDb";
 
 const formComponents = {
   Chemistry,
   Hematology,
   Urinalysis,
-  // Parasitology,
+  Parasitology,
   Serology,
 };
 
-const Printout = ({ sale, forms, ssx }) => {
-  console.log("forms", forms);
-  
-  const { updatedAt, customer, referral, category } = sale;
+const getComponents = (key) => {
+  switch (key) {
+    case "Chemistry":
+    case "Electrolyte":
+    case "Serology":
+      return formComponents["Chemistry"];
+    default:
+      return formComponents[key];
+  }
+};
+
+const Printout = ({ deal, forms, ssx }) => {
+  const { updatedAt, customerId: customer, referral, category } = deal;
 
   return (
     <div style={{ width: "100vw", height: "100vh", backgroundColor: "white" }}>
@@ -43,65 +53,60 @@ const Printout = ({ sale, forms, ssx }) => {
       </div>
 
       {/* Updated layout */}
-      <div
-        style={{
-          display: "flex", // Display forms side by side
-          flexWrap: "wrap", // Allow wrapping if needed
-          gap: "5px", // Reduce spacing for better fit
-          padding: "5px", // Reduced padding for a tighter fit
-          fontSize: "12px", // Smaller text for better fit
-        }}
-      >
+
+      <MDBRow>
         {Object?.keys(forms)?.map((key, index) => {
-          const FormComponent = formComponents[key];
+          const FormComponent = getComponents(key);
           return (
-            <div
-              key={index}
-              style={{
-                minWidth: "250px", // Smaller width
-                flex: "1",
-                padding: "5px", // Reduce padding
-                border: "1px solid #ddd", // Light border
-                borderRadius: "3px", // Smaller border radius
-                backgroundColor: "#fff",
-              }}
-            >
+            <MDBCol md="2">
               <div
+                key={index}
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  borderBottom: "1px solid #ccc",
-                  paddingBottom: "3px",
-                  marginBottom: "5px",
-                  fontWeight: "bold",
-                  fontSize: "12px", // Smaller font
+                  height: "100%",
+                  padding: "5px", // Reduce padding
+                  border: "1px solid #ddd", // Light border
+                  borderRadius: "3px", // Smaller border radius
+                  backgroundColor: "#fff",
                 }}
               >
-                <span>{key}</span>
-                <span>{forms[key]?.price}</span>
-              </div>
-              {FormComponent && (
-                <div style={{ fontSize: "10px", padding: "2px" }}>
-                  <FormComponent data={forms[key]} />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    borderBottom: "1px solid #ccc",
+                    paddingBottom: "3px",
+                    marginBottom: "5px",
+                    fontWeight: "bold",
+                    fontSize: "12px", // Smaller font
+                  }}
+                >
+                  <span>{key}</span>
+                  <span>{forms[key]?.price}</span>
                 </div>
-              )}
-            </div>
+                {FormComponent && (
+                  <div style={{ fontSize: "10px", padding: "2px" }}>
+                    <FormComponent data={forms[key]} />
+                  </div>
+                )}
+              </div>
+            </MDBCol>
           );
         })}
-      </div>
+      </MDBRow>
     </div>
-  ); 
+  );
 };
 
 export default function TaskPrintout() {
   const [sale, setSale] = useState(null);
   const [forms, setForms] = useState(null);
   const [ssx, setSsx] = useState(null);
-  
+
   useEffect(() => {
-    setSale(JSON.parse(localStorage.getItem("RequestForm")))
-    setForms(JSON.parse(localStorage.getItem("task")))
-    setSsx(localStorage.getItem("ssx"))
+    const { forms, deal } = JSON.parse(localStorage.getItem("inhouse"));
+    setSale(deal);
+    setForms(forms);
+    setSsx(localStorage.getItem("ssx"));
   }, []);
 
   // Ensure data has been loaded before rendering
@@ -109,6 +114,5 @@ export default function TaskPrintout() {
     return <div>Loading...</div>;
   }
 
-  return <Printout sale={sale} forms={forms} ssx={ssx} />;
+  return <Printout deal={sale} forms={forms} ssx={ssx} />;
 }
-
