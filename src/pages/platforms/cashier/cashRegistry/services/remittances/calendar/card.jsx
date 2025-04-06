@@ -11,6 +11,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false }) => {
   const dateCell = new Date(txt);
   const isFuture = dateCell > today;
   const week = txt?.slice(0, 3);
+  const isToday = dateCell.toDateString() === today.toDateString();
 
   const {
     opening = {},
@@ -26,7 +27,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false }) => {
   return (
     <div className="position-relative">
       <div
-        className={`cashier-rermmitance-calendar-card ${
+        className={`cashier-rermmitance-calendar-card ${isToday && "today"} ${
           !isFuture && net && "sale"
         } ${num ? "" : "opacity-0 pointer-events-none"}`}
         key={`pos-calendar-${index}`}
