@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBContainer, MDBCard, MDBCardHeader, MDBCardBody } from "mdbreact";
+import { MDBContainer, MDBCard,  MDBCardBody } from "mdbreact";
 import {
   BROWSE,
   RESET as PREFRESET,

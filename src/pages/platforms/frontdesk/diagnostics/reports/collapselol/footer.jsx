@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBCardFooter, MDBBtn, MDBIcon } from "mdbreact";
+import {  MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 

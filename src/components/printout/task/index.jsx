@@ -6,7 +6,7 @@ import BodySwitcher from "./bodySwitcher";
 // import { capitalize } from "lodash";
 import Signatories from "./signatories";
 // import Drugtest from "./drugtest";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const Printout = ({ task }) => {
   const {
@@ -22,7 +22,7 @@ const Printout = ({ task }) => {
   } = task;
   console.log("task", task);
 
-  const { activePlatform, company, auth } = useSelector(({ auth }) => auth);
+  // const { activePlatform, company, auth } = useSelector(({ auth }) => auth);
 
 
   return (

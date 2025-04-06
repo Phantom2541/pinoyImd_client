@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBCol, MDBRow } from "mdbreact";
-import { Select } from "./../../../../../../../../../components/customizable";
+// import { Select } from "./../../../../../../../../../components/customizable";
 import {
   Transparency,
   UrineColors,

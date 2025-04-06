@@ -28,6 +28,7 @@ export default function RevertSale() {
     [isLocked, setIsLocked] = useState(true),
     [haveMessage, setHaveMessage] = useState(false),
     dispatch = useDispatch();
+  
   const toggle = () => dispatch(ToggleRevertModal({}));
 
   useEffect(() => {

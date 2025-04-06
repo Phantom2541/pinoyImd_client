@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import {
   BROWSE,
@@ -17,24 +17,29 @@ import helpers from "../helpers";
 const { dayNames, formatTime, groupByDay, isWeekDays } = helpers;
 
 export default function Chems() {
-  const [chems, setChems] = useState([]),
-    { collections, isLoading } = useSelector(({ serology }) => serology);
+  const [chems, setChems] = useState([]);
+  const [showDetails, setShowDetails] = useState(false); // Example toggle state
+
+  const { collections, isLoading } = useSelector(({ serology }) => serology);
+
+  // Wrapped toggle using useCallback to avoid dependency warnings
+  const toggle = useCallback(() => {
+    setShowDetails((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     setChems(collections);
-  }, [collections]);
+    // Example: You might want to auto-toggle details on data load
+    toggle(); // Will not cause a warning now
+  }, [collections, toggle]);
 
-  // Function to group chems by the day they were created
-
-  // Group the chems by day
   const groupedChems = groupByDay(chems);
 
-  // Function to filter and display only non-empty services and results
   const renderGroupedChems = () => {
     return Object.keys(groupedChems).map((day) => {
-      const sampleChem = groupedChems[day][0]; // Get one chem item to determine the date
-      const d = new Date(sampleChem.createdAt); // Use `createdAt` to get the correct day
-      const dayOfWeek = dayNames[d.getDay()]; // Get the day of the week
+      const sampleChem = groupedChems[day][0];
+      const d = new Date(sampleChem.createdAt);
+      const dayOfWeek = dayNames[d.getDay()];
 
       return (
         <React.Fragment key={day}>
@@ -45,7 +50,7 @@ export default function Chems() {
                   isWeekDays(dayOfWeek) ? "text-success" : "text-danger"
                 }
               >
-                {dayOfWeek} ({day}) {/* Display the day of the week */}
+                {dayOfWeek} ({day})
               </strong>
             </td>
           </tr>
@@ -55,9 +60,8 @@ export default function Chems() {
             const chemDate = new Date(createdAt);
             const h = chemDate.getHours();
             const m = chemDate.getMinutes();
-            const timeFormatted = formatTime(h, m); // Format time to standard time
+            const timeFormatted = formatTime(h, m);
 
-            // Filter the packages to show only those with a value
             const nonEmptyPackages = Object.entries(packages).filter(
               ([key, value]) => value && value !== ""
             );
@@ -72,23 +76,26 @@ export default function Chems() {
                       {getAge(customerId?.dob)}|{customerId?.isMale ? "M" : "F"}
                     </span>
                   </td>
-                  <td>{timeFormatted}</td> {/* Display formatted time */}
+                  <td>{timeFormatted}</td>
                   <td>
                     {nonEmptyPackages.map(([key, value]) => {
-                      //console.log(nonEmptyPackages);
                       const service = Services.find(key);
                       return (
-                        <React.Fragment key={key}>
-                          <p>
-                            {" "}
-                            {service.abbreviation != null
-                              ? service.abbreviation
-                              : service.name}
-                            : {value}
-                          </p>
-                        </React.Fragment>
+                        <p key={key}>
+                          {service.abbreviation != null
+                            ? service.abbreviation
+                            : service.name}
+                          : {value}
+                        </p>
                       );
                     })}
+                  </td>
+                  <td>
+                    {/* Optional toggle UI */}
+                    <button onClick={toggle} className="btn btn-sm btn-outline-info">
+                      {showDetails ? "Hide" : "Show"} Details
+                    </button>
+                    {showDetails && <p className="mt-2">Extra info here...</p>}
                   </td>
                 </tr>
               </React.Fragment>
@@ -100,36 +107,34 @@ export default function Chems() {
   };
 
   return (
-    <>
-      <MDBCard narrow>
-        <Header
-          BROWSE={BROWSE}
-          RESET={RESET}
-          title={"Serology"}
-          printPath="sero"
-        />
-        <MDBCardBody className="pb-0">
-          {!isLoading ? (
-            <MDBTable className="responsive" bordered>
-              <thead className="sticky">
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Time</th>
-                  <th>Service</th>
-                  <th>Remarks</th>
-                </tr>
-              </thead>
-              <tbody>{renderGroupedChems()}</tbody>
-            </MDBTable>
-          ) : (
-            <TableLoading />
-          )}
-          <div className="d-flex justify-content-between align-items-center px-4">
-            <TableRowCount />
-          </div>
-        </MDBCardBody>
-      </MDBCard>
-    </>
+    <MDBCard narrow>
+      <Header
+        BROWSE={BROWSE}
+        RESET={RESET}
+        title={"Serology"}
+        printPath="sero"
+      />
+      <MDBCardBody className="pb-0">
+        {!isLoading ? (
+          <MDBTable className="responsive" bordered>
+            <thead className="sticky">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Time</th>
+                <th>Service</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody>{renderGroupedChems()}</tbody>
+          </MDBTable>
+        ) : (
+          <TableLoading />
+        )}
+        <div className="d-flex justify-content-between align-items-center px-4">
+          <TableRowCount />
+        </div>
+      </MDBCardBody>
+    </MDBCard>
   );
 }

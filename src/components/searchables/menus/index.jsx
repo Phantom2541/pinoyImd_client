@@ -8,7 +8,7 @@ import {
   SetCOLLECTIONS,
   RESET as MENUSRESET,
 } from "../../../services/redux/slices/commerce/catalog/menus";
-import { currency, globalSearch } from "../../../services/utilities";
+import { globalSearch } from "../../../services/utilities";
 import Notification from "./notifications";
 import "../style.css";
 

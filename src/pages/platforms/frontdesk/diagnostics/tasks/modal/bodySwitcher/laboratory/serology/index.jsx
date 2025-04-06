@@ -9,7 +9,7 @@ import {
 } from "./../../../../../../../../../services/utilities";
 
 export default function Serology() {
-  const { task, preferences, selected, params } = useSelector(
+  const { task, preferences,  params } = useSelector(
       ({ validator }) => validator
     ),
     dispatch = useDispatch();
