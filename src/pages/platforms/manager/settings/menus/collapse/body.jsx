@@ -28,17 +28,9 @@ export default function CollapseTable({
 
   const toggleModal = () => setShowModal((prev) => !prev);
 
-  // const handleSearch = (willSearch, key) => {
-  //   if (willSearch) {
-  //     setServices(globalSearch(packages, key));
-  //   } else {
-  //     setServices(packages || []);
-  //   }
-  // };
-
   const handlePick = (selected) => {
-    const combined = [...new Set([...selected, ...packages])];
-    const ids = combined.map(({ id }) => id);
+    const selectedIds = selected.map(({ id }) => id);
+    const ids = [...new Set([...selectedIds, ...packages])];
 
     dispatch(
       UPDATE({
@@ -60,15 +52,17 @@ export default function CollapseTable({
     }
   };
 
-  const handleDestroy = () => {
+  const handleDestroyOne = (idToRemove) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: `This action is irreversible.`,
+      title: "Remove this service?",
+      text: "This will delete the service from the menu.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, remove them",
+      confirmButtonText: "Yes, remove it",
     }).then((res) => {
       if (res.isConfirmed) {
+        const updatedPackages = packages.filter((id) => id !== idToRemove);
+
         dispatch(
           UPDATE({
             token,
@@ -76,7 +70,7 @@ export default function CollapseTable({
               description: menuDescription,
               abbreviation: menuAbbreviation,
               branchId: activePlatform?.branchId,
-              packages: [],
+              packages: updatedPackages,
               _id: menuId,
             },
           })
@@ -89,21 +83,14 @@ export default function CollapseTable({
       }
     });
   };
-  console.log("packages", packages);
-  console.log("services", services);
-  
+
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-2">
         <h6 className="mb-0">Services Tag/s</h6>
-        <div>
-          <MDBBtn size="sm" color="primary" onClick={toggleModal}>
-            <i className="fas fa-plus mr-1" /> Add
-          </MDBBtn>
-          <MDBBtn size="sm" color="danger" onClick={handleDestroy}>
-            <i className="fas fa-trash-alt mr-1" /> Remove All
-          </MDBBtn>
-        </div>
+        <MDBBtn size="sm" color="primary" onClick={toggleModal}>
+          <i className="fas fa-plus mr-1" /> Add
+        </MDBBtn>
       </div>
 
       <MDBTable bordered responsive small>
@@ -114,12 +101,14 @@ export default function CollapseTable({
             <th>Template</th>
             <th>Preference</th>
             <th>Preparation</th>
+            <th className="text-center">Actions</th>
           </tr>
         </MDBTableHead>
         <MDBTableBody>
           {services?.length ? (
             services.map((service, idx) => {
               const {
+                id,
                 name,
                 abbreviation,
                 department,
@@ -144,12 +133,22 @@ export default function CollapseTable({
                   <td>{templateLabel}</td>
                   <td>{preference || "—"}</td>
                   <td>{preparation || "—"}</td>
+                  <td className="text-center">
+                    <MDBBtn
+                      size="sm"
+                      color="danger"
+                      className="m-0"
+                      onClick={() => handleDestroyOne(id)}
+                    >
+                      <i className="fas fa-trash-alt" />
+                    </MDBBtn>
+                  </td>
                 </tr>
               );
             })
           ) : (
             <tr>
-              <td colSpan="5" className="text-center text-muted">
+              <td colSpan="6" className="text-center text-muted">
                 No services tagged.
               </td>
             </tr>

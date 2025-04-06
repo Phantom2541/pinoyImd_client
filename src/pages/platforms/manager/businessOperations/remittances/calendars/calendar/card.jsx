@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Indicator from "./indicator";
-import { currency } from "../../../../../../../services/utilities";
+import { currency, fullName } from "../../../../../../../services/utilities";
 import {
   SetActiveDATE,
   SetSELECTED,
@@ -16,6 +16,8 @@ const Card = ({ txt, num, index, items = [] }) => {
   const isFuture = dateCell > today;
   const week = txt?.slice(0, 3);
 
+  const isToday = dateCell.toDateString() === today.toDateString();
+
   // Compute total gross
   const totalGross = items.reduce((sum, { gross }) => sum + (gross || 0), 0);
   const handleRemittance = (_id) => {
@@ -25,19 +27,19 @@ const Card = ({ txt, num, index, items = [] }) => {
 
   const handleDate = () => dispatch(SetActiveDATE(num));
 
-  const handleTitle = (breakdown) => {
-    if (!breakdown) return "";
+  const handleTitle = (cashier, breakdown) => {
+    if (!breakdown) return fullName;
 
-    return Object.entries(breakdown)
+    const details = Object.entries(breakdown)
       .map(([key, value]) => `${capitalize(key)}: ${currency(value)}`)
       .join(", ");
-  };
 
-  console.log("items", items);
+    return `${fullName(cashier.fullName)}\n${details}`;
+  };
 
   return (
     <div
-      className={`calendar-card  ${
+      className={`calendar-card ${isToday && "today"}  ${
         num ? "cursor-pointer" : "opacity-0 pointer-events-none"
       }`}
       style={!num ? { opacity: 0, pointerEvents: "none" } : {}}
@@ -57,7 +59,7 @@ const Card = ({ txt, num, index, items = [] }) => {
                     key={i}
                     className="manager-remmitance-info mb-1 d-flex justify-content-between"
                     onClick={() => collector || handleRemittance(_id)}
-                    title={handleTitle(breakdown)}
+                    title={handleTitle(cashier, breakdown)}
                     style={{ position: "relative", zIndex: 999 }}
                   >
                     {cashier?.alias}

@@ -3,7 +3,6 @@ import {
   MDBCard,
   MDBCardBody,
   MDBCollapse,
-  MDBCollapseHeader,
   MDBContainer,
   MDBIcon,
 } from "mdbreact";
@@ -32,15 +31,18 @@ export default function MenuCollapse({
   };
 
   return (
-    <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
+    <MDBContainer fluid style={{ minHeight: "300px" }}>
       {paginatedMenus.map((menu, index) => {
         const { description, abbreviation, opd, packages, _id } = menu;
-
         const isOpen = index === activeId;
 
         return (
-          <MDBCard key={`menu-${_id}`}>
-            <MDBCollapseHeader className="d-flex justify-content-between align-items-center">
+          <MDBCard key={`menu-${_id}`} className="mb-2">
+            <div
+              onClick={() => toggleCollapse(index)}
+              className="d-flex justify-content-between align-items-center p-3 bg-light border-bottom"
+              style={{ cursor: "pointer" }}
+            >
               <div>
                 <strong>{index + 1}.</strong>{" "}
                 {description && `${capitalize(description)} | `}
@@ -50,21 +52,25 @@ export default function MenuCollapse({
               <div className="d-flex align-items-center gap-2">
                 <MDBIcon
                   icon="pencil-alt"
+                  title="Edit Menus"
                   className="mr-3"
                   style={{ color: "red", cursor: "pointer" }}
-                  onClick={() => handleUpdate(menu)}
-                />
-                <i
-                  className={`fa fa-angle-down transition-all`}
-                  style={{
-                    rotate: isOpen ? "0deg" : "90deg",
-                    cursor: "pointer",
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent collapse toggle
+                    handleUpdate(menu);
                   }}
-                  onClick={() => toggleCollapse(index)}
+                />
+                <MDBIcon
+                  icon="angle-down"
+                  className={`transition-all`}
+                  style={{
+                    transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.3s ease-in-out",
+                  }}
                 />
               </div>
-            </MDBCollapseHeader>
-            <MDBCollapse id={`collapse-${index}`} isOpen={isOpen}>
+            </div>
+            <MDBCollapse isOpen={isOpen}>
               <MDBCardBody className="pt-0">
                 <CollapseTable
                   searchKey={searchKey}

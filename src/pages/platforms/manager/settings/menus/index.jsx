@@ -56,12 +56,12 @@ export default function Menus() {
     if (!!collections && visible !== false) {
       Swal.fire({
         title: "Newly registered company",
-        text: "it seems that your company is newly registered, you need to create menus",
+        text: "It seems that your company is newly registered, you need to create menus",
         icon: "info",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        cancelButtonText: "Remined me later",
+        cancelButtonText: "Remind me later",
         confirmButtonText: "Yes, continue",
       }).then((result) => {
         if (result.isConfirmed) {
@@ -76,20 +76,14 @@ export default function Menus() {
   //Modal toggle
   const toggleModal = () => setShowModal(!showModal);
 
-  //Trigger for update
   const handleUpdate = (selected) => {
     setSelected(selected);
-    if (willCreate) {
-      setWillCreate(false);
-    }
+    if (willCreate) setWillCreate(false);
     setShowModal(true);
   };
 
-  //Trigger for create
   const handleCreate = () => {
-    if (!willCreate) {
-      setWillCreate(true);
-    }
+    if (!willCreate) setWillCreate(true);
     setShowModal(true);
   };
 
@@ -106,37 +100,36 @@ export default function Menus() {
 
   const resetSearch = () => setSearchKey("");
 
-  //Search function
   const handleSearch = async () => {
-    if (searchKey) {
+    const { value: search, isConfirmed } = await Swal.fire({
+      title: "What are you looking for?",
+      text: "Provide a keyword and we will find it for you.",
+      icon: "question",
+      input: "text",
+      inputValue: searchKey || "",
+      confirmButtonText: "Search",
+      showCancelButton: true,
+      cancelButtonText: "Clear Search",
+      inputValidator: (value) => {
+        if (!value && !searchKey) return "You need to write something!";
+      },
+    });
+
+    if (isConfirmed && search) {
+      const value = search.toUpperCase();
+      setSearchKey(value);
+      setMenus(globalSearch(collections, value));
+    } else if (!isConfirmed && searchKey) {
+      // Clear the search
       setSearchKey("");
       setMenus(collections);
-    } else {
-      const { value: search } = await Swal.fire({
-        title: "What are you looking for?",
-        text: "Provide a keyword and we will find it for you.",
-        icon: "question",
-        input: "text",
-        confirmButtonText: "Search",
-        inputValidator: (value) => {
-          if (!value) {
-            return "You need to write something!";
-          }
-        },
-      });
-
-      if (search) {
-        const value = search.toUpperCase();
-
-        setSearchKey(value);
-        setMenus(globalSearch(collections, value));
-      }
     }
   };
 
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     setVisible(!visible);
   };
+
   return (
     <>
       <MDBCard narrow>
@@ -158,7 +151,7 @@ export default function Menus() {
               size="sm"
               className="px-2"
             >
-              <MDBIcon icon={searchKey ? "times" : "search"} className="mt-0" />
+              <MDBIcon icon="search" className="mt-0" />
             </MDBBtn>
             <MDBBtn
               onClick={handleCreate}
@@ -181,7 +174,7 @@ export default function Menus() {
               size="sm"
               className="px-2"
             >
-              <MDBIcon icon={"arrow-down"} className="mt-0" />
+              <MDBIcon icon="arrow-down" className="mt-0" />
             </MDBBtn>
           </div>
         </MDBView>
@@ -195,7 +188,6 @@ export default function Menus() {
           />
           <div className="d-flex justify-content-between align-items-center px-4">
             <TableRowCount />
-
             <Pagination
               isLoading={isLoading}
               total={totalPages}
