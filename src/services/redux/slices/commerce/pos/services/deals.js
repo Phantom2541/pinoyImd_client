@@ -195,9 +195,9 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
 
 export const UPDATE_INFO = createAsyncThunk(
   `${url}/UPDATE_INFO`,
-  (form, thunkAPI) => {
+  ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.update(url, form.data, form.token, "update_info");
+      return axioKit.update(url, data, token, "update_info");
     } catch (error) {
       const message =
         (error.response &&

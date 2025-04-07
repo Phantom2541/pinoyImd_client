@@ -3,13 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBTypography } from "mdbreact";
 import Collapse from "./collapselol";
 import { Services } from "../../../../../services/fakeDb";
-import { UPDATE } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import { UPDATE } from "../../../../../services/redux/slices/commerce/pos/services/deals.js";
 
 export default function Body() {
-  const [activeCollapse, setActiveCollapse] = useState(""),
-    [didHoverID, setDidHoverID] = useState(-1),
+  const { token } = useSelector(({ auth }) => auth),
     { collections, patient } = useSelector(({ deals }) => deals),
-    [forms, setForms] = useState([]),
+    [activeCollapse, setActiveCollapse] = useState(""),
+    [didHoverID, setDidHoverID] = useState(-1),
+    [tasks, setTasks] = useState([]),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,8 +24,7 @@ export default function Body() {
         try {
           const services = Services.getTemplates(task.packages);
           const _forms = Object.keys(services);
-          console.log(`Make this automatically update:`, _forms);
-          dispatch(UPDATE({ _id, form: _forms }));
+          dispatch(UPDATE({ token, data: { _id, forms: _forms } }));
 
           updatedTask.forms = _forms;
         } catch (error) {
@@ -36,7 +36,7 @@ export default function Body() {
       updatedTasks.push(updatedTask);
     }
 
-    setForms(updatedTasks);
+    setTasks(updatedTasks);
   }, [collections, dispatch]);
 
   if (!patient?._id)
@@ -55,7 +55,7 @@ export default function Body() {
 
   return (
     <>
-      {forms.map((task, index) => (
+      {tasks.map((task, index) => (
         <Collapse
           key={task?._id}
           task={task}
