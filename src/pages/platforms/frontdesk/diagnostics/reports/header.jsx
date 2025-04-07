@@ -1,33 +1,37 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { TRACKER } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import {
+  TRACKER,
+  SetPatient,
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { fullName, getAge } from "../../../../../services/utilities";
 import { SearchUser } from "../../../../../components/searchables";
 import { MDBView } from "mdbreact";
-export default function Header({ patient, setPatient }) {
-  const { _id, dob, fullName: fullname } = patient,
-    { token, activePlatform } = useSelector(({ auth }) => auth),
+export default function Header() {
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    {
+      _id,
+      dob,
+      fullName: fullname,
+    } = useSelector(({ deals }) => deals.patient),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (patient?._id && activePlatform?.branchId) {
+    if (_id && activePlatform?.branchId) {
       dispatch(
         TRACKER({
           token,
           key: {
             branchId: activePlatform?.branchId,
-            customerId: patient._id,
+            customerId: _id,
           },
         })
       );
     }
-  }, [patient, activePlatform, dispatch, token]);
+  }, [_id, activePlatform, dispatch, token]);
 
-  const selectPatient = (user) => {
-    setPatient(user);
-  };
-  const onRegister = (key) => console.log("key", key);
+  const selectPatient = (user) => dispatch(SetPatient(user));
 
   return (
     <MDBView
@@ -35,10 +39,10 @@ export default function Header({ patient, setPatient }) {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <span className="mb-0">
-        {_id ? fullName(fullname) : "Tracker"}
+        {_id ? fullName(fullname) : "Tracker"} | &nbsp;
         {_id && getAge(dob)}
       </span>
-      <SearchUser setPatient={selectPatient} onRegister={onRegister} />
+      <SearchUser setPatient={selectPatient} />
     </MDBView>
   );
 }

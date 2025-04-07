@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../../utilities";
+import { axioKit, getAge } from "../../../../../utilities";
 
 const url = "commerce/pos/services/deals";
 const today = new Date();
@@ -24,7 +24,7 @@ const initialState = {
     patients: 0,
     isEmpty: true,
   },
-
+  patient: {},
   showModal: false,
   showRevertModal: false,
   showDiscountModal: false,
@@ -335,7 +335,11 @@ export const reduxSlice = createSlice({
       state.showModal = true;
       state.willCreate = false;
     },
-
+    SetPatient: (state, { payload }) => {
+      state.patient = payload;
+      const isSenior = getAge(payload.dob, true) > 59; // Use payload instead of customer
+      state.privilege = payload.privilege || (isSenior ? 2 : 0);
+    },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
@@ -743,6 +747,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   ToggleRevertModal,
+  SetPatient,
   SetMONTH,
   RESET,
 } = reduxSlice.actions;

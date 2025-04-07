@@ -1,5 +1,5 @@
 import React from "react";
-import {  MDBCard, MDBCollapse } from "mdbreact";
+import { MDBCard, MDBCollapse } from "mdbreact";
 import TaskHeader from "./header";
 import TaskBody from "./body";
 import TaskFooter from "./footer";

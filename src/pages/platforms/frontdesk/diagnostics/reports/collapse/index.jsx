@@ -8,11 +8,16 @@ import {
   MDBCollapseHeader,
   MDBIcon,
 } from "mdbreact";
-import { dateFormat, sourceColor,axioKit, harvestTask } from "../../../../../../services/utilities";
+import {
+  dateFormat,
+  sourceColor,
+  axioKit,
+  harvestTask,
+} from "../../../../../../services/utilities";
 import Table from "./table";
 import { useHistory } from "react-router";
 import { Services } from "../../../../../../services/fakeDb";
-import { useDispatch,  useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
@@ -26,18 +31,17 @@ export default function TasksCollapse({
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     history = useHistory(),
     dispatch = useDispatch();
-    
 
   const hasRenderedItems = task.rendered && task.rendered.length !== 0;
   const generateTask = async () => {
-    alert("lol ginagawa ko pa wait kalang ")
+    alert("lol ginagawa ko pa wait kalang ");
     console.log("task", task);
-    
+
     const { _id, cart, customerId, ssx } = task;
-     const packages = cart.flatMap((item) => item.packages);
-    
-        const template = Services.getTemplates(packages, "LAB")
-        
+    const packages = cart.flatMap((item) => item.packages);
+
+    const template = Services.getTemplates(packages, "LAB");
+
     let RequestForm = { customer: task?.customerId };
     const task = harvestTask(cart);
     localStorage.setItem("task", JSON.stringify(task));
@@ -64,7 +68,6 @@ export default function TasksCollapse({
           await axioKit.save(
             "/diagnostics/laboratory/result/miscellaneous",
             {
-              
               packages: buntisPresent,
               saleId: _id,
               customerId: customerId?._id,
@@ -162,9 +165,7 @@ export default function TasksCollapse({
             </MDBBadge>
             {!hasRenderedItems && (
               <MDBBadge
-                onClick={() =>
-                  generateTask()
-                }
+                onClick={() => generateTask()}
                 color="info"
                 className="px-2 cursor-pointer"
               >

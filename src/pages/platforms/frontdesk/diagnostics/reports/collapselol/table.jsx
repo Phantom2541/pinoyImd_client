@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { capitalize } from "../../../../../../services/utilities";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
@@ -6,30 +6,14 @@ import Modal from "./modal";
 import { useSelector } from "react-redux";
 
 export default function CollapseTable({ menu }) {
-  const [labTests, setLabTests] = useState([]),
-    [task, setTask] = useState({}),
-    [showModal, setShowModal] = useState(false),
+  const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    { activePlatform } = useSelector(({ auth }) => auth);
+    [task, setTask] = useState({}),
+    [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => setShowModal(!showModal);
 
-  useEffect(() => {
-    if (!menu) return;
-
-    const filteredLabTests = Templates.collections.flatMap(
-      ({ components, department }) => {
-        if (department !== "LAB") return []; // Ignore non-lab departments
-
-        return components.filter((component) => menu[component.toLowerCase()]);
-      }
-    );
-    setLabTests(filteredLabTests);
-  }, [menu]);
-
   const handlePrint = (task) => {
-    console.log("taskPrintout", task);
-
     localStorage.setItem("taskPrintout", JSON.stringify(task));
     window.open(
       "/printout/task",
@@ -38,7 +22,8 @@ export default function CollapseTable({ menu }) {
     );
   };
 
-  const { customerId, physicianId, source, category, _id } = menu;
+  const { customerId, physicianId, source, category, _id, forms, results } =
+    menu;
 
   const handleIndividual = (form, obj, index, miscIndex = 0) => {
     const { packages, hasDone = false, remarks = "", signatories = [] } = obj,
@@ -149,22 +134,21 @@ export default function CollapseTable({ menu }) {
           </tr>
         </thead>
         <tbody>
-          {labTests?.map((_labTest, index) => {
-            const labTest = menu[_labTest.toLowerCase()];
-
-            if (!labTest)
+          {forms?.map((form, index) => {
+            const result = results?.[form.toLowerCase()];
+            if (!result)
               return (
                 <tr key={task.key}>
                   <td colSpan={4}>Empty Test</td>
                 </tr>
               );
 
-            if (Array.isArray(labTest))
-              return labTest.map((obj, i) =>
-                handleIndividual(_labTest, obj, index + i, i)
+            if (Array.isArray(result))
+              return result.map((obj, i) =>
+                handleIndividual(form, obj, index + i, i)
               );
 
-            return handleIndividual(_labTest, labTest, index);
+            return handleIndividual(form, result, index);
           })}
         </tbody>
       </MDBTable>
