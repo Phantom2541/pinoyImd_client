@@ -3,7 +3,6 @@ const globalSearch = (collection, key = "") => {
   key = key?.toUpperCase(); // Normalize search key
   return collection.filter((obj) => {
     if (!obj) return false;
-    console.log("object", obj);
 
     if (typeof obj === "object") {
       return Object.values(obj).some((value) => {

@@ -33,8 +33,8 @@ export default function Pagination({ total, setPage, page, isLoading }) {
   return (
     <MDBPagination circle className="my-4 ">
       <MDBPageItem
-        disabled={isLoading || total <= 1}
-        onClick={() => setPage(false)}
+        disabled={isLoading || page <= 1}
+        onClick={() => setPage((prev) => prev - 1)}
       >
         <MDBPageNav className="page-link" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
@@ -45,7 +45,7 @@ export default function Pagination({ total, setPage, page, isLoading }) {
         <MDBPageNav className="page-link">{page}</MDBPageNav>
       </MDBPageItem>
       <MDBPageItem
-        onClick={() => setPage(true)}
+        onClick={() => setPage((prev) => prev + 1)}
         disabled={isLoading || page >= total}
       >
         <MDBPageNav className="page-link" aria-label="Next">
