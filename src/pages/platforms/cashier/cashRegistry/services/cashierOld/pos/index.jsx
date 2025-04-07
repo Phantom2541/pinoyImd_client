@@ -31,6 +31,11 @@ export default function CashRegister() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  useEffect(() => {
+    if (show) {
+      setDidCheckout(false);
+    }
+  }, [show]);
   //Toast for errors or success
   useEffect(() => {
     if (message) {
@@ -76,8 +81,6 @@ export default function CashRegister() {
   const toggleCheckout = () => setDidCheckout(!didCheckout);
 
   const handlePicker = (selected) => {
-    console.log("handlePicker selected", selected);
-
     setCart((prev) =>
       removeRedundantPackages(
         { ...selected, referenceId: selected._id, isNew: true },
@@ -97,7 +100,9 @@ export default function CashRegister() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <MDBRow>
-          {!didCheckout && <CashierMenu handlePicker={handlePicker} />}
+          {!didCheckout && (
+            <CashierMenu handlePicker={handlePicker} cart={cart} />
+          )}
           <CashierPatient
             gross={gross}
             discount={discount}
@@ -114,8 +119,10 @@ export default function CashRegister() {
           {didCheckout && (
             <CashierPayment
               Id
+              deals={deals}
               cart={cart}
               toggleModal={SetMODAL}
+              categoryIndex={categoryIndex}
               gross={gross}
               discount={discount}
             />

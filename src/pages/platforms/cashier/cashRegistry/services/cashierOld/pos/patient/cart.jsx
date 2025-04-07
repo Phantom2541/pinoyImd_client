@@ -49,14 +49,14 @@ export default function PatientCart({
 }) {
   console.log("cart", cart);
   console.log("gross", gross);
-  
+
   return (
     <>
       <div style={{ height: "300px", overflow: "auto" }}>
         <MDBTable className="text-center border mb-0" responsive hover>
           <thead>
             <tr>
-              <th className="text-left py-1">Servisssce</th>
+              <th className="text-left py-1">Services</th>
               <th className="py-1">SRP</th>
               <th className="py-1">UP</th>
               <th />

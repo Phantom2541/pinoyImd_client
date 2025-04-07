@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBAnimation,
   MDBBtn,
@@ -6,6 +6,7 @@ import {
   MDBCardBody,
   MDBCardText,
   MDBCol,
+  MDBIcon,
   MDBInput,
   MDBSelect,
   MDBSelectInput,
@@ -24,11 +25,13 @@ import Swal from "sweetalert2";
 import {
   SAVE,
   UPDATE,
+  SetMODAL,
 } from "./../../../../../../../services/redux/slices/commerce/pos/services/deals";
+
 import { UPDATE as PATIENTUPDATE } from "./../../../../../../../services/redux/slices/assets/persons/users";
 
 export default function CashierPayment({
-  patient,
+  deals,
   cart,
   sourceVendor,
   categoryIndex,
@@ -41,12 +44,29 @@ export default function CashierPayment({
   const [payment, setPayment] = useState(""),
     [isDeliver, setIsDeliver] = useState(false),
     [cash, setCash] = useState(0),
+    { formSubmitted = false, isSuccess = false } = useSelector(
+      ({ deals: d }) => d
+    ),
     { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const { abbr = "" } = Categories[categoryIndex],
     paymentOptions = Payments[abbr],
-    { _id, fullName, mobile, privilege, saleId = "", address } = patient;
+    { customerId, _id: saleId } = deals,
+    { _id, fullName, mobile, privilege, address } = customerId;
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      const balance = cash - (gross - discount);
+      dispatch(SetMODAL(false));
+      if (balance > 0)
+        Swal.fire({
+          icon: "info",
+          title: `Change: ${currency(balance)}`,
+          text: "Please return the change to the customer.",
+        });
+    }
+  }, [isSuccess, formSubmitted, discount, gross, dispatch, cash]);
 
   const handleSales = (authorizedBy) => {
     const net = gross - discount,
@@ -68,7 +88,7 @@ export default function CashierPayment({
       branchId: activePlatform?.branchId,
       customerId: _id,
       cashierId: auth._id,
-      category: categoryIndex === 0 ? "walkin" : abbr,
+      category: categoryIndex === 0 ? "wi" : abbr,
       payment: _payment,
       cash,
       amount: net,
@@ -150,14 +170,16 @@ export default function CashierPayment({
         text: "Payment received is less than the total amount due.",
       });
 
-    if (balance > 0)
-      Swal.fire({
-        icon: "info",
-        title: `Change: ${currency(balance)}`,
-        text: "Please return the change to the customer.",
-      });
+    // if (balance > 0)
+    //   Swal.fire({
+    //     icon: "info",
+    //     title: `Change: ${currency(balance)}`,
+    //     text: "Please return the change to the customer.",
+    //   });
 
     handleSales();
+
+    // dispatch(SetMODAL(false));
   };
 
   return (
@@ -199,12 +221,16 @@ export default function CashierPayment({
               />
               <MDBBtn
                 type="submit"
+                disabled={formSubmitted}
                 color={
                   privilegeIndex === 4 ? "warning" : saleId ? "info" : "success"
                 }
                 className="w-100 mx-auto"
               >
-                {saleId ? "Update" : "complete"} transaction
+                {saleId ? "Update" : "complete"} transaction{" "}
+                {formSubmitted && (
+                  <MDBIcon icon="spinner" pulse className="ml-2" />
+                )}
               </MDBBtn>
             </form>
           </MDBCardBody>
