@@ -6,10 +6,10 @@ import { MDBBtn, MDBIcon } from "mdbreact";
 
 export default function Search({
   collection = [],
-  handleFiltered,
-  reset,
-  handleAdd,
   hideButton = true,
+  handleFiltered = () => {},
+  reset = () => {},
+  handleAdd = () => {},
 }) {
   const [showBtn, setShowBtn] = useState(false),
     [searchValue, setSearchValue] = useState("");
