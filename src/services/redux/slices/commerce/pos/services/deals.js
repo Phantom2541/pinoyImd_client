@@ -700,6 +700,7 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.pending, (state) => {
         // state.isLoading = true; comment this to stop loading and refreshing UI
         state.isSuccess = false;
+        state.formSubmitted = true;
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
@@ -715,19 +716,15 @@ export const reduxSlice = createSlice({
 
         const currentValue = { ...state.collections[index] };
 
-        for (const key in payload) {
-          if (currentValue.hasOwnProperty(key)) {
-            currentValue[key] = payload[key];
-          }
-        }
-
-        state.collections[index] = currentValue;
+        state.collections[index] = { ...currentValue, ...payload };
         state.message = success;
         state.isSuccess = true;
+        state.formSubmitted = false;
         state.isLoading = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
+        state.formSubmitted = false;
         state.message = error.message;
         state.isLoading = false;
       });

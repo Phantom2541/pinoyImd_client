@@ -75,9 +75,15 @@ export default function DataTable({
     [totalPages, setTotalPages] = useState(1),
     { maxPage } = useSelector(({ auth }) => auth);
 
+  // useEffect(() => {
+  //   setTotalPages(Math.ceil((payload?.length || 0) / state.maxPage) || 1);
+  // }, []);
+
   useEffect(() => {
     if (dbTotalPages) setTotalPages(dbTotalPages);
   }, [dbTotalPages]);
+
+  console.log("total page", totalPages);
 
   useEffect(() => {
     if (!!liveInjector.length) {
@@ -149,6 +155,12 @@ export default function DataTable({
     );
   };
 
+  const handlePageChange = (action) => {
+    const newPage = page + (action ? 1 : -1);
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
   return (
     <MDBCard narrow>
       <Actions
@@ -182,7 +194,7 @@ export default function DataTable({
               isLoading={isLoading}
               total={totalPages}
               page={page}
-              setPage={setPage}
+              setPage={handlePageChange}
             />
           )}
         </div>

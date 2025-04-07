@@ -66,7 +66,6 @@ export default function CashierMenu({ handlePicker }) {
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
 
-  console.log("collections", abbr);
   const handleSearch = async (willSearch, key) => {
     if (willSearch && key) {
       setMenus(globalSearch(collections, key?.toUpperCase()));
