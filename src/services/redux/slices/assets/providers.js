@@ -305,6 +305,7 @@ export const reduxSlice = createSlice({
     },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
+      state.selected = {};
     },
     RESET: (state) => {
       state.isSuccess = false;

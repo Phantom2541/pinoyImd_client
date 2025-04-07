@@ -17,18 +17,15 @@ import {
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import { Select } from "../../../../../components/customizable";
 
 export default function Modal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     { showModal, selected, willCreate, isLoading } = useSelector(
       ({ providers }) => providers
     ),
-    { collections: branches } = useSelector(({ branches }) => branches),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  console.log("branches", branches);
 
   //Listener
   useEffect(() => {
@@ -100,10 +97,7 @@ export default function Modal() {
             tag="h4"
             variant="h4-responsive"
             className="text-center"
-          >
-            xxx
-          </MDBTypography>
-          <Select collections={branches} values="displayname" keys="_id" />
+          ></MDBTypography>
           {/* Input fields */}
           <MDBInput
             label="Name"
@@ -111,14 +105,6 @@ export default function Modal() {
             value={form?.displayname}
             required
             onChange={(e) => handleChange("displayname", e.target.value)}
-          />
-
-          <MDBInput
-            label="Sub Name"
-            type="string"
-            value={form?.abbr}
-            required
-            onChange={(e) => handleChange("abbr", e.target.value)}
           />
 
           <MDBInput

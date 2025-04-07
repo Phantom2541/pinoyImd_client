@@ -19,10 +19,10 @@ import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
-  const { showModal, selected, willCreate, isLoading } = useSelector(
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { showModal, selected, willCreate, isLoading } = useSelector(
       ({ providers }) => providers
     ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -34,6 +34,7 @@ export default function Modal() {
         userId: auth._id,
         clients: activePlatform.branchId,
         category: "utilities",
+        cutoff: selected.cutoff || 1,
       });
     }
   }, [showModal, selected, auth, activePlatform]);
@@ -65,7 +66,6 @@ export default function Modal() {
         token,
       })
     ).then(() => TOGGLE()); // Close modal after successful save
-    console.log("Form", form);
   };
 
   // Handle form submit
@@ -75,11 +75,21 @@ export default function Modal() {
   };
 
   // Handle change sa inputs
+
   const handleChange = (key, value) => {
-    setForm({
-      ...form,
-      [key]: value,
-    });
+    // For 'cutoff', ensure the value is between 1 and 31
+    if (key === "cutoff") {
+      const cutoffValue = Math.max(1, Math.min(31, Number(value))); // Restrict cutoff value between 1 and 31
+      setForm({
+        ...form,
+        [key]: cutoffValue,
+      });
+    } else {
+      setForm({
+        ...form,
+        [key]: value,
+      });
+    }
   };
 
   return (
@@ -107,13 +117,17 @@ export default function Modal() {
             required
             onChange={(e) => handleChange("displayname", e.target.value)}
           />
+
           <MDBInput
-            label="Sub Name"
-            type="string"
-            value={form?.abbr}
+            label="Monthly Cut Off"
+            type="number" // Use 'number' input type for better validation
+            value={form?.cutoff}
+            onChange={({ target }) => handleChange("cutoff", target.value)}
+            min="1" // Min value is 1
+            max="31" // Max value is 31
             required
-            onChange={(e) => handleChange("abbr", e.target.value)}
           />
+
           <MDBInput
             label="Number"
             type="string"
