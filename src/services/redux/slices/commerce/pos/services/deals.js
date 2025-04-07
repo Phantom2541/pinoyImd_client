@@ -369,7 +369,6 @@ export const reduxSlice = createSlice({
     },
 
     RESET: (state, { payload = {} }) => {
-      state.filtered = [];
       state.isSuccess = false;
       state.message = "";
       state.isLoading = false;
@@ -398,7 +397,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
-        state.collections = state.filtered = payload;
+        state.collections = payload;
+        state.filtered = payload;
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);

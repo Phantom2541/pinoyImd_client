@@ -63,7 +63,6 @@ export const Tables = () => {
       setView("all");
     }
   }, [collections, view]);
-
   const handleDelete = async ({ _id }) => {
     const { value: remarks } = await Swal.fire({
       title: "Are you sure?",
