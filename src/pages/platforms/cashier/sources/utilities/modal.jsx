@@ -108,6 +108,13 @@ export default function Modal() {
             onChange={(e) => handleChange("displayname", e.target.value)}
           />
           <MDBInput
+            label="Sub Name"
+            type="string"
+            value={form?.abbr}
+            required
+            onChange={(e) => handleChange("abbr", e.target.value)}
+          />
+          <MDBInput
             label="Number"
             type="string"
             value={form?.number}

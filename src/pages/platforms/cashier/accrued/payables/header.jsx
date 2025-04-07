@@ -5,6 +5,7 @@ import { useToasts } from "react-toast-notifications";
 import {
   RESET,
   BROWSE,
+  ResetDATE,
   SetPAYABLES,
   SetFILTERED,
   SetMONTH,
@@ -15,7 +16,7 @@ import CalendarPicker from "../../../../../components/header/calendars";
 // import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess, month, year } = useSelector(
+    { filtered, message, isSuccess, month, year, collections } = useSelector(
       ({ payables }) => payables
     ),
     { addToast } = useToasts(),
@@ -59,15 +60,17 @@ export default function TopHeader() {
           month={month}
           year={year}
           moved={(next) => dispatch(SetMONTH(next))}
-          reset={() => dispatch(RESET())}
+          reset={() => dispatch(ResetDATE())}
         />
       </div>
       <div>
         <div className="text-right d-flex items-center">
           <Search
-            collections={filtered}
+            collection={collections}
             handleFiltered={(items) => dispatch(SetFILTERED(items))}
             handleAdd={(key) => dispatch(SetPAYABLES(key))}
+            reset={() => dispatch(SetFILTERED(collections))}
+            hideButton={false}
           />
         </div>
       </div>

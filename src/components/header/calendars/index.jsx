@@ -12,7 +12,7 @@ const CalendarPicker = ({ month, year, moved, reset }) => {
 
   return (
     <div className="d-flex align-items-center justify-content-center">
-      <MDBBtnGroup>
+      <MDBBtnGroup style={{ height: "2.3rem" }}>
         <MDBBtn
           onClick={reset}
           disabled={isActiveMonth}
@@ -30,7 +30,11 @@ const CalendarPicker = ({ month, year, moved, reset }) => {
         >
           <MDBIcon icon="angle-left" style={{ fontSize: "1rem" }} />
         </MDBBtn>
-        <MDBBtn color="white" style={{ fontSize: "0.9rem" }} className="m-0">
+        <MDBBtn
+          color="white"
+          style={{ fontSize: "0.9rem" }}
+          className="m-0 d-flex align-items-center"
+        >
           {calendar.Months[month - 1]}&nbsp;
           {year}
         </MDBBtn>

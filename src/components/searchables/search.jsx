@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import "./search.css";
 import { globalSearch } from "../../services/utilities";
@@ -9,27 +9,40 @@ export default function Search({
   handleFiltered,
   reset,
   handleAdd,
-  withCreate = false,
+  hideButton = true,
 }) {
+  const [showBtn, setShowBtn] = useState(false),
+    [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    if (!hideButton) setShowBtn(true);
+  }, [hideButton]);
   const debouncedSearch = useMemo(() => {
     return debounce((key) => {
       const items = globalSearch(collection, key);
+      if (hideButton && items.length === 0) setShowBtn(true);
+      if (hideButton && items.length > 0) setShowBtn(false);
       handleFiltered(items);
     }, 300);
-  }, [collection, handleFiltered]);
+  }, [collection, handleFiltered, hideButton]);
 
   const handleChange = (value) => {
     if (!value) {
       debouncedSearch.cancel();
+      if (hideButton) setShowBtn(false);
       reset();
     } else {
       debouncedSearch(value);
     }
+    setSearchValue(value);
   };
 
   return (
-    <div className="d-flex align-items-center">
-      <div className="search-container">
+    <div className="d-flex align-items-center transition-all">
+      <div
+        className="search-container"
+        style={{ marginRight: !showBtn && "-35px" }}
+      >
         <input
           placeholder="Search..."
           onChange={({ target }) => handleChange(target.value)}
@@ -40,11 +53,16 @@ export default function Search({
           spellCheck={false}
         />
       </div>
-      {withCreate && (
-        <MDBBtn onClick={handleAdd} size="sm" color="primary">
-          <MDBIcon icon="plus" />
-        </MDBBtn>
-      )}
+      <MDBBtn
+        onClick={() => handleAdd(searchValue)}
+        size="sm"
+        style={{ opacity: showBtn ? 1 : 0, marginRight: "-5px" }}
+        color="white"
+        rounded
+        className="px-2 ml-3"
+      >
+        <MDBIcon icon="plus" />
+      </MDBBtn>
     </div>
   );
 }
