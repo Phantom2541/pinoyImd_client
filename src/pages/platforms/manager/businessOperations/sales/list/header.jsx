@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
-import { fullName, globalSearch } from "./../../../../../../services/utilities";
+import { fullName } from "./../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { Search } from "./../../../../../../components/searchables";
 import {
@@ -54,12 +54,6 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
 
-  const handleFiltered = (key) => {
-    if (!key) return dispatch(SetFILTERED(collections));
-    const _filtered = globalSearch(collections, key);
-    dispatch(SetFILTERED(_filtered));
-  };
-
   useEffect(() => {
     dispatch(SetFILTERED(collections));
   }, [dispatch, collections]);
@@ -100,7 +94,12 @@ const Header = () => {
         </select>
       </div>
       <div className="d-flex align-items-center">
-        <Search setFiltered={(key) => handleFiltered(key)} />
+        <Search
+          setFiltered={(results) => dispatch(SetFILTERED(results))}
+          reset={() => dispatch(SetFILTERED(collections))}
+          collections={collections}
+          haveAction={false}
+        />
       </div>
     </MDBView>
   );

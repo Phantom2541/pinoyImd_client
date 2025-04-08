@@ -11,7 +11,9 @@ import {
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess } = useSelector(({ menus }) => menus),
+    { filtered, message, isSuccess, collections } = useSelector(
+      ({ menus }) => menus
+    ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -44,7 +46,12 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <Search setFiltered={(key) => dispatch(SetFILTERED(key))} />
+          <Search
+            collections={collections}
+            setFiltered={(items) => dispatch(SetFILTERED(items))}
+            reset={() => dispatch(SetFILTERED(collections))}
+            haveAction={false}
+          />
         </div>
       </div>
     </MDBView>

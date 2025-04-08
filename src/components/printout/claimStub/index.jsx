@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { capitalize, currency } from "../../../services/utilities";
+import { capitalize, currency, fullAddress } from "../../../services/utilities";
 import { Developer, Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
@@ -15,14 +15,24 @@ const Hr = () => (
   />
 );
 
-const Text = ({ title, value, className }) => {
+const Text = ({
+  title = "",
+  value = "",
+  className = "",
+  isAddress = false,
+}) => {
   console.log("title, value", className);
 
   return (
     <div className={`d-flex justify-content-between ${className}`}>
       <span>{title}</span>
 
-      <span className="fw-bold text-right">{value}</span>
+      <span
+        className="fw-bold text-right"
+        style={{ fontSize: isAddress && "0.9rem" }}
+      >
+        {value}
+      </span>
     </div>
   );
 };
@@ -41,7 +51,6 @@ const Stub = ({ sale }) => {
       cart = [],
     } = sale,
     { fullName, address } = customer;
-  console.log("address", customer);
 
   return (
     <div
@@ -60,9 +69,9 @@ const Stub = ({ sale }) => {
       <Text
         className="mt-2"
         title="Name"
-        value={capitalize(`${fullName.fname.split(" ")[0]} ${fullName.lname}`)}
+        value={capitalize(`${fullName.fname} ${fullName.lname}`)}
       />
-      <Text title="Address" value={address} />
+      {/* <Text title="Address" value={fullAddress(address, false)} isAddress /> */}
       {privilege !== 0 && (
         <Text title="Privilege" value={Privileges[privilege] || "-"} />
       )}

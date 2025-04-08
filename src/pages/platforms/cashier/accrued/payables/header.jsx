@@ -67,7 +67,7 @@ export default function TopHeader() {
         <div className="text-right d-flex items-center">
           <Search
             collection={collections}
-            handleFiltered={(items) => dispatch(SetFILTERED(items))}
+            setFiltered={(items) => dispatch(SetFILTERED(items))}
             handleAdd={(key) => dispatch(SetPAYABLES(key))}
             reset={() => dispatch(SetFILTERED(collections))}
             hideButton={false}
