@@ -36,6 +36,7 @@ const Tables = () => {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  console.log("providers", providers);
   useEffect(() => {
     if (!formSubmitted && isSuccess) {
       dispatch(RESET());
