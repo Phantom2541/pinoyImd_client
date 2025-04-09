@@ -18,6 +18,8 @@ const initialState = {
    */
   collections: [],
   filtered: [],
+  month: new Date().getMonth() + 1,
+  year: new Date().getFullYear(),
   maxPage: 5,
   totalPages: 0,
   activePage: 1,
@@ -134,7 +136,27 @@ export const reduxSlice = createSlice({
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
+    SetMONTH: (state, { payload }) => {
+      console.log("SetMONTH payload :", payload);
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
     RESET: (state) => {
+      state.month = new Date().getMonth() + 1;
+      state.year = new Date().getFullYear();
       state.isSuccess = false;
       state.message = "";
     },
@@ -247,6 +269,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
+  SetMONTH,
   RESET,
 } = reduxSlice.actions;
 

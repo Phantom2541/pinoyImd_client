@@ -4,18 +4,17 @@ import { MDBView } from "mdbreact";
 import {
   SearchServices as Services,
   SearchTemplates as Templates,
-  SearchYear as Year,
-  SearchMonth as Month,
 } from "../../../../../../components/searchables";
 import {
   RESET,
   BROWSE,
   SetSERVICES,
-} from "../../../../../../services/redux/slices/diagnostics/management/controls";
+  SetMONTH,
+} from "../../../../../../services/redux/slices/liability/controls";
+import CalendarPicker from "../../../../../../components/header/calendars";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    [year, setYear] = useState(new Date().getFullYear()),
-    [month, setMonth] = useState(new Date().getMonth() + 1),
+    { month, year } = useSelector(({ controls }) => controls),
     [template, setTemplate] = useState(1),
     [service, setService] = useState(1),
     dispatch = useDispatch();
@@ -54,8 +53,12 @@ const Header = () => {
         <div className="text-right d-flex items-center">
           <Templates setTemplate={setTemplate} />
           <Services template={template} setService={handleServiceId} />
-          <Month month={month} setMonth={setMonth} />
-          <Year year={year} setYear={setYear} />
+          <CalendarPicker
+            year={year}
+            month={month}
+            moved={(direction) => dispatch(SetMONTH(direction))}
+            reset={() => dispatch(RESET())}
+          />
         </div>
       </div>
     </MDBView>
