@@ -16,7 +16,7 @@ import CalendarPicker from "../../../../../components/header/calendars";
 // import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess, month, year, collections } = useSelector(
+    { message, isSuccess, month, year, collections } = useSelector(
       ({ payables }) => payables
     ),
     { addToast } = useToasts(),

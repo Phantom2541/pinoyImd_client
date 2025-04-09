@@ -14,6 +14,8 @@ const initialState = {
   page: 0,
   showModal: false,
   willCreate: false,
+  month: new Date().getMonth() + 1, // 0-based index (Jan = 0)
+  year: new Date().getFullYear(),
   /**
    * Pagination
    */
@@ -82,7 +84,7 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetEDIT: (state, { payload }) => {
-      console.log("payload", payload);
+      console.log("SetEDIT payload:", payload);
 
       state.selected = payload;
       state.willCreate = false;
@@ -119,10 +121,31 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
+
+    SetMONTH: (state, { payload }) => {
+      console.log("SetMONTH payload :", payload);
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
     RESET: (state) => {
+      state.month = new Date().getMonth() + 1;
+      state.year = new Date().getFullYear();
       state.isSuccess = false;
       state.message = "";
     },
@@ -230,6 +253,7 @@ export const {
   SetSERVICES,
   SetMaxPage,
   SetActivePAGE,
+  SetMONTH,
   TOGGLE,
   RESET,
 } = reduxSlice.actions;
