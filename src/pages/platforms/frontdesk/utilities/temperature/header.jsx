@@ -11,6 +11,7 @@ import {
   BROWSE,
   RESET,
 } from "../../../../../services/redux/slices/monitoring/temperature";
+import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -60,27 +61,11 @@ const Header = () => {
     >
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex">
-          <Select
-            className="m-0 p-0 calendar mr-4"
-            value={monthLabel}
-            onChange={(value) => {
-              const selectedMonth = isObjectFormat
-                ? monthsArray.find((m) => m.label === value)
-                : { value: monthsArray.indexOf(value) + 1 };
-              dispatch(setMonth(selectedMonth?.value || month));
-            }}
-            inputClassName="m-0 p-0"
-            preValue={monthLabel}
-            choices={
-              isObjectFormat ? monthsArray.map((m) => m.label) : monthsArray
-            }
-          />
-          <Select
-            className="m-0 p-0 calendar"
-            value={year}
-            onChange={(value) => dispatch(setYear(value))}
-            preValue={year}
-            choices={calendar.Years}
+          <CalendarPicker
+            month={month}
+            year={year}
+            moved={dispatch}
+            reset={() => dispatch(setMonth(0))}
           />
         </div>
       </div>
