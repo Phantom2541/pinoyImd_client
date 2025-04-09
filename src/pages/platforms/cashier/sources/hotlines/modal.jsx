@@ -109,6 +109,7 @@ export default function Modal() {
             required
             onChange={({ target }) => handleChange("displayname", target.value)}
           />
+
           <MDBInput
             label="Address"
             type="string"

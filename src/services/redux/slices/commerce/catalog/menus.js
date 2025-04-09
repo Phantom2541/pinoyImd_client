@@ -92,10 +92,10 @@ export const reduxSlice = createSlice({
   reducers: {
     SetFILTERED: (state, { payload }) => {
       // Always create a new array before filtering
-      const collectionsCopy = state.collections.map((item) =>
-        JSON.parse(JSON.stringify(item))
-      );
-      const filtered = globalSearch(collectionsCopy, payload);
+      // const collectionsCopy = state.collections.map((item) =>
+      //   JSON.parse(JSON.stringify(item))
+      // );
+      const filtered = payload;
       state.filtered = filtered;
 
       // Dispatch the action instead of calling it as a function

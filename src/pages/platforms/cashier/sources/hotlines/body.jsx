@@ -1,21 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
+import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable, MDBBadge } from "mdbreact";
+import { Input } from "../../../../../components/customizable";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
   DESTROY,
+  RESET,
+  UPDATE,
 } from "../../../../../services/redux/slices/assets/providers";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage } = useSelector(
-      ({ providers }) => providers
-    ),
+    { filtered, activePage, maxPage, isSuccess, formSubmitted, showModal } =
+      useSelector(({ providers }) => providers),
+    [soloUpdate, setSoloUpdate] = useState(false),
+    [selected, setSelected] = useState(-1),
     dispatch = useDispatch();
 
-  const handleEdit = (service) => {
-    dispatch(SetSELECTED(service));
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) dispatch(RESET());
+  }, [formSubmitted, isSuccess, dispatch]);
+
+  const handleEdit = (hotlines) => {
+    dispatch(SetSELECTED(hotlines));
+    setSelected(hotlines);
     //console.log("SetSelected service :", service);
   };
 
@@ -35,6 +44,28 @@ const Body = () => {
     });
   };
 
+  const handleUpdate = () => {
+    if (selected && selected.newAbbreviation !== selected.abbr) {
+      const { _id, abbr } = selected;
+      dispatch(
+        UPDATE({
+          token,
+          data: { _id, abbr },
+        })
+      );
+    }
+  };
+
+  const handleChange = (hotlines) => {
+    setSelected({
+      ...hotlines,
+      abbrOld: hotlines?.abbr || "", // Ensure it has a default value
+    });
+    setSoloUpdate(true);
+  };
+
+  const handleAbbreviationChange = (key, value) =>
+    setSelected({ ...selected, [key]: value });
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -54,34 +85,66 @@ const Body = () => {
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((service, index) => (
-          <tr key={index}>
-            <td key={index}>{index + startIndex + 1}</td>
-            <td>{service.displayname}</td>
-            <td>{service.number} </td>
-            <td>{service.address}</td>
-            <td className="text-center">
-              <MDBBtnGroup>
-                <MDBBtn
-                  size="sm"
-                  rounded
-                  color="primary"
-                  onClick={() => handleEdit(service)}
+        {paginatedData?.map((hotlines, index) => {
+          const { _id, abbr, displayname, number, address } = hotlines;
+          return (
+            <tr key={index}>
+              <td key={index}>{index + startIndex + 1}</td>
+              <td style={{ fontWeight: 400 }}>
+                <div>{displayname}</div>
+
+                <div
+                  className="text-muted"
+                  onClick={() => handleChange(hotlines)} // Set selected to the full service object
                 >
-                  <MDBIcon icon="pencil-alt" />
-                </MDBBtn>
-                <MDBBtn
-                  onClick={() => handleDelete(service._id)}
-                  size="sm"
-                  rounded
-                  color="danger"
-                >
-                  <MDBIcon icon="trash" />
-                </MDBBtn>
-              </MDBBtnGroup>
-            </td>
-          </tr>
-        ))}
+                  {selected?._id === _id && !showModal && soloUpdate ? (
+                    // If this supplier is selected, show the input field for editing
+                    <Input
+                      formSubmitted={formSubmitted}
+                      isSuccess={isSuccess}
+                      _key="abbr"
+                      selected={selected}
+                      onChange={handleAbbreviationChange} // Handle input change
+                      handleCheck={handleUpdate} // Trigger update when editing is finished
+                    />
+                  ) : abbr != null && abbr !== "" ? (
+                    // If not editing, show the abbreviation as a badge
+                    <MDBBadge
+                      title="Click me to update"
+                      className="cursor-pointer"
+                    >
+                      {abbr}
+                    </MDBBadge>
+                  ) : (
+                    <p className="mb-0">No abbreviation</p>
+                  )}
+                </div>
+              </td>
+              <td>{number} </td>
+              <td>{address}</td>
+              <td className="text-center">
+                <MDBBtnGroup>
+                  <MDBBtn
+                    size="sm"
+                    rounded
+                    color="primary"
+                    onClick={() => handleEdit(hotlines)}
+                  >
+                    <MDBIcon icon="pencil-alt" />
+                  </MDBBtn>
+                  <MDBBtn
+                    onClick={() => handleDelete(hotlines._id)}
+                    size="sm"
+                    rounded
+                    color="danger"
+                  >
+                    <MDBIcon icon="trash" />
+                  </MDBBtn>
+                </MDBBtnGroup>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </MDBTable>
   );

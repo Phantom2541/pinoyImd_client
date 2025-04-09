@@ -1,15 +1,20 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../../components/tableLoading";
+import { BROWSE } from "../../../../../services/redux/slices/assets/branches";
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import Modal from "./modal";
 
 const Index = () => {
-  const { isLoading } = useSelector(({ providers }) => providers);
-
+  const { token } = useSelector(({ auth }) => auth),
+    { isLoading } = useSelector(({ providers }) => providers),
+    dispatch = useDispatch();
+  useEffect(() => {
+    if (token) dispatch(BROWSE({ token }));
+  }, [token]);
   return (
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>

@@ -19,10 +19,10 @@ import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
-  const { showModal, selected, willCreate, isLoading } = useSelector(
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { showModal, selected, willCreate, isLoading } = useSelector(
       ({ providers }) => providers
     ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -98,7 +98,6 @@ export default function Modal() {
             variant="h4-responsive"
             className="text-center"
           ></MDBTypography>
-
           {/* Input fields */}
           <MDBInput
             label="Name"
@@ -107,6 +106,7 @@ export default function Modal() {
             required
             onChange={(e) => handleChange("displayname", e.target.value)}
           />
+
           <MDBInput
             label="Number"
             type="string"
@@ -119,7 +119,6 @@ export default function Modal() {
             value={form?.address}
             onChange={(e) => handleChange("address", e.target.value)}
           />
-
           {/* Submit button */}
           <div className="text-center mb-1-half">
             <MDBBtn

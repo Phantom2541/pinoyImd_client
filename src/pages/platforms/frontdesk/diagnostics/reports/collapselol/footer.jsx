@@ -1,26 +1,26 @@
 import React from "react";
-import {  MDBBtn, MDBIcon } from "mdbreact";
-import { useDispatch, useSelector } from "react-redux";
-import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
+// import {  MDBBtn, MDBIcon } from "mdbreact";
+// import { useDispatch, useSelector } from "react-redux";
+// import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
 export default function TaskFooter({ task }) {
   const { _id } = task;
-  const dispatch = useDispatch();
-  const { token } = useSelector(({ auth }) => auth);
+  // const dispatch = useDispatch();
+  // const { token } = useSelector(({ auth }) => auth);
 
-  const markAsCompleted = () => {
-    dispatch(
-      REFORM({
-        token,
-        data: {
-          _id,
-          completed: true,
-          completedAt: new Date().toISOString(),
-        },
-      })
-    );
-    alert("Task marked as completed!");
-  };
+  // const markAsCompleted = () => {
+  //   dispatch(
+  //     REFORM({
+  //       token,
+  //       data: {
+  //         _id,
+  //         completed: true,
+  //         completedAt: new Date().toISOString(),
+  //       },
+  //     })
+  //   );
+  //   alert("Task marked as completed!");
+  // };
 
   return (
     <div
@@ -34,9 +34,9 @@ export default function TaskFooter({ task }) {
             {_id}
           </span>
         </div>
-        <MDBBtn color="success" size="sm" onClick={markAsCompleted}>
+        {/* <MDBBtn color="success" size="sm" onClick={markAsCompleted}>
           Mark as Completed <MDBIcon icon="check" className="ml-2" />
-        </MDBBtn>
+        </MDBBtn> */}
       </div>
     </div>
   );

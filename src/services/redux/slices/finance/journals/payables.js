@@ -144,12 +144,20 @@ export const reduxSlice = createSlice({
       state.collections = payload;
     },
     SetMONTH: (state, { payload }) => {
-      if (payload === "prev") {
-        state.month = state.month === 0 ? 11 : state.month - 1;
-        if (state.month === 11) state.year -= 1;
-      } else if (payload === "next") {
-        state.month = state.month === 11 ? 0 : state.month + 1;
-        if (state.month === 0) state.year += 1;
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
       }
     },
     /**
@@ -163,10 +171,13 @@ export const reduxSlice = createSlice({
       state.activePage = payload;
     },
     RESET: (state) => {
-      state.month = moment().month();
-      state.year = moment().year();
       state.isSuccess = false;
       state.message = "";
+    },
+
+    ResetDATE: (state) => {
+      state.month = moment().month() + 1;
+      state.year = moment().year();
     },
   },
   extraReducers: (builder) => {
@@ -207,7 +218,9 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
-        state.collections.unshift(payload);
+        const { payload: data } = payload;
+        state.collections.unshift(data);
+        state.filtered.unshift(data);
         state.isSuccess = true;
         state.isLoading = false;
       })
@@ -222,8 +235,6 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-
-        console.log(index);
 
         state.collections[index] = payload;
         state.isSuccess = true;
@@ -264,6 +275,7 @@ export const {
   TOGGLE,
   SetCREATE,
   SetPAYABLES,
+  ResetDATE,
   SetPAYMENTS,
   SetPAGE,
   SETSOURCES,

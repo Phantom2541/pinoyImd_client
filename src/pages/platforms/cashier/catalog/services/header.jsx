@@ -19,7 +19,7 @@ const Header = () => {
 
   //initial values
   useEffect(() => {
-    dispatch(SetSERVICES({ filtered: Services.collections, maxPage }));
+    dispatch(SetSERVICES({ collections: Services.collections, maxPage }));
   }, [dispatch, maxPage]);
 
   const handleTemplate = (template) => dispatch(SetCLUSTER(template));
@@ -29,6 +29,8 @@ const Header = () => {
 
     dispatch(SetFILTERED(service));
   };
+
+  console.log("cluster", cluster);
   return (
     <MDBView
       cascade
@@ -40,7 +42,7 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center">
+        <div className=" d-flex items-center justify-content-end">
           <Templates setTemplate={handleTemplate} />
           <Select
             // CSS
@@ -58,14 +60,6 @@ const Header = () => {
             preValue="Service"
             onChange={handleChange}
           />
-          {/* <Select
-            className="m-0 p-0 calendar mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
-            inputClassName="m-0 p-0"
-            preValue={component}
-            choices={Templates.getComponents("LAB")}
-          /> */}
         </div>
       </div>
     </MDBView>

@@ -305,6 +305,7 @@ export const reduxSlice = createSlice({
     },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
+      state.selected = {};
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -315,7 +316,19 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
+      .addCase(BROWSE.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+        const { payload: data } = payload;
+        state.collections = data;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(BROWSE.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
       .addCase(GETENROLLED.pending, (state) => {
         state.isLoading = true;
       })

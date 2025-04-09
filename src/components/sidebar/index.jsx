@@ -39,10 +39,11 @@ export default function SideNavigation({
   }, [company, activePlatform]);
 
   useEffect(() => {
-    if (activePlatform) {
-      setLinks(Sidebars[activePlatform.platform?.toLowerCase()] || []);
+    if (activePlatform?.platform) {
+      const { platform } = activePlatform;
+      setLinks(Sidebars[platform?.toLowerCase()] || []);
     }
-  }, [activePlatform]);
+  }, [activePlatform?.platform]);
 
   const renderNavItems = (
     items,
