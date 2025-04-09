@@ -55,7 +55,10 @@ export default function Body() {
 
   return (
     <>
-      {tasks.map((task, index) => (
+      {tasks.map((task, index) => {
+        console.log("task", task);
+        
+        return (
         <Collapse
           key={task?._id}
           task={task}
@@ -66,7 +69,7 @@ export default function Body() {
           activeCollapse={activeCollapse}
           isActive={activeCollapse === task?._id}
         />
-      ))}
+      )})}
     </>
   );
 }

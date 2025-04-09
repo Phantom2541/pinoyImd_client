@@ -18,7 +18,6 @@ const Card = ({ txt, num, index, items = [] }) => {
   const week = txt?.slice(0, 3);
 
   const isToday = dateCell.toDateString() === today.toDateString();
-
   // Compute total gross
   const totalGross = items.reduce((sum, { gross }) => sum + (gross || 0), 0);
   const handleRemittance = (_id) => {
@@ -39,7 +38,16 @@ const Card = ({ txt, num, index, items = [] }) => {
           if (el) el.style.fontSize = "25px";
         },
       });
-    if (selected) dispatch(SetSELECTED({ key: "remit", value: selected }));
+    if (selected)
+      dispatch(
+        SetSELECTED({
+          key: "remit",
+          value: {
+            ...selected,
+            createdAtNow: dateCell.toISOString().slice(0, 10),
+          },
+        })
+      );
   };
 
   const handleDate = () => dispatch(SetActiveDATE(num));
