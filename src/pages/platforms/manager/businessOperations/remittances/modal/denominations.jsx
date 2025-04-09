@@ -96,7 +96,7 @@ export default function Modal() {
       setFloating(denominations);
     }
   }, [showModal, title, selected]);
-  console.log("floating", floating);
+
   const coinImage = `${process.env.PUBLIC_URL}/assets/denominations.png`;
 
   const getBillimg = (bill) => ({
@@ -148,8 +148,9 @@ export default function Modal() {
 
     setSum(total);
   };
+
   const handleSubmit = () => {
-    const { gross, breakdown, _id } = selected;
+    const { gross, _id, cashier, createdAtNow } = selected;
 
     dispatch(
       SAVE({
@@ -160,7 +161,13 @@ export default function Modal() {
           userId: auth._id,
           fsid: 1,
           amount: gross,
-          breakdown,
+          breakdown: {
+            cashierId: cashier._id,
+            amount: gross,
+            collector: auth._id,
+            createdAt: new Date(),
+          },
+          createdAt: createdAtNow,
         },
       })
     )
