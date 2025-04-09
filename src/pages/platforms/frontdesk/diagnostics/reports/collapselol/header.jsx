@@ -21,7 +21,6 @@ export default function TaskHeader({
   activeCollapse,
 }) {
   const { _id, category, source, cart, customerId, ssx } = task;
-  const hasRenderedItems = task.rendered && task.rendered.length !== 0;
 
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
@@ -94,7 +93,6 @@ export default function TaskHeader({
     String(activeCollapse),
     String(didHoverID)
   );
-  console.log("border", border);
   return (
     <MDBCollapseHeader
       onMouseLeave={() => setDidHoverID(-1)}
@@ -120,25 +118,12 @@ export default function TaskHeader({
           </span>
         </div>
         <div className="d-flex align-items-center">
-          {!hasRenderedItems && (
-            <MDBBtn
-              size="sm"
-              style={{ width: "2rem", height: "1.4rem" }}
-              rounded
-              className="m-0 p-0"
-              onClick={() => generateTask()}
-              color="info"
-            >
-              <MDBIcon icon="sync-alt" />
-            </MDBBtn>
-          )}
-          {hasRenderedItems && (
+            
             <MDBBtn
               size="sm"
               color="white"
               rounded
               onClick={() =>
-                hasRenderedItems &&
                 setActiveCollapse((prev) => (prev === _id ? "" : _id))
               }
               className="m-0 p-0 transition-all "
@@ -149,38 +134,9 @@ export default function TaskHeader({
                 className="fa fa-angle-down transition-all "
               />
             </MDBBtn>
-          )}
         </div>
       </div>
-      {/* <div className="d-flex align-items-center">
-        <span>
-          {number}. {dateFormat(task?.createdAt)}
-        </span>
-        <span>
-          <MDBBadge color={sourceColor(category)} className="mx-2">
-            {category}
-          </MDBBadge>
-
-          {source && <MDBBadge color="warning">{source?.name}</MDBBadge>}
-        </span>
-      </div>
-      <div>
-        {!hasRenderedItems && (
-          <MDBBadge
-            onClick={() => generateTask()}
-            color="info"
-            className="px-2 cursor-pointer"
-          >
-            <MDBIcon icon="sync-alt" />
-          </MDBBadge>
-        )}
-        {hasRenderedItems && (
-          <i
-            style={{ transform: `rotate(${isActive ? 0 : 90}deg)` }}
-            className="fa fa-angle-down transition-all ml-2"
-          />
-        )}
-      </div> */}
+   
     </MDBCollapseHeader>
   );
 }
