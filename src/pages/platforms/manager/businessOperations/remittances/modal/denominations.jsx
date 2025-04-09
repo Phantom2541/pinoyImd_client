@@ -172,7 +172,6 @@ export default function Modal() {
         console.error("Error saving remittance:", err);
       });
   };
-  console.log("selected", selected);
   return (
     <MDBModal
       isOpen={showModal}
