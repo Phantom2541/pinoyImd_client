@@ -10,7 +10,7 @@ import {
   BROWSE,
   SetCREATE,
   SetMONTH,
-} from "./../../../../../services/redux/slices/liability/assurances";
+} from "./../../../../../services/redux/slices/diagnostics/management/assurances";
 import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
