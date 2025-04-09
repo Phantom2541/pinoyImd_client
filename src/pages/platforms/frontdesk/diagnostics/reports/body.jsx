@@ -37,7 +37,7 @@ export default function Body() {
     }
 
     setTasks(updatedTasks);
-  }, [collections, dispatch]);
+  }, [collections, dispatch, token]);
 
   if (!patient?._id)
     return (
