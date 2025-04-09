@@ -11,7 +11,7 @@ import {
   RESET,
   BROWSE,
   SetCREATE,
-} from "./../../../../../services/redux/slices/liability/assurances";
+} from "../../../../../services/redux/slices/diagnostics/management/assurances";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),

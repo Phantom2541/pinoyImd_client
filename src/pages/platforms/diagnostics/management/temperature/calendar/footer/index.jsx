@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../../services/redux/slices/monitoring/temperature";
+} from "../../../../../../../services/redux/slices/diagnostics/management/temperature";
 const Footer = ({ dateCell, txt }) => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ temperatures }) => temperatures);

@@ -11,7 +11,7 @@ import {
   RESET,
   BROWSE,
   SetSERVICES,
-} from "../../../../../../services/redux/slices/liability/controls";
+} from "../../../../../../services/redux/slices/diagnostics/management/controls";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     [year, setYear] = useState(new Date().getFullYear()),
