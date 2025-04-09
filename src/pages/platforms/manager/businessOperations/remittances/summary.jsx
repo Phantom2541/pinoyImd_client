@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { MDBBadge, MDBCard, MDBCardBody, MDBView } from "mdbreact";
 import { currency, fullName } from "../../../../../services/utilities";
