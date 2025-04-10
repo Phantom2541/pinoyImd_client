@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBCollapseHeader, MDBBadge, MDBIcon, MDBBtn } from "mdbreact";
+import { MDBCollapseHeader, MDBBadge, MDBBtn } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import {
   axioKit,
@@ -26,9 +26,6 @@ export default function TaskHeader({
   const dispatch = useDispatch();
 
   const generateTask = async () => {
-    alert("Processing task generation...");
-    console.log("Task Data:", task);
-
     // const packages = cart.flatMap((item) => item.packages);
     // const template = Services.getTemplates(packages, "LAB");
 
@@ -118,25 +115,23 @@ export default function TaskHeader({
           </span>
         </div>
         <div className="d-flex align-items-center">
-            
-            <MDBBtn
-              size="sm"
-              color="white"
-              rounded
-              onClick={() =>
-                setActiveCollapse((prev) => (prev === _id ? "" : _id))
-              }
-              className="m-0 p-0 transition-all "
-              style={{ width: isActive ? "1.5rem" : "2rem", height: "1.4rem" }}
-            >
-              <i
-                style={{ rotate: `${isActive ? 0 : 90}deg` }}
-                className="fa fa-angle-down transition-all "
-              />
-            </MDBBtn>
+          <MDBBtn
+            size="sm"
+            color="white"
+            rounded
+            onClick={() =>
+              setActiveCollapse((prev) => (prev === _id ? "" : _id))
+            }
+            className="m-0 p-0 transition-all "
+            style={{ width: isActive ? "1.5rem" : "2rem", height: "1.4rem" }}
+          >
+            <i
+              style={{ rotate: `${isActive ? 0 : 90}deg` }}
+              className="fa fa-angle-down transition-all "
+            />
+          </MDBBtn>
         </div>
       </div>
-   
     </MDBCollapseHeader>
   );
 }

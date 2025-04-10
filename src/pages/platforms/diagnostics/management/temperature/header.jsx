@@ -2,8 +2,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBIcon, MDBBtn } from "mdbreact";
-import { Calendar as calendar } from "../../../../../services/fakeDb";
-import { Select } from "../../../../../components/customizable";
 import "./style.css";
 import {
   SetMONTH,

@@ -17,10 +17,7 @@ import {
 } from "mdbreact";
 import { Statements } from "../../../../../../services/fakeDb";
 import { Select } from "../../../../../../components/customizable";
-import {
-  SelectUser,
-  SearchUser,
-} from "../../../../../../components/searchables";
+import { SelectUser } from "../../../../../../components/searchables";
 import util from "../util";
 import Swal from "sweetalert2";
 

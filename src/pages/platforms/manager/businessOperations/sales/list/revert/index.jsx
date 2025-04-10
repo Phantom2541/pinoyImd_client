@@ -22,14 +22,13 @@ export default function RevertSale() {
       selected,
       formSubmitted,
       message = "",
-      isSuccess,
     } = useSelector(({ deals }) => deals),
     [password, setPassword] = useState(""),
     [isLocked, setIsLocked] = useState(true),
     [haveMessage, setHaveMessage] = useState(false),
     dispatch = useDispatch();
-  
-  const toggle = () => dispatch(ToggleRevertModal({}));
+
+  const toggle = () => dispatch(ToggleRevertModal());
 
   useEffect(() => {
     if (show) {
@@ -37,12 +36,6 @@ export default function RevertSale() {
       setPassword("");
     }
   }, [show]);
-
-  useEffect(() => {
-    if (!formSubmitted && isSuccess && show) {
-      toggle();
-    }
-  }, [formSubmitted, isSuccess, dispatch, show, toggle]);
 
   useEffect(() => {
     if (message) {

@@ -30,7 +30,7 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
       );
     }
     return () => RESET();
-  }, [activePlatform, dispatch, token, month, year, RESET]);
+  }, [activePlatform, dispatch, token, month, year, RESET, BROWSE]);
 
   useEffect(() => {
     const params = new URLSearchParams({
@@ -38,7 +38,7 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
       year: today.getFullYear(),
     });
     history.push(`${pathname}?${params.toString()}`);
-  }, []);
+  }, [history, pathname]);
 
   const prev = (clearFocused = true) => {
     let _month = Number(month) === 1 ? 12 : Number(month) - 1, // Adjust the month to be 1-based

@@ -61,7 +61,6 @@ export default function Modal() {
     { isLoading, isSuccess } = useSelector(({ ledger }) => ledger),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
     [sum, setSum] = useState(0),
-    [coh, setCoh] = useState(0),
     [schedule, setSchedule] = useState("morning"),
     [position, setPosition] = useState(0),
     [location, setLocation] = useState("reception"),
@@ -77,16 +76,6 @@ export default function Modal() {
       dispatch(RESET());
     }
   }, [showModal, isLoading, isSuccess, dispatch]);
-  useEffect(() => {
-    let _coh = 0;
-    if (selected?.gross) {
-      let _sum = selected?.opening?.sum || 0;
-      const _gross = selected?.gross || 0;
-      let _expenses = selected?.expenses || 0;
-      _coh = _sum + _gross - _expenses;
-    }
-    setCoh(_coh);
-  }, [selected]);
 
   useEffect(() => {
     if (showModal) {
