@@ -4,7 +4,7 @@ import { MDBTable, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
-} from "./../../../../../services/redux/slices/liability/assurances";
+} from "../../../../../services/redux/slices/diagnostics/management/assurances";
 import Swal from "sweetalert2";
 import { fullName } from "../../../../../services/utilities";
 

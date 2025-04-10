@@ -1,13 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../utilities";
+import { axioKit } from "../../../../utilities";
 
 const url = "diagnostics/laboratory/monitoring/temperatures";
+const today = new Date();
 
 const initialState = {
-  month: new Date().getMonth(), // Month as a number (1-12)
+  month: new Date().getMonth() + 1, // Month as a number (1-12)
   year: new Date().getFullYear(),
   collections: [],
+  selected: {},
   isSuccess: false,
+  formSubmitted: false,
   isLoading: false,
   message: "",
 };
@@ -75,14 +78,36 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
-    setMonth: (state, action) => {
-      state.month = Number(action.payload);
+    SetMONTH: (state, { payload }) => {
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
     },
     setYear: (state, action) => {
       state.year = Number(action.payload);
     },
+    SetSelected: (state, { payload }) => {
+      state.selected = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
+      state.formSubmitted = false;
       state.message = "";
     },
   },
@@ -117,21 +142,22 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
-        state.isSuccess = false;
+        state.formSubmitted = true;
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         state.message = action?.success;
+        console.log(action.payload);
         state.collections.unshift(action.payload);
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         state.message = action.error.message;
         state.isLoading = false;
       })
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -142,11 +168,11 @@ export const reduxSlice = createSlice({
         state.collections[index] = action.payload;
         state.message = action.success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         state.message = action.error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
@@ -170,5 +196,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, setMonth, setYear } = reduxSlice.actions;
+export const { RESET, SetMONTH, setYear, SetSelected, ResetDATE } =
+  reduxSlice.actions;
 export default reduxSlice.reducer;

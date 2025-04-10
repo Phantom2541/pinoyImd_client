@@ -4,7 +4,7 @@ import { MDBTable } from "mdbreact";
 import {
   DESTROY,
   SetEDIT,
-} from "./../../../../../services/redux/slices/liability/controls";
+} from "../../../../../services/redux/slices/diagnostics/management/controls";
 import Swal from "sweetalert2";
 
 const Tables = () => {
