@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
+import "./App.css";
+import "./animations.css";
 import Platforms from "./pages/platforms";
 import Home from "./pages/home";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,12 +19,10 @@ import {
   FecaLog,
   SeroLog,
 } from "./components/printout";
-
 import Payslip from "./pages/platforms/manager/responsibilities/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
-import "./App.css";
-import "./animations.css";
+
 import RequestOutSource from "./components/printout/requestOutSource";
 
 export default function App() {

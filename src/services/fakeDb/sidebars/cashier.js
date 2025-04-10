@@ -27,13 +27,13 @@ const cashier = [
   {
     name: "Bulletin",
     icon: "tachometer-alt",
-    path: "/cashier/bulletin",
+    path: "/bulletin",
     title: "news and updates",
     component: Bulletin,
   },
   {
     name: "Cash Register",
-    path: "/cashier",
+    path: "/cash/register",
     icon: "money-bill",
     title: "cash register",
     children: [
