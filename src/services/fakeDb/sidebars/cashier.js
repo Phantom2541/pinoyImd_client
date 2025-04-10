@@ -68,7 +68,7 @@ const cashier = [
     children: [
       /**
        * obligation for services or goods received but not yet paid for by the accounting period's en
-       *  unpaid bills (Water, Electricity, etc.)
+       *  unpaid bills (Water, Electricity, SOA  & etc.)
        * Electric bill
        * Water bill
        * WIFI bill
@@ -81,16 +81,6 @@ const cashier = [
         title: "Outstanding payments for suppliers and utilities.",
         component: Payables,
       },
-      /**
-       * Collections from vouchers
-       */
-      {
-        name: "Accounts Receivable (A/R)",
-        path: "/receivables",
-        icon: "money-bill",
-        title: "Unpaid invoices from corporate accounts or HMOs",
-        component: Receivables,
-      },
       {
         name: "Payments",
         path: "/payments",
@@ -99,9 +89,8 @@ const cashier = [
         component: Payments,
       },
       /**
-       * Receivables  from sales vouchers
-       * from daily sales
-       * to be included as a SOA of insource
+       * SOA from A/P
+       * confirming the SOA listed in A/P
        */
       {
         name: "Statement of Account",
@@ -111,7 +100,17 @@ const cashier = [
         // component: Insources,
       },
       /**
-       * Personal Vouchers
+       * Generated monthly Collections from vouchers  (SOA)
+       */
+      {
+        name: "Accounts Receivable (A/R)",
+        path: "/receivables",
+        icon: "money-bill",
+        title: "Unpaid invoices from corporate accounts or HMOs",
+        component: Receivables,
+      },
+      /**
+       * Unproessed Vouchers
        * from daily sales
        */
       {
@@ -146,18 +145,18 @@ const cashier = [
         component: Insources,
       },
       {
-        name: "Utilities",
-        path: "/utilities",
-        icon: "tools",
-        title: "List of Company that provides Utilities or supports",
-        component: Utilities,
-      },
-      {
         name: "Suppliers",
         path: "/suppliers",
         icon: "handshake",
         title: "List of company that provides supplies",
         component: Suppliers,
+      },
+      {
+        name: "Utilities",
+        path: "/utilities",
+        icon: "tools",
+        title: "List of Company that provides Utilities or supports",
+        component: Utilities,
       },
       {
         name: "Hotlines",
