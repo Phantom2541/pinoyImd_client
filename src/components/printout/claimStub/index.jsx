@@ -65,7 +65,7 @@ const Stub = ({ sale }) => {
       }}
       className="text-center thermal-font"
     >
-      <Header date={createdAt} saleId={_id} />
+      <Header date={createdAt} dealId={_id} />
       <Text
         className="mt-2"
         title="Name"

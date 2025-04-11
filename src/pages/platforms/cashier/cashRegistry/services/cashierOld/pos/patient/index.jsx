@@ -72,7 +72,7 @@ export default function CashierPatient({
             <PatientPhysicians didCheckout={didCheckout} />
           </MDBRow>
           <PatientCart
-            saleId={_id}
+            dealId={_id}
             gross={gross}
             discount={discount}
             cart={cart}

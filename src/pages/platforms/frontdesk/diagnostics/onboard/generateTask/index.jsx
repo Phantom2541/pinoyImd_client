@@ -103,7 +103,7 @@ export default function Modal() {
             // Save buntisPresent if present
             await saveRequest("/diagnostics/laboratory/result/miscellaneous", {
               packages: buntisPresent,
-              saleId: _id,
+              dealId: _id,
               customerId: customerId?._id,
               branchId: activePlatform.branchId,
               buntis: true,
@@ -115,7 +115,7 @@ export default function Modal() {
           // Solo form processing
           const soloForms = tests.map((test) => ({
             packages: [test],
-            saleId: _id,
+            dealId: _id,
             customerId: customerId?._id,
             branchId: activePlatform.branchId,
             _buntis: false,

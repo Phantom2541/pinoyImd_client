@@ -119,7 +119,7 @@ export default function Sales() {
     setSelected({
       ...selected.customerId,
       category: selected.category,
-      saleId: selected._id,
+      dealId: selected._id,
       soldCart: selected.cart,
     });
     toggleCashRegister();

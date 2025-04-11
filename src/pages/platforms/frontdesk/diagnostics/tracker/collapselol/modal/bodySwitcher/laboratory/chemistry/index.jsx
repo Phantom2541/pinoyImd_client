@@ -7,13 +7,13 @@ referenceColor,
 findReference,
 } from "../../../../../../../../../../services/utilities";
 
-export default function Chemistry() {
-  const { task, setTask } = useState({});
+export default function Chemistry({ task, setTask }) {
+  
   const { collections: preferences } = useSelector(
     ({ preferences }) => preferences
   );
   console.log("taskasdas", task);
-  
+   
   const {
   packages = {},
   key: mapKey,
@@ -74,7 +74,16 @@ export default function Chemistry() {
             patient?.dob,
             preference,
             preferences
-          );
+           );
+           console.log("lo", lo);
+           console.log("hi", hi);
+           console.log("warn", warn);
+           console.log("alert", alert);
+           console.log("critical", critical);
+           console.log("units", units);
+           console.log("_id", _id);
+           
+           
           return (
             <tr key={`${mapKey}-${index}`}>
               <td className="fw-bold py-1" title={name || abbreviation}>

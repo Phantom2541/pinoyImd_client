@@ -45,7 +45,7 @@ const PrimaryFooter = ({ deal, setEdit }) => {
   //           "/diagnostics/laboratory/result/miscellaneous",
   //           {
   //             packages: buntisPresent,
-  //             saleId: _id,
+  //             dealId: _id,
   //             customerId: customerId?._id,
   //             branchId: activePlatform.branchId,
   //             buntis: true,
@@ -63,7 +63,7 @@ const PrimaryFooter = ({ deal, setEdit }) => {
 
   //       const newArr = tests.map((test) => ({
   //         packages: [test],
-  //         saleId: _id,
+  //         dealId: _id,
   //         customerId: customerId?._id,
   //         branchId: activePlatform.branchId,
   //         _buntis: false,
