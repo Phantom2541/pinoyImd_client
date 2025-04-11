@@ -64,7 +64,7 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
-    
+
     return (
       <tr key={task.key} className={`${hasDone && "table-active"}`}>
         <td className="fw-bold">{capitalize(department)}</td>
@@ -131,12 +131,12 @@ export default function CollapseTable({ menu }) {
             <th>Department</th>
             <th>Template</th>
             <th>Services</th>
+            <th>Action</th>
             <th />
           </tr>
         </thead>
         <tbody>
           {labTests?.map((_labTest, index) => {
-            
             const labTest = menu[_labTest.toLowerCase()];
 
             if (!labTest)

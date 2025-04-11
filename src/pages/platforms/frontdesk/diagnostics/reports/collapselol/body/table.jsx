@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { capitalize } from "../../../../../../services/utilities";
-import { Services, Templates } from "../../../../../../services/fakeDb";
+import { capitalize } from "../../../../../../../services/utilities";
+import { Services, Templates } from "../../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import Modal from "./modal";
+import Modal from "../../modal";
 import { useSelector } from "react-redux";
 
 export default function CollapseTable({ menu }) {
@@ -122,6 +122,9 @@ export default function CollapseTable({ menu }) {
     );
   };
 
+  console.log("forms :", forms);
+  console.log("results", results);
+
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">
@@ -130,6 +133,7 @@ export default function CollapseTable({ menu }) {
             <th>Department</th>
             <th>Template</th>
             <th>Services</th>
+            <th>Action </th>
             <th />
           </tr>
         </thead>

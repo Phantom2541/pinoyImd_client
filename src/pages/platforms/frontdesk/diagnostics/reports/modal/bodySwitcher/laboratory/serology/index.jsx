@@ -1,43 +1,39 @@
 import React from "react";
-import { Services } from "../../../../../../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
-import { useSelector } from "react-redux";
+import { Services } from "./../../../../../../../../../services/fakeDb";
 import {
-  referenceColor,
   findReference,
-} from "../../../../../../../../../../services/utilities";
+  referenceColor,
+} from "./../../../../../../../../../services/utilities";
+import { useSelector } from "react-redux";
 
-export default function Electrolyte({ task, setTask }) {
+export default function Serology({ task, setTask }) {
   const { collections: preferences } = useSelector(
     ({ preferences }) => preferences
   );
 
   const { packages = {}, key: mapKey, patient } = task;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target,
-      _value = Number(value);
-
-    return setTask({
+  const handleChange = (e) =>
+    setTask({
       ...task,
-      packages: { ...packages, [name]: _value },
+      packages: { ...packages, [e.target.name]: Number(e.target.value) },
     });
-  };
-  //console.log("packages", packages);
+
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>
         <tr>
-          <th colSpan={2} className="py-1" />
-          <th className="text-center py-1" colSpan={2}>
-            Service
+          <th className="py-1" colSpan={2} />
+          <th className="py-1" colSpan={2}>
+            Reference Value
           </th>
         </tr>
         <tr>
-          <th className="py-1">Service</th>
+          <th className="py-1">Services</th>
           <th className="py-1">Result</th>
-          <th className="py-1">Reference</th>
-          <th className="py-1">Units</th>
+          <th className="py-1">Range</th>
+          <th className="py-1">Unit</th>
         </tr>
       </thead>
       <tbody>
@@ -76,7 +72,7 @@ export default function Electrolyte({ task, setTask }) {
               ) : (
                 <>
                   <td colSpan={2} className="py-1">
-                    No reference found, please inform the admin first
+                    No reference found, please inform the admin first.
                   </td>
                 </>
               )}

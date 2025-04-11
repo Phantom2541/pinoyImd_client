@@ -4,7 +4,7 @@ import {
   getDevelopment,
   getGenderIcon,
   fullName as nameFormatter,
-} from "../../../../../../../services/utilities";
+} from "./../../../../../../services/utilities";
 
 export default function Patient({ patient }) {
   const { fullName, isMale, dob } = patient;
