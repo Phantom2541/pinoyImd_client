@@ -90,14 +90,14 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((supplier, index) => {
-          const { _id, displayname, abbr, number, address, membership } =
+          const { _id, displayname, name, abbr, number, address, membership } =
             supplier;
 
           return (
             <tr key={_id}>
               <td>{index + startIndex + 1}</td>
               <td style={{ fontWeight: 400 }}>
-                <div>{displayname}</div>
+                <div>{displayname || name}</div>
 
                 <div
                   className="text-muted"
