@@ -52,7 +52,7 @@ export default function CashierPayment({
 
   const { abbr = "" } = Categories[categoryIndex],
     paymentOptions = Payments[abbr],
-    { customerId, _id: saleId } = deals,
+    { customerId, _id: dealId } = deals,
     { _id, fullName, mobile, privilege, address } = customerId;
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function CashierPayment({
     // mil = d.getMilliseconds();
 
     var data = {
-      saleId: saleId || undefined,
+      dealId: dealId || undefined,
       source: sourceVendor || undefined,
       physicianId: physicianId || undefined,
       authorizedBy: authorizedBy || undefined,
@@ -136,7 +136,7 @@ export default function CashierPayment({
 
     toggleModal();
 
-    if (saleId)
+    if (dealId)
       return dispatch(
         UPDATE({
           token,
@@ -223,11 +223,11 @@ export default function CashierPayment({
                 type="submit"
                 disabled={formSubmitted}
                 color={
-                  privilegeIndex === 4 ? "warning" : saleId ? "info" : "success"
+                  privilegeIndex === 4 ? "warning" : dealId ? "info" : "success"
                 }
                 className="w-100 mx-auto"
               >
-                {saleId ? "Update" : "complete"} transaction{" "}
+                {dealId ? "Update" : "complete"} transaction{" "}
                 {formSubmitted && (
                   <MDBIcon icon="spinner" pulse className="ml-2" />
                 )}

@@ -8,6 +8,7 @@ import {
 } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import { capitalize } from "lodash";
 import { MDBAnimation, MDBProgress } from "mdbreact";
+import Swal from "sweetalert2";
 const Card = ({ txt, num, index, items = [] }) => {
   const { isLoading } = useSelector(({ remittances }) => remittances);
   const dispatch = useDispatch();
@@ -17,12 +18,36 @@ const Card = ({ txt, num, index, items = [] }) => {
   const week = txt?.slice(0, 3);
 
   const isToday = dateCell.toDateString() === today.toDateString();
-
   // Compute total gross
   const totalGross = items.reduce((sum, { gross }) => sum + (gross || 0), 0);
   const handleRemittance = (_id) => {
     const selected = items.find(({ _id: id }) => id === _id);
-    if (selected) dispatch(SetSELECTED({ key: "remit", value: selected }));
+    const { cashier } = selected;
+    if (!selected?.closing)
+      return Swal.fire({
+        title: `<span class="swal-small-title">${fullName(
+          cashier.fullName
+        )}</span>`,
+        text: "is not yet ready for remittance.",
+        icon: "warning",
+        confirmButtonText: "OK",
+        showCancelButton: false,
+        didOpen: () => {
+          // Optional: add extra styles directly via JS
+          const el = document.querySelector(".swal-small-title");
+          if (el) el.style.fontSize = "25px";
+        },
+      });
+    if (selected)
+      dispatch(
+        SetSELECTED({
+          key: "remit",
+          value: {
+            ...selected,
+            createdAtNow: dateCell.toISOString().slice(0, 10),
+          },
+        })
+      );
   };
 
   const handleDate = () => dispatch(SetActiveDATE(num));

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-export default function Header({ date, saleId }) {
+export default function Header({ date, dealId }) {
   const { company, activePlatform } = useSelector(({ auth }) => auth);
 
   return (
@@ -47,7 +47,7 @@ export default function Header({ date, saleId }) {
         >
           Transaction ID
         </small>
-        {saleId}
+        {dealId}
       </div>
     </>
   );

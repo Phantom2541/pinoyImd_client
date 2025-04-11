@@ -17,9 +17,9 @@ import TableLoading from "../../../../../components/tableLoading";
 
 const Tables = () => {
   const { filtered, activePage, maxPage, isLoading } = useSelector(
-    ({ payables }) => payables
-  );
-  const dispatch = useDispatch();
+      ({ payables }) => payables
+    ),
+    dispatch = useDispatch();
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -29,7 +29,7 @@ const Tables = () => {
   const handleUpdate = (payable) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You want to update this provider?",
+      text: "You want to update this Payables?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -76,12 +76,14 @@ const Tables = () => {
                 supplier,
                 hasPaid,
                 payor,
+                range,
+                status,
               } = payable;
               const dueDate = due ? new Date(due) : null;
               const today = new Date();
               const isToday =
                 dueDate?.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0);
-              const isPastDue = dueDate && dueDate > today;
+              const isPastDue = dueDate && dueDate < today;
 
               return (
                 <tr
@@ -92,46 +94,71 @@ const Tables = () => {
                 >
                   <td>{index + 1}</td>
                   <td>{util.getVendorOrParticular(particular, supplier)}</td>
-                  <td>{Statements?.getName(fsId)}</td>
-                  <td
-                    style={{
-                      color: !hasPaid
-                        ? isToday
-                          ? "orange"
-                          : isPastDue
-                          ? "red"
-                          : "black"
-                        : "black",
-                      fontWeight: isPastDue ? "bold" : "normal",
-                    }}
-                  >
-                    {dueDate ? dateFormat(dueDate) : ""}
+                  <td>
+                    <h6>{Statements?.getName(fsId)}</h6>
+                    {status}
+                  </td>
+                  <td>
+                    <h6
+                      style={{
+                        color: !hasPaid
+                          ? isToday
+                            ? "orange"
+                            : isPastDue
+                            ? "red"
+                            : "black"
+                          : "black",
+                        fontWeight: isPastDue ? "bold" : "normal",
+                      }}
+                    >
+                      {dueDate && dateFormat(dueDate)}
+                    </h6>
+                    {fsId === 31 && range && (
+                      <span>
+                        {range[0] &&
+                          new Date(range[0]).toLocaleDateString("en-GB", {
+                            month: "long",
+                            day: "2-digit",
+                          })}
+                        {" - "}
+                        {range[1] &&
+                          new Date(range[1]).toLocaleDateString("en-GB", {
+                            month: "long",
+                            day: "2-digit",
+                          })}
+                      </span>
+                    )}
                   </td>
                   <th>{currency(amount)}</th>
 
                   <td style={{ textAlign: "center" }}>
-                    {!hasPaid && (
-                      <MDBBtnGroup>
-                        <MDBBtn
-                          size="sm"
-                          rounded
-                          color="warning"
-                          onClick={() => dispatch(SetPAYMENTS(payable))}
-                        >
-                          Pay
-                        </MDBBtn>
-                        {!isPastDue && (
+                    {!hasPaid &&
+                      (fsId === 31 && status === "accepted" ? (
+                        <span style={{ color: "green" }}>
+                          Please verify the SOA first.
+                        </span>
+                      ) : (
+                        <MDBBtnGroup>
                           <MDBBtn
                             size="sm"
                             rounded
-                            color="info"
-                            onClick={() => handleUpdate(payable)}
+                            color="warning"
+                            onClick={() => dispatch(SetPAYMENTS(payable))}
                           >
-                            Update
+                            Pay
                           </MDBBtn>
-                        )}
-                      </MDBBtnGroup>
-                    )}
+                          {!isPastDue && (
+                            <MDBBtn
+                              size="sm"
+                              rounded
+                              color="info"
+                              onClick={() => handleUpdate(payable)}
+                            >
+                              Update
+                            </MDBBtn>
+                          )}
+                        </MDBBtnGroup>
+                      ))}
                     {hasPaid && (
                       <span>Payor : {fullName(payor?.fullName)}</span>
                     )}

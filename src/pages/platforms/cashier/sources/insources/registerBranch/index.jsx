@@ -42,7 +42,7 @@ export default function Modal() {
 
   const toggle = useCallback(() => {
     dispatch(ToggleRegister());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {

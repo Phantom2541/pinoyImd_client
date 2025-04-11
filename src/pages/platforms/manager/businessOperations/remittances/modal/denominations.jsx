@@ -61,7 +61,6 @@ export default function Modal() {
     { isLoading, isSuccess } = useSelector(({ ledger }) => ledger),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
     [sum, setSum] = useState(0),
-    [coh, setCoh] = useState(0),
     [schedule, setSchedule] = useState("morning"),
     [position, setPosition] = useState(0),
     [location, setLocation] = useState("reception"),
@@ -77,16 +76,6 @@ export default function Modal() {
       dispatch(RESET());
     }
   }, [showModal, isLoading, isSuccess, dispatch]);
-  useEffect(() => {
-    let _coh = 0;
-    if (selected?.gross) {
-      let _sum = selected?.opening?.sum || 0;
-      const _gross = selected?.gross || 0;
-      let _expenses = selected?.expenses || 0;
-      _coh = _sum + _gross - _expenses;
-    }
-    setCoh(_coh);
-  }, [selected]);
 
   useEffect(() => {
     if (showModal) {
@@ -96,7 +85,7 @@ export default function Modal() {
       setFloating(denominations);
     }
   }, [showModal, title, selected]);
-  console.log("floating", floating);
+
   const coinImage = `${process.env.PUBLIC_URL}/assets/denominations.png`;
 
   const getBillimg = (bill) => ({
@@ -148,8 +137,9 @@ export default function Modal() {
 
     setSum(total);
   };
+
   const handleSubmit = () => {
-    const { gross, breakdown, _id } = selected;
+    const { gross, _id, cashier, createdAtNow } = selected;
 
     dispatch(
       SAVE({
@@ -160,7 +150,13 @@ export default function Modal() {
           userId: auth._id,
           fsid: 1,
           amount: gross,
-          breakdown,
+          breakdown: {
+            cashierId: cashier._id,
+            amount: gross,
+            collector: auth._id,
+            createdAt: new Date(),
+          },
+          createdAt: createdAtNow,
         },
       })
     )
@@ -172,7 +168,6 @@ export default function Modal() {
         console.error("Error saving remittance:", err);
       });
   };
-  console.log("selected", selected);
   return (
     <MDBModal
       isOpen={showModal}

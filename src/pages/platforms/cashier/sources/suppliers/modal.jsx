@@ -23,6 +23,7 @@ export default function Modal() {
     { showModal, selected, willCreate, isLoading } = useSelector(
       ({ providers }) => providers
     ),
+    { collections } = useSelector(({ branches }) => branches),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -80,6 +81,8 @@ export default function Modal() {
       ...form,
       [key]: value,
     });
+
+    console.log("Form", form);
   };
 
   return (
@@ -98,6 +101,22 @@ export default function Modal() {
             variant="h4-responsive"
             className="text-center"
           ></MDBTypography>
+          <select
+            onChange={(e) => handleChange("vendors", e.target.value)}
+            className="browser-default custom-select"
+            // style={{ width: "115px", marginRight: "20px" }}
+          >
+            <option value="" disabled>
+              Select a branch
+            </option>
+            {Array.isArray(collections) &&
+              collections.map((branch, index) => (
+                <option key={index} value={branch._id}>
+                  {branch.displayname || (branch.name && branch.subname)}
+                </option>
+              ))}
+          </select>
+
           {/* Input fields */}
           <MDBInput
             label="Name"

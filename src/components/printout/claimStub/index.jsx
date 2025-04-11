@@ -15,14 +15,22 @@ const Hr = () => (
   />
 );
 
-const Text = ({ title, value, className }) => {
-  console.log("title, value", className);
-
+const Text = ({
+  title = "",
+  value = "",
+  className = "",
+  isAddress = false,
+}) => {
   return (
     <div className={`d-flex justify-content-between ${className}`}>
       <span>{title}</span>
 
-      <span className="fw-bold text-right">{value}</span>
+      <span
+        className="fw-bold text-right"
+        style={{ fontSize: isAddress && "0.9rem" }}
+      >
+        {value}
+      </span>
     </div>
   );
 };
@@ -41,7 +49,6 @@ const Stub = ({ sale }) => {
       cart = [],
     } = sale,
     { fullName, address } = customer;
-  console.log("address", customer);
 
   return (
     <div
@@ -56,13 +63,13 @@ const Stub = ({ sale }) => {
       }}
       className="text-center thermal-font"
     >
-      <Header date={createdAt} saleId={_id} />
+      <Header date={createdAt} dealId={_id} />
       <Text
         className="mt-2"
         title="Name"
-        value={capitalize(`${fullName.fname.split(" ")[0]} ${fullName.lname}`)}
+        value={capitalize(`${fullName.fname} ${fullName.lname}`)}
       />
-      <Text title="Address" value={address} />
+      <Text title="Address" value={address} isAddress />
       {privilege !== 0 && (
         <Text title="Privilege" value={Privileges[privilege] || "-"} />
       )}

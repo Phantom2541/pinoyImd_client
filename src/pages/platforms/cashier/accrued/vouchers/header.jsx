@@ -69,14 +69,14 @@ const Header = () => {
           <select
             id="cashier-select"
             className="custom-select mr-2"
-            value={sources}
             onChange={(e) => dispatch(SetFilterBySOURCE(e.target.value))}
           >
             <option value="" disabled>
               Select a cashier
             </option>
-            <option value="all">Select a all</option>
-
+            <option key="all" value="all">
+              Select all
+            </option>
             {sources?.map((source, index) => (
               <option key={`source-${index}`} value={source?._id}>
                 {source?.name}

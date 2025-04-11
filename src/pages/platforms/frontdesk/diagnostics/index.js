@@ -1,5 +1,5 @@
 import Onboard from "./onboard";
 import Tasks from "./tasks";
-import Reports from "./reports";
+import Reports from "./tracker";
 
 export { Onboard, Tasks, Reports };

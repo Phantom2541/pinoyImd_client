@@ -5,7 +5,7 @@ import Pagination from "./../../../../../components/pagination";
 import {
   SetMaxPage,
   SetActivePAGE,
-} from "./../../../../../services/redux/slices/liability/assurances";
+} from "../../../../../services/redux/slices/diagnostics/management/assurances";
 const Footer = () => {
   const { isLoading, totalPages, activePage } = useSelector(
       ({ assurances }) => assurances

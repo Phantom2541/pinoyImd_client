@@ -5,9 +5,7 @@ import { Services } from "../../../../../services/fakeDb";
 import { currency } from "./../../../../../services/utilities";
 
 const Tables = () => {
-  const { collections, activePage, maxPage } = useSelector(
-    ({ menus }) => menus
-  );
+  const { filtered, activePage, maxPage } = useSelector(({ menus }) => menus);
 
   /**
    * Pagination: Calculate the start and end index for the current page
@@ -15,7 +13,7 @@ const Tables = () => {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = collections.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
   return (
     <MDBTable responsive hover bordered>
@@ -41,8 +39,10 @@ const Tables = () => {
                 <small>{description}</small>
               </td>
               <td>
-                {services.map((service) => (
-                  <h6 key={service.id}>{service.name}</h6>
+                {services.map((service, index) => (
+                  <h6 key={service.id}>
+                    {index + 1}. {service.name}
+                  </h6>
                 ))}
               </td>
               <td>

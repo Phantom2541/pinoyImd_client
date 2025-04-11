@@ -25,7 +25,7 @@ export default function Summary() {
 
       if (
         createdDate.getDate() === day &&
-        createdDate.getMonth() === month &&
+        createdDate.getMonth() === month - 1 &&
         createdDate.getFullYear() === year
       ) {
         const cashierKey = cashierId._id;
@@ -38,7 +38,7 @@ export default function Summary() {
         if (!salesMap[cashierKey]) {
           salesMap[cashierKey] = {
             id: cashierId._id,
-            name: cashierId?.fullName?.fname || "Unknown Cashier",
+            name: cashierId?.alias || cashierId?.fullName?.fname,
             gross: 0,
             isDeleted: false,
           };
@@ -60,12 +60,14 @@ export default function Summary() {
 
     return Object.values(salesMap).sort((a, b) => b.gross - a.gross);
   }, [collections, day, month, year]);
-  const showCashierSelect = cashierSales.length > 0; // Hide dropdown if only one cashier exists
+
+  const showCashierSelect = cashierSales.length > 0;
+  const isOnlyOneCashier = cashierSales.length === 1;
+
   const { cluster, total } = useMemo(() => {
     const filtered =
       collections?.filter(({ createdAt, cashierId }) => {
         if (!createdAt) return false;
-
         const createdDate = new Date(createdAt);
 
         const matchesDate =
@@ -103,7 +105,7 @@ export default function Summary() {
             })}
           </span>
           <span className="text-end">SUMMARY</span>
-        </div>{" "}
+        </div>
       </MDBView>
       <MDBCardBody className="m-0 p-1">
         <div
@@ -114,7 +116,7 @@ export default function Summary() {
           {!isLoading ? (
             <div>
               <div
-                className="d-flex flex-column"
+                className="d-flex flex-align-items-center"
                 style={{
                   position: "sticky",
                   zIndex: 2,
@@ -123,13 +125,13 @@ export default function Summary() {
                 }}
               >
                 <label
-                  className="text-sm font-semibold grey-text"
+                  className="text-sm font-semibold grey-text mt-2"
                   style={{ fontSize: "0.9rem" }}
                 >
                   Cashier:
                 </label>
                 <select
-                  className="ml-2 border rounded p-1"
+                  className="ml-2 border rounded p-1 w-100"
                   value={selectedCashier}
                   onChange={(e) => setSelectedCashier(e.target.value)}
                 >
@@ -142,10 +144,23 @@ export default function Summary() {
                       value={id}
                       className={isDeleted ? "text-red-600" : ""}
                     >
-                      {`${name} - ${currency(gross)}`}
+                      {`${name} ${
+                        selectedCashier !== id && !isOnlyOneCashier
+                          ? `- ${currency(gross)}`
+                          : ""
+                      }`}
                     </option>
                   ))}
                 </select>
+              </div>
+              <hr />
+              <div className="d-flex justify-between align-items-center w-full">
+                <p className="font-bold flex-1 text-left">
+                  {cluster.length} Patient/s
+                </p>
+                <p className="font-bold flex-1 text-right">{`Total: ${currency(
+                  total
+                )}`}</p>
               </div>
               {/* )} */}
               {cluster.length > 0 ? (
@@ -180,15 +195,6 @@ export default function Summary() {
                         )
                       )}
                     </ol>
-                  </div>
-                  <hr />
-                  <div className="d-flex justify-between align-items-center w-full">
-                    <p className="font-bold flex-1 text-left">
-                      {cluster.length} Patient/s
-                    </p>
-                    <p className="font-bold flex-1 text-right">{`Total: ${currency(
-                      total
-                    )}`}</p>
                   </div>
                 </>
               ) : (

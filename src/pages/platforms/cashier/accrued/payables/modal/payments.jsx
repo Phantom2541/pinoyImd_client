@@ -23,7 +23,7 @@ import cash from "../../../../../../assets/paymentMethods/cash.png";
 import transfer from "../../../../../../assets/paymentMethods/transfer.png";
 import gcash from "../../../../../../assets/paymentMethods/gcash.png";
 import cheque from "../../../../../../assets/paymentMethods/cheque.png";
-import { dateFormat } from "../../../../../../services/utilities";
+import { currency, dateFormat } from "../../../../../../services/utilities";
 
 const paymentMethods = [
   { text: "Cash", img: cash },
@@ -33,16 +33,14 @@ const paymentMethods = [
 ];
 
 export default function PaymentModal() {
-  const dispatch = useDispatch();
-  const { addToast } = useToasts();
-
-  const { showPaymentModal, selected, willCreate, isLoading } = useSelector(
-    ({ payables }) => payables
-  );
-  const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
-
-  const [form, setForm] = useState(selected);
-  const [penalty, setPenalty] = useState(0);
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { showPaymentModal, selected, willCreate, isLoading } = useSelector(
+      ({ payables }) => payables
+    ),
+    [form, setForm] = useState(selected),
+    [penalty, setPenalty] = useState(0),
+    dispatch = useDispatch(),
+    { addToast } = useToasts();
 
   // Check if payment is past due
   useEffect(() => {
@@ -77,9 +75,7 @@ export default function PaymentModal() {
   };
 
   // Handle create function
-  const handleCreate = () => {
-    dispatch(SAVE({ data: form, token }));
-  };
+  const handleCreate = () => dispatch(SAVE({ data: form, token }));
 
   // Handle form submit
   const handleSubmit = (e) => {
@@ -89,13 +85,6 @@ export default function PaymentModal() {
 
   // Handle modal close
   const handleClose = () => dispatch(TOGGLE(false));
-
-  // Format currency
-  const formatCurrency = (amount) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "PHP",
-    }).format(amount);
 
   return (
     <MDBModal isOpen={showPaymentModal} toggle={handleClose} backdrop size="md">
@@ -194,7 +183,7 @@ export default function PaymentModal() {
               <div className="d-flex align-items-center">
                 <h6 className="grey-text mr-1">Expenses Amount:</h6>
                 <h5 style={{ fontWeight: 500 }}>
-                  {formatCurrency(selected?.amount || 0)}
+                  {currency(selected?.amount)}
                 </h5>
               </div>
 

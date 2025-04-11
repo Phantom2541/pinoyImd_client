@@ -662,7 +662,7 @@ export const reduxSlice = createSlice({
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        const identifier = payload?.form === "Miscellaneous" ? "saleId" : "_id";
+        const identifier = payload?.form === "Miscellaneous" ? "dealId" : "_id";
 
         // Find the index of the collection item based on the identifier
         const index = state.collections.findIndex(
@@ -671,7 +671,7 @@ export const reduxSlice = createSlice({
 
         // Ensure the index is valid
         if (index !== -1) {
-          if (identifier === "saleId") {
+          if (identifier === "dealId") {
             // Update miscellaneous item at the correct index
             if (state.collections[index]?.miscellaneous) {
               state.collections[index].miscellaneous[payload?.miscIndex] =

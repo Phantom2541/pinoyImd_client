@@ -5,7 +5,7 @@ import Pagination from "../../../../../components/pagination";
 import {
   SetMaxPage,
   SetActivePAGE,
-} from "../../../../../services/redux/slices/liability/controls";
+} from "../../../../../services/redux/slices/diagnostics/management/controls";
 const Footer = () => {
   const { isLoading, totalPages, activePage } = useSelector(
       ({ controls }) => controls

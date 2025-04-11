@@ -19,6 +19,7 @@ const Input = ({
   className = "form-control",
   formSubmitted = false,
   isSuccess = false,
+  label = "",
   _key, //this key is for value
   type = "text",
   selected = {},
@@ -34,6 +35,7 @@ const Input = ({
   return (
     <div className="d-flex align-items-center customizable-input-container">
       <input
+        placeholder={label}
         className={className}
         value={selected?.[_key] || ""}
         type={type}

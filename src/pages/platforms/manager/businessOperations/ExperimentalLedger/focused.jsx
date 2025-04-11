@@ -218,7 +218,7 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
 
         {sales.map((sale = {}, index) => {
           const {
-              _id: saleId,
+              _id: dealId,
               customerId = {},
               deletedAt,
               remarks = "",
@@ -248,7 +248,7 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
 
           return (
             <div
-              key={saleId}
+              key={dealId}
               className={`no-select my-2 note note-${
                 isDeleted ? "danger" : "primary"
               } ${!filteredByCashier && "d-none"} ${
@@ -379,7 +379,7 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
                                     token,
                                     key: {
                                       source: "-",
-                                      _id: saleId,
+                                      _id: dealId,
                                     },
                                   })
                                 )
@@ -399,7 +399,7 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
                                       token,
                                       key: {
                                         source: vendors?._id,
-                                        _id: saleId,
+                                        _id: dealId,
                                       },
                                     })
                                   )
@@ -428,7 +428,7 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
                                     token,
                                     key: {
                                       physician: "-",
-                                      _id: saleId,
+                                      _id: dealId,
                                     },
                                   })
                                 )
@@ -451,7 +451,7 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
                                         token,
                                         key: {
                                           physician: _id,
-                                          _id: saleId,
+                                          _id: dealId,
                                         },
                                       })
                                     )

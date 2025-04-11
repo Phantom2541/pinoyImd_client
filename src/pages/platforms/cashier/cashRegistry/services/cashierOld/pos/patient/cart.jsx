@@ -45,7 +45,7 @@ export default function PatientCart({
   setCart,
   categoryIndex,
   privilegeIndex,
-  saleId = "",
+  dealId = "",
 }) {
   console.log("cart", cart);
   console.log("gross", gross);
@@ -114,7 +114,7 @@ export default function PatientCart({
 
       <MDBBtn
         onClick={() => {
-          const _cart = saleId ? cart.filter(({ up }) => !up) : cart;
+          const _cart = dealId ? cart.filter(({ up }) => !up) : cart;
           if (_cart.length === 0)
             return Swal.fire({
               icon: "error",

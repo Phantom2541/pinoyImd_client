@@ -444,13 +444,13 @@ export const reduxSlice = createSlice({
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        const identifer = payload?.form === "Miscellaneous" ? "saleId" : "_id";
+        const identifer = payload?.form === "Miscellaneous" ? "dealId" : "_id";
 
         const index = state.collections.findIndex(
           (item) => item._id === payload[identifer]
         );
 
-        if (identifer === "saleId") {
+        if (identifer === "dealId") {
           state.collections[index].miscellaneous[payload?.miscIndex] = payload;
         } else {
           state.collections[index][String(payload.form).toLowerCase()] =

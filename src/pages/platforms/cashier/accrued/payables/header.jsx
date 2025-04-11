@@ -16,7 +16,7 @@ import CalendarPicker from "../../../../../components/header/calendars";
 // import { SearchUser } from "../../../../../components/searchables";
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess, month, year, collections } = useSelector(
+    { message, isSuccess, month, year, collections } = useSelector(
       ({ payables }) => payables
     ),
     { addToast } = useToasts(),
@@ -67,7 +67,7 @@ export default function TopHeader() {
         <div className="text-right d-flex items-center">
           <Search
             collection={collections}
-            handleFiltered={(items) => dispatch(SetFILTERED(items))}
+            setFiltered={(items) => dispatch(SetFILTERED(items))}
             handleAdd={(key) => dispatch(SetPAYABLES(key))}
             reset={() => dispatch(SetFILTERED(collections))}
             hideButton={false}

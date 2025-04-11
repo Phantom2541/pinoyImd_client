@@ -39,18 +39,19 @@ export default function SideNavigation({
   }, [company, activePlatform]);
 
   useEffect(() => {
-    if (activePlatform) {
-      setLinks(Sidebars[activePlatform.platform?.toLowerCase()] || []);
+    if (activePlatform?.platform) {
+      const { platform } = activePlatform;
+      setLinks(Sidebars[platform?.toLowerCase()] || []);
     }
-  }, [activePlatform]);
+  }, [activePlatform, setLinks]);
 
   const renderNavItems = (
-    items,
+    _links,
     keyPrefix = "",
     basePath = "",
     level = 1.5
   ) => {
-    return items.map((item, index) => {
+    return _links.map((item, index) => {
       const key = `${keyPrefix}-${index}`;
       const fullPath = `${basePath}${item.path || ""}`;
       const isOpen = activeCategory === key;
@@ -104,7 +105,13 @@ export default function SideNavigation({
         style={{ transition: "padding-left .3s" }}
       >
         {activePlatform && (
-          <MDBSideNavNav>{renderNavItems(links, "sidebar")}</MDBSideNavNav>
+          <MDBSideNavNav>
+            {renderNavItems(
+              links,
+              "sidebar",
+              `/${activePlatform.platform?.toLowerCase() || ""}`
+            )}
+          </MDBSideNavNav>
         )}
       </MDBSideNav>
       <button>tes</button>
