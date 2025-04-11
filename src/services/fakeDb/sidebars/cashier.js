@@ -2,7 +2,6 @@ import Bulletin from "../../../pages/platforms/cashier/bulletin";
 import {
   Cashier,
   Deals,
-  // Sales,
   Menus,
   Services,
   Insources,
@@ -11,17 +10,12 @@ import {
   Remittances,
   Hotlines,
   Suppliers,
+  Payables,
+  Receivables,
+  Vouchers,
+  Payments,
+  SOA,
 } from "../../../pages/platforms/cashier";
-
-import Payables from "../../../pages/platforms/cashier/accrued/payables";
-import Receivables from "../../../pages/platforms/cashier/accrued/receivables";
-import Payments from "../../../pages/platforms/cashier/accrued/payments";
-import Vouchers from "../../../pages/platforms/cashier/accrued/vouchers";
-// import SOA from "../../../pages/platforms/cashier/accrued/soa";
-// import ExperimentalLedger from "../../../pages/platforms/manager/pos/ExperimentalLedger";
-// import Remittances from "../../../pages/platforms/manager/pos/remittances";
-// //import Outsource from "../../../pages/platforms/manager/provider";
-// import Accrued from "../../../pages/platforms/frontdesk/liabilities/accrueds";
 
 const cashier = [
   {
@@ -96,8 +90,8 @@ const cashier = [
         name: "Statement of Account",
         path: "/soa",
         icon: "balance-scale",
-        title: "Insource from monthly sales",
-        // component: Insources,
+        title: "Outsourced services from monthly sales",
+        component: SOA,
       },
       /**
        * Generated monthly Collections from vouchers  (SOA)

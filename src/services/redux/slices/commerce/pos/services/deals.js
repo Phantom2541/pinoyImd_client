@@ -68,7 +68,23 @@ export const VOUCHERS = createAsyncThunk(
     }
   }
 );
+export const OUTSOURCES = createAsyncThunk(
+  `${url}/outsources`,
+  ({ token, keys }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/outsources`, token, keys);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const CASHIER = createAsyncThunk(
   `${url}/cashier`,
   ({ token, key }, thunkAPI) => {
@@ -422,27 +438,6 @@ export const reduxSlice = createSlice({
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
-
-        // const uniqueCashiers = [
-        //   ...new Map(
-        //     payload.map(({ cashierId }) => [
-        //       cashierId._id,
-        //       { _id: cashierId._id, name: fullName(cashierId?.fullName) },
-        //     ])
-        //   ).values(),
-        // ];
-
-        // const uniqueSource = [
-        //   ...new Map(
-        //     payload.map(({ source }) => [
-        //       source._id,
-        //       { _id: source._id, name: source?.displayname },
-        //     ])
-        //   ).values(),
-        // ];
-
-        // state.cashiers = uniqueSource;
-
         state.isSuccess = success;
         state.isLoading = false;
       })
@@ -451,7 +446,25 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
+      .addCase(OUTSOURCES.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(OUTSOURCES.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(OUTSOURCES.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
       .addCase(CASHIER.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

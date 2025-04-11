@@ -168,7 +168,7 @@ export default function Select({
         />
 
         <MDBSelectOptions search={handleSearchDisabling()}>
-          {collections.map((choice, index) => {
+          {collections?.map((choice, index) => {
             const key = keys ? String(choice[keys]) : choice;
 
             console.log("key", key);
