@@ -1,15 +1,15 @@
 import React from "react";
-import { MDBCollapseHeader, MDBBadge, MDBBtn } from "mdbreact";
-// import { useDispatch, useSelector } from "react-redux";
+import { MDBCollapseHeader, MDBBadge, MDBIcon, MDBBtn } from "mdbreact";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  // axioKit,
+  axioKit,
   dateFormat,
   sourceColor,
-  // harvestTask,
+  harvestTask,
   collapse,
 } from "../../../../../../services/utilities";
 // import { Services } from "../../../../../../services/fakeDb";
-// import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
+import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
 export default function TaskHeader({
   task,
@@ -20,76 +20,18 @@ export default function TaskHeader({
   isActive,
   activeCollapse,
 }) {
-  const { _id, category, source } = task; // cart, customerId, ssx
+  const { _id, category, source, cart, customerId, ssx } = task;
+  const hasRenderedItems = task.rendered && task.rendered.length !== 0;
 
-  // const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
-  // const dispatch = useDispatch();
-
-  // const generateTask = async () => {
-  //   // const packages = cart.flatMap((item) => item.packages);
-  //   // const template = Services.getTemplates(packages, "LAB");
-
-  //   let requestForm = { customer: customerId };
-  //   const harvestedTask = harvestTask(cart);
-  //   localStorage.setItem("task", JSON.stringify(harvestedTask));
-  //   localStorage.setItem("ssx", JSON.stringify(ssx));
-
-  //   const forms = Object.keys(harvestedTask);
-  //   for (const key in harvestedTask) {
-  //     const lowercaseKey = key.toLowerCase();
-  //     requestForm[lowercaseKey] = harvestedTask[key];
-
-  //     const department =
-  //       key === "ECG" || key === "X-ray"
-  //         ? "radiology"
-  //         : key === "Examination" || key === "Certicifate"
-  //         ? "clinic"
-  //         : "laboratory";
-
-  //     axioKit.save(
-  //       `/diagnostics/${department}/result/${lowercaseKey}`,
-  //       {
-  //         packages: harvestedTask[key],
-  //         _id,
-  //         customerId: customerId?._id,
-  //         branchId: activePlatform.branchId,
-  //       },
-  //       token
-  //     );
-
-  //     localStorage.setItem("RequestForm", JSON.stringify(requestForm));
-  //   }
-
-  //   window.open(
-  //     "/printout/request/form",
-  //     "Request Form",
-  //     "top=100px,left=100px,width=1050px,height=750px"
-  //   );
-
-  //   dispatch(
-  //     REFORM({
-  //       token,
-  //       data: {
-  //         _id,
-  //         ssx,
-  //         rendered: [
-  //           {
-  //             department: "LAB",
-  //             renderedBy: auth._id,
-  //             renderedAt: new Date().toLocaleString(),
-  //           },
-  //         ],
-  //         forms,
-  //       },
-  //     })
-  //   );
-  // };
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
+  const dispatch = useDispatch();
 
   const { color, border } = collapse.getStyle(
     String(_id),
     String(activeCollapse),
     String(didHoverID)
   );
+
   return (
     <MDBCollapseHeader
       onMouseLeave={() => setDidHoverID(-1)}
@@ -120,6 +62,7 @@ export default function TaskHeader({
             color="white"
             rounded
             onClick={() =>
+              hasRenderedItems &&
               setActiveCollapse((prev) => (prev === _id ? "" : _id))
             }
             className="m-0 p-0 transition-all "

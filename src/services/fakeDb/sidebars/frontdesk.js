@@ -58,7 +58,7 @@ const frontdesk = [
         component: Tasks,
       },
       {
-        name: "Reports",
+        name: "Tracker",
         path: "/reports",
         icon: "file-alt",
         component: Reports,

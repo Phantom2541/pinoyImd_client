@@ -1,19 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   VOUCHERS,
   SetFilterBySOURCE,
-  SetMONTH,
   RESET,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import CalendarPicker from "../../../../../components/header/calendars";
-
+import { MDBView } from "mdbreact";
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
   const { collections, month, year } = useSelector(({ deals }) => deals),
-    [sources, setSources] = React.useState([]),
+    [sources, setSources] = useState([]),
     dispatch = useDispatch();
   // Fetch vouchers
   useEffect(() => {
@@ -27,8 +25,6 @@ const Header = () => {
         key: {
           branchId: activePlatform.branchId,
           cashierId: auth._id,
-          startDate: startDate.toISOString(),
-          endDate: endDate.toISOString(),
         },
       })
     );
@@ -52,17 +48,15 @@ const Header = () => {
   }, [collections]);
 
   return (
-    <div className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
+    <MDBView
+      cascade
+      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+    >
       <div
         className="d-flex justify-items-center ml-2"
         style={{ width: "20rem" }}
       >
-        <CalendarPicker
-          month={month}
-          year={year}
-          moved={(next) => dispatch(SetMONTH(next))}
-          reset={() => dispatch(RESET())}
-        />
+        <i>Voucher List</i>
       </div>
       <div>
         <div className="text-right d-flex items-center ">
@@ -85,7 +79,7 @@ const Header = () => {
           </select>
         </div>
       </div>
-    </div>
+    </MDBView>
   );
 };
 
