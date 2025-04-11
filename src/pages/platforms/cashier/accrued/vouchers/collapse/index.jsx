@@ -55,9 +55,6 @@ export default function Body() {
               className={border}
               onMouseLeave={() => setDidHoverId(-1)}
               onMouseEnter={() => setDidHoverId(actualIndex)}
-              onClick={() =>
-                setActiveId(activeId === actualIndex ? -1 : actualIndex)
-              } // Toggle active state
               style={{ borderRadius: "50%" }}
             >
               <CollapsableHeader
