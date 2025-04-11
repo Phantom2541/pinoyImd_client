@@ -17,36 +17,26 @@ import {
 } from "mdbreact";
 import { Statements } from "../../../../../../services/fakeDb";
 import { Select } from "../../../../../../components/customizable";
-import {
-  SelectUser,
-  SearchUser,
-} from "../../../../../../components/searchables";
+import { SelectUser } from "../../../../../../components/searchables";
 import util from "../util";
 import Swal from "sweetalert2";
 
 export default function ModalCreate() {
   const dispatch = useDispatch();
   const {
-    showPayablesModal,
-    selected,
-    willCreate = false,
-  } = useSelector(({ payables }) => payables);
-  const { collections } = useSelector(({ providers }) => providers);
-  const { token, activePlatform } = useSelector(({ auth }) => auth);
-
-  const [form, setForm] = useState(selected || { range: ["", ""] }, {
-    patient: null,
-  });
+      showPayablesModal,
+      selected,
+      willCreate = false,
+    } = useSelector(({ payables }) => payables),
+    { collections } = useSelector(({ providers }) => providers),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
+    [form, setForm] = useState(selected || { patient: null });
 
   useEffect(() => {
-    setForm(selected || { range: ["", ""] });
+    setForm(selected);
   }, [showPayablesModal, selected]);
 
-  console.log("collections", collections);
-
-  const handleClose = () => {
-    dispatch(TOGGLE(false));
-  };
+  const handleClose = () => dispatch(TOGGLE(false));
 
   const handleSave = () => {
     if (willCreate && !form.fsId) {
@@ -85,8 +75,6 @@ export default function ModalCreate() {
   };
 
   const { particular = {}, supplier = {} } = form || {};
-
-  console.log("form", form);
 
   return (
     <MDBModal

@@ -13,7 +13,7 @@ import {
   SAVE,
   TOGGLE,
   UPDATE,
-} from "../../../../../services/redux/slices/liability/controls";
+} from "../../../../../services/redux/slices/diagnostics/management/controls";
 
 import { Services } from "../../../../../services/fakeDb";
 

@@ -14,7 +14,7 @@ const Index = () => {
     dispatch = useDispatch();
   useEffect(() => {
     if (token) dispatch(BROWSE({ token }));
-  }, [token]);
+  }, [token, dispatch]);
   return (
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>

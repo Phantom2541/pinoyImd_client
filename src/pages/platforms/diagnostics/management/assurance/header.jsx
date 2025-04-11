@@ -4,19 +4,18 @@ import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 import {
   SearchServices as Services,
   SearchTemplates as Templates,
-  SearchYear as Year,
-  SearchMonth as Month,
 } from "./../../../../../components/searchables";
 import {
   RESET,
   BROWSE,
   SetCREATE,
-} from "./../../../../../services/redux/slices/liability/assurances";
+  SetMONTH,
+} from "./../../../../../services/redux/slices/diagnostics/management/assurances";
+import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    [year, setYear] = useState(new Date().getFullYear()),
-    [month, setMonth] = useState(new Date().getMonth() + 1),
+    { month, year } = useSelector(({ assurances }) => assurances),
     [template, setTemplate] = useState(1),
     [service, setService] = useState(1),
     memoizedSetService = useCallback((value) => {
@@ -57,8 +56,12 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <Month month={month} setMonth={setMonth} />
-          <Year year={year} setYear={setYear} />
+          <CalendarPicker
+            month={month}
+            year={year}
+            moved={(direction) => dispatch(SetMONTH(direction))}
+            reset={() => dispatch(RESET())}
+          />
           <MDBBtn
             size="sm"
             className="px-2"

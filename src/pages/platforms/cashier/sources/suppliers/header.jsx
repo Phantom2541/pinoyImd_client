@@ -45,6 +45,7 @@ const Header = () => {
             handleAdd={handleAdd}
             reset={() => dispatch(ResetFILTER())}
             willcreate={true}
+            hideButton={false}
           />
         </div>
       </div>

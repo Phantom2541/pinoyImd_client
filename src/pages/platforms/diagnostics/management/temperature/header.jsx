@@ -2,15 +2,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBIcon, MDBBtn } from "mdbreact";
-import { Calendar as calendar } from "../../../../../services/fakeDb";
-import { Select } from "../../../../../components/customizable";
 import "./style.css";
 import {
-  setMonth,
-  setYear,
+  SetMONTH,
+  ResetDATE,
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/monitoring/temperature";
+} from "../../../../../services/redux/slices/diagnostics/management/temperature";
 import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
@@ -21,27 +19,23 @@ const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
 
   useEffect(() => {
-    if (token && activePlatform?.branchId && year && month) {
+    if (token && activePlatform?.branchId && year !== null && month !== null) {
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
       dispatch(
         BROWSE({
           token,
           key: {
-            branchId: activePlatform.branchId,
-            start: new Date(year, month - 1, 1),
-            end: new Date(year, month, 0, 23, 59, 59, 999),
+            branchId: activePlatform?.branchId,
+            start: startDate,
+            end: endDate,
           },
         })
       );
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, month, year]);
-
-  const monthsArray = calendar?.Months || [];
-  const isObjectFormat =
-    monthsArray.length > 0 && typeof monthsArray[0] === "object";
-  const monthLabel = isObjectFormat
-    ? monthsArray.find((m) => m.value === month)?.label || month
-    : monthsArray[month - 1] || month;
 
   const handlePrint = () => {
     localStorage.setItem("temperature", JSON.stringify(collections));
@@ -63,19 +57,18 @@ const Header = () => {
         <div className="d-flex">
           <CalendarPicker
             month={month}
+            moved={(action) => dispatch(SetMONTH(action))}
             year={year}
-            moved={dispatch}
-            reset={() => dispatch(setMonth(0))}
+            reset={() => dispatch(ResetDATE())}
           />
         </div>
       </div>
       <div className="d-flex align-items-center">
-        <span className="white-text mx-3 text-nowrap mt-0">Print </span>
         <MDBBtn
           type="submit"
           disabled={isLoading}
-          color="info"
-          className="mb-2"
+          color="primary"
+          size="md"
           rounded
           // onClick={() => handlePrint}
           onClick={handlePrint}

@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../services/fakeDb";
-import { SetCREATE } from "../../../../../services/redux/slices/liability/controls";
+import { SetCREATE } from "../../../../../services/redux/slices/diagnostics/management/controls";
 
 const Header = () => {
   const { serviceId } = useSelector(({ controls }) => controls);

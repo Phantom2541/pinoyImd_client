@@ -17,7 +17,7 @@ import {
 
 import { Menus, Services } from "../../../pages/platforms/cashier";
 import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
-import Temperature from "../../../pages/platforms/frontdesk/utilities/temperature";
+import Temperature from "../../../pages/platforms/diagnostics/management/temperature";
 
 import {
   Assurance,

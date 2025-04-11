@@ -22,7 +22,10 @@ export default function Payables() {
       dispatch(
         PROVIDERS({
           token,
-          key: { clients: activePlatform?.branchId, category: "utilities" },
+          key: {
+            clients: activePlatform?.branchId,
+            category: ["expenses"], // utilities", "suppliers
+          },
         })
       );
     }

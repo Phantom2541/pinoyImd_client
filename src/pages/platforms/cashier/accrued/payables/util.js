@@ -7,9 +7,7 @@ const util = {
       ? fullName(particular.fullName)
       : vendors?._id
       ? `${vendors?.name} - ${vendors?.subname}`
-      : `${supplier?.name}${`${
-          supplier?.subname ? ` - ${supplier.subname}` : ""
-        }`}`;
+      : `${supplier?.displayname || supplier?.name}`;
   },
 };
 
