@@ -8,7 +8,7 @@ import {
 } from "mdbreact";
 import { useSelector } from "react-redux";
 
-import CollapsableBody from "./body";
+// import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import TableLoading from "../../../../../../../components/tableLoading";
 
@@ -26,7 +26,7 @@ export default function Body() {
         >
           {filtered.map((payment, index) => {
             // console.log(payment);
-            const { breakdown } = payment;
+            // const { breakdown } = payment;
             return (
               <MDBCard
                 key={`staffs-${index}`}
