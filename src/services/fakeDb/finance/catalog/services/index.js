@@ -38,20 +38,19 @@ const Services = {
    * @param {array} cluster The cluster to filter the department names by
    * @returns {array} An array of department names or ["unknown department"] if no departments are found
    */
-  getDepartment: (cluster) => {
-    if (cluster.length < 0) return ["unknown department"]; // Return as an array
+ getDepartment: (cluster) => {
+  // Return empty if cluster is not valid or empty
+  if (!Array.isArray(cluster) || cluster.length === 0) return [];
 
-    // Filter and map to get an array of department names
-    const departments = collections
-      .filter(({ id }) => cluster.includes(id)) // Filter collections where the id matches cluster
-      .map(({ department }) => department); // Map to get only the department field
+  const departments = collections
+    .filter(({ id }) => cluster.includes(id))
+    .map(({ department }) => department)
+    .filter(Boolean); // Remove null/undefined/empty values
 
-    // Remove duplicates by converting the array to a Set and back to an array
-    const uniqueDepartments = [...new Set(departments)];
+  const uniqueDepartments = [...new Set(departments)];
 
-    // Return the array of departments or ["unknown department"] if no departments were found
-    return departments.length > 0 ? uniqueDepartments : ["unknown department"];
-  },
+  return uniqueDepartments.length > 0 ? uniqueDepartments : [];
+},
   getTemplates: (pks, department) => {
     const cluster = collections.filter(({ id }) => pks.includes(id));
     const templates = cluster.map(({ template }) => template);

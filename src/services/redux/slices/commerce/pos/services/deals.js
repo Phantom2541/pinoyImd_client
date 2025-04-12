@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit, getAge } from "../../../../../utilities";
+import _ from "lodash";
 
 const url = "commerce/pos/services/deals";
 const today = new Date();
@@ -25,6 +26,7 @@ const initialState = {
     isEmpty: true,
   },
   patient: {},
+  cluster: {},
   showModal: false,
   showRevertModal: false,
   showDiscountModal: false,
@@ -37,6 +39,7 @@ const initialState = {
   isLoading: false,
   censusLoading: false, // dedicated loader for celsus
   message: "",
+  source: "",
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -68,7 +71,23 @@ export const VOUCHERS = createAsyncThunk(
     }
   }
 );
+export const OUTSOURCES = createAsyncThunk(
+  `${url}/outsources`,
+  ({ token, keys }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/outsources`, token, keys);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const CASHIER = createAsyncThunk(
   `${url}/cashier`,
   ({ token, key }, thunkAPI) => {
@@ -322,12 +341,93 @@ export const reduxSlice = createSlice({
       if (payload !== state.filterBySource)
         if (payload === "all") {
           state.filtered = state.collections;
+          state.source = "";
         } else {
           state.filtered = state.collections.filter(
             ({ source }) => source?._id.toString() === payload.toString()
           );
+          state.source = payload;
         }
       state.filterBySource = payload;
+    },
+
+    SetFilterByOUTSOURCE: (state, { payload }) => {
+      if (payload !== state.filterBySource)
+        if (payload === "all") {
+          state.filtered = state.collections;
+          state.source = "";
+        } else {
+          console.log("payload", payload);
+
+          state.filtered = state.collections.filter(
+            ({ outsource }) => outsource?._id.toString() === payload.toString()
+
+            // source?._id.toString() === payload.toString()
+          );
+          state.outsource = payload;
+        }
+      state.filterBySource = payload;
+    },
+    SetCluster: (state, { payload }) => {
+      state.cluster = payload;
+    },
+
+    ISCHECKED: (state, { payload }) => {
+      const { date, byDate = false, deal } = payload;
+      const _cluster = [...state.cluster];
+      const findCluster = _cluster.find((item) => item?.date === date);
+      if (byDate) return findCluster.isSelected;
+      const { deals = [] } = findCluster || {};
+      return deals.some(({ _id }) => _id === deal._id);
+    },
+    PICK_ALL_VOUCHER_DEALS: (state, { payload }) => {
+      const { deals, date } = payload;
+      const _cluster = [...state.cluster];
+      const index = _cluster.findIndex((item) => item?.date === date);
+      // const findCluster = _cluster[index];
+      index > -1
+        ? _cluster.splice(index, 1)
+        : _cluster.push({ date, deals, isSelected: true });
+
+      state.cluster = _cluster;
+      localStorage.setItem(`source-${state.source}`, JSON.stringify(_cluster));
+    },
+
+    PICK_VOUCHER_DEAL: (state, { payload }) => {
+      if (!state.source)
+        return "please select source first to proceed in picking voucher";
+
+      const { date, deal, totalDeals } = payload; //ex. totalDeals=5
+      /* 
+          The purpose of 'totalDeals' is to determine how many deals exist on a specific date. 
+          If 'totalDeals' is equal to the number of deals in the local storage store for that date,
+          it means that all deals for that date have already been checked.
+      */
+      const _cluster = [...state.cluster];
+      const _clusterIndex = _cluster.findIndex((item) => item?.date === date);
+      if (_clusterIndex > -1) {
+        //if cluster is already exist
+        const { deals = [] } = _cluster[_clusterIndex];
+        const _deals = [...deals];
+
+        const dealIndex = _deals.findIndex((item) => item?._id === deal?._id);
+        // if deal is already exist remove it
+        // if deal is not exist push it to deals
+        dealIndex > -1 ? _deals.splice(dealIndex, 1) : _deals.push(deal);
+
+        // update cluster deals
+        const _oldCluster = _cluster[_clusterIndex];
+        _cluster[_clusterIndex] = {
+          ..._oldCluster,
+          deals: _deals,
+          isSelected: totalDeals === _deals.length,
+        };
+      } else {
+        //if cluster is not exist
+        _cluster.push({ date, deals: [deal], isSelected: false });
+      }
+      state.cluster = _cluster;
+      localStorage.setItem(`source-${state.source}`, JSON.stringify(_cluster));
     },
 
     SetSELECTED: (state, { payload }) => {
@@ -422,27 +522,6 @@ export const reduxSlice = createSlice({
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
-
-        // const uniqueCashiers = [
-        //   ...new Map(
-        //     payload.map(({ cashierId }) => [
-        //       cashierId._id,
-        //       { _id: cashierId._id, name: fullName(cashierId?.fullName) },
-        //     ])
-        //   ).values(),
-        // ];
-
-        // const uniqueSource = [
-        //   ...new Map(
-        //     payload.map(({ source }) => [
-        //       source._id,
-        //       { _id: source._id, name: source?.displayname },
-        //     ])
-        //   ).values(),
-        // ];
-
-        // state.cashiers = uniqueSource;
-
         state.isSuccess = success;
         state.isLoading = false;
       })
@@ -451,7 +530,25 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-
+      .addCase(OUTSOURCES.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(OUTSOURCES.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(OUTSOURCES.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
       .addCase(CASHIER.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -736,6 +833,7 @@ export const {
   SetFILTERED,
   SetFilterByCASHIER,
   SetFilterBySOURCE,
+  SetFilterByOUTSOURCE,
   SetSELECTED,
   SetREVERT,
   SetDISCOUNT,

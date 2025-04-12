@@ -178,6 +178,68 @@ const manager = [
     ],
   },
   {
+    name: "Accrued", // liabilities
+    path: "/accrued",
+    icon: "tv",
+    title: "liabilities and obligations",
+    children: [
+      /**
+       * obligation for services or goods received but not yet paid for by the accounting period's en
+       *  unpaid bills (Water, Electricity, SOA  & etc.)
+       * Electric bill
+       * Water bill
+       * WIFI bill
+       * Rental
+       */
+      {
+        name: "Accounts Payable (A/P)",
+        path: "/payables",
+        icon: "file-invoice-dollar",
+        title: "Outstanding payments for suppliers and utilities.",
+        // component: Payables,
+      },
+      {
+        name: "Payments",
+        path: "/payments",
+        icon: "dollar-sign",
+        title: "List of payments made.",
+        // component: Payments,
+      },
+      /**
+       * SOA from A/P
+       * confirming the SOA listed in A/P
+       */
+      {
+        name: "Statement of Account",
+        path: "/soa",
+        icon: "balance-scale",
+        title: "Outsourced services from monthly sales",
+        // component: SOA,
+      },
+      /**
+       * Generated monthly Collections from vouchers  (SOA)
+       */
+      {
+        name: "Accounts Receivable (A/R)",
+        path: "/receivables",
+        icon: "money-bill",
+        title: "Unpaid invoices from corporate accounts or HMOs",
+        // component: Receivables,
+      },
+      /**
+       * Unproessed Vouchers
+       * from daily sales
+       */
+      {
+        name: "Vouchers",
+        path: "/vouchers",
+        icon: "receipt",
+        title: "Vouchers from daily sales",
+        // component: Vouchers,
+      },
+    ],
+  },
+  {
     name: "Business Operations",
     path: "/operations",
     icon: "cogs",

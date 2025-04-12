@@ -72,6 +72,19 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
+export const SOA = createAsyncThunk(
+  `${url}/soa`,
+  async ({ keys, token }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/soa`, token, keys);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
@@ -182,14 +195,11 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
       })
-
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { success = false } = action.payload || {};
-
         state.collections = state.filtered = action.payload;
         state.totalPages =
           Math.ceil((action.payload?.length || 0) / state.maxPage) || 1;
@@ -197,12 +207,21 @@ export const reduxSlice = createSlice({
         state.isSuccess = success;
         state.isLoading = false;
       })
-
       .addCase(BROWSE.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
       })
-
+      .addCase(SOA.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(SOA.fulfilled, (state, { payload }) => {
+        state.collections = payload.payload;
+        state.isLoading = false;
+      })
+      .addCase(SOA.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
       .addCase(LIST.pending, (state) => {
         state.isLoading = true;
       })

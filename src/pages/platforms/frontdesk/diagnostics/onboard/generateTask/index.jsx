@@ -37,8 +37,6 @@ export default function Modal() {
     }
   }, [show]);
 
-  console.log(deal);
-
   const getIDS = (collections) => collections.map(({ id }) => id);
 
   const generateTask = async () => {
@@ -164,7 +162,9 @@ export default function Modal() {
       );
     }
 
-    if (outSourceId && outsource.length > 0) {
+    const haveOutSource = outsource.length > 0 && outSourceId;
+
+    if (haveOutSource) {
       window.open(
         "/printout/request/outsource",
         "OutsourceRequestForm", // Unique window name 2
@@ -188,7 +188,7 @@ export default function Modal() {
         },
       ],
       forms,
-      ...(outSourceId && { outsource: outSourceId }),
+      ...(haveOutSource && { outsource: outSourceId }),
     };
 
     dispatch(

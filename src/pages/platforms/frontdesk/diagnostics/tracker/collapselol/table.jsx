@@ -156,12 +156,12 @@ export default function CollapseTable({ menu }) {
           })}
         </tbody>
       </MDBTable>
-      <Modal
+      {/* <Modal
         show={showModal}
         toggle={toggleModal}
         task={task}
         setTask={setTask}
-      />
+      /> */}
     </>
   );
 }
