@@ -39,7 +39,7 @@ const initialState = {
   isLoading: false,
   censusLoading: false, // dedicated loader for celsus
   message: "",
-  source: "",
+  source: { _id: "" },
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -349,6 +349,7 @@ export const reduxSlice = createSlice({
           state.source = payload;
         }
       state.filterBySource = payload;
+      state.source = { _id: payload };
     },
 
     SetFilterByOUTSOURCE: (state, { payload }) => {
@@ -845,6 +846,7 @@ export const {
   SetPatient,
   SetMONTH,
   RESET,
+  ResetDATE,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
