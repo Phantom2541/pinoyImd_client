@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { capitalize } from "../../../../../../../services/utilities";
-import { Services, Templates } from "../../../../../../../services/fakeDb";
+import { capitalize } from "./../../../../../../services/utilities";
+import { Services, Templates } from "./../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import Modal from "../../modal";
+import Modal from "./modal";
 import { useSelector } from "react-redux";
 
 export default function CollapseTable({ menu }) {
