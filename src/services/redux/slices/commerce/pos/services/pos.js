@@ -205,23 +205,25 @@ export const reduxSlice = createSlice({
       state.sourceId = _id;
       state.membership = membership;
     },
-    ADDTOCART: (state, { payload }) => {
-      const index = state.cart.findIndex((item) => item._id === payload._id);
-      if (index === -1) {
-        state.cart = [...state.cart, payload];
-      } else {
-        // update this item and increase the quantity
-        state.cart[index] = payload;
-      }
-      // Get the department(s) related to the new item
-      const _department = Services.getDepartment(payload.packages);
+  ADDTOCART: (state, { payload }) => {
+  const index = state.cart.findIndex((item) => item._id === payload._id);
+  
+  if (index === -1) {
+    state.cart = [...state.cart, payload];
+  } else {
+    // Update the item and increase the quantity
+    state.cart[index] = payload;
+  }
 
-      // Combine the current department array with the new department array and ensure uniqueness
-      const department = [...new Set([..._department, ...state.department])];
+  // Get department(s) related to the new item
+  const _department = Services.getDepartment(payload.packages);
 
-      // Update the department state with the unique departments
-      state.department = department;
-    },
+  // Only update if department data exists and is not empty
+  if (_department && _department.length > 0) {
+    const department = [...new Set([..._department, ...state.department])];
+    state.department = department;
+  }
+},
     REMOVEFROMCART: (state, { payload }) => {
       //console.log("state.cart :", state.cart);
       //console.log("payload :", payload);
