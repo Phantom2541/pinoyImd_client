@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, getAge } from "../../../../../utilities";
+import { axioKit, dateFormat, getAge } from "../../../../../utilities";
 import _ from "lodash";
 
 const url = "commerce/pos/services/deals";
@@ -26,7 +26,7 @@ const initialState = {
     isEmpty: true,
   },
   patient: {},
-  cluster: {},
+  cluster: [],
   showModal: false,
   showRevertModal: false,
   showDiscountModal: false,
@@ -39,7 +39,7 @@ const initialState = {
   isLoading: false,
   censusLoading: false, // dedicated loader for celsus
   message: "",
-  source: { _id: "" },
+  vendor: { _id: "" },
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -338,18 +338,20 @@ export const reduxSlice = createSlice({
     },
 
     SetFilterBySOURCE: (state, { payload }) => {
-      if (payload !== state.filterBySource)
-        if (payload === "all") {
-          state.filtered = state.collections;
-          state.source = "";
-        } else {
-          state.filtered = state.collections.filter(
-            ({ source }) => source?._id.toString() === payload.toString()
-          );
-          state.source = payload;
-        }
-      state.filterBySource = payload;
-      state.source = { _id: payload };
+      const { value, vendor } = payload;
+      if (value === "all") {
+        state.filtered = state.collections;
+        state.vendor = { _id: "" };
+      } else if (value === "NoSource") {
+        state.filtered = state.collections.filter(({ source }) => !source);
+        state.vendor = { _id: "noSource" };
+      } else {
+        state.filtered = state.collections.filter(
+          ({ source }) => source?._id.toString() === value.toString()
+        );
+        state.vendor = vendor;
+      }
+      // state.filterBySource = value;
     },
 
     SetFilterByOUTSOURCE: (state, { payload }) => {
@@ -369,33 +371,202 @@ export const reduxSlice = createSlice({
         }
       state.filterBySource = payload;
     },
+
+    SetVOUCHERS: (state, { payload }) => {
+      state.collections = payload;
+      state.filtered = payload;
+    },
+    // SetCluster: (state, { payload }) => {
+    //   state.cluster = payload;
+    // },
     SetCluster: (state, { payload }) => {
-      state.cluster = payload;
+      const { cutoff, _id } = state.vendor;
+      const fakeDB = localStorage.getItem("cluster");
+      let parseVoucher = fakeDB ? JSON.parse(fakeDB) : {};
+      console.log("found voucher", parseVoucher[_id]);
+      if (parseVoucher[_id]?.length > 0) {
+        state.cluster = parseVoucher[_id];
+      } else {
+        console.log("register new source", _id);
+        const now = new Date();
+        const cutoffDate = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          Number(cutoff) || 1
+        );
+
+        const filteredPayload = payload
+          .filter((item) => {
+            const itemDate = new Date(item.date); // assuming item.date is like "March 24, 2025"
+            return itemDate <= cutoffDate;
+          })
+          .map((voucher) => ({ ...voucher, hasSelected: true }));
+
+        state.cluster = filteredPayload;
+
+        localStorage.setItem(
+          "cluster",
+          JSON.stringify({
+            ...parseVoucher,
+            [_id]: filteredPayload,
+          })
+        );
+      }
     },
 
-    ISCHECKED: (state, { payload }) => {
-      const { date, byDate = false, deal } = payload;
-      const _cluster = [...state.cluster];
-      const findCluster = _cluster.find((item) => item?.date === date);
-      if (byDate) return findCluster.isSelected;
-      const { deals = [] } = findCluster || {};
-      return deals.some(({ _id }) => _id === deal._id);
+    CHECK_CUTOFF: (state, { payload }) => {
+      const { cutoff, _id } = state.vendor;
+      const now = new Date();
+      const cutoffDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        Number(cutoff) || 1
+      );
+
+      const _collections = state.collections.map((item) => {
+        const { createdAt, source } = item;
+
+        if (
+          new Date(createdAt) <= cutoffDate &&
+          source?._id.toString() === _id
+        ) {
+          return { ...item, hasSelected: true };
+        } else {
+          return item;
+        }
+      });
+
+      const selectedDates = [
+        ...new Set(
+          _collections
+            .filter(
+              ({ hasSelected, source }) =>
+                hasSelected === true &&
+                source?._id?.toString() === state.vendor?._id?.toString()
+            )
+            .map(({ createdAt }) => dateFormat(createdAt))
+        ),
+      ];
+
+      const result = selectedDates.map((date) => ({
+        date,
+        vendorId: state.vendor._id,
+      }));
+      state.collections = _collections;
+      state.cluster = result;
+      localStorage.setItem("cluster", JSON.stringify(result));
+      localStorage.setItem("vouchers", JSON.stringify(_collections));
     },
-    PICK_ALL_VOUCHER_DEALS: (state, { payload }) => {
+
+    // CHECK_BULK: (state, { payload }) => {
+    //   const { date, hasSelected } = payload;
+
+    //   const _cluster = [...state.cluster];
+    //   const index = _cluster.findIndex(
+    //     (item) => item?.date === date && item?.vendorId === state.vendor._id
+    //   );
+
+    //   hasSelected
+    //     ? _cluster.push({ date, vendorId: state.vendor._id })
+    //     : _cluster.splice(index, 1);
+    //   state.cluster = _cluster;
+    //   const _collections = state.collections.map(
+    //     ({ createdAt, source, ...deal }) => {
+    //       if (
+    //         dateFormat(createdAt) === date &&
+    //         String(source._id) === String(state.vendor._id)
+    //       ) {
+    //         return { ...deal, createdAt, source, hasSelected };
+    //       }
+    //       return { ...deal, createdAt, source };
+    //     }
+    //   );
+
+    //   state.collections = [..._collections];
+    //   state.filtered = state.collections.filter(
+    //     ({ source }) => source?._id.toString() === state.vendor?._id.toString()
+    //   );
+
+    //   localStorage.setItem("vouchers", JSON.stringify(_collections));
+    //   localStorage.setItem("cluster", JSON.stringify(state.cluster));
+    // },
+
+    CHECK_BULK: (state, { payload }) => {
       const { deals, date } = payload;
-      const _cluster = [...state.cluster];
-      const index = _cluster.findIndex((item) => item?.date === date);
-      // const findCluster = _cluster[index];
-      index > -1
-        ? _cluster.splice(index, 1)
-        : _cluster.push({ date, deals, isSelected: true });
+      console.log("check bulk");
+      const cluster = [...state.cluster];
+      const index = cluster.findIndex((item) => item.date === date);
+      const foundCluster = cluster[index];
+      const { hasSelected = false } = foundCluster || {};
+      if (hasSelected) {
+        cluster.splice(index, 1);
+      } else {
+        //remove existing cluster and insert new cluster
+        if (index > -1) cluster.splice(index, 1);
+        cluster.push({ date, deals, hasSelected: true });
+      }
 
-      state.cluster = _cluster;
-      localStorage.setItem(`source-${state.source}`, JSON.stringify(_cluster));
+      state.cluster = cluster;
+
+      localStorage.setItem(
+        "cluster",
+        JSON.stringify({
+          ...JSON.parse(localStorage.getItem("cluster" || "{}")),
+          [state.vendor?._id]: cluster,
+        })
+      );
     },
 
-    PICK_VOUCHER_DEAL: (state, { payload }) => {
-      if (!state.source)
+    // CHECK_DEAL: (state, { payload }) => {
+    //   const { id, date, hasSelected } = payload;
+    //   const _collections = state.collections.map((item) =>
+    //     item._id === id ? { ...item, hasSelected } : item
+    //   );
+    //   if (!hasSelected) {
+    //     const filteredCollections = _collections.filter(
+    //       ({ source, createdAt }) =>
+    //         source?._id?.toString() === state.vendor?._id?.toString() &&
+    //         dateFormat(createdAt) === date
+    //     );
+
+    //     const hasAnyFalseSelected = filteredCollections.some(
+    //       ({ hasSelected }) => hasSelected === false
+    //     );
+
+    //     const index = state.cluster.findIndex(
+    //       (item) => item?.date === date && item.vendorId === state.vendor._id
+    //     );
+
+    //     if (hasAnyFalseSelected && index > -1) {
+    //       state.cluster.splice(index, 1);
+    //     }
+    //   } else {
+    //     const filteredCollections = _collections.filter(
+    //       ({ source, createdAt }) =>
+    //         source?._id?.toString() === state.vendor?._id?.toString() &&
+    //         dateFormat(createdAt) === date
+    //     );
+
+    //     const hasAnyFalseSelected = filteredCollections.some(
+    //       ({ hasSelected }) => hasSelected === false
+    //     );
+
+    //     if (!hasAnyFalseSelected) {
+    //       state.cluster.push({ date, vendorId: state.vendor._id });
+    //     }
+    //   }
+
+    //   state.filtered = _collections.filter(
+    //     ({ source }) => source?._id.toString() === state.vendor?._id.toString()
+    //   );
+
+    //   state.collections = [..._collections];
+    //   localStorage.setItem("vouchers", JSON.stringify(_collections));
+    //   localStorage.setItem("cluster", JSON.stringify(state.cluster));
+    // },
+
+    CHECK_DEAL: (state, { payload }) => {
+      if (!state.vendor._id)
         return "please select source first to proceed in picking voucher";
 
       const { date, deal, totalDeals } = payload; //ex. totalDeals=5
@@ -407,6 +578,7 @@ export const reduxSlice = createSlice({
       const _cluster = [...state.cluster];
       const _clusterIndex = _cluster.findIndex((item) => item?.date === date);
       if (_clusterIndex > -1) {
+        console.log("foundCluster");
         //if cluster is already exist
         const { deals = [] } = _cluster[_clusterIndex];
         const _deals = [...deals];
@@ -415,20 +587,30 @@ export const reduxSlice = createSlice({
         // if deal is already exist remove it
         // if deal is not exist push it to deals
         dealIndex > -1 ? _deals.splice(dealIndex, 1) : _deals.push(deal);
-
         // update cluster deals
         const _oldCluster = _cluster[_clusterIndex];
-        _cluster[_clusterIndex] = {
-          ..._oldCluster,
-          deals: _deals,
-          isSelected: totalDeals === _deals.length,
-        };
+
+        if (_deals.length === 0) {
+          _cluster.splice(_clusterIndex, 1);
+        } else {
+          _cluster[_clusterIndex] = {
+            ..._oldCluster,
+            deals: _deals,
+            hasSelected: totalDeals === _deals.length,
+          };
+        }
       } else {
         //if cluster is not exist
-        _cluster.push({ date, deals: [deal], isSelected: false });
+        _cluster.push({ date, deals: [deal], hasSelected: totalDeals === 1 });
       }
       state.cluster = _cluster;
-      localStorage.setItem(`source-${state.source}`, JSON.stringify(_cluster));
+      localStorage.setItem(
+        "cluster",
+        JSON.stringify({
+          ...JSON.parse(localStorage.getItem("cluster" || "{}")),
+          [state.vendor?._id]: _cluster,
+        })
+      );
     },
 
     SetSELECTED: (state, { payload }) => {
@@ -835,9 +1017,16 @@ export const {
   SetFilterByCASHIER,
   SetFilterBySOURCE,
   SetFilterByOUTSOURCE,
+  CHECK_CUTOFF,
   SetSELECTED,
+  CHECK_BULK,
+  CHECK_DEAL,
+  SetVOUCHERS,
   SetREVERT,
   SetDISCOUNT,
+  SetCluster,
+  ISCHECKED,
+  PICK_VOUCHER_DEAL,
   ToggleDiscountModal,
   SetMODAL,
   SetMaxPage,

@@ -1,89 +1,143 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   VOUCHERS,
   SetFilterBySOURCE,
   RESET,
-  SetMONTH,
-  ResetDATE,
+  SetVOUCHERS,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import { MDBView } from "mdbreact";
-import CalendarPicker from "../../../../../components/header/calendars";
+import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
+import {
+  INSOURCE,
+  SetINSOURCE,
+} from "../../../../../services/redux/slices/assets/providers";
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { collections, month, year } = useSelector(({ deals }) => deals),
+  const { collections, month, year, vendor } = useSelector(
+      ({ deals }) => deals
+    ),
+    { collections: providers } = useSelector(({ providers }) => providers),
     [sources, setSources] = useState([]),
     dispatch = useDispatch();
   // Fetch vouchers
   useEffect(() => {
-    const startDate = new Date(year, month - 1, 1);
-    startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
-    endDate.setHours(23, 59, 59, 999);
+    // const fakeDB = localStorage.getItem("vouchers");
+    // if (!fakeDB) {
     dispatch(
       VOUCHERS({
         token,
         key: {
           branchId: activePlatform.branchId,
-          cashierId: auth._id,
-          month,
-          year,
         },
       })
     );
-
+    // } else {
+    //   dispatch(SetVOUCHERS(JSON.parse(fakeDB)));
+    // }
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
-  //Filtering Cashier ID
   useEffect(() => {
-    let uniqueSource = [];
-    if (collections.length > 0)
-      uniqueSource = [
+    if (token) {
+      const fakeDB = localStorage.getItem("insource");
+      if (!fakeDB) {
+        dispatch(
+          INSOURCE({ token, key: { vendors: activePlatform.branchId } })
+        );
+      } else {
+        dispatch(SetINSOURCE(JSON.parse(fakeDB)));
+      }
+    }
+  }, [token, activePlatform, dispatch]);
+
+  const getProvider = useCallback(
+    (sourceId) => {
+      const foundProvider = providers.find(
+        ({ clients }) => String(clients?._id) === String(sourceId)
+      );
+      const { cutoff, clients } = foundProvider || { cutoff: 0, clients: {} };
+      return { cutoff, ...clients };
+    },
+
+    [providers]
+  );
+
+  useEffect(() => {
+    if (collections.length > 0 && providers.length > 0) {
+      const uniqueSource = [
         ...new Map(
-          collections.map(({ source }) => [
-            source?._id || "undefined",
-            { _id: source?._id, displayname: source?.displayname || "" },
-          ])
+          collections.map(({ source = {} }) => {
+            const { _id = "", displayname = "No tag source" } = source || {};
+            const matchedProvider = getProvider(_id);
+            const cutOff = matchedProvider?.cutoff || 0;
+            return [
+              _id || "NoSource", // key
+              {
+                _id: _id || "NoSource",
+                displayname: `${displayname} (${cutOff})`,
+              }, // value
+            ];
+          })
         ).values(),
       ];
 
-    setSources(uniqueSource);
-  }, [collections]);
+      setSources(uniqueSource);
+    }
+  }, [collections, providers, getProvider]);
+
+  const handleGenerateSOA = () => {
+    window.open(
+      "/printout/soa",
+      "OutsourceRequestForm", // Unique window name 2
+      "top=100px,left=0px,width=1050px,height=750px"
+    );
+  };
 
   return (
     <MDBView
       cascade
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <CalendarPicker
-        month={month}
-        year={year}
-        moved={(next) => dispatch(SetMONTH(next))}
-        reset={() => dispatch(ResetDATE())}
-      />
       <div>
-        <div className="text-right d-flex items-center ">
-          <select
-            id="cashier-select"
-            className="custom-select mr-2"
-            onChange={(e) => dispatch(SetFilterBySOURCE(e.target.value))}
+        <i>Voucher List</i>
+      </div>
+      <div className="text-right d-flex align-items-center ">
+        <select
+          id="cashier-select"
+          className="custom-select mr-2"
+          onChange={(e) =>
+            dispatch(
+              SetFilterBySOURCE({
+                value: e.target.value,
+                vendor: getProvider(e.target.value),
+              })
+            )
+          }
+        >
+          <option value="" disabled>
+            Select a Source
+          </option>
+          <option value="all">Select all</option>
+          {sources?.map((source, index) => (
+            <option key={`source-${index}`} value={source?._id}>
+              {source?.displayname}
+            </option>
+          ))}
+        </select>
+        {vendor?._id && vendor._id !== "noSource" && (
+          <MDBBtn
+            size="sm"
+            color="primary"
+            className="px-2 m-0 ml-1"
+            onClick={handleGenerateSOA}
+            rounded
+            title="Generate SOA"
           >
-            <option value="" disabled>
-              Select a Source
-            </option>
-            <option key="all" value="all">
-              Select all
-            </option>
-            {sources?.map((source, index) => (
-              <option key={`source-${index}`} value={source?._id}>
-                {source?.displayname}
-              </option>
-            ))}
-          </select>
-        </div>
+            <MDBIcon icon="print" />
+          </MDBBtn>
+        )}
       </div>
     </MDBView>
   );

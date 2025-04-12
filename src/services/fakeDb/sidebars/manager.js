@@ -30,6 +30,13 @@ import {
   Sales,
   ExperimentalLedger,
 } from "../../../pages/platforms/manager/businessOperations";
+import {
+  Vouchers,
+  Payables,
+  Receivables,
+  Payments,
+  SOA,
+} from "../../../pages/platforms/manager/accrued";
 
 const manager = [
   {
@@ -235,7 +242,7 @@ const manager = [
         path: "/vouchers",
         icon: "receipt",
         title: "Vouchers from daily sales",
-        // component: Vouchers,
+        component: Vouchers,
       },
     ],
   },

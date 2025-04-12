@@ -24,6 +24,7 @@ import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 
 import RequestOutSource from "./components/printout/requestOutSource";
+import SOA from "./components/printout/soa";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),
@@ -66,6 +67,7 @@ export default function App() {
       <Route path="/printout/task" exact component={TaskPrintout} />
       <Route path="/printout/payslip" exact component={Payslip} />
       <Route path="/printout/personnel" exact component={PersonnelPrintOut} />
+      <Route path="/printout/soa" exact component={SOA} />
       <Platforms />
     </Switch>
   );

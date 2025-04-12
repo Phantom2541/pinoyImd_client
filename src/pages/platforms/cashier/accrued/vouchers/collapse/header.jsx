@@ -14,7 +14,7 @@ const Header = ({
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div className="d-flex align-items-center">
-        {/* <input
+        <input
           className="form-check-input"
           type="checkbox"
           id={index}
@@ -25,7 +25,7 @@ const Header = ({
           //   if (liveSelector) liveSelector(_array);
           // }}
         />
-        <label htmlFor={index} className="form-check-label label-table" /> */}
+        <label htmlFor={index} className="form-check-label label-table" />
         {index + 1}. {title} |{" "}
         <span className={`${!isOpen && "text-primary"} ml-1 mt-1`}>
           {currency(sum)}

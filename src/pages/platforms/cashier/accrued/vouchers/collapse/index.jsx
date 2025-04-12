@@ -15,8 +15,7 @@ import { collapse, dateFormat } from "../../../../../../services/utilities";
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
     [vouchers, setVouchers] = useState([]),
-    [cluster, setCluster] = useState([]),
-    dispatch = useDispatch();
+    [cluster, setCluster] = useState([]);
 
   useEffect(() => {
     const groupByDate = filtered.reduce((groups, item) => {

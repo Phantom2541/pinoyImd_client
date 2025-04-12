@@ -6,16 +6,25 @@ import {
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
+  MDBTypography,
 } from "mdbreact";
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse, dateFormat } from "../../../../../../services/utilities";
+import {
+  CHECK_CUTOFF,
+  ISCHECKED,
+  SetCluster,
+} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function Body() {
-  const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
+  const { filtered, activePage, maxPage, vendor, cluster } = useSelector(
+      ({ deals }) => deals
+    ),
     [vouchers, setVouchers] = useState([]),
-    [cluster, setCluster] = useState([]),
+    [activeId, setActiveId] = useState(-1),
+    [didHoverId, setDidHoverId] = useState(-1),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,49 +32,53 @@ export default function Body() {
       const date = dateFormat(item.createdAt);
       const index = groups.findIndex((group) => group.date === date);
       if (index > -1) {
-        groups[index].deals.push({ ...item, isSelected: false });
+        groups[index].deals.push(item);
       } else {
         groups.push({
           date,
-          deals: [{ ...item, isSelected: false }],
-          isSelected: false,
+          deals: [item],
         });
       }
       return groups;
     }, []);
 
     setVouchers(groupByDate);
-    // setCluster(_cluster);
-  }, [filtered, activePage, maxPage]); // Re-run whenever filtered data or page changes
+  }, [filtered, activePage, maxPage]);
 
-  // useEffect(() => {
-  //   const _cluster = filtered.reduce((groups, item) => {
-  //     const date = dateFormat(item.createdAt);
-  //     if (!groups[date]) {
-  //       groups[date] = [];
-  //     }
-  //     groups[date].push(item);
-  //     return groups;
-  //   }, []);
+  useEffect(() => {
+    dispatch(SetCluster(vouchers));
+  }, [vouchers, dispatch]);
 
-  //   setCluster(_cluster);
-  // }, [filtered, activePage, maxPage]); // Re-run whenever filtered data or page changes
+  // const isChecked = (date) => {
+  //   if (cluster.length > 0) {
+  //     // const { date, bulk = false, deal } = data;
+  //     const _cluster = [...cluster];
+  //     return _cluster.some(
+  //       (item) => item?.date === date && item.vendorId === vendor._id
+  //     );
+  //   }
+  //   return false;
+  // };
 
-  /**
-   * Active states for collapsible items
-   */
-  const [activeId, setActiveId] = useState(-1);
-  const [didHoverId, setDidHoverId] = useState(-1);
-
-  const handleSelect = (deal) => {
-    const _cluster = [...cluster];
-    const index = _cluster.findIndex((item) => item._id === deal._id);
-    index > -1 ? _cluster.splice(index, 1) : _cluster.push(deal);
-    setCluster(_cluster);
+  const isChecked = (date, deal) => {
+    if (cluster.length > 0) {
+      const _cluster = [...cluster];
+      const findCluster = _cluster.find((item) => item?.date === date);
+      if (!deal?._id) return findCluster?.hasSelected;
+      const { deals = [] } = findCluster || {};
+      return deals?.some(({ _id }) => deal._id === _id) || false;
+    }
+    return false;
   };
-
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
+      {!vendor._id && (
+        <div style={{ marginTop: "-1.5rem", marginBottom: "-0.5rem" }}>
+          <MDBTypography noteTitle="Description: " note noteColor="warning">
+            Please select a source before generating the SOA.
+          </MDBTypography>
+        </div>
+      )}
       {vouchers?.map((voucher, index) => {
         const { deals, date } = voucher;
         const actualIndex = index; // Directly use the index in the paginated data
@@ -74,7 +87,6 @@ export default function Body() {
           activeId,
           didHoverId
         );
-
         return (
           <MDBCard
             key={`service-${date}`}
@@ -88,7 +100,9 @@ export default function Body() {
             >
               <CollapsableHeader
                 key={date}
+                deals={deals}
                 title={date}
+                isChecked={isChecked(date)}
                 count={deals.length}
                 sum={deals.reduce((acc, item) => acc + item.amount, 0)}
                 isOpen={activeId === actualIndex}
@@ -103,7 +117,11 @@ export default function Body() {
               isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
             >
               <MDBCardBody className=" m-0 p-0">
-                <CollapsableBody deals={deals} handleSelect={handleSelect} />
+                <CollapsableBody
+                  deals={deals}
+                  isChecked={isChecked}
+                  date={date}
+                />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

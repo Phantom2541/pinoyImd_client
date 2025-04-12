@@ -7,7 +7,7 @@ import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
 import { useSelector } from "react-redux";
 
-const Index = () => {
+const Vouchers = () => {
   const { isLoading } = useSelector(({ deals }) => deals);
   return (
     <MDBAnimation type="bounceInDown">
@@ -20,4 +20,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Vouchers;

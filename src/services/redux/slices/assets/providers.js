@@ -274,6 +274,9 @@ export const reduxSlice = createSlice({
       }
       state.filtered = payload;
     },
+    SetINSOURCE: (state, { payload }) => {
+      state.collections = payload;
+    },
     ResetFILTER: (state) => {
       const { collections } = state;
       state.totalPages = Math.ceil(collections.length / state.maxPage);
@@ -369,6 +372,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(INSOURCE.fulfilled, (state, { payload }) => {
         state.collections = payload.payload;
+        localStorage.setItem("insource", JSON.stringify(payload.payload));
         state.isLoading = false;
       })
       .addCase(INSOURCE.rejected, (state, { payload }) => {
@@ -521,6 +525,7 @@ export const {
   SetSELECTED,
   SetCREATE,
   SetFILTER,
+  SetINSOURCE,
   ResetFILTER,
   SetPAGE,
   SETSOURCES,

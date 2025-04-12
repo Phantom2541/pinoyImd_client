@@ -1,31 +1,40 @@
 import React from "react";
 import { MDBBtn } from "mdbreact";
 import { currency } from "../../../../../../services/utilities";
+import { useDispatch, useSelector } from "react-redux";
+import { CHECK_BULK } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const Header = ({
   sum,
   count,
   title,
   isOpen,
+  isChecked = false,
   textColor,
   index,
   setActiveId,
+  deals,
 }) => {
+  const { vendor } = useSelector(({ deals }) => deals),
+    dispatch = useDispatch();
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div className="d-flex align-items-center">
-        {/* <input
-          className="form-check-input"
-          type="checkbox"
-          id={index}
-          // onChange={(e) => {
-          //   setSelectedAll(e.target.checked);
-          //   const _array = e.target.checked ? array : [];
-          //   setSelected(_array);
-          //   if (liveSelector) liveSelector(_array);
-          // }}
-        />
-        <label htmlFor={index} className="form-check-label label-table" /> */}
+        {vendor._id && vendor._id !== "noSource" && (
+          <>
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id={index}
+              checked={isChecked}
+              onChange={() =>
+                // dispatch(CHECK_BULK({ date: title, hasSelected: !isChecked }))
+                dispatch(CHECK_BULK({ date: title, deals }))
+              }
+            />
+            <label htmlFor={index} className="form-check-label label-table" />
+          </>
+        )}
         {index + 1}. {title} |{" "}
         <span className={`${!isOpen && "text-primary"} ml-1 mt-1`}>
           {currency(sum)}
