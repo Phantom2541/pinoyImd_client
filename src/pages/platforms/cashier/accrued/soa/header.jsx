@@ -2,14 +2,45 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Select } from "../../../../../components/customizable";
-import { OUTSOURCES } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import {
+  OUTSOURCES,
+  SetFilterByOUTSOURCE,
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered, month, year } = useSelector(({ deals }) => deals),
-    { collections } = useSelector(({ payables }) => payables),
-    // [cluster, setCluster] = useState([]),
+    { collections, filtered, month, year } = useSelector(({ deals }) => deals),
+    { collections: payables } = useSelector(({ payables }) => payables),
+    [suppliers, setSuppliers] = useState([]),
     dispatch = useDispatch();
+
+  //Filtering Supplier ID
+  useEffect(() => {
+    let uniqueSource = [];
+    if (collections.length > 0)
+      uniqueSource = [
+        ...new Map(
+          collections.map(({ outsource: vendor }) => {
+            const { _id, displayname } = vendor;
+            const soa = payables.find(
+              ({ supplier }) => String(supplier.vendors) === String(_id)
+            );
+
+            return [
+              vendor?._id || "undefined",
+              {
+                _id,
+                displayname: soa
+                  ? `${displayname} (₱${soa.amount.toLocaleString()})`
+                  : displayname,
+              },
+            ];
+          })
+        ).values(),
+      ];
+
+    setSuppliers(uniqueSource);
+  }, [collections, payables]);
 
   //initial values
   useEffect(() => {
@@ -27,6 +58,11 @@ const Header = () => {
     }
   }, [token, dispatch, activePlatform, month, year]);
 
+  const handleVendors = (value) => {
+    console.log("value", value);
+    dispatch(SetFilterByOUTSOURCE(value));
+  };
+
   return (
     <MDBView
       cascade
@@ -34,22 +70,21 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered?.length} Services
+          {filtered?.length} Sendout/s
         </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
           <Select
             className="m-0 p-0  mr-4 "
-            values={"supplier.displayname"}
             placeholder="Supplier"
+            values={"displayname"}
             keys="_id"
-            // onChange={(value) => handleComponent(value || "LAB")}
+            onChange={(value) => handleVendors(value)}
             inputClassName="m-0 p-0 text-white"
-            collections={collections?.map(({ _id, supplier, amount }) => ({
+            collections={suppliers?.map(({ _id, displayname }) => ({
               _id,
-              supplier,
-              amount,
+              displayname,
             }))}
           />
         </div>

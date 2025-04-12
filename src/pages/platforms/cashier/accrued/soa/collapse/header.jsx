@@ -15,7 +15,7 @@ const Header = ({
     <div className={`d-flex justify-content-between ${textColor} `}>
       {index + 1}. {title}| {currency(sum)}
       <div className="d-flex">
-        <small className="mr-2 mt-1">{count} deal/s</small>
+        <small className="mr-2 mt-1">{count} sendout/s</small>
         <MDBBtn
           size="sm"
           color="white"

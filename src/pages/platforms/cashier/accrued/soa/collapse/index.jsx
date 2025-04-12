@@ -14,7 +14,9 @@ import { collapse, dateFormat } from "../../../../../../services/utilities";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
-    [cluster, setCluster] = useState([]);
+    [cluster, setCluster] = useState([]),
+    [selectAll, setSelectAll] = useState(false),
+    [selectedItems, setSelectedItems] = useState({});
 
   // Pagination logic and grouping by date
   useEffect(() => {
@@ -35,6 +37,13 @@ export default function Body() {
    */
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
+
+  const handleSelectAll = (dateKey, items, isSelectAll) => {
+    setSelectedItems((prev) => ({
+      ...prev,
+      [dateKey]: isSelectAll ? items.map((i) => i.id) : [],
+    }));
+  };
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
@@ -69,6 +78,9 @@ export default function Body() {
                 textColor={color}
                 setActiveId={setActiveId}
                 index={actualIndex}
+                // selectAll={selectedItems[key]?.length === values.length}
+                // setClear={() => handleSelectAll(key, values, false)}
+                // onSelectAll={(checked) => handleSelectAll(key, values, checked)}
               />
             </MDBCollapseHeader>
 
@@ -78,7 +90,7 @@ export default function Body() {
               isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
             >
               <MDBCardBody className="pt-2">
-                <CollapsableBody deals={values} />
+                <CollapsableBody deals={values} selectAll={selectAll} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

@@ -40,10 +40,14 @@ const Header = () => {
         ...new Map(
           collections.map(({ source }) => [
             source?._id || "undefined",
-            { _id: source?._id, name: source?.displayname || "" },
+            { _id: source?._id, displayname: source?.displayname || "" },
           ])
         ).values(),
       ];
+
+    console.log("uniqueSource", uniqueSource);
+    console.log("collections", collections);
+
     setSources(uniqueSource);
   }, [collections]);
 
@@ -66,14 +70,14 @@ const Header = () => {
             onChange={(e) => dispatch(SetFilterBySOURCE(e.target.value))}
           >
             <option value="" disabled>
-              Select a cashier
+              Select a Source
             </option>
             <option key="all" value="all">
               Select all
             </option>
             {sources?.map((source, index) => (
               <option key={`source-${index}`} value={source?._id}>
-                {source?.name}
+                {source?.displayname}
               </option>
             ))}
           </select>

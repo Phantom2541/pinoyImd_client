@@ -7,6 +7,7 @@ export default function Collapsable({ deals, handleSelect }) {
     <MDBTable bordered className="m-0 p-0">
       <MDBTableHead>
         <tr>
+          <th>Source</th>
           <th>Customer</th>
           <th>Category</th>
           <th>Amount</th>
@@ -16,9 +17,11 @@ export default function Collapsable({ deals, handleSelect }) {
       </MDBTableHead>
       <MDBTableBody>
         {deals?.map((deal, index) => {
-          const { customerId, category, amount, discount, privilege } = deal;
+          const { customerId, category, amount, discount, privilege, source } =
+            deal;
           return (
             <tr key={index}>
+              <td>{source?.displayname}</td>
               <td>
                 <div className=" d-flex align-items-center">
                   <input

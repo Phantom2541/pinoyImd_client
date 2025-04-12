@@ -68,7 +68,7 @@ export default function Body() {
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
       {vouchers?.map((voucher, index) => {
-        const { deals, date, isSelected } = voucher;
+        const { deals, date } = voucher;
         const actualIndex = index; // Directly use the index in the paginated data
         const { color, border } = collapse.getStyle(
           actualIndex,
