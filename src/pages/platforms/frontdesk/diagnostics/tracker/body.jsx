@@ -13,32 +13,42 @@ export default function Body() {
     [tasks, setTasks] = useState([]),
     dispatch = useDispatch();
 
-  useEffect(() => {
-    const updatedTasks = [];
+useEffect(() => {
+  const updatedTasks = [];
 
+  const processTasks = async () => {
     for (const task of collections) {
       let updatedTask = { ...task };
       const { _id, forms } = task;
 
       if (!forms || forms.length === 0) {
+        console.log("Generating forms for task:", _id);
+
         try {
           const services = Services.getTemplates(task.packages);
           const _forms = Object.keys(services);
-          dispatch(UPDATE({ token, data: { _id, forms: _forms } }));
 
-          updatedTask.forms = _forms;
+          // Prevent repeated dispatch for already updated tasks
+          if (_forms.length > 0 && (!task.forms || task.forms.length === 0)) {
+            await dispatch(UPDATE({ token, data: { _id, forms: _forms } }));
+            updatedTask.forms = _forms;
+          }
         } catch (error) {
-          console.error(`Error generating forms for task ${task._id}:`, error);
+          console.error(`Error generating forms for task ${_id}:`, error);
         }
       } else {
         console.log("Existing forms for task:", task.forms);
       }
+
       updatedTasks.push(updatedTask);
     }
 
     setTasks(updatedTasks);
-  }, [collections, dispatch, token]);
+  };
 
+  processTasks();
+}, [collections]); // Remove `dispatch` and `token` from deps unless strictly needed
+  
   if (!patient?._id)
     return (
       <MDBTypography note noteColor="info" className="">
