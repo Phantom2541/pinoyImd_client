@@ -656,7 +656,8 @@ export const reduxSlice = createSlice({
       state.message = "";
       state.isLoading = false;
       state.formSubmitted = false;
-
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
       if (payload?.resetCollections) state.collections = [];
     },
     ResetDATE: (state) => {

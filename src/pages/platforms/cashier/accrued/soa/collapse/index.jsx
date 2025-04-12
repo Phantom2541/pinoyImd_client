@@ -14,9 +14,7 @@ import { collapse, dateFormat } from "../../../../../../services/utilities";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
-    [cluster, setCluster] = useState([]),
-    [selectAll, setSelectAll] = useState(false),
-    [selectedItems, setSelectedItems] = useState({});
+    [cluster, setCluster] = useState([]);
 
   // Pagination logic and grouping by date
   useEffect(() => {
@@ -38,12 +36,7 @@ export default function Body() {
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
 
-  const handleSelectAll = (dateKey, items, isSelectAll) => {
-    setSelectedItems((prev) => ({
-      ...prev,
-      [dateKey]: isSelectAll ? items.map((i) => i.id) : [],
-    }));
-  };
+  console.log("cluster :", cluster);
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
@@ -54,6 +47,10 @@ export default function Body() {
           activeId,
           didHoverId
         );
+
+        const sum = values.reduce((acc, item) => {
+          return acc + (item?.services?.up || 0);
+        }, 0);
 
         return (
           <MDBCard
@@ -73,14 +70,11 @@ export default function Body() {
                 key={key}
                 title={key}
                 count={values.length}
-                sum={values.reduce((acc, item) => acc + item.amount, 0)}
+                sum={sum}
                 isOpen={activeId === actualIndex}
                 textColor={color}
                 setActiveId={setActiveId}
                 index={actualIndex}
-                // selectAll={selectedItems[key]?.length === values.length}
-                // setClear={() => handleSelectAll(key, values, false)}
-                // onSelectAll={(checked) => handleSelectAll(key, values, checked)}
               />
             </MDBCollapseHeader>
 
@@ -90,7 +84,7 @@ export default function Body() {
               isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
             >
               <MDBCardBody className="pt-2">
-                <CollapsableBody deals={values} selectAll={selectAll} />
+                <CollapsableBody deals={values} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

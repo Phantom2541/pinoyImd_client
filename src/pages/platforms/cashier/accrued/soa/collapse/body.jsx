@@ -2,14 +2,12 @@ import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { currency, fullName } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
-import Checkbox from "../../../sources/insources/modal/checkbox";
 export default function Collapsable({ deals }) {
   return (
     <MDBTable bordered>
       <MDBTableHead>
         <tr>
           <th>#</th>
-
           <th>Outsource</th>
           <th>Customer</th>
           <th>Source</th>
@@ -23,9 +21,6 @@ export default function Collapsable({ deals }) {
           return (
             <tr key={index}>
               <td>{++index}</td>
-              <td>
-                <Checkbox deal={deal} />
-              </td>
               <td className="fw-bold mb-1">{outsource?.displayname}</td>
               <td className="mb-1">{fullName(customerId?.fullName)}</td>
               <td>{source?.displayname}</td>
