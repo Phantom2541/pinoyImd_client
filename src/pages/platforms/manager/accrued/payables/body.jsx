@@ -135,7 +135,8 @@ const Tables = () => {
                     {!hasPaid &&
                       (fsId === 31 && status === "accepted" ? (
                         <span style={{ color: "green" }}>
-                          Please verify the SOA first.
+                          Double-check all your Sendout Information before
+                          confirming the payments.
                         </span>
                       ) : (
                         <MDBBtnGroup>
