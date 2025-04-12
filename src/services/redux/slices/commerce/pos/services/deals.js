@@ -350,6 +350,24 @@ export const reduxSlice = createSlice({
         }
       state.filterBySource = payload;
     },
+
+    SetFilterByOUTSOURCE: (state, { payload }) => {
+      if (payload !== state.filterBySource)
+        if (payload === "all") {
+          state.filtered = state.collections;
+          state.source = "";
+        } else {
+          console.log("payload", payload);
+
+          state.filtered = state.collections.filter(
+            ({ outsource }) => outsource?._id.toString() === payload.toString()
+
+            // source?._id.toString() === payload.toString()
+          );
+          state.outsource = payload;
+        }
+      state.filterBySource = payload;
+    },
     SetCluster: (state, { payload }) => {
       state.cluster = payload;
     },
@@ -815,6 +833,7 @@ export const {
   SetFILTERED,
   SetFilterByCASHIER,
   SetFilterBySOURCE,
+  SetFilterByOUTSOURCE,
   SetSELECTED,
   SetREVERT,
   SetDISCOUNT,
