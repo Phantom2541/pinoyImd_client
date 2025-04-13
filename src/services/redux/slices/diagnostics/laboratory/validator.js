@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
+import { SETPRIVILEGE } from "../../commerce/pos/services/pos";
 
 const url = "commerce/pos/services/deals";
 const healthyClient = {
@@ -152,6 +153,12 @@ export const reduxSlice = createSlice({
       console.log(healthyClient[payload]);
       console.log(state.task);
     },
+    SetPREFERENCES: (state, { payload }) => {
+      state.preferences = payload;
+    },
+    SetHEADS: (state, { payload }) => {
+      state.heads = payload;
+    },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
@@ -226,6 +233,8 @@ export const {
   SetPackages,
   SetFILTERED,
   SetMODAL,
+  SetPREFERENCES,
+  SetHEADS,
   SetHEALTHY,
   SetMaxPage,
   SetActivePAGE,

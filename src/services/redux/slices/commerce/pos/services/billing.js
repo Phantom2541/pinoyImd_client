@@ -216,7 +216,7 @@ export const reduxSlice = createSlice({
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
-
+        state.isSuccess = success;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
