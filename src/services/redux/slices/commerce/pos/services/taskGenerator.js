@@ -154,8 +154,17 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
+        const { payload, department } = action.payload;
+        const _collections = payload.map((item) => {
+          return {
+            ...item,
+            cart: item.cart.filter(({ packages }) =>
+              Services.filterByDepartment(packages, department)
+            ),
+          };
+        });
+
+        state.collections = _collections;
 
         state.isLoading = false;
       })

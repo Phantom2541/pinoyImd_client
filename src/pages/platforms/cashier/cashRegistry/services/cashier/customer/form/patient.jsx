@@ -44,7 +44,7 @@ const _form = {
   privilege: 0,
   email: "",
   activePlatform: {
-    branchId: branch._id,
+    branchId: branch?._id,
     isPatient: true,
     isCeo: false,
     platform: "patron",

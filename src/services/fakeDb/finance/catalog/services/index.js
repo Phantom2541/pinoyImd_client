@@ -26,13 +26,12 @@ const Services = {
     return this.find(pk)?.abbreviation || `No abbr found for ( ${pk})`;
   },
 
-  filterByDepartment: (cart, _department) => {
+  filterByDepartment: (packages, _department) => {
     const department = _department === "laboratory" ? "LAB" : "RAD";
-    return cart.filter(
-      ({ packages = [] }) =>
-        packages
-          .filter((pkg) => Services.find(pkg)?.department === department)
-          .map((id) => Services.find(id)).length > 0
+    return (
+      packages
+        .filter((pkg) => Services.find(pkg)?.department === department)
+        .map((id) => Services.find(id)).length > 0
     );
   },
 

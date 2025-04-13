@@ -37,11 +37,6 @@ export default function Card({ item, index }) {
     );
   };
 
-  const cart = Services.filterByDepartment(
-    item.cart,
-    activePlatform.department
-  );
-
   return (
     <>
       <div className="sales-card" key={index}>
@@ -55,7 +50,7 @@ export default function Card({ item, index }) {
         </p>
         <div className="sales-card-body">
           <div className="d-flex">
-            {cart?.map((menu) => {
+            {item.cart?.map((menu) => {
               return (
                 <MDBBadge key={menu.referenceId} className="mx-1">
                   {menu?.abbreviation}
