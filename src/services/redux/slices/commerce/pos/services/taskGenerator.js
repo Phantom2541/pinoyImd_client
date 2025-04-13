@@ -158,7 +158,7 @@ export const reduxSlice = createSlice({
         const _collections = payload.map((item) => {
           return {
             ...item,
-            cart: item.cart.filter(({ packages }) =>
+            cart: item?.cart?.filter(({ packages }) =>
               Services.filterByDepartment(packages, department)
             ),
           };
