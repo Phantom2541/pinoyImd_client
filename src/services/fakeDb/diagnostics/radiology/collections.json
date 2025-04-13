@@ -128,5 +128,11 @@
     "name": "Leg",
     "description": "The tibia and fibula are intact and normally aligned. No evidence of fracture, lytic or blastic lesion. The cortical and trabecular bone structures are preserved. Visualized knee and ankle joints are unremarkable. Surrounding soft tissues appear normal.",
     "impression": "Normal radiographic findings of the leg."
+  },
+  {
+    "id": 23,
+    "name": "Ankle",
+    "description": "The bones of the ankle joint, including the tibia, fibula, and talus, are intact and properly aligned. No evidence of fracture, dislocation, or lytic/blastic lesions. The joint space is well-preserved with no sign of effusion. Surrounding soft tissues are unremarkable.",
+    "impression": "Normal radiographic findings of the ankle."
   }
 ]
