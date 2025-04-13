@@ -198,6 +198,24 @@ export const SAVE = createAsyncThunk(
   }
 );
 
+export const GENERATE_SOA = createAsyncThunk(
+  `${url}/GENERATE_SOA`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, token, "generate_soa");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
     return axioKit.update(url, form.data, form.token);
@@ -382,7 +400,6 @@ export const reduxSlice = createSlice({
       const { cutoff, _id } = state.vendor;
       const fakeDB = localStorage.getItem("cluster");
       let parseVoucher = fakeDB ? JSON.parse(fakeDB) : {};
-      console.log("found voucher", parseVoucher[_id]);
       if (parseVoucher[_id]?.length > 0) {
         state.cluster = parseVoucher[_id];
       } else {
@@ -457,42 +474,8 @@ export const reduxSlice = createSlice({
       localStorage.setItem("vouchers", JSON.stringify(_collections));
     },
 
-    // CHECK_BULK: (state, { payload }) => {
-    //   const { date, hasSelected } = payload;
-
-    //   const _cluster = [...state.cluster];
-    //   const index = _cluster.findIndex(
-    //     (item) => item?.date === date && item?.vendorId === state.vendor._id
-    //   );
-
-    //   hasSelected
-    //     ? _cluster.push({ date, vendorId: state.vendor._id })
-    //     : _cluster.splice(index, 1);
-    //   state.cluster = _cluster;
-    //   const _collections = state.collections.map(
-    //     ({ createdAt, source, ...deal }) => {
-    //       if (
-    //         dateFormat(createdAt) === date &&
-    //         String(source._id) === String(state.vendor._id)
-    //       ) {
-    //         return { ...deal, createdAt, source, hasSelected };
-    //       }
-    //       return { ...deal, createdAt, source };
-    //     }
-    //   );
-
-    //   state.collections = [..._collections];
-    //   state.filtered = state.collections.filter(
-    //     ({ source }) => source?._id.toString() === state.vendor?._id.toString()
-    //   );
-
-    //   localStorage.setItem("vouchers", JSON.stringify(_collections));
-    //   localStorage.setItem("cluster", JSON.stringify(state.cluster));
-    // },
-
     CHECK_BULK: (state, { payload }) => {
       const { deals, date } = payload;
-      console.log("check bulk");
       const cluster = [...state.cluster];
       const index = cluster.findIndex((item) => item.date === date);
       const foundCluster = cluster[index];
@@ -515,54 +498,6 @@ export const reduxSlice = createSlice({
         })
       );
     },
-
-    // CHECK_DEAL: (state, { payload }) => {
-    //   const { id, date, hasSelected } = payload;
-    //   const _collections = state.collections.map((item) =>
-    //     item._id === id ? { ...item, hasSelected } : item
-    //   );
-    //   if (!hasSelected) {
-    //     const filteredCollections = _collections.filter(
-    //       ({ source, createdAt }) =>
-    //         source?._id?.toString() === state.vendor?._id?.toString() &&
-    //         dateFormat(createdAt) === date
-    //     );
-
-    //     const hasAnyFalseSelected = filteredCollections.some(
-    //       ({ hasSelected }) => hasSelected === false
-    //     );
-
-    //     const index = state.cluster.findIndex(
-    //       (item) => item?.date === date && item.vendorId === state.vendor._id
-    //     );
-
-    //     if (hasAnyFalseSelected && index > -1) {
-    //       state.cluster.splice(index, 1);
-    //     }
-    //   } else {
-    //     const filteredCollections = _collections.filter(
-    //       ({ source, createdAt }) =>
-    //         source?._id?.toString() === state.vendor?._id?.toString() &&
-    //         dateFormat(createdAt) === date
-    //     );
-
-    //     const hasAnyFalseSelected = filteredCollections.some(
-    //       ({ hasSelected }) => hasSelected === false
-    //     );
-
-    //     if (!hasAnyFalseSelected) {
-    //       state.cluster.push({ date, vendorId: state.vendor._id });
-    //     }
-    //   }
-
-    //   state.filtered = _collections.filter(
-    //     ({ source }) => source?._id.toString() === state.vendor?._id.toString()
-    //   );
-
-    //   state.collections = [..._collections];
-    //   localStorage.setItem("vouchers", JSON.stringify(_collections));
-    //   localStorage.setItem("cluster", JSON.stringify(state.cluster));
-    // },
 
     CHECK_DEAL: (state, { payload }) => {
       if (!state.vendor._id)
@@ -905,6 +840,27 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(GENERATE_SOA.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GENERATE_SOA.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        state.collections = state.collections.filter(
+          ({ _id }) => !payload.includes(_id)
+        );
+        state.message = success;
+        state.transaction = payload;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(GENERATE_SOA.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

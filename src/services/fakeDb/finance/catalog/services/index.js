@@ -26,6 +26,16 @@ const Services = {
     return this.find(pk)?.abbreviation || `No abbr found for ( ${pk})`;
   },
 
+  filterByDepartment: (cart, _department) => {
+    const department = _department === "laboratory" ? "LAB" : "RAD";
+    return cart.filter(
+      ({ packages = [] }) =>
+        packages
+          .filter((pkg) => Services.find(pkg)?.department === department)
+          .map((id) => Services.find(id)).length > 0
+    );
+  },
+
   whereIn: (cluster) => collections?.filter(({ id }) => cluster?.includes(id)),
 
   whereNotIn: (cluster) =>
@@ -38,19 +48,19 @@ const Services = {
    * @param {array} cluster The cluster to filter the department names by
    * @returns {array} An array of department names or ["unknown department"] if no departments are found
    */
- getDepartment: (cluster) => {
-  // Return empty if cluster is not valid or empty
-  if (!Array.isArray(cluster) || cluster.length === 0) return [];
+  getDepartment: (cluster) => {
+    // Return empty if cluster is not valid or empty
+    if (!Array.isArray(cluster) || cluster.length === 0) return [];
 
-  const departments = collections
-    .filter(({ id }) => cluster.includes(id))
-    .map(({ department }) => department)
-    .filter(Boolean); // Remove null/undefined/empty values
+    const departments = collections
+      .filter(({ id }) => cluster.includes(id))
+      .map(({ department }) => department)
+      .filter(Boolean); // Remove null/undefined/empty values
 
-  const uniqueDepartments = [...new Set(departments)];
+    const uniqueDepartments = [...new Set(departments)];
 
-  return uniqueDepartments.length > 0 ? uniqueDepartments : [];
-},
+    return uniqueDepartments.length > 0 ? uniqueDepartments : [];
+  },
   getTemplates: (pks, department) => {
     const cluster = collections.filter(({ id }) => pks.includes(id));
     const templates = cluster.map(({ template }) => template);

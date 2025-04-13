@@ -5,9 +5,11 @@ import { SecondaryFooter, PrimaryFooter } from "./footer";
 
 import Tagging from "./body/tagging";
 import Show from "./body/show";
+import { Services } from "../../../../../../services/fakeDb";
 
 export default function Card({ item, index }) {
-  const { collections: sources } = useSelector(({ providers }) => providers),
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { collections: sources } = useSelector(({ providers }) => providers),
     [deal, setDeal] = useState({}),
     [edit, setEdit] = useState(false);
   const {
@@ -24,7 +26,6 @@ export default function Card({ item, index }) {
   useEffect(() => {
     setDeal(item);
   }, [item]);
-  console.log("deal", item);
 
   const handlePin = () => {
     return (
@@ -35,6 +36,11 @@ export default function Card({ item, index }) {
       </span>
     );
   };
+
+  const cart = Services.filterByDepartment(
+    item.cart,
+    activePlatform.department
+  );
 
   return (
     <>
@@ -49,11 +55,13 @@ export default function Card({ item, index }) {
         </p>
         <div className="sales-card-body">
           <div className="d-flex">
-            {item?.cart?.map((menu) => (
-              <MDBBadge key={menu.referenceId} className="mx-1">
-                {menu?.abbreviation}
-              </MDBBadge>
-            ))}
+            {cart?.map((menu) => {
+              return (
+                <MDBBadge key={menu.referenceId} className="mx-1">
+                  {menu?.abbreviation}
+                </MDBBadge>
+              );
+            })}
           </div>
 
           <div className="d-flex items-center">
