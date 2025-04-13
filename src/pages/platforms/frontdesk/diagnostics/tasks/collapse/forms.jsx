@@ -14,7 +14,6 @@ const Forms = ({ form, obj, index, customer }) => {
   const formEntries = isMiscellaneous ? obj : [obj]; // If Miscellaneous, map multiple; otherwise, use single object
 
   const handlePrint = (task) => {
-    console.log("taskPrintout", task);
     localStorage.setItem("taskPrintout", JSON.stringify(task));
     window.open(
       "/printout/task",

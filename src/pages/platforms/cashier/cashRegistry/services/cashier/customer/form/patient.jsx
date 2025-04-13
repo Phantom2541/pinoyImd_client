@@ -14,12 +14,16 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { isEqual } from "lodash";
 import { SETPATIENT } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
+import { platform } from "chart.js";
 
 /**
  * if user is not in quest, use branch address
  * else use user quest addres
  */
-const { branch } = JSON.parse(localStorage.getItem("activePlatform")) || {};
+const { branch } =
+  (localStorage.getItem("activePlatform") !== "undefined" &&
+    JSON.parse(localStorage.getItem("activePlatform"))) ||
+  {};
 const _form = {
   fullName: {
     fname: "",
@@ -39,6 +43,13 @@ const _form = {
   mobile: "",
   privilege: 0,
   email: "",
+  activePlatform: {
+    branchId: branch._id,
+    isPatient: true,
+    isCeo: false,
+    platform: "patron",
+    role: "Patron",
+  },
 };
 
 export default function Patient({ setActiveIndex }) {

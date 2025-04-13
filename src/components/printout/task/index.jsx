@@ -3,10 +3,7 @@ import Header from "./header";
 import { MDBAlert } from "mdbreact";
 import { formColor, Banner } from "../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
-// import { capitalize } from "lodash";
 import Signatories from "./signatories";
-// import Drugtest from "./drugtest";
-// import { useSelector } from "react-redux";
 
 const Printout = ({ task }) => {
   const {
@@ -20,10 +17,6 @@ const Printout = ({ task }) => {
     remarks,
     signatories,
   } = task;
-  console.log("task", task);
-
-  // const { activePlatform, company, auth } = useSelector(({ auth }) => auth);
-
 
   return (
     <div style={{ width: "100vw", height: "100vh", backgroundColor: "white" }}>
@@ -37,7 +30,6 @@ const Printout = ({ task }) => {
           fontSize: "18px",
         }}
       >
-        {/* {!task.packages.includes(176) && ( */}
         <>
           <Banner company={branchId.companyId.name} branch={branchId.name} />
           <Header
@@ -65,8 +57,6 @@ const Printout = ({ task }) => {
           </div>
           <Signatories signatories={signatories} />
         </>
-        {/* )} */}
-        {/* {task.packages.includes(176) && <Drugtest task={task} />} */}
       </div>
     </div>
   );
@@ -77,8 +67,6 @@ export default function TaskPrintout() {
 
   useEffect(() => {
     setTask(JSON.parse(localStorage.getItem("taskPrintout")));
-
-    // return () => localStorage.removeItem("taskPrintout");
   }, []);
 
   if (task?._id) return <Printout task={task} />;
