@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit, dateFormat, getAge } from "../../../../../utilities";
-import _ from "lodash";
 
 const url = "commerce/pos/services/deals";
 const today = new Date();
@@ -673,7 +672,8 @@ export const reduxSlice = createSlice({
       state.message = "";
       state.isLoading = false;
       state.formSubmitted = false;
-
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
       if (payload?.resetCollections) state.collections = [];
     },
     ResetDATE: (state) => {

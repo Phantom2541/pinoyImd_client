@@ -42,7 +42,7 @@ const Header = () => {
     console.log("collections: ", collections);
 
     window.open(
-      "/printout/TempGraph",
+      "/printout/temperature/graph",
       "Temperature Graph",
       "top=100px,left=100px,width=1050px,height=750px"
     );
@@ -70,7 +70,6 @@ const Header = () => {
           color="primary"
           size="md"
           rounded
-          // onClick={() => handlePrint}
           onClick={handlePrint}
         >
           <MDBIcon icon="print" />

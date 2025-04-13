@@ -5,7 +5,7 @@ const url = "liability/controls";
 
 const initialState = {
   collections: [], // incase one query only
-  filter: [], // filtered on collection to eliminate server load
+  filtered: [], // filtered on collection to eliminate server load
   serviceId: undefined,
 
   // for BREAD
@@ -20,7 +20,6 @@ const initialState = {
    * Pagination
    */
   maxPage: 5, // Default value, computed dynamically when needed
-  filtered: [],
   paginated: [], // paginated the filtered
   activePage: 1,
   isSuccess: false,
@@ -108,10 +107,16 @@ export const reduxSlice = createSlice({
           state.page = state.totalPages;
         }
       }
-      state.filter = page;
+      state.filtered = page;
     },
     SetSERVICES: (state, { payload }) => {
       state.serviceId = payload;
+      const _filtered = state.collections.filter(
+        ({ serviceId }) => serviceId === payload
+      );
+      state.totalPages = Math.ceil(_filtered.length / state.maxPage) || 1;
+      state.activePage = Math.min(state.activePage, state.totalPages);
+      state.filtered = _filtered;
     },
 
     SetMaxPage: (state, { payload }) => {
@@ -156,12 +161,12 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(BROWSE.fulfilled, (state, action) => {
-        const { success } = action.payload;
-        state.collections = state.filtered = action.payload; // Fix typo
-        state.totalPages =
-          Math.ceil(action.payload.length / state.maxPage) || 1;
-        state.activePage = Math.min(state.activePage, state.totalPages);
+      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+        const { success, data } = payload;
+        console.log("payload", payload);
+        console.log("data", data);
+
+        state.collections = data;
         state.isSuccess = success;
         state.isLoading = false;
       })
@@ -175,6 +180,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
         state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
@@ -207,32 +213,12 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      // .addCase(UPDATE.pending, (state) => {
-      //   state.isLoading = true;
-      // })
-      // .addCase(UPDATE.fulfilled, (state, { payload }) => {
-      //   const index = state.collections.findIndex(
-      //     (item) => item._id === payload._id
-      //   );
-      //   if (index !== -1) {
-      //     state.collections[index] = payload;
-      //   }
-      //   state.showModal = false;
-      //   state.isSuccess = true;
-      //   state.isLoading = false;
-      // })
-      // .addCase(UPDATE.rejected, (state, { payload }) => {
-      //   state.message = payload;
-      //   state.isLoading = false;
-      // })
-
-      // DESTROY
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(DESTROY.fulfilled, (state, { payload }) => {
         state.collections = state.collections.filter(
-          (item) => item._id !== payload
+          ({ _id }) => _id !== payload
         );
         state.isSuccess = true;
         state.isLoading = false;

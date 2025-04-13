@@ -29,7 +29,6 @@ export default function Collapsable({ deals, date, isChecked }) {
             amount,
             discount,
             privilege,
-            hasSelected = false,
             source,
             cart = [],
           } = deal;

@@ -5,14 +5,34 @@ import { Select } from "../../../../../components/customizable";
 import {
   OUTSOURCES,
   SetFilterByOUTSOURCE,
+  SetMONTH,
+  RESET,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, filtered, month, year } = useSelector(({ deals }) => deals),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { collections, month, year } = useSelector(({ deals }) => deals),
     { collections: payables } = useSelector(({ payables }) => payables),
     [suppliers, setSuppliers] = useState([]),
     dispatch = useDispatch();
+
+  //initial values
+  useEffect(() => {
+    if (token) {
+      dispatch(
+        OUTSOURCES({
+          token,
+          keys: {
+            branchId: activePlatform?.branchId,
+            cashierId: auth._id,
+            month,
+            year,
+          },
+        })
+      );
+    }
+  }, [token, dispatch, activePlatform, month, year, auth]);
 
   //Filtering Supplier ID
   useEffect(() => {
@@ -42,22 +62,6 @@ const Header = () => {
     setSuppliers(uniqueSource);
   }, [collections, payables]);
 
-  //initial values
-  useEffect(() => {
-    if (token) {
-      dispatch(
-        OUTSOURCES({
-          token,
-          keys: {
-            branchId: activePlatform?.branchId,
-            month,
-            year,
-          },
-        })
-      );
-    }
-  }, [token, dispatch, activePlatform, month, year]);
-
   const handleVendors = (value) => {
     console.log("value", value);
     dispatch(SetFilterByOUTSOURCE(value));
@@ -70,7 +74,12 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered?.length} Sendout/s
+          <CalendarPicker
+            month={month}
+            year={year}
+            moved={(direction) => dispatch(SetMONTH(direction))}
+            reset={() => dispatch(RESET())}
+          />
         </span>
       </div>
       <div>

@@ -1,24 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { Services } from "../../../../../../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
 import {
-referenceColor,
-findReference,
+  referenceColor,
+  findReference,
 } from "../../../../../../../../../../services/utilities";
 
 export default function Chemistry({ task, setTask }) {
-  
   const { collections: preferences } = useSelector(
     ({ preferences }) => preferences
   );
-  console.log("taskasdas", task);
-   
-  const {
-  packages = {},
-  key: mapKey,
-  patient,
-  } = task;
+
+  const { packages = {}, key: mapKey, patient } = task;
 
   const handleChange = (e) => {
     const { name, value } = e.target,
@@ -66,7 +60,7 @@ export default function Chemistry({ task, setTask }) {
         </tr>
       </thead>
       <tbody>
-         {Object.entries(packages).map(([key, value], index) => { 
+        {Object.entries(packages).map(([key, value], index) => {
           const { preference, abbreviation, name } = Services.find(key);
           const { lo, hi, warn, alert, critical, units, _id } = findReference(
             key,
@@ -74,16 +68,8 @@ export default function Chemistry({ task, setTask }) {
             patient?.dob,
             preference,
             preferences
-           );
-           console.log("lo", lo);
-           console.log("hi", hi);
-           console.log("warn", warn);
-           console.log("alert", alert);
-           console.log("critical", critical);
-           console.log("units", units);
-           console.log("_id", _id);
-           
-           
+          );
+
           return (
             <tr key={`${mapKey}-${index}`}>
               <td className="fw-bold py-1" title={name || abbreviation}>
@@ -115,7 +101,7 @@ export default function Chemistry({ task, setTask }) {
               )}
             </tr>
           );
-        })} 
+        })}
       </tbody>
     </MDBTable>
   );

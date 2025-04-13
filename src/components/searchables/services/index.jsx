@@ -1,18 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Services as ServicesSchema } from "./../../../services/fakeDb";
 import { Select } from "../../../components/customizable";
 
 const Services = ({ template, service, setService }) => {
-  useEffect(() => {
-    const services = ServicesSchema.filterByTemplate(template);
-    setService(services.length > 0 ? services[0].id : null);
-  }, [template, setService]); // ✅ Now, no ESLint warning
-
   const services = ServicesSchema.filterByTemplate(template);
-
-  const handleChange = (value) => {
-    setService(Number(value)); // Update selected service
-  };
+  const handleChange = (id) => setService(Number(id));
 
   return (
     <div style={{ position: "absolute", left: 350, bottom: -15, width: 300 }}>

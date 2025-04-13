@@ -56,7 +56,7 @@ export default function Select({
   handleCheck = () => {},
   handleClose = () => {},
 }) {
-  console.log("Select collections", collections);
+  // console.log("Select collections", collections);
 
   const getNestedValue = (obj, path) => {
     return path
@@ -171,13 +171,9 @@ export default function Select({
           {collections?.map((choice, index) => {
             const key = keys ? String(choice[keys]) : choice;
 
-            console.log("key", key);
-
             let value = values?.includes(".")
               ? getNestedValue(choice, values)
               : choice[values] || choice;
-
-            console.log("value", value);
 
             if (typeof value === "object") {
               console.warn(
