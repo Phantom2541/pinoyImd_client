@@ -26,8 +26,7 @@ const Services = {
     return this.find(pk)?.abbreviation || `No abbr found for ( ${pk})`;
   },
 
-  filterByDepartment: (packages, _department) => {
-    const department = _department === "laboratory" ? "LAB" : "RAD";
+  filterByDepartment: (packages, department) => {
     return (
       packages
         .filter((pkg) => Services.find(pkg)?.department === department)

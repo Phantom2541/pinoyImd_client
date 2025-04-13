@@ -156,6 +156,12 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, department } = action.payload;
         const _collections = payload.map((item) => {
+          console.log(
+            "cart",
+            item.cart.filter(({ packages }) =>
+              Services.filterByDepartment(packages, department)
+            )
+          );
           return {
             ...item,
             cart: item.cart.filter(({ packages }) =>
@@ -163,6 +169,8 @@ export const reduxSlice = createSlice({
             ),
           };
         });
+
+        console.log("collections", _collections);
 
         state.collections = _collections;
 
