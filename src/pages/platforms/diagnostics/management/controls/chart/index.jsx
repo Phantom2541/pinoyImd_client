@@ -15,7 +15,7 @@ const calculateStats = (data) => {
 };
 
 const LeveyJennings = ({ title }) => {
-  const { collections } = useSelector(({ controls }) => controls),
+  const { filtered } = useSelector(({ controls }) => controls),
     [hi, setHi] = useState([]),
     [norm, setNorm] = useState([]),
     [lo, setLo] = useState([]),
@@ -25,17 +25,17 @@ const LeveyJennings = ({ title }) => {
 
   useEffect(() => {
     // Extract hi, lo, normal, and days from the fetched data
-    setHi(collections.map((item) => item.hi));
-    setLo(collections.map((item) => item.lo));
-    setNorm(collections.map((item) => item.norm));
+    setHi(filtered.map((item) => item.hi));
+    setLo(filtered.map((item) => item.lo));
+    setNorm(filtered.map((item) => item.norm));
     setDays(
-      collections.map((item) =>
+      filtered.map((item) =>
         new Date(item.createdAt).toLocaleDateString("en-GB", {
           day: "2-digit",
         })
       )
     );
-  }, [collections]);
+  }, [filtered]);
 
   const printChart = () => {
     if (chartRef.current) {

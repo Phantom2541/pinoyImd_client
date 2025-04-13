@@ -12,7 +12,7 @@ import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { collections, filtered, month, year } = useSelector(({ deals }) => deals),
+    { collections, month, year } = useSelector(({ deals }) => deals),
     { collections: payables } = useSelector(({ payables }) => payables),
     [suppliers, setSuppliers] = useState([]),
     dispatch = useDispatch();

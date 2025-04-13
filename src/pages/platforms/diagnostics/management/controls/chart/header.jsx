@@ -16,11 +16,10 @@ const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { month, year } = useSelector(({ controls }) => controls),
     [template, setTemplate] = useState(1),
-    [service, setService] = useState(1),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && activePlatform?.branchId && year && month && service) {
+    if (token && activePlatform?.branchId && year && month) {
       dispatch(
         BROWSE({
           token,
@@ -28,18 +27,14 @@ const Header = () => {
             branchId: activePlatform?.branchId,
             year,
             month,
-            service,
           },
         })
       );
     }
     return () => dispatch(RESET());
-  }, [token, activePlatform, year, month, service, dispatch]);
+  }, [token, activePlatform, year, month, dispatch]);
 
-  const handleServiceId = (serviceId) => {
-    setService(serviceId);
-    dispatch(SetSERVICES(serviceId));
-  };
+  const handleServiceId = (id) => dispatch(SetSERVICES(id));
 
   return (
     <MDBView

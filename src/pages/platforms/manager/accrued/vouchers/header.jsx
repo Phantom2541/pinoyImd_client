@@ -4,7 +4,6 @@ import {
   VOUCHERS,
   SetFilterBySOURCE,
   RESET,
-  SetVOUCHERS,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
 import {

@@ -13,42 +13,42 @@ export default function Body() {
     [tasks, setTasks] = useState([]),
     dispatch = useDispatch();
 
-useEffect(() => {
-  const updatedTasks = [];
+  useEffect(() => {
+    const updatedTasks = [];
 
-  const processTasks = async () => {
-    for (const task of collections) {
-      let updatedTask = { ...task };
-      const { _id, forms } = task;
+    const processTasks = async () => {
+      for (const task of collections) {
+        let updatedTask = { ...task };
+        const { _id, forms } = task;
 
-      if (!forms || forms.length === 0) {
-        console.log("Generating forms for task:", _id);
+        if (!forms || forms.length === 0) {
+          console.log("Generating forms for task:", _id);
 
-        try {
-          const services = Services.getTemplates(task.packages);
-          const _forms = Object.keys(services);
+          try {
+            const services = Services.getTemplates(task.packages);
+            const _forms = Object.keys(services);
 
-          // Prevent repeated dispatch for already updated tasks
-          if (_forms.length > 0 && (!task.forms || task.forms.length === 0)) {
-            await dispatch(UPDATE({ token, data: { _id, forms: _forms } }));
-            updatedTask.forms = _forms;
+            // Prevent repeated dispatch for already updated tasks
+            if (_forms.length > 0 && (!task.forms || task.forms.length === 0)) {
+              await dispatch(UPDATE({ token, data: { _id, forms: _forms } }));
+              updatedTask.forms = _forms;
+            }
+          } catch (error) {
+            console.error(`Error generating forms for task ${_id}:`, error);
           }
-        } catch (error) {
-          console.error(`Error generating forms for task ${_id}:`, error);
+        } else {
+          console.log("Existing forms for task:", task.forms);
         }
-      } else {
-        console.log("Existing forms for task:", task.forms);
+
+        updatedTasks.push(updatedTask);
       }
 
-      updatedTasks.push(updatedTask);
-    }
+      setTasks(updatedTasks);
+    };
 
-    setTasks(updatedTasks);
-  };
+    processTasks();
+  }, [collections, dispatch, token]); // Remove `dispatch` and `token` from deps unless strictly needed
 
-  processTasks();
-}, [collections]); // Remove `dispatch` and `token` from deps unless strictly needed
-  
   if (!patient?._id)
     return (
       <MDBTypography note noteColor="info" className="">
@@ -66,20 +66,19 @@ useEffect(() => {
   return (
     <>
       {tasks.map((task, index) => {
-        console.log("task", task);
-        
         return (
-        <Collapse
-          key={task?._id}
-          task={task}
-          didHoverID={didHoverID}
-          setDidHoverID={setDidHoverID}
-          number={index + 1}
-          setActiveCollapse={setActiveCollapse}
-          activeCollapse={activeCollapse}
-          isActive={activeCollapse === task?._id}
-        />
-      )})}
+          <Collapse
+            key={task?._id}
+            task={task}
+            didHoverID={didHoverID}
+            setDidHoverID={setDidHoverID}
+            number={index + 1}
+            setActiveCollapse={setActiveCollapse}
+            activeCollapse={activeCollapse}
+            isActive={activeCollapse === task?._id}
+          />
+        );
+      })}
     </>
   );
 }

@@ -28,13 +28,7 @@ const Header = () => {
           className="ms-2"
           rounded
           color="success"
-          onClick={() =>
-            dispatch(
-              SetCREATE({
-                serviceId: serviceId,
-              })
-            )
-          }
+          onClick={() => dispatch(SetCREATE({ serviceId }))}
         >
           <MDBIcon icon="plus" />
         </MDBBtn>

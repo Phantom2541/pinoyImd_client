@@ -1,7 +1,7 @@
 import React from "react";
-import { MDBCard, MDBCardBody, MDBContainer } from "mdbreact";
-import CardHeader from "./header";
-import CardTables from "./body";
+import { MDBCard, MDBContainer } from "mdbreact";
+import Header from "./header";
+import Body from "./body";
 import Modal from "./modal";
 import Chart from "./chart";
 import Footer from "./footer";
@@ -14,10 +14,8 @@ const Controls = () => {
       </div>
       <div style={{ width: "350px", marginLeft: "10px" }}>
         <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-          <CardHeader />
-          <MDBCardBody>
-            <CardTables />
-          </MDBCardBody>
+          <Header />
+          <Body />
           <Footer />
         </MDBCard>
       </div>

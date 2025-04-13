@@ -12,11 +12,7 @@ import {
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse, dateFormat } from "../../../../../../services/utilities";
-import {
-  CHECK_CUTOFF,
-  ISCHECKED,
-  SetCluster,
-} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { SetCluster } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function Body() {
   const { filtered, activePage, maxPage, vendor, cluster } = useSelector(
