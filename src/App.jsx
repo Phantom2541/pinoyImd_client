@@ -48,7 +48,7 @@ export default function App() {
         exact
         component={RequestOutSource}
       />
-      <Route path="/printout/TempGraph" exact component={TempGraph} />
+      <Route path="/printout/temperature/graph" exact component={TempGraph} />
 
       {/* Logbooks */}
       <Route path="/printout/chem" exact component={ChemLog} />
