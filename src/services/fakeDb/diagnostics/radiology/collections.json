@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "name": "CHEST PA",
+    "description": "No abnormal pulmonary densities seen.The heart is normal in size.Aorta is unremarkable.Hemidiaphragms, costophrenic sulci and the visualized bones are intact.",
+    "impression": "Normal chest findings."
+  },
+  {
+    "id": 2,
+    "name": "Skull AP/Lat",
+    "description": "No fracture nor dislocation seen in the visualized bones.Paranasal sinuses and mastoid process are well aerated.No bone mass lesion noted.Soft tissue is unremarkable.",
+    "impression": "Normal findings of skull."
+  },
+  {
+    "id": 3,
+    "name": "Thoracic Cage",
+    "description": "No fracture nor dislocation seen in the visualized thoracic spine and ribs. Soft tissue is unremarkable.",
+    "impression": "Normal findings of thoracic cage."
+  },
+  {
+    "id": 4,
+    "name": "Pelvis",
+    "description": "No fracture nor dislocation seen in the visualized bones.Soft tissue is unremarkable.",
+    "impression": "Normal findings of the Pelvis."
+  },
+  {
+    "id": 5,
+    "name": "Shoulder/Forearm",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the shoulder/forearm."
+  },
+  {
+    "id": 6,
+    "name": "Abdomen",
+    "description": "Examination shows the intestinal gas patterns to be within normal limits. The rest of the visualized visceral and osseous structures are unremarkable.",
+    "impression": "Negative radiograph of the Abdomen."
+  },
+  {
+    "id": 7,
+    "name": "Mandible",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the Mandible."
+  },
+  {
+    "id": 8,
+    "name": "Lumbosacral",
+    "description": "The Spine Curvature is unremarkable. No fracture, scoliosis nor spondylolisthesis seen. Disc spaces and vertebral bodies are well maintained. Soft tissue is unremarkable. ",
+    "impression": "Normal findings of the lumbar spine."
+  },
+  {
+    "id": 9,
+    "name": "Right Knee OR (LOWER EXTREMETIES)",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the right knee."
+  },
+  {
+    "id": 10,
+    "name": "Left Knee OR (LOWER EXTREMETIES)",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the left knee."
+  },
+  {
+    "id": 11,
+    "name": "Paranasal ",
+    "description": "Examination shows the paranasal to be well aerated and developed. Nasal septum is at the midline. The rest of the visualized osseous structures are unremarkable.",
+    "impression": ""
+  },
+  {
+    "id": 12,
+    "name": "Temporomandibular Joint",
+    "description": "Examination show no abnormal findings in the visualized osseous structures of the temporomandibular joint. Good condyle movements are seen in the open and close mouth views. ",
+    "impression": "Negative temporomandibular joint study."
+  },
+  {
+    "id": 13,
+    "name": "Thoracic Spine",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the thoracic spine."
+  },
+  {
+    "id": 14,
+    "name": "Thoracolumbar",
+    "description": "Thoracolumbar spine curvature is unremarkable.The disc spaces are maintained. No fracture nor spondylolisthesis seen.Soft tissue is unremarkable.",
+    "impression": "Normal findings of the thoracolumbar spine."
+  },
+  {
+    "id": 15,
+    "name": "Cervical Spine",
+    "description": "The spine curvature is unremarkable.The disc spaces are maintained.No fracture nor subluxation seen.Soft tissue is unremarkable.",
+    "impression": "Normal findings of cervical spine."
+  },
+  {
+    "id": 16,
+    "name": "Water’s View",
+    "description": "Examination shows the paranasal to be well aerated and developed.Nasal septum is at the midline.The rest of the visualized osseous structures are unremarkable.",
+    "impression": "Normal findings of the water’s view."
+  },
+  {
+    "id": 17,
+    "name": "Left Hip OR (LOWER EXTREMETIES)",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the left hip."
+  },
+  {
+    "id": 18,
+    "name": "Right Hip OR (LOWER EXTREMETIES)",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the right hip."
+  }
+]
