@@ -199,6 +199,24 @@ export const SAVE = createAsyncThunk(
   }
 );
 
+export const GENERATE_SOA = createAsyncThunk(
+  `${url}/GENERATE_SOA`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, token, "generate_soa");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
     return axioKit.update(url, form.data, form.token);
@@ -493,7 +511,6 @@ export const reduxSlice = createSlice({
 
     CHECK_BULK: (state, { payload }) => {
       const { deals, date } = payload;
-      console.log("check bulk");
       const cluster = [...state.cluster];
       const index = cluster.findIndex((item) => item.date === date);
       const foundCluster = cluster[index];
@@ -905,6 +922,27 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(GENERATE_SOA.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GENERATE_SOA.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        state.collections = state.collections.filter(
+          ({ _id }) => !payload.includes(_id)
+        );
+        state.message = success;
+        state.transaction = payload;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(GENERATE_SOA.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

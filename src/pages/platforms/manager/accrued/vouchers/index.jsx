@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
+import { useToasts } from "react-toast-notifications";
 
 import Header from "./header";
 import Body from "./collapse";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const Vouchers = () => {
-  const { isLoading } = useSelector(({ deals }) => deals);
+  const { isLoading, isSuccess, message } = useSelector(({ deals }) => deals),
+    dispatch = useDispatch(),
+    { addToast } = useToasts();
+
+  useEffect(() => {
+    message &&
+      addToast(message, {
+        appearance: isSuccess ? "success" : "error",
+      });
+
+    return () => dispatch(RESET());
+  }, [isSuccess, message, addToast, dispatch]);
   return (
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>

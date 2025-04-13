@@ -1,120 +1,97 @@
 import React, { useEffect, useState } from "react";
-import {
-  currency,
-  fullName,
-  getAge,
-  getGenderIcon,
-} from "../../../services/utilities";
-import { Services } from "../../../services/fakeDb";
+import { Banner, dateFormat } from "../../../services/utilities";
+import { Legend } from "./legend";
+import Header from "./header";
+import Body from "./body";
+import Footer from "./footer";
+import GeneratedBy from "./generatedBy";
 
 const SOA = () => {
-  const [vouchers, setVouchers] = useState([]);
+  const [vouchers, setVouchers] = useState([]),
+    [vendor, setVendor] = useState({}),
+    [menus, setMenus] = useState([]),
+    [total, setTotal] = useState(0),
+    [range, setRange] = useState("");
 
   useEffect(() => {
-    const fakeDB = JSON.parse(localStorage.getItem("cluster"));
-    setVouchers(fakeDB["652ba7dc55016cf2f1578202"]);
+    const cluster = JSON.parse(localStorage.getItem("cluster")) || {};
+    const _vendor = JSON.parse(localStorage.getItem("vendor")) || {};
+    const { menus, gross } = JSON.parse(localStorage.getItem("soa")) || {};
+    const voucherList = cluster[_vendor._id] || [];
+
+    setTotal(gross);
+    setVouchers(voucherList);
+    setVendor(_vendor);
+    setMenus(menus);
+
+    if (_vendor?.cutoff) {
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth(); // 0-based
+
+      const cutoffDay = parseInt(_vendor.cutoff);
+      const currentCutoffDate = new Date(currentYear, currentMonth, cutoffDay);
+
+      // Previous month cutoff
+      const previousMonthDate = new Date(currentCutoffDate);
+      previousMonthDate.setMonth(previousMonthDate.getMonth() - 1);
+      previousMonthDate.setDate(previousMonthDate.getDate() - 1);
+
+      // Find if there's a date in cluster earlier than previousMonthDate
+      const earlierDates = voucherList
+        .map((v) => new Date(v.date)) // assuming v.date is a valid date string
+        .filter((d) => d < previousMonthDate)
+        .sort((a, b) => b - a); // descending order
+
+      const finalPreviousMonth =
+        earlierDates.length > 0 ? earlierDates[0] : previousMonthDate;
+      const options = { month: "short", day: "numeric" };
+      const formattedDate = finalPreviousMonth.toLocaleDateString(
+        "en-US",
+        options
+      );
+      setRange(`${formattedDate} -  ${dateFormat(currentCutoffDate)}`);
+    }
   }, []);
 
   return (
     <div
-      className="mx-1 mt-1"
+      className="ml-1"
       style={{
         width: "794px",
-        cursor: "default",
         fontFamily: "Helvetica, sans-serif",
         letterSpacing: "-0.5px",
-        fontSize: "16px !important",
-        borderTop: "1px solid black",
-        borderLeft: "1px solid black",
-        borderRight: "1px solid black",
       }}
     >
-      <div style={{ height: "4rem" }}>
+      <div
+        style={{
+          borderTop: "1px solid black",
+          borderLeft: "1px solid black",
+          borderRight: "1px solid black",
+        }}
+      >
+        <div>
+          <div>
+            <Banner company={"Smart Care"} branch={"General Tinio"} />
+          </div>
+          <h5 className="text-center mt-2" style={{ fontWeight: 700 }}>
+            {/* Statement Of Account */}
+            STATEMENT OF ACCOUNT
+          </h5>
+        </div>
         <div
-          className="d-flex align-items-center justify-content-between mt-1 "
+          className="mt-1"
           style={{
-            borderBottom: "1px solid black",
+            cursor: "default",
+            fontSize: "16px !important",
           }}
         >
-          <h6>Source: PANTABANGAN RHU</h6>
-          <h6>From: 2021-2022</h6>
+          <Header range={range} vendor={vendor} total={total} />
+          <Body vouchers={vouchers} />
         </div>
-
-        <h4 className="fw-bold text-center">Statement Of Account</h4>
       </div>
-      {vouchers.map((voucher, index) => (
-        <>
-          <div
-            style={{
-              background: "black",
-              height: "1.4rem",
-            }}
-            key={index}
-            className="d-flex align-items-center text-white"
-          >
-            <span className="ml-1">{voucher.date}</span>
-            <span className="ml-2">
-              (
-              {currency(
-                voucher?.deals.reduce((sum, deal) => sum + deal.amount, 0)
-              )}
-              )
-            </span>
-          </div>
-          <table style={{ marginTop: "0rem" }} className="w-100">
-            <thead>
-              <tr>
-                <th className="fw-bold py-2">Customer</th>
-                <th className="fw-bold text-center  py-2">Category</th>
-                <th className="fw-bold text-center  py-2">Services</th>
-                <th className="fw-bold text-center  py-2">Amount</th>
-                <th className="fw-bold text-center  py-2">Discount</th>
-                <th className="fw-bold text-center  py-2">Privilege</th>
-              </tr>
-            </thead>
-            <tbody>
-              {voucher.deals?.map(
-                (
-                  {
-                    customerId,
-                    category,
-                    amount,
-                    discount,
-                    privilege,
-                    cart = [],
-                  },
-                  index
-                ) => (
-                  <tr
-                    style={{
-                      borderBottom: "1px solid black",
-                      borderTop: "1px solid black",
-                    }}
-                    key={index}
-                  >
-                    <td style={{ fontWeight: "bold" }}>
-                      {index + 1}.{" "}
-                      <strong className="ml-1">
-                        {getGenderIcon(customerId?.isMale)}{" "}
-                        {fullName(customerId?.fullName)} |{" "}
-                        {getAge(customerId?.dob)}
-                      </strong>
-                    </td>
-                    <td className="text-center">{category}</td>
-                    <td className="text-left py-0 px-0 text-uppercase">
-                      <div className="d-flex align-items-center">
-                        {cart?.map(({ menuId }, index) => (
-                          <div key={index}>{menuId.abbreviation},</div>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </>
-      ))}
+      <GeneratedBy />
+      <Footer menus={menus} />
     </div>
   );
 };
