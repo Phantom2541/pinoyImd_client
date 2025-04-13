@@ -156,6 +156,7 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.collections = payload;
+
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

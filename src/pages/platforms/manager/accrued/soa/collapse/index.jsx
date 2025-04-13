@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -11,67 +11,94 @@ import {
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse, dateFormat } from "../../../../../../services/utilities";
+import {
+  SetSoaCluster,
+  RESET,
+} from "../../../../../../services/redux/slices/commerce/pos/services/billing";
 
 export default function Body() {
-  const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
-    [cluster, setCluster] = useState([]);
+  const { filtered, activePage, maxPage, cluster, formSubmitted, isSuccess } =
+      useSelector(({ billing }) => billing),
+    [soa, setSoa] = useState([]),
+    [activeId, setActiveId] = useState(-1),
+    [didHoverId, setDidHoverId] = useState(-1),
+    [selected, setSelected] = useState({}),
+    dispatch = useDispatch();
 
-  // Pagination logic and grouping by date
   useEffect(() => {
-    const _cluster = filtered.reduce((groups, item) => {
+    const groupByDate = filtered.reduce((groups, item) => {
       const date = dateFormat(item.createdAt);
-      if (!groups[date]) {
-        groups[date] = [];
+      const index = groups.findIndex((group) => group.date === date);
+      if (index > -1) {
+        groups[index].deals.push(item);
+      } else {
+        groups.push({
+          date,
+          deals: [item],
+        });
       }
-      groups[date].push(item);
       return groups;
-    }, {});
+    }, []);
 
-    setCluster(_cluster);
-  }, [filtered, activePage, maxPage]); // Re-run whenever filtered data or page changes
+    setSoa(groupByDate);
+  }, [filtered, activePage, maxPage]);
 
-  /**
-   * Active states for collapsible items
-   */
-  const [activeId, setActiveId] = useState(-1);
-  const [didHoverId, setDidHoverId] = useState(-1);
+  useEffect(() => {
+    dispatch(SetSoaCluster(soa));
+  }, [soa, dispatch]);
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      setSelected({});
+      dispatch(RESET());
+    }
+  }, [formSubmitted, isSuccess, dispatch]);
+
+  const isChecked = (date, deal) => {
+    if (cluster.length > 0) {
+      const _cluster = [...cluster];
+      const findCluster = _cluster.find((item) => item?.date === date);
+      if (!deal?._id) return findCluster?.hasSelected;
+      const { deals = [] } = findCluster || {};
+      return deals?.some(({ _id }) => deal._id === _id) || false;
+    }
+    return false;
+  };
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
-      {Object.entries(cluster)?.map(([key, values], index) => {
-        const actualIndex = index; // Directly use the index in the paginated data
+      {soa?.map(({ date, deals }, index) => {
+        const actualIndex = index;
         const { color, border } = collapse.getStyle(
           actualIndex,
           activeId,
           didHoverId
         );
-
+        const sum = deals.reduce((acc, item) => {
+          return acc + (item?.services?.up || 0);
+        }, 0);
         return (
           <MDBCard
-            key={`service-${key}`}
+            key={`service-${date}`}
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader
               className={border}
               onMouseLeave={() => setDidHoverId(-1)}
               onMouseEnter={() => setDidHoverId(actualIndex)}
-              onClick={() =>
-                setActiveId(activeId === actualIndex ? -1 : actualIndex)
-              } // Toggle active state
               style={{ borderRadius: "50%" }}
             >
               <CollapsableHeader
-                key={key}
-                title={key}
-                count={values.length}
-                sum={values.reduce((acc, item) => acc + item.amount, 0)}
+                key={date}
+                title={date}
+                deals={deals}
+                count={deals.length}
+                isChecked={isChecked(date)}
+                sum={sum}
                 isOpen={activeId === actualIndex}
                 textColor={color}
                 setActiveId={setActiveId}
                 index={actualIndex}
-                // selectAll={selectedItems[key]?.length === values.length}
-                // setClear={() => handleSelectAll(key, values, false)}
-                // onSelectAll={(checked) => handleSelectAll(key, values, checked)}
               />
             </MDBCollapseHeader>
 
@@ -81,7 +108,13 @@ export default function Body() {
               isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
             >
               <MDBCardBody className="pt-2">
-                <CollapsableBody deals={values} />
+                <CollapsableBody
+                  deals={deals}
+                  date={date}
+                  selected={selected}
+                  setSelected={setSelected}
+                  isChecked={isChecked}
+                />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

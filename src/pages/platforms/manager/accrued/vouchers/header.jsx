@@ -92,7 +92,7 @@ const Header = () => {
         vendor: getProvider(source),
       })
     );
-  }, [source, getProvider]);
+  }, [source, getProvider, dispatch]);
 
   const handleGenerateSOA = () => {
     if (cluster.length === 0)

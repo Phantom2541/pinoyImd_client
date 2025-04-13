@@ -45,17 +45,6 @@ export default function Body() {
     dispatch(SetCluster(vouchers));
   }, [vouchers, dispatch]);
 
-  // const isChecked = (date) => {
-  //   if (cluster.length > 0) {
-  //     // const { date, bulk = false, deal } = data;
-  //     const _cluster = [...cluster];
-  //     return _cluster.some(
-  //       (item) => item?.date === date && item.vendorId === vendor._id
-  //     );
-  //   }
-  //   return false;
-  // };
-
   const isChecked = (date, deal) => {
     if (cluster.length > 0) {
       const _cluster = [...cluster];

@@ -29,6 +29,7 @@ export default function Header({ view, setView }) {
           key: {
             branchId: activePlatform?.branchId,
             createdAt,
+            department: activePlatform?.department,
           },
           token,
         })

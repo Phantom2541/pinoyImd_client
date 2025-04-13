@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-
 import {
   auth,
   personnels,
@@ -21,6 +20,7 @@ import {
   sales,
   taskGenerator,
   deals,
+  billing,
   dispenser,
 } from "./slices/commerce";
 
@@ -54,6 +54,7 @@ const store = configureStore({
     payables,
     payments,
     payrolls,
+    billing,
     auth,
     personnels,
     access,

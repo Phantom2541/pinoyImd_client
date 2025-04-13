@@ -18,7 +18,6 @@ const SOA = () => {
     const _vendor = JSON.parse(localStorage.getItem("vendor")) || {};
     const { menus, gross } = JSON.parse(localStorage.getItem("soa")) || {};
     const voucherList = cluster[_vendor._id] || [];
-
     setTotal(gross);
     setVouchers(voucherList);
     setVendor(_vendor);

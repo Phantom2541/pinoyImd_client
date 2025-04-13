@@ -3,13 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Select } from "../../../../../components/customizable";
 import {
-  OUTSOURCES,
+  BROWSE,
+  RESET,
   SetFilterByOUTSOURCE,
-} from "../../../../../services/redux/slices/commerce/pos/services/deals";
+} from "../../../../../services/redux/slices/commerce/pos/services/billing";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, filtered, month, year } = useSelector(({ deals }) => deals),
+    { collections, filtered, month, year, isSuccess } = useSelector(
+      ({ billing }) => billing
+    ),
     { collections: payables } = useSelector(({ payables }) => payables),
     [suppliers, setSuppliers] = useState([]),
     dispatch = useDispatch();
@@ -30,6 +33,7 @@ const Header = () => {
               vendor?._id || "undefined",
               {
                 _id,
+                soa,
                 displayname: soa
                   ? `${displayname} (₱${soa.amount.toLocaleString()})`
                   : displayname,
@@ -46,7 +50,7 @@ const Header = () => {
   useEffect(() => {
     if (token) {
       dispatch(
-        OUTSOURCES({
+        BROWSE({
           token,
           keys: {
             branchId: activePlatform?.branchId,
@@ -56,11 +60,14 @@ const Header = () => {
         })
       );
     }
+    return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, month, year]);
 
+  console.log("isSuccess", isSuccess);
+
   const handleVendors = (value) => {
-    console.log("value", value);
-    dispatch(SetFilterByOUTSOURCE(value));
+    const vendor = suppliers.find(({ _id }) => _id === value);
+    dispatch(SetFilterByOUTSOURCE({ value, vendor }));
   };
 
   return (

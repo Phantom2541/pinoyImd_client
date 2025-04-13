@@ -203,14 +203,14 @@ const manager = [
         path: "/payables",
         icon: "file-invoice-dollar",
         title: "Outstanding payments for suppliers and utilities.",
-        // component: Payables,
+        component: Payables,
       },
       {
         name: "Payments",
         path: "/payments",
         icon: "dollar-sign",
         title: "List of payments made.",
-        // component: Payments,
+        component: Payments,
       },
       /**
        * SOA from A/P
@@ -221,7 +221,7 @@ const manager = [
         path: "/soa",
         icon: "balance-scale",
         title: "Outsourced services from monthly sales",
-        // component: SOA,
+        component: SOA,
       },
       /**
        * Generated monthly Collections from vouchers  (SOA)
@@ -231,7 +231,7 @@ const manager = [
         path: "/receivables",
         icon: "money-bill",
         title: "Unpaid invoices from corporate accounts or HMOs",
-        // component: Receivables,
+        component: Receivables,
       },
       /**
        * Unproessed Vouchers

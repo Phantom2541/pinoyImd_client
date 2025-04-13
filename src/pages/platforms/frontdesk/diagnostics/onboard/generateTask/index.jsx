@@ -171,7 +171,7 @@ export default function Modal() {
         "top=100px,left=0px,width=1050px,height=750px"
       );
       await saveRequest(`/commerce/pos/services/dealOutSources`, {
-        dealId: deal._id,
+        _id: deal._id,
         servicesId: _outsource,
       });
     }
