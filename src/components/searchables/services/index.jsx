@@ -4,7 +4,6 @@ import { Select } from "../../../components/customizable";
 
 const Services = ({ template, service, setService }) => {
   const services = ServicesSchema.filterByTemplate(template);
-
   const handleChange = (id) => setService(Number(id));
 
   return (
