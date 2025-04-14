@@ -16,7 +16,7 @@ export default function Platforms() {
     dispatch = useDispatch();
   // const navigate = useNavigate();
   useEffect(() => {
-    setAccess(activePlatform.access);
+    setAccess([...activePlatform.access, "Patron"]);
   }, [activePlatform]);
 
   const handlePlatform = (platform) => {
