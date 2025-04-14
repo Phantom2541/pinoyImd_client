@@ -15,13 +15,14 @@ import {
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import dragAndDrop from "../../../../../../assets/drag-and-drop.png";
 const Body = ({ setOutSource, outSource }) => {
-  const dispatch = useDispatch();
-  const { inhouse, outsource } = useSelector(
-      ({ taskGenerator }) => taskGenerator
-    ),
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { inhouse, outsource } = useSelector(({ taskGenerator }) => taskGenerator),
     { collections } = useSelector(({ providers }) => providers),
-    [outSources, setOutSources] = useState([]);
+    [outSources, setOutSources] = useState([]),
+    dispatch = useDispatch();
 
+  const { department } = activePlatform;
+  const isRadiology = department === "radiology";
   useEffect(() => {
     const _outSources = collections
       .filter(({ vendors }) => vendors)
@@ -34,7 +35,7 @@ const Body = ({ setOutSource, outSource }) => {
   }, [collections]);
 
   const handleDragStart = (e, item, fromList) => {
-    if (!outSource) return console.log("Select outsource!!!");
+    if (!outSource && !isRadiology) return console.log("Select outsource!!!");
     const dragPreview = document.createElement("div");
     dragPreview.textContent = item.name;
     Object.assign(dragPreview.style, {
@@ -74,9 +75,9 @@ const Body = ({ setOutSource, outSource }) => {
     const data = e.dataTransfer.getData("application/json");
     if (!data) return;
     const { item, fromList } = JSON.parse(data);
-
+    console.log("toList", toList);
     if (fromList === toList) return;
-    if (toList === "outsource") {
+    if (toList === "outsource" || toList === "official reading") {
       dispatch(SetOUTSOURCE(item));
     } else {
       dispatch(SetINHOUSE(item));
@@ -137,7 +138,7 @@ const Body = ({ setOutSource, outSource }) => {
           justifyContent: "center",
         }}
       >
-        {isOutsource && !outSource ? (
+        {isOutsource && !outSource && !isRadiology ? (
           <h6>
             You need to select an
             <span className="text-primary"> outsource</span> <br />
@@ -145,7 +146,7 @@ const Body = ({ setOutSource, outSource }) => {
           </h6>
         ) : (
           <div className="d-flex flex-column">
-            <p>Drag and Drop Services Here...</p>
+            <p className="text-center">Drag and Drop Services Here...</p>
             <img src={dragAndDrop} alt="No Data" style={{ height: "12rem" }} />
           </div>
         )}
@@ -160,7 +161,7 @@ const Body = ({ setOutSource, outSource }) => {
         <MDBCard className="dragDrop">
           <MDBCardHeader className="bg-light dragDrop d-flex justify-content-between align-items-center">
             <span style={{ fontWeight: 500 }}>{title}</span>
-            {isOutsource && renderSelect()}
+            {isOutsource && !isRadiology && renderSelect()}
           </MDBCardHeader>
           <MDBCardBody
             className="m-0 p-0 dragDrop"
@@ -188,7 +189,10 @@ const Body = ({ setOutSource, outSource }) => {
     <div>
       <MDBRow>
         <Bucket collections={inhouse} title="Inhouse" />
-        <Bucket collections={outsource} title="Outsource" />
+        <Bucket
+          collections={outsource}
+          title={isRadiology ? "Official Reading" : "Outsource"}
+        />
       </MDBRow>
     </div>
   );

@@ -38,6 +38,7 @@ export default function Modal() {
   useEffect(() => {
     if (show) setOutSourceId("");
   }, [show]);
+  const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
 
   const getIDS = (collections) => collections.map(({ id }) => id);
   const saveRequest = async (template, data) => {
@@ -53,7 +54,6 @@ export default function Modal() {
       console.error("Error saving request:", error);
     }
   };
-  const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
     const _outsource = getIDS(outsource);
@@ -73,11 +73,13 @@ export default function Modal() {
       JSON.stringify({
         deal: { ...deal, ssx },
         sentOut,
+        isRad: department === "RAD",
         outsources: outsource,
       })
     );
-    localStorage.setItem("ssx", JSON.stringify(ssx));
 
+    localStorage.setItem("ssx", JSON.stringify(ssx));
+    console.log("inhouse", _inhouse);
     const forms = Object.keys(_inhouse);
     for (const key in _inhouse) {
       const lowercaseKey = key.toLowerCase();
@@ -116,12 +118,26 @@ export default function Modal() {
           await saveRequest(lowercaseKey, soloForms);
           break;
         case "X-ray":
-          // Solo form processing
-          bucket.map(
-            async (test) =>
+          const haveOfficialReading = outsource.length > 0;
+          const inhouseBucket = bucket.map((test) => ({
+            test,
+            hasRead: false,
+          }));
+          const readingBucket = outsource?.map(({ id: test }) => ({
+            test,
+            hasRead: true,
+          }));
+
+          const baseBucket = haveOfficialReading
+            ? [...inhouseBucket, ...readingBucket]
+            : inhouseBucket;
+
+          baseBucket.map(
+            async ({ test, hasRead }) =>
               await saveRequest(lowercaseKey, {
                 dealId: _id,
                 packages: test,
+                hasRead,
                 customerId: customerId?._id,
                 branchId: activePlatform.branchId,
               })
@@ -161,7 +177,8 @@ export default function Modal() {
       );
     }
 
-    const haveOutSource = outsource.length > 0 && outSourceId;
+    const haveOutSource =
+      outsource.length > 0 && (outSourceId || department === "RAD");
 
     if (haveOutSource) {
       window.open(
@@ -169,10 +186,12 @@ export default function Modal() {
         "OutsourceRequestForm", // Unique window name 2
         "top=100px,left=0px,width=1050px,height=750px"
       );
-      await saveRequest(`/commerce/pos/services/dealOutSources`, {
-        _id: deal._id,
-        servicesId: _outsource,
-      });
+      if (department !== "RAD") {
+        await saveRequest(`/commerce/pos/services/dealOutSources`, {
+          _id: deal._id,
+          servicesId: _outsource,
+        });
+      }
     }
 
     const data = {
@@ -197,8 +216,6 @@ export default function Modal() {
     );
     dispatch(TOGGLE());
   };
-
-  console.log("outsource", outsource);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} size="lg" backdrop>
