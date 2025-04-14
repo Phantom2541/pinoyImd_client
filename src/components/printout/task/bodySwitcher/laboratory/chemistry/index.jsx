@@ -9,8 +9,8 @@ import {
 export default function Chemistry({ task, fontSize }) {
   //console.log(fontSize);
   const style = { fontSize: `${fontSize}px` },
-    { packages, services, patient, preferences } = task;
-
+    { packages, services, patient } = task;
+  console.log("task", task);
 
   return (
     <MDBTable hover striped bordered responsive className="mb-0 text-center">
@@ -53,7 +53,7 @@ export default function Chemistry({ task, fontSize }) {
               patient?.isMale,
               patient?.dob,
               preference,
-              preferences
+              services.rv
             ),
             { lo, hi, units } = reference,
             indicators = calculateIndicators(reference, value),
@@ -72,7 +72,7 @@ export default function Chemistry({ task, fontSize }) {
               </td>
               <td style={{ ...style, color }} className="py-0 fw-bold">
                 {indicators}
-                {Number.isInteger(value) ? value?.toFixed(2): value }
+                {Number.isInteger(value) ? value?.toFixed(2) : value}
               </td>
               <td style={style} className="py-0">
                 {!lo ? `< ${hi}` : `${lo} - ${hi}`} {units}

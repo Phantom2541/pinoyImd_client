@@ -39,7 +39,7 @@ export default function Header() {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <span className="mb-0">
-        {_id ? fullName(fullname) : "Tracker"} | &nbsp; 
+        {_id ? fullName(fullname) : "Tracker"} | &nbsp;
         {_id && getAge(dob)}
       </span>
       <SearchUser setPatient={selectPatient} />
