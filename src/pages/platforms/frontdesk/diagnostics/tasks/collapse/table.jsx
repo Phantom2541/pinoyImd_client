@@ -34,12 +34,8 @@ export default function CollapseTable({ menu }) {
   }, [menu]);
 
   const handlePrint = (labTest) => {
-    console.log("labTest", labTest);
-    
     localStorage.setItem("taskPrintout", JSON.stringify(labTest));
 
-    console.log("labTest",labTest);
-    
     // window.open(
     //   "/printout/task",
     //   "Task Printout",
@@ -82,8 +78,8 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
-    console.log("tasasdasdasdasdask",task);
-    
+    console.log("tasasdasdasdasdask", task);
+
     return (
       <tr key={task.key} className={`${hasDone && "table-active"}`}>
         <td className="fw-bold">{capitalize(department)}</td>
@@ -133,6 +129,7 @@ export default function CollapseTable({ menu }) {
                   className="py-1 px-2 m-0"
                 >
                   <MDBIcon icon="print" />
+                  asdasdasdaasdas
                 </MDBBtn>
               )}
           </MDBBtnGroup>

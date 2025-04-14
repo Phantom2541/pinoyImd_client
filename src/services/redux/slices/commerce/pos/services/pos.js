@@ -15,7 +15,6 @@ function safeParseJSON(item, fallback = {}) {
   //   return fallback;
   // }
 }
-console.log(localStorage.getItem("auth"));
 
 const authData = safeParseJSON(localStorage.getItem("auth"));
 const activePlatform =

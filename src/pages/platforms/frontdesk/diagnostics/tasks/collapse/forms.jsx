@@ -2,12 +2,12 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { capitalize } from "../../../../../../services/utilities";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
-import { Services, Templates } from "../../../../../../services/fakeDb";
+import { Services } from "../../../../../../services/fakeDb";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 const Forms = ({ form, obj, index, customer }) => {
-  const { preferences } = useSelector(({ validator }) => validator),
-    { activePlatform } = useSelector(({ auth }) => auth),
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
   const { department } =
     activePlatform.department === "laboratory" ? "LAB" : "RAD";
@@ -16,7 +16,17 @@ const Forms = ({ form, obj, index, customer }) => {
   const formEntries = isCluster ? obj : [obj]; // If Miscellaneous, map multiple; otherwise, use single object
 
   const handlePrint = (task) => {
-    localStorage.setItem("taskPrintout", JSON.stringify(task));
+    const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
+      const range = collections.filter(({ serviceId }) => serviceId === id);
+
+      return {
+        ...rest,
+        id,
+        range,
+      };
+    });
+
+    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
     window.open(
       "/printout/task",
       "Task Printout",
@@ -80,8 +90,7 @@ const Forms = ({ form, obj, index, customer }) => {
                     handlePrint({
                       ...task,
                       branchId: activePlatform?.branch,
-                      services: Services.whereIn(_packages),
-                      preferences,
+                      services: _packages,
                       signatories,
                       isPrint: true,
                     })

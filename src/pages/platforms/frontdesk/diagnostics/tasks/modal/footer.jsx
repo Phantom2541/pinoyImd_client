@@ -10,10 +10,10 @@ import {
 } from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const Footer = () => {
-  const { token, auth } = useSelector(({ auth }) => auth);
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
   const { success, task, heads } = useSelector(({ validator }) => validator);
   const dispatch = useDispatch();
-
+  const department = activePlatform?.department;
   useEffect(() => {
     if (success) {
       dispatch(SetMODAL(false));
@@ -38,13 +38,15 @@ const Footer = () => {
   };
 
   const handleSave = (hasDone) => {
-    const { form, department } = task;
+    const { form } = task;
 
     const findSignatoryId = (identifier) =>
       heads.find(({ section }) => section === identifier)?.user?._id;
 
     const head = findSignatoryId(form.toLowerCase());
-    const sub = findSignatoryId(department === "LAB" ? "pathologist" : "radiologist");
+    const sub = findSignatoryId(
+      department === "laboratory" ? "pathologist" : "radiologist"
+    );
 
     dispatch(
       LABRESULT({
@@ -52,6 +54,7 @@ const Footer = () => {
         data: {
           ...task,
           hasDone: true,
+          department,
           signatories: [head, sub, auth._id],
         },
       })
@@ -61,7 +64,8 @@ const Footer = () => {
 
   const generateHealthyStats = () => {
     if (task?.form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
-    else if (task?.form === "Parasitology") dispatch(SetHEALTHY("parasitology"));
+    else if (task?.form === "Parasitology")
+      dispatch(SetHEALTHY("parasitology"));
   };
 
   return (
@@ -79,7 +83,7 @@ const Footer = () => {
         }
         className="w-100"
       />
-      
+
       {/* Button Layout */}
       <div className="d-flex justify-content-between align-items-center my-2">
         {/* Left: Healthy Client Button (if applicable) */}

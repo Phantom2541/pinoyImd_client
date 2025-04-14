@@ -12,11 +12,14 @@ import TableLoading from "../../../../../components/tableLoading";
  * For refrences to the following deals
  */
 import {
-  PREFERENCES,
-  SetPREFERENCES,
   HEADS,
   SetHEADS,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  BROWSE,
+  SetPREFERENCES,
+  RESET as PREFRESET,
+} from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 import ResultEntry from "./modal";
 
 export default function Tasks() {
@@ -30,18 +33,23 @@ export default function Tasks() {
     if (token && activePlatform?.branchId) {
       const branchId = activePlatform.branchId;
 
-      const preferencesData = localStorage.getItem(`preferences-${branchId}`);
+      const localData = localStorage.getItem(`preferences`);
       const headsData = localStorage.getItem(`heads-${branchId}`);
 
-      if (preferencesData) {
-        dispatch(SetPREFERENCES(JSON.parse(preferencesData)));
-      } else {
-        dispatch(PREFERENCES({ token, branchId })).then((res) => {
-          // optional: save response to localStorage
-          if (res?.payload) {
+      if (localData) {
+        const parsedData = JSON.parse(localData);
+        dispatch(SetPREFERENCES(parsedData));
+      } else if (token && activePlatform?.branchId) {
+        dispatch(
+          BROWSE({
+            token,
+            branchId: activePlatform.branchId,
+          })
+        ).then((result) => {
+          if (result?.payload) {
             localStorage.setItem(
-              `preferences-${branchId}`,
-              JSON.stringify(res.payload?.payload)
+              "preferences",
+              JSON.stringify(result?.payload?.payload)
             );
           }
         });
@@ -59,6 +67,9 @@ export default function Tasks() {
           }
         });
       }
+      return () => {
+        dispatch(PREFRESET());
+      };
     }
   }, [token, dispatch, activePlatform]);
 
