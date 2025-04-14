@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
-import { SETPRIVILEGE } from "../../commerce/pos/services/pos";
 
 const url = "commerce/pos/services/deals";
 const healthyClient = {

@@ -9,9 +9,11 @@ const Forms = ({ form, obj, index, customer }) => {
   const { preferences } = useSelector(({ validator }) => validator),
     { activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
+  const { department } =
+    activePlatform.department === "laboratory" ? "LAB" : "RAD";
 
-  const isMiscellaneous = form === "Miscellaneous";
-  const formEntries = isMiscellaneous ? obj : [obj]; // If Miscellaneous, map multiple; otherwise, use single object
+  const isCluster = ["Miscellaneous", "Xray"].includes(form);
+  const formEntries = isCluster ? obj : [obj]; // If Miscellaneous, map multiple; otherwise, use single object
 
   const handlePrint = (task) => {
     localStorage.setItem("taskPrintout", JSON.stringify(task));
@@ -24,26 +26,13 @@ const Forms = ({ form, obj, index, customer }) => {
 
   return formEntries.map((entry, entryIndex) => {
     const { packages, hasDone = false, remarks = "", signatories = [] } = entry;
-
-    // Find the template that contains this form
-    const foundTemplate = Templates.collections.find(({ components }) =>
-      components.includes(form)
-    );
-
-    if (!foundTemplate) {
-      console.warn(`⚠️ No template found for form: ${form}`);
-      return null; // Skip this row to prevent undefined errors
-    }
-
-    const { department } = foundTemplate;
-
     // Ensure packages is always an array to prevent TypeError
     const _packages =
       packages && typeof packages === "object"
         ? Array.isArray(packages)
           ? packages
           : Object.keys(packages).map((k) => Number(k))
-        : [];
+        : [packages];
 
     const task = {
       ...entry,
@@ -56,15 +45,13 @@ const Forms = ({ form, obj, index, customer }) => {
       department,
     };
 
-    const handleEntry = () => {
-      dispatch(SetTASK({ task, form }));
-    };
+    const handleEntry = () => dispatch(SetTASK({ task, form }));
 
     return (
       <tr key={task.key} className={`${hasDone && "table-active"}`}>
         <td>
           {index + 1}
-          {isMiscellaneous ? `.${entryIndex + 1}` : ""} {capitalize(form)}
+          {isCluster ? `.${entryIndex + 1}` : ""} {capitalize(form)}
         </td>
         <td>{form}</td>
         <td>
