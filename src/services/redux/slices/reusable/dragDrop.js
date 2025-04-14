@@ -22,6 +22,7 @@ export const reduxSlice = createSlice({
   reducers: {
     SetCollections: (state, action) => {
       state.collections = action.payload;
+      console.log("action payload", action.payload);
     },
     SetClusters: (state, action) => {
       state.clusters = action.payload;
