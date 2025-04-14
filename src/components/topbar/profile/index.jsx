@@ -10,7 +10,9 @@ import { useSelector } from "react-redux";
 import { PresetImage } from "../../../services/utilities";
 
 export default function Profile() {
-  const { auth, isPatient, image } = useSelector(({ auth }) => auth);
+  const { auth, isPatient, image, activePlatform } = useSelector(
+    ({ auth }) => auth
+  );
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
@@ -30,7 +32,10 @@ export default function Profile() {
       </MDBDropdownToggle>
       <MDBDropdownMenu right style={{ minWidth: "200px" }}>
         {!isPatient && (
-          <MDBDropdownItem disabled={!auth._id} href="/profile">
+          <MDBDropdownItem
+            disabled={!auth._id}
+            href={`/${activePlatform.platform.toLowerCase()}/profile`}
+          >
             My Account
           </MDBDropdownItem>
         )}
