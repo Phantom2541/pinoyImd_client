@@ -13,7 +13,12 @@ export default function CollapseTable({ menu }) {
   const toggleModal = () => setShowModal(!showModal);
 
   const handlePrint = (task) => {
-    localStorage.setItem("taskPrintout", JSON.stringify(task));
+    const services = Services.whereIn(task.services).map((service) => ({
+      ...service,
+      range: collections.filter(({ serviceId }) => serviceId === service.id),
+    }));
+
+    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
     window.open(
       "/printout/task",
       "Task Printout",
@@ -102,9 +107,8 @@ export default function CollapseTable({ menu }) {
                       ...task,
                       branchId: activePlatform?.branch,
                       referral: physicianId || {},
-                      services: Services.whereIn(_packages),
+                      services: _packages,
                       signatories,
-                      preferences: collections,
                       isPrint: true,
                     })
                   }
@@ -121,8 +125,8 @@ export default function CollapseTable({ menu }) {
     );
   };
 
-  console.log("forms :", forms);
-  console.log("results", results);
+  // console.log("forms :", forms);
+  // console.log("results", results);
 
   return (
     <>
@@ -155,12 +159,6 @@ export default function CollapseTable({ menu }) {
           })}
         </tbody>
       </MDBTable>
-      {/* <Modal
-        show={showModal}
-        toggle={toggleModal}
-        task={task}
-        setTask={setTask}
-      /> */}
     </>
   );
 }

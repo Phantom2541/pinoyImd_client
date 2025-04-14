@@ -9,10 +9,13 @@ const findReference = (
   preferences = []
 ) => {
   const getReference = (predicate) => {
+    console.log("predicate :", predicate);
+    console.log("key :", key);
+    console.log("preferences :", preferences);
+
     return (
-      preferences.find(
-        ({ serviceId, ...rest }) => serviceId === Number(key) && predicate(rest)
-      ) || null
+      preferences.find(({ serviceId, ...rest }) => serviceId === Number(key)) ||
+      null
     );
   };
 

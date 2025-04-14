@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBContainer, MDBCard, MDBCardBody } from "mdbreact";
 import {
   BROWSE,
+  SetPREFERENCES,
   RESET as PREFRESET,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 
@@ -16,8 +17,24 @@ export default function Tasks() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && activePlatform?.branchId) {
-      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
+    const localData = localStorage.getItem("preferences");
+    if (localData) {
+      const parsedData = JSON.parse(localData);
+      dispatch(SetPREFERENCES(parsedData));
+    } else if (token && activePlatform?.branchId) {
+      dispatch(
+        BROWSE({
+          token,
+          branchId: activePlatform.branchId,
+        })
+      ).then((result) => {
+        if (result?.payload) {
+          localStorage.setItem(
+            "preferences",
+            JSON.stringify(result?.payload?.payload)
+          );
+        }
+      });
     }
 
     return () => {
