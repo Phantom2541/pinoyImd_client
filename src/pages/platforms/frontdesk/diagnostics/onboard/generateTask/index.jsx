@@ -198,6 +198,8 @@ export default function Modal() {
     dispatch(TOGGLE());
   };
 
+  console.log("outsource", outsource);
+
   return (
     <MDBModal isOpen={show} toggle={toggle} size="lg" backdrop>
       <MDBModalHeader
