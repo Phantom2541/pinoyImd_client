@@ -87,10 +87,9 @@ const Body = ({ setOutSource, outSource }) => {
     dispatch({ type: "ADD_TO_LIST", payload: { item, toList } });
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-  const List = ({ collections, title }) => {
+  const handleDragOver = (e) => e.preventDefault();
+
+  const Bucket = ({ collections, title }) => {
     const isOutsource = title === "Outsource";
     const lowerTitle = title.toLowerCase();
 
@@ -188,8 +187,8 @@ const Body = ({ setOutSource, outSource }) => {
   return (
     <div>
       <MDBRow>
-        <List collections={inhouse} title="Inhouse" />
-        <List collections={outsource} title="Outsource" />
+        <Bucket collections={inhouse} title="Inhouse" />
+        <Bucket collections={outsource} title="Outsource" />
       </MDBRow>
     </div>
   );
