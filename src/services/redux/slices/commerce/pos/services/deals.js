@@ -255,14 +255,11 @@ export const LABRESULT = createAsyncThunk(
   ({ token, data }, thunkAPI) => {
     try {
       // \diagnostics\laboratory\result\miscellaneous
+      const department = ["laboratory", "radiology"].includes(data.department)
+        ? data.department
+        : "clinic";
       return axioKit.save(
-        `diagnostics/${
-          data.department === "LAB"
-            ? "laboratory"
-            : data.department === "RAD"
-            ? "radiology"
-            : "clinic"
-        }/result/${data.form.toLowerCase()}`,
+        `diagnostics/${department}/result/${data.form.toLowerCase()}`,
         data,
         token
       );
@@ -377,8 +374,6 @@ export const reduxSlice = createSlice({
           state.filtered = state.collections;
           state.source = "";
         } else {
-          console.log("payload", payload);
-
           state.filtered = state.collections.filter(
             ({ outsource }) => outsource?._id.toString() === payload.toString()
 
@@ -403,7 +398,6 @@ export const reduxSlice = createSlice({
       if (parseVoucher[_id]?.length > 0) {
         state.cluster = parseVoucher[_id];
       } else {
-        console.log("register new source", _id);
         const now = new Date();
         const cutoffDate = new Date(
           now.getFullYear(),
@@ -512,7 +506,6 @@ export const reduxSlice = createSlice({
       const _cluster = [...state.cluster];
       const _clusterIndex = _cluster.findIndex((item) => item?.date === date);
       if (_clusterIndex > -1) {
-        console.log("foundCluster");
         //if cluster is already exist
         const { deals = [] } = _cluster[_clusterIndex];
         const _deals = [...deals];

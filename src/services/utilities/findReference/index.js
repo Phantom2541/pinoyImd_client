@@ -13,10 +13,24 @@ const findReference = (
     console.log("key :", key);
     console.log("preferences :", preferences);
 
-    return (
-      preferences.find(({ serviceId, ...rest }) => serviceId === Number(key)) ||
-      null
-    );
+    let references = {};
+    switch (preference) {
+      case "gender":
+        references =
+          preferences.find(({ isMale }) => isMale === gender) || null;
+        break;
+      case "development":
+        references =
+          preferences.find(({ development }) => development === Number(key)) ||
+          null;
+
+        break;
+      default:
+        references = preferences[0];
+        break;
+    }
+
+    return references;
   };
 
   const preferencePredicates = {

@@ -7,10 +7,8 @@ import {
 } from "../../../../../../services/utilities";
 
 export default function Chemistry({ task, fontSize }) {
-  //console.log(fontSize);
   const style = { fontSize: `${fontSize}px` },
     { packages, services, patient } = task;
-  console.log("task", task);
 
   return (
     <MDBTable hover striped bordered responsive className="mb-0 text-center">
@@ -44,7 +42,7 @@ export default function Chemistry({ task, fontSize }) {
       </thead>
       <tbody>
         {Object.entries(packages).map(([fk, value], index) => {
-          const { name, preference } = services?.find(
+          const { name, preference, range } = services?.find(
               ({ id }) => id === Number(fk)
             ),
             nameUppercase = name?.toUpperCase(),
@@ -53,7 +51,7 @@ export default function Chemistry({ task, fontSize }) {
               patient?.isMale,
               patient?.dob,
               preference,
-              services.rv
+              range
             ),
             { lo, hi, units } = reference,
             indicators = calculateIndicators(reference, value),

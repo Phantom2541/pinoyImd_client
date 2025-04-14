@@ -13,10 +13,14 @@ export default function CollapseTable({ menu }) {
   const toggleModal = () => setShowModal(!showModal);
 
   const handlePrint = (task) => {
-    const services = Services.whereIn(task.services).map((service) => ({
-      ...service,
-      range: collections.filter(({ serviceId }) => serviceId === service.id),
-    }));
+    const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
+      const range = collections.filter(({ serviceId }) => serviceId === id);
+      return {
+        ...rest,
+        id,
+        range,
+      };
+    });
 
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
     window.open(
@@ -124,9 +128,6 @@ export default function CollapseTable({ menu }) {
       </tr>
     );
   };
-
-  // console.log("forms :", forms);
-  // console.log("results", results);
 
   return (
     <>
