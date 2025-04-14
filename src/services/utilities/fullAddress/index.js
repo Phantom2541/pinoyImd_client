@@ -14,5 +14,10 @@ const fullAddress = (address, isComplete = true) => {
     barangay && `${barangay}, `
   }${city}, ${region}`.replace(/^\s+|\s+$/gm, "");
 };
+const billingAddress = (address) => {
+  if (typeof address !== "object") return <i>Datatype mismatch</i>;
+  const { province, city, barangay } = address;
+  return `${barangay} - ${city}, ${province}`;
+};
 
-export default fullAddress;
+export { billingAddress, fullAddress };

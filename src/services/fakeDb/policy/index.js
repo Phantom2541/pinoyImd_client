@@ -10,6 +10,12 @@ const Policy = {
       ) || {};
     return department || "";
   },
+  getDepname: (pk) => {
+    if (pk < 0) return "unknown department";
+    const { department = "" } =
+      collections.find(({ department: dep }) => dep === pk) || "";
+    return department || "";
+  },
   getRole: (pk) => {
     if (pk < 0) return "unknown department";
     const { positions = [] } =
@@ -18,13 +24,17 @@ const Policy = {
       ) || {};
     if (positions.length === 0) return "unknown designation";
     const role = [...positions].find(({ id }) => id === pk).display_name;
+    console.log("role", role);
+
     return role;
   },
   getPositions: (code) => {
-    console.log(code);
+    // console.log(code);
     const { positions = [] } = collections.find(
       ({ department }) => department === code
     );
+    console.log("positions", positions);
+
     return positions;
   },
 

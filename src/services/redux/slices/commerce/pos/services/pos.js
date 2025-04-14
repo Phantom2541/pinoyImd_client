@@ -4,17 +4,22 @@ import { Services } from "../../../../../fakeDb";
 // import _ from "lodash";
 const url = "commerce/pos/services/deals";
 // Get data once
-function safeParseJSON(item) {
-  try {
-    return JSON.parse(item) || {};
-  } catch (error) {
-    console.error("Invalid JSON:", item, error);
-    return {};
-  }
+function safeParseJSON(item, fallback = {}) {
+  console.log("item", item);
+
+  if (!item || item === undefined) return fallback;
+  // try {
+  //   return JSON.parse(item) || fallback;
+  // } catch (error) {
+  //   console.error("Invalid JSON:", item, error);
+  //   return fallback;
+  // }
 }
 
 const authData = safeParseJSON(localStorage.getItem("auth"));
-const activePlatform = safeParseJSON(localStorage.getItem("activePlatform"));
+const activePlatform =
+  localStorage.getItem("activePlatform") !== "undefined" &&
+  safeParseJSON(localStorage.getItem("activePlatform"));
 const branch = activePlatform?.branch || {};
 
 const defaultCustomer = {
@@ -205,25 +210,25 @@ export const reduxSlice = createSlice({
       state.sourceId = _id;
       state.membership = membership;
     },
-  ADDTOCART: (state, { payload }) => {
-  const index = state.cart.findIndex((item) => item._id === payload._id);
-  
-  if (index === -1) {
-    state.cart = [...state.cart, payload];
-  } else {
-    // Update the item and increase the quantity
-    state.cart[index] = payload;
-  }
+    ADDTOCART: (state, { payload }) => {
+      const index = state.cart.findIndex((item) => item._id === payload._id);
 
-  // Get department(s) related to the new item
-  const _department = Services.getDepartment(payload.packages);
+      if (index === -1) {
+        state.cart = [...state.cart, payload];
+      } else {
+        // Update the item and increase the quantity
+        state.cart[index] = payload;
+      }
 
-  // Only update if department data exists and is not empty
-  if (_department && _department.length > 0) {
-    const department = [...new Set([..._department, ...state.department])];
-    state.department = department;
-  }
-},
+      // Get department(s) related to the new item
+      const _department = Services.getDepartment(payload.packages);
+
+      // Only update if department data exists and is not empty
+      if (_department && _department.length > 0) {
+        const department = [...new Set([..._department, ...state.department])];
+        state.department = department;
+      }
+    },
     REMOVEFROMCART: (state, { payload }) => {
       //console.log("state.cart :", state.cart);
       //console.log("payload :", payload);

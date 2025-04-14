@@ -12,12 +12,16 @@ import {
   TOGGLE,
   REFORM,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-
 import { axioKit } from "../../../../../../services/utilities";
-
-import Body from "./list";
+import CaseBox from "./case";
 import { Services } from "../../../../../../services/fakeDb";
+import _ from "lodash";
 
+/**
+ * Common for Buntis and Blood Donors
+ * HIV, RPR, HBsAg,  HCV
+ */
+const panel = [68, 69, 70, 97];
 export default function Modal() {
   const { auth, token, activePlatform } = useSelector(({ auth }) => auth),
     {
@@ -32,21 +36,28 @@ export default function Modal() {
   const toggle = () => dispatch(TOGGLE());
 
   useEffect(() => {
-    if (show) {
-      setOutSourceId("");
-    }
+    if (show) setOutSourceId("");
   }, [show]);
+  const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
 
   const getIDS = (collections) => collections.map(({ id }) => id);
-
+  const saveRequest = async (template, data) => {
+    try {
+      const _department = ["laboratory", "radiology"].includes(
+        activePlatform.department
+      )
+        ? activePlatform.department
+        : "clinic"; // default fallback just in case
+      const url = `/diagnostics/${_department}/result/${template}`;
+      await axioKit.save(url, data, token);
+    } catch (error) {
+      console.error("Error saving request:", error);
+    }
+  };
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
     const _outsource = getIDS(outsource);
-    const department = activePlatform.department;
-    const _inhouse = Services.getTemplates(
-      inhouseIDS,
-      department === "laboratory" ? "LAB" : "RAD"
-    );
+    const _inhouse = Services.getTemplates(inhouseIDS, department);
 
     const { _id, customerId, ssx } = deal;
     //sent out company
@@ -62,56 +73,41 @@ export default function Modal() {
       JSON.stringify({
         deal: { ...deal, ssx },
         sentOut,
+        isRad: department === "RAD",
         outsources: outsource,
       })
     );
+
     localStorage.setItem("ssx", JSON.stringify(ssx));
-
+    console.log("inhouse", _inhouse);
     const forms = Object.keys(_inhouse);
-
-    const saveRequest = async (url, data) => {
-      try {
-        await axioKit.save(url, data, token);
-      } catch (error) {
-        console.error("Error saving request:", error);
-      }
-    };
-
     for (const key in _inhouse) {
       const lowercaseKey = key.toLowerCase();
-
+      let bucket = _inhouse[key];
       const requestData = {
-        packages: _inhouse[key],
         _id,
+        packages: bucket,
         customerId: customerId?._id,
         branchId: activePlatform.branchId,
       };
 
       switch (key) {
         case "Miscellaneous":
-          const buntisTests = []; // HIV, RPR, HBsAg, HAV, HCV
-          let tests = _inhouse[key];
-
-          const buntisPresent = tests.filter((test) =>
-            buntisTests.includes(test)
-          );
-          if (buntisPresent.length) {
-            tests = tests.filter((item) => !buntisTests.includes(item));
-
-            // Save buntisPresent if present
-            await saveRequest("/diagnostics/laboratory/result/miscellaneous", {
-              packages: buntisPresent,
+          const panelAvail = bucket.filter((test) => panel.includes(test));
+          if (panelAvail.length) {
+            bucket = bucket.filter((item) => !panel.includes(item));
+            await saveRequest(lowercaseKey, {
+              packages: panelAvail,
               dealId: _id,
               customerId: customerId?._id,
               branchId: activePlatform.branchId,
               buntis: true,
             });
-            console.log("results test", tests);
-            return; // Stop further queries if buntisPresent is saved
+            return; // Stop further queries if panel is saved
           }
 
           // Solo form processing
-          const soloForms = tests.map((test) => ({
+          const soloForms = bucket.map((test) => ({
             packages: [test],
             dealId: _id,
             customerId: customerId?._id,
@@ -119,37 +115,56 @@ export default function Modal() {
             _buntis: false,
           }));
 
-          await saveRequest(
-            "/diagnostics/laboratory/result/miscellaneous",
-            soloForms
-          );
+          await saveRequest(lowercaseKey, soloForms);
           break;
-
-        case "ECG":
         case "X-ray":
-          // Radiology department handling
-          await saveRequest(
-            `/diagnostics/${department}/result/${lowercaseKey}`,
-            requestData
+          const haveOfficialReading = outsource.length > 0;
+          const inhouseBucket = bucket.map((test) => ({
+            test,
+            hasRead: false,
+          }));
+          const readingBucket = outsource?.map(({ id: test }) => ({
+            test,
+            hasRead: true,
+          }));
+
+          const baseBucket = haveOfficialReading
+            ? [...inhouseBucket, ...readingBucket]
+            : inhouseBucket;
+
+          baseBucket.map(
+            async ({ test, hasRead }) =>
+              await saveRequest(lowercaseKey, {
+                dealId: _id,
+                packages: test,
+                hasRead,
+                customerId: customerId?._id,
+                branchId: activePlatform.branchId,
+              })
           );
           break;
-
-        case "Examination":
-        case "Certificate":
-          // Clinic department handling
-          await saveRequest(
-            `/diagnostics/${department}/result/${lowercaseKey}`,
-            requestData
-          );
-          break;
-
         default:
-          // Default case for other departments
-          await saveRequest(
-            `/diagnostics/${department}/result/${lowercaseKey}`,
-            requestData
-          );
-          break;
+          /**
+           * Single results in every transactions
+           * 1. Chemistr
+           * 2. Urinalysis
+           * 3. Hematology
+           * 4. Parasitology
+           * 5. Coagulation
+           * 6. Serology
+           * 7. ECG
+           * 8. Ultrasound
+           * 9. 2DEcho
+           * 10. certificate
+           * 11. Examination
+           * 12. Bacteriology
+           * 13. Biopsy
+           * 14. PAPs
+           * 15. PBS
+           * 16. compatibility
+           * 17. Drugtest
+           */
+          await saveRequest(lowercaseKey, requestData);
       }
     }
 
@@ -162,7 +177,8 @@ export default function Modal() {
       );
     }
 
-    const haveOutSource = outsource.length > 0 && outSourceId;
+    const haveOutSource =
+      outsource.length > 0 && (outSourceId || department === "RAD");
 
     if (haveOutSource) {
       window.open(
@@ -170,19 +186,20 @@ export default function Modal() {
         "OutsourceRequestForm", // Unique window name 2
         "top=100px,left=0px,width=1050px,height=750px"
       );
-      await saveRequest(`/commerce/pos/services/dealOutSources`, {
-        dealId: deal._id,
-        servicesId: _outsource,
-      });
+      if (department !== "RAD") {
+        await saveRequest(`/commerce/pos/services/dealOutSources`, {
+          _id: deal._id,
+          servicesId: _outsource,
+        });
+      }
     }
 
     const data = {
       _id,
       ssx,
-      lol: auth._id,
       rendered: [
         {
-          department: "LAB",
+          department,
           renderedBy: auth._id,
           renderedAt: new Date().toLocaleString(),
         },
@@ -218,7 +235,7 @@ export default function Modal() {
             management.
           </MDBTypography>
 
-          <Body outSource={outSourceId} setOutSource={setOutSourceId} />
+          <CaseBox outSource={outSourceId} setOutSource={setOutSourceId} />
           <MDBBtn
             className="float-right mt-3 mb-3"
             color="primary"

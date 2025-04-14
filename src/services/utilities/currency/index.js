@@ -5,7 +5,7 @@
  * @returns {string} The formatted string.
  */
 const currency = (num = 0) => {
-  if (!num) return "₱ 0";
+  if (!num) return "-";
 
   const options = {
     style: "currency",

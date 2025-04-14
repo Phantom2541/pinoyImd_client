@@ -95,6 +95,10 @@ export const reduxSlice = createSlice({
 
       state.filtered = [...payload];
     },
+    SetPREFERENCES: (state, { payload }) => {
+      state.cluster = state.filtered = state.collections = [...payload];
+      state.isLoading = false;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -190,6 +194,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SetFILTERED, SetCLUSTER } = reduxSlice.actions;
+export const { RESET, SetFILTERED, SetCLUSTER, SetPREFERENCES } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

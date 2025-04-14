@@ -19,6 +19,7 @@ export default function Routes() {
   const { platform = "" } = activePlatform || {};
 
   const platformPrefix = platform ? `/${platform.toLowerCase()}` : "";
+  console.log("platform", platformPrefix);
 
   const renderSidebars = () => {
     const platforms = Sidebars[platform.toLowerCase()];

@@ -46,11 +46,15 @@ export default function Login({ show, toggle = null }) {
 
   useEffect(() => {
     if (auth._id && loginSuccess) {
-      history.push(
-        `/${activePlatform.platform}/${
-          activePlatform.platform === "manager" ? "dashboard" : "bulletin"
-        }`
-      );
+      if (activePlatform) {
+        history.push(
+          `/${activePlatform?.platform}/${
+            activePlatform?.platform === "manager" ? "dashboard" : "bulletin"
+          }`
+        );
+      } else {
+        history.push(`/patron/bulletin`);
+      }
       dispatch(RESET());
     }
   }, [auth, loginSuccess, history, location, dispatch, activePlatform]);

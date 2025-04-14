@@ -29,11 +29,13 @@ const List = ({
     event.preventDefault();
   };
   return (
-    <MDBCol
-      onDrop={(event) => handleDrop(event, tableName)}
-      onDragOver={handleDragOver}
-    >
-      <MDBCard className="dragDrop" style={{ height: "20rem" }}>
+    <MDBCol>
+      <MDBCard
+        className="dragDrop bg-danger"
+        style={{ height: "20rem" }}
+        onDrop={(event) => handleDrop(event, tableName)}
+        onDragOver={handleDragOver}
+      >
         <MDBCardHeader className="bg-light dragDrop d-flex justify-content-between align-items-center transition-all">
           <span style={{ fontWeight: 500 }}> {title}</span>
           {collections.length > 4 && <SearchUser />}
@@ -43,13 +45,16 @@ const List = ({
           onDrop={(event) => handleDrop(event, tableName)}
           onDragOver={handleDragOver}
         >
-          <MDBListGroup>
+          <MDBListGroup
+            onDrop={(event) => handleDrop(event, tableName)}
+            onDragOver={handleDragOver}
+          >
             {collections.length > 0 ? (
               collections.map((role, index) => (
                 <MDBAnimation
                   key={`${role._id}-${index}`}
                   type={
-                    index === removeID && title === removeBy
+                    role._id === removeID && title === removeBy
                       ? "zoomOut"
                       : addID === role._id
                       ? "zoomIn"
@@ -70,7 +75,11 @@ const List = ({
                 </MDBAnimation>
               ))
             ) : (
-              <MDBListGroupItem className="text-center">
+              <MDBListGroupItem
+                className="text-center"
+                onDrop={(event) => handleDrop(event, tableName)}
+                onDragOver={handleDragOver}
+              >
                 No Record
               </MDBListGroupItem>
             )}

@@ -22,8 +22,6 @@ export default function Body() {
         const { _id, forms } = task;
 
         if (!forms || forms.length === 0) {
-          console.log("Generating forms for task:", _id);
-
           try {
             const services = Services.getTemplates(task.packages);
             const _forms = Object.keys(services);
@@ -72,20 +70,18 @@ export default function Body() {
 
   return (
     <>
-      {tasks.map((task, index) => {
-        return (
-          <Collapse
-            key={task?._id}
-            task={task}
-            didHoverID={didHoverID}
-            setDidHoverID={setDidHoverID}
-            number={index + 1}
-            setActiveCollapse={setActiveCollapse}
-            activeCollapse={activeCollapse}
-            isActive={activeCollapse === task?._id}
-          />
-        );
-      })}
+      {tasks.map((task, index) => (
+        <Collapse
+          key={task?._id}
+          task={task}
+          didHoverID={didHoverID}
+          setDidHoverID={setDidHoverID}
+          number={index + 1}
+          setActiveCollapse={setActiveCollapse}
+          activeCollapse={activeCollapse}
+          isActive={activeCollapse === task?._id}
+        />
+      ))}
     </>
   );
 }

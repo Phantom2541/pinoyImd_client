@@ -135,7 +135,6 @@ export default function TasksCollapse({
         data: {
           _id,
           ssx,
-          lol: auth._id,
           rendered: [
             {
               department: "LAB",

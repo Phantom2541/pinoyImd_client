@@ -111,6 +111,7 @@ export const reduxSlice = createSlice({
     SetSELECTED: (state, { payload }) => {
       const list = payload.cart?.flatMap((item) => item.packages || []);
       const _inhouse = Services.whereIn(list);
+      console.log(_inhouse);
       state.inhouse = _inhouse;
       state.outsource = [];
       state.selected = payload;
@@ -154,8 +155,18 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
+        const { payload, department } = action.payload;
+        const _collections = payload.map((item) => {
+          return {
+            ...item,
+            cart: item?.cart?.filter(({ packages }) =>
+              Services.filterByDepartment(packages, department)
+            ),
+          };
+        });
+
+        state.collections = _collections;
+
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

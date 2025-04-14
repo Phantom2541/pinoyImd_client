@@ -6,7 +6,9 @@ const url = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
   token = localStorage.getItem("token") || "",
   email = localStorage.getItem("email") || "",
-  activePlatform = localStorage.getItem("activePlatform"),
+  activePlatform =
+    localStorage.getItem("activePlatform") !== "undefined" &&
+    localStorage.getItem("activePlatform"),
   fileUrl = `/public/users/credentials/${email}`,
   profileUrl = `/public/users/${email}`;
 
