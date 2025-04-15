@@ -19,8 +19,6 @@ export default function Routes() {
   const { platform = "" } = activePlatform || {};
 
   const platformPrefix = platform ? `/${platform.toLowerCase()}` : "";
-  console.log("platform", platformPrefix);
-
   const renderSidebars = () => {
     const platforms = Sidebars[platform.toLowerCase()];
     if (!Array.isArray(platforms)) return "Ooops.. platforms must be array";
@@ -72,12 +70,9 @@ export default function Routes() {
   return (
     <Switch>
       {!platform && <Route exact path={`/dashboard`} component={UnsetApply} />}
-
       {renderSidebars()}
-
       <Route path={`${platformPrefix}/profile`} exact component={Profile} />
       <Route path={`${platformPrefix}/apply`} exact component={UnsetApply} />
-
       <Route component={NotFound} />
     </Switch>
   );

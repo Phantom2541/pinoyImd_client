@@ -302,8 +302,6 @@ export const reduxSlice = createSlice({
       state.activePage = 1;
     },
     SetActivePAGE: (state, { payload }) => {
-      console.log("payload", payload);
-
       state.activePage = payload;
     },
     TOGGLE: (state) => {

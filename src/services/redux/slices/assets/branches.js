@@ -5,19 +5,28 @@ const url = "assets/branches";
 
 const initialState = {
   collections: [],
+  filtered: [],
   formSubmitted: false,
+  didSearch: false,
+  selected: {},
+  page: 0,
   isSuccess: false,
   isLoading: false,
   message: "",
+  showModal: false,
+  /**
+   * Footer
+   */
+  maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
 };
 
 export const BROWSE = createAsyncThunk(
   `${url}/browse`,
-  ({ token, companyId }, thunkAPI) => {
+  ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, {
-        companyId: companyId,
-      });
+      return axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -138,10 +147,24 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    /**
+     *  Footer
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+      state.selected = {};
+    },
     RESET: (state) => {
       state.isSuccess = false;
+      state.isLoading = false;
       state.formSubmitted = false;
-      state.isSuccess = false;
       state.message = "";
     },
   },
@@ -152,8 +175,8 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, action) => {
-        state.collections = action.payload;
+      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+        state.collections = state.filtered = payload;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -286,6 +309,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { RESET, SetMaxPage, SetActivePAGE, TOGGLE } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
