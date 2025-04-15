@@ -14,14 +14,14 @@ import { PresetUser } from "../../../../../services/utilities";
 export default function CompanyCards({ companies }) {
   return (
     <>
-      <MDBTypography note noteColor="info" className="text-center">
+      {/* <MDBTypography note noteColor="info" className="text-center">
         <strong>Instructions: </strong>
         Click a card to send a request form.
-      </MDBTypography>
+      </MDBTypography> */}
 
       <MDBRow>
         {!!companies.length ? (
-          companies.map(company => (
+          companies.map((company) => (
             <CompanyCard key={company._id} company={company} />
           ))
         ) : (

@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { MDBCol, MDBContainer, MDBInput, MDBRow } from "mdbreact";
+import {
+  MDBCard,
+  MDBCardBody,
+  MDBCol,
+  MDBContainer,
+  MDBRow,
+  MDBAnimation,
+  MDBProgress,
+  MDBView,
+} from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import CompanyCards from "./cards";
 import {
   BROWSE,
   RESET,
 } from "../../../../services/redux/slices/assets/companies";
+import Search from "../../../../components/searchables/physicians";
+import "./style.css";
 
 // const path = [
 //   {
@@ -15,7 +26,7 @@ import {
 
 export default function UnsetApply() {
   const { token, maxPage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ companies }) => companies),
+    { collections, isLoading } = useSelector(({ companies }) => companies),
     [companies, setCompanies] = useState([]),
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
@@ -59,20 +70,85 @@ export default function UnsetApply() {
   };
 
   return (
-    <>
-      <MDBContainer className="py-5 mt-4">
-        <MDBRow className="mb-3">
-          <MDBCol md="6">
-            <MDBInput
-              onChange={(e) => handleSearch(e.target.value)}
-              type="search"
-              label="Search by Company name"
-            />
-          </MDBCol>
-        </MDBRow>
-        <CompanyCards companies={companies} page={page} />
-        {/* Modal must be here */}
-      </MDBContainer>
-    </>
+    <MDBContainer className="mt-4" fluid>
+      {/* <MDBRow className="mb-3">
+        <MDBCol md="6">
+          <MDBInput
+            onChange={(e) => handleSearch(e.target.value)}
+            type="search"
+            label="Search by Company name"
+          />
+        </MDBCol>
+      </MDBRow> */}
+      <MDBCard narrow>
+        <MDBView
+          cascade
+          className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+        >
+          <div>Company List</div>
+          <div>
+            <Search />
+          </div>
+        </MDBView>
+        <MDBCardBody>
+          {!isLoading ? (
+            <CompanyCards companies={companies} page={page} />
+          ) : (
+            <>
+              <MDBRow>
+                {new Array(12).fill("").map((_, index) => (
+                  <MDBCol md="3" key={index} className="mt-4">
+                    <MDBCard>
+                      <MDBCardBody>
+                        <MDBAnimation
+                          type="flash"
+                          infinite
+                          delay={`${index + 1}00ms`}
+                          duration="3000ms"
+                        >
+                          <MDBProgress
+                            animated
+                            color="light"
+                            value={3000}
+                            id="company-loading-1"
+                          ></MDBProgress>
+                        </MDBAnimation>
+                        <MDBAnimation
+                          type="flash"
+                          infinite
+                          delay={`${index + 1}00ms`}
+                          duration="3000ms"
+                        >
+                          <MDBProgress
+                            animated
+                            color="light"
+                            value={3000}
+                            id="company-loading-2"
+                          ></MDBProgress>
+                        </MDBAnimation>
+                        <MDBAnimation
+                          type="flash"
+                          infinite
+                          delay={`${index + 1}00ms`}
+                          duration="3000ms"
+                        >
+                          <MDBProgress
+                            animated
+                            color="light"
+                            value={3000}
+                            id="company-loading-3"
+                          ></MDBProgress>
+                        </MDBAnimation>
+                      </MDBCardBody>
+                    </MDBCard>
+                  </MDBCol>
+                ))}
+              </MDBRow>
+            </>
+          )}
+        </MDBCardBody>
+      </MDBCard>
+      {/* Modal must be here */}
+    </MDBContainer>
   );
 }

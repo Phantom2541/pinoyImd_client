@@ -55,22 +55,21 @@ export default function UnsetApply() {
       setCompanies(collections);
     }
   };
-
   return (
-    <>
-      <MDBContainer className="py-5 mt-4">
-        <MDBRow className="mb-3">
-          <MDBCol md="6">
-            <MDBInput
-              onChange={(e) => handleSearch(e.target.value)}
-              type="search"
-              label="Search by Company name"
-            />
-          </MDBCol>
-        </MDBRow>
+    <MDBContainer className=" mt-4 bg-danger" fluid>
+      <MDBRow className="mb-3">
+        <MDBCol md="6">
+          <MDBInput
+            onChange={(e) => handleSearch(e.target.value)}
+            type="search"
+            label="Search by Company name"
+          />
+        </MDBCol>
+      </MDBRow>
+      <MDBRow>
         <CompanyCards companies={companies} page={page} />
-        {/* Modal must be here */}
-      </MDBContainer>
-    </>
+      </MDBRow>
+      {/* Modal must be here */}
+    </MDBContainer>
   );
 }
