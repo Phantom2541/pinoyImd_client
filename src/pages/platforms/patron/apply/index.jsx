@@ -18,10 +18,8 @@ export default function UnsetApply() {
     { collections } = useSelector(({ companies }) => companies),
     [companies, setCompanies] = useState([]),
     [page, setPage] = useState(1),
-    [totalPages, setTotalPages] = useState(1),
+    // [totalPages, setTotalPages] = useState(1),
     dispatch = useDispatch();
-
-  //console.log("unused variable total pages", totalPages);
 
   useEffect(() => {
     if (token) dispatch(BROWSE(token));
@@ -40,11 +38,11 @@ export default function UnsetApply() {
       //Pagination
       let totalPages = Math.floor(companies.length / maxPage);
       if (companies.length % maxPage > 0) totalPages += 1;
-      setTotalPages(totalPages);
+      // setTotalPages(totalPages);
 
       page > totalPages && setPage(totalPages);
     }
-  }, [companies, page]);
+  }, [companies, page, maxPage]);
 
   const handleSearch = (string) => {
     if (string) {

@@ -1,7 +1,6 @@
 import UnsetApply from "../../../pages/platforms/guest/apply";
 import Dashboard from "../../../pages/platforms/patron/dashboard";
-import Laboratories from "../../../pages/platforms/patron/diagnostics/laboratory";
-import Radiologies from "../../../pages/platforms/patron/diagnostics/radiology";
+import { Diagnostics } from "../../../pages/platforms/patron/echart";
 
 const patron = [
   {
@@ -16,16 +15,21 @@ const patron = [
     icon: "user-tag",
     children: [
       {
-        name: "Laboratory",
+        name: "Admission",
+        path: "/admission",
+      },
+      {
+        name: "Diagnostics",
+        path: "/diagnostics",
+        component: Diagnostics,
+      },
+      {
+        name: "Medical Records",
         path: "/laboratory",
       },
       {
-        name: "Radiology",
-        path: "/radiology",
-      },
-      {
-        name: "Admission",
-        path: "/admission",
+        name: "Medical Certificates",
+        path: "/certificates",
       },
     ],
   },
@@ -39,23 +43,6 @@ const patron = [
     path: "/apply",
     icon: "paper-plane",
     component: UnsetApply,
-  },
-  {
-    name: "Diagnostics",
-    path: "/diagnostics",
-    icon: "hospital-alt",
-    children: [
-      {
-        name: "Laboratory",
-        path: "/laboratory",
-        component: Laboratories,
-      },
-      {
-        name: "Radiology",
-        path: "/radiology",
-        component: Radiologies,
-      },
-    ],
   },
 ];
 

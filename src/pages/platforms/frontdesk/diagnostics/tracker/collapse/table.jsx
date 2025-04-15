@@ -1,36 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { capitalize } from "../../../../../../services/utilities";
-import { Services, Templates } from "../../../../../../services/fakeDb";
+import React, { useState } from "react";
+import { capitalize } from "./../../../../../../services/utilities";
+import { Services, Templates } from "./../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import Modal from "./modal";
 import { useSelector } from "react-redux";
 
 export default function CollapseTable({ menu }) {
-  const [labTests, setLabTests] = useState([]),
-    [task, setTask] = useState({}),
-    [showModal, setShowModal] = useState(false),
+  const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    { activePlatform } = useSelector(({ auth }) => auth);
+    [task, setTask] = useState({}),
+    [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => setShowModal(!showModal);
 
-  useEffect(() => {
-    if (!menu) return;
-
-    const filteredLabTests = Templates.collections.flatMap(
-      ({ components, department }) => {
-        if (department !== "LAB") return []; // Ignore non-lab departments
-
-        return components.filter((component) => menu[component.toLowerCase()]);
-      }
-    );
-    setLabTests(filteredLabTests);
-  }, [menu]);
-
   const handlePrint = (task) => {
-    console.log("taskPrintout", task);
+    const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
+      const range = collections.filter(({ serviceId }) => serviceId === id);
+      return {
+        ...rest,
+        id,
+        range,
+      };
+    });
 
-    localStorage.setItem("taskPrintout", JSON.stringify(task));
+    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
     window.open(
       "/printout/task",
       "Task Printout",
@@ -38,7 +30,8 @@ export default function CollapseTable({ menu }) {
     );
   };
 
-  const { customerId, physicianId, source, category, _id } = menu;
+  const { customerId, physicianId, source, category, _id, forms, results } =
+    menu;
 
   const handleIndividual = (form, obj, index, miscIndex = 0) => {
     const { packages, hasDone = false, remarks = "", signatories = [] } = obj,
@@ -66,9 +59,19 @@ export default function CollapseTable({ menu }) {
     };
 
     return (
-      <tr key={task.key} className={`${hasDone && "table-active"}`}>
-        <td className="fw-bold">{capitalize(department)}</td>
-        <td>{form}</td>
+      <tr key={task.key}>
+        {/* remove by darrel className={`${hasDone && "table-active"}`} */}
+        <td className="fw-bold">
+          {capitalize(department)}{" "}
+          {hasDone && (
+            <MDBBadge color="success" className="ml-2">
+              Done
+            </MDBBadge>
+          )}
+        </td>
+        <td>
+          {form} {hasDone && <MDBIcon icon="check" className="ml-1" />}
+        </td>
         <td>
           {Services.whereIn(_packages).map(({ abbreviation }, index) => (
             <MDBBadge
@@ -79,18 +82,21 @@ export default function CollapseTable({ menu }) {
               {abbreviation}
             </MDBBadge>
           ))}
+
+          {hasDone && <MDBIcon icon="check" className="ml-1" />}
         </td>
         <td>
           <MDBBtnGroup>
             <MDBBtn
               title="Modal"
+              rounded
               onClick={() => {
                 setTask(task);
                 toggleModal();
               }}
               color={hasDone ? "info" : "primary"}
               size="sm"
-              className="py-1 px-2 m-0"
+              className="py-1 px-3 m-0"
             >
               <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
             </MDBBtn>
@@ -99,20 +105,20 @@ export default function CollapseTable({ menu }) {
               signatories[1] &&
               hasDone && (
                 <MDBBtn
+                  rounded
                   onClick={() =>
                     handlePrint({
                       ...task,
                       branchId: activePlatform?.branch,
                       referral: physicianId || {},
-                      services: Services.whereIn(_packages),
+                      services: _packages,
                       signatories,
-                      preferences: collections,
                       isPrint: true,
                     })
                   }
                   color="warning"
                   size="sm"
-                  className="py-1 px-2 m-0"
+                  className="py-1 px-3 m-0"
                 >
                   <MDBIcon icon="print" />
                 </MDBBtn>
@@ -125,42 +131,35 @@ export default function CollapseTable({ menu }) {
 
   return (
     <>
-      <MDBTable small hover responsive>
+      <MDBTable small hover responsive bordered className="w-100">
         <thead>
           <tr>
             <th>Department</th>
             <th>Template</th>
             <th>Services</th>
-            <th>Action</th>
+            <th>Action </th>
             <th />
           </tr>
         </thead>
         <tbody>
-          {labTests?.map((_labTest, index) => {
-            const labTest = menu[_labTest.toLowerCase()];
-
-            if (!labTest)
+          {forms?.map((form, index) => {
+            const result = results?.[form.toLowerCase()];
+            if (!result)
               return (
                 <tr key={task.key}>
                   <td colSpan={4}>Empty Test</td>
                 </tr>
               );
 
-            if (Array.isArray(labTest))
-              return labTest.map((obj, i) =>
-                handleIndividual(_labTest, obj, index + i, i)
+            if (Array.isArray(result))
+              return result.map((obj, i) =>
+                handleIndividual(form, obj, index + i, i)
               );
 
-            return handleIndividual(_labTest, labTest, index);
+            return handleIndividual(form, result, index);
           })}
         </tbody>
       </MDBTable>
-      <Modal
-        show={showModal}
-        toggle={toggleModal}
-        task={task}
-        setTask={setTask}
-      />
     </>
   );
 }

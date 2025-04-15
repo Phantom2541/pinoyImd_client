@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTypography } from "mdbreact";
-import Collapse from "./collapse";
-import { Services } from "../../../../../services/fakeDb";
+import Collapse from "./collapse/index.jsx";
+import { Services } from "../../../../../services/fakeDb/index.js";
 import { UPDATE } from "../../../../../services/redux/slices/commerce/pos/services/deals.js";
 
 export default function Body() {

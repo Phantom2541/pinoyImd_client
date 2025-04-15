@@ -6,10 +6,9 @@ import {
   SetPatient,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { fullName, getAge } from "../../../../../services/utilities";
-import { SearchUser } from "../../../../../components/searchables";
 import { MDBView } from "mdbreact";
 export default function Header() {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, auth } = useSelector(({ auth }) => auth),
     {
       _id,
       dob,
@@ -17,29 +16,20 @@ export default function Header() {
     } = useSelector(({ deals }) => deals.patient),
     dispatch = useDispatch();
 
-  /**
-   * Initial Fetch
-   * Return all diagnostics
-   * only same branch can de edited if meet conditions.
-   *  1. same branch
-   *  2. same department
-   *  3. same performer
-   *  4. with in 7 days
-   */
   useEffect(() => {
-    if (_id && activePlatform?.branchId) {
+    if (auth._id) {
+      dispatch(SetPatient(auth));
       dispatch(
         TRACKER({
           token,
           key: {
-            customerId: _id,
+            customerId: auth._id,
+            department: "LAB",
           },
         })
       );
     }
-  }, [_id, activePlatform, dispatch, token]);
-
-  const selectPatient = (user) => dispatch(SetPatient(user));
+  }, [auth, dispatch, token]);
 
   return (
     <MDBView
@@ -50,7 +40,6 @@ export default function Header() {
         {_id ? fullName(fullname) : "Tracker"} | &nbsp;
         {_id && getAge(dob)}
       </span>
-      <SearchUser setPatient={selectPatient} />
     </MDBView>
   );
 }
