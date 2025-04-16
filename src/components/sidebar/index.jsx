@@ -4,6 +4,8 @@ import {
   MDBSideNavCat,
   MDBSideNavNav,
   MDBSideNav,
+  MDBAnimation,
+  MDBProgress,
   MDBIcon,
 } from "mdbreact";
 import { useSelector } from "react-redux";
@@ -14,16 +16,16 @@ import {
   capitalize,
   isImageValid,
 } from "../../services/utilities";
+import "./style.css";
 export default function SideNavigation({
   triggerOpening,
   breakWidth,
   onLinkClick,
 }) {
   const [links, setLinks] = useState([]),
-    { activePlatform, company } = useSelector(({ auth }) => auth),
+    { activePlatform, company, isLoading } = useSelector(({ auth }) => auth),
     [logo, setLogo] = useState(FailedLogo),
     [activeCategory, setActiveCategory] = useState(""); //for multiple children sidebar
-
   useEffect(() => {
     if (company?.name && activePlatform?.platform) {
       /**
@@ -104,14 +106,47 @@ export default function SideNavigation({
         triggerOpening={triggerOpening}
         style={{ transition: "padding-left .3s" }}
       >
-        {activePlatform && (
-          <MDBSideNavNav>
-            {renderNavItems(
-              links,
-              "sidebar",
-              `/${activePlatform.platform?.toLowerCase() || ""}`
+        {!isLoading ? (
+          <>
+            {activePlatform && (
+              <MDBSideNavNav>
+                {renderNavItems(
+                  links,
+                  "sidebar",
+                  `/${activePlatform.platform?.toLowerCase() || ""}`
+                )}
+              </MDBSideNavNav>
             )}
-          </MDBSideNavNav>
+          </>
+        ) : (
+          <>
+            {new Array(6).fill().map((_, index) => (
+              <div className="mx-2">
+                <MDBAnimation
+                  key={index}
+                  type="flash"
+                  infinite
+                  className="mt-4 d-flex align-items-center"
+                  delay={`${index + 1}00ms`}
+                  duration="3000ms"
+                >
+                  <MDBProgress
+                    animated
+                    id={`sidebar-loading-icon`}
+                    color="light"
+                    className="mr-2"
+                    value={3000}
+                  ></MDBProgress>
+                  <MDBProgress
+                    animated
+                    id={`sidebar-loading-${index + 1}`}
+                    color="light"
+                    value={3000}
+                  ></MDBProgress>
+                </MDBAnimation>
+              </div>
+            ))}
+          </>
         )}
       </MDBSideNav>
       <button>tes</button>

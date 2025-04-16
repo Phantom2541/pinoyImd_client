@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory, useLocation } from "react-router";
 import {
   MDBIcon,
   MDBDropdown,
@@ -13,6 +14,7 @@ import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons
 export default function Platforms() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
     [access, setAccess] = useState([]),
+    history = useHistory(),
     dispatch = useDispatch();
   // const navigate = useNavigate();
   useEffect(() => {
@@ -43,10 +45,10 @@ export default function Platforms() {
     }`; // Adjust path as needed
 
     // Redirect using React Router
-    // navigate(redirectURL);
+    history.push(redirectURL);
 
     // OR, if not using React Router, use:
-    window.location.href = redirectURL;
+    // window.location.href = redirectURL;
   };
   return (
     <MDBDropdown>
