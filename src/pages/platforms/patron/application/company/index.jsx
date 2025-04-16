@@ -5,7 +5,7 @@ import CompanyCards from "./cards";
 import {
   BROWSE,
   RESET,
-} from "../../../../services/redux/slices/assets/companies";
+} from "../../../../../services/redux/slices/assets/companies";
 
 // const path = [
 //   {
@@ -56,7 +56,7 @@ export default function UnsetApply() {
     }
   };
   return (
-    <MDBContainer className=" mt-4 bg-danger" fluid>
+    <MDBContainer className=" mt-4 " fluid>
       <MDBRow className="mb-3">
         <MDBCol md="6">
           <MDBInput

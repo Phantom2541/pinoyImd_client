@@ -9,7 +9,7 @@ import {
   MDBCardTitle,
 } from "mdbreact";
 import CompanyCard from "./card";
-import { PresetUser } from "../../../../../services/utilities";
+import { PresetUser } from "../../../../../../services/utilities";
 
 export default function CompanyCards({ companies }) {
   return (
@@ -21,7 +21,7 @@ export default function CompanyCards({ companies }) {
 
       <MDBRow>
         {!!companies.length ? (
-          companies.map(company => (
+          companies.map((company) => (
             <CompanyCard key={company._id} company={company} />
           ))
         ) : (

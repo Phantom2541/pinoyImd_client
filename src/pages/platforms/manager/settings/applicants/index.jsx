@@ -59,7 +59,7 @@ export default function Applicants() {
 
             <tbody>
               {applicants.map((applicant, index) => {
-                const { _id, user, employment, file201 } = applicant;
+                const { _id, user, employment = {}, file201 = {} } = applicant;
                 const { hasPds, hasResume, hasLetter } = file201;
                 const { biMonthly } = employment;
 

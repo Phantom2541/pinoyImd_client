@@ -28,13 +28,11 @@ const Policy = {
 
     return role;
   },
-  getPositions: (code) => {
-    // console.log(code);
-    const { positions = [] } = collections.find(
-      ({ department }) => department === code
-    );
-    // console.log("positions", positions);
+  getPositions: (_code) => {
+    const match = collections.find(({ code }) => code === _code);
+    console.log("match", match);
 
+    const positions = match?.positions || []; // fallback to empty array
     return positions;
   },
 

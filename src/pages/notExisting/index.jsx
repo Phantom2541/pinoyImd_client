@@ -11,7 +11,8 @@ export default function NotExisting() {
       <h1>Error 400</h1>
 
       <h4 className="mt-3">
-        [{capitalize(activePlatform?.platform)}] - {window.location.pathname}
+        [{capitalize(activePlatform?.platform || "patron")}] -{" "}
+        {window.location.pathname}
       </h4>
 
       <p>

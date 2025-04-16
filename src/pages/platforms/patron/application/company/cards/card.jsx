@@ -6,7 +6,7 @@ import {
   MDBCardTitle,
   MDBCol,
 } from "mdbreact";
-import { PresetUser, ENDPOINT } from "../../../../../services/utilities";
+import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
 
 import ApplicationModal from "./modal";
 

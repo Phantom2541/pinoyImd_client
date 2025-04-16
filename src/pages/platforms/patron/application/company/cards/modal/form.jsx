@@ -8,14 +8,13 @@ import {
   MDBTypography,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { UPLOAD } from "../../../../../../redux/slices/assets/persons/auth";
+import { UPLOAD } from "../../../../../../../services/redux/slices/assets/persons/auth";
 import { toast } from "react-toastify";
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../redux/slices/assets/persons/users";
-// import { ENDPOINT } from "../../../../../../components/utilities";
-import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
+} from "../../../../../../../services/redux/slices/assets/persons/users";
+import { ENDPOINT } from "../../../../../../components/utilities";
 
 export default function ApplicationForm({ branchId, companyId, roles }) {
   const { theme, token, auth } = useSelector(({ auth }) => auth),

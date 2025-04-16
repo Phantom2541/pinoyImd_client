@@ -1,4 +1,4 @@
-// import UnsetApply from "../../../pages/platforms/patron/apply";
+import { Apply, Documents } from "../../../pages/platforms/patron/application";
 import Dashboard from "../../../pages/platforms/patron/dashboard";
 import { Diagnostics } from "../../../pages/platforms/patron/echart";
 
@@ -39,10 +39,21 @@ const patron = [
     icon: "user-tie",
   },
   {
-    name: "Apply",
-    path: "/apply",
-    icon: "paper-plane",
-    // component: UnsetApply,
+    name: "Application",
+    path: "/application",
+    icon: "user-tag",
+    children: [
+      {
+        name: "Resume",
+        path: "/resume",
+        component: Apply,
+      },
+      {
+        name: "Documents",
+        path: "/documents",
+        component: Documents,
+      },
+    ],
   },
 ];
 

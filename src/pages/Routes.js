@@ -13,7 +13,6 @@ import Profile from "../components/profile";
 import Contract from "../components/contract";
 
 import { useSelector } from "react-redux";
-// import UnsetApply from "./platforms/guest/apply";
 
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
@@ -73,7 +72,6 @@ export default function Routes() {
       {renderSidebars()}
       <Route path={`${platformPrefix}/profile`} exact component={Profile} />
       <Route path={`${platformPrefix}/contract`} exact component={Contract} />
-      {/* <Route path={`${platformPrefix}/apply`} exact component={UnsetApply} /> */}
       <Route component={NotFound} />
     </Switch>
   );

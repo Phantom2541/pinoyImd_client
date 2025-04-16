@@ -16,7 +16,9 @@ export default function Platforms() {
     dispatch = useDispatch();
   // const navigate = useNavigate();
   useEffect(() => {
-    setAccess([...activePlatform.access, "Patron"]);
+    const platforms = activePlatform?.access || [];
+    const unique = new Set([...platforms, "patron"]);
+    setAccess(Array.from(unique));
   }, [activePlatform]);
 
   const handlePlatform = (platform) => {
@@ -27,7 +29,7 @@ export default function Platforms() {
           email: auth.email,
           activePlatform: {
             ...activePlatform,
-            platform,
+            platform: platform || "patron",
           },
         },
         token,
@@ -54,7 +56,7 @@ export default function Platforms() {
         <MDBIcon icon="network-wired" />
         &nbsp;
         <div className="d-none d-md-inline">
-          {capitalize(activePlatform?.platform)}
+          {capitalize(activePlatform?.platform || "patron")}
         </div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right>

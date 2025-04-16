@@ -13,10 +13,10 @@ export default function Profile() {
   const { auth, isPatient, image, activePlatform } = useSelector(
       ({ auth }) => auth
     ),
-    [platform, setPlatform] = useState("Patron");
+    [platform, setPlatform] = useState("patron");
 
   useEffect(() => {
-    setPlatform(activePlatform.platform);
+    setPlatform(activePlatform?.platform);
   }, [activePlatform]);
 
   return (

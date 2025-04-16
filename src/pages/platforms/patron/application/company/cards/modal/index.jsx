@@ -12,10 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   SAVE,
   APPLICATION,
-} from "../../../../../../services/redux/slices/assets/persons/personnels.js";
+} from "../../../../../../../services/redux/slices/assets/persons/personnels.js";
 
-import { Policy } from "../../../../../../services/fakeDb";
-import { UPLOAD } from "../../../../../../services/redux/slices/assets/persons/auth.js";
+import { Policy } from "../../../../../../../services/fakeDb/index.js";
+import { UPLOAD } from "../../../../../../../services/redux/slices/assets/persons/auth.js";
 
 export default function ApplicationModal({
   visibility,
@@ -58,11 +58,8 @@ export default function ApplicationModal({
     }
   };
 
-  const handleDepartment = (e) => {
-    const { value } = e.target;
+  const handleDepartment = ({ value }) => {
     setDepartment(value);
-    console.log(Policy.getPositions(value));
-
     setPositions(Policy.getPositions(value));
   };
 
@@ -85,7 +82,7 @@ export default function ApplicationModal({
             dispatch(
               UPLOAD({
                 data: {
-                  path: `patron/${auth.email}/Smart Care/${company}/Applications`,
+                  path: `users/${auth.email}/credentials/${company.name}`,
                   base64: reader.result.split(",")[1],
                   name,
                 },
@@ -110,8 +107,6 @@ export default function ApplicationModal({
       (branch) => branch._id === application.branchId
     );
     const role = Policy.getDepartment(application.designation);
-    alert(role);
-    return;
     const id = `${_company.displayname
       .split(" ")
       .map((word) => word[0])
@@ -212,7 +207,7 @@ export default function ApplicationModal({
                 className="form-control mb-3"
                 value={department}
                 name="department"
-                onChange={handleDepartment}
+                onChange={(e) => handleDepartment(e.target)}
               >
                 <option value="" selected>
                   Select a department

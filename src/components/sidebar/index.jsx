@@ -31,7 +31,7 @@ export default function SideNavigation({
        *  if logo is not found, display default
        *  @y'dreo
        */
-      const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.platform}/logo.png`;
+      const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform?.platform}/logo.png`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);
       });
@@ -41,7 +41,10 @@ export default function SideNavigation({
   useEffect(() => {
     if (activePlatform?.platform) {
       const { platform } = activePlatform;
+
       setLinks(Sidebars[platform?.toLowerCase()] || []);
+    } else {
+      setLinks(Sidebars["patron"] || []);
     }
   }, [activePlatform, setLinks]);
 
@@ -96,8 +99,8 @@ export default function SideNavigation({
         logo={logo}
         bg="https://mdbootstrap.com/img/Photos/Others/sidenav2.jpg"
         mask="strong"
-        href={`/${activePlatform.platform}/${
-          activePlatform.platform === "manager" ? "dashboard" : "bulletin"
+        href={`/${activePlatform?.platform || "patron"}/${
+          activePlatform?.platform === "manager" ? "dashboard" : "bulletin"
         }`}
         fixed
         breakWidth={breakWidth}
@@ -109,7 +112,7 @@ export default function SideNavigation({
             {renderNavItems(
               links,
               "sidebar",
-              `/${activePlatform.platform?.toLowerCase() || ""}`
+              `/${activePlatform?.platform?.toLowerCase() || "patron"}`
             )}
           </MDBSideNavNav>
         )}
