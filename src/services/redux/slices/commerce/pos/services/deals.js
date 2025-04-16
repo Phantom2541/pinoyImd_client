@@ -141,24 +141,6 @@ export const CENSUS = createAsyncThunk(
   }
 );
 
-export const OLDLEDGER = createAsyncThunk(
-  `${url}/oldledger`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${url}/oldledger`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const YEARLY = createAsyncThunk(
   `${url}/yearly`,
   ({ token, branchId, year }, thunkAPI) => {
@@ -777,34 +759,6 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.censusLoading = false;
       })
-
-      .addCase(OLDLEDGER.pending, (state) => {
-        state.census = {
-          // this is used for ledger
-          days: {},
-          grossSales: 0,
-          menus: {},
-          services: {},
-          expenses: 0,
-          patients: 0,
-          isEmpty: true,
-        };
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-
-      .addCase(OLDLEDGER.fulfilled, (state, action) => {
-        state.catalogs = action.payload;
-        state.collections = action.payload;
-        state.isLoading = false;
-      })
-      .addCase(OLDLEDGER.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
       .addCase(YEARLY.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
