@@ -4,6 +4,8 @@ import {
   MDBSideNavCat,
   MDBSideNavNav,
   MDBSideNav,
+  MDBAnimation,
+  MDBProgress,
   MDBIcon,
 } from "mdbreact";
 import { useSelector } from "react-redux";
@@ -14,39 +16,39 @@ import {
   capitalize,
   isImageValid,
 } from "../../services/utilities";
+import "./style.css";
+
 export default function SideNavigation({
   triggerOpening,
   breakWidth,
   onLinkClick,
 }) {
-  const [links, setLinks] = useState([]),
-    { activePlatform, company } = useSelector(({ auth }) => auth),
-    [logo, setLogo] = useState(FailedLogo),
-    [activeCategory, setActiveCategory] = useState(""); //for multiple children sidebar
+  const [links, setLinks] = useState([]);
+  const { activePlatform, company, isLoading } = useSelector(
+    ({ auth }) => auth
+  );
+  const [logo, setLogo] = useState(FailedLogo);
+  const [activeCategory, setActiveCategory] = useState("");
 
+  // Load logo if available
   useEffect(() => {
     if (company?.name && activePlatform?.platform) {
-      /**
-       *  display company logo
-       *  if logo is not found, display default
-       *  @y'dreo
-       */
-      const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform?.platform}/logo.png`;
+      const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.platform}/logo.png`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);
       });
     }
   }, [company, activePlatform]);
 
+  // Load sidebar links
   useEffect(() => {
     if (activePlatform?.platform) {
       const { platform } = activePlatform;
-
-      setLinks(Sidebars[platform?.toLowerCase()] || []);
+      setLinks(Sidebars[platform.toLowerCase()] || []);
     } else {
       setLinks(Sidebars["patron"] || []);
     }
-  }, [activePlatform, setLinks]);
+  }, [activePlatform]);
 
   const renderNavItems = (
     _links,
@@ -107,15 +109,40 @@ export default function SideNavigation({
         triggerOpening={triggerOpening}
         style={{ transition: "padding-left .3s" }}
       >
-        {activePlatform && (
-          <MDBSideNavNav>
-            {renderNavItems(
-              links,
-              "sidebar",
-              `/${activePlatform?.platform?.toLowerCase() || "patron"}`
-            )}
-          </MDBSideNavNav>
-        )}
+        <MDBSideNavNav>
+          {activePlatform
+            ? renderNavItems(
+                links,
+                "sidebar",
+                `/${activePlatform.platform.toLowerCase() || "patron"}`
+              )
+            : new Array(6).fill().map((_, index) => (
+                <div className="mx-2" key={index}>
+                  <MDBAnimation
+                    type="flash"
+                    infinite
+                    className="mt-3 d-flex align-items-center"
+                    delay={`${index + 1}00ms`}
+                    duration="3000ms"
+                  >
+                    <MDBProgress
+                      animated
+                      id={`sidebar-loading-icon`}
+                      color="light"
+                      className="mr-2 ml-2"
+                      value={3000}
+                    ></MDBProgress>
+                    <MDBProgress
+                      animated
+                      className="mr-2"
+                      id={`sidebar-loading-${index + 1}`}
+                      color="light"
+                      value={3000}
+                    ></MDBProgress>
+                  </MDBAnimation>
+                </div>
+              ))}
+        </MDBSideNavNav>
       </MDBSideNav>
       <button>tes</button>
     </div>
