@@ -1,4 +1,4 @@
-import UnsetApply from "../../../pages/platforms/guest/apply";
+// import UnsetApply from "../../../pages/platforms/patron/apply";
 import Dashboard from "../../../pages/platforms/patron/dashboard";
 import { Diagnostics } from "../../../pages/platforms/patron/echart";
 
@@ -42,7 +42,7 @@ const patron = [
     name: "Apply",
     path: "/apply",
     icon: "paper-plane",
-    component: UnsetApply,
+    // component: UnsetApply,
   },
 ];
 

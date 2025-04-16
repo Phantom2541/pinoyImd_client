@@ -16,26 +16,20 @@ export default function Cashier() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth);
   const { transaction, isSuccess } = useSelector(({ deals }) => deals);
   const dispatch = useDispatch();
-  const hasFetched = useRef(false);
+  const hasFetched = useRef(false),
+    date = new Date().toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
 
   useEffect(() => {
     if (hasFetched.current) return;
     hasFetched.current = true;
-
-    const _selected = JSON.parse(localStorage?.getItem("floatingcash"));
-    if (_selected) {
-      dispatch(SetSELECTED({ value: _selected }));
+    const selected = JSON.parse(localStorage?.getItem("floatingcash"));
+    if (selected) {
+      dispatch(SetSELECTED({ value: selected }));
     } else {
-      /**
-       * get local time of users
-       * Format: YYYY-MM-DD
-       */
-      const date = new Date().toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
-
       dispatch(
         AUTOSELECT({
           token,
@@ -46,15 +40,16 @@ export default function Cashier() {
           },
         })
       ).then(({ payload }) => {
-        if (payload !== null) {
-          localStorage.setItem("floatingcash", JSON.stringify(payload));
-          dispatch(SetSELECTED({ value: payload }));
+        const { data } = payload;
+        if (data !== null) {
+          localStorage.setItem("floatingcash", JSON.stringify(data));
+          dispatch(SetSELECTED({ value: data }));
         } else {
           dispatch(TOGGLE({ key: "open", value: new Date().getUTCDate() }));
         }
       });
     }
-  }, [activePlatform, auth, token, dispatch]);
+  }, [activePlatform, auth, token, dispatch, date]);
 
   useEffect(() => {
     if (transaction?._id !== "default" && isSuccess) {

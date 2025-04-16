@@ -12,7 +12,7 @@ import NotExisting from "./notExisting";
 import Profile from "../components/profile";
 
 import { useSelector } from "react-redux";
-import UnsetApply from "./platforms/guest/apply";
+// import UnsetApply from "./platforms/guest/apply";
 
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
@@ -69,10 +69,9 @@ export default function Routes() {
 
   return (
     <Switch>
-      {!platform && <Route exact path={`/dashboard`} component={UnsetApply} />}
       {renderSidebars()}
       <Route path={`${platformPrefix}/profile`} exact component={Profile} />
-      <Route path={`${platformPrefix}/apply`} exact component={UnsetApply} />
+      {/* <Route path={`${platformPrefix}/apply`} exact component={UnsetApply} /> */}
       <Route component={NotFound} />
     </Switch>
   );
