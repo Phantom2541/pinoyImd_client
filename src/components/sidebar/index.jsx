@@ -126,7 +126,7 @@ export default function SideNavigation({
                   key={index}
                   type="flash"
                   infinite
-                  className="mt-4 d-flex align-items-center"
+                  className="mt-3 d-flex align-items-center"
                   delay={`${index + 1}00ms`}
                   duration="3000ms"
                 >
