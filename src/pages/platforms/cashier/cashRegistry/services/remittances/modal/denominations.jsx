@@ -51,7 +51,7 @@ const coinSize = {
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { showModal, title, selected } = useSelector(
+    { showModal, title, selected, day, month, year } = useSelector(
       ({ remittances }) => remittances
     ),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
@@ -152,6 +152,7 @@ export default function Modal() {
             cashier: auth._id,
             branch: activePlatform?.branchId,
             department: Policy.getDepartment(activePlatform.position),
+            createdAt: new Date(year, month - 1, day).setHours(17, 4, 0, 3),
           },
         })
       );
@@ -198,11 +199,14 @@ export default function Modal() {
         toggle={() => dispatch(TOGGLE({ key: "open" }))}
         className="d-flex align-items-center justify-content-between darken-3 light-blue white-text"
       >
-        <div className="d-flex align-items-center">
+        <div className="d-flex justify-content-between">
           <MDBIcon icon="calendar-alt" className="mr-2" />
-          <span>
-            {title || "Floating Cash"} {sum > 0 && ` : (${currency(sum)})`}
-          </span>
+          <div className="d-flex align-items-end">
+            <span>
+              {title || "Floating Cash  "} {sum > 0 && ` : (${currency(sum)})`}
+            </span>
+            <span></span>
+          </div>
         </div>
 
         {title === "Closing Cash Register" && (

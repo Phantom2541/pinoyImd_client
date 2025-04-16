@@ -6,7 +6,7 @@ import {
   paymentMethod,
 } from "../../../../../../../services/utilities";
 import { MDBAnimation, MDBProgress } from "mdbreact";
-const Card = ({ txt, num, index, item = {}, isLoading = false }) => {
+const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
   const today = new Date();
   const dateCell = new Date(txt);
   const isFuture = dateCell > today;
@@ -126,7 +126,9 @@ const Card = ({ txt, num, index, item = {}, isLoading = false }) => {
                 </div>
               )}
             </div>
-            {!isFuture && !isRemitted && <Footer num={num} item={item} />}
+            {!isFuture && !isRemitted && deals.length > 0 && (
+              <Footer num={num} item={item} deals={deals} />
+            )}
           </>
         ) : (
           <div>
