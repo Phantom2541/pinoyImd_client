@@ -1,7 +1,7 @@
 import React from "react";
 import { Editor } from "react-draft-wysiwyg";
 
-export default function Docx({
+export default function DocxEditor({
   editorState,
   setEditorState,
   _style = {},

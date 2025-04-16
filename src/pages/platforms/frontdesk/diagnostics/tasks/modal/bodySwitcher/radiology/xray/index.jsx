@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
+import { EditorState } from "draft-js";
+import { DocxEditor } from "../../../../../../../../../components/docx";
 
 export default function Xray() {
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   return (
-    <div className="max-w-3xl mx-auto mt-10 space-y-6 p-4">
-      <h1 className="text-2xl font-bold mb-4">X-ray Result</h1>
+    <div className=" mx-auto ">
+      <h1 className="text-2xl font-bold ">X-ray Result</h1>
 
-      {/* Description */}
+      <DocxEditor
+        editorState={editorState}
+        _className="mt-3 border"
+        setEditorState={setEditorState}
+        _style={{
+          minHeight: "200px",
+          overflowY: "auto",
+          maxHeight: "300px",
+        }}
+      />
+      {/* <h1 className="text-2xl font-bold mb-4">X-ray Result</h1>
+
+      Description
       <div>
         <label htmlFor="description" className="block text-lg font-medium mb-2">
           Description
@@ -17,7 +32,6 @@ export default function Xray() {
         />
       </div>
 
-      {/* Impression */}
       <div>
         <label htmlFor="impression" className="block text-lg font-medium mb-2">
           Impression
@@ -27,7 +41,7 @@ export default function Xray() {
           className="w-full border border-gray-300 rounded-lg p-3 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Write the x-ray impression here..."
         />
-      </div>
+      </div> */}
     </div>
   );
 }
