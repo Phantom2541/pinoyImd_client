@@ -134,11 +134,12 @@ export default function SideNavigation({
                     animated
                     id={`sidebar-loading-icon`}
                     color="light"
-                    className="mr-2"
+                    className="mr-2 ml-2"
                     value={3000}
                   ></MDBProgress>
                   <MDBProgress
                     animated
+                    className="mr-2"
                     id={`sidebar-loading-${index + 1}`}
                     color="light"
                     value={3000}
