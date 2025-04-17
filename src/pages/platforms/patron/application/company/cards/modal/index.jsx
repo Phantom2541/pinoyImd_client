@@ -7,6 +7,7 @@ import {
   MDBModalFooter,
   MDBRow,
   MDBCol,
+  MDBIcon,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -16,6 +17,7 @@ import {
 
 import { Policy } from "../../../../../../../services/fakeDb/index.js";
 import { UPLOAD } from "../../../../../../../services/redux/slices/assets/persons/auth.js";
+import Swal from "sweetalert2";
 
 export default function ApplicationModal({
   visibility,
@@ -23,13 +25,36 @@ export default function ApplicationModal({
   company,
 }) {
   const { auth, token } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ personnels }) => personnels),
+    { collections, formSubmitted, isSuccess } = useSelector(
+      ({ personnels }) => personnels
+    ),
     [application, setApplication] = useState({}),
+    [file201Preview, setFile201Preview] = useState({}),
     [department, setDepartment] = useState(),
     [positions, setPositions] = useState([]),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isSuccess && !formSubmitted) {
+      setVisibility(false);
+      Swal.fire({
+        icon: "success",
+        title: "Application Submitted",
+        text: "You have successfully submitted your requirements. Please wait while we review and approve your application.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#3085d6",
+      });
+    }
+  }, [isSuccess, formSubmitted]);
+  useEffect(() => {
+    if (visibility) {
+      setApplication({});
+      setFile201Preview({});
+    }
+  }, [visibility]);
   useEffect(() => {
     token &&
+      visibility &&
       dispatch(
         APPLICATION({
           data: {
@@ -39,10 +64,9 @@ export default function ApplicationModal({
           token,
         })
       );
-  }, [dispatch, token, auth]);
+  }, [dispatch, token, auth, visibility]);
 
   //console.log("unused variable setPositions", setPositions);
-  console.log("application", application);
 
   const handleToggle = () => setVisibility(!visibility);
 
@@ -73,47 +97,62 @@ export default function ApplicationModal({
   };
 
   const handleFile = (e, name) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (
+      file.type !== "application/pdf" &&
+      !file.name.toLowerCase().endsWith(".pdf")
+    ) {
+      alert("Only PDF files are allowed.");
+      return;
+    }
     const reader = new FileReader();
-    reader.onload = (e) => {
-      let image = new Image();
-      image.src = e.target.result;
-      image.onload = function () {
-        if (this.width === this.height) {
-          if (this.width <= 300) {
-            dispatch(
-              UPLOAD({
-                data: {
-                  path: `users/${auth.email}/credentials/${company.name}`,
-                  base64: reader.result.split(",")[1],
-                  name,
-                },
-                token,
-              })
-            );
-          } else {
-            // toast.warn("Maximum size is 300 pixels and below.");
-            alert("Maximum size is 300 pixels and below.");
-          }
-        } else {
-          // toast.warn("Proportion must be 1:1");
-          alert("Proportion must be 1:1");
-        }
-      };
-    };
-    reader.readAsDataURL(e.target.files[0]);
-  };
 
-  const handleSubmit = () => {
+    reader.onload = () => {
+      const base64 = reader.result.split(",")[1]; // Get only the base64 part
+      setApplication((prev) => ({
+        ...prev,
+        file201: {
+          ...prev.file201,
+          [name]: base64,
+        },
+      }));
+
+      setFile201Preview((prev) => ({ ...prev, [name]: reader.result }));
+    };
+
+    reader.readAsDataURL(file);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const _company = company?.branches.find(
-      (branch) => branch._id === application.branchId
+      (branch) => branch._id === application?.branchId
     );
-    const id = `${_company.displayname
+    const id = `${_company?.displayname
       .split(" ")
       .map((word) => word[0])
-      .join("")}-${_company.name
+      .join("")}-${_company?.name
       .split(" ")
       .map((word) => word[0])
       .join("")}-${Math.floor(Math.random() * 100)}`;
+
+    const { file201 = {} } = application;
+    const { DataSheet = "", Resume = "", AppLetter = "" } = file201;
+    //save file201 pdfs
+    Object.entries(file201)?.forEach(([key, value]) => {
+      dispatch(
+        UPLOAD({
+          data: {
+            path: `users/${auth.email}/credentials${
+              key !== "dataSheet" ? `/${company.name}` : ""
+            }`,
+            base64: value,
+            name: `${key}.pdf`,
+          },
+          token,
+        })
+      );
+    });
     dispatch(
       SAVE({
         data: {
@@ -122,9 +161,9 @@ export default function ApplicationModal({
           status: "petition",
           branch: application.branchId,
           file201: {
-            hasPds: application.pds ? true : false,
-            hasResume: application.resume ? true : false,
-            hasLetter: application.letter ? true : false,
+            hasPds: DataSheet ? true : false,
+            hasResume: Resume ? true : false,
+            hasLetter: AppLetter ? true : false,
           },
           contract: {
             designation: application.designation,
@@ -136,22 +175,36 @@ export default function ApplicationModal({
         token,
       })
     );
-    setVisibility(!visibility);
+  };
+  const PDF_VIEWER = (path) => {
+    if (!file201Preview[path]) return "";
+
+    return (
+      <>
+        <iframe
+          src={file201Preview[path]}
+          alt={auth.email}
+          className="mx-auto rounded img-max img-fluid mb-1"
+          // onError={(e) => (e.target.src = PresetUser)}
+          title="Personal Data"
+          style={{
+            width: "100%",
+            height: "300px",
+            border: "1px solid #ccc",
+            borderRadius: "10px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            display: "block",
+            margin: "auto",
+          }}
+        />
+      </>
+    );
   };
 
-  const handleReadDataSheet = () => {
-    // return (
-    //   <>
-    //     <iframe
-    //       src={`${ENDPOINT}/public/users/${auth.email}/Smart Care/General Tinio Branch/Applications/Resume.pdf`}
-    //       alt={auth.email}
-    //       className="mx-auto rounded img-max img-fluid mb-1"
-    //       onError={(e) => (e.target.src = PresetUser)}
-    //       title="Personal Data"
-    //       style={{ width: "750px", height: "400px" }}
-    //     />
-    //   </>
-    // );
+  const sortByAscending = (array, key) => {
+    return [...array].sort((a, b) =>
+      String(a[key]).localeCompare(String(b[key]))
+    );
   };
   return (
     <MDBModal size="xl" isOpen={visibility} toggle={setVisibility} backdrop>
@@ -167,7 +220,7 @@ export default function ApplicationModal({
           <MDBIcon icon="times" size="lg" />
         </MDBBtn> */}
       </MDBModalHeader>
-      <form onSubmit={handleApplication}>
+      <form onSubmit={handleSubmit}>
         <MDBModalBody className="text-start">
           <MDBRow>
             <MDBCol md="4">
@@ -176,14 +229,12 @@ export default function ApplicationModal({
                 className="form-control mb-3"
                 value={application?.branchId}
                 name="branchId"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e)}
               >
-                <option value="" selected>
-                  Select a branch
-                </option>
-                {company.branches?.map((branch) => {
+                <option value={""}>Select a branch</option>
+                {sortByAscending(company.branches, "name")?.map((branch) => {
                   const disabler = collections?.find(
-                    (catalog) => catalog.branch._id === branch._id
+                    (catalog) => catalog?.branch?._id === branch?._id
                   );
                   return (
                     <option
@@ -195,7 +246,7 @@ export default function ApplicationModal({
                       }}
                     >
                       {branch?.name}
-                      {disabler ? "Application on process" : ""}
+                      {disabler ? " (Application on process)" : ""}
                     </option>
                   );
                 })}
@@ -209,14 +260,14 @@ export default function ApplicationModal({
                 name="department"
                 onChange={(e) => handleDepartment(e.target)}
               >
-                <option value="" selected>
-                  Select a department
-                </option>
-                {Policy.collections.map((collections, i) => (
-                  <option value={collections.code} key={`department-${i}`}>
-                    {collections.department}
-                  </option>
-                ))}
+                <option value="">Select a department</option>
+                {sortByAscending(Policy.collections, "department").map(
+                  (collection, i) => (
+                    <option value={collection.code} key={`department-${i}`}>
+                      {collection.department}
+                    </option>
+                  )
+                )}
                 ;
               </select>
             </MDBCol>
@@ -228,17 +279,17 @@ export default function ApplicationModal({
                 name="designation"
                 onChange={handleChange}
               >
-                <option value="" selected>
-                  Select a Designation / Positions
-                </option>
-                {positions?.map((position, i) => (
-                  <option
-                    value={position.id}
-                    key={`position-${position.id}-${i}`}
-                  >
-                    {position?.display_name}
-                  </option>
-                ))}
+                <option value="">Select a Designation / Positions</option>
+                {sortByAscending(positions, "display_name")?.map(
+                  (position, i) => (
+                    <option
+                      value={position.id}
+                      key={`position-${position.id}-${i}`}
+                    >
+                      {position?.display_name}
+                    </option>
+                  )
+                )}
               </select>
             </MDBCol>
           </MDBRow>
@@ -251,11 +302,11 @@ export default function ApplicationModal({
                 Personal Data Sheet
               </label>
               <input
-                onChange={(e) => handleFile(e, "dataSheet.docx")}
+                onChange={(e) => handleFile(e, "DataSheet")}
                 type="file"
                 id="upload-personal-data-sheet"
                 className="d-none"
-                accept="image/*"
+                accept=".pdf"
               />
             </MDBCol>
             <MDBCol md="4">
@@ -269,7 +320,7 @@ export default function ApplicationModal({
                 type="file"
                 id="upload-resume"
                 className="d-none"
-                onChange={(e) => handleFile(e, "Resume.pdf")}
+                onChange={(e) => handleFile(e, "Resume")}
                 accept=".pdf"
               />
             </MDBCol>
@@ -284,14 +335,20 @@ export default function ApplicationModal({
                 type="file"
                 id="upload-application"
                 className="d-none"
-                onChange={(e) => handleFile(e, "AppLetter.docx")}
-                accept="image/*"
+                onChange={(e) => handleFile(e, "AppLetter")}
+                accept=".pdf"
               />
             </MDBCol>
           </MDBRow>
-          <MDBRow className="d-flex justify-content-center">
-            <MDBCol md="8" className=" d-flex justify-content-center mt-3">
-              {handleReadDataSheet()}
+          <MDBRow>
+            <MDBCol md="4" className="w-100">
+              {PDF_VIEWER("DataSheet")}
+            </MDBCol>
+            <MDBCol md="4" className="w-100">
+              {PDF_VIEWER("Resume")}
+            </MDBCol>
+            <MDBCol md="4" className="w-100">
+              {PDF_VIEWER("AppLetter")}
             </MDBCol>
           </MDBRow>
           <MDBRow>
@@ -307,8 +364,13 @@ export default function ApplicationModal({
           </MDBRow>
         </MDBModalBody>
         <MDBModalFooter>
-          <MDBBtn type="submit" rounded color="success" onClick={handleSubmit}>
-            Submit
+          <MDBBtn
+            type="submit"
+            rounded
+            color="success"
+            disabled={formSubmitted}
+          >
+            Submit {formSubmitted && <MDBIcon icon="spinner" pulse />}
           </MDBBtn>
         </MDBModalFooter>
       </form>
