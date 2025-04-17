@@ -33,21 +33,18 @@ const DragDrop = () => {
 
   const handleDragStart = (e, role, index, title) => {
     console.log("title", title);
-    const { collections, setter } = getState(title);
+    const { collections } = getState(title);
     setHasDrag(true);
     // setRemoveID(role._id);
     // setRemoveBy(title);
     setDisabled(true);
     setTimeout(() => {
-      const _collections = [...collections];
       setRemoveID(-1);
       setDisabled(false);
 
       // _collections.splice(index, 1);
       // dispatch(setter(_collections));
     }, 200);
-
-    console.log("running data transfer");
 
     e.dataTransfer.setData(
       "application/json",
@@ -100,7 +97,7 @@ const DragDrop = () => {
     const data = event.dataTransfer.getData("application/json");
     console.log("data", data);
     if (!data) return "unknown role";
-    var { role, dragBy, removeIndex } = JSON.parse(data);
+    var { role, dragBy } = JSON.parse(data);
     var { collections: dynamicCollections, setter } = getState(dropTo);
     console.log("drag by", dragBy);
     console.log("dropTo to", dropTo);

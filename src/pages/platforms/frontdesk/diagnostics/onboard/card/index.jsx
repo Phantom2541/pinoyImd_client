@@ -5,11 +5,9 @@ import { SecondaryFooter, PrimaryFooter } from "./footer";
 
 import Tagging from "./body/tagging";
 import Show from "./body/show";
-import { Services } from "../../../../../../services/fakeDb";
 
 export default function Card({ item, index }) {
-  const { activePlatform } = useSelector(({ auth }) => auth),
-    { collections: sources } = useSelector(({ providers }) => providers),
+  const { collections: sources } = useSelector(({ providers }) => providers),
     [deal, setDeal] = useState({}),
     [edit, setEdit] = useState(false);
   const {

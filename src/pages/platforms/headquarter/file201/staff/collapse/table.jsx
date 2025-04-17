@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
-import { Roles, Policy } from "../../../../../../services/fakeDb";
+import { Policy } from "../../../../../../services/fakeDb";
 import AccessModal from "./accessModal";
 import { SETOnHotSEAT } from "../../../../../../services/redux/slices/assets/persons/personnels";
 

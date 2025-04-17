@@ -24,9 +24,7 @@ export default function SideNavigation({
   onLinkClick,
 }) {
   const [links, setLinks] = useState([]);
-  const { activePlatform, company, isLoading } = useSelector(
-    ({ auth }) => auth
-  );
+  const { activePlatform, company } = useSelector(({ auth }) => auth);
   const [logo, setLogo] = useState(FailedLogo);
   const [activeCategory, setActiveCategory] = useState("");
 

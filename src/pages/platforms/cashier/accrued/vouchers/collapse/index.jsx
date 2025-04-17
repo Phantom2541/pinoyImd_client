@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -16,7 +16,7 @@ export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
     [vouchers, setVouchers] = useState([]),
     [cluster, setCluster] = useState([]);
-    // dispatch = useDispatch();
+  // dispatch = useDispatch();
 
   useEffect(() => {
     const groupByDate = filtered.reduce((groups, item) => {

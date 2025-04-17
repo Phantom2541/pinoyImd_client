@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Banner, dateFormat } from "../../../services/utilities";
-import { Legend } from "./legend";
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";

@@ -14,7 +14,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { isEqual } from "lodash";
 import { SETPATIENT } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
-import { platform } from "chart.js";
 
 /**
  * if user is not in quest, use branch address
