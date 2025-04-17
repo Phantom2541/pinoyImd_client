@@ -11,9 +11,7 @@ import Compatibility from "./laboratory/compatibility";
 import Pbs from "./laboratory/pbs";
 import Electrolyte from "./laboratory/electrolyte";
 
-const Blank = ({ task }) => {
-  return <div>{task.form} is not working</div>;
-};
+const Blank = ({ task }) => <div>{task.form} is not working</div>;
 
 const componentMap = {
   hematology: Hematology,
@@ -33,32 +31,30 @@ const componentMap = {
 export default function BodySwitcher({ task }) {
   const [fontSize, setFontSize] = useState(),
     contentRef = useRef(null);
+  // Function to adjust font size based on content height
+  const adjustFontSize = ({ form }) => {
+    const contentHeight = contentRef.current.clientHeight;
+    const maxHeight = 400; // Maximum height of the container
+
+    if (contentHeight > maxHeight) {
+      // TODO
+      // adjust responsive logic
+      // Reduce the font size to fit the content within the container
+      var newFontSize = 0;
+      if (form?.toLowerCase() === "chemistry") {
+        newFontSize = (maxHeight / contentHeight) * 50; // 15
+      } else if (form?.toLowerCase() === "miscellaneous") {
+        newFontSize = (maxHeight / contentHeight) * 30;
+      } else {
+        newFontSize = (maxHeight / contentHeight) * 30;
+      }
+      setFontSize(newFontSize);
+    }
+  };
 
   useEffect(() => {
-    // Function to adjust font size based on content height
-    const adjustFontSize = () => {
-      const contentHeight = contentRef.current.clientHeight;
-      const maxHeight = 400; // Maximum height of the container
-
-      if (contentHeight > maxHeight) {
-        // TODO
-        // adjust responsive logic
-        // Reduce the font size to fit the content within the container
-        var newFontSize = 0;
-        if (task.form?.toLowerCase() === "chemistry") {
-          newFontSize = (maxHeight / contentHeight) * 50; // 15
-        } else if (task.form?.toLowerCase() === "miscellaneous") {
-          newFontSize = (maxHeight / contentHeight) * 30;
-        } else {
-          newFontSize = (maxHeight / contentHeight) * 30;
-        }
-
-        setFontSize(newFontSize);
-      }
-    };
-
     // Call adjustFontSize when the component mounts and whenever the content changes
-    adjustFontSize();
+    adjustFontSize(task.form);
 
     // Attach a resize listener to adjust font size on window resize
     window.addEventListener("resize", adjustFontSize);

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MDBCard, MDBRow, MDBCardBody, MDBAnimation } from "mdbreact";
 import "./style.css";
 import List from "./list";
@@ -8,14 +8,19 @@ import {
   SetCollections,
 } from "../../../services/redux/slices/reusable/dragDrop";
 const DragDrop = () => {
-  const { clusters, collections } = useSelector(({ dragDrop }) => dragDrop),
+  const { clusters, collections: c } = useSelector(({ dragDrop }) => dragDrop),
     [hasDrag, setHasDrag] = useState(false),
+    [collections, setCollections] = useState([]),
     [disabled, setDisabled] = useState(false),
     [removeID, setRemoveID] = useState(-1),
     [removeBy, setRemoveBy] = useState(""),
     [addID, setAddID] = useState(-1),
     dispatch = useDispatch();
 
+  useEffect(() => {
+    setCollections(c);
+    console.log("running", c);
+  }, [c]);
   const getState = useCallback(
     (stateName) => {
       const _collections =
@@ -27,17 +32,20 @@ const DragDrop = () => {
   );
 
   const handleDragStart = (e, role, index, title) => {
-    const { collections, setter } = getState(title);
+    console.log("title", title);
+    const { collections } = getState(title);
     setHasDrag(true);
-    setRemoveID(index);
-    setRemoveBy(title);
+    // setRemoveID(role._id);
+    // setRemoveBy(title);
     setDisabled(true);
     setTimeout(() => {
-      const _collections = [...collections];
       setRemoveID(-1);
-      _collections.splice(index, 1);
-      dispatch(setter(_collections));
-    }, 180);
+      setDisabled(false);
+
+      // _collections.splice(index, 1);
+      // dispatch(setter(_collections));
+    }, 200);
+
     e.dataTransfer.setData(
       "application/json",
       JSON.stringify({
@@ -47,6 +55,7 @@ const DragDrop = () => {
         collections,
       })
     );
+
     const dragPreview = document.createElement("div");
     dragPreview.textContent = role.name;
     Object.assign(dragPreview.style, {
@@ -86,19 +95,23 @@ const DragDrop = () => {
   const handleDrop = (event, dropTo = "List") => {
     event.preventDefault();
     const data = event.dataTransfer.getData("application/json");
+    console.log("data", data);
     if (!data) return "unknown role";
-    var { role, dragBy, removeIndex } = JSON.parse(data);
-    var { collections, setter } = getState(dropTo);
-    if (dragBy === dropTo) {
-      setTimeout(() => {
-        const _collections = [...collections];
-        _collections.splice(removeIndex, 0, role);
-        dispatch(setter(_collections));
-        setDisabled(false);
-      }, 200);
-    } else {
-      dispatch(setter([role, ...collections]));
-    }
+    var { role, dragBy } = JSON.parse(data);
+    var { collections: dynamicCollections, setter } = getState(dropTo);
+    console.log("drag by", dragBy);
+    console.log("dropTo to", dropTo);
+    if (dragBy === dropTo) return console.log("same drag and drop");
+    setRemoveBy("List");
+    setRemoveID(role._id);
+    setTimeout(() => {
+      const _collections = [...collections];
+      const index = _collections.findIndex(({ _id }) => _id === role._id);
+      _collections.splice(index, 1);
+      dispatch(SetCollections(_collections));
+    }, 200);
+
+    dispatch(setter([role, ...dynamicCollections]));
     setAddID(role._id);
   };
 

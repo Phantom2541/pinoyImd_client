@@ -141,24 +141,6 @@ export const CENSUS = createAsyncThunk(
   }
 );
 
-export const OLDLEDGER = createAsyncThunk(
-  `${url}/oldledger`,
-  ({ token, key }, thunkAPI) => {
-    try {
-      return axioKit.universal(`${url}/oldledger`, token, key);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const YEARLY = createAsyncThunk(
   `${url}/yearly`,
   ({ token, branchId, year }, thunkAPI) => {
@@ -185,6 +167,24 @@ export const SAVE = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const GENERATE_SOA = createAsyncThunk(
+  `${url}/GENERATE_SOA`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, token, "generate_soa");
     } catch (error) {
       const message =
         (error.response &&
@@ -237,14 +237,11 @@ export const LABRESULT = createAsyncThunk(
   ({ token, data }, thunkAPI) => {
     try {
       // \diagnostics\laboratory\result\miscellaneous
+      const department = ["laboratory", "radiology"].includes(data.department)
+        ? data.department
+        : "clinic";
       return axioKit.save(
-        `diagnostics/${
-          data.department === "LAB"
-            ? "laboratory"
-            : data.department === "RAD"
-            ? "radiology"
-            : "clinic"
-        }/result/${data.form.toLowerCase()}`,
+        `diagnostics/${department}/result/${data.form.toLowerCase()}`,
         data,
         token
       );
@@ -359,8 +356,6 @@ export const reduxSlice = createSlice({
           state.filtered = state.collections;
           state.source = "";
         } else {
-          console.log("payload", payload);
-
           state.filtered = state.collections.filter(
             ({ outsource }) => outsource?._id.toString() === payload.toString()
 
@@ -382,11 +377,9 @@ export const reduxSlice = createSlice({
       const { cutoff, _id } = state.vendor;
       const fakeDB = localStorage.getItem("cluster");
       let parseVoucher = fakeDB ? JSON.parse(fakeDB) : {};
-      console.log("found voucher", parseVoucher[_id]);
       if (parseVoucher[_id]?.length > 0) {
         state.cluster = parseVoucher[_id];
       } else {
-        console.log("register new source", _id);
         const now = new Date();
         const cutoffDate = new Date(
           now.getFullYear(),
@@ -457,42 +450,8 @@ export const reduxSlice = createSlice({
       localStorage.setItem("vouchers", JSON.stringify(_collections));
     },
 
-    // CHECK_BULK: (state, { payload }) => {
-    //   const { date, hasSelected } = payload;
-
-    //   const _cluster = [...state.cluster];
-    //   const index = _cluster.findIndex(
-    //     (item) => item?.date === date && item?.vendorId === state.vendor._id
-    //   );
-
-    //   hasSelected
-    //     ? _cluster.push({ date, vendorId: state.vendor._id })
-    //     : _cluster.splice(index, 1);
-    //   state.cluster = _cluster;
-    //   const _collections = state.collections.map(
-    //     ({ createdAt, source, ...deal }) => {
-    //       if (
-    //         dateFormat(createdAt) === date &&
-    //         String(source._id) === String(state.vendor._id)
-    //       ) {
-    //         return { ...deal, createdAt, source, hasSelected };
-    //       }
-    //       return { ...deal, createdAt, source };
-    //     }
-    //   );
-
-    //   state.collections = [..._collections];
-    //   state.filtered = state.collections.filter(
-    //     ({ source }) => source?._id.toString() === state.vendor?._id.toString()
-    //   );
-
-    //   localStorage.setItem("vouchers", JSON.stringify(_collections));
-    //   localStorage.setItem("cluster", JSON.stringify(state.cluster));
-    // },
-
     CHECK_BULK: (state, { payload }) => {
       const { deals, date } = payload;
-      console.log("check bulk");
       const cluster = [...state.cluster];
       const index = cluster.findIndex((item) => item.date === date);
       const foundCluster = cluster[index];
@@ -516,54 +475,6 @@ export const reduxSlice = createSlice({
       );
     },
 
-    // CHECK_DEAL: (state, { payload }) => {
-    //   const { id, date, hasSelected } = payload;
-    //   const _collections = state.collections.map((item) =>
-    //     item._id === id ? { ...item, hasSelected } : item
-    //   );
-    //   if (!hasSelected) {
-    //     const filteredCollections = _collections.filter(
-    //       ({ source, createdAt }) =>
-    //         source?._id?.toString() === state.vendor?._id?.toString() &&
-    //         dateFormat(createdAt) === date
-    //     );
-
-    //     const hasAnyFalseSelected = filteredCollections.some(
-    //       ({ hasSelected }) => hasSelected === false
-    //     );
-
-    //     const index = state.cluster.findIndex(
-    //       (item) => item?.date === date && item.vendorId === state.vendor._id
-    //     );
-
-    //     if (hasAnyFalseSelected && index > -1) {
-    //       state.cluster.splice(index, 1);
-    //     }
-    //   } else {
-    //     const filteredCollections = _collections.filter(
-    //       ({ source, createdAt }) =>
-    //         source?._id?.toString() === state.vendor?._id?.toString() &&
-    //         dateFormat(createdAt) === date
-    //     );
-
-    //     const hasAnyFalseSelected = filteredCollections.some(
-    //       ({ hasSelected }) => hasSelected === false
-    //     );
-
-    //     if (!hasAnyFalseSelected) {
-    //       state.cluster.push({ date, vendorId: state.vendor._id });
-    //     }
-    //   }
-
-    //   state.filtered = _collections.filter(
-    //     ({ source }) => source?._id.toString() === state.vendor?._id.toString()
-    //   );
-
-    //   state.collections = [..._collections];
-    //   localStorage.setItem("vouchers", JSON.stringify(_collections));
-    //   localStorage.setItem("cluster", JSON.stringify(state.cluster));
-    // },
-
     CHECK_DEAL: (state, { payload }) => {
       if (!state.vendor._id)
         return "please select source first to proceed in picking voucher";
@@ -577,7 +488,6 @@ export const reduxSlice = createSlice({
       const _cluster = [...state.cluster];
       const _clusterIndex = _cluster.findIndex((item) => item?.date === date);
       if (_clusterIndex > -1) {
-        console.log("foundCluster");
         //if cluster is already exist
         const { deals = [] } = _cluster[_clusterIndex];
         const _deals = [...deals];
@@ -849,34 +759,6 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.censusLoading = false;
       })
-
-      .addCase(OLDLEDGER.pending, (state) => {
-        state.census = {
-          // this is used for ledger
-          days: {},
-          grossSales: 0,
-          menus: {},
-          services: {},
-          expenses: 0,
-          patients: 0,
-          isEmpty: true,
-        };
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-
-      .addCase(OLDLEDGER.fulfilled, (state, action) => {
-        state.catalogs = action.payload;
-        state.collections = action.payload;
-        state.isLoading = false;
-      })
-      .addCase(OLDLEDGER.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-
       .addCase(YEARLY.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -905,6 +787,27 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(GENERATE_SOA.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GENERATE_SOA.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        state.collections = state.collections.filter(
+          ({ _id }) => !payload.includes(_id)
+        );
+        state.message = success;
+        state.transaction = payload;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(GENERATE_SOA.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

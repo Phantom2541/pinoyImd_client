@@ -7,6 +7,7 @@ const today = new Date();
 const initialState = {
   collections: [],
   selected: {},
+  deals: [],
   day: 1,
   month: today.getMonth() + 1,
   year: today.getFullYear(),
@@ -135,8 +136,9 @@ export const reduxSlice = createSlice({
       state.collections[index] = { ...oldRemittance, ...payload };
     },
     SetSELECTED: (state, { payload }) => {
-      const { key, value } = payload;
+      const { key, value, deals } = payload;
       if (key === "census") {
+        state.deals = deals;
         state.showCensus = true;
       } else if (key === "close") {
         state.showModal = true;
@@ -150,11 +152,12 @@ export const reduxSlice = createSlice({
       state.day = payload;
     },
     TOGGLE: (state, { payload = {} }) => {
-      const { key, value } = payload;
+      const { key, value, selected } = payload;
       if (key === "census") {
         state.showCensus = !state.showCensus;
         return;
       }
+      state.selected = selected;
       state.showModal = !state.showModal;
 
       if (value) {
@@ -199,7 +202,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, data } = action.payload;
-
         state.message = success;
         state.collections.unshift(data);
         state.selected = data;

@@ -9,11 +9,15 @@ const RequestOutSource = () => {
 
   useEffect(() => {
     const _request = JSON.parse(localStorage.getItem("outsource_request"));
-
     setRequest(_request);
   }, []);
 
-  const { deal = {}, outsources = [], sentOut = {} } = request || {};
+  const {
+    deal = {},
+    outsources = [],
+    sentOut = {},
+    isRad = false,
+  } = request || {};
   const { customerId = {}, ssx, patientNo = 1 } = deal;
   // Patient No. = index of deal
   // Case No. = deal _id
@@ -45,7 +49,7 @@ const RequestOutSource = () => {
                 className="text-white"
                 style={{ fontSize: "1rem", marginTop: "0.6rem" }}
               >
-                SEND OUT
+                {isRad ? "OFFICIAL READING" : "SEND OUT"}
               </h5>
             </div>
             <div
@@ -102,10 +106,12 @@ const RequestOutSource = () => {
                 <h6 className="font-weight-bold mr-1">SSX:</h6>
                 <h6>{ssx ? ssx : ""}</h6>
               </div>
-              <div className="d-flex align-items-center mt-1">
-                <h6 className="font-weight-bold mr-1">Sent out lab:</h6>
-                <h6>{sentOut?.vendors?.displayname}</h6>
-              </div>
+              {!isRad && (
+                <div className="d-flex align-items-center mt-1">
+                  <h6 className="font-weight-bold mr-1">Sent out lab:</h6>
+                  <h6>{sentOut?.vendors?.displayname}</h6>
+                </div>
+              )}
             </div>
             <div
               style={{

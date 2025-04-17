@@ -6,8 +6,10 @@ const url = "auth",
   maxPage = Number(localStorage.getItem("maxPage")) || 5,
   token = localStorage.getItem("token") || "",
   email = localStorage.getItem("email") || "",
-  activePlatform = localStorage.getItem("activePlatform"),
-  fileUrl = `/public/users/credentials/${email}`,
+  activePlatform =
+    localStorage.getItem("activePlatform") !== "undefined" &&
+    localStorage.getItem("activePlatform"),
+  fileUrl = `/public/users/companies/${email}`,
   profileUrl = `/public/users/${email}`;
 
 const initialState = {
@@ -252,7 +254,7 @@ export const reduxSlice = createSlice({
           const activePlatform = {
             ...auth.activePlatform,
             branch,
-            access: [..._access],
+            access: [..._access, "patron"],
             department,
             role,
             position: contract.designation,
@@ -355,9 +357,11 @@ export const reduxSlice = createSlice({
           state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
           state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         }
+        
         /**
          * this will control the topbar selections
          */
+
         state.isPatient = isPatient;
         // lookup for active platform
         state.branches = branches;

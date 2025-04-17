@@ -8,9 +8,9 @@ import {
 } from "./../../../../../../services/utilities";
 
 export default function Patient() {
-  const { customerId } = useSelector(({ validator }) => validator.selected); 
-  const { fullName = {}, isMale, dob } = customerId;
-
+  const { customerId } =
+    useSelector(({ validator }) => validator.selected) || {};
+  const { fullName = {}, isMale, dob } = customerId || {};
   return (
     <>
       {getGenderIcon(isMale)}

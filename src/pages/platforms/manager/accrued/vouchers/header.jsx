@@ -4,26 +4,27 @@ import {
   VOUCHERS,
   SetFilterBySOURCE,
   RESET,
+  GENERATE_SOA,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
 import {
   INSOURCE,
   SetINSOURCE,
 } from "../../../../../services/redux/slices/assets/providers";
+import Swal from "sweetalert2";
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { collections, month, year, vendor } = useSelector(
+  const { collections, month, year, vendor, cluster } = useSelector(
       ({ deals }) => deals
     ),
     { collections: providers } = useSelector(({ providers }) => providers),
+    [source, setSource] = useState(""),
     [sources, setSources] = useState([]),
     dispatch = useDispatch();
   // Fetch vouchers
   useEffect(() => {
-    // const fakeDB = localStorage.getItem("vouchers");
-    // if (!fakeDB) {
     dispatch(
       VOUCHERS({
         token,
@@ -32,9 +33,6 @@ const Header = () => {
         },
       })
     );
-    // } else {
-    //   dispatch(SetVOUCHERS(JSON.parse(fakeDB)));
-    // }
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
@@ -83,10 +81,66 @@ const Header = () => {
       ];
 
       setSources(uniqueSource);
+      setSource("all");
     }
   }, [collections, providers, getProvider]);
 
+  useEffect(() => {
+    dispatch(
+      SetFilterBySOURCE({
+        value: source,
+        vendor: getProvider(source),
+      })
+    );
+  }, [source, getProvider, dispatch]);
+
   const handleGenerateSOA = () => {
+    if (cluster.length === 0)
+      return Swal.fire({
+        icon: "warning",
+        title: "Action Required",
+        text: "Please select at least one voucher before generating the Statement of Account.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#3085d6",
+      });
+
+    const menus = [
+      ...new Map(
+        cluster
+          .flatMap(({ deals }) =>
+            deals.flatMap(({ cart }) =>
+              cart
+                .filter(({ menuId }) => menuId?.isProfile)
+                .map(({ menuId }) => ({
+                  _id: menuId._id,
+                  abbr: menuId.abbreviation,
+                  packages: menuId.packages,
+                }))
+            )
+          )
+          .map((menu) => [menu._id, menu]) // Ensure uniqueness by _id
+      ).values(),
+    ];
+
+    const dealIds = cluster.flatMap(({ deals }) => deals.map(({ _id }) => _id));
+
+    const gross = cluster.reduce(
+      (total, voucher) =>
+        total + voucher.deals.reduce((sum, deal) => sum + deal.amount, 0),
+      0
+    );
+
+    const data = {
+      dealIds,
+      clientId: vendor._id,
+      vendorId: activePlatform.branchId,
+      userId: auth._id,
+      amount: gross,
+    };
+
+    dispatch(GENERATE_SOA({ data, token }));
+    localStorage.setItem("vendor", JSON.stringify(vendor));
+    localStorage.setItem("soa", JSON.stringify({ menus, gross }));
     window.open(
       "/printout/soa",
       "OutsourceRequestForm", // Unique window name 2
@@ -106,14 +160,8 @@ const Header = () => {
         <select
           id="cashier-select"
           className="custom-select mr-2"
-          onChange={(e) =>
-            dispatch(
-              SetFilterBySOURCE({
-                value: e.target.value,
-                vendor: getProvider(e.target.value),
-              })
-            )
-          }
+          value={source}
+          onChange={(e) => setSource(e.target.value)}
         >
           <option value="" disabled>
             Select a Source

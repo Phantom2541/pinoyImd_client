@@ -39,7 +39,7 @@ class TopNavigation extends Component {
       paddingLeft: this.props.toggle ? "16px" : "240px",
       transition: "padding-left .3s",
     };
-    const { company, isPatient, platform } = this.props;
+    const { company, isPatient, platform = "patron" } = this.props;
     return (
       <MDBNavbar
         className="flexible-MDBNavbar"
@@ -78,9 +78,10 @@ class TopNavigation extends Component {
             <>
               <DTR />
               <Branches />
-              <Platforms />
             </>
           )}
+          <Platforms />
+
           <Profile />
         </MDBNavbarNav>
       </MDBNavbar>
@@ -92,7 +93,7 @@ const mapStateToProps = (state) => {
   return {
     company: state.auth.company,
     isPatient: state.auth.isPatient,
-    platform: state.auth.activePlatform.platform,
+    platform: state.auth.activePlatform?.platform || "patron",
   };
 };
 

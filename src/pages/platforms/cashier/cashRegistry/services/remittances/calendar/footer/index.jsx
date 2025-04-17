@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
 import {
@@ -7,11 +7,22 @@ import {
   SetSELECTED,
 } from "../../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
-const Footer = ({ num, item = {} }) => {
-  const dispatch = useDispatch();
-  const handleOpening = () => dispatch(TOGGLE({ key: "open", value: num }));
+const Footer = ({ num, item = {}, deals }) => {
+  const { month, year } = useSelector(({ remittances }) => remittances),
+    dispatch = useDispatch();
+  /**
+   * Conditions :
+   * 1. is possible once "moment" is present
+   * 2. if has deals and passed the "moment"
+   */
+  const handleOpening = () => {
+    const localStart = new Date(year, month - 1, num);
+    localStart.setHours(0, 0, 0, 0);
+    if (deals.length === 0 && localStart < new Date()) return;
+    dispatch(TOGGLE({ key: "open", value: num, seleted: item }));
+  };
   const handleCensus = () =>
-    dispatch(SetSELECTED({ key: "census", value: item }));
+    dispatch(SetSELECTED({ key: "census", value: item, deals }));
   const handleClose = () =>
     dispatch(SetSELECTED({ key: "close", value: item }));
   const { opening, gross, collector } = item;

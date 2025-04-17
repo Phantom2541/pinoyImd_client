@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBIcon,
   MDBDropdown,
@@ -10,7 +10,15 @@ import { useSelector } from "react-redux";
 import { PresetImage } from "../../../services/utilities";
 
 export default function Profile() {
-  const { auth, isPatient, image } = useSelector(({ auth }) => auth);
+  const { auth, isPatient, image, activePlatform } = useSelector(
+      ({ auth }) => auth
+    ),
+    [platform, setPlatform] = useState("patron");
+
+  useEffect(() => {
+    setPlatform(activePlatform?.platform);
+  }, [activePlatform]);
+
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
@@ -29,9 +37,18 @@ export default function Profile() {
         <span className="d-none d-md-inline">Profile</span>
       </MDBDropdownToggle>
       <MDBDropdownMenu right style={{ minWidth: "200px" }}>
-        {!isPatient && (
-          <MDBDropdownItem disabled={!auth._id} href="/profile">
+        {platform && (
+          <MDBDropdownItem href={`/${platform?.toLowerCase()}/profile`}>
             My Account
+          </MDBDropdownItem>
+        )}
+        {!isPatient && (
+          <MDBDropdownItem
+            disabled={!auth._id}
+            href={`/${platform?.toLowerCase()}/contract`}
+            title="i show dito ang contract sa active branch, need kasi malaman if LAB or RAD or Clinic"
+          >
+            Contract
           </MDBDropdownItem>
         )}
         <MDBDropdownItem

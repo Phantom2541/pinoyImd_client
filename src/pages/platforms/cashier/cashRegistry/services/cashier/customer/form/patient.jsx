@@ -19,7 +19,10 @@ import { SETPATIENT } from "../../../../../../../../services/redux/slices/commer
  * if user is not in quest, use branch address
  * else use user quest addres
  */
-const { branch } = JSON.parse(localStorage.getItem("activePlatform")) || {};
+const { branch } =
+  (localStorage.getItem("activePlatform") !== "patron" &&
+    JSON.parse(localStorage.getItem("activePlatform"))) ||
+  {};
 const _form = {
   fullName: {
     fname: "",
@@ -39,6 +42,13 @@ const _form = {
   mobile: "",
   privilege: 0,
   email: "",
+  activePlatform: {
+    branchId: branch?._id,
+    isPatient: true,
+    isCeo: false,
+    platform: "patron",
+    role: "patron",
+  },
 };
 
 export default function Patient({ setActiveIndex }) {

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Summary from "./summary";
-import { MDBRow } from "mdbreact";
 import Calendar from "./calendars";
 import Denomination from "./modal/denominations";
 
@@ -42,9 +41,7 @@ export default function Remittances() {
       <div style={{ width: "300px" }}>
         <Summary />
       </div>
-      <MDBRow className="w-100 mx-auto">
-        <Calendar />
-      </MDBRow>
+      <Calendar />
       <Denomination />
     </div>
   );

@@ -17,13 +17,21 @@ export default function Header() {
     } = useSelector(({ deals }) => deals.patient),
     dispatch = useDispatch();
 
+  /**
+   * Initial Fetch
+   * Return all diagnostics
+   * only same branch can de edited if meet conditions.
+   *  1. same branch
+   *  2. same department
+   *  3. same performer
+   *  4. with in 7 days
+   */
   useEffect(() => {
     if (_id && activePlatform?.branchId) {
       dispatch(
         TRACKER({
           token,
           key: {
-            branchId: activePlatform?.branchId,
             customerId: _id,
           },
         })
@@ -39,7 +47,7 @@ export default function Header() {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <span className="mb-0">
-        {_id ? fullName(fullname) : "Tracker"} | &nbsp; 
+        {_id ? fullName(fullname) : "Tracker"} | &nbsp;
         {_id && getAge(dob)}
       </span>
       <SearchUser setPatient={selectPatient} />

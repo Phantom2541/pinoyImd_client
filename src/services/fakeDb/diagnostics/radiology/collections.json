@@ -1,0 +1,138 @@
+[
+  {
+    "id": 1,
+    "name": "CHEST",
+    "position": ["AP", "PA"],
+    "description": "No abnormal pulmonary densities seen.The heart is normal in size.Aorta is unremarkable.Hemidiaphragms, costophrenic sulci and the visualized bones are intact.",
+    "impression": "Normal chest findings."
+  },
+  {
+    "id": 2,
+    "name": "Skull",
+    "position": ["AP", "Lat"],
+    "description": "No fracture nor dislocation seen in the visualized bones.Paranasal sinuses and mastoid process are well aerated.No bone mass lesion noted.Soft tissue is unremarkable.",
+    "impression": "Normal findings of skull."
+  },
+  {
+    "id": 3,
+    "name": "Thoracic Cage",
+    "description": "No fracture nor dislocation seen in the visualized thoracic spine and ribs. Soft tissue is unremarkable.",
+    "impression": "Normal findings of thoracic cage."
+  },
+  {
+    "id": 4,
+    "name": "Pelvis",
+    "description": "No fracture nor dislocation seen in the visualized bones.Soft tissue is unremarkable.",
+    "impression": "Normal findings of the Pelvis."
+  },
+  {
+    "id": 5,
+    "name": "Shoulder/Forearm",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the shoulder/forearm."
+  },
+  {
+    "id": 6,
+    "name": "Abdomen",
+    "description": "Examination shows the intestinal gas patterns to be within normal limits. The rest of the visualized visceral and osseous structures are unremarkable.",
+    "impression": "Negative radiograph of the Abdomen."
+  },
+  {
+    "id": 7,
+    "name": "Mandible",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the Mandible."
+  },
+  {
+    "id": 8,
+    "name": "Lumbo-Sacral",
+    "description": "The Spine Curvature is unremarkable. No fracture, scoliosis nor spondylolisthesis seen. Disc spaces and vertebral bodies are well maintained. Soft tissue is unremarkable. ",
+    "impression": "Normal findings of the lumbar and lumbosacral spine."
+  },
+  {
+    "id": 9,
+    "name": "Knee OR (LOWER EXTREMETIES)",
+    "position": ["Right", "Left"],
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the ? knee."
+  },
+  {
+    "id": 11,
+    "name": "Paranasal ",
+    "description": "Examination shows the paranasal to be well aerated and developed. Nasal septum is at the midline. The rest of the visualized osseous structures are unremarkable.",
+    "impression": ""
+  },
+  {
+    "id": 12,
+    "name": "Temporomandibular Joint",
+    "description": "Examination show no abnormal findings in the visualized osseous structures of the temporomandibular joint. Good condyle movements are seen in the open and close mouth views. ",
+    "impression": "Negative temporomandibular joint study."
+  },
+  {
+    "id": 13,
+    "name": "Thoracic Spine",
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the thoracic spine."
+  },
+  {
+    "id": 14,
+    "name": "Thoracolumbar",
+    "description": "Thoracolumbar spine curvature is unremarkable.The disc spaces are maintained. No fracture nor spondylolisthesis seen.Soft tissue is unremarkable.",
+    "impression": "Normal findings of the thoracolumbar spine."
+  },
+  {
+    "id": 15,
+    "name": "Cervical Spine",
+    "description": "The spine curvature is unremarkable.The disc spaces are maintained.No fracture nor subluxation seen.Soft tissue is unremarkable.",
+    "impression": "Normal findings of cervical spine."
+  },
+  {
+    "id": 16,
+    "name": "Water’s View",
+    "description": "Examination shows the paranasal to be well aerated and developed.Nasal septum is at the midline.The rest of the visualized osseous structures are unremarkable.",
+    "impression": "Normal findings of the water’s view."
+  },
+  {
+    "id": 17,
+    "name": "Hip OR (LOWER EXTREMETIES)",
+    "position": ["Right", "Left"],
+    "description": "No fracture nor dislocation seen in the visualized bones. Soft tissue is unremarkable.",
+    "impression": "Normal findings of the ? hip."
+  },
+  {
+    "id": 18,
+    "name": "Femur",
+    "description": "The visualized femoral shaft and adjacent soft tissues are unremarkable. No evidence of fracture, lytic or blastic lesion. Cortical outline and trabecular pattern are intact. Hip and knee joint spaces are preserved.",
+    "impression": "Normal radiographic findings of the femur."
+  },
+  {
+    "id": 19,
+    "name": "Sternum",
+    "description": "The sternum is intact. No evidence of fracture, lytic lesion, or abnormal calcification. The cortical margins and trabecular pattern appear normal. The adjacent soft tissues are unremarkable.",
+    "impression": "Normal radiographic findings of the sternum."
+  },
+  {
+    "id": 20,
+    "name": "Clavicle",
+    "description": "The clavicle is intact with normal alignment. No evidence of fracture, dislocation, or lytic/blastic lesion. The acromioclavicular and sternoclavicular joints are preserved. Surrounding soft tissues are unremarkable.",
+    "impression": "Normal radiographic findings of the clavicle."
+  },
+  {
+    "id": 21,
+    "name": "Elbow",
+    "description": "The bones of the elbow joint are intact and normally aligned. No fracture, dislocation, or lytic/blastic lesion seen. The joint space is preserved. No joint effusion or soft tissue abnormality noted.",
+    "impression": "Normal radiographic findings of the elbow."
+  },
+  {
+    "id": 22,
+    "name": "Leg",
+    "description": "The tibia and fibula are intact and normally aligned. No evidence of fracture, lytic or blastic lesion. The cortical and trabecular bone structures are preserved. Visualized knee and ankle joints are unremarkable. Surrounding soft tissues appear normal.",
+    "impression": "Normal radiographic findings of the leg."
+  },
+  {
+    "id": 23,
+    "name": "Ankle",
+    "description": "The bones of the ankle joint, including the tibia, fibula, and talus, are intact and properly aligned. No evidence of fracture, dislocation, or lytic/blastic lesions. The joint space is well-preserved with no sign of effusion. Surrounding soft tissues are unremarkable.",
+    "impression": "Normal radiographic findings of the ankle."
+  }
+]

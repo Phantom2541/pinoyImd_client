@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTypography } from "mdbreact";
-import Collapse from "./collapselol";
+import Collapse from "./collapse";
 import { Services } from "../../../../../services/fakeDb";
 import { UPDATE } from "../../../../../services/redux/slices/commerce/pos/services/deals.js";
 
@@ -22,8 +22,6 @@ export default function Body() {
         const { _id, forms } = task;
 
         if (!forms || forms.length === 0) {
-          console.log("Generating forms for task:", _id);
-
           try {
             const services = Services.getTemplates(task.packages);
             const _forms = Object.keys(services);
@@ -35,6 +33,9 @@ export default function Body() {
             }
           } catch (error) {
             console.error(`Error generating forms for task ${_id}:`, error);
+          // if (_forms.length > 0 && (!task.forms || task.forms.length === 0)) {
+          //   await dispatch(UPDATE({ token, data: { _id, forms: _forms } }));
+          //   updatedTask.forms = _forms;
           }
         } else {
           console.log("Existing forms for task:", task.forms);
@@ -49,6 +50,10 @@ export default function Body() {
     processTasks();
   }, [collections, dispatch, token]); // Remove `dispatch` and `token` from deps unless strictly needed
 
+//   processTasks();
+// }, [collections, dispatch, token]); // ✅ Now includes dispatch and token
+//  // Remove `dispatch` and `token` from deps unless strictly needed
+  
   if (!patient?._id)
     return (
       <MDBTypography note noteColor="info" className="">
@@ -65,20 +70,18 @@ export default function Body() {
 
   return (
     <>
-      {tasks.map((task, index) => {
-        return (
-          <Collapse
-            key={task?._id}
-            task={task}
-            didHoverID={didHoverID}
-            setDidHoverID={setDidHoverID}
-            number={index + 1}
-            setActiveCollapse={setActiveCollapse}
-            activeCollapse={activeCollapse}
-            isActive={activeCollapse === task?._id}
-          />
-        );
-      })}
+      {tasks.map((task, index) => (
+        <Collapse
+          key={task?._id}
+          task={task}
+          didHoverID={didHoverID}
+          setDidHoverID={setDidHoverID}
+          number={index + 1}
+          setActiveCollapse={setActiveCollapse}
+          activeCollapse={activeCollapse}
+          isActive={activeCollapse === task?._id}
+        />
+      ))}
     </>
   );
 }

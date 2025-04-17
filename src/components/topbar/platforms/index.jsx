@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import {
   MDBIcon,
   MDBDropdown,
@@ -13,10 +14,13 @@ import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons
 export default function Platforms() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
     [access, setAccess] = useState([]),
+    history = useHistory(),
     dispatch = useDispatch();
   // const navigate = useNavigate();
   useEffect(() => {
-    setAccess(activePlatform.access);
+    const platforms = activePlatform?.access || [];
+    const unique = new Set([...platforms, "patron"]);
+    setAccess(Array.from(unique));
   }, [activePlatform]);
 
   const handlePlatform = (platform) => {
@@ -27,7 +31,7 @@ export default function Platforms() {
           email: auth.email,
           activePlatform: {
             ...activePlatform,
-            platform,
+            platform: platform || "patron",
           },
         },
         token,
@@ -43,10 +47,10 @@ export default function Platforms() {
     }`; // Adjust path as needed
 
     // Redirect using React Router
-    // navigate(redirectURL);
+    history.push(redirectURL);
 
     // OR, if not using React Router, use:
-    window.location.href = redirectURL;
+    // window.location.href = redirectURL;
   };
   return (
     <MDBDropdown>
@@ -54,7 +58,7 @@ export default function Platforms() {
         <MDBIcon icon="network-wired" />
         &nbsp;
         <div className="d-none d-md-inline">
-          {capitalize(activePlatform?.platform)}
+          {capitalize(activePlatform?.platform || "patron")}
         </div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right>

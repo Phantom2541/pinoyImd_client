@@ -1955,175 +1955,471 @@
     "name": "ElectroCardiogram",
     "abbreviation": "ECG | EKG",
     "department": "RAD",
-    "template": 0,
-    "preference": ""
+    "template": 0
   },
   {
     "id": 202,
-    "name": "Ultrasound",
-    "abbreviation": "utzd",
+    "name": "Whole Abdomen Ultrasound",
+    "abbreviation": "WA-utz",
     "department": "RAD",
-    "template": 1,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 203,
-    "abbreviation": "x-ray KUB",
+    "name": "Upper Abdomen Ultrasound",
+    "abbreviation": "UA-utz",
     "department": "RAD",
-    "name": "x-ray(Kidney  Urether Bladder )",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 204,
-    "name": "X-ray (Chest Anterior-Posterior)",
-    "abbreviation": "x-ray CHEST AP",
+    "name": "Lower Abdomen Ultrasound",
+    "abbreviation": "LA-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 205,
-    "name": "x-ray (Chest Posterior-Anterior)",
-    "abbreviation": "x-ray CHEST PA",
+    "name": "Hepatobiliary Ultrasound",
+    "abbreviation": "HB-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 206,
-    "name": "x-ray (Lumbo-Sacral)",
-    "abbreviation": "x-ray LS",
+    "name": "Liver Ultrasound",
+    "abbreviation": "L-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 207,
-    "name": "x-ray (Pelvimetry /Pregnant)",
-    "abbreviation": "x-ray PELV",
+    "name": "Kidney Ultrasound",
+    "abbreviation": "K-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 208,
-    "name": "x-ray (Plain Abdomen /supin)",
-    "abbreviation": "x-ray PA",
+    "name": "Spleen  Ultrasound",
+    "abbreviation": "S-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 209,
-    "name": "x-ray (Rib Cage)",
-    "abbreviation": "x-ray RC",
+    "name": "Pancreas  Ultrasound",
+    "abbreviation": "P-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 210,
-    "name": "x-ray (Skull AP)",
-    "abbreviation": "x-ray SKULL AP",
+    "name": "Gallbladder  Ultrasound",
+    "abbreviation": "G-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 211,
-    "name": "x-ray (Skull Lateral)",
-    "abbreviation": "x-ray SKULL LAT",
+    "name": "Transvaginal Ultrasound",
+    "abbreviation": "TV-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 212,
-    "name": "x-ray (T-cage)",
-    "abbreviation": "x-ray TC",
+    "name": "Pelvic Ultrasound",
+    "abbreviation": "P-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 213,
-    "name": "x-ray (Thoraco-Lumbar )",
-    "abbreviation": "x-ray TL",
+    "name": "Pelvic Ultrasound",
+    "abbreviation": "P-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 214,
-    "name": "x-ray (Varioum Enema)",
-    "abbreviation": "x-ray VE",
+    "name": "Follicle Monitoring Ultrasound",
+    "abbreviation": "FM-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 215,
-    "name": "x-ray (Lateral View)",
-    "abbreviation": "x-ray LV",
+    "name": "Biophysical Profile Ultrasound",
+    "abbreviation": "BP-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 216,
-    "name": "x-ray Intravenous Pyelogram",
-    "abbreviation": "x-ray(IVP)",
+    "name": "Fetal Gender Determination Ultrasound",
+    "abbreviation": "FGD-utz",
     "department": "RAD",
-    "template": 2,
-    "preference": ""
+    "template": 1
   },
   {
     "id": 217,
-    "name": "x-ray(Kidney  Urether Bladder )",
-    "abbreviation": "x-ray KUB",
+    "name": "Congenital Anomaly Scan Ultrasound",
+    "abbreviation": "CAS-utz",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 218,
+    "name": "KUB Ultrasound (Kidney-Ureter-Bladder) Ultrasound",
+    "abbreviation": "KUB-utz",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 219,
+    "name": "Prostate Ultrasound (Transabdominal or Transrectal)",
+    "abbreviation": "P-utz",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 220,
+    "name": "Breast Ultrasound",
+    "abbreviation": "B-utz",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 221,
+    "name": "Scrotal/Testicular Ultrasound",
+    "abbreviation": "S-utz",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 222,
+    "name": "Thyroid Ultrasonography",
+    "abbreviation": "T-utz",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 223,
+    "name": "Neck Ultrasound",
+    "abbreviation": "N-utz",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 224,
+    "name": "Inguinal Ultrasound",
+    "abbreviation": "I-utz",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 225,
+    "name": "Soft Tissue Mass Ultrasound",
+    "abbreviation": "STM-utz",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 226,
+    "name": "Carotid Duplex Scan",
+    "abbreviation": "CD Scan",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 227,
+    "name": "Venous Duplex Scan",
+    "abbreviation": "VD Scan",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 228,
+    "name": "Arterial Doppler Study (Upper/Lower Extremities)",
+    "abbreviation": "AD Scan",
+    "department": "RAD",
+    "template": 1
+  },
+  {
+    "id": 234,
+    "name": "Chest X-ray (Posterior-Anterior View)",
+    "abbreviation": "x-ray CHEST PA",
     "department": "RAD",
     "template": 2,
-    "preference": ""
+    "preference": 1
   },
   {
     "id": 235,
+    "name": "Chest X-ray (AP View – supine/seated)",
+    "abbreviation": "x-ray CHEST AP",
+    "department": "RAD",
+    "template": 2,
+    "preference": 1
+  },
+  {
+    "id": 236,
+    "name": "Chest X-ray with Lateral View",
+    "abbreviation": "x-ray CHEST LV",
+    "department": "RAD",
+    "template": 2,
+    "preference": 1
+  },
+  {
+    "id": 237,
+    "name": "Ribs X-ray",
+    "abbreviation": "x-ray PELV",
+    "department": "RAD",
+    "template": 2,
+    "preference": 3
+  },
+  {
+    "id": 238,
+    "name": "Sternum X-ray",
+    "abbreviation": "x-ray STERNUM",
+    "department": "RAD",
+    "template": 2,
+    "preference": 19
+  },
+  {
+    "id": 239,
+    "name": "X-ray of the Arm (Humerus, Forearm)",
+    "abbreviation": "x-ray ARM",
+    "department": "RAD",
+    "template": 2,
+    "preference": 5
+  },
+  {
+    "id": 240,
+    "name": "X-ray of the Hand or Wrist",
+    "abbreviation": "x-ray HAND",
+    "department": "RAD",
+    "template": 2,
+    "preference": 5
+  },
+  {
+    "id": 241,
+    "name": "X-ray of the Shoulder",
+    "abbreviation": "x-ray SHOULDER",
+    "department": "RAD",
+    "template": 2,
+    "preference": 5
+  },
+  {
+    "id": 242,
+    "name": "X-ray of the Clavicle",
+    "abbreviation": "x-ray CLAVICLE",
+    "department": "RAD",
+    "template": 2,
+    "preference": 20
+  },
+  {
+    "id": 243,
+    "name": "X-ray of the Elbow",
+    "abbreviation": "x-ray ELBOW",
+    "department": "RAD",
+    "template": 2,
+    "preference": 21
+  },
+  {
+    "id": 244,
+    "name": "X-ray of the Leg (Tibia/Fibula)",
+    "abbreviation": "x-ray LEG",
+    "department": "RAD",
+    "template": 2,
+    "preference": 22
+  },
+  {
+    "id": 245,
+    "name": "X-ray of the Knee",
+    "abbreviation": "x-ray KNEE",
+    "department": "RAD",
+    "template": 2,
+    "preference": 9
+  },
+  {
+    "id": 246,
+    "name": "X-ray of the Ankle or Foot",
+    "abbreviation": "x-ray ANKLE",
+    "department": "RAD",
+    "template": 2,
+    "preference": 23
+  },
+  {
+    "id": 247,
+    "name": "X-ray of the Hip or Pelvis",
+    "abbreviation": "x-ray HIP",
+    "department": "RAD",
+    "template": 2,
+    "preference": 17
+  },
+  {
+    "id": 248,
+    "name": "X-ray of the Femur",
+    "abbreviation": "x-ray FEMUR",
+    "department": "RAD",
+    "template": 2,
+    "preference": 18
+  },
+  {
+    "id": 249,
+    "name": "Thoracic Spine X-ray",
+    "abbreviation": "x-ray THORACIC",
+    "department": "RAD",
+    "template": 2,
+    "preference": 13
+  },
+  {
+    "id": 250,
+    "name": "Thoracolumbar Spine X-ray",
+    "abbreviation": "x-ray THORACOLUMBAR",
+    "department": "RAD",
+    "template": 2,
+    "preference": 14
+  },
+  {
+    "id": 251,
+    "name": "Lumbar Spine X-ray",
+    "abbreviation": "x-ray LUMBAR",
+    "department": "RAD",
+    "template": 2,
+    "preference": 8
+  },
+  {
+    "id": 252,
+    "name": "Lumbosacral Spine X-ray",
+    "abbreviation": "x-ray LUMBOSACRAL",
+    "department": "RAD",
+    "template": 2,
+    "preference": 8
+  },
+  {
+    "id": 253,
+    "name": "Sacroiliac Joint X-ray",
+    "abbreviation": "x-ray SACROILIAC",
+    "department": "RAD",
+    "template": 2,
+    "preference": 4
+  },
+  {
+    "id": 254,
+    "name": "Skull X-ray",
+    "abbreviation": "x-ray SKULL",
+    "department": "RAD",
+    "template": 2,
+    "preference": 2
+  },
+  {
+    "id": 255,
+    "name": "Sinus X-ray",
+    "abbreviation": "x-ray SINUS",
+    "department": "RAD",
+    "template": 2,
+    "preference": 11
+  },
+  {
+    "id": 256,
+    "name": "Temporomandibular Joint (TMJ) X-ray",
+    "abbreviation": "x-ray TMJ",
+    "department": "RAD",
+    "template": 2,
+    "preference": 7
+  },
+  {
+    "id": 257,
+    "name": "Oblique Views",
+    "abbreviation": "x-ray OBLIQUE",
+    "department": "RAD",
+    "template": 2,
+    "special-view": true
+  },
+  {
+    "id": 258,
+    "name": "Lateral Views",
+    "abbreviation": "x-ray LATERAL",
+    "department": "RAD",
+    "template": 2,
+    "special-view": true
+  },
+  {
+    "id": 259,
+    "name": "Spot Film",
+    "abbreviation": "x-ray SPOT",
+    "department": "RAD",
+    "template": 2,
+    "special-view": true
+  },
+  {
+    "id": 260,
+    "name": "2D Echocardiography with Doppler",
+    "abbreviation": "2DEcho",
+    "department": "RAD",
+    "template": 3
+  },
+  {
+    "id": 261,
+    "name": "2D Echo with Color Flow Mapping",
+    "abbreviation": "2DEcho CFM",
+    "department": "RAD",
+    "template": 3
+  },
+  {
+    "id": 262,
+    "name": "Stress Echocardiography",
+    "abbreviation": "SEcho",
+    "department": "RAD",
+    "template": 3
+  },
+  {
+    "id": 263,
+    "name": "Transesophageal Echocardiography",
+    "abbreviation": "TEcho",
+    "department": "RAD",
+    "template": 3
+  },
+  {
+    "id": 310,
     "name": "Joint Mobility Enhancement",
     "abbreviation": "JME",
     "department": "REHAB"
   },
   {
-    "id": 236,
+    "id": 311,
     "name": "Musculoskeletal Rehabilitation",
     "abbreviation": "MSR",
     "department": "REHAB"
   },
   {
-    "id": 237,
+    "id": 312,
     "name": "Orthopedic Rehabilitation",
     "abbreviation": "OR",
     "department": "REHAB"
   },
   {
-    "id": 238,
+    "id": 313,
     "name": "Movement Restoration",
     "abbreviation": "MR",
     "department": "REHAB"
   },
   {
-    "id": 239,
+    "id": 314,
     "name": "Pain Management Therapy",
     "abbreviation": "PMT",
     "department": "REHAB"
   },
   {
-    "id": 240,
+    "id": 315,
     "name": "Post-Injury Rehabilitation",
     "abbreviation": "PIR",
     "department": "REHAB"
   },
   {
-    "id": 241,
+    "id": 316,
     "name": "Sports Injury Recovery",
     "abbreviation": "SIR",
     "department": "REHAB"

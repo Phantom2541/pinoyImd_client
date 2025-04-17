@@ -1,4 +1,4 @@
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/deals";
@@ -12,9 +12,14 @@ import TableLoading from "../../../../../components/tableLoading";
  * For refrences to the following deals
  */
 import {
-  PREFERENCES,
   HEADS,
+  SetHEADS,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  BROWSE,
+  SetPREFERENCES,
+  RESET as PREFRESET,
+} from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 import ResultEntry from "./modal";
 
 export default function Tasks() {
@@ -26,8 +31,45 @@ export default function Tasks() {
   //Initial Browse
   useEffect(() => {
     if (token && activePlatform?.branchId) {
-      dispatch(PREFERENCES({ token, branchId: activePlatform?.branchId }));
-      dispatch(HEADS({ token, branchId: activePlatform?.branchId }));
+      const branchId = activePlatform.branchId;
+
+      const localData = localStorage.getItem(`preferences`);
+      const headsData = localStorage.getItem(`heads-${branchId}`);
+
+      if (localData) {
+        const parsedData = JSON.parse(localData);
+        dispatch(SetPREFERENCES(parsedData));
+      } else if (token && activePlatform?.branchId) {
+        dispatch(
+          BROWSE({
+            token,
+            branchId: activePlatform.branchId,
+          })
+        ).then((result) => {
+          if (result?.payload) {
+            localStorage.setItem(
+              "preferences",
+              JSON.stringify(result?.payload?.payload)
+            );
+          }
+        });
+      }
+
+      if (headsData) {
+        dispatch(SetHEADS(JSON.parse(headsData)));
+      } else {
+        dispatch(HEADS({ token, branchId })).then((res) => {
+          if (res?.payload) {
+            localStorage.setItem(
+              `heads-${branchId}`,
+              JSON.stringify(res.payload?.payload)
+            );
+          }
+        });
+      }
+      return () => {
+        dispatch(PREFRESET());
+      };
     }
   }, [token, dispatch, activePlatform]);
 

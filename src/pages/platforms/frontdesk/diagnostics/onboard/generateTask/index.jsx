@@ -12,12 +12,15 @@ import {
   TOGGLE,
   REFORM,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-
 import { axioKit } from "../../../../../../services/utilities";
-
-import Body from "./list";
+import CaseBox from "./case";
 import { Services } from "../../../../../../services/fakeDb";
 
+/**
+ * Common for Buntis and Blood Donors
+ * HIV, RPR, HBsAg,  HCV
+ */
+const panel = [68, 69, 70, 97];
 export default function Modal() {
   const { auth, token, activePlatform } = useSelector(({ auth }) => auth),
     {
@@ -32,28 +35,33 @@ export default function Modal() {
   const toggle = () => dispatch(TOGGLE());
 
   useEffect(() => {
-    if (show) {
-      setOutSourceId("");
-    }
+    if (show) setOutSourceId("");
   }, [show]);
+  const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
 
   const getIDS = (collections) => collections.map(({ id }) => id);
+  const saveRequest = async (template, data, isStaticPath = false) => {
+    try {
+      const _department = ["laboratory", "radiology"].includes(
+        activePlatform.department
+      )
+        ? activePlatform.department
+        : "clinic"; // default fallback just in case
 
+      const url = isStaticPath
+        ? template
+        : `/diagnostics/${_department}/result/${template}`;
+      await axioKit.save(url, data, token);
+    } catch (error) {
+      console.error("Error saving request:", error);
+    }
+  };
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
     console.log("inHouseIds",inhouseIDS );
     
     const _outsource = getIDS(outsource);
-    console.log("_outsource",_outsource );
-
-    const department = activePlatform.department;
-    console.log("department",department );
-
-    const _inhouse = Services.getTemplates(
-      inhouseIDS,
-      department === "laboratory" ? "LAB" : "RAD"
-    );
-    console.log("_inhouse",_inhouse );
+    const _inhouse = Services.getTemplates(inhouseIDS, department);
 
     const { _id, customerId, ssx } = deal;
     //sent out company
@@ -69,96 +77,85 @@ export default function Modal() {
       JSON.stringify({
         deal: { ...deal, ssx },
         sentOut,
+        isRad: department === "RAD",
         outsources: outsource,
       })
     );
+
     localStorage.setItem("ssx", JSON.stringify(ssx));
+    const forms = Object.keys(_inhouse);
+    for (const key in _inhouse) {
+      const lowercaseKey = key.toLowerCase();
+      let bucket = _inhouse[key];
+      const requestData = {
+        _id,
+        packages: bucket,
+        customerId: customerId?._id,
+        branchId: activePlatform.branchId,
+      };
 
-    // const forms = Object.keys(_inhouse);
+      switch (key) {
+        case "Miscellaneous":
+          const panelAvail = bucket.filter((test) => panel.includes(test));
+          if (panelAvail.length) {
+            bucket = bucket.filter((item) => !panel.includes(item));
+            await saveRequest(lowercaseKey, {
+              packages: panelAvail,
+              dealId: _id,
+              customerId: customerId?._id,
+              branchId: activePlatform.branchId,
+              buntis: true,
+            });
+            return; // Stop further queries if panel is saved
+          }
 
-    // const saveRequest = async (url, data) => {
-    //   try {
-    //     await axioKit.save(url, data, token);
-    //   } catch (error) {
-    //     console.error("Error saving request:", error);
-    //   }
-    // };
+          // Solo form processing
+          const soloForms = bucket.map((test) => ({
+            packages: [test],
+            dealId: _id,
+            customerId: customerId?._id,
+            branchId: activePlatform.branchId,
+            _buntis: false,
+          }));
 
-    // for (const key in _inhouse) {
-    //   const lowercaseKey = key.toLowerCase();
-
-    //   const requestData = {
-    //     packages: _inhouse[key],
-    //     _id,
-    //     customerId: customerId?._id,
-    //     branchId: activePlatform.branchId,
-    //   };
-
-    //   switch (key) {
-    //     case "Miscellaneous":
-    //       const buntisTests = []; // HIV, RPR, HBsAg, HAV, HCV
-    //       let tests = _inhouse[key];
-
-    //       const buntisPresent = tests.filter((test) =>
-    //         buntisTests.includes(test)
-    //       );
-    //       if (buntisPresent.length) {
-    //         tests = tests.filter((item) => !buntisTests.includes(item));
-
-    //         // Save buntisPresent if present
-    //         await saveRequest("/diagnostics/laboratory/result/miscellaneous", {
-    //           packages: buntisPresent,
-    //           dealId: _id,
-    //           customerId: customerId?._id,
-    //           branchId: activePlatform.branchId,
-    //           buntis: true,
-    //         });
-    //         console.log("results test", tests);
-    //         return; // Stop further queries if buntisPresent is saved
-    //       }
-
-    //       // Solo form processing
-    //       const soloForms = tests.map((test) => ({
-    //         packages: [test],
-    //         dealId: _id,
-    //         customerId: customerId?._id,
-    //         branchId: activePlatform.branchId,
-    //         _buntis: false,
-    //       }));
-
-    //       await saveRequest(
-    //         "/diagnostics/laboratory/result/miscellaneous",
-    //         soloForms
-    //       );
-    //       break;
-
-    //     case "ECG":
-    //     case "X-ray":
-    //       // Radiology department handling
-    //       await saveRequest(
-    //         `/diagnostics/${department}/result/${lowercaseKey}`,
-    //         requestData
-    //       );
-    //       break;
-
-    //     case "Examination":
-    //     case "Certificate":
-    //       // Clinic department handling
-    //       await saveRequest(
-    //         `/diagnostics/${department}/result/${lowercaseKey}`,
-    //         requestData
-    //       );
-    //       break;
-
-    //     default:
-    //       // Default case for other departments
-    //       await saveRequest(
-    //         `/diagnostics/${department}/result/${lowercaseKey}`,
-    //         requestData
-    //       );
-    //       break;
-    //   }
-    // }
+          await saveRequest(lowercaseKey, soloForms);
+          break;
+        case "X-ray":
+          bucket.map(
+            async (test) =>
+              await saveRequest(lowercaseKey, {
+                dealId: _id,
+                packages: test,
+                hasRead: false,
+                customerId: customerId?._id,
+                branchId: activePlatform.branchId,
+              })
+          );
+          break;
+        default:
+          /**
+           * Single results in every transactions
+           * 1. Chemistr
+           * 2. Urinalysis
+           * 3. Hematology
+           * 4. Parasitology
+           * 5. Coagulation
+           * 6. Serology
+           * 7. ECG
+           * 8. Ultrasound
+           * 9. 2DEcho
+           * 10. certificate
+           * 11. Examination
+           * 12. Bacteriology
+           * 13. Biopsy
+           * 14. PAPs
+           * 15. PBS
+           * 16. compatibility
+           * 17. Drugtest
+           */
+          await saveRequest(lowercaseKey, requestData);
+      }
+    }
 
     // // Open the printout request form window
     // if (inhouse.length > 0) {
@@ -169,34 +166,53 @@ export default function Modal() {
     //   );
     // }
 
-    // const haveOutSource = outsource.length > 0 && outSourceId;
+    const haveOutSource =
+      outsource.length > 0 && (outSourceId || department === "RAD");
 
-    // if (haveOutSource) {
-    //   window.open(
-    //     "/printout/request/outsource",
-    //     "OutsourceRequestForm", // Unique window name 2
-    //     "top=100px,left=0px,width=1050px,height=750px"
-    //   );
-    //   await saveRequest(`/commerce/pos/services/dealOutSources`, {
-    //     dealId: deal._id,
-    //     servicesId: _outsource,
-    //   });
-    // }
+    if (haveOutSource) {
+      // have cluster
+      window.open(
+        "/printout/request/outsource",
+        "OutsourceRequestForm", // Unique window name 2
+        "top=100px,left=0px,width=1050px,height=750px"
+      );
+      if (department !== "RAD") {
+        await saveRequest(
+          `/commerce/pos/services/dealOutSources`,
+          {
+            _id: deal._id,
+            servicesId: _outsource,
+          },
+          true
+        );
+      } else {
+        const officialReadingXray = _outsource;
+        officialReadingXray.map(
+          async (test) =>
+            await saveRequest("x-ray", {
+              dealId: _id,
+              packages: test,
+              hasRead: true,
+              customerId: customerId?._id,
+              branchId: activePlatform.branchId,
+            })
+        );
+      }
+    }
 
-    // const data = {
-    //   _id,
-    //   ssx,
-    //   lol: auth._id,
-    //   rendered: [
-    //     {
-    //       department: "LAB",
-    //       renderedBy: auth._id,
-    //       renderedAt: new Date().toLocaleString(),
-    //     },
-    //   ],
-    //   forms,
-    //   ...(haveOutSource && { outsource: outSourceId }),
-    // };
+    const data = {
+      _id,
+      ssx,
+      rendered: [
+        {
+          department,
+          renderedBy: auth._id,
+          renderedAt: new Date().toLocaleString(),
+        },
+      ],
+      forms,
+      ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
+    };
 
     // dispatch(
     //   REFORM({
@@ -206,7 +222,6 @@ export default function Modal() {
     // );
     // dispatch(TOGGLE());
   };
-
   return (
     <MDBModal isOpen={show} toggle={toggle} size="lg" backdrop>
       <MDBModalHeader
@@ -225,7 +240,7 @@ export default function Modal() {
             management.
           </MDBTypography>
 
-          <Body outSource={outSourceId} setOutSource={setOutSourceId} />
+          <CaseBox outSource={outSourceId} setOutSource={setOutSourceId} />
           <MDBBtn
             className="float-right mt-3 mb-3"
             color="primary"
