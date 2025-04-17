@@ -357,9 +357,11 @@ export const reduxSlice = createSlice({
           state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
           state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         }
+        
         /**
          * this will control the topbar selections
          */
+
         state.isPatient = isPatient;
         // lookup for active platform
         state.branches = branches;

@@ -9,11 +9,11 @@ const Categories = ({
     <>
       <select
         className="form-control bg-light"
-        value={category.toLowerCase()}
+        value={category?.toLowerCase()}
         onChange={(e) => setCategory(e.target.value)}
       >
         {categories.map((c, index) => (
-          <option key={index} value={c.toLowerCase()}>
+          <option key={index} value={c?.toLowerCase()}>
             {c}
           </option>
         ))}

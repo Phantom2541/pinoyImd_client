@@ -119,7 +119,7 @@ export default function SideNavigation({
             ? renderNavItems(
                 links,
                 "sidebar",
-                `/${activePlatform.platform.toLowerCase() || "patron"}`
+                `/${activePlatform?.platform?.toLowerCase() || "patron"}`
               )
             : new Array(6).fill().map((_, index) => (
                 <div className="mx-2" key={index}>
