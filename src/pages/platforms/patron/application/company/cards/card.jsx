@@ -62,7 +62,7 @@ export default function CompanyCard({ company }) {
               display: "block",
             }}
           >
-            <MDBIcon icon="building" /> {company.subName}
+            <MDBIcon icon="building" className="grey-text" /> {company.subName}
           </h5>
           <h4
             className="card-title text-ellipsis"
