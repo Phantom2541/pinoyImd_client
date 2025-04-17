@@ -26,7 +26,6 @@ export default function CompanyCard({ company }) {
         style={{ marginTop: "44px" }}
         onMouseOver={() => setDidHover(true)}
         onMouseOut={() => setDidHover(false)}
-        onClick={() => setVisibility(true)}
       >
         <MDBView waves cascade hover rounded className="custom-mdbview mx-auto">
           <img
