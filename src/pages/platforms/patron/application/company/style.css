@@ -1,0 +1,26 @@
+#company-loading-1 {
+  height: 7rem !important;
+}
+#company-loading-2 {
+  height: 1.3rem !important;
+  margin-top: 1rem;
+  margin-right: 2rem;
+}
+
+#company-loading-3 {
+  height: 1.3rem !important;
+  margin-top: 1rem;
+  margin-right: 8rem;
+}
+
+.custom-mdbview {
+  display: flex;
+  width: 16rem;
+}
+.ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* ← Limit to 5 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
