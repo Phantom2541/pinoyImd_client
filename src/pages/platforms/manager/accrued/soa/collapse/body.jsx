@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { currency, fullName } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";

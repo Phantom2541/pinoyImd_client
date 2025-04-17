@@ -24,9 +24,7 @@ export default function SideNavigation({
   onLinkClick,
 }) {
   const [links, setLinks] = useState([]);
-  const { activePlatform, company, isLoading } = useSelector(
-    ({ auth }) => auth
-  );
+  const { activePlatform, company } = useSelector(({ auth }) => auth);
   const [logo, setLogo] = useState(FailedLogo);
   const [activeCategory, setActiveCategory] = useState("");
 
@@ -114,7 +112,7 @@ export default function SideNavigation({
             ? renderNavItems(
                 links,
                 "sidebar",
-                `/${activePlatform.platform.toLowerCase() || "patron"}`
+                `/${activePlatform?.platform?.toLowerCase() || "patron"}`
               )
             : new Array(6).fill().map((_, index) => (
                 <div className="mx-2" key={index}>

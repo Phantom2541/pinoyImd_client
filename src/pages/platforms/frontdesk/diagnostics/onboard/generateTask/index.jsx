@@ -15,7 +15,6 @@ import {
 import { axioKit } from "../../../../../../services/utilities";
 import CaseBox from "./case";
 import { Services } from "../../../../../../services/fakeDb";
-import _ from "lodash";
 
 /**
  * Common for Buntis and Blood Donors

@@ -19,7 +19,6 @@ import {
 } from "./../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import { currency } from "./../../../../../../../services/utilities";
 import { Services } from "../../../../../../../services/fakeDb";
-import { CASHIER } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function Census() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -93,7 +92,7 @@ export default function Census() {
     return () => {
       isMounted = false;
     };
-  }, [selected, token, activePlatform, auth, dispatch]);
+  }, [selected, token, activePlatform, auth, dispatch, deals]);
 
   const handleSubmit = () => {
     const data = {
