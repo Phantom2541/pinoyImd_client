@@ -66,7 +66,9 @@ class TopNavigation extends Component {
           <strong>
             {isPatient
               ? "Welcome to Pinoy iMD"
-              : `${capitalize(company?.name)} | ${capitalize(platform)}`}
+              : `${
+                  company?.name ? `${capitalize(company?.name)} | ` : ""
+                } ${capitalize(platform)}`}
           </strong>
         </MDBNavbarBrand>
         <MDBNavbarNav
