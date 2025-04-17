@@ -111,6 +111,7 @@ export default function Logo() {
                     disabled={isLoading}
                     color="warning"
                     size="sm"
+                    title="Download"
                     onClick={handleDownload}
                   >
                     <MDBIcon icon="download" />
@@ -118,6 +119,7 @@ export default function Logo() {
                   <label
                     className="btn btn-sm btn-primary"
                     htmlFor="upload-logo"
+                    title="Upload"
                   >
                     <MDBIcon icon="upload" />
                   </label>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBModal,
   MDBModalBody,
@@ -18,10 +18,18 @@ export default function Modal({
   ext,
   isUpload,
   handleUpload,
+  cropSize = { width: 170, height: 170 },
 }) {
   const [croppedArea, setCroppedArea] = useState(null),
     [crop, setCrop] = useState({ x: 0, y: 0 }),
+    [customCropSize, setCustomCropSize] = useState({}),
     [zoom, setZoom] = useState(1);
+
+  useEffect(() => {
+    if (show) {
+      setCustomCropSize(cropSize);
+    }
+  }, [cropSize, show]);
 
   const handleDownload = async () => {
     generateDownload(img, ext, croppedArea, isUpload);
@@ -54,6 +62,8 @@ export default function Modal({
             crop={crop}
             zoom={zoom}
             aspect={aspect}
+            cropSize={customCropSize}
+            // restrictPosition={false}
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
