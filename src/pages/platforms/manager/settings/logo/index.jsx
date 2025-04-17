@@ -28,7 +28,7 @@ export default function Logo() {
   const [preview, setPreview] = useState("");
 
   const handleError = (message) => {
-    document.getElementById("upload-banner").value = "";
+    document.getElementById("upload-logo").value = "";
     addToast(message, {
       appearance: "warning",
     });
