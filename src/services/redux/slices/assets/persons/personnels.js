@@ -23,6 +23,16 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  showModal: false,
+  selected: {},
+  willCreate: false,
+  /**
+   * Footer
+   */
+  filtered: [],
+  maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -145,9 +155,7 @@ export const APPLICATION = createAsyncThunk(
   `${url}/application`,
   ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/application`, token, {
-        auth: data?._id,
-      });
+      return axioKit.universal(`${url}/application`, token, data);
     } catch (error) {
       const message =
         (error.response &&
@@ -296,8 +304,9 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(APPLICATION.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+      .addCase(APPLICATION.fulfilled, (state, { payload }) => {
+        console.log("payload", payload);
+
         state.collections = payload;
         state.isLoading = false;
       })

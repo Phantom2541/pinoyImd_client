@@ -48,7 +48,7 @@ export default function Login({ show, toggle = null }) {
     if (auth._id && loginSuccess) {
       if (activePlatform) {
         history.push(
-          `/${activePlatform?.platform}/${
+          `/${activePlatform?.platform || "patron"}/${
             activePlatform?.platform === "manager" ? "dashboard" : "bulletin"
           }`
         );

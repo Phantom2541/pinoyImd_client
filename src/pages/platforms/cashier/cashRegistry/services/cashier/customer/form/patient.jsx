@@ -21,7 +21,7 @@ import { platform } from "chart.js";
  * else use user quest addres
  */
 const { branch } =
-  (localStorage.getItem("activePlatform") !== "undefined" &&
+  (localStorage.getItem("activePlatform") !== "patron" &&
     JSON.parse(localStorage.getItem("activePlatform"))) ||
   {};
 const _form = {
@@ -48,7 +48,7 @@ const _form = {
     isPatient: true,
     isCeo: false,
     platform: "patron",
-    role: "Patron",
+    role: "patron",
   },
 };
 

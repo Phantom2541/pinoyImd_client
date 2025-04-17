@@ -13,6 +13,7 @@ import Banner from "../../../pages/platforms/manager/settings/banner";
 import Logo from "../../../pages/platforms/manager/settings/logo";
 import Tieups from "../../../pages/platforms/manager/settings/tieups";
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
+import { Branches } from "../../../pages/platforms/headquarter/humanResources";
 
 const headquarter = [
   {
@@ -76,6 +77,7 @@ const headquarter = [
         name: "Branches",
         path: "/hr/branches",
         icon: "code-branch",
+        component: Branches,
       },
       {
         name: "Top Branch",

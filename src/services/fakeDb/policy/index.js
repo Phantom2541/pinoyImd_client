@@ -24,17 +24,15 @@ const Policy = {
       ) || {};
     if (positions.length === 0) return "unknown designation";
     const role = [...positions].find(({ id }) => id === pk).display_name;
-    console.log("role", role);
+    // console.log("role", role);
 
     return role;
   },
-  getPositions: (code) => {
-    // console.log(code);
-    const { positions = [] } = collections.find(
-      ({ department }) => department === code
-    );
-    console.log("positions", positions);
+  getPositions: (_code) => {
+    const match = collections.find(({ code }) => code === _code);
+    console.log("match", match);
 
+    const positions = match?.positions || []; // fallback to empty array
     return positions;
   },
 

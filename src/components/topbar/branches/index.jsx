@@ -11,9 +11,13 @@ import { capitalize } from "../../../services/utilities";
 import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth.js";
 
 export default function Branches() {
-  const { branches, access, activePlatform, token, auth } = useSelector(
-      ({ auth }) => auth
-    ),
+  const {
+      branches,
+      access,
+      activePlatform = {},
+      token,
+      auth,
+    } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const handleActivePlatform = (branchId) => {
@@ -36,7 +40,7 @@ export default function Branches() {
     dispatch(SETACTIVEPLATFORM({ data, token }));
   };
 
-  const { branch } = activePlatform;
+  const { branch = {} } = activePlatform;
 
   return (
     <MDBDropdown>

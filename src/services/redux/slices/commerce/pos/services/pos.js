@@ -5,8 +5,6 @@ import { Services } from "../../../../../fakeDb";
 const url = "commerce/pos/services/deals";
 // Get data once
 function safeParseJSON(item, fallback = {}) {
-  console.log("item", item);
-
   if (!item || item === undefined) return fallback;
   // try {
   //   return JSON.parse(item) || fallback;

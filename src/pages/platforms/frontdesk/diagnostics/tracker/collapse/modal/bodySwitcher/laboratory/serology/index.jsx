@@ -1,10 +1,10 @@
 import React from "react";
 import { MDBTable } from "mdbreact";
-import { Services } from "./../../../../../../../../../services/fakeDb";
+import { Services } from "../../../../../../../../../../services/fakeDb";
 import {
   findReference,
   referenceColor,
-} from "./../../../../../../../../../services/utilities";
+} from "../../../../../../../../../../services/utilities";
 import { useSelector } from "react-redux";
 
 export default function Serology({ task, setTask }) {

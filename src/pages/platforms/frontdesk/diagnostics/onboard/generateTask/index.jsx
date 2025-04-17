@@ -41,14 +41,17 @@ export default function Modal() {
   const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
 
   const getIDS = (collections) => collections.map(({ id }) => id);
-  const saveRequest = async (template, data) => {
+  const saveRequest = async (template, data, isStaticPath = false) => {
     try {
       const _department = ["laboratory", "radiology"].includes(
         activePlatform.department
       )
         ? activePlatform.department
         : "clinic"; // default fallback just in case
-      const url = `/diagnostics/${_department}/result/${template}`;
+
+      const url = isStaticPath
+        ? template
+        : `/diagnostics/${_department}/result/${template}`;
       await axioKit.save(url, data, token);
     } catch (error) {
       console.error("Error saving request:", error);
@@ -79,7 +82,6 @@ export default function Modal() {
     );
 
     localStorage.setItem("ssx", JSON.stringify(ssx));
-    console.log("inhouse", _inhouse);
     const forms = Object.keys(_inhouse);
     for (const key in _inhouse) {
       const lowercaseKey = key.toLowerCase();
@@ -118,26 +120,12 @@ export default function Modal() {
           await saveRequest(lowercaseKey, soloForms);
           break;
         case "X-ray":
-          const haveOfficialReading = outsource.length > 0;
-          const inhouseBucket = bucket.map((test) => ({
-            test,
-            hasRead: false,
-          }));
-          const readingBucket = outsource?.map(({ id: test }) => ({
-            test,
-            hasRead: true,
-          }));
-
-          const baseBucket = haveOfficialReading
-            ? [...inhouseBucket, ...readingBucket]
-            : inhouseBucket;
-
-          baseBucket.map(
-            async ({ test, hasRead }) =>
+          bucket.map(
+            async (test) =>
               await saveRequest(lowercaseKey, {
                 dealId: _id,
                 packages: test,
-                hasRead,
+                hasRead: false,
                 customerId: customerId?._id,
                 branchId: activePlatform.branchId,
               })
@@ -181,16 +169,33 @@ export default function Modal() {
       outsource.length > 0 && (outSourceId || department === "RAD");
 
     if (haveOutSource) {
+      // have cluster
       window.open(
         "/printout/request/outsource",
         "OutsourceRequestForm", // Unique window name 2
         "top=100px,left=0px,width=1050px,height=750px"
       );
       if (department !== "RAD") {
-        await saveRequest(`/commerce/pos/services/dealOutSources`, {
-          _id: deal._id,
-          servicesId: _outsource,
-        });
+        await saveRequest(
+          `/commerce/pos/services/dealOutSources`,
+          {
+            _id: deal._id,
+            servicesId: _outsource,
+          },
+          true
+        );
+      } else {
+        const officialReadingXray = _outsource;
+        officialReadingXray.map(
+          async (test) =>
+            await saveRequest("x-ray", {
+              dealId: _id,
+              packages: test,
+              hasRead: true,
+              customerId: customerId?._id,
+              branchId: activePlatform.branchId,
+            })
+        );
       }
     }
 
@@ -205,7 +210,7 @@ export default function Modal() {
         },
       ],
       forms,
-      ...(haveOutSource && { outsource: outSourceId }),
+      ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
     };
 
     dispatch(
@@ -216,7 +221,6 @@ export default function Modal() {
     );
     dispatch(TOGGLE());
   };
-
   return (
     <MDBModal isOpen={show} toggle={toggle} size="lg" backdrop>
       <MDBModalHeader

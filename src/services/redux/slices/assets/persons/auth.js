@@ -254,7 +254,7 @@ export const reduxSlice = createSlice({
           const activePlatform = {
             ...auth.activePlatform,
             branch,
-            access: [..._access],
+            access: [..._access, "patron"],
             department,
             role,
             position: contract.designation,

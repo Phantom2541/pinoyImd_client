@@ -9,7 +9,6 @@ import {
   MDBTableHead,
   MDBTableBody,
   MDBBtn,
-  MDBCollapse,
   MDBRow,
   MDBCol,
   MDBCardBody,
@@ -24,58 +23,39 @@ import { CASHIER } from "../../../../../../../services/redux/slices/commerce/pos
 
 export default function Census() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { showCensus, selected } = useSelector(({ remittances }) => remittances),
+    { showCensus, selected, deals } = useSelector(
+      ({ remittances }) => remittances
+    ),
     { collections } = useSelector(({ menus }) => menus),
     [census, setCensus] = useState({ menus: [], services: [] }),
-    [collapsed, setCollapsed] = useState({ menus: false, services: false }),
     [patients, setPatients] = useState(0),
     [gross, setGross] = useState(0),
     [breakdown, setBreakdown] = useState({}),
     [expenses, setExpenses] = useState(0),
+    [activeTab, setActiveTab] = useState("menus"),
     dispatch = useDispatch();
 
   useEffect(() => {
-    let isMounted = true; // ✅ Track if component is mounted
-    // if already saved
+    let isMounted = true;
     if (selected?.census && selected?.census?.menus.length > 0) {
       setCensus(selected.census);
       setPatients(selected.patients);
       setGross(selected.gross);
       setExpenses(selected.expenses);
-      return; // ✅ Prevent unnecessary API call
+      return;
     }
 
-    // if census is not saved then, fetched to deals
     const fetchCensus = async () => {
       try {
-        const date = new Date(selected.createdAt).toISOString().split("T")[0];
-        const { payload } = await dispatch(
-          CASHIER({
-            token,
-            key: {
-              branchId: activePlatform?.branchId,
-              cashierId: auth._id,
-              date,
-            },
-          })
-        );
-
-        // console.log("📡 Calling API with payload:", payload);
-
-        if (!isMounted) return; // ✅ Stop execution if unmounted
-
-        if (payload?.payload) {
-          const _patient = payload.payload?.length;
-          setPatients(_patient);
-
-          const menuCountMap = {}; // { menuId: count }
-          const serviceCountMap = {}; // { serviceId: count }
+        if (deals.length > 0) {
+          setPatients(deals?.length);
+          const menuCountMap = {};
+          const serviceCountMap = {};
           const paymentSummary = {};
 
-          setGross(payload.payload.reduce((acc, item) => acc + item.amount, 0));
+          setGross(deals.reduce((acc, item) => acc + item.amount, 0));
 
-          payload.payload.forEach(({ cart, amount, payment }) => {
-            // Payment Breakdown
+          deals.forEach(({ cart, amount, payment }) => {
             if (payment && amount) {
               if (!paymentSummary[payment]) {
                 paymentSummary[payment] = 0;
@@ -84,12 +64,10 @@ export default function Census() {
             }
 
             cart.forEach(({ menuId, packages }) => {
-              // Count Menus
               if (menuId?._id) {
                 menuCountMap[menuId._id] = (menuCountMap[menuId._id] || 0) + 1;
               }
 
-              // Count Services
               packages.forEach((serviceId) => {
                 serviceCountMap[serviceId] =
                   (serviceCountMap[serviceId] || 0) + 1;
@@ -97,13 +75,10 @@ export default function Census() {
             });
           });
 
-          console.log("menuCountMap", menuCountMap);
-          console.log("serviceCountMap", serviceCountMap);
-
           if (isMounted) {
             setCensus({
-              menus: menuCountMap, // {10:2, 5:1}
-              services: serviceCountMap, // {20:3, 15:2}
+              menus: menuCountMap,
+              services: serviceCountMap,
             });
             setBreakdown(paymentSummary);
           }
@@ -116,12 +91,9 @@ export default function Census() {
     if (selected?.createdAt) fetchCensus();
 
     return () => {
-      isMounted = false; // ✅ Cleanup to prevent memory leak
+      isMounted = false;
     };
   }, [selected, token, activePlatform, auth, dispatch]);
-
-  const toggleCollapse = (section) =>
-    setCollapsed((prev) => ({ ...prev, [section]: !prev[section] }));
 
   const handleSubmit = () => {
     const data = {
@@ -140,6 +112,9 @@ export default function Census() {
     ? new Date(selected.createdAt).toISOString().split("T")[0]
     : "N/A";
 
+  const tabStyle = (tab) =>
+    `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;
+
   return (
     <MDBModal
       isOpen={showCensus}
@@ -147,7 +122,6 @@ export default function Census() {
       size="lg"
       backdrop
     >
-      {/* Modal Header */}
       <MDBModalHeader
         toggle={() => dispatch(TOGGLE({ key: "census" }))}
         className="light-blue darken-3 white-text"
@@ -155,14 +129,14 @@ export default function Census() {
         <MDBIcon icon="calendar-alt" className="mr-2" />
         Census : {censusDate}
       </MDBModalHeader>
+
       {!selected && (
         <p className="font-weight-bold text-danger">
           Please declare your floating cash before proceeding with the census.
         </p>
       )}
-      {/* Modal Body */}
+
       <MDBModalBody className="mb-0">
-        {/* Summary Section */}
         <MDBRow className="align-items-center mb-3">
           {[
             {
@@ -197,66 +171,71 @@ export default function Census() {
           ))}
         </MDBRow>
 
-        {/* Collapsible Sections */}
-        {[
-          {
-            label: "Menus",
-            key: "menus",
-            data: Object.entries(census.menus).map(([id, count]) => ({
-              _id: id,
-              abbreviation: collections.find(({ _id }) => _id === id)
-                ?.abbreviation, // Assuming you have a function to get the menu name
-              // abbreviation: id,
-              count,
-            })),
-            columns: ["Test", "Count"],
-            accessor: (item) => [item.abbreviation, item.count],
-          },
-          {
-            label: "Services",
-            key: "services",
-            data: Object.entries(census.services).map(([id, count]) => ({
-              _id: id,
-              name: Services.getName(id),
-              count,
-            })),
-            columns: ["Service", "Count"],
-            accessor: (item) => [item.name, item.count],
-          },
-        ].map(({ label, key, data, columns, accessor }) => (
-          <div key={key} className="mb-2">
-            <MDBBtn
-              color={key === "menus" ? "primary" : "secondary"}
-              onClick={() => toggleCollapse(key)}
-              block
-            >
-              {label}{" "}
-              <MDBIcon icon={collapsed[key] ? "chevron-up" : "chevron-down"} />
-            </MDBBtn>
-            <MDBCollapse isOpen={collapsed[key]}>
-              <MDBTable bordered small>
-                <MDBTableHead>
-                  <tr>
-                    <th>#</th>
-                    {columns.map((col, idx) => (
-                      <th key={idx}>{col}</th>
-                    ))}
+        <div className="mb-3 d-flex">
+          <MDBBtn
+            className={tabStyle("menus")}
+            onClick={() => setActiveTab("menus")}
+          >
+            Menus
+          </MDBBtn>
+          <MDBBtn
+            className={tabStyle("services")}
+            onClick={() => setActiveTab("services")}
+          >
+            Services
+          </MDBBtn>
+        </div>
+
+        {/* Menus Table */}
+        {activeTab === "menus" && (
+          <MDBTable bordered small>
+            <MDBTableHead>
+              <tr>
+                <th>#</th>
+                <th>Test</th>
+                <th>Count</th>
+              </tr>
+            </MDBTableHead>
+            <MDBTableBody>
+              {Object.entries(census.menus).map(([id, count], idx) => {
+                const abbreviation =
+                  collections.find(({ _id }) => _id === id)?.abbreviation || id;
+                return (
+                  <tr key={id}>
+                    <td>{idx + 1}</td>
+                    <td>{abbreviation}</td>
+                    <td>{count}</td>
                   </tr>
-                </MDBTableHead>
-                <MDBTableBody>
-                  {data.map((item, index) => (
-                    <tr key={item._id}>
-                      <td>{index + 1}</td>
-                      {accessor(item).map((value, idx) => (
-                        <td key={idx}>{value}</td>
-                      ))}
-                    </tr>
-                  ))}
-                </MDBTableBody>
-              </MDBTable>
-            </MDBCollapse>
-          </div>
-        ))}
+                );
+              })}
+            </MDBTableBody>
+          </MDBTable>
+        )}
+
+        {/* Services Table */}
+        {activeTab === "services" && (
+          <MDBTable bordered small>
+            <MDBTableHead>
+              <tr>
+                <th>#</th>
+                <th>Service</th>
+                <th>Count</th>
+              </tr>
+            </MDBTableHead>
+            <MDBTableBody>
+              {Object.entries(census.services).map(([id, count], idx) => {
+                const name = Services.getName(id);
+                return (
+                  <tr key={id}>
+                    <td>{idx + 1}</td>
+                    <td>{name}</td>
+                    <td>{count}</td>
+                  </tr>
+                );
+              })}
+            </MDBTableBody>
+          </MDBTable>
+        )}
       </MDBModalBody>
 
       <MDBCardBody>

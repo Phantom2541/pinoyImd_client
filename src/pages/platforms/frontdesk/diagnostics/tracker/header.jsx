@@ -17,13 +17,21 @@ export default function Header() {
     } = useSelector(({ deals }) => deals.patient),
     dispatch = useDispatch();
 
+  /**
+   * Initial Fetch
+   * Return all diagnostics
+   * only same branch can de edited if meet conditions.
+   *  1. same branch
+   *  2. same department
+   *  3. same performer
+   *  4. with in 7 days
+   */
   useEffect(() => {
     if (_id && activePlatform?.branchId) {
       dispatch(
         TRACKER({
           token,
           key: {
-            branchId: activePlatform?.branchId,
             customerId: _id,
           },
         })

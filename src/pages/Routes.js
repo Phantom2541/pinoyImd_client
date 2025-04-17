@@ -10,17 +10,15 @@ import NotExisting from "./notExisting";
 
 //global
 import Profile from "../components/profile";
+import Contract from "../components/contract";
 
 import { useSelector } from "react-redux";
-import UnsetApply from "./platforms/guest/apply";
 
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { platform = "" } = activePlatform || {};
 
   const platformPrefix = platform ? `/${platform.toLowerCase()}` : "";
-  console.log("platform", platformPrefix);
-
   const renderSidebars = () => {
     const platforms = Sidebars[platform.toLowerCase()];
     if (!Array.isArray(platforms)) return "Ooops.. platforms must be array";
@@ -71,13 +69,9 @@ export default function Routes() {
 
   return (
     <Switch>
-      {!platform && <Route exact path={`/dashboard`} component={UnsetApply} />}
-
       {renderSidebars()}
-
       <Route path={`${platformPrefix}/profile`} exact component={Profile} />
-      <Route path={`${platformPrefix}/apply`} exact component={UnsetApply} />
-
+      <Route path={`${platformPrefix}/contract`} exact component={Contract} />
       <Route component={NotFound} />
     </Switch>
   );

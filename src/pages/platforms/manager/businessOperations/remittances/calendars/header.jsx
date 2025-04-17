@@ -9,6 +9,7 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import { Calendars } from "./../../../../../../components/header";
+import { currency } from "../../../../../../services/utilities";
 
 const Header = () => {
   const {
@@ -18,6 +19,7 @@ const Header = () => {
     } = useSelector(({ remittances }) => remittances),
     { collections: deals } = useSelector(({ deals }) => deals),
     { token, activePlatform } = useSelector(({ auth }) => auth),
+    [expenses, setExpenses] = useState(0),
     [sum, setSum] = useState(0),
     [remitted, setRemitted] = useState(0),
     dispatch = useDispatch();
@@ -28,6 +30,16 @@ const Header = () => {
         .filter((item) => !item.deleted)
         .reduce((acc, item) => acc + item.amount, 0);
       setSum(totalSales);
+      const totalExpenses = deals
+        .filter((item) => !item.deleted && item.cart)
+        .reduce((acc, item) => {
+          const cartExpenses = item.cart.reduce(
+            (cartAcc, cartItem) => cartAcc + (cartItem.capital || 0),
+            0
+          );
+          return acc + cartExpenses;
+        }, 0);
+      setExpenses(totalExpenses);
     }
   }, [deals]);
 
@@ -85,15 +97,13 @@ const Header = () => {
         year={year}
         reset={() => dispatch(ResetDATE())}
       />
-
+      <span> Expenses : {currency(expenses)}</span>
       <div className="d-flex align-items-center">
         <span className="mx-3 text-nowrap mt-0">
-          Sales: <strong className="text-white">₱{sum.toLocaleString()}</strong>{" "}
-          | Remitted:{" "}
-          <strong className={remittedClass}>
-            ₱{remitted.toLocaleString()}
-          </strong>{" "}
-          ({balanceMessage})
+          Sales: <strong className="text-white">{currency(sum)}</strong> |
+          Remitted:{" "}
+          <strong className={remittedClass}>{currency(remitted)}</strong> (
+          {balanceMessage})
         </span>
       </div>
     </MDBView>

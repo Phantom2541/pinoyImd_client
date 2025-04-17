@@ -19,7 +19,6 @@ export const BROWSE = createAsyncThunk(
   `${url}/browse`,
   async ({ token, key }, thunkAPI) => {
     try {
-      // console.log("Calling API with key:", key);
       const response = await axioKit.universal(`${url}/browse`, token, key);
       // console.log("API Response:", response);
       return response || []; // Ensure default array
