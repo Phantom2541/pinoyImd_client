@@ -16,6 +16,7 @@ import { ENDPOINT } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
 import { FailedLogo } from "../../../../../services/utilities";
+import ImageCropper from "../../../../../components/imageCropper";
 
 const array = new Array(5).fill().map((_, index) => index);
 
@@ -34,42 +35,66 @@ export default function Logo() {
     });
   };
 
-  const handleChange = (file) => {
-    if (isLoading) return;
+  // const handleUpload = (file) => {
+  //   if (isLoading) return;
 
-    if (!file.type === "image/png")
-      return handleError("Invalid file extension, must be png.");
+  //   if (!file.type === "image/png")
+  //     return handleError("Invalid file extension, must be png.");
 
-    const reader = new FileReader();
+  //   const reader = new FileReader();
 
-    reader.onload = ({ target }) => {
-      const { result } = target;
+  //   reader.onload = ({ target }) => {
+  //     const { result } = target;
 
-      const img = new Image();
-      img.src = result;
+  //     const img = new Image();
+  //     img.src = result;
 
-      img.onload = () => {
-        // Check the width and height
-        if (img.width !== 230 && img.height !== 80)
-          return handleError("Image dimensions must be 230x80 pixels.");
+  //     img.onload = () => {
+  //       // Check the width and height
+  //       if (img.width !== 230 && img.height !== 80)
+  //         return handleError("Image dimensions must be 230x80 pixels.");
 
-        dispatch(
-          UPLOAD({
-            data: {
-              path: `companies/${company.name}/${activePlatform.name}`,
-              base64: result.split(",")[1],
-              name: `logo.png`,
-            },
-            token,
-          })
-        );
+  //       dispatch(
+  //         UPLOAD({
+  //           data: {
+  //             path: `companies/${company.name}/${activePlatform.name}`,
+  //             base64: result.split(",")[1],
+  //             name: `logo.png`,
+  //           },
+  //           token,
+  //         })
+  //       );
 
-        setPreview(URL.createObjectURL(file));
-      };
-    };
+  //       setPreview(URL.createObjectURL(file));
+  //     };
+  //   };
 
-    // Read the file as a data URL
-    reader.readAsDataURL(file);
+  //   // Read the file as a data URL
+  //   reader.readAsDataURL(file);
+  // };
+
+  console.log("activePlatform", activePlatform);
+
+  const handleUpload = (base64) => {
+    const byteString = atob(base64.split(",")[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const newBlob = new Blob([ab], { type: "image/png" });
+    const objectUrl = URL.createObjectURL(newBlob);
+    setPreview(objectUrl);
+    dispatch(
+      UPLOAD({
+        data: {
+          path: `companies/${company.name}/${activePlatform?.branch?.name}`,
+          base64: base64.split(",")[1],
+          name: "logo.png",
+        },
+        token,
+      })
+    );
   };
 
   const handleDownload = () => {
@@ -99,7 +124,7 @@ export default function Logo() {
               <img
                 src={
                   preview ||
-                  `${ENDPOINT}/public/companies/${company.name}/${activePlatform.name}/logo.png`
+                  `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/logo.png`
                 }
                 className="img-fluid"
                 alt={company?.name || "Default Logo"}
@@ -116,21 +141,28 @@ export default function Logo() {
                   >
                     <MDBIcon icon="download" />
                   </MDBBtn>
-                  <label
+                  <ImageCropper
+                    handleUpload={handleUpload}
+                    cropSize={{ width: 230, height: 80 }}
+                    isUpload
+                    accept={".png"}
+                  />
+                </MDBBtnGroup>
+
+                {/* <label
                     className="btn btn-sm btn-primary"
                     htmlFor="upload-logo"
                     title="Upload"
                   >
                     <MDBIcon icon="upload" />
                   </label>
-                </MDBBtnGroup>
                 <input
                   id="upload-logo"
                   type="file"
                   className="d-none"
                   accept=".png"
                   onChange={(e) => handleChange(e.target.files[0])}
-                />
+                /> */}
               </MDBMask>
             </MDBView>
             <hr />

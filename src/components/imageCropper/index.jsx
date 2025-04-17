@@ -4,6 +4,7 @@ import Modal from "./modal";
 export default function ImageCropper({
   accept,
   aspect = 1,
+  cropSize,
   handleUpload = () => {},
   isUpload = false,
 }) {
@@ -15,10 +16,10 @@ export default function ImageCropper({
 
   const handleChange = ({ target }) => {
     const file = target.files[0];
-
+    console.log("file", file);
     if (!file) return;
 
-    if (!file.type.includes("image")) return;
+    // if (!file.type.includes("image")) return;
 
     if (file.type.includes("png")) setExt("png");
 
@@ -26,11 +27,15 @@ export default function ImageCropper({
 
     reader.onload = ({ target }) => {
       setImg(target.result);
+      console.log("set Show true");
       setShow(true);
     };
 
     reader.readAsDataURL(file);
+    target.value = null;
   };
+
+  console.log("show", show);
 
   return (
     <>
@@ -46,6 +51,7 @@ export default function ImageCropper({
       />
       <Modal
         show={show}
+        cropSize={cropSize}
         toggle={toggle}
         img={img}
         aspect={aspect}

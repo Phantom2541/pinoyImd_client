@@ -22,14 +22,7 @@ export default function Modal({
 }) {
   const [croppedArea, setCroppedArea] = useState(null),
     [crop, setCrop] = useState({ x: 0, y: 0 }),
-    [customCropSize, setCustomCropSize] = useState({}),
     [zoom, setZoom] = useState(1);
-
-  useEffect(() => {
-    if (show) {
-      setCustomCropSize(cropSize);
-    }
-  }, [cropSize, show]);
 
   const handleDownload = async () => {
     generateDownload(img, ext, croppedArea, isUpload);
@@ -44,7 +37,7 @@ export default function Modal({
   };
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
+    <MDBModal isOpen={show} toggle={toggle} backdrop>
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
@@ -62,7 +55,7 @@ export default function Modal({
             crop={crop}
             zoom={zoom}
             aspect={aspect}
-            cropSize={customCropSize}
+            cropSize={cropSize}
             // restrictPosition={false}
             onCropChange={setCrop}
             onZoomChange={setZoom}
