@@ -28,19 +28,27 @@ const Body = () => {
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((app, index) => (
-          <tr key={index}>
-            <td key={index}>{index + startIndex + 1}</td>
-            <td>
-              <h5>{app.branch.companyId.name}</h5>
-              <small>{app.branch.companyId.subName}</small>
-            </td>
-            <td>{app.branch.name} </td>
-            <td>{Policy.getPosition(app.contract.designation)} </td>
-            <td>{app.contract.soe}</td>
-            <td>{app.status}</td>
-          </tr>
-        ))}
+        {paginatedData?.map((app, index) => {
+          const { branch = {}, contract = {}, status } = app;
+          const { name, companyId } = branch;
+          const { soe, designation } = contract;
+
+          console.log("soe", soe, designation);
+
+          return (
+            <tr key={index}>
+              <td key={index}>{index + startIndex + 1}</td>
+              <td>
+                <h5>{companyId?.name}</h5>
+                <small>{companyId?.subName}</small>
+              </td>
+              <td>{name} </td>
+              <td>{Policy.getPosition(designation)}</td>
+              <td>{soe}</td>
+              <td>{status}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </MDBTable>
   );
