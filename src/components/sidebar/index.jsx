@@ -31,7 +31,12 @@ export default function SideNavigation({
   // Load logo if available
   useEffect(() => {
     if (company?.name && activePlatform?.platform) {
-      const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.platform}/logo.png`;
+      /**
+       *  display company logo
+       *  if logo is not found, display default
+       *  @y'dreo
+       */
+      const url = `${ENDPOINT}/public/companies/${company.name}/${activePlatform.platform}/logo.png`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);
       });

@@ -16,6 +16,7 @@ export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
     [vouchers, setVouchers] = useState([]),
     [cluster, setCluster] = useState([]);
+  // dispatch = useDispatch();
 
   useEffect(() => {
     const groupByDate = filtered.reduce((groups, item) => {

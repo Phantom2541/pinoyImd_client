@@ -6,7 +6,7 @@ import {
   MDBCardTitle,
   MDBCol,
 } from "mdbreact";
-import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
+import { PresetUser, ENDPOINT } from "../../../../../services/utilities";
 
 import ApplicationModal from "./modal";
 
@@ -15,7 +15,7 @@ export default function CompanyCard({ company }) {
     [didHover, setDidHover] = useState(false);
 
   return (
-    <MDBCol md="3" className="mb-4">
+    <MDBCol size="4" className="mb-4">
       <MDBCard
         onMouseOver={() => setDidHover(true)}
         onMouseOut={() => setDidHover(false)}
@@ -27,7 +27,7 @@ export default function CompanyCard({ company }) {
             src={`${ENDPOINT}/public/companies/${company?.name}/logo.jpg`}
             className="mb-3 img-thumbnail bg-transparent"
             style={{ height: 200, width: "auto" }}
-            onError={(e) => (e.target.src = PresetUser)}
+            onError={e => (e.target.src = PresetUser)}
           />
           <MDBCardTitle>{company?.name}</MDBCardTitle>
           <label>{company.subName}</label>

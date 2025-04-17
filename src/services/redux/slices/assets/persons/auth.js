@@ -9,7 +9,7 @@ const url = "auth",
   activePlatform =
     localStorage.getItem("activePlatform") !== "undefined" &&
     localStorage.getItem("activePlatform"),
-  fileUrl = `/public/users/credentials/${email}`,
+  fileUrl = `/public/users/companies/${email}`,
   profileUrl = `/public/users/${email}`;
 
 const initialState = {
