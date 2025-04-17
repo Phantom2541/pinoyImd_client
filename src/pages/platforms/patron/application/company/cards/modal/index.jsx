@@ -42,6 +42,7 @@ export default function ApplicationModal({
   }, [dispatch, token, auth]);
 
   //console.log("unused variable setPositions", setPositions);
+  console.log("application", application);
 
   const handleToggle = () => setVisibility(!visibility);
 
@@ -125,11 +126,11 @@ export default function ApplicationModal({
             hasResume: application.resume ? true : false,
             hasLetter: application.letter ? true : false,
           },
-          employment: {
+          contract: {
             designation: application.designation,
+            hos: 8,
           },
-          hos: 8,
-          platform: "",
+          platform: "Patron",
           message: application.message,
         },
         token,
@@ -153,15 +154,15 @@ export default function ApplicationModal({
     // );
   };
   return (
-    <MDBModal
-      size="fluid"
-      staticBackdrop
-      tabIndex="-1"
-      isOpen={visibility}
-      setShow={setVisibility}
-    >
-      <MDBModalHeader className="d-flex flex-coloumn justify-content-between align-items-center ">
-        <h3>{company.name}'s Application Requirements</h3>
+    <MDBModal size="xl" isOpen={visibility} toggle={setVisibility} backdrop>
+      <MDBModalHeader
+        toggle={() => handleToggle()}
+        className="light-blue darken-3 white-text"
+      >
+        <h3 style={{ fontWeight: 200 }}>
+          <span style={{ fontWeight: 400 }}>{company.name}'s</span> Application
+          Requirements
+        </h3>
         {/* <MDBBtn className="btn btn-sm" color="danger" onClick={handleToggle}>
           <MDBIcon icon="times" size="lg" />
         </MDBBtn> */}
@@ -245,8 +246,7 @@ export default function ApplicationModal({
             <MDBCol md="4">
               <label
                 htmlFor="upload-personal-data-sheet"
-                className="btn btn-primary btn-xl mt-3"
-                style={{ width: "485px" }}
+                className="btn btn-primary btn-md mt-3 w-100"
               >
                 Personal Data Sheet
               </label>
@@ -261,8 +261,7 @@ export default function ApplicationModal({
             <MDBCol md="4">
               <label
                 htmlFor="upload-resume"
-                className="btn btn-primary btn-xl mt-3"
-                style={{ width: "485px" }}
+                className="btn btn-primary btn-md mt-3 w-100"
               >
                 Resume
               </label>
@@ -277,8 +276,7 @@ export default function ApplicationModal({
             <MDBCol md="4">
               <label
                 htmlFor="upload-application"
-                className="btn btn-primary btn-xl mt-3"
-                style={{ width: "485px" }}
+                className="btn btn-primary btn-md mt-3 w-100"
               >
                 Application Letter
               </label>
@@ -300,7 +298,7 @@ export default function ApplicationModal({
             <MDBCol md="12" className="mt-4">
               <textarea
                 className="form-control"
-                label="Message"
+                placeholder="Message.."
                 value={application?.message}
                 name="message"
                 onChange={handleChange}
@@ -309,11 +307,8 @@ export default function ApplicationModal({
           </MDBRow>
         </MDBModalBody>
         <MDBModalFooter>
-          <MDBBtn type="button" color="secondary" onClick={handleToggle}>
-            Close
-          </MDBBtn>
-          <MDBBtn type="submit" color="success" onClick={handleSubmit}>
-            Submit application
+          <MDBBtn type="submit" rounded color="success" onClick={handleSubmit}>
+            Submit
           </MDBBtn>
         </MDBModalFooter>
       </form>

@@ -14,19 +14,16 @@ import CompanyCards from "./cards";
 import {
   BROWSE,
   RESET,
+  SetFILTERED,
 } from "../../../../../services/redux/slices/assets/companies";
-import Search from "../../../../../components/searchables/physicians";
+import Search from "../../../../../components/searchables/search";
 import "./style.css";
-
-// const path = [
-//   {
-//     path: "List of Companies",
-//   },
-// ];
 
 export default function UnsetApply() {
   const { token, maxPage } = useSelector(({ auth }) => auth),
-    { collections, isLoading } = useSelector(({ companies }) => companies),
+    { collections, isLoading, filtered } = useSelector(
+      ({ companies }) => companies
+    ),
     [companies, setCompanies] = useState([]),
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
@@ -41,10 +38,8 @@ export default function UnsetApply() {
   }, [token, dispatch]);
 
   useEffect(() => {
-    if (!!collections.length) {
-      setCompanies(collections);
-    }
-  }, [collections]);
+    setCompanies(filtered);
+  }, [filtered]);
 
   useEffect(() => {
     if (!!companies.length) {
@@ -57,29 +52,8 @@ export default function UnsetApply() {
     }
   }, [companies, page, maxPage]);
 
-  const handleSearch = (string) => {
-    if (string) {
-      setCompanies(
-        collections?.filter((catalog) =>
-          String(catalog.name).toLowerCase().startsWith(string.toLowerCase())
-        )
-      );
-    } else {
-      setCompanies(collections);
-    }
-  };
-
   return (
     <MDBContainer className="mt-4" fluid>
-      {/* <MDBRow className="mb-3">
-        <MDBCol md="6">
-          <MDBInput
-            onChange={(e) => handleSearch(e.target.value)}
-            type="search"
-            label="Search by Company name"
-          />
-        </MDBCol>
-      </MDBRow> */}
       <MDBCard narrow>
         <MDBView
           cascade
@@ -87,7 +61,12 @@ export default function UnsetApply() {
         >
           <div>Company List</div>
           <div>
-            <Search />
+            <Search
+              haveAction={false}
+              collections={collections}
+              setFiltered={(results) => dispatch(SetFILTERED(results))}
+              reset={() => dispatch(SetFILTERED(collections))}
+            />
           </div>
         </MDBView>
         <MDBCardBody>

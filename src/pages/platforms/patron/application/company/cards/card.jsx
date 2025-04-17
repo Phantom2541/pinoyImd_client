@@ -41,10 +41,15 @@ export default function CompanyCard({ company }) {
             floating
             tag="a"
             size="sm"
-            className="ml-auto mr-4 d-flex align-items-center justify-content-center"
+            className="ml-auto d-flex align-items-center justify-content-center"
             action
             color="danger"
-            style={{ width: "3rem", height: "3rem" }}
+            style={{
+              width: "2.4rem",
+              height: "2.4rem",
+              fontSize: "0.5rem",
+              fontWeight: 600,
+            }}
             onClick={() => setVisibility(true)}
           >
             Join Us Now!
