@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   MDBCard,
   MDBRow,
@@ -13,6 +13,25 @@ import {
   MDBDatePicker,
 } from "mdbreact";
 import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Register the necessary components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const barChartData = {
   labels: ["January", "February", "March", "April", "May"],
@@ -43,36 +62,33 @@ const barChartOptions = {
   responsive: true,
   maintainAspectRatio: true,
   scales: {
-    xAxes: [
-      {
-        barPercentage: 1,
-        gridLines: {
-          display: true,
-          color: "rgba(0, 0, 0, 0.1)",
-        },
-        ticks: {
-          fontColor: "#7e8591",
-        },
+    x: {
+      grid: {
+        display: true,
+        color: "rgba(0, 0, 0, 0.1)",
       },
-    ],
-    yAxes: [
-      {
-        gridLines: {
-          display: true,
-          color: "rgba(0, 0, 0, 0.1)",
-        },
-        ticks: {
-          beginAtZero: true,
-          min: 0,
-          fontColor: "#7e8591",
-        },
+      ticks: {
+        fontColor: "#7e8591",
       },
-    ],
+    },
+    y: {
+      grid: {
+        display: true,
+        color: "rgba(0, 0, 0, 0.1)",
+      },
+      ticks: {
+        beginAtZero: true,
+        min: 0,
+        fontColor: "#7e8591",
+      },
+    },
   },
-  legend: {
-    labels: {
-      fontColor: "#7e8591",
-      fontSize: 16,
+  plugins: {
+    legend: {
+      labels: {
+        fontColor: "#7e8591",
+        fontSize: 16,
+      },
     },
   },
 };
