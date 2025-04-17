@@ -24,7 +24,9 @@ export default function SideNavigation({
   onLinkClick,
 }) {
   const [links, setLinks] = useState([]);
-  const { activePlatform, company } = useSelector(({ auth }) => auth);
+  const { activePlatform, company, isLoading } = useSelector(
+    ({ auth }) => auth
+  );
   const [logo, setLogo] = useState(FailedLogo);
   const [activeCategory, setActiveCategory] = useState("");
 
@@ -113,7 +115,7 @@ export default function SideNavigation({
         style={{ transition: "padding-left .3s" }}
       >
         <MDBSideNavNav>
-          {activePlatform
+          {!isLoading
             ? renderNavItems(
                 links,
                 "sidebar",
