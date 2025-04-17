@@ -41,12 +41,19 @@ export default function Modal() {
 
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
+    console.log("inHouseIds",inhouseIDS );
+    
     const _outsource = getIDS(outsource);
+    console.log("_outsource",_outsource );
+
     const department = activePlatform.department;
+    console.log("department",department );
+
     const _inhouse = Services.getTemplates(
       inhouseIDS,
       department === "laboratory" ? "LAB" : "RAD"
     );
+    console.log("_inhouse",_inhouse );
 
     const { _id, customerId, ssx } = deal;
     //sent out company
@@ -67,137 +74,137 @@ export default function Modal() {
     );
     localStorage.setItem("ssx", JSON.stringify(ssx));
 
-    const forms = Object.keys(_inhouse);
+    // const forms = Object.keys(_inhouse);
 
-    const saveRequest = async (url, data) => {
-      try {
-        await axioKit.save(url, data, token);
-      } catch (error) {
-        console.error("Error saving request:", error);
-      }
-    };
+    // const saveRequest = async (url, data) => {
+    //   try {
+    //     await axioKit.save(url, data, token);
+    //   } catch (error) {
+    //     console.error("Error saving request:", error);
+    //   }
+    // };
 
-    for (const key in _inhouse) {
-      const lowercaseKey = key.toLowerCase();
+    // for (const key in _inhouse) {
+    //   const lowercaseKey = key.toLowerCase();
 
-      const requestData = {
-        packages: _inhouse[key],
-        _id,
-        customerId: customerId?._id,
-        branchId: activePlatform.branchId,
-      };
+    //   const requestData = {
+    //     packages: _inhouse[key],
+    //     _id,
+    //     customerId: customerId?._id,
+    //     branchId: activePlatform.branchId,
+    //   };
 
-      switch (key) {
-        case "Miscellaneous":
-          const buntisTests = []; // HIV, RPR, HBsAg, HAV, HCV
-          let tests = _inhouse[key];
+    //   switch (key) {
+    //     case "Miscellaneous":
+    //       const buntisTests = []; // HIV, RPR, HBsAg, HAV, HCV
+    //       let tests = _inhouse[key];
 
-          const buntisPresent = tests.filter((test) =>
-            buntisTests.includes(test)
-          );
-          if (buntisPresent.length) {
-            tests = tests.filter((item) => !buntisTests.includes(item));
+    //       const buntisPresent = tests.filter((test) =>
+    //         buntisTests.includes(test)
+    //       );
+    //       if (buntisPresent.length) {
+    //         tests = tests.filter((item) => !buntisTests.includes(item));
 
-            // Save buntisPresent if present
-            await saveRequest("/diagnostics/laboratory/result/miscellaneous", {
-              packages: buntisPresent,
-              dealId: _id,
-              customerId: customerId?._id,
-              branchId: activePlatform.branchId,
-              buntis: true,
-            });
-            console.log("results test", tests);
-            return; // Stop further queries if buntisPresent is saved
-          }
+    //         // Save buntisPresent if present
+    //         await saveRequest("/diagnostics/laboratory/result/miscellaneous", {
+    //           packages: buntisPresent,
+    //           dealId: _id,
+    //           customerId: customerId?._id,
+    //           branchId: activePlatform.branchId,
+    //           buntis: true,
+    //         });
+    //         console.log("results test", tests);
+    //         return; // Stop further queries if buntisPresent is saved
+    //       }
 
-          // Solo form processing
-          const soloForms = tests.map((test) => ({
-            packages: [test],
-            dealId: _id,
-            customerId: customerId?._id,
-            branchId: activePlatform.branchId,
-            _buntis: false,
-          }));
+    //       // Solo form processing
+    //       const soloForms = tests.map((test) => ({
+    //         packages: [test],
+    //         dealId: _id,
+    //         customerId: customerId?._id,
+    //         branchId: activePlatform.branchId,
+    //         _buntis: false,
+    //       }));
 
-          await saveRequest(
-            "/diagnostics/laboratory/result/miscellaneous",
-            soloForms
-          );
-          break;
+    //       await saveRequest(
+    //         "/diagnostics/laboratory/result/miscellaneous",
+    //         soloForms
+    //       );
+    //       break;
 
-        case "ECG":
-        case "X-ray":
-          // Radiology department handling
-          await saveRequest(
-            `/diagnostics/${department}/result/${lowercaseKey}`,
-            requestData
-          );
-          break;
+    //     case "ECG":
+    //     case "X-ray":
+    //       // Radiology department handling
+    //       await saveRequest(
+    //         `/diagnostics/${department}/result/${lowercaseKey}`,
+    //         requestData
+    //       );
+    //       break;
 
-        case "Examination":
-        case "Certificate":
-          // Clinic department handling
-          await saveRequest(
-            `/diagnostics/${department}/result/${lowercaseKey}`,
-            requestData
-          );
-          break;
+    //     case "Examination":
+    //     case "Certificate":
+    //       // Clinic department handling
+    //       await saveRequest(
+    //         `/diagnostics/${department}/result/${lowercaseKey}`,
+    //         requestData
+    //       );
+    //       break;
 
-        default:
-          // Default case for other departments
-          await saveRequest(
-            `/diagnostics/${department}/result/${lowercaseKey}`,
-            requestData
-          );
-          break;
-      }
-    }
+    //     default:
+    //       // Default case for other departments
+    //       await saveRequest(
+    //         `/diagnostics/${department}/result/${lowercaseKey}`,
+    //         requestData
+    //       );
+    //       break;
+    //   }
+    // }
 
-    // Open the printout request form window
-    if (inhouse.length > 0) {
-      window.open(
-        "/printout/request/form",
-        "RequestForm", // Window name 1
-        "top=100px,left=100px,width=1050px,height=750px"
-      );
-    }
+    // // Open the printout request form window
+    // if (inhouse.length > 0) {
+    //   window.open(
+    //     "/printout/request/form",
+    //     "RequestForm", // Window name 1
+    //     "top=100px,left=100px,width=1050px,height=750px"
+    //   );
+    // }
 
-    const haveOutSource = outsource.length > 0 && outSourceId;
+    // const haveOutSource = outsource.length > 0 && outSourceId;
 
-    if (haveOutSource) {
-      window.open(
-        "/printout/request/outsource",
-        "OutsourceRequestForm", // Unique window name 2
-        "top=100px,left=0px,width=1050px,height=750px"
-      );
-      await saveRequest(`/commerce/pos/services/dealOutSources`, {
-        dealId: deal._id,
-        servicesId: _outsource,
-      });
-    }
+    // if (haveOutSource) {
+    //   window.open(
+    //     "/printout/request/outsource",
+    //     "OutsourceRequestForm", // Unique window name 2
+    //     "top=100px,left=0px,width=1050px,height=750px"
+    //   );
+    //   await saveRequest(`/commerce/pos/services/dealOutSources`, {
+    //     dealId: deal._id,
+    //     servicesId: _outsource,
+    //   });
+    // }
 
-    const data = {
-      _id,
-      ssx,
-      lol: auth._id,
-      rendered: [
-        {
-          department: "LAB",
-          renderedBy: auth._id,
-          renderedAt: new Date().toLocaleString(),
-        },
-      ],
-      forms,
-      ...(haveOutSource && { outsource: outSourceId }),
-    };
+    // const data = {
+    //   _id,
+    //   ssx,
+    //   lol: auth._id,
+    //   rendered: [
+    //     {
+    //       department: "LAB",
+    //       renderedBy: auth._id,
+    //       renderedAt: new Date().toLocaleString(),
+    //     },
+    //   ],
+    //   forms,
+    //   ...(haveOutSource && { outsource: outSourceId }),
+    // };
 
-    dispatch(
-      REFORM({
-        token,
-        data,
-      })
-    );
-    dispatch(TOGGLE());
+    // dispatch(
+    //   REFORM({
+    //     token,
+    //     data,
+    //   })
+    // );
+    // dispatch(TOGGLE());
   };
 
   return (

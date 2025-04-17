@@ -30,10 +30,24 @@ const TemplatetUtils = {
     const components = department ? department.components : [];
     return components.indexOf(component);
   },
-  getComponentName: (component, key = `LAB`) => {
-    const department = templates.find(({ department }) => department === key);
-    return department.components[component];
-  },
+  getComponentName: (component, key = 'LAB') => {
+   
+  const department = templates.find(({ department }) => department === key);
+  if (!department) {
+    console.warn(`Department "${key}" not found in templates`);
+    return undefined;
+  }
+   console.log("department", department);
+
+  const name = department.components[component];
+  if (!name) {
+    console.warn(`Component ID "${component}" not found in department "${key}"`);
+    return undefined;
+  }
+   console.log("name", name);
+
+  return name;
+},
 
   /**
    * Finds the department based on the component name

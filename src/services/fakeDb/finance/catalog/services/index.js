@@ -51,40 +51,53 @@ const Services = {
 
   return uniqueDepartments.length > 0 ? uniqueDepartments : [];
 },
-  getTemplates: (pks, department) => {
-    const cluster = collections.filter(({ id }) => pks.includes(id));
-    const templates = cluster.map(({ template }) => template);
-    const uniqueTemplates = [...new Set(templates)]; // Remove duplicates
-    const result = {}; // This will hold the final object to return
+ getTemplates: (pks, department) => {
+  // Filter the collections to only include those with IDs in the pks array
+  const cluster = collections.filter(({ id }) => pks.includes(id));
 
-    uniqueTemplates.forEach((id) => {
-      const key = Templates.getComponentName(id, department);
-      let values = cluster
-        .filter(({ template }) => template === id)
-        .map(({ id }) => id) // Array of ids
-        .sort((a, b) => a - b);
+  // Get a unique list of template IDs from the filtered cluster
+  const uniqueTemplates = [...new Set(cluster.map(({ template }) => template))];
 
-      // Logic for switch to return object for specific cases
-      switch (key) {
-        case "Chemistry":
-        case "Electrolyte":
-        case "Serology":
-          // Create an object where each id is a key with empty string as value
-          values = values.reduce((acc, curr) => {
-            acc[curr] = ""; // Set each id as key with empty string value
-            return acc;
-          }, {});
-          result[key] = values; // Add the object to the result
-          break;
-        default:
-          // For other cases, assign the array of ids
-          result[key] = values; // Add the array to the result
-          break;
-      }
-    });
+  const result = {};
 
-    return result; // Return the final object instead of an array of objects
-  },
+  uniqueTemplates.forEach((templateId) => {
+    // Get the readable component name for the template ID and department
+    const key = Templates.getComponentName(templateId, department);
+
+    // Fallback in case key is undefined
+    const resolvedKey = key || "Unknown";
+
+    if (!key) {
+      console.warn(`⚠️ Template ID "${templateId}" not mapped for department "${department}"`);
+    }
+
+    // Get and sort the IDs from the cluster that match this template
+    let values = cluster
+      .filter(({ template }) => template === templateId)
+      .map(({ id }) => Number(id))
+      .sort((a, b) => a - b);
+
+    // Conditional formatting depending on the component type
+    switch (resolvedKey) {
+      case "Chemistry":
+      case "Electrolyte":
+      case "Serology":
+        // Convert array to object with empty string values
+        result[resolvedKey] = values.reduce((acc, id) => {
+          acc[id] = "";
+          return acc;
+        }, {});
+        break;
+
+      default:
+        // Use the sorted array of IDs as-is
+        result[resolvedKey] = values;
+        break;
+    }
+  });
+
+  return result;
+}
 };
 
 export default Services;

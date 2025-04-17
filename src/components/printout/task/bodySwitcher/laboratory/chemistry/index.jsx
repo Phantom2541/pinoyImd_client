@@ -75,7 +75,6 @@ export default function Chemistry({ task, fontSize }) {
                 {Number.isInteger(value) ? value?.toFixed(2): value }
               </td>
               <td style={style} className="py-0">
-                {!lo ? `< ${hi}` : `${lo} - ${hi}`} {units}
               </td>
               <td style={{ ...style, color }} className="py-0 fw-bold">
                 {indicators}
