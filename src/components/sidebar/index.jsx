@@ -31,7 +31,7 @@ export default function SideNavigation({
        *  if logo is not found, display default
        *  @y'dreo
        */
-      const url = `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.platform}/logo.png`;
+      const url = `${ENDPOINT}/public/companies/${company.name}/${activePlatform.platform}/logo.png`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);
       });

@@ -62,7 +62,7 @@ export default function Banner() {
         dispatch(
           UPLOAD({
             data: {
-              path: `credentials/${company.name}/${activePlatform.name}`,
+              path: `companies/${company.name}/${activePlatform.name}`,
               base64: result.split(",")[1],
               name: `banner.jpg`,
             },
@@ -101,7 +101,7 @@ export default function Banner() {
             <img
               src={
                 preview ||
-                `${ENDPOINT}/public/credentials/${company.name}/${activePlatform.name}/banner.jpg`
+                `${ENDPOINT}/public/companies/${company.name}/${activePlatform.name}/banner.jpg`
               }
               className="img-fluid"
               alt={company?.name || "Default Banner"}

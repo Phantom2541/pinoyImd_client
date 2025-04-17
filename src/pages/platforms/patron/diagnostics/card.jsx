@@ -37,7 +37,7 @@ export default function CompanyCard({
       <MDBCardImage
         position="top"
         alt={name}
-        src={`${ENDPOINT}/public/credentials/${name}/logo.jpg`}
+        src={`${ENDPOINT}/public/companies/${name}/logo.jpg`}
         onError={(e) => (e.target.src = PresetUser)}
         className="mx-auto"
         style={{

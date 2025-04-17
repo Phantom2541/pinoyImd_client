@@ -24,7 +24,7 @@ export default function CompanyCard({ company }) {
       >
         <MDBCardBody className="text-center">
           <MDBCardImage
-            src={`${ENDPOINT}/public/credentials/${company?.name}/logo.jpg`}
+            src={`${ENDPOINT}/public/companies/${company?.name}/logo.jpg`}
             className="mb-3 img-thumbnail bg-transparent"
             style={{ height: 200, width: "auto" }}
             onError={e => (e.target.src = PresetUser)}
