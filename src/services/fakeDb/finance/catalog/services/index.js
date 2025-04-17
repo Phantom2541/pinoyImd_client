@@ -65,49 +65,46 @@ const Services = {
     const uniqueTemplates = [...new Set(templates)]; // Remove duplicates
     const result = {}; // This will hold the final object to return
 
-  // Get a unique list of template IDs from the filtered cluster
-  const uniqueTemplates = [...new Set(cluster.map(({ template }) => template))];
+    uniqueTemplates.forEach((templateId) => {
+      // Get the readable component name for the template ID and department
+      const key = Templates.getComponentName(templateId, department);
 
-  const result = {};
+      // Fallback in case key is undefined
+      const resolvedKey = key || "Unknown";
 
-  uniqueTemplates.forEach((templateId) => {
-    // Get the readable component name for the template ID and department
-    const key = Templates.getComponentName(templateId, department);
+      if (!key) {
+        console.warn(
+          `⚠️ Template ID "${templateId}" not mapped for department "${department}"`
+        );
+      }
 
-    // Fallback in case key is undefined
-    const resolvedKey = key || "Unknown";
+      // Get and sort the IDs from the cluster that match this template
+      let values = cluster
+        .filter(({ template }) => template === templateId)
+        .map(({ id }) => Number(id))
+        .sort((a, b) => a - b);
 
-    if (!key) {
-      console.warn(`⚠️ Template ID "${templateId}" not mapped for department "${department}"`);
-    }
+      // Conditional formatting depending on the component type
+      switch (resolvedKey) {
+        case "Chemistry":
+        case "Electrolyte":
+        case "Serology":
+          // Convert array to object with empty string values
+          result[resolvedKey] = values.reduce((acc, id) => {
+            acc[id] = "";
+            return acc;
+          }, {});
+          break;
 
-    // Get and sort the IDs from the cluster that match this template
-    let values = cluster
-      .filter(({ template }) => template === templateId)
-      .map(({ id }) => Number(id))
-      .sort((a, b) => a - b);
+        default:
+          // Use the sorted array of IDs as-is
+          result[resolvedKey] = values;
+          break;
+      }
+    });
 
-    // Conditional formatting depending on the component type
-    switch (resolvedKey) {
-      case "Chemistry":
-      case "Electrolyte":
-      case "Serology":
-        // Convert array to object with empty string values
-        result[resolvedKey] = values.reduce((acc, id) => {
-          acc[id] = "";
-          return acc;
-        }, {});
-        break;
-
-      default:
-        // Use the sorted array of IDs as-is
-        result[resolvedKey] = values;
-        break;
-    }
-  });
-
-  return result;
-}
+    return result;
+  },
 };
 
 export default Services;

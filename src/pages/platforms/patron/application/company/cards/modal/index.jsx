@@ -106,7 +106,6 @@ export default function ApplicationModal({
     const _company = company?.branches.find(
       (branch) => branch._id === application.branchId
     );
-    const role = Policy.getDepartment(application.designation);
     const id = `${_company.displayname
       .split(" ")
       .map((word) => word[0])

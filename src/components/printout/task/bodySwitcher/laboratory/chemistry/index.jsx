@@ -63,6 +63,8 @@ export default function Chemistry({ task, fontSize }) {
                   hi
                 )}`;
 
+          console.log("units", units);
+
           return (
             <tr key={`${fk}-${index}`}>
               <td style={style} className="py-0 text-left text-uppercase">
@@ -72,8 +74,7 @@ export default function Chemistry({ task, fontSize }) {
                 {indicators}
                 {Number.isInteger(value) ? value?.toFixed(2) : value}
               </td>
-              <td style={style} className="py-0">
-              </td>
+              <td style={style} className="py-0"></td>
               <td style={{ ...style, color }} className="py-0 fw-bold">
                 {indicators}
                 {formatToSI(

@@ -8,10 +8,7 @@ import {
   MDBTypography,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  TOGGLE,
-  REFORM,
-} from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
+import { TOGGLE } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { axioKit } from "../../../../../../services/utilities";
 import CaseBox from "./case";
 import { Services } from "../../../../../../services/fakeDb";
@@ -22,7 +19,7 @@ import { Services } from "../../../../../../services/fakeDb";
  */
 const panel = [68, 69, 70, 97];
 export default function Modal() {
-  const { auth, token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     {
       show,
       selected: deal,
@@ -58,8 +55,8 @@ export default function Modal() {
   };
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
-    console.log("inHouseIds",inhouseIDS );
-    
+    console.log("inHouseIds", inhouseIDS);
+
     const _outsource = getIDS(outsource);
     const _inhouse = Services.getTemplates(inhouseIDS, department);
 
@@ -83,7 +80,7 @@ export default function Modal() {
     );
 
     localStorage.setItem("ssx", JSON.stringify(ssx));
-    const forms = Object.keys(_inhouse);
+    // const forms = Object.keys(_inhouse);
     for (const key in _inhouse) {
       const lowercaseKey = key.toLowerCase();
       let bucket = _inhouse[key];
@@ -200,19 +197,19 @@ export default function Modal() {
       }
     }
 
-    const data = {
-      _id,
-      ssx,
-      rendered: [
-        {
-          department,
-          renderedBy: auth._id,
-          renderedAt: new Date().toLocaleString(),
-        },
-      ],
-      forms,
-      ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
-    };
+    // const data = {
+    //   _id,
+    //   ssx,
+    //   rendered: [
+    //     {
+    //       department,
+    //       renderedBy: auth._id,
+    //       renderedAt: new Date().toLocaleString(),
+    //     },
+    //   ],
+    //   forms,
+    //   ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
+    // };
 
     // dispatch(
     //   REFORM({
