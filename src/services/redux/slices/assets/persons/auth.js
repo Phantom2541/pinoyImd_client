@@ -242,6 +242,7 @@ export const reduxSlice = createSlice({
           { token, auth, branches, isCeo, access, isPatient } = payload;
         const { branchId } = auth.activePlatform;
         if (branchId) {
+          console.log("have branchId");
           const _access = access
             .filter(({ branchId: bID }) => bID === branchId)
             .map((a) => a.platform);

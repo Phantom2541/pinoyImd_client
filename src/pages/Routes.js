@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
-  const { platform = "" } = activePlatform || {};
+  const { platform = "Patron" } = activePlatform || {};
 
   const platformPrefix = platform ? `/${platform.toLowerCase()}` : "";
   const renderSidebars = () => {

@@ -19,7 +19,10 @@ const login = async (email, password) =>
       localStorage.setItem("token", token);
       localStorage.setItem("email", auth.email);
       localStorage.setItem("auth", JSON.stringify(auth));
-      localStorage.setItem("activePlatform", auth?.activePlatform?.platform);
+      localStorage.setItem(
+        "activePlatform",
+        auth?.activePlatform?.platform || "patron"
+      );
 
       return data;
     })
