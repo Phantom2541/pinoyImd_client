@@ -123,7 +123,7 @@ export default function CollapseTable({
   const handleDepartmentChange = (e) => {
     const selectedDeptCode = e.target.value;
     setDep(Policy.getDepname(e.target.value));
-    setFilteredPositions(Policy.getPositions(selectedDeptCode));
+    setFilteredPositions(Policy.getPositionsByDepartmentName(selectedDeptCode));
   };
 
   return (
@@ -202,11 +202,13 @@ export default function CollapseTable({
               }}
             >
               <option value="">-- Select Department --</option>
-              {Policy.collections.map((dept) => (
-                <option key={dept.department} value={dept.department}>
-                  {dept.department}
-                </option>
-              ))}
+              {[...Policy.collections]
+                .sort((a, b) => a.department.localeCompare(b.department))
+                .map((dept) => (
+                  <option key={dept.department} value={dept.department}>
+                    {dept.department.toLocaleUpperCase()}
+                  </option>
+                ))}
             </select>
           </EditableField>
           <EditableField
