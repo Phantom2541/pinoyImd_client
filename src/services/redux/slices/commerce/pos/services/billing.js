@@ -18,7 +18,7 @@ const initialState = {
   month: new Date().getMonth() + 1,
   year: new Date().getFullYear(),
   /**
-   * for pagination
+   * for footer pagination
    */
   maxPage: 5, // for max page
   totalPages: 0, // for pages
@@ -26,6 +26,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false, // for loading
   message: "",
+  showModal: false,
 };
 
 /**

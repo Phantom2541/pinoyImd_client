@@ -24,6 +24,7 @@ import {
   Controls,
 } from "../../../pages/platforms/diagnostics/management";
 import Products from "../../../pages/platforms/frontdesk/market/products";
+import { Billings, Soa } from "../../../pages/platforms/frontdesk/Sendouts";
 
 import {
   Tablestemplate,
@@ -147,22 +148,24 @@ const frontdesk = [
     ],
   },
   {
-    name: "Outsource",
+    name: "Sendouts",
     icon: "tv",
     path: "/outsource",
     children: [
       {
         name: "Statement of Account",
+        path: "/soa",
         title: "stocks",
         icon: "balance-scale",
-        path: "/soa",
+        component: Soa,
       },
 
       {
-        name: "Onboarding",
+        name: "Billing",
+        path: "/billing",
         title: "stocks",
         icon: "file-invoice",
-        path: "/onboarding",
+        component: Billings,
       },
     ],
   },

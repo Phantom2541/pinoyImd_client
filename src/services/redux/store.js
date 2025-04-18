@@ -20,7 +20,7 @@ import {
   sales,
   taskGenerator,
   deals,
-  billing,
+  billings,
   dispenser,
 } from "./slices/commerce";
 
@@ -54,7 +54,7 @@ const store = configureStore({
     payables,
     payments,
     payrolls,
-    billing,
+    billings,
     auth,
     personnels,
     access,
