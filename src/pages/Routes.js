@@ -21,6 +21,7 @@ export default function Routes() {
   const platformPrefix = platform ? `/${platform.toLowerCase()}` : "";
   const renderSidebars = () => {
     const platforms = Sidebars[platform.toLowerCase()];
+
     if (!Array.isArray(platforms)) return "Ooops.. platforms must be array";
 
     const sideBars = [];

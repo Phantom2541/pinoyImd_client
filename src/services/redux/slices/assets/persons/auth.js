@@ -250,7 +250,7 @@ export const reduxSlice = createSlice({
           const { contract = { designation: -1 } } = branch || {};
           const department = Policy.getDepartment(contract.designation) || {};
           const role = Policy.getRole(contract.designation) || {};
-
+          console.log("activePlatofrm", auth.activePlatform);
           const activePlatform = {
             ...auth.activePlatform,
             branch,
