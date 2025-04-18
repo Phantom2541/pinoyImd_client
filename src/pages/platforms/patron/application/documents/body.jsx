@@ -32,9 +32,6 @@ const Body = () => {
           const { branch = {}, contract = {}, status } = app;
           const { name, companyId } = branch;
           const { soe, designation } = contract;
-
-          console.log("soe", soe, designation);
-
           return (
             <tr key={index}>
               <td key={index}>{index + startIndex + 1}</td>
