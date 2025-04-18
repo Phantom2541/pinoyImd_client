@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { MDBCard, MDBCardBody, MDBIcon, MDBTable, MDBView } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { BROWSE } from "../../../../../services/redux/slices/assets/persons/applicants";
+import {
+  BROWSE,
+  UPDATE,
+} from "../../../../../services/redux/slices/assets/persons/applicants";
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../services/utilities";
 
@@ -24,13 +27,16 @@ export default function Applicants() {
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
-      dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
+      dispatch(BROWSE({ token, data: { branchId: activePlatform?.branchId } }));
     }
   }, [dispatch, token, activePlatform]);
 
   useEffect(() => {
     setApplicants(collections);
   }, [collections]);
+
+  const handleSubmit = (_id) =>
+    dispatch(UPDATE({ token, data: { _id, status: "active" } }));
 
   return (
     <>
@@ -54,6 +60,7 @@ export default function Applicants() {
                 <th>Resume</th>
                 <th>Letter</th>
                 <th>By Monthly</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
@@ -91,6 +98,15 @@ export default function Applicants() {
                         icon={biMonthly ? "check" : "times"}
                         style={{ color: biMonthly ? "green" : "red" }}
                       />
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => handleSubmit(_id)}
+                      >
+                        <MDBIcon icon="eye" className="mr-1" />
+                        Accept
+                      </button>
                     </td>
                   </tr>
                 );

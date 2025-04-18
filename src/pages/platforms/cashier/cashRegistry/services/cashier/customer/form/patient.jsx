@@ -19,7 +19,7 @@ import { SETPATIENT } from "../../../../../../../../services/redux/slices/commer
  * if user is not in quest, use branch address
  * else use user quest addres
  */
-const { branch } =
+const { branch = {} } =
   (localStorage.getItem("activePlatform") !== "patron" &&
     JSON.parse(localStorage.getItem("activePlatform"))) ||
   {};
@@ -31,9 +31,9 @@ const _form = {
     suffix: "",
   },
   address: {
-    region: branch?.address.region,
-    province: branch?.address.province,
-    city: branch?.address.city,
+    region: branch?.address?.region,
+    province: branch?.address?.province,
+    city: branch?.address?.city,
     barangay: "",
     street: "",
   },

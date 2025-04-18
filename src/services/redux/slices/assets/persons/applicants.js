@@ -14,10 +14,9 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(
   `${url}`,
-  ({ token, branchId }, thunkAPI) => {
-    //console.log("running");
+  ({ token, data }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, { branchId });
+      return axioKit.universal(`${url}/browse`, token, data);
     } catch (error) {
       const message =
         (error.response &&
@@ -80,18 +79,23 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   }
 });
 
-export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
-  try {
-    return axioKit.update(url, form.data, form.token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const UPDATE = createAsyncThunk(
+  `${url}/update`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
