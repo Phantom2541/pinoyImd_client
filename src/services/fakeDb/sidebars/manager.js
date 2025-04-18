@@ -155,8 +155,8 @@ const manager = [
         component: Banner,
       },
       {
-        name: "Logos",
-        path: "/logos",
+        name: "Logo",
+        path: "/logo",
         component: Logo,
       },
       {

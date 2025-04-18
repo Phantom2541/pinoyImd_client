@@ -357,7 +357,7 @@ export const reduxSlice = createSlice({
           state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
           state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         }
-        
+
         /**
          * this will control the topbar selections
          */
@@ -383,6 +383,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPLOAD.fulfilled, (state, _) => {
         state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Sucessfully uploaded!";
       })
       .addCase(UPLOAD.rejected, (state, action) => {
         const { error } = action;
