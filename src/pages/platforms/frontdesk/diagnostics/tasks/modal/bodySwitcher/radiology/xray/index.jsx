@@ -1,47 +1,135 @@
-import React, { useState } from "react";
-import { EditorState } from "draft-js";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import {
+  EditorState,
+  convertToRaw,
+  convertFromRaw,
+  ContentState,
+} from "draft-js";
+import { useDispatch, useSelector } from "react-redux";
 import { DocxEditor } from "../../../../../../../../../components/docx";
+import {
+  MDBCard,
+  MDBCardBody,
+  MDBNav,
+  MDBNavItem,
+  MDBNavLink,
+  MDBTabContent,
+  MDBTabPane,
+} from "mdbreact";
+import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import { Services } from "../../../../../../../../../services/fakeDb/index.js";
 
 export default function Xray() {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const dispatch = useDispatch();
+  const { task } = useSelector(({ validator }) => validator);
+
+  const [description, setDescription] = useState(EditorState.createEmpty());
+  const [impression, setImpression] = useState(EditorState.createEmpty());
+  const [activeTab, setActiveTab] = useState("results");
+
+  const descTimeout = useRef(null);
+  const impTimeout = useRef(null);
+
+  const safeLoad = (raw) => {
+    try {
+      const parsed = JSON.parse(raw);
+      return EditorState.createWithContent(convertFromRaw(parsed));
+    } catch (e) {
+      return EditorState.createWithContent(ContentState.createFromText(raw || ""));
+    }
+  };
+
+  // Load editor content on mount or when task updates
+  useEffect(() => {
+    if (task?.description) {
+      setDescription(safeLoad(task.description));
+    }
+    if (task?.impression) {
+      setImpression(safeLoad(task.impression));
+    }
+  }, [task?.description, task?.impression]);
+
+  // Debounced auto-save
+  const delayedSave = useCallback((editorType, newState, timeoutRef) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      const updatedTask = {
+        ...task,
+        [editorType]: JSON.stringify(convertToRaw(newState.getCurrentContent())),
+      };
+
+      dispatch(
+        SetTASK({
+          form: task?.form,
+          task: updatedTask,
+        })
+      );
+    }, 500); // Adjust debounce delay as needed
+  }, [dispatch, task]);
+
   return (
-    <div className=" mx-auto ">
-      <h1 className="text-2xl font-bold ">X-ray Result</h1>
+    <div className="mx-auto">
+      {Services.getName(task?.packages)}
+      <MDBNav color="primary" tabs className="nav-justified">
+        <MDBNavItem>
+          <MDBNavLink
+            link
+            active={activeTab === "results"}
+            to="#!"
+            onClick={() => setActiveTab("results")}
+          >
+            Description
+          </MDBNavLink>
+        </MDBNavItem>
+        <MDBNavItem>
+          <MDBNavLink
+            link
+            active={activeTab === "kit"}
+            to="#!"
+            onClick={() => setActiveTab("kit")}
+          >
+            Impression
+          </MDBNavLink>
+        </MDBNavItem>
+      </MDBNav>
 
-      <DocxEditor
-        editorState={editorState}
-        _className="mt-3 border"
-        setEditorState={setEditorState}
-        _style={{
-          minHeight: "200px",
-          overflowY: "auto",
-          maxHeight: "300px",
-        }}
-      />
-      {/* <h1 className="text-2xl font-bold mb-4">X-ray Result</h1>
+      <MDBCard>
+        <MDBCardBody>
+          <MDBTabContent activeItem={activeTab} className="pt-0">
+            <MDBTabPane tabId="results">
+              <DocxEditor
+                editorState={description}
+                setEditorState={(newState) => {
+                  setDescription(newState);
+                  delayedSave("description", newState, descTimeout);
+                }}
+                _className="mt-3 border"
+                _style={{
+                  minHeight: "200px",
+                  overflowY: "auto",
+                  maxHeight: "300px",
+                }}
+              />
+            </MDBTabPane>
 
-      Description
-      <div>
-        <label htmlFor="description" className="block text-lg font-medium mb-2">
-          Description
-        </label>
-        <textarea
-          id="description"
-          className="w-full border border-gray-300 rounded-lg p-3 min-h-[150px] focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Write the x-ray description here..."
-        />
-      </div>
-
-      <div>
-        <label htmlFor="impression" className="block text-lg font-medium mb-2">
-          Impression
-        </label>
-        <textarea
-          id="impression"
-          className="w-full border border-gray-300 rounded-lg p-3 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Write the x-ray impression here..."
-        />
-      </div> */}
+            <MDBTabPane tabId="kit">
+              <DocxEditor
+                editorState={impression}
+                setEditorState={(newState) => {
+                  setImpression(newState);
+                  delayedSave("impression", newState, impTimeout);
+                }}
+                _className="mt-3 border"
+                _style={{
+                  minHeight: "200px",
+                  overflowY: "auto",
+                  maxHeight: "300px",
+                }}
+              />
+            </MDBTabPane>
+          </MDBTabContent>
+        </MDBCardBody>
+      </MDBCard>
     </div>
   );
 }
