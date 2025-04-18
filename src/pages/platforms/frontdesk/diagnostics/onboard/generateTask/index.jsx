@@ -8,7 +8,10 @@ import {
   MDBTypography,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { TOGGLE } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
+import {
+  REFORM,
+  TOGGLE,
+} from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { axioKit } from "../../../../../../services/utilities";
 import CaseBox from "./case";
 import { Services } from "../../../../../../services/fakeDb";
@@ -19,7 +22,7 @@ import { Services } from "../../../../../../services/fakeDb";
  */
 const panel = [68, 69, 70, 97];
 export default function Modal() {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     {
       show,
       selected: deal,
@@ -80,7 +83,7 @@ export default function Modal() {
     );
 
     localStorage.setItem("ssx", JSON.stringify(ssx));
-    // const forms = Object.keys(_inhouse);
+    const forms = Object.keys(_inhouse);
     for (const key in _inhouse) {
       const lowercaseKey = key.toLowerCase();
       let bucket = _inhouse[key];
@@ -155,13 +158,13 @@ export default function Modal() {
     }
 
     // // Open the printout request form window
-    // if (inhouse.length > 0) {
-    //   window.open(
-    //     "/printout/request/form",
-    //     "RequestForm", // Window name 1
-    //     "top=100px,left=100px,width=1050px,height=750px"
-    //   );
-    // }
+    if (inhouse.length > 0) {
+      window.open(
+        "/printout/request/form",
+        "RequestForm", // Window name 1
+        "top=100px,left=100px,width=1050px,height=750px"
+      );
+    }
 
     const haveOutSource =
       outsource.length > 0 && (outSourceId || department === "RAD");
@@ -197,27 +200,27 @@ export default function Modal() {
       }
     }
 
-    // const data = {
-    //   _id,
-    //   ssx,
-    //   rendered: [
-    //     {
-    //       department,
-    //       renderedBy: auth._id,
-    //       renderedAt: new Date().toLocaleString(),
-    //     },
-    //   ],
-    //   forms,
-    //   ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
-    // };
+    const data = {
+      _id,
+      ssx,
+      rendered: [
+        {
+          department,
+          renderedBy: auth._id,
+          renderedAt: new Date().toLocaleString(),
+        },
+      ],
+      forms,
+      ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
+    };
 
-    // dispatch(
-    //   REFORM({
-    //     token,
-    //     data,
-    //   })
-    // );
-    // dispatch(TOGGLE());
+    dispatch(
+      REFORM({
+        token,
+        data,
+      })
+    );
+    dispatch(TOGGLE());
   };
   return (
     <MDBModal isOpen={show} toggle={toggle} size="lg" backdrop>

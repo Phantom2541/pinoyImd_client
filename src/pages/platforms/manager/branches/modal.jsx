@@ -35,10 +35,12 @@ const _form = {
     mobile: "",
   },
 };
-const regionOptions = Philippines.Regions?.map((region) => ({
-  text: region.name,
-  value: region.name,
-}));
+// const regionOptions = Philippines.Regions?.map((region) => ({
+//   text: region.name,
+//   value: region.name,
+// }));
+
+const regionOptions = [];
 
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ personnels }) => personnels),
