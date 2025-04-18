@@ -20,16 +20,22 @@ export default function Branches() {
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ branches }) => branches
     ),
+    { branch } = activePlatform,
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
   // Initial Browse
   useEffect(() => {
-    if (token && activePlatform && activePlatform?.branchId) {
-      dispatch(BROWSE({ token, companyId: activePlatform.companyId }));
+    if (token && branch) {
+      dispatch(
+        BROWSE({
+          token,
+          key: { companyId: branch.companyId._id },
+        })
+      );
     }
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform]);
+  }, [token, dispatch, branch]);
 
   console.log(activePlatform.companyId);
   //Set fetched data for mapping
