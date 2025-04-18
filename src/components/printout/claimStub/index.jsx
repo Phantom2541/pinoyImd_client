@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { capitalize, currency } from "../../../services/utilities";
+import { billingAddress, capitalize, currency, fullAddress } from "../../../services/utilities";
 import { Developer, Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
@@ -69,7 +69,7 @@ const Stub = ({ sale }) => {
         title="Name"
         value={capitalize(`${fullName.fname} ${fullName.lname}`)}
       />
-      <Text title="Address" value={address} isAddress />
+      <Text title="Address" value={billingAddress(address)} isAddress />
       {privilege !== 0 && (
         <Text title="Privilege" value={Privileges[privilege] || "-"} />
       )}

@@ -12,17 +12,17 @@ import {
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/personnels";
 import Modal from "./modal";
-import { Roles } from "../../../../../services/fakeDb";
+import { Policy } from "../../../../../services/fakeDb";
 
 export default function Employees() {
-  const [employees, setEmployees] = useState([]),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
-    [showModal, setShowModal] = useState(false),
-    [willCreate, setWillCreate] = useState(true),
-    [selected, setSelected] = useState({}),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ personnels }) => personnels
     ),
+    [employees, setEmployees] = useState([]),
+    [showModal, setShowModal] = useState(false),
+    [willCreate, setWillCreate] = useState(true),
+    [selected, setSelected] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -57,7 +57,7 @@ export default function Employees() {
   };
   const toggleModal = () => setShowModal(!showModal);
 
-  const handleUpdate = selected => {
+  const handleUpdate = (selected) => {
     setSelected(selected);
     if (willCreate) {
       setWillCreate(false);
@@ -101,28 +101,27 @@ export default function Employees() {
         tableBodies={[
           {
             _key: "user",
-            _format: data => (
+            _format: (data) => (
               <h6>
                 <strong>{capitalize(fullName(data.fullName))}</strong>
               </h6>
             ),
           },
           {
-            _key: "employment",
-            _format: data => {
-              const designation = Roles.findById(Number(data.designation));
-
-              return <strong> {designation?.display_name}</strong>;
+            _key: "contract",
+            _format: (data) => {
+              const designation = Policy.getPosition(Number(data?.designation));
+              return <strong> {designation}</strong>;
             },
           },
           {
             _key: "id",
-            _format: data => <strong>{data}</strong>,
+            _format: (data) => <strong>{data}</strong>,
           },
 
           {
             _key: "status",
-            _format: data => <strong>{data}</strong>,
+            _format: (data) => <strong>{data}</strong>,
           },
         ]}
         handleSearch={handleSearch}
