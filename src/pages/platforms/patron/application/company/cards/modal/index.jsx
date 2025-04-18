@@ -85,7 +85,7 @@ export default function ApplicationModal({
 
   const handleDepartment = ({ value }) => {
     setDepartment(value);
-    setPositions(Policy.getPositions(value));
+    setPositions(Policy.getPositionsByDepartmentName(value));
   };
 
   const handleChange = (e) => {
@@ -263,7 +263,10 @@ export default function ApplicationModal({
                 <option value="">Select a department</option>
                 {sortByAscending(Policy.collections, "department").map(
                   (collection, i) => (
-                    <option value={collection.code} key={`department-${i}`}>
+                    <option
+                      value={collection.department}
+                      key={`department-${i}`}
+                    >
                       {collection.department}
                     </option>
                   )
