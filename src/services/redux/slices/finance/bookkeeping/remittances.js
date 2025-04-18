@@ -221,9 +221,9 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(AUTOSELECT.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.selected = payload;
+      .addCase(AUTOSELECT.fulfilled, (state, { payload }) => {
+        const { data } = payload;
+        state.selected = data;
         state.isSuccess = true;
         state.isLoading = false;
       })
