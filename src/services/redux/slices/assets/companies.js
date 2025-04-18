@@ -5,6 +5,7 @@ const url = "assets/companies";
 
 const initialState = {
   collections: [],
+  filtered: [],
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -142,6 +143,9 @@ export const reduxSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -151,7 +155,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        state.collections = action.payload;
+        state.collections = state.filtered = action.payload;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -268,6 +272,6 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { RESET, SetFILTERED } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

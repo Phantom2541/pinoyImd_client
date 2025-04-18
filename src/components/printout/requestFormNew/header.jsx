@@ -2,7 +2,7 @@ import React from "react";
 import { getAge, fullName as nameFormatter } from "../../../services/utilities";
 import { MDBRow, MDBCol } from "mdbreact";
 // import { Categories } from "../../services/fakeDb";
-export default function Header({ patient, category, ssx }) {
+export default function Header({ patient, category, ssx = "" }) {
   const { fullName: pFull, isMale = false, dob = "" } = patient;
 
   return (

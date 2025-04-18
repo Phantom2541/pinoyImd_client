@@ -5,11 +5,11 @@
  * @param {number} rotation - optional rotation parameter
  */
 
-const createImage = url =>
+const createImage = (url) =>
   new Promise((resolve, reject) => {
     const image = new Image();
     image.addEventListener("load", () => resolve(image));
-    image.addEventListener("error", error => reject(error));
+    image.addEventListener("error", (error) => reject(error));
     image.setAttribute("crossOrigin", "anonymous"); // needed to avoid cross-origin issues on CodeSandbox
     image.src = url;
   });
@@ -67,13 +67,13 @@ const generateDownload = async (src, ext, crop, upload = false) => {
   }
 
   const canvas = await getCroppedImg(src, crop);
-  // get base64
   if (upload) {
-    const base64 = canvas.toDataURL("image/jpeg");
+    const mimeType = ext === "png" ? "image/png" : "image/jpeg";
+    const base64 = canvas.toDataURL(mimeType);
     return base64;
   }
   canvas.toBlob(
-    blob => {
+    (blob) => {
       const previewUrl = window.URL.createObjectURL(blob);
 
       const anchor = document.createElement("a");

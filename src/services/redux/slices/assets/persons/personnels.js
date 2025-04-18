@@ -22,6 +22,7 @@ const initialState = {
   },
   isSuccess: false,
   isLoading: false,
+  formSubmitted: false,
   message: "",
   showModal: false,
   selected: {},
@@ -365,21 +366,21 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        if (state.collections) state.collections.unshift(payload);
+        // if (state.collections) state.collections.unshift(payload);
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE.pending, (state) => {

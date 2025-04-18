@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBAlert,
   MDBAnimation,
@@ -16,65 +16,62 @@ import {
   MDBView,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import {
-  ENDPOINT,
-  fullName,
-  getAge,
-  isJpegOrJpgFile,
-} from "../../../../../services/utilities";
+import { ENDPOINT, fullName, getAge } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
-import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
+import {
+  UPLOAD,
+  RESET,
+} from "../../../../../services/redux/slices/assets/persons/auth";
 import { FailedBanner } from "../../../../../services/utilities";
+import ImageCropper from "../../../../../components/imageCropper";
 
 const array = new Array(5).fill().map((_, index) => index);
 
 export default function Banner() {
-  const { auth } = useSelector(({ auth }) => auth);
+  const { auth, message, isSuccess } = useSelector(({ auth }) => auth);
   const { addToast } = useToasts();
   const [preview, setPreview] = useState("");
   const { activePlatform, company, token } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
 
-  const handleError = (message) => {
-    document.getElementById("upload-banner").value = "";
-    addToast(message, {
-      appearance: "warning",
-    });
-  };
+  useEffect(() => {
+    if (message) {
+      addToast(message, {
+        appearance: isSuccess ? "success" : "error",
+      });
+    }
 
-  const handleChange = (file) => {
-    if (!isJpegOrJpgFile(file))
-      return handleError("Invalid file extension, must be jpg.");
+    return () => dispatch(RESET());
+  }, [isSuccess, message, addToast, dispatch]);
 
-    const reader = new FileReader();
+  const handleUpload = (base64) => {
+    const byteString = atob(base64.split(",")[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const newBlob = new Blob([ab], { type: "image/png" });
 
-    reader.onload = ({ target }) => {
-      const { result } = target;
-
-      const img = new Image();
-      img.src = result;
-
-      img.onload = () => {
-        // Check the width and height
-        if (img.width !== 850 && img.height !== 85)
-          return handleError("Image dimensions must be 850x85 pixels.");
-
-        dispatch(
-          UPLOAD({
-            data: {
-              path: `companies/${company.name}/${activePlatform.name}`,
-              base64: result.split(",")[1],
-              name: `banner.jpg`,
-            },
-            token,
-          })
-        );
-        setPreview(URL.createObjectURL(file));
-      };
+    // Create an object URL and load the image to check dimensions
+    const objectUrl = URL.createObjectURL(newBlob);
+    const image = new Image();
+    image.onload = () => {
+      console.log("Image dimensions before upload:", image.width, image.height);
+      setPreview(objectUrl);
     };
+    image.src = objectUrl;
 
-    // Read the file as a data URL
-    reader.readAsDataURL(file);
+    dispatch(
+      UPLOAD({
+        data: {
+          path: `companies/${company.name}/${activePlatform?.branch?.name}`,
+          base64: base64.split(",")[1],
+          name: "banner.png",
+        },
+        token,
+      })
+    );
   };
 
   const handleDownload = () => {
@@ -83,7 +80,6 @@ export default function Banner() {
     link.download = "Preset-Banner.jpg";
     link.click();
   };
-
   return (
     <div style={{ width: "850px" }} className="mx-auto">
       <MDBTypography
@@ -101,7 +97,7 @@ export default function Banner() {
             <img
               src={
                 preview ||
-                `${ENDPOINT}/public/companies/${company.name}/${activePlatform.name}/banner.jpg`
+                `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`
               }
               className="img-fluid"
               alt={company?.name || "Default Banner"}
@@ -112,20 +108,20 @@ export default function Banner() {
                 <MDBBtn color="warning" size="sm" onClick={handleDownload}>
                   <MDBIcon icon="download" />
                 </MDBBtn>
-                <label
-                  className="btn btn-sm btn-primary"
-                  htmlFor="upload-banner"
-                >
-                  <MDBIcon icon="upload" />
-                </label>
+
+                <ImageCropper
+                  handleUpload={handleUpload}
+                  cropSize={{ width: 850, height: 85 }}
+                  modalSize="xl"
+                  isUpload
+                  label={
+                    <>
+                      <MDBIcon icon="upload" />
+                    </>
+                  }
+                  accept={".png"}
+                />
               </MDBBtnGroup>
-              <input
-                id="upload-banner"
-                type="file"
-                className="d-none"
-                accept=".jpg"
-                onChange={(e) => handleChange(e.target.files[0])}
-              />
             </MDBMask>
           </MDBView>
           <MDBRow className="my-2">

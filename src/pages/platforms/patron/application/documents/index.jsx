@@ -7,7 +7,7 @@ import Body from "./body";
 import Footer from "./footer";
 
 const Index = () => {
-  const { isLoading } = useSelector(({ services }) => services);
+  const { isLoading } = useSelector(({ personnels }) => personnels);
 
   return (
     <MDBAnimation type="bounceInDown">

@@ -188,19 +188,6 @@ const frontdesk = [
       },
     ],
   },
-  // {
-  //   name: "Market",
-  //   path: "/market",
-  //   icon: "list",
-  //   children: [
-  //     {
-  //       name: "Products",
-  //       path: "/products",
-  //       icon: "cogs",
-  //       component: Products,
-  //     },
-  //   ],
-  // },
   {
     name: "Merchandise",
     path: "/merchandise",
@@ -229,8 +216,8 @@ const frontdesk = [
     icon: "cogs",
     children: [
       {
-        name: "Logbooks",
-        path: "/logbooks",
+        name: "laboratory",
+        path: "/laboratory",
         icon: "books",
         children: [
           {
@@ -273,6 +260,38 @@ const frontdesk = [
             name: "Miscellaneous",
             path: "/miscellaneous",
             icon: "list",
+          },
+        ],
+      },
+      {
+        name: "Radiology",
+        path: "/radiology",
+        icon: "list",
+        children: [
+          {
+            name: "ECG",
+            path: "/ecg",
+            icon: "heartbeat",
+          },
+          {
+            name: "Ultrasound",
+            path: "/ultrasound",
+            icon: "user-md",
+          },
+          {
+            name: "Xray",
+            path: "/xray",
+            icon: "user-md",
+          },
+          {
+            name: "CT",
+            path: "/ct",
+            icon: "user-md",
+          },
+          {
+            name: "MRI",
+            path: "/mri",
+            icon: "user-md",
           },
         ],
       },
@@ -330,32 +349,38 @@ const frontdesk = [
       {
         name: "Tables",
         path: "/tables",
+        icon: "list",
         component: Tablestemplate,
-        icon: "table",
       },
       {
         name: "Collapsables",
         path: "/collapsables",
-        component: Collapsable,
         icon: "align-justify",
+        component: Collapsable,
       },
       {
         name: "Calendars",
         path: "/calendars",
-        component: Calendar,
         icon: "calendar-alt",
+        component: Calendar,
       },
       {
         name: "DragDrop",
         path: "/DragDrop",
+        icon: "drag",
         component: DragDrop,
-        icon: "calendar-alt",
       },
       {
         name: "Search",
         path: "/search",
+        icon: "search",
         component: Search,
-        icon: "calendar-alt",
+      },
+      {
+        name: "Cards",
+        path: "/card",
+        icon: "card",
+        // component: Card,
       },
     ],
   },

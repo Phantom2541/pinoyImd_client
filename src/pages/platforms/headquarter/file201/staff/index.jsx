@@ -134,17 +134,6 @@ export default function Staffs() {
         >
           <span className="white-text mx-3">{staffs.length} Staffs</span>
           <div className="text-right">
-            {/* <MDBBtn
-              onClick={handleSearch}
-              disabled={isLoading}
-              outline
-              color="white"
-              rounded
-              size="sm"
-              className="px-2"
-            >
-              <MDBIcon icon={searchKey ? "times" : "search"} className="mt-0" />
-            </MDBBtn> */}
             <MDBBtn
               onClick={handleCreate}
               disabled={isLoading}
@@ -184,12 +173,6 @@ export default function Staffs() {
           )}
         </MDBCardBody>
       </MDBCard>
-      {/* <Modal
-        selected={selected}
-        willCreate={willCreate}
-        show={showModal}
-        toggle={toggleModal}
-      /> */}
     </>
   );
 }

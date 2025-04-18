@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// useEffect,
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -13,7 +12,7 @@ import {
   MDBTableHead,
   MDBTableBody,
 } from "mdbreact";
-import { useToasts } from "react-toast-notifications";
+import Swal from "sweetalert2";
 import {
   RESET,
   SAVE,
@@ -21,141 +20,114 @@ import {
 import {
   getAge,
   getGenderIcon,
-  // globalSearch,
   properFullname,
 } from "../../../../../services/utilities";
 import { BROWSE } from "../../../../../services/redux/slices/assets/persons/users";
 
 export default function Modal({ show, toggle, selected, name }) {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, isLoading, message, isSuccess } = useSelector(
-      ({ users }) => users
-    ),
-    [users, setUsers] = useState([]),
-    [doctors, setDoctors] = useState([]),
-    { addToast } = useToasts(),
-    dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { collections } = useSelector(({ users }) => users);
 
-  // dumale, marivel y pedro
+  const [users, setUsers] = useState([]);
+  const [doctors, setDoctors] = useState([]);
 
+  // Search by name
   useEffect(() => {
     if (name) {
-      const [lname, rest = ""] = name.toUpperCase().split(", "),
-        [fname, mname] = rest?.split(" y ");
-
+      const [lname, rest = ""] = name.toUpperCase().split(", ");
+      const [fname, mname] = rest?.split(" y ");
       dispatch(BROWSE({ key: { lname, mname, fname }, token }));
     }
 
     return () => dispatch(RESET());
   }, [name, dispatch, token]);
-  //console.log(collections);
 
+  // Update users list
   useEffect(() => {
-    if (collections.payload) {
-      //console.log(collections.payload);
-      setUsers(collections.payload);
+    if (collections) {
+      setUsers(collections);
     }
   }, [collections]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(SAVE({ token, data: doctors }));
-    toggle();
-  };
+  const handleAddPhysicians = async (user) => {
+    const { value: formValues } = await Swal.fire({
+      title: `Tag ${properFullname(user.fullName)} as Physician`,
+      html: `
+      <input id="swal-postnominal" class="swal2-input" placeholder="Post-nominal (e.g., MD)">
+      <input id="swal-alias" class="swal2-input" placeholder="Alias">
+      <input id="swal-specialization" class="swal2-input" placeholder="Specialization">
+    `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Tag Physician",
+      preConfirm: () => {
+        const postnominal = document
+          .getElementById("swal-postnominal")
+          .value.trim();
+        const alis = document.getElementById("swal-alias").value.trim();
+        const specialization = document
+          .getElementById("swal-specialization")
+          .value.trim();
 
-  //Toast for errors or success
-  useEffect(() => {
-    if (message) {
-      addToast(message, {
-        appearance: isSuccess ? "success" : "error",
-      });
-    }
-
-    return () => dispatch(RESET());
-  }, [isSuccess, message, addToast, dispatch]);
-
-  //Search function
-  // const handleSearch = async (willSearch, key) => {
-  //   if (willSearch) return setUsers(globalSearch(collections.users, key));
-
-  //   setUsers(collections.users);
-  // };
-
-  const handleAddPhysicians = (user) => {
-    setDoctors({
-      user: user._id,
-      branch: activePlatform?.branchId,
-      status: "active",
+        return { postnominal, alis, specialization };
+      },
     });
+
+    if (formValues) {
+      const payload = {
+        user: user._id,
+        branch: activePlatform?.branchId,
+        status: "active",
+        alis: formValues.alis,
+        specialization: formValues.specialization,
+        ghostName: {
+          postnominal: formValues.postnominal,
+        },
+      };
+
+      setDoctors((prev) => [...prev, payload]);
+
+      // Save immediately
+      dispatch(SAVE({ token, data: [payload] }));
+
+      // Confirmation
+      Swal.fire({
+        title: "Physician Tagged!",
+        text: `${properFullname(user.fullName)} has been successfully tagged.`,
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      toggle();
+    }
   };
 
   return (
-    <MDBModal
-      isOpen={show}
-      toggle={toggle}
-      backdrop
-      // disableFocusTrap={false}
-      size="xl"
-    >
+    <MDBModal isOpen={show} toggle={toggle} backdrop size="xl">
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        Tag a Physicians
+        Tag a Physician
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
-        <form onSubmit={handleSubmit}>
-          <MDBRow>
-            <MDBCol md="12">
-              {/* <DataTable
-                isLoading={isLoading}
-                title="users"
-                liveSelector={}
-                array={users}
-                tableHeads={[
-                  {
-                    _text: "Name",
-                  },
-                  {
-                    _text: "Updated At",
-                  },
-                  {
-                    _text: "Created At",
-                  },
-                ]}
-                tableBodies={[
-                  {
-                    _key: "fullName",
-                    _format: (data) => (
-                      <strong>
-                        {getGenderIcon(data.isMale)}
-                        {String(properFullname(data, true)).toUpperCase()}
-                      </strong>
-                    ),
-                  },
-                  {
-                    _key: "updatedAt",
-                    _format: (data) => new Date(data).toLocaleString(),
-                  },
-                  {
-                    _key: "createdAt",
-                    _format: (data) => new Date(data).toLocaleString(),
-                  },
-                ]}
-                handleSearch={handleSearch}
-              /> */}
-              <MDBTable>
-                <MDBTableHead>
-                  <tr>
-                    <th>#</th>
-                    <th>Fullname</th>
-                    <th>Age</th>
-                    <th>Action</th>
-                  </tr>
-                </MDBTableHead>
-                <MDBTableBody>
-                  {users.map((user, index) => {
+        <MDBRow>
+          <MDBCol md="12">
+            <MDBTable>
+              <MDBTableHead>
+                <tr>
+                  <th>#</th>
+                  <th>Fullname</th>
+                  <th>Age</th>
+                  <th>Action</th>
+                </tr>
+              </MDBTableHead>
+              <MDBTableBody>
+                {Array.isArray(users) && users.length > 0 ? (
+                  users.map((user, index) => {
                     const { isMale, fullName, dob } = user;
                     return (
                       <tr key={`user-${index}`}>
@@ -178,24 +150,18 @@ export default function Modal({ show, toggle, selected, name }) {
                         </td>
                       </tr>
                     );
-                  })}
-                </MDBTableBody>
-              </MDBTable>
-            </MDBCol>
-          </MDBRow>
-
-          <div className="text-center mb-1-half">
-            <MDBBtn
-              type="submit"
-              disabled={isLoading}
-              color="info"
-              className="mb-2"
-              rounded
-            >
-              submit
-            </MDBBtn>
-          </div>
-        </form>
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      No users found.
+                    </td>
+                  </tr>
+                )}
+              </MDBTableBody>
+            </MDBTable>
+          </MDBCol>
+        </MDBRow>
       </MDBModalBody>
     </MDBModal>
   );

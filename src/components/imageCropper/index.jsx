@@ -3,7 +3,10 @@ import Modal from "./modal";
 
 export default function ImageCropper({
   accept,
+  label = "Crop",
+  modalSize = "md",
   aspect = 1,
+  cropSize,
   handleUpload = () => {},
   isUpload = false,
 }) {
@@ -30,12 +33,13 @@ export default function ImageCropper({
     };
 
     reader.readAsDataURL(file);
+    target.value = null;
   };
 
   return (
     <>
       <label htmlFor="cropImage" className="btn btn-primary btn-sm btn-rounded">
-        crop
+        {label}
       </label>
       <input
         id="cropImage"
@@ -45,7 +49,9 @@ export default function ImageCropper({
         accept={accept}
       />
       <Modal
+        modalSize={modalSize}
         show={show}
+        cropSize={cropSize}
         toggle={toggle}
         img={img}
         aspect={aspect}

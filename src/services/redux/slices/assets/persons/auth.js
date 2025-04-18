@@ -242,6 +242,7 @@ export const reduxSlice = createSlice({
           { token, auth, branches, isCeo, access, isPatient } = payload;
         const { branchId } = auth.activePlatform;
         if (branchId) {
+          console.log("have branchId");
           const _access = access
             .filter(({ branchId: bID }) => bID === branchId)
             .map((a) => a.platform);
@@ -250,7 +251,7 @@ export const reduxSlice = createSlice({
           const { contract = { designation: -1 } } = branch || {};
           const department = Policy.getDepartment(contract.designation) || {};
           const role = Policy.getRole(contract.designation) || {};
-
+          console.log("activePlatofrm", auth.activePlatform);
           const activePlatform = {
             ...auth.activePlatform,
             branch,
@@ -357,7 +358,7 @@ export const reduxSlice = createSlice({
           state.diploma = `${ENDPOINT}${fileUrl}/diploma.jpg`;
           state.medcert = `${ENDPOINT}${fileUrl}/medcert.pdf`;
         }
-        
+
         /**
          * this will control the topbar selections
          */
@@ -383,6 +384,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPLOAD.fulfilled, (state, _) => {
         state.isLoading = false;
+        state.isSuccess = true;
+        state.message = "Sucessfully uploaded!";
       })
       .addCase(UPLOAD.rejected, (state, action) => {
         const { error } = action;

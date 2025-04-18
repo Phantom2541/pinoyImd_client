@@ -9,6 +9,8 @@ import {
   MDBInput,
   MDBRow,
   MDBCol,
+  MDBSelect,
+  MDBSelectOptions,
 } from "mdbreact";
 import {
   SAVE,
@@ -16,6 +18,7 @@ import {
 } from "../../../../services/redux/slices/assets/branches";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
+import { Philippines } from "../../../../services/fakeDb";
 
 // declare your expected items
 const _form = {
@@ -32,6 +35,12 @@ const _form = {
     mobile: "",
   },
 };
+// const regionOptions = Philippines.Regions?.map((region) => ({
+//   text: region.name,
+//   value: region.name,
+// }));
+
+const regionOptions = [];
 
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ personnels }) => personnels),
@@ -116,7 +125,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="building" className="mr-2" />
-        {willCreate ? "Create" : "Update"} {selected.name || "a Branch"}
+        {willCreate ? "Create" : "Update Branch "} {selected.name || "a Branch"}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
@@ -124,13 +133,34 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             <MDBCol md="4">
               <MDBInput
                 type="text"
-                label="Name"
+                label="Branch Name"
                 value={handleValue("name")}
                 onChange={(e) => handleChange("name", e.target.value)}
                 required
                 icon="building"
               />
             </MDBCol>
+            <MDBCol md="4">
+              <MDBInput
+                type="text"
+                label="Display Name"
+                value={handleValue("displayname")}
+                onChange={(e) => handleChange("displayname", e.target.value)}
+                required
+                icon="building"
+              />
+            </MDBCol>
+            <MDBCol md="4">
+              <MDBInput
+                type="text"
+                label="Acronym"
+                value={handleValue("acronym")}
+                onChange={(e) => handleChange("acronym", e.target.value)}
+                required
+                icon="building"
+              />
+            </MDBCol>
+            <hr />
             <MDBCol md="4">
               <MDBInput
                 type="text"
@@ -156,8 +186,19 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               />
             </MDBCol>
           </MDBRow>
-
+          {/* branch address */}
           <MDBRow>
+            <MDBCol md="4">
+              <MDBSelect
+                label="Region"
+                data={regionOptions}
+                value={handleObjValue("address", "region")}
+                onValueChange={(selected) =>
+                  handleObjChange("address", "region", selected.value)
+                }
+                required
+              />
+            </MDBCol>
             <MDBCol md="4">
               <MDBInput
                 type="text"

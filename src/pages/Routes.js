@@ -16,11 +16,12 @@ import { useSelector } from "react-redux";
 
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
-  const { platform = "" } = activePlatform || {};
+  const { platform = "Patron" } = activePlatform || {};
 
   const platformPrefix = platform ? `/${platform.toLowerCase()}` : "";
   const renderSidebars = () => {
     const platforms = Sidebars[platform.toLowerCase()];
+
     if (!Array.isArray(platforms)) return "Ooops.. platforms must be array";
 
     const sideBars = [];

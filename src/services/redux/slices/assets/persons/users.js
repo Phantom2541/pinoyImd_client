@@ -88,20 +88,19 @@ export const reduxSlice = createSlice({
     CUSTOMALERT: (state, data) => {
       state.message = data.payload;
     },
-    RESET: state => {
+    RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(BROWSE.pending, state => {
+      .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, { payload, success }) => {
-        // console.log("payload", payload);
         state.collections = payload.payload;
         // state.collectionsUsers = payload;
         state.isLoading = false;
@@ -113,7 +112,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(GETPATIENTS.pending, state => {
+      .addCase(GETPATIENTS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -129,7 +128,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(SAVE.pending, state => {
+      .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -148,7 +147,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, state => {
+      .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -156,7 +155,7 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
-          item => item._id === payload._id
+          (item) => item._id === payload._id
         );
 
         state.collections[index] = payload;

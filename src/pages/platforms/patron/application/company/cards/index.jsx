@@ -13,11 +13,11 @@ import { PresetUser } from "../../../../../../services/utilities";
 
 export default function CompanyCards({ companies }) {
   return (
-    <>
-      <MDBTypography note noteColor="info" className="text-center">
+    <div style={{ marginTop: "-2rem" }}>
+      {/* <MDBTypography note noteColor="info" className="text-center">
         <strong>Instructions: </strong>
         Click a card to send a request form.
-      </MDBTypography>
+      </MDBTypography> */}
 
       <MDBRow>
         {!!companies.length ? (
@@ -40,6 +40,6 @@ export default function CompanyCards({ companies }) {
           </MDBCol>
         )}
       </MDBRow>
-    </>
+    </div>
   );
 }

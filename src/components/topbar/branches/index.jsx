@@ -12,7 +12,7 @@ import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons
 
 export default function Branches() {
   const {
-      branches,
+      branches = [],
       access,
       activePlatform = {},
       token,
@@ -40,14 +40,16 @@ export default function Branches() {
     dispatch(SETACTIVEPLATFORM({ data, token }));
   };
 
-  const { branch = {} } = activePlatform;
+  const { branch = {} } = activePlatform || {};
 
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
         <MDBIcon icon="code-branch" />
         &nbsp;
-        <div className="d-none d-md-inline">{capitalize(branch?.name)}</div>
+        <div className="d-none d-md-inline">
+          {branch?.name ? capitalize(branch?.name) : ""}
+        </div>
       </MDBDropdownToggle>
       <MDBDropdownMenu right>
         {branches.map(({ name, _id }, index) => (
