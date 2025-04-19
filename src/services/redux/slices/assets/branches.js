@@ -149,6 +149,14 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+      state.willCreate = false;
+    },
+    SetMODAL: (state) => {
+      state.showModal = !state.showModal;
+    },
     /**
      *  Footer
      */
@@ -311,6 +319,13 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SetMaxPage, SetActivePAGE, TOGGLE } = reduxSlice.actions;
+export const {
+  RESET,
+  SetMaxPage,
+  SetActivePAGE,
+  TOGGLE,
+  SetSELECTED,
+  SetMODAL,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;
