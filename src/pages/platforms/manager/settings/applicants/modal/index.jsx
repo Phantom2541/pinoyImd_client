@@ -9,12 +9,19 @@ import {
   MDBRow,
   MDBCol,
   MDBModalFooter,
+  MDBTypography,
 } from "mdbreact";
-import { useToasts } from "react-toast-notifications";
-import { fullName } from "../../../../../../../services/utilities";
-import { Access } from "../../../../../../../services/fakeDb";
-import { UPDATE_ACCESS } from "../../../../../../../services/redux/slices/assets/persons/personnels";
-import Table from "./table";
+import { fullName } from "../../../../../../services/utilities";
+
+import { Access } from "../../../../../../services/fakeDb";
+import { UPDATE_ACCESS } from "../../../../../../services/redux/slices/assets/persons/personnels";
+import {
+  ToggleAccessModal,
+  UPDATE,
+  RESET,
+} from "../../../../../../services/redux/slices/assets/persons/applicants";
+import Bucket from "./bucket";
+import Swal from "sweetalert2";
 
 /**
  * AccessModal component manages user access roles through a modal interface.
@@ -29,21 +36,38 @@ import Table from "./table";
  * @param {object} selected - Contains user and their current access data.
  */
 
-export default function AccessModal({ show, toggle, selected }) {
+export default function AccessModal() {
   const { auth, activePlatform, token } = useSelector(({ auth }) => auth),
-    // {stat}=useSelector(({personnels})=>personnels),
-    [existingAccess, setExistingAccess] = useState([]),
+    {
+      showAccessModal: show,
+      selected,
+      formSubmitted,
+      isSuccess,
+    } = useSelector(({ applicants }) => applicants),
+    [clusters, setClusters] = useState([]),
     [roles, setRoles] = useState([]),
     [search, setSearch] = useState([]),
-    [accessChanges, setAccessChanges] = useState({
-      deleted: [],
-      added: [],
-    }), // para malaman kung ano yung bagong inadd or dinelete na access para yun yung isesend sa back end
-    [duplicateRoles, setDuplicateRoles] = useState([]),
-    { addToast } = useToasts(),
+    [duplicateRoles, setDuplicateRoles] = useState([]), //the purpose of this is for searching....
     dispatch = useDispatch();
 
-  const { access = [], user = {} } = selected || {};
+  const { user = {} } = selected || {};
+
+  const toggle = useCallback(() => {
+    dispatch(ToggleAccessModal());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isSuccess && !formSubmitted) {
+      toggle();
+      dispatch(RESET());
+      Swal.fire({
+        title: "Success!",
+        text: "Successfully approved applicant.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    }
+  }, [isSuccess, formSubmitted, toggle, dispatch]);
 
   const handleSetRoles = useCallback((_roles) => {
     setRoles(_roles);
@@ -60,80 +84,42 @@ export default function AccessModal({ show, toggle, selected }) {
   }, []);
 
   useEffect(() => {
-    // remove existing access in collections of roles
     if (show) {
-      const _roles = removeDuplicate(selected.access);
-      setExistingAccess(selected.access);
-      handleSetRoles(_roles);
+      setClusters([]);
+      handleSetRoles(Access.collections);
     }
-    setAccessChanges({ deleted: [], added: [] });
-  }, [show, selected, handleSetRoles, removeDuplicate]);
+  }, [handleSetRoles, show]);
 
   const handleSubmit = () => {
-    const { added, deleted } = accessChanges;
-    if (added.length === 0 && deleted.length === 0) {
-      toggle();
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-
     dispatch(
-      UPDATE_ACCESS({ data: { accessChanges, staffID: selected._id }, token })
+      UPDATE_ACCESS({
+        data: { accessChanges: { added: clusters }, staffID: selected._id },
+        token,
+      })
     );
-    toggle();
+    dispatch(UPDATE({ token, data: { _id: selected._id, status: "active" } }));
   };
 
-  const handleAccessChanges = (role, isDelete = false) => {
-    const isExist = access.some(({ _id }) => _id === role?._id);
-    const { deleted, added } = accessChanges;
-    const _addedRoles = [...added];
-    const _deletedRoles = [...deleted];
-    const roleID = role?._id || role?.id;
-
-    const getIndex = (array) =>
-      array.findIndex(
-        ({ _id = "", id = "" }) => String(_id || id) === String(roleID)
-      );
-    const index = getIndex(isDelete ? _addedRoles : _deletedRoles);
-
-    if (index > -1) {
-      isDelete ? _addedRoles.splice(index, 1) : _deletedRoles.splice(index, 1);
-    }
-
-    if (isDelete && isExist) _deletedRoles.push(role);
-    if (!isDelete && !isExist)
-      _addedRoles.push({
-        platform: role.platform,
-        approvedBy: auth._id,
-        branchId: activePlatform.branchId,
-        userId: user._id,
-        id: roleID,
-        status: true,
-      });
-
-    setAccessChanges({
-      ...accessChanges,
-      added: _addedRoles,
-      deleted: _deletedRoles,
-    });
-  };
-
-  const RESET_ROLES = (_existingAccess = existingAccess) => {
+  const RESET_ROLES = (_existingAccess = clusters) => {
     const _roles = removeDuplicate(_existingAccess);
     setRoles(_roles);
     setSearch("");
   };
-
   const handleADD = (role = {}) => {
     const _roles = [...roles];
-    const _existingAccess = [...existingAccess];
+    const _existingAccess = [...clusters];
     const index = _roles.findIndex(({ id }) => id === role.id);
     _roles.splice(index, 1);
-    _existingAccess.unshift({ ...role, platform: role.name, new: true });
+    _existingAccess.unshift({
+      ...role,
+      status: true,
+      platform: role.platform,
+      approvedBy: auth._id,
+      branchId: activePlatform.branchId,
+      userId: user._id,
+    });
 
-    setExistingAccess(_existingAccess);
-    handleAccessChanges(role, false);
+    setClusters(_existingAccess);
 
     if (_roles.length === 0) {
       RESET_ROLES(_existingAccess);
@@ -153,7 +139,7 @@ export default function AccessModal({ show, toggle, selected }) {
   const handleDelete = (item) => {
     const nameOfDeletedRole = item?.platform;
     const _roles = [...roles];
-    const _existingAccess = [...existingAccess];
+    const _existingAccess = [...clusters];
     const indexOfAccess = getIndexOfRoleDeleted(_existingAccess, item);
     _roles.unshift({
       ...item,
@@ -162,8 +148,7 @@ export default function AccessModal({ show, toggle, selected }) {
     });
     _existingAccess.splice(indexOfAccess, 1);
     handleSetRoles(_roles);
-    setExistingAccess(_existingAccess);
-    handleAccessChanges(item, true);
+    setClusters(_existingAccess);
   };
 
   const handleSearch = (searchValue) => {
@@ -239,7 +224,7 @@ export default function AccessModal({ show, toggle, selected }) {
     <MDBModal
       isOpen={show}
       toggle={toggle}
-      size="xl"
+      size="lg"
       style={{ overFlow: "auto" }}
     >
       <MDBModalHeader
@@ -250,9 +235,14 @@ export default function AccessModal({ show, toggle, selected }) {
         <small> {`${fullName(user.fullName) || ""} `}</small>
       </MDBModalHeader>
       <MDBModalBody>
+        <MDBTypography noteTitle="Description: " note noteColor="warning">
+          Drag and drop roles between 'Access' and 'Tag Access' for easy
+          management.
+        </MDBTypography>
+
         <MDBRow>
           <MDBCol md="6">
-            <Table
+            <Bucket
               search={search}
               collections={roles}
               handleAction={handleADD}
@@ -265,8 +255,8 @@ export default function AccessModal({ show, toggle, selected }) {
             />
           </MDBCol>
           <MDBCol md="6">
-            <Table
-              collections={existingAccess}
+            <Bucket
+              collections={clusters}
               tableName="Tag Access"
               isTag={true}
               handleAction={handleDelete}
@@ -279,12 +269,8 @@ export default function AccessModal({ show, toggle, selected }) {
         </MDBRow>
       </MDBModalBody>
       <MDBModalFooter>
-        <MDBBtn
-          onClick={handleSubmit}
-          color="info"
-          // disabled={existingAccess.length === 0}
-        >
-          Save Changes
+        <MDBBtn onClick={handleSubmit} color="info" disabled={formSubmitted}>
+          Approve {formSubmitted && <MDBIcon icon="spinner" pulse />}
         </MDBBtn>
       </MDBModalFooter>
     </MDBModal>

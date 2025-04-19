@@ -251,6 +251,7 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         const { staffID, accessChanges } = payload;
         const { deleted, added } = accessChanges;
+        if (state.collections.length === 0) return;
         const index = state.collections.findIndex(
           (item) => item._id === staffID
         );
@@ -373,7 +374,7 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        // if (state.collections) state.collections.unshift(payload);
+        if (state.collections) state.collections.unshift(payload);
         state.isSuccess = true;
         state.formSubmitted = false;
       })

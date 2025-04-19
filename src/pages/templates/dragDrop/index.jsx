@@ -95,7 +95,6 @@ const DragDrop = () => {
   const handleDrop = (event, dropTo = "List") => {
     event.preventDefault();
     const data = event.dataTransfer.getData("application/json");
-    console.log("data", data);
     if (!data) return "unknown role";
     var { role, dragBy } = JSON.parse(data);
     var { collections: dynamicCollections, setter } = getState(dropTo);

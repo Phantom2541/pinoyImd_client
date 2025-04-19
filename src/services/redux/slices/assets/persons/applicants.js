@@ -6,7 +6,9 @@ const url = "assets/persons/applicants";
 const initialState = {
   collections: [],
   personnel: {},
-
+  selected: {},
+  formSubmitted: false,
+  showAccessModal: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -119,6 +121,13 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    ToggleAccessModal: (state, _) => {
+      state.showAccessModal = !state.showAccessModal;
+    },
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showAccessModal = true;
+    },
     UPDATEACCESS: (state, data) => {
       // used for updating access in file201
       const { _id, access, isNew = false } = data.payload,
@@ -221,7 +230,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -237,12 +246,12 @@ export const reduxSlice = createSlice({
         state.collections[index] = newInfo;
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
@@ -268,6 +277,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, UPDATEACCESS } = reduxSlice.actions;
+export const { RESET, UPDATEACCESS, ToggleAccessModal, SetSELECTED } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

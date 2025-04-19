@@ -9,8 +9,6 @@ import {
   MDBInput,
   MDBRow,
   MDBCol,
-  MDBSelect,
-  MDBSelectOptions,
 } from "mdbreact";
 import {
   SAVE,
@@ -35,12 +33,6 @@ const _form = {
     mobile: "",
   },
 };
-// const regionOptions = Philippines.Regions?.map((region) => ({
-//   text: region.name,
-//   value: region.name,
-// }));
-
-const regionOptions = [];
 
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading } = useSelector(({ personnels }) => personnels),
@@ -108,7 +100,9 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   const handleObjChange = (obj, key, value) => {
     const _obj = { ...form[obj] };
-    _obj[key] = value.toUpperCase();
+    // don't force uppercase on location keys
+    const noCaps = ["region", "province", "city", "barangay", "street"];
+    _obj[key] = noCaps.includes(key) ? value : value.toUpperCase();
     setForm({ ...form, [obj]: _obj });
   };
 
@@ -189,64 +183,68 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           {/* branch address */}
           <MDBRow>
             <MDBCol md="4">
-              <MDBSelect
-                label="Region"
-                data={regionOptions}
+              <select
                 value={handleObjValue("address", "region")}
-                onValueChange={(selected) =>
-                  handleObjChange("address", "region", selected.value)
-                }
-                required
-              />
-            </MDBCol>
-            <MDBCol md="4">
-              <MDBInput
-                type="text"
-                value={handleObjValue("address", "region")}
+                className="browser-default custom-select"
                 onChange={(e) =>
                   handleObjChange("address", "region", e.target.value)
                 }
-                label="Region"
-                required
-                icon="city"
-              />
+              >
+                <option>Select Region</option>
+                {Philippines.Regions.map(({ name }) => (
+                  <option key={name}>{name}</option>
+                ))}
+              </select>
             </MDBCol>
             <MDBCol md="4">
-              <MDBInput
-                type="text"
+              <select
                 value={handleObjValue("address", "province")}
+                className="browser-default custom-select"
                 onChange={(e) =>
                   handleObjChange("address", "province", e.target.value)
                 }
-                label="Province"
-                required
-                icon="monument"
-              />
+              >
+                <option>Select Province</option>
+                {Philippines.Provinces(handleObjValue("address", "region")).map(
+                  ({ name }) => (
+                    <option key={name}>{name}</option>
+                  )
+                )}
+              </select>
             </MDBCol>
             <MDBCol md="4">
-              <MDBInput
-                type="text"
+              <select
                 value={handleObjValue("address", "city")}
+                className="browser-default custom-select"
                 onChange={(e) =>
                   handleObjChange("address", "city", e.target.value)
                 }
-                icon="kaaba"
-                label="City/Municipality"
-                required
-              />
+              >
+                <option>Select Province</option>
+                {Philippines.Cities(handleObjValue("address", "province")).map(
+                  ({ name }) => (
+                    <option key={name}>{name}</option>
+                  )
+                )}
+              </select>
             </MDBCol>
           </MDBRow>
           <MDBRow>
             <MDBCol md="6">
-              <MDBInput
-                type="text"
+              <select
                 value={handleObjValue("address", "barangay")}
+                className="browser-default custom-select"
                 onChange={(e) =>
                   handleObjChange("address", "barangay", e.target.value)
                 }
-                icon="road"
-                label="Barangay"
-              />
+              >
+                <option>Select Barangay</option>
+                {Philippines.Barangays(handleObjValue("address", "city")).map(
+                  ({ name }) => (
+                    <option key={name}>{name}</option>
+                  )
+                )}
+              </select>
             </MDBCol>
             <MDBCol md="6">
               <MDBInput
