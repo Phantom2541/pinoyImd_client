@@ -54,54 +54,6 @@ const manager = [
     ],
   },
   {
-    name: "Procurement",
-    icon: "book-open",
-    path: "/po",
-    children: [
-      {
-        name: "Requisition", // 1. Pending, 2. submit
-        path: "/request",
-        component: PurRequest,
-      },
-      {
-        name: "Approval ", // 1. Pending, 2. Approved 3. Denied
-        path: "/process",
-      },
-      {
-        name: "Tracking", // 1. confirmation, 2. preparation, 3. shipped, 4. delivered
-        path: "/tracking",
-      },
-      {
-        name: "Records", // monthly view
-        path: "/records",
-      },
-    ],
-  },
-  {
-    name: "Responsibilities",
-    icon: "wrench",
-    path: "/liability",
-    children: [
-      {
-        name: "Supplies",
-        path: "/reagents",
-      },
-      {
-        name: "P M S",
-        path: "/preventive/maintenenace/schedule",
-      },
-      {
-        name: "Payroll",
-        path: "/payroll",
-        component: Payrolls,
-      },
-      {
-        name: "Cashier",
-        path: "/cashier",
-      },
-    ],
-  },
-  {
     name: "Accrued", // liabilities
     path: "/accrued",
     icon: "tv",
@@ -160,6 +112,54 @@ const manager = [
         icon: "receipt",
         title: "Vouchers from daily sales",
         component: Vouchers,
+      },
+    ],
+  },
+  {
+    name: "Procurement",
+    icon: "book-open",
+    path: "/po",
+    children: [
+      {
+        name: "Requisition", // 1. Pending, 2. submit
+        path: "/request",
+        component: PurRequest,
+      },
+      {
+        name: "Approval ", // 1. Pending, 2. Approved 3. Denied
+        path: "/process",
+      },
+      {
+        name: "Tracking", // 1. confirmation, 2. preparation, 3. shipped, 4. delivered
+        path: "/tracking",
+      },
+      {
+        name: "Records", // monthly view
+        path: "/records",
+      },
+    ],
+  },
+  {
+    name: "Responsibilities",
+    icon: "wrench",
+    path: "/liability",
+    children: [
+      {
+        name: "Supplies",
+        path: "/reagents",
+      },
+      {
+        name: "P M S",
+        path: "/preventive/maintenenace/schedule",
+      },
+      {
+        name: "Payroll",
+        path: "/payroll",
+        component: Payrolls,
+      },
+      {
+        name: "Cashier",
+        path: "/cashier",
       },
     ],
   },
