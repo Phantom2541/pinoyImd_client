@@ -5,11 +5,18 @@ import Banner from "../../../pages/platforms/manager/settings/banner";
 import Logo from "../../../pages/platforms/manager/settings/logo";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
-import Procurments from "../../../pages/platforms/headquarter/file201/procurments";
-import ExperentalStaff from "../../../pages/platforms/headquarter/file201/staff";
-import Equipments from "../../../pages/platforms/headquarter/file201/equipments";
 import Payrolls from "../../../pages/platforms/manager/responsibilities/payroll";
-import Employees from "../../../pages/platforms/headquarter/file201/employees";
+
+import {
+  Employees,
+  Equipments,
+  Applicants,
+  Staffs,
+  Physicians,
+  // Procurments,
+  Heads,
+} from "../../../pages/platforms/headquarter/file201";
+
 import Providers from "../../../pages/platforms/manager/provider";
 import {
   Remittances,
@@ -170,8 +177,23 @@ const manager = [
     children: [
       {
         name: "Staff",
-        path: "/expstaff",
-        component: ExperentalStaff,
+        path: "/staffs",
+        component: Staffs,
+      },
+      {
+        name: "Physicians",
+        path: "/physicians",
+        component: Physicians,
+      },
+      {
+        name: "Heads",
+        path: "/heads",
+        component: Heads,
+      },
+      {
+        name: "Applicants",
+        path: "/applicants",
+        component: Applicants,
       },
       {
         name: "File 201",
@@ -182,11 +204,6 @@ const manager = [
         name: "Equipments",
         path: "/equipments",
         component: Equipments,
-      },
-      {
-        name: "Procurement",
-        path: "/procurement",
-        component: Procurments,
       },
       {
         name: "Menus",

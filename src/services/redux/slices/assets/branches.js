@@ -185,6 +185,14 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+      state.willCreate = false;
+    },
+    SetMODAL: (state) => {
+      state.showModal = !state.showModal;
+    },
     /**
      *  Footer
      */
