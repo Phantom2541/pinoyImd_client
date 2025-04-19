@@ -3,6 +3,7 @@ import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 
 export default function Collapsable({ deal }) {
   const { decSS, frequency } = deal;
+  console.log("deal", deal);
 
   return (
     <MDBTable bordered>

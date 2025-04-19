@@ -1,8 +1,8 @@
 import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 
-export default function Collapsable({ service }) {
-  const { decSS, frequency } = service;
+export default function Collapsable({ item }) {
+  const { decSS, frequency } = item;
 
   return (
     <MDBTable bordered>

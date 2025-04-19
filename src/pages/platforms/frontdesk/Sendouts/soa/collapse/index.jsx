@@ -13,9 +13,7 @@ import CollapsableHeader from "./header";
 import { collapse } from "../../../../../../services/utilities";
 
 export default function Body() {
-  const { filtered, activePage, maxPage } = useSelector(
-    ({ services }) => services
-  );
+  const { filtered, activePage, maxPage } = useSelector(({ soa }) => soa);
 
   /**
    * Pagination: Calculate the start and end index for the current page
@@ -38,7 +36,7 @@ export default function Body() {
       }}
       fluid
     >
-      {paginatedData?.map((service, index) => {
+      {paginatedData?.map((soa, index) => {
         const actualIndex = startIndex + index; // Get the real index in filtered array
         const { color, border } = collapse.getStyle(
           actualIndex,
@@ -58,7 +56,7 @@ export default function Body() {
               style={{ borderRadius: "50%" }}
             >
               <CollapsableHeader
-                service={service}
+                soa={soa}
                 isOpen={activeId === actualIndex}
                 textColor={color}
                 setActiveId={setActiveId}
@@ -72,7 +70,7 @@ export default function Body() {
               isOpen={actualIndex === activeId}
             >
               <MDBCardBody className="pt-2">
-                <CollapsableBody service={service} />
+                <CollapsableBody soa={soa} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

@@ -11,7 +11,11 @@ const initialState = {
   selected: {},
   page: 0,
   isSuccess: false,
+  // main loading
   isLoading: false,
+  // form loading
+  isLoadingForm: false,
+  willCreate: false,
   message: "",
   showModal: false,
   /**

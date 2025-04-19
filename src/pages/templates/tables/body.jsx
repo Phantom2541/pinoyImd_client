@@ -25,12 +25,12 @@ const Body = () => {
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((service, index) => (
+        {paginatedData?.map((item, index) => (
           <tr key={index}>
             <td key={index}>{index + startIndex + 1}</td>
-            <td>{service.name}</td>
-            <td>{service.abbreviation} </td>
-            <td>{service.specimen}</td>
+            <td>{item.name}</td>
+            <td>{item.abbreviation} </td>
+            <td>{item.specimen}</td>
           </tr>
         ))}
       </tbody>

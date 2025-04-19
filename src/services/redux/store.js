@@ -45,6 +45,7 @@ import {
   payments,
   payrolls,
   ledger,
+  soa,
 } from "./slices/finance";
 import products from "./slices/market/products";
 
@@ -60,6 +61,7 @@ const store = configureStore({
     access,
     users,
     ledger,
+    soa,
     preferences,
     validator,
     physicians,

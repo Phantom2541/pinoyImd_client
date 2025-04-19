@@ -7,7 +7,7 @@ import Header from "./header";
 import Body from "./collapse";
 import Footer from "./footer";
 const Collapsable = () => {
-  const { isLoading } = useSelector(({ services }) => services);
+  const { isLoading } = useSelector(({ soa }) => soa);
 
   return (
     <MDBAnimation type="bounceInDown">

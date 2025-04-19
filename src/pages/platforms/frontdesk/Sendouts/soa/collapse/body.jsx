@@ -1,24 +1,24 @@
 import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 
-export default function Collapsable({ service }) {
-  const { decSS, frequency } = service;
+export default function Collapsable({ soa }) {
+  const { hasPaid, status } = soa;
 
   return (
     <MDBTable bordered>
       <MDBTableHead>
         <tr>
-          <th>Frequency</th>
-          <th>Description</th>
+          <th>Status</th>
+          <th>Has Paid</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
         <tr>
           <td>
-            <h5>{frequency}</h5>
+            <h5>{status}</h5>
           </td>
           <td>
-            <small>{decSS}</small>
+            <h5>{hasPaid ? "yes" : "no"}</h5>
           </td>
         </tr>
       </MDBTableBody>
