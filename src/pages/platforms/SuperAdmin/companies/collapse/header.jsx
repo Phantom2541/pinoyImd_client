@@ -1,8 +1,8 @@
 import React from "react";
 import { MDBBtn } from "mdbreact";
 
-const Header = ({ company, isOpen, textColor, index, setActiveId }) => {
-  const { name, subName } = company;
+const Header = ({ company = {}, isOpen, textColor, index, setActiveId }) => {
+  const { name = "", subName = "" } = company;
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       {index + 1}. {name} {subName}

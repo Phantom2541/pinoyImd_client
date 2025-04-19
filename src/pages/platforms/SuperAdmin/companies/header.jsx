@@ -1,11 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { BROWSE } from "../../../../services/redux/slices/assets/companies";
+import {
+  BROWSE,
+  SetFILTERED,
+  SetSELECTED,
+} from "../../../../services/redux/slices/assets/companies";
+import Search from "../../../../components/searchables/search";
 
 const Header = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ companies }) => companies),
+    { filtered, collections } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();
 
   //initial values
@@ -24,7 +29,14 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center"></div>
+        <Search
+          collections={collections}
+          hideButton
+          setFiltered={(results) =>
+            dispatch(SetFILTERED(results.length > 0 ? results : collections))
+          }
+          handleAdd={(value) => dispatch(SetSELECTED({ name: value }))}
+        />
       </div>
     </MDBView>
   );
