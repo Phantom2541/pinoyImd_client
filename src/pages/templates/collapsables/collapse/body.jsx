@@ -5,7 +5,7 @@ export default function Collapsable({ service }) {
   const { decSS, frequency } = service;
 
   return (
-    <MDBTable bordered>
+    <MDBTable bordered className="m-0 p-0">
       <MDBTableHead>
         <tr>
           <th>Frequency</th>

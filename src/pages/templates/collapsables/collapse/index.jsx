@@ -71,7 +71,7 @@ export default function Body() {
               className="mb-2 border border-black"
               isOpen={actualIndex === activeId}
             >
-              <MDBCardBody className="pt-2">
+              <MDBCardBody className="m-0 p-0">
                 <CollapsableBody service={service} />
               </MDBCardBody>
             </MDBCollapse>
