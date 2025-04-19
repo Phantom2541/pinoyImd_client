@@ -10,7 +10,7 @@ import {
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
-import { collapse } from "../../../../../services/utilities";
+import { collapse, fullName } from "../../../../../services/utilities";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(
@@ -46,7 +46,7 @@ export default function Body() {
           didHoverId
         );
 
-        const { branches, ceo } = company;
+        const { branches = [], ceo = {} } = company || {};
 
         return (
           <MDBCard
@@ -70,11 +70,14 @@ export default function Body() {
 
             <MDBCollapse
               id={`collapse-${actualIndex}`}
-              className="mb-2 border border-black"
+              className="mb-2 border border-black m-0 p-0"
               isOpen={actualIndex === activeId}
             >
-              <MDBCardBody className="pt-2">
+              <MDBCardBody className=" m-0 p-0">
                 <CollapsableBody ceo={ceo} branches={branches} />
+                <h5 className="ml-2">
+                  <strong>CEO:</strong> {fullName(ceo?.fullName)}
+                </h5>
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>
