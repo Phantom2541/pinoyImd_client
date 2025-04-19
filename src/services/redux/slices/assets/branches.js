@@ -94,6 +94,42 @@ export const UPDATE = createAsyncThunk(
     }
   }
 );
+
+export const ASSIGN_AO = createAsyncThunk(
+  `${url}/ASSIGN_AO`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "assign_ao");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const UNTAG_PERSONNEL = createAsyncThunk(
+  `${url}/untag_personnel`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "untag_personnel");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
@@ -160,6 +196,13 @@ export const reduxSlice = createSlice({
     /**
      *  Footer
      */
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
       state.activePage = 1;
@@ -211,7 +254,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -219,13 +262,14 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE.pending, (state) => {
@@ -247,6 +291,99 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+
+      .addCase(ASSIGN_AO.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+
+      .addCase(ASSIGN_AO.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        if (state.collections.length > 0) {
+          const { newPersonnel = false, createdPersonnel } = payload;
+          const getIndex = (collections) =>
+            collections.findIndex(({ _id }) => _id === payload._id);
+          const collectionIndex = getIndex(state.collections);
+          const filteredIndex = getIndex(state.filtered);
+
+          const filteredOldInfo = { ...state.filtered[filteredIndex] };
+          const collectionOldInfo = { ...state.collections[collectionIndex] };
+          if (newPersonnel) {
+            filteredOldInfo.personnels.unshift(createdPersonnel);
+            collectionOldInfo.personnels.unshift(createdPersonnel);
+          }
+
+          state.collections[collectionIndex] = {
+            ...collectionOldInfo,
+            ...payload,
+          };
+
+          state.filtered[filteredIndex] = {
+            ...filteredOldInfo,
+            ...payload,
+          };
+        }
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(ASSIGN_AO.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+
+      .addCase(UNTAG_PERSONNEL.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+
+      .addCase(UNTAG_PERSONNEL.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        if (state.collections.length > 0) {
+          const { newPersonnel = false, createdPersonnel } = payload;
+          const getIndex = (collections) =>
+            collections.findIndex(({ _id }) => _id === payload._id);
+          const collectionIndex = getIndex(state.collections);
+          const filteredIndex = getIndex(state.filtered);
+
+          const filteredOldInfo = { ...state.filtered[filteredIndex] };
+          const collectionOldInfo = { ...state.collections[collectionIndex] };
+
+          const getPersonnelIndex = (personnels) =>
+            personnels.findIndex(({ _id }) => _id === payload?.personnelID);
+
+          const personnelsCollection = [...collectionOldInfo.personnels];
+
+          personnelsCollection.splice(
+            getPersonnelIndex(personnelsCollection),
+            1
+          );
+
+          const personnelsFiltered = [...filteredOldInfo.personnels];
+          personnelsFiltered.splice(getPersonnelIndex(personnelsFiltered), 1);
+
+          state.collections[collectionIndex] = {
+            ...collectionOldInfo,
+            personnels: personnelsCollection,
+          };
+
+          state.filtered[filteredIndex] = {
+            ...filteredOldInfo,
+            personnels: personnelsFiltered,
+          };
+        }
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UNTAG_PERSONNEL.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.formSubmitted = false;
@@ -320,12 +457,12 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetFILTERED,
+  SetSELECTED,
+  TOGGLE,
   RESET,
   SetMaxPage,
   SetActivePAGE,
-  TOGGLE,
-  SetSELECTED,
-  SetMODAL,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
