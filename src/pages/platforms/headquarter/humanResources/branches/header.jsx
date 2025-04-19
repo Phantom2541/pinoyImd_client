@@ -2,11 +2,16 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Select } from "../../../../../components/customizable";
-import { BROWSE } from "../../../../../services/redux/slices/assets/branches";
+import {
+  BROWSE,
+  SetFILTERED,
+  SetSELECTED,
+} from "../../../../../services/redux/slices/assets/branches";
+import Search from "../../../../../components/searchables/search";
 
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ branches }) => branches),
+    { filtered, collections } = useSelector(({ branches }) => branches),
     dispatch = useDispatch();
 
   //initial values
@@ -31,16 +36,15 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center">
-          <Select
-            className="m-0 p-0  mr-4 "
-            // value={component}
-            // onChange={(value) => handleComponent(value || "LAB")}
-            inputClassName="m-0 p-0 text-white"
-            // preValue={component}
-            // collections={Templates.getComponents("LAB")}
-          />
-        </div>
+        <Search
+          handleAdd={(value) => dispatch(SetSELECTED({ name: value }))}
+          hideButton
+          collections={collections}
+          setFiltered={(results) =>
+            dispatch(SetFILTERED(results.length > 0 ? results : collections))
+          }
+          reset={() => dispatch(SetFILTERED(collections))}
+        />
       </div>
     </MDBView>
   );

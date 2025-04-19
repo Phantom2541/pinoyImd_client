@@ -91,13 +91,16 @@ export default function AccessModal() {
   }, [handleSetRoles, show]);
 
   const handleSubmit = () => {
+    const { _id, branch } = selected;
     dispatch(
       UPDATE_ACCESS({
         data: { accessChanges: { added: clusters }, staffID: selected._id },
         token,
       })
     );
-    dispatch(UPDATE({ token, data: { _id: selected._id, status: "active" } }));
+    dispatch(
+      UPDATE({ token, data: { _id: selected._id, branch, status: "active" } })
+    );
   };
 
   const RESET_ROLES = (_existingAccess = clusters) => {
