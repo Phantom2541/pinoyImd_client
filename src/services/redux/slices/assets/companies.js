@@ -9,6 +9,16 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  showModal: false,
+  willCreate: false,
+  /**
+   * for pagination
+   */
+  paginated: [],
+  page: 0,
+  maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -139,12 +149,22 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    /**
+     * for pagination
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
-    },
-    SetFILTERED: (state, { payload }) => {
-      state.filtered = payload;
     },
   },
   extraReducers: (builder) => {
@@ -272,6 +292,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SetFILTERED } = reduxSlice.actions;
+export const { RESET, SetFILTERED, SetMaxPage, SetActivePAGE } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

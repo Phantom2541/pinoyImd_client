@@ -3,28 +3,14 @@ import Services from "../../../pages/platforms/manager/settings/services";
 import Menus from "../../../pages/platforms/manager/settings/menus";
 import Banner from "../../../pages/platforms/manager/settings/banner";
 import Logo from "../../../pages/platforms/manager/settings/logo";
-import Tieups from "../../../pages/platforms/manager/settings/tieups";
-import Physicians from "../../../pages/platforms/headquarter/file201/physicians";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
-import Heads from "../../../pages/platforms/headquarter/file201/heads";
 import Procurments from "../../../pages/platforms/headquarter/file201/procurments";
-
-// import Staff from "../../../pages/platforms/manager/file201/oldstaff";
 import ExperentalStaff from "../../../pages/platforms/headquarter/file201/staff";
-
 import Equipments from "../../../pages/platforms/headquarter/file201/equipments";
 import Payrolls from "../../../pages/platforms/manager/responsibilities/payroll";
-//import Assurance from "../../../pages/platforms/manager/responsibilities/liability/quality/assurance";
-// Controls from "../../../pages/platforms/manager/responsibilities/liability/quality/controls";
-// import Ledger from "../../../pages/platforms/manager/pos/ledger";
-// import newLedger from "../../../pages/platforms/cashier/pos/newledger";
 import Employees from "../../../pages/platforms/headquarter/file201/employees";
-import Applicants from "../../../pages/platforms/manager/settings/applicants";
-import Branches from "../../../pages/platforms/manager/branches";
 import Providers from "../../../pages/platforms/manager/provider";
-import SABranches from "../../../pages/platforms/SuperAdmin/SABranches";
-import SACompany from "../../../pages/platforms/SuperAdmin/SACompany";
 import {
   Remittances,
   Sales,
@@ -46,131 +32,24 @@ const manager = [
     component: Dashboard,
   },
   {
-    name: "User Manual",
-    icon: "book-open",
-    path: "/user/manual",
-    component: UserManual,
-  },
-  {
-    name: "Procurement",
-    icon: "book-open",
-    path: "/po",
-    children: [
-      {
-        name: "Requisition", // 1. Pending, 2. submit
-        path: "/request",
-        component: PurRequest,
-      },
-      {
-        name: "Approval ", // 1. Pending, 2. Approved 3. Denied
-        path: "/process",
-      },
-      {
-        name: "Tracking", // 1. confirmation, 2. preparation, 3. shipped, 4. delivered
-        path: "/tracking",
-      },
-      {
-        name: "Records", // monthly view
-        path: "/records",
-      },
-    ],
-  },
-  {
-    name: "Responsibilities",
-    icon: "wrench",
-    path: "/liability",
-    children: [
-      {
-        name: "Supplies",
-        path: "/reagents",
-      },
-      {
-        name: "P M S",
-        path: "/preventive/maintenenace/schedule",
-      },
-      {
-        name: "Payroll",
-        path: "/payroll",
-        component: Payrolls,
-      },
-      {
-        name: "Cashier",
-        path: "/cashier",
-      },
-    ],
-  },
-  {
-    name: "Settings",
-    path: "/settings",
+    name: "Business Operations",
+    path: "/operations",
     icon: "cogs",
     children: [
       {
-        name: "Staff",
-        path: "/expstaff",
-        component: ExperentalStaff,
+        name: "Sales",
+        path: "/sales",
+        component: Sales,
       },
       {
-        name: "Heads",
-        path: "/heads",
-        component: Heads,
+        name: "Remittances",
+        path: "/remittances",
+        component: Remittances,
       },
       {
-        name: "File 201",
-        path: "/file201",
-        component: Employees,
-      },
-      {
-        name: "Physicians",
-        path: "/physicians",
-        component: Physicians,
-      },
-      {
-        name: "Applicants",
-        path: "/applicants",
-        component: Applicants,
-      },
-      {
-        name: "Equipments",
-        path: "/equipments",
-        component: Equipments,
-      },
-      {
-        name: "Procurement",
-        path: "/procurement",
-        component: Procurments,
-      },
-      {
-        name: "Menus",
-        path: "/menus",
-        component: Menus,
-      },
-      {
-        name: "Services",
-        path: "/services",
-        component: Services,
-      },
-      {
-        name: "Banner",
-        path: "/banners",
-        component: Banner,
-      },
-      {
-        name: "Logo",
-        path: "/logo",
-        component: Logo,
-      },
-      {
-        name: "Suppliers",
-        path: "/suppliers",
-      },
-      {
-        name: "Sourcing",
-        path: "/sourcing",
-      },
-      {
-        name: "Tie Up",
-        path: "/tieup",
-        component: Tieups,
+        name: "Ledger",
+        path: "/ledger",
+        component: ExperimentalLedger,
       },
     ],
   },
@@ -237,24 +116,97 @@ const manager = [
     ],
   },
   {
-    name: "Business Operations",
-    path: "/operations",
+    name: "Procurement",
+    icon: "book-open",
+    path: "/po",
+    children: [
+      {
+        name: "Requisition", // 1. Pending, 2. submit
+        path: "/request",
+        component: PurRequest,
+      },
+      {
+        name: "Approval ", // 1. Pending, 2. Approved 3. Denied
+        path: "/process",
+      },
+      {
+        name: "Tracking", // 1. confirmation, 2. preparation, 3. shipped, 4. delivered
+        path: "/tracking",
+      },
+      {
+        name: "Records", // monthly view
+        path: "/records",
+      },
+    ],
+  },
+  {
+    name: "Responsibilities",
+    icon: "wrench",
+    path: "/liability",
+    children: [
+      {
+        name: "Supplies",
+        path: "/reagents",
+      },
+      {
+        name: "P M S",
+        path: "/preventive/maintenenace/schedule",
+      },
+      {
+        name: "Payroll",
+        path: "/payroll",
+        component: Payrolls,
+      },
+      {
+        name: "Cashier",
+        path: "/cashier",
+      },
+    ],
+  },
+  {
+    name: "Settings",
+    path: "/settings",
     icon: "cogs",
     children: [
       {
-        name: "Sales",
-        path: "/sales",
-        component: Sales,
+        name: "Staff",
+        path: "/expstaff",
+        component: ExperentalStaff,
       },
       {
-        name: "Remittances",
-        path: "/remittances",
-        component: Remittances,
+        name: "File 201",
+        path: "/file201",
+        component: Employees,
       },
       {
-        name: "Ledger",
-        path: "/ledger",
-        component: ExperimentalLedger,
+        name: "Equipments",
+        path: "/equipments",
+        component: Equipments,
+      },
+      {
+        name: "Procurement",
+        path: "/procurement",
+        component: Procurments,
+      },
+      {
+        name: "Menus",
+        path: "/menus",
+        component: Menus,
+      },
+      {
+        name: "Services",
+        path: "/services",
+        component: Services,
+      },
+      {
+        name: "Banner",
+        path: "/banners",
+        component: Banner,
+      },
+      {
+        name: "Logo",
+        path: "/logo",
+        component: Logo,
       },
     ],
   },
@@ -265,22 +217,10 @@ const manager = [
     component: Providers,
   },
   {
-    name: " Branch",
-    path: "/branch",
-    icon: "building",
-    component: Branches,
-  },
-  {
-    name: "SA Branches", //Super Admin
-    path: "/SABranches",
-    icon: "university",
-    component: SABranches,
-  },
-  {
-    name: "SA Company", //Super Admin
-    path: "/SACompany",
-    icon: "building",
-    component: SACompany,
+    name: "User Manual",
+    icon: "book-open",
+    path: "/user/manual",
+    component: UserManual,
   },
 ];
 
