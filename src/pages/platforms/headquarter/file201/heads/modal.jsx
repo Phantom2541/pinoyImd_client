@@ -21,7 +21,7 @@ import { capitalize, isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../services/utilities";
 import { Select } from "../../../../../components/customizable";
-import Templates from "../../../../../components/searchables/templates";
+// import Templates from "../../../../../components/searchables/templates";
 import TemplatetUtils from "../../../../../services/fakeDb/diagnostics/templates";
 // declare your expected items
 const _form = {
@@ -30,30 +30,31 @@ const _form = {
   section: "",
 };
 
-var department = [
-  { text: "Radiology", value: "radiology" },
-  { text: "Laboratory", value: "laboratory" },
-];
-var sections = [
-  { text: "Pathologist", value: "pathologist" },
-  { text: "Analysis", value: "analysis" },
-  { text: "Bacteriology", value: "bacteriology" },
-  { text: "Biopsy", value: "biopsy" },
-  { text: "Chemistry", value: "chemistry" },
-  { text: "Coagulation", value: "coagulation" },
-  { text: "Compatibility", value: "compatibility" },
-  { text: "Drugtest", value: "drugtest" },
-  { text: "Hematology", value: "hematology" },
-  { text: "Miscellaneous", value: "Parasitology" },
-  { text: "PAPs", value: "paps" },
-  { text: "PBS", value: "pbs" },
-  { text: "Serology", value: "serology" },
-  { text: "Uniralysis", value: "uniralysis" },
-  { text: "ECG", value: "ecg" },
-  { text: "Ultrasound", value: "ultrasound" },
-  { text: "Xray", value: "xray" },
-  { text: "2DEcho", value: "2decho" },
-];
+// var department = [
+//   { text: "Radiology", value: "radiology" },
+//   { text: "Laboratory", value: "laboratory" },
+// ];
+// var sections = [
+//   { text: "Pathologist", value: "pathologist" },
+//   { text: "Radiologist", value: "radiologist" },
+//   { text: "Analysis", value: "analysis" },
+//   { text: "Bacteriology", value: "bacteriology" },
+//   { text: "Biopsy", value: "biopsy" },
+//   { text: "Chemistry", value: "chemistry" },
+//   { text: "Coagulation", value: "coagulation" },
+//   { text: "Compatibility", value: "compatibility" },
+//   { text: "Drugtest", value: "drugtest" },
+//   { text: "Hematology", value: "hematology" },
+//   { text: "Miscellaneous", value: "Parasitology" },
+//   { text: "PAPs", value: "paps" },
+//   { text: "PBS", value: "pbs" },
+//   { text: "Serology", value: "serology" },
+//   { text: "Uniralysis", value: "uniralysis" },
+//   { text: "ECG", value: "ecg" },
+//   { text: "Ultrasound", value: "ultrasound" },
+//   { text: "Xray", value: "xray" },
+//   { text: "2DEcho", value: "2decho" },
+// ];
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading, collections } = useSelector(
       ({ personnels }) => personnels
@@ -77,6 +78,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     const _sections = TemplatetUtils.getComponents(
       department === "laboratory" ? "LAB" : "RAD"
     );
+    _sections.push(department === "laboratory" ? "Pathologist" : "Radiologist");
     setSections(_sections);
   }, [department]);
 
@@ -130,17 +132,17 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   // use for direct values like strings and numbers
 
-  const handleSectionChange = (value) => {
+  const handleSectionChange = (section) => {
     setForm({
       ...form,
-      section: value,
+      section,
     });
   };
 
-  const handleStaffChange = (value) => {
+  const handleStaffChange = (user) => {
     setForm({
       ...form,
-      user: value,
+      user,
     });
   };
 

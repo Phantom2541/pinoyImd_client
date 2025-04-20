@@ -11,17 +11,7 @@ import DataTable from "../../../../../components/dataTable";
 import { fullName, globalSearch } from "../../../../../services/utilities";
 import { ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
-import {
-  MDBBtn,
-  MDBBtnGroup,
-  MDBCard,
-  MDBCardBody,
-  MDBIcon,
-  MDBTable,
-  MDBTableBody,
-  MDBTableHead,
-  MDBView,
-} from "mdbreact";
+import { MDBBtn } from "mdbreact";
 import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function Heads() {
@@ -63,7 +53,6 @@ export default function Heads() {
           },
         };
       });
-    console.log("running again");
     setHeads(newArray || []);
   }, [collections]);
 
@@ -81,9 +70,7 @@ export default function Heads() {
 
   //Trigger for create
   const handleCreate = () => {
-    if (!willCreate) {
-      setWillCreate(true);
-    }
+    !willCreate && setWillCreate(true);
     setShowModal(true);
   };
 
@@ -101,7 +88,6 @@ export default function Heads() {
   //Search function
   const handleSearch = async (willSearch, key) => {
     if (willSearch) return setHeads(globalSearch(collections, key));
-
     setHeads(collections);
   };
 
