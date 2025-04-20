@@ -29,6 +29,7 @@ import {
   Receivables,
   Payments,
   SOA,
+  Reseco,
 } from "../../../pages/platforms/manager/accrued";
 
 const manager = [
@@ -119,6 +120,13 @@ const manager = [
         icon: "receipt",
         title: "Vouchers from daily sales",
         component: Vouchers,
+      },
+      {
+        name: "Reseco",
+        path: "/reseco",
+        icon: "handshake",
+        title: "Monthly Reseco Deals",
+        component: Reseco,
       },
     ],
   },

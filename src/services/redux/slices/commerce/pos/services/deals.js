@@ -325,19 +325,35 @@ export const reduxSlice = createSlice({
     },
 
     SetFilterBySOURCE: (state, { payload }) => {
+      let filtered = [];
       if (payload === "all") {
-        state.filtered = state.collections;
+        filtered = state.collections;
         state.vendor = undefined;
       } else if (payload === "NoSource") {
-        state.filtered = state.collections.filter(({ source }) => !source);
+        filtered = state.collections.filter(({ source }) => !source);
         state.vendor = "noSource";
       } else {
-        state.filtered = state.collections.filter(
+        filtered = state.collections.filter(
           ({ source }) => source?._id.toString() === payload.toString()
         );
         state.vendor = payload;
       }
-      // state.filterBySource = value;
+
+      const groupByDate = filtered.reduce((groups, item) => {
+        const date = dateFormat(item.createdAt);
+        const index = groups.findIndex((group) => group.date === date);
+        if (index > -1) {
+          groups[index].deals.push({ ...item, isSelected: false });
+        } else {
+          groups.push({
+            date,
+            deals: [{ ...item, isSelected: false }],
+            isSelected: false,
+          });
+        }
+        return groups;
+      }, []);
+      state.filtered = groupByDate;
     },
 
     SetFilterByOUTSOURCE: (state, { payload }) => {
@@ -578,7 +594,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
-        state.collections = state.filtered = payload;
+        state.collections = payload;
         let uniqueSource = [];
         if (payload.length > 0)
           uniqueSource = [
@@ -593,9 +609,26 @@ export const reduxSlice = createSlice({
             ).values(),
           ];
         state.sources = uniqueSource;
+
+        const groupByDate = payload.reduce((groups, item) => {
+          const date = dateFormat(item.createdAt);
+          const index = groups.findIndex((group) => group.date === date);
+          if (index > -1) {
+            groups[index].deals.push({ ...item, isSelected: false });
+          } else {
+            groups.push({
+              date,
+              deals: [{ ...item, isSelected: false }],
+              isSelected: false,
+            });
+          }
+          return groups;
+        }, []);
+
         state.totalPages =
-          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+          Math.ceil((groupByDate?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
+        state.filtered = groupByDate;
         state.isSuccess = success;
         state.isLoading = false;
       })
