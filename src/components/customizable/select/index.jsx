@@ -71,7 +71,7 @@ export default function Select({
       if (preValue && String(preValue) === String(value)) return true;
       if (
         preValues?.length > 0 &&
-        preValues.map(String).includes(String(value))
+        preValues?.map(String).includes(String(value))
       )
         return true;
     }
@@ -80,7 +80,7 @@ export default function Select({
       if (preValue && String(preValue) !== String(value)) return true;
       if (
         preValues?.length > 0 &&
-        preValues.map(String).includes(String(value))
+        preValues?.map(String).includes(String(value))
       )
         return true;
     }
@@ -134,7 +134,7 @@ export default function Select({
   const getSelectedText = () => {
     if (multiple) {
       return preValues
-        .map((val) =>
+        ?.map((val) =>
           getObject
             ? collections.find((c) => String(c[keys]) === String(val))?.[
                 values

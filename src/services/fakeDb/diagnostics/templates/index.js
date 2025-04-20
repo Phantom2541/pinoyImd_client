@@ -28,26 +28,42 @@ const TemplatetUtils = {
   getComponentIndex: (component, key = `LAB`) => {
     const department = templates.find(({ department }) => department === key);
     const components = department ? department.components : [];
-    return components.indexOf(component);
+
+    console.log("Looking for component:", component, "Type:", typeof component);
+    console.log("Available components in department:", components);
+
+    const index = components.findIndex((c) => {
+      console.log("value of components", c);
+      console.log("value of component", component);
+      return c === component;
+    });
+
+    console.log("Index found:", components.indexOf(components[component]));
+
+    console.log(component[component]);
+
+    return index;
   },
-  getComponentName: (component, key = 'LAB') => {
-   
-  const department = templates.find(({ department }) => department === key);
-  if (!department) {
-    console.warn(`Department "${key}" not found in templates`);
-    return undefined;
-  }
-   console.log("department", department);
 
-  const name = department.components[component];
-  if (!name) {
-    console.warn(`Component ID "${component}" not found in department "${key}"`);
-    return undefined;
-  }
-   console.log("name", name);
+  getComponentName: (component, key = "LAB") => {
+    const department = templates.find(({ department }) => department === key);
+    if (!department) {
+      console.warn(`Department "${key}" not found in templates`);
+      return undefined;
+    }
+    console.log("department", department);
 
-  return name;
-},
+    const name = department.components[component];
+    if (!name) {
+      console.warn(
+        `Component ID "${component}" not found in department "${key}"`
+      );
+      return undefined;
+    }
+    console.log("name", name);
+
+    return name;
+  },
 
   /**
    * Finds the department based on the component name
@@ -87,11 +103,13 @@ const TemplatetUtils = {
       components.some((comp) => componentList.includes(comp))
     ),
   whereTemplate: (templateList, department) => {
-    const {components} = templates.find(({ department: dep }) => dep === department);
-    return  templateList.map(index => components[index]).filter(value => value !== undefined && value !== "");
-
+    const { components } = templates.find(
+      ({ department: dep }) => dep === department
+    );
+    return templateList
+      .map((index) => components[index])
+      .filter((value) => value !== undefined && value !== "");
   },
-  
-  };
+};
 
 export default TemplatetUtils;

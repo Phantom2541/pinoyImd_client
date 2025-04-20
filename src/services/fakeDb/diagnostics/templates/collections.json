@@ -2,26 +2,26 @@
   {
     "department": "LAB",
     "components": [
+      "Urinalysis",
+      "Hematology",
+      "Chemistry",
+      "Parasitology",
+      "Miscellaneous",
+      "Coagulation",
+      "Serology",
+
       "Analysis",
       "Bacteriology",
       "Biopsy",
-      "Chemistry",
-      "Coagulation",
       "Compatibility",
-      "Hematology",
-      "Miscellaneous",
-      "Parasitology",
       "PAPs",
       "PBS",
-      "Serology",
-      "Urinalysis",
-      "Drugtest",
-      "Electrolyte"
+      "Drugtest"
     ]
   },
   {
     "department": "RAD",
-    "components": ["ECG", "Ultrasound", "X-ray", "2DEcho"]
+    "components": ["ECG", "Ultrasound", "Xray", "2DEcho"]
   },
   {
     "department": "CLINIC",
