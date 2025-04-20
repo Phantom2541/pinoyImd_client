@@ -17,10 +17,12 @@ import {
   SAVE,
   UPDATE,
 } from "../../../../../services/redux/slices/assets/persons/heads";
-import { isEqual } from "lodash";
+import { capitalize, isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../services/utilities";
 import { Select } from "../../../../../components/customizable";
+import Templates from "../../../../../components/searchables/templates";
+import TemplatetUtils from "../../../../../services/fakeDb/diagnostics/templates";
 // declare your expected items
 const _form = {
   user: "",
@@ -59,14 +61,24 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     [crews, setCrews] = useState([]),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
+    [sections, setSections] = useState([]),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  const { department } = activePlatform;
 
   useEffect(() => {
     if (willCreate && activePlatform?.branchId)
       dispatch(EMPLOYEES({ token, branch: activePlatform?.branchId }));
     return () => dispatch(RESET());
   }, [activePlatform, token, willCreate, dispatch]);
+
+  useEffect(() => {
+    const _sections = TemplatetUtils.getComponents(
+      department === "laboratory" ? "LAB" : "RAD"
+    );
+    setSections(_sections);
+  }, [department]);
 
   useEffect(() => {
     setCrews(collections);
@@ -87,7 +99,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
     dispatch(
       UPDATE({
-        data: { ...form, id: selected._id },
+        data: { ...form, id: selected._id, department },
         token,
       })
     );
@@ -97,7 +109,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleCreate = () => {
     dispatch(
       SAVE({
-        data: { ...form, branch: activePlatform?.branchId },
+        data: { ...form, branch: activePlatform?.branchId, department },
         token,
       })
     );
@@ -124,12 +136,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       section: value,
     });
   };
-  const handleDepartmentChange = (value) => {
-    setForm({
-      ...form,
-      department: value,
-    });
-  };
+
   const handleStaffChange = (value) => {
     setForm({
       ...form,
@@ -151,12 +158,11 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <MDBRow>
             <MDBCol md="12">
               <Select
-                choices={department}
-                onChange={handleDepartmentChange}
-                preValue={selected.department ? selected.department : ""}
+                collections={
+                  department === "laboratory" ? ["Laboratory"] : ["Radiology"]
+                }
+                preValue={capitalize(activePlatform.department)}
                 label={"Department"}
-                values={"value"}
-                texts={"text"}
                 multiple={false}
               />
             </MDBCol>
@@ -164,12 +170,10 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <MDBRow>
             <MDBCol md={"12"} className="mb-3">
               <Select
-                choices={sections}
+                collections={sections}
                 onChange={handleSectionChange}
                 preValue={selected.section && selected.section}
                 label={"Sections"}
-                values={"value"}
-                texts={"text"}
                 multiple={false}
               />
             </MDBCol>
@@ -178,15 +182,15 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <MDBRow>
             <MDBCol md="12">
               <Select
-                choices={crews.map((crew) => ({
+                collections={crews.map((crew) => ({
                   _id: crew?.user?._id,
                   fullName: fullName(crew?.user?.fullName),
                 }))}
                 onChange={handleStaffChange}
                 preValue={selected?._id && selected.user._id}
                 label={"Staff"}
-                values={"_id"}
-                texts={"fullName"}
+                keys={"_id"}
+                values={"fullName"}
               />
             </MDBCol>
           </MDBRow>

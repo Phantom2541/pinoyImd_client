@@ -6,11 +6,11 @@ import Logo from "../../../pages/platforms/manager/settings/logo";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Payrolls from "../../../pages/platforms/manager/responsibilities/payroll";
-
+import Applicants from "../../../pages/platforms/manager/settings/applicants";
 import {
   Employees,
   Equipments,
-  Applicants,
+  // Applicants,
   Staffs,
   Physicians,
   // Procurments,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
@@ -11,13 +11,29 @@ import DataTable from "../../../../../components/dataTable";
 import { fullName, globalSearch } from "../../../../../services/utilities";
 import { ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
+import {
+  MDBBtn,
+  MDBBtnGroup,
+  MDBCard,
+  MDBCardBody,
+  MDBIcon,
+  MDBTable,
+  MDBTableBody,
+  MDBTableHead,
+  MDBView,
+} from "mdbreact";
+import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function Heads() {
   const [heads, setHeads] = useState([]),
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
+    {
+      token,
+      activePlatform,
+      isLoading: loadingImage,
+    } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ heads }) => heads
     ),
@@ -47,6 +63,7 @@ export default function Heads() {
           },
         };
       });
+    console.log("running again");
     setHeads(newArray || []);
   }, [collections]);
 
@@ -88,27 +105,27 @@ export default function Heads() {
     setHeads(collections);
   };
 
-  // const handleSignature = (e) => {
-  //   const reader = new FileReader();
-  //   reader.onload = (e) => {
-  //     let image = new Image();
-  //     image.src = e.target.result;
+  const handleSignature = (e, email) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      let image = new Image();
+      image.src = e.target.result;
 
-  //     image.onload = function () {
-  //       dispatch(
-  //         UPLOAD({
-  //           data: {
-  //             path: `patron/${email}`,
-  //             base64: reader.result.split(",")[1],
-  //             name: `signature.png`,
-  //           },
-  //           token,
-  //         })
-  //       );
-  //     };
-  //   };
-  //   reader.readAsDataURL(e.target.files[0]);
-  // };
+      image.onload = function () {
+        dispatch(
+          UPLOAD({
+            data: {
+              path: `users/${email}`,
+              base64: reader.result.split(",")[1],
+              name: `signature.png`,
+            },
+            token,
+          })
+        );
+      };
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
 
   const handleDelete = (data) => {
     Swal.fire({
@@ -124,6 +141,19 @@ export default function Heads() {
         dispatch(DESTROY({ token, data: { id: data._id } }));
       }
     });
+  };
+
+  const [imageErrors, setImageErrors] = useState({});
+
+  const handleImageError = (email) => {
+    setImageErrors((prev) => ({ ...prev, [email]: true }));
+  };
+
+  const handleUpload = () => {};
+
+  const fileInputRef = useRef();
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
   };
 
   return (
@@ -196,15 +226,39 @@ export default function Heads() {
 
           {
             _key: "user",
-            _format: (data) => (
+
+            _format: ({ email }) => (
               <>
-                <img
-                  alt={data.email || "Default Image"}
-                  id="signature"
-                  src={`${ENDPOINT}/public/users/${data?.email}/signature.png`}
-                  onError={(e) => (e.target.src = "")}
-                  height={50}
-                  width={50}
+                {!imageErrors[email] ? (
+                  <img
+                    onClick={triggerFileInput}
+                    alt={email || "Default Image"}
+                    className="cursor-pointer"
+                    id="signature"
+                    src={`${ENDPOINT}/public/users/${email}/signature.png?${new Date().getTime()}`}
+                    onError={() => handleImageError(email)}
+                    height={50}
+                    width={50}
+                  />
+                ) : (
+                  <div>
+                    <MDBBtn
+                      size="sm"
+                      color="info"
+                      rounded
+                      onClick={triggerFileInput}
+                    >
+                      Upload Signature
+                    </MDBBtn>
+                  </div>
+                )}
+
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/png"
+                  style={{ display: "none" }}
+                  onChange={(e) => handleSignature(e, email)}
                 />
               </>
             ),
