@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   MDBCard,
@@ -13,33 +13,27 @@ import CollapsableHeader from "./header";
 import { collapse } from "../../../../../../services/utilities";
 
 export default function Body() {
-  const { filtered, activePage, maxPage } = useSelector(
-    ({ services }) => services
-  );
+  const { filtered } = useSelector(({ deals }) => deals),
+    [cluster, setCluster] = useState([]);
 
   /**
-   * Pagination: Calculate the start and end index for the current page
-   */
-  const itemsPerPage = maxPage; // Number of items per page
-  const startIndex = (activePage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
-
-  /**
-   * Active states
+   * Active states for collapsible items
    */
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
 
+  const handleSelect = (deal) => {
+    const _cluster = [...cluster];
+    const index = _cluster.findIndex((item) => item._id === deal._id);
+    index > -1 ? _cluster.splice(index, 1) : _cluster.push(deal);
+    setCluster(_cluster);
+  };
+
   return (
-    <MDBContainer
-      style={{
-        minHeight: "300px",
-      }}
-      fluid
-    >
-      {paginatedData?.map((service, index) => {
-        const actualIndex = startIndex + index; // Get the real index in filtered array
+    <MDBContainer style={{ minHeight: "300px" }} fluid>
+      {filtered?.map((voucher, index) => {
+        const { deals, date } = voucher;
+        const actualIndex = index; // Directly use the index in the paginated data
         const { color, border } = collapse.getStyle(
           actualIndex,
           activeId,
@@ -48,7 +42,7 @@ export default function Body() {
 
         return (
           <MDBCard
-            key={`service-${actualIndex}`}
+            key={`service-${date}`}
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader
@@ -58,7 +52,10 @@ export default function Body() {
               style={{ borderRadius: "50%" }}
             >
               <CollapsableHeader
-                service={service}
+                key={date}
+                title={date}
+                count={deals.length}
+                sum={deals.reduce((acc, item) => acc + item.amount, 0)}
                 isOpen={activeId === actualIndex}
                 textColor={color}
                 setActiveId={setActiveId}
@@ -68,11 +65,10 @@ export default function Body() {
 
             <MDBCollapse
               id={`collapse-${actualIndex}`}
-              className="mb-2 border border-black"
-              isOpen={actualIndex === activeId}
+              isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
             >
-              <MDBCardBody className="pt-2">
-                <CollapsableBody service={service} />
+              <MDBCardBody className=" m-0 p-0">
+                <CollapsableBody deals={deals} handleSelect={handleSelect} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

@@ -7,8 +7,20 @@ const initialState = {
   collections: [],
   filtered: [],
   isSuccess: false,
+  formSubmitted: false,
   isLoading: false,
   message: "",
+  showModal: false,
+  willCreate: false,
+  selected: {},
+  /**
+   * for pagination
+   */
+  paginated: [],
+  page: 0,
+  maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -139,12 +151,30 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+      state.selected = {};
+    },
+    /**
+     * for pagination
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
-    },
-    SetFILTERED: (state, { payload }) => {
-      state.filtered = payload;
     },
   },
   extraReducers: (builder) => {
@@ -210,7 +240,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -218,13 +248,14 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE.pending, (state) => {
@@ -272,6 +303,13 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SetFILTERED } = reduxSlice.actions;
+export const {
+  RESET,
+  SetFILTERED,
+  SetMaxPage,
+  SetActivePAGE,
+  TOGGLE,
+  SetSELECTED,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

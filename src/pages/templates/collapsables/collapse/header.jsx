@@ -2,8 +2,8 @@ import React from "react";
 import { MDBBtn } from "mdbreact";
 import { Templates } from "../../../../services/fakeDb";
 
-const Header = ({ service, isOpen, textColor, index, setActiveId }) => {
-  const { name, abbreviation, template } = service;
+const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
+  const { name, abbreviation, template } = item;
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       {index + 1}. {name} {abbreviation}

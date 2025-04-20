@@ -28,6 +28,7 @@ import "../style.css";
  */
 export default function Search({
   setUser = () => {},
+  isRequired = false,
   displayWithLabel = true,
   label = "Please set a label",
 }) {
@@ -64,7 +65,10 @@ export default function Search({
 
   const handleChange = (e) => {
     const _searchKey = e.target.value;
-    if (!_searchKey) setDidSearch(false);
+    if (!_searchKey) {
+      setUser({ _id: "" });
+      setDidSearch(false);
+    }
     setSearchKey(_searchKey);
     const searchKey = _searchKey.split(",");
     if (searchKey.length > 1 && searchKey[1].trim()) {
@@ -84,9 +88,9 @@ export default function Search({
   return (
     <div className="position-relative">
       {selected._id ? (
-        <h6 className="d-flex align-items-center">
+        <h6 className="d-flex align-items-center mb-3">
           {displayWithLabel && `${label}:`}
-          <strong className="ml-1">{fullName(selected.fullName)}</strong>
+          <strong className="ml-1 ">{fullName(selected.fullName)}</strong>
           <MDBIcon
             icon="times"
             className="ml-2"
@@ -104,6 +108,7 @@ export default function Search({
             disabled={isLoading}
             label={label}
             style={{ width: "100%" }}
+            required={isRequired}
             type="search"
             value={searchKey}
             onChange={handleChange}

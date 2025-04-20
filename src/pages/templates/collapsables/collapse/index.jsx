@@ -38,7 +38,7 @@ export default function Body() {
       }}
       fluid
     >
-      {paginatedData?.map((service, index) => {
+      {paginatedData?.map((item, index) => {
         const actualIndex = startIndex + index; // Get the real index in filtered array
         const { color, border } = collapse.getStyle(
           actualIndex,
@@ -48,7 +48,7 @@ export default function Body() {
 
         return (
           <MDBCard
-            key={`service-${actualIndex}`}
+            key={`item-${actualIndex}`}
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader
@@ -58,7 +58,7 @@ export default function Body() {
               style={{ borderRadius: "50%" }}
             >
               <CollapsableHeader
-                service={service}
+                item={item}
                 isOpen={activeId === actualIndex}
                 textColor={color}
                 setActiveId={setActiveId}
@@ -72,7 +72,7 @@ export default function Body() {
               isOpen={actualIndex === activeId}
             >
               <MDBCardBody className="pt-2">
-                <CollapsableBody service={service} />
+                <CollapsableBody item={item} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

@@ -1,13 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const url = "assets/file201/procurements";
+const url = "procurements/commodity";
 
 const initialState = {
   collections: [],
+  filtered: [],
   isSuccess: false,
   isLoading: false,
   message: "",
+  showModal: false,
+  willCreate: false,
+  /**
+   * for pagination
+   */
+  paginated: [],
+  page: 0,
+  maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -104,6 +115,28 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+      state.willCreate = false;
+    },
+    SetMODAL: (state) => {
+      state.showModal = !state.showModal;
+    },
+    /**
+     *  Footer
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+      state.selected = {};
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -118,7 +151,10 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload;
+        state.collections = state.filtered = payload;
+        state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = true;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -205,6 +241,13 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const {
+  RESET,
+  SetMaxPage,
+  SetActivePAGE,
+  TOGGLE,
+  SetSELECTED,
+  SetMODAL,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

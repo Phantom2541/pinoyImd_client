@@ -14,18 +14,9 @@ const initialState = {
   filtered: [],
   filterByCashier: "all",
   cashiers: [],
-  // this is used for ledger
-  census: {
-    daily: {},
-    grossSales: 0,
-    menus: {},
-    services: {},
-    expenses: 0,
-    patients: 0,
-    isEmpty: true,
-  },
   patient: {},
   cluster: [],
+  sources: [],
   showModal: false,
   showRevertModal: false,
   showDiscountModal: false,
@@ -38,7 +29,7 @@ const initialState = {
   isLoading: false,
   censusLoading: false, // dedicated loader for celsus
   message: "",
-  vendor: { _id: "" },
+  vendor: undefined,
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -334,27 +325,42 @@ export const reduxSlice = createSlice({
     },
 
     SetFilterBySOURCE: (state, { payload }) => {
-      const { value, vendor } = payload;
-      if (value === "all") {
-        state.filtered = state.collections;
-        state.vendor = { _id: "" };
-      } else if (value === "NoSource") {
-        state.filtered = state.collections.filter(({ source }) => !source);
-        state.vendor = { _id: "noSource" };
+      let filtered = [];
+      if (payload === "all") {
+        filtered = state.collections;
+        state.vendor = undefined;
+      } else if (payload === "NoSource") {
+        filtered = state.collections.filter(({ source }) => !source);
+        state.vendor = "noSource";
       } else {
-        state.filtered = state.collections.filter(
-          ({ source }) => source?._id.toString() === value.toString()
+        filtered = state.collections.filter(
+          ({ source }) => source?._id.toString() === payload.toString()
         );
-        state.vendor = vendor;
+        state.vendor = payload;
       }
-      // state.filterBySource = value;
+
+      const groupByDate = filtered.reduce((groups, item) => {
+        const date = dateFormat(item.createdAt);
+        const index = groups.findIndex((group) => group.date === date);
+        if (index > -1) {
+          groups[index].deals.push({ ...item, isSelected: false });
+        } else {
+          groups.push({
+            date,
+            deals: [{ ...item, isSelected: false }],
+            isSelected: false,
+          });
+        }
+        return groups;
+      }, []);
+      state.filtered = groupByDate;
     },
 
     SetFilterByOUTSOURCE: (state, { payload }) => {
       if (payload !== state.filterBySource)
         if (payload === "all") {
           state.filtered = state.collections;
-          state.source = "";
+          state.vendor = "";
         } else {
           state.filtered = state.collections.filter(
             ({ outsource }) => outsource?._id.toString() === payload.toString()
@@ -565,8 +571,6 @@ export const reduxSlice = createSlice({
       state.message = "";
       state.isLoading = false;
       state.formSubmitted = false;
-      state.month = today.getMonth() + 1;
-      state.year = today.getFullYear();
       if (payload?.resetCollections) state.collections = [];
     },
     ResetDATE: (state) => {
@@ -591,10 +595,40 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
         state.collections = payload;
-        state.filtered = payload;
+        let uniqueSource = [];
+        if (payload.length > 0)
+          uniqueSource = [
+            ...new Map(
+              payload.map(({ source }) => [
+                source?._id || "NoSource",
+                {
+                  _id: source?._id || "NoSource",
+                  displayname: source?.displayname || "No Source",
+                },
+              ])
+            ).values(),
+          ];
+        state.sources = uniqueSource;
+
+        const groupByDate = payload.reduce((groups, item) => {
+          const date = dateFormat(item.createdAt);
+          const index = groups.findIndex((group) => group.date === date);
+          if (index > -1) {
+            groups[index].deals.push({ ...item, isSelected: false });
+          } else {
+            groups.push({
+              date,
+              deals: [{ ...item, isSelected: false }],
+              isSelected: false,
+            });
+          }
+          return groups;
+        }, []);
+
         state.totalPages =
-          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+          Math.ceil((groupByDate?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
+        state.filtered = groupByDate;
         state.isSuccess = success;
         state.isLoading = false;
       })
@@ -612,6 +646,20 @@ export const reduxSlice = createSlice({
       .addCase(VOUCHERS.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
         state.collections = state.filtered = payload;
+        let uniqueSource = [];
+        if (payload.length > 0)
+          uniqueSource = [
+            ...new Map(
+              payload.map(({ source }) => [
+                source?._id || "NoSource",
+                {
+                  _id: source?._id || "NoSource",
+                  displayname: source?.displayname || "No Source",
+                },
+              ])
+            ).values(),
+          ];
+        state.sources = uniqueSource;
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);

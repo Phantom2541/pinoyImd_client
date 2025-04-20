@@ -1,17 +1,21 @@
 import React from "react";
 import { MDBBtn } from "mdbreact";
-import { fullName } from "../../../../../../services/utilities";
+import { currency } from "../../../../../../services/utilities";
 
-const Header = ({ deal, isOpen, textColor, index, setActiveId }) => {
-  const { customerId } = deal;
-
-  console.log("deal", deal);
-
+const Header = ({
+  sum,
+  count,
+  title,
+  isOpen,
+  textColor,
+  index,
+  setActiveId,
+}) => {
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
-      {index + 1}. {fullName(customerId.fullName)}
+      {index + 1}. {title}| {currency(sum)}
       <div className="d-flex">
-        <small className="mr-2 mt-1">xx </small>
+        <small className="mr-2 mt-1">{count} sendout/s</small>
         <MDBBtn
           size="sm"
           color="white"

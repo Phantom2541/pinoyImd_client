@@ -13,6 +13,7 @@ import {
   TempGraph,
   PersonnelPrintOut,
   TaskPrintout,
+  ResecoPrintout,
   ElecLog,
   HemaLog,
   UrinLog,
@@ -64,6 +65,7 @@ export default function App() {
         component={Census}
       />
 
+      <Route path="/printout/reseco" exact component={ResecoPrintout} />
       <Route path="/printout/task" exact component={TaskPrintout} />
       <Route path="/printout/payslip" exact component={Payslip} />
       <Route path="/printout/personnel" exact component={PersonnelPrintOut} />

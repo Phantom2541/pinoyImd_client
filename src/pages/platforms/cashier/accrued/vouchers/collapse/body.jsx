@@ -4,12 +4,13 @@ import { currency, fullName } from "../../../../../../services/utilities";
 import { Privileges } from "../../../../../../services/fakeDb";
 import { useSelector } from "react-redux";
 export default function Collapsable({ deals }) {
-  const { source } = useSelector(({ deals }) => deals);
+  const { vendor } = useSelector(({ deals }) => deals);
+
   return (
     <MDBTable bordered className="m-0 p-0">
       <MDBTableHead>
         <tr>
-          {!source._id && <th>Source</th>}
+          {!vendor && <th>Source</th>}
           <th>Customer</th>
           <th>Category</th>
           <th>Services</th>
@@ -31,24 +32,13 @@ export default function Collapsable({ deals }) {
           } = deal;
           return (
             <tr key={index}>
-              {!source._id && (
+              {!vendor && (
                 <td>
                   <span className="fw-bold mr-1"> {++index}.</span>
                   {source?.displayname}
                 </td>
               )}
               <td>
-                {/* <input
-                    className="form-check-input m-0 p-0"
-                    type="checkbox"
-                    id={deal._id}
-                    onChange={() => handleSelect(deal)}
-                  />
-                  <label
-                    htmlFor={deal._id}
-                    style={{ marginRight: "-0.5rem" }}
-                    className="form-check-label label-table"
-                  > */}
                 {source._id && (
                   <span className="fw-bold mr-1"> {++index}.</span>
                 )}

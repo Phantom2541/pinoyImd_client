@@ -15,6 +15,7 @@ import {
   Vouchers,
   Payments,
   SOA,
+  Reseco,
 } from "../../../pages/platforms/cashier";
 
 const cashier = [
@@ -114,9 +115,18 @@ const cashier = [
         title: "Vouchers from daily sales",
         component: Vouchers,
       },
+      {
+        name: "Reseco",
+        path: "/reseco",
+        icon: "handshake",
+        title: "Monthly Reseco Deals",
+        component: Reseco,
+      },
     ],
   },
-  //viewing only
+  /**
+   * at this point its only viewing
+   */
   {
     name: "Sources",
     path: "/sources",
@@ -161,7 +171,6 @@ const cashier = [
       },
     ],
   },
-  //viewing only
   {
     name: "Services Catalog",
     path: "/catalogs",

@@ -36,8 +36,6 @@ export default function Body() {
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
 
-  console.log("cluster :", cluster);
-
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
       {Object.entries(cluster)?.map(([key, values], index) => {

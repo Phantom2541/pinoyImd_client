@@ -7,10 +7,10 @@ import {
   SetActivePAGE,
 } from "../../../services/redux/slices/commerce/catalog/services";
 const Footer = () => {
-  const { isLoading, totalPages, activePage } = useSelector(
+  const { maxPage } = useSelector(({ auth }) => auth),
+    { isLoading, totalPages, activePage } = useSelector(
       ({ services }) => services
     ),
-    { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {

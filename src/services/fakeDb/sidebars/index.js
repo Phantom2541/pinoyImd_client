@@ -17,6 +17,7 @@ import utility from "./utility";
 import diagnostic from "./diagnostic";
 import laboratory from "./laboratory";
 import radiology from "./radiology";
+import superadmin from "./superadmin";
 
 const Sidebars = {
   utility,
@@ -32,6 +33,7 @@ const Sidebars = {
   author,
   auditor,
   admin,
+  superadmin,
   accreditation,
   manager,
   patron,

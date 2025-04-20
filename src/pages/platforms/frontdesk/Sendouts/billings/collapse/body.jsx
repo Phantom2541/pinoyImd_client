@@ -1,26 +1,40 @@
 import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
-
-export default function Collapsable({ deal }) {
-  const { decSS, frequency } = deal;
-
+import { currency, fullName } from "../../../../../../services/utilities";
+import { Services } from "../../../../../../services/fakeDb";
+export default function Collapsable({ deals }) {
   return (
     <MDBTable bordered>
       <MDBTableHead>
         <tr>
-          <th>Frequency</th>
-          <th>Description</th>
+          <th>#</th>
+          <th>Outsource</th>
+          <th>Customer</th>
+          <th>Source</th>
+          <th>SSX </th>
+          <th>Price</th>
+          <th>Services</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
-        <tr>
-          <td>
-            <h5>{frequency}</h5>
-          </td>
-          <td>
-            <small>{decSS}</small>
-          </td>
-        </tr>
+        {deals?.map((deal, index) => {
+          const { customerId, outsource, services, source, ssx } = deal;
+          return (
+            <tr key={index}>
+              <td>{++index}</td>
+              <td className="fw-bold mb-1">{outsource?.displayname}</td>
+              <td className="mb-1">{fullName(customerId?.fullName)}</td>
+              <td>{source?.displayname}</td>
+              <td className="mb-1">{ssx}</td>
+              <td className="mb-1">{currency(services?.up)}</td>
+              <td className="mb-1">
+                {services?.servicesId
+                  ?.map((id) => Services.getAbbr(id))
+                  ?.join(", ")}
+              </td>
+            </tr>
+          );
+        })}
       </MDBTableBody>
     </MDBTable>
   );

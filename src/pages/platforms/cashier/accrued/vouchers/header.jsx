@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   VOUCHERS,
@@ -13,8 +13,7 @@ const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { collections, month, year } = useSelector(({ deals }) => deals),
-    [sources, setSources] = useState([]),
+  const { sources, month, year } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
   // Fetch vouchers
   useEffect(() => {
@@ -36,22 +35,6 @@ const Header = () => {
 
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
-
-  //Filtering Cashier ID
-  useEffect(() => {
-    let uniqueSource = [];
-    if (collections.length > 0)
-      uniqueSource = [
-        ...new Map(
-          collections.map(({ source }) => [
-            source?._id || "undefined",
-            { _id: source?._id, displayname: source?.displayname || "" },
-          ])
-        ).values(),
-      ];
-
-    setSources(uniqueSource);
-  }, [collections]);
 
   return (
     <MDBView

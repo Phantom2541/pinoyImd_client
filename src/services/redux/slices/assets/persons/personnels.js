@@ -293,7 +293,11 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload;
+        state.collections = payload.sort((a, b) => {
+          const aDesignation = String(a?.contract?.designation || "");
+          const bDesignation = String(b?.contract?.designation || "");
+          return aDesignation.localeCompare(bDesignation);
+        });
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { debounce } from "lodash";
+import { debounce, get } from "lodash";
 import {
   GETPATIENTS,
   RESET,
@@ -27,7 +27,12 @@ import "../style.css";
  *
  * @returns {JSX.Element} users
  */
-export default function Search({ setPatient, setRegister = () => {} }) {
+export default function Search({
+  setPatient = () => {},
+  setRegister = () => {},
+  excludes = [],
+  excludeKey = "",
+}) {
   const { filtered, isLoading } = useSelector(({ users }) => users),
     { token } = useSelector((state) => state.auth),
     [patients, setPatients] = useState([]),
@@ -35,10 +40,19 @@ export default function Search({ setPatient, setRegister = () => {} }) {
     [didHover, setDidHover] = useState(false),
     [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
-
   useEffect(() => {
-    setPatients(filtered);
-  }, [filtered]);
+    let _filtered = filtered;
+    if (excludes.length > 0) {
+      _filtered = filtered.filter((item) => {
+        return !excludes.some((exclude) => {
+          const value = get(exclude, excludeKey);
+          return String(value) === String(item._id);
+        });
+      });
+    }
+
+    setPatients(_filtered);
+  }, [filtered, excludes, excludeKey]);
   /**
    * This function is debounced which means it will only be executed after 1000 milliseconds (1 second)
    * of not being called again. This is useful for when the user is typing in the search
@@ -147,6 +161,6 @@ export default function Search({ setPatient, setRegister = () => {} }) {
           />
         </button>
       </div>
-    </div> 
+    </div>
   );
 }
