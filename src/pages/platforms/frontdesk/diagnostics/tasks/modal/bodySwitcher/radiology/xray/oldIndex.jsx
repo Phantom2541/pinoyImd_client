@@ -1,5 +1,12 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import {
+  EditorState,
+  convertToRaw,
+  convertFromRaw,
+  ContentState,
+} from "draft-js";
 import { useDispatch, useSelector } from "react-redux";
+import { DocxEditor } from "../../../../../../../../../components/docx/index.js";
 import {
   MDBCard,
   MDBCardBody,
@@ -9,51 +16,60 @@ import {
   MDBTabContent,
   MDBTabPane,
 } from "mdbreact";
-import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import { Services } from "../../../../../../../../../services/fakeDb/index.js";
 
 export default function Xray() {
   const dispatch = useDispatch();
   const { task } = useSelector(({ validator }) => validator);
-  console.log("task", task);
 
-  const [description, setDescription] = useState("");
-  const [impression, setImpression] = useState("");
+  const [description, setDescription] = useState(EditorState.createEmpty());
+  const [impression, setImpression] = useState(EditorState.createEmpty());
   const [activeTab, setActiveTab] = useState("results");
 
   const descTimeout = useRef(null);
   const impTimeout = useRef(null);
 
-  // Load values from task
+  const safeLoad = (raw) => {
+    try {
+      const parsed = JSON.parse(raw);
+      return EditorState.createWithContent(convertFromRaw(parsed));
+    } catch (e) {
+      return EditorState.createWithContent(
+        ContentState.createFromText(raw || "")
+      );
+    }
+  };
+
+  // Load editor content on mount or when task updates
   useEffect(() => {
     if (task?.description) {
-      try {
-        const parsed = JSON.parse(task.description);
-        setDescription(parsed?.blocks?.map((b) => b.text).join("\n") || "");
-      } catch (e) {
-        setDescription(task.description);
-      }
+      setDescription(safeLoad(task.description));
     }
     if (task?.impression) {
-      try {
-        const parsed = JSON.parse(task.impression);
-        setImpression(parsed?.blocks?.map((b) => b.text).join("\n") || "");
-      } catch (e) {
-        setImpression(task.impression);
-      }
+      setImpression(safeLoad(task.impression));
     }
   }, [task?.description, task?.impression]);
 
+  // Debounced auto-save
   const delayedSave = useCallback(
-    (field, value, timeoutRef) => {
+    (editorType, newState, timeoutRef) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
         const updatedTask = {
           ...task,
-          [field]: value,
+          [editorType]: JSON.stringify(
+            convertToRaw(newState.getCurrentContent())
+          ),
         };
-        dispatch(SetTASK({ form: task?.form, task: updatedTask }));
-      }, 500);
+
+        dispatch(
+          SetTASK({
+            form: task?.form,
+            task: updatedTask,
+          })
+        );
+      }, 500); // Adjust debounce delay as needed
     },
     [dispatch, task]
   );
@@ -88,35 +104,33 @@ export default function Xray() {
         <MDBCardBody>
           <MDBTabContent activeItem={activeTab} className="pt-0">
             <MDBTabPane tabId="results">
-              <textarea
-                className="form-control mt-3 border"
-                style={{
+              <DocxEditor
+                editorState={description}
+                setEditorState={(newState) => {
+                  setDescription(newState);
+                  delayedSave("description", newState, descTimeout);
+                }}
+                _className="mt-3 border"
+                _style={{
                   minHeight: "200px",
                   overflowY: "auto",
                   maxHeight: "300px",
-                }}
-                value={description}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setDescription(val);
-                  delayedSave("description", val, descTimeout);
                 }}
               />
             </MDBTabPane>
 
             <MDBTabPane tabId="kit">
-              <textarea
-                className="form-control mt-3 border"
-                style={{
+              <DocxEditor
+                editorState={impression}
+                setEditorState={(newState) => {
+                  setImpression(newState);
+                  delayedSave("impression", newState, impTimeout);
+                }}
+                _className="mt-3 border"
+                _style={{
                   minHeight: "200px",
                   overflowY: "auto",
                   maxHeight: "300px",
-                }}
-                value={impression}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setImpression(val);
-                  delayedSave("impression", val, impTimeout);
                 }}
               />
             </MDBTabPane>

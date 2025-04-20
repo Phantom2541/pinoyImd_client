@@ -9,7 +9,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Whole Blood",
-    "template": 0,
+    "template": 7,
     "ro": null,
     "preference": ""
   },
@@ -23,7 +23,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": null,
-    "template": 0,
+    "template": 7,
     "preference": ""
   },
   {
@@ -36,7 +36,7 @@
     "hi_ssx": "",
     "preparation": "No sexual contact for 3-5 day",
     "specimen": "Sperm",
-    "template": 0,
+    "template": 7,
     "ro": null,
     "preference": ""
   },
@@ -50,7 +50,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Whole Blood",
-    "template": 1,
+    "template": 8,
     "preference": ""
   },
   {
@@ -65,7 +65,7 @@
     "preparation": "typically no special preparation is needed; the patient simply needs to provide a specimen, usually sputum (mucus coughed up from the lungs), which will be used to create a smear on a microscope slide for staining and analysis; the healthcare provider will instruct on proper collection methods to ensure a quality",
     "procedure": "apply a thin smear of the specimen to a clean slide, heat fix it, flood with primary stain (carbolfuchsin), decolorize with acid alcohol, counterstain with methylene blue, rinse, and air dry; the key step is the decolorization with acid alcohol, which allows only acid-fast bacteria to retain the primary stain color. ",
     "specimen": "Sputum",
-    "template": 1
+    "template": 8
   },
   {
     "id": 6,
@@ -77,7 +77,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": null,
-    "template": 1,
+    "template": 8,
     "preference": ""
   },
   {
@@ -90,7 +90,7 @@
     "frequency": null,
     "preparation": "none",
     "specimen": "Whole Blood",
-    "template": 1,
+    "template": 8,
     "preference": ""
   },
   {
@@ -100,7 +100,7 @@
     "lo_ssx": "",
     "hi_ssx": "",
     "department": "LAB",
-    "template": 3,
+    "template": 2,
     "frequency": "Monitoring",
     "preference": "equal",
     "preparation": "Use finger stick on side of finger not on tip to minimize pain and tissue juice. Don't smear blood on strip; allow drop to dry on strip.",
@@ -117,7 +117,7 @@
     "preference": "equal",
     "preparation": "Deep cough , no food or drinks before collection",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 11,
@@ -130,7 +130,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": null,
-    "template": 7
+    "template": 4
   },
   {
     "id": 12,
@@ -143,7 +143,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 13,
@@ -156,7 +156,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 14,
@@ -169,7 +169,7 @@
     "preference": "equal",
     "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 15,
@@ -182,7 +182,7 @@
     "preference": "equal",
     "preparation": "10-12 hrs fasting",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 16,
@@ -195,7 +195,7 @@
     "preference": "equal",
     "preparation": "10-12 hrs fasting",
     "specimen": "serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 17,
@@ -208,7 +208,7 @@
     "preference": "equal",
     "preparation": "10-12 hrs fasting",
     "specimen": "serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 18,
@@ -221,7 +221,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 19,
@@ -234,7 +234,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 20,
@@ -247,7 +247,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "SERUM",
-    "template": 3
+    "template": 2
   },
   {
     "id": 21,
@@ -260,7 +260,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 22,
@@ -273,7 +273,7 @@
     "preference": "gender",
     "preparation": "FASTING 6 HOURS",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 23,
@@ -286,9 +286,8 @@
     "preference": "development",
     "preparation": "Never give K to any patient who is not voiding. Limit K to 40 mEqs/L of fluid is added to IVF\nUsed for little injection (Death sentence)",
     "specimen": "Serum",
-    "template": 14
+    "template": 2
   },
-
   {
     "id": 218,
     "name": "Total Calcium",
@@ -300,9 +299,8 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "SERUM",
-    "template": 14
+    "template": 2
   },
-
   {
     "id": 24,
     "name": "CHLORIDE",
@@ -314,7 +312,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 14
+    "template": 2
   },
   {
     "id": 25,
@@ -327,7 +325,7 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "SERUM",
-    "template": 14
+    "template": 2
   },
   {
     "id": 26,
@@ -340,7 +338,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 27,
@@ -353,7 +351,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 14
+    "template": 2
   },
   {
     "id": 28,
@@ -366,7 +364,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 14
+    "template": 2
   },
   {
     "id": 29,
@@ -379,7 +377,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 14
+    "template": 2
   },
   {
     "id": 30,
@@ -392,7 +390,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Urine",
-    "template": 3
+    "template": 2
   },
   {
     "id": 31,
@@ -405,7 +403,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 3
+    "template": 2
   },
   {
     "id": 32,
@@ -418,7 +416,7 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 33,
@@ -431,7 +429,7 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 34,
@@ -444,7 +442,7 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Whole Blood",
-    "template": 3
+    "template": 2
   },
   {
     "id": 35,
@@ -457,7 +455,7 @@
     "preference": "development",
     "preparation": "none",
     "specimen": "Other Body Fluids",
-    "template": 3
+    "template": 2
   },
   {
     "id": 36,
@@ -470,7 +468,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 3
+    "template": 2
   },
   {
     "id": 37,
@@ -483,7 +481,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 38,
@@ -496,7 +494,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 39,
@@ -509,7 +507,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Whole Blood",
-    "template": 3
+    "template": 2
   },
   {
     "id": 40,
@@ -522,7 +520,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 3
+    "template": 2
   },
   {
     "id": 41,
@@ -535,7 +533,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "fecal",
-    "template": 3
+    "template": 2
   },
   {
     "id": 42,
@@ -548,7 +546,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 43,
@@ -561,7 +559,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 44,
@@ -574,7 +572,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 45,
@@ -587,7 +585,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 46,
@@ -600,7 +598,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "EDTA",
-    "template": 3
+    "template": 2
   },
   {
     "id": 48,
@@ -613,7 +611,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 49,
@@ -626,7 +624,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 50,
@@ -639,7 +637,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 3
+    "template": 2
   },
   {
     "id": 51,
@@ -652,7 +650,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "red top",
-    "template": 3
+    "template": 2
   },
   {
     "id": 52,
@@ -665,7 +663,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 53,
@@ -678,7 +676,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Citrated Plasma",
-    "template": 4
+    "template": 5
   },
   {
     "id": 54,
@@ -691,7 +689,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Citrated Plasma",
-    "template": 4
+    "template": 5
   },
   {
     "id": 55,
@@ -704,7 +702,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Whole Blood",
-    "template": 5
+    "template": 10
   },
   {
     "id": 56,
@@ -717,7 +715,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "EDTA",
-    "template": 5
+    "template": 10
   },
   {
     "id": 57,
@@ -730,7 +728,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "EDTA",
-    "template": 5
+    "template": 10
   },
   {
     "id": 58,
@@ -741,7 +739,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "EDTA",
-    "template": 6
+    "template": 1
   },
   {
     "id": 59,
@@ -752,7 +750,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "EDTA",
-    "template": 6
+    "template": 1
   },
   {
     "id": 60,
@@ -765,7 +763,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 6
+    "template": 1
   },
   {
     "id": 61,
@@ -778,7 +776,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Whole Blood",
-    "template": 6
+    "template": 1
   },
   {
     "id": 62,
@@ -791,7 +789,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "EDTA",
-    "template": 6
+    "template": 1
   },
   {
     "id": 63,
@@ -804,7 +802,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 6
+    "template": 1
   },
   {
     "id": 64,
@@ -817,7 +815,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Whole Blood",
-    "template": 6
+    "template": 1
   },
   {
     "id": 65,
@@ -830,7 +828,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Whole Blood",
-    "template": 6
+    "template": 1
   },
   {
     "id": 66,
@@ -866,7 +864,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -879,7 +877,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -893,7 +891,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7
+    "template": 4
   },
   {
     "id": 72,
@@ -905,7 +903,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -918,7 +916,7 @@
     "hi_ssx": "",
     "preparation": "atleast a day of fever",
     "specimen": "Serum/Plasma",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -931,7 +929,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -944,7 +942,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "EDTA",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -957,7 +955,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -970,7 +968,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -983,7 +981,7 @@
     "hi_ssx": "",
     "preparation": "not Vacinated with Hepatits B",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -996,7 +994,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": null,
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -1010,7 +1008,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 96,
@@ -1022,7 +1020,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -1035,7 +1033,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -1048,7 +1046,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": null,
-    "template": 8,
+    "template": 3,
     "preference": ""
   },
   {
@@ -1061,7 +1059,7 @@
     "hi_ssx": "",
     "preparation": "no meat in food intake",
     "specimen": "Stool",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -1075,7 +1073,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Stool",
-    "template": 8
+    "template": 3
   },
   {
     "id": 86,
@@ -1088,7 +1086,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Vaginal Smear",
-    "template": 9,
+    "template": 6,
     "description": "A procedure in which a small brush is used to gently remove cells from the surface of the cervix and the area around it so they can be checked under a microscope for cervical cancer or cell changes that may lead to cervical cancer."
   },
   {
@@ -1115,7 +1113,7 @@
     "preference": "gender",
     "preparation": "not Vacinated with Hepatits B",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 133,
@@ -1128,7 +1126,7 @@
     "preference": "gender",
     "preparation": "not Vacinated with Hepatits B",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 134,
@@ -1141,7 +1139,7 @@
     "preference": "gender",
     "preparation": "not Vacinated with Hepatits B",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 99,
@@ -1154,7 +1152,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 140,
@@ -1167,7 +1165,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 146,
@@ -1179,7 +1177,7 @@
     "hi_ssx": "discontinue if FBS is more than 180 mg/dl",
     "preparation": "8-12 hrs fasting",
     "specimen": "Serum/Plasma",
-    "template": 7,
+    "template": 4,
     "preference": "development"
   },
 
@@ -1194,7 +1192,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
 
   {
@@ -1208,7 +1206,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 81,
@@ -1221,7 +1219,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 73,
@@ -1234,7 +1232,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 74,
@@ -1247,7 +1245,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 75,
@@ -1260,7 +1258,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 76,
@@ -1272,7 +1270,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": null,
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -1286,7 +1284,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 89,
@@ -1299,7 +1297,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 90,
@@ -1312,7 +1310,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 91,
@@ -1325,7 +1323,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Urine",
-    "template": 11
+    "template": 6
   },
   {
     "id": 93,
@@ -1338,7 +1336,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 94,
@@ -1351,7 +1349,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 101,
@@ -1364,7 +1362,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 102,
@@ -1377,7 +1375,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 103,
@@ -1390,7 +1388,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 104,
@@ -1403,7 +1401,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 105,
@@ -1416,7 +1414,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 106,
@@ -1429,7 +1427,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 107,
@@ -1442,7 +1440,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 108,
@@ -1455,7 +1453,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 109,
@@ -1468,7 +1466,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 98,
@@ -1481,7 +1479,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 110,
@@ -1494,7 +1492,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 111,
@@ -1507,7 +1505,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 112,
@@ -1520,7 +1518,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 113,
@@ -1533,7 +1531,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 114,
@@ -1546,7 +1544,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 115,
@@ -1559,7 +1557,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 116,
@@ -1572,7 +1570,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 117,
@@ -1585,7 +1583,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 118,
@@ -1598,7 +1596,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 119,
@@ -1611,7 +1609,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 120,
@@ -1623,7 +1621,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -1636,7 +1634,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 7,
+    "template": 4,
     "preference": ""
   },
   {
@@ -1650,7 +1648,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 123,
@@ -1663,7 +1661,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 124,
@@ -1676,7 +1674,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 125,
@@ -1689,7 +1687,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 126,
@@ -1702,7 +1700,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 127,
@@ -1715,7 +1713,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 128,
@@ -1728,7 +1726,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 129,
@@ -1741,7 +1739,7 @@
     "preference": "equal",
     "preparation": "none",
     "specimen": null,
-    "template": 11
+    "template": 6
   },
   {
     "id": 130,
@@ -1754,7 +1752,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 145,
@@ -1767,7 +1765,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Other Body Fluids",
-    "template": 11
+    "template": 6
   },
   {
     "id": 135,
@@ -1780,7 +1778,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 136,
@@ -1793,7 +1791,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 137,
@@ -1806,7 +1804,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 6
   },
   {
     "id": 141,
@@ -1819,7 +1817,7 @@
     "preference": "gender",
     "preparation": "Patient should fast at least 6 hrs",
     "specimen": "Serum",
-    "template": 3
+    "template": 2
   },
   {
     "id": 142,
@@ -1832,7 +1830,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
-    "template": 11
+    "template": 3
   },
   {
     "id": 143,
@@ -1844,7 +1842,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Urine",
-    "template": 12,
+    "template": 0,
     "preference": ""
   },
   {
@@ -1857,7 +1855,7 @@
     "hi_ssx": "",
     "preparation": "none",
     "specimen": "Urine",
-    "template": 12,
+    "template": 0,
     "preference": ""
   },
   {
@@ -1871,7 +1869,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 2
+    "template": 9
   },
   {
     "id": 172,
@@ -1884,7 +1882,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 2
+    "template": 9
   },
   {
     "id": 173,
@@ -1897,7 +1895,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 2
+    "template": 9
   },
   {
     "id": 174,
@@ -1910,7 +1908,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 2
+    "template": 9
   },
   {
     "id": 175,
@@ -1923,7 +1921,7 @@
     "preference": "gender",
     "preparation": "none",
     "specimen": null,
-    "template": 2
+    "template": 9
   },
   {
     "id": 176,

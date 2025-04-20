@@ -10,6 +10,7 @@ import Bacteriology from "./laboratory/bacteriology";
 import Compatibility from "./laboratory/compatibility";
 import Pbs from "./laboratory/pbs";
 import Electrolyte from "./laboratory/electrolyte";
+import Xray from "./radiology/xray";
 
 const Blank = ({ task }) => <div>{task.form} is not working</div>;
 
@@ -26,6 +27,7 @@ const componentMap = {
   compatibility: Compatibility,
   pbs: Pbs,
   electrolyte: Electrolyte,
+  xray: Xray,
 };
 
 export default function BodySwitcher({ task }) {

@@ -188,7 +188,6 @@ export const reduxSlice = createSlice({
     },
 
     SetSELECTED: (state, { payload }) => {
-      console.log("selected paylaod:", payload);
       state.selected = payload;
     },
     SetMaxPage: (state, { payload }) => {

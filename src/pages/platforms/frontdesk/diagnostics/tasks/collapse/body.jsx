@@ -1,43 +1,47 @@
 import React from "react";
 import { MDBTable } from "mdbreact";
 import Forms from "./forms";
+import { useSelector } from "react-redux";
 
-export default function Body({ customer, forms }) {
-  console.log("forms", forms);
+export default function Body({ _id, customer, forms }) {
+  const { activePlatform } = useSelector(({ auth }) => auth);
 
   return (
-    <>
-      <MDBTable small hover responsive>
-        <thead>
-          <tr>
-            <th>Performer</th>
-            <th>Template</th>
-            <th>Services</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(forms)?.map(([key, value], index) => {
-            if (!value || value.length === 0) {
-              return (
-                <tr key={`empty-${index}`}>
-                  <td colSpan={4}>Empty Test</td>
-                </tr>
-              );
-            }
+    <MDBTable small hover responsive>
+      <thead>
+        <tr>
+          <th>Performer</th>
+          <th>Template</th>
+          <th>Services</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(forms || {})?.map(([key, value], index) => {
+          const isEmpty =
+            !value || (Array.isArray(value) && value.length === 0);
 
+          if (isEmpty && activePlatform.department === "laboratory") {
             return (
-              <Forms
-                key={key}
-                form={key}
-                obj={value}
-                customer={customer}
-                index={index}
-              />
+              <tr key={`empty-${index}`}>
+                <td colSpan={4}>Empty Test</td>
+              </tr>
             );
-          })}
-        </tbody>
-      </MDBTable>
-    </>
+          }
+
+          // For Radiology (or any non-laboratory), still render even if null/empty
+          return (
+            <Forms
+              _id={_id}
+              key={`form-${index}`}
+              form={key}
+              obj={value || {}}
+              customer={customer}
+              index={index}
+            />
+          );
+        })}
+      </tbody>
+    </MDBTable>
   );
 }

@@ -66,8 +66,11 @@ const Services = {
     const result = {}; // This will hold the final object to return
 
     uniqueTemplates.forEach((templateId) => {
+      console.log("templateId", templateId);
+
       // Get the readable component name for the template ID and department
       const key = Templates.getComponentName(templateId, department);
+      // const key = Templates.getComponentIndex(templateId, department);
 
       // Fallback in case key is undefined
       const resolvedKey = key || "Unknown";
@@ -100,6 +103,39 @@ const Services = {
           // Use the sorted array of IDs as-is
           result[resolvedKey] = values;
           break;
+      }
+    });
+
+    return result;
+  },
+  getTemplatesWithIntKey: (pks, department) => {
+    const cluster = collections.filter(({ id }) => pks.includes(id));
+    const templates = cluster.map(({ template }) => template);
+    const uniqueTemplates = [...new Set(templates)];
+    const result = {};
+
+    uniqueTemplates.forEach((templateId) => {
+      console.log("templateId", templateId);
+
+      let values = cluster
+        .filter(({ template }) => template === templateId)
+        .map(({ id }) => Number(id))
+        .sort((a, b) => a - b);
+
+      // Assuming you still want to treat specific templates the same way,
+      // you'll need to map those component types to IDs somewhere else
+      // For now, we apply the object mapping for specific IDs if needed
+      const objectKeyTemplates = [
+        /* list of integer keys if needed */
+      ];
+
+      if (objectKeyTemplates.includes(templateId)) {
+        result[templateId] = values.reduce((acc, id) => {
+          acc[id] = "";
+          return acc;
+        }, {});
+      } else {
+        result[templateId] = values;
       }
     });
 

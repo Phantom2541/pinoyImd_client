@@ -40,7 +40,7 @@
 //   const generateChartData = (data) => {
 //     const grouped = groupByDay(data);
 //     const days = Object.keys(grouped);
-//     const rbsValues = days.map(
+//     const rbsValues = days??.map(
 //       (day) =>
 //         grouped[day].reduce((sum, chem) => sum + (chem.packages["9"] || 0), 0) /
 //         grouped[day].length

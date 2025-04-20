@@ -41,6 +41,8 @@ export default function Modal() {
 
   const getIDS = (collections) => collections.map(({ id }) => id);
   const saveRequest = async (template, data, isStaticPath = false) => {
+    console.log("activePlatform.department", activePlatform.department);
+
     try {
       const _department = ["laboratory", "radiology"].includes(
         activePlatform.department
@@ -58,19 +60,20 @@ export default function Modal() {
   };
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
-    console.log("inHouseIds", inhouseIDS);
-
     const _outsource = getIDS(outsource);
-    const _inhouse = Services.getTemplates(inhouseIDS, department);
+    const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);
+    const _forms = Services.getTemplates(inhouseIDS, department);
 
-    const { _id, customerId, ssx } = deal;
-    //sent out company
+    const { _id, customerId, ssx, forms: oldForms } = deal;
+    console.log("deal", deal);
+
     const sentOut = [...collections].find(
       ({ vendors }) => vendors?._id === outSourceId
     );
+
     localStorage.setItem(
       "inhouse",
-      JSON.stringify({ deal, forms: { ..._inhouse } })
+      JSON.stringify({ deal, forms: { ..._forms } })
     );
     localStorage.setItem(
       "outsource_request",
@@ -81,12 +84,30 @@ export default function Modal() {
         outsources: outsource,
       })
     );
-
     localStorage.setItem("ssx", JSON.stringify(ssx));
-    const forms = Object.keys(_inhouse);
-    for (const key in _inhouse) {
+
+    const deptIndexMap = {
+      LAB: 0,
+      RAD: 1,
+      CLINIC: 2,
+    };
+
+    const deptIndex = deptIndexMap[department];
+    const newFormKeys = Object.keys(_inhouse);
+
+    const forms = {
+      ...(oldForms || {}),
+      [deptIndex]: [
+        ...(oldForms?.[deptIndex] || []),
+        ...newFormKeys.filter(
+          (key) => !(oldForms?.[deptIndex] || []).includes(key)
+        ),
+      ],
+    };
+
+    for (const key in _forms) {
       const lowercaseKey = key.toLowerCase();
-      let bucket = _inhouse[key];
+      let bucket = _forms[key];
       const requestData = {
         _id,
         packages: bucket,
@@ -106,10 +127,9 @@ export default function Modal() {
               branchId: activePlatform.branchId,
               buntis: true,
             });
-            return; // Stop further queries if panel is saved
+            return;
           }
 
-          // Solo form processing
           const soloForms = bucket.map((test) => ({
             packages: [test],
             dealId: _id,
@@ -120,6 +140,7 @@ export default function Modal() {
 
           await saveRequest(lowercaseKey, soloForms);
           break;
+
         case "X-ray":
           bucket.map(
             async (test) =>
@@ -132,36 +153,16 @@ export default function Modal() {
               })
           );
           break;
+
         default:
-          /**
-           * Single results in every transactions
-           * 1. Chemistr
-           * 2. Urinalysis
-           * 3. Hematology
-           * 4. Parasitology
-           * 5. Coagulation
-           * 6. Serology
-           * 7. ECG
-           * 8. Ultrasound
-           * 9. 2DEcho
-           * 10. certificate
-           * 11. Examination
-           * 12. Bacteriology
-           * 13. Biopsy
-           * 14. PAPs
-           * 15. PBS
-           * 16. compatibility
-           * 17. Drugtest
-           */
           await saveRequest(lowercaseKey, requestData);
       }
     }
 
-    // // Open the printout request form window
     if (inhouse.length > 0) {
       window.open(
         "/printout/request/form",
-        "RequestForm", // Window name 1
+        "RequestForm",
         "top=100px,left=100px,width=1050px,height=750px"
       );
     }
@@ -170,12 +171,12 @@ export default function Modal() {
       outsource.length > 0 && (outSourceId || department === "RAD");
 
     if (haveOutSource) {
-      // have cluster
       window.open(
         "/printout/request/outsource",
-        "OutsourceRequestForm", // Unique window name 2
+        "OutsourceRequestForm",
         "top=100px,left=0px,width=1050px,height=750px"
       );
+
       if (department !== "RAD") {
         await saveRequest(
           `/commerce/pos/services/dealOutSources`,
@@ -222,6 +223,7 @@ export default function Modal() {
     );
     dispatch(TOGGLE());
   };
+
   return (
     <MDBModal isOpen={show} toggle={toggle} size="lg" backdrop>
       <MDBModalHeader

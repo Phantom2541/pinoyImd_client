@@ -5,25 +5,30 @@ import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-const Forms = ({ form, obj, index, customer }) => {
+const Forms = ({ _id, form, obj = {}, index, customer }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
-  const { department } =
-    activePlatform.department === "laboratory" ? "LAB" : "RAD";
+
+  const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
 
   const isCluster = ["Miscellaneous", "Xray"].includes(form);
-  const formEntries = isCluster ? obj : [obj]; // If Miscellaneous, map multiple; otherwise, use single object
+
+  // Ensure formEntries is an array even if obj is null or malformed
+  const formEntries = isCluster
+    ? Array.isArray(obj)
+      ? obj.length > 0
+        ? obj
+        : [{}] // empty array becomes [{}] for at least one row
+      : obj
+      ? [obj]
+      : [{}]
+    : [obj || {}];
 
   const handlePrint = (task) => {
     const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
       const range = collections.filter(({ serviceId }) => serviceId === id);
-
-      return {
-        ...rest,
-        id,
-        range,
-      };
+      return { ...rest, id, range };
     });
 
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
@@ -35,18 +40,27 @@ const Forms = ({ form, obj, index, customer }) => {
   };
 
   return formEntries.map((entry, entryIndex) => {
-    const { packages, hasDone = false, remarks = "", signatories = [] } = entry;
-    // Ensure packages is always an array to prevent TypeError
+    const {
+      packages = [],
+      hasDone = false,
+      remarks = "",
+      signatories = [],
+    } = entry || {};
+
     const _packages =
       packages && typeof packages === "object"
         ? Array.isArray(packages)
           ? packages
           : Object.keys(packages).map((k) => Number(k))
-        : [packages];
+        : packages
+        ? [packages]
+        : [];
 
     const task = {
       ...entry,
       key: `${form}-${index}-${entryIndex}`,
+      _id,
+      dealId: _id,
       form,
       patient: customer,
       generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
@@ -57,19 +71,27 @@ const Forms = ({ form, obj, index, customer }) => {
 
     const handleEntry = () => dispatch(SetTASK({ task, form }));
 
+    const isEmptyEntry = _packages.length === 0;
+
     return (
-      <tr key={task.key} className={`${hasDone && "table-active"}`}>
+      <tr key={task.key} className={hasDone ? "table-active" : ""}>
         <td>
           {index + 1}
           {isCluster ? `.${entryIndex + 1}` : ""} {capitalize(form)}
         </td>
         <td>{form}</td>
         <td>
-          {Services.whereIn(_packages).map(({ abbreviation }, i) => (
-            <MDBBadge pill key={`${task.key}-service-${i}`} className="pt-1">
-              {abbreviation}
+          {isEmptyEntry ? (
+            <MDBBadge color="danger" pill>
+              No services
             </MDBBadge>
-          ))}
+          ) : (
+            Services.whereIn(_packages).map(({ abbreviation }, i) => (
+              <MDBBadge pill key={`${task.key}-service-${i}`} className="pt-1">
+                {abbreviation}
+              </MDBBadge>
+            ))
+          )}
         </td>
         <td>
           <MDBBtnGroup>

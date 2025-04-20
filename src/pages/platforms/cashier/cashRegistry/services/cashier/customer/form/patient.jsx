@@ -88,6 +88,12 @@ export default function Patient({ setActiveIndex }) {
             ...form,
             password: "password",
             email: email || generateEmail(form),
+            activePlatform: {
+              isPatient: true,
+              isCeo: false,
+              platform: "patron",
+              role: "patron",
+            },
           },
           token,
         })
