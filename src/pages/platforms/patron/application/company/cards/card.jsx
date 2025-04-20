@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import {
   MDBCard,
   MDBCardBody,
-  MDBCardImage,
-  MDBCardTitle,
   MDBView,
   MDBMask,
   MDBCardText,
@@ -30,6 +28,7 @@ export default function CompanyCard({ company }) {
         <MDBView waves cascade hover rounded className="custom-mdbview mx-auto">
           <img
             src={`${ENDPOINT}/public/companies/${company?.name}/logo.jpg`}
+            alt={company?.name}
             className="mx-auto bg-transparent"
             style={{ height: "8rem", width: "100%" }}
             onError={(e) => (e.target.src = PresetUser)}

@@ -25,20 +25,28 @@ export default function SideNavigation({
 }) {
   const [links, setLinks] = useState([]);
   const { activePlatform, company, isLoading } = useSelector(
-    ({ auth }) => auth
-  );
-  const [logo, setLogo] = useState(FailedLogo);
-  const [activeCategory, setActiveCategory] = useState("");
+      ({ auth }) => auth
+    ),
+    [logo, setLogo] = useState(FailedLogo),
+    [href, setHref] = useState(""),
+    [activeCategory, setActiveCategory] = useState("");
 
-  // Load logo if available
+  // Load company logo if available
   useEffect(() => {
     if (company?.name && activePlatform?.platform && !isLoading) {
-      const url = `${ENDPOINT}/public/companies/${company.name}/${
-        activePlatform?.branch?.name
-      }/logo.png?${new Date().getTime()}`;
+      const url = `${ENDPOINT}/public/companies/${
+        company.name
+      }/logo.jpg?${new Date().getTime()}`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);
       });
+
+      const _href = `/${activePlatform?.platform || "patron"}/${
+        ["manager", "headquarter"].includes(activePlatform?.platform)
+          ? "dashboard"
+          : "bulletin"
+      }`;
+      setHref(_href);
     }
   }, [company, activePlatform, isLoading]);
 
@@ -102,10 +110,9 @@ export default function SideNavigation({
       <MDBSideNav
         logo={logo}
         bg="https://mdbootstrap.com/img/Photos/Others/sidenav2.jpg"
+        alt="company logo"
         mask="strong"
-        href={`/${activePlatform?.platform || "patron"}/${
-          activePlatform?.platform === "manager" ? "dashboard" : "bulletin"
-        }`}
+        href={href}
         fixed
         breakWidth={breakWidth}
         triggerOpening={triggerOpening}

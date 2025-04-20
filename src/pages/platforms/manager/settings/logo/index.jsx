@@ -53,7 +53,7 @@ export default function Logo() {
     dispatch(
       UPLOAD({
         data: {
-          path: `companies/${company.name}/${activePlatform?.branch?.name}`,
+          path: `companies/${company.name}`,
           base64: base64.split(",")[1],
           name: "logo.png",
         },
@@ -89,7 +89,7 @@ export default function Logo() {
               <img
                 src={
                   preview ||
-                  `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/logo.png`
+                  `${ENDPOINT}/public/companies/${company.name}/logo.png`
                 }
                 className="img-fluid"
                 alt={company?.name || "Default Logo"}
