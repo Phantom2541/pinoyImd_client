@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
@@ -9,15 +9,13 @@ import {
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { MDBView } from "mdbreact";
 import CalendarPicker from "../../../../../components/header/calendars";
+import { currency } from "../../../../../services/utilities";
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { sources, month, year } = useSelector(({ deals }) => deals),
+  const { sources, month, year, filtered } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
-
-  console.log("sources", sources);
-
   // Fetch vouchers
   useEffect(() => {
     const startDate = new Date(year, month - 1, 1);
@@ -40,6 +38,10 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
+  const sum = filtered
+    ?.map((item) => item.amount)
+    .reduce((acc, item) => acc + item, 0);
+
   return (
     <MDBView
       cascade
@@ -51,6 +53,7 @@ const Header = () => {
         moved={(next) => dispatch(SetMONTH(next))}
         reset={() => dispatch(ResetDATE())}
       />
+      <div>Gross : {currency(sum)}</div>
       <div>
         <div className="text-right d-flex items-center ">
           <select
