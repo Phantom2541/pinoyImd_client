@@ -5,9 +5,11 @@ import Pagination from "../../../../../components/pagination";
 import {
   SetMaxPage,
   SetActivePAGE,
-} from "../../../../../services/redux/slices/finance/journals/soa";
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 const Footer = () => {
-  const { isLoading, totalPages, activePage } = useSelector(({ soa }) => soa),
+  const { filtered, isLoading, totalPages, activePage } = useSelector(
+      ({ deals }) => deals
+    ),
     { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
@@ -25,6 +27,15 @@ const Footer = () => {
   return (
     <div className="mb-auto d-flex justify-content-between align-items-center px-4">
       <TableRowCount disablePageSelect={false} />
+      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+        <span className="black-text mx-3 text-nowrap mt-0">
+          {filtered.length} Total
+        </span>
+        <span>@darel create a button to generate</span>
+        {/* need mag generate to become a SOA, tas ma view s accrued->Statement of Account, base dapat s cutoff nila.
+          then, update mo ang deals->SOA, para di n maquery dito
+        */}
+      </div>
       <Pagination
         isLoading={isLoading}
         total={totalPages}

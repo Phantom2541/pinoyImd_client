@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  VOUCHERS,
+  BROWSE,
   SetFilterBySOURCE,
   RESET,
   SetMONTH,
@@ -15,6 +15,9 @@ const Header = () => {
   );
   const { sources, month, year } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
+
+  console.log("sources", sources);
+
   // Fetch vouchers
   useEffect(() => {
     const startDate = new Date(year, month - 1, 1);
@@ -22,13 +25,14 @@ const Header = () => {
     const endDate = new Date(year, month, 0, 23, 59, 59, 999);
     endDate.setHours(23, 59, 59, 999);
     dispatch(
-      VOUCHERS({
+      BROWSE({
         token,
         key: {
           branchId: activePlatform.branchId,
+          department: activePlatform.department,
           cashierId: auth._id,
-          month,
-          year,
+          createdAt: startDate,
+          endDate,
         },
       })
     );

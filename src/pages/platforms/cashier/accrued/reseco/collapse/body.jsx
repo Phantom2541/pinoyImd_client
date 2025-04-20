@@ -5,7 +5,6 @@ import { Privileges } from "../../../../../../services/fakeDb";
 import { useSelector } from "react-redux";
 export default function Collapsable({ deals }) {
   const { vendor } = useSelector(({ deals }) => deals);
-
   return (
     <MDBTable bordered className="m-0 p-0">
       <MDBTableHead>
@@ -29,9 +28,10 @@ export default function Collapsable({ deals }) {
             privilege,
             source,
             cart = [],
+            _id,
           } = deal;
           return (
-            <tr key={index}>
+            <tr key={_id}>
               {!vendor && (
                 <td>
                   <span className="fw-bold mr-1"> {++index}.</span>
@@ -39,7 +39,7 @@ export default function Collapsable({ deals }) {
                 </td>
               )}
               <td>
-                {source._id && (
+                {source?._id && (
                   <span className="fw-bold mr-1"> {++index}.</span>
                 )}
                 {fullName(customerId?.fullName)}

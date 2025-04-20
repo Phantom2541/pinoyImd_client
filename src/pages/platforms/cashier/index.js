@@ -7,7 +7,14 @@ import {
   Hotlines,
   Suppliers,
 } from "./sources";
-import { Payables, Receivables, Vouchers, Payments, SOA } from "./accrued";
+import {
+  Payables,
+  Receivables,
+  Vouchers,
+  Payments,
+  SOA,
+  Reseco,
+} from "./accrued";
 export {
   Cashier,
   Deals,
@@ -25,4 +32,5 @@ export {
   Vouchers,
   Payments,
   SOA,
+  Reseco,
 };

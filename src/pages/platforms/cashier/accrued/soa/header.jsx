@@ -63,7 +63,6 @@ const Header = () => {
   }, [collections, payables]);
 
   const handleVendors = (value) => {
-    console.log("value", value);
     dispatch(SetFilterByOUTSOURCE(value));
   };
 

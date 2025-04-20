@@ -24,7 +24,8 @@ import {
   Controls,
 } from "../../../pages/platforms/diagnostics/management";
 import Products from "../../../pages/platforms/frontdesk/market/products";
-import { Billings, Soa } from "../../../pages/platforms/frontdesk/Sendouts";
+import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
+import { SOA } from "../../../pages/platforms/cashier";
 
 import {
   Tablestemplate,
@@ -92,62 +93,6 @@ const frontdesk = [
     ],
   },
   {
-    name: "Catalogs", //viewing only
-    path: "/offers",
-    icon: "list",
-    children: [
-      /**
-       * a group of related services
-       */
-      {
-        name: "Menus",
-        path: "/menus",
-        icon: "bars",
-        component: Menus,
-      },
-      /**
-       *  a single service
-       */
-      {
-        name: "Services",
-        path: "/services",
-        icon: "list",
-        component: Services,
-      },
-      {
-        name: "Products",
-        path: "/products",
-        icon: "cogs",
-        component: Products,
-      },
-      {
-        name: "Consumables",
-        icon: "tv",
-        path: "/consumables",
-        children: [
-          {
-            name: "Preanalytical",
-            path: "/preanalytical",
-            icon: "check-circle",
-            component: Assurance,
-          },
-          {
-            name: "Analytical",
-            path: "Analytical",
-            icon: "balance-scale",
-            component: Controls,
-          },
-          {
-            name: "Postanalytical",
-            path: "/postanalytical",
-            icon: "thermometer-half",
-            component: Temperature,
-          },
-        ],
-      },
-    ],
-  },
-  {
     name: "Sendouts",
     icon: "tv",
     path: "/outsource",
@@ -157,7 +102,7 @@ const frontdesk = [
         path: "/soa",
         title: "stocks",
         icon: "balance-scale",
-        component: Soa,
+        component: SOA,
       },
 
       {
@@ -295,6 +240,62 @@ const frontdesk = [
             name: "MRI",
             path: "/mri",
             icon: "user-md",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Catalogs", //viewing only
+    path: "/offers",
+    icon: "list",
+    children: [
+      /**
+       * a group of related services
+       */
+      {
+        name: "Menus",
+        path: "/menus",
+        icon: "bars",
+        component: Menus,
+      },
+      /**
+       *  a single service
+       */
+      {
+        name: "Services",
+        path: "/services",
+        icon: "list",
+        component: Services,
+      },
+      {
+        name: "Products",
+        path: "/products",
+        icon: "cogs",
+        component: Products,
+      },
+      {
+        name: "Consumables",
+        icon: "tv",
+        path: "/consumables",
+        children: [
+          {
+            name: "Preanalytical",
+            path: "/preanalytical",
+            icon: "check-circle",
+            component: Assurance,
+          },
+          {
+            name: "Analytical",
+            path: "Analytical",
+            icon: "balance-scale",
+            component: Controls,
+          },
+          {
+            name: "Postanalytical",
+            path: "/postanalytical",
+            icon: "thermometer-half",
+            component: Temperature,
           },
         ],
       },

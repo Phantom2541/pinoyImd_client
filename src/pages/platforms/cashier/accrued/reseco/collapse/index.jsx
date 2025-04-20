@@ -14,21 +14,42 @@ import { collapse, dateFormat } from "../../../../../../services/utilities";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
+    [vouchers, setVouchers] = useState([]),
     [cluster, setCluster] = useState([]);
+  // dispatch = useDispatch();
 
-  // Pagination logic and grouping by date
   useEffect(() => {
-    const _cluster = filtered.reduce((groups, item) => {
+    const groupByDate = filtered.reduce((groups, item) => {
       const date = dateFormat(item.createdAt);
-      if (!groups[date]) {
-        groups[date] = [];
+      const index = groups.findIndex((group) => group.date === date);
+      if (index > -1) {
+        groups[index].deals.push({ ...item, isSelected: false });
+      } else {
+        groups.push({
+          date,
+          deals: [{ ...item, isSelected: false }],
+          isSelected: false,
+        });
       }
-      groups[date].push(item);
       return groups;
-    }, {});
+    }, []);
 
-    setCluster(_cluster);
+    setVouchers(groupByDate);
+    // setCluster(_cluster);
   }, [filtered, activePage, maxPage]); // Re-run whenever filtered data or page changes
+
+  // useEffect(() => {
+  //   const _cluster = filtered.reduce((groups, item) => {
+  //     const date = dateFormat(item.createdAt);
+  //     if (!groups[date]) {
+  //       groups[date] = [];
+  //     }
+  //     groups[date].push(item);
+  //     return groups;
+  //   }, []);
+
+  //   setCluster(_cluster);
+  // }, [filtered, activePage, maxPage]); // Re-run whenever filtered data or page changes
 
   /**
    * Active states for collapsible items
@@ -36,9 +57,17 @@ export default function Body() {
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
 
+  const handleSelect = (deal) => {
+    const _cluster = [...cluster];
+    const index = _cluster.findIndex((item) => item._id === deal._id);
+    index > -1 ? _cluster.splice(index, 1) : _cluster.push(deal);
+    setCluster(_cluster);
+  };
+
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
-      {Object.entries(cluster)?.map(([key, values], index) => {
+      {vouchers?.map((voucher, index) => {
+        const { deals, date } = voucher;
         const actualIndex = index; // Directly use the index in the paginated data
         const { color, border } = collapse.getStyle(
           actualIndex,
@@ -46,29 +75,22 @@ export default function Body() {
           didHoverId
         );
 
-        const sum = values.reduce((acc, item) => {
-          return acc + (item?.services?.up || 0);
-        }, 0);
-
         return (
           <MDBCard
-            key={`service-${key}`}
+            key={`service-${date}`}
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader
               className={border}
               onMouseLeave={() => setDidHoverId(-1)}
               onMouseEnter={() => setDidHoverId(actualIndex)}
-              onClick={() =>
-                setActiveId(activeId === actualIndex ? -1 : actualIndex)
-              } // Toggle active state
               style={{ borderRadius: "50%" }}
             >
               <CollapsableHeader
-                key={key}
-                title={key}
-                count={values.length}
-                sum={sum}
+                key={date}
+                title={date}
+                count={deals.length}
+                sum={deals.reduce((acc, item) => acc + item.amount, 0)}
                 isOpen={activeId === actualIndex}
                 textColor={color}
                 setActiveId={setActiveId}
@@ -78,11 +100,10 @@ export default function Body() {
 
             <MDBCollapse
               id={`collapse-${actualIndex}`}
-              className="mb-2 border border-black"
               isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
             >
-              <MDBCardBody className="pt-2">
-                <CollapsableBody deals={values} />
+              <MDBCardBody className=" m-0 p-0">
+                <CollapsableBody deals={deals} handleSelect={handleSelect} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

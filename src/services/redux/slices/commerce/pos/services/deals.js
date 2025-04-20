@@ -14,18 +14,9 @@ const initialState = {
   filtered: [],
   filterByCashier: "all",
   cashiers: [],
-  // this is used for ledger
-  census: {
-    daily: {},
-    grossSales: 0,
-    menus: {},
-    services: {},
-    expenses: 0,
-    patients: 0,
-    isEmpty: true,
-  },
   patient: {},
   cluster: [],
+  sources: [],
   showModal: false,
   showRevertModal: false,
   showDiscountModal: false,
@@ -38,7 +29,7 @@ const initialState = {
   isLoading: false,
   censusLoading: false, // dedicated loader for celsus
   message: "",
-  vendor: { _id: "" },
+  vendor: undefined,
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -334,18 +325,17 @@ export const reduxSlice = createSlice({
     },
 
     SetFilterBySOURCE: (state, { payload }) => {
-      const { value, vendor } = payload;
-      if (value === "all") {
+      if (payload === "all") {
         state.filtered = state.collections;
-        state.vendor = { _id: "" };
-      } else if (value === "NoSource") {
+        state.vendor = undefined;
+      } else if (payload === "NoSource") {
         state.filtered = state.collections.filter(({ source }) => !source);
-        state.vendor = { _id: "noSource" };
+        state.vendor = "noSource";
       } else {
         state.filtered = state.collections.filter(
-          ({ source }) => source?._id.toString() === value.toString()
+          ({ source }) => source?._id.toString() === payload.toString()
         );
-        state.vendor = vendor;
+        state.vendor = payload;
       }
       // state.filterBySource = value;
     },
@@ -354,7 +344,7 @@ export const reduxSlice = createSlice({
       if (payload !== state.filterBySource)
         if (payload === "all") {
           state.filtered = state.collections;
-          state.source = "";
+          state.vendor = "";
         } else {
           state.filtered = state.collections.filter(
             ({ outsource }) => outsource?._id.toString() === payload.toString()
@@ -588,8 +578,21 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
-        state.collections = payload;
-        state.filtered = payload;
+        state.collections = state.filtered = payload;
+        let uniqueSource = [];
+        if (payload.length > 0)
+          uniqueSource = [
+            ...new Map(
+              payload.map(({ source }) => [
+                source?._id || "NoSource",
+                {
+                  _id: source?._id || "NoSource",
+                  displayname: source?.displayname || "No Source",
+                },
+              ])
+            ).values(),
+          ];
+        state.sources = uniqueSource;
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -610,6 +613,20 @@ export const reduxSlice = createSlice({
       .addCase(VOUCHERS.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
         state.collections = state.filtered = payload;
+        let uniqueSource = [];
+        if (payload.length > 0)
+          uniqueSource = [
+            ...new Map(
+              payload.map(({ source }) => [
+                source?._id || "NoSource",
+                {
+                  _id: source?._id || "NoSource",
+                  displayname: source?.displayname || "No Source",
+                },
+              ])
+            ).values(),
+          ];
+        state.sources = uniqueSource;
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
