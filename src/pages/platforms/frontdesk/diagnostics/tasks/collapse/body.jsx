@@ -1,49 +1,59 @@
 import React from "react";
-import { MDBTable } from "mdbreact";
-import Forms from "./forms";
+import { MDBTable, MDBCardBody } from "mdbreact";
+import Task from "./task";
 import { useSelector } from "react-redux";
 
-export default function Body({ _id, customer, forms }) {
+export default function Body({ _id, customer, tasks }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
-
-  console.log("forms:", forms);
-
   return (
-    <MDBTable small hover responsive>
-      <thead>
-        <tr>
-          <th>Performer</th>
-          <th>Template</th>
-          <th>Services</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.entries(forms || {})?.map(([key, value], index) => {
-          const isEmpty =
-            !value || (Array.isArray(value) && value.length === 0);
+    <MDBCardBody className="pt-0">
+      <MDBTable small hover responsive>
+        <thead>
+          <tr>
+            <th>Performer</th>
+            <th>Template</th>
+            <th>Services</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(tasks || {})?.map(([key, task], index) => {
+            const isEmpty = !task || (Array.isArray(task) && task.length === 0);
 
-          if (isEmpty && activePlatform.department === "laboratory") {
+            if (isEmpty && activePlatform.department === "laboratory") {
+              return (
+                <tr key={`empty-${index}`}>
+                  <td colSpan={4}>Empty Test</td>
+                </tr>
+              );
+            }
+
+            if (["misclaneous", "xray"].includes(key)) {
+              return task.map((t, i) => (
+                <Task
+                  _id={t._id}
+                  key={`form-${i}`}
+                  form={key}
+                  obj={t || {}}
+                  customer={customer}
+                  index={`${index}-${i + 1}`}
+                />
+              ));
+            }
+
             return (
-              <tr key={`empty-${index}`}>
-                <td colSpan={4}>Empty Test</td>
-              </tr>
+              <Task
+                _id={_id}
+                key={`form-${index}`}
+                form={key}
+                obj={task || {}}
+                customer={customer}
+                index={index}
+              />
             );
-          }
-
-          // For Radiology (or any non-laboratory), still render even if null/empty
-          return (
-            <Forms
-              _id={_id}
-              key={`form-${index}`}
-              form={key}
-              obj={value || {}}
-              customer={customer}
-              index={index}
-            />
-          );
-        })}
-      </tbody>
-    </MDBTable>
+          })}
+        </tbody>
+      </MDBTable>
+    </MDBCardBody>
   );
 }

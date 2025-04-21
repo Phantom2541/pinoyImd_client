@@ -1,11 +1,14 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { capitalize } from "../../../../../../services/utilities";
+import {
+  capitalize,
+  fullName,
+} from "../../../../../../services/utilities/index.js";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
-import { Services } from "../../../../../../services/fakeDb";
+import { Services } from "../../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-const Forms = ({ _id, form, obj = {}, index, customer }) => {
+const Tasks = ({ _id, form, obj = {}, index, customer }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
@@ -74,7 +77,8 @@ const Forms = ({ _id, form, obj = {}, index, customer }) => {
       <tr key={task.key} className={hasDone ? "table-active" : ""}>
         <td>
           {index + 1}
-          {isCluster ? `.${entryIndex + 1}` : ""} {capitalize(form)}
+          {isCluster ? `.${entryIndex + 1}` : ""}{" "}
+          {fullName(signatories[0]?.fullName || "N/A")}
         </td>
         <td>{form}</td>
         <td>
@@ -128,4 +132,4 @@ const Forms = ({ _id, form, obj = {}, index, customer }) => {
   });
 };
 
-export default Forms;
+export default Tasks;

@@ -37,14 +37,16 @@ const Footer = () => {
     handleSave(hasDone);
   };
 
+  const findSignatoryId = (identifier) =>
+    heads.find(
+      ({ section }) => section.replace("-", "").toLowerCase() === identifier
+    )?.user?._id;
+
   const handleSave = (hasDone) => {
     const { form } = task;
 
-    const findSignatoryId = (identifier) =>
-      heads.find(({ section }) => section === identifier)?.user?._id;
-
     const head = findSignatoryId(form.toLowerCase());
-    const sub = findSignatoryId(
+    const dr = findSignatoryId(
       department === "laboratory" ? "pathologist" : "radiologist"
     );
 
@@ -53,13 +55,12 @@ const Footer = () => {
         token,
         data: {
           ...task,
-          hasDone: true,
+          hasDone,
           department,
-          signatories: [head, sub, auth._id],
+          signatories: [head, dr, auth._id],
         },
       })
     );
-    dispatch(SetMODAL(false));
   };
 
   const generateHealthyStats = () => {

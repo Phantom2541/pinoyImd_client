@@ -4,8 +4,8 @@ import { MDBView } from "mdbreact";
 import {
   TASKS,
   RESET,
-} from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
-import { Search as SEARCH } from "../../../../../../components/searchables";
+} from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { Search as SEARCH } from "../../../../../components/searchables";
 
 const Headers = ({ searchKey }) => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),

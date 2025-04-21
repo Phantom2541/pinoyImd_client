@@ -34,7 +34,7 @@ import { Select } from "../../../../../../components/customizable";
 
 export const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { collections, filtered, maxPage, activePage, formSubmitted, isSuccess } =
+    { collections, maxPage, activePage, formSubmitted, isSuccess } =
       useSelector(({ deals }) => deals),
     { collections: sources } = useSelector(({ providers }) => providers),
     [total, setTotal] = useState(0),
@@ -53,10 +53,10 @@ export const Tables = () => {
   }, [dispatch, formSubmitted, isSuccess]);
 
   useEffect(() => {
-    const validTransactions = filtered.filter((item) => !item.deletedAt);
+    const validTransactions = collections.filter((item) => !item.deletedAt);
     setTotal(validTransactions.reduce((a, b) => a + b.amount, 0));
     setPatient(validTransactions.length);
-  }, [filtered]);
+  }, [collections]);
 
   useEffect(() => {
     if (!!collections.length) {
@@ -101,13 +101,9 @@ export const Tables = () => {
     }
   };
 
-  const handleEdit = async (deal) => {
-    dispatch(SetDISCOUNT(deal));
-  };
+  const handleEdit = async (deal) => dispatch(SetDISCOUNT(deal));
 
-  const handleRevert = (deal) => {
-    dispatch(SetREVERT(deal));
-  };
+  const handleRevert = (deal) => dispatch(SetREVERT(deal));
 
   const handleUpdate = async (updatedKey, newKey, deal = {}) => {
     Deals.specificUpdate({
@@ -122,14 +118,14 @@ export const Tables = () => {
       addToast,
     });
   };
-
   /**
    * Pagination: Calculate the start and end index for the current page
    */
+
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = collections?.slice(startIndex, endIndex); // Get only items for the active page
 
   return (
     <MDBCardBody>
@@ -166,7 +162,8 @@ export const Tables = () => {
             const isDiscounted = deal.discount > 0;
             const isHover = index === didHoverID;
             const sourceName = deal.source?.displayname || deal.source?.name;
-            const { img, style, text } = paymentMethod.getImage(deal.payment);
+            const { img, style, text } = paymentMethod.getImage(deal?.payment);
+
             return (
               <tr
                 onMouseEnter={() => setDidHoverID(index)}

@@ -921,6 +921,7 @@ export const reduxSlice = createSlice({
 
         state.isSuccess = true;
         state.isLoading = false;
+        state.showModal = false;
       })
       .addCase(LABRESULT.rejected, (state, action) => {
         const { error } = action;

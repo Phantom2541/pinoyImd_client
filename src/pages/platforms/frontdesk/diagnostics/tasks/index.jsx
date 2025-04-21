@@ -4,7 +4,7 @@ import { useToasts } from "react-toast-notifications";
 import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { MDBCard, MDBCardBody } from "mdbreact";
 import DealCollapse from "./collapse";
-import Header from "./headers";
+import Header from "./header";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
 
@@ -28,7 +28,7 @@ export default function Tasks() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  //Initial Browse
+  // references
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       const branchId = activePlatform.branchId;

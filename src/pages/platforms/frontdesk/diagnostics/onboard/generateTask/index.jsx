@@ -103,8 +103,7 @@ export default function Modal() {
     for (const key in _forms) {
       const lowercaseKey = key.toLowerCase();
       let bucket = _forms[key];
-      const requestData = {
-        _id,
+      let requestData = {
         packages: bucket,
         customerId: customerId?._id,
         branchId: activePlatform.branchId,
@@ -115,27 +114,28 @@ export default function Modal() {
           if (panelAvail.length) {
             bucket = bucket.filter((item) => !panel.includes(item));
             await saveRequest(lowercaseKey, {
-              packages: panelAvail,
               dealId: _id,
+              packages: panelAvail,
               customerId: customerId?._id,
               branchId: activePlatform.branchId,
               buntis: true,
             });
           }
           if (bucket.length > 0) {
-            const soloForms = bucket.map((test) => ({
-              packages: [test],
-              dealId: _id,
-              customerId: customerId?._id,
-              branchId: activePlatform.branchId,
-              _buntis: false,
-            }));
-
-            await saveRequest(lowercaseKey, soloForms);
+            bucket.map(
+              async (test) =>
+                await saveRequest(lowercaseKey, {
+                  dealId: _id,
+                  packages: [test],
+                  customerId: customerId?._id,
+                  branchId: activePlatform.branchId,
+                  _buntis: false,
+                })
+            );
           }
           break;
 
-        case "X-ray":
+        case "Xray":
           bucket.map(
             async (test) =>
               await saveRequest(lowercaseKey, {
@@ -149,6 +149,7 @@ export default function Modal() {
           break;
 
         default:
+          requestData._id = _id;
           await saveRequest(lowercaseKey, requestData);
       }
     }
