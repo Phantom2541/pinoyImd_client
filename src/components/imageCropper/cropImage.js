@@ -4,7 +4,9 @@
  * @param {Object} pixelCrop - pixelCrop Object provided by react-easy-crop
  * @param {number} rotation - optional rotation parameter
  */
+import pica from "pica";
 
+const picaInstance = pica();
 const createImage = (url) =>
   new Promise((resolve, reject) => {
     const image = new Image();
@@ -88,4 +90,33 @@ const generateDownload = async (src, ext, crop, upload = false) => {
   );
 };
 
-export default generateDownload;
+const resizeImageToCropSize = async (imageSrc, cropSize) => {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = imageSrc;
+
+  await new Promise((resolve) => {
+    img.onload = resolve;
+  });
+
+  const offScreenCanvas = document.createElement("canvas");
+  offScreenCanvas.width = img.width;
+  offScreenCanvas.height = img.height;
+  const ctx = offScreenCanvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  const targetCanvas = document.createElement("canvas");
+  targetCanvas.width = cropSize.width;
+  targetCanvas.height = cropSize.height;
+
+  await picaInstance.resize(offScreenCanvas, targetCanvas, {
+    quality: 3, // max
+    unsharpAmount: 80,
+    unsharpThreshold: 2,
+  });
+
+  const resizedImage = await picaInstance.toBlob(targetCanvas, "image/png");
+  return URL.createObjectURL(resizedImage);
+};
+
+export { generateDownload, resizeImageToCropSize };

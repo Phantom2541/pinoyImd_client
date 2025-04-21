@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "./modal";
 
 export default function ImageCropper({
@@ -7,6 +7,7 @@ export default function ImageCropper({
   modalSize = "md",
   aspect = 1,
   cropSize,
+  setIsShow = () => {},
   handleUpload = () => {},
   isUpload = false,
 }) {
@@ -35,6 +36,10 @@ export default function ImageCropper({
     reader.readAsDataURL(file);
     target.value = null;
   };
+
+  useEffect(() => {
+    setIsShow(show);
+  }, [show, setIsShow]);
 
   return (
     <>

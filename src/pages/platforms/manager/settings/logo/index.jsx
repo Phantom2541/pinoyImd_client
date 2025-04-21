@@ -25,10 +25,16 @@ const array = new Array(5).fill().map((_, index) => index);
 
 export default function Logo() {
   const { addToast } = useToasts();
-  const { activePlatform, company, token, isLoading, message, isSuccess } =
-    useSelector(({ auth }) => auth);
+  const { company, token, isLoading, message, isSuccess } = useSelector(
+    ({ auth }) => auth
+  );
   const dispatch = useDispatch();
   const [preview, setPreview] = useState("");
+  const [showImgCropper, setShowImgCropper] = useState(false);
+
+  useEffect(() => {
+    setShowImgCropper(false);
+  }, []);
 
   useEffect(() => {
     if (message) {
@@ -85,7 +91,7 @@ export default function Logo() {
       <div style={{ width: "230px" }} className="mx-auto">
         <MDBCard>
           <MDBCardBody>
-            <MDBView hover>
+            <MDBView hover={!showImgCropper}>
               <img
                 src={
                   preview ||
@@ -109,6 +115,7 @@ export default function Logo() {
                   <ImageCropper
                     handleUpload={handleUpload}
                     cropSize={{ width: 230, height: 80 }}
+                    setIsShow={(show) => setShowImgCropper(show)}
                     isUpload
                     label={
                       <>
