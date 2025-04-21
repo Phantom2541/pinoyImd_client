@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 export default function Body({ _id, customer, forms }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
 
+  console.log("forms:", forms);
+
   return (
     <MDBTable small hover responsive>
       <thead>
@@ -13,7 +15,7 @@ export default function Body({ _id, customer, forms }) {
           <th>Performer</th>
           <th>Template</th>
           <th>Services</th>
-          <th />
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>

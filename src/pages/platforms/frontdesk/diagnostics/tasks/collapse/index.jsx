@@ -14,6 +14,8 @@ export default function DealCollapse() {
   return (
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
       {handlePagination(filtered, activePage, maxPage).map((deal, index) => {
+        console.log("deal", deal);
+
         return (
           <MDBCard key={`deal-${index}`}>
             <Header deal={deal} index={index} />

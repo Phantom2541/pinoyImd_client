@@ -11,9 +11,7 @@ const Forms = ({ _id, form, obj = {}, index, customer }) => {
     dispatch = useDispatch();
 
   const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
-
   const isCluster = ["Miscellaneous", "Xray"].includes(form);
-
   // Ensure formEntries is an array even if obj is null or malformed
   const formEntries = isCluster
     ? Array.isArray(obj)
@@ -55,7 +53,6 @@ const Forms = ({ _id, form, obj = {}, index, customer }) => {
         : packages
         ? [packages]
         : [];
-
     const task = {
       ...entry,
       key: `${form}-${index}-${entryIndex}`,

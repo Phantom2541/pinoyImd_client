@@ -18,7 +18,7 @@ const Header = ({ deal, index }) => {
     history = useHistory(),
     dispatch = useDispatch(),
     categoryName =
-      category === "walkin"
+      category === "wi"
         ? "Walkin"
         : Categories.find(({ abbr }) => abbr === category)?.name;
 
@@ -46,7 +46,10 @@ const Header = ({ deal, index }) => {
       <i
         onClick={() =>
           dispatch(
-            SetSELECTED({ deal, activeCOLAPSE: activeCOLAPSE === index ? -1 : index })
+            SetSELECTED({
+              deal,
+              activeCOLAPSE: activeCOLAPSE === index ? -1 : index,
+            })
           )
         }
         style={{ rotate: `${activeCOLAPSE === index ? 0 : 90}deg` }}
