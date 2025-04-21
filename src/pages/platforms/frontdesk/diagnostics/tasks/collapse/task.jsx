@@ -1,9 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  capitalize,
-  fullName,
-} from "../../../../../../services/utilities/index.js";
+import { fullName } from "../../../../../../services/utilities/index.js";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
@@ -13,18 +10,18 @@ const Tasks = ({ _id, form, obj = {}, index, customer }) => {
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
 
-  const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
-  const isCluster = ["Miscellaneous", "Xray"].includes(form);
-  // Ensure formEntries is an array even if obj is null or malformed
-  const formEntries = isCluster
-    ? Array.isArray(obj)
-      ? obj.length > 0
-        ? obj
-        : [{}] // empty array becomes [{}] for at least one row
-      : obj
-      ? [obj]
-      : [{}]
-    : [obj || {}];
+  // const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
+  // const isCluster = ["Miscellaneous", "Xray"].includes(form);
+  // // Ensure formEntries is an array even if obj is null or malformed
+  // const formEntries = isCluster
+  //   ? Array.isArray(obj)
+  //     ? obj.length > 0
+  //       ? obj
+  //       : [{}] // empty array becomes [{}] for at least one row
+  //     : obj
+  //     ? [obj]
+  //     : [{}]
+  //   : [obj || {}];
 
   const handlePrint = (task) => {
     const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
@@ -40,7 +37,7 @@ const Tasks = ({ _id, form, obj = {}, index, customer }) => {
     );
   };
 
-  return formEntries.map((entry, entryIndex) => {
+  return obj.map((entry, entryIndex) => {
     const {
       packages = [],
       hasDone = false,
@@ -66,7 +63,7 @@ const Tasks = ({ _id, form, obj = {}, index, customer }) => {
       generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
       hasDone,
       remarks,
-      department,
+      // department,
     };
 
     const handleEntry = () => dispatch(SetTASK({ task, form }));
@@ -76,8 +73,7 @@ const Tasks = ({ _id, form, obj = {}, index, customer }) => {
     return (
       <tr key={task.key} className={hasDone ? "table-active" : ""}>
         <td>
-          {index + 1}
-          {isCluster ? `.${entryIndex + 1}` : ""}{" "}
+          {index}
           {fullName(signatories[0]?.fullName || "N/A")}
         </td>
         <td>{form}</td>

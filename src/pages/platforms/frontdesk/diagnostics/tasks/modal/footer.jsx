@@ -61,6 +61,7 @@ const Footer = () => {
         },
       })
     );
+    dispatch(SetMODAL(false));
   };
 
   const generateHealthyStats = () => {

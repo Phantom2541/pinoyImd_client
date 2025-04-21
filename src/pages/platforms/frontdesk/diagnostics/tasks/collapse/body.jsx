@@ -36,7 +36,7 @@ export default function Body({ _id, customer, tasks }) {
                   form={key}
                   obj={t || {}}
                   customer={customer}
-                  index={`${index}-${i + 1}`}
+                  index={`${index + 1}-${i + 1}`}
                 />
               ));
             }
@@ -48,7 +48,7 @@ export default function Body({ _id, customer, tasks }) {
                 form={key}
                 obj={task || {}}
                 customer={customer}
-                index={index}
+                index={index + 1}
               />
             );
           })}
