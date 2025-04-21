@@ -32,8 +32,12 @@ export default function Banner() {
   const { addToast } = useToasts();
   const [preview, setPreview] = useState("");
   const { activePlatform, company, token } = useSelector(({ auth }) => auth);
+  const [showImgCropper, setShowImgCropper] = useState(false);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    setShowImgCropper(false);
+  }, []);
   useEffect(() => {
     if (message) {
       addToast(message, {
@@ -93,7 +97,7 @@ export default function Banner() {
       </MDBTypography>
       <MDBCard>
         <MDBCardBody>
-          <MDBView hover>
+          <MDBView hover={!showImgCropper}>
             <img
               src={
                 preview ||
@@ -113,6 +117,7 @@ export default function Banner() {
                   handleUpload={handleUpload}
                   cropSize={{ width: 850, height: 85 }}
                   modalSize="xl"
+                  setIsShow={(show) => setShowImgCropper(show)}
                   isUpload
                   label={
                     <>

@@ -11,24 +11,22 @@ import DataTable from "../../../../../components/dataTable";
 import { fullName, globalSearch } from "../../../../../services/utilities";
 import { ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
-import { MDBBtn } from "mdbreact";
+import { MDBBtn, MDBIcon } from "mdbreact";
 import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function Heads() {
-  const [heads, setHeads] = useState([]),
-    [selected, setSelected] = useState({}),
-    [showModal, setShowModal] = useState(false),
-    [willCreate, setWillCreate] = useState(true),
-    {
-      token,
-      activePlatform,
-      isLoading: loadingImage,
-    } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ heads }) => heads
     ),
+    [heads, setHeads] = useState([]),
+    [selected, setSelected] = useState({}),
+    [showModal, setShowModal] = useState(false),
+    [willCreate, setWillCreate] = useState(true),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  const [imageErrors, setImageErrors] = useState({});
 
   //Initial Browse
   useEffect(() => {
@@ -107,7 +105,10 @@ export default function Heads() {
             },
             token,
           })
-        );
+        ).then(() => {
+          // After successful upload
+          setImageErrors((prev) => ({ ...prev, [email]: false }));
+        });
       };
     };
     reader.readAsDataURL(e.target.files[0]);
@@ -129,13 +130,10 @@ export default function Heads() {
     });
   };
 
-  const [imageErrors, setImageErrors] = useState({});
-
   const handleImageError = (email) => {
     setImageErrors((prev) => ({ ...prev, [email]: true }));
   };
-
-  const handleUpload = () => {};
+  console.log("imageErrors", imageErrors);
 
   const fileInputRef = useRef();
   const triggerFileInput = () => {
@@ -230,11 +228,11 @@ export default function Heads() {
                   <div>
                     <MDBBtn
                       size="sm"
-                      color="info"
+                      color="warning"
                       rounded
                       onClick={triggerFileInput}
                     >
-                      Upload Signature
+                      <MDBIcon icon="upload" />
                     </MDBBtn>
                   </div>
                 )}
