@@ -24,13 +24,13 @@ import {
 } from "../../../../../services/utilities";
 import { BROWSE } from "../../../../../services/redux/slices/assets/persons/users";
 
-export default function Modal({ show, toggle, selected, name }) {
+export default function Modal({ show, toggle, name }) {
   const dispatch = useDispatch();
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ users }) => users);
 
   const [users, setUsers] = useState([]);
-  const [doctors, setDoctors] = useState([]);
+  // const [doctors, setDoctors] = useState([]);
 
   // Search by name
   useEffect(() => {
@@ -86,7 +86,7 @@ export default function Modal({ show, toggle, selected, name }) {
         },
       };
 
-      setDoctors((prev) => [...prev, payload]);
+      // setDoctors((prev) => [...prev, payload]);
 
       // Save immediately
       dispatch(SAVE({ token, data: [payload] }));

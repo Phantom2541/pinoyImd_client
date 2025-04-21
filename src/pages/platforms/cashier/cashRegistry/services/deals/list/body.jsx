@@ -109,7 +109,7 @@ const Tables = () => {
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex);
+  const paginatedData = collections.slice(startIndex, endIndex);
 
   return (
     <>

@@ -10,20 +10,20 @@ import {
   MDBBtn,
 } from "mdbreact";
 import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
-import joinNow from "../../../../../../assets/joinNow.png";
+// import joinNow from "../../../../../../assets/joinNow.png";
 import ApplicationModal from "./modal";
 
 export default function CompanyCard({ company }) {
-  const [visibility, setVisibility] = useState(false),
-    [didHover, setDidHover] = useState(false);
+  const [visibility, setVisibility] = useState(false);
+  // [didHover, setDidHover] = useState(false);
 
   return (
     <MDBCol md="3">
       <MDBCard
         narrow
         style={{ marginTop: "44px" }}
-        onMouseOver={() => setDidHover(true)}
-        onMouseOut={() => setDidHover(false)}
+        // onMouseOver={() => setDidHover(true)}
+        // onMouseOut={() => setDidHover(false)}
       >
         <MDBView waves cascade hover rounded className="custom-mdbview mx-auto">
           <img
