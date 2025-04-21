@@ -18,7 +18,7 @@ import { Services } from "../../../../../../services/fakeDb";
 
 /**
  * Common for Buntis and Blood Donors
- * HIV, RPR, HBsAg,  HCV
+ * HIV:68, RPR:69, HBsAg:70,  HCV:97
  */
 const panel = [68, 69, 70, 97];
 export default function Modal() {
@@ -41,8 +41,6 @@ export default function Modal() {
 
   const getIDS = (collections) => collections.map(({ id }) => id);
   const saveRequest = async (template, data, isStaticPath = false) => {
-    console.log("activePlatform.department", activePlatform.department);
-
     try {
       const _department = ["laboratory", "radiology"].includes(
         activePlatform.department
@@ -63,10 +61,7 @@ export default function Modal() {
     const _outsource = getIDS(outsource);
     const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);
     const _forms = Services.getTemplates(inhouseIDS, department);
-
     const { _id, customerId, ssx, forms: oldForms } = deal;
-    console.log("deal", deal);
-
     const sentOut = [...collections].find(
       ({ vendors }) => vendors?._id === outSourceId
     );
@@ -114,7 +109,6 @@ export default function Modal() {
         customerId: customerId?._id,
         branchId: activePlatform.branchId,
       };
-
       switch (key) {
         case "Miscellaneous":
           const panelAvail = bucket.filter((test) => panel.includes(test));
@@ -127,18 +121,18 @@ export default function Modal() {
               branchId: activePlatform.branchId,
               buntis: true,
             });
-            return;
           }
+          if (bucket.length > 0) {
+            const soloForms = bucket.map((test) => ({
+              packages: [test],
+              dealId: _id,
+              customerId: customerId?._id,
+              branchId: activePlatform.branchId,
+              _buntis: false,
+            }));
 
-          const soloForms = bucket.map((test) => ({
-            packages: [test],
-            dealId: _id,
-            customerId: customerId?._id,
-            branchId: activePlatform.branchId,
-            _buntis: false,
-          }));
-
-          await saveRequest(lowercaseKey, soloForms);
+            await saveRequest(lowercaseKey, soloForms);
+          }
           break;
 
         case "X-ray":
