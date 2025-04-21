@@ -1,130 +1,10 @@
 import React from "react";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
-
-// import { axioKit, harvestTask } from "../../../../../../../services/utilities";
-// import { REFORM } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { SetSELECTED } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-// import { Services } from "../../../../../../../services/fakeDb";
 
-const PrimaryFooter = ({ deal, setEdit }) => {
-  // const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-  const  dispatch = useDispatch();
-
-  // const generateTask = async () => {
-  //   const { _id, cart, customerId, ssx } = deal;
-
-  //   const packages = cart.flatMap((item) => item.packages);
-
-  //   const template = Services.getTemplates(packages, "LAB");
-
-  //   let RequestForm = { customer: deal?.customerId };
-  //   const task = harvestTask(cart);
-  //   localStorage.setItem("task", JSON.stringify(task));
-  //   localStorage.setItem("ssx", JSON.stringify(ssx));
-
-  //   const forms = Object.keys(task);
-  //   for (const key in task) {
-  //     const lowercaseKey = key.toLowerCase();
-  //     RequestForm[lowercaseKey] = task[key];
-
-  //     if (key === "Miscellaneous") {
-  //       // const buntisTests = [68, 69, 70, 131, 97]; // HIV, RPR, HBsAg, HAV, HCV
-  //       const buntisTests = []; // HIV, RPR, HBsAg, HAV, HCV //removed 131
-  //       var tests = task[key];
-  //       // Check if all elements to remove are present in the array
-  //       const buntisPresent = tests.filter((test) =>
-  //         buntisTests.includes(test)
-  //       );
-  //       //console.log("Miscellaneous");
-  //       if (!!buntisPresent.length) {
-  //         //console.log("buntisPresent");
-
-  //         tests = tests.filter((item) => !buntisTests.includes(item));
-  //         await axioKit.save(
-  //           "/diagnostics/laboratory/result/miscellaneous",
-  //           {
-  //             packages: buntisPresent,
-  //             dealId: _id,
-  //             customerId: customerId?._id,
-  //             branchId: activePlatform.branchId,
-  //             buntis: true,
-  //           },
-  //           token
-  //         );
-  //         return; // added a return to stop from double query
-  //       }
-
-  //       // Solo form:
-  //       // 1. Preg test (67),
-  //       // 2. Dengue Duo (77),
-  //       // 3. Blood Typing (66)
-  //       //console.log("single form");
-
-  //       const newArr = tests.map((test) => ({
-  //         packages: [test],
-  //         dealId: _id,
-  //         customerId: customerId?._id,
-  //         branchId: activePlatform.branchId,
-  //         _buntis: false,
-  //       }));
-
-  //       axioKit.save(
-  //         "/diagnostics/laboratory/result/miscellaneous",
-  //         newArr,
-  //         token
-  //       );
-
-  //       continue;
-  //     }
-  //     const department =
-  //       key === "ECG" || key === "X-ray"
-  //         ? "radiology"
-  //         : key === "Examination" || key === "Certicifate"
-  //         ? "clinic"
-  //         : "laboratory";
-
-  //     axioKit.save(
-  //       `/diagnostics/${department}/result/${lowercaseKey}`,
-  //       {
-  //         packages: task[key],
-  //         _id,
-  //         customerId: customerId?._id,
-  //         branchId: activePlatform.branchId,
-  //       },
-  //       token
-  //     );
-
-  //     localStorage.setItem("RequestForm", JSON.stringify(RequestForm));
-  //   }
-
-  //   // working request form but not showing anything
-  //   window.open(
-  //     "/printout/request/form",
-  //     "Request Form",
-  //     "top=100px,left=100px,width=1050px,height=750px"
-  //   );
-
-  //   dispatch(
-  //     REFORM({
-  //       token,
-  //       data: {
-  //         _id,
-  //         ssx,
-  //         lol: auth._id,
-  //         rendered: [
-  //           {
-  //             department: "LAB",
-  //             renderedBy: auth._id,
-  //             renderedAt: new Date().toLocaleString(),
-  //           },
-  //         ],
-  //         template,
-  //         forms,
-  //       },
-  //     })
-  //   );
-  // };
+const PrimaryFooter = ({ deal }) => {
+  const dispatch = useDispatch();
 
   const preAnalytical = async (deal) => {
     console.log("preAnalytical", deal);
@@ -133,16 +13,6 @@ const PrimaryFooter = ({ deal, setEdit }) => {
   return (
     <>
       <MDBBtnGroup className="sales-card-footer w-100 d-flex flex-row">
-        <MDBBtn
-          type="button"
-          className="m-0"
-          size="sm"
-          color="primary"
-          title="Edit"
-          onClick={() => setEdit(true)}
-        >
-          <MDBIcon icon="pencil-alt" />
-        </MDBBtn>
         <MDBBtn
           type="button"
           onClick={() => preAnalytical(deal)}
