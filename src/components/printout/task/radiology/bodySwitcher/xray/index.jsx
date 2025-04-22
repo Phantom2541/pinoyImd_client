@@ -3,7 +3,8 @@ import React from "react";
 export default function Xray({ fontSize = "16px", task }) {
   if (!task) return <div>No task data provided</div>;
 
-  const { description = "", impression = "" } = task;
+  const { description = "", impression = "", services } = task;
+  console.log("task", task);
 
   const formatText = (text) => {
     return text
@@ -17,23 +18,31 @@ export default function Xray({ fontSize = "16px", task }) {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial", fontSize }}>
-      <h2 style={{ color: "red", fontWeight: "bold", textAlign: "center" }}>
-        ROENTGENOLOGICAL REPORT
-      </h2>
-
+    <div
+      style={{
+        padding: "20px",
+        fontFamily: "Arial",
+        fontSize,
+        minHeight: "700px",
+        display: "flex",
+        flexDirection: "column",
+        // justifyContent: "space-between",
+      }}
+    >
       <div
         style={{ display: "flex", alignItems: "flex-start", marginTop: "20px" }}
       >
         <span style={{ color: "red", fontWeight: "bold", marginRight: "8px" }}>
           •
         </span>
-        <span style={{ fontWeight: "bold", color: "red" }}>Chest</span>
+        <span style={{ fontWeight: "bold", color: "red" }}>
+          {services.name}
+        </span>
       </div>
 
       <div style={{ marginTop: "10px" }}>{formatText(description)}</div>
-
-      <div style={{ marginTop: "30px" }}>{formatText(impression)}</div>
+      <div style={{ marginTop: "30px" }}>IMPRESSION :</div>
+      <div style={{ marginTop: "10px" }}>{formatText(impression)}</div>
     </div>
   );
 }

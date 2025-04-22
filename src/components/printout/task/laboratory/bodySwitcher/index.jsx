@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import Hematology from "./laboratory/hematology";
-import Urinalysis from "./laboratory/urinalysis";
-import Chemistry from "./laboratory/chemistry";
-import Parasitology from "./laboratory/parasitology";
-import Coagulation from "./laboratory/coagulation";
-import Miscellaneous from "./laboratory/miscellaneous";
-import Analysis from "./laboratory/analysis";
-import Bacteriology from "./laboratory/bacteriology";
-import Compatibility from "./laboratory/compatibility";
-import Pbs from "./laboratory/pbs";
-import Electrolyte from "./laboratory/electrolyte";
-import Xray from "./radiology/xray";
+import Hematology from "./hematology";
+import Urinalysis from "./urinalysis";
+import Chemistry from "./chemistry";
+import Parasitology from "./parasitology";
+import Coagulation from "./coagulation";
+import Miscellaneous from "./miscellaneous";
+import Analysis from "./analysis";
+import Bacteriology from "./bacteriology";
+import Compatibility from "./compatibility";
+import Pbs from "./pbs";
 
 const Blank = ({ task }) => <div>{task.form} is not working</div>;
 
@@ -26,8 +24,6 @@ const componentMap = {
   bacteriology: Bacteriology,
   compatibility: Compatibility,
   pbs: Pbs,
-  electrolyte: Electrolyte,
-  xray: Xray,
 };
 
 export default function BodySwitcher({ task }) {

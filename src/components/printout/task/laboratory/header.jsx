@@ -1,7 +1,10 @@
 import React from "react";
-import { getAge, fullName as nameFormatter } from "../../../services/utilities";
+import {
+  getAge,
+  fullName as nameFormatter,
+} from "../../../../services/utilities";
 import { MDBRow, MDBCol } from "mdbreact";
-import { Categories } from "../../../services/fakeDb";
+import { Categories } from "../../../../services/fakeDb";
 export default function Header({
   patient,
   date,

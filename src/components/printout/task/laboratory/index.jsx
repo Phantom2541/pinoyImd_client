@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "./header";
 import { MDBAlert } from "mdbreact";
-import { formColor, Banner } from "../../../services/utilities";
+import { formColor, Banner } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
 import Signatories from "./signatories";
 
@@ -62,7 +62,7 @@ const Printout = ({ task }) => {
   );
 };
 
-export default function TaskPrintout() {
+export default function LabTaskPrintout() {
   const [task, setTask] = useState({ _id: "" });
 
   useEffect(() => {

@@ -2,14 +2,13 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import { Search } from "../../../../../../../components/searchables";
+import { Search } from "./../../../../../../components/searchables";
 import {
   CASHIER,
   SetFILTERED,
-  // setVIEW,
   RESET,
-} from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
-import { INSOURCE } from "../../../../../../../services/redux/slices/assets/providers";
+} from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { INSOURCE } from "./../../../../../../services/redux/slices/assets/providers";
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(

@@ -23,7 +23,6 @@ const Tables = () => {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
       collections,
-      filtered,
       formSubmitted,
       isSuccess,
       activePage,
@@ -36,7 +35,6 @@ const Tables = () => {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  console.log("providers", providers);
   useEffect(() => {
     if (!formSubmitted && isSuccess) {
       dispatch(RESET());

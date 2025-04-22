@@ -1,0 +1,92 @@
+@media print {
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    background-color: white;
+    overflow: hidden;
+  }
+
+  header,
+  nav,
+  .app-header,
+  .topbar,
+  .page-header {
+    display: none !important;
+  }
+
+  #root {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  ::before,
+  ::after {
+    content: none !important;
+  }
+  .print-container {
+    width: 794px; /* A4 */
+    min-height: 1123px;
+    margin: auto;
+    font-family: Helvetica, sans-serif;
+    /* font-size: 18px; */
+    letter-spacing: -0.5px;
+    background-color: white;
+    cursor: default;
+  }
+
+  .print-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3cm;
+    padding: 0.5cm 1.5cm;
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+    z-index: 999;
+  }
+
+  .print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 6cm;
+    padding: 0.5cm 1.5cm;
+    background-color: white;
+    border-top: 1px solid #ccc;
+    z-index: 999;
+  }
+
+  .print-body {
+    margin-top: 3.5cm;
+    margin-bottom: 4.5cm;
+    padding: 1cm 1.5cm;
+    box-sizing: border-box;
+  }
+
+  .print-section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+  }
+
+  .print-page-break {
+    page-break-before: always;
+  }
+  .flex-spacer {
+    flex-grow: 1;
+  }
+
+  .remarks-section {
+    border-top: 1px solid #007bff;
+    padding-top: 0.3rem;
+    margin-top: 0.5rem;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}

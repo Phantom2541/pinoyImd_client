@@ -23,17 +23,26 @@ const Tasks = ({ _id, form, obj = {}, index, customer }) => {
   //     : [{}]
   //   : [obj || {}];
 
-  const handlePrint = (task) => {
+  const handleLabPrint = (task) => {
     const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
       const range = collections.filter(({ serviceId }) => serviceId === id);
       return { ...rest, id, range };
     });
 
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+    const URL = "/printout/laboratory/task",
+      title = `Laboratory Task Printout`,
+      features = "top=100px,left=100px,width=1050px,height=750px";
+
+    window.open(URL, title, features);
+  };
+  const handleRadPrint = (task) => {
+    const services = Services.find(task.services);
+    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
     window.open(
-      "/printout/task",
-      "Task Printout",
-      "top=100px,left=100px,width=1050px,height=750px"
+      "/printout/radiology/task",
+      "Radiology Task Printout",
+      "top=100px,left=100px,width=794px,height=1123px"
     );
   };
 
@@ -105,15 +114,18 @@ const Tasks = ({ _id, form, obj = {}, index, customer }) => {
               signatories[1] &&
               hasDone && (
                 <MDBBtn
-                  onClick={() =>
-                    handlePrint({
+                  onClick={() => {
+                    const _task = {
                       ...task,
                       branchId: activePlatform?.branch,
                       services: _packages,
                       signatories,
                       isPrint: true,
-                    })
-                  }
+                    };
+                    activePlatform.department === "laboratory"
+                      ? handleLabPrint(_task)
+                      : handleRadPrint(_task);
+                  }}
                   color="warning"
                   size="sm"
                   className="py-1 px-2 m-0"
