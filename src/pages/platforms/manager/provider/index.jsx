@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   OUTSOURCE,
   RESET,
+  UPDATE,
 } from "../../../../services/redux/slices/assets/providers";
 import {
   MDBContainer,
@@ -60,6 +61,51 @@ export default function Outsource() {
   const toggle = () => {
     setShowModal(!showModal);
   };
+  const handleEdit = async (source) => {
+    const { value: formValues } = await Swal.fire({
+      title: "Edit Provider",
+      html: `
+      <input 
+        id="swal-input1" 
+        class="swal2-input" 
+        placeholder="Display Name" 
+        value="${source?.displayname || ""}"
+      >
+      <input 
+        id="swal-input2" 
+        class="swal2-input" 
+        placeholder="ABBR" 
+        value="${source?.abbr || ""}"
+      >
+    `,
+      focusConfirm: false,
+      preConfirm: () => {
+        const displayname = document.getElementById("swal-input1").value;
+        const abbr = document.getElementById("swal-input2").value;
+
+        if (!displayname || !abbr) {
+          Swal.showValidationMessage("Please fill in both fields");
+          return false;
+        }
+
+        return { displayname, abbr };
+      },
+    });
+
+    if (formValues) {
+      console.log("Edited values:", formValues);
+      dispatch(
+        UPDATE({
+          token,
+          data: {
+            _id: source._id,
+            displayname: formValues.displayname,
+            abbr: formValues.abbr,
+          },
+        })
+      );
+    }
+  };
 
   return (
     <MDBContainer>
@@ -86,7 +132,7 @@ export default function Outsource() {
             </MDBTableHead>
             <MDBTableBody>
               {providers.map((source, index) => {
-                //console.log("source", source);
+                console.log("source", source);
 
                 return (
                   <tr>
@@ -94,10 +140,20 @@ export default function Outsource() {
                     <td>
                       {source?.vendors?.displayname
                         ? source?.vendors?.displayname
-                        : source?.vendors?.companyId.name}
-                      \{source?.vendors?.name}
+                        : source?.vendors?.companyId?.name}
+                      \{source?.vendors ? source?.vendors?.name : ""}
                     </td>
                     <td>{fullAddress(source?.vendors?.address)}</td>
+                    <td>
+                      <MDBBtn
+                        type="button"
+                        color="info"
+                        rounded
+                        onClick={() => handleEdit(source)}
+                      >
+                        <MDBIcon icon="pencil-alt" />
+                      </MDBBtn>
+                    </td>
                   </tr>
                 );
               })}

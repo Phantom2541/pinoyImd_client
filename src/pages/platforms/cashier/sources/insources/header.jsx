@@ -5,7 +5,6 @@ import {
   RESET,
   INSOURCE,
   SetSOURCE,
-  TOGGLE,
   RESET_COLLECTIONS,
   SetREGISTER,
 } from "../../../../../services/redux/slices/assets/providers";
@@ -14,9 +13,8 @@ import Swal from "sweetalert2";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
-
+  // initial values
   useEffect(() => {
-    // console.log("Outside if");
     if (token && activePlatform?.branchId) {
       dispatch(
         INSOURCE({
@@ -35,10 +33,10 @@ const Header = () => {
   };
 
   const setSource = (source) => {
-    const { name, displayname } = source;
+    const { displayname } = source;
     Swal.fire({
-      title: `${name || ""} ${displayname || ""}`,
-      text: `Do you want to register him as a new provider?`,
+      title: `${displayname || ""}`,
+      text: `Do you want to register as a new provider?`,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -47,7 +45,6 @@ const Header = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(SetSOURCE(source));
-        dispatch(TOGGLE());
       } else {
         dispatch(RESET_COLLECTIONS());
       }

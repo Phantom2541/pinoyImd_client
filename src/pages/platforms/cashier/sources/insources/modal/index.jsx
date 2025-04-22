@@ -41,22 +41,19 @@ const MembershipOptions = [
   { value: "crown", text: "Crown 25% discount" },
 ];
 export default function Modal() {
-  const {
-      showCompanyModal = false,
-      isLoading,
-      selected,
-    } = useSelector(({ providers }) => providers),
+  const { showModal, isLoading, selected } = useSelector(
+      ({ providers }) => providers
+    ),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     dispatch = useDispatch();
 
   const toggle = () => dispatch(TOGGLE());
-  console.log("modal", selected);
   useEffect(() => {
-    if (showCompanyModal) {
+    if (showModal) {
       setForm(_form);
     }
-  }, [showCompanyModal]);
+  }, [showModal]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -113,7 +110,7 @@ export default function Modal() {
   // use for direct values like strings and numbers
   const { name = "", displayname = "" } = selected || {};
   return (
-    <MDBModal isOpen={showCompanyModal} toggle={toggle} size="md" backdrop>
+    <MDBModal isOpen={showModal} toggle={toggle} size="md" backdrop>
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"

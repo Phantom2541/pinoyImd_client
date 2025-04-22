@@ -11,8 +11,6 @@ import {
 import {
   SetBRANCHES,
   SPECIFIC_UPDATE,
-  // RESET,
-  DESTROY,
   SetREGISTER,
 } from "../../../../../../services/redux/slices/assets/providers";
 import { SAVE } from "../../../../../../services/redux/slices/assets/persons/physicians";
@@ -153,21 +151,6 @@ export default function MenuCollapse() {
       }
     });
   };
-  const handleUntag = (providerId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You want to untag this company!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, untag it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { providerId } }));
-      }
-    });
-  };
 
   const registerGhostCompany = (insource) => {
     const { name } = insource;
@@ -262,7 +245,6 @@ export default function MenuCollapse() {
                 handleUpdate={(isSpecific = true) =>
                   isSpecific ? handleUpdate() : handleUpdateClient()
                 }
-                handleUntag={handleUntag}
                 registerGhostCompany={registerGhostCompany}
                 formSubmitted={formSubmitted || formSubmittedBranch}
                 insource={insource}

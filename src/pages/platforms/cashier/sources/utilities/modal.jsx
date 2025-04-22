@@ -129,7 +129,7 @@ export default function Modal() {
           />
 
           <MDBInput
-            label="Number"
+            label="Phone Number"
             type="string"
             value={form?.number}
             onChange={(e) => handleChange("number", e.target.value)}

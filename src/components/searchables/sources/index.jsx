@@ -146,8 +146,7 @@ export default function Search({
               {!isLoading ? (
                 <>
                   {results?.map((result) => {
-                    const { _id, name, isGhost = false, displayname } = result;
-                    const _name = `${name || ""}  ${displayname || ""}`;
+                    const { _id, isGhost = false, displayname } = result;
 
                     return (
                       <li
@@ -161,7 +160,7 @@ export default function Search({
                         }
                       >
                         <MDBIcon icon="database" className="mr-2 mt-1" />
-                        <small>{_name}</small>
+                        <small>{displayname}</small>
                       </li>
                     );
                   })}
