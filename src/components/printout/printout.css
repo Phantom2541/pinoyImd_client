@@ -5,7 +5,6 @@
     padding: 0;
     font-size: 18px;
     background-color: white;
-    overflow: hidden;
   }
 
   header,
@@ -26,8 +25,7 @@
     content: none !important;
   }
   .print-container {
-    width: 794px; /* A4 */
-    min-height: 1123px;
+    /* width: 794px; A4 */
     margin: auto;
     font-family: Helvetica, sans-serif;
     /* font-size: 18px; */
@@ -61,9 +59,10 @@
   }
 
   .print-body {
-    margin-top: 3.5cm;
+    margin-top: 3cm;
     margin-bottom: 4.5cm;
     padding: 1cm 1.5cm;
+    height: 100%;
     box-sizing: border-box;
   }
 
@@ -82,11 +81,12 @@
 
   .remarks-section {
     border-top: 1px solid #007bff;
-    padding-top: 0.3rem;
-    margin-top: 0.5rem;
+    background-color: white;
+    margin-bottom: -4rem !important;
+    margin: 3.1rem;
   }
   @page {
-    size: A4 portrait;
+    size: A4;
     margin: 0;
   }
 }
