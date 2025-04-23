@@ -9,20 +9,20 @@ const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
 
   return (
-    <div className="print-container">
+    <div className="print-container position-relative">
       <Banner company={branchId.companyId.name} branch={branchId.name} />
       <div className="print-body">
         <Header task={task} />
         <BodySwitcher task={task} />
         {/* Spacer pushes Remarks to bottom */}
-        <div className="flex-spacer" />
 
-        <div className="remarks-section d-flex px-1">
-          <div style={{ paddingTop: "2px" }} className="mr-1 mb-1">
-            Remarks:
-          </div>
-          <h5 className="fw-bold">{remarks}</h5>
+        <div className="flex-spacer" />
+      </div>
+      <div className="remarks-section d-flex px-1">
+        <div style={{ paddingTop: "2px" }} className="mr-1 mb-1">
+          Remarks:
         </div>
+        <h5 className="fw-bold">{remarks}</h5>
       </div>
       <Signatories signatories={signatories} />
     </div>

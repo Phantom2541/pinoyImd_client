@@ -13,8 +13,8 @@ export default function Header({ task }) {
 
   return (
     <div className="px-1">
-      <MDBRow>
-        <MDBCol md="8" style={{ alignItems: "baseline" }} className="d-flex">
+      <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center">
           Name:&nbsp;
           <h5
             className="mb-0 fw-bold text-wrap"
@@ -22,35 +22,37 @@ export default function Header({ task }) {
           >
             <u>{nameFormatter(pFull, true)}</u>
           </h5>
-        </MDBCol>
-        <MDBCol className="text-right">
+        </div>
+        <div>
           <span>Date: {new Date(updatedAt).toDateString()}</span>
-        </MDBCol>
-      </MDBRow>
-      <MDBRow>
-        <MDBCol md="8" style={{ alignItems: "baseline" }} className="d-flex">
-          Patient CODE :&nbsp;
-          <small
+        </div>
+      </div>
+
+      <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center">
+          Patient ID :&nbsp;
+          <span
             className="mb-0 fw-bold text-wrap"
             style={{ flex: 1, whiteSpace: "normal" }}
           >
             {_id}
-          </small>
-        </MDBCol>
-        <MDBCol className="text-right">
+          </span>
+        </div>
+        <div>
           <span>Time: {new Date(updatedAt).toLocaleTimeString()}</span>
-        </MDBCol>
-      </MDBRow>
-      <MDBRow>
-        <MDBCol style={{ alignItems: "baseline" }} className="text-left">
+        </div>
+      </div>
+
+      <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center">
           <span style={{ width: "64.2%" }}>
             Age:&nbsp;{getAge(dob)} | Gender: {isMale ? "Male" : "Female"}
           </span>
-        </MDBCol>
-        <MDBCol className="text-right">
-          <span>Case # : {task._id}</span>
-        </MDBCol>
-      </MDBRow>
+        </div>
+        <div>
+          <span>Case# : {task._id}</span>
+        </div>
+      </div>
       <MDBRow>
         <MDBCol style={{ alignItems: "baseline" }} className="text-left">
           <span style={{ width: categoryWidth }}>
@@ -73,7 +75,7 @@ export default function Header({ task }) {
       </MDBRow>
       <MDBAlert
         color={formColor(form)}
-        className="text-uppercase text-center py-0 mb-1"
+        className="text-uppercase d-flex align-items-center justify-content-center text-center py-0 mb-1 mt-2"
       >
         <h5
           style={{
@@ -82,6 +84,7 @@ export default function Header({ task }) {
             textAlign: "center",
             letterSpacing: "5px",
           }}
+          className="mt-2"
         >
           ROENTGENOLOGICAL REPORT
         </h5>
