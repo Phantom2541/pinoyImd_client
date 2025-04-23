@@ -1,12 +1,9 @@
 import React from "react";
 import { ENDPOINT, properFullname } from "../../../../services/utilities";
 
-const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
+const Signature = ({ person, label, style = {}, withSignature }) => {
   return (
-    <div
-      style={{ width: isHalf ? "50%" : "100%", ...style }}
-      className="text-center position-relative"
-    >
+    <div style={{ ...style }} className="text-center position-relative">
       {withSignature && (
         <img
           style={{
@@ -24,7 +21,9 @@ const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
         <u>{properFullname(person?.fullName)}</u>
       </h5>
       {label}
-      {label !== "Receptionist" && person?.prc && ` PRC#: ${person?.prc.id}`}
+      <h6>
+        {label !== "Receptionist" && person?.prc && ` PRC#: ${person?.prc.id}`}
+      </h6>
     </div>
   );
 };
@@ -39,8 +38,8 @@ export default function Signatories({ signatories }) {
       : "RADIOLOGIC TECHNOLOGIST";
 
   return (
-    <div className="pt-4 print-footer">
-      <div className="d-flex">
+    <div className="pt-4 print-footer ">
+      <div className="d-flex justify-content-between ">
         <Signature person={head} label={title} isHalf />
         <Signature person={frontdesk} label="Receptionist" isHalf />
       </div>
