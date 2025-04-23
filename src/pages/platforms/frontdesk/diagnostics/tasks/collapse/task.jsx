@@ -19,7 +19,7 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
     const URL = "/printout/laboratory/task",
       title = `Laboratory Task Printout`,
-      features = "top=100px,left=100px,width=1050px,height=750px";
+      features = "top=100px,left=100px,width=794px,height=1123px";
 
     window.open(URL, title, features);
   };
@@ -40,9 +40,6 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     remarks = "",
     signatories = [],
   } = obj;
-
-  console.log("packages", packages);
-  console.log("obj", obj);
 
   // object : chem
   // array : urinalysis, hema

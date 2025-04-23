@@ -3,19 +3,13 @@ import {
   getAge,
   fullName as nameFormatter,
 } from "../../../../services/utilities";
-import { MDBRow, MDBCol } from "mdbreact";
+import { MDBRow, MDBCol, MDBAlert } from "mdbreact";
 import { Categories } from "../../../../services/fakeDb";
-export default function Header({
-  patient,
-  date,
-  source,
-  category,
-  referral,
-  task,
-}) {
-  console.log("patient", patient);
+import { formColor } from "../../../../services/utilities";
 
-  const { fullName: pFull, isMale = false, dob = "" } = patient;
+export default function Header({ task }) {
+  const { category, patient, source, referral, form, updatedAt } = task;
+  const { fullName: pFull, isMale = false, dob = "", _id } = patient;
   const categoryWidth = source && referral ? "30%" : "64.2%";
 
   return (
@@ -31,13 +25,23 @@ export default function Header({
           </h5>
         </MDBCol>
         <MDBCol className="text-right">
-          <span>
-            Date: {new Date(date).toDateString()},&nbsp;
-            {new Date(date).toLocaleTimeString()}
-          </span>
+          <span>Date: {new Date(updatedAt).toDateString()}</span>
         </MDBCol>
       </MDBRow>
-
+      <MDBRow>
+        <MDBCol md="8" style={{ alignItems: "baseline" }} className="d-flex">
+          Patient CODE :&nbsp;
+          <small
+            className="mb-0 fw-bold text-wrap"
+            style={{ flex: 1, whiteSpace: "normal" }}
+          >
+            {_id}
+          </small>
+        </MDBCol>
+        <MDBCol className="text-right">
+          <span>Time: {new Date(updatedAt).toLocaleTimeString()}</span>
+        </MDBCol>
+      </MDBRow>
       <MDBRow>
         <MDBCol style={{ alignItems: "baseline" }} className="text-left">
           <span style={{ width: "64.2%" }}>
@@ -45,33 +49,37 @@ export default function Header({
           </span>
         </MDBCol>
         <MDBCol className="text-right">
-          <span>Transaction# : {task._id}</span>
+          <span>Transaction # : {task._id}</span>
         </MDBCol>
       </MDBRow>
-
       <MDBRow>
         <MDBCol style={{ alignItems: "baseline" }} className="text-left">
-          {referral ? (
-            <span style={{ width: categoryWidth }}>
-              Referral: Dr. {referral?.fullName?.lname}
-            </span>
-          ) : (
-            <span style={{ width: categoryWidth }}>
-              Category:&nbsp;
-              {category === "walkin"
-                ? "Walkin"
-                : Categories.find(({ abbr }) => abbr === category)?.name}
-            </span>
-          )}
-        </MDBCol>
-        <MDBCol className="text-right">
-          {source && (
-            <span>
-              Source: {source?.displayname}, {source?.name}
-            </span>
-          )}
+          <span style={{ width: categoryWidth }}>
+            Category:&nbsp;
+            {category === "walkin"
+              ? "Walkin"
+              : Categories.find(({ abbr }) => abbr === category)?.name}
+          </span>
         </MDBCol>
       </MDBRow>
+      <MDBRow>
+        <MDBCol style={{ alignItems: "baseline" }} className="text-left">
+          <span style={{ width: categoryWidth }}>
+            Physician: Dr. {referral?.fullName?.lname}
+          </span>
+        </MDBCol>
+        <MDBCol className="text-right">
+          <span>Source: {source?.displayname}</span>
+        </MDBCol>
+      </MDBRow>
+      <MDBAlert
+        color={formColor(form)}
+        className="text-uppercase text-center py-0 mb-1 mt-3"
+      >
+        <h5 style={{ letterSpacing: "30px" }} className="mb-0 fw-bold">
+          {form}
+        </h5>
+      </MDBAlert>
     </div>
   );
 }

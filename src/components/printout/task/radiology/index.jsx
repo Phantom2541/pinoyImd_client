@@ -6,31 +6,13 @@ import Signatories from "./signatories";
 import "../../printout.css";
 
 const Printout = ({ task }) => {
-  const {
-    category,
-    branchId,
-    patient,
-    updatedAt,
-    source,
-    referral,
-    form,
-    remarks,
-    signatories,
-  } = task;
+  const { branchId, remarks, signatories } = task;
 
   return (
     <div className="print-container">
       <Banner company={branchId.companyId.name} branch={branchId.name} />
       <div className="print-body">
-        <Header
-          patient={patient}
-          date={updatedAt}
-          source={source}
-          category={category}
-          task={task}
-          referral={referral}
-          form={form}
-        />
+        <Header task={task} />
         <BodySwitcher task={task} />
         {/* Spacer pushes Remarks to bottom */}
         <div className="flex-spacer" />
@@ -54,9 +36,9 @@ export default function RadTaskPrintout() {
     setTask(savedTask);
 
     // Delay to ensure content is rendered before print
-    // setTimeout(() => {
-    //   window.print();
-    // }, 500);
+    setTimeout(() => {
+      window.print();
+    }, 500);
   }, []);
 
   if (task?._id) return <Printout task={task} />;

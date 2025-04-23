@@ -36,7 +36,7 @@ export default function Xray({ fontSize = "16px", task }) {
           •
         </span>
         <span style={{ fontWeight: "bold", color: "red" }}>
-          {services.name}
+          {services.name.toUpperCase()}
         </span>
       </div>
 

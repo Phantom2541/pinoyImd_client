@@ -31,16 +31,16 @@ const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
 
 export default function Signatories({ signatories }) {
   const head = signatories[0],
-    sub = signatories[1],
+    dr = signatories[1],
     frontdesk = signatories[2];
   return (
-    <div className="pt-4">
+    <div className="pt-4 print-footer">
       <div className="d-flex">
         <Signature person={head} label="Medical Laboratory Scientist" isHalf />
         <Signature person={frontdesk} label="Receptionist" isHalf />
       </div>
       <Signature
-        person={sub}
+        person={dr}
         label="Pathologist"
         style={{ marginTop: "20px" }}
         withSignature

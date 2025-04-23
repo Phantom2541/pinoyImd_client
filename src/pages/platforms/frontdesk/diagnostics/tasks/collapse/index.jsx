@@ -14,7 +14,7 @@ export default function DealCollapse() {
   return (
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
       {handlePagination(filtered, activePage, maxPage).map((deal, index) => {
-        const { _id, customerId, forms } = deal;
+        const { _id, customerId, forms, category, source, physicianId } = deal;
         return (
           <MDBCard key={`deal-${index}`}>
             <Header deal={deal} index={index} />
@@ -22,7 +22,14 @@ export default function DealCollapse() {
               id={`collapse-${index}`}
               isOpen={index === activeCOLAPSE}
             >
-              <Body _id={_id} customer={customerId} tasks={forms} />
+              <Body
+                _id={_id}
+                customer={customerId}
+                tasks={forms}
+                category={category}
+                source={source}
+                referral={physicianId}
+              />
             </MDBCollapse>
           </MDBCard>
         );
