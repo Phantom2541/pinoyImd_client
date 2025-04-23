@@ -28,7 +28,7 @@ export default function Body({ _id, customer, tasks }) {
               );
             }
 
-            if (["misclaneous", "xray"].includes(key)) {
+            if (["misclaneous", "xray"].includes(key.toLowerCase())) {
               return task.map((t, i) => (
                 <Task
                   _id={t._id}

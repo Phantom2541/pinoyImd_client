@@ -5,23 +5,10 @@ import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-const Tasks = ({ _id, form, obj = {}, index, customer }) => {
+const Tasks = ({ _id, form, obj, index, customer }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
-
-  // const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
-  // const isCluster = ["Miscellaneous", "Xray"].includes(form);
-  // // Ensure formEntries is an array even if obj is null or malformed
-  // const formEntries = isCluster
-  //   ? Array.isArray(obj)
-  //     ? obj.length > 0
-  //       ? obj
-  //       : [{}] // empty array becomes [{}] for at least one row
-  //     : obj
-  //     ? [obj]
-  //     : [{}]
-  //   : [obj || {}];
 
   const handleLabPrint = (task) => {
     const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
@@ -36,6 +23,7 @@ const Tasks = ({ _id, form, obj = {}, index, customer }) => {
 
     window.open(URL, title, features);
   };
+
   const handleRadPrint = (task) => {
     const services = Services.find(task.services);
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
@@ -46,98 +34,102 @@ const Tasks = ({ _id, form, obj = {}, index, customer }) => {
     );
   };
 
-  return obj.map((entry, entryIndex) => {
-    const {
-      packages = [],
-      hasDone = false,
-      remarks = "",
-      signatories = [],
-    } = entry || {};
+  const {
+    packages = [],
+    hasDone = false,
+    remarks = "",
+    signatories = [],
+  } = obj;
 
-    const _packages =
-      packages && typeof packages === "object"
-        ? Array.isArray(packages)
-          ? packages
-          : Object.keys(packages).map((k) => Number(k))
-        : packages
-        ? [packages]
-        : [];
-    const task = {
-      ...entry,
-      key: `${form}-${index}-${entryIndex}`,
-      _id,
-      dealId: _id,
-      form,
-      patient: customer,
-      generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
-      hasDone,
-      remarks,
-      // department,
-    };
+  console.log("packages", packages);
+  console.log("obj", obj);
 
-    const handleEntry = () => dispatch(SetTASK({ task, form }));
+  // object : chem
+  // array : urinalysis, hema
+  // string : xray
+  const _packages =
+    packages && typeof packages === "object"
+      ? Array.isArray(packages)
+        ? packages
+        : Object.keys(packages).map((k) => Number(k))
+      : packages
+      ? [packages]
+      : [];
 
-    const isEmptyEntry = _packages.length === 0;
+  const task = {
+    ...obj,
+    key: `${form}-${index}`,
+    _id,
+    dealId: _id,
+    form,
+    patient: customer,
+    generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
+    hasDone,
+    remarks,
+  };
 
-    return (
-      <tr key={task.key} className={hasDone ? "table-active" : ""}>
-        <td>
-          {index}
-          {fullName(signatories[0]?.fullName || "N/A")}
-        </td>
-        <td>{form}</td>
-        <td>
-          {isEmptyEntry ? (
-            <MDBBadge color="danger" pill>
-              No services
+  const handleEntry = () => dispatch(SetTASK({ task, form }));
+
+  const isEmptyEntry = _packages.length === 0;
+
+  return (
+    <tr key={task.key} className={hasDone ? "table-active" : ""}>
+      <td>
+        {index}
+        {fullName(signatories[0]?.fullName || "N/A")}
+      </td>
+      <td>{form}</td>
+      <td>
+        {isEmptyEntry ? (
+          <MDBBadge color="danger" pill>
+            No services
+          </MDBBadge>
+        ) : (
+          Services.whereIn(_packages).map(({ abbreviation }, i) => (
+            <MDBBadge pill key={`${task.key}-service-${i}`} className="pt-1">
+              {abbreviation}
             </MDBBadge>
-          ) : (
-            Services.whereIn(_packages).map(({ abbreviation }, i) => (
-              <MDBBadge pill key={`${task.key}-service-${i}`} className="pt-1">
-                {abbreviation}
-              </MDBBadge>
-            ))
-          )}
-        </td>
-        <td>
-          <MDBBtnGroup>
-            <MDBBtn
-              onClick={handleEntry}
-              color={hasDone ? "info" : "primary"}
-              size="sm"
-              className="py-1 px-2 m-0"
-            >
-              <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
-            </MDBBtn>
-            {!!signatories.length &&
-              signatories[0] &&
-              signatories[1] &&
-              hasDone && (
-                <MDBBtn
-                  onClick={() => {
-                    const _task = {
-                      ...task,
-                      branchId: activePlatform?.branch,
-                      services: _packages,
-                      signatories,
-                      isPrint: true,
-                    };
-                    activePlatform.department === "laboratory"
-                      ? handleLabPrint(_task)
-                      : handleRadPrint(_task);
-                  }}
-                  color="warning"
-                  size="sm"
-                  className="py-1 px-2 m-0"
-                >
-                  <MDBIcon icon="print" />
-                </MDBBtn>
-              )}
-          </MDBBtnGroup>
-        </td>
-      </tr>
-    );
-  });
+          ))
+        )}
+      </td>
+      <td>
+        <MDBBtnGroup>
+          <MDBBtn
+            onClick={handleEntry}
+            color={hasDone ? "info" : "primary"}
+            size="sm"
+            className="py-1 px-2 m-0"
+          >
+            <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
+          </MDBBtn>
+          {!!signatories.length &&
+            signatories[0] &&
+            signatories[1] &&
+            hasDone && (
+              <MDBBtn
+                onClick={() => {
+                  const _task = {
+                    ...task,
+                    branchId: activePlatform?.branch,
+                    services: _packages,
+                    signatories,
+                    isPrint: true,
+                  };
+                  activePlatform.department === "laboratory"
+                    ? handleLabPrint(_task)
+                    : handleRadPrint(_task);
+                }}
+                color="warning"
+                size="sm"
+                className="py-1 px-2 m-0"
+              >
+                <MDBIcon icon="print" />
+              </MDBBtn>
+            )}
+        </MDBBtnGroup>
+      </td>
+    </tr>
+  );
 };
 
 export default Tasks;
