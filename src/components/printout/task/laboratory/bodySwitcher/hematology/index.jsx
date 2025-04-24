@@ -8,7 +8,8 @@ export default function Hematology({ fontSize, task }) {
     { patient, cc, dc, rci, apc, troupe, ct, bt } = task;
 
   return (
-    <div className="d-flex">
+    <div>
+      {/* className="d-flex" */}
       <CellCount
         cc={cc}
         isMale={patient.isMale ? "Male" : "Female"}

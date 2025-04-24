@@ -13,7 +13,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
     <MDBTable hover bordered responsive className="mb-0">
       <thead>
         <tr>
-          <th className="py-0" />
+          <th className="py-0">Red Cell Immunohaematology</th>
           <th style={style} className="py-0">
             Results
           </th>
@@ -28,10 +28,6 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
             reference = Preferences.rci[category],
             { lo, hi, unit } = reference,
             color = value < lo ? "blue" : value > hi && "red";
-          // indicators = calculateIndicators(
-          //   reference.hct,
-          //   value.toFixed(value < 20 ? 2 : 0)
-          // );
 
           return (
             <tr key={`cell-${index}`}>

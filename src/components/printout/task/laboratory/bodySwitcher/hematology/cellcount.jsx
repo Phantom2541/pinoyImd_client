@@ -14,7 +14,7 @@ export default function CellCount({ cc, isMale, style, apc }) {
       <thead>
         <tr>
           <th style={style} className="py-0">
-            Category
+            Complete Blood Count
           </th>
           <th style={style} className="py-0">
             Results

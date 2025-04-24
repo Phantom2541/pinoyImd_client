@@ -21,18 +21,12 @@ export default function Parasitology({ fontSize, task }) {
       <thead>
         <tr>
           <th style={style} className="py-0">
-            Name
+            Physical Examination
           </th>
           <th style={style} className="py-0">
             Result
           </th>
           <th className="py-0" />
-          <th style={style} className="py-0">
-            Name
-          </th>
-          <th style={style} className="py-0">
-            Result
-          </th>
         </tr>
       </thead>
       <tbody>
@@ -46,13 +40,6 @@ export default function Parasitology({ fontSize, task }) {
           >
             {FecalColor[color]}
           </td>
-          <td className="py-0" />
-          <td style={style} className="py-0 text-left">
-            Stool pH
-          </td>
-          <td style={style} className="py-0 fw-bold">
-            {PH[pH]}
-          </td>
         </tr>
         <tr>
           <td style={style} className="py-0 text-left">
@@ -64,17 +51,8 @@ export default function Parasitology({ fontSize, task }) {
           >
             {Consistency[consistency]}
           </td>
-          <td className="py-0" />
-          <td style={style} className="py-0">
-            Yeast Cells
-          </td>
-          <td
-            style={{ ...style, color: color > 3 && "red" }}
-            className="py-0 fw-bold"
-          >
-            {MicroscopicResultInWord[yeast]}
-          </td>
         </tr>
+        <tr> Microscopy Examination </tr>
         <tr>
           <td style={style} className="py-0">
             Pus cells
@@ -84,17 +62,6 @@ export default function Parasitology({ fontSize, task }) {
             className="py-0 fw-bold"
           >
             {MicroscopicInRange[pus]}
-          </td>
-
-          <td className="py-0" />
-          <td style={style} className="py-0">
-            Fat Globules
-          </td>
-          <td
-            style={{ ...style, color: color > 3 && "red" }}
-            className="py-0 fw-bold"
-          >
-            {MicroscopicResultInWord[fat]}
           </td>
         </tr>
         <tr>
@@ -107,18 +74,6 @@ export default function Parasitology({ fontSize, task }) {
           >
             {MicroscopicInRange[red]}
           </td>
-
-          <td className="py-0" />
-          <td style={style} className="py-0 text-left">
-            Occult Blood
-          </td>
-          <td style={style} className="py-0 fw-bold">
-            {occult === undefined
-              ? ""
-              : occult === "0"
-              ? "Negative"
-              : "Positive"}
-          </td>
         </tr>
         <tr>
           <td style={style} className="py-0">
@@ -130,9 +85,49 @@ export default function Parasitology({ fontSize, task }) {
           >
             {BacteriaInRange[bac]}
           </td>
-          <td className="py-0" />
-          <td className="py-0" />
-          <td className="py-0" />
+        </tr>
+        <tr>
+          <td style={style} className="py-0">
+            Yeast Cells
+          </td>
+          <td
+            style={{ ...style, color: color > 3 && "red" }}
+            className="py-0 fw-bold"
+          >
+            {MicroscopicResultInWord[yeast]}
+          </td>
+        </tr>
+        <tr>
+          <td style={style} className="py-0">
+            Fat Globules
+          </td>
+          <td
+            style={{ ...style, color: color > 3 && "red" }}
+            className="py-0 fw-bold"
+          >
+            {MicroscopicResultInWord[fat]}
+          </td>
+        </tr>
+        <tr>Chemiscal Examination</tr>
+        <tr>
+          <td style={style} className="py-0 text-left">
+            Stool pH
+          </td>
+          <td style={style} className="py-0 fw-bold">
+            {PH[pH]}
+          </td>
+        </tr>
+        <tr>
+          <td style={style} className="py-0 text-left">
+            Occult Blood
+          </td>
+          <td style={style} className="py-0 fw-bold">
+            {occult === undefined
+              ? ""
+              : occult === "0"
+              ? "Negative"
+              : "Positive"}
+          </td>
         </tr>
       </tbody>
     </MDBTable>

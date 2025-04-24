@@ -11,7 +11,7 @@ export default function DiffCount({ dc, style }) {
       <thead>
         <tr>
           <th style={style} className="py-0">
-            Category
+            Differential Count
           </th>
           <th style={style} className="py-0">
             Results

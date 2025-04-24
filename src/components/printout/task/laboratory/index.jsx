@@ -8,16 +8,6 @@ const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
   return (
     <div className="print-container">
-      {/* <div
-        style={{
-          width: "1050px",
-          height: "624px",
-          cursor: "default",
-          fontFamily: "Helvetica, sans-serif",
-          letterSpacing: "-0.5px",
-          fontSize: "18px",
-        }}
-      > */}
       <Banner company={branchId.companyId.name} branch={branchId.name} />
       <div className="print-body">
         <Header task={task} />
@@ -30,7 +20,6 @@ const Printout = ({ task }) => {
         </div>
       </div>
       <Signatories signatories={signatories} />
-      {/*  </div> */}
     </div>
   );
 };

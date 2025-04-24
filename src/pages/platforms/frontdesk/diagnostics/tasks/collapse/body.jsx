@@ -36,7 +36,9 @@ export default function Body({
             }
 
             if (
-              ["misclaneous", "xray", "ultrasound"].includes(key.toLowerCase())
+              ["miscellaneous", "xray", "ultrasound"].includes(
+                key.toLowerCase()
+              )
             ) {
               return task.map((t, i) => {
                 const _t = { ...t, category, source, referral };
