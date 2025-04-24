@@ -35,15 +35,15 @@ export default function Body({
               );
             }
 
-            if (["misclaneous", "xray"].includes(key.toLowerCase())) {
-              console.log("task", task);
-
+            if (
+              ["misclaneous", "xray", "ultrasound"].includes(key.toLowerCase())
+            ) {
               return task.map((t, i) => {
                 const _t = { ...t, category, source, referral };
                 return (
                   <Task
                     _id={t._id}
-                    key={`form-${i}`}
+                    key={`subform-${i}`}
                     form={key}
                     obj={_t || {}}
                     customer={customer}
@@ -52,7 +52,6 @@ export default function Body({
                 );
               });
             }
-
             return (
               <Task
                 _id={_id}

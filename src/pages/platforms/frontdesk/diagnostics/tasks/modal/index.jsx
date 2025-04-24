@@ -12,7 +12,6 @@ export default function Modal() {
       ({ validator }) => validator
     ),
     dispatch = useDispatch();
-  console.log("showModal", showModal);
 
   return (
     <MDBModal size="lg" isOpen={showModal} toggle={TOGGLE} backdrop>

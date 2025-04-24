@@ -37,21 +37,19 @@ export default function Heads() {
   }, [token, dispatch, activePlatform]);
   //Set fetched data for mapping
   useEffect(() => {
-    const newArray =
-      collections.length > 0 &&
-      collections.map((collection) => {
-        // para mailipat ko yung department tas section sa loob ng user na object
-        // para pwede kong maaccess yung dalawa nayun sa loob ni user para matawag ko sila sa isang key lang
-        return {
-          ...collection,
-          user: {
-            ...collection?.user,
-            department: collection?.department,
-            section: collection?.section,
-          },
-        };
-      });
-    setHeads(newArray || []);
+    if (collections.length > 0) {
+      // para mailipat ko yung department tas section sa loob ng user na object
+      // para pwede kong maaccess yung dalawa nayun sa loob ni user para matawag ko sila sa isang key lang
+      const newArray = collections.map((collection) => ({
+        ...collection,
+        user: {
+          ...collection?.user,
+          department: collection?.department,
+          section: collection?.section,
+        },
+      }));
+      setHeads(newArray || []);
+    }
   }, [collections]);
 
   //Modal toggle
@@ -130,15 +128,11 @@ export default function Heads() {
     });
   };
 
-  const handleImageError = (email) => {
+  const handleImageError = (email) =>
     setImageErrors((prev) => ({ ...prev, [email]: true }));
-  };
-  console.log("imageErrors", imageErrors);
 
   const fileInputRef = useRef();
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
+  const triggerFileInput = () => fileInputRef.current.click();
 
   return (
     <>
@@ -201,9 +195,11 @@ export default function Heads() {
                 <p className="fw-bold mb-1 text-capitalize">
                   {fullName(data.fullName)}
                 </p>
-                <strong>
-                  PRC ID: {data.prc?.id}| Expiration : {data?.prc?.to}
-                </strong>
+                {data?.prc && (
+                  <strong>
+                    PRC ID: {data.prc?.id}| Expiration : {data?.prc?.to}
+                  </strong>
+                )}
               </>
             ),
           },

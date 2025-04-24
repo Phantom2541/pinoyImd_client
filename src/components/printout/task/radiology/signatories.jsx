@@ -22,7 +22,9 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
       </h5>
       {label}
       <h6>
-        {label !== "Receptionist" && person?.prc && ` PRC#: ${person?.prc.id}`}
+        {label !== "Receptionist" &&
+          person?.prc &&
+          ` PRC License #: ${person?.prc.id}`}
       </h6>
     </div>
   );

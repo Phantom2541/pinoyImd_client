@@ -104,9 +104,11 @@ export default function Modal() {
       const lowercaseKey = key.toLowerCase();
       let bucket = _forms[key];
       let requestData = {
+        _id,
         packages: bucket,
         customerId: customerId?._id,
         branchId: activePlatform.branchId,
+        hasRead: false,
       };
       switch (key) {
         case "Miscellaneous":
@@ -134,7 +136,7 @@ export default function Modal() {
             );
           }
           break;
-
+        case "Ultrasound":
         case "Xray":
           bucket.map(
             async (test) =>
@@ -147,9 +149,18 @@ export default function Modal() {
               })
           );
           break;
+        case "ECG":
+          requestData.packages = bucket[0];
+          console.log("requestData", requestData);
+          console.log("bucket", bucket);
+
+          await saveRequest(lowercaseKey, requestData);
+          break;
 
         default:
-          requestData._id = _id;
+          console.log("lowercaseKey", lowercaseKey);
+          console.log("key", key);
+
           await saveRequest(lowercaseKey, requestData);
       }
     }

@@ -60,20 +60,26 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     dealId: _id,
     form,
     patient: customer,
-    generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
+    generateHealthyClient: [
+      "Urinalysis",
+      "Parasitology",
+      "Xray",
+      "Ultrasound",
+    ].includes(form)
+      ? true
+      : false,
     hasDone,
     remarks,
   };
 
-  const handleEntry = () => dispatch(SetTASK({ task, form }));
+  const handleEntry = () => dispatch(SetTASK({ task }));
 
   const isEmptyEntry = _packages.length === 0;
 
   return (
     <tr key={task.key} className={hasDone ? "table-active" : ""}>
       <td>
-        {index}
-        {fullName(signatories[0]?.fullName || "N/A")}
+        {index}.{signatories[0]?.fullName && fullName(signatories[0]?.fullName)}
       </td>
       <td>{form}</td>
       <td>

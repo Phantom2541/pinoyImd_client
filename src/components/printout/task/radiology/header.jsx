@@ -45,7 +45,7 @@ export default function Header({ task }) {
 
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center">
-          <span style={{ width: "64.2%" }}>
+          <span>
             Age:&nbsp;{getAge(dob)} | Gender: {isMale ? "Male" : "Female"}
           </span>
         </div>
