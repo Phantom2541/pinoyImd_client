@@ -10,13 +10,16 @@ export default function DiffCount({ dc, style }) {
     <MDBTable hover bordered responsive className="mb-0">
       <thead>
         <tr>
-          <th style={style} className="py-0">
+          <th style={{ fontSize: "1.2rem" }} className="py-0 fw-bold">
             Differential Count
           </th>
-          <th style={style} className="py-0">
+          <th
+            style={{ fontSize: "1.2rem" }}
+            className="py-0 fw-bold text-center"
+          >
             Results
           </th>
-          <th style={style} className="py-0">
+          <th style={{ fontSize: "1.2rem" }} className="py-0 fw-bold">
             Reference
           </th>
         </tr>
@@ -29,15 +32,16 @@ export default function DiffCount({ dc, style }) {
 
           return (
             <tr key={`cell-${index}`}>
-              <td style={style} className="py-0">
+              <td style={{ ...style, width: "40%" }} className="py-0">
                 {category}
               </td>
               <td
                 style={{
                   ...style,
+                  width: "30%",
                   color,
                 }}
-                className="py-0 fw-bold"
+                className="py-0 fw-bold text-center"
               >
                 {!!diff && (diff / 100).toFixed(2)}
               </td>

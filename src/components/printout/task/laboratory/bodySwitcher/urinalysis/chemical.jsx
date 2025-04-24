@@ -15,17 +15,21 @@ const Chemical = ({ style, Chemical }) => {
   ] = Chemical || [null, null, null, null, null, null, null, null];
 
   return (
-    <MDBTable>
+    <MDBTable bordered>
       <MDBTableHead>
         <tr>
-          <th style={style} className="py-0" colSpan={6}>
+          <th
+            style={{ fontSize: "1.2rem" }}
+            className="py-0 fw-bold text-left"
+            colSpan={6}
+          >
             Chemical Examination
           </th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
         <tr>
-          <td style={style} className="py-0 ">
+          <td style={{ ...style, width: "50%" }} className="py-0 ">
             Sugar
           </td>
           <td

@@ -13,13 +13,16 @@ export default function CellCount({ cc, isMale, style, apc }) {
     <MDBTable hover bordered responsive className="mb-0">
       <thead>
         <tr>
-          <th style={style} className="py-0">
+          <th className="py-0 fw-bold" style={{ fontSize: "1.2rem" }}>
             Complete Blood Count
           </th>
-          <th style={style} className="py-0">
+          <th
+            className="py-0 fw-bold text-center"
+            style={{ fontSize: "1.2rem", fontWeight: 600 }}
+          >
             Results
           </th>
-          <th style={style} className="py-0">
+          <th className="py-0 fw-bold" style={{ fontSize: "1.2rem" }}>
             Reference
           </th>
         </tr>
@@ -37,15 +40,16 @@ export default function CellCount({ cc, isMale, style, apc }) {
             );
           return (
             <tr key={`cell-${index}`}>
-              <td style={style} className="py-0">
-                {Title[index]}
+              <td style={{ ...style, width: "40%" }} className="py-0  ">
+                <span> {Title[index]}</span>
               </td>
               <td
                 style={{
                   ...style,
+                  width: "30%",
                   color,
                 }}
-                className="py-0 fw-bold"
+                className="py-0 fw-bold text-center"
               >
                 {_cell.toFixed(_cell < 20 ? 2 : 0)}
                 {indicators}
@@ -56,11 +60,7 @@ export default function CellCount({ cc, isMale, style, apc }) {
             </tr>
           );
         })}
-        <tr>
-          <td style={style} className="py-0" colSpan={3}>
-            &nbsp;
-          </td>
-        </tr>
+
         <tr>
           <td style={style} className="py-0">
             APC

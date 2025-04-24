@@ -17,16 +17,16 @@ export default function Parasitology({ fontSize, task }) {
     [pus, red, bac, yeast, fat] = me || [null, null];
   //console.log("occult", occult);
   return (
-    <MDBTable hover bordered responsive className="mb-0">
+    <MDBTable bordered responsive className="mb-0">
       <thead>
         <tr>
-          <th style={style} className="py-0">
+          <th style={{ ...style, fontSize: "1.2rem" }} className="py-0 fw-bold">
             Physical Examination
           </th>
-          <th style={style} className="py-0">
+          <th style={{ ...style, fontSize: "1.2rem" }} className="py-0 fw-bold">
             Result
           </th>
-          <th className="py-0" />
+          {/* <th className="py-0" /> */}
         </tr>
       </thead>
       <tbody>
@@ -52,7 +52,16 @@ export default function Parasitology({ fontSize, task }) {
             {Consistency[consistency]}
           </td>
         </tr>
-        <tr> Microscopy Examination </tr>
+        <tr>
+          {" "}
+          <td
+            colSpan={2}
+            style={{ fontSize: "1.2rem" }}
+            className="py-0 fw-bold"
+          >
+            Microscopy Examination
+          </td>{" "}
+        </tr>
         <tr>
           <td style={style} className="py-0">
             Pus cells
@@ -108,7 +117,15 @@ export default function Parasitology({ fontSize, task }) {
             {MicroscopicResultInWord[fat]}
           </td>
         </tr>
-        <tr>Chemiscal Examination</tr>
+        <tr>
+          <td
+            colSpan={2}
+            style={{ fontSize: "1.2rem" }}
+            className="py-0 fw-bold"
+          >
+            Chemiscal Examination
+          </td>
+        </tr>
         <tr>
           <td style={style} className="py-0 text-left">
             Stool pH

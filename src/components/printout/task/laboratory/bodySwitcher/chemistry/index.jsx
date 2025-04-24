@@ -14,28 +14,39 @@ export default function Chemistry({ task, fontSize }) {
     <MDBTable hover striped bordered responsive className="mb-0 text-center">
       <thead>
         <tr>
-          <th className="py-0" />
-          <th style={style} className="text-center py-0" colSpan={2}>
+          <th
+            style={{ ...style, fontSize: "1.1rem" }}
+            rowSpan={2}
+            className="py-0 text-left fw-bold align-middle text-center"
+          >
+            Service
+          </th>
+          <th
+            style={{ ...style, fontSize: "1.2rem" }}
+            className="text-center py-0 fw-bold"
+            colSpan={2}
+          >
             Conventional Unit
           </th>
-          <th style={style} className="text-center py-0" colSpan={2}>
+          <th
+            style={{ ...style, fontSize: "1.2rem" }}
+            className="text-center py-0 fw-bold"
+            colSpan={2}
+          >
             System International Unit
           </th>
         </tr>
         <tr>
-          <th style={style} className="py-0 text-left">
-            Service
-          </th>
-          <th style={style} className="py-0">
+          <th style={{ ...style, fontSize: "1.1rem" }} className="py-0 fw-bold">
             Result
           </th>
-          <th style={style} className="py-0">
+          <th style={{ ...style, fontSize: "1.1rem" }} className="py-0 fw-bold">
             Reference
           </th>
-          <th style={style} className="py-0">
+          <th style={{ ...style, fontSize: "1.1rem" }} className="py-0 fw-bold">
             Result
           </th>
-          <th style={style} className="py-0">
+          <th style={{ ...style, fontSize: "1.1rem" }} className="py-0 fw-bold">
             Reference
           </th>
         </tr>
@@ -62,8 +73,6 @@ export default function Chemistry({ task, fontSize }) {
                   nameUppercase,
                   hi
                 )}`;
-
-          console.log("units", units);
 
           return (
             <tr key={`${fk}-${index}`}>

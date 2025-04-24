@@ -13,11 +13,16 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
     <MDBTable hover bordered responsive className="mb-0">
       <thead>
         <tr>
-          <th className="py-0">Red Cell Immunohaematology</th>
-          <th style={style} className="py-0">
+          <th className="py-0 fw-bold" style={{ fontSize: "1.2rem" }}>
+            Red Cell Immunohaematology
+          </th>
+          <th
+            className="py-0 fw-bold text-center"
+            style={{ fontSize: "1.2rem" }}
+          >
             Results
           </th>
-          <th style={style} className="py-0">
+          <th className="py-0 fw-bold" style={{ fontSize: "1.2rem" }}>
             Reference
           </th>
         </tr>
@@ -30,13 +35,14 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
             color = value < lo ? "blue" : value > hi && "red";
 
           return (
-            <tr key={`cell-${index}`}>
-              <td style={style} className="py-0">
-                {category}
+            <tr key={`cell-${index}-1`}>
+              <td style={{ ...style, width: "40%" }} className="py-0">
+                <span> {category} </span>
               </td>
               <td
                 style={{
                   ...style,
+                  width: "30%",
                   color,
                 }}
                 className="py-0 fw-bold"
@@ -61,10 +67,10 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
           </td>
         </tr>
         <tr>
-          <td style={style} className="py-0">
+          <td style={{ ...style, width: "40%" }} className="py-0">
             Clotting Time
           </td>
-          <td style={style} className="py-0 fw-bold">
+          <td style={{ ...style, width: "30%" }} className="py-0 fw-bold">
             {ct[0] && `${ct[0]} ${options[ct[1]]}`}
           </td>
           <td style={style} className="py-0">

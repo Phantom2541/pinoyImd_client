@@ -1,6 +1,5 @@
 import React from "react";
 import { MDBTable } from "mdbreact";
-
 export default function Gloucose({ task, fontSize }) {
   const { results } = task;
   return (
@@ -12,11 +11,11 @@ export default function Gloucose({ task, fontSize }) {
         bordered
         responsive
         small
-        className="mb-0 text-center"
+        className="mb-0 text-center no-side-border-table"
       >
         <thead>
           <tr>
-            <th>Service</th>
+            <th>Services</th>
             <th>Result</th>
             <th>Reference</th>
           </tr>
@@ -28,7 +27,7 @@ export default function Gloucose({ task, fontSize }) {
               <b>{results.hba1c}</b>
             </td>
             <>
-              <td className="py-1">4 - 6 %</td>
+              <td>4 - 6 %</td>
             </>
           </tr>
         </tbody>

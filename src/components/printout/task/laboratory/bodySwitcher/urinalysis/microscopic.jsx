@@ -14,18 +14,23 @@ const Microscopic = ({ Microscopic, style }) => {
     null,
     null,
   ];
+
   return (
-    <MDBTable>
+    <MDBTable bordered>
       <MDBTableHead>
         <tr>
-          <td style={style} className="py-0 text-center" colSpan={8}>
+          <th
+            className="py-0 text-left fw-bold"
+            style={{ fontSize: "1.2rem" }}
+            colSpan={8}
+          >
             Microscopic Examination
-          </td>
+          </th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
         <tr>
-          <td style={style} className="py-0">
+          <td style={{ ...style, width: "50%" }} className="py-0 ">
             PUS
           </td>
           <td

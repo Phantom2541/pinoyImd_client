@@ -10,7 +10,7 @@ export default function Miscellaneous({ task, fontSize }) {
   return (
     <div
       style={{
-        border: "solid 2px",
+        border: "solid 1px",
         marginBottom: "3%",
         minHeight: "300px",
       }}

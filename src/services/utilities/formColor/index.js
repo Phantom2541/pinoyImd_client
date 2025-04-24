@@ -1,7 +1,7 @@
 const formColor = (form = "") =>
   ({
     serology: "light",
-    miscellaneous: "light",
+    miscellaneous: "#e8eaf6 indigo lighten-5",
     urinalysis: "warning",
     parasitology: "success",
     hematology: "danger",

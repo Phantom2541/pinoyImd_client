@@ -10,15 +10,10 @@ import {
 const Physical = ({ physical, style }) => {
   const [color, transparency, sg, pH] = physical;
   return (
-    <MDBTable>
-      <MDBTableHead>
-        <tr>
-          <th style={style} className="py-0" colSpan={2}></th>
-        </tr>
-      </MDBTableHead>
+    <MDBTable bordered>
       <MDBTableBody>
         <tr>
-          <td style={style} className="py-0">
+          <td style={{ ...style, width: "50%" }} className="py-0 ">
             Color
           </td>
           <td

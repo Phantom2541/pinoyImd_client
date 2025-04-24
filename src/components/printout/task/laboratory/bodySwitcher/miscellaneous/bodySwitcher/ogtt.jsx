@@ -12,7 +12,7 @@ export default function Ogtt({ task, fontSize }) {
         bordered
         responsive
         small
-        className="mb-0 text-center"
+        className="mb-0 text-center  no-side-border-table"
       >
         <thead>
           <tr>
