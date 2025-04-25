@@ -9,9 +9,12 @@ import {
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 export default function Chemistry() {
-  const { task, preferences } = useSelector(({ validator }) => validator
-  ),
+  const { task } = useSelector(({ validator }) => validator),
+    { collections: preferences } = useSelector(
+      ({ preferences }) => preferences
+    ),
     dispatch = useDispatch();
+  console.log("preferences", preferences);
 
   const { packages = {}, key: mapKey, patient } = task;
 
@@ -19,14 +22,16 @@ export default function Chemistry() {
     const { name, value } = target,
       _name = Number(name),
       _value = Number(value);
-    
-    
+
     if (_name !== 16)
       return dispatch(
-        SetTASK({form: task?.form,task:{
-          ...task,
-          packages: { ...packages, [name]: _value },
-        }})
+        SetTASK({
+          form: task?.form,
+          task: {
+            ...task,
+            packages: { ...packages, [name]: _value },
+          },
+        })
       );
 
     const chole = packages["14"],
@@ -34,18 +39,21 @@ export default function Chemistry() {
       ldl = chole - (tg / 5 + _value),
       vldl = tg / 5,
       chr = Number((chole / _value).toFixed(2));
-    
+
     dispatch(
-      SetTASK({form: task?.form,task:{
-        ...task,
-        packages: {
-          ...packages,
-          16: _value,
-          17: ldl,
-          18: vldl,
-          19: chr,
+      SetTASK({
+        form: task?.form,
+        task: {
+          ...task,
+          packages: {
+            ...packages,
+            16: _value,
+            17: ldl,
+            18: vldl,
+            19: chr,
+          },
         },
-      }})
+      })
     );
   };
 
@@ -75,6 +83,8 @@ export default function Chemistry() {
               preference,
               preferences
             );
+          console.log("_id", _id);
+
           return (
             <tr key={`${mapKey}-${index}`}>
               <td className="fw-bold py-1" title={name || abbreviation}>
@@ -88,7 +98,7 @@ export default function Chemistry() {
                   }}
                   name={key}
                   value={String(value)}
-                  onChange={(e)=>handleChange(e.target)}
+                  onChange={(e) => handleChange(e.target)}
                   className="w-100 text-center fw-bold"
                 />
               </td>
