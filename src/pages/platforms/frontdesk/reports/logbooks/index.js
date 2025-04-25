@@ -5,6 +5,10 @@ export { default as Fecalysis } from "./fecalysis";
 export { default as Serology } from "./serology";
 export { default as Electrolyte } from "./electrolyte";
 
+// RADIOLOGY
+export { default as Xray } from "./xray";
+
+
 // export { default as Drugtest } from "./drugtest";
 // export { default as Miscellaneous } from "./miscellaneous";
 // export { default as Paps } from "./paps";

@@ -36,6 +36,7 @@ import {
   temperatures,
   controls,
   assurances,
+  xray,
 } from "./slices/diagnostics";
 
 import { access, liabilities } from "./slices/liability";
@@ -91,6 +92,7 @@ const store = configureStore({
     assurances,
     dragDrop,
     products,
+    xray,
   },
 });
 
