@@ -15,21 +15,21 @@ export default function Chemistry({ task, fontSize }) {
       <thead>
         <tr>
           <th
-            style={{ ...style, fontSize: "1.1rem" }}
+            style={{ ...style, fontSize: "1.2rem" }}
             rowSpan={2}
             className="py-0 text-left fw-bold align-middle text-center"
           >
             Service
           </th>
           <th
-            style={{ ...style, fontSize: "1.2rem" }}
+            style={{ ...style, fontSize: "1.1rem" }}
             className="text-center py-0 fw-bold"
             colSpan={2}
           >
             Conventional Unit
           </th>
           <th
-            style={{ ...style, fontSize: "1.2rem" }}
+            style={{ ...style, fontSize: "1.1rem" }}
             className="text-center py-0 fw-bold"
             colSpan={2}
           >
