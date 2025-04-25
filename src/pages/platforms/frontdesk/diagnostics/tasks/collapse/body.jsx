@@ -26,7 +26,7 @@ export default function Body({
         <tbody>
           {Object.entries(tasks || {})?.map(([key, task], index) => {
             const isEmpty = !task || (Array.isArray(task) && task.length === 0);
-            const _task = { ...task, category, source, referral };
+            const _task = { ...task, category, source, referral, _id };
             if (isEmpty && activePlatform.department === "laboratory") {
               return (
                 <tr key={`empty-${index}`}>
@@ -41,10 +41,9 @@ export default function Body({
               )
             ) {
               return task.map((t, i) => {
-                const _t = { ...t, category, source, referral };
+                const _t = { ...t, category, source, referral, dealId: _id };
                 return (
                   <Task
-                    _id={t._id}
                     key={`subform-${i}`}
                     form={key}
                     obj={_t || {}}
@@ -56,7 +55,6 @@ export default function Body({
             }
             return (
               <Task
-                _id={_id}
                 key={`form-${index}`}
                 form={key}
                 obj={_task || {}}

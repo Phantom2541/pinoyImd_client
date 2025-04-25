@@ -39,7 +39,7 @@ const Header = () => {
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
   const sum = filtered
-    ?.map((item) => item.amount)
+    ?.flatMap(({ deals }) => deals.map((item) => item.amount))
     .reduce((acc, item) => acc + item, 0);
 
   return (

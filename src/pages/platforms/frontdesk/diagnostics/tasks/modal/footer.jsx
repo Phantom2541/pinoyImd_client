@@ -45,20 +45,36 @@ const Footer = () => {
   const handleSave = (hasDone) => {
     const { form } = task;
 
+    // if laboratory =pathogist
+    // if radiologist  and xray = radiologist
+    // if radiologist  and ultrasound = sonographer
+    // if radiologist  and ecg   = cardiologist
     const head = findSignatoryId(form.toLowerCase());
     const dr = findSignatoryId(
       department === "laboratory" ? "pathologist" : "radiologist"
     );
 
-    dispatch(
-      LABRESULT({
-        token,
-        data: {
+    const data = ["xray", "ultrasound", "miscellaneous"].includes(form)
+      ? (() => {
+          const { _id, ...rest } = task;
+          return {
+            ...rest,
+            hasDone,
+            department,
+            signatories: [head, dr, auth._id],
+          };
+        })()
+      : {
           ...task,
           hasDone,
           department,
           signatories: [head, dr, auth._id],
-        },
+        };
+
+    dispatch(
+      LABRESULT({
+        token,
+        data,
       })
     );
     dispatch(SetMODAL(false));
