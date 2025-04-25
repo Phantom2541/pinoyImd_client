@@ -38,6 +38,8 @@ export default function Tasks() {
 
       if (localData) {
         const parsedData = JSON.parse(localData);
+        console.log("parsedData", parsedData);
+
         dispatch(SetPREFERENCES(parsedData));
       } else if (token && activePlatform?.branchId) {
         dispatch(

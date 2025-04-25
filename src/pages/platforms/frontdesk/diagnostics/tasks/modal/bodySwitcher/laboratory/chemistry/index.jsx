@@ -9,9 +9,12 @@ import {
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 export default function Chemistry() {
-  const { task, preferences } = useSelector(({ validator }) => validator),
+  const { task } = useSelector(({ validator }) => validator),
+    { collections: preferences } = useSelector(
+      ({ preferences }) => preferences
+    ),
     dispatch = useDispatch();
-  console.log("task", task);
+  console.log("preferences", preferences);
 
   const { packages = {}, key: mapKey, patient } = task;
 
@@ -80,6 +83,8 @@ export default function Chemistry() {
               preference,
               preferences
             );
+          console.log("_id", _id);
+
           return (
             <tr key={`${mapKey}-${index}`}>
               <td className="fw-bold py-1" title={name || abbreviation}>
