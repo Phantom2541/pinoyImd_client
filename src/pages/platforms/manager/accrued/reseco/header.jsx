@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import * as ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import {
   BROWSE,
   SetFilterBySOURCE,
@@ -11,11 +13,12 @@ import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
 import CalendarPicker from "../../../../../components/header/calendars";
 import { currency } from "../../../../../services/utilities";
 import { Calendar } from "../../../../../services/fakeDb";
+
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { sources, month, year, filtered, vendor } = useSelector(
+  const { sources, month, year, filtered, vendor, collections } = useSelector(
       ({ deals }) => deals
     ),
     dispatch = useDispatch();
@@ -40,6 +43,8 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
+  console.log("activePlatform", activePlatform);
+
   const sum = filtered
     ?.flatMap(({ deals }) => deals.map((item) => item.amount))
     .reduce((acc, item) => acc + item, 0);
@@ -60,6 +65,82 @@ const Header = () => {
     );
   };
 
+  console.log("filtered", filtered);
+
+  const handleSoftCopy = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Deals");
+    const { branch } = activePlatform;
+    const { companyId } = branch;
+    // Add company name header - Add the row first
+    const companyHeader = worksheet.addRow([`Company: ${companyId?.name}`]);
+    companyHeader.font = { bold: true, size: 14 };
+
+    // Merge the row correctly
+    worksheet.mergeCells(`A${companyHeader.number}:E${companyHeader.number}`);
+
+    // Get source displayname from the first deal
+    const source =
+      sources.find((s) => String(s._id) === String(vendor))?.displayname ??
+      "Unknown Source";
+
+    // Add source header
+    const sourceAndGrossRow = worksheet.addRow([
+      `SOURCE: ${source.toUpperCase()}`,
+      "",
+      "",
+      `GROSS:  ${currency(sum)}`,
+      "",
+    ]);
+    sourceAndGrossRow.font = { bold: true };
+
+    // Merge cells for layout
+    worksheet.mergeCells(
+      `A${sourceAndGrossRow.number}:C${sourceAndGrossRow.number}`
+    );
+    worksheet.mergeCells(
+      `D${sourceAndGrossRow.number}:E${sourceAndGrossRow.number}`
+    );
+
+    worksheet.addRow([]); // empty spacer row
+
+    // Add table headers
+    const columns = [
+      { header: "Date", key: "date", width: 15 },
+      { header: "Customer", key: "customer", width: 25 },
+      { header: "Services", key: "services", width: 25 },
+      { header: "Payment Type", key: "payment", width: 15 },
+      { header: "Amount", key: "amount", width: 10 },
+    ];
+
+    // Set column widths manually (without adding auto headers)
+    worksheet.columns = columns.map(({ width }) => ({ width }));
+
+    // Now manually add headers
+    const tableHeader = worksheet.addRow(columns.map((col) => col.header));
+    tableHeader.font = { bold: true };
+
+    // Add each deal
+    filtered.forEach(({ date, deals }) => {
+      deals.forEach((deal) => {
+        worksheet.addRow([
+          date,
+          `${deal.customerId?.fullName?.fname ?? ""} ${
+            deal.customerId?.fullName?.lname ?? ""
+          }`,
+          deal.cart?.map(({ abbreviation = "" }) => abbreviation).join(",  "),
+          deal.payment ?? "",
+          deal.amount ?? 0,
+        ]);
+      });
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    saveAs(blob, `deals_export_${Date.now()}.xlsx`);
+  };
   return (
     <MDBView
       cascade
@@ -110,7 +191,7 @@ const Header = () => {
           rounded
           size="sm"
           className="px-2"
-          onClick={() => handlePrintOut("lol")}
+          onClick={handleSoftCopy}
         >
           <MDBIcon icon="file-excel" style={{ fontSize: "0.9rem" }} />
         </MDBBtn>
