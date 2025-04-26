@@ -39,7 +39,7 @@ export default function Collapsable({ deals }) {
                 </td>
               )}
               <td>
-                {source._id && (
+                {source?._id && (
                   <span className="fw-bold mr-1"> {++index}.</span>
                 )}
                 {fullName(customerId?.fullName)}

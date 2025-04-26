@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { MDBCard, MDBCardBody, MDBCollapse, MDBContainer } from "mdbreact";
+import { MDBCard, MDBCollapse, MDBContainer } from "mdbreact";
 import { handlePagination } from "../../../../../../services/utilities";
 import Body from "./body";
 import Header from "./header";
@@ -14,8 +14,7 @@ export default function DealCollapse() {
   return (
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
       {handlePagination(filtered, activePage, maxPage).map((deal, index) => {
-        console.log("deal", deal);
-
+        const { _id, customerId, forms, category, source, physicianId } = deal;
         return (
           <MDBCard key={`deal-${index}`}>
             <Header deal={deal} index={index} />
@@ -23,13 +22,14 @@ export default function DealCollapse() {
               id={`collapse-${index}`}
               isOpen={index === activeCOLAPSE}
             >
-              <MDBCardBody className="pt-0">
-                <Body
-                  _id={deal._id}
-                  customer={deal.customerId}
-                  forms={deal.forms}
-                />
-              </MDBCardBody>
+              <Body
+                _id={_id}
+                customer={customerId}
+                tasks={forms}
+                category={category}
+                source={source}
+                referral={physicianId}
+              />
             </MDBCollapse>
           </MDBCard>
         );

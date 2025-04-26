@@ -15,7 +15,6 @@ const Header = ({
   registerGhostCompany,
   setDidHoverId,
   setSelected,
-  handleUntag,
   setActiveId,
   activeId,
   didHoverId,
@@ -234,7 +233,7 @@ const Header = ({
               </h6>
             )}
           </div>
-          {isGhost ? (
+          {isGhost && (
             <span
               style={{ fontSize: "20px" }}
               className="ml-2"
@@ -243,18 +242,11 @@ const Header = ({
             >
               👻
             </span>
-          ) : (
-            ""
           )}
 
           {isPopOver && (
             <div className="d-flex align-items-center h-100 ml-3">
-              <PopOver
-                handleUntag={handleUntag}
-                index={index}
-                setActiveId={setActiveId}
-                providerID={_id}
-              />
+              <PopOver index={index} setActiveId={setActiveId} _id={_id} />
             </div>
           )}
         </div>

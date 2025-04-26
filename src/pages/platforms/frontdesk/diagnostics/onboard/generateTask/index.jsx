@@ -103,11 +103,12 @@ export default function Modal() {
     for (const key in _forms) {
       const lowercaseKey = key.toLowerCase();
       let bucket = _forms[key];
-      const requestData = {
+      let requestData = {
         _id,
         packages: bucket,
         customerId: customerId?._id,
         branchId: activePlatform.branchId,
+        hasRead: false,
       };
       switch (key) {
         case "Miscellaneous":
@@ -115,27 +116,28 @@ export default function Modal() {
           if (panelAvail.length) {
             bucket = bucket.filter((item) => !panel.includes(item));
             await saveRequest(lowercaseKey, {
-              packages: panelAvail,
               dealId: _id,
+              packages: panelAvail,
               customerId: customerId?._id,
               branchId: activePlatform.branchId,
               buntis: true,
             });
           }
           if (bucket.length > 0) {
-            const soloForms = bucket.map((test) => ({
-              packages: [test],
-              dealId: _id,
-              customerId: customerId?._id,
-              branchId: activePlatform.branchId,
-              _buntis: false,
-            }));
-
-            await saveRequest(lowercaseKey, soloForms);
+            bucket.map(
+              async (test) =>
+                await saveRequest(lowercaseKey, {
+                  dealId: _id,
+                  packages: [test],
+                  customerId: customerId?._id,
+                  branchId: activePlatform.branchId,
+                  _buntis: false,
+                })
+            );
           }
           break;
-
-        case "X-ray":
+        case "Ultrasound":
+        case "Xray":
           bucket.map(
             async (test) =>
               await saveRequest(lowercaseKey, {
@@ -147,8 +149,18 @@ export default function Modal() {
               })
           );
           break;
+        case "ECG":
+          requestData.packages = bucket[0];
+          console.log("requestData", requestData);
+          console.log("bucket", bucket);
+
+          await saveRequest(lowercaseKey, requestData);
+          break;
 
         default:
+          console.log("lowercaseKey", lowercaseKey);
+          console.log("key", key);
+
           await saveRequest(lowercaseKey, requestData);
       }
     }

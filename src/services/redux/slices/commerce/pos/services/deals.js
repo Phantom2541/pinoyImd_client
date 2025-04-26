@@ -889,11 +889,16 @@ export const reduxSlice = createSlice({
         // state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
+        state.showModal = false;
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        const identifier = payload?.form === "Miscellaneous" ? "dealId" : "_id";
+        state.showModal = false;
+
+        const identifier = ["Miscellaneous", "Xray"].includes(payload?.form)
+          ? "dealId"
+          : "_id";
 
         // Find the index of the collection item based on the identifier
         const index = state.collections.findIndex(
@@ -921,6 +926,7 @@ export const reduxSlice = createSlice({
 
         state.isSuccess = true;
         state.isLoading = false;
+        state.showModal = false;
       })
       .addCase(LABRESULT.rejected, (state, action) => {
         const { error } = action;

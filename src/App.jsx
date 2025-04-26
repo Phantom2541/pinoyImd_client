@@ -12,7 +12,8 @@ import {
   RequestForm,
   TempGraph,
   PersonnelPrintOut,
-  TaskPrintout,
+  LabTaskPrintout,
+  RadTaskPrintout,
   ResecoPrintout,
   ElecLog,
   HemaLog,
@@ -66,7 +67,16 @@ export default function App() {
       />
 
       <Route path="/printout/reseco" exact component={ResecoPrintout} />
-      <Route path="/printout/task" exact component={TaskPrintout} />
+      <Route
+        path="/printout/laboratory/task"
+        exact
+        component={LabTaskPrintout}
+      />
+      <Route
+        path="/printout/radiology/task"
+        exact
+        component={RadTaskPrintout}
+      />
       <Route path="/printout/payslip" exact component={Payslip} />
       <Route path="/printout/personnel" exact component={PersonnelPrintOut} />
       <Route path="/printout/soa" exact component={SOA} />

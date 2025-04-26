@@ -12,6 +12,9 @@ import {
 const Footer = () => {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
   const { success, task, heads } = useSelector(({ validator }) => validator);
+  const { collections: physicians } = useSelector(
+    ({ physicians }) => physicians
+  );
   const dispatch = useDispatch();
   const department = activePlatform?.department;
   useEffect(() => {
@@ -37,26 +40,58 @@ const Footer = () => {
     handleSave(hasDone);
   };
 
+  const findSignatoryId = (identifier) =>
+    heads.find(
+      ({ section }) => section.replace("-", "").toLowerCase() === identifier
+    )?.user?._id;
+
+  const findPhysicianId = (_user) =>
+    console.log(
+      "physicians",
+      physicians.find(({ user }) => user === _user)
+    );
   const handleSave = (hasDone) => {
     const { form } = task;
 
-    const findSignatoryId = (identifier) =>
-      heads.find(({ section }) => section === identifier)?.user?._id;
+    // if laboratory =pathogist
+    // if radiologist  and xray = radiologist
+    // if radiologist  and ultrasound = sonographer
+    // if radiologist  and ecg   = cardiologist
+    console.log("formfrom", form);
+    console.log("task", task);
 
     const head = findSignatoryId(form.toLowerCase());
-    const sub = findSignatoryId(
-      department === "laboratory" ? "pathologist" : "radiologist"
-    );
+    let dr;
+    if (form !== "Ecg") {
+      dr = findSignatoryId(
+        department === "laboratory" ? "pathologist" : "radiologist"
+      );
+    } else {
+      dr = findPhysicianId(task.signatories[1]._id);
+    }
+    // console.log("dr", dr);
+
+    const data = ["xray", "ultrasound", "miscellaneous"].includes(form)
+      ? (() => {
+          const { _id, ...rest } = task;
+          return {
+            ...rest,
+            hasDone,
+            department,
+            signatories: [head, dr, auth._id],
+          };
+        })()
+      : {
+          ...task,
+          hasDone,
+          department,
+          signatories: [head, dr, auth._id],
+        };
 
     dispatch(
       LABRESULT({
         token,
-        data: {
-          ...task,
-          hasDone: true,
-          department,
-          signatories: [head, sub, auth._id],
-        },
+        data,
       })
     );
     dispatch(SetMODAL(false));

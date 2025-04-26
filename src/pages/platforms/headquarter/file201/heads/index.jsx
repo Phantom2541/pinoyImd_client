@@ -11,24 +11,22 @@ import DataTable from "../../../../../components/dataTable";
 import { fullName, globalSearch } from "../../../../../services/utilities";
 import { ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
-import { MDBBtn } from "mdbreact";
+import { MDBBtn, MDBIcon } from "mdbreact";
 import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function Heads() {
-  const [heads, setHeads] = useState([]),
-    [selected, setSelected] = useState({}),
-    [showModal, setShowModal] = useState(false),
-    [willCreate, setWillCreate] = useState(true),
-    {
-      token,
-      activePlatform,
-      isLoading: loadingImage,
-    } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading } = useSelector(
       ({ heads }) => heads
     ),
+    [heads, setHeads] = useState([]),
+    [selected, setSelected] = useState({}),
+    [showModal, setShowModal] = useState(false),
+    [willCreate, setWillCreate] = useState(true),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  const [imageErrors, setImageErrors] = useState({});
 
   //Initial Browse
   useEffect(() => {
@@ -39,21 +37,19 @@ export default function Heads() {
   }, [token, dispatch, activePlatform]);
   //Set fetched data for mapping
   useEffect(() => {
-    const newArray =
-      collections.length > 0 &&
-      collections.map((collection) => {
-        // para mailipat ko yung department tas section sa loob ng user na object
-        // para pwede kong maaccess yung dalawa nayun sa loob ni user para matawag ko sila sa isang key lang
-        return {
-          ...collection,
-          user: {
-            ...collection?.user,
-            department: collection?.department,
-            section: collection?.section,
-          },
-        };
-      });
-    setHeads(newArray || []);
+    if (collections.length > 0) {
+      // para mailipat ko yung department tas section sa loob ng user na object
+      // para pwede kong maaccess yung dalawa nayun sa loob ni user para matawag ko sila sa isang key lang
+      const newArray = collections.map((collection) => ({
+        ...collection,
+        user: {
+          ...collection?.user,
+          department: collection?.department,
+          section: collection?.section,
+        },
+      }));
+      setHeads(newArray || []);
+    }
   }, [collections]);
 
   //Modal toggle
@@ -107,7 +103,10 @@ export default function Heads() {
             },
             token,
           })
-        );
+        ).then(() => {
+          // After successful upload
+          setImageErrors((prev) => ({ ...prev, [email]: false }));
+        });
       };
     };
     reader.readAsDataURL(e.target.files[0]);
@@ -129,18 +128,11 @@ export default function Heads() {
     });
   };
 
-  const [imageErrors, setImageErrors] = useState({});
-
-  const handleImageError = (email) => {
+  const handleImageError = (email) =>
     setImageErrors((prev) => ({ ...prev, [email]: true }));
-  };
-
-  const handleUpload = () => {};
 
   const fileInputRef = useRef();
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
+  const triggerFileInput = () => fileInputRef.current.click();
 
   return (
     <>
@@ -203,9 +195,11 @@ export default function Heads() {
                 <p className="fw-bold mb-1 text-capitalize">
                   {fullName(data.fullName)}
                 </p>
-                <strong>
-                  PRC ID: {data.prc?.id}| Expiration : {data?.prc?.to}
-                </strong>
+                {data?.prc && (
+                  <strong>
+                    PRC ID: {data.prc?.id}| Expiration : {data?.prc?.to}
+                  </strong>
+                )}
               </>
             ),
           },
@@ -230,11 +224,11 @@ export default function Heads() {
                   <div>
                     <MDBBtn
                       size="sm"
-                      color="info"
+                      color="warning"
                       rounded
                       onClick={triggerFileInput}
                     >
-                      Upload Signature
+                      <MDBIcon icon="upload" />
                     </MDBBtn>
                   </div>
                 )}

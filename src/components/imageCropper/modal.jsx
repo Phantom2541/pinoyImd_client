@@ -8,7 +8,7 @@ import {
   MDBAlert,
 } from "mdbreact";
 import Cropper from "react-easy-crop";
-import generateDownload from "./cropImage";
+import { generateDownload, resizeImageToCropSize } from "./cropImage";
 
 export default function Modal({
   show,
@@ -21,10 +21,16 @@ export default function Modal({
   handleUpload,
   cropSize = { width: 170, height: 170 },
 }) {
-  const [croppedArea, setCroppedArea] = useState(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [showWarning, setShowWarning] = useState(false);
+  const [localImg, setLocalImg] = useState(null),
+    [croppedArea, setCroppedArea] = useState(null),
+    [crop, setCrop] = useState({ x: 0, y: 0 }),
+    [zoom, setZoom] = useState(1),
+    [showWarning, setShowWarning] = useState(false),
+    [fitImg, setFitImg] = useState(false);
+
+  useEffect(() => {
+    setFitImg(false);
+  }, [show]);
 
   useEffect(() => {
     if (img) {
@@ -40,8 +46,21 @@ export default function Modal({
     }
   }, [img, cropSize]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (fitImg) {
+        const resizedImg = await resizeImageToCropSize(img, cropSize);
+        setLocalImg(resizedImg);
+      } else {
+        setLocalImg(img);
+      }
+    };
+
+    fetchData();
+  }, [fitImg, img, cropSize]);
+
   const handleDownload = async () => {
-    const result = await generateDownload(img, ext, croppedArea, isUpload);
+    const result = await generateDownload(localImg, ext, croppedArea, isUpload);
     if (isUpload) {
       handleUpload(result);
     }
@@ -63,7 +82,7 @@ export default function Modal({
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         {showWarning && (
-          <MDBAlert color="warning" className="text-center py-2">
+          <MDBAlert color="warning" className={`text-center py-2 `}>
             ⚠️ The uploaded image is smaller than the crop size (
             {cropSize.width}×{cropSize.height}). This may cause the final
             cropped image to look blurry or stretched.
@@ -81,7 +100,7 @@ export default function Modal({
           style={{ height: "300px", position: "relative" }}
         >
           <Cropper
-            image={img}
+            image={localImg}
             crop={crop}
             zoom={zoom}
             aspect={aspect}
@@ -90,6 +109,31 @@ export default function Modal({
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
           />
+        </div>
+        <div className="d-flex">
+          <p className="text-center text-muted mb-3">
+            Do you want to <strong>fit the image</strong> to the crop area?
+          </p>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            checked={fitImg}
+            onChange={() => setFitImg(!fitImg)}
+            id={"fit-yes"}
+          />
+          <label htmlFor={`fit-yes`} className="label-table mr-2 ml-1">
+            Yes
+          </label>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={"fit-no"}
+            checked={!fitImg}
+            onChange={() => setFitImg(!fitImg)}
+          />
+          <label htmlFor={`fit-no`} className="label-table">
+            No
+          </label>
         </div>
         {/* {show && (
           <MDBRangeInput min={1} max={3} value={zoom} getValue={setZoom} />

@@ -57,6 +57,7 @@ const Header = () => {
   useEffect(() => {
     dispatch(SetFILTERED(collections));
   }, [dispatch, collections]);
+
   useEffect(() => {
     if (!collections || collections.length === 0) return;
 

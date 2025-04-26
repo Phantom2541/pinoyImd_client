@@ -15,7 +15,7 @@ import {
   Miscellaneous,
   Pbs,
 } from "./laboratory";
-import { Xray, ECG, Ultrasound } from "./radiology";
+import { Xray, Ecg, Ultrasound } from "./radiology";
 import { PE, MC } from "./clinic";
 
 const Blank = () => {
@@ -39,7 +39,7 @@ const componentMap = {
   Pbs,
   //Radiology
   Xray,
-  ECG,
+  Ecg,
   Ultrasound,
   // Clinic
   PE,
@@ -48,8 +48,6 @@ const componentMap = {
 
 export default function BodySwitcher() {
   const { task } = useSelector(({ validator }) => validator);
-  console.log("task", task);
-
   const Component = componentMap[task.form] || Blank;
   return <Component />;
 }

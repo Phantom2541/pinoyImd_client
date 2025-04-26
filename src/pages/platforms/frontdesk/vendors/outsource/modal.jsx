@@ -115,7 +115,7 @@ export default function Modal({ show, toggle, displayname }) {
                         </p>
                         <p>{name}</p>
                       </td>
-                      <td>{contacts.email}</td>
+                      <td>{contacts?.email}</td>
                       <td>{capitalize(fullAddress(address))}</td>
                       <td>
                         <MDBBtn

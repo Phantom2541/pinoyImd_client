@@ -4,7 +4,7 @@ import { useToasts } from "react-toast-notifications";
 import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { MDBCard, MDBCardBody } from "mdbreact";
 import DealCollapse from "./collapse";
-import Header from "./headers";
+import Header from "./header";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
 
@@ -20,6 +20,10 @@ import {
   SetPREFERENCES,
   RESET as PREFRESET,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
+import {
+  BROWSE as PHYSICIANS,
+  RESET as PHYRESET,
+} from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
 
 export default function Tasks() {
@@ -28,7 +32,7 @@ export default function Tasks() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  //Initial Browse
+  // references
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       const branchId = activePlatform.branchId;
@@ -67,8 +71,19 @@ export default function Tasks() {
           }
         });
       }
+
+      dispatch(PHYSICIANS({ token, branchId })).then((res) => {
+        if (res?.payload) {
+          localStorage.setItem(
+            `physicians`,
+            JSON.stringify(res.payload?.payload)
+          );
+        }
+      });
+
       return () => {
         dispatch(PREFRESET());
+        dispatch(PHYRESET());
       };
     }
   }, [token, dispatch, activePlatform]);

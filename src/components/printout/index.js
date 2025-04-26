@@ -3,5 +3,6 @@ export * from "./logbook";
 export { default as RequestForm } from "./requestFormNew";
 export { default as TempGraph } from "./monitoring/temperature";
 export { default as PersonnelPrintOut } from "./personnel";
-export { default as TaskPrintout } from "./task";
+export { default as LabTaskPrintout } from "./task/laboratory";
+export { default as RadTaskPrintout } from "./task/radiology";
 export { default as ResecoPrintout } from "./reseco";

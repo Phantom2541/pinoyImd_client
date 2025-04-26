@@ -15,9 +15,9 @@ import {
   RESET,
 } from "../../../../../services/redux/slices/assets/companies";
 import { useDispatch, useSelector } from "react-redux";
-import AddressSelect from "../../../../../components/searchables/addressSelect";
+// import AddressSelect from "../../../../../components/searchables/addressSelect";
 import Search from "../../../../../components/searchables/ao";
-import { Policy } from "../../../../../services/fakeDb";
+// import { Policy } from "../../../../../services/fakeDb";
 import Swal from "sweetalert2";
 const _form = {
   ceo: "",

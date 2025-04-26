@@ -11,7 +11,7 @@ const Index = () => {
   const { isLoading } = useSelector(({ deals }) => deals);
   return (
     <MDBAnimation type="bounceInDown">
-      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+      <MDBCard narrow className="pb-3">
         <Header />
         <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
         <Footer />

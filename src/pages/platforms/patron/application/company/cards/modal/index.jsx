@@ -45,7 +45,7 @@ export default function ApplicationModal({
         confirmButtonColor: "#3085d6",
       });
     }
-  }, [isSuccess, formSubmitted]);
+  }, [isSuccess, formSubmitted, setVisibility]);
   useEffect(() => {
     if (visibility) {
       setApplication({});
@@ -70,18 +70,18 @@ export default function ApplicationModal({
 
   const handleToggle = () => setVisibility(!visibility);
 
-  const handleApplication = (e) => {
-    e.preventDefault();
-    if (!!company.branches.length) {
-      // console.log({
-      //   userId: auth._id,
-      //   ...application,
-      // });
-    } else {
-      // toast.warn("Sorry, there are no available branches for this company.");
-      alert("Sorry, there are no available branches for this company.");
-    }
-  };
+  // const handleApplication = (e) => {
+  //   e.preventDefault();
+  //   if (!!company.branches.length) {
+  //     // console.log({
+  //     //   userId: auth._id,
+  //     //   ...application,
+  //     // });
+  //   } else {
+  //     // toast.warn("Sorry, there are no available branches for this company.");
+  //     alert("Sorry, there are no available branches for this company.");
+  //   }
+  // };
 
   const handleDepartment = ({ value }) => {
     setDepartment(value);

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { billingAddress, capitalize, currency, fullAddress } from "../../../services/utilities";
+import {
+  billingAddress,
+  capitalize,
+  currency,
+} from "../../../services/utilities";
 import { Developer, Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";

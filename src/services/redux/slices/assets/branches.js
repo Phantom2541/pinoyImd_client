@@ -200,10 +200,6 @@ export const reduxSlice = createSlice({
     /**
      *  Footer
      */
-    SetSELECTED: (state, { payload }) => {
-      state.selected = payload;
-      state.showModal = true;
-    },
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
@@ -351,7 +347,7 @@ export const reduxSlice = createSlice({
       .addCase(UNTAG_PERSONNEL.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         if (state.collections.length > 0) {
-          const { newPersonnel = false, createdPersonnel } = payload;
+          // const { newPersonnel = false, createdPersonnel } = payload;
           const getIndex = (collections) =>
             collections.findIndex(({ _id }) => _id === payload._id);
           const collectionIndex = getIndex(state.collections);
