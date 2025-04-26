@@ -4,7 +4,6 @@ export default function Xray({ fontSize = "16px", task }) {
   if (!task) return <div>No task data provided</div>;
 
   const { description = "", impression = "", services } = task;
-  console.log("task", task);
 
   const formatText = (text) => {
     return text

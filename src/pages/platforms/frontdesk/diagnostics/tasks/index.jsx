@@ -20,6 +20,10 @@ import {
   SetPREFERENCES,
   RESET as PREFRESET,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
+import {
+  BROWSE as PHYSICIANS,
+  RESET as PHYRESET,
+} from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
 
 export default function Tasks() {
@@ -38,8 +42,6 @@ export default function Tasks() {
 
       if (localData) {
         const parsedData = JSON.parse(localData);
-        console.log("parsedData", parsedData);
-
         dispatch(SetPREFERENCES(parsedData));
       } else if (token && activePlatform?.branchId) {
         dispatch(
@@ -69,8 +71,19 @@ export default function Tasks() {
           }
         });
       }
+
+      dispatch(PHYSICIANS({ token, branchId })).then((res) => {
+        if (res?.payload) {
+          localStorage.setItem(
+            `physicians`,
+            JSON.stringify(res.payload?.payload)
+          );
+        }
+      });
+
       return () => {
         dispatch(PREFRESET());
+        dispatch(PHYRESET());
       };
     }
   }, [token, dispatch, activePlatform]);
