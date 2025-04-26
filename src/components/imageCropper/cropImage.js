@@ -90,33 +90,85 @@ const generateDownload = async (src, ext, crop, upload = false) => {
   );
 };
 
+// const resizeImageToCropSize = async (imageSrc, cropSize) => {
+//   const img = new Image();
+//   img.crossOrigin = "anonymous";
+//   img.src = imageSrc;
+
+//   await new Promise((resolve) => {
+//     img.onload = resolve;
+//   });
+
+//   const offScreenCanvas = document.createElement("canvas");
+//   offScreenCanvas.width = img.width;
+//   offScreenCanvas.height = img.height;
+//   const ctx = offScreenCanvas.getContext("2d");
+//   ctx.drawImage(img, 0, 0);
+
+//   const targetCanvas = document.createElement("canvas");
+//   targetCanvas.width = cropSize.width;
+//   targetCanvas.height = cropSize.height;
+
+//   await picaInstance.resize(offScreenCanvas, targetCanvas, {
+//     quality: 3, // max
+//     unsharpAmount: 80,
+//     unsharpThreshold: 2,
+//   });
+
+//   const resizedImage = await picaInstance.toBlob(targetCanvas, "image/png");
+//   return URL.createObjectURL(resizedImage);
+// };
+
 const resizeImageToCropSize = async (imageSrc, cropSize) => {
   const img = new Image();
-  img.crossOrigin = "anonymous";
   img.src = imageSrc;
+
+  // Try to use crossOrigin only if not same-origin
+  if (!imageSrc.startsWith(window.location.origin)) {
+    img.crossOrigin = "anonymous";
+  }
 
   await new Promise((resolve) => {
     img.onload = resolve;
   });
 
-  const offScreenCanvas = document.createElement("canvas");
-  offScreenCanvas.width = img.width;
-  offScreenCanvas.height = img.height;
-  const ctx = offScreenCanvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
+  // Try to use Pica safely
+  try {
+    const offScreenCanvas = document.createElement("canvas");
+    offScreenCanvas.width = img.width;
+    offScreenCanvas.height = img.height;
+    const ctx = offScreenCanvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
 
-  const targetCanvas = document.createElement("canvas");
-  targetCanvas.width = cropSize.width;
-  targetCanvas.height = cropSize.height;
+    const targetCanvas = document.createElement("canvas");
+    targetCanvas.width = cropSize.width;
+    targetCanvas.height = cropSize.height;
 
-  await picaInstance.resize(offScreenCanvas, targetCanvas, {
-    quality: 3, // max
-    unsharpAmount: 80,
-    unsharpThreshold: 2,
-  });
+    // Try using Pica, may fail in Brave
+    await pica().resize(offScreenCanvas, targetCanvas, {
+      quality: 3,
+      unsharpAmount: 80,
+      unsharpThreshold: 2,
+    });
 
-  const resizedImage = await picaInstance.toBlob(targetCanvas, "image/png");
-  return URL.createObjectURL(resizedImage);
+    const resizedBlob = await pica().toBlob(targetCanvas, "image/png");
+    return URL.createObjectURL(resizedBlob);
+  } catch (error) {
+    console.warn("Pica failed, falling back to drawImage:", error.message);
+
+    // Fallback to simple canvas resizing
+    const canvas = document.createElement("canvas");
+    canvas.width = cropSize.width;
+    canvas.height = cropSize.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise((resolve) =>
+      canvas.toBlob(resolve, "image/png")
+    );
+
+    return URL.createObjectURL(blob);
+  }
 };
 
 export { generateDownload, resizeImageToCropSize };

@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Search from "../../../../../components/searchables/ao";
 // import { Policy } from "../../../../../services/fakeDb";
 import Swal from "sweetalert2";
+import AddressSelect from "../../../../../components/searchables/addressSelect";
 const _form = {
   ceo: "",
   name: "",
@@ -29,7 +30,7 @@ const _form = {
   approved: true,
 };
 export default function Modal() {
-  const { token } = useSelector(({ auth }) => auth),
+  const { token, auth } = useSelector(({ auth }) => auth),
     {
       showModal: show,
       selected,
@@ -38,6 +39,10 @@ export default function Modal() {
       isSuccess,
     } = useSelector(({ companies }) => companies),
     [form, setForm] = useState(_form),
+    [branch, setBranch] = useState({
+      isMain: true,
+      address: { region: "REGION III (CENTRAL LUZON)" },
+    }),
     [isDuplicate, setIsDuplicate] = useState(false),
     dispatch = useDispatch();
 
@@ -84,7 +89,7 @@ export default function Modal() {
     dispatch(
       SAVE({
         token,
-        data: form,
+        data: { company: form, branch, authID: auth._id },
       })
     );
   };
@@ -135,9 +140,7 @@ export default function Modal() {
               <div className={`w-100 ${form.ceo && "mt-4"}`}>
                 <Search
                   label="CEO"
-                  setUser={(value) =>
-                    setForm({ ...form, ceo: value?._id || "" })
-                  }
+                  setUser={(value) => setForm({ ...form, ceo: value || "" })}
                   className="mt-4"
                 />
               </div>
@@ -177,7 +180,9 @@ export default function Modal() {
           <MDBRow>
             <MDBCol>
               <div>
-                <span className="mr-2 fw-bold"> Is Hiring ?</span>
+                <span className="mr-2 " style={{ fontWeight: 500 }}>
+                  Is Hiring ?
+                </span>
                 <input
                   className="form-check-input"
                   type="checkbox"
@@ -215,7 +220,9 @@ export default function Modal() {
             </MDBCol>
             <MDBCol>
               <div>
-                <span className="mr-2 fw-bold"> Is Hiring ?</span>
+                <span className="mr-2" style={{ fontWeight: 500 }}>
+                  Is Verify ?
+                </span>
                 <input
                   className="form-check-input"
                   type="checkbox"
@@ -252,6 +259,65 @@ export default function Modal() {
               </div>
             </MDBCol>
           </MDBRow>
+          <hr />
+          <span className="fw-bold">Main Branch</span>
+
+          <MDBRow>
+            <MDBCol>
+              <MDBInput
+                label="Name"
+                value={branch.name}
+                required
+                onChange={({ target }) =>
+                  setBranch({ ...branch, name: target.value })
+                }
+              />
+            </MDBCol>
+            <MDBCol>
+              <MDBInput
+                label="Subname"
+                value={branch.displayname}
+                onChange={({ target }) =>
+                  setBranch({ ...branch, displayname: target.value })
+                }
+              />
+            </MDBCol>
+          </MDBRow>
+          <MDBRow>
+            <MDBCol>
+              <MDBInput
+                label="Email"
+                value={branch?.contacts?.email}
+                required
+                type="email"
+                onChange={({ target }) =>
+                  setBranch({
+                    ...branch,
+                    contacts: { ...branch.contacts, email: target.value },
+                  })
+                }
+              />
+            </MDBCol>
+            <MDBCol>
+              <MDBInput
+                label="Mobile"
+                value={branch?.contacts?.mobile}
+                required
+                onChange={({ target }) =>
+                  setBranch({
+                    ...branch,
+                    contacts: { ...branch.contacts, mobile: target.value },
+                  })
+                }
+              />
+            </MDBCol>
+          </MDBRow>
+          <AddressSelect
+            address={branch.address}
+            handleChange={(key, value) =>
+              setBranch({ ...branch, [key]: value })
+            }
+          />
           <MDBBtn
             rounded
             className="float-right mt-4"

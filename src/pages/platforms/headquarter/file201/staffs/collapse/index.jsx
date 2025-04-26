@@ -12,7 +12,7 @@ import {
   handlePagination,
 } from "../../../../../../services/utilities";
 import CollapseTable from "./table";
-import { Roles } from "../../../../../../services/fakeDb";
+import { Policy, Roles } from "../../../../../../services/fakeDb";
 
 import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
@@ -57,9 +57,7 @@ export default function MenuCollapse({ staffs, page }) {
     >
       {handlePagination(staffs, page, maxPage).map((staff, index) => {
         const { user, contract, status, rate, contribution, _id } = staff;
-        const role = Roles.findById(
-          Number(contract?.designation)
-        )?.display_name;
+        const department = Policy.getDepartment(Number(contract?.designation));
 
         return (
           <MDBCard
@@ -79,7 +77,7 @@ export default function MenuCollapse({ staffs, page }) {
             >
               <label className="d-flex justify-content-between">
                 {index + 1}. {user && `${fullName(user?.fullName)} | `}
-                {contract?.designation && `${role}`}
+                {contract?.designation && `${department}`}
                 <small>
                   {contract?.soe && `${contract?.soe?.toUpperCase()} | `}
                   {status && status.toUpperCase()}

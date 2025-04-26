@@ -1,6 +1,6 @@
 import {
   // Employee,
-  Applicants,
+  // Applicants,
   Equipments,
   Heads,
   Physicians,
@@ -8,6 +8,7 @@ import {
   Staffs,
 } from "../../../pages/platforms/headquarter/file201";
 import Services from "../../../pages/platforms/manager/settings/services";
+import Applicants from "../../../pages/platforms/manager/settings/applicants";
 import Menus from "../../../pages/platforms/manager/settings/menus";
 import Banner from "../../../pages/platforms/manager/settings/banner";
 import Logo from "../../../pages/platforms/manager/settings/logo";

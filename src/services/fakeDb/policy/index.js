@@ -6,7 +6,7 @@ const Policy = {
     if (pk < 0) return "unknown department";
     const { department = "" } =
       collections.find(({ positions = [] }) =>
-        positions.some(({ id }) => id === pk)
+        positions.some(({ id }) => id === Number(pk))
       ) || {};
     return department || "";
   },

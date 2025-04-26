@@ -8,6 +8,7 @@ import {
   MDBModalHeader,
   MDBRow,
   MDBCol,
+  MDBInput,
 } from "mdbreact";
 import {
   EMPLOYEES,
@@ -67,6 +68,10 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     dispatch = useDispatch();
 
   const { department } = activePlatform;
+
+  useEffect(() => {
+    setForm(_form);
+  }, [show]);
 
   useEffect(() => {
     if (willCreate && activePlatform?.branchId)
@@ -146,6 +151,11 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     });
   };
 
+  const { user = {} } =
+    [...crews].find(({ user }) => user._id === form?.user) || {};
+  const { prc = {} } = user || {};
+
+  console.log("form", form);
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
       <MDBModalHeader
@@ -197,6 +207,42 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             </MDBCol>
           </MDBRow>
 
+          {form.user && (
+            <MDBRow>
+              <MDBCol md="4">
+                <MDBInput
+                  label="PRC ID"
+                  value={form?.prc?.id || prc?.id}
+                  onChange={({ target }) =>
+                    setForm({ ...form, prc: { ...form.prc, id: target.value } })
+                  }
+                />
+              </MDBCol>
+              <MDBCol md="4">
+                <MDBInput
+                  label="Register"
+                  type="date"
+                  value={form?.prc?.from || prc?.from}
+                  onChange={({ target }) =>
+                    setForm({
+                      ...form,
+                      prc: { ...form.prc, from: target.value },
+                    })
+                  }
+                />
+              </MDBCol>
+              <MDBCol md="4">
+                <MDBInput
+                  label="Expiration"
+                  type="date"
+                  value={form?.prc?.to || prc?.to}
+                  onChange={({ target }) =>
+                    setForm({ ...form, prc: { ...form.prc, to: target.value } })
+                  }
+                />
+              </MDBCol>
+            </MDBRow>
+          )}
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"

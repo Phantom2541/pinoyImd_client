@@ -111,7 +111,6 @@ export default function Heads() {
     };
     reader.readAsDataURL(e.target.files[0]);
   };
-
   const handleDelete = (data) => {
     Swal.fire({
       title: "Are you sure?",
@@ -132,6 +131,7 @@ export default function Heads() {
     setImageErrors((prev) => ({ ...prev, [email]: true }));
 
   const fileInputRef = useRef();
+
   const triggerFileInput = () => fileInputRef.current.click();
 
   return (
@@ -211,7 +211,9 @@ export default function Heads() {
               <>
                 {!imageErrors[email] ? (
                   <img
-                    onClick={triggerFileInput}
+                    onClick={() =>
+                      document.getElementById(`file-upload-${email}`).click()
+                    }
                     alt={email || "Default Image"}
                     className="cursor-pointer"
                     id="signature"
@@ -226,7 +228,9 @@ export default function Heads() {
                       size="sm"
                       color="warning"
                       rounded
-                      onClick={triggerFileInput}
+                      onClick={() =>
+                        document.getElementById(`file-upload-${email}`).click()
+                      }
                     >
                       <MDBIcon icon="upload" />
                     </MDBBtn>
@@ -234,8 +238,8 @@ export default function Heads() {
                 )}
 
                 <input
+                  id={`file-upload-${email}`}
                   type="file"
-                  ref={fileInputRef}
                   accept="image/png"
                   style={{ display: "none" }}
                   onChange={(e) => handleSignature(e, email)}
