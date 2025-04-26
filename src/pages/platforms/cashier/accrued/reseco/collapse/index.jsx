@@ -10,46 +10,11 @@ import {
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
-import { collapse, dateFormat } from "../../../../../../services/utilities";
+import { collapse } from "../../../../../../services/utilities";
 
 export default function Body() {
-  const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
-    [vouchers, setVouchers] = useState([]),
+  const { filtered } = useSelector(({ deals }) => deals),
     [cluster, setCluster] = useState([]);
-  // dispatch = useDispatch();
-
-  useEffect(() => {
-    const groupByDate = filtered.reduce((groups, item) => {
-      const date = dateFormat(item.createdAt);
-      const index = groups.findIndex((group) => group.date === date);
-      if (index > -1) {
-        groups[index].deals.push({ ...item, isSelected: false });
-      } else {
-        groups.push({
-          date,
-          deals: [{ ...item, isSelected: false }],
-          isSelected: false,
-        });
-      }
-      return groups;
-    }, []);
-
-    setVouchers(groupByDate);
-    // setCluster(_cluster);
-  }, [filtered, activePage, maxPage]); // Re-run whenever filtered data or page changes
-
-  // useEffect(() => {
-  //   const _cluster = filtered.reduce((groups, item) => {
-  //     const date = dateFormat(item.createdAt);
-  //     if (!groups[date]) {
-  //       groups[date] = [];
-  //     }
-  //     groups[date].push(item);
-  //     return groups;
-  //   }, []);
-
-  //   setCluster(_cluster);
-  // }, [filtered, activePage, maxPage]); // Re-run whenever filtered data or page changes
 
   /**
    * Active states for collapsible items
@@ -66,7 +31,7 @@ export default function Body() {
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
-      {vouchers?.map((voucher, index) => {
+      {filtered?.map((voucher, index) => {
         const { deals, date } = voucher;
         const actualIndex = index; // Directly use the index in the paginated data
         const { color, border } = collapse.getStyle(

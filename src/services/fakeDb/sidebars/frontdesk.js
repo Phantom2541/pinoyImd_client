@@ -7,6 +7,7 @@ import {
   Chemistry,
   Electrolyte,
   Serology,
+  Xray,
 } from "../../../pages/platforms/frontdesk/reports";
 
 import {
@@ -230,6 +231,7 @@ const frontdesk = [
             name: "Xray",
             path: "/xray",
             icon: "user-md",
+            component: Xray,
           },
           {
             name: "CT",

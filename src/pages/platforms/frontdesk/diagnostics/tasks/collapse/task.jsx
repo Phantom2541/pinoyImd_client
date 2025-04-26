@@ -56,8 +56,6 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
   const task = {
     ...obj,
     key: `${form}-${index}`,
-    _id,
-    dealId: _id,
     form,
     patient: customer,
     generateHealthyClient: [

@@ -168,13 +168,6 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      // .addCase(BROWSE.fulfilled, (state, action) => {
-      //   const { payload, success } = action.payload;
-      //   state.isSuccess = success;
-      //   state.collections = payload;
-      //   state.isLoading = false;
-      // })
-
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
         const services = [...Services.collections]
