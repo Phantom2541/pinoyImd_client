@@ -12,6 +12,9 @@ import {
 const Footer = () => {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
   const { success, task, heads } = useSelector(({ validator }) => validator);
+  const { collections: physicians } = useSelector(
+    ({ physicians }) => physicians
+  );
   const dispatch = useDispatch();
   const department = activePlatform?.department;
   useEffect(() => {
@@ -42,6 +45,11 @@ const Footer = () => {
       ({ section }) => section.replace("-", "").toLowerCase() === identifier
     )?.user?._id;
 
+  const findPhysicianId = (_user) =>
+    console.log(
+      "physicians",
+      physicians.find(({ user }) => user === _user)
+    );
   const handleSave = (hasDone) => {
     const { form } = task;
 
@@ -49,10 +57,19 @@ const Footer = () => {
     // if radiologist  and xray = radiologist
     // if radiologist  and ultrasound = sonographer
     // if radiologist  and ecg   = cardiologist
+    console.log("formfrom", form);
+    console.log("task", task);
+
     const head = findSignatoryId(form.toLowerCase());
-    const dr = findSignatoryId(
-      department === "laboratory" ? "pathologist" : "radiologist"
-    );
+    let dr;
+    if (form !== "Ecg") {
+      dr = findSignatoryId(
+        department === "laboratory" ? "pathologist" : "radiologist"
+      );
+    } else {
+      dr = findPhysicianId(task.signatories[1]._id);
+    }
+    // console.log("dr", dr);
 
     const data = ["xray", "ultrasound", "miscellaneous"].includes(form)
       ? (() => {

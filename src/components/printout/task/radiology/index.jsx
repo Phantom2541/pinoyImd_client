@@ -24,7 +24,7 @@ const Printout = ({ task }) => {
         </div>
         <h5 className="fw-bold">{remarks}</h5>
       </div>
-      <Signatories signatories={signatories} />
+      <Signatories signatories={signatories} form={task.form} />
     </div>
   );
 };
@@ -36,9 +36,9 @@ export default function RadTaskPrintout() {
     setTask(savedTask);
 
     // Delay to ensure content is rendered before print
-    setTimeout(() => {
-      window.print();
-    }, 500);
+    // setTimeout(() => {
+    //   window.print();
+    // }, 500);
   }, []);
 
   if (task?._id) return <Printout task={task} />;

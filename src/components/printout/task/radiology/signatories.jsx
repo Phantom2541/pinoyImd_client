@@ -30,7 +30,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
   );
 };
 
-export default function Signatories({ signatories }) {
+export default function Signatories({ signatories, form }) {
   const head = signatories[0],
     dr = signatories[1],
     frontdesk = signatories[2];
@@ -38,6 +38,7 @@ export default function Signatories({ signatories }) {
     signatories[0]?.title === "RXT"
       ? "X-RAY TECHNOLOGIST"
       : "RADIOLOGIC TECHNOLOGIST";
+  console.log("signatories", signatories);
 
   return (
     <div className="pt-4 print-footer ">
@@ -45,12 +46,14 @@ export default function Signatories({ signatories }) {
         <Signature person={head} label={title} isHalf />
         <Signature person={frontdesk} label="Receptionist" isHalf />
       </div>
-      <Signature
-        person={dr}
-        label="Radiologist"
-        style={{ marginTop: "20px" }}
-        withSignature
-      />
+      {form !== "ecg" && (
+        <Signature
+          person={dr}
+          label="Radiologist"
+          style={{ marginTop: "20px" }}
+          withSignature
+        />
+      )}
     </div>
   );
 }

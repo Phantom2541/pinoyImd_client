@@ -16,32 +16,22 @@ export default function Ecg() {
   const dispatch = useDispatch();
   const { task } = useSelector(({ validator }) => validator);
 
-  const [description, setDescription] = useState("");
-  const [impression, setImpression] = useState("");
+  const [findings, setFindings] = useState("");
   const [activeTab, setActiveTab] = useState("results");
 
   const descTimeout = useRef(null);
-  const impTimeout = useRef(null);
 
   // Load values from task
   useEffect(() => {
-    if (task?.description) {
+    if (task?.findings) {
       try {
-        const parsed = JSON.parse(task.description);
-        setDescription(parsed?.blocks?.map((b) => b.text).join("\n") || "");
+        const parsed = JSON.parse(task.findings);
+        setFindings(parsed?.blocks?.map((b) => b.text).join("\n") || "");
       } catch (e) {
-        setDescription(task.description);
+        setFindings(task.findings);
       }
     }
-    if (task?.impression) {
-      try {
-        const parsed = JSON.parse(task.impression);
-        setImpression(parsed?.blocks?.map((b) => b.text).join("\n") || "");
-      } catch (e) {
-        setImpression(task.impression);
-      }
-    }
-  }, [task?.description, task?.impression]);
+  }, [task?.findings]);
 
   const delayedSave = useCallback(
     (field, value, timeoutRef) => {
@@ -68,17 +58,7 @@ export default function Ecg() {
             to="#!"
             onClick={() => setActiveTab("results")}
           >
-            Description
-          </MDBNavLink>
-        </MDBNavItem>
-        <MDBNavItem>
-          <MDBNavLink
-            link
-            active={activeTab === "kit"}
-            to="#!"
-            onClick={() => setActiveTab("kit")}
-          >
-            Impression
+            Findings
           </MDBNavLink>
         </MDBNavItem>
       </MDBNav>
@@ -94,28 +74,11 @@ export default function Ecg() {
                   overflowY: "auto",
                   maxHeight: "300px",
                 }}
-                value={description}
+                value={findings}
                 onChange={(e) => {
                   const val = e.target.value;
-                  setDescription(val);
-                  delayedSave("description", val, descTimeout);
-                }}
-              />
-            </MDBTabPane>
-
-            <MDBTabPane tabId="kit">
-              <textarea
-                className="form-control mt-3 border"
-                style={{
-                  minHeight: "200px",
-                  overflowY: "auto",
-                  maxHeight: "300px",
-                }}
-                value={impression}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setImpression(val);
-                  delayedSave("impression", val, impTimeout);
+                  setFindings(val);
+                  delayedSave("findings", val, descTimeout);
                 }}
               />
             </MDBTabPane>
