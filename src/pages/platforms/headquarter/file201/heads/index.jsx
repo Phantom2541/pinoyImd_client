@@ -13,6 +13,7 @@ import { ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
+import SignaturePreview from "./signaturePreview";
 
 export default function Heads() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -22,6 +23,7 @@ export default function Heads() {
     [heads, setHeads] = useState([]),
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
+    [showPreviewSignature, setShowPreviewSignature] = useState(false),
     [willCreate, setWillCreate] = useState(true),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -54,19 +56,19 @@ export default function Heads() {
 
   //Modal toggle
   const toggleModal = () => setShowModal(!showModal);
+  const togglePreviewSignature = () =>
+    setShowPreviewSignature(!showPreviewSignature);
 
   //Trigger for update
   const handleUpdate = (selected) => {
     setSelected(selected);
-    if (willCreate) {
-      setWillCreate(false);
-    }
+    setWillCreate(false);
     setShowModal(true);
   };
 
   //Trigger for create
   const handleCreate = () => {
-    !willCreate && setWillCreate(true);
+    setWillCreate(true);
     setShowModal(true);
   };
 
@@ -90,26 +92,11 @@ export default function Heads() {
   const handleSignature = (e, email) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      let image = new Image();
-      image.src = e.target.result;
-
-      image.onload = function () {
-        dispatch(
-          UPLOAD({
-            data: {
-              path: `users/${email}`,
-              base64: reader.result.split(",")[1],
-              name: `signature.png`,
-            },
-            token,
-          })
-        ).then(() => {
-          // After successful upload
-          setImageErrors((prev) => ({ ...prev, [email]: false }));
-        });
-      };
+      setSelected({ signature: e.target.result, email });
+      togglePreviewSignature();
     };
     reader.readAsDataURL(e.target.files[0]);
+    e.target.value = null;
   };
   const handleDelete = (data) => {
     Swal.fire({
@@ -129,10 +116,6 @@ export default function Heads() {
 
   const handleImageError = (email) =>
     setImageErrors((prev) => ({ ...prev, [email]: true }));
-
-  const fileInputRef = useRef();
-
-  const triggerFileInput = () => fileInputRef.current.click();
 
   return (
     <>
@@ -256,6 +239,12 @@ export default function Heads() {
         willCreate={willCreate}
         show={showModal}
         toggle={toggleModal}
+      />
+      <SignaturePreview
+        show={showPreviewSignature}
+        toggle={togglePreviewSignature}
+        selected={selected}
+        setImageErrors={setImageErrors}
       />
     </>
   );
