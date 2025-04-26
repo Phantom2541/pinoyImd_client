@@ -54,8 +54,8 @@ export default function Body() {
               <CollapsableHeader
                 key={date}
                 title={date}
-                count={deals.length}
-                sum={deals.reduce((acc, item) => acc + item.amount, 0)}
+                count={deals?.length}
+                sum={deals?.reduce((acc, item) => acc + item.amount, 0)}
                 isOpen={activeId === actualIndex}
                 textColor={color}
                 setActiveId={setActiveId}

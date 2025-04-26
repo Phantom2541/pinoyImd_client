@@ -14,7 +14,12 @@ const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { sources, month, year, filtered } = useSelector(({ deals }) => deals),
+  const {
+      sources,
+      month,
+      year,
+      filtered = [],
+    } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
   // Fetch vouchers
   useEffect(() => {
@@ -39,7 +44,7 @@ const Header = () => {
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
   const sum = filtered
-    ?.flatMap(({ deals }) => deals.map((item) => item.amount))
+    ?.flatMap(({ deals = [] }) => deals.map((item) => item.amount))
     .reduce((acc, item) => acc + item, 0);
 
   return (

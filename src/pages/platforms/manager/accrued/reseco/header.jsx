@@ -7,7 +7,7 @@ import {
   SetMONTH,
   ResetDATE,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import { MDBView, MDBBtn } from "mdbreact";
+import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
 import CalendarPicker from "../../../../../components/header/calendars";
 import { currency } from "../../../../../services/utilities";
 import { Calendar } from "../../../../../services/fakeDb";
@@ -71,11 +71,12 @@ const Header = () => {
         moved={(next) => dispatch(SetMONTH(next))}
         reset={() => dispatch(ResetDATE())}
       />
-      <div>Gross : {currency(sum)}</div>
       <div>
-        <MDBBtn color="blue" size="sm" onClick={() => handlePrintOut("lol")}>
-          print
-        </MDBBtn>
+        <h5 className="mt-1">
+          Gross : <strong> {currency(sum)}</strong>
+        </h5>
+      </div>
+      <div className="d-flex align-items-center">
         <div className="text-right d-flex items-center ">
           <select
             id="cashier-select"
@@ -95,6 +96,24 @@ const Header = () => {
             ))}
           </select>
         </div>
+        <MDBBtn
+          color="white"
+          rounded
+          size="sm"
+          className="px-2"
+          onClick={() => handlePrintOut("lol")}
+        >
+          <MDBIcon icon="print" />
+        </MDBBtn>
+        <MDBBtn
+          color="white"
+          rounded
+          size="sm"
+          className="px-2"
+          onClick={() => handlePrintOut("lol")}
+        >
+          <MDBIcon icon="file-excel" style={{ fontSize: "0.9rem" }} />
+        </MDBBtn>
       </div>
     </MDBView>
   );
