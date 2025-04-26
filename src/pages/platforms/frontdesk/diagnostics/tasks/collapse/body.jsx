@@ -44,7 +44,6 @@ export default function Body({
                 const _t = { ...t, category, source, referral };
                 return (
                   <Task
-                    _id={t._id}
                     key={`subform-${i}`}
                     form={key}
                     obj={_t || {}}
