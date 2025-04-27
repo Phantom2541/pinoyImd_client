@@ -569,7 +569,7 @@ export const reduxSlice = createSlice({
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
-      state.isLoading = false;
+      // state.isLoading = false;
       state.formSubmitted = false;
       if (payload?.resetCollections) state.collections = [];
     },
@@ -895,6 +895,7 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.showModal = false;
+        if (state.collections.length === 0) return;
 
         const identifier = ["Miscellaneous", "Xray"].includes(payload?.form)
           ? "dealId"
@@ -902,7 +903,7 @@ export const reduxSlice = createSlice({
 
         // Find the index of the collection item based on the identifier
         const index = state.collections.findIndex(
-          (item) => item._id === payload[identifier]
+          (item) => item?._id === payload[identifier]
         );
 
         // Ensure the index is valid

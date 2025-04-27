@@ -47,7 +47,7 @@ export default function Body() {
 
           return (
             <MDBCard
-              key={`service-${date}`}
+              key={`service-${date}-${index}`}
               style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
             >
               <MDBCollapseHeader

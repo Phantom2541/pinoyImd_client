@@ -7,10 +7,11 @@ import Header from "./header";
 
 export default function DealCollapse() {
   const { maxPage } = useSelector(({ auth }) => auth),
-    { filtered, activePage, activeCOLAPSE } = useSelector(
+    { filtered, activePage, activeCOLAPSE, collections } = useSelector(
       ({ validator }) => validator
     );
-
+  console.log("filtered", filtered);
+  console.log("collections", collections);
   return (
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
       {handlePagination(filtered, activePage, maxPage).map((deal, index) => {

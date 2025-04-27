@@ -7,6 +7,7 @@ import {
   SetTASK,
   SetMODAL,
   SetHEALTHY,
+  SetVALIDATOR,
 } from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const Footer = () => {
@@ -57,8 +58,6 @@ const Footer = () => {
     // if radiologist  and xray = radiologist
     // if radiologist  and ultrasound = sonographer
     // if radiologist  and ecg   = cardiologist
-    console.log("formfrom", form);
-    console.log("task", task);
 
     const head = findSignatoryId(form.toLowerCase());
     let dr;
@@ -93,7 +92,9 @@ const Footer = () => {
         token,
         data,
       })
-    );
+    ).then(({ payload }) => {
+      dispatch(SetVALIDATOR(payload?.item || payload?.payload));
+    });
     dispatch(SetMODAL(false));
   };
 
