@@ -7,7 +7,7 @@ import {
   UPDATE,
   SAVE,
   RESET,
-} from "../../../../../../services/redux/slices/diagnostics/management/temperature";
+} from "../../../../../../services/redux/slices/diagnostics/management/temperatures";
 const Card = ({ txt, num, index }) => {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     { collections, selected, isSuccess, formSubmitted } = useSelector(

@@ -8,7 +8,7 @@ import {
   ResetDATE,
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/diagnostics/management/temperature";
+} from "../../../../../services/redux/slices/diagnostics/management/temperatures";
 import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
