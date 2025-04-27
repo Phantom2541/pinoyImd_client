@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
@@ -18,9 +18,13 @@ const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { sources, month, year, filtered, vendor } = useSelector(
-      ({ deals }) => deals
-    ),
+  const {
+      sources,
+      month,
+      year,
+      filtered = [],
+      vendor,
+    } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
   // Fetch vouchers
   useEffect(() => {
@@ -43,10 +47,8 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
-  console.log("activePlatform", activePlatform);
-
   const sum = filtered
-    ?.flatMap(({ deals }) => deals.map((item) => item.amount))
+    ?.flatMap(({ deals = [] }) => deals?.map((item) => item.amount))
     .reduce((acc, item) => acc + item, 0);
 
   const handlePrintOut = () => {
@@ -64,16 +66,14 @@ const Header = () => {
       "top=100px,left=0px,width=1050px,height=750px"
     );
   };
-
-  console.log("filtered", filtered);
-
   const handleSoftCopy = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Deals");
     const { branch } = activePlatform;
     const { companyId } = branch;
     // Add company name header - Add the row first
-    const companyHeader = worksheet.addRow([`Company: ${companyId?.name}`]);
+    const companyName = `${companyId?.name} ${companyId?.subName}`;
+    const companyHeader = worksheet.addRow([`Company: ${companyName}`]);
     companyHeader.font = { bold: true, size: 14 };
 
     // Merge the row correctly
@@ -139,8 +139,11 @@ const Header = () => {
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
-    saveAs(blob, `deals_export_${Date.now()}.xlsx`);
+    const fileName =
+      source === `Unknown Source` ? `${companyName} - Resco` : source;
+    saveAs(blob, `${fileName} ${Calendar.Months[month - 1]} ${year}.xlsx`);
   };
+
   return (
     <MDBView
       cascade

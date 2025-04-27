@@ -41,7 +41,7 @@ const Header = () => {
       uniqueSource = [
         ...new Map(
           collections.map(({ outsource: vendor }) => {
-            const { _id, displayname } = vendor;
+            const { _id = "", displayname } = vendor || {};
             const soa = payables.find(
               ({ supplier }) => String(supplier.vendors) === String(_id)
             );
@@ -90,7 +90,7 @@ const Header = () => {
             keys="_id"
             onChange={(value) => handleVendors(value)}
             inputClassName="m-0 p-0 text-white"
-            collections={suppliers?.map(({ _id, displayname }) => ({
+            collections={suppliers?.map(({ _id = "", displayname = "" }) => ({
               _id,
               displayname,
             }))}

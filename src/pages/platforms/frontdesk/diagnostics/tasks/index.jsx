@@ -28,7 +28,8 @@ import ResultEntry from "./modal";
 
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { message, isSuccess, isLoading } = useSelector(({ deals }) => deals),
+    { message, isSuccess } = useSelector(({ deals }) => deals),
+    { isLoading } = useSelector(({ validator }) => validator),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 

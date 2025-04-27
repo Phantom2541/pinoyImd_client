@@ -22,6 +22,7 @@ const Vouchers = () => {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
+
   return (
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
