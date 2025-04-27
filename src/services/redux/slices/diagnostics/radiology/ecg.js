@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const name = "/diagnostics/radiology/result/xray";
+const name = "/diagnostics/radiology/result/ecg";
 
 const initialState = {
   collections: [],
@@ -14,7 +14,6 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(`${name}/browse`, (items, thunkAPI) => {
   const { token, data } = items;
-  console.log("running");
   try {
     return axioKit.universal(`${name}/browse`, token, data);
   } catch (error) {
@@ -83,7 +82,7 @@ export const reduxSlice = createSlice({
         console.log("fulfilled", action.payload);
 
         const { payload } = action;
-        state.collections = payload.data;
+        state.collections = payload.data; //.sort((a, b) => b.createdAt - a.createdAt);
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

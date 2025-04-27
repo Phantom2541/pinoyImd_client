@@ -24,7 +24,6 @@ const Header = () => {
       year,
       filtered = [],
       vendor,
-      collections,
     } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
   // Fetch vouchers

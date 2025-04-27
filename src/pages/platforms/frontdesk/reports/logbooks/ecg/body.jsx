@@ -10,8 +10,7 @@ import {
 
 const Body = () => {
   const { maxPage, activePage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ xray }) => xray);
-  console.log("collections", collections);
+    { collections } = useSelector(({ ecg }) => ecg);
 
   return (
     <MDBTable responsive hover bordered>
@@ -31,17 +30,15 @@ const Body = () => {
         {collections?.map((collection, index) => {
           const { customerId, description, impression, createdAt } = collection;
 
-          const d = new Date(createdAt),
-            day = d.getDate();
           return (
             <tr key={index}>
               <td key={index}>{index + 1}</td>
               <td>{fullName(customerId.fullName)}</td>
               <td>{getAge(customerId.dob)}</td>
-              <td>{customerId.isMale ? "Male" : "Female:"}</td>
+              <td>{customerId.isMale ? "Male" : "Female"}</td>
               <td>{description}</td>
               <td>{impression} </td>
-              <td>{day}</td>
+              <td>{dateFormat(createdAt)}</td>
               <td>{getTime(createdAt)}</td>
             </tr>
           );

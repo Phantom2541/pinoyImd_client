@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 // import { Select } from "../../../../../../components/customizable";
-import { BROWSE } from "../../../../../../services/redux/slices/diagnostics/radiology/xray";
+import { BROWSE } from "../../../../../../services/redux/slices/diagnostics/radiology/ecg";
 import Calendar from "../../../../../templates/calendars/calendar";
 import CalendarPicker from "../../../../../../components/header/calendars";
 
 const Header = () => {
   const { maxPage, token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, month, year } = useSelector(({ xray }) => xray),
-    [xray, setXray] = useState([]),
+    { collections = {}, month, year } = useSelector(({ ecg }) => ecg),
+    [ecg, setEcg] = useState([]),
     dispatch = useDispatch();
 
   //initial values
@@ -21,21 +21,14 @@ const Header = () => {
           data: { branchId: activePlatform.branchId, month, year },
         })
       );
-  }, [dispatch, maxPage]);
+  }, [dispatch, maxPage, month, year]);
 
   useEffect(() => {
-    if (collections) setXray(collections);
+    if (collections) setEcg(collections);
   }, [collections]);
 
   const handleMoved = (month, year) => {
     console.log("month", month, year);
-
-    // dispatch(
-    //   BROWSE({
-    //     token,
-    //     data: { branchId: activePlatform.branchId, month, year },
-    //   })
-    // );
   };
 
   return (
@@ -46,7 +39,7 @@ const Header = () => {
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <CalendarPicker month={month} year={year} moved={handleMoved} />
         <span className="white-text mx-3 text-nowrap mt-0">
-          {xray.length} Xray
+          {ecg?.length} ECG
         </span>
       </div>
       <div>

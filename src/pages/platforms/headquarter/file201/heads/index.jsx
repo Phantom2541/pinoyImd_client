@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
@@ -12,7 +12,7 @@ import { fullName, globalSearch } from "../../../../../services/utilities";
 import { ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBBtn, MDBIcon } from "mdbreact";
-import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
+// import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
 import SignaturePreview from "./signaturePreview";
 
 export default function Heads() {

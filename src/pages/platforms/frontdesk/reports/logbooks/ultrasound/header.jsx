@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 // import { Select } from "../../../../../../components/customizable";
-import { BROWSE } from "../../../../../../services/redux/slices/diagnostics/radiology/xray";
+import { BROWSE } from "../../../../../../services/redux/slices/diagnostics/radiology/ultrasound";
 import Calendar from "../../../../../templates/calendars/calendar";
 import CalendarPicker from "../../../../../../components/header/calendars";
 
 const Header = () => {
   const { maxPage, token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, month, year } = useSelector(({ xray }) => xray),
-    [xray, setXray] = useState([]),
+    { collections, month, year } = useSelector(({ ultrasound }) => ultrasound),
+    [ultrasound, setUltrasound] = useState([]),
     dispatch = useDispatch();
 
   //initial values
@@ -24,7 +24,7 @@ const Header = () => {
   }, [dispatch, maxPage]);
 
   useEffect(() => {
-    if (collections) setXray(collections);
+    if (collections) setUltrasound(collections);
   }, [collections]);
 
   const handleMoved = (month, year) => {
@@ -46,7 +46,7 @@ const Header = () => {
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <CalendarPicker month={month} year={year} moved={handleMoved} />
         <span className="white-text mx-3 text-nowrap mt-0">
-          {xray.length} Xray
+          {ultrasound.length} Ultrasound
         </span>
       </div>
       <div>
