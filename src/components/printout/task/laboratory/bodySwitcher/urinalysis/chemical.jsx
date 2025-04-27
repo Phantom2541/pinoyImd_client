@@ -30,7 +30,7 @@ const Chemical = ({ style, Chemical }) => {
       <MDBTableBody>
         <tr>
           <td style={{ ...style, width: "50%" }} className="py-0 ">
-            Sugar
+            <span className="ml-2">Sugar</span>
           </td>
           <td
             style={{ ...style, color: !!sugar && "red" }}
@@ -41,7 +41,7 @@ const Chemical = ({ style, Chemical }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Blood
+            <span className="ml-2">Blood</span>
           </td>
           <td
             style={{ ...style, color: !!blood && "red" }}
@@ -52,7 +52,7 @@ const Chemical = ({ style, Chemical }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Protein
+            <span className="ml-2">Protein</span>
           </td>
           <td
             style={{ ...style, color: !!protein && "red" }}
@@ -63,7 +63,7 @@ const Chemical = ({ style, Chemical }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Urobilinogen
+            <span className="ml-2">Urobilinogen</span>
           </td>
           <td
             style={{ ...style, color: !!urobilinogen && "red" }}
@@ -75,7 +75,7 @@ const Chemical = ({ style, Chemical }) => {
 
         <tr>
           <td style={style} className="py-0 ">
-            Bilirubin
+            <span className="ml-2">Bilirubin</span>
           </td>
           <td
             style={{ ...style, color: !!billirubin && "red" }}
@@ -86,7 +86,7 @@ const Chemical = ({ style, Chemical }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Nitrate
+            <span className="ml-2">Nitrate</span>
           </td>
           <td
             style={{ ...style, color: !!nitrate && "red" }}
@@ -97,7 +97,7 @@ const Chemical = ({ style, Chemical }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Ketone
+            <span className="ml-2">Ketone</span>
           </td>
           <td
             style={{ ...style, color: !!ketone && "red" }}
@@ -108,7 +108,7 @@ const Chemical = ({ style, Chemical }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Leukocytes
+            <span className="ml-2">Leukocytes</span>
           </td>
           <td
             style={{ ...style, color: !!leukocytes && "red" }}

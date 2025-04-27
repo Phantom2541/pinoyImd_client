@@ -14,9 +14,14 @@ export default function Modal() {
     dispatch = useDispatch();
 
   return (
-    <MDBModal size="lg" isOpen={showModal} toggle={TOGGLE} backdrop>
+    <MDBModal
+      size="lg"
+      isOpen={showModal}
+      toggle={() => dispatch(TOGGLE("task"))}
+      backdrop
+    >
       <MDBModalHeader
-        toggle={() => dispatch(TOGGLE())}
+        toggle={() => dispatch(TOGGLE("task"))}
         className="light-blue darken-3 white-text"
       >
         <Patient patient={selected?.customerId} />

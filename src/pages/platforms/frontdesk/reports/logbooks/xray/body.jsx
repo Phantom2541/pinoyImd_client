@@ -2,16 +2,13 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
-  dateFormat,
   fullName,
   getAge,
   getTime,
 } from "../../../../../../services/utilities";
 
 const Body = () => {
-  const { maxPage, activePage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ xray }) => xray);
-  console.log("collections", collections);
+  const { collections = [] } = useSelector(({ xray }) => xray);
 
   return (
     <MDBTable responsive hover bordered>
@@ -28,24 +25,26 @@ const Body = () => {
         </tr>
       </thead>
       <tbody>
-        {collections?.map((collection, index) => {
-          const { customerId, description, impression, createdAt } = collection;
+        {Array.isArray(collections) &&
+          collections?.map((collection, index) => {
+            const { customerId, description, impression, createdAt } =
+              collection;
 
-          const d = new Date(createdAt),
-            day = d.getDate();
-          return (
-            <tr key={index}>
-              <td key={index}>{index + 1}</td>
-              <td>{fullName(customerId.fullName)}</td>
-              <td>{getAge(customerId.dob)}</td>
-              <td>{customerId.isMale ? "Male" : "Female:"}</td>
-              <td>{description}</td>
-              <td>{impression} </td>
-              <td>{day}</td>
-              <td>{getTime(createdAt)}</td>
-            </tr>
-          );
-        })}
+            const d = new Date(createdAt),
+              day = d.getDate();
+            return (
+              <tr key={index}>
+                <td key={index}>{index + 1}</td>
+                <td>{fullName(customerId.fullName)}</td>
+                <td>{getAge(customerId.dob)}</td>
+                <td>{customerId.isMale ? "Male" : "Female:"}</td>
+                <td>{description}</td>
+                <td>{impression} </td>
+                <td>{day}</td>
+                <td>{getTime(createdAt)}</td>
+              </tr>
+            );
+          })}
       </tbody>
     </MDBTable>
   );

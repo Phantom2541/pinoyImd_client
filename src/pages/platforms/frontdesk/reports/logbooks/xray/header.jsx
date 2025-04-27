@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 // import { Select } from "../../../../../../components/customizable";
 import { BROWSE } from "../../../../../../services/redux/slices/diagnostics/radiology/xray";
-import Calendar from "../../../../../templates/calendars/calendar";
 import CalendarPicker from "../../../../../../components/header/calendars";
 
 const Header = () => {
@@ -21,7 +20,7 @@ const Header = () => {
           data: { branchId: activePlatform.branchId, month, year },
         })
       );
-  }, [dispatch, maxPage]);
+  }, [dispatch, maxPage, activePlatform, month, year, token]);
 
   useEffect(() => {
     if (collections) setXray(collections);

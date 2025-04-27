@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   MDBCard,
@@ -19,7 +19,6 @@ export default function Body() {
   const { filtered, activePage } = useSelector(({ deals }) => deals),
     { maxPage } = useSelector(({ auth }) => auth),
     [cluster, setCluster] = useState([]);
-
   /**
    * Active states for collapsible items
    */

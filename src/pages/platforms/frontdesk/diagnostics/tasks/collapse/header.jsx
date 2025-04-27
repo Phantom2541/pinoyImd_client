@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { SetSELECTED } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import { SetSELECTED as SetVALIDATOR } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { Categories } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBCollapseHeader, MDBIcon } from "mdbreact";
 import {
@@ -46,7 +46,7 @@ const Header = ({ deal, index }) => {
       <i
         onClick={() =>
           dispatch(
-            SetSELECTED({
+            SetVALIDATOR({
               deal,
               activeCOLAPSE: activeCOLAPSE === index ? -1 : index,
             })

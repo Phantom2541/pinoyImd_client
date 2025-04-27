@@ -18,7 +18,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
       )}
 
       <h5 className="fw-bold mb-0 text-uppercase">
-        <u>{properFullname(person?.fullName)}</u>
+        <u>{properFullname(person?.fullName)} </u>
       </h5>
       {label}
       <h6>

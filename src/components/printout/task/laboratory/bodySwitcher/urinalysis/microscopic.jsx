@@ -31,7 +31,7 @@ const Microscopic = ({ Microscopic, style }) => {
       <MDBTableBody>
         <tr>
           <td style={{ ...style, width: "50%" }} className="py-0 ">
-            PUS
+            <span className="ml-2">PUS</span>
           </td>
           <td
             style={{ ...style, color: pus > 2 && "red" }}
@@ -42,7 +42,7 @@ const Microscopic = ({ Microscopic, style }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Epithelial Cell
+            <span className="ml-2"> Epithelial Cell</span>
           </td>
           <td style={style} className="py-0 fw-bold">
             {MicroscopicResultInWord[epithelial]}
@@ -50,7 +50,7 @@ const Microscopic = ({ Microscopic, style }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Amorphous urates
+            <span className="ml-2"> Amorphous urates</span>
           </td>
           <td style={style} className="py-0 fw-bold">
             {MicroscopicResultInWord[amorphous]}
@@ -58,7 +58,7 @@ const Microscopic = ({ Microscopic, style }) => {
         </tr>
         <tr>
           <td style={style} className="py-0">
-            Red cells
+            <span className="ml-2"> Red cells</span>
           </td>
           <td
             style={{ ...style, color: red > 2 && "red" }}
@@ -69,7 +69,7 @@ const Microscopic = ({ Microscopic, style }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Mucus Threads
+            <span className="ml-2"> Mucus Threads</span>
           </td>
           <td
             style={{ ...style, color: mucus > 1 && "red" }}
@@ -80,7 +80,7 @@ const Microscopic = ({ Microscopic, style }) => {
         </tr>
         <tr>
           <td style={style} className="py-0 ">
-            Bacteria
+            <span className="ml-2">Bacteria</span>
           </td>
           <td
             style={{ ...style, color: bacteria > 1 && "red" }}

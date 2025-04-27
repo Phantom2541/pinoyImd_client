@@ -100,7 +100,7 @@ export const HEADS = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name: url,
+  name: "validator",
   initialState,
   reducers: {
     SetVALIDATOR: (state, { payload }) => {
@@ -175,7 +175,8 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
-    TOGGLE: (state) => {
+    TOGGLE: (state, { payload }) => {
+      console.log("payload", payload);
       state.showModal = !state.showModal;
     },
     RESET: (state) => {

@@ -41,7 +41,7 @@ export default function CellCount({ cc, isMale, style, apc }) {
           return (
             <tr key={`cell-${index}`}>
               <td style={{ ...style, width: "40%" }} className="py-0  ">
-                <span> {Title[index]}</span>
+                <span className="ml-2"> {Title[index]}</span>
               </td>
               <td
                 style={{
@@ -63,13 +63,13 @@ export default function CellCount({ cc, isMale, style, apc }) {
 
         <tr>
           <td style={style} className="py-0">
-            APC
+            <span className="ml-2">APC</span>
           </td>
-          <td style={style} className="py-0 fw-bold">
+          <td style={style} className="py-0 fw-bold text-center">
             {apc}
           </td>
           <td style={style} className="py-0">
-            150-450 <sup>9</sup>/L
+            150 - 450 <sup>9</sup>/L
           </td>
         </tr>
       </tbody>

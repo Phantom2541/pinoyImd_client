@@ -33,7 +33,7 @@ export default function DiffCount({ dc, style }) {
           return (
             <tr key={`cell-${index}`}>
               <td style={{ ...style, width: "40%" }} className="py-0">
-                {category}
+                <span className="ml-2"> {category}</span>
               </td>
               <td
                 style={{
