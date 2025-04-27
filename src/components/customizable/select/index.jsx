@@ -174,8 +174,6 @@ export default function Select({
             let value = values?.includes(".")
               ? getNestedValue(choice, values)
               : choice[values] || choice;
-            console.log("key", key);
-            console.log("value", value);
             if (typeof value === "object") {
               console.warn(
                 "%c[Select] Invalid Values:",
