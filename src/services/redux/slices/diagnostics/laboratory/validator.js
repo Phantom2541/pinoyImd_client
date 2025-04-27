@@ -112,7 +112,6 @@ export const reduxSlice = createSlice({
 
       const findIndex = (collections) =>
         collections.findIndex((item) => item?._id === payload[identifier]);
-
       const findFormIndex = (forms) =>
         forms.findIndex((item) => item?._id === payload?._id);
 
