@@ -31,10 +31,6 @@ const Footer = () => {
         <span className="black-text mx-3 text-nowrap mt-0">
           {filtered.length} Total
         </span>
-        <span>@darel create a button to generate</span>
-        {/* need mag generate to become a SOA, tas ma view s accrued->Statement of Account, base dapat s cutoff nila.
-          then, update mo ang deals->SOA, para di n maquery dito
-        */}
       </div>
       <Pagination
         isLoading={isLoading}

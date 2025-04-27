@@ -37,7 +37,7 @@ export default function Body() {
     <MDBContainer fluid>
       {handlePagination(filtered, activePage, maxPage)?.map(
         (voucher, index) => {
-          const { deals, date } = voucher;
+          const { deals = [], date } = voucher;
           const actualIndex = index; // Directly use the index in the paginated data
           const { color, border } = collapse.getStyle(
             actualIndex,
@@ -59,8 +59,8 @@ export default function Body() {
                 <CollapsableHeader
                   key={date}
                   title={date}
-                  count={deals.length}
-                  sum={deals.reduce((acc, item) => acc + item.amount, 0)}
+                  count={deals?.length}
+                  sum={deals?.reduce((acc, item) => acc + item.amount, 0)}
                   isOpen={activeId === actualIndex}
                   textColor={color}
                   setActiveId={setActiveId}
