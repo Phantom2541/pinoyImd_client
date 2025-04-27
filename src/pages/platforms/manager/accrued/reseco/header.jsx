@@ -18,7 +18,7 @@ const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { sources, month, year, filtered, vendor, collections } = useSelector(
+  const { sources, month, year, filtered, vendor } = useSelector(
       ({ deals }) => deals
     ),
     dispatch = useDispatch();

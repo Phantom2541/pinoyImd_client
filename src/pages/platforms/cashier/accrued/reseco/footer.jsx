@@ -6,9 +6,9 @@ import {
   SetMaxPage,
   SetActivePAGE,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import { MDBIcon } from "mdbreact";
-import * as ExcelJS from "exceljs";
-import { saveAs } from "file-saver";
+// import { MDBIcon } from "mdbreact";
+// import * as ExcelJS from "exceljs";
+// import { saveAs } from "file-saver";
 
 const Footer = () => {
   const {
@@ -16,8 +16,6 @@ const Footer = () => {
       isLoading,
       totalPages,
       activePage,
-      vendor,
-      sources,
     } = useSelector(({ deals }) => deals),
     { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
@@ -33,10 +31,10 @@ const Footer = () => {
     }
   };
 
-  const totalDeals = filtered?.reduce(
-    (sum, item) => sum + item?.deals?.length,
-    0
-  );
+  // const totalDeals = filtered?.reduce(
+  //   (sum, item) => sum + item?.deals?.length,
+  //   0
+  // );
 
   // const handleSoftCopy = async () => {
   //   const workbook = new ExcelJS.Workbook();

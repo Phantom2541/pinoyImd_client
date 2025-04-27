@@ -359,10 +359,12 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(EMPLOYEES.fulfilled, (state, action) => {
-        // const { payload } = action.payload;
-        state.collections = action.payload;
-        state.isLoading = false;
+      .addCase(EMPLOYEES.fulfilled, (state, { payload }) => {
+        state.collections = payload.sort((a, b) => {
+          const aDesignation = String(a?.contract?.designation || "");
+          const bDesignation = String(b?.contract?.designation || "");
+          return aDesignation.localeCompare(bDesignation);
+        });
       })
       .addCase(EMPLOYEES.rejected, (state, action) => {
         const { error } = action;
