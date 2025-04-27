@@ -11,7 +11,9 @@ import { SOA } from "../../../../../../src/services/redux/slices/finance/journal
 const Statements = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { isLoading, month, year } = useSelector(({ deals }) => deals),
-    { isSuccess, message } = useSelector(({ billing }) => billing),
+    { isSuccess = false, message = "" } = useSelector(
+      ({ billings }) => billings
+    ),
     dispatch = useDispatch(),
     { addToast } = useToasts();
 

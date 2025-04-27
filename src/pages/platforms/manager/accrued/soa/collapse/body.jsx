@@ -17,7 +17,7 @@ export default function Collapsable({
 }) {
   const { token } = useSelector(({ auth }) => auth),
     { vendor, isSuccess, formSubmitted } = useSelector(
-      ({ billing }) => billing
+      ({ billings }) => billings
     ),
     dispatch = useDispatch();
 

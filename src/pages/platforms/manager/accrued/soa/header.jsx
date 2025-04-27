@@ -11,7 +11,7 @@ import {
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, filtered, month, year, isSuccess } = useSelector(
-      ({ billing }) => billing
+      ({ billings }) => billings
     ),
     { collections: payables } = useSelector(({ payables }) => payables),
     [suppliers, setSuppliers] = useState([]),
