@@ -37,6 +37,8 @@ import {
   controls,
   assurances,
   xray,
+  ultrasound,
+  ecg,
 } from "./slices/diagnostics";
 
 import { access, liabilities } from "./slices/liability";
@@ -48,6 +50,7 @@ import {
   ledger,
   soa,
 } from "./slices/finance";
+
 import products from "./slices/market/products";
 
 const store = configureStore({
@@ -93,6 +96,8 @@ const store = configureStore({
     dragDrop,
     products,
     xray,
+    ultrasound,
+    ecg,
   },
 });
 

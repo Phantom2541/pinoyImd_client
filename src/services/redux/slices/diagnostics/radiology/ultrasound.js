@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const name = "/diagnostics/radiology/result/xray";
+const name = "/diagnostics/radiology/result/ultrasound";
 
 const initialState = {
   collections: [],
@@ -14,7 +14,6 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(`${name}/browse`, (items, thunkAPI) => {
   const { token, data } = items;
-  console.log("running");
   try {
     return axioKit.universal(`${name}/browse`, token, data);
   } catch (error) {

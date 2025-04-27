@@ -8,6 +8,8 @@ import {
   Electrolyte,
   Serology,
   Xray,
+  Ultrasound,
+  Ecg,
 } from "../../../pages/platforms/frontdesk/reports";
 
 import {
@@ -221,11 +223,13 @@ const frontdesk = [
             name: "ECG",
             path: "/ecg",
             icon: "heartbeat",
+            component: Ecg,
           },
           {
             name: "Ultrasound",
             path: "/ultrasound",
             icon: "user-md",
+            component: Ultrasound,
           },
           {
             name: "Xray",
