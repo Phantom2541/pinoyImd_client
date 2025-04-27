@@ -71,8 +71,8 @@ export default function SignaturePreview({
           <img
             src={img}
             alt={selected.email}
-            height={"100px"}
-            width={"100px"}
+            height={"120px"}
+            width={"120px"}
           />
         </div>
         <div className="d-flex justify-content-center mt-3">
