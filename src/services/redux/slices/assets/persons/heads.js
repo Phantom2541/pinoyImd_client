@@ -6,6 +6,7 @@ const url = "assets/persons/heads";
 const initialState = {
   collections: [],
   isSuccess: false,
+  formSubmitted: false,
   isLoading: false,
   message: "",
 };
@@ -110,7 +111,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -119,16 +120,16 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.collections.unshift(payload);
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -141,12 +142,12 @@ export const reduxSlice = createSlice({
         state.collections[index] = payload;
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(DESTROY.pending, (state) => {

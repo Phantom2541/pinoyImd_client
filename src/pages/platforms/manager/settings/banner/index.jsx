@@ -37,7 +37,8 @@ export default function Banner() {
 
   useEffect(() => {
     setShowImgCropper(false);
-  }, []);
+    dispatch(RESET());
+  }, [dispatch]);
   useEffect(() => {
     if (message) {
       addToast(message, {

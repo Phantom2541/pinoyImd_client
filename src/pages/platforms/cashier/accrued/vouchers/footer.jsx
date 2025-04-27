@@ -26,15 +26,11 @@ const Footer = () => {
 
   return (
     <div className="mb-auto d-flex justify-content-between align-items-center px-4">
-      <TableRowCount disablePageSelect={false} />
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="black-text mx-3 text-nowrap mt-0">
+      <div className="d-flex align-items-center" style={{ width: "20rem" }}>
+        <TableRowCount disablePageSelect={false} />
+        <span className="black-text mx-3 text-nowrap mt-0 grey-text">
           {filtered.length} Total
         </span>
-        <span>@darel create a button to generate</span>
-        {/* need mag generate to become a SOA, tas ma view s accrued->Statement of Account, base dapat s cutoff nila.
-          then, update mo ang deals->SOA, para di n maquery dito
-        */}
       </div>
       <Pagination
         isLoading={isLoading}

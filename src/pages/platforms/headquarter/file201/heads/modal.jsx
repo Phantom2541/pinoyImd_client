@@ -31,35 +31,11 @@ const _form = {
   section: "",
 };
 
-// var department = [
-//   { text: "Radiology", value: "radiology" },
-//   { text: "Laboratory", value: "laboratory" },
-// ];
-// var sections = [
-//   { text: "Pathologist", value: "pathologist" },
-//   { text: "Radiologist", value: "radiologist" },
-//   { text: "Analysis", value: "analysis" },
-//   { text: "Bacteriology", value: "bacteriology" },
-//   { text: "Biopsy", value: "biopsy" },
-//   { text: "Chemistry", value: "chemistry" },
-//   { text: "Coagulation", value: "coagulation" },
-//   { text: "Compatibility", value: "compatibility" },
-//   { text: "Drugtest", value: "drugtest" },
-//   { text: "Hematology", value: "hematology" },
-//   { text: "Miscellaneous", value: "Parasitology" },
-//   { text: "PAPs", value: "paps" },
-//   { text: "PBS", value: "pbs" },
-//   { text: "Serology", value: "serology" },
-//   { text: "Uniralysis", value: "uniralysis" },
-//   { text: "ECG", value: "ecg" },
-//   { text: "Ultrasound", value: "ultrasound" },
-//   { text: "Xray", value: "xray" },
-//   { text: "2DEcho", value: "2decho" },
-// ];
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { isLoading, collections } = useSelector(
       ({ personnels }) => personnels
     ),
+    { formSubmitted, isSuccess } = useSelector(({ heads }) => heads),
     [crews, setCrews] = useState([]),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
@@ -70,14 +46,17 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const { department } = activePlatform;
 
   useEffect(() => {
-    setForm(_form);
-  }, [show]);
+    if (show && !formSubmitted && isSuccess) {
+      toggle();
+      setForm(_form);
+    }
+  }, [formSubmitted, isSuccess, show, toggle, setForm]);
 
   useEffect(() => {
-    if (willCreate && activePlatform?.branchId)
+    if (activePlatform?.branchId && show)
       dispatch(EMPLOYEES({ token, branch: activePlatform?.branchId }));
     return () => dispatch(RESET());
-  }, [activePlatform, token, willCreate, dispatch]);
+  }, [activePlatform, show, willCreate, dispatch, token]);
 
   useEffect(() => {
     const _sections = TemplatetUtils.getComponents(
@@ -93,11 +72,12 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   useEffect(() => {
     if (show && !willCreate && selected._id) return setForm(selected);
+    setForm(_form);
   }, [show, willCreate, selected]);
 
+  console.log("form", form);
+  console.log("selected", selected);
   const handleUpdate = () => {
-    toggle();
-
     // check if object has changed
     if (isEqual(form, selected))
       return addToast("No changes found, skipping update.", {
@@ -110,8 +90,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         token,
       })
     );
-
-    setForm(_form);
   };
   const handleCreate = () => {
     dispatch(
@@ -120,9 +98,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         token,
       })
     );
-
-    setForm(_form);
-    toggle();
   };
 
   const handleSubmit = (e) => {
@@ -155,7 +130,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     [...crews].find(({ user }) => user._id === form?.user) || {};
   const { prc = {} } = user || {};
 
-  console.log("form", form);
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
       <MDBModalHeader
@@ -184,7 +158,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <Select
                 collections={sections}
                 onChange={handleSectionChange}
-                preValue={selected.section && selected.section}
+                preValue={form?.section}
                 label={"Sections"}
                 multiple={false}
               />
@@ -199,7 +173,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
                   fullName: fullName(crew?.user?.fullName),
                 }))}
                 onChange={handleStaffChange}
-                preValue={selected?._id && selected.user._id}
+                preValue={willCreate ? form.user : form?.user?._id}
                 label={"Staff"}
                 keys={"_id"}
                 values={"fullName"}
@@ -246,12 +220,15 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || formSubmitted}
               color="info"
               className="mb-2"
               rounded
             >
-              {willCreate ? "submit" : "update"}
+              {willCreate ? "submit" : "update"}{" "}
+              {formSubmitted && (
+                <MDBIcon icon="spinner" pulse className="ml-2" />
+              )}
             </MDBBtn>
           </div>
         </form>

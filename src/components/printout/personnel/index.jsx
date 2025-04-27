@@ -1,7 +1,7 @@
 import { MDBTableBody, MDBTableHead } from "mdbreact";
 import React, { useEffect, useState } from "react";
-import { fullName } from "../../../services/utilities";
-import { Roles } from "../../../services/fakeDb";
+import { dateFormat, fullName } from "../../../services/utilities";
+import { Policy } from "../../../services/fakeDb";
 import Header from "./header";
 
 const PersonnelPrintOut = () => {
@@ -22,7 +22,6 @@ const PersonnelPrintOut = () => {
     height: "20px",
   };
 
-  //console.log(personnels);
   return (
     <div className="m-4">
       <Header />
@@ -68,7 +67,7 @@ const PersonnelPrintOut = () => {
         <MDBTableBody>
           {personnels.length > 0 ? (
             personnels.map((personnel, index) => {
-              const { user, employment } = personnel;
+              const { user, contract } = personnel;
               const { prc = { id: "", from: "", to: "" }, hea = "" } = user;
 
               return (
@@ -77,25 +76,28 @@ const PersonnelPrintOut = () => {
                   style={{ border: "1px solid black" }}
                 >
                   <td style={tdStyle}>
-                    <p className="m-0 ml-2">{fullName(user.fullName)}</p>
+                    <p className="m-0 ml-2">
+                      {fullName(user.fullName).toUpperCase()}
+                    </p>
                   </td>
                   <td className="text-center" style={tdStyle}>
-                    {Roles.findById(employment.designation)?.name || ""}
+                    {Policy.getRole(contract?.designation)}
+                    {contract?.designation}
                   </td>
                   <td style={tdStyle} className="text-center">
-                    {hea}
+                    {hea.toUpperCase()}
                   </td>
                   <td className="text-center" style={tdStyle}>
                     {prc.id}
                   </td>
                   <td className="text-center" style={tdStyle}>
-                    {prc.from}
+                    {dateFormat(prc.from)}
                   </td>
                   <td className="text-center" style={tdStyle}>
-                    {prc.to}
+                    {dateFormat(prc.to)}
                   </td>
                   <td className="text-center" style={tdStyle}>
-                    {user.dob}
+                    {dateFormat(user.dob)}
                   </td>
                 </tr>
               );

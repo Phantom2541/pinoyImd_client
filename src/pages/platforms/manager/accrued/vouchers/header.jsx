@@ -25,14 +25,16 @@ const Header = () => {
     dispatch = useDispatch();
   // Fetch vouchers
   useEffect(() => {
-    dispatch(
-      VOUCHERS({
-        token,
-        key: {
-          branchId: activePlatform.branchId,
-        },
-      })
-    );
+    if (activePlatform?.branchId) {
+      dispatch(
+        VOUCHERS({
+          token,
+          key: {
+            branchId: activePlatform?.branchId,
+          },
+        })
+      );
+    }
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 

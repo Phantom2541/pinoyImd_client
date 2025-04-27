@@ -12,7 +12,7 @@ import {
   handlePagination,
 } from "../../../../../../services/utilities";
 import CollapseTable from "./table";
-import { Policy, Roles } from "../../../../../../services/fakeDb";
+import { Policy } from "../../../../../../services/fakeDb";
 
 import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
 

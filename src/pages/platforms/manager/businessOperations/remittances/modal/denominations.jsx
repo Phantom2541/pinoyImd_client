@@ -322,35 +322,37 @@ export default function Modal() {
           <MDBCol md="2">
             <h5 className="text-center fw-bold">Break Down</h5>
             <div className="mt-5">
-              {selected.breakdown &&
-                Object.entries(selected.breakdown).map(([key, value]) => {
-                  const paymentData = paymentMethod.getImage(key); // Get payment method data
-                  const { img, style, text = "" } = paymentData;
-                  return (
-                    <div
-                      key={key}
-                      title={text}
-                      className="d-flex align-items-center text-white justify-content-between mt-2"
-                    >
-                      {paymentData?.img ? (
-                        <img
-                          src={img} // ✅ Use an <img> tag
-                          alt={key}
-                          className="mr-2"
-                          style={{ ...style, height: "1.1rem" }} // Adjust size if needed
-                        />
-                      ) : (
-                        "💰"
-                      )}
-                      <span>
-                        {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
-                        <strong className="text-dark">
-                          ₱{value.toLocaleString()}
-                        </strong>
-                      </span>
-                    </div>
-                  );
-                })}
+              {selected?.breakdown &&
+                Object.entries(selected?.breakdown || {}).map(
+                  ([key, value]) => {
+                    const paymentData = paymentMethod.getImage(key); // Get payment method data
+                    const { img, style, text = "" } = paymentData;
+                    return (
+                      <div
+                        key={key}
+                        title={text}
+                        className="d-flex align-items-center text-white justify-content-between mt-2"
+                      >
+                        {paymentData?.img ? (
+                          <img
+                            src={img} // ✅ Use an <img> tag
+                            alt={key}
+                            className="mr-2"
+                            style={{ ...style, height: "1.1rem" }} // Adjust size if needed
+                          />
+                        ) : (
+                          "💰"
+                        )}
+                        <span>
+                          {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                          <strong className="text-dark">
+                            ₱{value.toLocaleString()}
+                          </strong>
+                        </span>
+                      </div>
+                    );
+                  }
+                )}
               <hr />
               <div className="d-flex justify-content-between align-items-center">
                 <h5>Gross:</h5>
