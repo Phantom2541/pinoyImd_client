@@ -24,7 +24,7 @@ const Header = () => {
       uniqueSource = [
         ...new Map(
           collections.map(({ outsource: vendor }) => {
-            const { _id, displayname } = vendor;
+            const { _id = "", displayname = "" } = vendor || {};
             const soa = payables.find(
               ({ supplier }) => String(supplier.vendors) === String(_id)
             );
