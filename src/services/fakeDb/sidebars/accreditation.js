@@ -1,4 +1,5 @@
 import Staffs from "../../../pages/platforms/accredetations/staff";
+import Temperature from "../../../pages/platforms/accredetations/temperatures";
 
 const accreditation = [
   {
@@ -92,7 +93,8 @@ const accreditation = [
     children: [
       {
         name: "Temperature",
-        path: "/documents/temperature",
+        path: "/temperature",
+        component: Temperature,
       },
       {
         name: "Services Offers",

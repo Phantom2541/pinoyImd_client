@@ -1,25 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "diagnostics/laboratory/monitoring/temperatures";
+const url = "/diagnostics/laboratory/monitoring/temperatures";
 const today = new Date();
 
 const initialState = {
-  month: new Date().getMonth() + 1, // Month as a number (1-12)
-  year: new Date().getFullYear(),
   collections: [],
   selected: {},
+  month: new Date().getMonth() + 1, // Month as a number (1-12)
+  year: new Date().getFullYear(),
   isSuccess: false,
   formSubmitted: false,
   isLoading: false,
   message: "",
+  // pagination
+  maxPage: 0,
+  activePage: 1,
 };
 
 export const BROWSE = createAsyncThunk(
   `${url}/browse`,
-  async ({ token, key }, thunkAPI) => {
+  async ({ token, data }, thunkAPI) => {
     try {
-      const response = await axioKit.universal(`${url}/browse`, token, key);
+      const response = await axioKit.universal(`${url}/browse`, token, data);
       // console.log("API Response:", response);
       return response || []; // Ensure default array
     } catch (error) {
@@ -104,6 +107,16 @@ export const reduxSlice = createSlice({
     SetSelected: (state, { payload }) => {
       state.selected = payload;
     },
+    /**
+     *  for PAGINATION
+     */
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.formSubmitted = false;
@@ -119,7 +132,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         // console.log("payload: ", action.payload);
-        state.collections = action.payload;
+        state.collections = action.payload.data;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -195,6 +208,13 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SetMONTH, setYear, SetSelected, ResetDATE } =
-  reduxSlice.actions;
+export const {
+  RESET,
+  SetMONTH,
+  setYear,
+  SetSelected,
+  SetMaxPage,
+  SetActivePAGE,
+  ResetDATE,
+} = reduxSlice.actions;
 export default reduxSlice.reducer;
