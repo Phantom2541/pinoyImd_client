@@ -569,7 +569,7 @@ export const reduxSlice = createSlice({
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";
-      state.isLoading = false;
+      // state.isLoading = false;
       state.formSubmitted = false;
       if (payload?.resetCollections) state.collections = [];
     },
@@ -895,33 +895,34 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.showModal = false;
+        if (state.collections?.length > 0) {
+          const identifier = ["Miscellaneous", "Xray"].includes(payload?.form)
+            ? "dealId"
+            : "_id";
 
-        const identifier = ["Miscellaneous", "Xray"].includes(payload?.form)
-          ? "dealId"
-          : "_id";
+          // Find the index of the collection item based on the identifier
+          const index = state.collections.findIndex(
+            (item) => item?._id === payload[identifier]
+          );
 
-        // Find the index of the collection item based on the identifier
-        const index = state.collections.findIndex(
-          (item) => item._id === payload[identifier]
-        );
-
-        // Ensure the index is valid
-        if (index !== -1) {
-          if (identifier === "dealId") {
-            // Update miscellaneous item at the correct index
-            if (state.collections[index]?.miscellaneous) {
-              state.collections[index].miscellaneous[payload?.miscIndex] =
-                payload;
+          // Ensure the index is valid
+          if (index !== -1) {
+            if (identifier === "dealId") {
+              // Update miscellaneous item at the correct index
+              if (state.collections[index]?.miscellaneous) {
+                state.collections[index].miscellaneous[payload?.miscIndex] =
+                  payload;
+              }
+            } else {
+              const form = payload.form?.toLowerCase(); // Ensure form is lowercase
+              // Ensure collections[index] exists before modifying it
+              if (state.collections[index]) {
+                state.collections[index][form] = payload;
+              }
             }
           } else {
-            const form = payload.form?.toLowerCase(); // Ensure form is lowercase
-            // Ensure collections[index] exists before modifying it
-            if (state.collections[index]) {
-              state.collections[index][form] = payload;
-            }
+            console.warn("Item not found in collections:", payload);
           }
-        } else {
-          console.warn("Item not found in collections:", payload);
         }
 
         state.isSuccess = true;

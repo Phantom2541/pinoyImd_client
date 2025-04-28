@@ -86,7 +86,13 @@ export default function Modal() {
   };
 
   return (
-    <MDBModal isOpen={showModal} TOGGLE={TOGGLE} backdrop size="sm">
+    <MDBModal
+      isOpen={showModal}
+      TOGGLE={TOGGLE}
+      backdrop
+      size="sm"
+      disableFocusTrap={false}
+    >
       <MDBModalHeader
         toggle={() => dispatch(TOGGLE())}
         className="light-blue darken-3 white-text"
@@ -103,8 +109,7 @@ export default function Modal() {
           ></MDBTypography>
           <select
             onChange={(e) => handleChange("vendors", e.target.value)}
-            className="browser-default custom-select"
-            // style={{ width: "115px", marginRight: "20px" }}
+            className="form-control"
           >
             <option value="" disabled>
               Select a branch
@@ -138,7 +143,7 @@ export default function Modal() {
             value={form?.address}
             onChange={(e) => handleChange("address", e.target.value)}
           />
-          {/* Submit button */}
+
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"

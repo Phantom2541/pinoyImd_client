@@ -37,7 +37,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
           return (
             <tr key={`cell-${index}-1`}>
               <td style={{ ...style, width: "40%" }} className="py-0">
-                <span> {category} </span>
+                <span className="ml-2"> {category} </span>
               </td>
               <td
                 style={{
@@ -45,7 +45,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
                   width: "30%",
                   color,
                 }}
-                className="py-0 fw-bold"
+                className="py-0 fw-bold text-center"
               >
                 {value}
               </td>
@@ -57,7 +57,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
         })}
         <tr>
           <td style={style} className="py-0">
-            Bleeding Time
+            <span className="ml-2"> Bleeding Time</span>
           </td>
           <td style={style} className="py-0 fw-bold">
             {bt[0] && `${bt[0]} ${options[bt[1]]}`}
@@ -68,7 +68,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
         </tr>
         <tr>
           <td style={{ ...style, width: "40%" }} className="py-0">
-            Clotting Time
+            <span className="ml-2"> Clotting Time</span>
           </td>
           <td style={{ ...style, width: "30%" }} className="py-0 fw-bold">
             {ct[0] && `${ct[0]} ${options[ct[1]]}`}
@@ -79,7 +79,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
         </tr>
         <tr>
           <td style={style} className="py-0">
-            Reticulocytes
+            <span className="ml-2"> Reticulocytes</span>
           </td>
           <td style={style} className="py-0 fw-bold">
             {troupe?.retic > 0 && troupe?.retic}
@@ -90,7 +90,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
         </tr>
         <tr>
           <td style={style} className="py-0">
-            ESR
+            <span className="ml-2">ESR</span>
           </td>
           <td style={style} className="py-0 fw-bold">
             {troupe?.esr > 0 && troupe?.esr}

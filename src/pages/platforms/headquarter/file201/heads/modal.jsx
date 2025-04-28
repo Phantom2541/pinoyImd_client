@@ -56,7 +56,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     if (activePlatform?.branchId && show)
       dispatch(EMPLOYEES({ token, branch: activePlatform?.branchId }));
     return () => dispatch(RESET());
-  }, [activePlatform, show, willCreate, dispatch]);
+  }, [activePlatform, show, willCreate, dispatch, token]);
 
   useEffect(() => {
     const _sections = TemplatetUtils.getComponents(

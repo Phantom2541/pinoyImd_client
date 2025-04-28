@@ -17,11 +17,14 @@ const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
         />
       )}
 
-      <h5 className="fw-bold mb-0 text-uppercase">
+      <h5
+        className="fw-bold mb-0 text-uppercase"
+        style={{ fontSize: "1.1rem" }}
+      >
         <u>{properFullname(person?.fullName)}</u>
       </h5>
       {label}
-      <h6>
+      <h6 style={{ fontSize: "0.8rem" }}>
         {label !== "Receptionist" && person?.prc && ` PRC#: ${person?.prc.id}`}
       </h6>
     </div>

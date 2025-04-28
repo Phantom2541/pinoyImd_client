@@ -169,18 +169,18 @@ export default function Select({
 
         <MDBSelectOptions search={handleSearchDisabling()}>
           {collections?.map((choice, index) => {
-            const key = keys ? String(choice[keys]) : choice;
+            const key = keys ? String(choice[keys]) || "" : choice;
 
             let value = values?.includes(".")
               ? getNestedValue(choice, values)
               : choice[values] || choice;
-
             if (typeof value === "object") {
               console.warn(
                 "%c[Select] Invalid Values:",
                 "color: orange; font-weight: bold;",
                 "Ensure 'values' prop is correctly provided."
               );
+              return "";
             }
 
             return (
@@ -192,9 +192,9 @@ export default function Select({
                     : ""
                 }
                 checked={handleChecked(key)}
-                value={key || "--"}
+                value={String(key) || "--"}
               >
-                {value || "--"}
+                {String(value) || "--"}
               </MDBSelectOption>
             );
           })}

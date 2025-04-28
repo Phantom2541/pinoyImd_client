@@ -100,9 +100,39 @@ export const HEADS = createAsyncThunk(
 );
 
 export const reduxSlice = createSlice({
-  name: url,
+  name: "validator",
   initialState,
   reducers: {
+    SetVALIDATOR: (state, { payload }) => {
+      const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(
+        payload?.form
+      )
+        ? "dealId"
+        : "_id";
+
+      const findIndex = (collections) =>
+        collections.findIndex((item) => item?._id === payload[identifier]);
+      const findFormIndex = (forms) =>
+        forms.findIndex((item) => item?._id === payload?._id);
+
+      const updateCollection = (collections, index) => {
+        if (index > -1) {
+          if (identifier === "_id") {
+            collections[index].forms[payload.form] = payload;
+          } else {
+            const formIndex = findFormIndex(
+              collections[index].forms[payload.form]
+            );
+            if (formIndex > -1) {
+              collections[index].forms[payload.form][formIndex] = payload;
+            }
+          }
+        }
+      };
+
+      updateCollection(state.collections, findIndex(state.collections));
+      updateCollection(state.filtered, findIndex(state.filtered));
+    },
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
@@ -145,7 +175,8 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
-    TOGGLE: (state) => {
+    TOGGLE: (state, { payload }) => {
+      console.log("payload", payload);
       state.showModal = !state.showModal;
     },
     RESET: (state) => {
@@ -212,6 +243,7 @@ export const {
   SetPREFERENCES,
   SetHEADS,
   SetHEALTHY,
+  SetVALIDATOR,
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
