@@ -89,6 +89,7 @@ export const reduxSlice = createSlice({
   reducers: {
     RESET: (state) => {
       state.isSuccess = false;
+      state.formSubmitted = false;
       state.message = "";
     },
   },
