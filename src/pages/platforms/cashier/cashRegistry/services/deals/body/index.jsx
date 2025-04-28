@@ -17,7 +17,7 @@ import {
   SetSELECTED,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
-import { Select } from "../../../../../../../components/customizable";
+import { Input, Select } from "../../../../../../../components/customizable";
 
 const Tables = () => {
   const { token, maxPage } = useSelector(({ auth }) => auth),
@@ -131,6 +131,7 @@ const Tables = () => {
         <thead>
           <tr>
             <th>Patient Name</th>
+            <th>SSX</th>
             <th>Physician/Source</th>
             <th>Amount</th>
             <th className="text-center">Services</th>
@@ -187,16 +188,51 @@ const Tables = () => {
                           setSelected({ ...deal, updatedKey: "category" })
                         }
                       >
-                        {capitalize(
-                          deal.category === "walkin"
-                            ? deal.category
-                            : Categories.find(
-                                ({ abbr }) => abbr === deal.category
-                              ).name
-                        )}
+                        {deal.category === "walkin"
+                          ? deal.category
+                          : Categories.find(
+                              ({ abbr }) => abbr === deal.category
+                            ).abbr.toUpperCase()}
                       </MDBBadge>
                     )}
                     @ {new Date(deal?.createdAt).toLocaleTimeString()}
+                  </td>
+                  <td>
+                    {selected._id === deal._id &&
+                    selected?.updatedKey === "ssx" ? (
+                      <div
+                        style={{ width: "17rem" }}
+                        className="mt-3 d-flex align-items-center"
+                      >
+                        <Input
+                          label={"SSX"}
+                          selected={selected}
+                          onChange={(_key, value) =>
+                            setSelected({ ...selected, [_key]: value })
+                          }
+                          _key="newSSX"
+                          handleCheck={() => handleUpdate("ssx", "newSSX")}
+                          handleClose={() => setSelected({})}
+                          formSubmitted={formSubmitted}
+                          isSuccess={isSuccess}
+                          className="form-control form-control-sm"
+                        />
+                      </div>
+                    ) : (
+                      <span
+                        className="cursor-pointer"
+                        style={{ fontWeight: 400 }}
+                        onClick={() =>
+                          setSelected({
+                            ...deal,
+                            updatedKey: "ssx",
+                            newSSX: deal.ssx,
+                          })
+                        }
+                      >
+                        {deal.ssx || "--"}
+                      </span>
+                    )}
                   </td>
                   <td>
                     {selected?._id === deal?._id &&
@@ -252,6 +288,7 @@ const Tables = () => {
                       >
                         <Select
                           label={"Physician"}
+                          allowObjectValue
                           onChange={(value) =>
                             setSelected({ ...selected, newPhysician: value })
                           }

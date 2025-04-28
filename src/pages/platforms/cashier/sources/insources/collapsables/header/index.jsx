@@ -208,7 +208,7 @@ const Header = ({
                   formSubmitted={formSubmitted}
                   handleClose={() => setUpdate({})}
                   handleCheck={() => handleUpdate()}
-                  onChange={(value) =>
+                  onChange={(_, value) =>
                     setUpdate({
                       updatedKey: "credit",
                       credit,

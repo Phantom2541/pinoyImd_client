@@ -30,7 +30,7 @@ import {
   MDBBtnGroup,
 } from "mdbreact";
 import "./style.css";
-import { Select } from "../../../../../../components/customizable";
+import { Input, Select } from "../../../../../../components/customizable";
 
 export const Tables = () => {
   const { token } = useSelector(({ auth }) => auth),
@@ -237,16 +237,51 @@ export const Tables = () => {
                         setSelected({ ...deal, updatedKey: "category" })
                       }
                     >
-                      {capitalize(
-                        deal.category === "walkin"
-                          ? deal.category
-                          : Categories.find(
-                              ({ abbr }) => abbr === deal.category
-                            ).name
-                      )}
+                      {deal.category === "walkin"
+                        ? deal.category
+                        : Categories.find(
+                            ({ abbr }) => abbr === deal.category
+                          ).abbr?.toUpperCase()}
                     </MDBBadge>
                   )}
                   @ {new Date(deal.createdAt).toLocaleTimeString()}
+                </td>
+                <td>
+                  {selected._id === deal._id &&
+                  selected?.updatedKey === "ssx" ? (
+                    <div
+                      style={{ width: "17rem" }}
+                      className="mt-3 d-flex align-items-center"
+                    >
+                      <Input
+                        label={"SSX"}
+                        selected={selected}
+                        onChange={(_key, value) =>
+                          setSelected({ ...selected, [_key]: value })
+                        }
+                        _key="newSSX"
+                        handleCheck={() => handleUpdate("ssx", "newSSX")}
+                        handleClose={() => setSelected({})}
+                        formSubmitted={formSubmitted}
+                        isSuccess={isSuccess}
+                        className="form-control form-control-sm"
+                      />
+                    </div>
+                  ) : (
+                    <span
+                      className="cursor-pointer"
+                      style={{ fontWeight: 400 }}
+                      onClick={() =>
+                        setSelected({
+                          ...deal,
+                          updatedKey: "ssx",
+                          newSSX: deal.ssx,
+                        })
+                      }
+                    >
+                      {deal.ssx || "--"}
+                    </span>
+                  )}
                 </td>
                 <td>
                   {selected?._id === deal?._id &&
@@ -304,6 +339,7 @@ export const Tables = () => {
                         }
                         whitelisted
                         className="m-0 p-0 mt-3"
+                        allowObjectValue
                         // collections={getPhysicians(deal?.source?._id)}
                         collections={Deals.getPhysicians(
                           deal?.source._id,

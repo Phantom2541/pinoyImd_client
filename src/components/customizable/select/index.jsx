@@ -38,6 +38,7 @@ export default function Select({
   preValue = "",
   preValues = [],
   getObject = false,
+  allowObjectValue = false, // if true its mean the value is  a object because we have a emoji so hinid na niya ichecheck kung object ba yung value irerender parin niya
   label,
   keys, // old name values
   values, // old name texts
@@ -174,7 +175,8 @@ export default function Select({
             let value = values?.includes(".")
               ? getNestedValue(choice, values)
               : choice[values] || choice;
-            if (typeof value === "object") {
+
+            if (typeof value === "object" && !allowObjectValue) {
               console.warn(
                 "%c[Select] Invalid Values:",
                 "color: orange; font-weight: bold;",
@@ -194,7 +196,7 @@ export default function Select({
                 checked={handleChecked(key)}
                 value={String(key) || "--"}
               >
-                {String(value) || "--"}
+                {value || "--"}
               </MDBSelectOption>
             );
           })}
