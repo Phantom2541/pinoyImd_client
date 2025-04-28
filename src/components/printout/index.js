@@ -6,3 +6,5 @@ export { default as PersonnelPrintOut } from "./personnel";
 export { default as LabTaskPrintout } from "./task/laboratory";
 export { default as RadTaskPrintout } from "./task/radiology";
 export { default as ResecoPrintout } from "./reseco";
+export { default as RequestOutSource } from "./requestOutSource";
+export { default as SOA } from "./soa";

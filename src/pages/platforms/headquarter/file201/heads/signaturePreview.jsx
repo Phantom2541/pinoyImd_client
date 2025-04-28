@@ -6,7 +6,6 @@ import {
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBInput,
 } from "mdbreact";
 
 import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";

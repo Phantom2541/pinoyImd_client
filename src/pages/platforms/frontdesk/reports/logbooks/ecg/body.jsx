@@ -9,8 +9,7 @@ import {
 } from "../../../../../../services/utilities";
 
 const Body = () => {
-  const { maxPage, activePage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ ecg }) => ecg);
+  const { collections } = useSelector(({ ecg }) => ecg);
 
   return (
     <MDBTable responsive hover bordered>

@@ -20,13 +20,12 @@ import {
   UrinLog,
   FecaLog,
   SeroLog,
+  RequestOutSource,
+  SOA,
 } from "./components/printout";
 import Payslip from "./pages/platforms/manager/responsibilities/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
-
-import RequestOutSource from "./components/printout/requestOutSource";
-import SOA from "./components/printout/soa";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),

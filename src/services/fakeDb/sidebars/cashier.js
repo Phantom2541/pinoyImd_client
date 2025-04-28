@@ -88,7 +88,7 @@ const cashier = [
        * confirming the SOA listed in A/P
        */
       {
-        name: "Statement of Account",
+        name: "Statement of Account (SOA)",
         path: "/soa",
         icon: "balance-scale",
         title: "Outsourced services from monthly sales",
