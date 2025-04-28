@@ -41,6 +41,17 @@ const Microscopic = ({ Microscopic, style }) => {
           </td>
         </tr>
         <tr>
+          <td style={style} className="py-0">
+            <span className="ml-2"> Red cells</span>
+          </td>
+          <td
+            style={{ ...style, color: red > 2 && "red" }}
+            className="py-0 fw-bold"
+          >
+            {MicroscopicInRange[red]}
+          </td>
+        </tr>
+        <tr>
           <td style={style} className="py-0 ">
             <span className="ml-2"> Epithelial Cell</span>
           </td>
@@ -54,17 +65,6 @@ const Microscopic = ({ Microscopic, style }) => {
           </td>
           <td style={style} className="py-0 fw-bold">
             {MicroscopicResultInWord[amorphous]}
-          </td>
-        </tr>
-        <tr>
-          <td style={style} className="py-0">
-            <span className="ml-2"> Red cells</span>
-          </td>
-          <td
-            style={{ ...style, color: red > 2 && "red" }}
-            className="py-0 fw-bold"
-          >
-            {MicroscopicInRange[red]}
           </td>
         </tr>
         <tr>

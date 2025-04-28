@@ -24,15 +24,15 @@ const Header = () => {
           data: { branchId: activePlatform.branchId, month, year },
         })
       );
-  }, [dispatch, maxPage, month, year]);
+  }, [dispatch, maxPage, month, year, token, activePlatform]);
 
   useEffect(() => {
     if (collections) setEcg(collections);
   }, [collections]);
 
-  const handleMoved = (month, year) => {
-    console.log("month", month, year);
-  };
+  // const handleMoved = (month, year) => {
+  //   console.log("month", month, year);
+  // };
 
   return (
     <MDBView

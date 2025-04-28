@@ -7,6 +7,7 @@ import {
   MDBAnimation,
   MDBProgress,
   MDBIcon,
+  MDBTooltip,
 } from "mdbreact";
 import { useSelector } from "react-redux";
 import { Sidebars } from "../../services/fakeDb";
@@ -97,6 +98,7 @@ export default function SideNavigation({
           topLevel
           onClick={onLinkClick}
           style={indentStyle}
+          title={item.title} // ← DITO LANG NILAGAY ANG TOOLTIP
         >
           <MDBIcon icon={item.icon} className="mr-2" />
           {capitalize(item.name)}
@@ -110,7 +112,7 @@ export default function SideNavigation({
       <MDBSideNav
         logo={logo}
         bg="https://mdbootstrap.com/img/Photos/Others/sidenav2.jpg"
-        alt="company logo"
+        alt="Company Logo"
         mask="strong"
         href={href}
         fixed

@@ -26,7 +26,7 @@ const Header = () => {
       );
     }
     return () => dispatch(RESET());
-  }, [token, dispatch]);
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     if (filtered) setServices(filtered);
