@@ -251,11 +251,17 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(UPDATE.fulfilled, (state, { payload }) => {
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
+        console.log("payload", payload);
+        const updateCOllections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
 
-        state.collections[index] = payload;
+          collections[index] = payload;
+        };
+        updateCOllections(state.collections);
+        updateCOllections(state.filtered);
+
         state.isSuccess = true;
         state.isLoading = false;
       })
