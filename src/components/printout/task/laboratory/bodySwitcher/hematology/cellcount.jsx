@@ -65,7 +65,7 @@ export default function CellCount({ cc, isMale, style, apc }) {
           <td style={style} className="py-0">
             APC
           </td>
-          <td style={style} className="py-0 fw-bold">
+          <td style={style} className="py-0 fw-bold text-center">
             {apc}
           </td>
           <td style={style} className="py-0">
