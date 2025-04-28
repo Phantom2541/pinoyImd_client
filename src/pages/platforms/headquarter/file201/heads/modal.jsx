@@ -32,9 +32,7 @@ const _form = {
 };
 
 export default function Modal({ show, toggle, selected, willCreate }) {
-  const { isLoading, collections } = useSelector(
-      ({ personnels }) => personnels
-    ),
+  const { collections } = useSelector(({ personnels }) => personnels),
     { formSubmitted, isSuccess } = useSelector(({ heads }) => heads),
     [crews, setCrews] = useState([]),
     { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -75,8 +73,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     setForm(_form);
   }, [show, willCreate, selected]);
 
-  console.log("form", form);
-  console.log("selected", selected);
   const handleUpdate = () => {
     // check if object has changed
     if (isEqual(form, selected))
@@ -158,7 +154,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <Select
                 collections={sections}
                 onChange={handleSectionChange}
-                preValue={form?.section}
+                preValue={capitalize(form?.section)}
                 label={"Sections"}
                 multiple={false}
               />
@@ -220,7 +216,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"
-              disabled={isLoading || formSubmitted}
+              disabled={formSubmitted}
               color="info"
               className="mb-2"
               rounded
