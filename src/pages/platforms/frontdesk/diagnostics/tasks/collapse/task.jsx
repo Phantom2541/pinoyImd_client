@@ -11,12 +11,9 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     dispatch = useDispatch();
 
   const handleLabPrint = (task) => {
-    const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
-      const range = collections.filter(({ serviceId }) => serviceId === id);
-      return { ...rest, id, range };
-    });
-
+    const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+
     const URL = "/printout/laboratory/task",
       title = `Laboratory Task Printout`,
       features = "top=100px,left=100px,width=794px,height=1123px";

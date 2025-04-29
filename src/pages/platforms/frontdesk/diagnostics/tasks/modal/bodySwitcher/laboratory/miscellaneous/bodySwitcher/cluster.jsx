@@ -5,7 +5,6 @@ import { Select } from "./../../../../../../../../../../components/customizable"
 
 export default function Cluster({ task, setTask }) {
   const { packages = [], results = {} } = task;
-
   const handleSelectChange = (name, value) =>
     setTask({ ...task, results: { ...results, [name]: value } });
 

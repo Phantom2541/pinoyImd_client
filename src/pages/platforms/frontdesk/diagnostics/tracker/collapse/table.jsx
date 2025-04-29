@@ -12,26 +12,27 @@ export default function CollapseTable({ menu }) {
 
   const toggleModal = () => setShowModal(!showModal);
 
-  const handlePrint = (task) => {
-    const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
-      const range = collections.filter(({ serviceId }) => serviceId === id);
-      return {
-        ...rest,
-        id,
-        range,
-      };
-    });
-
+  const handleLabPrint = (task) => {
+    const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
-    window.open(
-      "/printout/task",
-      "Task Printout",
-      "top=100px,left=100px,width=1050px,height=750px"
-    );
+
+    const URL = "/printout/laboratory/task",
+      title = `Laboratory Task Printout`,
+      features = "top=100px,left=100px,width=794px,height=1123px";
+
+    const printWindow = window.open(URL, title, features);
+    printWindow.focus();
   };
 
-  const { customerId, physicianId, source, category, _id, forms, results } =
-    menu;
+  const handleRadPrint = (task) => {
+    const services = Services.find(task.services);
+    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+    window.open(
+      "/printout/radiology/task",
+      "Radiology Task Printout",
+      "top=100px,left=100px,width=794px,height=1123px"
+    );
+  };
 
   const handleIndividual = (form, obj, index, miscIndex = 0) => {
     const { packages, hasDone = false, remarks = "", signatories = [] } = obj,
@@ -106,16 +107,19 @@ export default function CollapseTable({ menu }) {
               hasDone && (
                 <MDBBtn
                   rounded
-                  onClick={() =>
-                    handlePrint({
+                  onClick={() => {
+                    const _task = {
                       ...task,
                       branchId: activePlatform?.branch,
                       referral: physicianId || {},
                       services: _packages,
                       signatories,
                       isPrint: true,
-                    })
-                  }
+                    };
+                    activePlatform.department === "laboratory"
+                      ? handleLabPrint(_task)
+                      : handleRadPrint(_task);
+                  }}
                   color="warning"
                   size="sm"
                   className="py-1 px-3 m-0"
@@ -128,6 +132,11 @@ export default function CollapseTable({ menu }) {
       </tr>
     );
   };
+
+  const { customerId, physicianId, source, category, _id, forms, results } =
+    menu;
+
+  console.log("forms:", forms);
 
   return (
     <>
@@ -142,7 +151,8 @@ export default function CollapseTable({ menu }) {
           </tr>
         </thead>
         <tbody>
-          {forms?.map((form, index) => {
+          HERES xxxxxx
+          {forms["0"]?.map((form, index) => {
             const result = results?.[form.toLowerCase()];
             if (!result)
               return (

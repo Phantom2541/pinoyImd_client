@@ -113,16 +113,15 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        const services = [...Services.collections]
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((service) => {
-            const references = payload.filter(
-              ({ serviceId }) => serviceId === service.id
-            );
-            return { ...service, references };
-          });
+        const services = [...Services.collections].map((service) => {
+          const references = payload.filter(
+            ({ serviceId }) => serviceId === service.id
+          );
+          return { ...service, references };
+        });
 
         state.cluster = state.filtered = state.collections = [...services];
+        localStorage.setItem("preferences", JSON.stringify(services));
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

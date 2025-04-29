@@ -19,48 +19,38 @@ import { SETPATIENT } from "../../../../../../../../services/redux/slices/commer
  * if user is not in quest, use branch address
  * else use user quest addres
  */
-const { branch = {} } =
-  (localStorage.getItem("activePlatform") !== "patron" &&
-    JSON.parse(localStorage.getItem("activePlatform"))) ||
-  {};
-const _form = {
-  fullName: {
-    fname: "",
-    mname: "",
-    lname: "",
-    suffix: "",
-  },
-  address: {
-    region: branch?.address?.region,
-    province: branch?.address?.province,
-    city: branch?.address?.city,
-    barangay: "",
-    street: "",
-  },
-  dob: "",
-  isMale: false,
-  mobile: "",
-  privilege: 0,
-  email: "",
-  activePlatform: {
-    branchId: branch?._id,
-    isPatient: true,
-    isCeo: false,
-    platform: "patron",
-    role: "patron",
-  },
-};
 
 export default function Patient({ setActiveIndex }) {
   const { token } = useSelector(({ auth }) => auth),
     { customer } = useSelector(({ pos }) => pos),
-    [form, setForm] = useState(_form),
+    [form, setForm] = useState({}),
     dispatch = useDispatch();
 
   // inject searched name if no match
   useEffect(() => {
-    if (customer) setForm(customer);
-  }, [customer]);
+    if (customer) {
+      const { address } = JSON.parse(
+        localStorage.getItem("activePlatform")
+      )?.branch;
+
+      const _address = customer?.address?.province
+        ? customer.address
+        : {
+            region: address?.region || "",
+            province: address?.province || "",
+            city: address?.city || "",
+            barangay: "",
+            street: "",
+          };
+
+      const form = {
+        ...customer,
+        address: _address,
+      };
+
+      setForm(form);
+    }
+  }, [customer, setForm]);
 
   // update form for selected user
 
@@ -101,7 +91,6 @@ export default function Patient({ setActiveIndex }) {
         dispatch(SETPATIENT(payload.payload));
       });
     }
-    // setForm(_form);
     setActiveIndex(0);
   };
 

@@ -17,24 +17,16 @@ export default function Tasks() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    const localData = localStorage.getItem("preferences");
-    if (localData) {
-      const parsedData = JSON.parse(localData);
-      dispatch(SetPREFERENCES(parsedData));
+    const prefData = localStorage.getItem("preferences");
+    if (prefData) {
+      dispatch(SetPREFERENCES(JSON.parse(prefData)));
     } else if (token && activePlatform?.branchId) {
       dispatch(
         BROWSE({
           token,
           branchId: activePlatform.branchId,
         })
-      ).then((result) => {
-        if (result?.payload) {
-          localStorage.setItem(
-            "preferences",
-            JSON.stringify(result?.payload?.payload)
-          );
-        }
-      });
+      );
     }
 
     return () => {
