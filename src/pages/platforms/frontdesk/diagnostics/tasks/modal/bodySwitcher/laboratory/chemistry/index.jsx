@@ -74,8 +74,6 @@ export default function Chemistry() {
       </thead>
       <tbody>
         {Object.entries(packages).map(([key, value], index) => {
-          console.log(Services.find(key));
-
           const { preference, abbreviation, name } = Services.find(key),
             _preferences = preferences.find(({ id }) => id === Number(key)),
             { lo, hi, warn, alert, critical, units, _id } = findReference(
@@ -83,7 +81,7 @@ export default function Chemistry() {
               patient?.isMale,
               patient?.dob,
               preference,
-              _preferences.references
+              _preferences?.references
             );
 
           return (

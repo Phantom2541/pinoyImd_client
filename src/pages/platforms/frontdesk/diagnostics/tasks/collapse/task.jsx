@@ -10,13 +10,19 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
 
+  console.log("collections :", collections);
+
   const handleLabPrint = (task) => {
     const services = Services.whereIn(task.services).map(({ id, ...rest }) => {
-      const range = collections.filter(({ serviceId }) => serviceId === id);
+      const range = collections.filter(
+        ({ serviceId }) => Number(serviceId) === Number(id)
+      );
+      console.log("range", range);
+
       return { ...rest, id, range };
     });
-
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+
     const URL = "/printout/laboratory/task",
       title = `Laboratory Task Printout`,
       features = "top=100px,left=100px,width=794px,height=1123px";
