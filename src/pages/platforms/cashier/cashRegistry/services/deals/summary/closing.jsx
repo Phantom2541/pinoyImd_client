@@ -42,7 +42,7 @@ export default function Vouchers() {
           paymentSummary[payment] += amount;
         }
 
-        cart.forEach(({ menuId, packages }) => {
+        cart?.forEach(({ menuId, packages }) => {
           // Count Menus
           const { _id, abbreviation } = menuId;
           if (!menuCountMap[_id]) {
