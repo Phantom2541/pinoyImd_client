@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Services } from "./../../../../../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import {
   referenceColor,
@@ -10,13 +9,10 @@ import { SetTASK } from "./../../../../../../../../../services/redux/slices/diag
 
 export default function Chemistry() {
   const { task } = useSelector(({ validator }) => validator),
-    { collections: preferences } = useSelector(
-      ({ preferences }) => preferences
-    ),
+    { collections: services } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
 
   const { packages = {}, key: mapKey, patient } = task || {};
-
   const handleChange = (target) => {
     const { name, value } = target,
       _name = Number(name),
@@ -74,15 +70,15 @@ export default function Chemistry() {
       </thead>
       <tbody>
         {Object.entries(packages).map(([key, value], index) => {
-          const { preference, abbreviation, name } = Services.find(key),
-            _preferences = preferences.find(({ id }) => id === Number(key)),
-            { lo, hi, warn, alert, critical, units, _id } = findReference(
-              key,
-              patient?.isMale,
-              patient?.dob,
-              preference,
-              _preferences?.references
-            );
+          const service = services.find((s) => s.id === Number(key)) || {};
+          const { preference, abbreviation, name, references } = service;
+          const { lo, hi, warn, alert, critical, units, _id } = findReference(
+            Number(key),
+            patient?.isMale,
+            patient?.dob,
+            preference,
+            references
+          );
 
           return (
             <tr key={`${mapKey}-${index}`}>

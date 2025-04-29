@@ -38,26 +38,18 @@ export default function Tasks() {
     if (token && activePlatform?.branchId) {
       const branchId = activePlatform.branchId;
 
-      const localData = localStorage.getItem(`preferences`);
+      const prefData = localStorage.getItem(`preferences`);
       const headsData = localStorage.getItem(`heads-${branchId}`);
 
-      if (localData) {
-        const parsedData = JSON.parse(localData);
-        dispatch(SetPREFERENCES(parsedData));
+      if (prefData) {
+        dispatch(SetPREFERENCES(JSON.parse(prefData)));
       } else if (token && activePlatform?.branchId) {
         dispatch(
           BROWSE({
             token,
             branchId: activePlatform.branchId,
           })
-        ).then((result) => {
-          if (result?.payload) {
-            localStorage.setItem(
-              "preferences",
-              JSON.stringify(result?.payload?.payload)
-            );
-          }
-        });
+        );
       }
 
       if (headsData) {

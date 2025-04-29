@@ -1,15 +1,11 @@
 import collections from "./collections.json";
 import Templates from "../../../diagnostics/templates/index.js";
 const prioritizedSort = () => {
-  const prefOrder = ["development", "equal", "gender", ""];
-
   const customSort = (a, b) => {
-    const prefA = prefOrder.indexOf(a.preference),
-      prefB = prefOrder.indexOf(b.preference);
-
-    if (prefA === prefB) return a.name.localeCompare(b.name);
-
-    return prefA - prefB;
+    if (a.template !== b.template) {
+      return a.template - b.template;
+    }
+    return a.name.localeCompare(b.name);
   };
 
   return collections.sort(customSort);

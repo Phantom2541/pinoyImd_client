@@ -1,31 +1,32 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPackages, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  SetPackages,
+  SetTASK,
+} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
-import { Services } from "./../../../../../../../../../services/fakeDb";
 import {
   findReference,
   referenceColor,
 } from "./../../../../../../../../../services/utilities";
 
 export default function Serology() {
-  const { task, preferences,  params } = useSelector(
-      ({ validator }) => validator
-    ),
+  const { task, params } = useSelector(({ validator }) => validator),
+    { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
-
-  console.log("params", params);
-  const { packages = {}, key: mapKey, patient } = task;
-  // const { key: mapKey } = task;
-  // const { customerId: patient } = selected;
 
   const handleChange = (target) => {
     const { name, value } = target;
-    console.log("value", value, name);
-
     dispatch(SetPackages({ ...params, [name]: Number(value) }));
-    dispatch(SetTASK({form: task.form, task:{ ...task, packages: { ...packages, [name]: Number(value) } }}));
+    dispatch(
+      SetTASK({
+        form: task.form,
+        task: { ...task, packages: { ...packages, [name]: Number(value) } },
+      })
+    );
   };
+  const { packages = {}, key: mapKey, patient } = task;
+
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>
@@ -44,14 +45,15 @@ export default function Serology() {
       </thead>
       <tbody>
         {Object.entries(packages).map(([key, value], index) => {
-          const { preference, abbreviation, name } = Services.find(key),
-            { lo, hi, warn, alert, critical, units, _id } = findReference(
-              key,
-              patient?.isMale,
-              patient?.dob,
-              preference,
-              preferences
-            );
+          const service = collections.find((s) => s.id === Number(key)) || {};
+          const { preference, abbreviation, name, references } = service;
+          const { lo, hi, warn, alert, critical, units, _id } = findReference(
+            key,
+            patient?.isMale,
+            patient?.dob,
+            preference,
+            references
+          );
           return (
             <tr key={`${mapKey}-${index}`}>
               <td className="fw-bold py-1" title={name || abbreviation}>
@@ -65,7 +67,7 @@ export default function Serology() {
                   }}
                   name={key}
                   value={String(value)}
-                  onChange={(e)=>handleChange(e.target)}
+                  onChange={(e) => handleChange(e.target)}
                   className="w-100 text-center fw-bold"
                 />
               </td>
