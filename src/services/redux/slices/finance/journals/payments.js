@@ -12,6 +12,7 @@ const initialState = {
   paginated: [], // paginated the filtered
   selected: {},
   month: new Date().getMonth() + 1, // 0-based index (Jan = 0)
+  formSubmitted: false,
   year: new Date().getFullYear(),
   totalPages: 0,
   page: 0,
@@ -152,6 +153,7 @@ export const reduxSlice = createSlice({
       state.month = moment().month() + 1;
       state.year = moment().year();
       state.isSuccess = false;
+      state.formSubmitted = false;
       state.message = "";
     },
   },
@@ -197,7 +199,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
       })
       .addCase(UPDATE.fulfilled, (state, { payload }) => {
         const index = state.collections.findIndex(
@@ -207,11 +209,11 @@ export const reduxSlice = createSlice({
           state.collections[index] = payload;
         }
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(Daily.pending, (state) => {
         state.isLoading = true;

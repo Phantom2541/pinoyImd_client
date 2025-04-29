@@ -23,6 +23,7 @@ const initialState = {
   activePage: 1,
   isSuccess: false,
   isLoading: false,
+  formSubmitted: false,
   message: "",
 };
 
@@ -113,6 +114,15 @@ export const reduxSlice = createSlice({
       state.showPayablesModal = false;
       state.willCreate = true;
     },
+    SetPAYOR: (state, { payload }) => {
+      const { payableId, payor } = payload;
+      const updateCollections = (collections) => {
+        const index = collections.findIndex(({ _id }) => _id === payableId);
+        collections[index] = { ...collections[index], payor };
+      };
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
+    },
     SetPAYABLES: (state) => {
       state.showPaymentModal = false;
       state.showPayablesModal = true;
@@ -185,6 +195,7 @@ export const reduxSlice = createSlice({
     },
     RESET: (state) => {
       state.isSuccess = false;
+      state.formSubmitted = false;
       state.message = "";
     },
 
@@ -234,24 +245,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
         state.collections.unshift(data);
         state.filtered.unshift(data);
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
       })
       .addCase(UPDATE.fulfilled, (state, { payload }) => {
-        console.log("payload", payload);
         const updateCOllections = (collections) => {
           const index = collections.findIndex(
             (item) => item._id === payload._id
@@ -263,11 +273,11 @@ export const reduxSlice = createSlice({
         updateCOllections(state.filtered);
 
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(DESTROY.pending, (state) => {
@@ -301,6 +311,7 @@ export const {
   SetCREATE,
   SetPAYABLES,
   SetPAYMENTS,
+  SetPAYOR,
   SetPAGE,
   SETSOURCES,
   SetShowMODAL,

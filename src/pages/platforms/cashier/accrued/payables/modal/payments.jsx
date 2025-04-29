@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -11,10 +11,11 @@ import {
   MDBIcon,
 } from "mdbreact";
 import {
-  SAVE,
   UPDATE,
   TOGGLE,
+  SetPAYOR,
 } from "../../../../../../services/redux/slices/finance/journals/payables";
+import { SAVE } from "../../../../../../services/redux/slices/finance/journals/payments";
 import "./style.css";
 import { Statements } from "../../../../../../services/fakeDb";
 import { isEqual } from "lodash";
@@ -24,6 +25,7 @@ import transfer from "../../../../../../assets/paymentMethods/transfer.png";
 import gcash from "../../../../../../assets/paymentMethods/gcash.png";
 import cheque from "../../../../../../assets/paymentMethods/cheque.png";
 import { currency, dateFormat } from "../../../../../../services/utilities";
+import Swal from "sweetalert2";
 
 const paymentMethods = [
   { text: "Cash", img: cash },
@@ -34,13 +36,19 @@ const paymentMethods = [
 
 export default function PaymentModal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { showPaymentModal, selected, willCreate, isLoading } = useSelector(
+    { showPaymentModal, selected, willCreate } = useSelector(
       ({ payables }) => payables
     ),
     [form, setForm] = useState(selected),
+    [formSubmitted, setFormSubmitted] = useState(false),
     [penalty, setPenalty] = useState(0),
     dispatch = useDispatch(),
     { addToast } = useToasts();
+
+  // Handle modal close
+  const handleClose = useCallback(() => {
+    dispatch(TOGGLE(false));
+  }, [dispatch]);
 
   // Check if payment is past due
   useEffect(() => {
@@ -79,22 +87,45 @@ export default function PaymentModal() {
   };
   // Handle create function
   const handleCreate = () => {
-    if (form.status === "accepted") {
+    setFormSubmitted(true);
+    dispatch(
+      UPDATE({
+        data: {
+          ...form,
+          _id: selected._id,
+          hasPaid: true,
+          status: "paid",
+        },
+        token,
+      })
+    ).then(({ payload }) => {
+      const { supplier = {}, particular = {} } = payload;
       dispatch(
-        UPDATE({
+        SAVE({
           data: {
-            ...form,
-            _id: selected._id,
-            hasPaid: true,
-            status: "paid",
+            ...payload,
+            userId: auth._id,
+            category: form.orOption,
+            payableId: payload._id,
+            ...(supplier?._id && { supplier: supplier?._id }),
+            ...(particular?._id && { particular: particular?._id }),
           },
           token,
         })
-      );
-    } else {
-      dispatch(SAVE({ data: form, token }));
-    }
-    handleClose();
+      ).then(({ payload }) => {
+        setFormSubmitted(false);
+        dispatch(
+          SetPAYOR({ payableId: payload.payableId, payor: payload.userId })
+        );
+        handleClose();
+        Swal.fire({
+          title: "Payment Successful!",
+          text: "Your payment has been processed successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      });
+    });
   };
 
   // Handle form submit
@@ -102,9 +133,6 @@ export default function PaymentModal() {
     e.preventDefault();
     willCreate ? handleCreate() : handleUpdate();
   };
-
-  // Handle modal close
-  const handleClose = () => dispatch(TOGGLE(false));
 
   return (
     <MDBModal isOpen={showPaymentModal} toggle={handleClose} backdrop size="md">
@@ -209,8 +237,16 @@ export default function PaymentModal() {
 
               {/* Submit Button */}
               <div className="text-center mt-4">
-                <MDBBtn type="submit" disabled={isLoading} color="info" rounded>
-                  {isLoading ? "Processing..." : "Pay"}
+                <MDBBtn
+                  type="submit"
+                  disabled={formSubmitted}
+                  color="info"
+                  rounded
+                >
+                  {formSubmitted ? "Processing..." : "Pay"}{" "}
+                  {formSubmitted && (
+                    <MDBIcon icon="spinner" pulse className="ml-2" />
+                  )}
                 </MDBBtn>
               </div>
             </form>

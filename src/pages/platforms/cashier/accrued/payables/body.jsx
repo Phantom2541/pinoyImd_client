@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBTable, MDBBtnGroup, MDBBtn } from "mdbreact";
+import { MDBTable, MDBBtnGroup, MDBBtn, MDBBadge } from "mdbreact";
 import {
   SetPAYMENTS,
   SetUpdate,
@@ -14,6 +14,7 @@ import {
 import Swal from "sweetalert2";
 import util from "./util";
 import TableLoading from "../../../../../components/tableLoading";
+import { capitalize } from "lodash";
 
 const Tables = () => {
   const { filtered, activePage, maxPage, isLoading } = useSelector(
@@ -96,7 +97,7 @@ const Tables = () => {
                   <td>{util.getVendorOrParticular(particular, supplier)}</td>
                   <td>
                     <h6>{Statements?.getName(fsId)}</h6>
-                    {status}
+                    <MDBBadge> {capitalize(status)}</MDBBadge>
                   </td>
                   <td>
                     <h6

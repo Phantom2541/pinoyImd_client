@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SAVE,
   TOGGLE,
   UPDATE,
+  RESET,
 } from "../../../../../../services/redux/slices/finance/journals/payables";
 import {
   MDBModal,
@@ -26,6 +27,8 @@ export default function ModalCreate() {
   const {
       showPayablesModal,
       selected,
+      formSubmitted,
+      isSuccess,
       willCreate = false,
     } = useSelector(({ payables }) => payables),
     { collections } = useSelector(({ providers }) => providers),
@@ -36,7 +39,16 @@ export default function ModalCreate() {
     setForm(selected);
   }, [showPayablesModal, selected]);
 
-  const handleClose = () => dispatch(TOGGLE(false));
+  const handleClose = useCallback(() => {
+    dispatch(TOGGLE(false));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      handleClose();
+      dispatch(RESET());
+    }
+  }, [formSubmitted, isSuccess, dispatch, handleClose]);
 
   const handleSave = () => {
     if (willCreate && !form.fsId) {
@@ -64,14 +76,13 @@ export default function ModalCreate() {
         UPDATE({
           data: {
             ...formData,
-            supplier: supplier._id,
-            particular: particular._id,
+            supplier: supplier?._id,
+            particular: particular?._id,
           },
           token,
         })
       );
     }
-    handleClose();
   };
 
   const { particular = {}, supplier = {} } = form || {};
@@ -219,8 +230,14 @@ export default function ModalCreate() {
           value={form.due ? new Date(form.due).toISOString().split("T")[0] : ""}
           onChange={({ target }) => setForm({ ...form, due: target.value })}
         />
-        <MDBBtn color="primary" className="float-right" onClick={handleSave}>
+        <MDBBtn
+          color="primary"
+          className="float-right"
+          onClick={handleSave}
+          disabled={formSubmitted}
+        >
           {willCreate ? "Save" : "Update"}
+          {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
         </MDBBtn>
       </MDBModalBody>
     </MDBModal>
