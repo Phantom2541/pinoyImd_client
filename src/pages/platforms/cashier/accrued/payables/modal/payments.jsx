@@ -44,7 +44,10 @@ export default function PaymentModal() {
 
   // Check if payment is past due
   useEffect(() => {
-    setForm(selected);
+    setForm({
+      ...selected,
+      orOption: selected?.orOption ? selected?.orOption : "Cash",
+    });
     if (selected?.due) {
       const dueDate = new Date(selected.due);
       const today = new Date();
@@ -84,7 +87,6 @@ export default function PaymentModal() {
             _id: selected._id,
             hasPaid: true,
             status: "paid",
-            orOption: form.orOption ? form.orOption : "Cash",
           },
           token,
         })
