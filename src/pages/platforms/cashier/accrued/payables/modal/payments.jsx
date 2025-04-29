@@ -72,10 +72,28 @@ export default function PaymentModal() {
       });
     }
     dispatch(UPDATE({ data: { ...form, _id: selected._id }, token }));
+    handleClose();
   };
-
   // Handle create function
-  const handleCreate = () => dispatch(SAVE({ data: form, token }));
+  const handleCreate = () => {
+    if (form.status === "accepted") {
+      dispatch(
+        UPDATE({
+          data: {
+            ...form,
+            _id: selected._id,
+            hasPaid: true,
+            status: "paid",
+            orOption: form.orOption ? form.orOption : "Cash",
+          },
+          token,
+        })
+      );
+    } else {
+      dispatch(SAVE({ data: form, token }));
+    }
+    handleClose();
+  };
 
   // Handle form submit
   const handleSubmit = (e) => {

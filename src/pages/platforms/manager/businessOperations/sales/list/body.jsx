@@ -150,6 +150,7 @@ export const Tables = () => {
         <thead>
           <tr style={{ marginTop: "-5rem" }}>
             <th>Patient</th>
+            <th>SSX</th>
             <th>Source/Physician</th>
             <th>Amount</th>
             <th>Services</th>
