@@ -128,6 +128,7 @@ export default function CollapseTable({ menu }) {
       </tr>
     );
   };
+  console.log("forms", forms);
 
   return (
     <>
@@ -142,7 +143,8 @@ export default function CollapseTable({ menu }) {
           </tr>
         </thead>
         <tbody>
-          {forms?.map((form, index) => {
+          HERES
+          {forms["0"]?.map((form, index) => {
             const result = results?.[form.toLowerCase()];
             if (!result)
               return (

@@ -14,46 +14,59 @@ export default function Body() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    const updatedTasks = [];
+    if (!collections.length) return;
 
     const processTasks = async () => {
+      const updatedTasks = [];
+
       for (const task of collections) {
-        let updatedTask = { ...task };
         const { _id, forms } = task;
+        console.log("forms", forms);
 
-        if (!forms || forms.length === 0) {
+        const updatedForms = normalizeForms(forms);
+
+        const shouldUpdate =
+          !forms ||
+          typeof forms !== "object" ||
+          JSON.stringify(updatedForms) !== JSON.stringify(forms);
+
+        if (shouldUpdate) {
           try {
-            const services = Services.getTemplates(task.packages);
-            const _forms = Object.keys(services);
-
-            // Prevent repeated dispatch for already updated tasks
-            if (_forms.length > 0 && (!task.forms || task.forms.length === 0)) {
-              await dispatch(UPDATE({ token, data: { _id, forms: _forms } }));
-              updatedTask.forms = _forms;
-            }
+            await dispatch(
+              UPDATE({ token, data: { _id, forms: updatedForms } })
+            );
+            updatedTasks.push({ ...task, forms: updatedForms });
           } catch (error) {
-            console.error(`Error generating forms for task ${_id}:`, error);
-          // if (_forms.length > 0 && (!task.forms || task.forms.length === 0)) {
-          //   await dispatch(UPDATE({ token, data: { _id, forms: _forms } }));
-          //   updatedTask.forms = _forms;
+            console.error(`Error updating forms for task ${_id}:`, error);
+            updatedTasks.push(task);
           }
         } else {
-          console.log("Existing forms for task:", task.forms);
+          console.log("Existing correct forms for task:", forms);
+          updatedTasks.push(task);
         }
-
-        updatedTasks.push(updatedTask);
       }
 
       setTasks(updatedTasks);
     };
 
     processTasks();
-  }, [collections, dispatch, token]); // Remove `dispatch` and `token` from deps unless strictly needed
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // <<== EMPTY dependency array!! runs only once after mount
+  const normalizeForms = (forms) => {
+    const normalizedForms = { 0: [], 1: [], 2: [] };
 
-//   processTasks();
-// }, [collections, dispatch, token]); // ✅ Now includes dispatch and token
-//  // Remove `dispatch` and `token` from deps unless strictly needed
-  
+    if (forms && typeof forms === "object") {
+      Object.keys(forms).forEach((key) => {
+        if (["0", "1", "2"].includes(key) && Array.isArray(forms[key])) {
+          normalizedForms[key] = forms[key].map((_, index) => index);
+        }
+      });
+    }
+
+    console.log("Normalized Forms:", normalizedForms);
+    return normalizedForms;
+  };
+
   if (!patient?._id)
     return (
       <MDBTypography note noteColor="info" className="">
