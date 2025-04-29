@@ -270,6 +270,7 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.transaction = payload;
+        state.ssx = "";
         state.isSuccess = true;
         state.isLoading = false;
       })

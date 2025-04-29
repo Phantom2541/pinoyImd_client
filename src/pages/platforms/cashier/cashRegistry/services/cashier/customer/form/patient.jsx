@@ -19,10 +19,10 @@ import { SETPATIENT } from "../../../../../../../../services/redux/slices/commer
  * if user is not in quest, use branch address
  * else use user quest addres
  */
-const { branch = {} } =
-  (localStorage.getItem("activePlatform") !== "patron" &&
-    JSON.parse(localStorage.getItem("activePlatform"))) ||
-  {};
+const { address = {} } = JSON.parse(
+  localStorage.getItem("activePlatform")
+).branch;
+
 const _form = {
   fullName: {
     fname: "",
@@ -31,9 +31,9 @@ const _form = {
     suffix: "",
   },
   address: {
-    region: branch?.address?.region,
-    province: branch?.address?.province,
-    city: branch?.address?.city,
+    region: address?.region,
+    province: address?.province,
+    city: address?.city,
     barangay: "",
     street: "",
   },
@@ -43,7 +43,6 @@ const _form = {
   privilege: 0,
   email: "",
   activePlatform: {
-    branchId: branch?._id,
     isPatient: true,
     isCeo: false,
     platform: "patron",
@@ -59,7 +58,8 @@ export default function Patient({ setActiveIndex }) {
 
   // inject searched name if no match
   useEffect(() => {
-    if (customer) setForm(customer);
+    let form = { ..._form, fullName: { ...customer } };
+    if (customer) setForm(form);
   }, [customer]);
 
   // update form for selected user
