@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BROWSE } from "../../../../services/redux/slices/assets/persons/personnels";
 import {
   MDBBtn,
   MDBCard,
@@ -11,18 +10,19 @@ import {
   MDBTableHead,
   MDBView,
 } from "mdbreact";
-import { fullName } from "../../../../services/utilities";
-import { Roles } from "../../../../services/fakeDb";
+import { dateFormat, fullName } from "../../../../services/utilities";
+import { Policy } from "../../../../services/fakeDb";
+import { EMPLOYEES } from "../../../../services/redux/slices/assets/persons/personnels";
 
 const HumanResources = () => {
-  const { token } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ personnels }) => personnels),
     [personnels, setPersonnels] = useState([]),
     dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(BROWSE({ token, branchId: "637097f0535529a3a57e933e" }));
-  }, [token, dispatch]);
+    dispatch(EMPLOYEES({ token, branch: activePlatform?.branchId }));
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     setPersonnels(collections);
@@ -86,20 +86,20 @@ const HumanResources = () => {
             <MDBTableBody>
               {personnels.length > 0 ? (
                 personnels.map((personnel, index) => {
-                  const { user, employment } = personnel;
-                  const { prc = { id: "", from: "", to: "" } } = user;
+                  const { user, contract } = personnel;
+                  const { prc = { id: "", from: "", to: "" }, hea } = user;
 
                   return (
                     <tr key={`personnel-${index}`}>
-                      <td>{fullName(user.fullName)}</td>
+                      <td>{fullName(user?.fullName).toUpperCase()}</td>
                       <td className="text-center">
-                        {Roles.findById(employment.designation)?.name || ""}
+                        {Policy.getPosition(Number(contract?.designation))}
                       </td>
-                      <td>College (static)</td>
+                      <td>{hea}</td>
                       <td className="text-center">{prc.id}</td>
-                      <td className="text-center">{prc.from}</td>
-                      <td className="text-center">{prc.to}</td>
-                      <td className="text-center">{user.dob}</td>
+                      <td className="text-center">{dateFormat(prc.from)}</td>
+                      <td className="text-center">{dateFormat(prc.to)}</td>
+                      <td className="text-center">{dateFormat(user?.dob)}</td>
                     </tr>
                   );
                 })

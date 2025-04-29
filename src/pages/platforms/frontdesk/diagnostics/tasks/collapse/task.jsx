@@ -21,7 +21,8 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
       title = `Laboratory Task Printout`,
       features = "top=100px,left=100px,width=794px,height=1123px";
 
-    window.open(URL, title, features);
+    const printWindow = window.open(URL, title, features);
+    printWindow.focus();
   };
 
   const handleRadPrint = (task) => {
@@ -70,7 +71,10 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     remarks,
   };
 
-  const handleEntry = () => dispatch(SetTASK({ task }));
+  const handleEntry = () => {
+    console.log("clicked entry");
+    dispatch(SetTASK({ task }));
+  };
 
   const isEmptyEntry = _packages.length === 0;
 

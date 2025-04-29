@@ -15,7 +15,7 @@ const Header = ({
   isChecked = false,
   setActiveId = () => {},
 }) => {
-  const { vendor } = useSelector(({ billing }) => billing),
+  const { vendor } = useSelector(({ billings }) => billings),
     dispatch = useDispatch();
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>

@@ -110,7 +110,7 @@ export default function Summary() {
       <MDBCardBody className="m-0 p-1">
         <div
           className="flex justify-between items-center"
-          style={{ width: "17rem" }}
+          style={{ width: "18rem" }}
         >
           {/* Only show cashier selection if there's more than one */}
           {!isLoading ? (
@@ -164,39 +164,37 @@ export default function Summary() {
               </div>
               {/* )} */}
               {cluster.length > 0 ? (
-                <>
-                  <div
-                    style={{ maxHeight: "40rem", overflowY: "auto" }}
-                    className="summary-scrollbar"
-                  >
-                    <ol className="mt-2 list-decimal list-inside">
-                      {cluster.map(
-                        ({ customerId, amount, createdAt, cart }, index) => (
-                          <li key={index} className="p-2 border-b">
-                            <div className="font-bold">
-                              {fullName(
-                                customerId?.fullName || "Unknown Customer"
-                              )}
-                            </div>
-                            <div className="text-gray-500 text-sm">
-                              {new Date(createdAt).toLocaleTimeString()}
-                            </div>
-                            <div className="text-blue-600">
-                              {currency(amount)}
-                            </div>
-                            <div className="text-blue-600">
-                              {cart.map((i, index) => (
-                                <MDBBadge key={i.id ?? index} color="primary">
-                                  {i?.menuId?.abbreviation}
-                                </MDBBadge>
-                              ))}
-                            </div>
-                          </li>
-                        )
-                      )}
-                    </ol>
-                  </div>
-                </>
+                <div
+                  style={{ maxHeight: "40rem", overflowY: "auto" }}
+                  className="summary-scrollbar "
+                >
+                  <ol className="mt-2 list-decimal list-inside">
+                    {cluster.map(
+                      ({ customerId, amount, createdAt, cart }, index) => (
+                        <li key={index} className="p-2 border-b">
+                          <div className="font-bold">
+                            {fullName(
+                              customerId?.fullName || "Unknown Customer"
+                            )}
+                          </div>
+                          <div className="text-gray-500 text-sm">
+                            {new Date(createdAt).toLocaleTimeString()}
+                          </div>
+                          <div className="text-blue-600">
+                            {currency(amount)}
+                          </div>
+                          <div className="text-blue-600">
+                            {cart.map((i, index) => (
+                              <MDBBadge key={i.id ?? index} color="primary">
+                                {i?.menuId?.abbreviation}
+                              </MDBBadge>
+                            ))}
+                          </div>
+                        </li>
+                      )
+                    )}
+                  </ol>
+                </div>
               ) : (
                 <p className="text-gray-500 mt-5 text-center">
                   No collections found for this date.
@@ -204,7 +202,7 @@ export default function Summary() {
               )}
             </div>
           ) : (
-            <div style={{ width: "17rem" }}>
+            <div style={{ width: "18rem" }}>
               <SummaryLoading rowCount={10} />
             </div>
           )}

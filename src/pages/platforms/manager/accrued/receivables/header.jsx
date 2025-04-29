@@ -1,19 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { VOUCHERS } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import {
+  VOUCHERS,
+  RESET,
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 const Header = () => {
-  const { token } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { filtered } = useSelector(({ deals }) => deals),
     [services, setServices] = useState([]),
     dispatch = useDispatch();
 
   //initial values
   useEffect(() => {
-    if (token) {
-      dispatch(VOUCHERS({ token, key: { key: "services", type: "accrued" } }));
+    if (token && activePlatform?.branchId) {
+      dispatch(
+        VOUCHERS({
+          token,
+          key: {
+            key: "services",
+            type: "accrued",
+            branchId: activePlatform?.branchId,
+          },
+        })
+      );
     }
-  }, [token, dispatch]);
+    return () => dispatch(RESET());
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     if (filtered) setServices(filtered);

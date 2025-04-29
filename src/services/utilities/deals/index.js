@@ -23,6 +23,7 @@ const Deals = {
             ),
           }))
         : [];
+
     return physiciansFormmated;
   },
 

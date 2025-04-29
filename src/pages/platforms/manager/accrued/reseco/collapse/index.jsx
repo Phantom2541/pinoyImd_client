@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   MDBCard,
@@ -19,7 +19,6 @@ export default function Body() {
   const { filtered, activePage } = useSelector(({ deals }) => deals),
     { maxPage } = useSelector(({ auth }) => auth),
     [cluster, setCluster] = useState([]);
-
   /**
    * Active states for collapsible items
    */
@@ -37,7 +36,7 @@ export default function Body() {
     <MDBContainer fluid>
       {handlePagination(filtered, activePage, maxPage)?.map(
         (voucher, index) => {
-          const { deals, date } = voucher;
+          const { deals = [], date } = voucher;
           const actualIndex = index; // Directly use the index in the paginated data
           const { color, border } = collapse.getStyle(
             actualIndex,
@@ -47,7 +46,7 @@ export default function Body() {
 
           return (
             <MDBCard
-              key={`service-${date}`}
+              key={`service-${date}-${index}`}
               style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
             >
               <MDBCollapseHeader
@@ -59,8 +58,8 @@ export default function Body() {
                 <CollapsableHeader
                   key={date}
                   title={date}
-                  count={deals.length}
-                  sum={deals.reduce((acc, item) => acc + item.amount, 0)}
+                  count={deals?.length}
+                  sum={deals?.reduce((acc, item) => acc + item.amount, 0)}
                   isOpen={activeId === actualIndex}
                   textColor={color}
                   setActiveId={setActiveId}

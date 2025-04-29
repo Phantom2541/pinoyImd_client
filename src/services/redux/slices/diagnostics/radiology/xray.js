@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const name = "/diagnostics/radiology/results/xray";
+const name = "/diagnostics/radiology/result/xray";
 
 const initialState = {
   collections: [],
+  month: new Date().getMonth() + 1,
+  year: new Date().getFullYear(),
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -81,7 +83,7 @@ export const reduxSlice = createSlice({
         console.log("fulfilled", action.payload);
 
         const { payload } = action;
-        state.collections = payload;
+        state.collections = payload.data;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

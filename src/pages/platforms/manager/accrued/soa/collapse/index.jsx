@@ -18,7 +18,7 @@ import {
 
 export default function Body() {
   const { filtered, activePage, maxPage, cluster, formSubmitted, isSuccess } =
-      useSelector(({ billing }) => billing),
+      useSelector(({ billings }) => billings),
     [soa, setSoa] = useState([]),
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),

@@ -57,7 +57,7 @@ export default function Body() {
   };
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
-      {!vendor._id && (
+      {!vendor?._id && (
         <div style={{ marginTop: "-1.5rem", marginBottom: "-0.5rem" }}>
           <MDBTypography noteTitle="Description: " note noteColor="warning">
             Please select a source before generating the SOA.
@@ -65,7 +65,7 @@ export default function Body() {
         </div>
       )}
       {vouchers?.map((voucher, index) => {
-        const { deals, date } = voucher;
+        const { deals = [], date } = voucher;
         const actualIndex = index; // Directly use the index in the paginated data
         const { color, border } = collapse.getStyle(
           actualIndex,
@@ -88,7 +88,7 @@ export default function Body() {
                 deals={deals}
                 title={date}
                 isChecked={isChecked(date)}
-                count={deals.length}
+                count={deals?.length}
                 sum={deals.reduce((acc, item) => acc + item.amount, 0)}
                 isOpen={activeId === actualIndex}
                 textColor={color}

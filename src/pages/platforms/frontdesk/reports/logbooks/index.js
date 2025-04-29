@@ -7,7 +7,8 @@ export { default as Electrolyte } from "./electrolyte";
 
 // RADIOLOGY
 export { default as Xray } from "./xray";
-
+export { default as Ultrasound } from "./ultrasound";
+export { default as Ecg } from "./ecg";
 
 // export { default as Drugtest } from "./drugtest";
 // export { default as Miscellaneous } from "./miscellaneous";

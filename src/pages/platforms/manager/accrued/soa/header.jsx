@@ -11,7 +11,7 @@ import {
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, filtered, month, year, isSuccess } = useSelector(
-      ({ billing }) => billing
+      ({ billings }) => billings
     ),
     { collections: payables } = useSelector(({ payables }) => payables),
     [suppliers, setSuppliers] = useState([]),
@@ -24,7 +24,7 @@ const Header = () => {
       uniqueSource = [
         ...new Map(
           collections.map(({ outsource: vendor }) => {
-            const { _id, displayname } = vendor;
+            const { _id = "", displayname = "" } = vendor || {};
             const soa = payables.find(
               ({ supplier }) => String(supplier.vendors) === String(_id)
             );

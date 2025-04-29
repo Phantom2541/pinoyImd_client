@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup } from "mdbreact";
 import { LABRESULT } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
@@ -7,11 +7,13 @@ import {
   SetTASK,
   SetMODAL,
   SetHEALTHY,
+  SetVALIDATOR,
 } from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const Footer = () => {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
   const { success, task, heads } = useSelector(({ validator }) => validator);
+  const [isLoading, setIsLoading] = useState(false);
   const { collections: physicians } = useSelector(
     ({ physicians }) => physicians
   );
@@ -19,7 +21,7 @@ const Footer = () => {
   const department = activePlatform?.department;
   useEffect(() => {
     if (success) {
-      dispatch(SetMODAL(false));
+      // dispatch(SetMODAL(false));
       dispatch(SetHEALTHY(false));
     }
   }, [success, dispatch]);
@@ -57,8 +59,6 @@ const Footer = () => {
     // if radiologist  and xray = radiologist
     // if radiologist  and ultrasound = sonographer
     // if radiologist  and ecg   = cardiologist
-    console.log("formfrom", form);
-    console.log("task", task);
 
     const head = findSignatoryId(form.toLowerCase());
     let dr;
@@ -87,14 +87,17 @@ const Footer = () => {
           department,
           signatories: [head, dr, auth._id],
         };
-
+    setIsLoading(true);
     dispatch(
       LABRESULT({
         token,
         data,
       })
-    );
-    dispatch(SetMODAL(false));
+    ).then(({ payload }) => {
+      setIsLoading(false);
+      dispatch(SetVALIDATOR(payload?.item || payload?.payload));
+      dispatch(SetMODAL(false));
+    });
   };
 
   const generateHealthyStats = () => {
@@ -132,6 +135,7 @@ const Footer = () => {
         <div className="ml-auto">
           <MDBBtnGroup>
             <MDBBtn
+              disabled={isLoading}
               onClick={() => {
                 if (task?.form === "Hematology") return computeHemaDiff(true);
                 handleSave(true);
@@ -141,6 +145,7 @@ const Footer = () => {
               Post
             </MDBBtn>
             <MDBBtn
+              disabled={isLoading}
               onClick={() => {
                 if (task?.form === "Hematology") return computeHemaDiff(false);
                 handleSave(false);

@@ -34,7 +34,8 @@ export default function Logo() {
 
   useEffect(() => {
     setShowImgCropper(false);
-  }, []);
+    dispatch(RESET());
+  }, [dispatch]);
 
   useEffect(() => {
     if (message) {

@@ -17,7 +17,6 @@ export default function AddressSelect({
         _address.province = Philippines.initialProvince(value);
         const city = Philippines.initialCity(_address.province);
         _address.city = city;
-
         break;
 
       case "province":

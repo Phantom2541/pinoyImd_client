@@ -1,4 +1,5 @@
-import HumanResources from "../../../pages/platforms/accredetations/humanResources";
+import Staffs from "../../../pages/platforms/accredetations/staff";
+import Temperature from "../../../pages/platforms/accredetations/temperatures";
 
 const accreditation = [
   {
@@ -18,7 +19,7 @@ const accreditation = [
       {
         name: "2. HUMAN RESOURCES MANAGEMANT",
         path: "/laboratory/manpower",
-        component: HumanResources,
+        component: Staffs,
       },
       {
         name: "3. PHYSICAL PLANT and ENVIRONMENT MANAGEMENT",
@@ -92,15 +93,12 @@ const accreditation = [
     children: [
       {
         name: "Temperature",
-        path: "/documents/temperature",
+        path: "/temperature",
+        component: Temperature,
       },
       {
         name: "Services Offers",
         path: "/documents/services",
-      },
-      {
-        name: "Employees",
-        path: "/documents/employees",
       },
       {
         name: "Quality Control",
