@@ -21,29 +21,22 @@ const Body = () => {
         <tr className="text-center">
           <th>#</th>
           <th>Name</th>
-          <th colSpan="4">Hotline</th>
-        </tr>
-        <tr className="text-center">
-          <th colSpan="2"></th>
-          <th>Hotline Name</th>
-          <th>Contact</th>
-          <th>Description</th>
-          <th>Actions</th>
+          <th>A.O.</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th colSpan="4">Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((provider, index) => {
-          const { name, subName, hotlineName, contactNumber, description } =
-            provider;
+          const { name, subName, contactNumber } = provider;
           return (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>
                 {subName ? `${subName}, ` : ""} {name}
               </td>
-              <td>{hotlineName || "--"}</td>
               <td>{contactNumber || "--"}</td>
-              <td>{description || "--"}</td>
               <td className="text-center" style={{ width: "200px" }}>
                 <button className="btn btn-primary rounded">
                   <i className="fas fa-phone-alt"></i> Call

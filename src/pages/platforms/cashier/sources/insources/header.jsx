@@ -21,6 +21,7 @@ const Header = () => {
           token,
           key: {
             vendors: activePlatform?.branchId,
+            category: "insource",
           },
         })
       );
