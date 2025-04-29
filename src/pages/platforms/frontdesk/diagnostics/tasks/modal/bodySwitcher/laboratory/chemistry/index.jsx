@@ -117,48 +117,6 @@ export default function Chemistry() {
               )}
             </tr>
           );
-
-          // live code version
-          // return (
-          //   <tr key={`${mapKey}-${index}`}>
-          //     <td className="fw-bold py-1">{key}</td>
-          //     <td className="py-1">
-          //       <input
-          //         type="number"
-          //         name={key}
-          //         value={String(value)}
-          //         onChange={(e) => handleChange(e.target)}
-          //         className="w-100 text-center fw-bold"
-          //         style={{
-          //           color: sampleFiltered
-          //             ? referenceColor(
-          //                 Number(value),
-          //                 sampleFiltered.critical,
-          //                 sampleFiltered.alert,
-          //                 sampleFiltered.warn
-          //               )
-          //             : undefined,
-          //         }}
-          //       />
-          //     </td>
-          //     {sampleFiltered ? (
-          //       <>
-          //         <td className="py-1">
-          //           {sampleFiltered.lo} - {sampleFiltered.hi}
-          //         </td>
-          //         <td className="py-1 text-capitalize">
-          //           {sampleFiltered.units}
-          //         </td>
-          //       </>
-          //     ) : (
-          //       <>
-          //         <td colSpan={2} className="py-1 text-center">
-          //           No reference
-          //         </td>
-          //       </>
-          //     )}
-          //   </tr>
-          // );
         })}
       </tbody>
     </MDBTable>
