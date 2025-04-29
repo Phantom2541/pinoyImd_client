@@ -14,7 +14,6 @@ export default function Chemistry() {
       ({ preferences }) => preferences
     ),
     dispatch = useDispatch();
-  console.log("preferences", preferences);
 
   const { packages = {}, key: mapKey, patient } = task;
 
@@ -76,14 +75,14 @@ export default function Chemistry() {
       <tbody>
         {Object.entries(packages).map(([key, value], index) => {
           const { preference, abbreviation, name } = Services.find(key),
+            _preferences = preferences.find(({ id }) => id === Number(key)),
             { lo, hi, warn, alert, critical, units, _id } = findReference(
               key,
               patient?.isMale,
               patient?.dob,
               preference,
-              preferences
+              _preferences.references
             );
-          console.log("_id", _id);
 
           return (
             <tr key={`${mapKey}-${index}`}>
@@ -110,7 +109,7 @@ export default function Chemistry() {
               ) : (
                 <>
                   <td colSpan={2} className="py-1">
-                    No reference found, please inform the admin first
+                    No Chemistry reference found, please inform the admin first
                   </td>
                 </>
               )}

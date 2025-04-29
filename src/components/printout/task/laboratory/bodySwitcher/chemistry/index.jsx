@@ -10,8 +10,6 @@ export default function Chemistry({ task, fontSize }) {
   const style = { fontSize: `${fontSize}px` },
     { packages, services, patient } = task;
 
-  console.log("task :xxxx", task);
-
   return (
     <MDBTable hover striped bordered responsive className="mb-0 text-center">
       <thead>
