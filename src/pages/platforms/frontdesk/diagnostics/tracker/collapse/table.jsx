@@ -36,9 +36,9 @@ export default function CollapseTable({ menu }) {
 
   const handleIndividual = (form, obj, index, miscIndex = 0) => {
     const { packages, hasDone = false, remarks = "", signatories = [] } = obj,
-      { department } = Templates.collections.find(({ components }) =>
-        components.includes(form)
-      );
+      { department } = Templates.findByComponentName(form);
+
+    console.log("department", department);
 
     const _packages = Array.isArray(packages)
       ? packages
@@ -71,7 +71,8 @@ export default function CollapseTable({ menu }) {
           )}
         </td>
         <td>
-          {form} {hasDone && <MDBIcon icon="check" className="ml-1" />}
+          {capitalize(form)}{" "}
+          {hasDone && <MDBIcon icon="check" className="ml-1" />}
         </td>
         <td>
           {Services.whereIn(_packages).map(({ abbreviation }, index) => (
@@ -133,8 +134,15 @@ export default function CollapseTable({ menu }) {
     );
   };
 
-  const { customerId, physicianId, source, category, _id, forms, results } =
-    menu;
+  const {
+    customerId,
+    physicianId,
+    source,
+    category,
+    _id,
+    forms,
+    diagnostics = [],
+  } = menu;
 
   console.log("forms:", forms);
 
@@ -151,23 +159,29 @@ export default function CollapseTable({ menu }) {
           </tr>
         </thead>
         <tbody>
-          HERES xxxxxx
-          {forms["0"]?.map((form, index) => {
-            const result = results?.[form.toLowerCase()];
-            if (!result)
-              return (
-                <tr key={task.key}>
-                  <td colSpan={4}>Empty Test</td>
-                </tr>
-              );
+          {diagnostics &&
+            diagnostics?.map((diagnostic, index) => {
+              console.log("diagnostic :", diagnostic);
+              // console.log("results :", results);
+              // const result = results?.[form.key.toLowerCase()];
+              // if (!result)
+              //   return (
+              //     <tr key={task.key}>
+              //       <td colSpan={4}>Empty Test</td>
+              //     </tr>
+              //   );
 
-            if (Array.isArray(result))
-              return result.map((obj, i) =>
-                handleIndividual(form, obj, index + i, i)
-              );
+              if (Array.isArray(diagnostic.result))
+                return diagnostic.result.map((obj, i) =>
+                  handleIndividual(diagnostic.key, obj, index + i, i)
+                );
 
-            return handleIndividual(form, result, index);
-          })}
+              return handleIndividual(
+                diagnostic.key.toLowerCase(),
+                diagnostic.result,
+                index
+              );
+            })}
         </tbody>
       </MDBTable>
     </>

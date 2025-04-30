@@ -1,10 +1,11 @@
-import templates from "./collections.json";
+import { capitalize } from "../../../utilities";
+import collections from "./collections.json";
 
 /**
  * Department Finder Utility
  */
-const TemplatetUtils = {
-  collections: [...templates],
+const Templates = {
+  collections: [...collections],
 
   /**
    * Finds the components of a department
@@ -12,7 +13,7 @@ const TemplatetUtils = {
    * @returns {Array} Array of component names
    */
   getComponents: (key) => {
-    const department = templates.find(
+    const department = collections.find(
       ({ department }) => department.toLowerCase() === key.toLowerCase()
     );
     return department
@@ -26,7 +27,7 @@ const TemplatetUtils = {
    * @returns {Number} Index of the component in the department
    */
   getComponentIndex: (component, key = `LAB`) => {
-    const department = templates.find(({ department }) => department === key);
+    const department = collections.find(({ department }) => department === key);
     const components = department ? department.components : [];
 
     console.log("Looking for component:", component, "Type:", typeof component);
@@ -46,7 +47,7 @@ const TemplatetUtils = {
   },
 
   getComponentName: (component, key = "LAB") => {
-    const department = templates.find(({ department }) => department === key);
+    const department = collections.find(({ department }) => department === key);
     if (!department) {
       console.warn(`Department "${key}" not found in templates`);
       return undefined;
@@ -70,8 +71,8 @@ const TemplatetUtils = {
    * @param {String} componentName
    * @returns {Object} The department object
    */
-  findComponentName: (componentName) =>
-    templates.find(({ components }) => components.includes(componentName)),
+  findByComponentName: (form) =>
+    collections.find(({ components }) => components.includes(capitalize(form))),
 
   /*************  ✨ Codeium Command ⭐  *************/
   /**
@@ -86,7 +87,7 @@ const TemplatetUtils = {
   findComponentByIndex: (index) => {
     let currentIndex = 0;
 
-    for (const { template, components } of templates) {
+    for (const { template, components } of collections) {
       if (index < currentIndex + components.length) {
         return { template, component: components[index - currentIndex] };
       }
@@ -96,14 +97,14 @@ const TemplatetUtils = {
     return null; // If index is out of bounds
   },
   whereDepartment: (departmentList) =>
-    templates.filter(({ department }) => departmentList.includes(department)),
+    collections.filter(({ department }) => departmentList.includes(department)),
 
   whereComponent: (componentList) =>
-    templates.filter(({ components }) =>
+    collections.filter(({ components }) =>
       components.some((comp) => componentList.includes(comp))
     ),
   whereTemplate: (templateList, department) => {
-    const { components } = templates.find(
+    const { components } = collections.find(
       ({ department: dep }) => dep === department
     );
     return templateList
@@ -112,4 +113,4 @@ const TemplatetUtils = {
   },
 };
 
-export default TemplatetUtils;
+export default Templates;
