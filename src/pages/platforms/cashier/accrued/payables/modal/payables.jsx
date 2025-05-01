@@ -230,6 +230,12 @@ export default function ModalCreate() {
           value={form.due ? new Date(form.due).toISOString().split("T")[0] : ""}
           onChange={({ target }) => setForm({ ...form, due: target.value })}
         />
+        <MDBInput
+          label="Remarks"
+          type="string"
+          value={form?.remarks}
+          onChange={({ target }) => setForm({ ...form, remarks: target.value })}
+        />
         <MDBBtn
           color="primary"
           className="float-right"
