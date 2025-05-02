@@ -54,6 +54,7 @@ export default function Modal() {
     { showModal, title, selected, day, month, year } = useSelector(
       ({ remittances }) => remittances
     ),
+    { collections: payments } = useSelector(({ payments }) => payments),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
     [sum, setSum] = useState(0),
     [coh, setCoh] = useState(0),
@@ -68,10 +69,21 @@ export default function Modal() {
   useEffect(() => {
     let cashRemitted = 0;
     if (selected?.gross) {
+      const censusDate = selected?.createdAt
+        ? new Date(selected.createdAt).toLocaleDateString("en-PH") // 'YYYY-MM-DD' in local time
+        : "N/A";
+
+      const paymentsSum = payments
+        .filter(
+          ({ createdAt, amount }) =>
+            createdAt &&
+            new Date(createdAt).toLocaleDateString("en-PH") === censusDate &&
+            amount
+        )
+        .reduce((sum, { amount }) => sum + Number(amount), 0);
       let _fc = selected?.opening?.sum || 0;
       const _coh = selected?.breakdown?.cash || 0;
-      let _expenses = selected?.expenses || 0;
-      cashRemitted = _fc + _coh - _expenses;
+      cashRemitted = _fc + _coh - paymentsSum;
     }
     setCoh(cashRemitted);
   }, [selected]);
