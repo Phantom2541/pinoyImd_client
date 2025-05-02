@@ -23,7 +23,11 @@ import cash from "../../../../../../assets/paymentMethods/cash.png";
 import transfer from "../../../../../../assets/paymentMethods/transfer.png";
 import gcash from "../../../../../../assets/paymentMethods/gcash.png";
 import cheque from "../../../../../../assets/paymentMethods/cheque.png";
-import { currency, dateFormat } from "../../../../../../services/utilities";
+import {
+  currency,
+  dateFormat,
+  fullName,
+} from "../../../../../../services/utilities";
 import Swal from "sweetalert2";
 import "./style.css";
 
@@ -158,8 +162,9 @@ export default function PaymentModal() {
                   Supplier:
                 </h6>
                 <h5 style={{ fontWeight: 500 }}>
-                  {console.log("name", selected)}
-                  {selected?.supplier?.displayname || "N/A"}
+                  {selected?.supplier
+                    ? selected?.supplier?.displayname
+                    : fullName(selected?.particular?.fullName)}
                 </h5>
               </div>
               <div className="d-flex align-items-center">

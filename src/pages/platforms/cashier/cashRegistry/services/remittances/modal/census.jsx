@@ -25,14 +25,16 @@ export default function Census() {
     { showCensus, selected, deals } = useSelector(
       ({ remittances }) => remittances
     ),
+    { collections: payments } = useSelector(({ payments }) => payments),
     { collections } = useSelector(({ menus }) => menus),
     [census, setCensus] = useState({ menus: [], services: [] }),
     [patients, setPatients] = useState(0),
     [gross, setGross] = useState(0),
     [breakdown, setBreakdown] = useState({}),
-    [expenses, setExpenses] = useState(0),
+    // [expenses, setExpenses] = useState(0),
     [activeTab, setActiveTab] = useState("menus"),
     dispatch = useDispatch();
+  console.log("payments", payments);
 
   useEffect(() => {
     let isMounted = true;
@@ -40,7 +42,7 @@ export default function Census() {
       setCensus(selected.census);
       setPatients(selected.patients);
       setGross(selected.gross);
-      setExpenses(selected.expenses);
+      // setExpenses(selected.expenses);
       return;
     }
 
@@ -111,6 +113,19 @@ export default function Census() {
     ? new Date(selected.createdAt).toISOString().split("T")[0]
     : "N/A";
 
+  const paymentsSum = payments
+    .filter(
+      ({ createdAt, amount }) =>
+        createdAt &&
+        new Date(createdAt).toLocaleDateString("en-CA") === censusDate &&
+        amount
+    )
+    .reduce((sum, { amount }) => sum + Number(amount), 0);
+
+  console.log("paymentsSum", paymentsSum);
+  // const paymentsSumTotal = paymentsSum.reduce((acc, payment) => {
+  //   return acc + payment.amount;
+  // }, 0);
   const tabStyle = (tab) =>
     `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;
 
@@ -147,7 +162,7 @@ export default function Census() {
             {
               icon: "money-bill-wave",
               text: "Expenses",
-              value: currency(expenses),
+              value: currency(paymentsSum),
               color: "text-danger",
             },
             {

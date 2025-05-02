@@ -7,6 +7,7 @@ import Calendar from "./calendar";
 import { Denomination, Census } from "./modal";
 import { BROWSE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
 import { BROWSE as DEALS } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { Monthly } from "../../../../../../services/redux/slices/finance/journals/payments";
 
 export default function Remmitances() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
@@ -32,6 +33,20 @@ export default function Remmitances() {
       );
     }
   }, [activePlatform, dispatch, month, token, year, auth]);
+
+  useEffect(() => {
+    dispatch(
+      Monthly({
+        token,
+        key: {
+          branchId: activePlatform?.branchId,
+          cashierId: auth._id,
+          month,
+          year,
+        },
+      })
+    );
+  }, [month, year]);
 
   return (
     <MDBContainer className="d-grid" fluid>
