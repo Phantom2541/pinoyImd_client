@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-// import { Select } from "../../../../../components/customizable";
-// import { Templates, Services } from "../../../../../services/fakeDb";
+import { Search } from "../../../../../components/searchables";
 import {
   OUTSOURCE,
-  RESET,
+  SetCREATE,
+  SetFILTER,
+  ResetFILTER,
 } from "../../../../../services/redux/slices/assets/providers";
-import SearchProviders from "../../../../../components/searchables/providers";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { paginated } = useSelector(({ providers }) => providers),
+    { filtered } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
   //initial values
@@ -26,8 +26,10 @@ const Header = () => {
         })
       );
     }
-    return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
+
+  const handleAdd = (key) => dispatch(SetCREATE({ displayname: key }));
+  const handleFiltered = (items) => dispatch(SetFILTER(items));
 
   return (
     <MDBView
@@ -36,12 +38,19 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {paginated?.length} Outsources
+          {filtered?.length} Outsources
         </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <SearchProviders />
+          <Search
+            collection={filtered}
+            handleFiltered={handleFiltered}
+            handleAdd={handleAdd}
+            reset={() => dispatch(ResetFILTER())}
+            willcreate={true}
+            hideButton={false}
+          />
         </div>
       </div>
     </MDBView>

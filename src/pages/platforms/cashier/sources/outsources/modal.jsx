@@ -12,25 +12,37 @@ import {
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../services/redux/slices/liability/assurances";
-
-import { Services } from "./../../../../../../services/fakeDb";
+  TOGGLE,
+} from "../../../../../services/redux/slices/assets/providers";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
-  const { show, toggle, selected, willCreate, isLoading } = useSelector(
-      ({ assurances }) => assurances
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { showModal, selected, willCreate, isLoading } = useSelector(
+      ({ providers }) => providers
     ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ branches }) => branches),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  //Listener
+  useEffect(() => {
+    if (showModal) {
+      setForm({
+        ...selected,
+        userId: auth._id,
+        clients: activePlatform.branchId,
+        category: "outsources",
+      });
+    }
+  }, [showModal, selected, auth, activePlatform]);
+
   // Handle update function
   const handleUpdate = () => {
-    toggle();
+    TOGGLE();
 
     // Check if object has changed
     if (isEqual(form, selected)) {
@@ -54,44 +66,40 @@ export default function Modal() {
         data: form,
         token,
       })
-    ).then(() => toggle()); // Close modal after successful save
+    ).then(() => TOGGLE()); // Close modal after successful save
+    //console.log("Add Button : ", form);
   };
 
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (willCreate) {
-      return handleCreate();
-    }
-
-    handleUpdate();
+    willCreate ? handleCreate() : handleUpdate();
   };
 
   // Handle change sa inputs
   const handleChange = (key, value) => {
     setForm({
       ...form,
-      [key]: Number(value),
-      userId: auth._id,
-      branchId: activePlatform.branchId,
+      [key]: value,
     });
+
+    console.log("Form", form);
   };
 
-  // Fix: Return correct form value
-  const handleValue = (key) => form[key] || "";
-
-  // Handle modal close
-  const handleClose = () => toggle();
-
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop size="sm">
+    <MDBModal
+      isOpen={showModal}
+      TOGGLE={TOGGLE}
+      backdrop
+      size="sm"
+      disableFocusTrap={false}
+    >
       <MDBModalHeader
-        toggle={handleClose}
+        toggle={() => dispatch(TOGGLE())}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Controls
+        {willCreate ? "Create" : "Update"} Supplier
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
@@ -99,34 +107,56 @@ export default function Modal() {
             tag="h4"
             variant="h4-responsive"
             className="text-center"
+          ></MDBTypography>
+          <select
+            onChange={(e) => handleChange("vendors", e.target.value)}
+            className="form-control"
           >
-            {Services.getName(selected?.serviceId)}
-          </MDBTypography>
+            <option value="" disabled>
+              Select a branch
+            </option>
+            {Array.isArray(collections) &&
+              collections.map((branch, index) => (
+                <option key={index} value={branch._id}>
+                  {branch.displayname || (branch.name && branch.subname)}
+                </option>
+              ))}
+          </select>
 
           {/* Input fields */}
           <MDBInput
-            label="Abnormal"
-            type="number"
-            value={handleValue("abnormal")}
+            label="Name"
+            type="string"
+            value={form?.displayname}
             required
-            onChange={(e) => handleChange("abnormal", e.target.value)}
-          />
-          <MDBInput
-            label="High"
-            type="number"
-            value={handleValue("high")}
-            required
-            onChange={(e) => handleChange("high", e.target.value)}
-          />
-          <MDBInput
-            label="Normal"
-            type="number"
-            value={handleValue("normal")}
-            required
-            onChange={(e) => handleChange("normal", e.target.value)}
+            onChange={(e) => handleChange("displayname", e.target.value)}
           />
 
-          {/* Submit button */}
+          {/* <MDBInput
+            label="Number"
+            type="string"
+            value={form?.number}
+            onChange={(e) => handleChange("number", e.target.value)}
+          /> */}
+          <MDBInput
+            label="A.O."
+            type="string"
+            value={form?.ao}
+            onChange={(e) => handleChange("a.o", e.target.value)}
+          />
+          <MDBInput
+            label="Membership"
+            type="string"
+            value={form?.membership}
+            onChange={(e) => handleChange("membership", e.target.value)}
+          />
+          <MDBInput
+            label="Address"
+            type="string"
+            value={form?.address}
+            onChange={(e) => handleChange("address", e.target.value)}
+          />
+
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"
