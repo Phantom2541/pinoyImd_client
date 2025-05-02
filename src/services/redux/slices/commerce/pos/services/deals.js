@@ -895,33 +895,44 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.showModal = false;
-        if (state.collections?.length > 0) {
+        if (Array.isArray(state.collections) && state.collections.length > 0) {
           const identifier = ["Miscellaneous", "Xray"].includes(payload?.form)
             ? "dealId"
             : "_id";
 
-          // Find the index of the collection item based on the identifier
+          const targetId = payload?.[identifier];
+
+          if (!targetId) {
+            console.warn(
+              "Missing identifier value in payload:",
+              identifier,
+              payload
+            );
+            return;
+          }
+
           const index = state.collections.findIndex(
-            (item) => item?._id === payload[identifier]
+            (item) => item && item._id === targetId
           );
 
-          // Ensure the index is valid
-          if (index !== -1) {
+          if (index !== -1 && state.collections[index]) {
             if (identifier === "dealId") {
-              // Update miscellaneous item at the correct index
-              if (state.collections[index]?.miscellaneous) {
+              if (Array.isArray(state.collections[index].miscellaneous)) {
                 state.collections[index].miscellaneous[payload?.miscIndex] =
                   payload;
+              } else {
+                console.warn("Missing miscellaneous array at index", index);
               }
             } else {
-              const form = payload.form?.toLowerCase(); // Ensure form is lowercase
-              // Ensure collections[index] exists before modifying it
-              if (state.collections[index]) {
-                state.collections[index][form] = payload;
-              }
+              const form = payload.form?.toLowerCase();
+              state.collections[index][form] = payload;
             }
           } else {
-            console.warn("Item not found in collections:", payload);
+            console.warn(
+              "Item not found in collections for",
+              identifier,
+              targetId
+            );
           }
         }
 

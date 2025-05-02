@@ -34,16 +34,15 @@ export default function CollapseTable({ menu }) {
     );
   };
 
-  const handleIndividual = (form, obj, index, miscIndex = 0) => {
-    const { packages, hasDone = false, remarks = "", signatories = [] } = obj,
+  const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
+    const { hasDone = false, remarks = "", signatories = [] } = obj,
       { department } = Templates.findByComponentName(form);
 
     console.log("department", department);
 
-    const _packages = Array.isArray(packages)
-      ? packages
-      : Object.keys(packages).map((k) => Number(k));
-
+    const _packages = Array.isArray(obj?.packages)
+      ? obj.packages
+      : Object.keys(obj?.packages || {}).map(Number);
     var task = {
       ...obj,
       key: `${form}-${index}`,
