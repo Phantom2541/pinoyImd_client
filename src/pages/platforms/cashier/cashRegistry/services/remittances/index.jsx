@@ -35,6 +35,7 @@ export default function Remmitances() {
   }, [activePlatform, dispatch, month, token, year, auth]);
 
   useEffect(() => {
+    //payables
     dispatch(
       Monthly({
         token,

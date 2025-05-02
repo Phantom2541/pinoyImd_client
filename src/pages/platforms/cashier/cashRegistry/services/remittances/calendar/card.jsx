@@ -6,7 +6,9 @@ import {
   paymentMethod,
 } from "../../../../../../../services/utilities";
 import { MDBAnimation, MDBProgress } from "mdbreact";
+import { useSelector } from "react-redux";
 const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
+  const { collections } = useSelector(({ payments }) => payments);
   const today = new Date();
   const dateCell = new Date(txt);
   const isFuture = dateCell > today;
@@ -15,12 +17,26 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
 
   const {
     opening = {},
-    expenses = 0,
     gross = 0,
     collector,
     closing,
+    cashier,
     breakdown,
   } = item;
+
+  const expenses = collections
+    .filter(({ createdAt, userId }) => {
+      const collectionDate = new Date(createdAt);
+
+      return (
+        collectionDate.getFullYear() === dateCell.getFullYear() &&
+        collectionDate.getMonth() === dateCell.getMonth() &&
+        collectionDate.getDate() === dateCell.getDate() &&
+        userId?._id === cashier?._id
+      );
+    })
+    .reduce((acc, curr) => acc + curr.amount, 0);
+
   const net = (opening.sum || 0) + gross - expenses;
   const isRemitted = !!collector;
 
