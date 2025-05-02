@@ -32,6 +32,8 @@ const initialState = {
   collections: [],
   filtered: [],
   showModal: false,
+  totalPages: 0,
+  page: 1,
   maxPage: 5,
   activePage: 1,
   activeCOLAPSE: -1,
@@ -134,6 +136,12 @@ export const reduxSlice = createSlice({
       updateCollection(state.filtered, findIndex(state.filtered));
     },
     SetFILTERED: (state, { payload }) => {
+      if (payload.length > 0) {
+        state.totalPages = Math.ceil(payload.length / state.maxPage);
+        if (state.page > state.totalPages) {
+          state.page = state.totalPages;
+        }
+      }
       state.filtered = payload;
     },
     SetSELECTED: (state, { payload }) => {
@@ -193,8 +201,12 @@ export const reduxSlice = createSlice({
       })
       .addCase(TASKS.fulfilled, (state, action) => {
         const { payload } = action.payload;
+
         state.collections = payload;
         state.filtered = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
       })
       .addCase(TASKS.rejected, (state, action) => {
