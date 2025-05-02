@@ -214,5 +214,13 @@
     "meaning": "Money deposited into the business or project.",
     "category": "capital",
     "profitable": true
+  },
+  {
+    "id": 44,
+    "title": "Partial remittances",
+    "abbreviation": "PR",
+    "meaning": "Partial remittance of the daily sales.",
+    "category": "expenses",
+    "profitable": false
   }
 ]

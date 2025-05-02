@@ -108,14 +108,14 @@ export default function Census() {
   };
 
   const censusDate = selected?.createdAt
-    ? new Date(selected.createdAt).toISOString().split("T")[0]
+    ? new Date(selected.createdAt).toLocaleDateString("en-PH") // 'YYYY-MM-DD' in local time
     : "N/A";
 
   const paymentsSum = payments
     .filter(
       ({ createdAt, amount }) =>
         createdAt &&
-        new Date(createdAt).toLocaleDateString("en-CA") === censusDate &&
+        new Date(createdAt).toLocaleDateString("en-PH") === censusDate &&
         amount
     )
     .reduce((sum, { amount }) => sum + Number(amount), 0);
