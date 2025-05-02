@@ -26,23 +26,19 @@ const Templates = {
    * @param {String} [key=LAB] Department name
    * @returns {Number} Index of the component in the department
    */
-  getComponentIndex: (component, key = `LAB`) => {
-    const department = collections.find(({ department }) => department === key);
-    const components = department ? department.components : [];
+  getComponentIndex: (component, key = "LAB") => {
+    console.log("component", component);
 
-    console.log("Looking for component:", component, "Type:", typeof component);
-    console.log("Available components in department:", components);
+    const { components } = collections.find(
+      ({ department }) => department === key
+    );
 
-    const index = components.findIndex((c) => {
-      console.log("value of components", c);
-      console.log("value of component", component);
-      return c === component;
-    });
+    console.log("Looking for component:", component);
+    console.log("Available components:", components);
 
-    console.log("Index found:", components.indexOf(components[component]));
+    const index = components.findIndex((c) => c.startsWith(component));
 
-    console.log(component[component]);
-
+    console.log("Index found:", index);
     return index;
   },
 

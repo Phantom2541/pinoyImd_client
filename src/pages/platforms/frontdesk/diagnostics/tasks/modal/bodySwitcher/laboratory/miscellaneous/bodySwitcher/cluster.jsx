@@ -4,7 +4,7 @@ import { Services } from "./../../../../../../../../../../services/fakeDb";
 import { Select } from "./../../../../../../../../../../components/customizable";
 
 export default function Cluster({ task, setTask }) {
-  const { packages = [], results = {} } = task;
+  const { packages = [], results = { 68: 0, 69: 0, 70: 0 } } = task;
   const handleSelectChange = (name, value) =>
     setTask({ ...task, results: { ...results, [name]: value } });
 

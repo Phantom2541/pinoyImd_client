@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTypography } from "mdbreact";
 import Collapse from "./collapse";
-import { Services } from "../../../../../services/fakeDb";
+import { Services, Templates } from "../../../../../services/fakeDb";
 import { UPDATE } from "../../../../../services/redux/slices/commerce/pos/services/deals.js";
 
 export default function Body() {
@@ -22,8 +22,10 @@ export default function Body() {
       for (const task of collections) {
         const { _id, forms } = task;
         console.log("forms", forms);
+        console.log("_id", _id);
 
         const updatedForms = normalizeForms(forms);
+        console.log("updatedForms", updatedForms);
 
         const shouldUpdate =
           !forms ||
@@ -52,13 +54,27 @@ export default function Body() {
     processTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // <<== EMPTY dependency array!! runs only once after mount
-  const normalizeForms = (forms) => {
-    const normalizedForms = { 0: [], 1: [], 2: [] };
+  const normalizeForms = (formsInput) => {
+    const normalizedForms = {};
+    const forms = JSON.parse(JSON.stringify(formsInput)); // clone to avoid Proxy issues
 
-    if (forms && typeof forms === "object") {
-      Object.keys(forms).forEach((key) => {
-        if (["0", "1", "2"].includes(key) && Array.isArray(forms[key])) {
-          normalizedForms[key] = forms[key].map((_, index) => index);
+    const _form = Templates.getComponentIndex(forms);
+    console.log("_form", _form);
+
+    if (Array.isArray(forms)) {
+      if (forms.length > 0) {
+        normalizedForms["0"] = Array.from(
+          { length: forms.length },
+          (_, i) => i
+        );
+      }
+    } else if (forms && typeof forms === "object") {
+      ["0", "1", "2"].forEach((key) => {
+        if (Array.isArray(forms[key]) && forms[key].length > 0) {
+          normalizedForms[key] = Array.from(
+            { length: forms[key].length },
+            (_, i) => i
+          );
         }
       });
     }
