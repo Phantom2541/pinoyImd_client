@@ -79,7 +79,18 @@ export const Daily = createAsyncThunk(
     }
   }
 );
-
+export const Monthly = createAsyncThunk(
+  `${url}/monthly`,
+  async ({ token, key }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/monthly`, token, key);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
@@ -162,18 +173,15 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
       })
-
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = payload;
         state.filtered = payload;
         state.isLoading = false;
       })
-
       .addCase(BROWSE.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
       })
-
       .addCase(LIST.pending, (state) => {
         state.isLoading = true;
       })
@@ -218,13 +226,23 @@ export const reduxSlice = createSlice({
       .addCase(Daily.pending, (state) => {
         state.isLoading = true;
       })
-
       .addCase(Daily.fulfilled, (state, { payload }) => {
         state.filtered = payload;
         state.isLoading = false;
       })
-
       .addCase(Daily.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.isLoading = false;
+      })
+      .addCase(Monthly.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(Monthly.fulfilled, (state, { payload }) => {
+        state.collections = payload;
+        state.filtered = payload;
+        state.isLoading = false;
+      })
+      .addCase(Monthly.rejected, (state, { payload }) => {
         state.message = payload;
         state.isLoading = false;
       })
@@ -244,7 +262,6 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
         state.isLoading = false;
       })
-
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;

@@ -10,6 +10,7 @@ import {
   currency,
   dateFormat,
   fullName,
+  getTime,
 } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import util from "./util";
@@ -49,14 +50,13 @@ const Tables = () => {
         <MDBTable responsive hover bordered>
           <thead>
             <tr>
-              <th rowSpan={2}>#</th>
-              <th rowSpan={2}>Particular/Vendor</th>
-              <th rowSpan={2}>Statement</th>
-              <th rowSpan={2}>Due Date</th>
-              <th rowSpan={2}>Amount</th>
-              <th rowSpan={2} style={{ textAlign: "center" }}>
-                Actions
-              </th>
+              <th>#</th>
+              <th>Received By: </th>
+              <th>Particular/Vendor</th>
+              <th>Statement</th>
+              <th>Due Date</th>
+              <th>Remarks</th>
+              <th style={{ textAlign: "center" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -78,7 +78,9 @@ const Tables = () => {
                 hasPaid,
                 payor,
                 range,
+                receiveBy,
                 status,
+                createdAt,
               } = payable;
               const dueDate = due ? new Date(due) : null;
               const today = new Date();
@@ -94,7 +96,16 @@ const Tables = () => {
                   }
                 >
                   <td>{index + 1}</td>
-                  <td>{util.getVendorOrParticular(particular, supplier)}</td>
+                  <td>
+                    <h6>{fullName(receiveBy?.fullName)} </h6>
+                    <small style={{ color: "blue" }}>
+                      {getTime(createdAt)}
+                    </small>
+                  </td>
+                  <td>
+                    <h6> {util.getVendorOrParticular(particular, supplier)}</h6>
+                    <small style={{ color: "blue" }}>{currency(amount)}</small>
+                  </td>
                   <td>
                     <h6>{Statements?.getName(fsId)}</h6>
                     <MDBBadge> {capitalize(status)}</MDBBadge>
@@ -130,8 +141,7 @@ const Tables = () => {
                       </span>
                     )}
                   </td>
-                  <th>{currency(amount)}</th>
-
+                  <th>{payable.remarks} </th>
                   <td style={{ textAlign: "center" }}>
                     {!hasPaid &&
                       (fsId === 31 && status === "accepted" ? (

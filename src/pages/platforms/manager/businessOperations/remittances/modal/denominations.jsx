@@ -66,6 +66,8 @@ export default function Modal() {
     [location, setLocation] = useState("reception"),
     dispatch = useDispatch();
 
+  console.log("selected", selected);
+
   useEffect(() => {
     calculateSum(floating);
   }, [floating]);
@@ -321,6 +323,7 @@ export default function Modal() {
           </MDBCol>
           <MDBCol md="2">
             <h5 className="text-center fw-bold">Break Down</h5>
+            <div>Floating Cash: {currency(selected?.opening?.sum || 0)}</div>
             <div className="mt-5">
               {selected?.breakdown &&
                 Object.entries(selected?.breakdown || {}).map(
@@ -355,9 +358,11 @@ export default function Modal() {
                 )}
               <hr />
               <div className="d-flex justify-content-between align-items-center">
-                <h5>Gross:</h5>
+                <h5>COH:</h5>
                 <h5>
-                  <strong>{currency(selected?.gross)}</strong>
+                  <strong style={{ color: "blue" }}>
+                    {currency(selected?.gross + selected?.opening?.sum)}
+                  </strong>
                 </h5>
               </div>
             </div>
