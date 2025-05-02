@@ -11,30 +11,30 @@ export default function Calendar() {
       ({ remittances }) => remittances
     );
 
-  const dateMap = new Map(
-    collections
-      .filter(({ createdAt }) => createdAt) // Filter out null/undefined dates
-      .map(({ createdAt, ...rest }) => [
-        new Date(createdAt).getUTCDate(),
-        { createdAt, ...rest },
-      ])
-  );
-  // calendar-template
   return (
     <div className="cashier-remittance-calendar p-3">
       <WeekHeader />
       <div className="cashier-calendar-remittance-body">
-        {generateCalendar(month, year).map(({ num, txt = "" }, index) => {
-          const item = dateMap.get(num) || {}; // Default to an empty object instead of null
-          const localStart = new Date(year, month - 1, num);
-          localStart.setHours(0, 0, 0, 0);
+        {generateCalendar(month, year).map(({ num, txt = "" }) => {
+          const localDate = new Date(year, month - 1, num);
+          localDate.setHours(0, 0, 0, 0); // normalize start of day
 
-          const localEnd = new Date(localStart);
-          localEnd.setHours(23, 59, 59, 999);
+          const nextDate = new Date(localDate);
+          nextDate.setDate(localDate.getDate() + 1); // exclusive upper bound
+
+          // Get item for remittance (assumes only one per day)
+          const item =
+            collections.find(({ createdAt }) => {
+              const dt = new Date(createdAt);
+              return dt >= localDate && dt < nextDate;
+            }) || {};
+
+          // Get deals for this day
           const _deals = deals.filter(({ createdAt }) => {
-            const created = new Date(createdAt); // UTC timestamp from DB
-            return created >= localStart && created <= localEnd;
+            const dt = new Date(createdAt);
+            return dt >= localDate && dt < nextDate;
           });
+
           return (
             <Card
               key={num}

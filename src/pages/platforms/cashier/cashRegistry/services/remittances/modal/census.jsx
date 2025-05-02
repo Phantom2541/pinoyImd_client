@@ -31,7 +31,6 @@ export default function Census() {
     [patients, setPatients] = useState(0),
     [gross, setGross] = useState(0),
     [breakdown, setBreakdown] = useState({}),
-    // [expenses, setExpenses] = useState(0),
     [activeTab, setActiveTab] = useState("menus"),
     dispatch = useDispatch();
   console.log("payments", payments);
@@ -42,7 +41,6 @@ export default function Census() {
       setCensus(selected.census);
       setPatients(selected.patients);
       setGross(selected.gross);
-      // setExpenses(selected.expenses);
       return;
     }
 
@@ -122,10 +120,6 @@ export default function Census() {
     )
     .reduce((sum, { amount }) => sum + Number(amount), 0);
 
-  console.log("paymentsSum", paymentsSum);
-  // const paymentsSumTotal = paymentsSum.reduce((acc, payment) => {
-  //   return acc + payment.amount;
-  // }, 0);
   const tabStyle = (tab) =>
     `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;
 
