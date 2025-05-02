@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { MDBTable } from "mdbreact";
+import { MDBTable, MDBIcon } from "mdbreact";
+import { billingAddress, fullName } from "../../../../../services/utilities";
 
 const Body = () => {
   const { paginated, activePage, maxPage } = useSelector(
@@ -22,24 +23,25 @@ const Body = () => {
           <th>#</th>
           <th>Name</th>
           <th>A.O.</th>
-          <th>Phone</th>
+          <th>Membership</th>
           <th>Address</th>
           <th colSpan="4">Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((provider, index) => {
-          const { name, subName, contactNumber } = provider;
+          const { vendors, membership, ao } = provider,
+            { displayname, address } = vendors;
           return (
             <tr key={index}>
               <td>{index + 1}</td>
-              <td>
-                {subName ? `${subName}, ` : ""} {name}
-              </td>
-              <td>{contactNumber || "--"}</td>
+              <td>{displayname}</td>
+              <td>{fullName(ao.fullName)}</td>
+              <td>{membership}</td>
+              <td>{billingAddress(address)}</td>
               <td className="text-center" style={{ width: "200px" }}>
                 <button className="btn btn-primary rounded">
-                  <i className="fas fa-phone-alt"></i> Call
+                  <MDBIcon icon="store-slash" />
                 </button>
               </td>
             </tr>

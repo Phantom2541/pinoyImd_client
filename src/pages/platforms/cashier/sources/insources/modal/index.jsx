@@ -24,7 +24,7 @@ import Checkbox from "./checkbox";
 // declare your expected items
 const _form = {
   name: "",
-  category: ["insource"],
+  category: "insource",
   ao: "",
   membership: "",
   credit: 0,
@@ -57,18 +57,11 @@ export default function Modal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { category = [], ao = "" } = form;
+    const { ao = "" } = form;
     if (!ao) {
       delete form.ao;
     }
-    if (category.length === 0)
-      return Swal.fire({
-        title: "Warning!",
-        text: "Categories are required.",
-        icon: "warning",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
-      });
+    console.log("form", form);
 
     dispatch(
       SAVE({
@@ -86,22 +79,11 @@ export default function Modal() {
   const categoryHasChecked = (category) => form.category.includes(category);
 
   const handleChecked = (newCategory) => {
-    const { category = [] } = form;
-    const _category = [...category];
-    const index = _category.findIndex((c) => c === newCategory);
-
-    if (index > -1) {
-      _category.splice(index, 1);
-    } else {
-      _category.push(newCategory);
-    }
-    const hasPartner = _category.some((c) => c === "partner");
+    console.log("newCategory", newCategory);
 
     setForm((prev) => ({
       ...prev,
-      category: hasPartner
-        ? _category.filter((c) => c !== "insource" && c !== "outsource")
-        : _category,
+      category: newCategory,
     }));
   };
 
