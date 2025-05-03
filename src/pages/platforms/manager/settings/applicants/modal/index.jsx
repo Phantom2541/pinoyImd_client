@@ -13,7 +13,7 @@ import {
 } from "mdbreact";
 import { fullName } from "../../../../../../services/utilities";
 
-import { Access } from "../../../../../../services/fakeDb";
+import { Access, Policy } from "../../../../../../services/fakeDb";
 import { UPDATE_ACCESS } from "../../../../../../services/redux/slices/assets/persons/personnels";
 import {
   ToggleAccessModal,
@@ -50,7 +50,7 @@ export default function AccessModal() {
     [duplicateRoles, setDuplicateRoles] = useState([]), //the purpose of this is for searching....
     dispatch = useDispatch();
 
-  const { user = {} } = selected || {};
+  const { user = {}, contract } = selected || {};
 
   const toggle = useCallback(() => {
     dispatch(ToggleAccessModal());
@@ -234,8 +234,11 @@ export default function AccessModal() {
         toggle={toggle}
         className="light-blue darken-3 white-text"
       >
-        <MDBIcon icon="universal-access" className="mr-2" />
-        <small> {`${fullName(user.fullName) || ""} `}</small>
+        <h6>
+          <MDBIcon icon="universal-access" className="mr-2" />
+          {`${fullName(user.fullName) || ""} `}
+        </h6>
+        <small>{Policy.getPosition(contract?.designation)}</small>
       </MDBModalHeader>
       <MDBModalBody>
         <MDBTypography noteTitle="Description: " note noteColor="warning">

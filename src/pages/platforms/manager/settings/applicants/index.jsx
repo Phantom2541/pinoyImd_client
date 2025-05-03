@@ -64,7 +64,7 @@ export default function Applicants() {
                   <th> Pds</th>
                   <th>Resume</th>
                   <th>Letter</th>
-                  <th>By Monthly</th>
+                  <th>Remarks</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -74,12 +74,11 @@ export default function Applicants() {
                   const {
                     _id,
                     user,
-                    employment = {},
                     file201 = {},
                     contract,
+                    remarks,
                   } = applicant;
                   const { hasPds, hasResume, hasLetter } = file201;
-                  const { biMonthly } = employment;
 
                   return (
                     <tr key={_id}>
@@ -109,12 +108,7 @@ export default function Applicants() {
                           style={{ color: hasLetter ? "green" : "red" }}
                         />
                       </td>
-                      <td>
-                        <MDBIcon
-                          icon={biMonthly ? "check" : "times"}
-                          style={{ color: biMonthly ? "green" : "red" }}
-                        />
-                      </td>
+                      <td>{remarks}</td>
                       <td>
                         <button
                           className="btn btn-sm btn-primary"
