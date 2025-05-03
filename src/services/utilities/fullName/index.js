@@ -13,9 +13,10 @@ const fullName = (fullname, isComplete = false) => {
       .join("")}.`;
   }
 
-  return `${lname}, ${fname}${suffix && ` ${suffix}`}${
-    mname && ` y ${middleName}`
-  }`.replace(/^\s+|\s+$/gm, "");
+  const suffixPart = suffix && suffix !== "NONE" ? ` ${suffix}` : "";
+  const middlePart = mname ? ` y ${middleName}` : "";
+
+  return `${lname}, ${fname}${suffixPart}${middlePart}`.trim();
 };
 
 export default fullName;

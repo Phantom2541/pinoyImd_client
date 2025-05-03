@@ -41,7 +41,7 @@
     ]
   },
   {
-    "department": "accounting",
+    "department": "Accounting",
     "code": "ACC",
     "positions": [
       {
@@ -114,7 +114,7 @@
     ]
   },
   {
-    "department": "human resource",
+    "department": "Human Resource",
     "code": "HR",
     "positions": [
       {
@@ -135,7 +135,7 @@
     ]
   },
   {
-    "department": "laboratory",
+    "department": "Laboratory",
     "code": "LAB",
     "positions": [
       {
@@ -155,21 +155,31 @@
       },
       {
         "id": 38,
-        "name": "scientist",
-        "display_name": "Medical Laboratory Scientist"
+        "name": "Jr LMS",
+        "display_name": "Jr.Medical Laboratory Scientist"
       },
       {
         "id": 39,
-        "name": "chief",
-        "display_name": "Chief MLS"
+        "name": "LMS",
+        "display_name": "Medical Laboratory Scientist"
       },
       {
         "id": 40,
+        "name": "Sr LMS",
+        "display_name": "Sr.Medical Laboratory Scientist"
+      },
+      {
+        "id": 41,
+        "name": "chief MLS",
+        "display_name": "Chief MLS"
+      },
+      {
+        "id": 42,
         "name": "patho",
         "display_name": "Pathologist"
       },
       {
-        "id": 41,
+        "id": 43,
         "name": "chief patho",
         "display_name": "Chief Pathologist"
       }
@@ -180,27 +190,32 @@
     "code": "RAD",
     "positions": [
       {
-        "id": 43,
+        "id": 44,
         "name": "ass tech",
-        "display_name": "Assistant Technology"
+        "display_name": "Assistant Technician"
       },
       {
-        "id": 44,
+        "id": 45,
         "name": "sonographer",
         "display_name": "Sonographer"
       },
       {
-        "id": 45,
+        "id": 46,
         "name": "radtech",
-        "display_name": "Radiation Technology"
+        "display_name": "Radiologic Technician"
       },
       {
-        "id": 46,
+        "id": 47,
+        "name": "rxt",
+        "display_name": "Registered X-ray Technologist"
+      },
+      {
+        "id": 48,
         "name": "radiologist",
         "display_name": "Radiologist"
       },
       {
-        "id": 47,
+        "id": 49,
         "name": "chief radio",
         "display_name": "Chief Radiologist"
       }

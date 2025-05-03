@@ -9,6 +9,7 @@ import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../services/utilities";
 import Access from "./modal";
 import TableLoading from "../../../../../components/tableLoading";
+import { Policy } from "../../../../../services/fakeDb";
 
 export default function Applicants() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -59,6 +60,7 @@ export default function Applicants() {
                     Name&nbsp;
                     <MDBIcon icon="sort" title="Sort by Name" />
                   </th>
+                  <tn>Position</tn>
                   <th> Pds</th>
                   <th>Resume</th>
                   <th>Letter</th>
@@ -74,6 +76,7 @@ export default function Applicants() {
                     user,
                     employment = {},
                     file201 = {},
+                    contract,
                   } = applicant;
                   const { hasPds, hasResume, hasLetter } = file201;
                   const { biMonthly } = employment;
@@ -81,8 +84,13 @@ export default function Applicants() {
                   return (
                     <tr key={_id}>
                       <td>{index + 1}</td>
-
                       <td>{fullName(user.fullName)}</td>
+                      <td>
+                        <h5>{Policy.getPosition(contract?.designation)}</h5>
+                        <small>
+                          {Policy.getDepartment(contract?.designation)}
+                        </small>
+                      </td>
                       <td>
                         <MDBIcon
                           icon={hasPds ? "check" : "times"}
