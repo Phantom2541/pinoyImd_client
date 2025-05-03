@@ -9,14 +9,14 @@ import { DESTROY } from "../../../../../../services/redux/slices/diagnostics/lab
 
 export default function CollapseTable({ id, references, preference }) {
   const { token } = useSelector(({ auth }) => auth),
-    [showButton, setShowButton] = useState(false),
+    [showButton, setShowButton] = useState(true),
     [showModal, setShowModal] = useState(false),
     [willCreate, setWillCreate] = useState(true),
     [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
   const toggleModal = () => setShowModal(!showModal);
-
+  console.log("references", references);
   const toggleRemove = (reference) => {
     setShowButton(false);
     //console.log("reference", reference);

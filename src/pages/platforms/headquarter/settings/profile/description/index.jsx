@@ -86,7 +86,7 @@ export default function Description() {
                 label="Enter description here...."
                 value={description || company?.description}
                 onChange={({ target }) => setDescription(target.value)}
-                style={{ minHeight: "230px" }}
+                style={{ minHeight: "200px" }}
                 required
               />
               <MDBBtn
