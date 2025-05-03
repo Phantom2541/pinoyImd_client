@@ -47,9 +47,6 @@ export default function PatientCart({
   privilegeIndex,
   dealId = "",
 }) {
-  console.log("cart", cart);
-  console.log("gross", gross);
-
   return (
     <>
       <div style={{ height: "300px", overflow: "auto" }}>

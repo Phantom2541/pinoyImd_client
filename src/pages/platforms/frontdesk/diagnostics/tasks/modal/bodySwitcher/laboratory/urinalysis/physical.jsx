@@ -46,9 +46,6 @@ export default function Physical() {
   return (
     <MDBRow className="text-left">
       {physicalSelects.map(({ label, choices }, index) => {
-        console.log("choices", choices);
-        console.log("choices", pe[index]);
-
         return (
           <MDBCol md="6" key={`${label}-${index}`}>
             {/* <Select
