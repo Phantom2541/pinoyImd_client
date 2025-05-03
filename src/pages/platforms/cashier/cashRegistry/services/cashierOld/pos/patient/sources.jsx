@@ -12,8 +12,6 @@ export default function PatientSources({ didCheckout }) {
   const { collections } = useSelector(({ providers }) => providers),
     { selected } = useSelector(({ deals }) => deals);
 
-  console.log("PatientSources selected :", selected.source);
-
   return (
     <MDBCol md="6">
       <MDBSelect className="colorful-select dropdown-primary mt-0 hidden-md-down">

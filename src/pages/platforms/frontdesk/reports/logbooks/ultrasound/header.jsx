@@ -28,8 +28,6 @@ const Header = () => {
   }, [collections]);
 
   const handleMoved = (month, year) => {
-    console.log("month", month, year);
-
     // dispatch(
     //   BROWSE({
     //     token,

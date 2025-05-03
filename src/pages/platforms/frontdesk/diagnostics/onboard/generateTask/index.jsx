@@ -151,16 +151,11 @@ export default function Modal() {
           break;
         case "ECG":
           requestData.packages = bucket[0];
-          console.log("requestData", requestData);
-          console.log("bucket", bucket);
 
           await saveRequest(lowercaseKey, requestData);
           break;
 
         default:
-          console.log("lowercaseKey", lowercaseKey);
-          console.log("key", key);
-
           await saveRequest(lowercaseKey, requestData);
       }
     }

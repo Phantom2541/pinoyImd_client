@@ -10,7 +10,11 @@ export default function CollapseTable({ menu }) {
     [task, setTask] = useState({}),
     [showModal, setShowModal] = useState(false);
 
-  const toggleModal = () => setShowModal(!showModal);
+  const toggleModal = () => {
+    console.log(task);
+
+    setShowModal(!showModal);
+  };
 
   const handleLabPrint = (task) => {
     const services = collections.filter(({ id }) => task.services.includes(id));
@@ -35,10 +39,7 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
-    const { hasDone = false, remarks = "", signatories = [] } = obj,
-      { department } = Templates.findByComponentName(form);
-
-    console.log("department", department);
+    const { department } = Templates.findByComponentName(form);
 
     const _packages = Array.isArray(obj?.packages)
       ? obj.packages
@@ -50,10 +51,10 @@ export default function CollapseTable({ menu }) {
       generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
       patient: customerId,
       source: source || {},
-      hasDone,
+      hasDone: obj?.hasDone,
       category,
       id: _id,
-      remarks,
+      remarks: obj?.remarks,
       department,
       miscIndex,
     };
@@ -63,7 +64,7 @@ export default function CollapseTable({ menu }) {
         {/* remove by darrel className={`${hasDone && "table-active"}`} */}
         <td className="fw-bold">
           {capitalize(department)}{" "}
-          {hasDone && (
+          {obj?.hasDone && (
             <MDBBadge color="success" className="ml-2">
               Done
             </MDBBadge>
@@ -71,7 +72,7 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>
           {capitalize(form)}{" "}
-          {hasDone && <MDBIcon icon="check" className="ml-1" />}
+          {obj?.hasDone && <MDBIcon icon="check" className="ml-1" />}
         </td>
         <td>
           {Services.whereIn(_packages).map(({ abbreviation }, index) => (
@@ -84,7 +85,7 @@ export default function CollapseTable({ menu }) {
             </MDBBadge>
           ))}
 
-          {hasDone && <MDBIcon icon="check" className="ml-1" />}
+          {obj?.hasDone && <MDBIcon icon="check" className="ml-1" />}
         </td>
         <td>
           <MDBBtnGroup>
@@ -95,16 +96,16 @@ export default function CollapseTable({ menu }) {
                 setTask(task);
                 toggleModal();
               }}
-              color={hasDone ? "info" : "primary"}
+              color={obj?.hasDone ? "info" : "primary"}
               size="sm"
               className="py-1 px-3 m-0"
             >
-              <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
+              <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
             </MDBBtn>
-            {!!signatories.length &&
-              signatories[0] &&
-              signatories[1] &&
-              hasDone && (
+            {!!obj?.signatories.length &&
+              obj?.signatories[0] &&
+              obj?.signatories[1] &&
+              obj?.hasDone && (
                 <MDBBtn
                   rounded
                   onClick={() => {
@@ -113,7 +114,7 @@ export default function CollapseTable({ menu }) {
                       branchId: activePlatform?.branch,
                       referral: physicianId || {},
                       services: _packages,
-                      signatories,
+                      signatories: obj?.signatories,
                       isPrint: true,
                     };
                     activePlatform.department === "laboratory"
@@ -139,11 +140,8 @@ export default function CollapseTable({ menu }) {
     source,
     category,
     _id,
-    forms,
     diagnostics = [],
   } = menu;
-
-  console.log("forms:", forms);
 
   return (
     <>
@@ -160,8 +158,6 @@ export default function CollapseTable({ menu }) {
         <tbody>
           {diagnostics &&
             diagnostics?.map((diagnostic, index) => {
-              console.log("diagnostic :", diagnostic);
-              // console.log("results :", results);
               // const result = results?.[form.key.toLowerCase()];
               // if (!result)
               //   return (

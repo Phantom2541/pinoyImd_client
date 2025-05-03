@@ -81,8 +81,6 @@ export default function Modal() {
       ...form,
       [key]: value,
     });
-
-    console.log("Form", form);
   };
 
   return (

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTypography } from "mdbreact";
 import Collapse from "./collapse";
-import { Services, Templates } from "../../../../../services/fakeDb";
 import { UPDATE } from "../../../../../services/redux/slices/commerce/pos/services/deals.js";
 
 export default function Body() {
@@ -21,11 +20,7 @@ export default function Body() {
 
       for (const task of collections) {
         const { _id, forms } = task;
-        console.log("forms", forms);
-        console.log("_id", _id);
-
         const updatedForms = normalizeForms(forms);
-        console.log("updatedForms", updatedForms);
 
         const shouldUpdate =
           !forms ||
@@ -43,7 +38,6 @@ export default function Body() {
             updatedTasks.push(task);
           }
         } else {
-          console.log("Existing correct forms for task:", forms);
           updatedTasks.push(task);
         }
       }
@@ -57,9 +51,6 @@ export default function Body() {
   const normalizeForms = (formsInput) => {
     const normalizedForms = {};
     const forms = JSON.parse(JSON.stringify(formsInput)); // clone to avoid Proxy issues
-
-    const _form = Templates.getComponentIndex(forms);
-    console.log("_form", _form);
 
     if (Array.isArray(forms)) {
       if (forms.length > 0) {
@@ -79,7 +70,6 @@ export default function Body() {
       });
     }
 
-    console.log("Normalized Forms:", normalizedForms);
     return normalizedForms;
   };
 

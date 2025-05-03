@@ -4,8 +4,6 @@ import { MDBTable } from "mdbreact";
 // import { Services } from "../../..services/fakeDb";
 
 export default function Drugtest({ sale }) {
-  //console.log("sale", sale);
-
   // const {
   //   category,
   //   branchId,
@@ -17,7 +15,6 @@ export default function Drugtest({ sale }) {
   //   remarks,
   //   signatories,
   // } = task;
-  const { updatedAt, customerId, referral, category, cart = [] } = sale;
   return (
     <>
       <Header />

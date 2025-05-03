@@ -33,7 +33,6 @@ export default function Census() {
     [breakdown, setBreakdown] = useState({}),
     [activeTab, setActiveTab] = useState("menus"),
     dispatch = useDispatch();
-  console.log("payments", payments);
 
   useEffect(() => {
     let isMounted = true;

@@ -76,7 +76,6 @@ const Body = ({ setOutSource, outSource }) => {
     const data = e.dataTransfer.getData("application/json");
     if (!data) return;
     const { item, fromList } = JSON.parse(data);
-    console.log("toList", toList);
     if (fromList === toList) return;
     if (toList === "outsource" || toList === "official reading") {
       dispatch(SetOUTSOURCE(item));

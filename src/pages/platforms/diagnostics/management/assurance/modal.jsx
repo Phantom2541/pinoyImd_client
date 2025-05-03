@@ -79,13 +79,11 @@ export default function Modal() {
   };
 
   // Handle change sa inputs
-  const handleChange = (key, value) => {
+  const handleChange = (key, value) =>
     setForm({
       ...form,
       [key]: Number(value),
     });
-    console.log("Form", form);
-  };
 
   return (
     <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
