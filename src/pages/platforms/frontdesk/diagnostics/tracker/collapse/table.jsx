@@ -3,7 +3,7 @@ import { capitalize } from "./../../../../../../services/utilities";
 import { Services, Templates } from "./../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
-
+import Modal from "./modal";
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
@@ -63,17 +63,14 @@ export default function CollapseTable({ menu }) {
       <tr key={task.key}>
         {/* remove by darrel className={`${hasDone && "table-active"}`} */}
         <td className="fw-bold">
-          {capitalize(department)}{" "}
+          {capitalize(department)}
           {obj?.hasDone && (
             <MDBBadge color="success" className="ml-2">
               Done
             </MDBBadge>
           )}
         </td>
-        <td>
-          {capitalize(form)}{" "}
-          {obj?.hasDone && <MDBIcon icon="check" className="ml-1" />}
-        </td>
+        <td>{capitalize(form)}</td>
         <td>
           {Services.whereIn(_packages).map(({ abbreviation }, index) => (
             <MDBBadge
@@ -84,24 +81,24 @@ export default function CollapseTable({ menu }) {
               {abbreviation}
             </MDBBadge>
           ))}
-
-          {obj?.hasDone && <MDBIcon icon="check" className="ml-1" />}
         </td>
         <td>
           <MDBBtnGroup>
-            <MDBBtn
-              title="Modal"
-              rounded
-              onClick={() => {
-                setTask(task);
-                toggleModal();
-              }}
-              color={obj?.hasDone ? "info" : "primary"}
-              size="sm"
-              className="py-1 px-3 m-0"
-            >
-              <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
-            </MDBBtn>
+            {menu?.branchId === activePlatform?.branchId && (
+              <MDBBtn
+                title="Modal"
+                rounded
+                onClick={() => {
+                  setTask(task);
+                  toggleModal();
+                }}
+                color={obj?.hasDone ? "info" : "primary"}
+                size="sm"
+                className="py-1 px-3 m-0"
+              >
+                <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
+              </MDBBtn>
+            )}
             {!!obj?.signatories.length &&
               obj?.signatories[0] &&
               obj?.signatories[1] &&
@@ -152,20 +149,11 @@ export default function CollapseTable({ menu }) {
             <th>Template</th>
             <th>Services</th>
             <th>Action </th>
-            <th />
           </tr>
         </thead>
         <tbody>
           {diagnostics &&
             diagnostics?.map((diagnostic, index) => {
-              // const result = results?.[form.key.toLowerCase()];
-              // if (!result)
-              //   return (
-              //     <tr key={task.key}>
-              //       <td colSpan={4}>Empty Test</td>
-              //     </tr>
-              //   );
-
               if (Array.isArray(diagnostic.result))
                 return diagnostic.result.map((obj, i) =>
                   handleIndividual(diagnostic.key, obj, index + i, i)
@@ -179,6 +167,7 @@ export default function CollapseTable({ menu }) {
             })}
         </tbody>
       </MDBTable>
+      <Modal toggle={toggleModal} title="Update Laboratory Task" />
     </>
   );
 }

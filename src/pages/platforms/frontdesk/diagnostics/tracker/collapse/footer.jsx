@@ -5,22 +5,6 @@ import React from "react";
 
 export default function TaskFooter({ task }) {
   const { _id } = task;
-  // const dispatch = useDispatch();
-  // const { token } = useSelector(({ auth }) => auth);
-
-  // const markAsCompleted = () => {
-  //   dispatch(
-  //     REFORM({
-  //       token,
-  //       data: {
-  //         _id,
-  //         completed: true,
-  //         completedAt: new Date().toISOString(),
-  //       },
-  //     })
-  //   );
-  //   alert("Task marked as completed!");
-  // };
 
   return (
     <div
