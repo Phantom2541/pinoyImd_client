@@ -30,6 +30,7 @@ const Tables = () => {
       view = "all",
     } = useSelector(({ deals }) => deals),
     { collections: providers } = useSelector(({ providers }) => providers),
+    [data, setData] = useState([]),
     [selected, setSelected] = useState({}),
     [didHoverID, setDidHoverID] = useState(-1),
     { addToast } = useToasts(),
@@ -41,6 +42,12 @@ const Tables = () => {
       setSelected({});
     }
   }, [dispatch, formSubmitted, isSuccess]);
+
+  useEffect(() => {
+    if (collections.length > 0) {
+      setData(collections);
+    }
+  }, [collections]);
   //Set fetched data for mapping
   useEffect(() => {
     if (!!collections.length) {
@@ -107,7 +114,7 @@ const Tables = () => {
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = collections.slice(startIndex, endIndex);
+  const paginatedData = data.slice(startIndex, endIndex);
 
   return (
     <>

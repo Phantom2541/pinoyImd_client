@@ -12,7 +12,7 @@ const Header = ({ payment, index, activeId }) => {
       {Statements.getName(fsId)} {amount}
       <small>
         {amount}
-        <isadsa
+        <span
           style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
           className="fa fa-angle-down transition-all ml-2"
         />

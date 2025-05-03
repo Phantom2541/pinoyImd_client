@@ -46,7 +46,7 @@ const Header = () => {
       let gross = 0;
       collections.forEach((collection) => {
         if (!collection?.collector && collection.gross) {
-          gross += collection?.closing.sum;
+          gross += collection?.closing.sum - collection.opening.sum;
         }
       });
       setCoh(gross);
@@ -63,7 +63,10 @@ const Header = () => {
           <span className="white-text mx-3 text-nowrap mt-0">
             Remittances :{" "}
             {coh > 0 && (
-              <span style={{ color: "green" }}> COH:({currency(coh)})</span>
+              <span style={{ color: "green" }} title="Unremitted sales">
+                {" "}
+                COH:({currency(coh)})
+              </span>
             )}
           </span>
         </div>

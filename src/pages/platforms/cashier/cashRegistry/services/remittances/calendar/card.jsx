@@ -135,8 +135,9 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                         whiteSpace: "nowrap",
                         color: isRemitted ? "inherit" : "green", // 🟢 Green only for COH, regular if remitted
                       }}
+                      title="Sales + Floating Cash - Expenses"
                     >
-                      {isRemitted ? "Remitted" : "GROSS"}: {currency(net)}
+                      {isRemitted ? "Remitted" : "COH"}: {currency(net)}
                     </h6>
                   </div>
                 </div>
