@@ -3,7 +3,7 @@ import { capitalize } from "./../../../../../../services/utilities";
 import { Services, Templates } from "./../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
-import Modal from "./modal";
+// import Modal from "./modal";
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
@@ -17,6 +17,8 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleLabPrint = (task) => {
+    console.log(task);
+
     const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
 
@@ -58,6 +60,7 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
+    console.log("menu", menu);
 
     return (
       <tr key={task.key}>
@@ -108,7 +111,7 @@ export default function CollapseTable({ menu }) {
                   onClick={() => {
                     const _task = {
                       ...task,
-                      branchId: activePlatform?.branch,
+                      branchId: menu?.branchId,
                       referral: physicianId || {},
                       services: _packages,
                       signatories: obj?.signatories,
@@ -167,7 +170,7 @@ export default function CollapseTable({ menu }) {
             })}
         </tbody>
       </MDBTable>
-      <Modal toggle={toggleModal} title="Update Laboratory Task" />
+      {/* onProcess <Modal toggle={toggleModal} title="Update Laboratory Task" /> */}
     </>
   );
 }
