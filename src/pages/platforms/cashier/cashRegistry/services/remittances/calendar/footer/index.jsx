@@ -25,7 +25,7 @@ const Footer = ({ num, item = {}, deals }) => {
     dispatch(SetSELECTED({ key: "census", value: item, deals }));
   const handleClose = () =>
     dispatch(SetSELECTED({ key: "close", value: item }));
-  const { opening, gross, collector } = item;
+  const { opening, sales: gross, collector } = item;
 
   return (
     <MDBBtnGroup className="sales-card-footer w-100">

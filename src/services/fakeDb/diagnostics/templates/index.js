@@ -27,18 +27,10 @@ const Templates = {
    * @returns {Number} Index of the component in the department
    */
   getComponentIndex: (component, key = "LAB") => {
-    console.log("component", component);
-
     const { components } = collections.find(
       ({ department }) => department === key
     );
-
-    console.log("Looking for component:", component);
-    console.log("Available components:", components);
-
     const index = components.findIndex((c) => c.startsWith(component));
-
-    console.log("Index found:", index);
     return index;
   },
 
@@ -48,8 +40,6 @@ const Templates = {
       console.warn(`Department "${key}" not found in templates`);
       return undefined;
     }
-    console.log("department", department);
-
     const name = department.components[component];
     if (!name) {
       console.warn(
@@ -57,7 +47,6 @@ const Templates = {
       );
       return undefined;
     }
-    console.log("name", name);
 
     return name;
   },

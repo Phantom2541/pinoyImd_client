@@ -15,7 +15,6 @@ export default function Parasitology({ fontSize, task }) {
     [color, consistency] = pe || [null, null],
     [pH, occult] = ce || [null, null],
     [pus, red, bac, yeast, fat] = me || [null, null];
-  //console.log("occult", occult);
   return (
     <MDBTable bordered responsive className="mb-0">
       <thead>
@@ -26,7 +25,6 @@ export default function Parasitology({ fontSize, task }) {
           <th style={{ ...style, fontSize: "1.2rem" }} className="py-0 fw-bold">
             Result
           </th>
-          {/* <th className="py-0" /> */}
         </tr>
       </thead>
       <tbody>

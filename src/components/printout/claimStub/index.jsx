@@ -89,7 +89,6 @@ const Stub = ({ sale }) => {
         <tbody>
           {cart?.map((menu, index) => {
             const { description, abbreviation, packages = [], up } = menu;
-            console.log("menus", sale);
 
             return (
               <tr key={`menu-${index}`}>

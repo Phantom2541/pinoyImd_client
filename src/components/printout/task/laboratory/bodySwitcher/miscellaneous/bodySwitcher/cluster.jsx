@@ -15,8 +15,6 @@ export default function Cluster({ task, fontSize }) {
     .filter((key) => test.includes(Number(key)))
     .map((key) => Services.find(key));
 
-  console.log("results", results);
-
   return (
     <div className="pl-5 mb-5" style={{ fontSize: `${fontSize}rem` }}>
       <MDBCol>

@@ -41,8 +41,8 @@ export default function Calendar() {
               num={num}
               txt={txt}
               item={item}
-              isLoading={isLoading}
               deals={_deals}
+              isLoading={isLoading}
             />
           );
         })}

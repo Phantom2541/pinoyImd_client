@@ -2,7 +2,6 @@ import React from "react";
 import { MDBCard, MDBCollapse } from "mdbreact";
 import TaskHeader from "./header";
 import TaskBody from "./body";
-import TaskFooter from "./footer";
 
 export default function TasksCollapse({
   task,
@@ -15,7 +14,6 @@ export default function TasksCollapse({
 }) {
   const { _id } = task;
 
-  
   return (
     <MDBCard style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}>
       <TaskHeader
@@ -27,10 +25,9 @@ export default function TasksCollapse({
         setActiveCollapse={setActiveCollapse}
         isActive={isActive}
       />
-        <MDBCollapse id={`collapse-${_id}`} isOpen={isActive}>
-          <TaskBody task={task} />
-          <TaskFooter task={task} />
-        </MDBCollapse>
+      <MDBCollapse id={`collapse-${_id}`} isOpen={isActive}>
+        <TaskBody task={task} />
+      </MDBCollapse>
     </MDBCard>
   );
 }

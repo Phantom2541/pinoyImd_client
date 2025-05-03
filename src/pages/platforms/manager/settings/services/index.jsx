@@ -8,7 +8,7 @@ import Pagination from "../../../../../components/pagination";
 import ServiceCollapse from "./collapse";
 import Header from "./header";
 
-export default function ServicesComponent() {
+const ServicesComponent = () => {
   const { maxPage } = useSelector(({ auth }) => auth),
     { message, isSuccess, isLoading, filtered } = useSelector(
       ({ preferences }) => preferences
@@ -60,4 +60,6 @@ export default function ServicesComponent() {
       </MDBCardBody>
     </MDBCard>
   );
-}
+};
+
+export default ServicesComponent;

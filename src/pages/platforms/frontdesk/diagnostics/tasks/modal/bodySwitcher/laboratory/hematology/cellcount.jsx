@@ -1,39 +1,34 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  SetPARAMS,
+  SetTASK,
+} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import { Cellcount as CellCount } from "./../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
 
 export default function Cellcount() {
-  const {task, selected} = useSelector(({validator}) => validator),
+  const { task, selected } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
-  const {  cc = [] } = task,
+  const { cc = [] } = task,
     { Preferences, Abbreviation, Title } = CellCount;
 
   const handleChange = (e) => {
-    console.log("taskssadasdasdas", task);
-    
     const { name, value } = e.target,
       _name = Number(name),
       // _value = parseFloat(value),
       _cells = [...cc];
-
     // cell count float
     _cells[_name] = value;
-
     if (!_name) {
       _cells[1] = parseFloat((Number(value) * 340).toFixed(0));
       _cells[2] = parseFloat((Number(value) * 11).toFixed(2));
     }
-
     while (_cells.length < 4) {
       _cells.push(0);
     }
-    console.log("cc",task.cc);
-    console.log("_cells",_cells);
-    dispatch(SetTASK({form: task?.form, task:{ ...task, cc: _cells }}));
-    
+    dispatch(SetTASK({ form: task?.form, task: { ...task, cc: _cells } }));
     dispatch(SetPARAMS({ key: "cc", value: _cells }));
   };
 

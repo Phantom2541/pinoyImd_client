@@ -27,10 +27,10 @@ export default function CompanyCard({ company }) {
       >
         <MDBView waves cascade hover rounded className="custom-mdbview mx-auto">
           <img
-            src={`${ENDPOINT}/public/companies/${company?.name}/logo.jpg`}
+            src={`${ENDPOINT}/public/companies/${company?.name}/logo.png`}
             alt={company?.name}
             className="mx-auto bg-transparent"
-            style={{ height: "8rem", width: "100%" }}
+            style={{ height: "7rem", width: "90%" }}
             onError={(e) => (e.target.src = PresetUser)}
           />
           <MDBMask overlay="white-slight" tag="a" />
@@ -80,6 +80,9 @@ export default function CompanyCard({ company }) {
           >
             {company?.name}
           </h4>
+          <h6 style={{ marginTop: "-0.4rem" }}>
+            "{company.tagline || "Your Health, Our Priority."}"
+          </h6>
           <MDBCardText className="ellipsis">
             {company.description ||
               "is a modern, patient-centered diagnostic facility dedicated to providing accurate, timely, and affordable laboratory services. Established with the vision of advancing healthcare diagnostics in the community, Smartcare Laboratory combines expert medical technologists with state-of-the-art equipment to deliver reliable results that healthcare providers and patients can trust. From routine tests to specialized diagnostics, our commitment is to uphold the highest standards in quality, safety, and efficiency. At Smartcare, we believe that better diagnostics lead to better decisions—and ultimately, better care."}
