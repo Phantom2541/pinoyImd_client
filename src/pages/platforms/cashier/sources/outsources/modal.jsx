@@ -35,7 +35,7 @@ export default function Modal() {
         ...selected,
         userId: auth._id,
         clients: activePlatform.branchId,
-        category: "outsources",
+        category: "outsource",
       });
     }
   }, [showModal, selected, auth, activePlatform]);
@@ -99,7 +99,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Supplier
+        {willCreate ? "Create" : "Update"} Outsource
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
@@ -131,13 +131,6 @@ export default function Modal() {
             required
             onChange={(e) => handleChange("displayname", e.target.value)}
           />
-
-          {/* <MDBInput
-            label="Number"
-            type="string"
-            value={form?.number}
-            onChange={(e) => handleChange("number", e.target.value)}
-          /> */}
           <MDBInput
             label="A.O."
             type="string"

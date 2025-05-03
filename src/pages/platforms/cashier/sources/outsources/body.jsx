@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup, MDBBadge } from "mdbreact";
+import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup } from "mdbreact";
 import { billingAddress, fullName } from "../../../../../services/utilities";
-import { Input } from "../../../../../components/customizable";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
@@ -15,7 +14,7 @@ const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
     { filtered, activePage, maxPage, isSuccess, formSubmitted, showModal } =
       useSelector(({ providers }) => providers),
-    [soloUpdate, setSoloUpdate] = useState(false),
+    [soloUpdate, SetSoloUpdate] = useState(false),
     [selected, setSelected] = useState(-1),
     dispatch = useDispatch();
 
@@ -45,24 +44,12 @@ const Body = () => {
     });
   };
 
-  const handleUpdate = () => {
-    if (selected && selected.newAbbreviation !== selected.abbr) {
-      const { _id, abbr } = selected;
-      dispatch(
-        UPDATE({
-          token,
-          data: { _id, abbr },
-        })
-      );
-    }
-  };
-
   const handleChange = (provider) => {
     setSelected({
       ...provider,
       abbrOld: provider?.abbr || "", // Ensure it has a default value
     });
-    setSoloUpdate(true);
+    // setSoloUpdate(true);
   };
 
   const handleAbbreviationChange = (key, value) =>
@@ -90,13 +77,13 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((provider, index) => {
-          const { vendors, membership, ao } = provider,
+          const { vendors = {}, membership, ao } = provider,
             { displayname, address } = vendors;
           return (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{displayname}</td>
-              <td>{fullName(ao.fullName)}</td>
+              <td>{fullName(ao?.fullName)}</td>
               <td>{membership}</td>
               <td>{billingAddress(address)}</td>
 
