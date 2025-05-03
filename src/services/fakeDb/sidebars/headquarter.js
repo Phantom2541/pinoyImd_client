@@ -1,5 +1,5 @@
 import {
-  Equipments as Equipment,
+  Equipments,
   Heads,
   Physicians,
   Procurments as Procurement,
@@ -226,7 +226,7 @@ const headquarter = [
             name: "Equipment",
             path: "/equipments",
             icon: "cpu",
-            component: Equipment,
+            component: Equipments,
           },
           {
             name: "Procurement",
