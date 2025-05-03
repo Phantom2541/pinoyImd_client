@@ -81,12 +81,12 @@ export default function CollapseTable({
   const resetData = useCallback(() => {
     const deptCode = employment?.department;
     setFilteredPositions(Policy.getPosition(deptCode));
+    setDep(Policy.getDepartment(employment?.designation));
     reset({
       employmentHor: employment?.hos || 0,
       employmentSoe: employment?.soe || "",
       employmentPc: employment?.pc || 0,
       employmentDesignation: employment?.designation || "",
-      employmentDepartment: employment?.department || "",
       rateMonthly: rate?.monthly || 0,
       rateCola: rate?.cola || 0,
       rateDaily: rate?.daily || 0,
