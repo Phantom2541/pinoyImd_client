@@ -91,7 +91,7 @@ export default function AccessModal() {
   }, [handleSetRoles, show]);
 
   const handleSubmit = () => {
-    const { _id, branch } = selected;
+    const { branch } = selected;
     dispatch(
       UPDATE_ACCESS({
         data: { accessChanges: { added: clusters }, staffID: selected._id },

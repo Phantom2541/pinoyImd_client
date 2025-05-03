@@ -7,20 +7,22 @@ import {
   SetClusters,
   SetCollections,
 } from "../../../services/redux/slices/reusable/dragDrop";
+
 const DragDrop = () => {
-  const { clusters, collections: c } = useSelector(({ dragDrop }) => dragDrop),
-    [hasDrag, setHasDrag] = useState(false),
-    [collections, setCollections] = useState([]),
-    [disabled, setDisabled] = useState(false),
-    [removeID, setRemoveID] = useState(-1),
-    [removeBy, setRemoveBy] = useState(""),
-    [addID, setAddID] = useState(-1),
-    dispatch = useDispatch();
+  const { clusters, collections: c } = useSelector(({ dragDrop }) => dragDrop);
+  const [hasDrag, setHasDrag] = useState(false);
+  const [collections, setCollections] = useState([]);
+  const [disabled, setDisabled] = useState(false);
+  const [removeID, setRemoveID] = useState(-1);
+  const [removeBy, setRemoveBy] = useState("");
+  const [addID, setAddID] = useState(-1);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setCollections(c);
     console.log("running", c);
   }, [c]);
+
   const getState = useCallback(
     (stateName) => {
       const _collections =
@@ -34,16 +36,12 @@ const DragDrop = () => {
   const handleDragStart = (e, role, index, title) => {
     console.log("title", title);
     const { collections } = getState(title);
+
     setHasDrag(true);
-    // setRemoveID(role._id);
-    // setRemoveBy(title);
     setDisabled(true);
     setTimeout(() => {
       setRemoveID(-1);
       setDisabled(false);
-
-      // _collections.splice(index, 1);
-      // dispatch(setter(_collections));
     }, 200);
 
     e.dataTransfer.setData(
@@ -51,7 +49,6 @@ const DragDrop = () => {
       JSON.stringify({
         role,
         dragBy: title,
-        removeIndex: index,
         collections,
       })
     );
@@ -78,7 +75,6 @@ const DragDrop = () => {
 
     document.body.appendChild(dragPreview);
 
-    // Set as drag image
     e.dataTransfer.setDragImage(
       dragPreview,
       dragPreview.clientWidth / 2,
@@ -95,14 +91,19 @@ const DragDrop = () => {
   const handleDrop = (event, dropTo = "List") => {
     event.preventDefault();
     const data = event.dataTransfer.getData("application/json");
-    if (!data) return "unknown role";
-    var { role, dragBy } = JSON.parse(data);
-    var { collections: dynamicCollections, setter } = getState(dropTo);
-    console.log("drag by", dragBy);
-    console.log("dropTo to", dropTo);
-    if (dragBy === dropTo) return console.log("same drag and drop");
+    if (!data) return;
+
+    const { role, dragBy } = JSON.parse(data);
+    const { collections: dynamicCollections, setter } = getState(dropTo);
+
+    if (dragBy === dropTo) {
+      console.log("Same drag and drop");
+      return;
+    }
+
     setRemoveBy("List");
     setRemoveID(role._id);
+
     setTimeout(() => {
       const _collections = [...collections];
       const index = _collections.findIndex(({ _id }) => _id === role._id);
