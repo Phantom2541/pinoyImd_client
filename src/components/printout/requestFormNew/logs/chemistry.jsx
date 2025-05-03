@@ -3,8 +3,6 @@ import { Services } from "../../../../services/fakeDb";
 import { MDBRow, MDBCol } from "mdbreact";
 
 const Chemistry = ({ data = {} }) => {
-  console.log("data:", data);
-
   // Convert object keys to an array (assuming keys are test names)
   const testList = Object.keys(data);
 

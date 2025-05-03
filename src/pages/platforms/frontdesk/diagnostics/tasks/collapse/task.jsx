@@ -68,10 +68,7 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     remarks,
   };
 
-  const handleEntry = () => {
-    console.log("clicked entry");
-    dispatch(SetTASK({ task }));
-  };
+  const handleEntry = () => dispatch(SetTASK({ task }));
 
   const isEmptyEntry = _packages.length === 0;
 

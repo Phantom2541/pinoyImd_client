@@ -3,16 +3,22 @@ import { capitalize } from "./../../../../../../services/utilities";
 import { Services, Templates } from "./../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
-
+// import Modal from "./modal";
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     [task, setTask] = useState({}),
     [showModal, setShowModal] = useState(false);
 
-  const toggleModal = () => setShowModal(!showModal);
+  const toggleModal = () => {
+    console.log(task);
+
+    setShowModal(!showModal);
+  };
 
   const handleLabPrint = (task) => {
+    console.log(task);
+
     const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
 
@@ -35,10 +41,7 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
-    const { hasDone = false, remarks = "", signatories = [] } = obj,
-      { department } = Templates.findByComponentName(form);
-
-    console.log("department", department);
+    const { department } = Templates.findByComponentName(form);
 
     const _packages = Array.isArray(obj?.packages)
       ? obj.packages
@@ -50,29 +53,27 @@ export default function CollapseTable({ menu }) {
       generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
       patient: customerId,
       source: source || {},
-      hasDone,
+      hasDone: obj?.hasDone,
       category,
       id: _id,
-      remarks,
+      remarks: obj?.remarks,
       department,
       miscIndex,
     };
+    console.log("menu", menu);
 
     return (
       <tr key={task.key}>
         {/* remove by darrel className={`${hasDone && "table-active"}`} */}
         <td className="fw-bold">
-          {capitalize(department)}{" "}
-          {hasDone && (
+          {capitalize(department)}
+          {obj?.hasDone && (
             <MDBBadge color="success" className="ml-2">
               Done
             </MDBBadge>
           )}
         </td>
-        <td>
-          {capitalize(form)}{" "}
-          {hasDone && <MDBIcon icon="check" className="ml-1" />}
-        </td>
+        <td>{capitalize(form)}</td>
         <td>
           {Services.whereIn(_packages).map(({ abbreviation }, index) => (
             <MDBBadge
@@ -83,37 +84,37 @@ export default function CollapseTable({ menu }) {
               {abbreviation}
             </MDBBadge>
           ))}
-
-          {hasDone && <MDBIcon icon="check" className="ml-1" />}
         </td>
         <td>
           <MDBBtnGroup>
-            <MDBBtn
-              title="Modal"
-              rounded
-              onClick={() => {
-                setTask(task);
-                toggleModal();
-              }}
-              color={hasDone ? "info" : "primary"}
-              size="sm"
-              className="py-1 px-3 m-0"
-            >
-              <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
-            </MDBBtn>
-            {!!signatories.length &&
-              signatories[0] &&
-              signatories[1] &&
-              hasDone && (
+            {menu?.branchId === activePlatform?.branchId && (
+              <MDBBtn
+                title="Modal"
+                rounded
+                onClick={() => {
+                  setTask(task);
+                  toggleModal();
+                }}
+                color={obj?.hasDone ? "info" : "primary"}
+                size="sm"
+                className="py-1 px-3 m-0"
+              >
+                <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
+              </MDBBtn>
+            )}
+            {!!obj?.signatories.length &&
+              obj?.signatories[0] &&
+              obj?.signatories[1] &&
+              obj?.hasDone && (
                 <MDBBtn
                   rounded
                   onClick={() => {
                     const _task = {
                       ...task,
-                      branchId: activePlatform?.branch,
+                      branchId: menu?.branchId,
                       referral: physicianId || {},
                       services: _packages,
-                      signatories,
+                      signatories: obj?.signatories,
                       isPrint: true,
                     };
                     activePlatform.department === "laboratory"
@@ -139,11 +140,8 @@ export default function CollapseTable({ menu }) {
     source,
     category,
     _id,
-    forms,
     diagnostics = [],
   } = menu;
-
-  console.log("forms:", forms);
 
   return (
     <>
@@ -154,22 +152,11 @@ export default function CollapseTable({ menu }) {
             <th>Template</th>
             <th>Services</th>
             <th>Action </th>
-            <th />
           </tr>
         </thead>
         <tbody>
           {diagnostics &&
             diagnostics?.map((diagnostic, index) => {
-              console.log("diagnostic :", diagnostic);
-              // console.log("results :", results);
-              // const result = results?.[form.key.toLowerCase()];
-              // if (!result)
-              //   return (
-              //     <tr key={task.key}>
-              //       <td colSpan={4}>Empty Test</td>
-              //     </tr>
-              //   );
-
               if (Array.isArray(diagnostic.result))
                 return diagnostic.result.map((obj, i) =>
                   handleIndividual(diagnostic.key, obj, index + i, i)
@@ -183,6 +170,7 @@ export default function CollapseTable({ menu }) {
             })}
         </tbody>
       </MDBTable>
+      {/* onProcess <Modal toggle={toggleModal} title="Update Laboratory Task" /> */}
     </>
   );
 }

@@ -18,8 +18,6 @@ const Footer = () => {
   }, [dispatch, maxPage]);
 
   const handlePageChange = (action) => {
-    console.log("action", action);
-
     const newPage = activePage + (action ? 1 : -1);
     if (newPage >= 1 && newPage <= totalPages) {
       dispatch(SetActivePAGE(newPage));

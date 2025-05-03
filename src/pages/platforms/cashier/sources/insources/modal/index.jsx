@@ -18,7 +18,6 @@ import {
 } from "../../../../../../services/redux/slices/assets/providers";
 import { Select } from "../../../../../../components/customizable";
 import Search from "../../../../../../components/searchables/ao";
-import Swal from "sweetalert2";
 import Checkbox from "./checkbox";
 
 // declare your expected items
@@ -61,7 +60,6 @@ export default function Modal() {
     if (!ao) {
       delete form.ao;
     }
-    console.log("form", form);
 
     dispatch(
       SAVE({
@@ -78,16 +76,11 @@ export default function Modal() {
   };
   const categoryHasChecked = (category) => form.category.includes(category);
 
-  const handleChecked = (newCategory) => {
-    console.log("newCategory", newCategory);
-
+  const handleChecked = (newCategory) =>
     setForm((prev) => ({
       ...prev,
       category: newCategory,
     }));
-  };
-
-  console.log("form", form);
 
   // use for direct values like strings and numbers
   const { name = "", displayname = "" } = selected || {};

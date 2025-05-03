@@ -15,8 +15,6 @@ const Tables = () => {
     dispatch = useDispatch(),
     [hoveredRow, setHoveredRow] = useState(null); // Track hovered row index
 
-  console.log("Tables filtered", filtered);
-
   /**
    * Pagination: Calculate the start and end index for the current page
    */

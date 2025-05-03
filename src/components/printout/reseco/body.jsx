@@ -9,7 +9,6 @@ const Body = () => {
   useEffect(() => {
     setResecos(JSON.parse(localStorage.getItem("resecos")));
   }, []);
-  console.log("resecos", resecos);
 
   return (
     <MDBTable responsive hover bordered>
@@ -27,8 +26,6 @@ const Body = () => {
           const { deals, date } = item;
           const _deals = deals.map((deal, i) => {
             const { customerId, amount, cart, physicianId } = deal;
-            console.log("cart", cart);
-
             return (
               <tr key={index}>
                 <td key={index}>{i + 1}</td>

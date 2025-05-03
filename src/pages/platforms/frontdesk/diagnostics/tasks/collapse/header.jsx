@@ -35,9 +35,13 @@ const Header = ({ deal, index }) => {
       )}
       {/* on the right corner */}
       <MDBBadge
-        onClick={() =>
-          history.push(`/transactions/reports?patient=${customerId?._id}`)
-        }
+        onClick={() => {
+          localStorage.setItem(`customerId`, JSON.stringify(customerId));
+
+          history.push(
+            `/frontdesk/diagnostics/reports?patient=${customerId?._id}`
+          );
+        }}
         color="info"
         className="px-2"
       >

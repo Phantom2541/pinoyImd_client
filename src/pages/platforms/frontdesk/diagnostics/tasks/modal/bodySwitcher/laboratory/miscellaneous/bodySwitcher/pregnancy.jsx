@@ -10,7 +10,6 @@ import { Services } from "./../../../../../../../../../../services/fakeDb";
 export default function Pregnancy({ task, setTask }) {
   const { results = false } = task;
 
-  console.log("results", task);
   return (
     <>
       {Object.entries(task.packages).map(([key, value], index) => {

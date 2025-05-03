@@ -35,8 +35,6 @@ export default function CashierPatient({
     _id,
   } = selected?.customerId || {};
 
-  console.log("CashierPatient selected", selected);
-
   return (
     <MDBCol md="5" className={didCheckout ? "pr-0 offset-md-2" : "pl-0"}>
       <MDBCard className="h-100">

@@ -10,7 +10,7 @@ import {
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, filtered, month, year, isSuccess } = useSelector(
+    { collections, filtered, month, year } = useSelector(
       ({ billings }) => billings
     ),
     { collections: payables } = useSelector(({ payables }) => payables),
@@ -62,9 +62,6 @@ const Header = () => {
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, month, year]);
-
-  console.log("isSuccess", isSuccess);
-
   const handleVendors = (value) => {
     const vendor = suppliers.find(({ _id }) => _id === value);
     dispatch(SetFilterByOUTSOURCE({ value, vendor }));

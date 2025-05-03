@@ -133,9 +133,6 @@ export default function Payrolls() {
                   }
                   return null;
                 });
-                console.log("akinsenas", akinsenas);
-                console.log("katapusan", katapusan);
-
                 return (
                   <tr key={`payroll-${index + 1}`}>
                     <td>{index + 1}.</td>

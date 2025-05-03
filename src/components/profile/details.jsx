@@ -16,7 +16,6 @@ export default function Details({
   curraddress,
   setCurraddress,
 }) {
-  console.log("form", form);
   return (
     <form onSubmit={handleSubmit}>
       <MDBRow>

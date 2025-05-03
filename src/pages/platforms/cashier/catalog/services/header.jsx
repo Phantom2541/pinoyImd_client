@@ -24,13 +24,8 @@ const Header = () => {
 
   const handleTemplate = (template) => dispatch(SetCLUSTER(template));
 
-  const handleChange = (service) => {
-    console.log("service", service);
+  const handleChange = (service) => dispatch(SetFILTERED(service));
 
-    dispatch(SetFILTERED(service));
-  };
-
-  console.log("cluster", cluster);
   return (
     <MDBView
       cascade

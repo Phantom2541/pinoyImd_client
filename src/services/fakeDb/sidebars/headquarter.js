@@ -173,38 +173,94 @@ const headquarter = [
     icon: "cogs",
     children: [
       {
-        name: "Equipments",
-        path: "/equipments",
-        component: Equipments,
+        name: "About Us",
+        icon: "tv",
+        path: "/aboutus",
+        children: [
+          {
+            name: "Banner",
+            path: "/banners",
+            component: Banner,
+          },
+          {
+            name: "Logos",
+            path: "/logos",
+            component: Logo,
+          },
+          {
+            name: "tagline",
+            path: "/taglines",
+            component: Logo,
+          },
+          {
+            name: "Description",
+            path: "/descriptions",
+            component: Logo,
+          },
+        ],
       },
       {
-        name: "Procurement",
-        path: "/procurement",
-        component: Procurments,
+        name: "Sources",
+        icon: "tv",
+        path: "/sources",
+        children: [
+          {
+            name: "Outsourcing",
+            path: "/outsourcing",
+          },
+          {
+            name: "Insourcing",
+            path: "/insourcing",
+          },
+          {
+            name: "Suppliers",
+            path: "/suppliers",
+          },
+          {
+            name: "Tie Up",
+            path: "/tieup",
+            component: Tieups,
+          },
+        ],
       },
-
       {
-        name: "Banner",
-        path: "/banners",
-        component: Banner,
+        name: "Faculties",
+        icon: "tv",
+        path: "/faculties",
+        children: [
+          {
+            name: "Staff",
+            path: "/faculties/staff",
+            component: Equipments,
+          },
+          {
+            name: "Heads",
+            path: "/faculties/heads",
+            component: Procurments,
+          },
+          {
+            name: "Physicians",
+            path: "/faculties/physicians",
+            component: Physicians,
+          },
+        ],
       },
       {
-        name: "Logos",
-        path: "/logos",
-        component: Logo,
-      },
-      {
-        name: "Suppliers",
-        path: "/suppliers",
-      },
-      {
-        name: "Sourcing",
-        path: "/sourcing",
-      },
-      {
-        name: "Tie Up",
-        path: "/tieup",
-        component: Tieups,
+        name: "Assets",
+        icon: "tv",
+        path: "/assets",
+        children: [
+          {
+            name: "Equipments",
+            path: "/equipments",
+            component: Equipments,
+          },
+          {
+            name: "Procurement",
+            path: "/procurement",
+            component: Procurments,
+          },
+        ],
       },
     ],
   },

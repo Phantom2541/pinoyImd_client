@@ -38,7 +38,6 @@ export default function Signatories({ signatories, form }) {
     signatories[0]?.title === "RXT"
       ? "X-RAY TECHNOLOGIST"
       : "RADIOLOGIC TECHNOLOGIST";
-  console.log("signatories", signatories);
 
   return (
     <div className="pt-4 print-footer ">

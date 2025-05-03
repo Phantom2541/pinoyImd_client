@@ -83,8 +83,6 @@ export default function DataTable({
     if (dbTotalPages) setTotalPages(dbTotalPages);
   }, [dbTotalPages]);
 
-  console.log("total page", totalPages);
-
   useEffect(() => {
     if (!!liveInjector.length) {
       setSelected(liveInjector);

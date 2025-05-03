@@ -47,7 +47,7 @@ export default function Remmitances() {
         },
       })
     );
-  }, [month, year]);
+  }, [month, year, token, activePlatform?.branchId, auth._id, dispatch]);
 
   return (
     <MDBContainer className="d-grid" fluid>

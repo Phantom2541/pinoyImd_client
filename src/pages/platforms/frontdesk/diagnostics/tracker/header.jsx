@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { useLocation } from "react-router-dom";
 import {
   TRACKER,
   SetPatient,
@@ -15,8 +15,10 @@ export default function Header() {
       dob,
       fullName: fullname,
     } = useSelector(({ deals }) => deals.patient),
-    dispatch = useDispatch();
-
+    dispatch = useDispatch(),
+    location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const patientId = params.get("patient");
   /**
    * Initial Fetch
    * Return all diagnostics
@@ -27,7 +29,17 @@ export default function Header() {
    *  4. with in 7 days
    */
   useEffect(() => {
-    if (_id && activePlatform?.branchId) {
+    if (patientId) {
+      dispatch(
+        TRACKER({
+          token,
+          key: {
+            customerId: patientId,
+          },
+        })
+      );
+      dispatch(SetPatient(JSON.parse(localStorage.getItem("customerId"))));
+    } else if (_id && activePlatform?.branchId) {
       dispatch(
         TRACKER({
           token,
@@ -37,9 +49,12 @@ export default function Header() {
         })
       );
     }
-  }, [_id, activePlatform, dispatch, token]);
+  }, [_id, activePlatform, dispatch, token, patientId]);
 
-  const selectPatient = (user) => dispatch(SetPatient(user));
+  const selectPatient = (user) => {
+    dispatch(SetPatient(user));
+    localStorage.removeItem("customerId");
+  };
 
   return (
     <MDBView
@@ -50,7 +65,7 @@ export default function Header() {
         {_id ? fullName(fullname) : "Tracker"} | &nbsp;
         {_id && getAge(dob)}
       </span>
-      <SearchUser setPatient={selectPatient} />
+      {!patientId && <SearchUser setPatient={selectPatient} />}
     </MDBView>
   );
 }

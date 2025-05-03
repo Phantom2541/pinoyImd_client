@@ -15,7 +15,6 @@ import { Services } from "../../../../../../../../../services/fakeDb/index.js";
 export default function Xray() {
   const dispatch = useDispatch();
   const { task } = useSelector(({ validator }) => validator);
-  console.log("task", task);
 
   const [description, setDescription] = useState("");
   const [impression, setImpression] = useState("");
