@@ -21,7 +21,6 @@ import {
   Heads,
 } from "../../../pages/platforms/headquarter/file201";
 
-import Providers from "../../../pages/platforms/manager/provider";
 import {
   Remittances,
   Sales,
@@ -351,12 +350,6 @@ const manager = [
         ],
       },
     ],
-  },
-  {
-    name: "Provider",
-    path: "/provider",
-    icon: "university",
-    component: Providers,
   },
   {
     name: "User Manual",
