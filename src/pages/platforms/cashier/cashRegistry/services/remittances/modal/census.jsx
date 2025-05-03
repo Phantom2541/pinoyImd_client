@@ -94,19 +94,6 @@ export default function Census() {
     };
   }, [selected, token, activePlatform, auth, dispatch, deals]);
 
-  const handleSubmit = () => {
-    const data = {
-      _id: selected._id,
-      census,
-      breakdown,
-      patients,
-      gross,
-    };
-
-    dispatch(CENSUS({ token, data }));
-    dispatch(TOGGLE({ key: "census" }));
-  };
-
   const censusDate = selected?.createdAt
     ? new Date(selected.createdAt).toLocaleDateString("en-PH") // 'YYYY-MM-DD' in local time
     : "N/A";
@@ -119,6 +106,22 @@ export default function Census() {
         amount
     )
     .reduce((sum, { amount }) => sum + Number(amount), 0);
+
+  const handleSubmit = () => {
+    const { opening } = selected;
+    const data = {
+      _id: selected._id,
+      census,
+      breakdown,
+      patients,
+      sales: gross,
+      collections: breakdown.cash + opening.sum - paymentsSum,
+      expenses: paymentsSum,
+    };
+
+    dispatch(CENSUS({ token, data }));
+    dispatch(TOGGLE({ key: "census" }));
+  };
 
   const tabStyle = (tab) =>
     `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;

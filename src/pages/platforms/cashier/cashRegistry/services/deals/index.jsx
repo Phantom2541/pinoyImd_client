@@ -6,7 +6,7 @@ import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import TableLoading from "../../../../../../components/tableLoading";
-import { Closing, Payments, Vouchers } from "./summary";
+import { Closing, Category, Payments } from "./summary";
 import { Daily } from "../../../../../../services/redux/slices/finance/journals/payments";
 import {
   INSOURCE,
@@ -84,8 +84,8 @@ export default function Deals() {
         <CashRegister />
       </div>
       <div style={{ width: "300px", marginLeft: "10px" }}>
-        <Payments />
-        {filtered.length > 0 && <Vouchers />}
+        <Category />
+        {filtered.length > 0 && <Payments />}
         <Closing />
       </div>
     </MDBContainer>

@@ -17,11 +17,11 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
 
   const {
     opening = {},
-    gross = 0,
+    sales: gross = 0,
     collector,
     closing,
     cashier,
-    breakdown,
+    breakdown = {},
   } = item;
 
   const expenses = collections
@@ -37,8 +37,11 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
     })
     .reduce((acc, curr) => acc + curr.amount, 0);
 
-  const net = (opening.sum || 0) + gross - expenses;
   const isRemitted = !!collector;
+
+  const { cash, ...rest } = breakdown;
+  const nonCash = Object.entries(rest);
+  const net = (opening.sum || 0) + cash - expenses;
 
   return (
     <div className="position-relative">
@@ -53,32 +56,127 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
         {!isLoading ? (
           <>
             <div className="sales-card-info mt-3">
+              {gross > 0 && (
+                <div className="d-flex align-items-center justify-content-between">
+                  <h6
+                    className={`mb-0 text-right `}
+                    style={{ whiteSpace: "nowrap", fontWeight: 400 }}
+                  >
+                    Sales:
+                  </h6>
+
+                  <div
+                    style={{
+                      flexGrow: 1,
+                      borderBottom: "1px dashed #999",
+                      margin: "0 10px",
+                    }}
+                  />
+
+                  <h6
+                    className={`mb-0 text-right`}
+                    style={{ whiteSpace: "nowrap", fontWeight: 400 }}
+                  >
+                    {currency(gross)}
+                  </h6>
+                </div>
+              )}
+
+              {nonCash.length > 0 && (
+                <>
+                  <div
+                    className="d-flex align-items-center "
+                    style={{ marginBottom: "-10px" }}
+                  >
+                    <h6
+                      style={{
+                        whiteSpace: "nowrap",
+                        fontWeight: 400,
+                      }}
+                    >
+                      Non-Cash:
+                    </h6>
+                    <h6
+                      className="ml-1"
+                      style={{ fontWeight: 400, fontSize: "0.9rem" }}
+                    ></h6>
+                  </div>
+                  {nonCash.map(([key, value], idx) => (
+                    <div
+                      key={idx}
+                      style={{ fontSize: "0.5rem" }}
+                      className="d-flex align-items-center justify-content-between ml-3 mt-1"
+                    >
+                      <h6
+                        className={`mb-0 text-right `}
+                        style={{
+                          whiteSpace: "nowrap",
+                          fontSize: "0.8rem",
+                          color: "green",
+                          fontWeight: 400,
+                        }}
+                      >
+                        {key}:
+                      </h6>
+
+                      <div
+                        style={{
+                          flexGrow: 1,
+                          borderBottom: "1px dashed #999",
+                          margin: "0 10px",
+                        }}
+                      />
+
+                      <h6
+                        className={`mb-0 text-right `}
+                        style={{
+                          whiteSpace: "nowrap",
+                          fontWeight: 400,
+                          color: "green",
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        {currency(value)}
+                      </h6>
+                    </div>
+                  ))}
+                </>
+              )}
+
               {[
-                { label: "FC", value: opening.sum, title: "Floating Cash" },
-                { label: "Sales", value: gross },
+                { label: "Cash Sales:", value: breakdown?.cash },
                 {
-                  label: "Total",
-                  value: gross ? gross + opening.sum : 0,
-                  cn: "font-weight-bold",
+                  label: " Add: FC",
+                  value: opening.sum,
+                  title: "Floating Cash",
                 },
+
                 { label: "Expenses", value: expenses, cn: "text-danger" },
               ]
                 .filter(({ value }) => value > 0)
                 .map(({ label, value, cn, title = "" }, idx) => (
                   <div
-                    key={idx}
-                    title={title}
-                    className="d-flex align-items-center justify-content-between"
+                    className="d-flex align-items-center justify-content-between "
+                    key={index}
                   >
                     <h6
                       className={`mb-0 text-right ${cn}`}
-                      style={{ whiteSpace: "nowrap" }}
+                      style={{ whiteSpace: "nowrap", fontWeight: 400 }}
                     >
                       {label}:
                     </h6>
+
+                    <div
+                      style={{
+                        flexGrow: 1,
+                        borderBottom: "1px dashed #999",
+                        margin: "0 10px",
+                      }}
+                    />
+
                     <h6
                       className={`mb-0 text-right ${cn}`}
-                      style={{ whiteSpace: "nowrap" }}
+                      style={{ whiteSpace: "nowrap", fontWeight: 400 }}
                     >
                       {currency(value)}
                     </h6>
@@ -88,7 +186,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
               {/* 🟢 Show COH only if transactions exist */}
               {!!closing && (
                 <div style={{ marginBottom: "1.8rem" }}>
-                  <div className="cashier-remittance-breakdown">
+                  {/* <div className="cashier-remittance-breakdown">
                     <hr className="my-1" />
 
                     {breakdown &&
@@ -120,12 +218,13 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                           </div>
                         );
                       })}
-                  </div>
-                  {/* <hr /> */}
+                  </div> */}
                   <div
-                    className="cashier-remittance-total"
+                    className="cashier-remittance-total d-flex align-items-center justify-content-between"
                     style={{
                       position: "absolute",
+                      width: "94%",
+                      borderTop: "1px dashed #999",
                       bottom: "0rem",
                     }}
                   >
@@ -137,7 +236,10 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                       }}
                       title="Sales + Floating Cash - Expenses"
                     >
-                      {isRemitted ? "Remitted" : "COH"}: {currency(net)}
+                      {isRemitted ? "Remitted" : "COH"}:
+                    </h6>
+                    <h6 className="mt-1" style={{ fontWeight: 400 }}>
+                      {currency(net)}
                     </h6>
                   </div>
                 </div>
