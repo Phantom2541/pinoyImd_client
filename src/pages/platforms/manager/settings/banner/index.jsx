@@ -27,7 +27,7 @@ import ImageCropper from "../../../../../components/imageCropper";
 
 const array = new Array(5).fill().map((_, index) => index);
 
-export default function Banner() {
+const Banner = () => {
   const { auth, message, isSuccess } = useSelector(({ auth }) => auth);
   const { addToast } = useToasts();
   const [preview, setPreview] = useState("");
@@ -206,4 +206,6 @@ export default function Banner() {
       </MDBCard>
     </div>
   );
-}
+};
+
+export default Banner;

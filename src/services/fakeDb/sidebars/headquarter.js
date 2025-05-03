@@ -1,264 +1,238 @@
 import {
-  // Employee,
-  // Applicants,
-  Equipments,
+  Equipments as Equipment,
   Heads,
   Physicians,
-  Procurments,
+  Procurments as Procurement,
   Staffs,
 } from "../../../pages/platforms/headquarter/file201";
-import Services from "../../../pages/platforms/manager/settings/services";
-import Applicants from "../../../pages/platforms/manager/settings/applicants";
-import Menus from "../../../pages/platforms/manager/settings/menus";
-import Banner from "../../../pages/platforms/manager/settings/banner";
-import Logo from "../../../pages/platforms/manager/settings/logo";
-import Tieups from "../../../pages/platforms/manager/settings/tieups";
+import {
+  Outsources,
+  Insources,
+  Utilities,
+  Hotlines,
+  Suppliers,
+} from "../../../pages/platforms/cashier";
+
+import {
+  Menus,
+  Services,
+  Banner,
+  Logo,
+  Applicants,
+  Tieups,
+} from "../../../pages/platforms/manager/settings";
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
 
 const headquarter = [
   {
-    name: "File 201",
-    path: "/file201",
-    icon: "book-open",
-    children: [
-      {
-        name: "Staff",
-        path: "/staff",
-        component: Staffs,
-      },
-      {
-        name: "Heads",
-        path: "/heads",
-        component: Heads,
-      },
-      {
-        name: "Applicants",
-        path: "/petitioners",
-        component: Applicants,
-      },
-      {
-        name: "Physicians",
-        path: "/physicians",
-        component: Physicians,
-      },
-      {
-        name: "Sources",
-        path: "/source",
-        // component: Sources,
-      },
-      {
-        name: "Referral",
-        path: "/referral",
-        // component: Sources,
-      },
-      {
-        name: "Outsources",
-        path: "/outsource",
-        // component: Sources,
-      },
-      {
-        name: "Equipments",
-        path: "/equipments",
-        component: Equipments,
-      },
-      {
-        name: "Procurement",
-        path: "/procurement",
-        component: Procurments,
-      },
-    ],
-  },
-  {
     name: "Human Resources",
     path: "/hr",
-    icon: "code-branch",
+    icon: "users",
     children: [
       {
         name: "Branches",
         path: "/hr/branches",
-        icon: "code-branch",
+        icon: "map",
         component: Branches,
       },
       {
         name: "Top Branch",
         path: "/hr/top/branch",
-        icon: "list",
+        icon: "crown",
       },
       {
-        name: "Best Employee's",
+        name: "Best Employees",
         path: "/hr/employee",
-        icon: "list",
+        icon: "badge-check",
       },
     ],
   },
   {
     name: "Commerce",
     path: "/commerce",
-    icon: "tv",
+    icon: "shopping-basket",
     children: [
       {
         name: "Menus",
         path: "/menus",
+        icon: "menu",
         component: Menus,
       },
       {
         name: "Services",
         path: "/services",
+        icon: "concierge-bell",
         component: Services,
       },
       {
-        name: "Sales", // daily
-        path: "/commerce/sales",
-        icon: "list",
-      },
-      {
-        name: "Ledger", // daily
-        path: "/commerce/ledger",
-        icon: "list",
-      },
-      {
-        name: "Census", // services avail
-        path: "/commerce/census",
-        icon: "list",
-      },
-      {
-        name: "Duty", // daily duty
+        name: "Duty Schedule",
         path: "/commerce/duty",
-        icon: "list",
-      },
-      {
-        name: "Products",
-        path: "/commerce/products",
-        icon: "list",
+        icon: "calendar-days",
       },
     ],
   },
   {
-    name: "procurement's",
+    name: "Procurement",
     path: "/duty",
-    icon: "code-branch",
+    icon: "package",
     children: [
       {
-        name: "Supplier's",
+        name: "Suppliers",
         path: "/duty/suppliers",
-        icon: "list",
+        icon: "truck",
       },
       {
         name: "Stock",
         path: "/duty/stock",
-        icon: "list",
+        icon: "warehouse",
       },
       {
         name: "Merchandise",
         path: "/duty/merchandise",
-        icon: "list",
+        icon: "shopping-bag",
       },
       {
-        name: "Equipments",
+        name: "Equipment",
         path: "/duty/equipments",
-        icon: "list",
+        icon: "hammer",
         component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",
         path: "/duty/maintenance",
-        icon: "code-branch",
+        icon: "shield-check",
       },
     ],
   },
   {
     name: "Settings",
     path: "/settings",
-    icon: "cogs",
+    icon: "sliders-horizontal",
     children: [
       {
-        name: "About Us",
-        icon: "tv",
-        path: "/aboutus",
+        name: "Profile",
+        icon: "user-cog",
+        path: "/profile",
         children: [
           {
             name: "Banner",
             path: "/banners",
+            icon: "layout",
             component: Banner,
           },
           {
             name: "Logos",
             path: "/logos",
+            icon: "image",
             component: Logo,
           },
           {
-            name: "tagline",
+            name: "Tagline",
             path: "/taglines",
+            icon: "quote",
             component: Logo,
           },
           {
             name: "Description",
             path: "/descriptions",
+            icon: "file-text",
             component: Logo,
           },
         ],
       },
       {
         name: "Sources",
-        icon: "tv",
         path: "/sources",
+        icon: "cogs",
         children: [
           {
             name: "Outsourcing",
             path: "/outsourcing",
+            icon: "external-link",
+            component: Outsources,
           },
           {
             name: "Insourcing",
             path: "/insourcing",
+            icon: "download",
+            component: Insources,
           },
           {
             name: "Suppliers",
             path: "/suppliers",
+            icon: "briefcase",
+            component: Suppliers,
           },
           {
-            name: "Tie Up",
+            name: "Utilities",
+            path: "/utilities",
+            icon: "tools",
+            title: "List of Company that provides Utilities or supports",
+            component: Utilities,
+          },
+          {
+            name: "Hotlines",
+            path: "/hotlines",
+            icon: "phone",
+            title: "List of Hotlines",
+            component: Hotlines,
+          },
+          {
+            name: "Tie Ups",
             path: "/tieup",
+            icon: "handshake",
             component: Tieups,
           },
         ],
       },
       {
-        name: "Faculties",
-        icon: "tv",
+        name: "Personnel",
+        icon: "users-round",
         path: "/faculties",
         children: [
           {
             name: "Staff",
-            path: "/faculties/staff",
-            component: Equipments,
+            path: "/staff",
+            icon: "user",
+            component: Staffs,
           },
           {
             name: "Heads",
-            path: "/faculties/heads",
-            component: Procurments,
+            path: "/heads",
+            icon: "user-check",
+            component: Heads,
           },
           {
             name: "Physicians",
-            path: "/faculties/physicians",
+            path: "/physicians",
+            icon: "stethoscope",
             component: Physicians,
+          },
+          {
+            name: "Job Applicants",
+            path: "/petitioners",
+            icon: "user-plus",
+            component: Applicants,
           },
         ],
       },
       {
         name: "Assets",
-        icon: "tv",
+        icon: "database",
         path: "/assets",
         children: [
           {
-            name: "Equipments",
+            name: "Equipment",
             path: "/equipments",
-            component: Equipments,
+            icon: "cpu",
+            component: Equipment,
           },
           {
             name: "Procurement",
             path: "/procurement",
-            component: Procurments,
+            icon: "clipboard-list",
+            component: Procurement,
           },
         ],
       },
@@ -266,8 +240,8 @@ const headquarter = [
   },
   {
     name: "Mortality",
-    icon: "code-branch",
     path: "/mortality",
+    icon: "alert-triangle",
   },
 ];
 
