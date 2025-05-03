@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -16,19 +16,22 @@ import {
 import { fullName } from "../../../../../../../services/utilities";
 
 export default function RevertSale() {
-  const { token, auth } = useSelector(({ auth }) => auth),
-    {
-      showRevertModal: show,
-      selected,
-      formSubmitted,
-      message = "",
-    } = useSelector(({ deals }) => deals),
-    [password, setPassword] = useState(""),
-    [isLocked, setIsLocked] = useState(true),
-    [haveMessage, setHaveMessage] = useState(false),
-    dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { token, auth } = useSelector(({ auth }) => auth);
+  const {
+    showRevertModal: show,
+    selected,
+    formSubmitted,
+    message = "",
+  } = useSelector(({ deals }) => deals);
 
-  const toggle = () => dispatch(ToggleRevertModal());
+  const [password, setPassword] = useState("");
+  const [isLocked, setIsLocked] = useState(true);
+  const [haveMessage, setHaveMessage] = useState(false);
+
+  const toggle = useCallback(() => {
+    dispatch(ToggleRevertModal());
+  }, [dispatch]);
 
   useEffect(() => {
     if (show) {
@@ -44,6 +47,7 @@ export default function RevertSale() {
   }, [message]);
 
   const { customerId } = selected;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
@@ -71,9 +75,10 @@ export default function RevertSale() {
             note
             noteTitle="Reauthentication: "
           >
-            Required To ensure security, please reauthenticate before reverting
+            Required. To ensure security, please reauthenticate before reverting
             this sale. Enter your password to confirm your identity and proceed.
           </MDBTypography>
+
           <MDBInput
             label="Password"
             value={password}
@@ -95,6 +100,7 @@ export default function RevertSale() {
               For security reasons, please verify your credentials carefully.
             </MDBTypography>
           )}
+
           <MDBBtn
             className="float-right"
             rounded

@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup, MDBBadge } from "mdbreact";
+import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup } from "mdbreact";
 import { billingAddress, fullName } from "../../../../../services/utilities";
-import { Input } from "../../../../../components/customizable";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
   DESTROY,
   RESET,
-  UPDATE,
 } from "../../../../../services/redux/slices/assets/providers";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage, isSuccess, formSubmitted, showModal } =
-      useSelector(({ providers }) => providers),
-    [soloUpdate, setSoloUpdate] = useState(false),
+    { filtered, activePage, maxPage, isSuccess, formSubmitted } = useSelector(
+      ({ providers }) => providers
+    ),
     [selected, setSelected] = useState(-1),
     dispatch = useDispatch();
 
@@ -24,9 +22,10 @@ const Body = () => {
   }, [formSubmitted, isSuccess, dispatch]);
 
   const handleEdit = (provider) => {
+    console.log(selected);
+
     dispatch(SetSELECTED(provider));
     setSelected(provider);
-    //console.log("SetSelected service :", service);
   };
 
   const handleDelete = (_id) => {
@@ -45,36 +44,10 @@ const Body = () => {
     });
   };
 
-  const handleUpdate = () => {
-    if (selected && selected.newAbbreviation !== selected.abbr) {
-      const { _id, abbr } = selected;
-      dispatch(
-        UPDATE({
-          token,
-          data: { _id, abbr },
-        })
-      );
-    }
-  };
-
-  const handleChange = (provider) => {
-    setSelected({
-      ...provider,
-      abbrOld: provider?.abbr || "", // Ensure it has a default value
-    });
-    setSoloUpdate(true);
-  };
-
-  const handleAbbreviationChange = (key, value) =>
-    setSelected({ ...selected, [key]: value });
-  /**
-   * Pagination: Calculate the start and end index for the current page
-   */
-
-  const itemsPerPage = maxPage; // Number of items per page
+  const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered?.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = filtered?.slice(startIndex, endIndex);
 
   return (
     <MDBTable responsive hover bordered>
@@ -85,7 +58,7 @@ const Body = () => {
           <th>A.O.</th>
           <th>Membership</th>
           <th>Address</th>
-          <th colSpan="4">Action</th>
+          <th colSpan="2">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -99,7 +72,6 @@ const Body = () => {
               <td>{fullName(ao.fullName)}</td>
               <td>{membership}</td>
               <td>{billingAddress(address)}</td>
-
               <td className="text-center" style={{ width: "200px" }}>
                 <MDBBtnGroup>
                   <MDBBtn

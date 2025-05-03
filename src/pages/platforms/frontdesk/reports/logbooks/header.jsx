@@ -4,17 +4,19 @@ import { MDBView, MDBBtnGroup, MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import Months from "../../../../../services/fakeDb/calendar/months";
 import Years from "../../../../../services/fakeDb/calendar/years";
+
 const today = new Date();
 
 const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { search, pathname } = useLocation(),
-    query = new URLSearchParams(search),
-    month = query.get("month"),
-    year = query.get("year"),
-    focusedDay = query.get("focusedDay"),
-    history = useHistory(),
-    dispatch = useDispatch();
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { search, pathname } = useLocation();
+  const query = new URLSearchParams(search);
+  const month = query.get("month");
+  const year = query.get("year");
+  const focusedDay = query.get("focusedDay");
+
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -22,27 +24,30 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
         BROWSE({
           data: {
             branch: activePlatform?.branchId,
-            month: month || today.getMonth() + 1,
-            year: year || today.getFullYear(),
+            month: Number(month) || today.getMonth() + 1,
+            year: Number(year) || today.getFullYear(),
           },
           token,
         })
       );
     }
-    return () => RESET();
-  }, [activePlatform, dispatch, token, month, year, RESET, BROWSE]);
+
+    return () => {
+      dispatch(RESET());
+    };
+  }, [activePlatform, dispatch, token, month, year, BROWSE, RESET]);
 
   useEffect(() => {
     const params = new URLSearchParams({
-      month: today.getMonth() + 1, // Add 1 to match human-readable month format
+      month: today.getMonth() + 1,
       year: today.getFullYear(),
     });
     history.push(`${pathname}?${params.toString()}`);
   }, [history, pathname]);
 
   const prev = (clearFocused = true) => {
-    let _month = Number(month) === 1 ? 12 : Number(month) - 1, // Adjust the month to be 1-based
-      _year = Number(month) === 1 ? Number(year) - 1 : Number(year);
+    const _month = Number(month) === 1 ? 12 : Number(month) - 1;
+    const _year = Number(month) === 1 ? Number(year) - 1 : Number(year);
 
     const params = new URLSearchParams({
       month: _month,
@@ -56,8 +61,8 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
   };
 
   const next = (clearFocused = true) => {
-    let _month = Number(month) === 12 ? 1 : Number(month) + 1, // Adjust the month to be 1-based
-      _year = Number(month) === 12 ? Number(year) + 1 : Number(year);
+    const _month = Number(month) === 12 ? 1 : Number(month) + 1;
+    const _year = Number(month) === 12 ? Number(year) + 1 : Number(year);
 
     const params = new URLSearchParams({
       month: _month,
@@ -72,25 +77,21 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
 
   const selectToday = () => {
     const params = new URLSearchParams({
-      month: today.getMonth() + 1, // Add 1 to match human-readable month format
+      month: today.getMonth() + 1,
       year: today.getFullYear(),
     });
     history.push(`${pathname}?${params.toString()}`);
   };
-  const disablePrevOnLastChoice = () => {
-    if (Number(month) === 0 && Number(year) === Years[0]) return true;
-    return false;
-  };
+
+  const disablePrevOnLastChoice = () =>
+    Number(month) === 0 && Number(year) === Years[0];
+
+  const disableNextOnLastChoice = () =>
+    Number(month) === 11 && Number(year) === Years[Years.length - 1];
 
   const isTodaySelected =
     Number(month) === today.getMonth() + 1 &&
     Number(year) === today.getFullYear();
-
-  const disableNextOnLastChoice = () => {
-    if (Number(month) === 11 && Number(year) === Years[Years.length - 1])
-      return true;
-    return false;
-  };
 
   const handlePrint = () => {
     localStorage.setItem("month", JSON.stringify(month));
@@ -98,7 +99,7 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
     window.open(
       `/printout/${printPath}`,
       `${title} Logbook`,
-      "top=100px,left=100px,width=1050px,height=750px" // size of page that will open
+      "top=100px,left=100px,width=1050px,height=750px"
     );
   };
 
@@ -123,8 +124,7 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
             <MDBIcon icon="angle-left" style={{ fontSize: "1rem" }} />
           </MDBBtn>
           <MDBBtn color="light" style={{ fontSize: "1rem" }} className="m-0">
-            {Months[month - 1]}&nbsp;
-            {year}
+            {Months[month - 1]} {year}
           </MDBBtn>
           <MDBBtn
             onClick={next}
