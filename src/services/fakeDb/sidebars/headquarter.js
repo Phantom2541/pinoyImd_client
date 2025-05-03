@@ -23,6 +23,8 @@ import {
 } from "../../../pages/platforms/manager/settings";
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
+import Tagline from "../../../pages/platforms/headquarter/settings/profile/tagline";
+import Description from "../../../pages/platforms/headquarter/settings/profile/description";
 
 const headquarter = [
   {
@@ -131,13 +133,13 @@ const headquarter = [
             name: "Tagline",
             path: "/taglines",
             icon: "quote",
-            component: Logo,
+            component: Tagline,
           },
           {
             name: "Description",
             path: "/descriptions",
             icon: "file-text",
-            component: Logo,
+            component: Description,
           },
         ],
       },

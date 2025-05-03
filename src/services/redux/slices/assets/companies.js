@@ -265,7 +265,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
+        const index = state?.collections?.findIndex(
           (item) => item._id === payload._id
         );
 

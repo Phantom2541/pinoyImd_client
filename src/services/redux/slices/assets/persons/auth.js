@@ -170,6 +170,9 @@ export const reduxSlice = createSlice({
       state.loginSuccess = false;
       state.message = "";
     },
+    SetCOMPANY: (state, { payload }) => {
+      state.company = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -393,6 +396,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, MAXPAGE, UPLOADBAR, IMAGE, NETWORK } = reduxSlice.actions;
+export const { RESET, SetCOMPANY, MAXPAGE, UPLOADBAR, IMAGE, NETWORK } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;
