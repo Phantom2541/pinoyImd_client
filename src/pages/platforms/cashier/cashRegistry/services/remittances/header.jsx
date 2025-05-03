@@ -43,13 +43,16 @@ const Header = () => {
 
   useEffect(() => {
     if (collections) {
-      let gross = 0;
-      collections.forEach((collection) => {
-        if (!collection?.collector && collection.gross) {
-          gross += collection?.closing.sum - collection.opening.sum;
+      const sales = [...collections]?.reduce((total, collection) => {
+        if (!collection?.collector && collection.sales) {
+          const closingSum = collection?.closing?.sum || 0;
+          const openingSum = collection?.opening?.sum || 0;
+          return total + (closingSum - openingSum);
         }
-      });
-      setCoh(gross);
+        return total;
+      }, 0);
+
+      setCoh(sales);
     }
   }, [collections]);
 
@@ -63,9 +66,11 @@ const Header = () => {
           <span className="white-text mx-3 text-nowrap mt-0">
             Remittances :{" "}
             {coh > 0 && (
-              <span style={{ color: "green" }} title="Unremitted sales">
-                {" "}
-                COH:({currency(coh)})
+              <span
+                style={{ color: "green" }}
+                title="Unremitted sales (COH - FC)"
+              >
+                Collections:({currency(coh)})
               </span>
             )}
           </span>

@@ -9,10 +9,10 @@ import {
   MDBBtn,
   MDBCollapse,
 } from "mdbreact";
-import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import SummaryLoading from "./loading";
 import { Services } from "../../../../../../../services/fakeDb";
 import { useToasts } from "react-toast-notifications";
+import Modal from "../modal";
 
 export default function Vouchers() {
   const { token } = useSelector(({ auth }) => auth),
@@ -22,8 +22,8 @@ export default function Vouchers() {
     [serviceCensus, setServiceCensus] = useState([]),
     [breakdown, setBreakdown] = useState({}),
     [activeTab, setActiveTab] = useState("menus"),
-    { addToast } = useToasts(),
-    dispatch = useDispatch();
+    [show, setShow] = useState(false),
+    [selectedCensus, setSelectedCensus] = useState({});
 
   useEffect(() => {
     if (collections && collections.length > 0 && !isLoading) {
@@ -61,6 +61,8 @@ export default function Vouchers() {
     }
   }, [collections, isLoading]);
 
+  const toggle = () => setShow(!show);
+
   const handleSubmit = () => {
     if (!selected) {
       alert("Please set a floating cash first.");
@@ -82,12 +84,8 @@ export default function Vouchers() {
       patient: collections.length,
       gross: total,
     };
-
-    dispatch(CENSUS({ token, data })).then(() => {
-      addToast("End-of-Shift Summary saved successfully.", {
-        appearance: "success",
-      });
-    });
+    setSelectedCensus(data);
+    toggle();
   };
 
   return (
@@ -181,6 +179,7 @@ export default function Vouchers() {
           </MDBBtn>
         )}
       </MDBCardBody>
+      <Modal selected={selectedCensus} toggle={toggle} show={show} />
     </MDBCard>
   );
 }

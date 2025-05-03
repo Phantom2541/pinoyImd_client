@@ -63,13 +63,13 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((provider, index) => {
-          const { vendors, membership, ao } = provider,
+          const { vendors = {}, membership, ao } = provider,
             { displayname, address } = vendors;
           return (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{displayname}</td>
-              <td>{fullName(ao.fullName)}</td>
+              <td>{fullName(ao?.fullName)}</td>
               <td>{membership}</td>
               <td>{billingAddress(address)}</td>
               <td className="text-center" style={{ width: "200px" }}>

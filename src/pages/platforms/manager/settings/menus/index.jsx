@@ -14,7 +14,7 @@ import TableRowCount from "../../../../../components/pagination/rows";
 import Pagination from "../../../../../components/pagination";
 import Swal from "sweetalert2";
 
-export default function Menus() {
+const Menus = () => {
   const [menus, setMenus] = useState([]),
     [selected, setSelected] = useState({}),
     [showModal, setShowModal] = useState(false),
@@ -206,4 +206,6 @@ export default function Menus() {
       <Generate visible={visible} setVisible={setVisible} />
     </>
   );
-}
+};
+
+export default Menus;

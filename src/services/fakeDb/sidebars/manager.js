@@ -1,19 +1,23 @@
 import Dashboard from "../../../pages/platforms/manager/dashboard";
-import Services from "../../../pages/platforms/manager/settings/services";
-import Menus from "../../../pages/platforms/manager/settings/menus";
-import Banner from "../../../pages/platforms/manager/settings/banner";
-import Logo from "../../../pages/platforms/manager/settings/logo";
+
+import {
+  Services,
+  Menus,
+  Banner,
+  Logo,
+  Applicants,
+  Tieups,
+} from "../../../pages/platforms/manager/settings";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Payrolls from "../../../pages/platforms/manager/responsibilities/payroll";
-import Applicants from "../../../pages/platforms/manager/settings/applicants";
+
 import {
   Employees,
   Equipments,
-  // Applicants,
   Staffs,
   Physicians,
-  // Procurments,
+  Procurments,
   Heads,
 } from "../../../pages/platforms/headquarter/file201";
 
@@ -31,6 +35,14 @@ import {
   SOA,
   Reseco,
 } from "../../../pages/platforms/manager/accrued";
+
+import {
+  Outsources,
+  Insources,
+  Utilities,
+  Hotlines,
+  Suppliers,
+} from "../../../pages/platforms/cashier";
 
 const manager = [
   {
@@ -179,59 +191,164 @@ const manager = [
     ],
   },
   {
-    name: "Settings",
-    path: "/settings",
-    icon: "cogs",
+    name: "Commerce",
+    path: "/commerce",
+    icon: "shopping-basket",
     children: [
-      {
-        name: "Staff",
-        path: "/staffs",
-        component: Staffs,
-      },
-      {
-        name: "Physicians",
-        path: "/physicians",
-        component: Physicians,
-      },
-      {
-        name: "Heads",
-        path: "/heads",
-        component: Heads,
-      },
-      {
-        name: "Applicants",
-        path: "/applicants",
-        component: Applicants,
-      },
-      {
-        name: "File 201",
-        path: "/file201",
-        component: Employees,
-      },
-      {
-        name: "Equipments",
-        path: "/equipments",
-        component: Equipments,
-      },
       {
         name: "Menus",
         path: "/menus",
+        icon: "menu",
         component: Menus,
       },
       {
         name: "Services",
         path: "/services",
+        icon: "concierge-bell",
         component: Services,
       },
       {
-        name: "Banner",
-        path: "/banners",
-        component: Banner,
+        name: "Duty Schedule",
+        path: "/commerce/duty",
+        icon: "calendar-days",
+      },
+    ],
+  },
+  {
+    name: "Settings",
+    path: "/settings",
+    icon: "cogs",
+    children: [
+      {
+        name: "Profile",
+        icon: "user-cog",
+        path: "/profile",
+        children: [
+          {
+            name: "Banner",
+            path: "/banners",
+            icon: "layout",
+            component: Banner,
+          },
+          {
+            name: "Logos",
+            path: "/logos",
+            icon: "image",
+            component: Logo,
+          },
+          {
+            name: "Tagline",
+            path: "/taglines",
+            icon: "quote",
+            component: Logo,
+          },
+          {
+            name: "Description",
+            path: "/descriptions",
+            icon: "file-text",
+            component: Logo,
+          },
+        ],
       },
       {
-        name: "Logo",
-        path: "/logo",
-        component: Logo,
+        name: "Sources",
+        path: "/sources",
+        icon: "cogs",
+        children: [
+          {
+            name: "Outsourcing",
+            path: "/outsourcing",
+            icon: "external-link",
+            component: Outsources,
+          },
+          {
+            name: "Insourcing",
+            path: "/insourcing",
+            icon: "download",
+            component: Insources,
+          },
+          {
+            name: "Suppliers",
+            path: "/suppliers",
+            icon: "briefcase",
+            component: Suppliers,
+          },
+          {
+            name: "Utilities",
+            path: "/utilities",
+            icon: "tools",
+            title: "List of Company that provides Utilities or supports",
+            component: Utilities,
+          },
+          {
+            name: "Hotlines",
+            path: "/hotlines",
+            icon: "phone",
+            title: "List of Hotlines",
+            component: Hotlines,
+          },
+          {
+            name: "Tie Ups",
+            path: "/tieup",
+            icon: "handshake",
+            component: Tieups,
+          },
+        ],
+      },
+      {
+        name: "Personnel",
+        icon: "users-round",
+        path: "/faculties",
+        children: [
+          {
+            name: "Staff",
+            path: "/staff",
+            icon: "user",
+            component: Staffs,
+          },
+          {
+            name: "File 201",
+            path: "/file201",
+            component: Employees,
+          },
+          {
+            name: "Heads",
+            path: "/heads",
+            icon: "user-check",
+            component: Heads,
+          },
+          {
+            name: "Physicians",
+            path: "/physicians",
+            icon: "stethoscope",
+            component: Physicians,
+          },
+          {
+            name: "Job Applicants",
+            path: "/petitioners",
+            icon: "user-plus",
+            component: Applicants,
+          },
+        ],
+      },
+      {
+        name: "Assets",
+        icon: "database",
+        path: "/assets",
+        children: [
+          {
+            name: "Equipment",
+            path: "/equipments",
+            icon: "cpu",
+            component: Equipments,
+          },
+          {
+            name: "Procurement",
+            path: "/procurement",
+            icon: "clipboard-list",
+            component: Procurments,
+          },
+        ],
       },
     ],
   },
