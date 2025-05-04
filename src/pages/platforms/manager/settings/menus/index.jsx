@@ -6,6 +6,7 @@ import Generate from "./generate";
 import {
   BROWSE,
   RESET,
+  SetFILTERED,
 } from "../../../../../services/redux/slices/commerce/catalog/menus";
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
@@ -25,7 +26,7 @@ const Menus = () => {
     [willCreate, setWillCreate] = useState(true),
     [visible, setVisible] = useState(false),
     { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, isLoading } = useSelector(
+    { collections, message, isSuccess, isLoading, filtered } = useSelector(
       ({ menus }) => menus
     ),
     { addToast } = useToasts(),
@@ -123,8 +124,12 @@ const Menus = () => {
           <div className="d-flex align-items-center justify-content-between">
             <Search
               collections={collections}
-              setFiltered={setMenus}
-              reset={() => setMenus(collections)}
+              setFiltered={(results) =>
+                dispatch(
+                  SetFILTERED(results.length > 0 ? results : collections)
+                )
+              }
+              reset={() => dispatch(SetFILTERED(collections))}
               haveAction={false}
             />
 
@@ -157,7 +162,7 @@ const Menus = () => {
           {!isLoading ? (
             <>
               <MenuCollapse
-                menus={menus}
+                menus={filtered}
                 page={page}
                 resetSearch={resetSearch}
                 searchKey={searchKey}
