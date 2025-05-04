@@ -47,6 +47,7 @@ export default function AccessModal() {
     [clusters, setClusters] = useState([]),
     [roles, setRoles] = useState([]),
     [search, setSearch] = useState([]),
+    [soe, setSoe] = useState(""),
     [duplicateRoles, setDuplicateRoles] = useState([]), //the purpose of this is for searching....
     dispatch = useDispatch();
 
@@ -90,7 +91,8 @@ export default function AccessModal() {
     }
   }, [handleSetRoles, show]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const { branch } = selected;
     dispatch(
       UPDATE_ACCESS({
@@ -99,7 +101,15 @@ export default function AccessModal() {
       })
     );
     dispatch(
-      UPDATE({ token, data: { _id: selected._id, branch, status: "active" } })
+      UPDATE({
+        token,
+        data: {
+          _id: selected._id,
+          branch,
+          status: "active",
+          contract: { ...contract, soe },
+        },
+      })
     );
   };
 
@@ -240,45 +250,62 @@ export default function AccessModal() {
         </h6>
         <small>{Policy.getPosition(contract?.designation)}</small>
       </MDBModalHeader>
-      <MDBModalBody>
-        <MDBTypography noteTitle="Description: " note noteColor="warning">
-          Drag and drop roles between 'Access' and 'Tag Access' for easy
-          management.
-        </MDBTypography>
+      <form onSubmit={handleSubmit}>
+        <MDBModalBody>
+          <select
+            className="form-control mb-3"
+            label="Status of employment"
+            required
+            value={soe}
+            onChange={({ target }) => setSoe(target.value)}
+          >
+            <option value="" disabled>
+              Select status of employment
+            </option>
+            <option value="Contractual">Contractual</option>
+            <option value="Reliever">Reliever</option>
+            <option value="Permanent">Permanent</option>
+            <option value="Honorarium">Honorarium</option>
+          </select>
+          <MDBTypography noteTitle="Description: " note noteColor="warning">
+            Drag and drop roles between 'Access' and 'Tag Access' for easy
+            management.
+          </MDBTypography>
 
-        <MDBRow>
-          <MDBCol md="6">
-            <Bucket
-              search={search}
-              collections={roles}
-              handleAction={handleADD}
-              handleSearch={handleSearch}
-              handleDragStart={handleDragStart}
-              handleDragOver={handleDragOver}
-              tableName="Access"
-              handleDrop={handleDrop}
-              hasDrag={hasDrag}
-            />
-          </MDBCol>
-          <MDBCol md="6">
-            <Bucket
-              collections={clusters}
-              tableName="Tag Access"
-              isTag={true}
-              handleAction={handleDelete}
-              handleDragStart={handleDragStart}
-              handleDragOver={handleDragOver}
-              handleDrop={handleDrop}
-              hasDrag={hasDrag}
-            />
-          </MDBCol>
-        </MDBRow>
-      </MDBModalBody>
-      <MDBModalFooter>
-        <MDBBtn onClick={handleSubmit} color="info" disabled={formSubmitted}>
-          Approve {formSubmitted && <MDBIcon icon="spinner" pulse />}
-        </MDBBtn>
-      </MDBModalFooter>
+          <MDBRow>
+            <MDBCol md="6">
+              <Bucket
+                search={search}
+                collections={roles}
+                handleAction={handleADD}
+                handleSearch={handleSearch}
+                handleDragStart={handleDragStart}
+                handleDragOver={handleDragOver}
+                tableName="Access"
+                handleDrop={handleDrop}
+                hasDrag={hasDrag}
+              />
+            </MDBCol>
+            <MDBCol md="6">
+              <Bucket
+                collections={clusters}
+                tableName="Tag Access"
+                isTag={true}
+                handleAction={handleDelete}
+                handleDragStart={handleDragStart}
+                handleDragOver={handleDragOver}
+                handleDrop={handleDrop}
+                hasDrag={hasDrag}
+              />
+            </MDBCol>
+          </MDBRow>
+        </MDBModalBody>
+        <MDBModalFooter>
+          <MDBBtn type="submit" color="info" disabled={formSubmitted}>
+            Approve {formSubmitted && <MDBIcon icon="spinner" pulse />}
+          </MDBBtn>
+        </MDBModalFooter>
+      </form>
     </MDBModal>
   );
 }
