@@ -54,7 +54,7 @@ export default function CashierPayment({
     paymentOptions = Payments[abbr],
     { customerId, _id: dealId } = deals,
     { _id, fullName, mobile, privilege, address } = customerId;
-
+  console.log("deals", deals);
   useEffect(() => {
     if (!formSubmitted && isSuccess) {
       const balance = cash - (gross - discount);
@@ -79,7 +79,11 @@ export default function CashierPayment({
     // t = d.getMinutes(),
     // s = d.getSeconds(),
     // mil = d.getMilliseconds();
-
+    const selectedMenus = [...cart].filter(({ isNew }) => isNew);
+    const _department = [
+      ...new Set(selectedMenus.flatMap((item) => item.department)),
+    ];
+    const department = [...new Set([...deals.department, ..._department])];
     var data = {
       dealId: dealId || undefined,
       source: sourceVendor || undefined,
@@ -93,6 +97,7 @@ export default function CashierPayment({
       cash,
       amount: net,
       discount,
+      department,
       isPickup: !isDeliver,
       // createdAt: `${y}-${m + 1}-${a}T${h}:${t}:${s}.${mil}+0800`,
       cart: cart.map((menu) => {

@@ -24,7 +24,6 @@ export default function Remmitances() {
           token,
           key: {
             branchId: activePlatform?.branchId,
-            department: activePlatform?.department,
             cashierId: auth._id,
             createdAt,
             endDate,

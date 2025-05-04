@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBRow, MDBCol, MDBTabPane, MDBAlert, MDBBtn } from "mdbreact";
+import { MDBRow, MDBCol, MDBAlert, MDBBtn } from "mdbreact";
 
 export default function Contracts({ form, handleChange }) {
   const calculateDiscount = (basePrice, discountPercentage) => {
@@ -7,7 +7,7 @@ export default function Contracts({ form, handleChange }) {
   };
 
   return (
-    <MDBTabPane tabId={"menu-1"} className="m-0 p-0">
+    <>
       <MDBRow className="m-0 p-0">
         {!form?.hasDiscount ? (
           <MDBCol md="12">
@@ -92,6 +92,6 @@ export default function Contracts({ form, handleChange }) {
           </MDBCol>
         )}
       </MDBRow>
-    </MDBTabPane>
+    </>
   );
 }

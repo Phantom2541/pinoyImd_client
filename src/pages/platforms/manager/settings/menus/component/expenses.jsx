@@ -1,11 +1,11 @@
 import React from "react";
-import { MDBInput, MDBRow, MDBCol, MDBTabPane } from "mdbreact";
+import { MDBInput, MDBRow, MDBCol } from "mdbreact";
 
 export default function SRP({ handleChange, handleValue }) {
   return (
-    <MDBTabPane tabId={"menu-2"}>
+    <>
       <MDBRow>
-        <MDBCol md="4">
+        <MDBCol md="3">
           <MDBInput
             type="number"
             label="Capital"
@@ -16,7 +16,7 @@ export default function SRP({ handleChange, handleValue }) {
             className="mb-0"
           />
         </MDBCol>
-        <MDBCol md="4">
+        <MDBCol md="3">
           <MDBInput
             type="number"
             label="Expenses"
@@ -27,9 +27,7 @@ export default function SRP({ handleChange, handleValue }) {
             className="mb-0"
           />
         </MDBCol>
-      </MDBRow>
-      <MDBRow>
-        <MDBCol md="4">
+        <MDBCol md="3">
           <MDBInput
             type="number"
             label="Refund"
@@ -37,7 +35,7 @@ export default function SRP({ handleChange, handleValue }) {
             onChange={(e) => handleChange("refund", e.target.value)}
           />
         </MDBCol>
-        <MDBCol md="4">
+        <MDBCol md="3">
           <MDBInput
             type="number"
             label="Promo"
@@ -46,6 +44,6 @@ export default function SRP({ handleChange, handleValue }) {
           />
         </MDBCol>
       </MDBRow>
-    </MDBTabPane>
+    </>
   );
 }

@@ -102,7 +102,7 @@ export const reduxSlice = createSlice({
       // Dispatch the action instead of calling it as a function
       state.totalPages = Math.ceil(filtered.length / state.maxPage);
 
-      state.isSuccess = true;
+      // state.isSuccess = true;
     },
     SetCOLLECTIONS: (state, { payload }) => {
       state.collections = payload;
@@ -150,6 +150,7 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload;
         state.message = success;
         state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -184,11 +185,15 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
 
-        state.collections[index] = payload;
+          collections[index] = payload;
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;

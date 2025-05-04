@@ -12,6 +12,7 @@ import {
   MDBNav,
   MDBNavItem,
   MDBNavLink,
+  MDBTabPane,
   MDBTabContent,
 } from "mdbreact";
 import { isEqual } from "lodash";
@@ -43,12 +44,7 @@ const _form = {
     onPromo: false,
     hasReseco: false,
   },
-  tabs = [
-    "Suggested Retail Price",
-    "Insourcing/Contracts",
-    "Expenses",
-    "Others",
-  ];
+  tabs = ["SRP", "Insourcing/Contracts", "Expenses", "Others"];
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { formSubmitted = false, isSuccess } = useSelector(({ menus }) => menus),
@@ -126,7 +122,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         <MDBIcon icon="book-open" className="mr-2" />
         {willCreate ? "Create" : "Update"} {selected?.description || "a Menu"}
       </MDBModalHeader>
-      <MDBModalBody className="mb-0">
+      <MDBModalBody className="mb-0 ">
         <form onSubmit={handleSubmit}>
           <h5 className="mb-0">Information</h5>
           <MDBRow>
@@ -169,20 +165,28 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           </MDBNav>
 
           <MDBTabContent activeItem={activeTab}>
-            <SRP handleValue={handleValue} handleChange={handleChange} />
+            <MDBTabPane tabId={"menu-0"}>
+              <SRP handleValue={handleValue} handleChange={handleChange} />
+            </MDBTabPane>
           </MDBTabContent>
           <MDBTabContent activeItem={activeTab}>
-            <Contracts
-              form={form}
-              handleValue={handleValue}
-              handleChange={handleChange}
-            />
+            <MDBTabPane tabId={"menu-1"} className="m-0 p-0">
+              <Contracts
+                form={form}
+                handleValue={handleValue}
+                handleChange={handleChange}
+              />
+            </MDBTabPane>
           </MDBTabContent>
           <MDBTabContent activeItem={activeTab}>
-            <Expenses handleValue={handleValue} handleChange={handleChange} />
+            <MDBTabPane tabId={"menu-2"}>
+              <Expenses handleValue={handleValue} handleChange={handleChange} />
+            </MDBTabPane>
           </MDBTabContent>
           <MDBTabContent activeItem={activeTab}>
-            <Others handleValue={handleValue} handleChange={handleChange} />
+            <MDBTabPane tabId={"menu-3"}>
+              <Others handleValue={handleValue} handleChange={handleChange} />
+            </MDBTabPane>
           </MDBTabContent>
 
           <div className="text-center mb-1-half">
