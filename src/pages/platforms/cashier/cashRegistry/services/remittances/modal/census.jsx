@@ -22,7 +22,7 @@ import { Services } from "../../../../../../../services/fakeDb";
 
 export default function Census() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { showCensus, selected, deals } = useSelector(
+    { showCensus, selected, deals, formSubmitted, isSuccess } = useSelector(
       ({ remittances }) => remittances
     ),
     { collections: payments } = useSelector(({ payments }) => payments),
@@ -93,6 +93,12 @@ export default function Census() {
     };
   }, [selected, token, activePlatform, auth, dispatch, deals]);
 
+  useEffect(() => {
+    if (showCensus && isSuccess && !formSubmitted) {
+      dispatch(TOGGLE({ key: "census" }));
+    }
+  }, [isSuccess, formSubmitted, showCensus, dispatch]);
+
   const censusDate = selected?.createdAt
     ? new Date(selected.createdAt).toLocaleDateString("en-PH") // 'YYYY-MM-DD' in local time
     : "N/A";
@@ -114,12 +120,12 @@ export default function Census() {
       breakdown,
       patients,
       sales: gross,
-      collections: breakdown.cash + opening.sum - paymentsSum,
+      coh: breakdown.cash + opening.sum - paymentsSum,
       expenses: paymentsSum,
     };
 
     dispatch(CENSUS({ token, data }));
-    dispatch(TOGGLE({ key: "census" }));
+    // dispatch(TOGGLE({ key: "census" }));
   };
 
   const tabStyle = (tab) =>
@@ -257,7 +263,8 @@ export default function Census() {
             rounded
             onClick={handleSubmit}
           >
-            <strong>Submit</strong>
+            <strong>Submit</strong>{" "}
+            {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
           </MDBBtn>
         )}
       </MDBCardBody>
