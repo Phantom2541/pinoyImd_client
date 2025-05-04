@@ -16,7 +16,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { RESET } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
-import { Categories } from "../../../../../../../services/fakeDb";
+import { Categories, Services } from "../../../../../../../services/fakeDb";
 import { SetMODAL } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function CashRegister() {
@@ -81,9 +81,11 @@ export default function CashRegister() {
   const toggleCheckout = () => setDidCheckout(!didCheckout);
 
   const handlePicker = (selected) => {
+    const department = Services.getDepartment(selected.packages) || [];
+
     setCart((prev) =>
       removeRedundantPackages(
-        { ...selected, referenceId: selected._id, isNew: true },
+        { ...selected, referenceId: selected._id, department, isNew: true },
         prev
       )
     );
