@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { MDBBadge } from "mdbreact";
+import { MDBBadge, MDBCol } from "mdbreact";
 import { SecondaryFooter, PrimaryFooter } from "./footer";
 
 import Tagging from "./body/tagging";
 import Show from "./body/show";
 
 export default function Card({ item, index }) {
-  const { collections: sources } = useSelector(({ providers }) => providers),
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { collections: sources } = useSelector(({ providers }) => providers),
     [deal, setDeal] = useState({}),
     [edit, setEdit] = useState(false);
   const {
       customerId = {},
       createdAt,
-      renderedAt,
+      rendered = [],
       physicianId = {},
       source: forwardedBy = {},
       _id,
+      cart = [],
     } = deal,
     { fullName: fullname = {} } = customerId,
-    source = sources.find(({ vendors }) => vendors?._id === forwardedBy?._id);
+    source = sources.find(({ vendors }) => vendors?._id === forwardedBy?._id),
+    { renderedAt, department } =
+      rendered.find(
+        ({ department }) =>
+          department ===
+          (activePlatform.department === "Laboratory" ? "LAB" : "RAD")
+      ) || {};
 
   useEffect(() => {
     setDeal(item);
@@ -27,16 +35,14 @@ export default function Card({ item, index }) {
 
   const handlePin = () => {
     return (
-      <span
-        className={`sales-card-num ${item.rendered?.length > 0 && "rendered"}`}
-      >
+      <span className={`sales-card-num ${department && "rendered"}`}>
         {deal.page} {index + 1}
       </span>
     );
   };
 
   return (
-    <>
+    <MDBCol md="4" key={index}>
       <div className="sales-card" key={index}>
         {handlePin()}
         <p className="line-clamp">
@@ -48,7 +54,7 @@ export default function Card({ item, index }) {
         </p>
         <div className="sales-card-body">
           <div className="d-flex">
-            {item.cart?.map(({ abbreviation, referenceId }) => (
+            {cart?.map(({ abbreviation, referenceId }) => (
               <MDBBadge key={referenceId} className="mx-1">
                 {abbreviation}
               </MDBBadge>
@@ -86,6 +92,6 @@ export default function Card({ item, index }) {
           />
         )}
       </div>
-    </>
+    </MDBCol>
   );
 }

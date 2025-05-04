@@ -25,7 +25,6 @@ const PrimaryFooter = ({ deal }) => {
         </MDBBtn>
         <MDBBtn
           type="button"
-          // onClick={() => generateTask()}
           onClick={() => dispatch(SetSELECTED(deal))}
           className="m-0 "
           title="Generate Task"

@@ -204,6 +204,7 @@ export default function Modal() {
       _id,
       ssx,
       rendered: [
+        ...deal.rendered,
         {
           department,
           renderedBy: auth._id,
