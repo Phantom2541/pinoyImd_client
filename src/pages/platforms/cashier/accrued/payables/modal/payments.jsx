@@ -122,10 +122,11 @@ export default function PaymentModal() {
           },
           token,
         })
-      ).then(({ payload }) => {
+      ).then(({ payload: data }) => {
+        const { payload } = data;
         setFormSubmitted(false);
         dispatch(
-          SetPAYOR({ payableId: payload.payableId, payor: payload.userId })
+          SetPAYOR({ payableId: payload.payableId, payor: payload.payor })
         );
         handleClose();
         Swal.fire({
