@@ -3,8 +3,10 @@ import { MDBModal, MDBModalBody, MDBIcon, MDBModalHeader } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb";
 import DataTable from "../../../../../../components/dataTable";
 import { capitalize, globalSearch } from "../../../../../../services/utilities";
+import { useSelector } from "react-redux";
 
-export default function Modal({ show, toggle, handlePick }) {
+export default function Modal({ show, toggle, handlePick, _isLoading }) {
+  const { formSubmitted } = useSelector(({ menus }) => menus);
   const [services, setServices] = useState([]);
 
   useEffect(() => {
@@ -37,6 +39,7 @@ export default function Modal({ show, toggle, handlePick }) {
             {
               _icon: "share",
               _function: handlePick,
+              _isLoading: formSubmitted,
               _haveSelect: true,
               _allowMultiple: true,
               _shouldReset: true,
