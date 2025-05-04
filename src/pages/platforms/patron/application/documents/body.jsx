@@ -40,7 +40,7 @@ const Body = () => {
                 <small>{companyId?.subName}</small>
               </td>
               <td>{name} </td>
-              <td>{Policy.getPosition(designation)}</td>
+              <td>{Policy.getPositions(designation)}</td>
               <td>{soe}</td>
               <td>{status}</td>
             </tr>

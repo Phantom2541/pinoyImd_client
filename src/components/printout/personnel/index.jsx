@@ -81,7 +81,7 @@ const PersonnelPrintOut = () => {
                     </p>
                   </td>
                   <td className="text-center" style={tdStyle}>
-                    {Policy.getRole(contract?.designation)}
+                    {Policy.getPosition(contract?.designation)}
                     {contract?.designation}
                   </td>
                   <td style={tdStyle} className="text-center">

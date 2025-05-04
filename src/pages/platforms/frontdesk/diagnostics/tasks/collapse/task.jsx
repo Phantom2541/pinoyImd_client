@@ -114,7 +114,7 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
                     signatories,
                     isPrint: true,
                   };
-                  activePlatform.department === "laboratory"
+                  activePlatform.department === "Laboratory"
                     ? handleLabPrint(_task)
                     : handleRadPrint(_task);
                 }}

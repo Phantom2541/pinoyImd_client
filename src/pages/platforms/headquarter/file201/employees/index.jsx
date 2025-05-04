@@ -110,7 +110,9 @@ export default function Employees() {
           {
             _key: "contract",
             _format: (data) => {
-              const designation = Policy.getPosition(Number(data?.designation));
+              const designation = Policy.getPositions(
+                Number(data?.designation)
+              );
               return <strong> {designation}</strong>;
             },
           },

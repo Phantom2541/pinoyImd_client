@@ -228,11 +228,11 @@ export const LABRESULT = createAsyncThunk(
   ({ token, data }, thunkAPI) => {
     try {
       // \diagnostics\laboratory\result\miscellaneous
-      const department = ["laboratory", "radiology"].includes(data.department)
+      const department = ["Laboratory", "radiology"].includes(data.department)
         ? data.department
         : "clinic";
       return axioKit.save(
-        `diagnostics/${department}/result/${data.form.toLowerCase()}`,
+        `diagnostics/${department.toLowerCase()}/result/${data.form.toLowerCase()}`,
         data,
         token
       );

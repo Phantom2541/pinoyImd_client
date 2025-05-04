@@ -11,6 +11,7 @@ export default function Header({ task }) {
   const { category, patient, source, referral, form, updatedAt } = task;
   const { fullName: pFull, isMale = false, dob = "", _id } = patient;
   const categoryWidth = source && referral ? "30%" : "64.2%";
+  console.log("sdadas", task);
 
   return (
     <div className="px-1">

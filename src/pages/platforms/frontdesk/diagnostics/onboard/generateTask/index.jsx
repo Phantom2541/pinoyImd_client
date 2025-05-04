@@ -37,12 +37,12 @@ export default function Modal() {
   useEffect(() => {
     if (show) setOutSourceId("");
   }, [show]);
-  const department = activePlatform.department === "laboratory" ? "LAB" : "RAD";
+  const department = activePlatform.department === "Laboratory" ? "LAB" : "RAD";
 
   const getIDS = (collections) => collections.map(({ id }) => id);
   const saveRequest = async (template, data, isStaticPath = false) => {
     try {
-      const _department = ["laboratory", "radiology"].includes(
+      const _department = ["Laboratory", "Radiology"].includes(
         activePlatform.department
       )
         ? activePlatform.department
@@ -50,7 +50,7 @@ export default function Modal() {
 
       const url = isStaticPath
         ? template
-        : `/diagnostics/${_department}/result/${template}`;
+        : `/diagnostics/${_department.toLowerCase()}/result/${template}`;
       await axioKit.save(url, data, token);
     } catch (error) {
       console.error("Error saving request:", error);

@@ -48,13 +48,11 @@ export default function Card({ item, index }) {
         </p>
         <div className="sales-card-body">
           <div className="d-flex">
-            {item.cart?.map((menu) => {
-              return (
-                <MDBBadge key={menu.referenceId} className="mx-1">
-                  {menu?.abbreviation}
-                </MDBBadge>
-              );
-            })}
+            {item.cart?.map(({ abbreviation, referenceId }) => (
+              <MDBBadge key={referenceId} className="mx-1">
+                {abbreviation}
+              </MDBBadge>
+            ))}
           </div>
 
           <div className="d-flex items-center">

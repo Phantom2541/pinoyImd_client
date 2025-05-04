@@ -143,7 +143,7 @@ export default function Collapsable({ branch = {} }) {
                   )}
                 </td>
                 <td style={style}>
-                  {Policy.getPosition(contract?.designation)}
+                  {Policy.getPositions(contract?.designation)}
                 </td>
                 <td style={style}>{user.email}</td>
                 {/* 👩‍💼 */}
