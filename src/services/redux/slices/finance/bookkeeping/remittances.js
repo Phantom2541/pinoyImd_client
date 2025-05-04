@@ -196,7 +196,7 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -207,14 +207,13 @@ export const reduxSlice = createSlice({
         state.selected = data;
         state.showModal = false;
         state.isSuccess = true;
-        state.isLoading = false;
-        console.log("SAVE.fulfilled floatingcash", data);
+        state.formSubmitted = false;
         localStorage.setItem("floatingcash", JSON.stringify(data));
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(AUTOSELECT.pending, (state) => {
         state.isLoading = true;
@@ -241,10 +240,10 @@ export const reduxSlice = createSlice({
       .addCase(CENSUS.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
-          ({ _id }) => _id === action.payload._id
+          ({ _id }) => _id === payload._id
         );
         state.collections[index] = {
-          ...action.payload,
+          ...payload,
           ...state.collections[index],
         };
         state.selected = payload;

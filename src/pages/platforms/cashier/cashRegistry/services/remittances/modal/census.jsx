@@ -9,8 +9,6 @@ import {
   MDBTableHead,
   MDBTableBody,
   MDBBtn,
-  MDBRow,
-  MDBCol,
   MDBCardBody,
 } from "mdbreact";
 import {
@@ -22,7 +20,7 @@ import { Services } from "../../../../../../../services/fakeDb";
 
 export default function Census() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { showCensus, selected, deals } = useSelector(
+    { showCensus, selected, deals, formSubmitted, isSuccess } = useSelector(
       ({ remittances }) => remittances
     ),
     { collections: payments } = useSelector(({ payments }) => payments),
@@ -93,6 +91,12 @@ export default function Census() {
     };
   }, [selected, token, activePlatform, auth, dispatch, deals]);
 
+  useEffect(() => {
+    if (showCensus && isSuccess && !formSubmitted) {
+      dispatch(TOGGLE({ key: "census" }));
+    }
+  }, [isSuccess, formSubmitted, showCensus, dispatch]);
+
   const censusDate = selected?.createdAt
     ? new Date(selected.createdAt).toLocaleDateString("en-PH") // 'YYYY-MM-DD' in local time
     : "N/A";
@@ -114,17 +118,16 @@ export default function Census() {
       breakdown,
       patients,
       sales: gross,
-      collections: breakdown.cash + opening.sum - paymentsSum,
+      coh: breakdown.cash + opening.sum - paymentsSum,
       expenses: paymentsSum,
     };
 
     dispatch(CENSUS({ token, data }));
-    dispatch(TOGGLE({ key: "census" }));
+    // dispatch(TOGGLE({ key: "census" }));
   };
 
   const tabStyle = (tab) =>
     `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;
-
   return (
     <MDBModal
       isOpen={showCensus}
@@ -147,8 +150,14 @@ export default function Census() {
       )}
 
       <MDBModalBody className="mb-0">
-        <MDBRow className="align-items-center mb-3">
+        <div className=" d-flex justify-content-between align-items-center mb-3">
           {[
+            {
+              icon: "hand-holding-usd",
+              text: "Floating Cash",
+              value: currency(selected?.opening?.sum),
+              color: "text-success",
+            },
             {
               icon: "chart-line",
               text: "Gross Sales",
@@ -168,18 +177,18 @@ export default function Census() {
               color: "text-primary",
             },
           ].map(({ icon, text, value, color }, index) => (
-            <MDBCol
+            <div
               key={index}
-              size="4"
+              size="3"
               className={index === 2 ? "text-right" : ""}
             >
               <h6 className="mb-0">
                 <MDBIcon icon={icon} className={`${color} mr-2`} />
                 {text}: <strong>{value}</strong>
               </h6>
-            </MDBCol>
+            </div>
           ))}
-        </MDBRow>
+        </div>
 
         <div className="mb-3 d-flex">
           <MDBBtn
@@ -257,7 +266,8 @@ export default function Census() {
             rounded
             onClick={handleSubmit}
           >
-            <strong>Submit</strong>
+            <strong>Submit</strong>{" "}
+            {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
           </MDBBtn>
         )}
       </MDBCardBody>

@@ -79,7 +79,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   useEffect(() => {
     if (show && !willCreate && selected._id) return setForm(selected);
-    setForm(_form);
+    setForm(selected);
   }, [show, willCreate, selected]);
 
   const handleUpdate = () => {
@@ -127,8 +127,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const { prc = {} } = user || {};
 
   const handleStaffChange = (user) => {
-    console.log("user", user);
-
     setForm({
       ...form,
       user,
@@ -149,7 +147,8 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     _sections.push(department === "Laboratory" ? "Pathologist" : "Radiologist");
     setSections(_sections);
   };
-  console.log("form", form);
+
+  console.log("form", willCreate, form?.user?._id);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>

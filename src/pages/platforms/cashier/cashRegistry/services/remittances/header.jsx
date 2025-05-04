@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
+import { useToasts } from "react-toast-notifications";
 import {
   BROWSE,
   RESET,
@@ -13,11 +14,21 @@ import { Calendars } from "../../../../../../components/header";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { month, year, collections } = useSelector(
+    { month, year, collections, isSuccess, message } = useSelector(
       ({ remittances }) => remittances
     ),
     [coh, setCoh] = useState(0),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    message &&
+      addToast(message, {
+        appearance: isSuccess ? "success" : "error",
+      });
+
+    return () => dispatch(RESET());
+  }, [isSuccess, message, addToast, dispatch]);
 
   useEffect(() => {
     if (token && activePlatform?.branchId && year && month) {
