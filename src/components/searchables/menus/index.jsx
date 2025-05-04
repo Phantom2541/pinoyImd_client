@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
-import { MDBIcon } from "mdbreact";
+import { MDBIcon, MDBAnimation, MDBProgress } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
   BROWSE as MENUS,
@@ -24,11 +24,12 @@ import "../style.css";
  *
  * @returns {JSX.Element} user
  */
-export default function Search({ setMenu, setRegister }) {
+export default function Search({ setMenu, setRegister = () => {} }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ menus }) => menus),
     [match, setMatch] = useState([]),
     [searchKey, setSearchKey] = useState(""),
+    [isLoading, setIsLoading] = useState(false),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -73,6 +74,8 @@ export default function Search({ setMenu, setRegister }) {
   const debouncedSearch = useMemo(
     () =>
       debounce((key) => {
+        setIsLoading(false);
+
         if (key.trim().length <= 1) return setMatch([]);
         const _match = globalSearch(collections, key.trim());
         setMatch(_match);
@@ -82,6 +85,7 @@ export default function Search({ setMenu, setRegister }) {
 
   const handleChange = (value) => {
     setSearchKey(value);
+    setIsLoading(true);
     // Debounced search trigger
     debouncedSearch(value);
   };
@@ -108,46 +112,70 @@ export default function Search({ setMenu, setRegister }) {
   return (
     <div className=" d-flex align-items-center " style={{ width: "85%" }}>
       <Notification didSearch={match.length > 0} />
-      <div className={`searchable-search  ${match.length > 0 && "active"}`}>
+      <div className={`searchable-search  ${searchKey && "active"}`}>
         <div className="searchable-search-suggestions">
-          {searchKey && match.length === 0 && (
-            <li onClick={handleRegister}>No match found.</li>
-          )}
-
-          {match.length === 0 && !searchKey && (
-            <li>Please type a menu name.</li>
-          )}
-
-          {match.length > 0 &&
-            match.map((menu, index) => {
-              const { description = "", abbreviation = "", opd = 0 } = menu;
-
-              return (
-                <li
-                  key={`menu-suggestion-${index}`}
-                  onClick={() => {
-                    if (opd) {
-                      handleSelect(menu);
-                    } else {
-                      addToast("This product has no set price.", {
-                        appearance: "warning",
-                      });
-                    }
-                  }}
-                >
-                  <div className="d-flex align-items-left justify-content-between menu-suggestion ">
-                    <span className="text-left  ">
-                      {description && (
-                        <span className="description text-dark">
-                          {description}
-                        </span>
-                      )}
-                    </span>
-                    <span className="ml-3 text-dark">{abbreviation}</span>
-                  </div>
+          {!isLoading ? (
+            <>
+              {" "}
+              {searchKey && match.length === 0 && (
+                <li onClick={handleRegister} className="text-dark">
+                  No services found for "{searchKey}". try another keywords
                 </li>
-              );
-            })}
+              )}
+              {match.length === 0 && !searchKey && (
+                <li>Please type a menu name.</li>
+              )}
+              {match.length > 0 &&
+                match.map((menu, index) => {
+                  const { description = "", abbreviation = "", opd = 0 } = menu;
+
+                  return (
+                    <li
+                      key={`menu-suggestion-${index}`}
+                      onClick={() => {
+                        if (opd) {
+                          handleSelect(menu);
+                        } else {
+                          addToast("This product has no set price.", {
+                            appearance: "warning",
+                          });
+                        }
+                      }}
+                    >
+                      <div className="d-flex align-items-left justify-content-between menu-suggestion ">
+                        <span className="text-left  ">
+                          {description && (
+                            <span className="description text-dark">
+                              {description}
+                            </span>
+                          )}
+                        </span>
+                        <span className="ml-3 text-dark">{abbreviation}</span>
+                      </div>
+                    </li>
+                  );
+                })}
+            </>
+          ) : (
+            <>
+              {new Array(5).fill("").map((_, index) => (
+                <MDBAnimation
+                  key={index}
+                  className="p-1 ml-2 mr-2 "
+                  type="flash"
+                  infinite
+                  delay={`${index + 1}00ms`}
+                  duration="3000ms"
+                >
+                  <MDBProgress
+                    color="light"
+                    value={3000}
+                    id="progress-table"
+                  ></MDBProgress>
+                </MDBAnimation>
+              ))}
+            </>
+          )}
         </div>
         <input
           ref={inputRef} // Attach the reference to the input element
