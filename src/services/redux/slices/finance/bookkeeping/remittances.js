@@ -14,6 +14,7 @@ const initialState = {
   title: "",
   showModal: false,
   showCensus: false,
+  formSubmitted: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -170,7 +171,6 @@ export const reduxSlice = createSlice({
 
     RESET: (state) => {
       state.isSuccess = false;
-
       state.message = "";
     },
     ResetDATE: (state) => {
@@ -234,21 +234,28 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(CENSUS.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(CENSUS.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+        const index = state.collections.findIndex(
+          ({ _id }) => _id === action.payload._id
+        );
+        state.collections[index] = {
+          ...action.payload,
+          ...state.collections[index],
+        };
         state.selected = payload;
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(CENSUS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;

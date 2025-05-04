@@ -36,13 +36,11 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
       );
     })
     .reduce((acc, curr) => acc + curr.amount, 0);
-
   const isRemitted = !!collector;
 
   const { cash, ...rest } = breakdown;
   const nonCash = Object.entries(rest);
   const net = (opening.sum || 0) + cash - expenses;
-
   return (
     <div className="position-relative">
       <div
