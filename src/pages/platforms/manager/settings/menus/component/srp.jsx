@@ -1,9 +1,9 @@
 import React from "react";
-import { MDBInput, MDBRow, MDBCol, MDBTabPane } from "mdbreact";
+import { MDBInput, MDBRow, MDBCol } from "mdbreact";
 
 export default function SRP({ handleChange, handleValue }) {
   return (
-    <MDBTabPane tabId={"menu-0"}>
+    <>
       <MDBRow>
         <MDBCol md="4">
           <MDBInput
@@ -29,6 +29,8 @@ export default function SRP({ handleChange, handleValue }) {
             onChange={(e) => handleChange("er", e.target.value)}
           />
         </MDBCol>
+      </MDBRow>
+      <MDBRow>
         <MDBCol md="4">
           <MDBInput
             type="number"
@@ -37,7 +39,7 @@ export default function SRP({ handleChange, handleValue }) {
             onChange={(e) => handleChange("pw", e.target.value)}
           />
         </MDBCol>
-        <MDBCol md="4">
+        <MDBCol md="3">
           <MDBInput
             type="number"
             label="Promo"
@@ -45,16 +47,16 @@ export default function SRP({ handleChange, handleValue }) {
             onChange={(e) => handleChange("promo", e.target.value)}
           />
         </MDBCol>
+        <MDBCol md="5">
+          <MDBInput
+            type="number"
+            label="Health Maintenance Organization"
+            value={handleValue("hmo")}
+            onChange={(e) => handleChange("hmo", e.target.value.toLowerCase())}
+            className="mb-0"
+          />
+        </MDBCol>
       </MDBRow>
-      <MDBCol md="6">
-        <MDBInput
-          type="number"
-          label="Health Maintenance Organization"
-          value={handleValue("hmo")}
-          onChange={(e) => handleChange("hmo", e.target.value.toLowerCase())}
-          className="mb-0"
-        />
-      </MDBCol>
-    </MDBTabPane>
+    </>
   );
 }

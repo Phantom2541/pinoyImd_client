@@ -1,8 +1,8 @@
 import React from "react";
-import { MDBRow, MDBCol, MDBTabPane, MDBInput } from "mdbreact";
+import { MDBRow, MDBCol, MDBInput } from "mdbreact";
 export default function Others({ handleChange, handleValue }) {
   return (
-    <MDBTabPane tabId={"menu-3"}>
+    <>
       <MDBRow>
         <MDBCol md="6">
           <label>Is Profile </label>
@@ -57,6 +57,6 @@ export default function Others({ handleChange, handleValue }) {
           />
         </MDBCol>
       </MDBRow>
-    </MDBTabPane>
+    </>
   );
 }
