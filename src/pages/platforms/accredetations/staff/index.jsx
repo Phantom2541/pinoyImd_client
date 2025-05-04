@@ -93,7 +93,7 @@ const HumanResources = () => {
                     <tr key={`personnel-${index}`}>
                       <td>{fullName(user?.fullName).toUpperCase()}</td>
                       <td className="text-center">
-                        {Policy.getPosition(Number(contract?.designation))}
+                        {Policy.getPositions(Number(contract?.designation))}
                       </td>
                       <td>{hea}</td>
                       <td className="text-center">{prc.id}</td>

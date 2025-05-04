@@ -12,6 +12,8 @@ export default function Body({
   referral,
 }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
+  console.log("task", tasks);
+
   return (
     <MDBCardBody className="pt-0">
       <MDBTable small hover responsive>
@@ -27,7 +29,7 @@ export default function Body({
           {Object.entries(tasks || {})?.map(([key, task], index) => {
             const isEmpty = !task || (Array.isArray(task) && task.length === 0);
             const _task = { ...task, category, source, referral, _id };
-            if (isEmpty && activePlatform.department === "laboratory") {
+            if (isEmpty && activePlatform.department === "Laboratory") {
               return (
                 <tr key={`empty-${index}`}>
                   <td colSpan={4}>Empty Test</td>

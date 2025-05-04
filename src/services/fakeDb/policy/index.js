@@ -16,7 +16,16 @@ const Policy = {
       collections.find(({ department: dep }) => dep === pk) || "";
     return department || "";
   },
-  getRole: (pk) => {
+
+  getPositionsByDepartmentName: (name) => {
+    const match = collections.find(({ department }) => department === name);
+    const positions = match?.positions || []; // fallback to empty array
+    return positions;
+  },
+  /**
+   * return  position display_name by department id
+   */
+  getPosition: (pk) => {
     if (pk < 0) return "unknown department";
     const { positions = [] } =
       collections.find(({ positions = [] }) =>
@@ -24,17 +33,12 @@ const Policy = {
       ) || {};
     if (positions.length === 0) return "unknown designation";
     const role = [...positions].find(({ id }) => id === pk).display_name;
-    // console.log("role", role);
-
     return role;
   },
-  getPositionsByDepartmentName: (name) => {
-    const match = collections.find(({ department }) => department === name);
-    const positions = match?.positions || []; // fallback to empty array
-    return positions;
-  },
-
-  getPosition: (pk) => {
+  /**
+   * return all positions by department id
+   */
+  getPositions: (pk) => {
     if (pk < 0) return collections[0].positions[0].display_name;
     const { positions = [] } =
       collections.find(({ positions = [] }) =>

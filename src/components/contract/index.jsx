@@ -15,7 +15,7 @@ export default function EmploymentContractPage() {
   const companySubName = companyId.subName;
   const branchName = name;
   const departmentName = Policy.getDepname(department);
-  const positionTitle = Policy.getPosition(position);
+  const positionTitle = Policy.getPositions(position);
   const employmentStatus = contract.soe;
 
   return (

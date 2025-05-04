@@ -85,7 +85,7 @@ export default function Applicants() {
                       <td>{index + 1}</td>
                       <td>{fullName(user.fullName)}</td>
                       <td>
-                        <h5>{Policy.getPosition(contract?.designation)}</h5>
+                        <h5>{Policy.getPositions(contract?.designation)}</h5>
                         <small>
                           {Policy.getDepartment(contract?.designation)}
                         </small>

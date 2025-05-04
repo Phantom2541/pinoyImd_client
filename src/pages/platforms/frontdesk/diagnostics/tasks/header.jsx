@@ -20,7 +20,7 @@ const Headers = ({ searchKey }) => {
           token,
           key: {
             department: [
-              activePlatform?.department === "laboratory" ? "LAB" : "RAD",
+              activePlatform?.department === "Laboratory" ? "LAB" : "RAD",
             ],
             branchId: activePlatform?.branchId,
             createdAt: new Date().setHours(0, 0, 0, 0),

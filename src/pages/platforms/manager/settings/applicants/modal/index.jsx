@@ -238,7 +238,7 @@ export default function AccessModal() {
           <MDBIcon icon="universal-access" className="mr-2" />
           {`${fullName(user.fullName) || ""} `}
         </h6>
-        <small>{Policy.getPosition(contract?.designation)}</small>
+        <small>{Policy.getPositions(contract?.designation)}</small>
       </MDBModalHeader>
       <MDBModalBody>
         <MDBTypography noteTitle="Description: " note noteColor="warning">

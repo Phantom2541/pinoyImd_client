@@ -22,26 +22,23 @@ import { capitalize, isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../services/utilities";
 import { Select } from "../../../../../components/customizable";
-// import Templates from "../../../../../components/searchables/templates";
-import TemplatetUtils from "../../../../../services/fakeDb/diagnostics/templates";
-// declare your expected items
+import Templates from "../../../../../services/fakeDb/diagnostics/templates";
+import { Policy } from "../../../../../services/fakeDb";
 const _form = {
   user: "",
   department: "",
   section: "",
 };
-
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { collections } = useSelector(({ personnels }) => personnels),
     { formSubmitted, isSuccess } = useSelector(({ heads }) => heads),
     [crews, setCrews] = useState([]),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
+    [department, setDepartment] = useState(activePlatform?.department),
     [sections, setSections] = useState([]),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
-  const { department } = activePlatform;
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -57,16 +54,28 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   }, [activePlatform, show, willCreate, dispatch, token]);
 
   useEffect(() => {
-    const _sections = TemplatetUtils.getComponents(
-      department === "laboratory" ? "LAB" : "RAD"
-    );
-    _sections.push(department === "laboratory" ? "Pathologist" : "Radiologist");
-    setSections(_sections);
-  }, [department]);
+    if (activePlatform?.departments === department) {
+      const _sections = Templates.getComponents(
+        department === "Laboratory" ? "LAB" : "RAD"
+      );
+
+      // add new section field
+      _sections.push(
+        department === "Laboratory" ? "Pathologist" : "Radiologist"
+      );
+      setSections(_sections);
+    }
+  }, [department, activePlatform]);
 
   useEffect(() => {
-    setCrews(collections);
-  }, [collections]);
+    const positions = Policy.getPositionsByDepartmentName(department).map(
+      ({ id }) => id
+    );
+    const _crew = collections.filter(({ contract }) =>
+      positions.includes(contract.designation)
+    );
+    setCrews(_crew);
+  }, [collections, department]);
 
   useEffect(() => {
     if (show && !willCreate && selected._id) return setForm(selected);
@@ -82,7 +91,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
     dispatch(
       UPDATE({
-        data: { ...form, id: selected._id, department },
+        data: { ...form, id: selected._id },
         token,
       })
     );
@@ -90,12 +99,11 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const handleCreate = () => {
     dispatch(
       SAVE({
-        data: { ...form, branch: activePlatform?.branchId, department },
+        data: { ...form, branch: activePlatform?.branchId },
         token,
       })
     );
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -114,17 +122,34 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       section,
     });
   };
-
-  const handleStaffChange = (user) => {
-    setForm({
-      ...form,
-      user,
-    });
-  };
-
   const { user = {} } =
     [...crews].find(({ user }) => user._id === form?.user) || {};
   const { prc = {} } = user || {};
+
+  const handleStaffChange = (user) => {
+    console.log("user", user);
+
+    setForm({
+      ...form,
+      user,
+      prc,
+    });
+  };
+
+  const handleDepartmentChange = (department) => {
+    setDepartment(department);
+    setForm({
+      ...form,
+      department: department.toLowerCase(),
+    });
+    const _sections = Templates.getComponents(
+      department === "Laboratory" ? "LAB" : "RAD"
+    );
+    // add new section field
+    _sections.push(department === "Laboratory" ? "Pathologist" : "Radiologist");
+    setSections(_sections);
+  };
+  console.log("form", form);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
@@ -133,19 +158,18 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} {selected.name || " a Tag Staff"}
+        {willCreate ? "Designate" : "Update"} {selected.name || " head"}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBRow>
             <MDBCol md="12">
               <Select
-                collections={
-                  department === "laboratory" ? ["Laboratory"] : ["Radiology"]
-                }
-                preValue={capitalize(activePlatform.department)}
+                collections={["Radiology", "Laboratory"]}
+                preValue={capitalize(department)}
                 label={"Department"}
                 multiple={false}
+                onChange={handleDepartmentChange}
               />
             </MDBCol>
           </MDBRow>
@@ -166,7 +190,9 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <Select
                 collections={crews.map((crew) => ({
                   _id: crew?.user?._id,
-                  fullName: fullName(crew?.user?.fullName),
+                  fullName: `${fullName(
+                    crew?.user?.fullName
+                  )} - ${Policy.getPosition(crew?.contract?.designation)}`,
                 }))}
                 onChange={handleStaffChange}
                 preValue={willCreate ? form.user : form?.user?._id}
