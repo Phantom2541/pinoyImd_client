@@ -9,8 +9,6 @@ import {
   MDBTableHead,
   MDBTableBody,
   MDBBtn,
-  MDBRow,
-  MDBCol,
   MDBCardBody,
 } from "mdbreact";
 import {
