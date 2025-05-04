@@ -10,19 +10,11 @@ export default function DealCollapse() {
     { filtered, activePage, activeCOLAPSE } = useSelector(
       ({ validator }) => validator
     );
-
   return (
     <MDBContainer style={{ minHeight: "500px" }} fluid className="md-accordion">
       {handlePagination(filtered, activePage, maxPage).map((deal, index) => {
-        const {
-          _id,
-          customerId,
-          forms,
-          diagnostic,
-          category,
-          source,
-          physicianId,
-        } = deal;
+        const { _id, customerId, diagnostic, category, source, physicianId } =
+          deal;
         return (
           <MDBCard key={`deal-${index}`}>
             <Header deal={deal} index={index} />

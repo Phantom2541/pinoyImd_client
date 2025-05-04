@@ -12,7 +12,6 @@ export default function Body({
   referral,
 }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
-  console.log("task", tasks);
 
   return (
     <MDBCardBody className="pt-0">
