@@ -6,6 +6,8 @@ import Signatories from "./signatories";
 import "../../printout.css";
 const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
+  console.log();
+
   return (
     <div className="print-container position-relative">
       <Banner company={branchId.companyId.name} branch={branchId.name} />

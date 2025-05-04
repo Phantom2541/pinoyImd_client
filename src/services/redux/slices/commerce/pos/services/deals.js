@@ -232,7 +232,7 @@ export const LABRESULT = createAsyncThunk(
         ? data.department
         : "clinic";
       return axioKit.save(
-        `diagnostics/${department}/result/${data.form.toLowerCase()}`,
+        `diagnostics/${department.toLowerCase()}/result/${data.form.toLowerCase()}`,
         data,
         token
       );

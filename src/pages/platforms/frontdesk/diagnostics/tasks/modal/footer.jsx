@@ -64,7 +64,7 @@ const Footer = () => {
     let dr;
     if (form !== "Ecg") {
       dr = findSignatoryId(
-        department === "laboratory" ? "pathologist" : "radiologist"
+        department === "Laboratory" ? "pathologist" : "radiologist"
       );
     } else {
       dr = findPhysicianId(task.signatories[1]._id);
