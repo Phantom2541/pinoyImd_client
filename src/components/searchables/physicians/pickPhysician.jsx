@@ -28,6 +28,9 @@ import "./style.css";
  */
 export default function PickPhysician({
   onClick = () => {},
+  disabled = false,
+  selectedClassName = "", // this classname if apply in showing of selected physician
+  globalSearch = false, // if true search all physician in database
   label = "Please set a label",
 }) {
   const { collections, isLoading } = useSelector(
@@ -60,7 +63,13 @@ export default function PickPhysician({
   const debouncedSearch = debounce((searchKey) => {
     const key = formatNameToObj(searchKey);
     dispatch(
-      SEARCH({ token, key: { ...key, branchID: activePlatform?.branchId } })
+      SEARCH({
+        token,
+        key: {
+          ...key,
+          ...(!globalSearch && { branchID: activePlatform?.branchId }),
+        },
+      })
     );
   }, 1000);
 
@@ -87,7 +96,7 @@ export default function PickPhysician({
     <>
       <div className="position-relative">
         {selected._id ? (
-          <div className="d-flex align-items-center">
+          <div className={`d-flex align-items-center ${selectedClassName}`}>
             <div>
               <small className="grey-text">
                 {label}:
@@ -116,7 +125,7 @@ export default function PickPhysician({
         ) : (
           <>
             <MDBInput
-              disabled={isLoading}
+              disabled={isLoading || disabled}
               label={label}
               style={{ width: "100%" }}
               type="search"
@@ -149,7 +158,7 @@ export default function PickPhysician({
                   <>
                     {users.length === 0 && (
                       <h6 className="text-center mt-2">
-                        No users Found. Try another keywords
+                        No physicians Found. Try another keywords
                       </h6>
                     )}
                     <ul>

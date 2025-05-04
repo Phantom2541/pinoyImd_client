@@ -60,7 +60,7 @@ export default function Applicants() {
                     Name&nbsp;
                     <MDBIcon icon="sort" title="Sort by Name" />
                   </th>
-                  <tn>Position</tn>
+                  <th>Position</th>
                   <th> Pds</th>
                   <th>Resume</th>
                   <th>Letter</th>
@@ -85,8 +85,12 @@ export default function Applicants() {
                       <td>{index + 1}</td>
                       <td>{fullName(user.fullName)}</td>
                       <td>
-                        <h5>{Policy.getPositions(contract?.designation)}</h5>
-                        <small>
+                        <h6 className="font-weight-bold">
+                          {Policy.getPosition(contract?.designation)}
+                        </h6>
+                        <small
+                          style={{ marginTop: "-0.3rem", display: "block" }}
+                        >
                           {Policy.getDepartment(contract?.designation)}
                         </small>
                       </td>

@@ -18,13 +18,19 @@ export default function CollapseTable({
 }) {
   const [services, setServices] = useState([]);
   const [showModal, setShowModal] = useState(false);
-
   const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { formSubmitted, isSuccess } = useSelector(({ menus }) => menus);
   const dispatch = useDispatch();
 
   useEffect(() => {
     setServices(Services.whereIn(packages));
   }, [packages]);
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess) {
+      setShowModal(false);
+    }
+  }, [formSubmitted, isSuccess]);
 
   const toggleModal = () => setShowModal((prev) => !prev);
 
@@ -45,7 +51,7 @@ export default function CollapseTable({
       })
     );
 
-    toggleModal();
+    // toggleModal();
     if (searchKey) {
       setActiveId(-1);
       resetSearch();

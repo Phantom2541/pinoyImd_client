@@ -38,6 +38,7 @@ export default function Actions({
       _allowMultiple = true,
       _disabledOnSearch = false,
       _selected = false,
+      _isLoading = false,
     } = action;
 
     const element = (
@@ -72,14 +73,15 @@ export default function Actions({
             handleSelectReset();
           }
         }}
-        disabled={isLoading || (_disabledOnSearch && search ? true : false)}
+        disabled={_isLoading || (_disabledOnSearch && search ? true : false)}
         outline={!_selected}
         color="white"
         rounded
         size="sm"
         className={`px-2 ${_className}`}
       >
-        <MDBIcon icon={_icon} className="mt-0" />
+        <MDBIcon icon={_icon} className="mt-0" />{" "}
+        {_isLoading && <MDBIcon icon="spinner" pulse className="ml-2" />}
       </MDBBtn>
     );
 

@@ -50,8 +50,8 @@ const _form = {
     "Others",
   ];
 export default function Modal({ show, toggle, selected, willCreate }) {
-  const { isLoading } = useSelector(({ personnels }) => personnels),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { formSubmitted = false, isSuccess } = useSelector(({ menus }) => menus),
     [form, setForm] = useState(_form),
     [activeTab, setActiveTab] = useState("menu-0"),
     { addToast } = useToasts(),
@@ -61,9 +61,14 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     if (selected._id) setForm(selected);
   }, [selected]);
 
-  const handleUpdate = () => {
-    toggle();
+  useEffect(() => {
+    if (!formSubmitted && isSuccess && show) {
+      toggle();
+      setForm(_form);
+    }
+  }, [formSubmitted, isSuccess, toggle, show]);
 
+  const handleUpdate = () => {
     // check if object has changed
     if (isEqual(form, selected))
       return addToast("No changes found, skipping update.", {
@@ -76,8 +81,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         token,
       })
     );
-
-    setForm(_form);
   };
 
   const handleCreate = () => {
@@ -90,9 +93,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         token,
       })
     );
-
-    setForm(_form);
-    toggle();
   };
 
   const handleSubmit = (e) => {
@@ -188,12 +188,15 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"
-              disabled={isLoading}
+              disabled={formSubmitted}
               color="info"
               className="mb-2"
               rounded
             >
-              {willCreate ? "submit" : "update"}
+              {willCreate ? "submit" : "update"}{" "}
+              {formSubmitted && (
+                <MDBIcon icon="spinner" pulse className="ml-2" />
+              )}
             </MDBBtn>
           </div>
         </form>

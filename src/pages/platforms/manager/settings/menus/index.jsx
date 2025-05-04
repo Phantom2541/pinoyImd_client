@@ -7,12 +7,13 @@ import {
   BROWSE,
   RESET,
 } from "../../../../../services/redux/slices/commerce/catalog/menus";
-import { globalSearch } from "../../../../../services/utilities";
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
 import TableRowCount from "../../../../../components/pagination/rows";
 import Pagination from "../../../../../components/pagination";
 import Swal from "sweetalert2";
+import Search from "../../../../../components/searchables/search";
+import TableLoading from "../../../../../components/tableLoading";
 
 const Menus = () => {
   const [menus, setMenus] = useState([]),
@@ -100,34 +101,12 @@ const Menus = () => {
 
   const resetSearch = () => setSearchKey("");
 
-  const handleSearch = async () => {
-    const { value: search, isConfirmed } = await Swal.fire({
-      title: "What are you looking for?",
-      text: "Provide a keyword and we will find it for you.",
-      icon: "question",
-      input: "text",
-      inputValue: searchKey || "",
-      confirmButtonText: "Search",
-      showCancelButton: true,
-      cancelButtonText: "Clear Search",
-      inputValidator: (value) => {
-        if (!value && !searchKey) return "You need to write something!";
-      },
-    });
+  // const handleGenerate = () => {
+  //   setVisible(!visible);
+  // };
 
-    if (isConfirmed && search) {
-      const value = search.toUpperCase();
-      setSearchKey(value);
-      setMenus(globalSearch(collections, value));
-    } else if (!isConfirmed && searchKey) {
-      // Clear the search
-      setSearchKey("");
-      setMenus(collections);
-    }
-  };
-
-  const handleGenerate = () => {
-    setVisible(!visible);
+  const handleChangePage = (isAdd) => {
+    setPage((prev) => (isAdd ? prev + 1 : prev - 1));
   };
 
   return (
@@ -141,18 +120,14 @@ const Menus = () => {
             {menus.length}&nbsp;
             {searchKey ? `Matches with ${searchKey}` : "Available Menus"}
           </span>
-          <div className="text-right">
-            <MDBBtn
-              onClick={handleSearch}
-              disabled={isLoading}
-              outline
-              color="white"
-              rounded
-              size="sm"
-              className="px-2"
-            >
-              <MDBIcon icon="search" className="mt-0" />
-            </MDBBtn>
+          <div className="d-flex align-items-center justify-content-between">
+            <Search
+              collections={collections}
+              setFiltered={setMenus}
+              reset={() => setMenus(collections)}
+              haveAction={false}
+            />
+
             <MDBBtn
               onClick={handleCreate}
               disabled={isLoading}
@@ -160,11 +135,11 @@ const Menus = () => {
               color="white"
               rounded
               size="sm"
-              className="px-2"
+              className="px-2 ml-3"
             >
               <MDBIcon icon="plus" className="mt-0" />
             </MDBBtn>
-            <MDBBtn
+            {/* <MDBBtn
               onClick={handleGenerate}
               disabled={isLoading}
               outline
@@ -175,26 +150,32 @@ const Menus = () => {
               className="px-2"
             >
               <MDBIcon icon="arrow-down" className="mt-0" />
-            </MDBBtn>
+            </MDBBtn> */}
           </div>
         </MDBView>
         <MDBCardBody className="pb-0">
-          <MenuCollapse
-            menus={menus}
-            page={page}
-            resetSearch={resetSearch}
-            searchKey={searchKey}
-            handleUpdate={handleUpdate}
-          />
-          <div className="d-flex justify-content-between align-items-center px-4">
-            <TableRowCount />
-            <Pagination
-              isLoading={isLoading}
-              total={totalPages}
-              page={page}
-              setPage={setPage}
-            />
-          </div>
+          {!isLoading ? (
+            <>
+              <MenuCollapse
+                menus={menus}
+                page={page}
+                resetSearch={resetSearch}
+                searchKey={searchKey}
+                handleUpdate={handleUpdate}
+              />
+              <div className="d-flex justify-content-between align-items-center px-4">
+                <TableRowCount />
+                <Pagination
+                  isLoading={isLoading}
+                  total={totalPages}
+                  page={page}
+                  setPage={handleChangePage}
+                />
+              </div>
+            </>
+          ) : (
+            <TableLoading />
+          )}
         </MDBCardBody>
       </MDBCard>
       <Modal
