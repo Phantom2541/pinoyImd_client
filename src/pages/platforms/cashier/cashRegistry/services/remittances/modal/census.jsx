@@ -130,7 +130,6 @@ export default function Census() {
 
   const tabStyle = (tab) =>
     `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;
-
   return (
     <MDBModal
       isOpen={showCensus}
@@ -153,8 +152,14 @@ export default function Census() {
       )}
 
       <MDBModalBody className="mb-0">
-        <MDBRow className="align-items-center mb-3">
+        <div className=" d-flex justify-content-between align-items-center mb-3">
           {[
+            {
+              icon: "hand-holding-usd",
+              text: "Floating Cash",
+              value: currency(selected?.opening?.sum),
+              color: "text-success",
+            },
             {
               icon: "chart-line",
               text: "Gross Sales",
@@ -174,18 +179,18 @@ export default function Census() {
               color: "text-primary",
             },
           ].map(({ icon, text, value, color }, index) => (
-            <MDBCol
+            <div
               key={index}
-              size="4"
+              size="3"
               className={index === 2 ? "text-right" : ""}
             >
               <h6 className="mb-0">
                 <MDBIcon icon={icon} className={`${color} mr-2`} />
                 {text}: <strong>{value}</strong>
               </h6>
-            </MDBCol>
+            </div>
           ))}
-        </MDBRow>
+        </div>
 
         <div className="mb-3 d-flex">
           <MDBBtn
