@@ -16,7 +16,6 @@ export default function CollapseTable({ id, references, preference }) {
     dispatch = useDispatch();
 
   const toggleModal = () => setShowModal(!showModal);
-  console.log("CollapseTable references :", references);
   const toggleRemove = (reference) => {
     setShowButton(false);
     //console.log("reference", reference);

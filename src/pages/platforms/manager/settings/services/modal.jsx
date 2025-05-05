@@ -138,7 +138,9 @@ export default function Modal({
     e.preventDefault();
 
     if (!validateHierarchy(form))
-      return handleError("Please input proper references.");
+      return handleError(
+        "Please input proper references. Hierarchy  of values is must."
+      );
 
     // if (!form.units) return handleError("Please select a unit of measurement.");
 
