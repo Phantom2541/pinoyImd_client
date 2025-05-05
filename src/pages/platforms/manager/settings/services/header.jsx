@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Select } from "../../../../../components/customizable";
@@ -7,11 +7,12 @@ import {
   BROWSE,
   RESET,
   SetCLUSTER,
-  SetFILTERED,
+  SetFILTEREDbyDEPARTMENT,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
     { cluster, filtered } = useSelector(({ preferences }) => preferences),
+    [department, setDepartment] = useState("LAB"),
     dispatch = useDispatch();
 
   // Initial Browse
@@ -23,10 +24,10 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
 
-  const handleTemplate = (template) => dispatch(SetCLUSTER(template));
-  const handleChange = (service) => {
-    dispatch(SetFILTERED(service));
-  };
+  const handleTemplate = (template) =>
+    dispatch(SetFILTEREDbyDEPARTMENT({ template, department }));
+  const handleChange = (services) =>
+    services.length > 0 && dispatch(SetCLUSTER(services));
 
   return (
     <MDBView
@@ -35,16 +36,23 @@ const Header = () => {
     >
       <div className="d-flex justify-content-end align-items-center">
         <span className="white-text font-weight-bold mr-2">Services:</span>
-        <span className="font-weight-bold">{filtered.length}</span>
+        <span className="font-weight-bold">{cluster.length}</span>
+      </div>
+      <div>
+        <select onChange={(e) => setDepartment(e.target.value)}>
+          <option>Choose a department</option>
+          <option value="LAB">Laboratory</option>
+          <option value="RAD">Radiology</option>
+        </select>
+        <Templates setTemplate={handleTemplate} Department={department} />
       </div>
       <div className="d-flex align-items-center" style={{ width: "30rem" }}>
-        <Templates setTemplate={handleTemplate} />
         <Select
           // CSS
           className="m-0 p-0 ml-4 text-white w-100 mdb-custom-select"
           inputClassName="text-white m-0 p-0"
           // Data
-          collections={cluster}
+          collections={filtered}
           keys="id"
           multiple={true}
           // preValues={[5, 46]}

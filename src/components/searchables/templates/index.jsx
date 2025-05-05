@@ -1,9 +1,9 @@
 import React from "react";
 import { Templates as templates } from "./../../../services/fakeDb";
 
-const Templates = ({ setTemplate }) => {
+const Templates = ({ setTemplate, Department }) => {
   const template = templates?.collections?.find(
-    ({ department }) => department === "LAB"
+    ({ department }) => department === Department
   );
 
   const components = template ? template.components : [];

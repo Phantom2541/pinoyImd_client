@@ -14,12 +14,12 @@ import {
   MDBInput,
   MDBBtn,
 } from "mdbreact";
-import { References } from "../../../../../../services/fakeDb";
+import { References } from "../../../../../services/fakeDb";
 import Swal from "sweetalert2";
 import {
   SAVE,
   UPDATE,
-} from "../../../../../../services/redux/slices/diagnostics/laboratory/preferences";
+} from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 
 export default function Modal({
   show,
@@ -169,13 +169,13 @@ export default function Modal({
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="flask" className="mr-2" />
-        {willCreate ? "Create" : "Update"} a Reference
+        {willCreate ? "Create" : "Update"} a Reference Value
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBRow>
             <MDBCol>
-              {preference !== "equal" && willCreate && (
+              {preference !== "equal" && (
                 <MDBSelect
                   getValue={(e) => handleChange(key, Number(e[0]))}
                   className="colorful-select dropdown-primary mt-2 mb-0 hidden-md-down"
@@ -188,7 +188,7 @@ export default function Modal({
                           key={`choice-${index}`}
                           value={String(index)}
                         >
-                          {choice}
+                          {choice.name} ({choice.ageGap})
                         </MDBSelectOption>
                       )
                     )}

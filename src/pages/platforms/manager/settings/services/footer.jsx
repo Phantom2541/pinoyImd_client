@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import TableRowCount from "../../../components/pagination/rows";
-import Pagination from "../../../components/pagination";
+import TableRowCount from "../../../../../components/pagination/rows";
+import Pagination from "../../../../../components/pagination";
 import {
   SetMaxPage,
   SetActivePAGE,
-} from "../../../services/redux/slices/commerce/catalog/services";
+} from "../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 const Footer = () => {
   const { maxPage } = useSelector(({ auth }) => auth),
     { isLoading, totalPages, activePage } = useSelector(
-      ({ services }) => services
+      ({ preferences }) => preferences
     ),
     dispatch = useDispatch();
 

@@ -8,8 +8,6 @@ const Body = () => {
     ({ taskGenerator }) => taskGenerator
   );
 
-  console.log("collections", collections);
-
   return (
     <>
       {!collections?.length && !isLoading && (

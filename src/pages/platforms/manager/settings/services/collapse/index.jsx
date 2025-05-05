@@ -14,13 +14,14 @@ import {
 import CollapseTable from "./table";
 
 export default function ServiceCollapse() {
-  const { maxPage } = useSelector(({ auth }) => auth),
-    { filtered, activePage } = useSelector(({ preferences }) => preferences),
+  const { cluster, activePage, maxPage } = useSelector(
+      ({ preferences }) => preferences
+    ),
     [activeId, setActiveId] = useState(0);
 
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid className="md-accordion">
-      {handlePagination(filtered, activePage, maxPage)?.map(
+      {handlePagination(cluster, activePage, maxPage)?.map(
         ({ id, name, abbreviation, references, preference }, index) => (
           <MDBCard key={`services-${index}`}>
             <MDBCollapseHeader
@@ -28,14 +29,20 @@ export default function ServiceCollapse() {
                 references && setActiveId((prev) => (prev === id ? 0 : id))
               }
             >
-              {index + 1}. {capitalize(name)}
+              {(activePage - 1) * maxPage + index + 1}. {capitalize(name)}
               {abbreviation && ` | ${abbreviation.toUpperCase()}`}
-              <span className="text-primary"> Preference : {preference}</span>
-              {references && (
-                <i
-                  style={{ rotate: `${activeId === id ? 0 : 90}deg` }}
-                  className="fa fa-angle-down transition-all"
-                />
+              {preference && (
+                <>
+                  <span className="text-primary">
+                    &nbsp; Preference : {capitalize(preference)}
+                  </span>
+                  {references && (
+                    <i
+                      style={{ rotate: `${activeId === id ? 0 : 90}deg` }}
+                      className="fa fa-angle-down transition-all"
+                    />
+                  )}
+                </>
               )}
             </MDBCollapseHeader>
             {references && (

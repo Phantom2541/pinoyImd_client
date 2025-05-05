@@ -1,15 +1,101 @@
 const preferences = {
-  gender: ["Female", "Male"],
+  gender: [
+    // Can be localized if needed
+    "Female", // Babae
+    "Male", // Lalaki
+  ],
   development: [
-    "Newborn",
-    "Infant",
-    "Toddler",
-    "Child",
-    "Teenager",
-    "Adolescent",
-    "Young Adult",
-    "Adult",
-    "Geriatric",
+    {
+      name: "Fetal",
+      tagalog: "Pang-sanggol (Bata sa sinapupunan)",
+      minDay: -280,
+      maxDay: -1,
+      ageGap: "Conception to birth(approx. 40 weeks)",
+    },
+    {
+      name: "Newborn",
+      tagalog: "Bagong Silang",
+      minDay: 0,
+      maxDay: 27,
+      ageGap: "0–27 days",
+    },
+    {
+      name: "Infant",
+      tagalog: "Sanggol",
+      minDay: 28,
+      maxDay: 364,
+      ageGap: "28 days – 11 months",
+    },
+    {
+      name: "Toddler",
+      tagalog: "Paslit",
+      minDay: 365,
+      maxDay: 1094,
+      ageGap: "1–2 years",
+    },
+    {
+      name: "Child",
+      tagalog: "Bata",
+      minDay: 1095,
+      maxDay: 4014,
+      ageGap: "3–10 years",
+    },
+    {
+      name: "Pre-Teen",
+      tagalog: "Gulang Bata",
+      minDay: 4015,
+      maxDay: 4744,
+      ageGap: "11–12 years",
+    },
+    {
+      name: "Teenager",
+      tagalog: "Tin-edyer",
+      minDay: 4745,
+      maxDay: 6574,
+      ageGap: "13–17 years",
+    },
+    {
+      name: "Young Adult",
+      tagalog: "Batang Nasa Hustong Gulang",
+      minDay: 6575,
+      maxDay: 9130,
+      ageGap: "18–24 years",
+    },
+    {
+      name: "Adult",
+      tagalog: "Nasa Hustong Gulang",
+      minDay: 9131,
+      maxDay: 18249,
+      ageGap: "25–49 years",
+    },
+    {
+      name: "Middle Aged",
+      tagalog: "Gitnang Edad",
+      minDay: 18250,
+      maxDay: 21900,
+      ageGap: "50–59 years",
+    },
+    {
+      name: "Senior",
+      tagalog: "Nakatatanda",
+      minDay: 21901,
+      maxDay: 25549,
+      ageGap: "60–69 years",
+    },
+    {
+      name: "Elderly",
+      tagalog: "Matanda",
+      minDay: 25550,
+      maxDay: 29219,
+      ageGap: "70–79 years",
+    },
+    {
+      name: "Geriatric",
+      tagalog: "Nakatatanda (Mahina na)",
+      minDay: 29220,
+      maxDay: Infinity,
+      ageGap: "80+ years",
+    },
   ],
 };
 
