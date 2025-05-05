@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { Select } from "../../../components/customizable";
-import { Templates, Services } from "../../../services/fakeDb";
-import {
-  SetCOLLECTIONS,
-  SetByTEMPLATES,
-} from "../../../commerce/merchandise/products";
+import { Select } from "../../../../../../components/customizable";
+import { Templates, Services } from "../../../../../../services/fakeDb";
+import { SetCOLLECTIONS } from "../../../../../../services/redux/slices/commerce/catalog/productGenerics";
 const Header = () => {
   const { maxPage } = useSelector(({ auth }) => auth);
   const { filtered } = useSelector(({ services }) => services);
@@ -27,8 +24,8 @@ const Header = () => {
   const handleComponent = (value) => {
     setComponent(value);
 
-    const template = Templates.getComponentIndex(value);
-    dispatch(SetByTEMPLATES(template));
+    // const template = Templates.getComponentIndex(value);
+    // dispatch(SetByTEMPLATES(template));
   };
 
   return (

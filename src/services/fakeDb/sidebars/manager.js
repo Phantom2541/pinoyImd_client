@@ -28,7 +28,7 @@ import {
 } from "../../../pages/platforms/manager/businessOperations";
 
 import {
-  Generics,
+  ProductGenerics,
   Products,
 } from "../../../pages/platforms/manager/commerce/merchandise";
 
@@ -214,18 +214,20 @@ const manager = [
       },
       {
         name: "Duty Schedule",
-        path: "/commerce/duty",
+        path: "/duty",
         icon: "calendar-days",
       },
       {
-        name: "Generics",
-        path: "/commerce/generics",
+        name: "ProductGenerics",
+        path: "/products/generics",
         icon: "calendar-days",
+        component: ProductGenerics,
       },
       {
         name: "Products",
-        path: "/commerce/products",
+        path: "/products",
         icon: "calendar-days",
+        component: Products,
       },
     ],
   },
