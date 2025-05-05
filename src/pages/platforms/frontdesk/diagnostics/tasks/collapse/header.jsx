@@ -13,7 +13,8 @@ import {
 } from "../../../../../../services/utilities";
 
 const Header = ({ deal, index }) => {
-  const { activeCOLAPSE } = useSelector(({ validator }) => validator),
+  const { maxPage } = useSelector(({ auth }) => auth),
+    { activeCOLAPSE, activePage } = useSelector(({ validator }) => validator),
     { customerId, category, source } = deal,
     history = useHistory(),
     dispatch = useDispatch(),
@@ -24,8 +25,8 @@ const Header = ({ deal, index }) => {
 
   return (
     <MDBCollapseHeader>
-      {index + 1}. {getGenderIcon(customerId?.isMale)}{" "}
-      {fullName(customerId?.fullName)} |
+      {(activePage - 1) * maxPage + index + 1}.{" "}
+      {getGenderIcon(customerId?.isMale)} {fullName(customerId?.fullName)} |
       <span style={{ color: "blue" }}>{getAge(customerId?.dob)}</span>
       <MDBBadge color={sourceColor(categoryName)} className="mx-2">
         {categoryName}
