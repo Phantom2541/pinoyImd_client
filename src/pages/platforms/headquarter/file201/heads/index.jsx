@@ -53,6 +53,7 @@ export default function Heads() {
       setHeads(newArray || []);
     }
   }, [collections]);
+  console.log("collections", collections);
 
   //Modal toggle
   const toggleModal = () => setShowModal(!showModal);

@@ -68,18 +68,17 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   }, [department, activePlatform]);
 
   useEffect(() => {
-    const positions = Policy.getPositionsByDepartmentName(department).map(
-      ({ id }) => id
-    );
+    const positions = Policy.getPositionsByDepartmentName(
+      !willCreate ? capitalize(selected.department) : department
+    ).map(({ id }) => id);
     const _crew = collections.filter(({ contract }) =>
       positions.includes(contract.designation)
     );
     setCrews(_crew);
-  }, [collections, department]);
+  }, [collections, department, selected, willCreate]);
 
   useEffect(() => {
     if (show && !willCreate && selected._id) return setForm(selected);
-    setForm(selected);
   }, [show, willCreate, selected]);
 
   const handleUpdate = () => {
@@ -148,7 +147,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     setSections(_sections);
   };
 
-  console.log("form", willCreate, form?.user?._id);
+  console.log("selected", selected);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
@@ -165,7 +164,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             <MDBCol md="12">
               <Select
                 collections={["Radiology", "Laboratory"]}
-                preValue={capitalize(department)}
+                preValue={capitalize(form.department)}
                 label={"Department"}
                 multiple={false}
                 onChange={handleDepartmentChange}
