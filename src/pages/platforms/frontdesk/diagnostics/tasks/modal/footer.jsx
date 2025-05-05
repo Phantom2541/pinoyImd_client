@@ -21,7 +21,6 @@ const Footer = () => {
   const department = activePlatform?.department;
   useEffect(() => {
     if (success) {
-      // dispatch(SetMODAL(false));
       dispatch(SetHEALTHY(false));
     }
   }, [success, dispatch]);

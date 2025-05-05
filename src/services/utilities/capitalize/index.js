@@ -1,14 +1,11 @@
-const capitalize = string => {
-  if (!string) return "-";
+const capitalize = (string) => {
+  if (!string && string !== 0) return "-"; // covers null, undefined, ''
+  if (typeof string === "number") return string;
 
-  const words = string.split(" ");
-
-  return words
-    .map(word => {
-      if (word.length === 0) return "";
-
-      return `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
-    })
+  return String(string)
+    .trim()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
 };
 

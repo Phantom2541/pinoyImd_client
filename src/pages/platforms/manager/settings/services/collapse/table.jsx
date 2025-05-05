@@ -3,7 +3,7 @@ import { MDBBtn, MDBIcon, MDBTable, MDBBtnGroup } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { capitalize } from "../../../../../../services/utilities";
 import { References } from "../../../../../../services/fakeDb";
-import Modal from "./modal";
+import Modal from "../modal";
 import Swal from "sweetalert2";
 import { DESTROY } from "../../../../../../services/redux/slices/diagnostics/laboratory/preferences";
 
@@ -16,7 +16,7 @@ export default function CollapseTable({ id, references, preference }) {
     dispatch = useDispatch();
 
   const toggleModal = () => setShowModal(!showModal);
-  console.log("references", references);
+  console.log("CollapseTable references :", references);
   const toggleRemove = (reference) => {
     setShowButton(false);
     //console.log("reference", reference);
@@ -98,7 +98,7 @@ export default function CollapseTable({ id, references, preference }) {
                       ? isMale
                         ? "Male"
                         : "Female"
-                      : References.preferences.development[development]}
+                      : References.getDevelopmentByIndex(development)?.name}
                   </td>
                 )}
                 <td>{lo}</td>

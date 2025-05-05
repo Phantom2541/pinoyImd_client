@@ -36,9 +36,9 @@ export default function RadTaskPrintout() {
     setTask(savedTask);
 
     // Delay to ensure content is rendered before print
-    // setTimeout(() => {
-    //   window.print();
-    // }, 500);
+    setTimeout(() => {
+      window.print();
+    }, 500);
   }, []);
 
   if (task?._id) return <Printout task={task} />;
