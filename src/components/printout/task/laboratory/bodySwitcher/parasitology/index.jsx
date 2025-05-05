@@ -44,28 +44,27 @@ export default function Parasitology({ fontSize, task }) {
             Consistency
           </td>
           <td
-            style={{ ...style, color: color > 3 && "red" }}
+            style={{ ...style, color: consistency > 3 && "red" }}
             className="py-0 fw-bold"
           >
             {Consistency[consistency]}
           </td>
         </tr>
         <tr>
-          {" "}
           <td
             colSpan={2}
             style={{ fontSize: "1.2rem" }}
             className="py-0 fw-bold"
           >
             Microscopy Examination
-          </td>{" "}
+          </td>
         </tr>
         <tr>
           <td style={style} className="py-0">
             Pus cells
           </td>
           <td
-            style={{ ...style, color: color > 3 && "red" }}
+            style={{ ...style, color: pus > 3 && "red" }}
             className="py-0 fw-bold"
           >
             {MicroscopicInRange[pus]}
@@ -76,7 +75,7 @@ export default function Parasitology({ fontSize, task }) {
             Red cells
           </td>
           <td
-            style={{ ...style, color: color > 3 && "red" }}
+            style={{ ...style, color: red > 3 && "red" }}
             className="py-0 fw-bold"
           >
             {MicroscopicInRange[red]}
@@ -87,7 +86,7 @@ export default function Parasitology({ fontSize, task }) {
             Bacteria
           </td>
           <td
-            style={{ ...style, color: color > 3 && "red" }}
+            style={{ ...style, color: bac > 3 && "red" }}
             className="py-0 fw-bold"
           >
             {BacteriaInRange[bac]}
@@ -98,7 +97,7 @@ export default function Parasitology({ fontSize, task }) {
             Yeast Cells
           </td>
           <td
-            style={{ ...style, color: color > 3 && "red" }}
+            style={{ ...style, color: yeast > 0 && "red" }}
             className="py-0 fw-bold"
           >
             {MicroscopicResultInWord[yeast]}
@@ -109,7 +108,7 @@ export default function Parasitology({ fontSize, task }) {
             Fat Globules
           </td>
           <td
-            style={{ ...style, color: color > 3 && "red" }}
+            style={{ ...style, color: fat > 1 && "red" }}
             className="py-0 fw-bold"
           >
             {MicroscopicResultInWord[fat]}
