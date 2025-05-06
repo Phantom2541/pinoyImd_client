@@ -11,11 +11,21 @@ const Header = ({
   index,
   setActiveId,
 }) => {
+  const date = new Date(title);
+  console.log("date", date);
+
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div className="d-flex align-items-center">
-        <label htmlFor={index} className="form-check-label label-table" />
-        {index + 1}. {title} |{" "}
+        <label
+          htmlFor={index}
+          className={`form-check-label label-table ${
+            [0, 6].includes(date.getDay()) ? "text-primary" : ""
+          }`}
+        >
+          {index + 1}. {date.toDateString()}
+        </label>
+        |
         <span className={`${!isOpen && "text-primary"} ml-1 mt-1`}>
           {currency(sum)}
         </span>

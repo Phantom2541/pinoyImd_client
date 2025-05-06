@@ -28,15 +28,13 @@ const Header = ({
     clients,
     _id,
     membership = "",
-    name: ghostName,
     subName: ghostSubName,
     cutoff = 0,
     credit = 0,
   } = insource;
   const isGhost = clients?._id ? false : true;
 
-  const { name, displayname } = clients || "";
-  const baseName = isGhost ? ghostName : name;
+  const { abbr, displayname } = clients || "";
   const baseSubname = isGhost ? ghostSubName : displayname;
 
   const { color, border } = collapse.getStyle(index, activeId, didHoverId);
@@ -103,7 +101,41 @@ const Header = ({
                 {baseSubname}
               </h6>
             )}
-            <MDBBadge style={{ fontSize: "10px" }}>{baseName}</MDBBadge>
+            {update?.updatedKey === "name" && update?.providerID === _id ? (
+              <div style={{ width: "6rem" }}>
+                <Input
+                  _key={"newAbbr"}
+                  className="mt-2 form-control form-control-sm"
+                  type="string"
+                  selected={update}
+                  formSubmitted={formSubmitted}
+                  handleClose={() => setUpdate({})}
+                  handleCheck={() => handleUpdate()}
+                  onChange={(_, value) =>
+                    setUpdate({
+                      updatedKey: "abbr",
+                      newAbbr: value,
+                      abbr,
+                      newKey: "newAbbr",
+                      providerID: _id,
+                    })
+                  }
+                />
+              </div>
+            ) : (
+              <MDBBadge
+                style={{ fontSize: "10px" }}
+                onClick={() => {
+                  setUpdate({
+                    updatedKey: "abbr",
+                    newAbbr: abbr,
+                    providerID: _id,
+                  });
+                }}
+              >
+                {abbr ? abbr : "N/A"}
+              </MDBBadge>
+            )}
           </div>
 
           <div className="mr-5">

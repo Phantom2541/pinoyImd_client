@@ -1,7 +1,12 @@
 import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBadge } from "mdbreact";
-import { currency, fullName } from "../../../../../../services/utilities";
-import { Privileges } from "../../../../../../services/fakeDb";
+import {
+  currency,
+  fullName,
+  getAge,
+  getGenderIcon,
+} from "../../../../../../services/utilities";
+import { Categories, Privileges } from "../../../../../../services/fakeDb";
 import { useSelector } from "react-redux";
 export default function Collapsable({ deals }) {
   const { vendor } = useSelector(({ deals }) => deals);
@@ -14,8 +19,6 @@ export default function Collapsable({ deals }) {
           <th>Category</th>
           <th>Services</th>
           <th>Amount</th>
-          <th>Discount</th>
-          <th>Privilege</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
@@ -35,16 +38,30 @@ export default function Collapsable({ deals }) {
               {!vendor && (
                 <td>
                   <span className="fw-bold mr-1"> {++index}.</span>
-                  {source?.displayname}
+                  {source?.abbr || source?.displayname}
                 </td>
               )}
               <td>
-                {source?._id && (
-                  <span className="fw-bold mr-1"> {!!vendor && ++index}.</span>
-                )}
-                {fullName(customerId?.fullName)}
+                <h6>
+                  {source?._id && (
+                    <span className="fw-bold mr-1">
+                      {!!vendor && `${++index}.`}
+                    </span>
+                  )}
+                  {fullName(customerId?.fullName)}
+                </h6>
+                <small>
+                  {getGenderIcon(customerId?.isMale)} {getAge(customerId?.dob)}
+                </small>
               </td>
-              <td>{category}</td>
+              <td>
+                <h5
+                  title={Categories.find(({ abbr }) => abbr === category)?.name}
+                >
+                  {category}
+                </h5>
+                {privilege > 0 && <small>{Privileges[privilege]}</small>}
+              </td>
               <td>
                 {cart.map(({ menuId }, index) => (
                   <MDBBadge key={index} className="mr-1">
@@ -52,9 +69,14 @@ export default function Collapsable({ deals }) {
                   </MDBBadge>
                 ))}
               </td>
-              <td>{currency(amount)}</td>
-              <td>{currency(discount)}</td>
-              <td>{Privileges[privilege]}</td>
+              <td>
+                <h6>{currency(amount)}</h6>
+                {!!discount && (
+                  <MDBBadge className="mr-1 danger" title="Discount" tag="span">
+                    {currency(discount)}
+                  </MDBBadge>
+                )}
+              </td>
             </tr>
           );
         })}

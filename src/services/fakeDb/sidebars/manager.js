@@ -26,6 +26,12 @@ import {
   Sales,
   ExperimentalLedger,
 } from "../../../pages/platforms/manager/businessOperations";
+
+import {
+  ProductGenerics,
+  Products,
+} from "../../../pages/platforms/manager/commerce/merchandise";
+
 import {
   Vouchers,
   Payables,
@@ -208,8 +214,20 @@ const manager = [
       },
       {
         name: "Duty Schedule",
-        path: "/commerce/duty",
+        path: "/duty",
         icon: "calendar-days",
+      },
+      {
+        name: "ProductGenerics",
+        path: "/products/generics",
+        icon: "calendar-days",
+        component: ProductGenerics,
+      },
+      {
+        name: "Products",
+        path: "/products",
+        icon: "calendar-days",
+        component: Products,
       },
     ],
   },

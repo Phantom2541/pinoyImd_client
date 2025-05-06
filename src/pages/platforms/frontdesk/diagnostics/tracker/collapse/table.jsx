@@ -60,7 +60,6 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
-    console.log("menu", menu);
 
     return (
       <tr key={task.key}>
@@ -117,7 +116,7 @@ export default function CollapseTable({ menu }) {
                       signatories: obj?.signatories,
                       isPrint: true,
                     };
-                    activePlatform.department === "laboratory"
+                    activePlatform.department === "Laboratory"
                       ? handleLabPrint(_task)
                       : handleRadPrint(_task);
                   }}
