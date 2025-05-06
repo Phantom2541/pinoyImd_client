@@ -148,10 +148,10 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                 { label: "Expenses", value: expenses, cn: "text-danger" },
               ]
                 .filter(({ value }) => value > 0)
-                .map(({ label, value, cn, title = "" }, idx) => (
+                .map(({ label, value, cn }, idx) => (
                   <div
                     className="d-flex align-items-center justify-content-between "
-                    key={index}
+                    key={idx}
                   >
                     <h6
                       className={`mb-0 text-right ${cn}`}

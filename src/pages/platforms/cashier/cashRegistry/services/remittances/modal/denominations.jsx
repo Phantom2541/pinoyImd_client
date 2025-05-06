@@ -14,6 +14,7 @@ import {
   MDBCard,
   MDBInput,
   MDBCardBody,
+  MDBTypography,
 } from "mdbreact";
 import {
   TOGGLE,
@@ -186,7 +187,7 @@ export default function Modal() {
               ..._floating,
               sum, // floating is included
             },
-            gross: selected.gross,
+            sales: selected.sales,
             _id: selected._id,
           },
         })
@@ -242,6 +243,13 @@ export default function Modal() {
       </MDBModalHeader>
 
       <MDBModalBody className="mb-0">
+        <MDBTypography
+          note
+          noteTitle="Note:"
+          tag="h6"
+          noteColor="warning"
+          className="font-weight-bold"
+        ></MDBTypography>
         <MDBRow>
           <MDBCol md="10">
             <h5 className="text-center font-weight-bold">Bills</h5>
