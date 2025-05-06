@@ -243,13 +243,16 @@ export default function Modal() {
       </MDBModalHeader>
 
       <MDBModalBody className="mb-0">
-        <MDBTypography
-          note
-          noteTitle="Note:"
-          tag="h6"
-          noteColor="warning"
-          className="font-weight-bold"
-        ></MDBTypography>
+        {selected?._id ? (
+          <MDBTypography note noteTitle="Note: " tag="h6" noteColor="primary">
+            Declare your closing by selecting each denomination. Make sure it
+            matches your Cash On Hand (COH) before submitting.
+          </MDBTypography>
+        ) : (
+          <MDBTypography note noteTitle="Note: " tag="h6" noteColor="primary">
+            Declare your floating cash by selecting each denomination.
+          </MDBTypography>
+        )}
         <MDBRow>
           <MDBCol md="10">
             <h5 className="text-center font-weight-bold">Bills</h5>
