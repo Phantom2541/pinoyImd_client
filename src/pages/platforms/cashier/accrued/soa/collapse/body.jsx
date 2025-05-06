@@ -17,16 +17,16 @@ export default function Collapsable({ deals }) {
       </MDBTableHead>
       <MDBTableBody>
         {deals?.map((deal, index) => {
-          const { customerId, outsource, services, source } = deal;
+          const { customerId, outsource, sendouts, source } = deal;
           return (
             <tr key={index}>
               <td>{++index}</td>
               <td className="fw-bold mb-1">{outsource?.displayname}</td>
               <td className="mb-1">{fullName(customerId?.fullName)}</td>
               <td>{source?.displayname}</td>
-              <td className="mb-1">{currency(services?.up)}</td>
+              <td className="mb-1">{currency(sendouts?.up)}</td>
               <td className="mb-1">
-                {services?.servicesId
+                {sendouts?.servicesId
                   ?.map((id) => Services.getAbbr(id))
                   ?.join(", ")}
               </td>

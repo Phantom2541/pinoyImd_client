@@ -1,4 +1,4 @@
-import { Cashier, Deals, Sales, Remittances } from "./cashRegistry";
+import { Cashier, Deals, Sales, Remittances, Onboarding } from "./cashRegistry";
 import { Menus, Services } from "./catalog";
 import {
   Insources,
@@ -19,6 +19,7 @@ export {
   Cashier,
   Deals,
   Sales,
+  Onboarding,
   Remittances,
   Menus,
   Services,
