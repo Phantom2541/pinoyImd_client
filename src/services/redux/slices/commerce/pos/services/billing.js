@@ -107,7 +107,7 @@ export const reduxSlice = createSlice({
     },
 
     SetSoaCluster: (state, { payload }) => {
-      const { soa, _id } = state.vendor;
+      const { soa = [], _id } = state.vendor;
       const fakeDB = localStorage.getItem("billing");
       let parseVoucher = fakeDB ? JSON.parse(fakeDB) : {};
       if (!_id && !soa) return;

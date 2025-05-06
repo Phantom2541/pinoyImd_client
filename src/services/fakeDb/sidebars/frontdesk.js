@@ -96,13 +96,13 @@ const frontdesk = [
     ],
   },
   {
-    name: "Sendouts",
+    name: "Sendouts (SOA)",
     icon: "tv",
     path: "/outsource",
     children: [
       {
-        name: "Statement of Account",
-        path: "/soa",
+        name: "Logbook",
+        path: "/logbook",
         title: "stocks",
         icon: "balance-scale",
         component: SOA,
