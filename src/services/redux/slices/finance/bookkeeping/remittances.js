@@ -257,25 +257,24 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action;
+        const { success, payload } = action.payload;
         const index = state.collections.findIndex(
           (item) => item?._id === payload._id
         );
-
-        state.collections[index] = payload;
-        state.message = success;
+        state.collections[index] = { ...payload, ...state.collections[index] };
+        state.message = "Successfully Closing";
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       });
   },
 });

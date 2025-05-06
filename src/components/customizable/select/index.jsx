@@ -7,6 +7,7 @@ import {
   MDBIcon,
 } from "mdbreact";
 import "./style.css";
+import { isEmpty } from "lodash";
 
 /**
  * A customizable select component with support for single and multiple selections, search, and more.
@@ -148,13 +149,13 @@ export default function Select({
         ] || preValue
       : preValue;
   };
-
+  console.log("isEmpty", isEmpty(preValues));
   return (
     <div className="d-flex align-items-center w-100">
       <MDBSelect
         label={!hideLabel && label}
         getValue={handleSelection}
-        key={JSON.stringify(preValues)}
+        key={JSON.stringify(isEmpty(preValues) ? preValue : preValues)}
         className={`${className} w-100`}
         multiple={multiple}
         color="primary"

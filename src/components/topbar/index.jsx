@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBIcon } from "mdbreact";
+import {
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarNav,
+  MDBIcon,
+  MDBBadge,
+} from "mdbreact";
 import { connect } from "react-redux";
 import Platforms from "./platforms";
 import Profile from "./profile";
@@ -64,11 +70,16 @@ class TopNavigation extends Component {
         </div>
 
         <MDBNavbarBrand href="#" style={navStyle}>
-          <strong>
+          <MDBBadge
+            className="py-2 px-3"
+            color="warning-color-dark"
+            style={{ fontSize: "1rem", fontWeight: 400 }}
+            pill
+          >
             {isPatient
               ? "Welcome to Pinoy iMD"
               : `${capitalize(department)} :) ${capitalize(aka)}`}
-          </strong>
+          </MDBBadge>
         </MDBNavbarBrand>
         <MDBNavbarNav
           expand="sm"

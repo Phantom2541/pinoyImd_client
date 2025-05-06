@@ -228,6 +228,8 @@ export default function PosCard() {
                 <p>{_mobile ? mobile(_mobile) : email}</p>
               </div>
             </MDBCol>
+          </MDBRow>
+          <MDBRow>
             <MDBCol>
               <div className="pos-card-details">
                 <span>Address:</span>

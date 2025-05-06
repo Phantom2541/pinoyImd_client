@@ -141,7 +141,7 @@ export default function Modal() {
   };
 
   const handleSubmit = () => {
-    const { gross, _id, cashier, createdAtNow } = selected;
+    const { sales, _id, cashier, createdAtNow } = selected;
 
     dispatch(
       SAVE({
@@ -151,10 +151,10 @@ export default function Modal() {
           branchId: activePlatform?.branchId,
           userId: auth._id,
           fsid: 1,
-          amount: gross,
+          amount: sales,
           breakdown: {
             cashierId: cashier._id,
-            amount: gross,
+            amount: sales,
             collector: auth._id,
             createdAt: new Date(),
           },
