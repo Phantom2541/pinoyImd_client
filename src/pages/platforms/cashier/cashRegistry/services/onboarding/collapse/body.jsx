@@ -1,11 +1,37 @@
 import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBtn } from "mdbreact";
 import { Services } from "../../../../../../../services/fakeDb";
+import { useSelector } from "react-redux";
 
 export default function Collapsable({ item }) {
-  const { sendouts, source, createdAt } = item;
+  const { auth, token } = useSelector((auth) => auth),
+    { sendouts, source, createdAt } = item;
   function handleAcknowledgeAndProcess() {
-    console.log(item);
+    const UpdateData = {
+      token,
+      data: {
+        _id: item._id,
+        acknowledged: {
+          by: auth._id,
+          at: new Date(),
+        },
+      },
+    };
+
+    const SaveData = {
+      token,
+      data: {
+        dealId: item._id,
+        menuId: {
+          $in: sendouts.servicesId, // sendouts?.servicesId ??
+        },
+        up: 0, //?
+        discount: 0, //?
+      },
+    };
+
+    console.log(UpdateData);
+    console.log(SaveData);
   }
 
   return (
@@ -36,10 +62,7 @@ export default function Collapsable({ item }) {
               year: "numeric",
               hour: "2-digit",
               minute: "2-digit",
-            }).format(new Date(createdAt))} @ ${new Intl.DateTimeFormat(
-              "default",
-              { hour: "2-digit", minute: "2-digit" }
-            ).format(new Date(createdAt))}`}
+            }).format(new Date(createdAt))}`}
           </td>
         </tr>
       </MDBTableBody>
