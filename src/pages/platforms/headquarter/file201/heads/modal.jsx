@@ -43,7 +43,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
       toggle();
-      setForm(_form);
+      // setForm(_form);
     }
   }, [formSubmitted, isSuccess, show, toggle, setForm]);
 
@@ -79,6 +79,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   useEffect(() => {
     if (show && !willCreate && selected._id) return setForm(selected);
+    setForm(_form);
   }, [show, willCreate, selected]);
 
   const handleUpdate = () => {
@@ -147,7 +148,8 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     setSections(_sections);
   };
 
-  console.log("selected", selected);
+  console.log("sections", sections);
+  console.log("form", form);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
@@ -176,7 +178,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <Select
                 collections={sections}
                 onChange={handleSectionChange}
-                preValue={capitalize(form?.section)}
+                preValue={selected?.section}
                 label={"Sections"}
                 multiple={false}
               />
@@ -193,7 +195,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
                   )} - ${Policy.getPosition(crew?.contract?.designation)}`,
                 }))}
                 onChange={handleStaffChange}
-                preValue={willCreate ? form.user : form?.user?._id}
+                preValue={willCreate ? form.user : selected?.user?._id}
                 label={"Staff"}
                 keys={"_id"}
                 values={"fullName"}
