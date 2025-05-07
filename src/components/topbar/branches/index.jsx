@@ -44,13 +44,16 @@ export default function Branches() {
 
   return (
     <MDBDropdown>
-      <MDBDropdownToggle nav caret>
-        <MDBIcon icon="code-branch" />
-        &nbsp;
-        <div className="d-none d-md-inline">
-          {branch?.name ? capitalize(branch?.name) : ""}
-        </div>
-      </MDBDropdownToggle>
+      {branches.length > 1 &&
+        branches[0].name === activePlatform.branch.name && (
+          <MDBDropdownToggle nav caret>
+            <MDBIcon icon="code-branch" />
+            &nbsp;
+            <div className="d-none d-md-inline">
+              {branch?.name ? capitalize(branch?.name) : ""}
+            </div>
+          </MDBDropdownToggle>
+        )}
       <MDBDropdownMenu right>
         {branches.map(({ name, _id }, index) => (
           <MDBDropdownItem
