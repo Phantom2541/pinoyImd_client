@@ -37,14 +37,14 @@ const Header = () => {
     if (remittances) {
       const totalRemitted = remittances
         .filter((item) => !item.deleted)
-        .reduce((acc, item) => acc + (item?.coh || 0), 0);
+        .reduce((acc, item) => acc + (item?.coh - item?.opening?.sum), 0);
 
       const totalExpenses = remittances
         .filter((item) => !item.deleted)
         .reduce((acc, item) => acc + (item?.expenses || 0), 0);
 
       setRemitted(totalRemitted);
-      setExpenses(totalExpenses); // assuming you have a state for this
+      setExpenses(totalExpenses);
     }
   }, [remittances]);
 
