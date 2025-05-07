@@ -107,10 +107,13 @@ export default function SideNavigation({
     });
   };
 
+  console.log("activePlatform", activePlatform);
+
   return (
     <div className="white-skin">
       <MDBSideNav
-        logo={logo}
+        // logo={logo}
+        tag="div"
         bg="https://mdbootstrap.com/img/Photos/Others/sidenav2.jpg"
         alt="Company Logo"
         mask="strong"
@@ -120,6 +123,14 @@ export default function SideNavigation({
         triggerOpening={triggerOpening}
         style={{ transition: "padding-left .3s" }}
       >
+        {/* ✅ Custom Header with Logo + Dynamic Title */}
+        <div className="text-center p-3">
+          <img src={logo} alt="Company Logo" style={{ maxWidth: "100px" }} />
+          <div className="mt-2 font-weight-bold text-white">
+            {activePlatform?.branch?.company || company.name}
+          </div>
+        </div>
+        <hr />
         <MDBSideNavNav>
           {!isLoading
             ? renderNavItems(
