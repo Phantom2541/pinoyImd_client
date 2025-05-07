@@ -62,8 +62,6 @@ export default function Modal() {
     [location, setLocation] = useState("reception"),
     dispatch = useDispatch();
 
-  console.log("selected", selected);
-
   useEffect(() => {
     calculateSum(floating);
   }, [floating]);
@@ -222,11 +220,14 @@ export default function Modal() {
                       <td className="text-center">
                         <MDBCard>
                           <MDBCardBody
-                            style={{ backGroundColor: "transparent" }}
-                            className="p-0 m"
+                            style={{
+                              backGroundColor: "transparent",
+                            }}
+                            className="p-0 "
                           >
                             <div
                               style={getBillimg(Number(bill1))}
+                              className="bg-warning"
                               title={currency(bill1)}
                             />
                           </MDBCardBody>
