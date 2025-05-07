@@ -20,7 +20,7 @@ const Statements = () => {
           token,
           keys: {
             branchId: activePlatform?.branchId,
-            fsId: 31,
+            fsId: 31, // Outsourcing Expense"
             year,
             month,
           },

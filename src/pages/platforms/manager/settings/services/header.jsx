@@ -38,31 +38,39 @@ const Header = () => {
         <span className="white-text font-weight-bold mr-2">Services:</span>
         <span className="font-weight-bold">{cluster.length}</span>
       </div>
-      <div>
-        <select onChange={(e) => setDepartment(e.target.value)}>
+      <div className="d-flex align-items-center ">
+        <select
+          onChange={(e) => setDepartment(e.target.value)}
+          className="form-control mr-2 bg-light"
+          style={{ width: "13rem" }}
+        >
           <option>Choose a department</option>
           <option value="LAB">Laboratory</option>
           <option value="RAD">Radiology</option>
         </select>
-        <Templates setTemplate={handleTemplate} Department={department} />
-      </div>
-      <div className="d-flex align-items-center" style={{ width: "30rem" }}>
-        <Select
-          // CSS
-          className="m-0 p-0 ml-4 text-white w-100 mdb-custom-select"
-          inputClassName="text-white m-0 p-0"
-          // Data
-          collections={filtered}
-          keys="id"
-          multiple={true}
-          // preValues={[5, 46]}
-          // whitelisted={true}
-          getObject={true}
-          values="name"
-          label="Service"
-          preValue="Service"
-          onChange={handleChange}
+        <Templates
+          setTemplate={handleTemplate}
+          Department={department}
+          className="bg-light"
         />
+        <div className="d-flex align-items-center" style={{ width: "20rem" }}>
+          <Select
+            // CSS
+            className="m-0 p-0 ml-4 text-white w-100 mdb-custom-select"
+            inputClassName="text-white m-0 p-0"
+            // Data
+            collections={filtered}
+            keys="id"
+            multiple={true}
+            // preValues={[5, 46]}
+            // whitelisted={true}
+            getObject={true}
+            values="name"
+            label="Service"
+            preValue="Service"
+            onChange={handleChange}
+          />
+        </div>
       </div>
     </MDBView>
   );

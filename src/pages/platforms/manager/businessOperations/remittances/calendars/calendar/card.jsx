@@ -78,7 +78,7 @@ const Card = ({ txt, num, index, items = [] }) => {
         <div className="sales-card-body">
           <div className="d-flex flex-column">
             {items.map(
-              ({ cashier, gross, collector, _id, breakdown }, i) =>
+              ({ cashier, sales: gross, collector, _id, breakdown }, i) =>
                 gross > 0 && (
                   <div
                     key={i}
@@ -87,7 +87,7 @@ const Card = ({ txt, num, index, items = [] }) => {
                     title={handleTitle(cashier, breakdown)}
                     style={{ position: "relative", zIndex: 999 }}
                   >
-                    {cashier?.alias}
+                    {cashier?.alias || cashier?.fullName?.fname}
                     <span style={{ color: collector ? "" : "green" }}>
                       {currency(gross)}
                     </span>

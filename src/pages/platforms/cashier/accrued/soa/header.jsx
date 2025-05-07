@@ -25,7 +25,7 @@ const Header = () => {
           token,
           keys: {
             branchId: activePlatform?.branchId,
-            cashierId: auth._id,
+            // cashierId: auth._id,
             month,
             year,
           },

@@ -16,6 +16,7 @@ import {
   Payments,
   SOA,
   Reseco,
+  Onboarding,
 } from "../../../pages/platforms/cashier";
 
 const cashier = [
@@ -52,6 +53,13 @@ const cashier = [
         icon: "money-check",
         title: "Ledger of daily remittances",
         component: Remittances,
+      },
+      {
+        name: "Onboarding",
+        path: "/onboarding",
+        icon: "user-check",
+        title: "Onboarding of insources",
+        component: Onboarding,
       },
     ],
   },

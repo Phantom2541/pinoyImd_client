@@ -14,6 +14,7 @@ import {
   MDBCard,
   MDBInput,
   MDBCardBody,
+  MDBTypography,
 } from "mdbreact";
 import {
   TOGGLE,
@@ -186,7 +187,7 @@ export default function Modal() {
               ..._floating,
               sum, // floating is included
             },
-            gross: selected.gross,
+            sales: selected.sales,
             _id: selected._id,
           },
         })
@@ -242,6 +243,16 @@ export default function Modal() {
       </MDBModalHeader>
 
       <MDBModalBody className="mb-0">
+        {selected?._id ? (
+          <MDBTypography note noteTitle="Note: " tag="h6" noteColor="primary">
+            Declare your closing by selecting each denomination. Make sure it
+            matches your Cash On Hand (COH) before submitting.
+          </MDBTypography>
+        ) : (
+          <MDBTypography note noteTitle="Note: " tag="h6" noteColor="primary">
+            Declare your floating cash by selecting each denomination.
+          </MDBTypography>
+        )}
         <MDBRow>
           <MDBCol md="10">
             <h5 className="text-center font-weight-bold">Bills</h5>

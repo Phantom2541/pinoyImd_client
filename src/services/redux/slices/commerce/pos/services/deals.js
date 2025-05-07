@@ -78,6 +78,23 @@ export const OUTSOURCES = createAsyncThunk(
     }
   }
 );
+export const INSOURCES = createAsyncThunk(
+  `${url}/insources`,
+  ({ token, keys }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/insources`, token, keys);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const CASHIER = createAsyncThunk(
   `${url}/cashier`,
   ({ token, key }, thunkAPI) => {
@@ -686,6 +703,25 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(OUTSOURCES.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(INSOURCES.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(INSOURCES.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(INSOURCES.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

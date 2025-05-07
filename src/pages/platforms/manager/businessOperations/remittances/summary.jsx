@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { MDBBadge, MDBCard, MDBCardBody, MDBView } from "mdbreact";
 import { currency, fullName } from "../../../../../services/utilities";
@@ -6,13 +6,26 @@ import Month from "../../../../../services/fakeDb/calendar/months";
 import SummaryLoading from "../../../cashier/cashRegistry/services/deals/summary/loading";
 import "./style.css";
 export default function Summary() {
-  const { month, year, day } = useSelector(({ remittances }) => remittances);
+  const {
+    month,
+    year,
+    day: baseDay,
+  } = useSelector(({ remittances }) => remittances);
   const { collections, isLoading } = useSelector(({ deals }) => deals);
   const [selectedCashier, setSelectedCashier] = useState("");
+  const [day, setDay] = useState(1);
 
-  const currentDate = new Date(year, month, day);
-  const activeDate = `${Month[month]} ${day}, ${year}`;
+  const currentDate = new Date(year, month - 1, day);
+  const activeDate = `${Month[month - 1]} ${day}, ${year}`;
   const isSunday = currentDate.getDay() === 0;
+
+  useEffect(() => {
+    setDay(baseDay);
+  }, [baseDay]);
+
+  useEffect(() => {
+    setDay(new Date().getDate());
+  }, []);
 
   const cashierSales = useMemo(() => {
     const salesMap = {};
