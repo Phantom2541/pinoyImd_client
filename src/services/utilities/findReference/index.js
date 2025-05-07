@@ -23,8 +23,10 @@ const findReference = (
     switch (preference) {
       case "gender":
         references =
-          preferences.find(({ serviceId }) => serviceId === Number(key)) ||
-          null;
+          preferences.find(
+            ({ serviceId, isMale }) =>
+              serviceId === Number(key) && isMale === gender
+          ) || null;
 
         break;
       case "development":
