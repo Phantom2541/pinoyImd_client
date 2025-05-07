@@ -24,11 +24,8 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/ledger";
 import { Denominations } from "../../../../../../services/fakeDb";
-import {
-  currency,
-  fullName,
-  paymentMethod,
-} from "../../../../../../services/utilities";
+import { currency, fullName } from "../../../../../../services/utilities";
+import Breakdown from "../../../../../../components/breakdown";
 // import "./style.css";
 
 const billPositions = {
@@ -65,8 +62,6 @@ export default function Modal() {
     [position, setPosition] = useState(0),
     [location, setLocation] = useState("reception"),
     dispatch = useDispatch();
-
-  console.log("selected", selected);
 
   useEffect(() => {
     calculateSum(floating);
@@ -226,11 +221,14 @@ export default function Modal() {
                       <td className="text-center">
                         <MDBCard>
                           <MDBCardBody
-                            style={{ backGroundColor: "transparent" }}
-                            className="p-0 m"
+                            style={{
+                              backGroundColor: "transparent",
+                            }}
+                            className="p-0 "
                           >
                             <div
                               style={getBillimg(Number(bill1))}
+                              className="bg-warning"
                               title={currency(bill1)}
                             />
                           </MDBCardBody>
@@ -323,8 +321,8 @@ export default function Modal() {
           </MDBCol>
           <MDBCol md="2">
             <h5 className="text-center fw-bold">Break Down</h5>
-            <div>Floating Cash: {currency(selected?.opening?.sum || 0)}</div>
-            <div className="mt-5">
+            <Breakdown deal={selected} />
+            {/* <div className="mt-5">
               {selected?.breakdown &&
                 Object.entries(selected?.breakdown || {}).map(
                   ([key, value]) => {
@@ -365,7 +363,7 @@ export default function Modal() {
                   </strong>
                 </h5>
               </div>
-            </div>
+            </div> */}
           </MDBCol>
         </MDBRow>
         <div
