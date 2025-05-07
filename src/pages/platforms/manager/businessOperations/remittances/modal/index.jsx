@@ -3,7 +3,7 @@ import { MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
 import { capitalize, currency } from "../../../../../../services/utilities";
 import { Denominations } from "../../../../../../services/fakeDb";
 
-export default function Remittances({ title }) {
+export default function Modal({ title }) {
   return (
     <MDBTable bordered small>
       <MDBTableHead>

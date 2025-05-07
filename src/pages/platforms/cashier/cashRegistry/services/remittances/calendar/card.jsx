@@ -20,22 +20,23 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
     sales: gross = 0,
     collector,
     closing,
-    cashier,
+    // cashier,
     breakdown = {},
+    expenses,
   } = item;
 
-  const expenses = collections
-    .filter(({ createdAt, userId }) => {
-      const collectionDate = new Date(createdAt);
+  // const expenses = collections
+  //   .filter(({ createdAt, userId }) => {
+  //     const collectionDate = new Date(createdAt);
 
-      return (
-        collectionDate.getFullYear() === dateCell.getFullYear() &&
-        collectionDate.getMonth() === dateCell.getMonth() &&
-        collectionDate.getDate() === dateCell.getDate() &&
-        userId?._id === cashier?._id
-      );
-    })
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  //     return (
+  //       collectionDate.getFullYear() === dateCell.getFullYear() &&
+  //       collectionDate.getMonth() === dateCell.getMonth() &&
+  //       collectionDate.getDate() === dateCell.getDate() &&
+  //       userId?._id === cashier?._id
+  //     );
+  //   })
+  //   .reduce((acc, curr) => acc + curr.amount, 0);
   const isRemitted = !!collector;
 
   const { cash, ...rest } = breakdown;
@@ -138,13 +139,19 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
               )}
 
               {[
-                { label: "Cash Sales:", value: breakdown?.cash },
+                {
+                  label: "Cash Sales:",
+                  value: breakdown?.cash !== gross ? breakdown?.cash : 0,
+                },
                 {
                   label: " Add: FC",
                   value: opening.sum,
                   title: "Floating Cash",
                 },
-
+                {
+                  label: "Total:",
+                  value: breakdown?.cash + opening.sum,
+                },
                 { label: "Expenses", value: expenses, cn: "text-danger" },
               ]
                 .filter(({ value }) => value > 0)
@@ -152,6 +159,11 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                   <div
                     className="d-flex align-items-center justify-content-between "
                     key={idx}
+                    style={
+                      label === " Add: FC"
+                        ? { borderBottom: "1px solid #999" }
+                        : null
+                    }
                   >
                     <h6
                       className={`mb-0 text-right ${cn}`}

@@ -24,12 +24,8 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/ledger";
 import { Denominations } from "../../../../../../services/fakeDb";
-import {
-  currency,
-  fullName,
-  paymentMethod,
-} from "../../../../../../services/utilities";
-// import "./style.css";
+import { currency, fullName } from "../../../../../../services/utilities";
+import Breakdown from "./breakdown";
 
 const billPositions = {
   20: "-2px -3px",
@@ -194,7 +190,7 @@ export default function Modal() {
           <div className="d-flex align-items-center ">
             <MDBIcon icon="calendar-alt" className="mr-2" />
             <span style={{ fontSize: "1.4rem", fontWeight: "400" }}>
-              Remittance ({currency(sum || 0)})
+              Remittance ({currency(selected?.coh || 0)})
             </span>
           </div>
         </div>
@@ -321,52 +317,7 @@ export default function Modal() {
               ))}
             </div>
           </MDBCol>
-          <MDBCol md="2">
-            <h5 className="text-center fw-bold">Break Down</h5>
-            <div>Floating Cash: {currency(selected?.opening?.sum || 0)}</div>
-            <div className="mt-5">
-              {selected?.breakdown &&
-                Object.entries(selected?.breakdown || {}).map(
-                  ([key, value]) => {
-                    const paymentData = paymentMethod.getImage(key); // Get payment method data
-                    const { img, style, text = "" } = paymentData;
-                    return (
-                      <div
-                        key={key}
-                        title={text}
-                        className="d-flex align-items-center text-white justify-content-between mt-2"
-                      >
-                        {paymentData?.img ? (
-                          <img
-                            src={img} // ✅ Use an <img> tag
-                            alt={key}
-                            className="mr-2"
-                            style={{ ...style, height: "1.1rem" }} // Adjust size if needed
-                          />
-                        ) : (
-                          "💰"
-                        )}
-                        <span>
-                          {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
-                          <strong className="text-dark">
-                            ₱{value.toLocaleString()}
-                          </strong>
-                        </span>
-                      </div>
-                    );
-                  }
-                )}
-              <hr />
-              <div className="d-flex justify-content-between align-items-center">
-                <h5>COH:</h5>
-                <h5>
-                  <strong style={{ color: "blue" }}>
-                    {currency(selected?.gross + selected?.opening?.sum)}
-                  </strong>
-                </h5>
-              </div>
-            </div>
-          </MDBCol>
+          <Breakdown />
         </MDBRow>
         <div
           className="d-flex align-items-center justify-content-between mt-3"

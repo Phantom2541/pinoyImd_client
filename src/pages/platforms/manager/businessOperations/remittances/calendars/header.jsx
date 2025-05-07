@@ -30,16 +30,6 @@ const Header = () => {
         .filter((item) => !item.deleted)
         .reduce((acc, item) => acc + item.amount, 0);
       setSum(totalSales);
-      const totalExpenses = deals
-        .filter((item) => !item.deleted && item.cart)
-        .reduce((acc, item) => {
-          const cartExpenses = item.cart.reduce(
-            (cartAcc, cartItem) => cartAcc + (cartItem.capital || 0),
-            0
-          );
-          return acc + cartExpenses;
-        }, 0);
-      setExpenses(totalExpenses);
     }
   }, [deals]);
 
@@ -47,8 +37,14 @@ const Header = () => {
     if (remittances) {
       const totalRemitted = remittances
         .filter((item) => !item.deleted)
-        .reduce((acc, item) => acc + (item?.closing?.sum || 0), 0);
+        .reduce((acc, item) => acc + (item?.coh || 0), 0);
+
+      const totalExpenses = remittances
+        .filter((item) => !item.deleted)
+        .reduce((acc, item) => acc + (item?.expenses || 0), 0);
+
       setRemitted(totalRemitted);
+      setExpenses(totalExpenses); // assuming you have a state for this
     }
   }, [remittances]);
 
@@ -97,11 +93,14 @@ const Header = () => {
         year={year}
         reset={() => dispatch(ResetDATE())}
       />
-      <span> Expenses : {currency(expenses)}</span>
+
       <div className="d-flex align-items-center">
         <span className="mx-3 text-nowrap mt-0">
-          Sales: <strong className="text-white">{currency(sum)}</strong> |
-          Remitted:{" "}
+          Sales: <strong className="text-white">{currency(sum)}</strong>
+        </span>
+        |<span> Expenses : {currency(expenses)}</span>
+        <span className="mx-3 text-nowrap mt-0">
+          + Remitted:{" "}
           <strong className={remittedClass}>{currency(remitted)}</strong> (
           {balanceMessage})
         </span>
