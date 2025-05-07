@@ -12,7 +12,7 @@ const FormattedTotal = ({
   return (
     <div
       className={`d-flex align-items-center justify-content-between ${className}`}
-      key={_key}
+      key={_key || title}
     >
       <h5
         className="mb-0 text-right text-nowrap"

@@ -1,14 +1,16 @@
 import React from "react";
 import FormattedTotal from "./formattedTotal";
 
-const Breakdown = ({ deal }) => {
+const Breakdown = ({ deal = {} }) => {
   const { opening = {}, sales: gross = 0, breakdown = {}, expenses = 0 } = deal;
   const { cash, ...rest } = breakdown;
   const nonCash = Object.entries(rest);
-  const net = (opening.sum || 0) + cash - expenses;
+  const net = (opening?.sum || 0) + cash - expenses;
   return (
     <div style={{ fontFamily: "sans-serif" }}>
-      {gross > 0 && <FormattedTotal value={gross} title="Sales" />}
+      {gross > 0 && (
+        <FormattedTotal value={gross} title="Sales" _key="Salessss" />
+      )}
 
       {nonCash.length > 0 && (
         <>
@@ -45,7 +47,7 @@ const Breakdown = ({ deal }) => {
             title={label}
             value={value}
             style={{ color }}
-            _key={idx}
+            _key={`${idx}-${label}`}
           />
         ))}
 
