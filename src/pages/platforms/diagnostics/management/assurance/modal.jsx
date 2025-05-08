@@ -120,7 +120,7 @@ export default function Modal() {
             onChange={(e) => handleChange("norm", e.target.value)}
           />
           <MDBInput
-            label="Normal"
+            label="High"
             type="number"
             value={form.hi}
             required
