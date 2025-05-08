@@ -1,5 +1,11 @@
 import React from "react";
-import { MDBTable, MDBTableHead, MDBTableBody, MDBBtn } from "mdbreact";
+import {
+  MDBTable,
+  MDBTableHead,
+  MDBTableBody,
+  MDBBtn,
+  MDBBtnGroup,
+} from "mdbreact";
 import { Services } from "../../../../../../../services/fakeDb";
 import { useSelector } from "react-redux";
 
@@ -29,9 +35,6 @@ export default function Collapsable({ item }) {
         discount: 0, //?
       },
     };
-
-    console.log(UpdateData);
-    console.log(SaveData);
   }
 
   return (
@@ -41,6 +44,7 @@ export default function Collapsable({ item }) {
           <th>Sources</th>
           <th>Services</th>
           <th>Generated At</th>
+          <th>Action</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
@@ -62,13 +66,20 @@ export default function Collapsable({ item }) {
               year: "numeric",
               hour: "2-digit",
               minute: "2-digit",
-            }).format(new Date(createdAt))}`}
+            }).format(new Date(createdAt || Date.now()))}`}
+          </td>
+          <td>
+            <MDBBtnGroup>
+              <MDBBtn size="sm" color="primary">
+                Process
+              </MDBBtn>
+              <MDBBtn size="sm" color="danger">
+                Deny
+              </MDBBtn>
+            </MDBBtnGroup>
           </td>
         </tr>
       </MDBTableBody>
-      <MDBBtn color="primary" onClick={() => handleAcknowledgeAndProcess()}>
-        Acknowledge & Process
-      </MDBBtn>
     </MDBTable>
   );
 }

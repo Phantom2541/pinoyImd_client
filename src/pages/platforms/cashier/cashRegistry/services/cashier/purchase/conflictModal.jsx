@@ -12,7 +12,6 @@ const Card = ({
 }) => {
   const { description = "", abbreviation = "", packages = [] } = menu,
     { gross } = computeGD(menu, categoryIndex, privilegeIndex);
-
   return (
     <div className="conflict-card" onClick={() => handlePick(chosen)}>
       <div className="conflict-card-header">
@@ -21,7 +20,7 @@ const Card = ({
           {description && (
             <>
               <br />
-              <small>{description}</small>
+              <small>{description} </small>
             </>
           )}
         </div>

@@ -11,11 +11,11 @@ const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div>
-        {index + 1}. {getGenderIcon(customerId.isMale)}{" "}
-        {fullName(customerId.fullName)} |{getAge(customerId.dob)}
+        {index + 1}. {getGenderIcon(customerId?.isMale)}{" "}
+        {fullName(customerId?.fullName)} |{getAge(customerId?.dob)}
       </div>
       <div className="d-flex">
-        <small className="mr-2 mt-1">{branchId.displayname}</small>
+        <small className="mr-2 mt-1">{branchId?.displayname}</small>
         <MDBBtn
           size="sm"
           color="white"

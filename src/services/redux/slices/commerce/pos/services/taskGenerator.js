@@ -111,7 +111,6 @@ export const reduxSlice = createSlice({
     SetSELECTED: (state, { payload }) => {
       const list = payload.cart?.flatMap((item) => item.packages || []);
       const _inhouse = Services.whereIn(list);
-      // console.log("_inhouse :", _inhouse);
       state.inhouse = _inhouse;
       state.outsource = [];
       state.selected = payload;
