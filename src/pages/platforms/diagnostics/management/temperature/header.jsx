@@ -20,16 +20,13 @@ const Header = () => {
 
   useEffect(() => {
     if (token && activePlatform?.branchId && year !== null && month !== null) {
-      const startDate = new Date(year, month - 1, 1);
-      const endDate = new Date(year, month, 0, 23, 59, 59, 999);
-
       dispatch(
         BROWSE({
           token,
-          key: {
+          data: {
             branchId: activePlatform?.branchId,
-            start: startDate,
-            end: endDate,
+            month,
+            year,
           },
         })
       );
@@ -54,15 +51,14 @@ const Header = () => {
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex align-items-center justify-content-between">
-        <div className="d-flex">
-          <CalendarPicker
-            month={month}
-            moved={(action) => dispatch(SetMONTH(action))}
-            year={year}
-            reset={() => dispatch(ResetDATE())}
-          />
-        </div>
+        <CalendarPicker
+          month={month}
+          moved={(action) => dispatch(SetMONTH(action))}
+          year={year}
+          reset={() => dispatch(ResetDATE())}
+        />
       </div>
+      <h3 className="text-white text-center mx-3">TEMPERATURE MONITORING</h3>
       <div className="d-flex align-items-center">
         <MDBBtn
           type="submit"

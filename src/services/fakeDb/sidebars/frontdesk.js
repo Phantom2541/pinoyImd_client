@@ -19,7 +19,6 @@ import {
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import { Menus, Services } from "../../../pages/platforms/cashier";
-import { Source, Outsource } from "../../../pages/platforms/frontdesk/vendors";
 import Temperature from "../../../pages/platforms/diagnostics/management/temperature";
 
 import {
@@ -304,47 +303,6 @@ const frontdesk = [
             component: Temperature,
           },
         ],
-      },
-    ],
-  },
-  {
-    name: "Vendors",
-    path: "/vendors",
-    icon: "handshake",
-    children: [
-      /**
-       * where client came from
-       */
-      {
-        name: "Source",
-        path: "/source",
-        component: Source,
-      },
-      /**
-       * where we send services that are not available on the store
-       */
-      {
-        name: "Outsource",
-        path: "/outsource",
-        component: Outsource,
-      },
-      {
-        name: "Controls",
-        path: "/controls",
-        component: Controls,
-      },
-      {
-        name: "Assurance",
-        path: "/assurance",
-        component: Assurance,
-      },
-      /**
-       * have a multi-vendor relationship
-       */
-      {
-        name: "Tieup",
-        path: "/tieup",
-        // component: Source,
       },
     ],
   },

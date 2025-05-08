@@ -18,7 +18,7 @@ const Header = () => {
         {/* Left-aligned text (auto-adjust kapag tumama sa button) */}
         <div className="flex-grow-1 w-50">
           <span className="white-text d-block w-100 text-wrap">
-            {serviceId ? Services.getName(serviceId) : ""}
+            {serviceId ? Services.getName(serviceId) : "Select Service first"}
           </span>
         </div>
 

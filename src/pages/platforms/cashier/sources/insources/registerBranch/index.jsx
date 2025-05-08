@@ -57,6 +57,7 @@ export default function Modal() {
         ...prev,
         name: selected?.name,
         displayname: selected?.displayname,
+        abbr: selected?.abbr,
         providerId: selected?._id,
       }));
     }
@@ -104,6 +105,17 @@ export default function Modal() {
         <MDBRow>
           <MDBCol>
             <MDBInput
+              label="Name"
+              value={form.name}
+              onChange={({ target }) =>
+                setForm({ ...form, name: target.value })
+              }
+            />
+          </MDBCol>
+        </MDBRow>
+        <MDBRow>
+          <MDBCol>
+            <MDBInput
               label="Branch Display name"
               required
               value={form.displayname}
@@ -112,17 +124,18 @@ export default function Modal() {
               }
             />
           </MDBCol>
-          {form?.providerID && (
-            <MDBCol>
-              <MDBInput
-                label="Name"
-                value={form.name}
-                onChange={({ target }) =>
-                  setForm({ ...form, name: target.value })
-                }
-              />
-            </MDBCol>
-          )}
+        </MDBRow>
+        <MDBRow>
+          <MDBCol>
+            <MDBInput
+              label="Acronym"
+              required
+              value={form.abbr}
+              onChange={({ target }) =>
+                setForm({ ...form, abbr: target.value })
+              }
+            />
+          </MDBCol>
         </MDBRow>
         <AddressSelect
           handleChange={(_, value) =>

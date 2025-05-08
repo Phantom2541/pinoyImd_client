@@ -20,6 +20,7 @@ const Header = () => {
     { collections: deals } = useSelector(({ deals }) => deals),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [expenses, setExpenses] = useState(0),
+    [nonCash, setNonCash] = useState(0),
     [sum, setSum] = useState(0),
     [remitted, setRemitted] = useState(0),
     dispatch = useDispatch();
@@ -30,16 +31,6 @@ const Header = () => {
         .filter((item) => !item.deleted)
         .reduce((acc, item) => acc + item.amount, 0);
       setSum(totalSales);
-      const totalExpenses = deals
-        .filter((item) => !item.deleted && item.cart)
-        .reduce((acc, item) => {
-          const cartExpenses = item.cart.reduce(
-            (cartAcc, cartItem) => cartAcc + (cartItem.capital || 0),
-            0
-          );
-          return acc + cartExpenses;
-        }, 0);
-      setExpenses(totalExpenses);
     }
   }, [deals]);
 
@@ -47,8 +38,27 @@ const Header = () => {
     if (remittances) {
       const totalRemitted = remittances
         .filter((item) => !item.deleted)
-        .reduce((acc, item) => acc + (item?.closing?.sum || 0), 0);
+        .reduce((acc, item) => acc + (item?.coh - item?.opening?.sum), 0);
+
+      const totalExpenses = remittances
+        .filter((item) => !item.deleted)
+        .reduce((acc, item) => acc + (item?.expenses || 0), 0);
+
+      const totalNonCash = remittances
+        .filter((item) => !item.deleted)
+        .reduce((acc, item) => {
+          const {
+            gcash = 0,
+            voucher = 0,
+            cheque = 0,
+            credit = 0,
+          } = item.breakdown || {};
+          return acc + (gcash + voucher + cheque + credit);
+        }, 0);
+
       setRemitted(totalRemitted);
+      setExpenses(totalExpenses);
+      setNonCash(totalNonCash);
     }
   }, [remittances]);
 
@@ -75,10 +85,10 @@ const Header = () => {
   let remittedClass = "";
   let balanceMessage = "";
 
-  if (remitted < sum) {
+  if (remitted + nonCash + expenses < sum) {
     remittedClass = "text-danger font-weight-bold"; // Dark red for under-remitted
     balanceMessage = "⚠️ Under-remitted";
-  } else if (remitted > sum) {
+  } else if (remitted + nonCash + expenses > sum) {
     remittedClass = "text-warning font-weight-bold"; // Dark yellow for over-remitted
     balanceMessage = "⚠️ Over-remitted";
   } else {
@@ -97,11 +107,17 @@ const Header = () => {
         year={year}
         reset={() => dispatch(ResetDATE())}
       />
-      <span> Expenses : {currency(expenses)}</span>
+
       <div className="d-flex align-items-center">
         <span className="mx-3 text-nowrap mt-0">
-          Sales: <strong className="text-white">{currency(sum)}</strong> |
-          Remitted:{" "}
+          Sales: <strong className="text-white">{currency(sum)}</strong>
+        </span>
+        |<span> Expenses : {currency(expenses)}</span>|
+        <span title="Gcash, Voucher, Cheque, Credit">
+          Non-Cash: {currency(nonCash)}
+        </span>
+        <span className="mx-3 text-nowrap mt-0">
+          + Remitted:{" "}
           <strong className={remittedClass}>{currency(remitted)}</strong> (
           {balanceMessage})
         </span>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -9,10 +9,12 @@ import {
 } from "../../../../../services/redux/slices/finance/journals/payments";
 import { Statements } from "./components";
 import CalendarPicker from "../../../../../components/header/calendars";
+import { currency } from "../../../../../services/utilities";
 
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { month, year } = useSelector(({ payments }) => payments),
+    { month, year, filtered } = useSelector(({ payments }) => payments),
+    [total, setTotal] = useState(0),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,7 +32,16 @@ export default function TopHeader() {
     }
     // return () => dispatch(RESET());
   }, [token, activePlatform, year, month, dispatch]);
-
+  useEffect(() => {
+    if (filtered.length > 0) {
+      const total = filtered.reduce((acc, payment) => {
+        return acc + payment.amount;
+      }, 0);
+      setTotal(total);
+    } else {
+      setTotal(0);
+    }
+  }, [filtered]);
   const handleCategories = (categories) => {
     dispatch(SetFILTERByCategories(categories));
     // console.log(categories);
@@ -49,7 +60,9 @@ export default function TopHeader() {
           reset={() => dispatch(RESET())}
         />
       </div>
-      <span className="white-text mx-3 text-nowrap mt-0">Payments </span>
+      <span className="white-text mx-3 text-nowrap mt-0">
+        Payments ({currency(total)}){" "}
+      </span>
       <div>
         <div className="text-right d-flex items-center">
           <Statements setCategories={handleCategories} />

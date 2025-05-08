@@ -7,7 +7,6 @@ import {
   MDBAnimation,
   MDBProgress,
   MDBIcon,
-  MDBTooltip,
 } from "mdbreact";
 import { useSelector } from "react-redux";
 import { Sidebars } from "../../services/fakeDb";
@@ -106,8 +105,6 @@ export default function SideNavigation({
       );
     });
   };
-
-  console.log("activePlatform", activePlatform);
 
   return (
     <div className="white-skin">

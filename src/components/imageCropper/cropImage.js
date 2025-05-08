@@ -6,7 +6,7 @@
  */
 import pica from "pica";
 
-const picaInstance = pica();
+// const picaInstance = pica();
 const createImage = (url) =>
   new Promise((resolve, reject) => {
     const image = new Image();

@@ -149,7 +149,7 @@ export default function Select({
         ] || preValue
       : preValue;
   };
-  console.log("isEmpty", isEmpty(preValues));
+
   return (
     <div className="d-flex align-items-center w-100">
       <MDBSelect

@@ -7,7 +7,7 @@ const Services = ({ template, service, setService }) => {
   const handleChange = (id) => setService(Number(id));
 
   return (
-    <div style={{ position: "absolute", left: 350, bottom: -15, width: 300 }}>
+    <div style={{ bottom: -15, width: 300, marginLeft: 10 }}>
       <Select
         collections={services}
         keys={["id"]}

@@ -12,6 +12,7 @@ import {
   SetMONTH,
 } from "../../../../../../services/redux/slices/diagnostics/management/controls";
 import CalendarPicker from "../../../../../../components/header/calendars";
+
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { month, year } = useSelector(({ controls }) => controls),
@@ -39,22 +40,25 @@ const Header = () => {
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header blue-gradient narrower py-2 px-4 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      style={{ flexWrap: "wrap" }}
     >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">Controls </span>
-      </div>
-      <div>
-        <div className="text-right d-flex items-center">
-          <Templates setTemplate={setTemplate} />
-          <Services template={template} setService={handleServiceId} />
+      {/* Left Section */}
+      <div className="d-flex align-items-center" style={{ width: "20rem" }}>
+        <span className="white-text mx-3 text-nowrap mt-0">
           <CalendarPicker
             year={year}
             month={month}
             moved={(direction) => dispatch(SetMONTH(direction))}
             reset={() => dispatch(RESET())}
           />
-        </div>
+        </span>
+      </div>
+
+      {/* Right Section */}
+      <div className="d-flex justify-content-end align-items-center flex-wrap gap-2">
+        <Templates setTemplate={setTemplate} />
+        <Services template={template} setService={handleServiceId} />
       </div>
     </MDBView>
   );

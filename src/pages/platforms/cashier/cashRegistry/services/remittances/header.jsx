@@ -55,9 +55,12 @@ const Header = () => {
   useEffect(() => {
     if (collections) {
       const sales = [...collections]?.reduce((total, collection) => {
+        console.log("collection", collection);
+
         if (!collection?.collector && collection.sales) {
-          const closingSum = collection?.closing?.sum || 0;
+          const closingSum = collection?.coh || 0;
           const openingSum = collection?.opening?.sum || 0;
+
           return total + (closingSum - openingSum);
         }
         return total;
