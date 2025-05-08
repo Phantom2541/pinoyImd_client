@@ -28,7 +28,6 @@ export default function Body() {
    */
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
-
   return (
     <MDBContainer
       style={{
