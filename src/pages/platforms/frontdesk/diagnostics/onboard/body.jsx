@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { MDBTypography, MDBRow } from "mdbreact";
+import { MDBTypography, MDBRow, MDBCardBody } from "mdbreact";
 import Card from "./card";
 
 const Body = () => {
@@ -9,7 +9,7 @@ const Body = () => {
   );
 
   return (
-    <>
+    <MDBCardBody>
       {!collections?.length && !isLoading && (
         <MDBTypography noteColor="info" note>
           Tasks are empty
@@ -24,7 +24,7 @@ const Body = () => {
           />
         ))}
       </MDBRow>
-    </>
+    </MDBCardBody>
   );
 };
 

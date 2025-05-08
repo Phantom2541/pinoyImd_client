@@ -7,10 +7,12 @@ const utility = [
       {
         name: "Request",
         path: "/housekeeper/request",
+        icon: "list",
       },
       {
         name: "Trackers",
         path: "/housekeeper/trackers",
+        icon: "list",
       },
     ],
   },
@@ -23,6 +25,7 @@ const utility = [
         name: "Purchase Order",
         title: "stocks",
         path: "/liability/order",
+        icon: "box",
       },
     ],
   },
@@ -34,10 +37,12 @@ const utility = [
       {
         name: "Products",
         path: "/supply/menus",
+        icon: "cogs",
       },
       {
         name: "Stocks",
         path: "/supply/stocks",
+        icon: "cogs",
       },
     ],
   },

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -11,12 +11,10 @@ import {
 } from "mdbreact";
 import SummaryLoading from "./loading";
 import { Services } from "../../../../../../../services/fakeDb";
-import { useToasts } from "react-toast-notifications";
 import Modal from "../modal";
 
 export default function Vouchers() {
-  const { token } = useSelector(({ auth }) => auth),
-    { collections, total, isLoading } = useSelector(({ deals }) => deals),
+  const { collections, total, isLoading } = useSelector(({ deals }) => deals),
     { selected } = useSelector(({ remittances }) => remittances),
     [menuCensus, setMenuCensus] = useState([]),
     [serviceCensus, setServiceCensus] = useState([]),

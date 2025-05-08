@@ -12,7 +12,7 @@ import {
 
 const Footer = () => {
   const {
-      filtered = [],
+      // filtered = [],
       isLoading,
       totalPages,
       activePage,

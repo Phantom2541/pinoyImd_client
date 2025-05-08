@@ -15,14 +15,17 @@ const admin = [
       {
         name: "List",
         path: "/users/list",
+        icon: "users",
       },
       {
         name: "Representatives",
         path: "/users/patron",
+        icon: "user-tag",
       },
       {
         name: "Banned",
         path: "/users/banned",
+        icon: "ban",
       },
     ],
   },

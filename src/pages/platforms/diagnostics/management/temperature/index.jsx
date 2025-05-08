@@ -1,7 +1,7 @@
 import React from "react";
-import Calendar from "./calendar";
 import { MDBCard, MDBContainer, MDBAnimation } from "mdbreact";
 import Header from "./header";
+import Calendar from "./calendar";
 import "./style.css";
 
 export default function Temperature() {

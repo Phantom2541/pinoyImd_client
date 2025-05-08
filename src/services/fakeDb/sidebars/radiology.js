@@ -3,10 +3,7 @@ import {
   Tasks,
   Reports,
 } from "../../../pages/platforms/frontdesk/diagnostics";
-import {
-  Menus,
-  Services,
-} from "../../../pages/platforms/cashier";
+import { Menus, Services } from "../../../pages/platforms/cashier";
 
 const radiology = [
   {
@@ -22,43 +19,48 @@ const radiology = [
       {
         name: "Onboarding",
         path: "/onboarding",
+        icon: "cogs",
         component: Onboard,
       },
       {
         name: "Tasks",
         path: "/task",
+        icon: "cogs",
         component: Tasks,
       },
       {
         name: "Reports",
         path: "/reports",
+        icon: "cogs",
         component: Reports,
       },
     ],
   },
-   {
-     name: "Services", //viewing only
-     path: "/offers",
-     icon: "list",
-     children: [
-       /**
-        * a group of related services
-        */
-       {
-         name: "Menus",
-         path: "/menus",
-         component: Menus,
-       },
-       /**
-        *  a single service
-        */
-       {
-         name: "examinations",
-         path: "/services",
-         component: Services,
-       },
-     ],
-   },
+  {
+    name: "Services", //viewing only
+    path: "/offers",
+    icon: "list",
+    children: [
+      /**
+       * a group of related services
+       */
+      {
+        name: "Menus",
+        path: "/menus",
+        icon: "cogs",
+        component: Menus,
+      },
+      /**
+       *  a single service
+       */
+      {
+        name: "examinations",
+        path: "/services",
+        icon: "tools",
+        component: Services,
+      },
+    ],
+  },
   {
     name: "Liability",
     path: "/liability",
@@ -68,6 +70,7 @@ const radiology = [
         name: "Supply",
         title: "stocks",
         path: "/liability/supply",
+        icon: "box",
       },
     ],
   },
@@ -79,10 +82,12 @@ const radiology = [
       {
         name: "Products",
         path: "/radiology/offers/menus",
+        icon: "cogs",
       },
       {
         name: "Stocks",
         path: "/radiology/offers/stocks",
+        icon: "cogs",
       },
     ],
   },

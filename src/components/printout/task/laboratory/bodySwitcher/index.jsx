@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import Hematology from "./hematology";
 import Urinalysis from "./urinalysis";
 import Chemistry from "./chemistry";

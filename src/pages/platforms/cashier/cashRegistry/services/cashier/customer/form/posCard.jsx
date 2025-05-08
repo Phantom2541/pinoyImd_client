@@ -54,7 +54,7 @@ export default function PosCard() {
           .then(({ payload }) => {
             // Assuming the response contains the source data in 'payload'
             const sourceData = payload.payload;
-            console.log("Fetching source data:", sourceData);
+            // console.log("Fetching source data:", sourceData);
 
             // Store the fetched data in localStorage for future use
             localStorage.setItem(
