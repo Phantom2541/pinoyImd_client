@@ -12,10 +12,12 @@ const auditor = [
       {
         name: "Bills",
         path: "/transactions/patients",
+        icon: "cash-register",
       },
       {
         name: "Ledgers",
         path: "/transactions/sales",
+        icon: "money-bill",
       },
     ],
   },
@@ -27,10 +29,12 @@ const auditor = [
       {
         name: "Payables",
         path: "/accrued/payables",
+        icon: "money-bill",
       },
       {
         name: "Receivables",
         path: "/accrued/receivables",
+        icon: "money-bill",
       },
     ],
   },
@@ -42,16 +46,19 @@ const auditor = [
       {
         name: "Temperature",
         path: "/liability/temperature",
+        icon: "thermometer-half",
       },
       {
         name: "Supply",
         title: "stocks",
         path: "/liability/supply",
+        icon: "box",
       },
       {
         name: "Machine",
         title: "Preventive Maintenance",
         path: "/liability/machine",
+        icon: "tools",
       },
     ],
   },

@@ -20,16 +20,19 @@ const clinical = [
       {
         name: "Onboarding",
         path: "/onboarding",
+        icon: "cogs",
         component: Onboard,
       },
       {
         name: "Tasks",
         path: "/task",
+        icon: "cogs",
         component: Tasks,
       },
       {
         name: "Reports",
         path: "/reports",
+        icon: "cogs",
         component: Reports,
       },
     ],
@@ -45,6 +48,7 @@ const clinical = [
       {
         name: "Menus",
         path: "/menus",
+        icon: "cogs",
         component: Menus,
       },
       /**
@@ -53,6 +57,7 @@ const clinical = [
       {
         name: "examinations",
         path: "/services",
+        icon: "tools",
         component: Services,
       },
     ],
@@ -65,6 +70,7 @@ const clinical = [
       {
         name: "Supply",
         title: "stocks",
+        icon: "box",
         path: "/liability/supply",
       },
     ],

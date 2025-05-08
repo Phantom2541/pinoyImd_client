@@ -1,5 +1,27 @@
 import { Line } from "react-chartjs-2";
 import React from "react";
+import { Chart } from "chart.js";
+
+// Register necessary components for Chart.js v3
+import {
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 // Define the normal ranges for room and ref
 const NORMAL_ROOM_RANGE = { min: 20, max: 25 }; // Example range
@@ -78,111 +100,45 @@ const barChartData = (labels, roomAM, roomPM, refAM, refPM) => ({
   ],
 });
 
-// Chart options configuration
+// Chart options configuration for Chart.js v3
 const barChartOptions = {
   responsive: true,
   maintainAspectRatio: true,
   scales: {
-    xAxes: [
-      {
-        gridLines: {
-          display: true,
-          color: "rgba(0, 0, 0, 0.1)",
-        },
-        ticks: {
-          fontColor: "#7e8591",
-        },
+    x: {
+      grid: {
+        display: true,
+        color: "rgba(0, 0, 0, 0.1)",
       },
-    ],
-    yAxes: [
-      {
-        gridLines: {
-          display: true,
-          color: "rgba(0, 0, 0, 0.1)",
-        },
-        ticks: {
-          beginAtZero: true,
-          min: 0,
-          fontColor: "#7e8591",
-        },
-        // Draw horizontal lines for normal ranges
-        drawOnChartArea: true,
-        scaleLabel: {
-          display: true,
-        },
+      ticks: {
+        color: "#7e8591",
       },
-    ],
-  },
-  legend: {
-    labels: {
-      fontColor: "#7e8591",
-      fontSize: 16,
+    },
+    y: {
+      grid: {
+        display: true,
+        color: "rgba(0, 0, 0, 0.1)",
+      },
+      ticks: {
+        beginAtZero: true,
+        min: 0,
+        color: "#7e8591",
+      },
+      title: {
+        display: true,
+        text: "Temperature (°C)",
+      },
     },
   },
-  annotation: {
-    // Add horizontal lines for normal ranges
-    annotations: [
-      {
-        id: "roomMin",
-        type: "line",
-        mode: "horizontal",
-        scaleID: "y-axis-0",
-        value: NORMAL_ROOM_RANGE.min,
-        borderColor: "rgba(255, 99, 132, 0.5)",
-        borderWidth: 2,
-        label: {
-          enabled: true,
-          content: "Room Min",
-          position: "left",
-          fontColor: "rgba(255, 99, 132, 0.5)",
+  plugins: {
+    legend: {
+      labels: {
+        color: "#7e8591",
+        font: {
+          size: 16,
         },
       },
-      {
-        id: "roomMax",
-        type: "line",
-        mode: "horizontal",
-        scaleID: "y-axis-0",
-        value: NORMAL_ROOM_RANGE.max,
-        borderColor: "rgba(255, 99, 132, 0.5)",
-        borderWidth: 2,
-        label: {
-          enabled: true,
-          content: "Room Max",
-          position: "left",
-          fontColor: "rgba(255, 99, 132, 0.5)",
-        },
-      },
-      {
-        id: "refMin",
-        type: "line",
-        mode: "horizontal",
-        scaleID: "y-axis-0",
-        value: NORMAL_REF_RANGE.min,
-        borderColor: "rgba(75, 192, 192, 0.5)",
-        borderWidth: 2,
-        label: {
-          enabled: true,
-          content: "Ref Min",
-          position: "left",
-          fontColor: "rgba(75, 192, 192, 0.5)",
-        },
-      },
-      {
-        id: "refMax",
-        type: "line",
-        mode: "horizontal",
-        scaleID: "y-axis-0",
-        value: NORMAL_REF_RANGE.max,
-        borderColor: "rgba(75, 192, 192, 0.5)",
-        borderWidth: 2,
-        label: {
-          enabled: true,
-          content: "Ref Max",
-          position: "left",
-          fontColor: "rgba(75, 192, 192, 0.5)",
-        },
-      },
-    ],
+    },
   },
 };
 

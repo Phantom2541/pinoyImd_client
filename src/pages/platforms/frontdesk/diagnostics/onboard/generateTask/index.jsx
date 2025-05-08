@@ -225,15 +225,20 @@ export default function Modal() {
   };
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} size="lg" backdrop>
+    <MDBModal
+      isOpen={show}
+      toggle={toggle}
+      size="lg"
+      backdrop
+      aria-hidden={show ? "false" : "true"} // Keep this if using aria-hidden
+    >
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
+        inert={show ? "false" : "true"} // Inert is set to prevent focus
       >
-        <h5>
-          <MDBIcon className="mr-2" icon="tasks" />
-          Task Generator
-        </h5>
+        <MDBIcon className="mr-2" icon="tasks" />
+        Task Generator
       </MDBModalHeader>
       <form>
         <MDBModalBody className="mb-0">

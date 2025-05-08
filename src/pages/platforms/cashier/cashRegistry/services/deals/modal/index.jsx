@@ -6,8 +6,6 @@ import {
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBInput,
-  MDBTypography,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import { currency } from "../../../../../../../services/utilities";
@@ -15,7 +13,7 @@ import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookk
 
 export default function Modal({ show, selected, toggle }) {
   const { token } = useSelector(({ auth }) => auth),
-    { total, collections, isLoading } = useSelector(({ deals }) => deals),
+    { total, collections } = useSelector(({ deals }) => deals),
     { selected: selectedRemittance } = useSelector(
       ({ remittances }) => remittances
     ),
@@ -132,10 +130,6 @@ export default function Modal({ show, selected, toggle }) {
               >
                 Non-Cash:
               </h6>
-              <h6
-                className="ml-1"
-                style={{ fontWeight: 400, fontSize: "0.9rem" }}
-              ></h6>
             </div>
             {nonCash.map(([key, value], idx) => (
               <div

@@ -1,4 +1,3 @@
-// Header.jsx
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBIcon, MDBBtn } from "mdbreact";
@@ -36,7 +35,7 @@ const Header = () => {
 
   const handlePrint = () => {
     localStorage.setItem("temperature", JSON.stringify(collections));
-    console.log("collections: ", collections);
+    // console.log("collections: ", collections);
 
     window.open(
       "/printout/temperature/graph",

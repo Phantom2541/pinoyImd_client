@@ -9,9 +9,6 @@ export default function Calendar() {
   const { month, year } = useSelector(({ temperatures }) => temperatures),
     [selected, setSelected] = useState({});
 
-  // const { month = new Date().getMonth(), year = new Date().getFullYear() } =
-  //   useSelector(({ sales }) => sales);
-
   return (
     <div className="temperature-calendar p-3">
       <WeekHeader />

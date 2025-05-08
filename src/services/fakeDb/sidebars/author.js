@@ -7,10 +7,12 @@ const author = [
       {
         name: "Menus",
         path: "/patients",
+        icon: "cash-register",
       },
       {
         name: "Preferences",
         path: "/sales",
+        icon: "money-bill",
       },
     ],
   },
@@ -22,14 +24,17 @@ const author = [
       {
         name: "Temperature",
         path: "/temperature",
+        icon: "tv",
       },
       {
         name: "Supply",
         path: "/supply",
+        icon: "tv",
       },
       {
         name: "Machine",
         path: "/machine",
+        icon: "tv",
       },
     ],
   },
@@ -41,10 +46,12 @@ const author = [
       {
         name: "Payables",
         path: "/payables",
+        icon: "tv",
       },
       {
         name: "Receivables",
         path: "/receivables",
+        icon: "tv",
       },
     ],
   },
@@ -56,14 +63,17 @@ const author = [
       {
         name: "Temperature",
         path: "/temperature",
+        icon: "tv",
       },
       {
         name: "Supply",
         path: "/supply",
+        icon: "tv",
       },
       {
         name: "Machine",
         path: "/machine",
+        icon: "tv",
       },
     ],
   },
@@ -75,10 +85,12 @@ const author = [
       {
         name: "Menus",
         path: "/menus",
+        icon: "cogs",
       },
       {
         name: "Services",
         path: "/services",
+        icon: "tools",
       },
     ],
   },

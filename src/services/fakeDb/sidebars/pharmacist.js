@@ -12,10 +12,12 @@ const pharmacist = [
       {
         name: "Bills",
         path: "/transactions/patients",
+        icon: "cash-register",
       },
       {
         name: "Ledgers",
         path: "/transactions/sales",
+        icon: "money-bill",
       },
     ],
   },
@@ -27,10 +29,12 @@ const pharmacist = [
       {
         name: "Payables",
         path: "/accrued/payables",
+        icon: "tv",
       },
       {
         name: "Receivables",
         path: "/accrued/receivables",
+        icon: "tv",
       },
     ],
   },
@@ -42,16 +46,19 @@ const pharmacist = [
       {
         name: "Temperature",
         path: "/liability/temperature",
+        icon: "thermometer-half",
       },
       {
         name: "Supply",
         title: "stocks",
         path: "/liability/supply",
+        icon: "box",
       },
       {
         name: "Machine",
         title: "Preventive Maintenance",
         path: "/liability/machine",
+        icon: "tools",
       },
     ],
   },
@@ -63,10 +70,12 @@ const pharmacist = [
       {
         name: "Menus",
         path: "/offers/menus",
+        icon: "cogs",
       },
       {
         name: "Services",
         path: "/offers/services",
+        icon: "tools",
       },
     ],
   },

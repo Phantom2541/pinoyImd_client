@@ -7,14 +7,17 @@ const procurement = [
       {
         name: "Request",
         path: "/purchases/request",
+        icon: "cogs",
       },
       {
         name: "Approved",
         path: "/purchases/approved",
+        icon: "cogs",
       },
       {
         name: "Completed",
         path: "/purchases/purchase",
+        icon: "cogs",
       },
     ],
   },
@@ -26,10 +29,12 @@ const procurement = [
       {
         name: "Products",
         path: "/offers/menus",
+        icon: "cogs",
       },
       {
         name: "Stocks",
         path: "/offers/stocks",
+        icon: "tools",
       },
     ],
   },

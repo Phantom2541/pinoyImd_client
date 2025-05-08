@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBCard, MDBSpinner, MDBCardBody } from "mdbreact";
+import { MDBCard, MDBSpinner } from "mdbreact";
 
 import Header from "./headers";
 import Body from "./body";
@@ -22,7 +22,7 @@ export default function Sales() {
    * this data is not slow moving info
    */
   useEffect(() => {
-    if (token && activePlatform.branchId) {
+    if (typeof window !== "undefined" && token && activePlatform.branchId) {
       const branchId = activePlatform.branchId;
       const storedSource = localStorage.getItem(`outsource_${branchId}`);
 
@@ -45,25 +45,21 @@ export default function Sales() {
           });
       }
 
-      return () => {
-        dispatch(RESET());
-      };
+      return () => dispatch(RESET());
     }
   }, [token, dispatch, activePlatform]);
 
   return (
     <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
       <Header />
-      <MDBCardBody>
-        {isLoading ? (
-          <div className="text-center mt-5">
-            <MDBSpinner />
-          </div>
-        ) : (
-          <Body />
-        )}
-        <GenerateTask />
-      </MDBCardBody>
+      {isLoading ? (
+        <div className="text-center mt-5">
+          <MDBSpinner />
+        </div>
+      ) : (
+        <Body />
+      )}
+      <GenerateTask />
     </MDBCard>
   );
 }

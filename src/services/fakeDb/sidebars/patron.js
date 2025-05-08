@@ -17,19 +17,23 @@ const patron = [
       {
         name: "Admission",
         path: "/admission",
+        icon: "user-tag",
       },
       {
         name: "Diagnostics",
         path: "/diagnostics",
+        icon: "user-tag",
         component: Diagnostics,
       },
       {
         name: "Medical Records",
         path: "/laboratory",
+        icon: "user-tag",
       },
       {
         name: "Medical Certificates",
         path: "/certificates",
+        icon: "user-tag",
       },
     ],
   },
@@ -46,11 +50,13 @@ const patron = [
       {
         name: "Resume",
         path: "/resume",
+        icon: "user-tag",
         component: Apply,
       },
       {
         name: "Documents",
         path: "/documents",
+        icon: "user-tag",
         component: Documents,
       },
     ],

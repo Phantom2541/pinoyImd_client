@@ -64,16 +64,19 @@ const manager = [
       {
         name: "Sales",
         path: "/sales",
+        icon: "money-bill",
         component: Sales,
       },
       {
         name: "Remittances",
         path: "/remittances",
+        icon: "money-bill",
         component: Remittances,
       },
       {
         name: "Ledger",
         path: "/ledger",
+        icon: "money-bill",
         component: ExperimentalLedger,
       },
     ],
@@ -155,19 +158,23 @@ const manager = [
       {
         name: "Requisition", // 1. Pending, 2. submit
         path: "/request",
+        icon: "file-invoice",
         component: PurRequest,
       },
       {
         name: "Approval ", // 1. Pending, 2. Approved 3. Denied
         path: "/process",
+        icon: "file-invoice",
       },
       {
         name: "Tracking", // 1. confirmation, 2. preparation, 3. shipped, 4. delivered
         path: "/tracking",
+        icon: "file-invoice",
       },
       {
         name: "Records", // monthly view
         path: "/records",
+        icon: "file-invoice",
       },
     ],
   },
@@ -179,19 +186,23 @@ const manager = [
       {
         name: "Supplies",
         path: "/reagents",
+        icon: "box",
       },
       {
         name: "P M S",
         path: "/preventive/maintenenace/schedule",
+        icon: "tools",
       },
       {
         name: "Payroll",
         path: "/payroll",
+        icon: "money-bill",
         component: Payrolls,
       },
       {
         name: "Cashier",
         path: "/cashier",
+        icon: "money-bill",
       },
     ],
   },
@@ -326,6 +337,7 @@ const manager = [
           {
             name: "File 201",
             path: "/file201",
+            icon: "user",
             component: Employees,
           },
           {

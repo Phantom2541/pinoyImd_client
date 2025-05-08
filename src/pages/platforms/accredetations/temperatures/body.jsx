@@ -3,8 +3,7 @@ import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 
 const Body = () => {
-  const { maxPage, activePage } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ temperatures }) => temperatures);
+  const { collections } = useSelector(({ temperatures }) => temperatures);
 
   return (
     <MDBTable responsive hover bordered>

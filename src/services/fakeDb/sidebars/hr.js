@@ -60,11 +60,13 @@ const hr = [
       {
         name: "Menus",
         path: "/finance/menus",
+        icon: "cogs",
         component: Menus,
       },
       {
         name: "Services",
         path: "/finance/services",
+        icon: "tools",
         component: Services,
       },
     ],

@@ -29,6 +29,7 @@ const Header = () => {
   useEffect(() => {
     if (collections) setEcg(collections);
   }, [collections]);
+  console.log("ecg", ecg);
 
   // const handleMoved = (month, year) => {
   //   console.log("month", month, year);

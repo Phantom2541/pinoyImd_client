@@ -25,7 +25,9 @@ export default function Platforms() {
   }, [token, email]);
 
   useEffect(() => {
-    socket.on("me", (id) => console.log(`[Socket] ${id} Connected.`));
+    socket.on("me", (id) => {
+      // console.log(`[Socket] ${id} Connected.`);
+    });
 
     return () => socket.off("me");
   }, []);

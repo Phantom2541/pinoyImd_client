@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 import { Services } from "../../../../../services/fakeDb/index";
-import _ from "lodash";
 
 const url = "diagnostics/laboratory/preferences";
 
