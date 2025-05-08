@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -6,139 +6,209 @@ import {
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBInput,
-  MDBTypography,
+  MDBRow,
+  MDBCol,
+  MDBBadge,
 } from "mdbreact";
-import {
-  SAVE,
-  UPDATE,
-} from "../../../../../../services/redux/slices/liability/assurances";
+import { currency, fullName } from "../../../../../../services/utilities";
+import { Memberships, Services } from "../../../../../../services/fakeDb";
+import { capitalize, isEmpty } from "lodash";
+import { PROCESS_ONBOARDING } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import Swal from "sweetalert2";
 
-import { Services } from "../../../../../../services/fakeDb";
-
-import { isEqual } from "lodash";
-import { useToasts } from "react-toast-notifications";
-
-export default function Modal() {
-  const { show, toggle, selected, willCreate, isLoading } = useSelector(
-      ({ assurances }) => assurances
-    ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected),
-    { addToast } = useToasts(),
+export default function Modal({ show, selected, toggle }) {
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { formSubmitted, isSuccess } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
 
-  // Handle update function
-  const handleUpdate = () => {
-    toggle();
+  const [open, setOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
 
-    // Check if object has changed
-    if (isEqual(form, selected)) {
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
+  const handleSelect = (item) => {
+    setSelectedOption(item);
+    setOpen(false);
+  };
+
+  const { customerId = {}, sendouts = {}, branchId = {} } = selected || {};
+  const { foundMenus = [], membership = "" } = sendouts;
+
+  const discountPercentage =
+    Memberships.find(({ value }) => value === membership)?.discount || 0;
+
+  const amount = selectedOption?.opd || 0;
+  const discount = amount * discountPercentage;
+  const net = amount - discount;
+
+  const toPercent = (value) => `${value * 100}%`;
+
+  useEffect(() => {
+    if (show && !formSubmitted && isSuccess) {
+      toggle();
     }
+  }, [formSubmitted, isSuccess, show, toggle]);
 
+  useEffect(() => {
+    if (show) {
+      setOpen(false);
+      setSelectedOption({});
+      if (foundMenus.length === 1) {
+        setSelectedOption(foundMenus[0]);
+      }
+    }
+  }, [show, foundMenus]);
+
+  const handleSubmit = () => {
+    if (isEmpty(selectedOption))
+      return Swal.fire({
+        icon: "warning",
+        title: "Menu is required",
+        text: "Please select a menu before proceeding.",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
+      });
+
+    const updateDeal = {
+      _id: selected?._id,
+      acknowledge: {
+        by: auth._id,
+        at: new Date(),
+      },
+    };
+
+    const dealMenu = {
+      menuId: selectedOption?._id,
+      up: amount, //?
+      discount, //?
+    };
+
+    const deal = {
+      source: branchId?._id,
+      branchId: activePlatform.branchId,
+      customerId: customerId._id,
+      cash: 0,
+      cashierId: auth._id,
+      payment: "voucher",
+      discount,
+      amount,
+    };
     dispatch(
-      UPDATE({
-        data: { ...form, _id: selected._id },
-        token,
-      })
+      PROCESS_ONBOARDING({ data: { deal, dealMenu, updateDeal }, token })
     );
   };
 
-  // Handle create function
-  const handleCreate = () => {
-    dispatch(
-      SAVE({
-        data: form,
-        token,
-      })
-    ).then(() => toggle()); // Close modal after successful save
-  };
-
-  // Handle form submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (willCreate) {
-      return handleCreate();
-    }
-
-    handleUpdate();
-  };
-
-  // Handle change sa inputs
-  const handleChange = (key, value) => {
-    setForm({
-      ...form,
-      [key]: Number(value),
-      userId: auth._id,
-      branchId: activePlatform.branchId,
-    });
-  };
-
-  // Fix: Return correct form value
-  const handleValue = (key) => form[key] || "";
-
-  // Handle modal close
-  const handleClose = () => toggle();
+  const applyDiscount = selectedOption?.discountable && discount;
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop size="sm">
+    <MDBModal isOpen={show} toggle={toggle} backdrop size="md">
       <MDBModalHeader
-        toggle={handleClose}
+        toggle={() => toggle()}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Controls
+        {fullName(customerId.fullName)}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
-        <form onSubmit={handleSubmit}>
-          <MDBTypography
-            tag="h4"
-            variant="h4-responsive"
-            className="text-center"
-          >
-            {Services.getName(selected?.serviceId)}
-          </MDBTypography>
+        <MDBRow>
+          <MDBCol>
+            <div className="position-relative" style={{ width: "100%" }}>
+              <div
+                className="form-control"
+                onClick={() => setOpen(!open)}
+                style={{ cursor: "pointer" }}
+              >
+                {!isEmpty(selectedOption)
+                  ? `${selectedOption?.abbreviation || ""} - ${
+                      selectedOption?.description || ""
+                    }`
+                  : "Select a menu that offers the selected services"}
+              </div>
+              {open && (
+                <ul
+                  className="list-group position-absolute w-100"
+                  style={{
+                    zIndex: 999,
+                    maxHeight: "500px",
+                    overflowY: "auto",
+                  }}
+                >
+                  {foundMenus
+                    .filter(({ opd }) => opd > 0)
+                    ?.map((menu, index) => (
+                      <li
+                        key={index}
+                        className="list-group-item"
+                        style={{ cursor: "pointer", lineHeight: "1.2rem" }}
+                        onClick={() => handleSelect(menu)}
+                      >
+                        <strong>{menu?.abbreviation}</strong>
+                        <br />
+                        <small className="text-muted">
+                          {menu?.description}
+                        </small>
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
+          </MDBCol>
+        </MDBRow>
+        <MDBRow className="mt-3">
+          <MDBCol>
+            <span className="font-weight-bold">Services:</span>
+            <br />
+            {sendouts?.servicesId?.map((id, key) => (
+              <MDBBadge key={key} className="mr-1">
+                {Services.getAbbr(id)}
+              </MDBBadge>
+            ))}
+          </MDBCol>
+        </MDBRow>
 
-          {/* Input fields */}
-          <MDBInput
-            label="Abnormal"
-            type="number"
-            value={handleValue("abnormal")}
-            required
-            onChange={(e) => handleChange("abnormal", e.target.value)}
-          />
-          <MDBInput
-            label="High"
-            type="number"
-            value={handleValue("high")}
-            required
-            onChange={(e) => handleChange("high", e.target.value)}
-          />
-          <MDBInput
-            label="Normal"
-            type="number"
-            value={handleValue("normal")}
-            required
-            onChange={(e) => handleChange("normal", e.target.value)}
-          />
+        {applyDiscount && (
+          <h6 className="mt-3">
+            Patient received a <b>{toPercent(discountPercentage)} discount</b>{" "}
+            Applied under <b className="mr-1">{capitalize(membership)}</b>
+            partnership with <b>{branchId.displayname}</b>.
+          </h6>
+        )}
 
-          {/* Submit button */}
-          <div className="text-center mb-1-half">
-            <MDBBtn
-              type="submit"
-              disabled={isLoading}
-              color="info"
-              className="mb-2"
-              rounded
-            >
-              {willCreate ? "Submit" : "Update"}
-            </MDBBtn>
+        <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex align-items-center mt-3">
+            <h6 style={{ fontWeight: 400 }} className="mr-2">
+              Amount:
+            </h6>
+            <h5>{currency(amount)}</h5>
           </div>
-        </form>
+          {applyDiscount && (
+            <>
+              <div className="d-flex align-items-center mt-3">
+                <h6 style={{ fontWeight: 400 }} className="mr-2">
+                  Discount:
+                </h6>
+                <h5>{currency(discount)}</h5>
+              </div>
+              <div className="d-flex align-items-center mt-3">
+                <h6 style={{ fontWeight: 400 }} className="mr-2">
+                  Net:
+                </h6>
+                <h5>{currency(net)}</h5>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="text-center mt-2">
+          <MDBBtn
+            size="md"
+            disabled={formSubmitted}
+            rounded
+            color="primary"
+            onClick={handleSubmit}
+          >
+            Process
+            {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
+          </MDBBtn>
+        </div>
       </MDBModalBody>
     </MDBModal>
   );

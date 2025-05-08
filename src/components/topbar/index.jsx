@@ -73,7 +73,11 @@ class TopNavigation extends Component {
           <MDBBadge
             className="py-2 px-3"
             color="warning-color-dark"
-            style={{ fontSize: "1rem", fontWeight: 400 }}
+            style={{
+              fontSize: "1rem",
+              fontWeight: 400,
+              boxShadow: "0px 0px 0px 0px",
+            }}
             pill
           >
             {isPatient
