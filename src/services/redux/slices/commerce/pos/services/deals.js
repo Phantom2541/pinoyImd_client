@@ -237,6 +237,42 @@ export const UPDATE_INFO = createAsyncThunk(
   }
 );
 
+export const PROCESS_ONBOARDING = createAsyncThunk(
+  `${url}/PROCESS_ONBOARDING`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "process_onboarding");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const DENY_ONBOARDING = createAsyncThunk(
+  `${url}/DENY_ONBOARDING`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "deny_onboarding");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 /**
  * Automatic generate URL.
  */
@@ -895,6 +931,56 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+
+      .addCase(PROCESS_ONBOARDING.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(PROCESS_ONBOARDING.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(({ _id }) => _id === payload);
+          collections.splice(index, 1);
+        };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(PROCESS_ONBOARDING.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+
+      .addCase(DENY_ONBOARDING.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(DENY_ONBOARDING.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(({ _id }) => _id === payload);
+          collections.splice(index, 1);
+        };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(DENY_ONBOARDING.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE_INFO.pending, (state) => {

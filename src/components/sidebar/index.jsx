@@ -121,9 +121,13 @@ export default function SideNavigation({
         style={{ transition: "padding-left .3s" }}
       >
         {/* ✅ Custom Header with Logo + Dynamic Title */}
-        <div className="text-center p-3">
-          <img src={logo} alt="Company Logo" style={{ maxWidth: "100px" }} />
-          <div className="mt-2 font-weight-bold" style={{ color: "blue" }}>
+        <div className="text-center mt-2 " style={{ marginBottom: "-10px" }}>
+          <img
+            src={logo}
+            alt="Company Logo"
+            style={{ width: "150px", height: "65px" }}
+          />
+          <div className="mt-2 text-dark" style={{ fontWeight: 500 }}>
             {activePlatform?.branch?.company || company.name}
           </div>
         </div>
