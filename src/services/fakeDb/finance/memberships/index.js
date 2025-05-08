@@ -1,4 +1,10 @@
 const Memberships = [
+  {
+    value: "bronze",
+    text: "Bronze - Recognized Member",
+    discount: 0,
+    emoji: "🥉", // Bronze Medal
+  },
   { value: "silver", text: "Silver 5% discount", discount: 0.05, emoji: "🥈" }, // Silver Medal
   { value: "gold", text: "Gold 10% discount", discount: 0.1, emoji: "🥇" }, // Gold Medal
   {

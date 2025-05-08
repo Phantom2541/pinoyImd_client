@@ -18,6 +18,7 @@ import {
 } from "../../../../../../services/redux/slices/assets/providers";
 import { Select } from "../../../../../../components/customizable";
 import Search from "../../../../../../components/searchables/ao";
+import { Memberships } from "../../../../../../services/fakeDb";
 import Checkbox from "./checkbox";
 
 // declare your expected items
@@ -31,14 +32,6 @@ const _form = {
   invoice: false,
 };
 
-const MembershipOptions = [
-  { value: "hmo", text: "HMO " },
-  { value: "silver", text: "Silver 5% discount" },
-  { value: "gold", text: "Gold 10% discount" },
-  { value: "platinum", text: "Platinum 15% discount" },
-  { value: "diamond", text: "Diamond 20% discount" },
-  { value: "crown", text: "Crown 25% discount" },
-];
 export default function Modal() {
   const { showModal, isLoading, selected } = useSelector(
       ({ providers }) => providers
@@ -113,7 +106,7 @@ export default function Modal() {
           <MDBRow>
             <MDBCol>
               <Select
-                collections={MembershipOptions}
+                collections={Memberships}
                 label={"Membership"}
                 onChange={(value) => setForm({ ...form, membership: value })}
                 values={"text"}

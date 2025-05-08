@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { capitalize } from "lodash";
+// import { capitalize } from "lodash";
 import { MDBTable, MDBIcon, MDBBadge, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
   currency,
@@ -32,6 +32,7 @@ const Tables = () => {
     { collections: providers } = useSelector(({ providers }) => providers),
     [data, setData] = useState([]),
     [selected, setSelected] = useState({}),
+    [providerOptions, setProviderOptions] = useState([]),
     [didHoverID, setDidHoverID] = useState(-1),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -48,6 +49,19 @@ const Tables = () => {
       setData(collections);
     }
   }, [collections]);
+  useEffect(() => {
+    if (providers.length > 0) {
+      let _providerOptions = providers.map(({ clients }) => ({
+        _id: clients._id,
+        text: `${clients?.displayname?.toUpperCase()}`,
+      }));
+
+      _providerOptions.unshift({ _id: "", text: "No Source" });
+
+      setProviderOptions(_providerOptions);
+    }
+  }, [providers]);
+
   //Set fetched data for mapping
   useEffect(() => {
     if (!!collections.length) {
@@ -263,10 +277,7 @@ const Tables = () => {
                           whitelisted
                           soloUpdate
                           className="m-0 p-0 mt-3"
-                          collections={providers.map(({ clients }) => ({
-                            _id: clients._id,
-                            text: `${clients?.displayname?.toUpperCase()}`,
-                          }))}
+                          collections={providerOptions}
                           preValue={source?._id}
                           formSubmitted={formSubmitted}
                           keys={"_id"}
