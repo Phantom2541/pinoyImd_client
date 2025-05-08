@@ -1,8 +1,29 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Line } from "react-chartjs-2";
+import {
+  Chart,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  CategoryScale,
+} from "chart.js";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
+
+// Register the required components
+Chart.register(
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  CategoryScale
+);
 
 const calculateStats = (data) => {
   if (!data.length) return { mean: 0, stdDev: 0 };
@@ -15,24 +36,21 @@ const calculateStats = (data) => {
 };
 
 const LeveyJennings = ({ title }) => {
-  const { filtered } = useSelector(({ controls }) => controls),
-    [hi, setHi] = useState([]),
-    [norm, setNorm] = useState([]),
-    [lo, setLo] = useState([]),
-    [days, setDays] = useState([]);
+  const { filtered } = useSelector(({ controls }) => controls);
+  const [hi, setHi] = useState([]);
+  const [norm, setNorm] = useState([]);
+  const [lo, setLo] = useState([]);
+  const [days, setDays] = useState([]);
   const { mean, stdDev } = calculateStats([...norm]);
   const chartRef = useRef(null);
 
   useEffect(() => {
-    // Extract hi, lo, normal, and days from the fetched data
     setHi(filtered.map((item) => item.hi));
     setLo(filtered.map((item) => item.lo));
     setNorm(filtered.map((item) => item.norm));
     setDays(
       filtered.map((item) =>
-        new Date(item.createdAt).toLocaleDateString("en-GB", {
-          day: "2-digit",
-        })
+        new Date(item.createdAt).toLocaleDateString("en-GB", { day: "2-digit" })
       )
     );
   }, [filtered]);
@@ -66,11 +84,11 @@ const LeveyJennings = ({ title }) => {
   };
 
   const lineChartData = {
-    labels: [...days],
+    labels: days,
     datasets: [
       {
         label: "Normal Values",
-        data: [...norm],
+        data: norm,
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         fill: false,
@@ -78,7 +96,7 @@ const LeveyJennings = ({ title }) => {
       },
       {
         label: "High Values",
-        data: [...hi],
+        data: hi,
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         fill: false,
@@ -86,7 +104,7 @@ const LeveyJennings = ({ title }) => {
       },
       {
         label: "Low Values",
-        data: [...lo],
+        data: lo,
         borderColor: "rgba(54, 162, 235, 1)",
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         fill: false,
@@ -157,7 +175,6 @@ const LeveyJennings = ({ title }) => {
             />
           </div>
 
-          {/* Footer with Print Button */}
           <div className="mt-auto text-center">
             <button
               onClick={printChart}
@@ -169,7 +186,6 @@ const LeveyJennings = ({ title }) => {
                 border: "none",
                 borderRadius: "4px",
                 cursor: "pointer",
-                width: "auto",
               }}
             >
               Print Chart
