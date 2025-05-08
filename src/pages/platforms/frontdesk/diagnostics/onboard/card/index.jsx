@@ -22,11 +22,10 @@ export default function Card({ item, index }) {
     } = deal,
     { fullName: fullname = {} } = customerId,
     source = sources.find(({ vendors }) => vendors?._id === forwardedBy?._id),
-    { renderedAt, department } =
+    { at, dept } =
       rendered.find(
-        ({ department }) =>
-          department ===
-          (activePlatform.department === "Laboratory" ? "LAB" : "RAD")
+        ({ dept }) =>
+          dept === (activePlatform.department === "Laboratory" ? "LAB" : "RAD")
       ) || {};
 
   useEffect(() => {
@@ -35,7 +34,7 @@ export default function Card({ item, index }) {
 
   const handlePin = () => {
     return (
-      <span className={`sales-card-num ${department && "rendered"}`}>
+      <span className={`sales-card-num ${dept && "rendered"}`}>
         {deal.page} {index + 1}
       </span>
     );
@@ -68,9 +67,7 @@ export default function Card({ item, index }) {
             </div>
             <div className="sales-card-info">
               <small>Time Rendered</small>
-              <span>
-                {renderedAt ? new Date(renderedAt).toLocaleTimeString() : "-"}
-              </span>
+              <span>{at ? new Date(at).toLocaleTimeString() : "-"}</span>
             </div>
           </div>
           {edit ? (

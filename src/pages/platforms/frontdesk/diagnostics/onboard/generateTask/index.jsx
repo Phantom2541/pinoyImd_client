@@ -206,9 +206,9 @@ export default function Modal() {
       rendered: [
         ...deal.rendered,
         {
-          department,
-          renderedBy: auth._id,
-          renderedAt: new Date().toLocaleString(),
+          dept: department,
+          by: auth._id,
+          at: new Date().toLocaleString(),
         },
       ],
       forms,
