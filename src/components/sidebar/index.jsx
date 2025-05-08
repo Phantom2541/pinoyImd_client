@@ -106,8 +106,6 @@ export default function SideNavigation({
     });
   };
 
-  console.log("activePlatform", activePlatform);
-
   return (
     <div className="white-skin">
       <MDBSideNav
