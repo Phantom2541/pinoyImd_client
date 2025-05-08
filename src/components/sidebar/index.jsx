@@ -7,7 +7,6 @@ import {
   MDBAnimation,
   MDBProgress,
   MDBIcon,
-  MDBTooltip,
 } from "mdbreact";
 import { useSelector } from "react-redux";
 import { Sidebars } from "../../services/fakeDb";

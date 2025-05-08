@@ -56,15 +56,15 @@ export default function Modal() {
     ),
     { isLoading, isSuccess } = useSelector(({ ledger }) => ledger),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
-    [sum, setSum] = useState(0),
+    // [sum, setSum] = useState(0),
     [schedule, setSchedule] = useState("morning"),
     [position, setPosition] = useState(0),
     [location, setLocation] = useState("reception"),
     dispatch = useDispatch();
 
-  useEffect(() => {
-    calculateSum(floating);
-  }, [floating]);
+  // useEffect(() => {
+  //   calculateSum(floating);
+  // }, [floating]);
 
   useEffect(() => {
     if (showModal && !isLoading && isSuccess) {
@@ -116,23 +116,23 @@ export default function Modal() {
     });
   };
 
-  const calculateSum = (data) => {
-    if (!data) return; // Ensure data is not null or undefined
-    const bills = data.bills || {}; // Default to empty object if undefined
-    const coins = data.coins || {};
+  // const calculateSum = (data) => {
+  //   if (!data) return; // Ensure data is not null or undefined
+  //   const bills = data.bills || {}; // Default to empty object if undefined
+  //   const coins = data.coins || {};
 
-    const total =
-      Object.entries(bills).reduce(
-        (acc, [denom, qty]) => acc + parseInt(denom) * qty,
-        0
-      ) +
-      Object.entries(coins).reduce(
-        (acc, [denom, qty]) => acc + parseInt(denom) * qty,
-        0
-      );
+  //   const total =
+  //     Object.entries(bills).reduce(
+  //       (acc, [denom, qty]) => acc + parseInt(denom) * qty,
+  //       0
+  //     ) +
+  //     Object.entries(coins).reduce(
+  //       (acc, [denom, qty]) => acc + parseInt(denom) * qty,
+  //       0
+  //     );
 
-    setSum(total);
-  };
+  //   setSum(total);
+  // };
 
   const handleSubmit = () => {
     const { sales, _id, cashier, createdAtNow } = selected;

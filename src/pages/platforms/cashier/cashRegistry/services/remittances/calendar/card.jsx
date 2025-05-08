@@ -3,12 +3,12 @@ import Indicator from "./indicator";
 import Footer from "./footer";
 import {
   currency,
-  // paymentMethod,
+  paymentMethod,
 } from "../../../../../../../services/utilities";
 import { MDBAnimation, MDBProgress } from "mdbreact";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
-  const { collections } = useSelector(({ payments }) => payments);
+  // const { collections } = useSelector(({ payments }) => payments);
   const today = new Date();
   const dateCell = new Date(txt);
   const isFuture = dateCell > today;
@@ -20,23 +20,10 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
     sales: gross = 0,
     collector,
     closing,
-    // cashier,
     breakdown = {},
     expenses,
   } = item;
 
-  // const expenses = collections
-  //   .filter(({ createdAt, userId }) => {
-  //     const collectionDate = new Date(createdAt);
-
-  //     return (
-  //       collectionDate.getFullYear() === dateCell.getFullYear() &&
-  //       collectionDate.getMonth() === dateCell.getMonth() &&
-  //       collectionDate.getDate() === dateCell.getDate() &&
-  //       userId?._id === cashier?._id
-  //     );
-  //   })
-  //   .reduce((acc, curr) => acc + curr.amount, 0);
   const isRemitted = !!collector;
 
   const { cash, ...rest } = breakdown;
@@ -192,7 +179,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
               {/* 🟢 Show COH only if transactions exist */}
               {!!closing && (
                 <div style={{ marginBottom: "1.8rem" }}>
-                  {/* <div className="cashier-remittance-breakdown">
+                  <div className="cashier-remittance-breakdown">
                     <hr className="my-1" />
 
                     {breakdown &&
@@ -224,7 +211,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                           </div>
                         );
                       })}
-                  </div> */}
+                  </div>
                   <div
                     className="cashier-remittance-total d-flex align-items-center justify-content-between"
                     style={{
