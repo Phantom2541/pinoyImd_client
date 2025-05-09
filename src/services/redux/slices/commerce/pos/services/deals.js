@@ -44,6 +44,28 @@ export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
+
+export const HUNDREDDATA = createAsyncThunk(
+  `${url}/showFormsByDepartment`,
+  ({ token, data }, thunkAPI) => {
+    console.log("in HUNDREDDATA");
+    console.log("data", data);
+
+    try {
+      return axioKit.universal(`${url}/showFormsByDepartment`, token, data);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const VOUCHERS = createAsyncThunk(
   `${url}/vouchers`,
   ({ token, key }, thunkAPI) => {
@@ -720,6 +742,24 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(VOUCHERS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(HUNDREDDATA.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(HUNDREDDATA.fulfilled, (state, action) => {
+        console.log("action.payload", action.payload);
+
+        const { payload, success } = action.payload;
+        state.collections = payload;
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(HUNDREDDATA.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

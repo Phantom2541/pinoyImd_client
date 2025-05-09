@@ -214,6 +214,7 @@ export default function Modal() {
       forms,
       ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
     };
+    console.log("data", data);
 
     dispatch(
       REFORM({
