@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import {
-  MDBCard,
-  MDBCardBody,
-  MDBCollapse,
-  MDBCollapseHeader,
-  MDBContainer,
-} from "mdbreact";
+import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
