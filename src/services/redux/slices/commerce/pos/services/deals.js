@@ -47,12 +47,9 @@ export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
 
 export const HUNDREDDATA = createAsyncThunk(
   `${url}/showFormsByDepartment`,
-  ({ token, data }, thunkAPI) => {
-    console.log("in HUNDREDDATA");
-    console.log("data", data);
-
+  ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/showFormsByDepartment`, token, data);
+      return axioKit.universal(`${url}/showFormsByDepartment`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -752,10 +749,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(HUNDREDDATA.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload);
-
-        const { payload, success } = action.payload;
-        state.collections = payload;
+        const { data, success } = action.payload;
+        state.collections = data;
         state.isSuccess = success;
         state.isLoading = false;
       })

@@ -12,23 +12,21 @@ export default function OldData() {
     { collections } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
 
-  /**
-   * Fetch source provider from the server and store it in localStorage
-   * this data is not slow moving info
-   */
   useEffect(() => {
     console.log("outside if");
 
     if (token && activePlatform.department) {
       console.log("insed if");
 
-      BROWSE({ token, data: { department: activePlatform.department } });
+      dispatch(
+        HUNDREDDATA({ token, key: { department: activePlatform.department } })
+      );
       console.log("collections", activePlatform.department);
     }
   }, [token, dispatch, activePlatform]);
 
   const btnHandler = async () => {
-    for (const deal of collections) {
+    const records = collections.map((deal) => {
       const { _id, ssx, forms: oldForms, rendered = [] } = deal;
       const department =
         activePlatform.department === "Laboratory" ? "LAB" : "RAD";
@@ -40,8 +38,10 @@ export default function OldData() {
 
       const deptIndex = deptIndexMap[department];
       const newFormKeys = Object.keys(
-        Services.getTemplatesWithIntKey([], department)
+        Services.getTemplatesWithIntKey([], activePlatform.department)
       );
+      console.log("newFormKeys", newFormKeys);
+
       const forms = {
         ...(oldForms || {}),
         [deptIndex]: [
@@ -52,8 +52,8 @@ export default function OldData() {
         ],
       };
 
-      const _forms = Services.getTemplates([], department);
-      console.log("_forms", _forms);
+      const _forms = Services.getTemplates([], activePlatform.department);
+      console.log("_forms", forms);
 
       // Construct final data object
       const data = {
@@ -69,16 +69,15 @@ export default function OldData() {
         ],
         forms,
       };
-
-      console.log("data", data);
-    }
+      return data;
+    });
+    console.log("records", records);
   };
-
   return (
     <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
       <div className="text-center mt-5">
         {" "}
-        {collections.length > 0 ? (
+        {collections?.length > 0 ? (
           <button onClick={btnHandler}>Generate</button>
         ) : (
           <MDBSpinner />
