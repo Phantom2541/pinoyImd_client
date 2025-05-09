@@ -2,7 +2,10 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBSpinner } from "mdbreact";
 
-import { HUNDREDDATA } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import {
+  HUNDREDDATA,
+  BROWSE,
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { Services } from "../../../../../services/fakeDb";
 export default function OldData() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -19,7 +22,7 @@ export default function OldData() {
     if (token && activePlatform.department) {
       console.log("insed if");
 
-      HUNDREDDATA({ token, data: { department: activePlatform.department } });
+      BROWSE({ token, data: { department: activePlatform.department } });
       console.log("collections", activePlatform.department);
     }
   }, [token, dispatch, activePlatform]);
