@@ -1,23 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { VOUCHERS } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 const Header = () => {
-  const { token } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ deals }) => deals),
-    [services, setServices] = useState([]),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { filtered, year, month } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
 
   //initial values
   useEffect(() => {
     if (token) {
-      dispatch(VOUCHERS({ token, key: { key: "services", type: "accrued" } }));
+      dispatch(
+        VOUCHERS({
+          token,
+          key: {
+            branchId: activePlatform.branchId,
+            month,
+            year,
+            cashierId: auth._id,
+          },
+        })
+      );
     }
-  }, [token, dispatch]);
-
-  useEffect(() => {
-    if (filtered) setServices(filtered);
-  }, [filtered]);
+  }, [token, dispatch, activePlatform, month, year, auth]);
 
   return (
     <MDBView
@@ -26,7 +31,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {services.length} Services
+          {filtered.length} Receivables
         </span>
       </div>
       <div>

@@ -47,10 +47,10 @@ export default function Search({ setMenu, setRegister = () => {} }) {
         // If menus are found in localStorage, use them (parse back to an object)
         const menus = JSON.parse(storedMenus);
         // You can dispatch the menus here if needed
-        dispatch(SetCOLLECTIONS(menus)); // Optionally dispatch to update the store if necessary
+        dispatch(SetCOLLECTIONS(menus));
       } else {
         // If no data in localStorage, make the server request
-        dispatch(MENUS({ key: { branchId }, token }))
+        dispatch(MENUS({ token, key: { branchId } }))
           .then(({ payload }) => {
             // Assuming the response contains the menus data in 'payload'
             const menus = payload.payload;
