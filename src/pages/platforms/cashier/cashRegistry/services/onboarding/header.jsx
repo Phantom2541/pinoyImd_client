@@ -23,7 +23,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered.length} Services
+          {filtered.length} Onboarding
         </span>
       </div>
       <div>

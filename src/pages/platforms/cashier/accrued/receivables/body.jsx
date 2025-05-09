@@ -19,18 +19,18 @@ const Body = () => {
       <thead>
         <tr>
           <th>#</th>
-          <th>Service</th>
-          <th>Abbreviation</th>
-          <th>Specimen</th>
+          <th>Patient</th>
+          <th>Menu</th>
+          <th>Amount</th>
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((service, index) => (
+        {paginatedData?.map((deal, index) => (
           <tr key={index}>
             <td key={index}>{index + startIndex + 1}</td>
-            <td>{service.name}</td>
-            <td>{service.abbreviation} </td>
-            <td>{service.specimen}</td>
+            <td>{deal?.customer?.name}</td>
+            <td>{deal.abbreviation} </td>
+            <td>{deal.amount}</td>
           </tr>
         ))}
       </tbody>

@@ -11,11 +11,30 @@ import Swal from "sweetalert2";
 import { fullName } from "../../../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import { DENY_ONBOARDING } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
-
-export default function Collapsable({ item, handleProcess }) {
+import { isEmpty } from "lodash";
+export default function Collapsable({ item }) {
   const { token, auth } = useSelector(({ auth }) => auth),
     { sendouts, source, createdAt } = item,
     dispatch = useDispatch();
+
+  const handleProcess = (deal) => {
+    const { servicesId } = deal.sendouts;
+    console.log("servicesId:", servicesId);
+
+    if (isEmpty(sendouts.foundMenus)) {
+      return Swal.fire({
+        icon: "warning",
+        title: "No Matching Menu Found",
+        html: `This request cannot be processed because there is no menu that offers the <b>${servicesId
+          .map((id) => Services.getAbbr(id))
+          .join(
+            ", "
+          )}</b> services. Please contact the administrator for assistance.`,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
+      });
+    }
+  };
 
   const handleDeny = async (deal) => {
     const customer = fullName(item?.customerId?.fullName);
@@ -55,7 +74,7 @@ export default function Collapsable({ item, handleProcess }) {
       Swal.fire({
         icon: "success",
         title: "Request Denied",
-        html: `The request for <b>${customer}</b> has been denied successfully.`,
+        html: `The action for <b>${customer}</b> has been saved successfully.`,
       });
     }
   };
