@@ -18,6 +18,7 @@ import {
   Reseco,
   Onboarding,
 } from "../../../pages/platforms/cashier";
+import StaffSchedule from "../../../pages/platforms/cashier/scheduler";
 
 const cashier = [
   {
@@ -200,6 +201,13 @@ const cashier = [
         component: Services,
       },
     ],
+  },
+  {
+    name: "Schedule",
+    icon: "tachometer-alt",
+    path: "/schedule",
+    title: "news and updates",
+    component: StaffSchedule,
   },
 ];
 
