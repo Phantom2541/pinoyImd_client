@@ -96,6 +96,41 @@ const Templates = {
       .map((index) => components[index])
       .filter((value) => value !== undefined && value !== "");
   },
+  getComponentIndices: (componentList = [], _department = "LAB") => {
+    const deptIndexMap = {};
+    const deptIndexMapping = { LAB: 0, RAD: 1, CLINIC: 2 };
+
+    for (const { department, components } of collections) {
+      const departmentIndex = deptIndexMapping[department];
+
+      const indices = components.reduce((acc, component, idx) => {
+        if (componentList.includes(component)) {
+          acc.push(idx);
+        }
+        return acc;
+      }, []);
+
+      if (indices.length > 0) {
+        deptIndexMap[departmentIndex] = indices;
+      }
+    }
+
+    return deptIndexMap;
+  },
+  getDepartmentsByComponents: (componentList = []) => {
+    const departments = [];
+
+    for (const { department, components } of collections) {
+      const hasComponent = components.some((component) =>
+        componentList.includes(component)
+      );
+      if (hasComponent) {
+        departments.push(department);
+      }
+    }
+
+    return departments;
+  },
 };
 
 export default Templates;

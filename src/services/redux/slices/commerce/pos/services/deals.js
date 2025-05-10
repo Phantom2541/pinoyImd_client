@@ -225,6 +225,29 @@ export const GENERATE_SOA = createAsyncThunk(
   }
 );
 
+export const UPDATE100DATA = createAsyncThunk(
+  `${url}/updateFormsByDepartment`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(
+        url,
+        form.data,
+        form.token,
+        "updateFormsByDepartment"
+      );
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
     return axioKit.update(url, form.data, form.token);
@@ -813,7 +836,25 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(UPDATE100DATA.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE100DATA.fulfilled, (state, action) => {
+        const { success, data } = action.payload;
 
+        state.collections = data;
+
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE100DATA.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
       .addCase(MANAGERUPDATE.pending, (state) => {
         state.formSubmitted = true;
         state.isSuccess = false;
