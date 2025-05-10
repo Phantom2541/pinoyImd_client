@@ -16,7 +16,7 @@ import {
   Onboard,
   Tasks,
   Reports,
-  OldData,
+  // OldData,
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import { Menus, Services } from "../../../pages/platforms/cashier";
@@ -67,12 +67,6 @@ const frontdesk = [
         path: "/reports",
         icon: "file-alt",
         component: Reports,
-      },
-      {
-        name: "100 Data",
-        path: "/oldData",
-        icon: "file-alt",
-        component: OldData,
       },
       {
         name: "Quality Management",

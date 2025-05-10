@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { debounce } from "lodash";
+import { debounce, isEmpty } from "lodash";
 import { MDBIcon, MDBAnimation, MDBProgress } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
@@ -24,7 +24,11 @@ import "../style.css";
  *
  * @returns {JSX.Element} user
  */
-export default function Search({ setMenu, setRegister = () => {} }) {
+export default function Search({
+  setMenu,
+  setRegister = () => {},
+  filtered = [],
+}) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ menus }) => menus),
     [match, setMatch] = useState([]),
@@ -77,7 +81,10 @@ export default function Search({ setMenu, setRegister = () => {} }) {
         setIsLoading(false);
 
         if (key.trim().length <= 1) return setMatch([]);
-        const _match = globalSearch(collections, key.trim());
+        const _match = globalSearch(
+          isEmpty(filtered) ? collections : filtered,
+          key.trim()
+        );
         setMatch(_match);
       }, 500),
     [collections]

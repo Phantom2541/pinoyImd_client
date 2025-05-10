@@ -119,8 +119,8 @@ export default function CollapseTable({ BranchId, affiliated, providerId }) {
                       formSubmitted={formSubmitted}
                       isSuccess={isSuccess}
                       selected={selected}
-                      onChange={(value) =>
-                        setSelected({ ...selected, newSpecialization: value })
+                      onChange={(key, value) =>
+                        setSelected({ ...selected, [key]: value })
                       }
                       handleCheck={handleUpdate}
                       handleClose={() => setSelected({})}

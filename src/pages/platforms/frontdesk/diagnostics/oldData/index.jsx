@@ -1,63 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBCard, MDBSpinner } from "mdbreact";
+import { MDBCard, MDBSpinner, MDBTable } from "mdbreact";
 
 import {
   HUNDREDDATA,
-  BROWSE,
+  UPDATE100DATA,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import { Services } from "../../../../../services/fakeDb";
+import { fullName, harvestTask } from "../../../../../services/utilities";
+import { Services, Templates } from "../../../../../services/fakeDb";
 export default function OldData() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ deals }) => deals),
+    [deals, setDeals] = useState([]),
     dispatch = useDispatch();
 
-  /**
-   * Fetch source provider from the server and store it in localStorage
-   * this data is not slow moving info
-   */
   useEffect(() => {
-    console.log("outside if");
-
     if (token && activePlatform.department) {
-      console.log("insed if");
-
-      BROWSE({ token, data: { department: activePlatform.department } });
-      console.log("collections", activePlatform.department);
+      dispatch(
+        HUNDREDDATA({ token, key: { department: activePlatform.department } })
+      );
     }
   }, [token, dispatch, activePlatform]);
 
-  const btnHandler = async () => {
-    for (const deal of collections) {
-      const { _id, ssx, forms: oldForms, rendered = [] } = deal;
-      const department =
-        activePlatform.department === "Laboratory" ? "LAB" : "RAD";
-      const deptIndexMap = {
-        LAB: 0,
-        RAD: 1,
-        CLINIC: 2,
-      };
+  useEffect(() => {
+    const records = collections?.map((sale) => {
+      const { _id, ssx, createdAt, rendered = [], cart, customerId } = sale;
+      const packages = cart?.map((s) => s.packages)?.flat();
 
-      const deptIndex = deptIndexMap[department];
-      const newFormKeys = Object.keys(
-        Services.getTemplatesWithIntKey([], department)
-      );
-      const forms = {
-        ...(oldForms || {}),
-        [deptIndex]: [
-          ...(oldForms?.[deptIndex] || []),
-          ...newFormKeys.filter(
-            (key) => !(oldForms?.[deptIndex] || []).includes(key)
-          ),
-        ],
-      };
+      const department = Services.getDepartment(packages);
+      console.log("department", department);
+      const task = harvestTask(sale?.cart);
+      const formIndices = Templates.getComponentIndices(Object.keys(task));
 
-      const _forms = Services.getTemplates([], department);
-      console.log("_forms", _forms);
-
-      // Construct final data object
-      const data = {
+      return {
         _id,
+        customerId,
+        department,
+        cart,
         ssx,
         rendered: [
           ...rendered,
@@ -67,22 +46,65 @@ export default function OldData() {
             at: new Date().toLocaleString(),
           },
         ],
-        forms,
+        forms: formIndices,
+        createdAt,
       };
+    });
+    setDeals(records);
+  }, [collections, activePlatform, auth]);
 
-      console.log("data", data);
-    }
+  const generateTask = async () => {
+    const data = deals
+      .filter(({ department }) => department.length > 0)
+      .map(({ _id, department, forms }) => ({
+        _id,
+        department,
+        forms,
+      }));
+    // console.log("data", data);?
+
+    dispatch(
+      UPDATE100DATA({
+        token,
+        data,
+      })
+    );
   };
 
   return (
     <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
       <div className="text-center mt-5">
-        {" "}
-        {collections.length > 0 ? (
-          <button onClick={btnHandler}>Generate</button>
+        {collections?.length > 0 ? (
+          <MDBTable responsive hover bordered>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>client</th>
+                <th>services</th>
+                <th>department</th>
+                <th>forms</th>
+                <th>date</th>
+                <th>_id</th>
+              </tr>
+            </thead>
+            <tbody>
+              {deals?.map((item, index) => (
+                <tr key={index}>
+                  <td key={index}>{index++}</td>
+                  <td>{fullName(item?.customerId?.fullName)}</td>
+                  <td>{item?.cart?.map((s) => s.abbreviation).join(", ")} </td>
+                  <td>{JSON.stringify(item.department)}</td>
+                  <td>{JSON.stringify(item?.forms)} </td>
+                  <td>{new Date(item.createdAt).toLocaleString()}</td>
+                  <td>{item._id}</td>
+                </tr>
+              ))}
+            </tbody>
+          </MDBTable>
         ) : (
           <MDBSpinner />
-        )}{" "}
+        )}
+        <button onClick={() => generateTask()}>Generate</button>
       </div>
     </MDBCard>
   );

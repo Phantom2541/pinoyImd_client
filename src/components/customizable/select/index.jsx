@@ -43,6 +43,7 @@ export default function Select({
   label,
   keys, // old name values
   values, // old name texts
+  selected = {},
   className = "",
   inputClassName = "",
   disableAll = false,
@@ -108,12 +109,15 @@ export default function Select({
 
       return onChange(selectedItems);
     }
+
     const selectedItem = getObject
       ? collections?.find(
           (choice) => String(choice[keys] || choice) === String(array[0])
         )
       : array[0];
-    return onChange(selectedItem);
+    console.log("selectedItem", selectedItem);
+
+    return onChange(keys, selectedItem);
   };
 
   const handleChecked = (value) => {
@@ -150,6 +154,13 @@ export default function Select({
       : preValue;
   };
 
+  const isArrayofObjects =
+    Array.isArray(collections) &&
+    collections.every(
+      (item) =>
+        typeof item === "object" && !Array.isArray(item) && item !== null
+    );
+
   return (
     <div className="d-flex align-items-center w-100">
       <MDBSelect
@@ -168,7 +179,8 @@ export default function Select({
 
         <MDBSelectOptions search={handleSearchDisabling()}>
           {collections?.map((choice, index) => {
-            const key = keys ? String(choice[keys]) || "" : choice;
+            const key =
+              keys && isArrayofObjects ? String(choice[keys]) || "" : choice;
 
             let value = values?.includes(".")
               ? getNestedValue(choice, values)
@@ -205,7 +217,7 @@ export default function Select({
           {!formSubmitted ? (
             <MDBIcon
               icon="check"
-              onClick={handleCheck}
+              onClick={() => handleCheck()}
               style={{
                 color: "blue",
                 fontSize: "1rem",

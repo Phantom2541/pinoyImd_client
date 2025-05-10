@@ -10,11 +10,11 @@ import {
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
-import { collapse, fullName } from "../../../../../services/utilities";
+import { collapse } from "../../../../../../services/utilities";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(
-    ({ companies }) => companies
+    ({ services }) => services
   );
 
   /**
@@ -38,7 +38,7 @@ export default function Body() {
       }}
       fluid
     >
-      {paginatedData?.map((company, index) => {
+      {paginatedData?.map((item, index) => {
         const actualIndex = startIndex + index; // Get the real index in filtered array
         const { color, border } = collapse.getStyle(
           actualIndex,
@@ -46,11 +46,9 @@ export default function Body() {
           didHoverId
         );
 
-        const { branches = [], ceo = {} } = company || {};
-
         return (
           <MDBCard
-            key={`company-${actualIndex}`}
+            key={`item-${actualIndex}`}
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader
@@ -60,7 +58,7 @@ export default function Body() {
               style={{ borderRadius: "50%" }}
             >
               <CollapsableHeader
-                company={company}
+                item={item}
                 isOpen={activeId === actualIndex}
                 textColor={color}
                 setActiveId={setActiveId}
@@ -70,14 +68,11 @@ export default function Body() {
 
             <MDBCollapse
               id={`collapse-${actualIndex}`}
-              className="mb-2 border border-black m-0 p-0"
+              className="mb-2 border border-black"
               isOpen={actualIndex === activeId}
             >
-              <MDBCardBody className=" m-0 p-0">
-                <CollapsableBody cid={company._id} branches={branches} />
-                <h5 className="ml-2">
-                  <strong>CEO:</strong> {fullName(ceo?.fullName)}
-                </h5>
+              <MDBCardBody className="pt-2">
+                <CollapsableBody item={item} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

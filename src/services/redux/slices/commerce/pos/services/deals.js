@@ -47,12 +47,9 @@ export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
 
 export const HUNDREDDATA = createAsyncThunk(
   `${url}/showFormsByDepartment`,
-  ({ token, data }, thunkAPI) => {
-    console.log("in HUNDREDDATA");
-    console.log("data", data);
-
+  ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/showFormsByDepartment`, token, data);
+      return axioKit.universal(`${url}/showFormsByDepartment`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -215,6 +212,29 @@ export const GENERATE_SOA = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(url, data, token, "generate_soa");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const UPDATE100DATA = createAsyncThunk(
+  `${url}/updateFormsByDepartment`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(
+        url,
+        form.data,
+        form.token,
+        "updateFormsByDepartment"
+      );
     } catch (error) {
       const message =
         (error.response &&
@@ -752,10 +772,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(HUNDREDDATA.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload);
-
-        const { payload, success } = action.payload;
-        state.collections = payload;
+        const { data, success } = action.payload;
+        state.collections = data;
         state.isSuccess = success;
         state.isLoading = false;
       })
@@ -818,7 +836,25 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(UPDATE100DATA.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE100DATA.fulfilled, (state, action) => {
+        const { success, data } = action.payload;
 
+        state.collections = data;
+
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE100DATA.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
       .addCase(MANAGERUPDATE.pending, (state) => {
         state.formSubmitted = true;
         state.isSuccess = false;
