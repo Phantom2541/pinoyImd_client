@@ -3,8 +3,6 @@ import Dashboard from "../../../pages/platforms/manager/dashboard";
 import {
   Services,
   Menus,
-  Banner,
-  Logo,
   Applicants,
   Tieups,
 } from "../../../pages/platforms/manager/settings";
@@ -247,37 +245,6 @@ const manager = [
     path: "/settings",
     icon: "cogs",
     children: [
-      {
-        name: "Profile",
-        icon: "user-cog",
-        path: "/profile",
-        children: [
-          {
-            name: "Banner",
-            path: "/banners",
-            icon: "layout",
-            component: Banner,
-          },
-          {
-            name: "Logos",
-            path: "/logos",
-            icon: "image",
-            component: Logo,
-          },
-          {
-            name: "Tagline",
-            path: "/taglines",
-            icon: "quote",
-            component: Logo,
-          },
-          {
-            name: "Description",
-            path: "/descriptions",
-            icon: "file-text",
-            component: Logo,
-          },
-        ],
-      },
       {
         name: "Sources",
         path: "/sources",
