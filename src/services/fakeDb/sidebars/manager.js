@@ -349,6 +349,30 @@ const manager = [
     ],
   },
   {
+    name: "Markey Place",
+    icon: "shopping-cart",
+    path: "/marketplace",
+    children: [
+      {
+        name: "Machine",
+        path: "/machines",
+        icon: "laptop-code",
+      },
+      {
+        name: "Products",
+        path: "/products",
+        icon: "cogs",
+        component: Products,
+      },
+      {
+        name: "Medicines",
+        path: "/medicines",
+        icon: "pills",
+        component: Products,
+      },
+    ],
+  },
+  {
     name: "User Manual",
     icon: "book-open",
     path: "/user/manual",
