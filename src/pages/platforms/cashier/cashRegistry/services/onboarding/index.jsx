@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBAnimation } from "mdbreact";
-
+import { useToasts } from "react-toast-notifications";
 import TableLoading from "../../../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./collapse";
 import Footer from "./footer";
-import Modal from "./modal";
+import Modal from "./modal/index";
 import {
   BROWSE,
   SetCOLLECTIONS,
 } from "../../../../../../services/redux/slices/commerce/catalog/menus";
+import { RESET } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 const Collapsable = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { isLoading } = useSelector(({ deals }) => deals),
+    { isLoading, message, isSuccess } = useSelector(({ deals }) => deals),
     [selected, setSelected] = useState({}),
     [show, setShow] = useState(false),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
   const toggle = () => setShow(!show);
@@ -46,6 +48,15 @@ const Collapsable = () => {
     }
   }, [token, activePlatform?.branchId, dispatch]);
 
+  useEffect(() => {
+    message &&
+      addToast(message, {
+        appearance: isSuccess ? "success" : "error",
+      });
+
+    return () => dispatch(RESET());
+  }, [isSuccess, message, addToast, dispatch]);
+
   return (
     <>
       <MDBAnimation type="bounceInDown">
@@ -61,7 +72,7 @@ const Collapsable = () => {
           <Footer />
         </MDBCard>
       </MDBAnimation>
-      <Modal selected={selected} show={show} toggle={toggle} />
+      <Modal />
     </>
   );
 };
