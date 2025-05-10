@@ -87,7 +87,7 @@ export default function Search({
         );
         setMatch(_match);
       }, 500),
-    [collections]
+    [collections, filtered, setMatch, setIsLoading]
   ); // dependencies
 
   const handleChange = (value) => {

@@ -14,10 +14,9 @@ import {
   DENY_ONBOARDING,
   SetSELECTED,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
-import { isEmpty } from "lodash";
 export default function Collapsable({ item }) {
   const { token, auth } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ menus }) => menus),
+    // { collections } = useSelector(({ menus }) => menus),
     { sendouts, source, createdAt } = item,
     dispatch = useDispatch();
 

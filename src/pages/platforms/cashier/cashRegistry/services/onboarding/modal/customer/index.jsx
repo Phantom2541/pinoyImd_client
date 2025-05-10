@@ -1,23 +1,11 @@
 import React from "react";
-import {
-  MDBCol,
-  MDBCardBody,
-  MDBCard,
-  MDBBadge,
-  MDBIcon,
-  MDBRow,
-} from "mdbreact";
+import { MDBCol, MDBCardBody, MDBCard, MDBBadge } from "mdbreact";
 import {
   Memberships,
   Privileges,
   Services,
 } from "../../../../../../../../services/fakeDb";
-import {
-  fullAddress,
-  fullName,
-  getAge,
-  mobile,
-} from "../../../../../../../../services/utilities";
+import { mobile } from "../../../../../../../../services/utilities";
 
 const Customer = ({ deal }) => {
   const { customerId, branchId, ssx, privilege, sendouts } = deal;
