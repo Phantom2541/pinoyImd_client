@@ -43,8 +43,9 @@ export default function Header() {
       dispatch(
         TRACKER({
           token,
-          key: {
+           key: {
             customerId: _id,
+            department: activePlatform?.department,
           },
         })
       );

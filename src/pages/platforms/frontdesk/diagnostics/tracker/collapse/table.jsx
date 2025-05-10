@@ -9,7 +9,7 @@ export default function CollapseTable({ menu }) {
     { collections } = useSelector(({ preferences }) => preferences),
     [task, setTask] = useState({}),
     [showModal, setShowModal] = useState(false);
-
+  console.log("menu", menu);
   const toggleModal = () => {
     console.log(task);
 
@@ -60,10 +60,10 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
+    console.log("obj", obj);
 
     return (
       <tr key={task.key}>
-        {/* remove by darrel className={`${hasDone && "table-active"}`} */}
         <td className="fw-bold">
           {capitalize(department)}
           {obj?.hasDone && (
@@ -101,7 +101,8 @@ export default function CollapseTable({ menu }) {
                 <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
               </MDBBtn>
             )}
-            {!!obj?.signatories.length &&
+            {Array.isArray(obj?.signatories) &&
+              obj.signatories.length >= 2 &&
               obj?.signatories[0] &&
               obj?.signatories[1] &&
               obj?.hasDone && (
@@ -139,9 +140,8 @@ export default function CollapseTable({ menu }) {
     source,
     category,
     _id,
-    diagnostics = [],
+    diagnostic = {},
   } = menu;
-
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">
@@ -154,18 +154,16 @@ export default function CollapseTable({ menu }) {
           </tr>
         </thead>
         <tbody>
-          {diagnostics &&
-            diagnostics?.map((diagnostic, index) => {
-              if (Array.isArray(diagnostic.result))
-                return diagnostic.result.map((obj, i) =>
-                  handleIndividual(diagnostic.key, obj, index + i, i)
+          {diagnostic &&
+            Object.entries(diagnostic).map(([key, value], index) => {
+              if (Array.isArray(value?.result)) {
+                return value.result.map((obj, i) =>
+                  handleIndividual(key.toLowerCase(), obj, index + i, i)
                 );
+              }
+              console.log("value", value);
 
-              return handleIndividual(
-                diagnostic.key.toLowerCase(),
-                diagnostic.result,
-                index
-              );
+              return handleIndividual(key.toLowerCase(), value, index);
             })}
         </tbody>
       </MDBTable>
