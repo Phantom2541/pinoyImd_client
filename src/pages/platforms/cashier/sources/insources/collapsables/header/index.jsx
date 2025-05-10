@@ -5,8 +5,7 @@ import {
   collapse,
   currency,
 } from "../../../../../../../services/utilities";
-import { Input } from "../../../../../../../components/customizable";
-import { Select } from "../../../../../../../components/customizable";
+import { Select, Input } from "../../../../../../../components/customizable";
 import PopOver from "./popOver";
 import { Memberships } from "../../../../../../../services/fakeDb";
 
