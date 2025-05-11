@@ -4,9 +4,10 @@ import {
   capitalize,
   currency,
 } from "../../../services/utilities";
-import { Developer, Privileges, Services } from "../../../services/fakeDb";
+import { Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
+import Footer from "./footer";
 
 const Hr = () => (
   <hr
@@ -39,7 +40,7 @@ const Text = ({
   );
 };
 
-const Stub = ({ sale }) => {
+const Stub = ({ sale = {} }) => {
   const {
       _id,
       createdAt,
@@ -99,7 +100,6 @@ const Stub = ({ sale }) => {
                   {description || abbreviation}
                   {packages.length > 1 &&
                     packages.map((id, index) => {
-                      //console.log(packages);
                       const { name, abbreviation } = Services.find(id);
 
                       return (
@@ -138,26 +138,7 @@ const Stub = ({ sale }) => {
         title="Cashier"
         value={capitalize(`${cashier.fname.split(" ")[0]} ${cashier.lname}`)}
       />
-      <Hr />
-      <br />
-      <div className="mt-2">
-        I knowingly and voluntarily permit this Health Care Facility to perform
-        the above services and agree to pay the specified amount
-      </div>
-      <div className="mt-2 text-left d-flex">
-        Name<div className="w-100 border-bottom border-dark">:</div>
-      </div>
-      <div className="mt-2 text-left d-flex">
-        Relationship<div className="w-100 border-bottom border-dark">:</div>
-      </div>
-      <br />
-      <Hr />
-      <div className="mt-2">
-        THIS SHALL SERVE AS YOUR ACKNOWLEDGEMENT RECEIPT AND IS VALID FORs
-        <b> FIVE(5) </b>
-        DAYS
-      </div>
-      <img width={75} src={Developer.icon} alt="Developer Icon" />
+      <Footer />
     </div>
   );
 };
@@ -166,7 +147,14 @@ export default function ClaimStub() {
   const [sale, setSale] = useState({ _id: "" });
 
   useEffect(() => {
-    setSale(JSON.parse(localStorage.getItem("claimStub")));
+    try {
+      const storedSale = localStorage.getItem("claimStub");
+      if (storedSale) {
+        setSale(JSON.parse(storedSale));
+      }
+    } catch (error) {
+      console.error("Failed to access localStorage: ", error);
+    }
   }, []);
 
   if (sale?._id) return <Stub sale={sale} />;

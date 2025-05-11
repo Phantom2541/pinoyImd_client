@@ -29,7 +29,7 @@ export default function CellCount({ cc, isMale, style, apc }) {
       </thead>
       <tbody>
         {/* CC/Cell Count */}
-        {cc.map((cell, index) => {
+        {cc?.map((cell, index) => {
           const _cell = Number(cell),
             reference = Preferences[isMale],
             { lo, hi, unit } = reference[Abbreviation[index]],

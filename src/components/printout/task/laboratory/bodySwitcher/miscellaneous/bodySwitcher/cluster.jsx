@@ -12,15 +12,15 @@ const test = [68, 69, 70, 97, 131];
 export default function Cluster({ task, fontSize }) {
   const { results } = task;
   const services = Object.keys(results)
-    .filter((key) => test.includes(Number(key)))
-    .map((key) => Services.find(key));
+    ?.filter((key) => test.includes(Number(key)))
+    ?.map((key) => Services.find(key));
 
   return (
     <div className="pl-5 mb-5" style={{ fontSize: `${fontSize}rem` }}>
       <MDBCol>
         <h6>Results :</h6>
         <div>
-          {services.map((service, i) => (
+          {services?.map((service, i) => (
             <MDBCol size="12" className="offset-1" key={`cluster-${i}`}>
               {service?.name || service?.abbreviation}:&nbsp;
               <b

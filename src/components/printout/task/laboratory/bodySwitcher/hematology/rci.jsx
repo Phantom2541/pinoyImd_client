@@ -28,7 +28,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
         </tr>
       </thead>
       <tbody>
-        {rci.map((value, index) => {
+        {rci?.map((value, index) => {
           const category = Category[index],
             reference = Preferences.rci[category],
             { lo, hi, unit } = reference,

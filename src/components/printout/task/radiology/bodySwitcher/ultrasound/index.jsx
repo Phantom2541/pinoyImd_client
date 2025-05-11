@@ -7,9 +7,9 @@ export default function Xray({ fontSize = "16px", task }) {
 
   const formatText = (text) => {
     return text
-      .replace(/\\n/g, "\n") // handles escaped newlines if needed
-      .split("\n")
-      .map((line, index) => (
+      ?.replace(/\\n/g, "\n") // handles escaped newlines if needed
+      ?.split("\n")
+      ?.map((line, index) => (
         <p key={index} style={{ margin: "0 0 5px 0", textIndent: "20px" }}>
           {line.trim()}
         </p>
