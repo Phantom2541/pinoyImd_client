@@ -3,6 +3,7 @@ import {
   billingAddress,
   capitalize,
   currency,
+  useLocalStorage,
 } from "../../../services/utilities";
 import { Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
@@ -144,18 +145,14 @@ const Stub = ({ sale = {} }) => {
 };
 
 export default function ClaimStub() {
+  const storedSale = useLocalStorage("claimStub");
   const [sale, setSale] = useState({ _id: "" });
 
   useEffect(() => {
-    try {
-      const storedSale = localStorage.getItem("claimStub");
-      if (storedSale) {
-        setSale(JSON.parse(storedSale));
-      }
-    } catch (error) {
-      console.error("Failed to access localStorage: ", error);
+    if (storedSale && storedSale._id) {
+      setSale(storedSale);
     }
-  }, []);
+  }, [storedSale]);
 
   if (sale?._id) return <Stub sale={sale} />;
 
