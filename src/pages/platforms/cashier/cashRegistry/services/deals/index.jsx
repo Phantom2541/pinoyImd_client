@@ -13,10 +13,11 @@ import {
   RESET,
   SetSOURCE,
 } from "../../../../../../services/redux/slices/assets/providers.js";
+import { ClaimStub } from "./../../../../../../components/printout";
 
 export default function Deals() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { isLoading } = useSelector(({ deals }) => deals),
+    { isLoading, onPrint } = useSelector(({ deals }) => deals),
     { filtered } = useSelector(({ payments }) => payments),
     dispatch = useDispatch();
 
@@ -72,6 +73,8 @@ export default function Deals() {
       };
     }
   }, [token, dispatch, activePlatform.branchId, auth._id]);
+
+  if (onPrint) return <ClaimStub />;
 
   return (
     <MDBContainer className="d-flex" fluid>

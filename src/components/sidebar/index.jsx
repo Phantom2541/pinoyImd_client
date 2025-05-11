@@ -107,7 +107,7 @@ export default function SideNavigation({
   };
 
   return (
-    <div className="white-skin">
+    <div className="white-skin no-print">
       <MDBSideNav
         // logo={logo}
         tag="div"

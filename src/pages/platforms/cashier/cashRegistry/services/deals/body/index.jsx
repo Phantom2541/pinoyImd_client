@@ -15,10 +15,10 @@ import {
   SetFILTERED,
   RESET,
   SetSELECTED,
+  SetPrinting,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 import { Input, Select } from "../../../../../../../components/customizable";
-
 const Tables = () => {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
@@ -79,13 +79,16 @@ const Tables = () => {
     }
   }, [collections, view, dispatch]);
 
-  const handleView = (selected) => {
+  // Sample generateStub function
+
+  const handlePrintout = async (selected) => {
     localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
-    window.open(
-      "/printout/claimstub",
-      "Claim Stub",
-      "top=100px,left=150px,width=450px,height=850px"
-    );
+    dispatch(SetPrinting(true));
+    // window.open(
+    //   "/printout/claimstub",
+    //   "Claim Stub",
+    //   "top=100px,left=150px,width=450px,height=850px"
+    // );
   };
 
   const handleCashRegister = (selected) => {
@@ -351,10 +354,7 @@ const Tables = () => {
                       </div>
                     )}
                   </td>
-                  <td
-                    className="cursor-pointer"
-                    onClick={() => handleView(deal)}
-                  >
+                  <td className="cursor-pointer">
                     <div className="d-flex align-items-center">
                       <h6
                         className="mt-2"
@@ -363,6 +363,7 @@ const Tables = () => {
                       >
                         {currency(deal.amount)}
                       </h6>
+
                       <img
                         src={img}
                         alt={text}
@@ -395,7 +396,7 @@ const Tables = () => {
                               color="info"
                               rounded
                               title="Print receipt."
-                              onClick={() => handleView(deal)}
+                              onClick={() => handlePrintout(deal)}
                             >
                               <MDBIcon icon="print" />
                             </MDBBtn>

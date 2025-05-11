@@ -30,6 +30,7 @@ const initialState = {
   censusLoading: false, // dedicated loader for celsus
   message: "",
   vendor: undefined,
+  onPrint: false,
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -672,6 +673,9 @@ export const reduxSlice = createSlice({
       state.month = today.getMonth() + 1;
       state.year = today.getFullYear();
     },
+    SetPrinting: (state, { payload }) => {
+      state.onPrint = payload;
+    },
   },
   /**
    * Handles extra actions not handled by the reducer itself.
@@ -1203,6 +1207,7 @@ export const {
   SetMONTH,
   RESET,
   ResetDATE,
+  SetPrinting,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
