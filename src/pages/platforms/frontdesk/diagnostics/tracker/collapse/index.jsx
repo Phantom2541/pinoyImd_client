@@ -13,6 +13,7 @@ export default function TasksCollapse({
   setDidHoverID,
 }) {
   const { _id } = task;
+
   return (
     <MDBCard style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}>
       <TaskHeader
