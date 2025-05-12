@@ -38,6 +38,7 @@ const initialState = {
   activePage: 1,
   activeCOLAPSE: -1,
   isSuccess: false,
+  print: false,
   isLoading: false,
   message: "",
 };
@@ -168,6 +169,9 @@ export const reduxSlice = createSlice({
     SetHEALTHY: (state, { payload }) => {
       state.task = { ...state.task, ...healthyClient[payload] };
     },
+    SetPrint: (state) => {
+      state.print = true;
+    },
     SetPREFERENCES: (state, { payload }) => {
       state.preferences = payload;
     },
@@ -250,6 +254,7 @@ export const {
   SetSELECTED,
   SetTASK,
   SetPARAMS,
+  SetPrint,
   SetPackages,
   SetFILTERED,
   SetMODAL,

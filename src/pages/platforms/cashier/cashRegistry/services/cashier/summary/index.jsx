@@ -16,6 +16,7 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import { removeUndefinedValues } from "../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
+import { SetPrinting } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function Summary() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -115,7 +116,8 @@ export default function Summary() {
       );
 
     data = removeUndefinedValues(data);
-
+    localStorage.setItem("claimStub", JSON.stringify(data));
+    dispatch(SetPrinting(true));
     try {
       await dispatch(SAVE({ token, data })).unwrap(); // Ensure save completes before proceeding
       dispatch(SETCART());

@@ -7,7 +7,10 @@ import DealCollapse from "./collapse";
 import Header from "./header";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
-
+import {
+  LabTaskPrintout,
+  RadTaskPrintout,
+} from "../../../../../components/printout/index.js";
 /**
  * For refrences to the following deals
  */
@@ -29,7 +32,7 @@ import ResultEntry from "./modal";
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { message, isSuccess } = useSelector(({ deals }) => deals),
-    { isLoading } = useSelector(({ validator }) => validator),
+    { isLoading, print } = useSelector(({ validator }) => validator),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -91,7 +94,11 @@ export default function Tasks() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
-
+  if (activePlatform.department === "Laboratory" && print) {
+    return <LabTaskPrintout />;
+  } else if (activePlatform.department === "Radiology" && print) {
+    return <RadTaskPrintout />;
+  }
   return (
     <MDBCard narrow>
       <Header />
