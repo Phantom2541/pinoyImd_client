@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   REFORM,
   TOGGLE,
+  SetPrinting,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { axioKit } from "../../../../../../services/utilities";
 import CaseBox from "./case";
@@ -32,6 +33,7 @@ export default function Modal() {
     { collections } = useSelector(({ providers }) => providers),
     [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
+
   const toggle = () => dispatch(TOGGLE());
 
   useEffect(() => {
@@ -159,11 +161,19 @@ export default function Modal() {
     }
 
     if (inhouse.length > 0) {
-      window.open(
-        "/printout/request/form",
-        "RequestForm",
-        "top=100px,left=100px,width=1050px,height=750px"
+      dispatch(
+        SetPrinting({
+          status: true,
+          form: "inhouse",
+          selected: { deal, forms: { ..._forms } },
+        })
       );
+
+      // window.open(
+      //   "/printout/request/form",
+      //   "RequestForm",
+      //   "top=100px,left=100px,width=1050px,height=750px"
+      // );
     }
 
     const haveOutSource =
@@ -214,7 +224,6 @@ export default function Modal() {
       forms,
       ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
     };
-    console.log("data", data);
 
     dispatch(
       REFORM({

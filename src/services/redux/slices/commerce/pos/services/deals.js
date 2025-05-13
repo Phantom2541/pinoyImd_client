@@ -674,7 +674,9 @@ export const reduxSlice = createSlice({
       state.year = today.getFullYear();
     },
     SetPrinting: (state, { payload }) => {
-      state.onPrint = payload;
+      const { status, selected } = payload;
+      state.onPrint = status;
+      state.selected = { ...selected };
     },
   },
   /**

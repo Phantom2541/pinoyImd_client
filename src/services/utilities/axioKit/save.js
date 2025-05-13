@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { removeUndefinedValues } from "../../../services/utilities";
 /**
  * Save function.
  *
@@ -10,7 +10,7 @@ import axios from "axios";
  */
 const save = async (entity, data, token, endpoint = "save") =>
   await axios
-    .post(`${entity}/${endpoint}`, data, {
+    .post(`${entity}/${endpoint}`, removeUndefinedValues(data), {
       headers: {
         Authorization: `QTracy ${token}`,
       },

@@ -64,8 +64,8 @@ export default function Modal({ show, selected, toggle }) {
         toggle={handleClose}
         className="light-blue darken-3 white-text"
       >
-        <MDBIcon icon="user" className="mr-2" />
-        Controls
+        <MDBIcon icon="cash-register" className="mr-2" />
+        Remittance
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <div className="d-flex align-items-center justify-content-between">

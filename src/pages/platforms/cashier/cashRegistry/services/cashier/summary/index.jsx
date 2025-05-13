@@ -55,7 +55,7 @@ export default function Summary() {
     if (loading) return; // Prevent multiple clicks
     setLoading(true); // Disable button while saving
 
-    let data = {
+    let selected = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
       authorizedBy: authorizedBy || undefined,
@@ -115,11 +115,13 @@ export default function Summary() {
         })
       );
 
-    data = removeUndefinedValues(data);
-    localStorage.setItem("claimStub", JSON.stringify(data));
-    dispatch(SetPrinting(true));
+    selected = removeUndefinedValues(selected);
+
     try {
-      await dispatch(SAVE({ token, data })).unwrap(); // Ensure save completes before proceeding
+      await dispatch(SAVE({ token, data: selected })).then(({ payload }) => {
+        selected._id = payload.payload._id;
+        dispatch(SetPrinting({ status: true, selected }));
+      }); // Ensure save completes before proceeding
       dispatch(SETCART());
       addToast("Transaction completed successfully", { appearance: "info" });
     } catch (error) {
