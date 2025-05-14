@@ -28,25 +28,17 @@ export default function Modal() {
 
   const printDiv = () => {
     const content = document.getElementById("printableArea").innerHTML;
-    const styles = `
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          padding: 20px;
-        }
-        .printable-content {
-          width: 100%;
-          margin: 0 auto;
-        }
-      </style>
-    `;
 
     const myWindow = window.open("", "", "height=600,width=800");
-    myWindow.document.write(`
+
+    const doc = myWindow.document;
+
+    // Create HTML Structure
+    const html = doc.documentElement;
+    html.innerHTML = `
       <html>
         <head>
           <title>Print</title>
-          ${styles}
         </head>
         <body>
           <div class="printable-content">
@@ -54,7 +46,8 @@ export default function Modal() {
           </div>
         </body>
       </html>
-    `);
+    `;
+
     myWindow.document.close();
     myWindow.focus();
     myWindow.print();

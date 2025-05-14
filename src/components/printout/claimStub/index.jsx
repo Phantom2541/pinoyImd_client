@@ -103,7 +103,7 @@ export default function ClaimStub() {
         </thead>
         <tbody>
           {cart?.map((menu, index) => {
-            const { description, abbreviation, packages = [], up } = menu;
+            const { description, abbreviation, packages = [], srp } = menu;
             console.log("menu", menu);
 
             return (
@@ -131,7 +131,7 @@ export default function ClaimStub() {
                   style={{ fontSize: "17.5px" }}
                   className="text-right py-0 px-0 fw-bold"
                 >
-                  {currency(up)}
+                  {currency(srp)}
                 </td>
               </tr>
             );
@@ -139,8 +139,10 @@ export default function ClaimStub() {
         </tbody>
       </MDBTable>
       <Hr />
-      <Text title="SUBTOTAL" value={currency(amount)} />
+      <Text title="SUBTOTAL" value={currency(amount + discount)} />
       <Text title="DISCOUNT :" value={currency(discount)} />
+      <Hr />
+      <Text title="Total :" value={currency(amount)} />
       <Text
         title="TENDERED AMOUNT :"
         value={payment === "cash" ? currency(cash) : currency(amount)}

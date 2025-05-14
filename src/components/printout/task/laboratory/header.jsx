@@ -12,8 +12,6 @@ export default function Header() {
   const { selected } = useSelector(({ deals }) => deals),
     [task, setTask] = useState({ _id: "" });
 
-  console.log("Header :", task);
-
   useEffect(() => {
     if (selected) {
       setTask(selected);

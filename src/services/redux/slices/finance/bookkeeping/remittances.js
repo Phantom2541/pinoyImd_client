@@ -154,14 +154,12 @@ export const reduxSlice = createSlice({
       state.day = payload;
     },
     TOGGLE: (state, { payload = {} }) => {
-      const { key, value, selected } = payload;
+      const { key, value } = payload;
       if (key === "census") {
         state.showCensus = !state.showCensus;
         return;
       }
-      state.selected = selected;
       state.showModal = !state.showModal;
-
       if (value) {
         state.title =
           key === "open" ? "Floating Cash" : "Closing Cash Register";
@@ -271,11 +269,12 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item?._id === payload._id
         );
-        state.selected = payload;
         state.collections[index] = { ...payload, ...state.collections[index] };
         state.message = "Remittance Successfully Updated";
         state.isSuccess = true;
         state.formSubmitted = false;
+        //  printing remittances
+        state.selected = payload;
         state.onPrint = true;
       })
       .addCase(UPDATE.rejected, (state, action) => {

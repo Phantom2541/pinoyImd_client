@@ -19,8 +19,6 @@ export default function LabTaskPrintout() {
   const { branchId, remarks } = task;
   const { companyId, name } = branchId || {};
 
-  console.log("branchId :", branchId);
-
   return (
     <div className="print-container position-relative" id="printableArea">
       <Banner company={companyId?.name} branch={name} />
