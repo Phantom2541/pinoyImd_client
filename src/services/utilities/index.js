@@ -53,7 +53,6 @@ import Female from "../../assets/female.jpg";
 import PresetIMD from "../../assets/iMD.jpg";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
-import { useIndexedDB } from "./IndexedDB";
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -100,7 +99,6 @@ export {
   contacts,
   dateFormat,
   getWeekend,
-  useIndexedDB,
   currency,
   removeRedundantPackages,
   computeGD,

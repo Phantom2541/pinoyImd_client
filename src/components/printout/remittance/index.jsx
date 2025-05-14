@@ -1,16 +1,10 @@
-import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Header from "./header";
 import Body from "./body";
 import { Banner } from "../../../services/utilities";
 
 export default function Printout() {
-  const { selected } = useSelector(({ remittances }) => remittances),
-    [platform, setPlatform] = useState({ _id: "" });
-
-  console.log("selected", selected);
-
-  const { branch } = platform;
+  const { activePlatform } = useSelector(({ auth }) => auth);
 
   return (
     <div style={{ backgroundColor: "white" }}>
@@ -24,7 +18,10 @@ export default function Printout() {
           fontSize: "18px",
         }}
       >
-        <Banner company={branch?.companyId.name} branch={branch?.name} />
+        <Banner
+          company={activePlatform?.companyId.name}
+          branch={activePlatform?.branchId.name}
+        />
         <Header />
         <Body />
       </div>
