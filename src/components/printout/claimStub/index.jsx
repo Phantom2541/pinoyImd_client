@@ -97,13 +97,14 @@ export default function ClaimStub() {
         <thead>
           <tr>
             <th colSpan={2} className="py-0" style={{ fontSize: "17.5px" }}>
-              Services
+              ITEMIZED SERVICES BILL
             </th>
           </tr>
         </thead>
         <tbody>
           {cart?.map((menu, index) => {
             const { description, abbreviation, packages = [], up } = menu;
+            console.log("menu", menu);
 
             return (
               <tr key={`menu-${index}`}>
@@ -138,18 +139,20 @@ export default function ClaimStub() {
         </tbody>
       </MDBTable>
       <Hr />
-      <Text title="Total" value={currency(amount)} />
+      <Text title="SUBTOTAL" value={currency(amount)} />
+      <Text title="DISCOUNT :" value={currency(discount)} />
       <Text
-        title={capitalize(payment)}
+        title="TENDERED AMOUNT :"
         value={payment === "cash" ? currency(cash) : currency(amount)}
       />
-      <Text title="Discount" value={currency(discount)} />
-      {payment === "cash" && (
-        <Text title="Change" value={currency(cash - amount)} />
-      )}
+      <Text title="PAYMENT METHOD :" value={capitalize(payment)} />
       <Hr />
+      {payment === "cash" && (
+        <Text title="CHANGE" value={currency(cash - amount)} />
+      )}
+      <br />
       <Text
-        title="Cashier"
+        title="CASHIER :"
         value={capitalize(`${fname?.split(" ")[0]} ${lname}`)}
       />
       <Footer />

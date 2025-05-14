@@ -12,6 +12,7 @@ const initialState = {
   month: today.getMonth() + 1,
   year: today.getFullYear(),
   title: "",
+  onPrint: false,
   showModal: false,
   showCensus: false,
   formSubmitted: false,
@@ -177,6 +178,10 @@ export const reduxSlice = createSlice({
       state.month = today.getMonth() + 1;
       state.year = today.getFullYear();
     },
+    SetPrinting: (state, { payload }) => {
+      const { status } = payload;
+      state.onPrint = status;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -266,10 +271,12 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item?._id === payload._id
         );
+        state.selected = payload;
         state.collections[index] = { ...payload, ...state.collections[index] };
-        state.message = "Successfully Closing";
+        state.message = "Remittance Successfully Updated";
         state.isSuccess = true;
         state.formSubmitted = false;
+        state.onPrint = true;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
@@ -288,6 +295,7 @@ export const {
   SetActiveDATE,
   RESET,
   SetLEDGER,
+  SetPrinting,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

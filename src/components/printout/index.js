@@ -1,6 +1,7 @@
 export { default as ClaimStub } from "./claimStub";
 export { default as RequestForm } from "./requestFormNew";
 export { default as RequestOutSource } from "./requestOutSource";
+export { default as Remittance } from "./remittance";
 export { default as LabTaskPrintout } from "./task/laboratory";
 export { default as RadTaskPrintout } from "./task/radiology";
 // suport
