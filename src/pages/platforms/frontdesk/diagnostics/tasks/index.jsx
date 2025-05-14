@@ -94,11 +94,11 @@ export default function Tasks() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
-  if (activePlatform.department === "Laboratory" && print) {
-    return <LabTaskPrintout />;
-  } else if (activePlatform.department === "Radiology" && print) {
-    return <RadTaskPrintout />;
-  }
+  // if (activePlatform.department === "Laboratory" && print) {
+  //   return <LabTaskPrintout />;
+  // } else if (activePlatform.department === "Radiology" && print) {
+  //   return <RadTaskPrintout />;
+  // }
   return (
     <MDBCard narrow>
       <Header />

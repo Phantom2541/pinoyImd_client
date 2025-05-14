@@ -3,10 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fullName } from "../../../../../../services/utilities/index.js";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb/index.js";
-import {
-  SetTASK,
-  SetPrint,
-} from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 const Tasks = ({ _id, form, obj, index, customer }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
@@ -16,24 +13,21 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
   const handleLabPrint = (task) => {
     const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
-    dispatch(SetPrint());
-    // const URL = "/printout/laboratory/task",
-    //   title = `Laboratory Task Printout`,
-    //   features = "top=100px,left=100px,width=794px,height=1123px";
-
-    // const printWindow = window.open(URL, title, features);
-    // printWindow.focus();
+    window.open(
+      "/printout/laboratory/task",
+      "Radiology Task Printout",
+      "top=100px,left=100px,width=794px,height=1123px"
+    );
   };
 
   const handleRadPrint = (task) => {
     const services = Services.find(task.services);
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
-    dispatch(SetPrint());
-    // window.open(
-    //   "/printout/radiology/task",
-    //   "Radiology Task Printout",
-    //   "top=100px,left=100px,width=794px,height=1123px"
-    // );
+    window.open(
+      "/printout/radiology/task",
+      "Radiology Task Printout",
+      "top=100px,left=100px,width=794px,height=1123px"
+    );
   };
 
   const {
