@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { ENDPOINT, properFullname } from "../../../../services/utilities";
 
-const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
+const Signature = ({ person, label, style = {}, withSignature }) => {
   return (
     <div style={style} className="text-center position-relative">
       {withSignature && (
@@ -31,15 +32,24 @@ const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
   );
 };
 
-export default function Signatories({ signatories }) {
-  const head = signatories[0],
-    dr = signatories[1],
-    frontdesk = signatories[2];
+export default function Signatories() {
+  const { selected } = useSelector(({ deals }) => deals),
+    [signatories, setSignatories] = useState({ _id: "" });
+
+  useEffect(() => {
+    if (selected) {
+      setSignatories(selected.signatories);
+    }
+  }, [selected]);
+
+  const head = signatories?.[0],
+    dr = signatories?.[1],
+    frontdesk = signatories?.[2];
   return (
     <div className="pt-4 print-footer">
       <div className="d-flex justify-content-between">
-        <Signature person={head} label="Medical Laboratory Scientist" isHalf />
-        <Signature person={frontdesk} label="Receptionist" isHalf />
+        <Signature person={head} label="Medical Laboratory Scientist" />
+        <Signature person={frontdesk} label="Receptionist" />
       </div>
       <Signature
         person={dr}

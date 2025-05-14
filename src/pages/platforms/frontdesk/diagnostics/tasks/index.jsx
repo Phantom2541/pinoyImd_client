@@ -2,15 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import { MDBCard, MDBCardBody } from "mdbreact";
+import { MDBCard } from "mdbreact";
 import DealCollapse from "./collapse";
 import Header from "./header";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
-import {
-  LabTaskPrintout,
-  RadTaskPrintout,
-} from "../../../../../components/printout/index.js";
 /**
  * For refrences to the following deals
  */
@@ -28,11 +24,12 @@ import {
   RESET as PHYRESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
+import Printout from "./modal/printout";
 
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { message, isSuccess } = useSelector(({ deals }) => deals),
-    { isLoading, print } = useSelector(({ validator }) => validator),
+    { isLoading } = useSelector(({ validator }) => validator),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -102,11 +99,10 @@ export default function Tasks() {
   return (
     <MDBCard narrow>
       <Header />
-      <MDBCardBody className="pb-0">
-        {isLoading ? <TableLoading /> : <DealCollapse />}
-      </MDBCardBody>
+      {isLoading ? <TableLoading /> : <DealCollapse />}
       <Footer />
       <ResultEntry />
+      <Printout />
     </MDBCard>
   );
 }

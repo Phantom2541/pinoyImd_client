@@ -191,7 +191,9 @@ export default function Modal() {
             _id: selected._id,
           },
         })
-      );
+      ).then((Remittance) => {
+        console.log("closing cash register", Remittance);
+      });
     }
     // dispatch(TOGGLE());
   };
@@ -426,7 +428,7 @@ export default function Modal() {
               formSubmitted
             }
           >
-            <MDBIcon icon="check" className="mr-2" /> Submit{" "}
+            <MDBIcon icon="check" className="mr-2" /> Submit
             {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
           </MDBBtn>
         </div>

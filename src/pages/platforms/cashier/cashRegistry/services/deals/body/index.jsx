@@ -81,15 +81,8 @@ const Tables = () => {
 
   // Sample generateStub function
 
-  const handlePrintout = async (selected) => {
-    localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
-    dispatch(SetPrinting(true));
-    // window.open(
-    //   "/printout/claimstub",
-    //   "Claim Stub",
-    //   "top=100px,left=150px,width=450px,height=850px"
-    // );
-  };
+  const handlePrintout = async (selected) =>
+    dispatch(SetPrinting({ status: true, selected: generateStub(selected) }));
 
   const handleCashRegister = (selected) => {
     dispatch(
@@ -101,17 +94,14 @@ const Tables = () => {
     );
   };
 
-  const generateStub = (deal) => ({
-    ...deal,
+  const generateStub = ({ customerId, cashierId, cart, ...rest }) => ({
+    ...rest,
     customer: {
-      fullName: deal.customerId?.fullName,
-      address: `${
-        deal.customerId?.address?.barangay &&
-        `${deal.customerId?.address?.barangay}, `
-      }${deal.customerId?.address?.city}`,
+      fullName: customerId?.fullName,
+      address: customerId?.address,
     },
-    cashier: deal.cashierId?.fullName,
-    cart: deal.cart,
+    cashier: cashierId?.fullName,
+    cart,
   });
 
   const handleUpdate = async (updatedKey, newKey, deal = {}) => {

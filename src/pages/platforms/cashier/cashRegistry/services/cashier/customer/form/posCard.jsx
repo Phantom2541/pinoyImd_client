@@ -28,7 +28,7 @@ import {
 import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
 
 export default function PosCard() {
-  const { category, privilege, customer } = useSelector(({ pos }) => pos),
+  const { category, privilege, customer, ssx } = useSelector(({ pos }) => pos),
     { collections: sources } = useSelector(({ providers }) => providers),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [physicians, setPhysicians] = useState([]),
@@ -110,6 +110,7 @@ export default function PosCard() {
           <input
             placeholder="3 days fever, headache (etc)..."
             type="text"
+            value={ssx}
             onChange={({ target }) => dispatch(SETSSX(target.value))}
           />
         </div>

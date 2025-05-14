@@ -1,18 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Header from "./header";
 import { Banner } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
 import Signatories from "./signatories";
 import "../../printout.css";
-const Printout = ({ task }) => {
-  const { branchId, remarks, signatories } = task;
+
+export default function LabTaskPrintout() {
+  const { selected } = useSelector(({ deals }) => deals),
+    [task, setTask] = useState({ _id: "" });
+
+  useEffect(() => {
+    if (selected) {
+      setTask(selected);
+    }
+  }, [selected]);
+
+  const { branchId, remarks } = task;
+  const { companyId, name } = branchId || {};
+
+  console.log("branchId :", branchId);
 
   return (
-    <div className="print-container position-relative">
-      <Banner company={branchId.companyId.name} branch={branchId.name} />
+    <div className="print-container position-relative" id="printableArea">
+      <Banner company={companyId?.name} branch={name} />
       <div className="print-body">
-        <Header task={task} />
-        <BodySwitcher task={task} />
+        <Header />
+        <BodySwitcher />
         <div className="flex-spacer" />
       </div>
       <div className="remarks-section d-flex px-1">
@@ -21,23 +35,7 @@ const Printout = ({ task }) => {
         </div>
         <h5 className="fw-bold">{remarks}</h5>
       </div>
-      <Signatories signatories={signatories} />
+      <Signatories />
     </div>
   );
-};
-
-export default function LabTaskPrintout() {
-  const [task, setTask] = useState({ _id: "" });
-
-  useEffect(() => {
-    setTask(JSON.parse(localStorage.getItem("taskPrintout")));
-    // Delay to ensure content is rendered before print
-    setTimeout(() => {
-      window.print();
-    }, 500);
-  }, []);
-
-  if (task?._id) return <Printout task={task} />;
-
-  return <div>Task is Empty</div>;
 }

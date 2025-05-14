@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fullName } from "../../../../../../services/utilities/index.js";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
@@ -7,11 +7,10 @@ import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/lab
 
 const Tasks = ({ _id, form, obj, index, customer }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
 
   const handleLabPrint = (task) => {
-    const services = collections.filter(({ id }) => task.services.includes(id));
+    const services = Services.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
     window.open(
       "/printout/laboratory/task",
@@ -105,16 +104,9 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
             hasDone && (
               <MDBBtn
                 onClick={() => {
-                  const _task = {
-                    ...task,
-                    branchId: activePlatform?.branch,
-                    services: _packages,
-                    signatories,
-                    isPrint: true,
-                  };
-                  activePlatform.department === "Laboratory"
-                    ? handleLabPrint(_task)
-                    : handleRadPrint(_task);
+                  activePlatform === "radiology"
+                    ? handleRadPrint(task)
+                    : handleLabPrint(task);
                 }}
                 color="warning"
                 size="sm"
