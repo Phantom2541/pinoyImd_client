@@ -9,13 +9,6 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
 
-  const {
-    packages = [],
-    hasDone = false,
-    remarks = "",
-    signatories = [],
-  } = obj;
-
   const handleLabPrint = (task) => {
     const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
@@ -43,6 +36,13 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
       "top=100px,left=100px,width=794px,height=1123px"
     );
   };
+
+  const {
+    packages = [],
+    hasDone = false,
+    remarks = "",
+    signatories = [],
+  } = obj;
 
   // object : chem
   // array : urinalysis, hema
