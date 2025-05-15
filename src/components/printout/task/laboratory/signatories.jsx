@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { ENDPOINT, properFullname } from "../../../../services/utilities";
 
 const Signature = ({ person, label, style = {}, withSignature }) => {
@@ -32,16 +30,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
   );
 };
 
-export default function Signatories() {
-  const { selected } = useSelector(({ deals }) => deals),
-    [signatories, setSignatories] = useState({ _id: "" });
-
-  useEffect(() => {
-    if (selected) {
-      setSignatories(selected.signatories);
-    }
-  }, [selected]);
-
+export default function Signatories({ signatories }) {
   const head = signatories?.[0],
     dr = signatories?.[1],
     frontdesk = signatories?.[2];

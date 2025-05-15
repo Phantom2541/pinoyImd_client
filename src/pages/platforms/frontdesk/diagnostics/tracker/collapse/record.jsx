@@ -1,33 +1,32 @@
 import React, { useState } from "react";
-import { capitalize } from "./../../../../../../services/utilities";
-import { Services, Templates } from "./../../../../../../services/fakeDb";
+import { capitalize } from "../../../../../../services/utilities";
+import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
 // import Modal from "./modal";
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    [task, setTask] = useState({}),
     [showModal, setShowModal] = useState(false);
-  console.log("menu", menu);
-  const toggleModal = () => {
-    console.log(task);
 
-    setShowModal(!showModal);
-  };
+  const toggleModal = () => setShowModal(!showModal);
 
   const handleLabPrint = (task) => {
-    console.log(task);
-
     const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
 
-    const URL = "/printout/laboratory/task",
-      title = `Laboratory Task Printout`,
-      features = "top=100px,left=100px,width=794px,height=1123px";
+    const URL = `${window.location.origin}/printout/laboratory/task`;
+    const title = `Laboratory Task Printout`;
+    const features = "top=100px,left=100px,width=794px,height=1123px";
 
-    const printWindow = window.open(URL, title, features);
-    printWindow.focus();
+    setTimeout(() => {
+      const printWindow = window.open(URL, title, features);
+      if (printWindow) {
+        printWindow.focus();
+      } else {
+        console.warn("Popup blocked or failed to open.");
+      }
+    }, 100);
   };
 
   const handleRadPrint = (task) => {
@@ -90,10 +89,7 @@ export default function CollapseTable({ menu }) {
               <MDBBtn
                 title="Modal"
                 rounded
-                onClick={() => {
-                  setTask(task);
-                  toggleModal();
-                }}
+                onClick={() => toggleModal()}
                 color={obj?.hasDone ? "info" : "primary"}
                 size="sm"
                 className="py-1 px-3 m-0"
@@ -109,7 +105,7 @@ export default function CollapseTable({ menu }) {
                 <MDBBtn
                   rounded
                   onClick={() => {
-                    const _task = {
+                    const selected = {
                       ...task,
                       branchId: menu?.branchId,
                       referral: physicianId || {},
@@ -118,8 +114,8 @@ export default function CollapseTable({ menu }) {
                       isPrint: true,
                     };
                     activePlatform.department === "Laboratory"
-                      ? handleLabPrint(_task)
-                      : handleRadPrint(_task);
+                      ? handleLabPrint(selected)
+                      : handleRadPrint(selected);
                   }}
                   color="warning"
                   size="sm"
