@@ -270,7 +270,7 @@ export default function Census() {
             rounded
             onClick={handleSubmit}
           >
-            <strong>Submit</strong>{" "}
+            <strong>Submit</strong>
             {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
           </MDBBtn>
         )}

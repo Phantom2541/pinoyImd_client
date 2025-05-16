@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBTable, MDBCardBody } from "mdbreact";
-import Task from "./task";
+import Record from "./record";
 import { useSelector } from "react-redux";
 
 export default function Body({
@@ -44,7 +44,7 @@ export default function Body({
               return task.map((t, i) => {
                 const _t = { ...t, category, source, referral, dealId: _id };
                 return (
-                  <Task
+                  <Record
                     key={`subform-${i}`}
                     form={key}
                     obj={_t || {}}
@@ -55,7 +55,7 @@ export default function Body({
               });
             }
             return (
-              <Task
+              <Record
                 key={`form-${index}`}
                 form={key}
                 obj={_task || {}}

@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fullName } from "../../../../../../services/utilities/index.js";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
@@ -14,12 +13,18 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
 
-    const URL = "/printout/laboratory/task",
-      title = `Laboratory Task Printout`,
-      features = "top=100px,left=100px,width=794px,height=1123px";
+    const URL = `${window.location.origin}/printout/laboratory/task`;
+    const title = `Laboratory Task Printout`;
+    const features = "top=100px,left=100px,width=794px,height=1123px";
 
-    const printWindow = window.open(URL, title, features);
-    printWindow.focus();
+    setTimeout(() => {
+      const printWindow = window.open(URL, title, features);
+      if (printWindow) {
+        printWindow.focus();
+      } else {
+        console.warn("Popup blocked or failed to open.");
+      }
+    }, 100);
   };
 
   const handleRadPrint = (task) => {
@@ -107,7 +112,7 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
             hasDone && (
               <MDBBtn
                 onClick={() => {
-                  const _task = {
+                  const selected = {
                     ...task,
                     branchId: activePlatform?.branch,
                     services: _packages,
@@ -115,8 +120,8 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
                     isPrint: true,
                   };
                   activePlatform.department === "Laboratory"
-                    ? handleLabPrint(_task)
-                    : handleRadPrint(_task);
+                    ? handleLabPrint(selected)
+                    : handleRadPrint(selected);
                 }}
                 color="warning"
                 size="sm"

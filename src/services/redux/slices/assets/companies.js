@@ -151,6 +151,9 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+    },
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
@@ -305,6 +308,7 @@ export const reduxSlice = createSlice({
 
 export const {
   RESET,
+  SetCOLLECTIONS,
   SetFILTERED,
   SetMaxPage,
   SetActivePAGE,

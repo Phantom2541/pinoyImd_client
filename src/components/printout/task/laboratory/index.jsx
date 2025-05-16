@@ -1,16 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./header";
 import { Banner } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
 import Signatories from "./signatories";
 import "../../printout.css";
-const Printout = ({ task }) => {
+
+export default function LabTaskPrintout() {
+  const [task, setTask] = useState({ _id: "" });
+
+  useEffect(() => {
+    const savedTask = JSON.parse(localStorage.getItem("taskPrintout"));
+    setTask(savedTask);
+
+    // Delay to ensure content is rendered before print
+    setTimeout(() => {
+      window.print();
+    }, 500);
+  }, []);
+
   const { branchId, remarks, signatories } = task;
-  console.log();
+  const { companyId, name } = branchId || {};
 
   return (
-    <div className="print-container position-relative">
-      <Banner company={branchId.companyId.name} branch={branchId.name} />
+    <div className="print-container position-relative" id="printableArea">
+      <Banner company={companyId?.name} branch={name} />
       <div className="print-body">
         <Header task={task} />
         <BodySwitcher task={task} />
@@ -22,23 +35,7 @@ const Printout = ({ task }) => {
         </div>
         <h5 className="fw-bold">{remarks}</h5>
       </div>
-      <Signatories signatories={signatories} />
+      <Signatories signatories={signatories} form={task.form} />
     </div>
   );
-};
-
-export default function LabTaskPrintout() {
-  const [task, setTask] = useState({ _id: "" });
-
-  useEffect(() => {
-    setTask(JSON.parse(localStorage.getItem("taskPrintout")));
-    // Delay to ensure content is rendered before print
-    setTimeout(() => {
-      window.print();
-    }, 500);
-  }, []);
-
-  if (task?._id) return <Printout task={task} />;
-
-  return <div>Task is Empty</div>;
 }

@@ -16,6 +16,7 @@ import {
   Onboard,
   Tasks,
   Reports,
+  // OldData,
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import { Menus, Services } from "../../../pages/platforms/cashier";

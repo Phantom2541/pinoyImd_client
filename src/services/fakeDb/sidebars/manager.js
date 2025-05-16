@@ -3,8 +3,6 @@ import Dashboard from "../../../pages/platforms/manager/dashboard";
 import {
   Services,
   Menus,
-  Banner,
-  Logo,
   Applicants,
   Tieups,
 } from "../../../pages/platforms/manager/settings";
@@ -25,6 +23,7 @@ import {
   Remittances,
   Sales,
   ExperimentalLedger,
+  Quest,
 } from "../../../pages/platforms/manager/businessOperations";
 
 import {
@@ -65,19 +64,27 @@ const manager = [
         name: "Sales",
         path: "/sales",
         icon: "money-bill",
+        title: "Daily Sales",
         component: Sales,
       },
       {
         name: "Remittances",
         path: "/remittances",
-        icon: "money-bill",
+        icon: "pencil-alt",
         component: Remittances,
       },
       {
         name: "Ledger",
         path: "/ledger",
-        icon: "money-bill",
+        icon: "file-invoice-dollar",
         component: ExperimentalLedger,
+      },
+      {
+        name: "Mobile Services",
+        path: "/mobile",
+        icon: "mobile-alt",
+        title: "Quest System for Mobile Clinic Lab Team",
+        component: Quest,
       },
     ],
   },
@@ -148,6 +155,12 @@ const manager = [
         title: "Monthly Reseco Deals",
         component: Reseco,
       },
+      {
+        name: "Payroll",
+        path: "/payroll",
+        icon: "money-bill",
+        component: Payrolls,
+      },
     ],
   },
   {
@@ -193,17 +206,6 @@ const manager = [
         path: "/preventive/maintenenace/schedule",
         icon: "tools",
       },
-      {
-        name: "Payroll",
-        path: "/payroll",
-        icon: "money-bill",
-        component: Payrolls,
-      },
-      {
-        name: "Cashier",
-        path: "/cashier",
-        icon: "money-bill",
-      },
     ],
   },
   {
@@ -247,37 +249,6 @@ const manager = [
     path: "/settings",
     icon: "cogs",
     children: [
-      {
-        name: "Profile",
-        icon: "user-cog",
-        path: "/profile",
-        children: [
-          {
-            name: "Banner",
-            path: "/banners",
-            icon: "layout",
-            component: Banner,
-          },
-          {
-            name: "Logos",
-            path: "/logos",
-            icon: "image",
-            component: Logo,
-          },
-          {
-            name: "Tagline",
-            path: "/taglines",
-            icon: "quote",
-            component: Logo,
-          },
-          {
-            name: "Description",
-            path: "/descriptions",
-            icon: "file-text",
-            component: Logo,
-          },
-        ],
-      },
       {
         name: "Sources",
         path: "/sources",
@@ -378,6 +349,30 @@ const manager = [
             component: Procurments,
           },
         ],
+      },
+    ],
+  },
+  {
+    name: "Markey Place",
+    icon: "shopping-cart",
+    path: "/marketplace",
+    children: [
+      {
+        name: "Machine",
+        path: "/machines",
+        icon: "laptop-code",
+      },
+      {
+        name: "Products",
+        path: "/products",
+        icon: "cogs",
+        component: Products,
+      },
+      {
+        name: "Medicines",
+        path: "/medicines",
+        icon: "pills",
+        component: Products,
       },
     ],
   },

@@ -16,6 +16,11 @@ const initialState = {
   show: false,
   isLoading: false,
   message: "",
+  onPrint: false,
+  form: "inhouse",
+  selected: {
+    _id: "default",
+  },
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -145,6 +150,12 @@ export const reduxSlice = createSlice({
 
       if (payload?.resetCollections) state.collections = [];
     },
+    SetPrinting: (state, { payload }) => {
+      const { status, selected, form } = payload;
+      state.onPrint = status;
+      state.selected = selected;
+      state.form = form;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -259,6 +270,7 @@ export const {
   TOGGLE,
   SetOUTSOURCE,
   SetINHOUSE,
+  SetPrinting,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

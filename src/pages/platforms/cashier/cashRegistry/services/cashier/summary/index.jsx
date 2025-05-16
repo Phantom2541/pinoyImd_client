@@ -16,6 +16,7 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import { removeUndefinedValues } from "../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
+import { SetPrinting } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function Summary() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -54,7 +55,7 @@ export default function Summary() {
     if (loading) return; // Prevent multiple clicks
     setLoading(true); // Disable button while saving
 
-    let data = {
+    let selected = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
       authorizedBy: authorizedBy || undefined,
@@ -114,10 +115,13 @@ export default function Summary() {
         })
       );
 
-    data = removeUndefinedValues(data);
+    selected = removeUndefinedValues(selected);
 
     try {
-      await dispatch(SAVE({ token, data })).unwrap(); // Ensure save completes before proceeding
+      await dispatch(SAVE({ token, data: selected })).then(({ payload }) => {
+        selected._id = payload.payload._id;
+        dispatch(SetPrinting({ status: true, selected }));
+      }); // Ensure save completes before proceeding
       dispatch(SETCART());
       addToast("Transaction completed successfully", { appearance: "info" });
     } catch (error) {

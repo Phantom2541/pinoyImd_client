@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 /**
@@ -22,16 +22,16 @@ const Input = ({
   label = "",
   _key, //this key is for value
   type = "text",
-  selected = {},
+  selected = {}, // data
   onChange = () => {},
   handleCheck = () => {},
   handleClose = () => {},
 }) => {
-  useEffect(() => {
-    if (!formSubmitted && isSuccess) {
-      handleClose();
-    }
-  }, [formSubmitted, isSuccess, handleClose]);
+  // useEffect(() => {
+  //   if (!formSubmitted && isSuccess) {
+  //     handleClose();
+  //   }
+  // }, [formSubmitted, isSuccess, handleClose]);
   return (
     <div className="d-flex align-items-center customizable-input-container">
       <input
@@ -67,7 +67,7 @@ const Input = ({
         )}
         <MDBIcon
           icon="times"
-          onClick={handleClose}
+          onClick={() => handleClose()}
           disabled={formSubmitted}
           className="cursor-pointer"
           style={{ color: "red", fontSize: "1rem" }}

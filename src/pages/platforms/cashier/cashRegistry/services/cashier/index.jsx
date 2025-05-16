@@ -11,10 +11,9 @@ import {
   TOGGLE,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import Denominations from "../remittances/modal/denominations";
-
+import Printout from "./printout";
 export default function Cashier() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth);
-  const { transaction, isSuccess } = useSelector(({ deals }) => deals);
   const dispatch = useDispatch();
   const hasFetched = useRef(false),
     date = new Date().toLocaleDateString(undefined, {
@@ -51,17 +50,6 @@ export default function Cashier() {
     }
   }, [activePlatform, auth, token, dispatch, date]);
 
-  useEffect(() => {
-    if (transaction?._id !== "default" && isSuccess) {
-      localStorage.setItem("claimStub", JSON.stringify(transaction));
-      window.open(
-        "/printout/claimstub",
-        "Claim Stub",
-        "top=100px,left=100px,width=550px,height=750px"
-      );
-    }
-  }, [transaction, isSuccess]);
-
   return (
     <MDBRow
       className="res-container"
@@ -77,6 +65,7 @@ export default function Cashier() {
         <Summary />
       </MDBCol>
       <Denominations />
+      <Printout />
     </MDBRow>
   );
 }

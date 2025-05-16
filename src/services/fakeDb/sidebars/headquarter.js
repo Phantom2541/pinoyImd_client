@@ -18,13 +18,13 @@ import {
   Services,
   Banner,
   Logo,
+  Tagline,
+  Description,
   Applicants,
   Tieups,
 } from "../../../pages/platforms/manager/settings";
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
-import Tagline from "../../../pages/platforms/headquarter/settings/profile/tagline";
-import Description from "../../../pages/platforms/headquarter/settings/profile/description";
 
 const headquarter = [
   {

@@ -73,24 +73,6 @@ export default function Modal() {
   }, [formSubmitted, isSuccess, showModal, dispatch]);
 
   useEffect(() => {
-    //comment by darrel
-    // let cashRemitted = 0;
-    // if (selected?.gross) {
-    // const censusDate = selected?.createdAt
-    //   ? new Date(selected.createdAt).toLocaleDateString("en-PH") // 'YYYY-MM-DD' in local time
-    //   : "N/A";
-    // const paymentsSum = payments
-    //   .filter(
-    //     ({ createdAt, amount }) =>
-    //       createdAt &&
-    //       new Date(createdAt).toLocaleDateString("en-PH") === censusDate &&
-    //       amount
-    //   )
-    //   .reduce((sum, { amount }) => sum + Number(amount), 0);
-    // let _fc = selected?.opening?.sum || 0;
-    // const _coh = selected?.breakdown?.cash || 0;
-    // cashRemitted = _fc + _coh - paymentsSum;
-    // }
     setCoh(selected?.coh);
   }, [selected]);
 
@@ -193,7 +175,6 @@ export default function Modal() {
         })
       );
     }
-    // dispatch(TOGGLE());
   };
 
   const increaseQuantity = (type, denomination) => {
@@ -426,7 +407,7 @@ export default function Modal() {
               formSubmitted
             }
           >
-            <MDBIcon icon="check" className="mr-2" /> Submit{" "}
+            <MDBIcon icon="check" className="mr-2" /> Submit
             {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
           </MDBBtn>
         </div>

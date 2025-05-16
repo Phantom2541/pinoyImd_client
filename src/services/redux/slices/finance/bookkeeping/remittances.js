@@ -12,6 +12,7 @@ const initialState = {
   month: today.getMonth() + 1,
   year: today.getFullYear(),
   title: "",
+  onPrint: false,
   showModal: false,
   showCensus: false,
   formSubmitted: false,
@@ -153,14 +154,12 @@ export const reduxSlice = createSlice({
       state.day = payload;
     },
     TOGGLE: (state, { payload = {} }) => {
-      const { key, value, selected } = payload;
+      const { key, value } = payload;
       if (key === "census") {
         state.showCensus = !state.showCensus;
         return;
       }
-      state.selected = selected;
       state.showModal = !state.showModal;
-
       if (value) {
         state.title =
           key === "open" ? "Floating Cash" : "Closing Cash Register";
@@ -176,6 +175,10 @@ export const reduxSlice = createSlice({
     ResetDATE: (state) => {
       state.month = today.getMonth() + 1;
       state.year = today.getFullYear();
+    },
+    SetPrinting: (state, { payload }) => {
+      const { status } = payload;
+      state.onPrint = status;
     },
   },
   extraReducers: (builder) => {
@@ -267,9 +270,12 @@ export const reduxSlice = createSlice({
           (item) => item?._id === payload._id
         );
         state.collections[index] = { ...payload, ...state.collections[index] };
-        state.message = "Successfully Closing";
+        state.message = "Remittance Successfully Updated";
         state.isSuccess = true;
         state.formSubmitted = false;
+        //  printing remittances
+        state.selected = payload;
+        state.onPrint = true;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
@@ -288,6 +294,7 @@ export const {
   SetActiveDATE,
   RESET,
   SetLEDGER,
+  SetPrinting,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

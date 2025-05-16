@@ -15,10 +15,10 @@ import {
   SetFILTERED,
   RESET,
   SetSELECTED,
+  SetPrinting,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 import { Input, Select } from "../../../../../../../components/customizable";
-
 const Tables = () => {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
@@ -79,14 +79,10 @@ const Tables = () => {
     }
   }, [collections, view, dispatch]);
 
-  const handleView = (selected) => {
-    localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
-    window.open(
-      "/printout/claimstub",
-      "Claim Stub",
-      "top=100px,left=150px,width=450px,height=850px"
-    );
-  };
+  // Sample generateStub function
+
+  const handlePrintout = async (selected) =>
+    dispatch(SetPrinting({ status: true, selected: generateStub(selected) }));
 
   const handleCashRegister = (selected) => {
     dispatch(
@@ -98,17 +94,14 @@ const Tables = () => {
     );
   };
 
-  const generateStub = (deal) => ({
-    ...deal,
+  const generateStub = ({ customerId, cashierId, cart, ...rest }) => ({
+    ...rest,
     customer: {
-      fullName: deal.customerId?.fullName,
-      address: `${
-        deal.customerId?.address?.barangay &&
-        `${deal.customerId?.address?.barangay}, `
-      }${deal.customerId?.address?.city}`,
+      fullName: customerId?.fullName,
+      address: customerId?.address,
     },
-    cashier: deal.cashierId?.fullName,
-    cart: deal.cart,
+    cashier: cashierId?.fullName,
+    cart,
   });
 
   const handleUpdate = async (updatedKey, newKey, deal = {}) => {
@@ -351,10 +344,7 @@ const Tables = () => {
                       </div>
                     )}
                   </td>
-                  <td
-                    className="cursor-pointer"
-                    onClick={() => handleView(deal)}
-                  >
+                  <td className="cursor-pointer">
                     <div className="d-flex align-items-center">
                       <h6
                         className="mt-2"
@@ -363,6 +353,7 @@ const Tables = () => {
                       >
                         {currency(deal.amount)}
                       </h6>
+
                       <img
                         src={img}
                         alt={text}
@@ -395,7 +386,7 @@ const Tables = () => {
                               color="info"
                               rounded
                               title="Print receipt."
-                              onClick={() => handleView(deal)}
+                              onClick={() => handlePrintout(deal)}
                             >
                               <MDBIcon icon="print" />
                             </MDBBtn>

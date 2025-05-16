@@ -74,7 +74,7 @@ export default function Body() {
               isOpen={actualIndex === activeId}
             >
               <MDBCardBody className=" m-0 p-0">
-                <CollapsableBody ceo={ceo} branches={branches} />
+                <CollapsableBody cid={company._id} branches={branches} />
                 <h5 className="ml-2">
                   <strong>CEO:</strong> {fullName(ceo?.fullName)}
                 </h5>

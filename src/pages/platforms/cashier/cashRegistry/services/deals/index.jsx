@@ -13,6 +13,7 @@ import {
   RESET,
   SetSOURCE,
 } from "../../../../../../services/redux/slices/assets/providers.js";
+import Printout from "./modal/printout";
 
 export default function Deals() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
@@ -88,6 +89,7 @@ export default function Deals() {
         {filtered.length > 0 && <Payments />}
         <Closing />
       </div>
+      <Printout />
     </MDBContainer>
   );
 }

@@ -1,33 +1,32 @@
 import React, { useState } from "react";
-import { capitalize } from "./../../../../../../services/utilities";
-import { Services, Templates } from "./../../../../../../services/fakeDb";
+import { capitalize } from "../../../../../../services/utilities";
+import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
 // import Modal from "./modal";
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    [task, setTask] = useState({}),
     [showModal, setShowModal] = useState(false);
 
-  const toggleModal = () => {
-    console.log(task);
-
-    setShowModal(!showModal);
-  };
+  const toggleModal = () => setShowModal(!showModal);
 
   const handleLabPrint = (task) => {
-    console.log(task);
-
     const services = collections.filter(({ id }) => task.services.includes(id));
     localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
 
-    const URL = "/printout/laboratory/task",
-      title = `Laboratory Task Printout`,
-      features = "top=100px,left=100px,width=794px,height=1123px";
+    const URL = `${window.location.origin}/printout/laboratory/task`;
+    const title = `Laboratory Task Printout`;
+    const features = "top=100px,left=100px,width=794px,height=1123px";
 
-    const printWindow = window.open(URL, title, features);
-    printWindow.focus();
+    setTimeout(() => {
+      const printWindow = window.open(URL, title, features);
+      if (printWindow) {
+        printWindow.focus();
+      } else {
+        console.warn("Popup blocked or failed to open.");
+      }
+    }, 100);
   };
 
   const handleRadPrint = (task) => {
@@ -60,10 +59,10 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
+    console.log("obj", obj);
 
     return (
       <tr key={task.key}>
-        {/* remove by darrel className={`${hasDone && "table-active"}`} */}
         <td className="fw-bold">
           {capitalize(department)}
           {obj?.hasDone && (
@@ -90,10 +89,7 @@ export default function CollapseTable({ menu }) {
               <MDBBtn
                 title="Modal"
                 rounded
-                onClick={() => {
-                  setTask(task);
-                  toggleModal();
-                }}
+                onClick={() => toggleModal()}
                 color={obj?.hasDone ? "info" : "primary"}
                 size="sm"
                 className="py-1 px-3 m-0"
@@ -101,14 +97,15 @@ export default function CollapseTable({ menu }) {
                 <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
               </MDBBtn>
             )}
-            {!!obj?.signatories.length &&
+            {Array.isArray(obj?.signatories) &&
+              obj.signatories.length >= 2 &&
               obj?.signatories[0] &&
               obj?.signatories[1] &&
               obj?.hasDone && (
                 <MDBBtn
                   rounded
                   onClick={() => {
-                    const _task = {
+                    const selected = {
                       ...task,
                       branchId: menu?.branchId,
                       referral: physicianId || {},
@@ -117,8 +114,8 @@ export default function CollapseTable({ menu }) {
                       isPrint: true,
                     };
                     activePlatform.department === "Laboratory"
-                      ? handleLabPrint(_task)
-                      : handleRadPrint(_task);
+                      ? handleLabPrint(selected)
+                      : handleRadPrint(selected);
                   }}
                   color="warning"
                   size="sm"
@@ -139,9 +136,8 @@ export default function CollapseTable({ menu }) {
     source,
     category,
     _id,
-    diagnostics = [],
+    diagnostic = {},
   } = menu;
-
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">
@@ -154,18 +150,16 @@ export default function CollapseTable({ menu }) {
           </tr>
         </thead>
         <tbody>
-          {diagnostics &&
-            diagnostics?.map((diagnostic, index) => {
-              if (Array.isArray(diagnostic.result))
-                return diagnostic.result.map((obj, i) =>
-                  handleIndividual(diagnostic.key, obj, index + i, i)
+          {diagnostic &&
+            Object.entries(diagnostic).map(([key, value], index) => {
+              if (Array.isArray(value?.result)) {
+                return value.result.map((obj, i) =>
+                  handleIndividual(key.toLowerCase(), obj, index + i, i)
                 );
+              }
+              console.log("value", value);
 
-              return handleIndividual(
-                diagnostic.key.toLowerCase(),
-                diagnostic.result,
-                index
-              );
+              return handleIndividual(key.toLowerCase(), value, index);
             })}
         </tbody>
       </MDBTable>

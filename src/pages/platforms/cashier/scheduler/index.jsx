@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MDBCard, MDBCardBody, MDBBtn } from "mdbreact";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -88,7 +88,7 @@ const initialEvents = Object.entries(staff).flatMap(([department, members]) =>
 );
 
 export default function StaffSchedule() {
-  const [events, setEvents] = useState(initialEvents);
+  const [events, setEvents] = useState([]);
   const [selectedDept, setSelectedDept] = useState("All");
   const [selectedStaff, setSelectedStaff] = useState("All");
 
@@ -120,6 +120,10 @@ export default function StaffSchedule() {
     });
     saveAs(blob, "staff_schedule.xlsx");
   };
+
+  useEffect(() => {
+    setEvents(initialEvents);
+  }, []);
 
   const departmentStaff =
     selectedDept === "All"

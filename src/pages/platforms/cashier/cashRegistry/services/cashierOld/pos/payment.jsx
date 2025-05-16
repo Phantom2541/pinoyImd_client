@@ -71,14 +71,6 @@ export default function CashierPayment({
   const handleSales = (authorizedBy) => {
     const net = gross - discount,
       _payment = payment || paymentOptions[0];
-    // d = new Date(),
-    // y = d.getFullYear(),
-    // m = d.getMonth(),
-    // a = d.getDate(),
-    // h = d.getHours(),
-    // t = d.getMinutes(),
-    // s = d.getSeconds(),
-    // mil = d.getMilliseconds();
     const selectedMenus = [...cart].filter(({ isNew }) => isNew);
     const _department = [
       ...new Set(selectedMenus.flatMap((item) => item.department)),
@@ -99,7 +91,6 @@ export default function CashierPayment({
       discount,
       department,
       isPickup: !isDeliver,
-      // createdAt: `${y}-${m + 1}-${a}T${h}:${t}:${s}.${mil}+0800`,
       cart: cart.map((menu) => {
         const {
             description,
@@ -157,16 +148,10 @@ export default function CashierPayment({
     );
   };
 
-  // const handleDiscountValidation = () => {
-  //   //console.log("here");
-  // };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const balance = cash - (gross - discount);
-
-    // if (privilegeIndex === 4) return handleDiscountValidation();
 
     if (balance < 0)
       return Swal.fire({
@@ -175,16 +160,7 @@ export default function CashierPayment({
         text: "Payment received is less than the total amount due.",
       });
 
-    // if (balance > 0)
-    //   Swal.fire({
-    //     icon: "info",
-    //     title: `Change: ${currency(balance)}`,
-    //     text: "Please return the change to the customer.",
-    //   });
-
     handleSales();
-
-    // dispatch(SetMODAL(false));
   };
 
   return (

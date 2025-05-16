@@ -30,6 +30,7 @@ const initialState = {
   censusLoading: false, // dedicated loader for celsus
   message: "",
   vendor: undefined,
+  onPrint: false,
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -44,6 +45,25 @@ export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
+
+export const HUNDREDDATA = createAsyncThunk(
+  `${url}/showFormsByDepartment`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/showFormsByDepartment`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const VOUCHERS = createAsyncThunk(
   `${url}/vouchers`,
   ({ token, key }, thunkAPI) => {
@@ -193,6 +213,29 @@ export const GENERATE_SOA = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(url, data, token, "generate_soa");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const UPDATE100DATA = createAsyncThunk(
+  `${url}/updateFormsByDepartment`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(
+        url,
+        form.data,
+        form.token,
+        "updateFormsByDepartment"
+      );
     } catch (error) {
       const message =
         (error.response &&
@@ -630,6 +673,11 @@ export const reduxSlice = createSlice({
       state.month = today.getMonth() + 1;
       state.year = today.getFullYear();
     },
+    SetPrinting: (state, { payload }) => {
+      const { status, selected } = payload;
+      state.onPrint = status;
+      state.selected = { ...selected };
+    },
   },
   /**
    * Handles extra actions not handled by the reducer itself.
@@ -724,6 +772,22 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(HUNDREDDATA.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(HUNDREDDATA.fulfilled, (state, action) => {
+        const { data, success } = action.payload;
+        state.collections = data;
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(HUNDREDDATA.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
       .addCase(OUTSOURCES.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -778,7 +842,25 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(UPDATE100DATA.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE100DATA.fulfilled, (state, action) => {
+        const { success, data } = action.payload;
 
+        state.collections = data;
+
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE100DATA.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
       .addCase(MANAGERUPDATE.pending, (state) => {
         state.formSubmitted = true;
         state.isSuccess = false;
@@ -1127,6 +1209,7 @@ export const {
   SetMONTH,
   RESET,
   ResetDATE,
+  SetPrinting,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
