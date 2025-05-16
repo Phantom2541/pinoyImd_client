@@ -49,7 +49,11 @@ export default function Census() {
           const serviceCountMap = {};
           const paymentSummary = {};
 
-          setGross(deals.reduce((acc, item) => acc + item.amount, 0));
+          setGross(
+            deals
+              .filter((item) => !item.deletedAt)
+              .reduce((acc, item) => acc + item.amount, 0)
+          );
 
           deals.forEach(({ cart, amount, payment }) => {
             if (payment && amount) {

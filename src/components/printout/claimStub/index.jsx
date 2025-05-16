@@ -99,7 +99,7 @@ const Stub = ({ sale }) => {
                   {description || abbreviation}
                   {packages.length > 1 &&
                     packages.map((id, index) => {
-                      //console.log(packages);
+                      console.log(id);
                       const { name, abbreviation } = Services.find(id);
 
                       return (
@@ -107,7 +107,7 @@ const Stub = ({ sale }) => {
                           key={`package-${index}`}
                           className="ml-4 stub-item"
                         >
-                          -{abbreviation || name}
+                          -{abbreviation || name || ""}
                         </div>
                       );
                     })}
