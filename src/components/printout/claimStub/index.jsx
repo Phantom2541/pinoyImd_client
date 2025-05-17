@@ -115,14 +115,17 @@ export default function ClaimStub() {
                   {description || abbreviation}
                   {packages.length > 1 &&
                     packages.map((id, index) => {
-                      const { name, abbreviation } = Services.find(id);
-
+                      const service = Services.find(id);
+                      if (!service) {
+                        return null;
+                      }
+                      const { name, abbreviation } = service;
                       return (
                         <div
                           key={`package-${index}`}
                           className="ml-4 stub-item"
                         >
-                          -{abbreviation || name}
+                          -{abbreviation || name || ""}
                         </div>
                       );
                     })}
