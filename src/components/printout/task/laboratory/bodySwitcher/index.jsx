@@ -1,5 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useRef } from "react";
 import Hematology from "./hematology";
 import Urinalysis from "./urinalysis";
 import Chemistry from "./chemistry";
@@ -27,16 +26,7 @@ const componentMap = {
   pbs: Pbs,
 };
 
-export default function BodySwitcher() {
-  const { selected } = useSelector(({ deals }) => deals),
-    [task, setTask] = useState({ _id: "" });
-
-  useEffect(() => {
-    if (selected) {
-      setTask(selected);
-    }
-  }, [selected]);
-
+export default function BodySwitcher({ task }) {
   const contentRef = useRef(null);
   const Component = componentMap[task.form?.toLowerCase()] || Blank;
   return (

@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import Header from "./header";
 import { Banner } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
 import Signatories from "./signatories";
 import "../../printout.css";
 
-const Printout = () => {
-  const { selected } = useSelector(({ deals }) => deals),
-    [task, setTask] = useState({ _id: "" });
-  console.log("task", task);
-
-  useEffect(() => {
-    if (selected) {
-      setTask(selected);
-    }
-  }, [selected]);
+const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
   return (
     <div className="print-container position-relative" id="printableArea">

@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import {
   getAge,
   fullName as nameFormatter,
@@ -8,18 +6,7 @@ import { MDBRow, MDBCol, MDBAlert } from "mdbreact";
 import { Categories } from "../../../../services/fakeDb";
 import { formColor } from "../../../../services/utilities";
 
-export default function Header() {
-  const { selected } = useSelector(({ deals }) => deals),
-    [task, setTask] = useState({ _id: "" });
-
-  console.log("Header :", task);
-
-  useEffect(() => {
-    if (selected) {
-      setTask(selected);
-    }
-  }, [selected]);
-
+export default function Header({ task }) {
   const { category, patient = {}, source, referral, form, updatedAt } = task;
   const { fullName: pFull, isMale = false, dob = "", _id } = patient;
   const categoryWidth = source && referral ? "30%" : "64.2%";

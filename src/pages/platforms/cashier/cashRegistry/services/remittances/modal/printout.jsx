@@ -12,6 +12,7 @@ import { SetPrinting } from "./../../../../../../../services/redux/slices/financ
 export default function Modal() {
   const { onPrint } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
+
   const handleClose = () => dispatch(SetPrinting({ status: false }));
 
   const printDiv = () => {
