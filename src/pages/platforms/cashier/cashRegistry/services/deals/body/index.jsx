@@ -15,7 +15,6 @@ import {
   SetFILTERED,
   RESET,
   SetSELECTED,
-  SetPrinting,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 import { Input, Select } from "../../../../../../../components/customizable";

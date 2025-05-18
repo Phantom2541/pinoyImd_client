@@ -44,16 +44,19 @@ export default function Modal() {
   const getIDS = (collections) => collections.map(({ id }) => id);
   const saveRequest = async (template, data, isStaticPath = false) => {
     try {
-      const _department = ["Laboratory", "Radiology"].includes(
-        activePlatform.department
-      )
-        ? activePlatform.department
-        : "clinic"; // default fallback just in case
+      console.log("data", template);
+      console.log("data", data);
+      console.log("data", isStaticPath);
 
-      const url = isStaticPath
-        ? template
-        : `/diagnostics/${_department.toLowerCase()}/result/${template}`;
-      await axioKit.save(url, data, token);
+      // const _department = ["Laboratory", "Radiology"].includes(
+      //   activePlatform.department
+      // )
+      //   ? activePlatform.department
+      //   : "clinic"; // default fallback just in case
+      // const url = isStaticPath
+      //   ? template
+      //   : `/diagnostics/${_department.toLowerCase()}/result/${template}`;
+      // await axioKit.save(url, data, token);
     } catch (error) {
       console.error("Error saving request:", error);
     }
@@ -101,6 +104,8 @@ export default function Modal() {
         ),
       ],
     };
+    console.log("oldForms", oldForms);
+    console.log("forms", forms);
 
     for (const key in _forms) {
       const lowercaseKey = key.toLowerCase();
@@ -161,54 +166,47 @@ export default function Modal() {
     }
 
     if (inhouse.length > 0) {
-      dispatch(
-        SetPrinting({
-          status: true,
-          form: "inhouse",
-          selected: { deal, forms: { ..._forms } },
-        })
+      window.open(
+        "/printout/request/form",
+        "RequestForm",
+        "top=100px,left=100px,width=1050px,height=750px"
       );
-
-      // window.open(
-      //   "/printout/request/form",
-      //   "RequestForm",
-      //   "top=100px,left=100px,width=1050px,height=750px"
-      // );
     }
 
     const haveOutSource =
       outsource.length > 0 && (outSourceId || department === "RAD");
+    console.log("haveOutSource", haveOutSource);
 
-    if (haveOutSource) {
-      window.open(
-        "/printout/request/outsource",
-        "OutsourceRequestForm",
-        "top=100px,left=0px,width=1050px,height=750px"
-      );
+    // if (haveOutSource) {
+    //   window.open(
+    //     "/printout/request/outsource",
+    //     "OutsourceRequestForm",
+    //     "top=100px,left=0px,width=1050px,height=750px"
+    //   );
 
-      if (department !== "RAD") {
-        await saveRequest(
-          `/commerce/pos/services/dealOutSources`,
-          {
-            _id: deal._id,
-            servicesId: _outsource,
-          },
-          true
-        );
-      } else {
-        const officialReadingXray = _outsource;
-        officialReadingXray.map(
-          async (test) =>
-            await saveRequest("x-ray", {
-              dealId: _id,
-              packages: test,
-              hasRead: true,
-              customerId: customerId?._id,
-              branchId: activePlatform.branchId,
-            })
-        );
-      }
-    }
+    //   if (department !== "RAD") {
+    //     await saveRequest(
+    //       `/commerce/pos/services/dealOutSources`,
+    //       {
+    //         _id: deal._id,
+    //         servicesId: _outsource,
+    //       },
+    //       true
+    //     );
+    //   } else {
+    //     const officialReadingXray = _outsource;
+    //     officialReadingXray.map(
+    //       async (test) =>
+    //         await saveRequest("x-ray", {
+    //           dealId: _id,
+    //           packages: test,
+    //           hasRead: true,
+    //           customerId: customerId?._id,
+    //           branchId: activePlatform.branchId,
+    //         })
+    //     );
+    //   }
+    // }
 
     const data = {
       _id,
@@ -224,13 +222,14 @@ export default function Modal() {
       forms,
       ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
     };
+    console.log("data", data);
 
-    dispatch(
-      REFORM({
-        token,
-        data,
-      })
-    );
+    // dispatch(
+    //   REFORM({
+    //     token,
+    //     data,
+    //   })
+    // );
     dispatch(TOGGLE());
   };
 

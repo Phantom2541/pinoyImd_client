@@ -128,7 +128,7 @@ export default function SideNavigation({
             style={{ width: "150px", height: "65px" }}
           />
           <div className="mt-2 text-dark" style={{ fontWeight: 500 }}>
-            {activePlatform?.branch?.company || company.name}
+            {activePlatform?.branch?.company || company?.name}
           </div>
         </div>
         <hr />
