@@ -8,7 +8,6 @@ const Sales = () => {
     const today = new Date().toISOString().split("T")[0];
     const query = {
       date: today,
-      branchId: localStorage.getItem("branchId"),
     };
     fetch("/api/deals", {
       method: "POST",
