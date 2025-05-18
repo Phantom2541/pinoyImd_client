@@ -16,7 +16,6 @@ import {
   Onboard,
   Tasks,
   Reports,
-  // OldData,
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import { Menus, Services } from "../../../pages/platforms/cashier";
@@ -40,7 +39,7 @@ import {
 
 const frontdesk = [
   {
-    name: "bulletin board",
+    name: "Bulletin Board",
     icon: "tachometer-alt",
     path: "/bulletin",
     component: Dashboard,
@@ -52,42 +51,42 @@ const frontdesk = [
     children: [
       {
         name: "Onboarding",
-        path: "/onboarding",
+        path: "/diagnostics/onboarding",
         icon: "tv",
         component: Onboard,
       },
       {
         name: "Tasks",
-        path: "/task",
+        path: "/diagnostics/tasks",
         icon: "clipboard-list",
         component: Tasks,
       },
       {
         name: "Tracker",
-        path: "/reports",
+        path: "/diagnostics/reports",
         icon: "file-alt",
         component: Reports,
       },
       {
         name: "Quality Management",
         icon: "tv",
-        path: "/quality",
+        path: "/diagnostics/quality",
         children: [
           {
-            name: "Quality Assurance(QA)",
-            path: "/management/external",
+            name: "Quality Assurance (QA)",
+            path: "/diagnostics/quality/external",
             icon: "check-circle",
             component: Assurance,
           },
           {
-            name: "Quality Control(QC)",
-            path: "/management/internal",
+            name: "Quality Control (QC)",
+            path: "/diagnostics/quality/internal",
             icon: "balance-scale",
             component: Controls,
           },
           {
             name: "Temperature",
-            path: "/temperature",
+            path: "/diagnostics/quality/temperature",
             icon: "thermometer-half",
             component: Temperature,
           },
@@ -102,16 +101,13 @@ const frontdesk = [
     children: [
       {
         name: "Logbook",
-        path: "/logbook",
-        title: "stocks",
+        path: "/outsource/logbook",
         icon: "balance-scale",
         component: SOA,
       },
-
       {
         name: "Billing",
-        path: "/billing",
-        title: "stocks",
+        path: "/outsource/billing",
         icon: "file-invoice",
         component: Billings,
       },
@@ -124,182 +120,185 @@ const frontdesk = [
     children: [
       {
         name: "Request",
-        path: "/request",
+        path: "/purchases/request",
         icon: "shopping-cart",
+        // component: RequestComponent, // add your component here
       },
       {
         name: "Received",
-        path: "/received",
+        path: "/purchases/received",
         icon: "truck-loading",
+        // component: ReceivedComponent, // add your component here
       },
       {
         name: "Completed",
-        path: "/completed",
+        path: "/purchases/completed",
         icon: "check-circle",
+        // component: CompletedComponent, // add your component here
       },
     ],
   },
   {
     name: "Merchandise",
     path: "/merchandise",
-    icon: "list",
+    icon: "boxes",
     children: [
       {
         name: "Products",
-        path: "/products",
-        icon: "cogs",
+        path: "/merchandise/products",
+        icon: "tags",
+        component: Products,
       },
       {
         name: "Machines",
-        path: "/machines",
+        path: "/merchandise/machines",
         icon: "laptop-code",
+        // component: MachinesComponent, // add your component here
       },
       {
         name: "Stocks",
-        path: "/stocks",
+        path: "/merchandise/stocks",
         icon: "box",
+        // component: StocksComponent, // add your component here
       },
     ],
   },
   {
     name: "Reports",
     path: "/reports",
-    icon: "cogs",
+    icon: "file-alt",
     children: [
       {
-        name: "laboratory",
-        path: "/laboratory",
-        icon: "books",
+        name: "Laboratory",
+        path: "/reports/laboratory",
+        icon: "flask",
         children: [
           {
             name: "Chemistry",
-            path: "/chemistry",
+            path: "/reports/laboratory/chemistry",
             icon: "flask",
             component: Chemistry,
           },
           {
             name: "Electrolytes",
-            path: "/Electrolyte",
+            path: "/reports/laboratory/electrolytes",
             icon: "vials",
             component: Electrolyte,
           },
           {
             name: "Hematology",
-            path: "/hematology",
+            path: "/reports/laboratory/hematology",
             icon: "blood",
             component: Hematology,
           },
           {
             name: "Urinalysis",
-            path: "/urinalysis",
+            path: "/reports/laboratory/urinalysis",
             icon: "toilet-paper",
             component: Urinalysis,
           },
           {
             name: "Fecalysis",
-            path: "/fecalysis",
+            path: "/reports/laboratory/fecalysis",
             icon: "smile",
             component: Fecalysis,
           },
           {
             name: "Serology",
-            path: "/serology",
+            path: "/reports/laboratory/serology",
             icon: "microscope",
             component: Serology,
           },
           {
             name: "Miscellaneous",
-            path: "/miscellaneous",
+            path: "/reports/laboratory/miscellaneous",
             icon: "list",
+            // component: MiscellaneousComponent, // add your component here
           },
         ],
       },
       {
         name: "Radiology",
-        path: "/radiology",
-        icon: "list",
+        path: "/reports/radiology",
+        icon: "x-ray",
         children: [
           {
             name: "ECG",
-            path: "/ecg",
+            path: "/reports/radiology/ecg",
             icon: "heartbeat",
             component: Ecg,
           },
           {
             name: "Ultrasound",
-            path: "/ultrasound",
+            path: "/reports/radiology/ultrasound",
             icon: "user-md",
             component: Ultrasound,
           },
           {
             name: "Xray",
-            path: "/xray",
-            icon: "user-md",
+            path: "/reports/radiology/xray",
+            icon: "x-ray",
             component: Xray,
           },
           {
             name: "CT",
-            path: "/ct",
+            path: "/reports/radiology/ct",
             icon: "user-md",
+            // component: CtComponent, // add your component here
           },
           {
             name: "MRI",
-            path: "/mri",
+            path: "/reports/radiology/mri",
             icon: "user-md",
+            // component: MriComponent, // add your component here
           },
         ],
       },
     ],
   },
   {
-    name: "Catalogs", //viewing only
+    name: "Catalogs",
     path: "/offers",
     icon: "list",
     children: [
-      /**
-       * a group of related services
-       */
       {
         name: "Menus",
-        path: "/menus",
+        path: "/offers/menus",
         icon: "bars",
         component: Menus,
       },
-      /**
-       *  a single service
-       */
       {
         name: "Services",
-        path: "/services",
+        path: "/offers/services",
         icon: "list",
         component: Services,
       },
       {
         name: "Products",
-        path: "/products",
+        path: "/offers/products",
         icon: "cogs",
         component: Products,
       },
       {
         name: "Consumables",
         icon: "tv",
-        path: "/consumables",
+        path: "/offers/consumables",
         children: [
           {
             name: "Preanalytical",
-            path: "/preanalytical",
+            path: "/offers/consumables/preanalytical",
             icon: "check-circle",
             component: Assurance,
           },
           {
             name: "Analytical",
-            path: "Analytical",
+            path: "/offers/consumables/analytical",
             icon: "balance-scale",
             component: Controls,
           },
           {
             name: "Postanalytical",
-            path: "/postanalytical",
+            path: "/offers/consumables/postanalytical",
             icon: "thermometer-half",
             component: Temperature,
           },
@@ -307,49 +306,46 @@ const frontdesk = [
       },
     ],
   },
-  /**
-   * For refereces of new components
-   */
   {
-    name: "Templates ",
-    path: "/templates ",
+    name: "Templates",
+    path: "/templates",
     icon: "list",
     children: [
       {
         name: "Tables",
-        path: "/tables",
+        path: "/templates/tables",
         icon: "list",
         component: Tablestemplate,
       },
       {
         name: "Collapsables",
-        path: "/collapsables",
+        path: "/templates/collapsables",
         icon: "align-justify",
         component: Collapsable,
       },
       {
         name: "Calendars",
-        path: "/calendars",
+        path: "/templates/calendars",
         icon: "calendar-alt",
         component: Calendar,
       },
       {
         name: "DragDrop",
-        path: "/DragDrop",
+        path: "/templates/dragdrop",
         icon: "drag",
         component: DragDrop,
       },
       {
         name: "Search",
-        path: "/search",
+        path: "/templates/search",
         icon: "search",
         component: Search,
       },
       {
         name: "Cards",
-        path: "/card",
+        path: "/templates/cards",
         icon: "card",
-        // component: Card,
+        // component: Card, // add your component here
       },
     ],
   },
