@@ -12,6 +12,7 @@ const colors = [
     "Dark Brown (Healthy)",
     "Brown",
     "Light Brown",
+    "Dark Yellow",
     "Yellow",
     "Reddish",
     "Greenish",
@@ -43,7 +44,7 @@ export default function Physical({ task, setTask }) {
     <MDBRow>
       <MDBCol md="6">
         <MDBSelect
-          getValue={e => handleSelectChange(0, Number(e[0]))}
+          getValue={(e) => handleSelectChange(0, Number(e[0]))}
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
@@ -61,7 +62,7 @@ export default function Physical({ task, setTask }) {
       </MDBCol>
       <MDBCol md="6">
         <MDBSelect
-          getValue={e => handleSelectChange(1, Number(e[0]))}
+          getValue={(e) => handleSelectChange(1, Number(e[0]))}
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
