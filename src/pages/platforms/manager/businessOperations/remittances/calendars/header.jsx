@@ -28,8 +28,8 @@ const Header = () => {
   useEffect(() => {
     if (deals) {
       const totalSales = deals
-        .filter((item) => !item.deleted)
-        .reduce((acc, item) => acc + item.amount, 0);
+        .filter(({ deletedAt }) => !deletedAt)
+        .reduce((acc, { amount }) => acc + amount, 0);
       setSum(totalSales);
     }
   }, [deals]);
@@ -37,15 +37,15 @@ const Header = () => {
   useEffect(() => {
     if (remittances) {
       const totalRemitted = remittances
-        .filter((item) => !item.deleted)
+        .filter((item) => !item.deletedAt)
         .reduce((acc, item) => acc + (item?.coh - item?.opening?.sum), 0);
 
       const totalExpenses = remittances
-        .filter((item) => !item.deleted)
+        .filter((item) => !item.deletedAt)
         .reduce((acc, item) => acc + (item?.expenses || 0), 0);
 
       const totalNonCash = remittances
-        .filter((item) => !item.deleted)
+        .filter((item) => !item.deletedAt)
         .reduce((acc, item) => {
           const {
             gcash = 0,

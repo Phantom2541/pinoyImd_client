@@ -1,7 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
+import { useSelector } from "react-redux";
+import { currency, axioKit } from "../../../../../services/utilities";
 
 const Insources = () => {
+  const [currentMonthSales, setCurrentMonthSales] = useState(0);
+  const [lastMonthSales, setLastMonthSales] = useState(0);
+
+  const { activePlatform, auth, token } = useSelector(({ auth }) => auth);
+
+  useEffect(() => {
+    const today = new Date();
+    const month = today.getMonth();
+    const year = today.getFullYear();
+
+    const queryCurrentMonth = {
+      cashier: auth._id,
+      branch: activePlatform.branchId,
+      month: month + 1,
+      year,
+    };
+
+    const queryLastMonth = {
+      cashier: auth._id,
+      branch: activePlatform.branchId,
+      month: month === 0 ? 11 : month,
+      year: month === 0 ? year - 1 : year,
+    };
+
+    // Fetch Current Month Sales
+    axioKit
+      .universal(
+        `finance/bookkeeping/remittances/bulletin`,
+        token,
+        queryCurrentMonth
+      )
+      .then((res) => setCurrentMonthSales(res.totalSales || 0))
+      .catch((err) => console.log(err.message));
+
+    // Fetch Last Month Sales
+    axioKit
+      .universal(
+        `finance/bookkeeping/remittances/bulletin`,
+        token,
+        queryLastMonth
+      )
+      .then((res) => setLastMonthSales(res.totalSales || 0))
+      .catch((err) => console.log(err.message));
+  }, [activePlatform, auth, token]);
+
   return (
     <MDBCol xl="3" md="6" className="mb-4 mb-r">
       <MDBCard>
@@ -19,18 +66,21 @@ const Insources = () => {
             </MDBBtn>
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
-            <h5 className="ml-4 mt-4 mb-2 font-weight-bold">6,512 </h5>
-            <p className="font-small grey-text">Total Sales</p>
+            <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
+              {currency(currentMonthSales)}
+            </h5>
+            <p className="font-small grey-text">Current Sales</p>
           </MDBCol>
         </MDBRow>
+
         <MDBRow className="my-3">
           <MDBCol md="7" col="7" className="text-left pl-4">
             <p className="font-small dark-grey-text font-up ml-4 font-weight-bold">
-              Last month
+              Last Month
             </p>
           </MDBCol>
           <MDBCol md="5" col="5" className="text-right pr-5">
-            <p className="font-small grey-text">145,567</p>
+            <p className="font-small grey-text"> {currency(lastMonthSales)}</p>
           </MDBCol>
         </MDBRow>
       </MDBCard>
