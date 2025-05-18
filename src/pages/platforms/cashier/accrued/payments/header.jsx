@@ -13,7 +13,7 @@ import { currency } from "../../../../../services/utilities";
 
 export default function TopHeader() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { month, year, filtered } = useSelector(({ payments }) => payments),
+    { month, year, collections } = useSelector(({ payments }) => payments),
     [total, setTotal] = useState(0),
     dispatch = useDispatch();
 
@@ -33,15 +33,15 @@ export default function TopHeader() {
     // return () => dispatch(RESET());
   }, [token, activePlatform, year, month, dispatch]);
   useEffect(() => {
-    if (filtered.length > 0) {
-      const total = filtered.reduce((acc, payment) => {
+    if (collections.length > 0) {
+      const total = collections.reduce((acc, payment) => {
         return acc + payment.amount;
       }, 0);
       setTotal(total);
     } else {
       setTotal(0);
     }
-  }, [filtered]);
+  }, [collections]);
   const handleCategories = (categories) => {
     dispatch(SetFILTERByCategories(categories));
     // console.log(categories);
