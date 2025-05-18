@@ -25,7 +25,7 @@ export default function DiffCount({ dc, style }) {
         </tr>
       </thead>
       <tbody>
-        {Object.values(dc)?.map((diff, index) => {
+        {Object.values(dc).map((diff, index) => {
           const category = Category[index],
             { lo, hi } = Preferences.differentials[category],
             color = diff < lo ? "blue" : diff > hi && "red";

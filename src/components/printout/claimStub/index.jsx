@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import {
   billingAddress,
   capitalize,
   currency,
 } from "../../../services/utilities";
-import { Privileges, Services } from "../../../services/fakeDb";
+import { Developer, Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
-import Footer from "./footer";
 
 const Hr = () => (
   <hr
@@ -41,32 +39,20 @@ const Text = ({
   );
 };
 
-export default function ClaimStub() {
-  const { selected } = useSelector(({ deals }) => deals),
-    [sale, setSale] = useState(null);
-
-  useEffect(() => {
-    setSale(selected);
-  }, [selected]);
-
-  if (!sale) return <div>Loading...</div>; // Show loading if sale is not fetched yet
-
-  console.log(sale);
-
+const Stub = ({ sale }) => {
   const {
       _id,
       createdAt,
       payment,
-      customer = {},
+      customer,
       privilege,
       amount,
       cash,
       discount,
-      cashier = {},
+      cashier,
       cart = [],
     } = sale,
-    { fullName = {}, address } = customer,
-    { fname, lname } = cashier;
+    { fullName, address } = customer;
 
   return (
     <div
@@ -79,14 +65,13 @@ export default function ClaimStub() {
         fontSize: "20px",
         wordSpacing: "-1px",
       }}
-      className="text-center thermal-font claim-stub-printable"
-      id="printableArea"
+      className="text-center thermal-font"
     >
       <Header date={createdAt} dealId={_id} />
       <Text
         className="mt-2"
         title="Name"
-        value={capitalize(`${fullName?.fname} ${fullName?.lname}`)}
+        value={capitalize(`${fullName.fname} ${fullName.lname}`)}
       />
       <Text title="Address" value={billingAddress(address)} isAddress />
       {privilege !== 0 && (
@@ -97,14 +82,13 @@ export default function ClaimStub() {
         <thead>
           <tr>
             <th colSpan={2} className="py-0" style={{ fontSize: "17.5px" }}>
-              ITEMIZED SERVICES BILL
+              Services
             </th>
           </tr>
         </thead>
         <tbody>
           {cart?.map((menu, index) => {
-            const { description, abbreviation, packages = [], srp } = menu;
-            console.log("menu", menu);
+            const { description, abbreviation, packages = [], up } = menu;
 
             return (
               <tr key={`menu-${index}`}>
@@ -115,17 +99,15 @@ export default function ClaimStub() {
                   {description || abbreviation}
                   {packages.length > 1 &&
                     packages.map((id, index) => {
-                      const service = Services.find(id);
-                      if (!service) {
-                        return null;
-                      }
-                      const { name, abbreviation } = service;
+                      //console.log(packages);
+                      const { name, abbreviation } = Services.find(id);
+
                       return (
                         <div
                           key={`package-${index}`}
                           className="ml-4 stub-item"
                         >
-                          -{abbreviation || name || ""}
+                          -{abbreviation || name}
                         </div>
                       );
                     })}
@@ -134,7 +116,7 @@ export default function ClaimStub() {
                   style={{ fontSize: "17.5px" }}
                   className="text-right py-0 px-0 fw-bold"
                 >
-                  {currency(srp)}
+                  {currency(up)}
                 </td>
               </tr>
             );
@@ -142,25 +124,52 @@ export default function ClaimStub() {
         </tbody>
       </MDBTable>
       <Hr />
-      <Text title="SUBTOTAL" value={currency(amount + discount)} />
-      <Text title="DISCOUNT :" value={currency(discount)} />
-      <Hr />
-      <Text title="Total :" value={currency(amount)} />
+      <Text title="Total" value={currency(amount)} />
       <Text
-        title="TENDERED AMOUNT :"
+        title={capitalize(payment)}
         value={payment === "cash" ? currency(cash) : currency(amount)}
       />
-      <Text title="PAYMENT METHOD :" value={capitalize(payment)} />
-      <Hr />
+      <Text title="Discount" value={currency(discount)} />
       {payment === "cash" && (
-        <Text title="CHANGE" value={currency(cash - amount)} />
+        <Text title="Change" value={currency(cash - amount)} />
       )}
-      <br />
+      <Hr />
       <Text
-        title="CASHIER :"
-        value={capitalize(`${fname?.split(" ")[0]} ${lname}`)}
+        title="Cashier"
+        value={capitalize(`${cashier.fname.split(" ")[0]} ${cashier.lname}`)}
       />
-      <Footer />
+      <Hr />
+      <br />
+      <div className="mt-2">
+        I knowingly and voluntarily permit this Health Care Facility to perform
+        the above services and agree to pay the specified amount
+      </div>
+      <div className="mt-2 text-left d-flex">
+        Name<div className="w-100 border-bottom border-dark">:</div>
+      </div>
+      <div className="mt-2 text-left d-flex">
+        Relationship<div className="w-100 border-bottom border-dark">:</div>
+      </div>
+      <br />
+      <Hr />
+      <div className="mt-2">
+        THIS SHALL SERVE AS YOUR ACKNOWLEDGEMENT RECEIPT AND IS VALID FORs
+        <b> FIVE(5) </b>
+        DAYS
+      </div>
+      <img width={75} src={Developer.icon} alt="Developer Icon" />
     </div>
   );
+};
+
+export default function ClaimStub() {
+  const [sale, setSale] = useState({ _id: "" });
+
+  useEffect(() => {
+    setSale(JSON.parse(localStorage.getItem("claimStub")));
+  }, []);
+
+  if (sale?._id) return <Stub sale={sale} />;
+
+  return <div>Sale is Empty</div>;
 }

@@ -81,8 +81,14 @@ const Tables = () => {
 
   // Sample generateStub function
 
-  const handlePrintout = async (selected) =>
-    dispatch(SetPrinting({ status: true, selected: generateStub(selected) }));
+  const handlePrintout = async (selected) => {
+    localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
+    window.open(
+      "/printout/claimstub",
+      "Claim Stub",
+      "top=100px,left=150px,width=450px,height=850px"
+    );
+  };
 
   const handleCashRegister = (selected) => {
     dispatch(

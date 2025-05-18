@@ -52,7 +52,7 @@ export default function Chemistry({ task, fontSize }) {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(packages)?.map(([fk, value], index) => {
+        {Object.entries(packages).map(([fk, value], index) => {
           const { name, preference, references } = services?.find(
               ({ id }) => id === Number(fk)
             ),

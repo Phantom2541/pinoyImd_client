@@ -7,8 +7,9 @@ import "../../printout.css";
 
 const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
+
   return (
-    <div className="print-container position-relative" id="printableArea">
+    <div className="print-container position-relative">
       <Banner company={branchId.companyId.name} branch={branchId.name} />
       <div className="print-body">
         <Header task={task} />
