@@ -11,13 +11,13 @@ const OutSources = () => {
             <thead>
               <tr>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Keywords</strong>
+                  <strong>Outsorces</strong>
                 </th>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Visits</strong>
+                  <strong>Patient</strong>
                 </th>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Pages</strong>
+                  <strong>Amount</strong>
                 </th>
               </tr>
             </thead>

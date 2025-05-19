@@ -11,13 +11,13 @@ const InSources = () => {
             <thead>
               <tr>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Browser</strong>
+                  <strong>Insources</strong>
                 </th>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Visits</strong>
+                  <strong>Clients</strong>
                 </th>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Pages</strong>
+                  <strong>Amounts</strong>
                 </th>
               </tr>
             </thead>
