@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
 import { useSelector } from "react-redux";
+import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
 import { currency, axioKit } from "../../../../../services/utilities";
 
 const Insources = () => {
@@ -66,14 +66,14 @@ const Insources = () => {
               className="ml-4"
               style={{ padding: 0 }}
             >
-              <MDBIcon icon="dollar-sign" size="2x" />
+              <MDBIcon icon="eye" size="2x" />
             </MDBBtn>
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
             <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
               {currency(currentMonthSales)}
             </h5>
-            <p className="font-small grey-text">Current Sales</p>
+            <p className="font-small grey-text">Current Vouchers</p>
           </MDBCol>
         </MDBRow>
 

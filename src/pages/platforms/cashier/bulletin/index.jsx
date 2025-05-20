@@ -22,8 +22,8 @@ export default function Dashboard() {
       <section className="mb-4">
         <MDBRow>
           <Sales />
-          <OutSource />
           <InSource />
+          <OutSource />
           <Utilities />
         </MDBRow>
       </section>

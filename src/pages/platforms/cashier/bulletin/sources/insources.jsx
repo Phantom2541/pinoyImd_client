@@ -49,10 +49,13 @@ const Insources = () => {
             <thead>
               <tr>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>Insource</strong>
+                  <strong>Insources</strong>
                 </th>
                 <th className="font-weight-bold dark-grey-text">
-                  <strong>num of Patients</strong>
+                  <strong>Clients</strong>
+                </th>
+                <th className="font-weight-bold dark-grey-text">
+                  <strong>Amounts</strong>
                 </th>
               </tr>
             </thead>
