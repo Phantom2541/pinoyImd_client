@@ -1,8 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { MDBTable, MDBCard, MDBCardBody, MDBCol, MDBBtn } from "mdbreact";
+import { useSelector } from "react-redux";
+import { currency, axioKit } from "../../../../../services/utilities";
 
-const OutSources = () => {
+const Outsources = () => {
+  const [data, setData] = useState([]);
+
+  const { activePlatform, auth, token } = useSelector(({ auth }) => auth);
+
+  useEffect(() => {
+    const today = new Date();
+    const month = today.getMonth();
+    const year = today.getFullYear();
+
+    const queryCurrentMonth = {
+      cashier: auth._id,
+      branch: activePlatform.branchId,
+      month: month + 1,
+      year,
+    };
+
+    // const queryLastMonth = {
+    //   cashier: auth._id,
+    //   branch: activePlatform.branchId,
+    //   month: month === 0 ? 11 : month,
+    //   year: month === 0 ? year - 1 : year,
+    // };
+
+    // Fetch Current Month Sales
+    axioKit
+      .universal(
+        `/commerce/pos/services/deals/groupOutsource`,
+        token,
+        queryCurrentMonth
+      )
+      .then((res) => {
+        setData(res);
+      })
+      .catch((err) => console.log(err.message));
+  }, [activePlatform, auth, token]);
+
   return (
     <MDBCol lg="4" md="12">
       <MDBCard className="mb-4">
@@ -11,6 +49,7 @@ const OutSources = () => {
             <thead>
               <tr>
                 <th className="font-weight-bold dark-grey-text">
+<<<<<<< Updated upstream
                   <strong>Outsorces</strong>
                 </th>
                 <th className="font-weight-bold dark-grey-text">
@@ -18,30 +57,22 @@ const OutSources = () => {
                 </th>
                 <th className="font-weight-bold dark-grey-text">
                   <strong>Amount</strong>
+=======
+                  <strong>Outsource</strong>
+                </th>
+                <th className="font-weight-bold dark-grey-text">
+                  <strong>patients</strong>
+>>>>>>> Stashed changes
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Design</td>
-                <td>15</td>
-                <td>307</td>
-              </tr>
-              <tr>
-                <td>Bootstrap</td>
-                <td>32</td>
-                <td>504</td>
-              </tr>
-              <tr>
-                <td>MDBootstrap</td>
-                <td>41</td>
-                <td>613</td>
-              </tr>
-              <tr>
-                <td>Frontend</td>
-                <td>14</td>
-                <td>208</td>
-              </tr>
+              {data?.map((data, index) => (
+                <tr key={index}>
+                  <td>{data?.source}</td>
+                  <td>{data?.totalPatients}</td>
+                </tr>
+              ))}
             </tbody>
           </MDBTable>
           <MDBBtn
@@ -57,4 +88,4 @@ const OutSources = () => {
   );
 };
 
-export default OutSources;
+export default Outsources;

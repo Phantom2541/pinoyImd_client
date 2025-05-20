@@ -3,7 +3,7 @@ import { capitalize } from "../../../../../../services/utilities";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
-// import Modal from "./modal";
+import Modal from "../modal";
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
@@ -85,18 +85,18 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>
           <MDBBtnGroup>
-            {menu?.branchId === activePlatform?.branchId && (
-              <MDBBtn
-                title="Modal"
-                rounded
-                onClick={() => toggleModal()}
-                color={obj?.hasDone ? "info" : "primary"}
-                size="sm"
-                className="py-1 px-3 m-0"
-              >
-                <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
-              </MDBBtn>
-            )}
+            {/* {menu?.branchId === activePlatform?.branchId && ( */}
+            <MDBBtn
+              title="Modal"
+              rounded
+              onClick={() => toggleModal()}
+              color={obj?.hasDone ? "info" : "primary"}
+              size="sm"
+              className="py-1 px-3 m-0"
+            >
+              <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
+            </MDBBtn>
+            {/* )} */}
             {Array.isArray(obj?.signatories) &&
               obj.signatories.length >= 2 &&
               obj?.signatories[0] &&
@@ -163,7 +163,8 @@ export default function CollapseTable({ menu }) {
             })}
         </tbody>
       </MDBTable>
-      {/* onProcess <Modal toggle={toggleModal} title="Update Laboratory Task" /> */}
+      {/* onProcess */}
+      <Modal toggle={toggleModal} title="Update Laboratory Task" />
     </>
   );
 }
