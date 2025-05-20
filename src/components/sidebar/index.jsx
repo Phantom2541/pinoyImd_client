@@ -56,7 +56,6 @@ export default function SideNavigation({
       const platformKey = activePlatform?.platform
         ?.toLowerCase()
         .replace(/\s/g, "");
-      console.log(platformKey);
       setLinks(Sidebars[platformKey] || []);
     } else {
       setLinks(Sidebars["patron"] || []);

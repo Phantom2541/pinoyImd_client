@@ -14,8 +14,14 @@ import {
   SAVE,
   // UPDATE,
 } from "../../../../services/redux/slices/finance/journals/payments";
+
+import {
+  // PAYROLL,
+  TOGGLE,
+} from "../../../../services/redux/slices/assets/persons/personnels";
+
 // import { isEqual } from "lodash";
-import { currency } from "../../../../services/utilities";
+import { currency, fullName } from "../../../../services/utilities";
 
 // declare your expected items
 const _form = {
@@ -27,8 +33,11 @@ const _form = {
   loan: 0,
 };
 
-export default function Modal({ show, toggle, selected, willCreate }) {
+export default function Modal() {
   const { token, auth } = useSelector(({ auth }) => auth),
+    { selected, showModal, toggle, willCreate } = useSelector(
+      ({ personnels }) => personnels
+    ),
     [form, setForm] = useState(_form),
     [totDeduc, setTotDeduc] = useState(),
     [totEarn, setTotEarn] = useState(),
@@ -117,21 +126,22 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     willCreate ? form[key] : form[key] || selected[key];
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
+  const handleClose = () => dispatch(TOGGLE());
 
   return (
     <MDBModal
-      isOpen={show}
-      toggle={toggle}
+      isOpen={showModal}
+      toggle={handleClose}
       backdrop
       disableFocusTrap={false}
       size="lg"
     >
       <MDBModalHeader
-        toggle={toggle}
+        toggle={handleClose}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        Payroll
+        {fullName(selected?.user?.fullName)}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <MDBTable>
