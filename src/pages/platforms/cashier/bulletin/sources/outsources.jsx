@@ -49,20 +49,10 @@ const Outsources = () => {
             <thead>
               <tr>
                 <th className="font-weight-bold dark-grey-text">
-<<<<<<< Updated upstream
-                  <strong>Outsorces</strong>
-                </th>
-                <th className="font-weight-bold dark-grey-text">
-                  <strong>Patient</strong>
-                </th>
-                <th className="font-weight-bold dark-grey-text">
-                  <strong>Amount</strong>
-=======
                   <strong>Outsource</strong>
                 </th>
                 <th className="font-weight-bold dark-grey-text">
                   <strong>patients</strong>
->>>>>>> Stashed changes
                 </th>
               </tr>
             </thead>
