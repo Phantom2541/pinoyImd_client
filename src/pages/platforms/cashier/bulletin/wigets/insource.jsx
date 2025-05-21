@@ -21,14 +21,6 @@ const Insources = () => {
       year,
     };
 
-    // const queryLastMonth = {
-    //   cashier: auth._id,
-    //   branch: activePlatform.branchId,
-    //   month: month === 0 ? 11 : month,
-    //   year: month === 0 ? year - 1 : year,
-    // };
-
-    // Fetch Current Month Sales
     axioKit
       .universal(
         `finance/bookkeeping/remittances/widgets`,
@@ -38,19 +30,17 @@ const Insources = () => {
       .then((res) => {
         setCurrentMonthSales(res.current.totalSales || 0);
         setLastMonthSales(res.last.totalSales || 0);
+        localStorage.setItem(
+          "currentVouchers",
+          JSON.stringify(res.current.totalVouchers || 0)
+        );
+        localStorage.setItem(
+          "lastMonthVouchers",
+          JSON.stringify(res.last.totalVouchers)
+        );
         console.log(res);
       })
       .catch((err) => console.log(err.message));
-
-    // Fetch Last Month Sales
-    // axioKit
-    //   .universal(
-    //     `finance/bookkeeping/remittances/bulletin`,
-    //     token,
-    //     queryLastMonth
-    //   )
-    //   .then((res) => setLastMonthSales(res.totalSales || 0))
-    //   .catch((err) => console.log(err.message));
   }, [activePlatform, auth, token]);
 
   return (

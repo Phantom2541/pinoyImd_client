@@ -1,61 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
-import { currency, axioKit } from "../../../../../services/utilities";
+import { currency } from "../../../../../services/utilities";
 
 const Sales = () => {
-  const [currentMonthSales, setCurrentMonthSales] = useState(0);
-  const [lastMonthSales, setLastMonthSales] = useState(0);
-  const [currentVouchers, setCurrentVouchers] = useState(0);
-  const [lastVouchers, setLastVouchers] = useState(0);
-
-  const { activePlatform, auth, token } = useSelector(({ auth }) => auth);
-
-  useEffect(() => {
-    const today = new Date();
-    const month = today.getMonth(); // 0-based
-    const year = today.getFullYear();
-
-    const query = {
-      cashier: auth._id,
-      branch: activePlatform.branchId,
-      month: month + 1,
-      year,
-    };
-
-    const cacheKey = `bulletin-${query.cashier}-${query.branch}-${query.month}-${query.year}`;
-
-    const fetchSalesData = async () => {
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        const data = JSON.parse(cached);
-        setCurrentMonthSales(data.current.totalSales || 0);
-        setLastMonthSales(data.last.totalSales || 0);
-        setCurrentVouchers(data.current.totalVouchers || 0);
-        setLastVouchers(data.last.totalVouchers || 0);
-        return;
-      }
-
-      try {
-        const res = await axioKit.universal(
-          `finance/bookkeeping/remittances/bulletin`,
-          token,
-          query
-        );
-
-        setCurrentMonthSales(res.current.totalSales || 0);
-        setLastMonthSales(res.last.totalSales || 0);
-        setCurrentVouchers(res.current.totalVouchers || 0);
-        setLastVouchers(res.last.totalVouchers || 0);
-
-        localStorage.setItem(cacheKey, JSON.stringify(res));
-      } catch (err) {
-        console.error(err.message);
-      }
-    };
-
-    fetchSalesData();
-  }, [activePlatform, auth, token]);
+  const currentMonthVouchers = localStorage.getItem("currentVouchers");
+  const lastMonthVouchers = localStorage.getItem("lastMonthVouchers");
 
   return (
     <MDBCol xl="3" md="6" className="mb-4 mb-r">
@@ -75,21 +23,23 @@ const Sales = () => {
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
             <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
-              {currency(currentMonthSales)}
+              {currency(Number(lastMonthVouchers))}
             </h5>
-            <p className="font-small grey-text">Current Sales</p>
+            <p className="font-small grey-text">Last Month</p>
           </MDBCol>
         </MDBRow>
-        <MDBRow className="mb-1">
+        {/* <MDBRow className="mb-1">
           <MDBCol md="7" col="7" className="text-left pl-4">
             <p className="font-small dark-grey-text font-up ml-4 font-weight-bold">
               Last Month
             </p>
           </MDBCol>
           <MDBCol md="5" col="5" className="text-right pr-5">
-            <p className="font-small grey-text">{currency(lastMonthSales)}</p>
+            <p className="font-small grey-text">
+              {currency(Number(lastMonthVouchers))}
+            </p>
           </MDBCol>
-        </MDBRow>
+        </MDBRow> */}
         <MDBRow className="pb-3">
           <MDBCol md="7" col="7" className="text-left pl-4">
             <p className="font-small dark-grey-text font-up ml-4 font-weight-bold">
@@ -97,7 +47,9 @@ const Sales = () => {
             </p>
           </MDBCol>
           <MDBCol md="5" col="5" className="text-right pr-5">
-            <p className="font-small grey-text">{currency(currentVouchers)}</p>
+            <p className="font-small grey-text">
+              {currency(Number(currentMonthVouchers))}
+            </p>
           </MDBCol>
         </MDBRow>
       </MDBCard>
