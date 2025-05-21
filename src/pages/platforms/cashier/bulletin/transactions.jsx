@@ -37,8 +37,8 @@ const barChartData = {
   labels: ["January", "February", "March", "April", "May"],
   datasets: [
     {
-      label: "# of Votes",
-      data: [12, 19, 3, 5, 2],
+      label: "Monthly Sales",
+      data: [124000, 191000, 12000, 55000, 72000],
       backgroundColor: [
         "rgba(255, 99, 132, 0.2)",
         "rgba(54, 162, 235, 0.2)",
@@ -102,7 +102,7 @@ const Transactions = () => {
             cascade
             className="gradient-card-header light-blue lighten-1"
           >
-            <h4 className="h4-responsive mb-0 font-weight-bold">Traffic</h4>
+            <h4 className="h4-responsive mb-0 font-weight-bold">SALES</h4>
           </MDBView>
           <MDBCardBody cascade className="pb-3">
             <MDBRow className="pt-3 card-body">
