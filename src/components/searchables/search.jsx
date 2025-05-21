@@ -20,14 +20,21 @@ export default function Search({
   }, [hideButton]);
   const debouncedSearch = useMemo(() => {
     return debounce((key) => {
+      console.log("key", key);
+      console.log("collections", collections);
+
       const items = globalSearch(collections, key);
-      if (hideButton && items.length === 0) setShowBtn(true);
-      if (hideButton && items.length > 0) setShowBtn(false);
-      setFiltered(items);
+      // if (hideButton && items.length === 0) setShowBtn(true);
+      // if (hideButton && items.length > 0) setShowBtn(false);
+      console.log("items", items);
+
+      // setFiltered(items);
     }, 300);
   }, [collections, setFiltered, hideButton]);
 
   const handleChange = (value) => {
+    console.log("value", value);
+
     if (!value) {
       debouncedSearch.cancel();
       if (hideButton) setShowBtn(false);

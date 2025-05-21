@@ -4,12 +4,13 @@ import { MDBView } from "mdbreact";
 import {
   TASKS,
   RESET,
+  SetFILTERED,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { Search as SEARCH } from "../../../../../components/searchables";
 
 const Headers = ({ searchKey }) => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ validator }) => validator),
+    { filtered } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
   //Initial Browse
@@ -40,11 +41,17 @@ const Headers = ({ searchKey }) => {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <span className="white-text mx-3">
-        {collections.length}&nbsp;
+        {filtered.length}&nbsp;
         {searchKey ? `Matches with ${searchKey}` : "Onboarding Tasks"}
       </span>
       <div className="text-right">
-        <SEARCH />
+        {console.log("filtered", filtered)}
+        <SEARCH
+          collection={filtered}
+          setFiltered={(items) => dispatch(SetFILTERED(items))}
+          reset={() => dispatch(SetFILTERED(filtered))}
+          haveAction={false}
+        />
       </div>
     </MDBView>
   );
