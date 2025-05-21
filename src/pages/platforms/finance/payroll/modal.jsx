@@ -128,6 +128,7 @@ export default function Modal() {
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
   const handleClose = () => dispatch(TOGGLE());
 
+  console.log("selected", selected);
   return (
     <MDBModal
       isOpen={showModal}

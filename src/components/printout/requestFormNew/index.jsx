@@ -4,6 +4,7 @@ import {
   Chemistry,
   Hematology,
   Urinalysis,
+  Miscellaneous,
   Parasitology,
   Serology,
 } from "./logs";
@@ -15,6 +16,7 @@ const formComponents = {
   Hematology,
   Urinalysis,
   Parasitology,
+  Miscellaneous,
   Serology,
 };
 
@@ -106,7 +108,7 @@ export default function TaskPrintout() {
     const { forms, deal } = JSON.parse(localStorage.getItem("inhouse"));
     setSale(deal);
     setForms(forms);
-    setSsx(localStorage.getItem("ssx"));
+    setSsx(localStorage.getItem("ssx") || "");
   }, []);
 
   // Ensure data has been loaded before rendering

@@ -119,13 +119,12 @@ export const reduxSlice = createSlice({
         forms.findIndex((item) => item?._id === payload?._id);
 
       const updateCollection = (collections, index) => {
-        console.log("index", index);
         if (index > -1) {
           if (identifier === "_id") {
             collections[index].diagnostic[payload.form] = payload;
           } else {
             const formIndex = findFormIndex(
-              collections[index].forms[payload.form]
+              collections[index].diagnostic[payload.form]
             );
             if (formIndex > -1) {
               collections[index].diagnostic[payload.form][formIndex] = payload;
