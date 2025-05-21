@@ -235,6 +235,16 @@ export const reduxSlice = createSlice({
       );
       state.access.available = state.access.available.unshift({ _id, access });
     },
+    SetSELECTED: (state, { payload }) => {
+      console.log("payload", payload);
+
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    TOGGLE: (state) => {
+      state.showModal = false;
+    },
     RESET: (state, data) => {
       state.isSuccess = false;
       state.message = "";
@@ -423,6 +433,8 @@ export const {
   SETQUEUED,
   SETREVOKED,
   UPDATEACCESS,
+  SetSELECTED,
+  TOGGLE,
   RESET,
   SetUPDATE_TRACKER,
 } = reduxSlice.actions;

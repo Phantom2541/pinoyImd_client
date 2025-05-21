@@ -9,8 +9,9 @@ import {
   getDate,
   currency,
 } from "../../../../services/utilities";
+import { SetSELECTED } from "../../../../services/redux/slices/assets/persons/personnels";
 
-import { Roles } from "../../../../services/fakeDb";
+import { Policy } from "../../../../services/fakeDb";
 const Body = () => {
   const { collections, message, isSuccess, maxPage, activePage } = useSelector(
       ({ personnels }) => personnels
@@ -32,9 +33,13 @@ const Body = () => {
     }
   }, [isSuccess, message, addToast, dispatch]);
 
-  const handlePayslip = (model) => {
-    console.log("model", model);
-    localStorage.setItem("payslip", JSON.stringify(model));
+  const handlePAYROLL = (selected) => {
+    dispatch(SetSELECTED(selected));
+  };
+
+  const handlePayslip = (selected) => {
+    // console.log("selected", selected);
+    localStorage.setItem("payslip", JSON.stringify(selected));
 
     window.open(
       "/printout/payslip",
@@ -60,7 +65,7 @@ const Body = () => {
           <th rowSpan="2" title="Cost of Living Allowance">
             COLA
           </th>
-          <th className="payroll-header" colSpan="2">
+          <th className="payroll-header text-center" colSpan="2">
             Payroll
           </th>
         </tr>
@@ -72,9 +77,7 @@ const Body = () => {
       <tbody>
         {paginatedData.map((personnel, index) => {
           const { user, contract, rate, payroll } = personnel;
-          const designation = Roles.findById(Number(contract?.designation));
-          // //console.log("payrollss", payroll);
-
+          const designation = Policy.getPosition(Number(contract?.designation));
           let akinsenas = payroll?.find(
             ({ createdAt }) => getDate(createdAt) <= 15
           );
@@ -95,8 +98,8 @@ const Body = () => {
             }
             return null;
           });
-          console.log("Quincena", akinsenas);
-          console.log("katapusan", katapusan);
+          // console.log("Quincena", akinsenas);
+          // console.log("katapusan", katapusan);
 
           return (
             <tr key={`payroll-${index + 1}`}>
@@ -106,10 +109,7 @@ const Body = () => {
                   {capitalize(fullName(user.fullName))}
                 </p>
                 <p className="text-muted mb-0">
-                  <p className="text-muted mb-0">
-                    {designation?.name?.toUpperCase()} |
-                    {contract?.soe?.toUpperCase()}
-                  </p>
+                  {designation?.toUpperCase()} | {contract?.soe?.toUpperCase()}
                 </p>
               </td>
               <td>
@@ -118,9 +118,7 @@ const Body = () => {
                 </p>
                 {Number(contract?.pc) === 1 && (
                   <p className="text-muted mb-0">
-                    <p className="text-muted mb-0">
-                      Daily: {currency(rate?.daily)}
-                    </p>
+                    Daily: {currency(rate?.daily)}
                   </p>
                 )}
               </td>
@@ -145,7 +143,7 @@ const Body = () => {
                   ) : (
                     <MDBBtnGroup className="shadow-0">
                       <MDBBtn
-                        // onClick={() => handleToggle(personnel)}
+                        onClick={() => handlePAYROLL(personnel)}
                         color="success"
                         size="sm"
                         title="Create Payroll"
@@ -174,7 +172,7 @@ const Body = () => {
                 ) : (
                   <MDBBtnGroup className="shadow-0">
                     <MDBBtn
-                      //   onClick={() => handleToggle(personnel)}
+                      onClick={() => handlePAYROLL(personnel)}
                       color="success"
                       size="sm"
                       title="Untag this branch."

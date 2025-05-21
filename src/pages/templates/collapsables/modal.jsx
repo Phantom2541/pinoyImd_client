@@ -20,10 +20,10 @@ import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
-  const { show, toggle, selected, willCreate, isLoading } = useSelector(
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { show, toggle, selected, willCreate, isLoading } = useSelector(
       ({ assurances }) => assurances
     ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();

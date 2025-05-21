@@ -1,8 +1,25 @@
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
+import {
+  PAYROLL,
+  RESET,
+} from "../../../../services/redux/slices/assets/persons/personnels";
+
 // import { Select } from "../../../../components/customizable";
 const Header = () => {
   const { collections } = useSelector(({ personnels }) => personnels);
+
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    PaySlip = useSelector(({ payments }) => payments.isSuccess),
+    dispatch = useDispatch();
+  //Initial Browse
+  useEffect(() => {
+    if (token && activePlatform?.branchId)
+      dispatch(PAYROLL({ token, branchId: activePlatform?.branchId }));
+
+    return () => dispatch(RESET());
+  }, [token, dispatch, activePlatform, PaySlip]);
 
   return (
     <MDBView
