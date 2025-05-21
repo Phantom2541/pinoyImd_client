@@ -100,7 +100,7 @@ const Stub = ({ sale }) => {
                   {packages.length > 1 &&
                     packages.map((id, index) => {
                       //console.log(packages);
-                      const { name, abbreviation } = Services.find(id);
+                      const { name, abbreviation } = Services?.find(id);
 
                       return (
                         <div
