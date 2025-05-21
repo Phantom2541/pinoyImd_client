@@ -143,9 +143,12 @@ export default function Modal() {
       >
         <MDBIcon icon="user" className="mr-2" />
         {fullName(selected?.user?.fullName)}
+        <h6 style={{ marginBottom: "-0.7rem", marginLeft: "1.9rem" }}>
+          FRONTDESK | PERMANENT
+        </h6>
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
-        <MDBTable>
+        {/* <MDBTable>
           <thead>
             <tr>
               <th></th>
@@ -241,7 +244,222 @@ export default function Modal() {
               <td> </td>
             </tr>
           </tbody>
-        </MDBTable>
+        </MDBTable> */}
+        <table style={{ border: "1px solid black" }} className="w-100">
+          <thead>
+            <tr>
+              <th className="border border-dark p-2 font-weight-bold text-center bg-info">
+                Earnings
+              </th>
+              <th className="border border-dark p-2  font-weight-bold text-center bg-info">
+                Amount
+              </th>
+              <th className="border border-dark p-2  font-weight-bold text-center bg-info">
+                Deductions
+              </th>
+              <th className="border border-dark p-2  font-weight-bold text-center bg-info">
+                Amount
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{ height: "2rem" }}>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Rate
+              </td>
+              <td
+                className="border border-dark p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(handleCalc(selected?.rate?.monthly))}
+              </td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Cash Advance
+              </td>
+              <td className="border border-dark p-1">
+                <input
+                  name="ca"
+                  placeholder="Enter cash advance here..."
+                  value={handleValue("ca")}
+                  onChange={(e) => handleChange("ca", e.target.value)}
+                  className="form-control"
+                />
+              </td>
+            </tr>
+            <tr style={{ height: "2.5rem" }}>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Cola
+              </td>
+              <td
+                className="border border-dark p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(handleCalc(selected?.rate?.cola))}
+              </td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Absent (day)
+              </td>
+              <td className="border border-dark p-1">
+                <input
+                  value={handleValue("absent")}
+                  placeholder="Enter absent days here..."
+                  onChange={(e) => handleChange("absent", e.target.value)}
+                  className="form-control"
+                />
+              </td>
+            </tr>
+            <tr style={{ height: "2.5rem" }}>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Holiday
+              </td>
+              <td className="border border-dark p-1">
+                <input
+                  value={handleValue("holiday")}
+                  placeholder="Enter holiday here..."
+                  onChange={(e) => handleChange("holiday", e.target.value)}
+                  className="form-control"
+                />
+              </td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Loan
+              </td>
+              <td className="border border-dark p-1">
+                <input
+                  value={handleValue("loan")}
+                  placeholder="Enter loan here..."
+                  onChange={(e) => handleChange("loan", e.target.value)}
+                  className="form-control"
+                />
+              </td>
+            </tr>
+            <tr style={{ height: "2.5rem" }}>
+              <td className="p-1" style={{ fontWeight: 400 }}>
+                Over Time (Hrs)
+              </td>
+              <td className="border border-dark p-1">
+                <input
+                  value={handleValue("overtime")}
+                  placeholder="Enter overtime hours here..."
+                  onChange={(e) => handleChange("overtime", e.target.value)}
+                  className="form-control"
+                />
+              </td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Phil. Health
+              </td>
+              <td
+                className="border border-dark p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(selected?.contribution?.ph)}
+              </td>
+            </tr>
+            <tr style={{ height: "2.5rem" }}>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Bonus
+              </td>
+              <td className="border border-dark p-1">
+                <input
+                  value={handleValue("bonus")}
+                  placeholder="Enter bonus here..."
+                  onChange={(e) => handleChange("bonus", e.target.value)}
+                  className="form-control"
+                />
+              </td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                SSS
+              </td>
+              <td
+                className="border border-dark p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(selected?.contribution?.sss)}
+              </td>
+            </tr>
+            <tr style={{ height: "2.5rem" }}>
+              <td className="border border-dark"></td>
+              <td className="border border-dark"></td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Pag-ibig
+              </td>
+              <td
+                className="border border-dark text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {" "}
+                {currency(selected?.contribution?.pi)}{" "}
+              </td>
+            </tr>
+            <tr style={{ height: "2.5rem" }}>
+              <td
+                className="border border-dark bg-info p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Gross Earnings{" "}
+              </td>
+              <td
+                className="border border-dark bg-info p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(totEarn)}
+              </td>
+              <td
+                className="border border-dark bg-info p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Total Deductions
+              </td>
+              <td
+                className="border border-dark bg-info p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(totDeduc)}
+              </td>
+            </tr>
+
+            <tr style={{ height: "2.5rem" }}>
+              <td
+                className="border border-dark text-right font-weight-bold  p-1"
+                colSpan={3}
+              >
+                Net Salary
+              </td>
+              <td className="border border-dark p-1 text-right font-weight-bold">
+                {currency(totEarn - totDeduc)}{" "}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </MDBModalBody>
       <MDBModalFooter>
         <button
