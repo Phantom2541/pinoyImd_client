@@ -1,26 +1,9 @@
-import React, { useState, useEffect } from "react";
 import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
 import { currency } from "../../../../../services/utilities";
 
 const Sales = () => {
-  const [dailySales, setDailySales] = useState(0);
-  useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    const query = {
-      date: today,
-    };
-    fetch("/api/deals", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(query),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setDailySales(data.reduce((total, deal) => total + deal.total, 0));
-      });
-  }, []);
+  const currentMonthVouchers = localStorage.getItem("currentVouchers");
+  const lastMonthVouchers = localStorage.getItem("lastMonthVouchers");
 
   return (
     <MDBCol xl="3" md="6" className="mb-4 mb-r">
@@ -35,24 +18,38 @@ const Sales = () => {
               className="ml-4"
               style={{ padding: 0 }}
             >
-              <MDBIcon icon="eye" size="2x" />
+              <MDBIcon icon="dollar-sign" size="2x" />
             </MDBBtn>
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
             <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
-              {currency(dailySales)}
+              {currency(Number(lastMonthVouchers))}
             </h5>
-            <p className="font-small grey-text">Sales</p>
+            <p className="font-small grey-text">Last Month</p>
           </MDBCol>
         </MDBRow>
-        <MDBRow className="my-3">
+        {/* <MDBRow className="mb-1">
           <MDBCol md="7" col="7" className="text-left pl-4">
             <p className="font-small dark-grey-text font-up ml-4 font-weight-bold">
-              Transactions
+              Last Month
             </p>
           </MDBCol>
           <MDBCol md="5" col="5" className="text-right pr-5">
-            <p className="font-small grey-text">{dailySales}</p>
+            <p className="font-small grey-text">
+              {currency(Number(lastMonthVouchers))}
+            </p>
+          </MDBCol>
+        </MDBRow> */}
+        <MDBRow className="pb-3">
+          <MDBCol md="7" col="7" className="text-left pl-4">
+            <p className="font-small dark-grey-text font-up ml-4 font-weight-bold">
+              Vouchers (This Month)
+            </p>
+          </MDBCol>
+          <MDBCol md="5" col="5" className="text-right pr-5">
+            <p className="font-small grey-text">
+              {currency(Number(currentMonthVouchers))}
+            </p>
           </MDBCol>
         </MDBRow>
       </MDBCard>

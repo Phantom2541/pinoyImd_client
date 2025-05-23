@@ -235,6 +235,19 @@ export const reduxSlice = createSlice({
       );
       state.access.available = state.access.available.unshift({ _id, access });
     },
+    SetSELECTED: (state, { payload }) => {
+      console.log("payload", payload);
+
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+    TOGGLE: (state) => {
+      state.showModal = false;
+    },
     RESET: (state, data) => {
       state.isSuccess = false;
       state.message = "";
@@ -330,6 +343,9 @@ export const reduxSlice = createSlice({
       .addCase(PAYROLL.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.collections = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
       })
       .addCase(PAYROLL.rejected, (state, action) => {
@@ -423,6 +439,9 @@ export const {
   SETQUEUED,
   SETREVOKED,
   UPDATEACCESS,
+  SetSELECTED,
+  SetActivePAGE,
+  TOGGLE,
   RESET,
   SetUPDATE_TRACKER,
 } = reduxSlice.actions;

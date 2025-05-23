@@ -12,7 +12,6 @@ export default function Body({
   referral,
 }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
-
   return (
     <MDBCardBody className="pt-0">
       <MDBTable small hover responsive>

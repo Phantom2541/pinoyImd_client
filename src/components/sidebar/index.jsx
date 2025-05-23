@@ -55,8 +55,10 @@ export default function SideNavigation({
   // Load sidebar links
   useEffect(() => {
     if (activePlatform?.platform) {
-      const { platform } = activePlatform;
-      setLinks(Sidebars[platform.toLowerCase()] || []);
+      const platformKey = activePlatform?.platform
+        ?.toLowerCase()
+        .replace(/\s/g, "");
+      setLinks(Sidebars[platformKey] || []);
     } else {
       setLinks(Sidebars["patron"] || []);
     }

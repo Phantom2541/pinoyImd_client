@@ -1,13 +1,13 @@
 import React from "react";
 import { MDBTable } from "mdbreact";
-import { Cellcount as CellCount } from "../../../../../../../../../../services/fakeDb";
+import { Cellcount as CellCount } from "../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
 
 export default function Cellcount({ task, setTask }) {
   const { patient, cc = [] } = task,
     { Preferences, Abbreviation, Title } = CellCount;
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target,
       _name = Number(name),
       _value = Number(value),

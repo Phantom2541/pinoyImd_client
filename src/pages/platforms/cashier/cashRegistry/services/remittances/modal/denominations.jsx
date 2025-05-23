@@ -73,6 +73,8 @@ export default function Modal() {
   }, [formSubmitted, isSuccess, showModal, dispatch]);
 
   useEffect(() => {
+    console.log("selected?.coh", selected);
+
     setCoh(selected?.coh);
   }, [selected]);
 
@@ -186,6 +188,7 @@ export default function Modal() {
       },
     }));
   };
+  console.log("coh", coh);
 
   return (
     <MDBModal

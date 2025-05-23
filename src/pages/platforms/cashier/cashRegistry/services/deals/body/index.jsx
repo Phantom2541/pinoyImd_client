@@ -69,6 +69,10 @@ const Tables = () => {
           ? collections
           : collections.filter(({ perform }) => perform === view);
 
+      console.log("collections", collections);
+      console.log("view", view);
+      console.log("deals", _deals);
+
       // if any items inside deals has sourceKeyAsDeclared value, show sources in table head
       // if (_deals.find((s) => s.physicianId)) setShowPhysicians(true);
       // if (_deals.find((s) => s.source)) setShowSources(true);

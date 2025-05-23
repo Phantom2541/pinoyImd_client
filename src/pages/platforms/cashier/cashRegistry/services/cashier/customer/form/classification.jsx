@@ -137,12 +137,6 @@ export default function PosCard() {
           >
             {Privileges.map((privilege, index) => {
               let disabled = false;
-
-              // If already has a privilege, disable other choices
-              if (userPrivilege > 0 && userPrivilege !== index) {
-                disabled = true;
-              }
-
               // Ensure only valid seniors can select "Senior Citizen" (index 2)
               if (index === 2 && userPrivilege !== 2) {
                 disabled = true;

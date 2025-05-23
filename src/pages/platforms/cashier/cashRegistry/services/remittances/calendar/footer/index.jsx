@@ -8,6 +8,8 @@ import {
 } from "../../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 const Footer = ({ num, item = {}, deals }) => {
+  console.log("item", item);
+
   const { month, year } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
   /**

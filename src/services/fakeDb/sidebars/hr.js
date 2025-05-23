@@ -1,7 +1,8 @@
 import Services from "../../../pages/platforms/manager/settings/services";
 import Menus from "../../../pages/platforms/manager/settings/menus";
 import Dashboard from "../../../pages/platforms/hr/dashboard";
-import Payrolls from "../../../pages/platforms/hr/accured/payrolls";
+// import Payrolls from "../../../pages/platforms/hr/accured/payrolls";
+import Payrolls from "../../../pages/platforms/finance/payroll";
 
 const hr = [
   {
@@ -36,8 +37,8 @@ const hr = [
     children: [
       {
         name: "Payroll",
-        icon: "list",
         path: "/payroll",
+        icon: "money-bill",
         component: Payrolls,
       },
       {

@@ -15,7 +15,16 @@ export default function PatientCategories({
 }) {
   return (
     <MDBCol md="6">
-      <MDBSelect
+      <input
+        type="text"
+        readOnly
+        name="category"
+        className="form-control"
+        value={`Category: ${
+          !categoryIndex ? "Walkin" : Categories[categoryIndex].name
+        }`}
+      />
+      {/* <MDBSelect
         getValue={(e) => setCategoryIndex(Number(e[0]))}
         className="colorful-select dropdown-primary mt-2 hidden-md-down"
       >
@@ -33,7 +42,7 @@ export default function PatientCategories({
             </MDBSelectOption>
           ))}
         </MDBSelectOptions>
-      </MDBSelect>
+      </MDBSelect> */}
     </MDBCol>
   );
 }

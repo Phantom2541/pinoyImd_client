@@ -1,6 +1,7 @@
 import React from "react";
 import { getAge, fullName as nameFormatter } from "../../../services/utilities";
 import { MDBRow, MDBCol } from "mdbreact";
+import { isEmpty } from "lodash";
 // import { Categories } from "../../services/fakeDb";
 export default function Header({ patient, category, ssx = "" }) {
   const { fullName: pFull, isMale = false, dob = "" } = patient;
@@ -27,7 +28,7 @@ export default function Header({ patient, category, ssx = "" }) {
         </MDBCol>
       </MDBRow>
       <h5>
-        Sign and Symptoms: <span>{ssx ? ssx : ""}</span>
+        Sign and Symptoms: <span>{!isEmpty(ssx) ? ssx : ""}</span>
       </h5>
     </div>
   );

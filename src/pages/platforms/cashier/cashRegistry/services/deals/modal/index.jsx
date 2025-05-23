@@ -23,9 +23,14 @@ export default function Modal({ show, selected, toggle }) {
     dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("filtered", filtered);
+
     if (filtered.length > 0) {
       const amount =
         filtered?.reduce((sum, voucher) => sum + voucher.amount, 0) || 0;
+      console.log("filtered", filtered);
+      console.log("amount", amount);
+
       setExpenses(amount);
     }
   }, [filtered]);

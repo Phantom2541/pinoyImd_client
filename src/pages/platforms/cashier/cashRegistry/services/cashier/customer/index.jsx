@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import Patient from "./form/patient";
-import PosCard from "./form/posCard";
+import Classification from "./form/classification";
 import {
   SETPATIENT,
   SETSEARCHKEY,
@@ -65,7 +65,7 @@ export default function POS() {
         )}
       </div>
       <div className="pos-card-button">
-        {["POS", "Patient"]?.map((name, index) => {
+        {["Class", "Patient"]?.map((name, index) => {
           return (
             <button
               key={`button-${index}`}
@@ -74,7 +74,7 @@ export default function POS() {
             >
               {name}
               <MDBIcon
-                icon={name === "POS" ? "cash-register" : "user-injured"}
+                icon={name === "Class" ? "cogs" : "user-injured"}
                 className="pos-button-icon"
               />
             </button>
@@ -84,7 +84,7 @@ export default function POS() {
       <div className="pos-card">
         <div className="pos-card-body">
           <section className={`${activeIndex === 0 && "active"}`}>
-            <PosCard />
+            <Classification />
           </section>
           <section className={`${activeIndex === 1 && "active"}`}>
             <Patient setActiveIndex={setActiveIndex} />
