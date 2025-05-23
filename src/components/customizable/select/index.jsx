@@ -115,9 +115,10 @@ export default function Select({
           (choice) => String(choice[keys] || choice) === String(array[0])
         )
       : array[0];
-    console.log("selectedItem", selectedItem);
 
-    return onChange(keys, selectedItem);
+    // console.log("selectedItem", selectedItem);
+
+    return onChange(selectedItem);
   };
 
   const handleChecked = (value) => {

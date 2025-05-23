@@ -7,11 +7,11 @@ import {
   MDBIcon,
   MDBModalHeader,
   // MDBInput,
-  MDBTable,
   MDBModalFooter,
 } from "mdbreact";
 import {
   SAVE,
+  RESET,
   // UPDATE,
 } from "../../../../services/redux/slices/finance/journals/payments";
 
@@ -22,6 +22,7 @@ import {
 
 // import { isEqual } from "lodash";
 import { currency, fullName } from "../../../../services/utilities";
+import { Policy } from "../../../../services/fakeDb";
 
 // declare your expected items
 const _form = {
@@ -35,15 +36,26 @@ const _form = {
 
 export default function Modal() {
   const { token, auth } = useSelector(({ auth }) => auth),
-    { selected, showModal, toggle, willCreate } = useSelector(
+    { selected, showModal, willCreate } = useSelector(
       ({ personnels }) => personnels
     ),
+    { formSubmitted, isSuccess } = useSelector(({ payments }) => payments),
     [form, setForm] = useState(_form),
     [totDeduc, setTotDeduc] = useState(),
     [totEarn, setTotEarn] = useState(),
     dispatch = useDispatch();
 
   const payCycle = Number(selected?.contract?.pc);
+
+  const toggle = useCallback(() => dispatch(TOGGLE()), [dispatch]);
+
+  useEffect(() => {
+    setForm(_form);
+    if (!formSubmitted && isSuccess && showModal) {
+      toggle();
+      dispatch(RESET());
+    }
+  }, [isSuccess, formSubmitted, showModal, dispatch, toggle]);
 
   const handleCalc = useCallback(
     (monthly) => {
@@ -98,13 +110,7 @@ export default function Modal() {
       },
       net: totEarn - totDeduc,
     };
-    console.log({
-      breakdown,
-      particular: selected?.user?._id,
-      userId: auth._id,
-      branchId: selected?.branch._id,
-      fsId: 3,
-    });
+
     //console.log(selected);
     dispatch(
       SAVE({
@@ -113,12 +119,12 @@ export default function Modal() {
           particular: selected?.user?._id,
           userId: auth._id,
           branchId: selected?.branch._id,
-          fsId: 3,
+          fsId: 13,
         },
         token,
       })
     );
-    toggle();
+    // toggle();
   };
 
   // use for direct values like strings and numbers
@@ -127,6 +133,8 @@ export default function Modal() {
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
   const handleClose = () => dispatch(TOGGLE());
+  const { contract = {} } = selected;
+  const designation = Policy.getPosition(Number(contract?.designation));
 
   return (
     <MDBModal
@@ -142,114 +150,237 @@ export default function Modal() {
       >
         <MDBIcon icon="user" className="mr-2" />
         {fullName(selected?.user?.fullName)}
+        <h6 style={{ marginBottom: "-0.7rem", marginLeft: "1.9rem" }}>
+          {designation?.toUpperCase()} | {contract?.soe?.toUpperCase()}
+        </h6>
       </MDBModalHeader>
-      <MDBModalBody className="mb-0">
-        <MDBTable>
+      <MDBModalBody className="mb-0 m-0 p-1">
+        <table style={{ border: "1px solid black" }} className="w-100">
           <thead>
             <tr>
-              <th></th>
-              <th>Earinings</th>
-              <th></th>
-              <th>Deductions</th>
+              <th className="border border-dark p-2 font-weight-bold text-center bg-info">
+                Earnings
+              </th>
+              <th className="border border-dark p-2  font-weight-bold text-center bg-info">
+                Amount
+              </th>
+              <th className="border border-dark p-2  font-weight-bold text-center bg-info">
+                Deductions
+              </th>
+              <th className="border border-dark p-2  font-weight-bold text-center bg-info">
+                Amount
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Rate</td>
-              <td>{currency(handleCalc(selected?.rate?.monthly))}</td>
-              <td>Cash Advance</td>
-              <td>
+            <tr style={{ height: "2rem" }}>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Rate
+              </td>
+              <td
+                className="border border-dark p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(handleCalc(selected?.rate?.monthly))}
+              </td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Cash Advance
+              </td>
+              <td className="border border-dark p-1">
                 <input
                   name="ca"
+                  placeholder="Enter cash advance here..."
                   value={handleValue("ca")}
                   onChange={(e) => handleChange("ca", e.target.value)}
                   className="form-control"
                 />
               </td>
             </tr>
-            <tr>
-              <td>Cola</td>
-              <td>{currency(handleCalc(selected?.rate?.cola))}</td>
-              <td>Absent (day)</td>
-              <td>
+            <tr style={{ height: "2.5rem" }}>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Cola
+              </td>
+              <td
+                className="border border-dark p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(handleCalc(selected?.rate?.cola))}
+              </td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Absent (day)
+              </td>
+              <td className="border border-dark p-1">
                 <input
                   value={handleValue("absent")}
+                  placeholder="Enter absent days here..."
                   onChange={(e) => handleChange("absent", e.target.value)}
                   className="form-control"
                 />
               </td>
             </tr>
-            <tr>
-              <td>Holiday</td>
-              <td>
+            <tr style={{ height: "2.5rem" }}>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Holiday
+              </td>
+              <td className="border border-dark p-1">
                 <input
                   value={handleValue("holiday")}
+                  placeholder="Enter holiday here..."
                   onChange={(e) => handleChange("holiday", e.target.value)}
                   className="form-control"
                 />
               </td>
-              <td>Loan</td>
-              <td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Loan
+              </td>
+              <td className="border border-dark p-1">
                 <input
                   value={handleValue("loan")}
+                  placeholder="Enter loan here..."
                   onChange={(e) => handleChange("loan", e.target.value)}
                   className="form-control"
                 />
               </td>
             </tr>
-            <tr>
-              <td>Over Time (Hrs)</td>
-              <td>
+            <tr style={{ height: "2.5rem" }}>
+              <td className="p-1" style={{ fontWeight: 400 }}>
+                Over Time (Hrs)
+              </td>
+              <td className="border border-dark p-1">
                 <input
                   value={handleValue("overtime")}
+                  placeholder="Enter overtime hours here..."
                   onChange={(e) => handleChange("overtime", e.target.value)}
                   className="form-control"
                 />
               </td>
-              <td>Phil. Health</td>
-              <td>{currency(selected?.contribution?.ph)}</td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Phil. Health
+              </td>
+              <td
+                className="border border-dark p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(selected?.contribution?.ph)}
+              </td>
             </tr>
-            <tr>
-              <td>Bonus</td>
-              <td>
+            <tr style={{ height: "2.5rem" }}>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Bonus
+              </td>
+              <td className="border border-dark p-1">
                 <input
                   value={handleValue("bonus")}
+                  placeholder="Enter bonus here..."
                   onChange={(e) => handleChange("bonus", e.target.value)}
                   className="form-control"
                 />
               </td>
-              <td>SSS</td>
-              <td>{currency(selected?.contribution?.sss)}</td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                SSS
+              </td>
+              <td
+                className="border border-dark p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(selected?.contribution?.sss)}
+              </td>
             </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td>Pag-ibig</td>
-              <td> {currency(selected?.contribution?.pi)} </td>
+            <tr style={{ height: "2.5rem" }}>
+              <td className="border border-dark"></td>
+              <td className="border border-dark"></td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Pag-ibig
+              </td>
+              <td
+                className="border border-dark text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {" "}
+                {currency(selected?.contribution?.pi)}{" "}
+              </td>
             </tr>
-            <tr>
-              <td>Gross </td>
-              <td>{currency(totEarn)}</td>
-              <td></td>
-              <td>{currency(totDeduc)}</td>
+            <tr style={{ height: "2.5rem" }}>
+              <td
+                className="border border-dark bg-info p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Gross Earnings{" "}
+              </td>
+              <td
+                className="border border-dark bg-info p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(totEarn)}
+              </td>
+              <td
+                className="border border-dark bg-info p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Total Deductions
+              </td>
+              <td
+                className="border border-dark bg-info p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(totDeduc)}
+              </td>
             </tr>
-            <tr>
-              <td></td>
-              <td>Net</td>
-              <td> {currency(totEarn - totDeduc)} </td>
-              <td> </td>
+
+            <tr style={{ height: "2.5rem" }}>
+              <td className="border border-dark text-right   p-1" colSpan={3}>
+                <h5 className="mt-1" style={{ fontWeight: 500 }}>
+                  Net Salary
+                </h5>
+              </td>
+              <td className="border border-dark p-1 text-right">
+                <h5 className="mt-1" style={{ fontWeight: 500 }}>
+                  {currency(totEarn - totDeduc)}{" "}
+                </h5>
+              </td>
             </tr>
           </tbody>
-        </MDBTable>
+        </table>
       </MDBModalBody>
       <MDBModalFooter>
         <button
+          disabled={formSubmitted}
           onClick={() => {
             handleSubmit();
           }}
           className="btn btn-info"
         >
-          Submit
+          Submit {formSubmitted && <MDBIcon icon="spinner" pulse />}
         </button>
       </MDBModalFooter>
     </MDBModal>

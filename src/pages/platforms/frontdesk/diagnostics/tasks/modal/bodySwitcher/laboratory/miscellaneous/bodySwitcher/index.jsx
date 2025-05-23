@@ -23,5 +23,6 @@ export default function BodySwitcher({ task, setTask }) {
   const Component = task?.packages?.find((pkg) => packageComponentMap[pkg])
     ? packageComponentMap[task.packages.find((pkg) => packageComponentMap[pkg])]
     : Cluster;
+
   return <Component task={task} setTask={setTask} />;
 }
