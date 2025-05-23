@@ -41,8 +41,10 @@ export default function SideNavigation({
         if (valid) setLogo(url);
       });
 
-      const _href = `/${activePlatform?.platform || "patron"}/${
-        ["manager", "headquarter"].includes(activePlatform?.platform)
+      const _href = `/${activePlatform?.platform.toLowerCase() || "patron"}/${
+        ["manager", "headquarter"].includes(
+          activePlatform?.platform.toLowerCase()
+        )
           ? "dashboard"
           : "bulletin"
       }`;

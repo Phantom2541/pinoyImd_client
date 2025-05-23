@@ -48,8 +48,12 @@ export default function Login({ show, toggle = null }) {
     if (auth._id && loginSuccess) {
       if (activePlatform) {
         history.push(
-          `/${activePlatform?.platform || "patron"}/${
-            activePlatform?.platform === "manager" ? "dashboard" : "bulletin"
+          `/${activePlatform?.platform.toLowerCase() || "patron"}/${
+            ["manager", "headquarter"].includes(
+              activePlatform?.platform.toLowerCase()
+            )
+              ? "dashboard"
+              : "bulletin"
           }`
         );
       } else {
