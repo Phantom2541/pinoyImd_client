@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -8,8 +8,6 @@ import {
 
 // import { Select } from "../../../../components/customizable";
 const Header = () => {
-  const { collections } = useSelector(({ personnels }) => personnels);
-
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
@@ -26,10 +24,11 @@ const Header = () => {
       cascade
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Persons
-        </span>
+      <div
+        className="d-flex justify-items-center my-2"
+        style={{ width: "20rem" }}
+      >
+        <span className="white-text mx-3 text-nowrap mt-0">Person List</span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
