@@ -11,15 +11,15 @@ const Header = () => {
   const { collections } = useSelector(({ personnels }) => personnels);
 
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    PaySlip = useSelector(({ payments }) => payments.isSuccess),
     dispatch = useDispatch();
+
   //Initial Browse
   useEffect(() => {
     if (token && activePlatform?.branchId)
       dispatch(PAYROLL({ token, branchId: activePlatform?.branchId }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform, PaySlip]);
+  }, [token, dispatch, activePlatform]);
 
   return (
     <MDBView
