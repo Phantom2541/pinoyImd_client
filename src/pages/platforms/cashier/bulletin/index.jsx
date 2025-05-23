@@ -1,4 +1,6 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { axioKit } from "../../../../services/utilities";
 import {
   MDBContainer,
   MDBRow,
@@ -17,12 +19,57 @@ import { Expenses, Purchases } from "./calendars";
 // import Vouchers from "../accrued/vouchers";
 
 export default function Dashboard() {
+  const [currentMonthSales, setCurrentMonthSales] = useState(0);
+  const [lastMonthSales, setLastMonthSales] = useState(0);
+
+  const { activePlatform, auth, token } = useSelector(({ auth }) => auth);
+
+  useEffect(() => {
+    const today = new Date();
+    const month = today.getMonth();
+    const year = today.getFullYear();
+
+    const queryCurrentMonth = {
+      cashier: auth._id,
+      branch: activePlatform.branchId,
+      month: month + 1,
+      year,
+    };
+
+    axioKit
+      .universal(
+        `finance/bookkeeping/remittances/widgets`,
+        token,
+        queryCurrentMonth
+      )
+      .then((res) => {
+        setCurrentMonthSales(res.current.totalSales || 0);
+        setLastMonthSales(res.last.totalSales || 0);
+        localStorage.setItem(
+          "currentVouchers",
+          JSON.stringify(res.current.totalVouchers || 0)
+        );
+        localStorage.setItem(
+          "lastMonthVouchers",
+          JSON.stringify(res.last.totalVouchers)
+        );
+        console.log(res);
+      })
+      .catch((err) => console.log(err.message));
+  }, [activePlatform, auth, token]);
+
   return (
     <MDBContainer fluid id="v6" className="mb-5">
       <section className="mb-4">
         <MDBRow>
-          <Sales />
-          <InSource />
+          <Sales
+            currentMonthSales={currentMonthSales}
+            lastMonthSales={lastMonthSales}
+          />
+          <InSource
+          // currentMonthVouchers={currentMonthVouchers}
+          // lastMonthVouchers={lastMonthVouchers}
+          />
           <OutSource />
           <Utilities />
         </MDBRow>

@@ -1,10 +1,7 @@
 import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
 import { currency } from "../../../../../services/utilities";
 
-const Sales = () => {
-  const currentMonthVouchers = localStorage.getItem("currentVouchers");
-  const lastMonthVouchers = localStorage.getItem("lastMonthVouchers");
-
+const Sales = ({ currentMonthSales, lastMonthSales }) => {
   return (
     <MDBCol xl="3" md="6" className="mb-4 mb-r">
       <MDBCard>
@@ -23,12 +20,12 @@ const Sales = () => {
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
             <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
-              {currency(Number(lastMonthVouchers))}
+              {currency(Number(currentMonthSales))}
             </h5>
-            <p className="font-small grey-text">Last Month</p>
+            <p className="font-small grey-text">Current Sales</p>
           </MDBCol>
         </MDBRow>
-        {/* <MDBRow className="mb-1">
+        <MDBRow className="my-3">
           <MDBCol md="7" col="7" className="text-left pl-4">
             <p className="font-small dark-grey-text font-up ml-4 font-weight-bold">
               Last Month
@@ -36,19 +33,7 @@ const Sales = () => {
           </MDBCol>
           <MDBCol md="5" col="5" className="text-right pr-5">
             <p className="font-small grey-text">
-              {currency(Number(lastMonthVouchers))}
-            </p>
-          </MDBCol>
-        </MDBRow> */}
-        <MDBRow className="pb-3">
-          <MDBCol md="7" col="7" className="text-left pl-4">
-            <p className="font-small dark-grey-text font-up ml-4 font-weight-bold">
-              Vouchers (This Month)
-            </p>
-          </MDBCol>
-          <MDBCol md="5" col="5" className="text-right pr-5">
-            <p className="font-small grey-text">
-              {currency(Number(currentMonthVouchers))}
+              {currency(Number(lastMonthSales))}
             </p>
           </MDBCol>
         </MDBRow>
