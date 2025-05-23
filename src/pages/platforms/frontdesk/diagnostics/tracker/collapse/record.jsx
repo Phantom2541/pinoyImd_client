@@ -3,7 +3,7 @@ import { capitalize } from "../../../../../../services/utilities";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
-import Modal from "../modal";
+// import Modal from "../modal";
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
@@ -164,7 +164,7 @@ export default function CollapseTable({ menu }) {
         </tbody>
       </MDBTable>
       {/* onProcess */}
-      <Modal toggle={toggleModal} title="Update Laboratory Task" />
+      {/* <Modal toggle={toggleModal} title="Update Laboratory Task" /> */}
     </>
   );
 }

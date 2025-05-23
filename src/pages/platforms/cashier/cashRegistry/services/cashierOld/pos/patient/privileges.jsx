@@ -19,9 +19,17 @@ export default function PatientPrivileges({
 
   return (
     <MDBCol md="6">
-      <MDBSelect
+      <input
+        type="text"
+        readOnly
+        name="privilege"
+        className="form-control"
+        value={`Privilege: ${Privileges[selected.privilege]}`}
+      />
+      {/* <MDBSelect
         getValue={(e) => setPrivilegeIndex(Number(e[0]))}
-        className="colorful-select dropdown-primary mt-2 hidden-md-down"
+        className="colorful-select dropdown-primary mt-2 hidden-md-down "
+        options={{ options: false }}
       >
         <MDBSelectInput selected={Privileges[selected.privilege]} />
         <MDBSelectOptions>
@@ -39,7 +47,7 @@ export default function PatientPrivileges({
             </MDBSelectOption>
           ))}
         </MDBSelectOptions>
-      </MDBSelect>
+      </MDBSelect> */}
     </MDBCol>
   );
 }

@@ -17,7 +17,14 @@ export default function PatientPhysicians({ setPhysicianId, didCheckout }) {
 
   return (
     <MDBCol md="6">
-      <MDBSelect
+      <input
+        type="text"
+        readOnly
+        name="physician"
+        className="form-control"
+        value={`Physician: ${properFullname(selected?.physicianId?.fullName)}`}
+      />
+      {/* <MDBSelect
         getValue={(e) => setPhysicianId(e[0])}
         className="colorful-select dropdown-primary mt-0 hidden-md-down"
       >
@@ -36,7 +43,7 @@ export default function PatientPhysicians({ setPhysicianId, didCheckout }) {
             </MDBSelectOption>
           ))}
         </MDBSelectOptions>
-      </MDBSelect>
+      </MDBSelect> */}
     </MDBCol>
   );
 }
