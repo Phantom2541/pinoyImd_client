@@ -205,6 +205,14 @@ export const reduxSlice = createSlice({
     SetUPDATE_TRACKER: (state, data) => {
       state.updateTracker.fieldName = data.payload;
     },
+    SetPAYROLL: (state, { payload }) => {
+      const index = state?.collections?.findIndex(
+        ({ user }) => user?._id === payload?.particular
+      );
+      console.log("payroll user", payload);
+      console.log("index", index);
+      state.collections[index]?.payroll.push(payload);
+    },
     SETOnHotSEAT: (state, { payload }) => {
       // set default values
       state.staff = payload.user;
@@ -438,6 +446,7 @@ export const {
   SETOnHotSEAT,
   SETQUEUED,
   SETREVOKED,
+  SetPAYROLL,
   UPDATEACCESS,
   SetSELECTED,
   SetActivePAGE,

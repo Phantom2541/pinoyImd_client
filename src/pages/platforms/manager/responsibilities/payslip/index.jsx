@@ -14,12 +14,10 @@ const Slip = () => {
       <MDBRow>
         <MDBCol>
           <Hr />
-          <br />
           <i>Employees copy</i>
         </MDBCol>
         <MDBCol>
           <Hr />
-          <br />
           <i>HR copy</i>
         </MDBCol>
       </MDBRow>

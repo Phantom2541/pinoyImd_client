@@ -17,6 +17,7 @@ import {
 
 import {
   // PAYROLL,
+  SetPAYROLL,
   TOGGLE,
 } from "../../../../services/redux/slices/assets/persons/personnels";
 
@@ -92,6 +93,7 @@ export default function Modal() {
   }, [form, selected, handleCalc]);
 
   const handleSubmit = () => {
+    const { isAquincena = false } = selected;
     const breakdown = {
       deduction: {
         ca: form.ca,
@@ -100,6 +102,7 @@ export default function Modal() {
         ph: selected?.contribution?.ph,
         sss: selected?.contribution?.sss,
         pi: selected?.contribution?.pi,
+        total: totDeduc,
       },
       earn: {
         holiday: form.holiday,
@@ -107,8 +110,10 @@ export default function Modal() {
         bonus: form.bonus,
         rate: handleCalc(selected?.rate?.monthly),
         cola: handleCalc(selected?.rate?.cola),
+        total: totEarn,
       },
       net: totEarn - totDeduc,
+      isAquincena,
     };
 
     //console.log(selected);
@@ -123,7 +128,10 @@ export default function Modal() {
         },
         token,
       })
-    );
+    ).then(({ payload }) => {
+      const { payload: data } = payload;
+      dispatch(SetPAYROLL(data));
+    });
     // toggle();
   };
 
@@ -195,9 +203,10 @@ export default function Modal() {
               <td className="border border-dark p-1">
                 <input
                   name="ca"
+                  type="number"
                   placeholder="Enter cash advance here..."
-                  value={handleValue("ca")}
-                  onChange={(e) => handleChange("ca", e.target.value)}
+                  value={String(handleValue("ca"))}
+                  onChange={(e) => handleChange("ca", Number(e.target.value))}
                   className="form-control"
                 />
               </td>
@@ -223,9 +232,12 @@ export default function Modal() {
               </td>
               <td className="border border-dark p-1">
                 <input
-                  value={handleValue("absent")}
+                  value={String(handleValue("absent"))}
+                  type="number"
                   placeholder="Enter absent days here..."
-                  onChange={(e) => handleChange("absent", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("absent", Number(e.target.value))
+                  }
                   className="form-control"
                 />
               </td>
@@ -239,9 +251,12 @@ export default function Modal() {
               </td>
               <td className="border border-dark p-1">
                 <input
-                  value={handleValue("holiday")}
+                  value={String(handleValue("holiday"))}
+                  type="number"
                   placeholder="Enter holiday here..."
-                  onChange={(e) => handleChange("holiday", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("holiday", Number(e.target.value))
+                  }
                   className="form-control"
                 />
               </td>
@@ -253,10 +268,11 @@ export default function Modal() {
               </td>
               <td className="border border-dark p-1">
                 <input
-                  value={handleValue("loan")}
+                  value={String(handleValue("loan"))}
                   placeholder="Enter loan here..."
-                  onChange={(e) => handleChange("loan", e.target.value)}
+                  onChange={(e) => handleChange("loan", Number(e.target.value))}
                   className="form-control"
+                  type="number"
                 />
               </td>
             </tr>
@@ -266,9 +282,12 @@ export default function Modal() {
               </td>
               <td className="border border-dark p-1">
                 <input
-                  value={handleValue("overtime")}
+                  value={String(handleValue("overtime"))}
+                  type="number"
                   placeholder="Enter overtime hours here..."
-                  onChange={(e) => handleChange("overtime", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("overtime", Number(e.target.value))
+                  }
                   className="form-control"
                 />
               </td>
@@ -294,9 +313,11 @@ export default function Modal() {
               </td>
               <td className="border border-dark p-1">
                 <input
-                  value={handleValue("bonus")}
+                  value={String(handleValue("bonus") || "")}
                   placeholder="Enter bonus here..."
-                  onChange={(e) => handleChange("bonus", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("bonus", Number(e.target.value))
+                  }
                   className="form-control"
                 />
               </td>
