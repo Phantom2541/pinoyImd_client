@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 // import Modal from "./modal";
 import {
   BROWSE,
+  SetActivePAGE,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/personnels";
 // import { globalSearch } from "../../../../../services/utilities";
@@ -18,28 +19,20 @@ export default function Staffs() {
     // [selected, setSelected] = useState({}),
     // [showModal, setShowModal] = useState(false),
     [searchKey, setSearchKey] = useState(""),
-    [page, setPage] = useState(1),
-    [totalPages, setTotalPages] = useState(1),
     [willCreate, setWillCreate] = useState(true),
     // [visible, setVisible] = useState(false),
-    { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, isLoading } = useSelector(
-      ({ personnels }) => personnels
-    ),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
+    {
+      collections,
+      message,
+      isSuccess,
+      isLoading,
+      activePage,
+      totalPages,
+      maxPage,
+    } = useSelector(({ personnels }) => personnels),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
-  useEffect(() => {
-    if (staffs.length > 0) {
-      let totalPages = Math.floor(staffs.length / maxPage);
-      if (staffs.length % maxPage > 0) totalPages += 1;
-      setTotalPages(totalPages);
-
-      if (page > totalPages) {
-        setPage(totalPages);
-      }
-    }
-  }, [staffs, page, maxPage]);
 
   //Initial Browse
   useEffect(() => {
@@ -114,15 +107,20 @@ export default function Staffs() {
   //   }
   // };
 
-  useEffect(() => {
-    if (staffs.length > 0) {
-      let totalPages = Math.floor(staffs.length / maxPage);
-      if (staffs.length % maxPage > 0) totalPages += 1;
-      setTotalPages(totalPages);
-
-      if (page > totalPages) setPage(totalPages);
+  const handlePageChange = (action) => {
+    const newPage = activePage + (action ? 1 : -1);
+    if (newPage >= 1 && newPage <= totalPages) {
+      dispatch(SetActivePAGE(newPage));
     }
-  }, [staffs, page, maxPage]);
+  };
+
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = staffs.slice(startIndex, endIndex); // Get only items for the active page
+
+  console.log("paginatedData", paginatedData);
+
   return (
     <>
       <MDBCard narrow>
@@ -151,8 +149,8 @@ export default function Staffs() {
           ) : (
             <>
               <MenuCollapse
-                staffs={staffs}
-                page={page}
+                staffs={paginatedData}
+                page={activePage}
                 resetSearch={resetSearch}
                 searchKey={searchKey}
                 handleUpdate={handleUpdate}
@@ -163,8 +161,8 @@ export default function Staffs() {
                 <Pagination
                   isLoading={isLoading}
                   total={totalPages}
-                  page={page}
-                  setPage={setPage}
+                  page={activePage}
+                  setPage={handlePageChange}
                 />
               </div>
             </>

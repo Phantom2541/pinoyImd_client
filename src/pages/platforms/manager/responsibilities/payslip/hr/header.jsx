@@ -19,8 +19,17 @@ const Header = ({ payslip, branch }) => {
       _range = isAquincena
         ? `${month} 1 to ${month} 15`
         : `${month} 16 to ${month} ${lastDayOfMonth}`;
-    } else {
+    } else if (pc === 2) {
       _range = `${month} 1 to ${month} ${lastDayOfMonth}`;
+    } else {
+      //pang quarterly
+      const quarter = Math.floor(m / 3);
+      const startMonth = Months[quarter * 3];
+      const endMonthIndex = quarter * 3 + 2;
+      const endMonth = Months[endMonthIndex];
+      const lastDayOfEndMonth = new Date(year, endMonthIndex + 1, 0).getDate();
+
+      _range = `${startMonth} 1 to ${endMonth} ${lastDayOfEndMonth}`;
     }
     setDateRange(_range);
   }, [payslip]);

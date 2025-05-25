@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   MDBCard,
   MDBCardBody,
@@ -7,18 +7,15 @@ import {
   MDBContainer,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fullName,
-  handlePagination,
-} from "../../../../../../services/utilities";
+import { fullName } from "../../../../../../services/utilities";
 import CollapseTable from "./table";
 import { Policy } from "../../../../../../services/fakeDb";
 
 import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
-export default function MenuCollapse({ staffs, page }) {
+export default function MenuCollapse({ staffs }) {
   const [activeId, setActiveId] = useState(-1);
-  const { maxPage, token } = useSelector(({ auth }) => auth);
+  const { token } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
 
   const onSubmit = (data) => {
@@ -55,7 +52,7 @@ export default function MenuCollapse({ staffs, page }) {
       }}
       fluid
     >
-      {handlePagination(staffs, page, maxPage).map((staff, index) => {
+      {staffs.map((staff, index) => {
         const { user, contract, status, rate, contribution, _id } = staff;
         const department = Policy.getDepartment(Number(contract?.designation));
 

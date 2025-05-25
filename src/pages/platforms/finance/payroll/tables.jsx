@@ -38,8 +38,6 @@ const Body = () => {
     setPersonnels(salariedEmployees);
   }, [collections]);
 
-  console.log("collections", collections);
-
   //Toast for errors or success
   useEffect(() => {
     if (message) {

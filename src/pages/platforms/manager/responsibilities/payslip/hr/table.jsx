@@ -23,38 +23,38 @@ export default function Table() {
             <td className="bg-info py-1">Amount</td>
           </tr>
           <tr>
-            <td className="py-0  ">Rate</td>
+            <td className="py-0  ">Monthly</td>
             <td className="py-0 ">{currency(rate.monthly)}</td>
             <td className="py-0 ">Cash Advance</td>
             <td className="py-0 "> {currency(deduction?.ca)} </td>
           </tr>
           <tr>
-            <td className="py-0 ">COLA</td>
-            <td className="py-0 "> {currency(rate?.cola)} </td>
+            <td className="py-0 ">Daily</td>
+            <td className="py-0 "> {currency(rate?.daily)} </td>
             <td className="py-0 ">Absent (days)</td>
-            <td className="py-0 "> {deduction?.absent} </td>
+            <td className="py-0 "> {deduction?.absent || "-"} </td>
           </tr>
           <tr>
-            <td className="py-0 ">Holiday</td>
-            <td className="py-0 "> {currency(earn?.holiday)} </td>
+            <td className="py-0 ">COLA</td>
+            <td className="py-0 "> {currency(rate?.cola)} </td>
             <td className="py-0 ">Loan</td>
             <td className="py-0 "> {currency(deduction?.loan)} </td>
           </tr>
           <tr>
-            <td className="py-0 ">Over Time</td>
-            <td className="py-0 ">{earn?.overtime || "-"} </td>
+            <td className="py-0 ">Holiday (days)</td>
+            <td className="py-0 "> {currency(earn?.holiday)} </td>
             <td className="py-0 ">Phil. Health</td>
             <td className="py-0 "> {currency(deduction?.ph)} </td>
           </tr>
           <tr>
-            <td className="py-0 ">Bonus</td>
-            <td className="py-0 "> {currency(earn?.bonus)} </td>
+            <td className="py-0 ">Over Time (hrs)</td>
+            <td className="py-0 ">{earn?.overtime || "-"} </td>
             <td className="py-0 ">SSS</td>
             <td className="py-0 "> {currency(deduction?.sss)} </td>
           </tr>
           <tr>
-            <td className="py-0 "></td>
-            <td className="py-0 "> </td>
+            <td className="py-0 ">Bonus</td>
+            <td className="py-0 "> {currency(earn?.bonus)} </td>
             <td className="py-0 ">Pag-ibig</td>
             <td className="py-0 "> {currency(deduction?.pi)} </td>
           </tr>
@@ -109,7 +109,7 @@ export default function Table() {
           </tr>
           <tr>
             <td className="py-0 m-0 p-0 border text-center" colSpan={2}>
-              <i> {numWords(breakdown?.net).toUpperCase()}</i>
+              <i> {numWords(Math.round(breakdown?.net)).toUpperCase()}</i>
             </td>
           </tr>
         </tbody>

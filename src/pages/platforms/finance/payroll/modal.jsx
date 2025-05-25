@@ -186,7 +186,7 @@ export default function Modal() {
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
               >
-                Rate
+                Monthly
               </td>
               <td
                 className="border border-dark p-1 text-right"
@@ -216,13 +216,13 @@ export default function Modal() {
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
               >
-                Cola
+                Daily
               </td>
               <td
                 className="border border-dark p-1 text-right"
                 style={{ fontWeight: 400 }}
               >
-                {currency(handleCalc(selected?.rate?.cola))}
+                {currency(handleCalc(selected?.rate?.daily))}
               </td>
               <td
                 className="border border-dark p-1"
@@ -234,7 +234,7 @@ export default function Modal() {
                 <input
                   value={String(handleValue("absent"))}
                   type="number"
-                  placeholder="Enter absent days here..."
+                  placeholder="Enter number of absent days..."
                   onChange={(e) =>
                     handleChange("absent", Number(e.target.value))
                   }
@@ -247,18 +247,13 @@ export default function Modal() {
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
               >
-                Holiday
+                Cola
               </td>
-              <td className="border border-dark p-1">
-                <input
-                  value={String(handleValue("holiday"))}
-                  type="number"
-                  placeholder="Enter holiday here..."
-                  onChange={(e) =>
-                    handleChange("holiday", Number(e.target.value))
-                  }
-                  className="form-control"
-                />
+              <td
+                className="border border-dark p-1 text-right"
+                style={{ fontWeight: 400 }}
+              >
+                {currency(handleCalc(selected?.rate?.cola))}
               </td>
               <td
                 className="border border-dark p-1"
@@ -277,16 +272,19 @@ export default function Modal() {
               </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
-              <td className="p-1" style={{ fontWeight: 400 }}>
-                Over Time (Hrs)
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Holiday (days)
               </td>
               <td className="border border-dark p-1">
                 <input
-                  value={String(handleValue("overtime"))}
+                  value={String(handleValue("holiday"))}
                   type="number"
-                  placeholder="Enter overtime hours here..."
+                  placeholder="Enter number of holiday days..."
                   onChange={(e) =>
-                    handleChange("overtime", Number(e.target.value))
+                    handleChange("holiday", Number(e.target.value))
                   }
                   className="form-control"
                 />
@@ -309,14 +307,15 @@ export default function Modal() {
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
               >
-                Bonus
+                Over Time (Hrs)
               </td>
               <td className="border border-dark p-1">
                 <input
-                  value={String(handleValue("bonus") || "")}
-                  placeholder="Enter bonus here..."
+                  value={String(handleValue("overtime"))}
+                  type="number"
+                  placeholder="Enter overtime hours here..."
                   onChange={(e) =>
-                    handleChange("bonus", Number(e.target.value))
+                    handleChange("overtime", Number(e.target.value))
                   }
                   className="form-control"
                 />
@@ -335,8 +334,22 @@ export default function Modal() {
               </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
-              <td className="border border-dark"></td>
-              <td className="border border-dark"></td>
+              <td
+                className="border border-dark p-1"
+                style={{ fontWeight: 400 }}
+              >
+                Bonus
+              </td>
+              <td className="border border-dark p-1">
+                <input
+                  value={String(handleValue("bonus") || "")}
+                  placeholder="Enter bonus here..."
+                  onChange={(e) =>
+                    handleChange("bonus", Number(e.target.value))
+                  }
+                  className="form-control"
+                />
+              </td>
               <td
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
