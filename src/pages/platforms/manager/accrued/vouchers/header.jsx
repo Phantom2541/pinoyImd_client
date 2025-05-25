@@ -175,7 +175,7 @@ const Header = () => {
             </option>
           ))}
         </select>
-        {vendor?._id && vendor._id !== "noSource" && (
+        {vendor?._id && vendor?._id !== "noSource" && (
           <MDBBtn
             size="sm"
             color="primary"

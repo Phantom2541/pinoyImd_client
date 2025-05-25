@@ -422,6 +422,7 @@ export const reduxSlice = createSlice({
 
     SetFilterBySOURCE: (state, { payload }) => {
       let filtered = [];
+      console.log("payload", payload);
       if (payload === "all") {
         filtered = state.collections;
         state.vendor = undefined;
@@ -430,9 +431,9 @@ export const reduxSlice = createSlice({
         state.vendor = "noSource";
       } else {
         filtered = state.collections.filter(
-          ({ source }) => source?._id.toString() === payload.toString()
+          ({ source }) => source?._id.toString() === payload?.value?.toString()
         );
-        state.vendor = payload;
+        state.vendor = payload.vendor;
       }
 
       const groupByDate = filtered.reduce((groups, item) => {
