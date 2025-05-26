@@ -119,8 +119,6 @@ export default function Staffs() {
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = staffs.slice(startIndex, endIndex); // Get only items for the active page
 
-  console.log("paginatedData", paginatedData);
-
   return (
     <>
       <MDBCard narrow>
