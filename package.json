@@ -19,6 +19,7 @@
     "mdbreact": "./mdbreact-4.25.0.tgz",
     "mdbreact-admin-pro": "file:",
     "num-words": "^1.2.3",
+    "number-to-words": "^1.2.4",
     "pica": "^9.0.1",
     "react": "^16.12.0",
     "react-big-calendar": "^1.18.0",

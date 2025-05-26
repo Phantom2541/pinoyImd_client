@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-import numWords from "num-words";
+import { toWords } from "number-to-words";
 import { currency } from "../../../../../../services/utilities";
 import Header from "./header";
 export default function Table() {
@@ -10,59 +10,148 @@ export default function Table() {
   const { deduction = {}, earn = {} } = breakdown;
 
   const { branch = {} } = activePlatform;
+  const { overtime = 0, nightShift = 0, holiday } = earn;
+  const { regular = { present: 0, absent: 0 }, special = 0 } = holiday;
+  const { present = 0, absent = 0 } = regular;
+  const hourlyRate = rate.daily / 8;
 
   return (
     <div>
-      <MDBTable bordered small className="payslip">
+      <MDBTable bordered small className="payslip" responsive>
         <Header branch={branch} payslip={payslip} />
         <tbody>
           <tr>
-            <td className="bg-info py-1">Earnings</td>
+            <td className="bg-info py-1" style={{ width: "22%" }}>
+              Earnings
+            </td>
             <td className="bg-info py-1">Amount</td>
-            <td className="bg-info py-1">Deductions</td>
+            <td className="bg-info py-1" style={{ width: "22%" }}>
+              Deductions
+            </td>
             <td className="bg-info py-1">Amount</td>
           </tr>
           <tr>
             <td className="py-0  ">Monthly</td>
-            <td className="py-0 ">{currency(rate.monthly)}</td>
+            <td className="py-0 text-right ">{currency(rate.monthly)}</td>
             <td className="py-0 ">Cash Advance</td>
             <td className="py-0 "> {currency(deduction?.ca)} </td>
           </tr>
           <tr>
             <td className="py-0 ">Daily</td>
-            <td className="py-0 "> {currency(rate?.daily)} </td>
-            <td className="py-0 ">Absent (days)</td>
-            <td className="py-0 "> {deduction?.absent || "-"} </td>
+            <td className="py-0 text-right"> {currency(rate?.daily)} </td>
+            <td className="py-0 ">Absent </td>
+            <td className="py-0 ">
+              {deduction.absent ? (
+                <div className="d-flex align-items-center justify-content-between">
+                  <span>{deduction.absent} days</span>
+                  <span>{currency(deduction.absent * rate?.daily)}</span>
+                </div>
+              ) : (
+                "-"
+              )}
+            </td>
           </tr>
           <tr>
             <td className="py-0 ">COLA</td>
-            <td className="py-0 "> {currency(rate?.cola)} </td>
+            <td className="py-0 text-right"> {currency(rate?.cola)} </td>
             <td className="py-0 ">Loan</td>
-            <td className="py-0 "> {currency(deduction?.loan)} </td>
+            <td className="py-0 text-right"> {currency(deduction?.loan)} </td>
           </tr>
           <tr>
-            <td className="py-0 ">Holiday (days)</td>
-            <td className="py-0 "> {currency(earn?.holiday)} </td>
-            <td className="py-0 ">Phil. Health</td>
-            <td className="py-0 "> {currency(deduction?.ph)} </td>
+            <td className="py-0 " style={{ verticalAlign: "middle" }}>
+              Regular Holiday{" "}
+            </td>
+            <td className="py-0 ">
+              <div className="d-flex align-items-center justify-content-between">
+                {present ? (
+                  <>
+                    <span>{present}days P</span>
+                    <span>{currency(present * rate?.daily * 2)}</span>
+                  </>
+                ) : (
+                  "P -"
+                )}
+              </div>
+              <div className="d-flex align-items-center justify-content-between">
+                {absent ? (
+                  <>
+                    <span>{absent}days A</span>
+                    <span>{currency(absent * rate?.daily)}</span>
+                  </>
+                ) : (
+                  "A -"
+                )}
+              </div>
+            </td>
+            <td className="py-0 " style={{ verticalAlign: "middle" }}>
+              Phil. Health
+            </td>
+            <td
+              className="py-0  text-right"
+              style={{ verticalAlign: "middle" }}
+            >
+              {" "}
+              {currency(deduction?.ph)}{" "}
+            </td>
           </tr>
           <tr>
-            <td className="py-0 ">Over Time (hrs)</td>
-            <td className="py-0 ">{earn?.overtime || "-"} </td>
+            <td className="py-0 ">Special Holiday</td>
+            <td className="py-0 ">
+              {special ? (
+                <div className="d-flex align-items-center justify-content-between">
+                  <span>{special}days</span>
+                  <span>{currency(special * rate?.daily * 1.3)}</span>
+                </div>
+              ) : (
+                "-"
+              )}
+            </td>
             <td className="py-0 ">SSS</td>
-            <td className="py-0 "> {currency(deduction?.sss)} </td>
+            <td className="py-0 text-right"> {currency(deduction?.sss)} </td>
+          </tr>
+          <tr>
+            <td className="py-0 ">Night Shift </td>
+            <td className="py-0 ">
+              {nightShift ? (
+                <div className="d-flex align-items-center justify-content-between">
+                  <span>{nightShift}hrs</span>
+                  <span>{currency(nightShift * hourlyRate * 0.1)}</span>
+                </div>
+              ) : (
+                "-"
+              )}
+            </td>
+            <td className="py-0 ">Pag-ibig</td>
+            <td className="py-0 text-right"> {currency(deduction?.pi)} </td>
+          </tr>
+          <tr>
+            <td className="py-0 ">Over Time </td>
+            <td className="py-0 ">
+              {earn?.overtime ? (
+                <div className="d-flex align-items-center justify-content-between">
+                  <span>{earn?.overtime}hrs</span>
+                  <span>{currency(overtime * hourlyRate * 1.25)}</span>
+                </div>
+              ) : (
+                "-"
+              )}
+            </td>
+            <td className="py-0 "></td>
+            <td className="py-0 "> </td>
           </tr>
           <tr>
             <td className="py-0 ">Bonus</td>
-            <td className="py-0 "> {currency(earn?.bonus)} </td>
-            <td className="py-0 ">Pag-ibig</td>
-            <td className="py-0 "> {currency(deduction?.pi)} </td>
+            <td className="py-0 text-right"> {currency(earn?.bonus)} </td>
+            <td className="py-0 "></td>
+            <td className="py-0 "> </td>
           </tr>
           <tr>
             <td className="py-0 ">Gross Earnings :</td>
-            <td className="py-0 font-weight-bold"> {currency(earn?.total)} </td>
+            <td className="py-0 font-weight-bold text-right">
+              {currency(earn?.total)}{" "}
+            </td>
             <td className="py-0 ">Total Deductions </td>
-            <td className="py-0 font-weight-bold">
+            <td className="py-0 font-weight-bold text-right">
               {currency(deduction?.total)}{" "}
             </td>
           </tr>
@@ -109,7 +198,7 @@ export default function Table() {
           </tr>
           <tr>
             <td className="py-0 m-0 p-0 border text-center" colSpan={2}>
-              <i> {numWords(Math.round(breakdown?.net)).toUpperCase()}</i>
+              <i> {toWords(breakdown?.net).toUpperCase()}</i>
             </td>
           </tr>
         </tbody>
