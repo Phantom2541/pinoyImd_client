@@ -6,7 +6,7 @@ import { useToasts } from "react-toast-notifications";
 import {
   capitalize,
   fullName,
-  getDate,
+  getDate as getMonth,
   currency,
 } from "../../../../services/utilities";
 import {
@@ -38,8 +38,6 @@ const Body = () => {
     setPersonnels(salariedEmployees);
   }, [collections]);
 
-  console.log("collections", collections);
-
   //Toast for errors or success
   useEffect(() => {
     if (message) {
@@ -60,7 +58,7 @@ const Body = () => {
     window.open(
       "/printout/payslip",
       "Task Printout",
-      "top=100px,left=100px,width=1050px,height=750px"
+      "top=100px,left=100px,width=1300px,height=750px"
     );
   };
   /**
@@ -76,6 +74,25 @@ const Body = () => {
     if (newPage >= 1 && newPage <= totalPages) {
       dispatch(SetActivePAGE(newPage));
     }
+  };
+
+  const getDay = (createdAt) => {
+    const date = new Date(createdAt);
+    return date.getDate();
+  };
+  const canBePaidThisQuarter = (createdAt) => {
+    const date = new Date(createdAt);
+    const now = new Date();
+
+    const createdMonth = date.getMonth(); // 0–11
+    const nowMonth = now.getMonth();
+
+    const createdQuarter = Math.floor(createdMonth / 3) + 1;
+    const currentQuarter = Math.floor(nowMonth / 3) + 1;
+
+    const sameYear = date.getFullYear() === now.getFullYear();
+
+    return createdQuarter === currentQuarter && sameYear;
   };
 
   return (
@@ -104,25 +121,22 @@ const Body = () => {
             const designation = Policy.getPosition(
               Number(contract?.designation)
             );
-            let akinsenas = payroll?.find(
-              ({ createdAt }) => getDate(createdAt) <= 15
-            );
 
-            let katapusan = payroll?.find((payslip) => {
-              if (Number(contract?.pc) === 1) {
-                if (getDate(payslip.createdAt) > 15) {
-                  return payslip;
-                }
-              } else if (Number(contract?.pc) === 2) {
-                if (getDate(payslip.createdAt) <= 31) {
-                  return payslip;
-                }
-              } else {
-                if (getDate(payslip.createdAt) <= 90) {
-                  return payslip;
-                }
-              }
-              return null;
+            const akinsenas = payroll?.find(
+              ({ createdAt, breakdown }) =>
+                getMonth(createdAt) === getMonth(new Date()) &&
+                breakdown?.isAquincena
+            );
+            const katapusan = payroll?.find(({ createdAt, breakdown }) => {
+              const day = getDay(createdAt);
+              const pc = Number(contract?.pc);
+              const isSameMonth = getMonth(createdAt) === getMonth(new Date());
+
+              return pc === 1
+                ? day > 15 && !breakdown?.isAquincena && isSameMonth
+                : pc === 2
+                ? day <= 31 && isSameMonth
+                : canBePaidThisQuarter(createdAt);
             });
             // console.log("Quincena", akinsenas);
             // console.log("katapusan", katapusan);
@@ -159,7 +173,13 @@ const Body = () => {
                     {akinsenas ? (
                       <MDBBtnGroup className="shadow-0">
                         <MDBBtn
-                          onClick={() => handlePayslip(personnel)}
+                          onClick={() =>
+                            handlePayslip({
+                              ...personnel,
+                              breakdown: akinsenas?.breakdown,
+                              datePaid: akinsenas?.createdAt,
+                            })
+                          }
                           color="warning"
                           size="sm"
                           title="View Payslip."
@@ -170,7 +190,9 @@ const Body = () => {
                     ) : (
                       <MDBBtnGroup className="shadow-0">
                         <MDBBtn
-                          onClick={() => handlePAYROLL(personnel)}
+                          onClick={() =>
+                            handlePAYROLL({ ...personnel, isAquincena: true })
+                          }
                           color="success"
                           size="sm"
                           title="Create Payroll"
@@ -188,7 +210,13 @@ const Body = () => {
                   {katapusan ? (
                     <MDBBtnGroup className="shadow-0">
                       <MDBBtn
-                        onClick={() => handlePayslip(personnel)}
+                        onClick={() =>
+                          handlePayslip({
+                            ...personnel,
+                            breakdown: katapusan?.breakdown,
+                            datePaid: katapusan?.createdAt,
+                          })
+                        }
                         color="warning"
                         size="sm"
                         title="Untag this branch."

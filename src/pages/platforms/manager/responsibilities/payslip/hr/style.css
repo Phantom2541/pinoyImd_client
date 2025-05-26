@@ -1,0 +1,19 @@
+.confidential-box {
+  background-color: #e0eac9; /* light green like in the image */
+  background-image: radial-gradient(black 0.5px, transparent 0.5px);
+  background-size: 5px 5px;
+  color: black;
+  font-weight: bold;
+  font-family: "Arial", sans-serif;
+  border: 1px solid black;
+  font-size: 1.1rem;
+}
+
+.payslip {
+  font-family: "Arial", sans-serif;
+}
+
+.payslip th,
+.payslip td {
+  border: 1px solid black !important;
+}

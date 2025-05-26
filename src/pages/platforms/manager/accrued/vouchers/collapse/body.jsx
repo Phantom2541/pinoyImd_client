@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBadge } from "mdbreact";
 import { currency, fullName } from "../../../../../../services/utilities";
 import { Privileges } from "../../../../../../services/fakeDb";

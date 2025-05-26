@@ -17,10 +17,11 @@ const Header = ({
 }) => {
   const { vendor } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
+
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div className="d-flex align-items-center">
-        {vendor._id && vendor._id !== "noSource" && (
+        {vendor?._id && vendor?._id !== "noSource" && (
           <>
             <input
               className="form-check-input"
