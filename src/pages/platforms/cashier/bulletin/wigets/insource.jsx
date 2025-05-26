@@ -1,7 +1,7 @@
 import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
 import { currency } from "../../../../../services/utilities";
 
-const Insources = ({ currentMonthVouchers, lastMonthVouchers }) => {
+const Insources = ({ currentVouchers, lastMonthVouchers }) => {
   return (
     <MDBCol xl="3" md="6" className="mb-4 mb-r">
       <MDBCard>
@@ -20,7 +20,7 @@ const Insources = ({ currentMonthVouchers, lastMonthVouchers }) => {
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
             <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
-              {currency(currentMonthVouchers)}
+              {currency(currentVouchers)}
             </h5>
             <p className="font-small grey-text">Current Vouchers</p>
           </MDBCol>

@@ -163,6 +163,8 @@ export default function Modal({
   };
 
   const { lo, hi, warn, alert, critical, snug } = form;
+  console.log("preference", preference);
+  console.log("form", form);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop>
@@ -190,7 +192,8 @@ export default function Modal({
                           key={`choice-${index}`}
                           value={String(index)}
                         >
-                          {choice.name} ({choice.ageGap})
+                          {choice.name ? choice.name : choice}
+                          {choice.ageGap ? `(${choice.ageGap})` : ""}
                         </MDBSelectOption>
                       )
                     )}

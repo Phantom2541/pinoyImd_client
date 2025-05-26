@@ -25,9 +25,11 @@ export default function ServiceCollapse() {
         ({ id, name, abbreviation, references, preference }, index) => (
           <MDBCard key={`services-${index}`}>
             <MDBCollapseHeader
-              onClick={() =>
-                references && setActiveId((prev) => (prev === id ? 0 : id))
-              }
+              onClick={() => {
+                if (preference) {
+                  setActiveId((prev) => (prev === id ? 0 : id));
+                }
+              }}
             >
               {(activePage - 1) * maxPage + index + 1}. {capitalize(name)}
               {abbreviation && ` | ${abbreviation.toUpperCase()}`}
@@ -36,13 +38,16 @@ export default function ServiceCollapse() {
                   <span className="text-primary">
                     &nbsp; Preference : {capitalize(preference)}
                   </span>
-                  {references && (
-                    <i
-                      style={{ rotate: `${activeId === id ? 0 : 90}deg` }}
-                      className="fa fa-angle-down transition-all"
-                    />
-                  )}
                 </>
+              )}
+              {preference && (
+                <i
+                  style={{
+                    rotate: `${activeId === id ? 0 : 90}deg`,
+                    transition: "transform 0.3s",
+                  }}
+                  className="fa fa-angle-down"
+                />
               )}
             </MDBCollapseHeader>
             {references && (
