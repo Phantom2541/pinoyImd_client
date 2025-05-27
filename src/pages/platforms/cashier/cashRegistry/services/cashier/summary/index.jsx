@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MDBBtn } from "mdbreact";
 import {
   capitalize,
@@ -48,6 +48,10 @@ export default function Summary() {
     amount = gross - discount,
     { abbr = undefined } = Categories[category],
     providedPaymentOptions = Payments[abbr];
+
+  useEffect(() => {
+    if (abbr === "hmo") setPayment("voucher");
+  }, [abbr]);
 
   const handleCheckout = async (e) => {
     e.preventDefault();
@@ -133,7 +137,6 @@ export default function Summary() {
       dispatch(RESET());
     }
   };
-
   return (
     <form onSubmit={handleCheckout}>
       <table className="summary-table">
@@ -174,7 +177,7 @@ export default function Summary() {
           </tr>
           <tr>
             <td colSpan="2">
-              {["cash", "downpayment"].includes(payment) ? (
+              {["cash", "downpayment"].includes(payment) && abbr !== "hmo" ? (
                 <input
                   type="number"
                   min={amount}

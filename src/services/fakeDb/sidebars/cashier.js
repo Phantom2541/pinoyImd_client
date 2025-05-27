@@ -17,6 +17,7 @@ import {
   SOA,
   Reseco,
   Onboarding,
+  HMO,
 } from "../../../pages/platforms/cashier";
 import StaffSchedule from "../../../pages/platforms/cashier/scheduler";
 
@@ -156,6 +157,13 @@ const cashier = [
         icon: "warehouse",
         title: "List of Companies who send out their services",
         component: Insources,
+      },
+      {
+        name: "HMO",
+        path: "/hmo",
+        icon: "hospital",
+        title: "Health Management Organizations",
+        component: HMO,
       },
       {
         name: "Suppliers",
