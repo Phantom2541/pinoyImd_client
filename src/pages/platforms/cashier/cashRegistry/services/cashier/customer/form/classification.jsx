@@ -162,12 +162,14 @@ export default function PosCard() {
             onChange={({ target }) => handleSource(target.value)}
           >
             <option value="">None</option>
-            {sources?.map(({ _id, clients, membership }) => (
-              <option key={_id} value={_id} title={membership}>
-                {Memberships.find(({ value }) => value === membership)?.emoji}
-                {clients?.displayname}
-              </option>
-            ))}
+            {sources
+              ?.filter(({ category }) => category !== "hmo")
+              .map(({ _id, clients, membership }) => (
+                <option key={_id} value={_id} title={membership}>
+                  {Memberships.find(({ value }) => value === membership)?.emoji}
+                  {clients?.displayname}
+                </option>
+              ))}
           </select>
         </div>
         {source ? (
