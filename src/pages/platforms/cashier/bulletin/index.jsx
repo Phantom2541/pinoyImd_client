@@ -21,6 +21,10 @@ import { Expenses, Purchases } from "./calendars";
 export default function Dashboard() {
   const [currentMonthSales, setCurrentMonthSales] = useState(0);
   const [lastMonthSales, setLastMonthSales] = useState(0);
+  const [currentVouchers, setCurrentVouchers] = useState(0);
+  const [lastMonthVouchers, setLastMonthVouchers] = useState(0);
+  const [currentMonthOutsources, setCurrentMonthOutsources] = useState(0);
+  const [lastMonthOutsources, setLastMonthOutsources] = useState(0);
 
   const { activePlatform, auth, token } = useSelector(({ auth }) => auth);
 
@@ -45,14 +49,20 @@ export default function Dashboard() {
       .then((res) => {
         setCurrentMonthSales(res.current.totalSales || 0);
         setLastMonthSales(res.last.totalSales || 0);
-        localStorage.setItem(
-          "currentVouchers",
-          JSON.stringify(res.current.totalVouchers || 0)
-        );
-        localStorage.setItem(
-          "lastMonthVouchers",
-          JSON.stringify(res.last.totalVouchers)
-        );
+        setCurrentVouchers(res.current.totalVouchers || 0);
+        setLastMonthVouchers(res.last.totalVouchers || 0);
+        console.log(res);
+      })
+      .catch((err) => console.log(err.message));
+    axioKit
+      .universal(
+        `commerce/pos/services/deals/widgets`,
+        token,
+        queryCurrentMonth
+      )
+      .then((res) => {
+        setCurrentMonthOutsources(res.current.totalAmount || 0);
+        setLastMonthOutsources(res.last.totalAmount || 0);
         console.log(res);
       })
       .catch((err) => console.log(err.message));
@@ -67,10 +77,13 @@ export default function Dashboard() {
             lastMonthSales={lastMonthSales}
           />
           <InSource
-          // currentMonthVouchers={currentMonthVouchers}
-          // lastMonthVouchers={lastMonthVouchers}
+            currentVouchers={currentVouchers}
+            lastMonthVouchers={lastMonthVouchers}
           />
-          <OutSource />
+          <OutSource
+            currentMonthOutsources={currentMonthOutsources}
+            lastMonthOutsources={lastMonthOutsources}
+          />
           <Utilities />
         </MDBRow>
       </section>

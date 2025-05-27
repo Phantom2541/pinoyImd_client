@@ -6,7 +6,7 @@ import {
   MDBIcon,
   MDBModalHeader,
 } from "mdbreact";
-import { Remittance } from "../../../../../../../components/printout old";
+import { Remittance } from "../../../../../../../components/printout";
 import { SetPrinting } from "./../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 export default function Modal() {
