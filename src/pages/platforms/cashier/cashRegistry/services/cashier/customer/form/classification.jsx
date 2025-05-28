@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBCol, MDBRow, MDBTypography } from "mdbreact";
 
@@ -101,7 +101,7 @@ export default function PosCard() {
     dispatch(SETSOURCE({ _id: clients?._id, membership }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
-
+  const baseCategory = Categories[category]?.abbr;
   return (
     <>
       <div>
@@ -163,7 +163,9 @@ export default function PosCard() {
           >
             <option value="">None</option>
             {sources
-              ?.filter(({ category }) => category !== "hmo")
+              ?.filter(({ category: c }) =>
+                baseCategory === "hmo" ? c === "hmo" : c !== "hmo"
+              )
               .map(({ _id, clients, membership }) => (
                 <option key={_id} value={_id} title={membership}>
                   {Memberships.find(({ value }) => value === membership)?.emoji}
