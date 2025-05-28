@@ -125,7 +125,7 @@ export default function Modal() {
   };
 
   const isApplySourceDisc =
-    (category === "opd" || category === "wi") && isEmpty(privilege);
+    (category === "opd" || category === "wi") && !privilege;
 
   const baseCategory = isApplySourceDisc ? "is" : category;
   const categoryIndex = Categories.findIndex(
