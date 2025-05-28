@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -7,12 +7,17 @@ import {
   SetSOURCE,
   RESET_COLLECTIONS,
   SetREGISTER,
+  SetCATEGORY,
+  SetFILTER,
 } from "../../../../../services/redux/slices/assets/providers";
 import Search from "../../../../../components/searchables/sources";
 import Swal from "sweetalert2";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ providers }) => providers),
+    { category } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
+
   // initial values
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -29,8 +34,13 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
 
-  const handleRegister = (displayname = "") => {
-    dispatch(SetREGISTER({ displayname }));
+  useEffect(() => {
+    const filter = collections.filter((item) => item.category === category);
+    dispatch(SetFILTER(filter));
+  }, [collections, category, dispatch]);
+
+  const handleRegister = (name = "") => {
+    dispatch(SetREGISTER({ name }));
   };
 
   const setSource = (source) => {
@@ -52,6 +62,10 @@ const Header = () => {
     });
   };
 
+  const handleChangeCategory = (value) => {
+    dispatch(SetCATEGORY(value));
+  };
+
   return (
     <MDBView
       cascade
@@ -62,6 +76,19 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
+          <div className="d-flex align-items-center mr-4">
+            <span className="mr-1">Category:</span>
+            <select
+              className="form-control bg-light"
+              value={category}
+              onChange={(e) => handleChangeCategory(e.target.value)}
+            >
+              <option value="insource">Insource</option>
+              <option value="hmo">Health Management Organization</option>
+              <option value="sc">Subcontract</option>
+              <option value="ssc">Special Subcontract</option>
+            </select>
+          </div>
           <Search setSource={setSource} handleRegister={handleRegister} />
         </div>
       </div>
