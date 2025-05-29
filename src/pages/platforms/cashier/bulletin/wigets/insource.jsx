@@ -1,7 +1,7 @@
-import React from "react";
 import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
+import { currency } from "../../../../../services/utilities";
 
-const Insources = () => {
+const Insources = ({ currentVouchers, lastMonthVouchers }) => {
   return (
     <MDBCol xl="3" md="6" className="mb-4 mb-r">
       <MDBCard>
@@ -15,22 +15,26 @@ const Insources = () => {
               className="ml-4"
               style={{ padding: 0 }}
             >
-              <MDBIcon icon="dollar-sign" size="2x" />
+              <MDBIcon icon="eye" size="2x" />
             </MDBBtn>
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
-            <h5 className="ml-4 mt-4 mb-2 font-weight-bold">6,512 </h5>
-            <p className="font-small grey-text">Total Sales</p>
+            <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
+              {currency(currentVouchers)}
+            </h5>
+            <p className="font-small grey-text">Current Vouchers</p>
           </MDBCol>
         </MDBRow>
         <MDBRow className="my-3">
           <MDBCol md="7" col="7" className="text-left pl-4">
             <p className="font-small dark-grey-text font-up ml-4 font-weight-bold">
-              Last month
+              Last Month
             </p>
           </MDBCol>
           <MDBCol md="5" col="5" className="text-right pr-5">
-            <p className="font-small grey-text">145,567</p>
+            <p className="font-small grey-text">
+              {currency(lastMonthVouchers)}
+            </p>
           </MDBCol>
         </MDBRow>
       </MDBCard>

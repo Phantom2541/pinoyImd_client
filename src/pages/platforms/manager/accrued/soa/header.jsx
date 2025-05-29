@@ -26,7 +26,7 @@ const Header = () => {
           collections.map(({ outsource: vendor }) => {
             const { _id = "", displayname = "" } = vendor || {};
             const soa = payables.find(
-              ({ supplier }) => String(supplier.vendors) === String(_id)
+              ({ supplier }) => String(supplier?.vendors) === String(_id)
             );
 
             return [

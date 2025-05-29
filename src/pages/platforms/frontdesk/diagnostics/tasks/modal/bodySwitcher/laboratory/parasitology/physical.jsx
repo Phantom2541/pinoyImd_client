@@ -18,6 +18,7 @@ const colors = [
     "Dark Brown (Healthy)",
     "Brown",
     "Light Brown",
+    "Dark Yellow",
     "Yellow",
     "Reddish",
     "Greenish",

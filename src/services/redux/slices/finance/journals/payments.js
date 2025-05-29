@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import { axioKit, dateFormat } from "../../../../utilities";
 import { Statements } from "../../../../fakeDb";
 import moment from "moment";
 const url = "finance/journals/payments";
@@ -173,9 +173,46 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+      .addCase(BROWSE.fulfilled, (state, action) => {
+        const { payload } = action;
         state.collections = payload;
-        state.filtered = payload;
+        let uniqueSource = [];
+        if (payload?.length > 0)
+          uniqueSource = [
+            ...new Map(
+              payload.map(({ source }) => [
+                source?._id || "NoSource",
+                {
+                  _id: source?._id || "NoSource",
+                  displayname: source?.displayname || "No Source",
+                },
+              ])
+            ).values(),
+          ];
+        state.sources = uniqueSource;
+
+        const groupByDate = payload.reduce((groups, item) => {
+          const date = dateFormat(item.createdAt);
+          const index = groups.findIndex((group) => group.date === date);
+
+          if (index > -1) {
+            groups[index].deals.push({ ...item, isSelected: false });
+            groups[index].sum += item.amount;
+          } else {
+            groups.push({
+              date,
+              sum: item.amount,
+              deals: [{ ...item, isSelected: false }],
+              isSelected: false,
+            });
+          }
+          return groups;
+        }, []);
+
+        state.totalPages =
+          Math.ceil((groupByDate?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.filtered = groupByDate;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, { payload }) => {
@@ -194,16 +231,16 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
         state.collections.unshift(payload);
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE.pending, (state) => {

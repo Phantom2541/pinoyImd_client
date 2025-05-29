@@ -1,4 +1,3 @@
-import React from "react";
 import { Services } from "../../../../services/fakeDb";
 import { MDBRow, MDBCol } from "mdbreact";
 

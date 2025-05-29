@@ -8,6 +8,7 @@ import { Denomination, Census } from "./modal";
 import { BROWSE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
 import { BROWSE as DEALS } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { Monthly } from "../../../../../../services/redux/slices/finance/journals/payments";
+import Printout from "./modal/printout";
 
 export default function Remmitances() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
@@ -56,6 +57,7 @@ export default function Remmitances() {
       </MDBCard>
       <Denomination />
       <Census />
+      <Printout />
     </MDBContainer>
   );
 }

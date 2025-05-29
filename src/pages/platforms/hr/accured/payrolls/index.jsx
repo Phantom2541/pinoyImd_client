@@ -27,6 +27,21 @@ import {
   MDBBtnGroup,
 } from "mdbreact";
 
+// Control the employees payroll details
+// ✅ HR Department – “Human Resources”
+// Saklaw ng trabaho nila sa payroll:
+
+// Timekeeping (oras ng pasok, leave, tardiness, OT, etc.)
+
+// Employee records (salary rate, employment status, benefits)
+
+// Payroll input (who gets paid, how much, adjustments)
+
+// Attendance reports for payroll computation
+
+// Coordination with Finance for payroll cutoffs
+
+// HR ang may hawak sa data at basis ng sweldo(attendance, rates, deductions, etc.)
 export default function Payrolls() {
   const [personnels, setPersonnels] = useState([]),
     [selected, setSelected] = useState({}),
@@ -99,9 +114,8 @@ export default function Payrolls() {
                 <th>#</th>
                 <th>Name</th>
                 <th>Rate</th>
-                <th>COLA</th>
-                {/* Cost of Living Allowance */}
-                <th>Akinsenas</th>
+                <th title="Cost of Living Allowance">COLA</th>
+                <th>Quincenas</th>
                 <th>Katapusan</th>
               </tr>
             </thead>

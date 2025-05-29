@@ -29,7 +29,8 @@ const initialState = {
   isLoading: false,
   censusLoading: false, // dedicated loader for celsus
   message: "",
-  vendor: undefined,
+  vendor: {},
+  onPrint: false,
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -421,34 +422,19 @@ export const reduxSlice = createSlice({
 
     SetFilterBySOURCE: (state, { payload }) => {
       let filtered = [];
-      if (payload === "all") {
+      if (payload.value === "all") {
         filtered = state.collections;
-        state.vendor = undefined;
-      } else if (payload === "NoSource") {
+        state.vendor = {};
+      } else if (payload.value === "NoSource") {
         filtered = state.collections.filter(({ source }) => !source);
         state.vendor = "noSource";
       } else {
         filtered = state.collections.filter(
-          ({ source }) => source?._id.toString() === payload.toString()
+          ({ source }) => source?._id.toString() === payload?.value?.toString()
         );
-        state.vendor = payload;
+        state.vendor = payload.vendor;
       }
-
-      const groupByDate = filtered.reduce((groups, item) => {
-        const date = dateFormat(item.createdAt);
-        const index = groups.findIndex((group) => group.date === date);
-        if (index > -1) {
-          groups[index].deals.push({ ...item, isSelected: false });
-        } else {
-          groups.push({
-            date,
-            deals: [{ ...item, isSelected: false }],
-            isSelected: false,
-          });
-        }
-        return groups;
-      }, []);
-      state.filtered = groupByDate;
+      state.filtered = filtered;
     },
 
     SetFilterByOUTSOURCE: (state, { payload }) => {
@@ -476,34 +462,36 @@ export const reduxSlice = createSlice({
     // },
     SetCluster: (state, { payload }) => {
       const { cutoff, _id } = state.vendor;
-      const fakeDB = localStorage.getItem("cluster");
-      let parseVoucher = fakeDB ? JSON.parse(fakeDB) : {};
-      if (parseVoucher[_id]?.length > 0) {
-        state.cluster = parseVoucher[_id];
-      } else {
-        const now = new Date();
-        const cutoffDate = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          Number(cutoff) || 1
-        );
+      if (_id) {
+        const fakeDB = localStorage.getItem("cluster");
+        let parseVoucher = fakeDB ? JSON.parse(fakeDB) : {};
+        if (parseVoucher[_id]?.length > 0) {
+          state.cluster = parseVoucher[_id];
+        } else {
+          const now = new Date();
+          const cutoffDate = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            Number(cutoff) || 1
+          );
 
-        const filteredPayload = payload
-          .filter((item) => {
-            const itemDate = new Date(item.date); // assuming item.date is like "March 24, 2025"
-            return itemDate <= cutoffDate;
-          })
-          .map((voucher) => ({ ...voucher, hasSelected: true }));
+          const filteredPayload = payload
+            .filter((item) => {
+              const itemDate = new Date(item.date); // assuming item.date is like "March 24, 2025"
+              return itemDate <= cutoffDate;
+            })
+            .map((voucher) => ({ ...voucher, hasSelected: true }));
 
-        state.cluster = filteredPayload;
+          state.cluster = filteredPayload;
 
-        localStorage.setItem(
-          "cluster",
-          JSON.stringify({
-            ...parseVoucher,
-            [_id]: filteredPayload,
-          })
-        );
+          localStorage.setItem(
+            "cluster",
+            JSON.stringify({
+              ...parseVoucher,
+              [_id]: filteredPayload,
+            })
+          );
+        }
       }
     },
 
@@ -671,6 +659,11 @@ export const reduxSlice = createSlice({
     ResetDATE: (state) => {
       state.month = today.getMonth() + 1;
       state.year = today.getFullYear();
+    },
+    SetPrinting: (state, { payload }) => {
+      const { status, selected } = payload;
+      state.onPrint = status;
+      state.selected = { ...selected };
     },
   },
   /**
@@ -1203,6 +1196,7 @@ export const {
   SetMONTH,
   RESET,
   ResetDATE,
+  SetPrinting,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

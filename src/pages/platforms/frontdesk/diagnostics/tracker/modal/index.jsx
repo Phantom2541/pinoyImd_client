@@ -8,13 +8,15 @@ import {
   MDBBtnGroup,
 } from "mdbreact";
 import Patient from "./patient";
-import { formColor } from "../../../../../../../services/utilities";
+import { formColor } from "../../../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
 import { useDispatch, useSelector } from "react-redux";
-import { LABRESULT } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { LABRESULT } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
 
 export default function Modal({ show, toggle, task, setTask }) {
+  console.log("task", task);
+
   const { token, auth } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ heads }) => heads),
     [rerender, setRerender] = useState(true), //handle rendering for healthy client injection
@@ -66,14 +68,6 @@ export default function Modal({ show, toggle, task, setTask }) {
       sub = findSignatoryId(
         department === "LAB" ? "pathologist" : "radiologist"
       );
-
-    // //console.log({
-    //   ...task,
-    //   //if meant to save, just copy current state in db
-    //   hasDone: hasDone || dbDone,
-    //   signatories: [head, sub, auth._id],
-    // });
-
     dispatch(
       LABRESULT({
         token,

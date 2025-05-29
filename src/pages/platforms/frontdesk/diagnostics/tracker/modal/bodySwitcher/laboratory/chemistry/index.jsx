@@ -1,11 +1,11 @@
 import React from "react";
-import { Services } from "../../../../../../../../../../services/fakeDb";
+import { Services } from "../../../../../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
 import {
   referenceColor,
   findReference,
-} from "../../../../../../../../../../services/utilities";
+} from "../../../../../../../../../services/utilities";
 
 export default function Chemistry({ task, setTask }) {
   const { collections: preferences } = useSelector(

@@ -7,14 +7,21 @@ import {
   MDBCardBody,
 } from "mdbreact";
 import { useSelector } from "react-redux";
+import { collapse } from "../../../../../../../services/utilities";
 
-import CollapsableBody from "./body";
-import CollapsableHeader from "./header";
+import Body from "./body";
+import Header from "./header";
 import TableLoading from "../../../../../../../components/tableLoading";
 
-export default function Body() {
-  const { filtered, isLoading } = useSelector(({ payments }) => payments),
-    [activeId, setActiveId] = useState(-1);
+export default function Index() {
+  const { filtered, isLoading } = useSelector(({ payments }) => payments);
+
+  /**
+   * Active states for collapsible items
+   */
+  const [activeId, setActiveId] = useState(-1);
+  const [didHoverId, setDidHoverId] = useState(-1);
+
   return (
     <>
       {!isLoading ? (
@@ -25,7 +32,14 @@ export default function Body() {
           fluid
         >
           {filtered.map((payment, index) => {
-            const { breakdown, fsid } = payment;
+            const { deals, date, sum } = payment;
+            const actualIndex = index; // Directly use the index in the paginated data
+            const { color } = collapse.getStyle(
+              actualIndex,
+              activeId,
+              didHoverId
+            );
+
             return (
               <MDBCard
                 key={`staffs-${index}`}
@@ -44,8 +58,17 @@ export default function Body() {
                   onClick={() =>
                     setActiveId((prev) => (prev === index ? -1 : index))
                   }
+                  onMouseLeave={() => setDidHoverId(-1)}
+                  onMouseEnter={() => setDidHoverId(actualIndex)}
                 >
-                  <CollapsableHeader payment={payment} index={index} />
+                  <Header
+                    key={date}
+                    title={date}
+                    count={deals?.length}
+                    sum={sum}
+                    textColor={color}
+                    index={index}
+                  />
                 </MDBCollapseHeader>
                 <MDBCollapse
                   id={`collapse-${index}`}
@@ -58,7 +81,8 @@ export default function Body() {
                   }}
                 >
                   <MDBCardBody className="pt-2">
-                    {fsid === 13 && <CollapsableBody breakdown={breakdown} />}
+                    {/* {fsid === 13 && */}
+                    <Body deals={deals} />
                   </MDBCardBody>
                 </MDBCollapse>
               </MDBCard>

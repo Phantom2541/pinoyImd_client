@@ -1,14 +1,15 @@
-import React from "react";
-import Head from "./head";
 import Table from "./table";
-import Footer from "./footer";
-
+import "./style.css";
+import { Banner } from "../../../../../../services/utilities";
+import { useSelector } from "react-redux";
 export default function Hr() {
+  const { activePlatform } = useSelector(({ auth }) => auth);
+  const { branch = {} } = activePlatform;
+  const { companyId = {}, name = "" } = branch;
   return (
     <>
-      <Head />
+      <Banner company={companyId?.name} branch={name} />
       <Table />
-      <Footer />
     </>
   );
 }

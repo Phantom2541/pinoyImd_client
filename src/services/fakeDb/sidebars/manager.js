@@ -8,7 +8,7 @@ import {
 } from "../../../pages/platforms/manager/settings";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
-import Payrolls from "../../../pages/platforms/manager/responsibilities/payroll";
+import Payrolls from "../../../pages/platforms/finance/payroll";
 
 import {
   Employees,
@@ -23,6 +23,7 @@ import {
   Remittances,
   Sales,
   ExperimentalLedger,
+  Quest,
 } from "../../../pages/platforms/manager/businessOperations";
 
 import {
@@ -63,19 +64,27 @@ const manager = [
         name: "Sales",
         path: "/sales",
         icon: "money-bill",
+        title: "Daily Sales",
         component: Sales,
       },
       {
         name: "Remittances",
         path: "/remittances",
-        icon: "money-bill",
+        icon: "pencil-alt",
         component: Remittances,
       },
       {
         name: "Ledger",
         path: "/ledger",
-        icon: "money-bill",
+        icon: "file-invoice-dollar",
         component: ExperimentalLedger,
+      },
+      {
+        name: "Mobile Services",
+        path: "/mobile",
+        icon: "mobile-alt",
+        title: "Quest System for Mobile Clinic Lab Team",
+        component: Quest,
       },
     ],
   },
@@ -146,6 +155,12 @@ const manager = [
         title: "Monthly Reseco Deals",
         component: Reseco,
       },
+      {
+        name: "Payroll",
+        path: "/payroll",
+        icon: "money-bill",
+        component: Payrolls,
+      },
     ],
   },
   {
@@ -190,17 +205,6 @@ const manager = [
         name: "P M S",
         path: "/preventive/maintenenace/schedule",
         icon: "tools",
-      },
-      {
-        name: "Payroll",
-        path: "/payroll",
-        icon: "money-bill",
-        component: Payrolls,
-      },
-      {
-        name: "Cashier",
-        path: "/cashier",
-        icon: "money-bill",
       },
     ],
   },
@@ -345,6 +349,30 @@ const manager = [
             component: Procurments,
           },
         ],
+      },
+    ],
+  },
+  {
+    name: "Markey Place",
+    icon: "shopping-cart",
+    path: "/marketplace",
+    children: [
+      {
+        name: "Machine",
+        path: "/machines",
+        icon: "laptop-code",
+      },
+      {
+        name: "Products",
+        path: "/products",
+        icon: "cogs",
+        component: Products,
+      },
+      {
+        name: "Medicines",
+        path: "/medicines",
+        icon: "pills",
+        component: Products,
       },
     ],
   },

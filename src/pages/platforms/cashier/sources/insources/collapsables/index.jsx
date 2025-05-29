@@ -23,14 +23,8 @@ import Header from "./header";
 
 export default function MenuCollapse() {
   const { token } = useSelector(({ auth }) => auth),
-    {
-      collections,
-      searchResults,
-      didSearch,
-      formSubmitted,
-      isSuccess,
-      message,
-    } = useSelector(({ providers }) => providers),
+    { filtered, searchResults, didSearch, formSubmitted, isSuccess, message } =
+      useSelector(({ providers }) => providers),
     { formSubmitted: formSubmittedBranch, isSuccess: isSuccessBranch } =
       useSelector(({ branches }) => branches),
     [insources, setInsources] = useState([]),
@@ -45,9 +39,9 @@ export default function MenuCollapse() {
     if (didSearch && searchResults.length > 0) {
       setInsources(searchResults || []);
     } else {
-      setInsources(collections || []);
+      setInsources(filtered || []);
     }
-  }, [collections, didSearch, searchResults]);
+  }, [filtered, didSearch, searchResults]);
 
   useEffect(() => {
     if (message) {
@@ -277,7 +271,7 @@ export default function MenuCollapse() {
           );
         })
       ) : (
-        <p>No record</p>
+        <p className="text-center">No insource record.</p>
       )}
       {/* <Modal toggle={toggle} show={show} selected={ghostCompany} /> */}
     </MDBContainer>

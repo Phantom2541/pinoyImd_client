@@ -4,6 +4,7 @@ import { MDBView } from "mdbreact";
 
 import Sourcing from "./sourcing.jsx";
 import Status from "./status.jsx";
+import Search from "./search.jsx";
 
 import {
   BROWSE,
@@ -14,6 +15,7 @@ export default function Header({ view, setView }) {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ taskGenerator }) => taskGenerator),
     [status, setStatus] = useState("All"),
+    [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
 
   //Initial Browse and Fetch Data
@@ -57,6 +59,9 @@ export default function Header({ view, setView }) {
         <Status setStatus={setStatus} status={status} />
         <span className="mx-3 font-weight-bold">Sources:</span>
         <Sourcing onChange={setView} view={view} />
+      </div>
+      <div className="text-right">
+        <Search searchKey={searchKey} setSearchKey={setSearchKey} didSearch />
       </div>
     </MDBView>
   );

@@ -205,6 +205,14 @@ export const reduxSlice = createSlice({
     SetUPDATE_TRACKER: (state, data) => {
       state.updateTracker.fieldName = data.payload;
     },
+    SetPAYROLL: (state, { payload }) => {
+      const index = state?.collections?.findIndex(
+        ({ user }) => user?._id === payload?.particular
+      );
+      console.log("payroll user", payload);
+      console.log("index", index);
+      state.collections[index]?.payroll.push(payload);
+    },
     SETOnHotSEAT: (state, { payload }) => {
       // set default values
       state.staff = payload.user;
@@ -234,6 +242,19 @@ export const reduxSlice = createSlice({
         (item) => item._id !== payload._id
       );
       state.access.available = state.access.available.unshift({ _id, access });
+    },
+    SetSELECTED: (state, { payload }) => {
+      console.log("payload", payload);
+
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+    TOGGLE: (state) => {
+      state.showModal = false;
     },
     RESET: (state, data) => {
       state.isSuccess = false;
@@ -298,6 +319,9 @@ export const reduxSlice = createSlice({
           const bDesignation = String(b?.contract?.designation || "");
           return aDesignation.localeCompare(bDesignation);
         });
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -330,6 +354,9 @@ export const reduxSlice = createSlice({
       .addCase(PAYROLL.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.collections = payload;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
       })
       .addCase(PAYROLL.rejected, (state, action) => {
@@ -422,7 +449,11 @@ export const {
   SETOnHotSEAT,
   SETQUEUED,
   SETREVOKED,
+  SetPAYROLL,
   UPDATEACCESS,
+  SetSELECTED,
+  SetActivePAGE,
+  TOGGLE,
   RESET,
   SetUPDATE_TRACKER,
 } = reduxSlice.actions;

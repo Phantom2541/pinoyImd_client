@@ -18,7 +18,6 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 import { Input, Select } from "../../../../../../../components/customizable";
-
 const Tables = () => {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
@@ -52,7 +51,7 @@ const Tables = () => {
   useEffect(() => {
     if (providers.length > 0) {
       let _providerOptions = providers.map(({ clients }) => ({
-        _id: clients._id,
+        _id: clients?._id,
         text: `${clients?.displayname?.toUpperCase()}`,
       }));
 
@@ -70,6 +69,10 @@ const Tables = () => {
           ? collections
           : collections.filter(({ perform }) => perform === view);
 
+      console.log("collections", collections);
+      console.log("view", view);
+      console.log("deals", _deals);
+
       // if any items inside deals has sourceKeyAsDeclared value, show sources in table head
       // if (_deals.find((s) => s.physicianId)) setShowPhysicians(true);
       // if (_deals.find((s) => s.source)) setShowSources(true);
@@ -79,7 +82,9 @@ const Tables = () => {
     }
   }, [collections, view, dispatch]);
 
-  const handleView = (selected) => {
+  // Sample generateStub function
+
+  const handlePrintout = async (selected) => {
     localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
     window.open(
       "/printout/claimstub",
@@ -98,17 +103,14 @@ const Tables = () => {
     );
   };
 
-  const generateStub = (deal) => ({
-    ...deal,
+  const generateStub = ({ customerId, cashierId, cart, ...rest }) => ({
+    ...rest,
     customer: {
-      fullName: deal.customerId?.fullName,
-      address: `${
-        deal.customerId?.address?.barangay &&
-        `${deal.customerId?.address?.barangay}, `
-      }${deal.customerId?.address?.city}`,
+      fullName: customerId?.fullName,
+      address: customerId?.address,
     },
-    cashier: deal.cashierId?.fullName,
-    cart: deal.cart,
+    cashier: cashierId?.fullName,
+    cart,
   });
 
   const handleUpdate = async (updatedKey, newKey, deal = {}) => {
@@ -351,10 +353,7 @@ const Tables = () => {
                       </div>
                     )}
                   </td>
-                  <td
-                    className="cursor-pointer"
-                    onClick={() => handleView(deal)}
-                  >
+                  <td className="cursor-pointer">
                     <div className="d-flex align-items-center">
                       <h6
                         className="mt-2"
@@ -363,6 +362,7 @@ const Tables = () => {
                       >
                         {currency(deal.amount)}
                       </h6>
+
                       <img
                         src={img}
                         alt={text}
@@ -395,7 +395,7 @@ const Tables = () => {
                               color="info"
                               rounded
                               title="Print receipt."
-                              onClick={() => handleView(deal)}
+                              onClick={() => handlePrintout(deal)}
                             >
                               <MDBIcon icon="print" />
                             </MDBBtn>

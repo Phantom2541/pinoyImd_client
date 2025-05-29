@@ -32,7 +32,7 @@ export default function Summary() {
     const deletedCashiers = new Set();
     setSelectedCashier("");
 
-    collections.forEach(({ cashierId, amount, createdAt, isDeleted }) => {
+    collections.forEach(({ cashierId, amount, createdAt, deletedAt }) => {
       if (!cashierId || !createdAt) return;
       const createdDate = new Date(createdAt);
 
@@ -43,7 +43,7 @@ export default function Summary() {
       ) {
         const cashierKey = cashierId._id;
 
-        if (isDeleted) {
+        if (deletedAt) {
           deletedCashiers.add(cashierKey);
           return;
         }
@@ -95,7 +95,12 @@ export default function Summary() {
         return matchesDate && matchesCashier;
       }) || [];
 
-    const totalAmount = filtered.reduce((sum, { amount }) => sum + amount, 0);
+    console.log("filtered", filtered);
+
+    const totalAmount = filtered.reduce((sum, { amount, deletedAt }) => {
+      if (deletedAt) return sum;
+      return sum + amount;
+    }, 0);
 
     return { cluster: filtered, total: totalAmount };
   }, [day, month, year, collections, selectedCashier]);
@@ -175,7 +180,6 @@ export default function Summary() {
                   total
                 )}`}</p>
               </div>
-              {/* )} */}
               {cluster.length > 0 ? (
                 <div
                   style={{ maxHeight: "40rem", overflowY: "auto" }}
@@ -183,9 +187,17 @@ export default function Summary() {
                 >
                   <ol className="mt-2 list-decimal list-inside">
                     {cluster.map(
-                      ({ customerId, amount, createdAt, cart }, index) => (
+                      (
+                        { customerId, amount, createdAt, cart, deletedAt },
+                        index
+                      ) => (
                         <li key={index} className="p-2 border-b">
-                          <div className="font-bold">
+                          <div
+                            className="font-bold"
+                            style={{
+                              color: deletedAt ? "red" : "inherit",
+                            }}
+                          >
                             {fullName(
                               customerId?.fullName || "Unknown Customer"
                             )}
@@ -194,7 +206,7 @@ export default function Summary() {
                             {new Date(createdAt).toLocaleTimeString()}
                           </div>
                           <div className="text-blue-600">
-                            {currency(amount)}
+                            {currency(amount)} {deletedAt ? "(Deleted)" : ""}
                           </div>
                           <div className="text-blue-600">
                             {cart.map((i, index) => (

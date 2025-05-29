@@ -14,7 +14,16 @@ export default function PatientSources({ didCheckout }) {
 
   return (
     <MDBCol md="6">
-      <MDBSelect className="colorful-select dropdown-primary mt-0 hidden-md-down">
+      <input
+        type="text"
+        readOnly
+        name="source"
+        className="form-control"
+        value={`Source: ${
+          selected?.source ? selected?.source?.displayname : "-"
+        }`}
+      />
+      {/* <MDBSelect className="colorful-select dropdown-primary mt-0 hidden-md-down">
         <MDBSelectInput selected={selected?.source?.displayname} />
         <MDBSelectOptions>
           <MDBSelectOption value="">Source</MDBSelectOption>
@@ -29,7 +38,7 @@ export default function PatientSources({ didCheckout }) {
             </MDBSelectOption>
           ))}
         </MDBSelectOptions>
-      </MDBSelect>
+      </MDBSelect> */}
     </MDBCol>
   );
 }

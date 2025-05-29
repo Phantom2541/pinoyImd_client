@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -10,10 +10,12 @@ import {
   MDBRow,
   MDBCol,
 } from "mdbreact";
+import { useToasts } from "react-toast-notifications";
 
 import {
   TOGGLE,
   ToggleDidSearch,
+  RESET,
   SAVE,
 } from "../../../../../../services/redux/slices/assets/providers";
 import { Select } from "../../../../../../components/customizable";
@@ -33,19 +35,38 @@ const _form = {
 };
 
 export default function Modal() {
-  const { showModal, isLoading, selected } = useSelector(
-      ({ providers }) => providers
-    ),
+  const {
+      showModal,
+      selected,
+      category: defaultCategory,
+      formSubmitted,
+      isSuccess,
+    } = useSelector(({ providers }) => providers),
     { token, activePlatform } = useSelector(({ auth }) => auth),
+    [category, setCategory] = useState(""),
     [form, setForm] = useState(_form),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  const toggle = () => dispatch(TOGGLE());
+  const toggle = useCallback(() => dispatch(TOGGLE()), [dispatch]);
+
+  useEffect(() => {
+    if (showModal && !formSubmitted && isSuccess) {
+      console.log("close the modallllll");
+      addToast("New provider added successfully.", {
+        appearance: "success",
+      });
+      dispatch(RESET());
+      toggle();
+    }
+  }, [showModal, formSubmitted, isSuccess, dispatch, toggle, addToast]);
+
   useEffect(() => {
     if (showModal) {
       setForm(_form);
+      setCategory(defaultCategory);
     }
-  }, [showModal]);
+  }, [showModal, defaultCategory]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,12 +81,12 @@ export default function Modal() {
         data: {
           ...form,
           clients: selected._id,
+          category,
           vendors: activePlatform.branchId,
         },
       })
     );
     dispatch(ToggleDidSearch(false));
-    dispatch(TOGGLE());
   };
   const categoryHasChecked = (category) => form.category.includes(category);
 
@@ -104,6 +125,21 @@ export default function Modal() {
             label="Administrative Officer"
           />
           <MDBRow>
+            <MDBCol>
+              <Select
+                label="Category"
+                preValue={category}
+                onChange={(e) => setCategory(e)}
+                keys={"value"}
+                values={"text"}
+                collections={[
+                  { text: "Insource", value: "insource" },
+                  { text: "Health Management Organization", value: "hmo" },
+                  { text: "Subcontract", value: "sc" },
+                  { text: "Special Subcontract", value: "ssc" },
+                ]}
+              />
+            </MDBCol>
             <MDBCol>
               <Select
                 collections={Memberships}
@@ -264,12 +300,12 @@ export default function Modal() {
           <div className="d-flex justify-content-end mt-4">
             <MDBBtn
               type="submit"
-              disabled={isLoading}
+              disabled={formSubmitted}
               color="info"
               className="mb-2"
               rounded
             >
-              Submit
+              Submit {formSubmitted && <MDBIcon icon="spinner" pulse />}
             </MDBBtn>
           </div>
         </MDBModalBody>

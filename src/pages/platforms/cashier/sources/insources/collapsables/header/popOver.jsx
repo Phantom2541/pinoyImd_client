@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   MDBPopover,
@@ -8,7 +7,10 @@ import {
   MDBBtn,
 } from "mdbreact";
 import Swal from "sweetalert2";
-import { DESTROY } from "../../../../../../../services/redux/slices/assets/providers";
+import {
+  DESTROY,
+  RESET,
+} from "../../../../../../../services/redux/slices/assets/providers";
 const PopOver = ({ index, _id, setActiveId = () => {} }) => {
   const { token } = useSelector((state) => state.auth),
     dispatch = useDispatch();
@@ -24,7 +26,9 @@ const PopOver = ({ index, _id, setActiveId = () => {} }) => {
       confirmButtonText: "Yes, untag it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { _id } }));
+        dispatch(DESTROY({ token, data: { _id } })).then(() =>
+          dispatch(RESET())
+        );
       }
     });
   };

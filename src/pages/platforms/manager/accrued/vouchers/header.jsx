@@ -56,6 +56,7 @@ const Header = () => {
       const foundProvider = providers.find(
         ({ clients }) => String(clients?._id) === String(sourceId)
       );
+
       const { cutoff, clients } = foundProvider || { cutoff: 0, clients: {} };
       return { cutoff, ...clients };
     },
@@ -81,19 +82,20 @@ const Header = () => {
           })
         ).values(),
       ];
-
       setSources(uniqueSource);
       setSource("all");
     }
   }, [collections, providers, getProvider]);
 
   useEffect(() => {
-    dispatch(
-      SetFilterBySOURCE({
-        value: source,
-        vendor: getProvider(source),
-      })
-    );
+    if (source) {
+      dispatch(
+        SetFilterBySOURCE({
+          value: source,
+          vendor: getProvider(source),
+        })
+      );
+    }
   }, [source, getProvider, dispatch]);
 
   const handleGenerateSOA = () => {
@@ -175,7 +177,7 @@ const Header = () => {
             </option>
           ))}
         </select>
-        {vendor?._id && vendor._id !== "noSource" && (
+        {vendor?._id && vendor?._id !== "noSource" && (
           <MDBBtn
             size="sm"
             color="primary"

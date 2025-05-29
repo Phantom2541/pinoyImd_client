@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
+import { currency, axioKit } from "../../../../../services/utilities";
 
-const Outsource = () => {
+const Outsource = ({ currentMonthOutsources, lastMonthOutsources }) => {
   return (
     <MDBCol xl="3" md="6" className="mb-4 mb-r">
       <MDBCard>
@@ -19,8 +21,10 @@ const Outsource = () => {
             </MDBBtn>
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
-            <h5 className="ml-4 mt-4 mb-2 font-weight-bold">3,955 </h5>
-            <p className="font-small grey-text">Order Ammount</p>
+            <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
+              {currency(currentMonthOutsources)}
+            </h5>
+            <p className="font-small grey-text">Outsources</p>
           </MDBCol>
         </MDBRow>
         <MDBRow className="my-3">
@@ -30,7 +34,9 @@ const Outsource = () => {
             </p>
           </MDBCol>
           <MDBCol md="5" col="5" className="text-right pr-5">
-            <p className="font-small grey-text">145,567</p>
+            <p className="font-small grey-text">
+              {currency(lastMonthOutsources)}
+            </p>
           </MDBCol>
         </MDBRow>
       </MDBCard>

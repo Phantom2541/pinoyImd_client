@@ -66,7 +66,11 @@ const Collapsable = () => {
             {isLoading ? (
               <TableLoading />
             ) : (
-              <Body toggle={toggle} setSelected={setSelected} />
+              <Body
+                toggle={toggle}
+                setSelected={setSelected}
+                selected={selected}
+              />
             )}
           </MDBCardBody>
           <Footer />

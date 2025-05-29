@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   REFORM,
   TOGGLE,
+  SetPrinting,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { axioKit } from "../../../../../../services/utilities";
 import CaseBox from "./case";
@@ -32,6 +33,7 @@ export default function Modal() {
     { collections } = useSelector(({ providers }) => providers),
     [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
+
   const toggle = () => dispatch(TOGGLE());
 
   useEffect(() => {
@@ -47,7 +49,6 @@ export default function Modal() {
       )
         ? activePlatform.department
         : "clinic"; // default fallback just in case
-
       const url = isStaticPath
         ? template
         : `/diagnostics/${_department.toLowerCase()}/result/${template}`;
@@ -95,7 +96,7 @@ export default function Modal() {
       [deptIndex]: [
         ...(oldForms?.[deptIndex] || []),
         ...newFormKeys.filter(
-          (key) => !(oldForms?.[deptIndex] || []).includes(key)
+          (key) => !(oldForms?.[deptIndex] || []).includes(Number(key))
         ),
       ],
     };
@@ -214,7 +215,6 @@ export default function Modal() {
       forms,
       ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
     };
-    console.log("data", data);
 
     dispatch(
       REFORM({

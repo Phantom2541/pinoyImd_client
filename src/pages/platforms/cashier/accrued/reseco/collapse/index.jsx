@@ -8,11 +8,11 @@ import {
   MDBContainer,
 } from "mdbreact";
 
-import CollapsableBody from "./body";
-import CollapsableHeader from "./header";
+import Body from "./body";
+import Header from "./header";
 import { collapse } from "../../../../../../services/utilities";
 
-export default function Body() {
+export default function Index() {
   const { filtered } = useSelector(({ deals }) => deals),
     [cluster, setCluster] = useState([]);
 
@@ -47,11 +47,11 @@ export default function Body() {
           >
             <MDBCollapseHeader
               className={border}
+              style={{ borderRadius: "50%" }}
               onMouseLeave={() => setDidHoverId(-1)}
               onMouseEnter={() => setDidHoverId(actualIndex)}
-              style={{ borderRadius: "50%" }}
             >
-              <CollapsableHeader
+              <Header
                 key={date}
                 title={date}
                 count={deals?.length}
@@ -68,7 +68,7 @@ export default function Body() {
               isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
             >
               <MDBCardBody className=" m-0 p-0">
-                <CollapsableBody deals={deals} handleSelect={handleSelect} />
+                <Body deals={deals} handleSelect={handleSelect} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>
