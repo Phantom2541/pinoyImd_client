@@ -51,7 +51,7 @@ import {
   soa,
 } from "./slices/finance";
 
-import products from "./slices/market/products";
+import { products, productsGenerics } from "./slices/market";
 
 const store = configureStore({
   reducer: {
@@ -98,6 +98,7 @@ const store = configureStore({
     xray,
     ultrasound,
     ecg,
+    productsGenerics,
   },
 });
 

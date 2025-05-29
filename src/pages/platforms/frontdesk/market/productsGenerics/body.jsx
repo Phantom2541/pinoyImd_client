@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-import { Input } from "../../../components/customizable";
+import { Input } from "../../../../../components/customizable";
+import { ProductGenerics } from "../../../manager/commerce/merchandise";
 
 const Body = () => {
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
-      ({ services }) => services
+      ({ productsGenerics }) => productsGenerics
     ),
     [selected, setSelected] = useState({});
 
@@ -39,20 +40,26 @@ const Body = () => {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = filtered.slice(startIndex, endIndex);
+
   return (
     <MDBTable responsive hover bordered>
       <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
-          <th>Service</th>
-          <th>Abbreviation</th>
-          <th>Specimen</th>
+          <th>Name</th>
+          <th>Expense</th>
+          <th>Section</th>
         </tr>
+
+        <td> </td>
+        <td> name search </td>
+        <td> catalog </td>
+        <td> catalog </td>
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { id, name, abbreviation, specimen } = item;
+          const { id, name, expense, section } = item;
           const isSelected = selected.id === id;
           return (
             <tr key={index}>
@@ -94,12 +101,12 @@ const Body = () => {
                     />
                   </div>
                 ) : (
-                  <strong onClick={() => handleSelected({ id, abbreviation })}>
-                    {abbreviation}
+                  <strong onClick={() => handleSelected({ id, expense })}>
+                    {expense}
                   </strong>
                 )}
               </td>
-              <td>{specimen}</td>
+              <td>{section}</td>
             </tr>
           );
         })}
