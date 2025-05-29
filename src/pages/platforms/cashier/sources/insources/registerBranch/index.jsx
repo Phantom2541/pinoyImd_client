@@ -21,6 +21,7 @@ import {
   SetCATEGORY,
 } from "../../../../../../services/redux/slices/assets/providers";
 import { Select } from "../../../../../../components/customizable";
+import Swal from "sweetalert2";
 
 const _form = {
   name: "",
@@ -39,6 +40,7 @@ export default function Modal() {
       formSubmitted,
       isSuccess,
       category: defaultCategory,
+      categories,
       selected,
       showRegisterModal: show,
     } = useSelector(({ providers }) => providers),
@@ -80,7 +82,14 @@ export default function Modal() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { branchId } = activePlatform;
-
+    if (!category)
+      return Swal.fire({
+        icon: "warning",
+        title: "Category is required!",
+        text: "Please select a category before proceeding.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#d33",
+      });
     dispatch(
       REGISTER_BRANCH({
         token,
@@ -127,12 +136,7 @@ export default function Modal() {
                 onChange={(e) => setCategory(e)}
                 keys={"value"}
                 values={"text"}
-                collections={[
-                  { text: "Insource", value: "insource" },
-                  { text: "Health Management Organization", value: "hmo" },
-                  { text: "Subcontract", value: "sc" },
-                  { text: "Special Subcontract", value: "ssc" },
-                ]}
+                collections={categories}
               />
             </MDBCol>
             <MDBCol md="6">

@@ -17,11 +17,13 @@ import {
   ToggleDidSearch,
   RESET,
   SAVE,
+  SetCATEGORY,
 } from "../../../../../../services/redux/slices/assets/providers";
 import { Select } from "../../../../../../components/customizable";
 import Search from "../../../../../../components/searchables/ao";
 import { Memberships } from "../../../../../../services/fakeDb";
 import Checkbox from "./checkbox";
+import Swal from "sweetalert2";
 
 // declare your expected items
 const _form = {
@@ -38,6 +40,7 @@ export default function Modal() {
   const {
       showModal,
       selected,
+      categories,
       category: defaultCategory,
       formSubmitted,
       isSuccess,
@@ -52,7 +55,6 @@ export default function Modal() {
 
   useEffect(() => {
     if (showModal && !formSubmitted && isSuccess) {
-      console.log("close the modallllll");
       addToast("New provider added successfully.", {
         appearance: "success",
       });
@@ -75,6 +77,15 @@ export default function Modal() {
       delete form.ao;
     }
 
+    if (!category)
+      return Swal.fire({
+        icon: "warning",
+        title: "Category is required!",
+        text: "Please select a category before proceeding.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#d33",
+      });
+
     dispatch(
       SAVE({
         token,
@@ -87,6 +98,7 @@ export default function Modal() {
       })
     );
     dispatch(ToggleDidSearch(false));
+    dispatch(SetCATEGORY(category));
   };
   const categoryHasChecked = (category) => form.category.includes(category);
 
@@ -132,12 +144,7 @@ export default function Modal() {
                 onChange={(e) => setCategory(e)}
                 keys={"value"}
                 values={"text"}
-                collections={[
-                  { text: "Insource", value: "insource" },
-                  { text: "Health Management Organization", value: "hmo" },
-                  { text: "Subcontract", value: "sc" },
-                  { text: "Special Subcontract", value: "ssc" },
-                ]}
+                collections={categories}
               />
             </MDBCol>
             <MDBCol>

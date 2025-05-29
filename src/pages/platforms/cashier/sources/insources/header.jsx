@@ -8,14 +8,12 @@ import {
   RESET_COLLECTIONS,
   SetREGISTER,
   SetCATEGORY,
-  SetFILTER,
 } from "../../../../../services/redux/slices/assets/providers";
 import Search from "../../../../../components/searchables/sources";
 import Swal from "sweetalert2";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ providers }) => providers),
-    { category } = useSelector(({ providers }) => providers),
+    { category, categories } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
   // initial values
@@ -33,11 +31,6 @@ const Header = () => {
     }
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
-
-  useEffect(() => {
-    const filter = collections.filter((item) => item.category === category);
-    dispatch(SetFILTER(filter));
-  }, [collections, category, dispatch]);
 
   const handleRegister = (name = "") => {
     dispatch(SetREGISTER({ name }));
@@ -62,17 +55,13 @@ const Header = () => {
     });
   };
 
-  const handleChangeCategory = (value) => {
-    dispatch(SetCATEGORY(value));
-  };
-
   return (
     <MDBView
       cascade
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">Sources </span>
+        <span className="white-text mx-3 text-nowrap mt-0">Insource List </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
@@ -81,12 +70,14 @@ const Header = () => {
             <select
               className="form-control bg-light"
               value={category}
-              onChange={(e) => handleChangeCategory(e.target.value)}
+              onChange={(e) => dispatch(SetCATEGORY(e.target.value))}
             >
-              <option value="insource">Insource</option>
-              <option value="hmo">Health Management Organization</option>
-              <option value="sc">Subcontract</option>
-              <option value="ssc">Special Subcontract</option>
+              <option value="">All</option>
+              {categories.map((c, index) => (
+                <option key={index} value={c.value}>
+                  {c.text}
+                </option>
+              ))}
             </select>
           </div>
           <Search setSource={setSource} handleRegister={handleRegister} />
