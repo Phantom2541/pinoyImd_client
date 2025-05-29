@@ -14,7 +14,7 @@ import {
   getAge,
 } from "../../../../../../../services/utilities";
 import { Categories, Services } from "../../../../../../../services/fakeDb";
-import { findIndex, isEmpty } from "lodash";
+import { findIndex, get, isEmpty } from "lodash";
 import {
   PROCESS_ONBOARDING,
   SetMODAL,
@@ -48,17 +48,6 @@ export default function Modal() {
   } = selected || {};
 
   const { membership = "", servicesId = [] } = sendouts;
-
-  // const discountPercentage =
-  //   Memberships.find(({ value }) => value === membership)?.discount || 0;
-
-  // const discount = discountPercentage
-  //   ? [...cart]
-  //       .filter(({ discountable }) => discountable)
-  //       .reduce((acc, { opd }) => (acc += opd * discountPercentage || 0), 0)
-  //   : 0;
-
-  // const gross = [...cart].reduce((acc, curr) => (acc += curr?.opd || 0), 0);
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -124,21 +113,25 @@ export default function Modal() {
     setCart(_cart);
   };
 
-  const isApplySourceDisc =
-    (category === "opd" || category === "wi") && !privilege;
+  const getCategoryIndex = (c) => {
+    return Categories.findIndex((item) => item.abbr === c);
+  };
 
-  const baseCategory = isApplySourceDisc ? "is" : category;
-  const categoryIndex = Categories.findIndex(
-    (item) => item.abbr === baseCategory
-  );
-
-  const { gross = 0, discount = 0 } = computeGD(
+  const getTotal = (cIndex, getObj = false) => {
+    const { gross = 0, discount = 0 } = computeGD(
       cart,
-      categoryIndex,
+      cIndex,
       privilege,
       membership
-    ),
-    amount = gross - discount;
+    );
+    const amount = gross - discount;
+    return !getObj ? amount : { gross, discount, amount };
+  };
+
+  const pAmount = getTotal(getCategoryIndex(category)); //privilege amount
+  const iAmount = getTotal(getCategoryIndex("is")); // insourcing membership amount
+  const categoryIndex = getCategoryIndex(iAmount < pAmount ? "is" : category);
+  const { discount, amount, gross } = getTotal(categoryIndex, true);
 
   const handleSubmit = () => {
     const remainingPackages = [...servicesId].filter(
