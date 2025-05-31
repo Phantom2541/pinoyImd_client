@@ -165,8 +165,9 @@ export default function PosCard() {
           >
             <option value="">None</option>
             {sources
-              ?.filter(({ category: c }) =>
-                hasMembership ? c === baseCategory : true
+              ?.filter(
+                ({ category: c }) =>
+                  c === (hasMembership ? baseCategory : "insource")
               )
               .map(({ _id, clients, membership }) => (
                 <option key={_id} value={_id} title={membership}>
