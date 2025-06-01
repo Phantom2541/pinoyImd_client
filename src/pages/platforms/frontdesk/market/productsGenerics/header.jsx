@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
-import { Select } from "../../../../../components/customizable";
-import { Templates, Services } from "../../../../../services/fakeDb";
-import { BROWSE } from "../../../../../services/redux/slices/market/productsGenerics";
+
+import { Search } from "../../../../../components/searchables";
+import {
+  BROWSE,
+  SetFILTER,
+} from "../../../../../services/redux/slices/market/productsGenerics";
 
 const Header = () => {
   const { maxPage, tokens, activePlatform } = useSelector(({ auth }) => auth);
-  const { filtered } = useSelector(({ productsGenerics }) => productsGenerics);
-  const [component, setComponent] = useState("");
-  const [generics, setGenerics] = useState([]),
+  const { collections } = useSelector(
+      ({ productsGenerics }) => productsGenerics
+    ),
     dispatch = useDispatch();
+  // console.log("collections", collections);
 
   //initial values
   useEffect(() => {
@@ -20,10 +24,6 @@ const Header = () => {
       );
   }, [dispatch, maxPage]);
 
-  useEffect(() => {
-    if (filtered) setGenerics(filtered);
-  }, [filtered]);
-
   return (
     <MDBView
       cascade
@@ -31,22 +31,19 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {generics.length} generics
+          {collections.length} generics
         </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          {/* <Select
-            className="m-0 p-0 calendar mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
-            inputClassName="m-0 p-0"
-            preValue={component}
-            collections={Templates.getComponents("LAB")}
-          /> */}
-          <MDBBtn>
-            <MDBIcon icon="plus" />
-          </MDBBtn>
+          <Search
+            collections={collections}
+            setFiltered={(items) => dispatch(SetFILTER(items))}
+            placeholder="Search generics"
+            // haveAction={false}
+            reset={() => dispatch(SetFILTER(collections))}
+            hideButton={false}
+          />
         </div>
       </div>
     </MDBView>

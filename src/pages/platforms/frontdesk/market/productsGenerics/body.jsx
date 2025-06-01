@@ -51,11 +51,6 @@ const Body = () => {
           <th>Expense</th>
           <th>Section</th>
         </tr>
-
-        <td> </td>
-        <td> name search </td>
-        <td> catalog </td>
-        <td> catalog </td>
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
