@@ -11,7 +11,7 @@ import {
   RESET,
 } from "../../../../../services/redux/slices/assets/providers.js";
 import GenerateTask from "./generateTask/index.jsx";
-import Printout from "./printout";
+// import Printout from "./printout";
 
 export default function Sales() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -61,7 +61,7 @@ export default function Sales() {
         <Body />
       )}
       <GenerateTask />
-      <Printout />
+      {/* <Printout /> */}
     </MDBCard>
   );
 }

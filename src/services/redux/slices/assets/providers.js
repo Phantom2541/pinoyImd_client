@@ -2,14 +2,20 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
 const url = "assets/providers";
-
+const categories = [
+  { text: "Vendors", value: "insource" },
+  { text: "Health Management Organization", value: "hmo" },
+  { text: "Subcontract", value: "sbc" },
+  { text: "Special Subcontract", value: "ssbc" },
+];
 const initialState = {
   collections: [],
+  categories: categories,
   paginated: [],
   // enrolled: [],
   formSubmitted: false,
   searchResults: [],
-  category: "insource", // this is the default active category in insource
+  category: "", // this is the default active category in insource
   isSuccess: false,
   isLoading: false,
   didSearch: false,
@@ -205,8 +211,18 @@ export const reduxSlice = createSlice({
     },
 
     SetCATEGORY: (state, { payload }) => {
+      const filter = state.collections.filter(
+        (item) => item.category === payload
+      );
+      const baseCollections = !payload ? state.collections : filter;
+      state.filtered = baseCollections;
+
+      state.totalPages =
+        Math.ceil((baseCollections?.length || 0) / state.maxPage) || 1;
+      state.activePage = Math.min(state.activePage, state.totalPages);
       state.category = payload;
     },
+
     SetBRANCHES: (state, { payload }) => {
       const {
         branch = {},
@@ -377,6 +393,9 @@ export const reduxSlice = createSlice({
       })
       .addCase(INSOURCE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload.payload;
+        state.totalPages =
+          Math.ceil((payload.payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         localStorage.setItem("insource", JSON.stringify(payload.payload));
         state.isLoading = false;
       })

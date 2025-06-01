@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -32,10 +32,11 @@ export default function Search({
   displayWithLabel = true,
   label = "Please set a label",
 }) {
-  const { collections, isLoading } = useSelector(({ users }) => users),
+  const { collections } = useSelector(({ users }) => users),
     { token } = useSelector((state) => state.auth),
     [users, setUsers] = useState([]),
     [didSearch, setDidSearch] = useState(false),
+    [isFetch, setIsFetch] = useState(false),
     [selected, setSelected] = useState({}),
     [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
@@ -58,21 +59,33 @@ export default function Search({
     setUsers(collections);
   }, [collections]);
 
-  const debouncedSearch = debounce((searchKey) => {
-    const key = formatNameToObj(searchKey);
-    dispatch(BROWSE({ token, key }));
-  }, 1000);
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((searchKey) => {
+        const key = formatNameToObj(searchKey);
+        dispatch(BROWSE({ token, key }));
+        setIsFetch(false);
+      }, 1000),
+    [dispatch, token]
+  );
 
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
   const handleChange = (e) => {
     const _searchKey = e.target.value;
     if (!_searchKey) {
       setUser({ _id: "" });
       setDidSearch(false);
     }
+
     setSearchKey(_searchKey);
     const searchKey = _searchKey.split(",");
     if (searchKey.length > 1 && searchKey[1].trim()) {
       setDidSearch(true);
+      setIsFetch(true);
       return debouncedSearch(_searchKey);
     }
   };
@@ -105,7 +118,6 @@ export default function Search({
       ) : (
         <>
           <MDBInput
-            disabled={isLoading}
             label={label}
             style={{ width: "100%" }}
             required={isRequired}
@@ -119,7 +131,7 @@ export default function Search({
           />
           {didSearch && (
             <div className="search-results">
-              {isLoading ? (
+              {isFetch ? (
                 new Array(5).fill("").map((_, index) => (
                   <MDBAnimation
                     key={index}

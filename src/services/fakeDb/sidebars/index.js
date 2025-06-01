@@ -18,6 +18,7 @@ import diagnostic from "./diagnostic";
 import laboratory from "./laboratory";
 import radiology from "./radiology";
 import superadmin from "./superadmin";
+import physician from "./physician";
 
 const Sidebars = {
   utility,
@@ -40,6 +41,7 @@ const Sidebars = {
   diagnostic,
   laboratory,
   radiology,
+  physician,
 };
 
 export default Sidebars;

@@ -13,19 +13,19 @@ const clinical = [
     path: "/clinical/bulletin",
   },
   {
-    name: "Diagnostics",
-    path: "/laboratory",
+    name: "Schedules",
+    path: "/Schedules",
     icon: "cogs",
     children: [
       {
-        name: "Onboarding",
-        path: "/onboarding",
+        name: "Appointments",
+        path: "/appointments",
         icon: "cogs",
         component: Onboard,
       },
       {
         name: "Tasks",
-        path: "/task",
+        path: "/tasks",
         icon: "cogs",
         component: Tasks,
       },
@@ -34,6 +34,12 @@ const clinical = [
         path: "/reports",
         icon: "cogs",
         component: Reports,
+      },
+      {
+        name: "schedules",
+        path: "/schedules",
+        icon: "calendar-alt",
+        // component: Reports,
       },
     ],
   },

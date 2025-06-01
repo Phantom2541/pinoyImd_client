@@ -22,9 +22,16 @@ import { fullName } from "../../../../../../services/utilities";
 import Header from "./header";
 
 export default function MenuCollapse() {
-  const { token } = useSelector(({ auth }) => auth),
-    { filtered, searchResults, didSearch, formSubmitted, isSuccess, message } =
-      useSelector(({ providers }) => providers),
+  const { token, maxPage } = useSelector(({ auth }) => auth),
+    {
+      filtered,
+      searchResults,
+      didSearch,
+      formSubmitted,
+      isSuccess,
+      message,
+      activePage,
+    } = useSelector(({ providers }) => providers),
     { formSubmitted: formSubmittedBranch, isSuccess: isSuccessBranch } =
       useSelector(({ branches }) => branches),
     [insources, setInsources] = useState([]),
@@ -206,6 +213,10 @@ export default function MenuCollapse() {
     );
   };
 
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = insources?.slice(startIndex, endIndex); // Get only items for the active page
   return (
     <MDBContainer
       style={{
@@ -213,8 +224,8 @@ export default function MenuCollapse() {
       }}
       fluid
     >
-      {insources?.length > 0 ? (
-        insources?.map((insource, index) => {
+      {paginatedData?.length > 0 ? (
+        paginatedData?.map((insource, index) => {
           const { clients, _id } = insource;
           const isGhost = clients?._id ? false : true;
           const affiliated = clients?.affiliated || [];
@@ -271,7 +282,7 @@ export default function MenuCollapse() {
           );
         })
       ) : (
-        <p className="text-center">No insource record.</p>
+        <p className="text-center">No record.</p>
       )}
       {/* <Modal toggle={toggle} show={show} selected={ghostCompany} /> */}
     </MDBContainer>

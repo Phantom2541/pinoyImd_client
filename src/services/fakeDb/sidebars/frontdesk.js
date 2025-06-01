@@ -122,19 +122,19 @@ const frontdesk = [
     children: [
       {
         name: "Request",
-        path: "/purchases/request",
+        path: "/request",
         icon: "shopping-cart",
         // component: RequestComponent, // add your component here
       },
       {
         name: "Received",
-        path: "/purchases/received",
+        path: "/received",
         icon: "truck-loading",
         // component: ReceivedComponent, // add your component here
       },
       {
         name: "Completed",
-        path: "/purchases/completed",
+        path: "/completed",
         icon: "check-circle",
         // component: CompletedComponent, // add your component here
       },

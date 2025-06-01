@@ -169,7 +169,6 @@ export default function Patient({ setActiveIndex }) {
               value={dob}
               onChange={({ target }) => {
                 // if age is greater than 59, automatically set privilege
-
                 const data = {
                   dob: target.value,
                   privilege: 0,
