@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
-import { Input } from "../../../../components/customizable";
+import { Input } from "../../../../../components/customizable";
 
 const Body = () => {
   const { filtered, activePage, maxPage, isSuccess } = useSelector(

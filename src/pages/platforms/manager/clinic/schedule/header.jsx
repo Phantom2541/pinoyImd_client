@@ -1,27 +1,22 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
-import { Search } from "../../../../../components/searchables";
+import { MDBView } from "mdbreact";
+// import { Select } from "../../../../../components/customizable";
+import Search from "../../../../../components/searchables/users";
 import {
   BROWSE,
   SetFILTER,
-} from "../../../../../services/redux/slices/market/productsGenerics";
+} from "../../../../../services/redux/slices/clinical/clinic";
 
 const Header = () => {
   const { tokens, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(
-      ({ productsGenerics }) => productsGenerics
-    ),
+  const { collections } = useSelector(({ clinic }) => clinic),
     dispatch = useDispatch();
-  // console.log("collections", collections);
 
-  //initial values
   useEffect(() => {
     if (tokens)
-      dispatch(
-        BROWSE({ tokens, params: { branchId: activePlatform?.branchId } })
-      );
-  }, [dispatch, tokens]);
+      dispatch(BROWSE({ tokens, key: { branchId: activePlatform?.branchId } }));
+  }, [dispatch, tokens, activePlatform]);
 
   return (
     <MDBView
@@ -30,7 +25,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} generics
+          {collections.length} clinic
         </span>
       </div>
       <div>
@@ -38,8 +33,7 @@ const Header = () => {
           <Search
             collections={collections}
             setFiltered={(items) => dispatch(SetFILTER(items))}
-            placeholder="Search generics"
-            // haveAction={false}
+            placeholder="Search"
             reset={() => dispatch(SetFILTER(collections))}
             hideButton={false}
           />

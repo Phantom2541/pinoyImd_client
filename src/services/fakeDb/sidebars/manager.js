@@ -48,7 +48,7 @@ import {
   Suppliers,
 } from "../../../pages/platforms/cashier";
 
-import Clinic from "../../../pages/platforms/manager/clinic";
+import Clinic from "../../../pages/platforms/manager/clinic/schedule";
 
 const manager = [
   {

@@ -9,9 +9,12 @@ import {
   MDBInput,
   MDBTypography,
 } from "mdbreact";
-import { SAVE, UPDATE } from "../../../../";
+import {
+  SAVE,
+  UPDATE,
+} from "../../../../../services/redux/slices/clinical/clinic";
 
-import { Services } from "../../../services/fakeDb";
+import { Services } from "../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
