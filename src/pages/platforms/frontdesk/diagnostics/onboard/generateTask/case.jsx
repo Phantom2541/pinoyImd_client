@@ -23,7 +23,6 @@ const Body = ({ setOutSource, outSource }) => {
 
   const { department } = activePlatform;
   const isRadiology = department === "radiology";
-
   useEffect(() => {
     const _outSources = collections
       .filter(({ vendors }) => vendors)
