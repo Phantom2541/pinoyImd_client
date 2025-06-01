@@ -8,7 +8,7 @@ const individual = (menu, category, privilege, membership) => {
     : category;
   const gross = menu[_abbr];
 
-  const hasMembership = ["is", "hmo", "sbc", "ssbc"].includes(category);
+  const hasMembership = ["is", "hmo"].includes(category);
 
   let up = (gross * 80) / 100;
   if (membership && hasMembership && discountable) {

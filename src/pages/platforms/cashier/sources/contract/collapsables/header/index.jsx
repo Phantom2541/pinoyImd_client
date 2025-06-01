@@ -1,12 +1,7 @@
 import { MDBCollapseHeader, MDBBtn, MDBBadge } from "mdbreact";
-import {
-  capitalize,
-  collapse,
-  currency,
-} from "../../../../../../../services/utilities";
+import { collapse, currency } from "../../../../../../../services/utilities";
 import { Select, Input } from "../../../../../../../components/customizable";
 import PopOver from "./popOver";
-import { Memberships } from "../../../../../../../services/fakeDb";
 import { useSelector } from "react-redux";
 
 const Header = ({

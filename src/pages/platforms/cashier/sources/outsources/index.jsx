@@ -10,7 +10,7 @@ import Footer from "./footer";
 import Modal from "./modal";
 
 const Index = () => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token } = useSelector(({ auth }) => auth),
     { isLoading } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 

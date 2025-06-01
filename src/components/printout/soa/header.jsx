@@ -10,7 +10,9 @@ const Header = ({ range, vendor, total }) => {
       >
         <div className="d-flex align-items-center mt-1">
           <h6 className="fw-bold">Name: </h6>
-          <h6 className="ml-1">{`${vendor?.companyId?.name?.toUpperCase()} ${vendor?.name?.toUpperCase()}`}</h6>
+          <h6 className="ml-1">{`${
+            vendor?.companyId?.name?.toUpperCase() || ""
+          } ${vendor?.name?.toUpperCase()}`}</h6>
         </div>
         <div className="d-flex align-items-center mt-1">
           <h6 className="fw-bold">From: </h6>

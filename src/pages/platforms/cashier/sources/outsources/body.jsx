@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup } from "mdbreact";
-import {
-  billingAddress,
-  currency,
-  fullName,
-} from "../../../../../services/utilities";
+import { billingAddress, currency } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,

@@ -4,6 +4,7 @@ import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import GeneratedBy from "./generatedBy";
+import { isEmpty } from "lodash";
 
 const SOA = () => {
   const [vouchers, setVouchers] = useState([]),
@@ -89,7 +90,7 @@ const SOA = () => {
         </div>
       </div>
       <GeneratedBy />
-      <Footer menus={menus} />
+      {!isEmpty(menus) && <Footer menus={menus} />}
     </div>
   );
 };
