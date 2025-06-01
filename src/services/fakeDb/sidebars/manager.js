@@ -48,6 +48,8 @@ import {
   Suppliers,
 } from "../../../pages/platforms/cashier";
 
+import Appointments from "../../../pages/platforms/manager/clinical/appointments";
+
 const manager = [
   {
     name: "Dashboard",
@@ -381,6 +383,20 @@ const manager = [
     icon: "book-open",
     path: "/user/manual",
     component: UserManual,
+  },
+  {
+    name: "Schedules",
+    path: "/schedules",
+    icon: "calendar-alt",
+    children: [
+      {
+        name: "Appointments",
+        path: "/appointments",
+        icon: "money-bill",
+        title: "Daily Appointments",
+        component: Appointments,
+      },
+    ],
   },
 ];
 
