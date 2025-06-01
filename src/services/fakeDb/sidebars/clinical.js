@@ -5,6 +5,7 @@ import {
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import { Menus, Services } from "../../../pages/platforms/cashier";
+import Appointments from "../../../pages/platforms/clinical/appointment";
 
 const clinical = [
   {
@@ -21,7 +22,7 @@ const clinical = [
         name: "Appointments",
         path: "/appointments",
         icon: "cogs",
-        component: Onboard,
+        component: Appointments,
       },
       {
         name: "Tasks",
