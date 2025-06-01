@@ -48,7 +48,7 @@ import {
   Suppliers,
 } from "../../../pages/platforms/cashier";
 
-import Appointments from "../../../pages/platforms/manager/clinical/appointments";
+import Clinic from "../../../pages/platforms/manager/clinic";
 
 const manager = [
   {
@@ -385,18 +385,10 @@ const manager = [
     component: UserManual,
   },
   {
-    name: "Schedules",
-    path: "/schedules",
-    icon: "calendar-alt",
-    children: [
-      {
-        name: "Appointments",
-        path: "/appointments",
-        icon: "money-bill",
-        title: "Daily Appointments",
-        component: Appointments,
-      },
-    ],
+    name: "Clinic",
+    icon: "book-open",
+    path: "/clinic",
+    component: Clinic,
   },
 ];
 
