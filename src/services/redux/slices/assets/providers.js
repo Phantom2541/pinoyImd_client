@@ -5,12 +5,15 @@ const url = "assets/providers";
 const categories = [
   { text: "Vendors", value: "insource" },
   { text: "Health Management Organization", value: "hmo" },
+];
+const contractCategories = [
   { text: "Subcontract", value: "sbc" },
-  { text: "Special Subcontract", value: "ssbc" },
+  { text: "Special Subcontract", value: "ssc" },
 ];
 const initialState = {
   collections: [],
   categories: categories,
+  contractCategories,
   paginated: [],
   // enrolled: [],
   formSubmitted: false,
@@ -212,11 +215,10 @@ export const reduxSlice = createSlice({
 
     SetCATEGORY: (state, { payload }) => {
       const filter = state.collections.filter(
-        (item) => item.category === payload
+        ({ category, status }) => (category || status) === payload
       );
       const baseCollections = !payload ? state.collections : filter;
       state.filtered = baseCollections;
-
       state.totalPages =
         Math.ceil((baseCollections?.length || 0) / state.maxPage) || 1;
       state.activePage = Math.min(state.activePage, state.totalPages);
@@ -464,22 +466,23 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
       })
       .addCase(UPDATE.fulfilled, (state, { payload }) => {
-        const index = state.filtered.findIndex(
-          (item) => item._id === payload._id
+        const { payload: data } = payload;
+
+        const _collections = state.collections;
+        const index = _collections.findIndex((item) => item._id === data._id);
+        state.collections[index] = data;
+        state.filtered = _collections.filter(
+          ({ category, status }) => (category || status) === state.category
         );
-        if (index !== -1) {
-          state.filtered[index] = payload;
-        }
-        state.showModal = false;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(SPECIFIC_UPDATE.pending, (state) => {
