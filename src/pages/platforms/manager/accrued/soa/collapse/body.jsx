@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { currency, fullName } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
@@ -37,7 +36,7 @@ export default function Collapsable({
       </MDBTableHead>
       <MDBTableBody>
         {deals?.map((deal, index) => {
-          const { customerId, outsource, services, source } = deal;
+          const { customerId, outsource, sendouts, source } = deal;
           const isToUpdate = deal._id === selected.dealId && vendor.soa?._id;
           return (
             <tr key={index}>
@@ -83,11 +82,11 @@ export default function Collapsable({
                 {!isToUpdate ? (
                   <div
                     onClick={() =>
-                      setSelected({ ...deal.services, dealId: deal._id })
+                      setSelected({ ...deal.sendouts, dealId: deal._id })
                     }
                     className="w-100"
                   >
-                    {currency(services?.up)}
+                    {currency(sendouts?.up)}
                   </div>
                 ) : (
                   <Input
@@ -106,7 +105,7 @@ export default function Collapsable({
                 )}
               </td>
               <td className="mb-1">
-                {services?.servicesId
+                {sendouts?.servicesId
                   ?.map((id) => Services.getAbbr(id))
                   ?.join(", ")}
               </td>

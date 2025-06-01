@@ -32,7 +32,10 @@ export default function Sales() {
         dispatch(SETSOURCES(sourceData));
       } else {
         dispatch(
-          OUTSOURCE({ token, key: { clients: activePlatform.branchId } })
+          OUTSOURCE({
+            token,
+            key: { clients: activePlatform.branchId, status: "approved" },
+          })
         )
           .then(({ payload }) => {
             const sourceData = payload.payload;

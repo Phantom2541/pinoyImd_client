@@ -83,7 +83,6 @@ const Header = () => {
           })
         ).values(),
       ];
-      console.log("collections", collections);
       setSources(uniqueSource);
       setSource("all");
     }

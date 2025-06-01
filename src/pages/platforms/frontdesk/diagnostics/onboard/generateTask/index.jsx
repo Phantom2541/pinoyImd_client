@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   REFORM,
   TOGGLE,
-  SetPrinting,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { axioKit } from "../../../../../../services/utilities";
 import CaseBox from "./case";
@@ -34,7 +33,10 @@ export default function Modal() {
     [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
 
-  const toggle = () => dispatch(TOGGLE());
+  const toggle = () => {
+    console.log("toggle clickeddd");
+    dispatch(TOGGLE());
+  };
 
   useEffect(() => {
     if (show) setOutSourceId("");
@@ -226,17 +228,10 @@ export default function Modal() {
   };
 
   return (
-    <MDBModal
-      isOpen={show}
-      toggle={toggle}
-      size="lg"
-      backdrop
-      aria-hidden={show ? "false" : "true"} // Keep this if using aria-hidden
-    >
+    <MDBModal isOpen={show} backdrop toggle={toggle} size="lg">
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
-        inert={show ? "false" : "true"} // Inert is set to prevent focus
       >
         <MDBIcon className="mr-2" icon="tasks" />
         Task Generator

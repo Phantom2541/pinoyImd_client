@@ -27,6 +27,7 @@ const Statements = () => {
             fsId: 31, // Outsourcing Expense"
             year,
             month,
+            status: "accepted",
           },
         })
       );

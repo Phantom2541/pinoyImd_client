@@ -10,7 +10,10 @@ const Customer = ({ deal }) => {
   const { customerId, branchId, ssx, privilege, sendouts } = deal;
   const { mobile: _mobile } = customerId;
   const membership =
-    Memberships.find(({ value }) => value === sendouts.membership)?.text || 0;
+    Memberships.find(({ value }) => value === sendouts.membership)?.text ||
+    false;
+
+  console.log("membership", membership);
   return (
     <MDBCol md="4">
       <MDBCard>
