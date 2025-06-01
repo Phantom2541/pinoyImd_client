@@ -422,19 +422,38 @@ export const reduxSlice = createSlice({
 
     SetFilterBySOURCE: (state, { payload }) => {
       let filtered = [];
-      if (payload.value === "all") {
+      if (payload === "all") {
         filtered = state.collections;
         state.vendor = {};
-      } else if (payload.value === "NoSource") {
+      } else if (payload === "NoSource") {
         filtered = state.collections.filter(({ source }) => !source);
         state.vendor = "noSource";
       } else {
         filtered = state.collections.filter(
-          ({ source }) => source?._id.toString() === payload?.value?.toString()
+          ({ source }) => source?._id.toString() === payload?.toString()
         );
         state.vendor = payload.vendor;
       }
-      state.filtered = filtered;
+      const groupByDate = filtered.reduce((groups, item) => {
+        const date = dateFormat(item.createdAt);
+        const index = groups.findIndex((group) => group.date === date);
+        if (index > -1) {
+          groups[index].deals.push({ ...item, isSelected: false });
+        } else {
+          groups.push({
+            date,
+            deals: [{ ...item, isSelected: false }],
+            isSelected: false,
+          });
+        }
+        return groups;
+      }, []);
+
+      state.totalPages =
+        Math.ceil((groupByDate?.length || 0) / state.maxPage) || 1;
+      state.activePage = Math.min(state.activePage, state.totalPages);
+      state.filtered = groupByDate;
+      // state.filtered = filtered;
     },
 
     SetFilterByOUTSOURCE: (state, { payload }) => {
