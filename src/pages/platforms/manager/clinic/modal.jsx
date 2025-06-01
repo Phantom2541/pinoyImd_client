@@ -9,10 +9,7 @@ import {
   MDBInput,
   MDBTypography,
 } from "mdbreact";
-import {
-  SAVE,
-  UPDATE,
-} from "../../../services/redux/slices/liability/assurances";
+import { SAVE, UPDATE } from "../../../../";
 
 import { Services } from "../../../services/fakeDb";
 

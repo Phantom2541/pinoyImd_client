@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { Select } from "../../../components/customizable";
-import { Templates, Services } from "../../../services/fakeDb";
-import {
-  SetCOLLECTIONS,
-  SetByTEMPLATES,
-} from "../../../services/redux/slices/commerce/catalog/services";
+import { Select } from "../../../../components/customizable";
+import { Templates, Services } from "../../../../services/fakeDb";
+// import {
+// SetCOLLECTIONS,
+// SetByTEMPLATES,
+// } from "../../../../services/redux/slices/commerce/catalog/services";
 const Header = () => {
   const { maxPage } = useSelector(({ auth }) => auth);
   const { filtered } = useSelector(({ services }) => services);
@@ -15,21 +15,21 @@ const Header = () => {
     dispatch = useDispatch();
 
   //initial values
-  useEffect(() => {
-    if (maxPage)
-      dispatch(SetCOLLECTIONS({ collections: Services.collections, maxPage }));
-  }, [dispatch, maxPage]);
+  // useEffect(() => {
+  //   if (maxPage)
+  //     dispatch(SetCOLLECTIONS({ collections: Services.collections, maxPage }));
+  // }, [dispatch, maxPage]);
 
   useEffect(() => {
     if (filtered) setServices(filtered);
   }, [filtered]);
 
-  const handleComponent = (value) => {
-    setComponent(value);
+  // const handleComponent = (value) => {
+  //   setComponent(value);
 
-    const template = Templates.getComponentIndex(value);
-    dispatch(SetByTEMPLATES(template));
-  };
+  //   const template = Templates.getComponentIndex(value);
+  //   dispatch(SetByTEMPLATES(template));
+  // };
 
   return (
     <MDBView
@@ -46,7 +46,7 @@ const Header = () => {
           <Select
             className="m-0 p-0 calendar mr-4"
             value={component}
-            onChange={(value) => handleComponent(value)}
+            // onChange={(value) => handleComponent(value)}
             inputClassName="m-0 p-0"
             preValue={component}
             collections={Templates.getComponents("LAB")}
