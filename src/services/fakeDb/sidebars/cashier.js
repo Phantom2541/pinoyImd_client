@@ -157,6 +157,7 @@ const cashier = [
         title: "List of Companies who send out their services",
         component: Insources,
       },
+
       {
         name: "Suppliers",
         path: "/suppliers",

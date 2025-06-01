@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
@@ -8,12 +8,13 @@ import {
   MDBRow,
 } from "mdbreact";
 import {
+  computeGD,
   fullAddress,
   fullName,
   getAge,
 } from "../../../../../../../services/utilities";
-import { Memberships, Services } from "../../../../../../../services/fakeDb";
-import { findIndex, isEmpty } from "lodash";
+import { Categories, Services } from "../../../../../../../services/fakeDb";
+import { findIndex, get, isEmpty } from "lodash";
 import {
   PROCESS_ONBOARDING,
   SetMODAL,
@@ -38,20 +39,15 @@ export default function Modal() {
 
   const toggle = useCallback(() => dispatch(SetMODAL(false)), [dispatch]);
 
-  const { customerId = {}, sendouts = {}, branchId = {} } = selected || {};
+  const {
+    customerId = {},
+    sendouts = {},
+    branchId = {},
+    privilege = 0,
+    category,
+  } = selected || {};
 
   const { membership = "", servicesId = [] } = sendouts;
-
-  const discountPercentage =
-    Memberships.find(({ value }) => value === membership)?.discount || 0;
-
-  const discount = discountPercentage
-    ? [...cart]
-        .filter(({ discountable }) => discountable)
-        .reduce((acc, { opd }) => (acc += opd * discountPercentage || 0), 0)
-    : 0;
-
-  const gross = [...cart].reduce((acc, curr) => (acc += curr?.opd || 0), 0);
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -116,6 +112,27 @@ export default function Modal() {
     _cart.unshift(menu);
     setCart(_cart);
   };
+
+  const getCategoryIndex = (c) => {
+    return Categories.findIndex((item) => item.abbr === c);
+  };
+
+  const getTotal = (cIndex, getObj = false) => {
+    const { gross = 0, discount = 0 } = computeGD(
+      cart,
+      cIndex,
+      privilege,
+      membership
+    );
+    const amount = gross - discount;
+    return !getObj ? amount : { gross, discount, amount };
+  };
+
+  const pAmount = getTotal(getCategoryIndex(category)); //privilege amount
+  const iAmount = getTotal(getCategoryIndex("is")); // insourcing membership amount
+  const categoryIndex = getCategoryIndex(iAmount < pAmount ? "is" : category);
+  const { discount, amount, gross } = getTotal(categoryIndex, true);
+
   const handleSubmit = () => {
     const remainingPackages = [...servicesId].filter(
       (serviceID) => !cart.some((item) => item.packages.includes(serviceID))
@@ -133,7 +150,7 @@ export default function Modal() {
     const dealMenus = [...cart].map(({ _id, opd }) => ({
       menuId: _id,
       up: opd,
-      discount: discountPercentage ? opd * discountPercentage : 0,
+      discount: discount ? discount : 0,
     }));
 
     const deal = {
@@ -238,7 +255,9 @@ export default function Modal() {
           <Customer deal={selected} />
           <Menus
             cart={cart}
-            discount={discountPercentage}
+            selected={selected}
+            category={categoryIndex}
+            // discount={discountPercentage}
             matchMenus={matchMenus}
             handleAddToCart={handleAddToCart}
             handleRemovedToCart={handleRemovedToCart}
@@ -247,8 +266,10 @@ export default function Modal() {
             cart={cart}
             gross={gross}
             discount={discount}
+            amount={amount}
             handleSubmit={handleSubmit}
             formSubmitted={formSubmitted}
+            selected={selected}
           />
         </MDBRow>
       </MDBModalBody>

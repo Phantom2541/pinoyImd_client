@@ -43,7 +43,6 @@ export default function Select({
   label,
   keys, // old name values
   values, // old name texts
-  selected = {},
   className = "",
   inputClassName = "",
   disableAll = false,
@@ -182,7 +181,6 @@ export default function Select({
           {collections?.map((choice, index) => {
             const key =
               keys && isArrayofObjects ? String(choice[keys]) || "" : choice;
-
             let value = values?.includes(".")
               ? getNestedValue(choice, values)
               : choice[values] || choice;

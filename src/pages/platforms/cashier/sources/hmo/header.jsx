@@ -1,30 +1,28 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
   RESET,
-  INSOURCE,
+  BROWSE,
   SetSOURCE,
   RESET_COLLECTIONS,
+  TOGGLE,
   SetREGISTER,
-  SetCATEGORY,
 } from "../../../../../services/redux/slices/assets/providers";
-import Search from "../../../../../components/searchables/sources";
+import Search from "../../../../../components/searchables/search";
 import Swal from "sweetalert2";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { category, categories } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
-
   // initial values
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       dispatch(
-        INSOURCE({
+        BROWSE({
           token,
           key: {
             vendors: activePlatform?.branchId,
-            category: "insource",
+            category: "hmo",
           },
         })
       );
@@ -32,8 +30,8 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
 
-  const handleRegister = (name = "") => {
-    dispatch(SetREGISTER({ name }));
+  const handleRegister = (displayname = "") => {
+    dispatch(SetREGISTER({ displayname }));
   };
 
   const setSource = (source) => {
@@ -61,26 +59,13 @@ const Header = () => {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">Insource List </span>
+        <span className="white-text mx-3 text-nowrap mt-0">
+          Health Management Organizations{" "}
+        </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <div className="d-flex align-items-center mr-4">
-            <span className="mr-1">Category:</span>
-            <select
-              className="form-control bg-light"
-              value={category}
-              onChange={(e) => dispatch(SetCATEGORY(e.target.value))}
-            >
-              <option value="">All</option>
-              {categories.map((c, index) => (
-                <option key={index} value={c.value}>
-                  {c.text}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Search setSource={setSource} handleRegister={handleRegister} />
+          <Search hideButton={false} handleAdd={() => dispatch(TOGGLE())} />
         </div>
       </div>
     </MDBView>

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { debounce, get } from "lodash";
 import {
   GETPATIENTS,
   RESET,
 } from "./../../../services/redux/slices/assets/persons/users";
-import { MDBIcon } from "mdbreact";
+import { MDBAnimation, MDBIcon, MDBProgress } from "mdbreact";
 import {
   formatNameToObj,
   fullName,
@@ -14,7 +14,6 @@ import {
 } from "./../../../services/utilities";
 import Notification from "./notification";
 import "../style.css";
-
 /**
  * A Search component that allows the user to search for a patient by last name, first name, and middle name.
  * The component will make an API call to search for patients and render a list of results below the search input.
@@ -38,6 +37,7 @@ export default function Search({
     [patients, setPatients] = useState([]),
     [didSearch, setDidSearch] = useState(false),
     [didHover, setDidHover] = useState(false),
+    [isFetching, setIsFetching] = useState(false),
     [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
   useEffect(() => {
@@ -68,16 +68,28 @@ export default function Search({
    * search key as arguments. The GETPATIENTS action will make the API call to search
    * for patients and update the state with the result.
    */
-  const debouncedSearch = debounce((searchKey) => {
-    const key = formatNameToObj(searchKey);
-    dispatch(GETPATIENTS({ token, key }));
-  }, 1000);
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((searchKey) => {
+        const key = formatNameToObj(searchKey);
+        setIsFetching(false);
+        dispatch(GETPATIENTS({ token, key }));
+      }, 1000),
+    [token, dispatch]
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
 
   const handleChange = (e) => {
     const _searchKey = e.target.value;
     setSearchKey(_searchKey);
     const searchKey = _searchKey.split(",");
     if (searchKey.length > 1 && searchKey[1].trim()) {
+      setIsFetching(true);
       setDidSearch(true);
       return debouncedSearch(_searchKey);
     }
@@ -105,37 +117,60 @@ export default function Search({
       <Notification didSearch={didSearch} />
       <div className={`searchable-search ${didSearch && "active"}`}>
         <div className="searchable-search-suggestions">
-          {!patients.length ? (
-            <small
-              className={didHover ? "text-success" : ""}
-              onClick={handleRegister}
-              onMouseEnter={() => setDidHover(true)}
-              onMouseLeave={() => setDidHover(false)}
-            >
-              No Patient Record found. <br /> click here to register
-            </small>
-          ) : (
-            <ul>
-              {patients?.map((user) => {
-                // console.log(user);
-                const { _id, fullName: fullname } = user;
+          {!isFetching ? (
+            <>
+              {!patients.length ? (
+                <small
+                  className={didHover ? "text-success" : ""}
+                  onClick={handleRegister}
+                  onMouseEnter={() => setDidHover(true)}
+                  onMouseLeave={() => setDidHover(false)}
+                >
+                  No Patient Record found. <br /> click here to register
+                </small>
+              ) : (
+                <ul>
+                  {patients?.map((user) => {
+                    // console.log(user);
+                    const { _id, fullName: fullname } = user;
 
-                return (
-                  <li
-                    onClick={() => handleSelect(user)}
-                    key={_id}
-                    className="text-dark text-nowrap"
-                  >
-                    {getGenderIcon(user.gender)} {fullName(fullname)} |{" "}
-                    {getAge(user.dob)}
-                  </li>
-                );
-              })}
-            </ul>
+                    return (
+                      <li
+                        onClick={() => handleSelect(user)}
+                        key={_id}
+                        className="text-dark text-nowrap"
+                      >
+                        {getGenderIcon(user.gender)} {fullName(fullname)} |{" "}
+                        {getAge(user.dob)}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </>
+          ) : (
+            <>
+              {new Array(5).fill("").map((_, index) => (
+                <MDBAnimation
+                  key={index}
+                  className="p-1 ml-2 mr-2 mt-1"
+                  type="flash"
+                  infinite
+                  delay={`${index + 1}00ms`}
+                  duration="3000ms"
+                >
+                  <MDBProgress
+                    animated
+                    color="light"
+                    value={3000}
+                    id="progress-table"
+                  ></MDBProgress>
+                </MDBAnimation>
+              ))}
+            </>
           )}
         </div>
         <input
-          disabled={isLoading}
           value={searchKey}
           onChange={handleChange}
           placeholder="Search..."
@@ -144,7 +179,8 @@ export default function Search({
         />
         <button
           type="submit"
-          className={didSearch && !isLoading ? "bg-danger" : ""}
+          disabled={isFetching}
+          className={didSearch && !isFetching ? "bg-danger" : ""}
           onClick={
             didSearch
               ? () => {
@@ -155,8 +191,7 @@ export default function Search({
           }
         >
           <MDBIcon
-            pulse={isLoading}
-            icon={isLoading ? "spinner" : didSearch ? "times" : "search"}
+            icon={didSearch && !isFetching ? "times" : "search"}
             className="search-icon"
           />
         </button>

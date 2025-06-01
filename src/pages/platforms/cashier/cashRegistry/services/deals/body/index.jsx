@@ -51,7 +51,7 @@ const Tables = () => {
   useEffect(() => {
     if (providers.length > 0) {
       let _providerOptions = providers.map(({ clients }) => ({
-        _id: clients._id,
+        _id: clients?._id,
         text: `${clients?.displayname?.toUpperCase()}`,
       }));
 
