@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { Select } from "../../../../../components/customizable";
 import {
   BROWSE,
   RESET,
@@ -45,8 +44,6 @@ const Header = () => {
     setSuppliers(uniqueSource);
   }, [collections, payables]);
 
-  console.log("suppliers", suppliers);
-
   //initial values
   useEffect(() => {
     if (token) {
@@ -76,19 +73,21 @@ const Header = () => {
       <span className="white-text mx-3 text-nowrap mt-0">
         {filtered?.length} Sendout/s
       </span>
-      <div style={{ width: "18rem" }}>
-        <Select
-          className="m-0 p-0  mr-4 w-full "
-          placeholder="Supplier"
-          values={"displayname"}
-          keys="_id"
-          onChange={(value) => handleVendors(value)}
-          inputClassName="m-0 p-0 text-white"
-          collections={suppliers?.map(({ _id, displayname }) => ({
-            _id,
-            displayname,
-          }))}
-        />
+      <div style={{ width: "20rem" }}>
+        <div className="d-flex align-items-center">
+          <span className="mr-2">Supplier:</span>
+          <select
+            className="form-control bg-light"
+            onChange={({ target }) => handleVendors(target.value)}
+          >
+            <option value="all">All</option>
+            {suppliers.map(({ _id, displayname }) => (
+              <option key={_id} value={_id}>
+                {displayname}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </MDBView>
   );
