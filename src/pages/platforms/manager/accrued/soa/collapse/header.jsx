@@ -1,8 +1,8 @@
-import React from "react";
 import { MDBBtn } from "mdbreact";
 import { currency } from "../../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import { CHECK_BULK_SOA } from "../../../../../../services/redux/slices/commerce/pos/services/billing";
+import Swal from "sweetalert2";
 
 const Header = ({
   sum,
@@ -17,6 +17,24 @@ const Header = ({
 }) => {
   const { vendor } = useSelector(({ billings }) => billings),
     dispatch = useDispatch();
+
+  const handleCheckAll = () => {
+    if (!isChecked) setActiveId(index);
+    const havePrice = [...deals].every(({ sendouts }) => sendouts.up);
+    if (!havePrice)
+      return Swal.fire({
+        icon: "warning",
+        title: "Cannot proceed with Check All",
+        html: `
+          <p><strong>Date:</strong> ${title}</p>
+          <p>Some of the deals for this date have no price:</p>
+          <p>Please review and make sure all deals have a valid price before proceeding.</p>
+          `,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
+      });
+    dispatch(CHECK_BULK_SOA({ date: title, deals }));
+  };
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div className="d-flex align-items-center">
@@ -27,10 +45,7 @@ const Header = ({
               type="checkbox"
               id={index}
               checked={isChecked}
-              onChange={() => {
-                if (!isChecked) setActiveId(index);
-                dispatch(CHECK_BULK_SOA({ date: title, deals }));
-              }}
+              onChange={() => handleCheckAll()}
             />
             <label htmlFor={index} className="form-check-label label-table" />
           </>

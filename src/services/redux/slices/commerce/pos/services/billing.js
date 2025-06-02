@@ -117,6 +117,7 @@ export const reduxSlice = createSlice({
       if (value === "all") {
         state.filtered = state.collections;
         state.source = "";
+        state.vendor = {};
       } else {
         state.filtered = state.collections.filter(
           ({ outsource }) => outsource?._id === value
@@ -269,6 +270,7 @@ export const reduxSlice = createSlice({
       .addCase(GENERATE_SOA.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const { dealIDS } = payload;
+        state.vendor.soa = null;
         const updateCollections = (collections) => {
           return collections.filter((item) => !dealIDS.includes(item._id));
         };
@@ -323,13 +325,13 @@ export const reduxSlice = createSlice({
 
         const cluster = state.cluster;
         const clusterIndex = cluster.findIndex((item) =>
-          item.deals.some((deal) => deal._id === payload._id)
+          item?.deals?.some((deal) => deal._id === payload._id)
         );
         const dealIndex = cluster[clusterIndex]?.deals?.findIndex(
           (item) => item._id === payload._id
         );
 
-        const deal = cluster[clusterIndex].deals[dealIndex];
+        const deal = cluster[clusterIndex]?.deals[dealIndex];
         if (dealIndex > -1 && clusterIndex > -1) {
           cluster[clusterIndex].deals[dealIndex] = {
             ...deal,

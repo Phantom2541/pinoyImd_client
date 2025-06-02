@@ -145,7 +145,7 @@ export default function Body() {
               className="mb-2 border border-black"
               isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
             >
-              <MDBCardBody className="pt-2">
+              <MDBCardBody className="m-0 p-0">
                 <CollapsableBody
                   deals={deals}
                   date={date}
