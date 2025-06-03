@@ -33,52 +33,60 @@ export default function Body() {
   };
 
   return (
-    <MDBContainer fluid>
-      {handlePagination(filtered, activePage, maxPage)?.map(
-        (voucher, index) => {
-          const { deals = [], date } = voucher;
-          const actualIndex = index; // Directly use the index in the paginated data
-          const { color, border } = collapse.getStyle(
-            actualIndex,
-            activeId,
-            didHoverId
-          );
+    <MDBCardBody>
+      <MDBContainer fluid>
+        {handlePagination(filtered, activePage, maxPage)?.map(
+          (voucher, index) => {
+            const { deals = [], date } = voucher;
+            const actualIndex = index; // Directly use the index in the paginated data
+            const { color, border } = collapse.getStyle(
+              actualIndex,
+              activeId,
+              didHoverId
+            );
 
-          return (
-            <MDBCard
-              key={`service-${date}-${index}`}
-              style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
-            >
-              <MDBCollapseHeader
-                className={border}
-                onMouseLeave={() => setDidHoverId(-1)}
-                onMouseEnter={() => setDidHoverId(actualIndex)}
-                style={{ borderRadius: "50%" }}
+            return (
+              <MDBCard
+                key={`service-${date}-${index}`}
+                style={{
+                  boxShadow: "0px 0px 0px 0px",
+                  backgroundColor: "white",
+                }}
               >
-                <CollapsableHeader
-                  key={date}
-                  title={date}
-                  count={deals?.length}
-                  sum={deals?.reduce((acc, item) => acc + item.amount, 0)}
-                  isOpen={activeId === actualIndex}
-                  textColor={color}
-                  setActiveId={setActiveId}
-                  index={actualIndex}
-                />
-              </MDBCollapseHeader>
+                <MDBCollapseHeader
+                  className={border}
+                  onMouseLeave={() => setDidHoverId(-1)}
+                  onMouseEnter={() => setDidHoverId(actualIndex)}
+                  style={{ borderRadius: "50%" }}
+                >
+                  <CollapsableHeader
+                    key={date}
+                    title={date}
+                    count={deals?.length}
+                    sum={deals?.reduce((acc, item) => acc + item.amount, 0)}
+                    isOpen={activeId === actualIndex}
+                    textColor={color}
+                    setActiveId={setActiveId}
+                    index={actualIndex}
+                  />
+                </MDBCollapseHeader>
 
-              <MDBCollapse
-                id={`collapse-${actualIndex}`}
-                isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
-              >
-                <MDBCardBody className=" m-0 p-0">
-                  <CollapsableBody deals={deals} handleSelect={handleSelect} />
-                </MDBCardBody>
-              </MDBCollapse>
-            </MDBCard>
-          );
-        }
-      )}
-    </MDBContainer>
+                <MDBCollapse
+                  id={`collapse-${actualIndex}`}
+                  isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
+                >
+                  <MDBCardBody className=" m-0 p-0">
+                    <CollapsableBody
+                      deals={deals}
+                      handleSelect={handleSelect}
+                    />
+                  </MDBCardBody>
+                </MDBCollapse>
+              </MDBCard>
+            );
+          }
+        )}
+      </MDBContainer>
+    </MDBCardBody>
   );
 }
