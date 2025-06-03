@@ -9,9 +9,10 @@ const Slip = () => {
         <Hr />
         <i>Employee's copy</i>
       </div>
-      <div className="ml-3">
+
+      <div className="ml-3 payslip-hr-printout">
         <Hr />
-        <i>Employee's copy</i>
+        <i>HR copy</i>
       </div>
     </div>
   );

@@ -80,13 +80,13 @@ const Header = ({ payslip, branch }) => {
         </th>
       </tr>
       <tr>
-        <th colSpan={2}>
-          <div className="d-flex justify-content-between">
+        <th colSpan={2} className="py-2 p-1">
+          <div className="d-flex justify-content-between payslip-name-printout">
             Name: <u className="font-weight-bold">{fullName(user?.fullName)}</u>
           </div>
         </th>
-        <th colSpan={2}>
-          <div className="d-flex justify-content-between">
+        <th colSpan={2} className="p-1" style={{ width: "2rem" }}>
+          <div className="d-flex justify-content-between payslip-designation-printout">
             Designation:
             <u className="font-weight-bold">{designation?.toUpperCase()}</u>
           </div>
