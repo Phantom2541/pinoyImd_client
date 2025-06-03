@@ -14,7 +14,7 @@ import {
   getAge,
 } from "../../../../../../../services/utilities";
 import { Categories, Services } from "../../../../../../../services/fakeDb";
-import { findIndex, get, isEmpty } from "lodash";
+import { findIndex, isEmpty } from "lodash";
 import {
   PROCESS_ONBOARDING,
   SetMODAL,
@@ -47,7 +47,11 @@ export default function Modal() {
     category,
   } = selected || {};
 
-  const { membership = "", servicesId = [] } = sendouts;
+  const {
+    membership = "",
+    servicesId = [],
+    category: contractCategory,
+  } = sendouts;
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -128,9 +132,10 @@ export default function Modal() {
     return !getObj ? amount : { gross, discount, amount };
   };
 
-  const pAmount = getTotal(getCategoryIndex(category)); //privilege amount
-  const iAmount = getTotal(getCategoryIndex("is")); // insourcing membership amount
-  const categoryIndex = getCategoryIndex(iAmount < pAmount ? "is" : category);
+  // const pAmount = getTotal(getCategoryIndex(category)); //privilege amount
+  // const iAmount = getTotal(getCategoryIndex("is")); // insourcing membership amount
+  // const categoryIndex = getCategoryIndex(iAmount < pAmount ? "is" : category);
+  const categoryIndex = getCategoryIndex(contractCategory);
   const { discount, amount, gross } = getTotal(categoryIndex, true);
 
   const handleSubmit = () => {
