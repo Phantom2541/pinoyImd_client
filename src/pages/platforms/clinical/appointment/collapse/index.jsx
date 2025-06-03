@@ -11,6 +11,8 @@ import {
 // import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse } from "../../../../../services/utilities";
+import CollapsableBody from "./body";
+import { isEmpty } from "lodash";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(
@@ -30,7 +32,6 @@ export default function Body() {
    */
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
-
   return (
     <MDBContainer
       style={{
@@ -38,46 +39,55 @@ export default function Body() {
       }}
       fluid
     >
-      {paginatedData?.map((item, index) => {
-        const actualIndex = startIndex + index; // Get the real index in filtered array
-        const { color, border } = collapse.getStyle(
-          actualIndex,
-          activeId,
-          didHoverId
-        );
+      {!isEmpty(paginatedData) ? (
+        <>
+          {paginatedData?.map((item, index) => {
+            const actualIndex = startIndex + index; // Get the real index in filtered array
+            const { color, border } = collapse.getStyle(
+              actualIndex,
+              activeId,
+              didHoverId
+            );
 
-        return (
-          <MDBCard
-            key={`item-${actualIndex}`}
-            style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
-          >
-            <MDBCollapseHeader
-              className={border}
-              onMouseLeave={() => setDidHoverId(-1)}
-              onMouseEnter={() => setDidHoverId(actualIndex)}
-              style={{ borderRadius: "50%" }}
-            >
-              <CollapsableHeader
-                item={item}
-                isOpen={activeId === actualIndex}
-                textColor={color}
-                setActiveId={setActiveId}
-                index={actualIndex}
-              />
-            </MDBCollapseHeader>
+            return (
+              <MDBCard
+                key={`item-${actualIndex}`}
+                style={{
+                  boxShadow: "0px 0px 0px 0px",
+                  backgroundColor: "white",
+                }}
+              >
+                <MDBCollapseHeader
+                  className={border}
+                  onMouseLeave={() => setDidHoverId(-1)}
+                  onMouseEnter={() => setDidHoverId(actualIndex)}
+                  style={{ borderRadius: "50%" }}
+                >
+                  <CollapsableHeader
+                    item={item}
+                    isOpen={activeId === actualIndex}
+                    textColor={color}
+                    setActiveId={setActiveId}
+                    index={actualIndex}
+                  />
+                </MDBCollapseHeader>
 
-            <MDBCollapse
-              id={`collapse-${actualIndex}`}
-              className="mb-2 border border-black"
-              isOpen={actualIndex === activeId}
-            >
-              <MDBCardBody className="pt-2">
-                {/* <CollapsableBody item={item} /> */}
-              </MDBCardBody>
-            </MDBCollapse>
-          </MDBCard>
-        );
-      })}
+                <MDBCollapse
+                  id={`collapse-${actualIndex}`}
+                  isOpen={actualIndex === activeId}
+                  className="m-0 p-0"
+                >
+                  <MDBCardBody className="m-0 p-0">
+                    <CollapsableBody item={item} />
+                  </MDBCardBody>
+                </MDBCollapse>
+              </MDBCard>
+            );
+          })}
+        </>
+      ) : (
+        <h5 className="text-center">No Appointments.</h5>
+      )}
     </MDBContainer>
   );
 }

@@ -1,6 +1,6 @@
 import Table from "./table";
 import "./style.css";
-import { Banner } from "../../../../../../services/utilities";
+import { Banner } from "../../../../services/utilities";
 import { useSelector } from "react-redux";
 export default function Hr() {
   const { activePlatform } = useSelector(({ auth }) => auth);

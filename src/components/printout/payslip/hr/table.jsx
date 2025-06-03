@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { toWords } from "number-to-words";
-import { currency } from "../../../../../../services/utilities";
+import { currency } from "../../../../services/utilities";
 import Header from "./header";
 export default function Table() {
   const { activePlatform } = useSelector(({ auth }) => auth);

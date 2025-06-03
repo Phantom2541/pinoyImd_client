@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { BROWSE } from "../../../../services/redux/slices/clinical/appointments";
-import { Select } from "../../../../components/customizable";
+import {
+  BROWSE,
+  SetPHYSICIAN,
+} from "../../../../services/redux/slices/clinical/appointments";
+import { properFullname } from "../../../../services/utilities";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(({ appointments }) => appointments);
+  const { collections, physician } = useSelector(
+    ({ appointments }) => appointments
+  );
   const [appointments, setAppointments] = useState([]),
     dispatch = useDispatch();
 
@@ -40,15 +45,20 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center">
-          <Select
-            className="m-0 p-0 calendar mr-4"
-            // value={appointments}
-            // onChange={(value) => handleComponent(value)}
-            inputClassName="m-0 p-0"
-            // preValue={appointments}
-            collections={appointments}
-          />
+        <div className="text-right d-flex align-items-center">
+          <span className="mr-2">Physician:</span>
+          <select
+            className="form-control bg-light"
+            value={physician}
+            onChange={({ target }) => dispatch(SetPHYSICIAN(target.value))}
+          >
+            <option value="all">All</option>
+            {appointments.map(({ user }) => (
+              <option key={user._id} value={user._id}>
+                Dr. {properFullname(user?.fullName)}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </MDBView>
