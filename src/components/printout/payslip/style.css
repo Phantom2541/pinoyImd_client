@@ -1,0 +1,7 @@
+@media print {
+  .payslip-printout-container {
+    background: white;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+}

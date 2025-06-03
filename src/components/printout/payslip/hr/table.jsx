@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { toWords } from "number-to-words";
-import { currency } from "../../../../services/utilities";
 import Header from "./header";
+import { currency } from "../../../../services/utilities";
 export default function Table() {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const payslip = JSON.parse(localStorage.getItem("payslip"));

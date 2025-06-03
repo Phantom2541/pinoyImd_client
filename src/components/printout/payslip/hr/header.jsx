@@ -37,7 +37,6 @@ const Header = ({ payslip, branch }) => {
   const { user = {}, contract = {} } = payslip || {};
 
   const designation = Policy.getPosition(Number(contract.designation));
-
   return (
     <thead>
       <tr>
@@ -89,9 +88,7 @@ const Header = ({ payslip, branch }) => {
         <th colSpan={2}>
           <div className="d-flex justify-content-between">
             Designation:
-            <u className="font-weight-bold">
-              {designation?.name?.toUpperCase()}
-            </u>
+            <u className="font-weight-bold">{designation?.toUpperCase()}</u>
           </div>
         </th>
       </tr>

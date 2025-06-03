@@ -7,9 +7,13 @@ export default function Hr() {
   const { branch = {} } = activePlatform;
   const { companyId = {}, name = "" } = branch;
   return (
-    <>
-      <Banner company={companyId?.name} branch={name} />
+    <div className="payslip-hr-printout">
+      <Banner
+        company={companyId?.name}
+        branch={name}
+        className="payslip-banner-printout"
+      />
       <Table />
-    </>
+    </div>
   );
 }
