@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Months from "../../../../../../services/fakeDb/calendar/months";
-import { Roles } from "../../../../../../services/fakeDb";
-import { fullName } from "../../../../../../services/utilities";
+import Months from "../../../../services/fakeDb/calendar/months";
+import { Policy, Roles } from "../../../../services/fakeDb";
+import { fullName } from "../../../../services/utilities";
 
 const Header = ({ payslip, branch }) => {
   const [dateRange, setDateRange] = useState("");
@@ -36,7 +36,7 @@ const Header = ({ payslip, branch }) => {
 
   const { user = {}, contract = {} } = payslip || {};
 
-  const designation = Roles.findById(Number(contract.designation));
+  const designation = Policy.getPosition(Number(contract.designation));
 
   return (
     <thead>

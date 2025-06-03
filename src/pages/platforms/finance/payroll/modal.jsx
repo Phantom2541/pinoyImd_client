@@ -1,18 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  // MDBBtn,
   MDBModal,
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  // MDBInput,
   MDBModalFooter,
 } from "mdbreact";
 import {
   SAVE,
   RESET,
-  // UPDATE,
 } from "../../../../services/redux/slices/finance/journals/payments";
 
 import {
