@@ -14,7 +14,7 @@ const Slip = () => {
       <MDBRow>
         <MDBCol>
           <Hr />
-          <i>Employees copy</i>
+          <i>Employee's copy</i>
         </MDBCol>
         <MDBCol>
           <Hr />
@@ -26,15 +26,15 @@ const Slip = () => {
 };
 
 export default function Payslip() {
-  const [task, setTask] = useState({ _id: "" });
+  const [payroll, setPayroll] = useState({ _id: "" });
 
   useEffect(() => {
-    setTask(JSON.parse(localStorage.getItem("payslip")));
+    setPayroll(JSON.parse(localStorage.getItem("payslip")));
 
     return () => localStorage.removeItem("payslip");
   }, []);
 
-  if (task?._id) return <Slip task={task} />;
+  if (payroll?._id) return <Slip payroll={payroll} />;
 
-  return <div>Task is Empty</div>;
+  return <div>Payroll is Empty</div>;
 }
