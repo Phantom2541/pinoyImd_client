@@ -5,8 +5,9 @@ const url = "/diagnostics/clinic/appointments";
 
 const initialState = {
   filter: [],
-  paginated: [],
 
+  paginated: [],
+  physician: "",
   // Bread attributes
   selected: {}, // assurance
   page: 0,
@@ -92,6 +93,25 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetPHYSICIAN: (state, { payload }) => {
+      const arrangePayload = (collections) => {
+        return collections.flatMap(({ user, appointments = [] }) => {
+          return appointments?.map((appt) => ({
+            ...appt,
+            doctor: user,
+          }));
+        });
+      };
+      if (payload === "all") {
+        state.physician = payload;
+        state.filtered = arrangePayload(state.collections);
+      } else {
+        state.filtered =
+          state.collections.find(({ user }) => user._id === payload)
+            ?.appointments || [];
+        state.physician = payload;
+      }
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -163,8 +183,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-
-        state.collections = state.filtered = payload; // Fix typo
+        const arrangePayload = (collections) => {
+          return collections.flatMap(({ user, appointments }) => {
+            return appointments.map((appt) => ({
+              ...appt,
+              doctor: user,
+            }));
+          });
+        };
+        state.collections = payload;
+        state.filtered = arrangePayload(payload);
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
@@ -239,6 +267,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetPHYSICIAN,
   SetCREATE,
   SetEDIT,
   SetFILTER,
