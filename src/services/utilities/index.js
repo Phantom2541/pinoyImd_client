@@ -53,11 +53,11 @@ import Female from "../../assets/female.jpg";
 import PresetIMD from "../../assets/iMD.jpg";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
-const ENDPOINT = "http://localhost:5000";
+// const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
 // endpoint ni kuya kevin
-// const ENDPOINT = "https://pinoy-imd-deed6e69cc41.herokuapp.com";
+const ENDPOINT = "https://pinoy-imd-deed6e69cc41.herokuapp.com";
 
 const socket = io.connect(ENDPOINT);
 const PresetImage = (gender) => (gender ? Male : Female);
