@@ -48,9 +48,9 @@ export default function Login({ show, toggle = null }) {
     if (auth._id && loginSuccess) {
       if (activePlatform) {
         history.push(
-          `/${activePlatform?.platform.toLowerCase() || "patron"}/${
+          `/${activePlatform?.platform?.toLowerCase() || "patron"}/${
             ["manager", "headquarter"].includes(
-              activePlatform?.platform.toLowerCase()
+              activePlatform?.platform?.toLowerCase()
             )
               ? "dashboard"
               : "bulletin"
