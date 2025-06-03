@@ -8,13 +8,14 @@ import {
 const Menus = ({
   selected,
   cart,
-  category,
+  category, //category index
   matchMenus,
   handleAddToCart,
   handleRemovedToCart,
 }) => {
   const { sendouts = {}, privilege } = selected || {};
   const { membership = "" } = sendouts;
+  console.log("cart", cart);
   return (
     <MDBCol md="4">
       <table className="menus-table">

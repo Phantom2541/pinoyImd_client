@@ -5,7 +5,6 @@ import {
   BROWSE,
   SetPHYSICIAN,
 } from "../../../../services/redux/slices/clinical/appointments";
-import { Select } from "../../../../components/customizable";
 import { properFullname } from "../../../../services/utilities";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
