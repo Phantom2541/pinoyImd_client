@@ -41,9 +41,9 @@ export default function SideNavigation({
         if (valid) setLogo(url);
       });
 
-      const _href = `/${activePlatform?.platform.toLowerCase() || "patron"}/${
+      const _href = `/${activePlatform?.platform?.toLowerCase() || "patron"}/${
         ["manager", "headquarter"].includes(
-          activePlatform?.platform.toLowerCase()
+          activePlatform?.platform?.toLowerCase()
         )
           ? "dashboard"
           : "bulletin"

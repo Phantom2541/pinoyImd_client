@@ -1,12 +1,28 @@
 import { MDBBtn } from "mdbreact";
 import { properFullname } from "../../../../../services/utilities";
+import { useSelector } from "react-redux";
+import Months from "../../../../../services/fakeDb/calendar/months";
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
+  const { physician } = useSelector(({ appointments }) => appointments);
+
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
-      {index + 1}. Dr.{properFullname(item?.user?.fullName)}
+      <div className="d-flex align-items-center">
+        {physician === "all" && (
+          <>
+            <span className="">
+              Dr. {properFullname(item?.doctor?.fullName)}{" "}
+            </span>
+            <span className="mx-2">-</span>
+          </>
+        )}
+        <span>{`${Months[item.month]} ${item.day}, ${item.year}`}</span>
+      </div>
       <div className="d-flex">
-        <small className="mr-2 mt-1">{console.log("item", item)}</small>
+        <small className={`mr-2 mt-1 `} style={{ fontWeight: 500 }}>
+          {item?.patients?.length} - Appointments
+        </small>
         <MDBBtn
           size="sm"
           color="white"
