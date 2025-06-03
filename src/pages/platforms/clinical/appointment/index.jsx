@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../components/tableLoading";
 import Header from "./header";
-// import Body from "./body";
+import Body from "./collapse";
 // import Footer from "./footer";
 // import Modal from "./modal";
 
@@ -14,7 +14,7 @@ const Index = () => {
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <Header />
-        {/* <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody> */}
+        <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
         {/* <Footer /> */}
       </MDBCard>
       {/* <Modal /> */}
