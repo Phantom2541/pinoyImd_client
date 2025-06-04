@@ -7,12 +7,12 @@ const Slip = () => {
     <div className="d-flex align-items-center payslip-printout-container">
       <div>
         <Hr />
-        <i>Employee's copy</i>
+        <i>HR copy</i>
       </div>
 
       <div className="ml-3 payslip-hr-printout">
         <Hr />
-        <i>HR copy</i>
+        <i>Employee's copy</i>
       </div>
     </div>
   );
