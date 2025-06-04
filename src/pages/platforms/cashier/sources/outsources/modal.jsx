@@ -96,7 +96,7 @@ export default function Modal() {
       isOpen={showModal}
       TOGGLE={TOGGLE}
       backdrop
-      size="sm"
+      size="md"
       disableFocusTrap={false}
     >
       <MDBModalHeader
@@ -108,6 +108,17 @@ export default function Modal() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
+          <div className="text-center mb-3 d-flex align-items-center">
+            <h5>Registered With Pinoy IMD?</h5>
+            <input className="form-check-input" type="checkbox" id="Male" />
+            <label htmlFor="Male" className="form-check-label label-table pl-4">
+              Male
+            </label>
+            <input className="form-check-input" type="checkbox" id="Male" />
+            <label htmlFor="Male" className="form-check-label label-table pl-4">
+              Male
+            </label>
+          </div>
           <MDBTypography
             tag="h4"
             variant="h4-responsive"
@@ -142,32 +153,6 @@ export default function Modal() {
                 </option>
               ))}
           </select>
-
-          {/* <MDBInput
-            label="Name"
-            type="string"
-            value={form?.displayname}
-            required
-            onChange={(e) => handleChange("displayname", e.target.value)}
-          />
-          <MDBInput
-            label="A.O."
-            type="string"
-            value={form?.ao}
-            onChange={(e) => handleChange("a.o", e.target.value)}
-          />
-          <MDBInput
-            label="Membership"
-            type="string"
-            value={form?.membership}
-            onChange={(e) => handleChange("membership", e.target.value)}
-          />
-          <MDBInput
-            label="Address"
-            type="string"
-            value={form?.address}
-            onChange={(e) => handleChange("address", e.target.value)}
-          /> */}
 
           <div className="text-center mb-1-half mt-3">
             <MDBBtn
