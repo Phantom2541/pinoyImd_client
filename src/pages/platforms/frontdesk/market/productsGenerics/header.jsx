@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
-
 import { Search } from "../../../../../components/searchables";
 import {
   BROWSE,
@@ -9,7 +8,7 @@ import {
 } from "../../../../../services/redux/slices/market/productsGenerics";
 
 const Header = () => {
-  const { maxPage, tokens, activePlatform } = useSelector(({ auth }) => auth);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(
       ({ productsGenerics }) => productsGenerics
     ),
@@ -18,11 +17,11 @@ const Header = () => {
 
   //initial values
   useEffect(() => {
-    if (maxPage)
+    if (token)
       dispatch(
-        BROWSE({ tokens, params: { branchId: activePlatform?.branchId } })
+        BROWSE({ token, params: { branchId: activePlatform?.branchId } })
       );
-  }, [dispatch, maxPage]);
+  }, [dispatch, token]);
 
   return (
     <MDBView

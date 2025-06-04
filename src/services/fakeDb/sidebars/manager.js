@@ -48,8 +48,6 @@ import {
   Suppliers,
 } from "../../../pages/platforms/cashier";
 
-import Clinic from "../../../pages/platforms/manager/clinic";
-
 const manager = [
   {
     name: "Dashboard",
@@ -388,7 +386,7 @@ const manager = [
     name: "Clinic",
     icon: "book-open",
     path: "/clinic",
-    component: Clinic,
+    // component: Clinic,
   },
 ];
 
