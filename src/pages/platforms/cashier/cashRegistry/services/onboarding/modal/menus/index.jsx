@@ -51,7 +51,7 @@ const Menus = ({
                 <td className="text-left" title={title}>
                   <span>
                     {description ? `${description} - ` : ""}
-                    {abbreviation} {up}
+                    {abbreviation}
                   </span>
                   <small className="d-block">
                     {/* Check if there are no packages */}

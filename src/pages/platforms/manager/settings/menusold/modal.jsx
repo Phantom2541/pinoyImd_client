@@ -45,7 +45,8 @@ const _form = {
   },
   tabs = [
     "Suggested Retail Price",
-    "Insourcing/Contracts",
+    "Insourcing",
+    "Contracts",
     "Expenses",
     "Others",
   ];

@@ -102,7 +102,7 @@ export default function PosCard() {
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
   var baseCategory = Categories[category]?.abbr;
-  const hasMembership = ["is", "sbc", "ssbc", "hmo"].includes(baseCategory);
+  const hasMembership = ["is", "sbc", "ssc", "hmo"].includes(baseCategory);
   baseCategory = baseCategory === "is" ? "insource" : baseCategory;
   return (
     <>
