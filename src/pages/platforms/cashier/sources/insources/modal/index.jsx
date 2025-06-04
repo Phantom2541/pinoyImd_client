@@ -92,6 +92,7 @@ export default function Modal() {
         data: {
           ...form,
           clients: selected._id,
+          status: "approved",
           category,
           vendors: activePlatform.branchId,
         },

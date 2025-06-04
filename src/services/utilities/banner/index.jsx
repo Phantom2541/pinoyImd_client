@@ -1,13 +1,13 @@
 import { ENDPOINT, FailedBanner } from "../index";
 import { useSelector } from "react-redux";
 
-export default function Banner() {
+export default function Banner({ className = "print-header" }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { branch = {} } = activePlatform;
   const { companyId = {}, name = "" } = branch || {};
 
   return (
-    <div className="print-header">
+    <div className={className}>
       <img
         src={`${ENDPOINT}/public/companies/${companyId?.name}/${name}/banner.png`}
         onError={(e) => (e.target.src = FailedBanner)}

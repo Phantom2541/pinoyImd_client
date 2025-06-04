@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
@@ -14,11 +14,14 @@ import {
 import Swal from "sweetalert2";
 import util from "./util";
 import TableLoading from "../../../../../components/tableLoading";
+import Deals from "./deals";
+import { isEmpty } from "lodash";
 
 const Tables = () => {
   const { filtered, activePage, maxPage, isLoading } = useSelector(
       ({ payables }) => payables
     ),
+    [activeId, setActiveId] = useState(-1),
     dispatch = useDispatch();
 
   const itemsPerPage = maxPage;
@@ -45,7 +48,7 @@ const Tables = () => {
   return (
     <>
       {!isLoading ? (
-        <MDBTable responsive hover bordered>
+        <MDBTable responsive>
           <thead>
             <tr>
               <th rowSpan={2}>#</th>
@@ -76,6 +79,7 @@ const Tables = () => {
                 supplier,
                 hasPaid,
                 payor,
+                deals,
                 range,
                 status,
               } = payable;
@@ -84,87 +88,124 @@ const Tables = () => {
               const isToday =
                 dueDate?.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0);
               const isPastDue = dueDate && dueDate < today;
+              const isOpen = activeId === _id;
+              const hasDeals =
+                status !== "accepted" && fsId === 31 && !isEmpty(deals);
 
               return (
-                <tr
-                  key={_id}
-                  style={
-                    isPastDue && !hasPaid ? { backgroundColor: "#ffcccc" } : {}
-                  }
-                >
-                  <td>{index + 1}</td>
-                  <td>{util.getVendorOrParticular(particular, supplier)}</td>
-                  <td>
-                    <h6>{Statements?.getName(fsId)}</h6>
-                    {status}
-                  </td>
-                  <td>
-                    <h6
-                      style={{
-                        color: !hasPaid
-                          ? isToday
-                            ? "orange"
-                            : isPastDue
-                            ? "red"
-                            : "black"
-                          : "black",
-                        fontWeight: isPastDue ? "bold" : "normal",
-                      }}
-                    >
-                      {dueDate && dateFormat(dueDate)}
-                    </h6>
-                    {fsId === 31 && range && (
-                      <span>
-                        {range[0] &&
-                          new Date(range[0]).toLocaleDateString("en-GB", {
-                            month: "long",
-                            day: "2-digit",
-                          })}
-                        {" - "}
-                        {range[1] &&
-                          new Date(range[1]).toLocaleDateString("en-GB", {
-                            month: "long",
-                            day: "2-digit",
-                          })}
-                      </span>
-                    )}
-                  </td>
-                  <th>{currency(amount)}</th>
-
-                  <td style={{ textAlign: "center" }}>
-                    {!hasPaid &&
-                      (fsId === 31 && status === "accepted" ? (
-                        <span style={{ color: "green" }}>
-                          Double-check all your Sendout Information before
-                          confirming the payments.
+                <>
+                  <tr
+                    className={isOpen && "border border-black"}
+                    key={_id}
+                    style={
+                      isPastDue && !hasPaid
+                        ? { backgroundColor: "#ffcccc" }
+                        : {}
+                    }
+                  >
+                    <td>{index + 1}</td>
+                    <td>{util.getVendorOrParticular(particular, supplier)}</td>
+                    <td>
+                      <h6>{Statements?.getName(fsId)}</h6>
+                      {status}
+                    </td>
+                    <td>
+                      <h6
+                        style={{
+                          color: !hasPaid
+                            ? isToday
+                              ? "orange"
+                              : isPastDue
+                              ? "red"
+                              : "black"
+                            : "black",
+                          fontWeight: isPastDue ? "bold" : "normal",
+                        }}
+                      >
+                        {dueDate && dateFormat(dueDate)}
+                      </h6>
+                      {fsId === 31 && range && (
+                        <span>
+                          {range[0] &&
+                            new Date(range[0]).toLocaleDateString("en-GB", {
+                              month: "long",
+                              day: "2-digit",
+                            })}
+                          {" - "}
+                          {range[1] &&
+                            new Date(range[1]).toLocaleDateString("en-GB", {
+                              month: "long",
+                              day: "2-digit",
+                            })}
                         </span>
-                      ) : (
-                        <MDBBtnGroup>
+                      )}
+                    </td>
+                    <th>{currency(amount)}</th>
+
+                    <td style={{ textAlign: "center" }}>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div></div>
+                        {!hasPaid &&
+                          (fsId === 31 && status === "accepted" ? (
+                            <span style={{ color: "green" }}>
+                              Double-check all your Sendout Information before
+                              confirming the payments.
+                            </span>
+                          ) : (
+                            <MDBBtnGroup>
+                              <MDBBtn
+                                size="sm"
+                                rounded
+                                color="warning"
+                                onClick={() => dispatch(SetPAYMENTS(payable))}
+                              >
+                                Pay
+                              </MDBBtn>
+                              {!isPastDue && status === "accepted" && (
+                                <MDBBtn
+                                  size="sm"
+                                  rounded
+                                  color="info"
+                                  onClick={() => handleUpdate(payable)}
+                                >
+                                  Update
+                                </MDBBtn>
+                              )}
+                            </MDBBtnGroup>
+                          ))}
+                        {hasPaid && (
+                          <span>Payor : {fullName(payor?.fullName)}</span>
+                        )}
+                        {hasDeals ? (
                           <MDBBtn
                             size="sm"
+                            color="white"
                             rounded
-                            color="warning"
-                            onClick={() => dispatch(SetPAYMENTS(payable))}
+                            title="View Deals"
+                            onClick={() =>
+                              setActiveId((prev) => (prev === _id ? -1 : _id))
+                            }
+                            className="m-0 p-0 transition-all float-right "
+                            style={{
+                              width: isOpen ? "1.5rem" : "2rem",
+                              height: isOpen ? "1.5rem" : "1.3rem",
+                            }}
                           >
-                            Pay
+                            <i
+                              style={{ rotate: `${isOpen ? 0 : 90}deg` }}
+                              className="fa fa-angle-down transition-all "
+                            />
                           </MDBBtn>
-                          {!isPastDue && (
-                            <MDBBtn
-                              size="sm"
-                              rounded
-                              color="info"
-                              onClick={() => handleUpdate(payable)}
-                            >
-                              Update
-                            </MDBBtn>
-                          )}
-                        </MDBBtnGroup>
-                      ))}
-                    {hasPaid && (
-                      <span>Payor : {fullName(payor?.fullName)}</span>
-                    )}
-                  </td>
-                </tr>
+                        ) : (
+                          <div></div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                  {hasDeals && (
+                    <Deals deals={deals} isOpen={isOpen} _id={_id} />
+                  )}
+                </>
               );
             })}
           </tbody>

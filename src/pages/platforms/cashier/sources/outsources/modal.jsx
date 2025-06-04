@@ -24,6 +24,8 @@ export default function Modal() {
       ({ providers }) => providers
     ),
     { collections } = useSelector(({ branches }) => branches),
+    { collections: companies } = useSelector(({ companies }) => companies),
+    [branches, setBranches] = useState([]),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -35,7 +37,7 @@ export default function Modal() {
         ...selected,
         userId: auth._id,
         clients: activePlatform.branchId,
-        category: "outsource",
+        status: "pending",
       });
     }
   }, [showModal, selected, auth, activePlatform]);
@@ -83,6 +85,12 @@ export default function Modal() {
       [key]: value,
     });
 
+  const handleChangeCompany = (company) => {
+    const _branches = [...collections].filter(
+      ({ companyId }) => companyId === company
+    );
+    setBranches(_branches);
+  };
   return (
     <MDBModal
       isOpen={showModal}
@@ -96,7 +104,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Outsource
+        {willCreate ? "Apply" : "Update"} Outsource
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
@@ -106,22 +114,36 @@ export default function Modal() {
             className="text-center"
           ></MDBTypography>
           <select
+            onChange={(e) => handleChangeCompany(e.target.value)}
+            className="form-control mb-3"
+          >
+            <option value="" disabled>
+              Select a company
+            </option>
+            {Array.isArray(companies) &&
+              companies.map((company, index) => (
+                <option key={index} value={company._id}>
+                  {company.name}
+                </option>
+              ))}
+          </select>
+          <select
+            value={form?.vendors || ""}
             onChange={(e) => handleChange("vendors", e.target.value)}
             className="form-control"
           >
             <option value="" disabled>
               Select a branch
             </option>
-            {Array.isArray(collections) &&
-              collections.map((branch, index) => (
+            {Array.isArray(branches) &&
+              branches.map((branch, index) => (
                 <option key={index} value={branch._id}>
                   {branch.displayname || (branch.name && branch.subname)}
                 </option>
               ))}
           </select>
 
-          {/* Input fields */}
-          <MDBInput
+          {/* <MDBInput
             label="Name"
             type="string"
             value={form?.displayname}
@@ -145,9 +167,9 @@ export default function Modal() {
             type="string"
             value={form?.address}
             onChange={(e) => handleChange("address", e.target.value)}
-          />
+          /> */}
 
-          <div className="text-center mb-1-half">
+          <div className="text-center mb-1-half mt-3">
             <MDBBtn
               type="submit"
               disabled={isLoading}
@@ -155,7 +177,7 @@ export default function Modal() {
               className="mb-2"
               rounded
             >
-              {willCreate ? "Submit" : "Update"}
+              {willCreate ? "Apply" : "Update"}
             </MDBBtn>
           </div>
         </form>

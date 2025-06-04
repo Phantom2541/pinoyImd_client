@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
+import { MDBAnimation, MDBCard } from "mdbreact";
 
 import Header from "./header";
 import Body from "./collapse";
@@ -13,7 +13,7 @@ const Index = () => {
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3">
         <Header />
-        <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
+        {isLoading ? <TableLoading /> : <Body />}
         <Footer />
       </MDBCard>
     </MDBAnimation>

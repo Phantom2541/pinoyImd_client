@@ -23,7 +23,7 @@ import {
   RequestOutSource,
   SOA,
 } from "./components/printout";
-import Payslip from "./pages/platforms/manager/responsibilities/payslip";
+import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 

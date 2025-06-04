@@ -8,6 +8,11 @@ import Footer from "./footer";
 import Modal from "./modal";
 
 const Index = () => {
+  // const services = useSelector((state) => state.services);
+  // const isLoading = services.isLoading;
+  // const isSuccess = services.isSuccess;
+  // const isError = services.isError;
+
   const { isLoading } = useSelector(({ services }) => services);
 
   return (

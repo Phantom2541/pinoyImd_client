@@ -1,18 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  // MDBBtn,
   MDBModal,
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  // MDBInput,
   MDBModalFooter,
 } from "mdbreact";
 import {
   SAVE,
   RESET,
-  // UPDATE,
 } from "../../../../services/redux/slices/finance/journals/payments";
 
 import {
@@ -105,7 +102,7 @@ export default function Modal() {
       const specialHolidaySalary = daily * special * 1.3;
       const holidaySalary = regularHolidaySalary + specialHolidaySalary;
       const overtime = Number(form?.overtime) * (daily / 8) * 1.25;
-      const nightShift = Number(form?.nightShift) * (daily / 8) * 0.1;
+      const nightShift = Number(form?.nightShift) * daily * 0.1;
 
       setTotEarn(
         handleCalc(monthly) +
@@ -181,6 +178,8 @@ export default function Modal() {
   const { holiday = {} } = form;
   const { regular = {}, special = 0 } = holiday;
   const hourlyRate = selected?.rate?.daily / 8;
+  const dailyRate = selected?.rate?.daily;
+
   return (
     <MDBModal
       isOpen={showModal}
@@ -485,7 +484,7 @@ export default function Modal() {
                 className="border border-dark text-right p-1"
                 style={{ fontWeight: 400 }}
               >
-                {currency(selected?.contribution?.pi)}{" "}
+                {currency(selected?.contribution?.ph)}{" "}
               </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
@@ -493,7 +492,7 @@ export default function Modal() {
                 className="border border-dark p-1"
                 style={{ fontWeight: 400 }}
               >
-                Night Shift (Hrs)
+                Night Shift (Duty)
               </td>
               <td className="border border-dark p-1">
                 <div className="d-flex align-items-center justify-content-between">
@@ -512,7 +511,7 @@ export default function Modal() {
                     className="form-control"
                   />
                   <h6>
-                    {currency(handleValue("nightShift") * hourlyRate * 0.1)}
+                    {currency(handleValue("nightShift") * dailyRate * 0.1)}
                   </h6>
                 </div>
               </td>
