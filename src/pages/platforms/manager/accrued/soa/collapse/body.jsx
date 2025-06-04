@@ -28,21 +28,61 @@ export default function Collapsable({
 
   const handleCheck = (deal) => {
     const { sendouts } = deal;
-    if (!sendouts?.up)
-      return Swal.fire({
+    if (!sendouts?.up) {
+      Swal.fire({
         icon: "warning",
-        title: "Cannot select this deal",
-        text: "This deal has no price. Please enter a valid price before selecting.",
+        title: "Enter Deal Price",
+        text: "This deal has no price. Please enter a valid amount to continue.",
+        input: "number",
+
+        inputAttributes: {
+          min: 0,
+          step: "0.01",
+        },
+        inputPlaceholder: "Enter price",
         confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
+        confirmButtonText: "Submit",
+        showCancelButton: true,
+        reverseButtons: true,
+        cancelButtonText: "Cancel",
+        preConfirm: (value) => {
+          if (!value || isNaN(value) || Number(value) <= 0) {
+            Swal.showValidationMessage(
+              "Please enter a valid price greater than 0"
+            );
+          }
+          return Number(value); // Return numeric value
+        },
+      }).then((result) => {
+        const _sendouts = { ...sendouts, up: result.value };
+        if (result.isConfirmed) {
+          dispatch(
+            UPDATE({
+              data: { ..._sendouts, up: result.value, dealId: deal?._id },
+              token,
+            })
+          ).then(() => {
+            dispatch(
+              CHECK_SOA({
+                deal: { ...deal, sendouts: _sendouts },
+                totalDeals: deals.length,
+                date,
+              })
+            );
+          });
+        } else {
+          console.log("User cancelled the input.");
+        }
       });
-    dispatch(
-      CHECK_SOA({
-        deal,
-        totalDeals: deals.length,
-        date,
-      })
-    );
+    } else {
+      dispatch(
+        CHECK_SOA({
+          deal,
+          totalDeals: deals.length,
+          date,
+        })
+      );
+    }
   };
   return (
     <MDBTable bordered className="m-0">
