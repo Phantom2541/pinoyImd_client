@@ -10,31 +10,17 @@ import {
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
-import { collapse, dateFormat } from "../../../../../../services/utilities";
+import { collapse } from "../../../../../../services/utilities";
 
 export default function Body() {
-  const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals),
+  const { filtered } = useSelector(({ deals }) => deals),
     [vouchers, setVouchers] = useState([]),
     [cluster, setCluster] = useState([]);
 
   useEffect(() => {
-    const groupByDate = filtered.reduce((groups, item) => {
-      const date = dateFormat(item.createdAt);
-      const index = groups.findIndex((group) => group.date === date);
-      if (index > -1) {
-        groups[index].deals.push({ ...item, isSelected: false });
-      } else {
-        groups.push({
-          date,
-          deals: [{ ...item, isSelected: false }],
-          isSelected: false,
-        });
-      }
-      return groups;
-    }, []);
-
-    setVouchers(groupByDate);
-  }, [filtered, activePage, maxPage]);
+    setVouchers(filtered);
+    console.log("filtered", filtered);
+  }, [filtered]);
 
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
@@ -52,7 +38,7 @@ export default function Body() {
 
   const renderVouchers = () =>
     vouchers.map((voucher, index) => {
-      const { deals, date } = voucher;
+      const { deals = [], date } = voucher;
       const actualIndex = index;
       const { color, border } = collapse.getStyle(
         actualIndex,
@@ -62,7 +48,7 @@ export default function Body() {
 
       return (
         <MDBCard
-          key={`service-${date}`}
+          key={`service-${date}-${index}`}
           style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
         >
           <MDBCollapseHeader
@@ -74,7 +60,7 @@ export default function Body() {
             <CollapsableHeader
               key={date}
               title={date}
-              count={deals.length}
+              count={deals?.length}
               sum={deals.reduce((acc, item) => acc + item.amount, 0)}
               isOpen={activeId === actualIndex}
               textColor={color}

@@ -31,6 +31,7 @@ const Header = () => {
           token,
           key: {
             branchId: activePlatform?.branchId,
+            status: "approved",
           },
         })
       );
