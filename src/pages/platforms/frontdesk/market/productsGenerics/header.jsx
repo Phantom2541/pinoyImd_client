@@ -8,7 +8,7 @@ import {
 } from "../../../../../services/redux/slices/market/productsGenerics";
 
 const Header = () => {
-  const { tokens, activePlatform } = useSelector(({ auth }) => auth);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(
       ({ productsGenerics }) => productsGenerics
     ),
@@ -17,11 +17,11 @@ const Header = () => {
 
   //initial values
   useEffect(() => {
-    if (tokens)
+    if (token)
       dispatch(
-        BROWSE({ tokens, params: { branchId: activePlatform?.branchId } })
+        BROWSE({ token, params: { branchId: activePlatform?.branchId } })
       );
-  }, [dispatch, tokens]);
+  }, [dispatch, token]);
 
   return (
     <MDBView

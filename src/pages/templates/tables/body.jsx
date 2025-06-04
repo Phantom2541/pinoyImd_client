@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { MDBTable } from "mdbreact";
+import { useDispatch, useSelector } from "react-redux";
+import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { Input } from "../../../components/customizable";
+import { SetEDIT } from "../../../services/redux/slices/reusable/table";
+import Swal from "sweetalert2";
 
 const Body = () => {
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
       ({ services }) => services
     ),
-    [selected, setSelected] = useState({});
+    [selected, setSelected] = useState({}),
+    dispatch = useDispatch();
 
   const handleUpdate = () => {
     const { id, key, value } = selected;
@@ -40,6 +43,20 @@ const Body = () => {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+
+  const handleDelete = (_id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      // dispatch(DESTROY({ token, data: { _id  } }));
+    });
+  };
   return (
     <MDBTable responsive hover bordered>
       <thead style={{ backgroundColor: "#", color: "black" }}>
@@ -48,6 +65,7 @@ const Body = () => {
           <th>Service</th>
           <th>Abbreviation</th>
           <th>Specimen</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -100,6 +118,26 @@ const Body = () => {
                 )}
               </td>
               <td>{specimen}</td>
+              <td>
+                <MDBBtnGroup>
+                  <MDBBtn
+                    color="danger"
+                    size="sm"
+                    rounded
+                    onClick={() => handleDelete(id)}
+                  >
+                    <MDBIcon icon="trash" />
+                  </MDBBtn>
+                  <MDBBtn
+                    color="primary"
+                    size="sm"
+                    rounded
+                    onClick={() => dispatch(SetEDIT(item))}
+                  >
+                    <MDBIcon icon="pencil-alt" />
+                  </MDBBtn>
+                </MDBBtnGroup>
+              </td>
             </tr>
           );
         })}

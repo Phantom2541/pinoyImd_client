@@ -1,21 +1,20 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { Input } from "../../../../../components/customizable";
-import { ProductGenerics } from "../../../manager/commerce/merchandise";
+import {
+  ProductsGenerics,
+  SetEDIT,
+} from "../../../../../services/redux/slices/market/productsGenerics";
 
 const Body = () => {
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
       ({ productsGenerics }) => productsGenerics
     ),
-    [selected, setSelected] = useState({});
+    [selected, setSelected] = useState({}),
+    dispatch = useDispatch();
 
-  const handleUpdate = () => {
-    const { id, key, value } = selected;
-    console.log("selected", { id, [key]: value });
-    // dispatch here to update the selected item
-    setSelected({});
-  };
+  console.log("filtered", selected);
 
   const handleSelected = (data) => {
     const { id, ...val } = data; // note: on handling data from collection, please use _id
@@ -41,6 +40,10 @@ const Body = () => {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex);
+  const handleUpdate = (item) => {
+    dispatch(SetEDIT(item));
+  };
+  const handleDelete = (id) => console.log("handleDelete : ", id);
 
   return (
     <MDBTable responsive hover bordered>
@@ -48,14 +51,16 @@ const Body = () => {
         <tr>
           <th>#</th>
           <th>Name</th>
+          <th>Subname</th>
           <th>Expense</th>
           <th>Section</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { id, name, expense, section } = item;
-          const isSelected = selected.id === id;
+          const { _id, name, subname, expense, section } = item;
+          const isSelected = selected._id === _id;
           return (
             <tr key={index}>
               <td key={index}>{index + startIndex + 1}</td>
@@ -75,8 +80,29 @@ const Body = () => {
                     />
                   </div>
                 ) : (
-                  <strong onClick={() => handleSelected({ id, name })}>
+                  <strong onClick={() => handleSelected({ _id, name })}>
                     {name}
+                  </strong>
+                )}
+              </td>
+              <td>
+                {isSelected && selected.key === "subname" ? (
+                  <div style={{ width: "13rem" }}>
+                    <Input
+                      _key={"value"}
+                      className="mt-2 form-control form-control-sm"
+                      isSuccess={isSuccess}
+                      selected={selected}
+                      onChange={(key, val) =>
+                        setSelected({ ...selected, [key]: val })
+                      }
+                      handleCheck={() => handleUpdate()}
+                      handleClose={() => setSelected({})}
+                    />
+                  </div>
+                ) : (
+                  <strong onClick={() => handleSelected({ _id, subname })}>
+                    {subname}
                   </strong>
                 )}
               </td>
@@ -96,12 +122,28 @@ const Body = () => {
                     />
                   </div>
                 ) : (
-                  <strong onClick={() => handleSelected({ id, expense })}>
+                  <strong onClick={() => handleSelected({ _id, expense })}>
                     {expense}
                   </strong>
                 )}
               </td>
-              <td>{section}</td>
+              <td>
+                <strong>{section}</strong>
+              </td>
+              <td>
+                <button
+                  onClick={() => handleUpdate(item)}
+                  className="btn btn-primary btn-sm mr-2"
+                >
+                  Update
+                </button>
+                <button
+                  onClick={() => handleDelete(_id)}
+                  className="btn btn-danger btn-sm"
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           );
         })}
