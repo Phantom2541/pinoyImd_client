@@ -50,7 +50,12 @@ export default function PosCard() {
         dispatch(SETSOURCES(sourceData));
       } else {
         // If no data in localStorage, make the server request
-        dispatch(INSOURCE({ token, key: { vendors: activePlatform.branchId } }))
+        dispatch(
+          INSOURCE({
+            token,
+            key: { vendors: activePlatform.branchId, status: "approved" },
+          })
+        )
           .then(({ payload }) => {
             // Assuming the response contains the source data in 'payload'
             const sourceData = payload.payload;
@@ -102,7 +107,7 @@ export default function PosCard() {
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
   var baseCategory = Categories[category]?.abbr;
-  const hasMembership = ["is", "sbc", "ssbc", "hmo"].includes(baseCategory);
+  const hasMembership = ["is", "sbc", "ssc", "hmo"].includes(baseCategory);
   baseCategory = baseCategory === "is" ? "insource" : baseCategory;
   return (
     <>

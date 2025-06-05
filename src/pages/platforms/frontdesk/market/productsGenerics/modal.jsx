@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -8,18 +8,20 @@ import {
   MDBModalHeader,
   MDBInput,
   MDBTypography,
+  MDBModaltable,
 } from "mdbreact";
 import {
   SAVE,
   UPDATE,
+  TOGGLE,
 } from "../../../../../services/redux/slices/market/productsGenerics";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
-  const { show, toggle, selected, willCreate, isLoading } = useSelector(
-      ({ assurances }) => assurances
+  const { showModal, selected, willCreate, isLoading } = useSelector(
+      ({ productsGenerics }) => productsGenerics
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
@@ -28,7 +30,7 @@ export default function Modal() {
 
   // Handle update function
   const handleUpdate = () => {
-    toggle();
+    TOGGLE();
 
     // Check if object has changed
     if (isEqual(form, selected)) {
@@ -52,25 +54,30 @@ export default function Modal() {
         data: form,
         token,
       })
-    ).then(() => toggle()); // Close modal after successful save
+    ).then(() => TOGGLE()); // Close modal after successful save
   };
 
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    // console.log("form", form);
 
-    if (willCreate) {
-      return handleCreate();
-    }
+    // if (willCreate) {
+    //   return handleCreate();
+    // }
 
-    handleUpdate();
+    // handleUpdate();
   };
 
   // Handle change sa inputs
   const handleChange = (key, value) => {
+    console.log("key :", key);
+    console.log("value :", value);
+    console.log("form :", form);
+
     setForm({
       ...form,
-      [key]: Number(value),
+      [key]: value,
       userId: auth._id,
       branchId: activePlatform.branchId,
     });
@@ -80,49 +87,32 @@ export default function Modal() {
   const handleValue = (key) => form[key] || "";
 
   // Handle modal close
-  const handleClose = () => toggle();
+  const handleClose = () => dispatch(TOGGLE());
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop size="sm">
+    <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
       <MDBModalHeader
         toggle={handleClose}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Controls
+        {willCreate ? "Create" : "Update"} Products
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
-          {/* <MDBTypography
-            tag="h4"
-            variant="h4-responsive"
-            className="text-center"
-          >
-            {Services.getName(selected?.serviceId)}
-          </MDBTypography> */}
-
-          {/* Input fields */}
-          {/* <MDBInput
-            label="Abnormal"
-            type="number"
-            value={handleValue("abnormal")}
+          <MDBInput
+            label="Name"
+            type="text"
+            value={handleValue("name")}
             required
-            onChange={(e) => handleChange("abnormal", e.target.value)}
-          /> */}
-          {/* <MDBInput
-            label="High"
-            type="number"
-            value={handleValue("high")}
-            required
-            onChange={(e) => handleChange("high", e.target.value)}
-          /> */}
-          {/* <MDBInput
-            label="Normal"
-            type="number"
-            value={handleValue("normal")}
-            required
-            onChange={(e) => handleChange("normal", e.target.value)}
-          /> */}
+            onChange={(e) => handleChange("name", e.target.value)}
+          />
+          <MDBInput
+            label="subname"
+            type="text"
+            value={handleValue("subname")}
+            onChange={(e) => handleChange("subname", e.target.value)}
+          />
 
           {/* Submit button */}
           <div className="text-center mb-1-half">

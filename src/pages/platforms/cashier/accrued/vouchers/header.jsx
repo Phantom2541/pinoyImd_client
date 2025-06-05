@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   VOUCHERS,
@@ -13,7 +13,10 @@ const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { sources, month, year } = useSelector(({ deals }) => deals),
+  const { sources, month, year, collections } = useSelector(
+      ({ deals }) => deals
+    ),
+    [source, setSource] = useState("all"),
     dispatch = useDispatch();
   // Fetch vouchers
   useEffect(() => {
@@ -32,6 +35,12 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
+  useEffect(() => {
+    if (collections.length > 0) {
+      dispatch(SetFilterBySOURCE({ value: source }));
+    }
+  }, [source, dispatch, collections]);
+
   return (
     <MDBView
       cascade
@@ -40,7 +49,10 @@ const Header = () => {
       <CalendarPicker
         month={month}
         year={year}
-        moved={(next) => dispatch(SetMONTH(next))}
+        moved={(next) => {
+          dispatch(SetMONTH(next));
+          setSource("all"); //to reset the selected source into all
+        }}
         reset={() => dispatch(ResetDATE())}
       />
       <div>
@@ -48,9 +60,8 @@ const Header = () => {
           <select
             id="cashier-select"
             className="custom-select mr-2"
-            onChange={(e) =>
-              dispatch(SetFilterBySOURCE({ value: e.target.value }))
-            }
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
           >
             <option value="" disabled>
               Select a Source

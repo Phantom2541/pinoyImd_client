@@ -45,7 +45,8 @@ const Header = ({
   const isWhiteColor = color === "text-white"; //para sa color ng small tag
 
   const _category = categories.find((c) => c.value === category)?.text;
-  console.log("_category", _category, category);
+
+  const isDenied = status === "denied";
 
   const handleCategory = () => {
     switch (status) {
@@ -74,7 +75,7 @@ const Header = ({
       style={{ borderRadius: "50%" }}
     >
       <div
-        className={`d-flex justify-content-between ${color} `}
+        className={`d-flex justify-content-between  ${color} `}
         style={{ color: color === "text-white" && "white !important" }}
       >
         <div className="d-flex align-items-start">
@@ -156,7 +157,7 @@ const Header = ({
               >
                 Category
               </small>
-              <h6>{handleCategory()}</h6>
+              <h6 className={isDenied && "text-danger"}>{handleCategory()}</h6>
             </div>
           )}
 

@@ -21,7 +21,7 @@ import {
   UPDATE,
   SAVE,
 } from "../../../../../services/redux/slices/commerce/catalog/menus";
-import { Contracts, SRP, Others, Expenses } from "./component";
+import { SRP, Contracts, Memberships, Expenses, Others } from "./component";
 
 // declare your expected items
 const _form = {
@@ -44,7 +44,7 @@ const _form = {
     onPromo: false,
     hasReseco: false,
   },
-  tabs = ["SRP", "Insourcing/Contracts", "Expenses", "Others"];
+  tabs = ["SRP", "Contracts", "Memberships", "Expenses", "Others"];
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { formSubmitted = false, isSuccess } = useSelector(({ menus }) => menus),
@@ -170,8 +170,16 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             </MDBTabPane>
           </MDBTabContent>
           <MDBTabContent activeItem={activeTab}>
-            <MDBTabPane tabId={"menu-1"} className="m-0 p-0">
+            <MDBTabPane tabId={"menu-1"}>
               <Contracts
+                handleValue={handleValue}
+                handleChange={handleChange}
+              />
+            </MDBTabPane>
+          </MDBTabContent>
+          <MDBTabContent activeItem={activeTab}>
+            <MDBTabPane tabId={"menu-2"} className="m-0 p-0">
+              <Memberships
                 form={form}
                 handleValue={handleValue}
                 handleChange={handleChange}
@@ -179,12 +187,12 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             </MDBTabPane>
           </MDBTabContent>
           <MDBTabContent activeItem={activeTab}>
-            <MDBTabPane tabId={"menu-2"}>
+            <MDBTabPane tabId={"menu-3"}>
               <Expenses handleValue={handleValue} handleChange={handleChange} />
             </MDBTabPane>
           </MDBTabContent>
           <MDBTabContent activeItem={activeTab}>
-            <MDBTabPane tabId={"menu-3"}>
+            <MDBTabPane tabId={"menu-4"}>
               <Others handleValue={handleValue} handleChange={handleChange} />
             </MDBTabPane>
           </MDBTabContent>

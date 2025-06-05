@@ -422,15 +422,15 @@ export const reduxSlice = createSlice({
 
     SetFilterBySOURCE: (state, { payload }) => {
       let filtered = [];
-      if (payload === "all") {
+      if (payload.value === "all") {
         filtered = state.collections;
         state.vendor = {};
-      } else if (payload === "NoSource") {
+      } else if (payload.value === "NoSource") {
         filtered = state.collections.filter(({ source }) => !source);
         state.vendor = "noSource";
       } else {
         filtered = state.collections.filter(
-          ({ source }) => source?._id.toString() === payload?.toString()
+          ({ source }) => source?._id.toString() === payload?.value?.toString()
         );
         state.vendor = payload.vendor;
       }

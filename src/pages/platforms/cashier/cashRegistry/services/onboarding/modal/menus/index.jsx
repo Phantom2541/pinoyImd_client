@@ -8,13 +8,14 @@ import {
 const Menus = ({
   selected,
   cart,
-  category,
+  category, //category index
   matchMenus,
   handleAddToCart,
   handleRemovedToCart,
 }) => {
   const { sendouts = {}, privilege } = selected || {};
   const { membership = "" } = sendouts;
+  console.log("cart", cart);
   return (
     <MDBCol md="4">
       <table className="menus-table">
@@ -50,7 +51,7 @@ const Menus = ({
                 <td className="text-left" title={title}>
                   <span>
                     {description ? `${description} - ` : ""}
-                    {abbreviation} {up}
+                    {abbreviation}
                   </span>
                   <small className="d-block">
                     {/* Check if there are no packages */}

@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { toWords } from "number-to-words";
-import { currency } from "../../../../services/utilities";
 import Header from "./header";
+import { currency } from "../../../../services/utilities";
 export default function Table() {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const payslip = JSON.parse(localStorage.getItem("payslip"));
@@ -17,30 +17,44 @@ export default function Table() {
 
   return (
     <div>
-      <MDBTable bordered small className="payslip" responsive>
+      <table className="payslip">
         <Header branch={branch} payslip={payslip} />
         <tbody>
           <tr>
-            <td className="bg-info py-1" style={{ width: "22%" }}>
+            <td className="bg-info py-1  px-1 " style={{ width: "22%" }}>
               Earnings
             </td>
-            <td className="bg-info py-1">Amount</td>
-            <td className="bg-info py-1" style={{ width: "22%" }}>
+            <td className="bg-info py-1   px-1  payslip-amount-earnings-printout ">
+              Amount
+            </td>
+            <td
+              className="bg-info py-1   px-1  payslip-amount-earnings-printout "
+              style={{ width: "24%" }}
+            >
               Deductions
             </td>
-            <td className="bg-info py-1">Amount</td>
+            <td
+              className="bg-info py-1   px-1  payslip-amount-deductions-printout "
+              style={{ width: "27%" }}
+            >
+              Amount
+            </td>
           </tr>
           <tr>
-            <td className="py-0  ">Monthly</td>
-            <td className="py-0 text-right ">{currency(rate.monthly)}</td>
-            <td className="py-0 ">Cash Advance</td>
-            <td className="py-0 "> {currency(deduction?.ca)} </td>
+            <td className="py-0   px-1  ">Monthly</td>
+            <td className="py-0 text-right   px-1 ">
+              {currency(rate.monthly)}
+            </td>
+            <td className="py-0   px-1 ">Cash Advance</td>
+            <td className="py-0   px-1  "> {currency(deduction?.ca)} </td>
           </tr>
           <tr>
-            <td className="py-0 ">Daily</td>
-            <td className="py-0 text-right"> {currency(rate?.daily)} </td>
-            <td className="py-0 ">Absent </td>
-            <td className="py-0 ">
+            <td className="py-0   px-1 ">Daily</td>
+            <td className="py-0 text-right   px-1 ">
+              {currency(rate?.daily)}{" "}
+            </td>
+            <td className="py-0   px-1 ">Absent </td>
+            <td className="py-0   px-1 ">
               {deduction.absent ? (
                 <div className="d-flex align-items-center justify-content-between">
                   <span>{deduction.absent} days</span>
@@ -52,16 +66,18 @@ export default function Table() {
             </td>
           </tr>
           <tr>
-            <td className="py-0 ">COLA</td>
-            <td className="py-0 text-right"> {currency(rate?.cola)} </td>
-            <td className="py-0 ">Loan</td>
-            <td className="py-0 text-right"> {currency(deduction?.loan)} </td>
+            <td className="py-0 px-1  ">COLA</td>
+            <td className="py-0 px-1  text-right">{currency(rate?.cola)} </td>
+            <td className="py-0 px-1  ">Loan</td>
+            <td className="py-0 px-1  text-right">
+              {currency(deduction?.loan)}{" "}
+            </td>
           </tr>
           <tr>
-            <td className="py-0 " style={{ verticalAlign: "middle" }}>
+            <td className="py-0   px-1  " style={{ verticalAlign: "middle" }}>
               Regular Holiday{" "}
             </td>
-            <td className="py-0 ">
+            <td className="py-0   px-1 ">
               <div className="d-flex align-items-center justify-content-between">
                 {present ? (
                   <>
@@ -83,20 +99,19 @@ export default function Table() {
                 )}
               </div>
             </td>
-            <td className="py-0 " style={{ verticalAlign: "middle" }}>
+            <td className="py-0   px-1 " style={{ verticalAlign: "middle" }}>
               Phil. Health
             </td>
             <td
-              className="py-0  text-right"
+              className="py-0   px-1  text-right"
               style={{ verticalAlign: "middle" }}
             >
-              {" "}
-              {currency(deduction?.ph)}{" "}
+              {currency(deduction?.ph)}
             </td>
           </tr>
           <tr>
-            <td className="py-0 ">Special Holiday</td>
-            <td className="py-0 ">
+            <td className="py-0   px-1 ">Special Holiday</td>
+            <td className="py-0   px-1 ">
               {special ? (
                 <div className="d-flex align-items-center justify-content-between">
                   <span>{special}days</span>
@@ -106,12 +121,14 @@ export default function Table() {
                 "-"
               )}
             </td>
-            <td className="py-0 ">SSS</td>
-            <td className="py-0 text-right"> {currency(deduction?.sss)} </td>
+            <td className="py-0   px-1 ">SSS</td>
+            <td className="py-0 text-right   px-1 ">
+              {currency(deduction?.sss)}{" "}
+            </td>
           </tr>
           <tr>
-            <td className="py-0 ">Night Shift </td>
-            <td className="py-0 ">
+            <td className="py-0   px-1 ">Night Shift </td>
+            <td className="py-0   px-1 ">
               {nightShift ? (
                 <div className="d-flex align-items-center justify-content-between">
                   <span>{nightShift}hrs</span>
@@ -121,12 +138,15 @@ export default function Table() {
                 "-"
               )}
             </td>
-            <td className="py-0 ">Pag-ibig</td>
-            <td className="py-0 text-right"> {currency(deduction?.pi)} </td>
+            <td className="py-0   px-1 ">Pag-ibig</td>
+            <td className="py-0 text-right   px-1 ">
+              {" "}
+              {currency(deduction?.pi)}{" "}
+            </td>
           </tr>
           <tr>
-            <td className="py-0 ">Over Time </td>
-            <td className="py-0 ">
+            <td className="py-0   px-1 ">Over Time </td>
+            <td className="py-0   px-1 ">
               {earn?.overtime ? (
                 <div className="d-flex align-items-center justify-content-between">
                   <span>{earn?.overtime}hrs</span>
@@ -136,28 +156,31 @@ export default function Table() {
                 "-"
               )}
             </td>
-            <td className="py-0 "></td>
-            <td className="py-0 "> </td>
+            <td className="py-0  px-1  "></td>
+            <td className="py-0   px-1 "> </td>
           </tr>
           <tr>
-            <td className="py-0 ">Bonus</td>
-            <td className="py-0 text-right"> {currency(earn?.bonus)} </td>
-            <td className="py-0 "></td>
-            <td className="py-0 "> </td>
+            <td className="py-0   px-1 ">Bonus</td>
+            <td className="py-0   px-1  text-right">
+              {" "}
+              {currency(earn?.bonus)}{" "}
+            </td>
+            <td className="py-0   px-1 "></td>
+            <td className="py-0   px-1 "> </td>
           </tr>
           <tr>
-            <td className="py-0 ">Gross Earnings :</td>
-            <td className="py-0 font-weight-bold text-right">
+            <td className="py-0   px-1 ">Gross Earnings :</td>
+            <td className="py-0 font-weight-bold text-right   px-1 ">
               {currency(earn?.total)}{" "}
             </td>
-            <td className="py-0 ">Total Deductions </td>
-            <td className="py-0 font-weight-bold text-right">
+            <td className="py-0   px-1 ">Total Deductions </td>
+            <td className="py-0   px-1  font-weight-bold text-right">
               {currency(deduction?.total)}{" "}
             </td>
           </tr>
           <tr>
             <td
-              className="py-0 "
+              className="py-0   px-1 "
               colSpan={2}
               rowSpan={3}
               style={{
@@ -181,7 +204,7 @@ export default function Table() {
             </td>
 
             <td
-              className="py-0 m-0 p-0 border bg-info text-center font-weight-bold"
+              className="py-0 m-0 p-0   px-1  border bg-info text-center font-weight-bold"
               colSpan={2}
             >
               NET PAY
@@ -189,7 +212,7 @@ export default function Table() {
           </tr>
           <tr>
             <td
-              className="py-0 m-0 p-0 border text-center bg-light font-weight-bold"
+              className="py-0 m-0   px-1  p-0 border text-center bg-light font-weight-bold"
               colSpan={2}
               style={{ fontSize: "1.2rem" }}
             >
@@ -197,12 +220,12 @@ export default function Table() {
             </td>
           </tr>
           <tr>
-            <td className="py-0 m-0 p-0 border text-center" colSpan={2}>
+            <td className="py-0 m-0  px-1 p-0 border text-center" colSpan={2}>
               <i> {toWords(breakdown?.net).toUpperCase()}</i>
             </td>
           </tr>
         </tbody>
-      </MDBTable>
+      </table>
     </div>
   );
 }

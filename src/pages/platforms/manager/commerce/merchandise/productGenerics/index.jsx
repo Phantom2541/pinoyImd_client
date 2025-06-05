@@ -8,7 +8,7 @@ import Footer from "./footer";
 import Modal from "./modal";
 
 const Index = () => {
-  const { isLoading } = useSelector(({ services }) => services);
+  const { isLoading } = useSelector(({ clinic }) => clinic);
 
   return (
     <MDBAnimation type="bounceInDown">
