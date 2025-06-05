@@ -24,7 +24,7 @@ export default function Payables() {
           token,
           key: {
             clients: activePlatform?.branchId,
-            category: ["expenses"], // utilities", "suppliers
+            category: ["expenses"], // utilities,subcontract,special subcontract "suppliers
           },
         })
       );

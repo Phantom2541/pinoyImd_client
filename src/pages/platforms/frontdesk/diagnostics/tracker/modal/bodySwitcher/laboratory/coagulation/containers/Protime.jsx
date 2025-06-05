@@ -1,24 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { MDBInput, MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
+import { useSelector, useDispatch } from "react-redux";
+import { SETPARAMS } from "./../../../../../../../../../redux/slices/task/forms";
 
-const Protime = ({ task, setTask }) => {
-  const [inr, setInr] = useState(),
+const Protime = () => {
+  const { theme } = useSelector(({ auth }) => auth),
+    { params } = useSelector(({ task }) => task),
+    [inr, setInr] = useState(),
     [percent, setPercent] = useState(),
-    [pt, setPt] = useState([0, 0]);
+    [pt, setPt] = useState([0, 0]),
+    dispatch = useDispatch();
 
   useEffect(() => {
-    const _pt = !!task.pt ? task.pt : [0, 0];
+    const _pt = !!params.pt ? params.pt : [0, 0];
     setPt(_pt);
-  }, [task]);
+  }, [params]);
 
   useEffect(() => {
-    if (!!task.pt && task.pt[0] !== null && !!task.pt && task.pt[1] !== null) {
-      const _inr = task.pt[0] / task.pt[1];
+    if (
+      !!params.pt &&
+      params.pt[0] !== null &&
+      !!params.pt &&
+      params.pt[1] !== null
+    ) {
+      const _inr = params.pt[0] / params.pt[1];
       setInr(_inr.toFixed(2));
-      const _per = (task.pt[1] / task.pt[0]) * 100;
+      const _per = (params.pt[1] / params.pt[0]) * 100;
       setPercent(_per.toFixed(2));
     }
-  }, [task]);
+  }, [params]);
   const handlePt = (e) => {
     const { name, value } = e.target;
     let _pt = [...pt];
@@ -27,13 +37,18 @@ const Protime = ({ task, setTask }) => {
     } else {
       _pt[1] = parseFloat(value);
     }
-    setTask({
-      ...task,
-      pt: _pt,
-    });
+    dispatch(SETPARAMS({ ...params, pt: _pt }));
   };
   return (
-    <MDBTable align="middle" hover responsive small className="mt-2" striped>
+    <MDBTable
+      align="middle"
+      hover
+      responsive
+      small
+      color={theme.color}
+      className="mt-2"
+      striped
+    >
       <MDBTableHead>
         <tr className="text-center border">
           <th>Name</th>
@@ -47,7 +62,7 @@ const Protime = ({ task, setTask }) => {
           <td>
             <MDBInput
               label="Patient"
-              // icon="user"
+              icon="user"
               group
               type="number"
               className="mb-3 "
@@ -63,7 +78,7 @@ const Protime = ({ task, setTask }) => {
           <td>
             <MDBInput
               label="Control"
-              // icon="cog"
+              icon="cog"
               group
               type="number"
               name="control"
@@ -74,32 +89,32 @@ const Protime = ({ task, setTask }) => {
           </td>
           <td>10.7-14.1 sec. </td>
         </tr>
-        <tr className="text-center" key={`coagulation-INR`}>
+        <tr className="text-center" key={`coagulation-control`}>
           <td>INR</td>
           <td>
             <MDBInput
               label="INR"
-              // icon="cog"
+              icon="cog"
               group
               step="0.01"
               className="mb-3 "
               value={inr}
-              readOnly
+              readonly
             />
           </td>
           <td>0.8-1.1 %</td>
         </tr>
-        <tr key={`coagulation-Activity`}>
+        <tr>
           <td>%Activity</td>
           <td>
             <MDBInput
               label="INR"
-              // icon="cog"
+              icon="cog"
               group
               step="0.01"
               className="mb-3 "
               value={`${percent} %`}
-              readOnly
+              readonly
             />
           </td>
           <td></td>

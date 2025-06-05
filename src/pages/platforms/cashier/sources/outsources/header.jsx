@@ -21,7 +21,6 @@ const Header = () => {
           token,
           key: {
             clients: activePlatform?.branchId,
-            category: "outsource",
           },
         })
       );

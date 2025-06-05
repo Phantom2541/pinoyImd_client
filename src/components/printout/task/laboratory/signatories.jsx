@@ -31,7 +31,7 @@ const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
   );
 };
 
-export default function Signatories({ signatories }) {
+export default function Signatories({ signatories = [] }) {
   const head = signatories[0],
     dr = signatories[1],
     frontdesk = signatories[2];

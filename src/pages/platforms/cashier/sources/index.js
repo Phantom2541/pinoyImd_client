@@ -4,5 +4,5 @@ import Utilities from "./utilities";
 import Hotlines from "./hotlines";
 import Suppliers from "./suppliers";
 import HMO from "./hmo";
-
-export { Insources, Outsources, Utilities, Hotlines, Suppliers, HMO };
+import Contract from "./contract";
+export { Insources, Outsources, Utilities, Hotlines, Suppliers, HMO, Contract };

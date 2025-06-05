@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  MDBBtn,
   MDBCard,
   MDBCardBody,
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
+  MDBIcon,
 } from "mdbreact";
 
 import CollapsableBody from "./body";
@@ -14,11 +16,23 @@ import { collapse, dateFormat } from "../../../../../../services/utilities";
 import {
   SetSoaCluster,
   RESET,
+  GENERATE_SOA,
 } from "../../../../../../services/redux/slices/commerce/pos/services/billing";
+import get from "../utils";
+import { RemoveVERIFIED_SOA } from "../../../../../../services/redux/slices/finance/journals/payables";
 
 export default function Body() {
-  const { filtered, activePage, maxPage, cluster, formSubmitted, isSuccess } =
-      useSelector(({ billings }) => billings),
+  const { token } = useSelector(({ auth }) => auth),
+    {
+      filtered,
+      activePage,
+      maxPage,
+      cluster,
+      formSubmitted,
+      isSuccess,
+
+      vendor,
+    } = useSelector(({ billings }) => billings),
     [soa, setSoa] = useState([]),
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),
@@ -64,9 +78,33 @@ export default function Body() {
     }
     return false;
   };
+  const { soa: s } = vendor;
+  const canGenerateSOA = s?.amount === get.totalAmount(cluster);
 
+  const handleGenerateSOA = () => {
+    const dealIDS = cluster.flatMap(({ deals }) => deals.map(({ _id }) => _id));
+    dispatch(GENERATE_SOA({ token, data: { dealIDS, bill: s._id } })).then(
+      ({ payload }) => {
+        const { payload: data } = payload;
+        dispatch(RemoveVERIFIED_SOA(data.bill));
+      }
+    );
+  };
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
+      <div
+        className="d-flex justify-content-between align-items-center"
+        style={{ marginTop: "-1.2rem", marginBottom: "1rem" }}
+      >
+        {s && <> {get.description(vendor, cluster)}</>}
+        {canGenerateSOA && (
+          <MDBBtn size="sm" rounded color="primary" onClick={handleGenerateSOA}>
+            <MDBIcon icon="file-invoice-dollar" className="mr-2" />
+            Verified SOA
+            {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
+          </MDBBtn>
+        )}
+      </div>
       {soa?.map(({ date, deals }, index) => {
         const actualIndex = index;
         const { color, border } = collapse.getStyle(
@@ -75,7 +113,7 @@ export default function Body() {
           didHoverId
         );
         const sum = deals.reduce((acc, item) => {
-          return acc + (item?.services?.up || 0);
+          return acc + (item?.sendouts?.up || 0);
         }, 0);
         return (
           <MDBCard
@@ -107,7 +145,7 @@ export default function Body() {
               className="mb-2 border border-black"
               isOpen={actualIndex === activeId} // Only open if the current ID matches activeId
             >
-              <MDBCardBody className="pt-2">
+              <MDBCardBody className="m-0 p-0">
                 <CollapsableBody
                   deals={deals}
                   date={date}

@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody } from "mdbreact";
 
@@ -6,17 +5,23 @@ import Collapsable from "./collapsables";
 import TopHeader from "./header";
 import Pagination from "../../../../../components/pagination";
 import TableRowCount from "../../../../../components/pagination/rows";
-import { SetPAGE } from "../../../../../services/redux/slices/assets/providers";
+import { SetActivePAGE } from "../../../../../services/redux/slices/assets/providers";
 import TableLoading from "../../../../../components/tableLoading";
 import Modal from "./modal";
 import RegisterBranch from "./registerBranch";
 const Insources = () => {
-  const { totalPages, page, isLoading } = useSelector(
+  const { totalPages, activePage, isLoading } = useSelector(
       ({ providers }) => providers
     ),
     dispatch = useDispatch();
 
-  const setPage = (page) => dispatch(SetPAGE(page));
+  const handlePageChange = (action) => {
+    const newPage = activePage + (action ? 1 : -1);
+    if (newPage >= 1 && newPage <= totalPages) {
+      dispatch(SetActivePAGE(newPage));
+    }
+  };
+
   return (
     <>
       <MDBCard narrow className="pb-3 mt-3" style={{ minHeight: "600px" }}>
@@ -30,8 +35,8 @@ const Insources = () => {
           <Pagination
             isLoading={isLoading}
             total={totalPages}
-            page={page}
-            setPage={setPage}
+            page={activePage}
+            setPage={handlePageChange}
           />
         </div>
       </MDBCard>

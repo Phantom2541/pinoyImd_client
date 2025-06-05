@@ -1,15 +1,21 @@
-import React from "react";
 import { MDBCol, MDBBadge, MDBIcon } from "mdbreact";
 import { SearchMenu } from "../../../../../../../../components/searchables";
 import { Services } from "../../../../../../../../services/fakeDb";
-import { currency } from "../../../../../../../../services/utilities";
+import {
+  computeGD,
+  currency,
+} from "../../../../../../../../services/utilities";
 const Menus = ({
+  selected,
   cart,
+  category, //category index
   matchMenus,
   handleAddToCart,
   handleRemovedToCart,
-  discount,
 }) => {
+  const { sendouts = {}, privilege } = selected || {};
+  const { membership = "" } = sendouts;
+  console.log("cart", cart);
   return (
     <MDBCol md="4">
       <table className="menus-table">
@@ -33,21 +39,16 @@ const Menus = ({
         </thead>
         <tbody>
           {cart.map((item) => {
+            const { _id, description, abbreviation, packages } = item;
             const {
-              _id,
-              description,
-              abbreviation,
-              packages,
-              opd,
-              discountable,
-            } = item;
-            const discounted = discountable ? opd - opd * discount : opd;
+              gross = 0,
+              up = 0,
+              title = "",
+              color = "",
+            } = computeGD(item, category, privilege, membership);
             return (
               <tr key={_id}>
-                <td
-                  className="text-left"
-                  title={discountable ? "Discountable" : "Not Discountable"}
-                >
+                <td className="text-left" title={title}>
                   <span>
                     {description ? `${description} - ` : ""}
                     {abbreviation}
@@ -71,12 +72,12 @@ const Menus = ({
                 </td>
                 <td
                   title="Suggested Retail Price"
-                  className={discountable && "text-primary"}
+                  // className={discountable && "text-primary"}
                 >
-                  {currency(opd)}
+                  {currency(gross)}
                 </td>
                 <td title="Suggested Retail Price">
-                  <span>{currency(discounted)}</span>
+                  <span className={`text-${color}`}>{currency(up)}</span>
                   <button
                     onClick={() => handleRemovedToCart(_id)}
                     className="menus-button-delete"

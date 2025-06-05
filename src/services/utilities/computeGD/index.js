@@ -8,8 +8,10 @@ const individual = (menu, category, privilege, membership) => {
     : category;
   const gross = menu[_abbr];
 
+  const hasMembership = ["is", "hmo"].includes(category);
+
   let up = (gross * 80) / 100;
-  if (membership && category === "is") {
+  if (membership && hasMembership && discountable) {
     const dr = Memberships.find((m) => m.value === membership)?.discount || 0;
     const discount = gross * dr;
     up = gross - discount;

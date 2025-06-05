@@ -1,6 +1,7 @@
 import Bulletin from "../../../pages/platforms/cashier/bulletin";
 import {
   Cashier,
+  Contract,
   Deals,
   Menus,
   Services,
@@ -17,7 +18,6 @@ import {
   SOA,
   Reseco,
   Onboarding,
-  HMO,
 } from "../../../pages/platforms/cashier";
 import StaffSchedule from "../../../pages/platforms/cashier/scheduler";
 
@@ -159,12 +159,13 @@ const cashier = [
         component: Insources,
       },
       {
-        name: "HMO",
-        path: "/hmo",
-        icon: "hospital",
-        title: "Health Management Organizations",
-        component: HMO,
+        name: "Contract",
+        path: "/contract",
+        icon: "warehouse",
+        title: "List of Companies who send out their services",
+        component: Contract,
       },
+
       {
         name: "Suppliers",
         path: "/suppliers",

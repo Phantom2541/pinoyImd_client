@@ -12,6 +12,7 @@ const initialState = {
   collections: [],
   filtered: [],
   cluster: [],
+  totalAmount: 0,
   vendor: { _id: "" },
   selected: {},
   formSubmitted: false,
@@ -88,8 +89,26 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   }
 });
 
+export const GENERATE_SOA = createAsyncThunk(
+  `${url}/genearte_soa`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "generate_bill_soa");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
-  name: url,
+  name: "billing",
   initialState,
   reducers: {
     // for template use only
@@ -98,6 +117,7 @@ export const reduxSlice = createSlice({
       if (value === "all") {
         state.filtered = state.collections;
         state.source = "";
+        state.vendor = {};
       } else {
         state.filtered = state.collections.filter(
           ({ outsource }) => outsource?._id === value
@@ -242,6 +262,47 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(GENERATE_SOA.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GENERATE_SOA.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const { dealIDS } = payload;
+        state.vendor.soa = null;
+        const updateCollections = (collections) => {
+          return collections.filter((item) => !dealIDS.includes(item._id));
+        };
+        state.collections = updateCollections(state.collections);
+        state.filtered = updateCollections(state.filtered);
+
+        //update localstorage
+        const cluster = state.cluster
+          .map((clusterItem) => ({
+            ...clusterItem,
+            deals: clusterItem.deals.filter(
+              (deal) => !dealIDS.includes(deal._id)
+            ),
+          }))
+          .filter((clusterItem) => clusterItem.deals.length > 0);
+
+        localStorage.setItem(
+          "billing",
+          JSON.stringify({
+            ...JSON.parse(localStorage.getItem("billing" || "{}")),
+            [state.vendor?._id]: cluster,
+          })
+        );
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(GENERATE_SOA.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
       .addCase(UPDATE.pending, (state) => {
         state.formSubmitted = true;
         state.isSuccess = false;
@@ -249,23 +310,42 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const getIndex = (collections) =>
-          collections.findIndex((item) => item._id === payload._id);
 
-        const collectionIndex = getIndex(state.collections);
-        const filteredIndex = getIndex(state.filtered);
-
-        const existingSoa = state.collections[collectionIndex];
-        const existingFiltered = state.filtered[filteredIndex];
-
-        state.collections[collectionIndex] = {
-          ...existingSoa,
-          services: payload,
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
+          collections[index] = {
+            ...collections[index],
+            sendouts: payload,
+          };
         };
-        state.filtered[filteredIndex] = {
-          ...existingFiltered,
-          services: payload,
-        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+
+        const cluster = state.cluster;
+        const clusterIndex = cluster.findIndex((item) =>
+          item?.deals?.some((deal) => deal._id === payload._id)
+        );
+        const dealIndex = cluster[clusterIndex]?.deals?.findIndex(
+          (item) => item._id === payload._id
+        );
+
+        const deal = cluster[clusterIndex]?.deals[dealIndex];
+        if (dealIndex > -1 && clusterIndex > -1) {
+          cluster[clusterIndex].deals[dealIndex] = {
+            ...deal,
+            sendouts: payload,
+          };
+          localStorage.setItem(
+            "billing",
+            JSON.stringify({
+              ...JSON.parse(localStorage.getItem("billing" || "{}")),
+              [state.vendor?._id]: cluster,
+            })
+          );
+        }
+
         state.message = success;
         state.formSubmitted = false;
         state.isSuccess = true;

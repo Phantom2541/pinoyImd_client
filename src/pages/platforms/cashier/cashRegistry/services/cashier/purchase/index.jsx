@@ -20,7 +20,6 @@ export default function Menus({ patronPresent }) {
 
   const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
   const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
-
   return (
     <>
       <table className="menus-table">

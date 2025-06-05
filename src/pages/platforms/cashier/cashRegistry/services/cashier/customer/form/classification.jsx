@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBCol, MDBRow, MDBTypography } from "mdbreact";
 
@@ -50,7 +50,12 @@ export default function PosCard() {
         dispatch(SETSOURCES(sourceData));
       } else {
         // If no data in localStorage, make the server request
-        dispatch(INSOURCE({ token, key: { vendors: activePlatform.branchId } }))
+        dispatch(
+          INSOURCE({
+            token,
+            key: { vendors: activePlatform.branchId, status: "approved" },
+          })
+        )
           .then(({ payload }) => {
             // Assuming the response contains the source data in 'payload'
             const sourceData = payload.payload;
@@ -93,15 +98,17 @@ export default function PosCard() {
     setPhysicians(_physicians); // Update the physicians list based on the filtered data
     // Dispatch the selected source
     // if membership is not null
-    const { membership, clients } = sources.find(
-      (source) => source._id.toString() === _id
-    );
+    const { membership = "", clients } =
+      sources?.find((source) => source?._id.toString() === _id) || {};
+
     handlePhysician(""); // reset the selected pyhisican if change the source
     setSource(_id);
     dispatch(SETSOURCE({ _id: clients?._id, membership }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
-
+  var baseCategory = Categories[category]?.abbr;
+  const hasMembership = ["is", "sbc", "ssc", "hmo"].includes(baseCategory);
+  baseCategory = baseCategory === "is" ? "insource" : baseCategory;
   return (
     <>
       <div>
@@ -163,7 +170,10 @@ export default function PosCard() {
           >
             <option value="">None</option>
             {sources
-              ?.filter(({ category }) => category !== "hmo")
+              ?.filter(
+                ({ category: c }) =>
+                  c === (hasMembership ? baseCategory : "insource")
+              )
               .map(({ _id, clients, membership }) => (
                 <option key={_id} value={_id} title={membership}>
                   {Memberships.find(({ value }) => value === membership)?.emoji}

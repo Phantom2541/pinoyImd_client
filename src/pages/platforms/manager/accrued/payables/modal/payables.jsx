@@ -76,6 +76,16 @@ export default function ModalCreate() {
 
   const { particular = {}, supplier = {} } = form || {};
 
+  const handleSuppliers = () => {
+    return [...collections].map((supplier) => {
+      const { vendors = null, displayname } = supplier;
+
+      return {
+        value: supplier._id,
+        label: vendors ? vendors.name : displayname,
+      };
+    });
+  };
   return (
     <MDBModal
       isOpen={showPayablesModal}
@@ -113,7 +123,7 @@ export default function ModalCreate() {
           onChange={(value) => setForm({ ...form, fsId: Number(value) })}
         />
         {willCreate && (
-          <div className="d-flex align-item-center w-100">
+          <div className="d-flex align-item-center w-100 mt-3">
             <div style={{ width: form.orOption ? "35%" : "100%" }}>
               <select
                 className="browser-default custom-select"
@@ -149,14 +159,7 @@ export default function ModalCreate() {
                   </div>
                 ) : form.orOption === "Supplier" ? (
                   <Select
-                    collections={
-                      Array.isArray(collections)
-                        ? collections.map((item) => ({
-                            value: item._id, // Ensure _id exists
-                            label: item.displayname, // Use `name`, trim whitespace
-                          }))
-                        : []
-                    }
+                    collections={handleSuppliers()}
                     label="Supplier"
                     className="m-0 p-0 ml-3"
                     keys="value"
@@ -215,6 +218,7 @@ export default function ModalCreate() {
         )}
         <MDBInput
           label="Due Date"
+          className="mt-3"
           type="date"
           value={form.due ? new Date(form.due).toISOString().split("T")[0] : ""}
           onChange={({ target }) => setForm({ ...form, due: target.value })}

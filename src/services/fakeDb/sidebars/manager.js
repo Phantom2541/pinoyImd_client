@@ -382,6 +382,12 @@ const manager = [
     path: "/user/manual",
     component: UserManual,
   },
+  {
+    name: "Clinic",
+    icon: "book-open",
+    path: "/clinic",
+    // component: Clinic,
+  },
 ];
 
 export default manager;

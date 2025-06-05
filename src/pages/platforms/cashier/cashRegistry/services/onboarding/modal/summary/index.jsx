@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCol, MDBBtn, MDBIcon } from "mdbreact";
 import { currency } from "../../../../../../../../services/utilities";
 import { isEmpty } from "lodash";
@@ -7,6 +6,7 @@ const Summary = ({
   cart = 0,
   gross = 0,
   discount = 0,
+  amount = 0,
   handleSubmit,
   formSubmitted = false,
 }) => {
@@ -31,7 +31,7 @@ const Summary = ({
           </tr>
           <tr>
             <td>Net Amount</td>
-            <td className="table-price">{currency(gross - discount)}</td>
+            <td className="table-price">{currency(amount)}</td>
           </tr>
           <tr>
             <td>Payment</td>

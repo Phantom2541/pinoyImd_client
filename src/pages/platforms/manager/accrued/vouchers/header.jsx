@@ -31,6 +31,7 @@ const Header = () => {
           token,
           key: {
             branchId: activePlatform?.branchId,
+            status: "approved",
           },
         })
       );
@@ -65,7 +66,7 @@ const Header = () => {
   );
 
   useEffect(() => {
-    if (collections.length > 0 && providers.length > 0) {
+    if (collections.length > 0) {
       const uniqueSource = [
         ...new Map(
           collections.map(({ source = {} }) => {
@@ -77,6 +78,7 @@ const Header = () => {
               {
                 _id: _id || "NoSource",
                 displayname: `${displayname} (${cutOff})`,
+                cutoff: cutOff,
               }, // value
             ];
           })
@@ -171,11 +173,31 @@ const Header = () => {
             Select a Source
           </option>
           <option value="all">Select all</option>
-          {sources?.map((source, index) => (
-            <option key={`source-${index}`} value={source?._id}>
-              {source?.displayname}
-            </option>
-          ))}
+          {sources?.map((source, index) => {
+            const { cutoff = 0, _id = "", displayname = "" } = source;
+            var className = "";
+            var title = "";
+
+            if (!cutoff) {
+              className = "bg-warning text-white";
+              title = "No cutoff set for this source";
+            }
+            if (_id === "NoSource") {
+              className = "bg-danger text-white";
+              title = "No source available";
+            }
+
+            return (
+              <option
+                key={`source-${index}`}
+                className={className}
+                value={_id}
+                title={title}
+              >
+                {displayname}
+              </option>
+            );
+          })}
         </select>
         {vendor?._id && vendor?._id !== "noSource" && (
           <MDBBtn
