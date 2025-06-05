@@ -18,7 +18,7 @@ import {
   TOGGLE,
 } from "../../../../../services/redux/slices/assets/providers";
 
-import { isEqual, set } from "lodash";
+import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
 
@@ -55,6 +55,13 @@ export default function Modal() {
     }
   }, [dispatch, showModal, isSuccess, formSubmitted]);
 
+  const companyIsGhost = () => {
+    const isGhost = companies.find(
+      ({ _id }) => _id === form.companyId
+    )?.isGhost;
+    if (!isGhost && !form.isRegister) return {};
+    return { status: "approved", category: "ghost" };
+  };
   // Handle update function
   const handleUpdate = () => {
     // Check if object has changed
@@ -76,7 +83,7 @@ export default function Modal() {
   const handleCreate = () => {
     dispatch(
       SAVE({
-        data: form,
+        data: { ...form, ...companyIsGhost() },
         token,
       })
     );
@@ -99,6 +106,7 @@ export default function Modal() {
     const _branches = [...collections].filter(
       ({ companyId }) => companyId === company
     );
+    setForm({ ...form, companyId: company });
     setBranches(_branches);
   };
 
@@ -173,7 +181,7 @@ export default function Modal() {
                 {Array.isArray(companies) &&
                   companies.map((company, index) => (
                     <option key={index} value={company._id}>
-                      {company.name}
+                      {company.isGhost && "👻"} {company.name}
                     </option>
                   ))}
               </select>
@@ -189,7 +197,7 @@ export default function Modal() {
                 {Array.isArray(branches) &&
                   branches.map((branch, index) => (
                     <option key={index} value={branch._id}>
-                      {branch.displayname || (branch.name && branch.subname)}
+                      {branch.displayname || (branch.name && branch.name)}
                     </option>
                   ))}
               </select>
