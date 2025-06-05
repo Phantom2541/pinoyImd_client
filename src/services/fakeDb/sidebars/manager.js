@@ -8,7 +8,7 @@ import {
 } from "../../../pages/platforms/manager/settings";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
-import Payrolls from "../../../pages/platforms/manager/responsibilities/payroll";
+import Payrolls from "../../../pages/platforms/finance/payroll";
 
 import {
   Employees,
@@ -381,6 +381,12 @@ const manager = [
     icon: "book-open",
     path: "/user/manual",
     component: UserManual,
+  },
+  {
+    name: "Clinic",
+    icon: "book-open",
+    path: "/clinic",
+    // component: Clinic,
   },
 ];
 

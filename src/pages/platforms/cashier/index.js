@@ -3,8 +3,10 @@ import { Menus, Services } from "./catalog";
 import {
   Insources,
   Outsources,
+  HMO,
   Utilities,
   Hotlines,
+  Contract,
   Suppliers,
 } from "./sources";
 import {
@@ -24,6 +26,8 @@ export {
   Menus,
   Services,
   Insources,
+  Contract,
+  HMO,
   Outsources,
   Utilities,
   Hotlines,

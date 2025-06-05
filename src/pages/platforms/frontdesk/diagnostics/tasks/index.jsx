@@ -2,12 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import { MDBCard, MDBCardBody } from "mdbreact";
+import { MDBCard } from "mdbreact";
 import DealCollapse from "./collapse";
 import Header from "./header";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
-
 /**
  * For refrences to the following deals
  */
@@ -25,6 +24,7 @@ import {
   RESET as PHYRESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
+import Printout from "./modal/printout";
 
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -91,15 +91,18 @@ export default function Tasks() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
-
+  // if (activePlatform.department === "Laboratory" && print) {
+  //   return <LabTaskPrintout />;
+  // } else if (activePlatform.department === "Radiology" && print) {
+  //   return <RadTaskPrintout />;
+  // }
   return (
     <MDBCard narrow>
       <Header />
-      <MDBCardBody className="pb-0">
-        {isLoading ? <TableLoading /> : <DealCollapse />}
-      </MDBCardBody>
+      {isLoading ? <TableLoading /> : <DealCollapse />}
       <Footer />
       <ResultEntry />
+      <Printout />
     </MDBCard>
   );
 }

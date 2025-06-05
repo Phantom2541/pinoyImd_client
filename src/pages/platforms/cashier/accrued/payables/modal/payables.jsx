@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SAVE,
@@ -87,6 +87,17 @@ export default function ModalCreate() {
 
   const { particular = {}, supplier = {} } = form || {};
 
+  const handleSuppliers = () => {
+    return [...collections].map((supplier) => {
+      const { vendors = null, displayname } = supplier;
+
+      return {
+        value: supplier._id,
+        label: vendors ? vendors.name : displayname,
+      };
+    });
+  };
+
   return (
     <MDBModal
       isOpen={showPayablesModal}
@@ -160,14 +171,7 @@ export default function ModalCreate() {
                   </div>
                 ) : form.orOption === "Supplier" ? (
                   <Select
-                    collections={
-                      Array.isArray(collections)
-                        ? collections.map((item) => ({
-                            value: item._id, // Ensure _id exists
-                            label: item.displayname, // Use `name`, trim whitespace
-                          }))
-                        : []
-                    }
+                    collections={handleSuppliers()}
                     label="Supplier"
                     className="m-0 p-0 ml-3"
                     keys="value"

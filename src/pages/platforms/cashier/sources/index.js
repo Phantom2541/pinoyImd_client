@@ -3,5 +3,6 @@ import Outsources from "./outsources";
 import Utilities from "./utilities";
 import Hotlines from "./hotlines";
 import Suppliers from "./suppliers";
-
-export { Insources, Outsources, Utilities, Hotlines, Suppliers };
+import HMO from "./hmo";
+import Contract from "./contract";
+export { Insources, Outsources, Utilities, Hotlines, Suppliers, HMO, Contract };

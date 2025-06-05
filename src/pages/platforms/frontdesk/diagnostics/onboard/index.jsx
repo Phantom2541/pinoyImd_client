@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBSpinner } from "mdbreact";
 
@@ -11,6 +11,7 @@ import {
   RESET,
 } from "../../../../../services/redux/slices/assets/providers.js";
 import GenerateTask from "./generateTask/index.jsx";
+// import Printout from "./printout";
 
 export default function Sales() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -31,7 +32,10 @@ export default function Sales() {
         dispatch(SETSOURCES(sourceData));
       } else {
         dispatch(
-          OUTSOURCE({ token, key: { clients: activePlatform.branchId } })
+          OUTSOURCE({
+            token,
+            key: { clients: activePlatform.branchId, status: "approved" },
+          })
         )
           .then(({ payload }) => {
             const sourceData = payload.payload;
@@ -60,6 +64,7 @@ export default function Sales() {
         <Body />
       )}
       <GenerateTask />
+      {/* <Printout /> */}
     </MDBCard>
   );
 }

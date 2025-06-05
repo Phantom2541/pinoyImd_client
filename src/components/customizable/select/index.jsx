@@ -43,7 +43,6 @@ export default function Select({
   label,
   keys, // old name values
   values, // old name texts
-  selected = {},
   className = "",
   inputClassName = "",
   disableAll = false,
@@ -115,9 +114,10 @@ export default function Select({
           (choice) => String(choice[keys] || choice) === String(array[0])
         )
       : array[0];
-    console.log("selectedItem", selectedItem);
 
-    return onChange(keys, selectedItem);
+    // console.log("selectedItem", selectedItem);
+
+    return onChange(selectedItem);
   };
 
   const handleChecked = (value) => {
@@ -181,7 +181,6 @@ export default function Select({
           {collections?.map((choice, index) => {
             const key =
               keys && isArrayofObjects ? String(choice[keys]) || "" : choice;
-
             let value = values?.includes(".")
               ? getNestedValue(choice, values)
               : choice[values] || choice;

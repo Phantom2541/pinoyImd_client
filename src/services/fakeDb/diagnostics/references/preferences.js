@@ -1,9 +1,5 @@
 const preferences = {
-  gender: [
-    // Can be localized if needed
-    "Female", // Babae
-    "Male", // Lalaki
-  ],
+  gender: ["Female", "Male"],
   development: [
     {
       name: "Fetal",

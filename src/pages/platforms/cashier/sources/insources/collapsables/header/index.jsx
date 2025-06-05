@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCollapseHeader, MDBBtn, MDBBadge } from "mdbreact";
 import {
   capitalize,
@@ -8,6 +7,7 @@ import {
 import { Select, Input } from "../../../../../../../components/customizable";
 import PopOver from "./popOver";
 import { Memberships } from "../../../../../../../services/fakeDb";
+import { useSelector } from "react-redux";
 
 const Header = ({
   insource,
@@ -23,17 +23,23 @@ const Header = ({
   handleUpdate,
   formSubmitted,
 }) => {
+  const { categories, category: activeCategory } = useSelector(
+    ({ providers }) => providers
+  );
   const {
     clients,
     _id,
+    category,
     membership = "",
     subName: ghostSubName,
     cutoff = 0,
     credit = 0,
+    due,
   } = insource;
   const isGhost = clients?._id ? false : true;
 
   const { abbr, displayname } = clients || "";
+
   const baseSubname = isGhost ? ghostSubName : displayname;
 
   const { color, border } = collapse.getStyle(index, activeId, didHoverId);
@@ -44,6 +50,8 @@ const Header = ({
     !clients?.companyId && !clients?.isVerified && !isGhost;
 
   const isWhiteColor = color === "text-white"; //para sa color ng small tag
+
+  const _category = categories.find((c) => c.value === category)?.text;
 
   return (
     <MDBCollapseHeader
@@ -87,7 +95,7 @@ const Header = ({
               />
             ) : (
               <h6
-                style={{ marginBottom: "-4px" }}
+                style={{ marginBottom: "-4px", maxWidth: "20rem" }}
                 onClick={() =>
                   setUpdate({
                     ...clients,
@@ -100,7 +108,7 @@ const Header = ({
                 {baseSubname}
               </h6>
             )}
-            {update?.updatedKey === "name" && update?.providerID === _id ? (
+            {update?.updatedKey === "abbr" && update?.providerID === _id ? (
               <div style={{ width: "6rem" }}>
                 <Input
                   _key={"newAbbr"}
@@ -136,7 +144,17 @@ const Header = ({
               </MDBBadge>
             )}
           </div>
-
+          {!activeCategory && (
+            <div className="mr-5">
+              <small
+                className={!isWhiteColor && "grey-text"}
+                style={{ fontSize: "0.7rem" }}
+              >
+                Category
+              </small>
+              <h6>{_category}</h6>
+            </div>
+          )}
           <div className="mr-5">
             <small
               style={{ fontSize: "0.7rem" }}
@@ -219,6 +237,48 @@ const Header = ({
                 }}
               >
                 {cutoff ? cutoff : "N/A"}
+              </h6>
+            )}
+          </div>
+          <div className="mr-5">
+            <small
+              style={{ fontSize: "0.7rem" }}
+              className={!isWhiteColor && "grey-text"}
+            >
+              Monthly Due Date
+            </small>
+            {update?.updatedKey === "due" && update?.providerID === _id ? (
+              <div style={{ width: "6rem" }}>
+                <Select
+                  className="m-0 p-0"
+                  collections={new Array(27).fill(0).map((_, i) => i + 1)}
+                  preValue={update.updatedValue}
+                  handleCheck={() => handleUpdate()}
+                  handleClose={() => setUpdate({})}
+                  formSubmitted={formSubmitted}
+                  onChange={(value) =>
+                    setUpdate({
+                      updatedKey: "due",
+                      newDue: value,
+                      due,
+                      newKey: "newDue",
+                      providerID: _id,
+                    })
+                  }
+                  soloUpdate
+                />
+              </div>
+            ) : (
+              <h6
+                onClick={() => {
+                  setUpdate({
+                    updatedKey: "due",
+                    updatedValue: due,
+                    providerID: _id,
+                  });
+                }}
+              >
+                {due ? due : "N/A"}
               </h6>
             )}
           </div>

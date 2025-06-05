@@ -1,5 +1,4 @@
-import React from "react";
-import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
+import { MDBTable, MDBTableHead, MDBTableBody, MDBBadge } from "mdbreact";
 import { currency, fullName } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +7,7 @@ import {
   UPDATE,
 } from "../../../../../../services/redux/slices/commerce/pos/services/billing";
 import { Input } from "../../../../../../components/customizable";
+import Swal from "sweetalert2";
 export default function Collapsable({
   deals,
   date,
@@ -21,14 +21,74 @@ export default function Collapsable({
     ),
     dispatch = useDispatch();
 
-  const handleCheck = () => {
+  const handleUpdatePrice = () => {
+    if (!selected.up) return setSelected({});
     dispatch(UPDATE({ data: selected, token }));
   };
+
+  const handleCheck = (deal) => {
+    const { sendouts } = deal;
+    if (!sendouts?.up) {
+      Swal.fire({
+        icon: "warning",
+        title: "Enter Deal Price",
+        text: "This deal has no price. Please enter a valid amount to continue.",
+        input: "number",
+
+        inputAttributes: {
+          min: 0,
+          step: "0.01",
+        },
+        inputPlaceholder: "Enter price",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Submit",
+        showCancelButton: true,
+        reverseButtons: true,
+        cancelButtonText: "Cancel",
+        preConfirm: (value) => {
+          if (!value || isNaN(value) || Number(value) <= 0) {
+            Swal.showValidationMessage(
+              "Please enter a valid price greater than 0"
+            );
+          }
+          return Number(value); // Return numeric value
+        },
+      }).then((result) => {
+        const _sendouts = { ...sendouts, up: result.value };
+        if (result.isConfirmed) {
+          dispatch(
+            UPDATE({
+              data: { ..._sendouts, up: result.value, dealId: deal?._id },
+              token,
+            })
+          ).then(() => {
+            dispatch(
+              CHECK_SOA({
+                deal: { ...deal, sendouts: _sendouts },
+                totalDeals: deals.length,
+                date,
+              })
+            );
+          });
+        } else {
+          console.log("User cancelled the input.");
+        }
+      });
+    } else {
+      dispatch(
+        CHECK_SOA({
+          deal,
+          totalDeals: deals.length,
+          date,
+        })
+      );
+    }
+  };
   return (
-    <MDBTable bordered>
+    <MDBTable bordered className="m-0">
       <MDBTableHead>
         <tr>
-          {!vendor._id && <th>Outsource</th>}
+          {!vendor?._id && <th>Outsource</th>}
           <th>Customer</th>
           <th>Source</th>
           <th>Price</th>
@@ -37,7 +97,7 @@ export default function Collapsable({
       </MDBTableHead>
       <MDBTableBody>
         {deals?.map((deal, index) => {
-          const { customerId, outsource, services, source } = deal;
+          const { customerId, outsource, sendouts, source } = deal;
           const isToUpdate = deal._id === selected.dealId && vendor.soa?._id;
           return (
             <tr key={index}>
@@ -55,15 +115,7 @@ export default function Collapsable({
                       type="checkbox"
                       id={deal._id}
                       checked={isChecked(date, deal)}
-                      onChange={() =>
-                        dispatch(
-                          CHECK_SOA({
-                            deal,
-                            totalDeals: deals.length,
-                            date,
-                          })
-                        )
-                      }
+                      onChange={() => handleCheck(deal)}
                     />
                     <label
                       htmlFor={deal._id}
@@ -83,11 +135,11 @@ export default function Collapsable({
                 {!isToUpdate ? (
                   <div
                     onClick={() =>
-                      setSelected({ ...deal.services, dealId: deal._id })
+                      setSelected({ ...deal.sendouts, dealId: deal._id })
                     }
                     className="w-100"
                   >
-                    {currency(services?.up)}
+                    {currency(sendouts?.up)}
                   </div>
                 ) : (
                   <Input
@@ -98,7 +150,7 @@ export default function Collapsable({
                     onChange={(key, value) =>
                       setSelected({ ...selected, [key]: Number(value) })
                     }
-                    handleCheck={() => handleCheck()}
+                    handleCheck={() => handleUpdatePrice()}
                     className="form-control form-control-sm"
                     _key={"up"}
                     type="number"
@@ -106,9 +158,11 @@ export default function Collapsable({
                 )}
               </td>
               <td className="mb-1">
-                {services?.servicesId
-                  ?.map((id) => Services.getAbbr(id))
-                  ?.join(", ")}
+                {sendouts?.servicesId?.map((id) => (
+                  <MDBBadge key={id} className="ml-2">
+                    {Services.getAbbr(id)}
+                  </MDBBadge>
+                ))}
               </td>
             </tr>
           );

@@ -23,11 +23,11 @@ const Body = ({ setOutSource, outSource }) => {
 
   const { department } = activePlatform;
   const isRadiology = department === "radiology";
-
   useEffect(() => {
     const _outSources = collections
       .filter(({ vendors }) => vendors)
-      .map(({ vendors }) => ({
+      .map(({ vendors, category }) => ({
+        category,
         text: vendors?.displayname || vendors?.name || "a",
         value: vendors?._id || "a",
       }));
@@ -89,7 +89,6 @@ const Body = ({ setOutSource, outSource }) => {
   };
 
   const handleDragOver = (e) => e.preventDefault();
-
   const Bucket = ({ collections, title }) => {
     const isOutsource = title === "Outsource";
     const lowerTitle = title.toLowerCase();
@@ -103,9 +102,9 @@ const Body = ({ setOutSource, outSource }) => {
         <option value="" disabled={!!outSource}>
           Select outsource
         </option>
-        {outSources.map(({ text, value }, index) => (
+        {outSources.map(({ text, value, category }, index) => (
           <option key={index} value={value}>
-            {text}
+            {category === "ghost" && "👻"} {text}
           </option>
         ))}
       </select>

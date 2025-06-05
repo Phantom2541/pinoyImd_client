@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBCard,
@@ -11,40 +11,20 @@ import {
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
-import { collapse, dateFormat } from "../../../../../../services/utilities";
+import { collapse } from "../../../../../../services/utilities";
 import { SetCluster } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function Body() {
-  const { filtered, activePage, maxPage, vendor, cluster } = useSelector(
-      ({ deals }) => deals
-    ),
+  const { filtered, vendor, cluster } = useSelector(({ deals }) => deals),
     [vouchers, setVouchers] = useState([]),
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),
     dispatch = useDispatch();
 
   useEffect(() => {
-    const groupByDate = filtered.reduce((groups, item) => {
-      const date = dateFormat(item.createdAt);
-      const index = groups.findIndex((group) => group.date === date);
-      if (index > -1) {
-        groups[index].deals.push(item);
-      } else {
-        groups.push({
-          date,
-          deals: [item],
-        });
-      }
-      return groups;
-    }, []);
-
-    setVouchers(groupByDate);
-  }, [filtered, activePage, maxPage]);
-
-  useEffect(() => {
-    dispatch(SetCluster(vouchers));
-  }, [vouchers, dispatch]);
-
+    dispatch(SetCluster(filtered));
+    setVouchers(filtered);
+  }, [filtered, dispatch]);
   const isChecked = (date, deal) => {
     if (cluster.length > 0) {
       const _cluster = [...cluster];
@@ -74,7 +54,7 @@ export default function Body() {
         );
         return (
           <MDBCard
-            key={`service-${date}`}
+            key={`vouchers-${date}-${index}`}
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader

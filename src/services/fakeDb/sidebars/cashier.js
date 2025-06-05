@@ -1,6 +1,7 @@
 import Bulletin from "../../../pages/platforms/cashier/bulletin";
 import {
   Cashier,
+  Contract,
   Deals,
   Menus,
   Services,
@@ -157,6 +158,14 @@ const cashier = [
         title: "List of Companies who send out their services",
         component: Insources,
       },
+      {
+        name: "Contract",
+        path: "/contract",
+        icon: "warehouse",
+        title: "List of Companies who send out their services",
+        component: Contract,
+      },
+
       {
         name: "Suppliers",
         path: "/suppliers",

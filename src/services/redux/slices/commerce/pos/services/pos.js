@@ -241,6 +241,7 @@ export const reduxSlice = createSlice({
       state.cart = [];
       state.cash = 0;
       state.customer = {};
+      state.ssx = "";
       if (payload?.resetCollections) state.collections = [];
     },
   },

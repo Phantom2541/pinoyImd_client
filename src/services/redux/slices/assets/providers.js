@@ -2,13 +2,23 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
 const url = "assets/providers";
-
+const categories = [
+  { text: "Vendors", value: "insource" },
+  { text: "Health Management Organization", value: "hmo" },
+];
+const contractCategories = [
+  { text: "Subcontract", value: "sbc" },
+  { text: "Special Subcontract", value: "ssc" },
+];
 const initialState = {
   collections: [],
+  categories: categories,
+  contractCategories,
   paginated: [],
   // enrolled: [],
   formSubmitted: false,
   searchResults: [],
+  category: "", // this is the default active category in insource
   isSuccess: false,
   isLoading: false,
   didSearch: false,
@@ -184,7 +194,6 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     ToggleDidSearch: (state, { payload }) => {
-      console.log("toggle didSearch");
       state.didSearch = payload;
     },
     SetSOURCE: (state, { payload }) => {
@@ -203,6 +212,19 @@ export const reduxSlice = createSlice({
       state.searchResults = payload;
       state.didSearch = true;
     },
+
+    SetCATEGORY: (state, { payload }) => {
+      const filter = state.collections.filter(
+        ({ category, status }) => (category || status) === payload
+      );
+      const baseCollections = !payload ? state.collections : filter;
+      state.filtered = baseCollections;
+      state.totalPages =
+        Math.ceil((baseCollections?.length || 0) / state.maxPage) || 1;
+      state.activePage = Math.min(state.activePage, state.totalPages);
+      state.category = payload;
+    },
+
     SetBRANCHES: (state, { payload }) => {
       const {
         branch = {},
@@ -213,44 +235,46 @@ export const reduxSlice = createSlice({
         isUpdateBranch = false,
       } = payload;
 
-      const index = state.collections.findIndex((e) => e._id === providerId);
-
-      if (isUpdateBranch) {
-        // manipulate clients updating
-        state.collections[index] = {
-          ...state.collections[index],
-          clients: { ...branch },
-        };
-      } else {
-        //manipulate affiliateds
-        if (index < 0) return console.log("provider not found");
-        const provider = { ...state.collections[index] };
-
-        const { clients = {} } = provider || {};
-
-        const affiliateds = [...clients?.affiliated];
-        if (physicianId) {
-          const affiliatedIndex = affiliateds.findIndex(
-            (e) => e._id === physicianId
-          );
-          if (isUpdatePhysician) {
-            affiliateds[affiliatedIndex] = affiliated;
-          } else {
-            affiliateds.splice(affiliatedIndex, 1);
-          }
+      const updateCollections = (collections) => {
+        const index = collections.findIndex((e) => e._id === providerId);
+        if (isUpdateBranch) {
+          // manipulate clients updating
+          collections[index] = {
+            ...state.collections[index],
+            clients: { ...branch },
+          };
         } else {
-          affiliateds.unshift(affiliated);
+          //manipulate affiliateds
+          if (index < 0) return console.log("provider not found");
+          const provider = { ...collections[index] };
+
+          const { clients = {} } = provider || {};
+
+          const affiliateds = [...clients?.affiliated];
+          if (physicianId) {
+            const affiliatedIndex = affiliateds.findIndex(
+              (e) => e._id === physicianId
+            );
+            if (isUpdatePhysician) {
+              affiliateds[affiliatedIndex] = affiliated;
+            } else {
+              affiliateds.splice(affiliatedIndex, 1);
+            }
+          } else {
+            affiliateds.unshift(affiliated);
+          }
+
+          collections[index] = {
+            ...provider,
+            clients: { ...clients, affiliated: affiliateds },
+          };
         }
+      };
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
 
-        state.collections[index] = {
-          ...provider,
-          clients: { ...clients, affiliated: affiliateds },
-        };
-
-        state.selected = payload;
-        state.willCreate = false;
-        state.showModal = true;
-      }
+      state.selected = payload;
+      state.willCreate = false;
     },
     SetCREATE: (state, { payload }) => {
       state.selected = payload;
@@ -266,6 +290,7 @@ export const reduxSlice = createSlice({
       state.selected = {};
     },
     SetFILTER: (state, { payload }) => {
+      state.didSearch = false;
       if (payload.length > 0) {
         state.totalPages = Math.ceil(payload.length / state.maxPage);
         if (state.page > state.totalPages) {
@@ -369,7 +394,10 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(INSOURCE.fulfilled, (state, { payload }) => {
-        state.collections = payload.payload;
+        state.collections = state.filtered = payload.payload;
+        state.totalPages =
+          Math.ceil((payload.payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
         localStorage.setItem("insource", JSON.stringify(payload.payload));
         state.isLoading = false;
       })
@@ -400,18 +428,17 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.isSuccess = true;
-        state.isLoading = false;
-        state.showModal = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(REGISTER_BRANCH.pending, (state) => {
         state.formSubmitted = true;
@@ -419,15 +446,18 @@ export const reduxSlice = createSlice({
       .addCase(REGISTER_BRANCH.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
         const { isGhostProvider } = data;
-        if (isGhostProvider) {
-          const index = state.collections.findIndex(
-            ({ _id }) => data._id === _id
-          );
+        const updateCollections = (collections) => {
+          if (isGhostProvider) {
+            const index = collections.findIndex(({ _id }) => data._id === _id);
 
-          state.collections[index] = data;
-        } else {
-          state.collections.unshift(data);
-        }
+            collections[index] = data;
+          } else {
+            collections.unshift(data);
+          }
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -436,22 +466,23 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
       })
       .addCase(UPDATE.fulfilled, (state, { payload }) => {
-        const index = state.filtered.findIndex(
-          (item) => item._id === payload._id
+        const { payload: data } = payload;
+
+        const _collections = state.collections;
+        const index = _collections.findIndex((item) => item._id === data._id);
+        state.collections[index] = data;
+        state.filtered = _collections.filter(
+          ({ category, status }) => (category || status) === state.category
         );
-        if (index !== -1) {
-          state.filtered[index] = payload;
-        }
-        state.showModal = false;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, { payload }) => {
         state.message = payload;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(SPECIFIC_UPDATE.pending, (state) => {
@@ -460,11 +491,17 @@ export const reduxSlice = createSlice({
       .addCase(SPECIFIC_UPDATE.fulfilled, (state, { payload }) => {
         const { payload: data, success } = payload;
         const { updatedKey, _id } = data;
-        const index = state.collections.findIndex((item) => item._id === _id);
-        state.collections[index] = {
-          ...state.collections[index],
-          [updatedKey]: data[updatedKey],
+        const updateCollections = (collections) => {
+          const index = collections.findIndex((item) => item._id === _id);
+          collections[index] = {
+            ...collections[index],
+            [updatedKey]: data[updatedKey],
+          };
         };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+
         state.isSuccess = true;
         state.formSubmitted = false;
         state.message = success;
@@ -480,13 +517,14 @@ export const reduxSlice = createSlice({
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload
-        );
 
-        state.collections.splice(index, 1);
-        const ind = state.filtered.findIndex((item) => item._id === payload);
-        state.filtered.splice(ind, 1);
+        const updateCollections = (collections) => {
+          const index = collections.findIndex((item) => item._id === payload);
+          collections.splice(index, 1);
+        };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -524,6 +562,7 @@ export const {
   SetCREATE,
   SetFILTER,
   SetINSOURCE,
+  SetCATEGORY,
   ResetFILTER,
   SetPAGE,
   SETSOURCES,

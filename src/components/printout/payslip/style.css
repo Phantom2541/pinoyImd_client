@@ -1,0 +1,74 @@
+@media print {
+  .payslip-printout-container {
+    background: white;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .payslip-hr-printout {
+    margin-top: 0.5rem !important;
+    padding: 5px;
+    width: 100%;
+  }
+  .payslip-cut-line {
+    position: relative;
+    border-bottom: 2px dashed black !important;
+    height: 6px;
+    margin-top: 2.5rem;
+    width: 100%;
+  }
+
+  .cut-icon {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    -webkit-print-color-adjust: exact; /* Better fidelity for some browsers */
+    print-color-adjust: exact;
+    top: -30px;
+    font-size: 40px;
+    transform: rotate(-10deg);
+  }
+  .payslip-employee-printout {
+    margin-top: 2rem !important;
+    margin-left: 0px !important ;
+    padding: 5px;
+    width: 100%;
+  }
+
+  /* .payslip-designation-printout {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .payslip-name-printout {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .payslip-amount-deductions-printout {
+    width: 10% !important;
+    background: blue !important;
+  }
+
+  .payslip-amount-earnings-printout {
+    width: 100% !important;
+    background: red !important;
+  }
+
+  .confidential-box {
+    background-color: #e0eac9;
+    background-image: radial-gradient(
+      black 0.5px,
+      transparent 0.5px
+    ) !important;
+    background-size: 5px 5px;
+    color: black;
+    font-weight: bold;
+    font-family: "Arial", sans-serif;
+    border: 1px solid black !important;
+    font-size: 1.1rem;
+  } */
+}
+
+.cut-icon {
+  display: none;
+}

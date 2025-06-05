@@ -41,8 +41,10 @@ export default function SideNavigation({
         if (valid) setLogo(url);
       });
 
-      const _href = `/${activePlatform?.platform || "patron"}/${
-        ["manager", "headquarter"].includes(activePlatform?.platform)
+      const _href = `/${activePlatform?.platform?.toLowerCase() || "patron"}/${
+        ["manager", "headquarter"].includes(
+          activePlatform?.platform?.toLowerCase()
+        )
           ? "dashboard"
           : "bulletin"
       }`;
@@ -53,8 +55,10 @@ export default function SideNavigation({
   // Load sidebar links
   useEffect(() => {
     if (activePlatform?.platform) {
-      const { platform } = activePlatform;
-      setLinks(Sidebars[platform.toLowerCase()] || []);
+      const platformKey = activePlatform?.platform
+        ?.toLowerCase()
+        .replace(/\s/g, "");
+      setLinks(Sidebars[platformKey] || []);
     } else {
       setLinks(Sidebars["patron"] || []);
     }
@@ -107,7 +111,7 @@ export default function SideNavigation({
   };
 
   return (
-    <div className="white-skin">
+    <div className="white-skin no-print">
       <MDBSideNav
         // logo={logo}
         tag="div"
@@ -128,7 +132,7 @@ export default function SideNavigation({
             style={{ width: "150px", height: "65px" }}
           />
           <div className="mt-2 text-dark" style={{ fontWeight: 500 }}>
-            {activePlatform?.branch?.company || company.name}
+            {activePlatform?.branch?.company || company?.name}
           </div>
         </div>
         <hr />

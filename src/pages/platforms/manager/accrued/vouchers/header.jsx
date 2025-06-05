@@ -12,6 +12,12 @@ import {
   SetINSOURCE,
 } from "../../../../../services/redux/slices/assets/providers";
 import Swal from "sweetalert2";
+import {
+  billingAddress,
+  fullName,
+  VouchersToExcel,
+} from "../../../../../services/utilities";
+import get from "./utils";
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
@@ -31,6 +37,7 @@ const Header = () => {
           token,
           key: {
             branchId: activePlatform?.branchId,
+            status: "approved",
           },
         })
       );
@@ -56,45 +63,52 @@ const Header = () => {
       const foundProvider = providers.find(
         ({ clients }) => String(clients?._id) === String(sourceId)
       );
-      const { cutoff, clients } = foundProvider || { cutoff: 0, clients: {} };
-      return { cutoff, ...clients };
+
+      const { cutoff, clients, due } = foundProvider || {
+        cutoff: 0,
+        clients: {},
+      };
+      return { cutoff, due, ...clients };
     },
 
     [providers]
   );
 
   useEffect(() => {
-    if (collections.length > 0 && providers.length > 0) {
+    if (collections.length > 0) {
       const uniqueSource = [
         ...new Map(
           collections.map(({ source = {} }) => {
             const { _id = "", displayname = "No tag source" } = source || {};
             const matchedProvider = getProvider(_id);
-            const cutOff = matchedProvider?.cutoff || 0;
+            const { cutoff = 0, due = 0 } = matchedProvider;
             return [
               _id || "NoSource", // key
               {
                 _id: _id || "NoSource",
-                displayname: `${displayname} (${cutOff})`,
+                displayname: `${displayname} (${cutoff})`,
+                cutoff: cutoff,
+                due,
               }, // value
             ];
           })
         ).values(),
       ];
-
       setSources(uniqueSource);
       setSource("all");
     }
   }, [collections, providers, getProvider]);
 
   useEffect(() => {
-    dispatch(
-      SetFilterBySOURCE({
-        value: source,
-        vendor: getProvider(source),
-      })
-    );
-  }, [source, getProvider, dispatch]);
+    if (source && collections.length > 0) {
+      dispatch(
+        SetFilterBySOURCE({
+          value: source,
+          vendor: getProvider(source),
+        })
+      );
+    }
+  }, [source, getProvider, dispatch, collections]);
 
   const handleGenerateSOA = () => {
     if (cluster.length === 0)
@@ -106,48 +120,59 @@ const Header = () => {
         confirmButtonColor: "#3085d6",
       });
 
-    const menus = [
-      ...new Map(
-        cluster
-          .flatMap(({ deals }) =>
-            deals.flatMap(({ cart }) =>
-              cart
-                .filter(({ menuId }) => menuId?.isProfile)
-                .map(({ menuId }) => ({
-                  _id: menuId._id,
-                  abbr: menuId.abbreviation,
-                  packages: menuId.packages,
-                }))
-            )
-          )
-          .map((menu) => [menu._id, menu]) // Ensure uniqueness by _id
-      ).values(),
-    ];
+    Swal.fire({
+      title: "Generate SOA?",
+      text: "Are you sure you want to generate a Statement of Account? This will download an Excel file and create a printout.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, generate SOA!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const menus = get.menus(cluster);
+        const dealIds = cluster.flatMap(({ deals }) =>
+          deals.map(({ _id }) => _id)
+        );
+        const gross = cluster.reduce(
+          (total, voucher) =>
+            total + voucher.deals.reduce((sum, deal) => sum + deal.amount, 0),
+          0
+        );
 
-    const dealIds = cluster.flatMap(({ deals }) => deals.map(({ _id }) => _id));
+        const data = {
+          dealIds,
+          clientId: vendor._id,
+          vendorId: activePlatform.branchId,
+          userId: auth._id,
+          amount: gross,
+        };
+        const dateRange = get.dateRange(vendor, cluster);
 
-    const gross = cluster.reduce(
-      (total, voucher) =>
-        total + voucher.deals.reduce((sum, deal) => sum + deal.amount, 0),
-      0
-    );
+        const options = {
+          fileName: get.fileName(vendor, cluster),
+          dateRange,
+          name: get.name(vendor),
+          due: get.due(vendor),
+          gross,
+          createdBy: fullName(auth.fullName),
+          address: billingAddress(vendor.address),
+        };
 
-    const data = {
-      dealIds,
-      clientId: vendor._id,
-      vendorId: activePlatform.branchId,
-      userId: auth._id,
-      amount: gross,
-    };
+        dispatch(GENERATE_SOA({ data, token }));
 
-    dispatch(GENERATE_SOA({ data, token }));
-    localStorage.setItem("vendor", JSON.stringify(vendor));
-    localStorage.setItem("soa", JSON.stringify({ menus, gross }));
-    window.open(
-      "/printout/soa",
-      "OutsourceRequestForm", // Unique window name 2
-      "top=100px,left=0px,width=1050px,height=750px"
-    );
+        localStorage.setItem("vendor", JSON.stringify(vendor));
+        localStorage.setItem("soa", JSON.stringify({ menus, gross, options }));
+        window.open(
+          "/printout/soa",
+          "OutsourceRequestForm", // Unique window name 2
+          "top=100px,left=0px,width=1050px,height=750px"
+        );
+        setTimeout(() => {
+          VouchersToExcel({ array: cluster, menus, options });
+        }, 1000);
+      }
+    });
   };
 
   return (
@@ -160,7 +185,7 @@ const Header = () => {
       </div>
       <div className="text-right d-flex align-items-center ">
         <select
-          id="cashier-select"
+          style={{ width: "20rem" }}
           className="custom-select mr-2"
           value={source}
           onChange={(e) => setSource(e.target.value)}
@@ -169,22 +194,40 @@ const Header = () => {
             Select a Source
           </option>
           <option value="all">Select all</option>
-          {sources?.map((source, index) => (
-            <option key={`source-${index}`} value={source?._id}>
-              {source?.displayname}
-            </option>
-          ))}
+          {sources?.map((source, index) => {
+            const { cutoff = 0, _id = "", displayname = "" } = source;
+            var className = "";
+            var title = "";
+
+            if (!cutoff) {
+              className = "bg-warning text-white";
+              title = "No cutoff set for this source";
+            }
+            if (_id === "NoSource") {
+              className = "bg-danger text-white";
+              title = "No source available";
+            }
+
+            return (
+              <option
+                key={`source-${index}`}
+                className={className}
+                value={_id}
+                title={title}
+              >
+                {displayname}
+              </option>
+            );
+          })}
         </select>
-        {vendor?._id && vendor._id !== "noSource" && (
+        {vendor?._id && vendor?._id !== "noSource" && (
           <MDBBtn
             size="sm"
             color="primary"
-            className="px-2 m-0 ml-1"
             onClick={handleGenerateSOA}
-            rounded
             title="Generate SOA"
           >
-            <MDBIcon icon="print" />
+            <MDBIcon icon="file-invoice" className="mr-2" /> Generate SOA
           </MDBBtn>
         )}
       </div>

@@ -1,11 +1,10 @@
 import React from "react";
 import { MDBRow, MDBCol } from "mdbreact";
-import { Services } from "../../../../../../../../../../../services/fakeDb";
-import { Select } from "../../../../../../../../../../../components/customizable";
+import { Services } from "./../../../../../../../../../../services/fakeDb";
+import { Select } from "./../../../../../../../../../../components/customizable";
 
 export default function Cluster({ task, setTask }) {
-  const { packages = [], results = {} } = task;
-
+  const { packages = [], results = { 68: 0, 69: 0, 70: 0 } } = task;
   const handleSelectChange = (name, value) =>
     setTask({ ...task, results: { ...results, [name]: value } });
 
@@ -18,7 +17,7 @@ export default function Cluster({ task, setTask }) {
           <MDBCol key={`cluster-${index}`}>
             <Select
               inputClassName={results[fk] && "text-danger"}
-              choices={[
+              collections={[
                 {
                   str: "NON-REACTIVE",
                   index: 0,
@@ -29,10 +28,10 @@ export default function Cluster({ task, setTask }) {
                 },
               ]}
               label={abbreviation || name}
-              preValue={String(results[fk] || 0)}
-              texts="str"
-              values="index"
+              keys="index"
+              values="str"
               onChange={(e) => handleSelectChange(fk, Number(e))}
+              preValue={String(results[fk] || 0)}
             />
           </MDBCol>
         );

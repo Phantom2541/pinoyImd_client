@@ -88,6 +88,7 @@ export default function Deals() {
         {filtered.length > 0 && <Payments />}
         <Closing />
       </div>
+      {/* <Printout /> */}
     </MDBContainer>
   );
 }

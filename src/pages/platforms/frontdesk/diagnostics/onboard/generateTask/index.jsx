@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MDBBtn,
   MDBModal,
@@ -32,7 +32,11 @@ export default function Modal() {
     { collections } = useSelector(({ providers }) => providers),
     [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
-  const toggle = () => dispatch(TOGGLE());
+
+  const toggle = () => {
+    console.log("toggle clickeddd");
+    dispatch(TOGGLE());
+  };
 
   useEffect(() => {
     if (show) setOutSourceId("");
@@ -47,7 +51,6 @@ export default function Modal() {
       )
         ? activePlatform.department
         : "clinic"; // default fallback just in case
-
       const url = isStaticPath
         ? template
         : `/diagnostics/${_department.toLowerCase()}/result/${template}`;
@@ -95,7 +98,7 @@ export default function Modal() {
       [deptIndex]: [
         ...(oldForms?.[deptIndex] || []),
         ...newFormKeys.filter(
-          (key) => !(oldForms?.[deptIndex] || []).includes(key)
+          (key) => !(oldForms?.[deptIndex] || []).includes(Number(key))
         ),
       ],
     };
@@ -214,7 +217,6 @@ export default function Modal() {
       forms,
       ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
     };
-    console.log("data", data);
 
     dispatch(
       REFORM({
@@ -226,17 +228,10 @@ export default function Modal() {
   };
 
   return (
-    <MDBModal
-      isOpen={show}
-      toggle={toggle}
-      size="lg"
-      backdrop
-      aria-hidden={show ? "false" : "true"} // Keep this if using aria-hidden
-    >
+    <MDBModal isOpen={show} backdrop toggle={toggle} size="lg">
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
-        inert={show ? "false" : "true"} // Inert is set to prevent focus
       >
         <MDBIcon className="mr-2" icon="tasks" />
         Task Generator

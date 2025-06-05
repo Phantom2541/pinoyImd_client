@@ -12,7 +12,7 @@ import {
   providers,
   tieups,
 } from "./slices/assets";
-import { dragDrop } from "./slices/reusable";
+import { dragDrop, table } from "./slices/reusable";
 import {
   menus,
   services,
@@ -51,7 +51,8 @@ import {
   soa,
 } from "./slices/finance";
 
-import products from "./slices/market/products";
+import { products, productsGenerics } from "./slices/market";
+import { appointments } from "./slices/clinical";
 
 const store = configureStore({
   reducer: {
@@ -93,11 +94,15 @@ const store = configureStore({
     providers,
     controls,
     assurances,
-    dragDrop,
     products,
     xray,
     ultrasound,
     ecg,
+    productsGenerics,
+    appointments,
+    //for templates only
+    dragDrop,
+    table,
   },
 });
 

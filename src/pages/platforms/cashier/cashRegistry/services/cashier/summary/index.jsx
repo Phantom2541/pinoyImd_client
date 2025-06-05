@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MDBBtn } from "mdbreact";
 import {
   capitalize,
@@ -16,6 +16,7 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import { removeUndefinedValues } from "../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
+import { SetPrinting } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function Summary() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -48,13 +49,18 @@ export default function Summary() {
     { abbr = undefined } = Categories[category],
     providedPaymentOptions = Payments[abbr];
 
+  useEffect(() => {
+    if (abbr === "hmo") setPayment("voucher");
+    else setPayment("cash");
+  }, [abbr]);
+
   const handleCheckout = async (e) => {
     e.preventDefault();
 
     if (loading) return; // Prevent multiple clicks
     setLoading(true); // Disable button while saving
 
-    let data = {
+    let selected = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
       authorizedBy: authorizedBy || undefined,
@@ -114,10 +120,13 @@ export default function Summary() {
         })
       );
 
-    data = removeUndefinedValues(data);
+    selected = removeUndefinedValues(selected);
 
     try {
-      await dispatch(SAVE({ token, data })).unwrap(); // Ensure save completes before proceeding
+      await dispatch(SAVE({ token, data: selected })).then(({ payload }) => {
+        selected._id = payload.payload._id;
+        dispatch(SetPrinting({ status: true, selected }));
+      }); // Ensure save completes before proceeding
       dispatch(SETCART());
       addToast("Transaction completed successfully", { appearance: "info" });
     } catch (error) {
@@ -129,7 +138,6 @@ export default function Summary() {
       dispatch(RESET());
     }
   };
-
   return (
     <form onSubmit={handleCheckout}>
       <table className="summary-table">
@@ -170,7 +178,7 @@ export default function Summary() {
           </tr>
           <tr>
             <td colSpan="2">
-              {["cash", "downpayment"].includes(payment) ? (
+              {["cash", "downpayment"].includes(payment) && abbr !== "hmo" ? (
                 <input
                   type="number"
                   min={amount}

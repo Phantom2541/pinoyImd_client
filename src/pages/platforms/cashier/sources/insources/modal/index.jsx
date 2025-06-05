@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -10,16 +10,20 @@ import {
   MDBRow,
   MDBCol,
 } from "mdbreact";
+import { useToasts } from "react-toast-notifications";
 
 import {
   TOGGLE,
   ToggleDidSearch,
+  RESET,
   SAVE,
+  SetCATEGORY,
 } from "../../../../../../services/redux/slices/assets/providers";
 import { Select } from "../../../../../../components/customizable";
 import Search from "../../../../../../components/searchables/ao";
 import { Memberships } from "../../../../../../services/fakeDb";
 import Checkbox from "./checkbox";
+import Swal from "sweetalert2";
 
 // declare your expected items
 const _form = {
@@ -33,19 +37,38 @@ const _form = {
 };
 
 export default function Modal() {
-  const { showModal, isLoading, selected } = useSelector(
-      ({ providers }) => providers
-    ),
+  const {
+      showModal,
+      selected,
+      categories,
+      category: defaultCategory,
+      formSubmitted,
+      isSuccess,
+    } = useSelector(({ providers }) => providers),
     { token, activePlatform } = useSelector(({ auth }) => auth),
+    [category, setCategory] = useState(""),
     [form, setForm] = useState(_form),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  const toggle = () => dispatch(TOGGLE());
+  const toggle = useCallback(() => dispatch(TOGGLE()), [dispatch]);
+
+  useEffect(() => {
+    if (showModal && !formSubmitted && isSuccess) {
+      addToast("New provider added successfully.", {
+        appearance: "success",
+      });
+      dispatch(RESET());
+      toggle();
+    }
+  }, [showModal, formSubmitted, isSuccess, dispatch, toggle, addToast]);
+
   useEffect(() => {
     if (showModal) {
       setForm(_form);
+      setCategory(defaultCategory);
     }
-  }, [showModal]);
+  }, [showModal, defaultCategory]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,18 +77,29 @@ export default function Modal() {
       delete form.ao;
     }
 
+    if (!category)
+      return Swal.fire({
+        icon: "warning",
+        title: "Category is required!",
+        text: "Please select a category before proceeding.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#d33",
+      });
+
     dispatch(
       SAVE({
         token,
         data: {
           ...form,
           clients: selected._id,
+          status: "approved",
+          category,
           vendors: activePlatform.branchId,
         },
       })
     );
     dispatch(ToggleDidSearch(false));
-    dispatch(TOGGLE());
+    dispatch(SetCATEGORY(category));
   };
   const categoryHasChecked = (category) => form.category.includes(category);
 
@@ -106,6 +140,16 @@ export default function Modal() {
           <MDBRow>
             <MDBCol>
               <Select
+                label="Category"
+                preValue={category}
+                onChange={(e) => setCategory(e)}
+                keys={"value"}
+                values={"text"}
+                collections={categories}
+              />
+            </MDBCol>
+            <MDBCol>
+              <Select
                 collections={Memberships}
                 label={"Membership"}
                 onChange={(value) => setForm({ ...form, membership: value })}
@@ -127,6 +171,16 @@ export default function Modal() {
               />
             </MDBCol>
             <MDBCol>
+              <Select
+                label={"Monthly Due Date"}
+                collections={new Array(30).fill("").map((_, i) => i + 1)}
+                onChange={(value) => setForm({ ...form, due: Number(value) })}
+                preValue={form.due}
+              />
+            </MDBCol>
+          </MDBRow>
+          <MDBRow>
+            <MDBCol>
               <MDBInput
                 type="number"
                 label="Credit Limit"
@@ -135,7 +189,6 @@ export default function Modal() {
               />
             </MDBCol>
           </MDBRow>
-
           <span className="mb-2" style={{ fontWeight: 300 }}>
             Categories:
           </span>
@@ -264,12 +317,12 @@ export default function Modal() {
           <div className="d-flex justify-content-end mt-4">
             <MDBBtn
               type="submit"
-              disabled={isLoading}
+              disabled={formSubmitted}
               color="info"
               className="mb-2"
               rounded
             >
-              Submit
+              Submit {formSubmitted && <MDBIcon icon="spinner" pulse />}
             </MDBBtn>
           </div>
         </MDBModalBody>

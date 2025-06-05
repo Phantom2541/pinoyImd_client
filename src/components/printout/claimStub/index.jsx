@@ -99,8 +99,9 @@ const Stub = ({ sale }) => {
                   {description || abbreviation}
                   {packages.length > 1 &&
                     packages.map((id, index) => {
-                      //console.log(packages);
-                      const { name, abbreviation } = Services.find(id);
+                      console.log("id", id);
+                      console.log("here", Services?.find(id));
+                      const { name, abbreviation } = Services?.find(id);
 
                       return (
                         <div

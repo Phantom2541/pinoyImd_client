@@ -48,12 +48,6 @@
     "platform": "Human Resources"
   },
   {
-    "id": 9,
-    "name": "clinical",
-    "code": "clinical",
-    "platform": "Clinical"
-  },
-  {
     "id": 10,
     "name": "laboratory",
     "code": "laboratory",
@@ -97,14 +91,20 @@
   },
   {
     "id": 17,
+    "name": "author",
+    "code": "author",
+    "platform": "Author"
+  },
+  {
+    "id": 18,
     "name": "clinical",
     "code": "clinical",
     "platform": "Clinical"
   },
   {
-    "id": 18,
-    "name": "author",
-    "code": "author",
-    "platform": "Author"
+    "id": 19,
+    "name": "physician",
+    "code": "physician",
+    "platform": "physician"
   }
 ]

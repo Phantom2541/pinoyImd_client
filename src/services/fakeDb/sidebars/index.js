@@ -9,7 +9,7 @@ import cashier from "./cashier";
 import clinical from "./clinical";
 import frontdesk from "./frontdesk";
 import headquarter from "./headquarter";
-import hr from "./hr";
+import humanresources from "./hr";
 import nutritionist from "./nutritionist";
 import pharmacist from "./pharmacist";
 import procurement from "./procurement";
@@ -18,6 +18,7 @@ import diagnostic from "./diagnostic";
 import laboratory from "./laboratory";
 import radiology from "./radiology";
 import superadmin from "./superadmin";
+import physician from "./physician";
 
 const Sidebars = {
   utility,
@@ -25,7 +26,7 @@ const Sidebars = {
   pharmacist,
   nutritionist,
   headquarter,
-  hr,
+  humanresources,
   frontdesk,
   cashier,
   clinical,
@@ -40,6 +41,7 @@ const Sidebars = {
   diagnostic,
   laboratory,
   radiology,
+  physician,
 };
 
 export default Sidebars;

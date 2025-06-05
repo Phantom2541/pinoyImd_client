@@ -128,6 +128,14 @@ export const reduxSlice = createSlice({
       state.showPayablesModal = true;
       state.willCreate = true;
     },
+    RemoveVERIFIED_SOA: (state, { payload }) => {
+      // This function is used in manager/accrues/soa to remove verified SOA entries.
+      const index = state.collections.findIndex(({ _id }) => _id === payload);
+      state.collections.splice(index, 1);
+      state.showPayablesModal = false;
+      state.showPaymentModal = true;
+      state.willCreate = false;
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = true;
@@ -311,6 +319,7 @@ export const {
   SetCREATE,
   SetPAYABLES,
   SetPAYMENTS,
+  RemoveVERIFIED_SOA,
   SetPAYOR,
   SetPAGE,
   SETSOURCES,

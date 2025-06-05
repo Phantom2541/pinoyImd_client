@@ -1,64 +1,55 @@
-import React from "react";
 import { MDBCol, MDBCardBody, MDBCard, MDBBadge } from "mdbreact";
-import {
-  Memberships,
-  Privileges,
-  Services,
-} from "../../../../../../../../services/fakeDb";
+import { Privileges, Services } from "../../../../../../../../services/fakeDb";
 import { mobile } from "../../../../../../../../services/utilities";
-
+const Categories = {
+  sbc: "Subcontract",
+  ssc: "Special Subcontract",
+};
 const Customer = ({ deal }) => {
   const { customerId, branchId, ssx, privilege, sendouts } = deal;
   const { mobile: _mobile } = customerId;
-  const membership =
-    Memberships.find(({ value }) => value === sendouts.membership)?.text || 0;
+  const { category } = sendouts || {};
+
   return (
     <MDBCol md="4">
       <MDBCard>
         <MDBCardBody>
-          <div>
-            <span className="mr-2 grey-text" style={{ fontSize: "0.8rem" }}>
-              SSX:
-            </span>
-            <h6>{ssx || "None"}</h6>
-          </div>
-          <div>
-            <span className="mr-2 grey-text" style={{ fontSize: "0.8rem" }}>
-              Category:
-            </span>
-            <h6>OPD</h6>
-          </div>
-          <div>
-            <span className="mr-2 grey-text" style={{ fontSize: "0.8rem" }}>
-              Privillege:
-            </span>
-            <h6>{Privileges[privilege]}</h6>
-          </div>
-          <div>
-            <span className="mr-2 grey-text" style={{ fontSize: "0.8rem" }}>
-              Mobile:
-            </span>
-            <h6>{mobile(_mobile)}</h6>
-          </div>
-          <div>
-            <span className="mr-2 grey-text" style={{ fontSize: "0.8rem" }}>
-              Source:
-            </span>
-            <h6>
-              {branchId?.displayname} {membership && `(${membership})`}
-            </h6>
-          </div>
-          <div>
-            <span className="mr-2 grey-text" style={{ fontSize: "0.8rem" }}>
-              Request Services:
-            </span>
-            <br />
-            {sendouts?.servicesId?.map((id, key) => (
-              <MDBBadge key={key} className="mr-1">
-                {Services.getAbbr(id)}
-              </MDBBadge>
-            ))}
-          </div>
+          {[
+            { title: "SSX", value: ssx || "None" },
+            { title: "Category", value: "OPD" },
+            {
+              title: "Privilege",
+              value: Privileges[privilege],
+            },
+            { title: "Mobile", value: mobile(_mobile) },
+            {
+              title: "Source",
+              value: branchId?.displayname,
+            },
+            {
+              title: "Contract",
+              value: Categories[category],
+            },
+            {
+              title: "Request Services",
+              value: (
+                <>
+                  {sendouts?.servicesId?.map((id, key) => (
+                    <MDBBadge key={key} className="mr-1">
+                      {Services.getAbbr(id)}
+                    </MDBBadge>
+                  ))}
+                </>
+              ),
+            },
+          ].map(({ title, value }, index) => (
+            <div key={index}>
+              <span className="mr-2 grey-text" style={{ fontSize: "0.8rem" }}>
+                {title}:
+              </span>
+              <h6>{value}</h6>
+            </div>
+          ))}
         </MDBCardBody>
       </MDBCard>
     </MDBCol>
