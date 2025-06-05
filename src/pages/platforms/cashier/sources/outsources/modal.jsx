@@ -14,6 +14,7 @@ import {
 import {
   SAVE,
   UPDATE,
+  RESET,
   TOGGLE,
 } from "../../../../../services/redux/slices/assets/providers";
 
@@ -23,7 +24,7 @@ import AddressSelect from "../../../../../components/searchables/addressSelect";
 
 export default function Modal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { showModal, selected, willCreate, isLoading } = useSelector(
+    { showModal, selected, willCreate, isSuccess, formSubmitted } = useSelector(
       ({ providers }) => providers
     ),
     { collections } = useSelector(({ branches }) => branches),
@@ -47,10 +48,15 @@ export default function Modal() {
     }
   }, [showModal, selected, auth, activePlatform]);
 
+  useEffect(() => {
+    if (showModal && !formSubmitted && isSuccess) {
+      dispatch(TOGGLE());
+      dispatch(RESET());
+    }
+  }, [dispatch, showModal, isSuccess, formSubmitted]);
+
   // Handle update function
   const handleUpdate = () => {
-    TOGGLE();
-
     // Check if object has changed
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
@@ -73,8 +79,7 @@ export default function Modal() {
         data: form,
         token,
       })
-    ).then(() => TOGGLE()); // Close modal after successful save
-    //console.log("Add Button : ", form);
+    );
   };
 
   // Handle form submit
@@ -251,16 +256,18 @@ export default function Modal() {
               />
             </>
           )}
-
           <div className="text-center mb-1-half mt-3">
             <MDBBtn
               type="submit"
-              disabled={isLoading}
+              disabled={formSubmitted}
               color="info"
               className="mb-2"
               rounded
             >
               {willCreate ? "Apply" : "Update"}
+              {formSubmitted && (
+                <MDBIcon icon="spinner" pulse className="ml-2" />
+              )}
             </MDBBtn>
           </div>
         </form>

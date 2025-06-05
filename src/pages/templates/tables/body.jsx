@@ -58,7 +58,7 @@ const Body = () => {
     });
   };
   return (
-    <MDBTable responsive hover bordered>
+    <MDBTable responsive hover>
       <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
