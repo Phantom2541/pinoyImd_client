@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Banner, dateFormat } from "../../../services/utilities";
+import { useEffect, useState } from "react";
+import { Banner } from "../../../services/utilities";
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import GeneratedBy from "./generatedBy";
 import { isEmpty } from "lodash";
-
+import "./style.css";
 const SOA = () => {
   const [vouchers, setVouchers] = useState([]),
-    [vendor, setVendor] = useState({}),
+    [options, setOptions] = useState({}),
     [menus, setMenus] = useState([]),
     [total, setTotal] = useState(0),
     [range, setRange] = useState("");
@@ -16,46 +16,19 @@ const SOA = () => {
   useEffect(() => {
     const cluster = JSON.parse(localStorage.getItem("cluster")) || {};
     const _vendor = JSON.parse(localStorage.getItem("vendor")) || {};
-    const { menus, gross } = JSON.parse(localStorage.getItem("soa")) || {};
+    const { menus, gross, options } =
+      JSON.parse(localStorage.getItem("soa")) || {};
     const voucherList = cluster[_vendor._id] || [];
     setTotal(gross);
     setVouchers(voucherList);
-    setVendor(_vendor);
     setMenus(menus);
-
-    if (_vendor?.cutoff) {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = today.getMonth(); // 0-based
-
-      const cutoffDay = parseInt(_vendor.cutoff);
-      const currentCutoffDate = new Date(currentYear, currentMonth, cutoffDay);
-
-      // Previous month cutoff
-      const previousMonthDate = new Date(currentCutoffDate);
-      previousMonthDate.setMonth(previousMonthDate.getMonth() - 1);
-      previousMonthDate.setDate(previousMonthDate.getDate() - 1);
-
-      // Find if there's a date in cluster earlier than previousMonthDate
-      const earlierDates = voucherList
-        .map((v) => new Date(v.date)) // assuming v.date is a valid date string
-        .filter((d) => d < previousMonthDate)
-        .sort((a, b) => b - a); // descending order
-
-      const finalPreviousMonth =
-        earlierDates.length > 0 ? earlierDates[0] : previousMonthDate;
-      const options = { month: "short", day: "numeric" };
-      const formattedDate = finalPreviousMonth.toLocaleDateString(
-        "en-US",
-        options
-      );
-      setRange(`${formattedDate} -  ${dateFormat(currentCutoffDate)}`);
-    }
+    setRange(options.dateRange);
+    setOptions(options);
   }, []);
 
   return (
     <div
-      className="ml-1"
+      className="ml-1 soa-container"
       style={{
         width: "794px",
         fontFamily: "Helvetica, sans-serif",
@@ -71,7 +44,11 @@ const SOA = () => {
       >
         <div>
           <div>
-            <Banner company={"Smart Care"} branch={"General Tinio"} />
+            <Banner
+              company={"Smart Care"}
+              branch={"General Tinio"}
+              className="soa-banner-printout"
+            />
           </div>
           <h5 className="text-center mt-2" style={{ fontWeight: 700 }}>
             {/* Statement Of Account */}
@@ -85,7 +62,7 @@ const SOA = () => {
             fontSize: "16px !important",
           }}
         >
-          <Header range={range} vendor={vendor} total={total} />
+          <Header range={range} options={options} total={total} />
           <Body vouchers={vouchers} />
         </div>
       </div>

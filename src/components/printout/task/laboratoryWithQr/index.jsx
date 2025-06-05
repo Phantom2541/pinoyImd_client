@@ -4,13 +4,16 @@ import { Banner } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
 import Signatories from "./signatories";
 import "../../printout.css";
+import Footer from "./footer";
+import "./style.css";
 const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
+  console.log();
 
   return (
-    <div className="print-container position-relative">
+    <div className="laboratory-container ">
       <Banner company={branchId.companyId.name} branch={branchId.name} />
-      <div className="print-body">
+      <div className="laboratory-body">
         <Header task={task} />
         <BodySwitcher task={task} />
         <div className="flex-spacer" />
@@ -22,6 +25,7 @@ const Printout = ({ task }) => {
         <h5 className="fw-bold">{remarks}</h5>
       </div>
       <Signatories signatories={signatories} />
+      <Footer />
     </div>
   );
 };

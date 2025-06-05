@@ -1,0 +1,8 @@
+@media print {
+  .laboratory-container {
+    background: red;
+  }
+
+  .laboratory-body {
+  }
+}

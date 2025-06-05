@@ -12,6 +12,13 @@ import {
   SetINSOURCE,
 } from "../../../../../services/redux/slices/assets/providers";
 import Swal from "sweetalert2";
+import {
+  billingAddress,
+  dateFormat,
+  fullName,
+  VouchersToExcel,
+} from "../../../../../services/utilities";
+import get from "./utils";
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
@@ -58,8 +65,11 @@ const Header = () => {
         ({ clients }) => String(clients?._id) === String(sourceId)
       );
 
-      const { cutoff, clients } = foundProvider || { cutoff: 0, clients: {} };
-      return { cutoff, ...clients };
+      const { cutoff, clients, due } = foundProvider || {
+        cutoff: 0,
+        clients: {},
+      };
+      return { cutoff, due, ...clients };
     },
 
     [providers]
@@ -72,13 +82,14 @@ const Header = () => {
           collections.map(({ source = {} }) => {
             const { _id = "", displayname = "No tag source" } = source || {};
             const matchedProvider = getProvider(_id);
-            const cutOff = matchedProvider?.cutoff || 0;
+            const { cutoff = 0, due = 0 } = matchedProvider;
             return [
               _id || "NoSource", // key
               {
                 _id: _id || "NoSource",
-                displayname: `${displayname} (${cutOff})`,
-                cutoff: cutOff,
+                displayname: `${displayname} (${cutoff})`,
+                cutoff: cutoff,
+                due,
               }, // value
             ];
           })
@@ -90,7 +101,7 @@ const Header = () => {
   }, [collections, providers, getProvider]);
 
   useEffect(() => {
-    if (source) {
+    if (source && collections.length > 0) {
       dispatch(
         SetFilterBySOURCE({
           value: source,
@@ -98,7 +109,7 @@ const Header = () => {
         })
       );
     }
-  }, [source, getProvider, dispatch]);
+  }, [source, getProvider, dispatch, collections]);
 
   const handleGenerateSOA = () => {
     if (cluster.length === 0)
@@ -110,26 +121,8 @@ const Header = () => {
         confirmButtonColor: "#3085d6",
       });
 
-    const menus = [
-      ...new Map(
-        cluster
-          .flatMap(({ deals }) =>
-            deals.flatMap(({ cart }) =>
-              cart
-                .filter(({ menuId }) => menuId?.isProfile)
-                .map(({ menuId }) => ({
-                  _id: menuId._id,
-                  abbr: menuId.abbreviation,
-                  packages: menuId.packages,
-                }))
-            )
-          )
-          .map((menu) => [menu._id, menu]) // Ensure uniqueness by _id
-      ).values(),
-    ];
-
+    const menus = get.menus(cluster);
     const dealIds = cluster.flatMap(({ deals }) => deals.map(({ _id }) => _id));
-
     const gross = cluster.reduce(
       (total, voucher) =>
         total + voucher.deals.reduce((sum, deal) => sum + deal.amount, 0),
@@ -143,15 +136,29 @@ const Header = () => {
       userId: auth._id,
       amount: gross,
     };
+    const dateRange = get.dateRange(vendor, cluster);
 
-    dispatch(GENERATE_SOA({ data, token }));
+    const options = {
+      fileName: get.fileName(vendor, cluster),
+      dateRange,
+      name: get.name(vendor),
+      due: get.due(vendor),
+      gross,
+      createdBy: fullName(auth.fullName),
+      address: billingAddress(vendor.address),
+    };
+    // dispatch(GENERATE_SOA({ data, token }));
+
     localStorage.setItem("vendor", JSON.stringify(vendor));
-    localStorage.setItem("soa", JSON.stringify({ menus, gross }));
+    localStorage.setItem("soa", JSON.stringify({ menus, gross, options }));
     window.open(
       "/printout/soa",
       "OutsourceRequestForm", // Unique window name 2
       "top=100px,left=0px,width=1050px,height=750px"
     );
+    setTimeout(() => {
+      VouchersToExcel({ array: cluster, menus, options });
+    }, 1000);
   };
 
   return (
@@ -162,9 +169,11 @@ const Header = () => {
       <div>
         <i>Voucher List</i>
       </div>
-      <div className="text-right d-flex align-items-center ">
+      <div
+        className="text-right d-flex align-items-center "
+        style={{ width: "20rem" }}
+      >
         <select
-          id="cashier-select"
           className="custom-select mr-2"
           value={source}
           onChange={(e) => setSource(e.target.value)}
