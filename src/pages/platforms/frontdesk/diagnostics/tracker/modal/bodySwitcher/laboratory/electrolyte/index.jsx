@@ -1,27 +1,35 @@
 import React from "react";
-import { Services } from "../../../../../../../../../services/fakeDb";
+import { useDispatch, useSelector } from "react-redux";
+import { Services } from "./../../../../../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
-import { useSelector } from "react-redux";
 import {
   referenceColor,
   findReference,
-} from "../../../../../../../../../services/utilities";
+} from "./../../../../../../../../../services/utilities";
+import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-export default function Electrolyte({ task, setTask }) {
-  const { collections: preferences } = useSelector(
-    ({ preferences }) => preferences
-  );
+export default function Electrolyte() {
+  const { task } = useSelector(({ validator }) => validator),
+    { collections: preferences } = useSelector(
+      ({ preferences }) => preferences
+    ),
+    dispatch = useDispatch();
 
   const { packages = {}, key: mapKey, patient } = task;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target,
+  const handleChange = (target) => {
+    const { name, value } = target,
       _value = Number(value);
 
-    return setTask({
-      ...task,
-      packages: { ...packages, [name]: _value },
-    });
+    return dispatch(
+      SetTASK({
+        form: task?.form,
+        task: {
+          ...task,
+          packages: { ...packages, [name]: _value },
+        }
+      })
+    );
   };
   //console.log("packages", packages);
   return (
@@ -64,7 +72,7 @@ export default function Electrolyte({ task, setTask }) {
                   }}
                   name={key}
                   value={String(value)}
-                  onChange={handleChange}
+                  onChange={(e)=>handleChange(e.target)}
                   className="w-100 text-center fw-bold"
                 />
               </td>

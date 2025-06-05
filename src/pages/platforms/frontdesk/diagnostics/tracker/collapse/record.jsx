@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { capitalize } from "../../../../../../services/utilities";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import { useSelector } from "react-redux";
-// import Modal from "../modal";
+import { useDispatch, useSelector } from "react-redux";
+import Modal from "../modal";
+import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    [showModal, setShowModal] = useState(false);
+    [showModal, setShowModal] = useState(false),
+    dispatch = useDispatch();
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -89,7 +92,7 @@ export default function CollapseTable({ menu }) {
             <MDBBtn
               title="Modal"
               rounded
-              onClick={() => toggleModal()}
+              onClick={() => dispatch(SetTASK({ task }))}
               color={obj?.hasDone ? "info" : "primary"}
               size="sm"
               className="py-1 px-3 m-0"
@@ -164,7 +167,12 @@ export default function CollapseTable({ menu }) {
         </tbody>
       </MDBTable>
       {/* onProcess */}
-      {/* <Modal toggle={toggleModal} title="Update Laboratory Task" /> */}
+      <Modal
+        show={showModal}
+        toggle={toggleModal}
+        task={menu}
+        // setTask={setMenu}
+      />
     </>
   );
 }
