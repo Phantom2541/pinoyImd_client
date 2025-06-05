@@ -158,7 +158,7 @@ const Header = () => {
           createdBy: fullName(auth.fullName),
           address: billingAddress(vendor.address),
         };
-        // dispatch(GENERATE_SOA({ data, token }));
+        dispatch(GENERATE_SOA({ data, token }));
 
         localStorage.setItem("vendor", JSON.stringify(vendor));
         localStorage.setItem("soa", JSON.stringify({ menus, gross, options }));
