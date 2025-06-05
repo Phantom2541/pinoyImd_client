@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -6,8 +6,10 @@ import {
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBInput,
   MDBTypography,
+  MDBInput,
+  MDBRow,
+  MDBCol,
 } from "mdbreact";
 import {
   SAVE,
@@ -15,8 +17,9 @@ import {
   TOGGLE,
 } from "../../../../../services/redux/slices/assets/providers";
 
-import { isEqual } from "lodash";
+import { isEqual, set } from "lodash";
 import { useToasts } from "react-toast-notifications";
+import AddressSelect from "../../../../../components/searchables/addressSelect";
 
 export default function Modal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
@@ -37,7 +40,9 @@ export default function Modal() {
         ...selected,
         userId: auth._id,
         clients: activePlatform.branchId,
+        address: {},
         status: "pending",
+        isRegister: true,
       });
     }
   }, [showModal, selected, auth, activePlatform]);
@@ -91,6 +96,7 @@ export default function Modal() {
     );
     setBranches(_branches);
   };
+
   return (
     <MDBModal
       isOpen={showModal}
@@ -109,50 +115,142 @@ export default function Modal() {
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <div className="text-center mb-3 d-flex align-items-center">
-            <h5>Registered With Pinoy IMD?</h5>
-            <input className="form-check-input" type="checkbox" id="Male" />
-            <label htmlFor="Male" className="form-check-label label-table pl-4">
-              Male
-            </label>
-            <input className="form-check-input" type="checkbox" id="Male" />
-            <label htmlFor="Male" className="form-check-label label-table pl-4">
-              Male
-            </label>
+            <MDBTypography
+              note
+              noteTitle="Notice: "
+              noteColor="primary"
+              className="mr-3 mb-0"
+            >
+              Registered With Pinoy IMD?
+            </MDBTypography>
+            <div>
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="Yes"
+                onChange={() =>
+                  setForm({ ...form, isRegister: !form.isRegister })
+                }
+                checked={form.isRegister}
+              />
+              <label htmlFor="Yes" className="form-check-label  pl-4 mr-4">
+                Yes
+              </label>
+              <input
+                checked={!form.isRegister}
+                onChange={() =>
+                  setForm({ ...form, isRegister: !form.isRegister })
+                }
+                className="form-check-input"
+                type="checkbox"
+                id="No"
+              />
+              <label htmlFor="No" className="form-check-label label-table pl-4">
+                No
+              </label>
+            </div>
           </div>
           <MDBTypography
             tag="h4"
             variant="h4-responsive"
             className="text-center"
           ></MDBTypography>
-          <select
-            onChange={(e) => handleChangeCompany(e.target.value)}
-            className="form-control mb-3"
-          >
-            <option value="" disabled>
-              Select a company
-            </option>
-            {Array.isArray(companies) &&
-              companies.map((company, index) => (
-                <option key={index} value={company._id}>
-                  {company.name}
+          {form.isRegister ? (
+            <>
+              <select
+                onChange={(e) => handleChangeCompany(e.target.value)}
+                className="form-control mb-3"
+                required
+              >
+                <option value="" disabled>
+                  Select a company
                 </option>
-              ))}
-          </select>
-          <select
-            value={form?.vendors || ""}
-            onChange={(e) => handleChange("vendors", e.target.value)}
-            className="form-control"
-          >
-            <option value="" disabled>
-              Select a branch
-            </option>
-            {Array.isArray(branches) &&
-              branches.map((branch, index) => (
-                <option key={index} value={branch._id}>
-                  {branch.displayname || (branch.name && branch.subname)}
+                {Array.isArray(companies) &&
+                  companies.map((company, index) => (
+                    <option key={index} value={company._id}>
+                      {company.name}
+                    </option>
+                  ))}
+              </select>
+              <select
+                value={form?.vendors || ""}
+                required
+                onChange={(e) => handleChange("vendors", e.target.value)}
+                className="form-control"
+              >
+                <option value="" disabled>
+                  Select a branch
                 </option>
-              ))}
-          </select>
+                {Array.isArray(branches) &&
+                  branches.map((branch, index) => (
+                    <option key={index} value={branch._id}>
+                      {branch.displayname || (branch.name && branch.subname)}
+                    </option>
+                  ))}
+              </select>
+            </>
+          ) : (
+            <>
+              <MDBRow>
+                <MDBCol>
+                  <MDBInput
+                    label="Company name"
+                    required
+                    value={form.company}
+                    onChange={({ target }) =>
+                      setForm({ ...form, company: target.value })
+                    }
+                  />
+                </MDBCol>
+                <MDBCol>
+                  <MDBInput
+                    label="Branch name"
+                    required
+                    value={form.branch}
+                    onChange={({ target }) =>
+                      setForm({ ...form, branch: target.value })
+                    }
+                  />
+                </MDBCol>
+              </MDBRow>
+              <MDBRow>
+                <MDBCol>
+                  <MDBInput
+                    label="Email"
+                    type="email"
+                    required
+                    value={form?.contacts?.person}
+                    onChange={({ target }) =>
+                      setForm({
+                        ...form,
+                        contacts: { ...form.contacts, person: target.value },
+                      })
+                    }
+                  />
+                </MDBCol>
+                <MDBCol>
+                  <MDBInput
+                    label="Contact number"
+                    required
+                    value={form?.contacts?.mobile}
+                    onChange={({ target }) =>
+                      setForm({
+                        ...form,
+                        contacts: { ...form.contacts, mobile: target.value },
+                      })
+                    }
+                  />
+                </MDBCol>
+              </MDBRow>
+              <AddressSelect
+                address={form.address}
+                required
+                handleChange={(key, value) =>
+                  setForm({ ...form, [key]: value })
+                }
+              />
+            </>
+          )}
 
           <div className="text-center mb-1-half mt-3">
             <MDBBtn
