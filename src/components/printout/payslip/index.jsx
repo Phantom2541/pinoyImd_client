@@ -5,12 +5,14 @@ import "./style.css";
 const Slip = () => {
   return (
     <div className="d-flex align-items-center payslip-printout-container">
-      <div>
+      <div className="payslip-hr-printout">
         <Hr />
         <i>HR copy</i>
       </div>
-
-      <div className="ml-3 payslip-hr-printout">
+      <div className="payslip-cut-line">
+        <span className="cut-icon">✂️</span>
+      </div>
+      <div className="ml-3 payslip-employee-printout">
         <Hr />
         <i>Employee's copy</i>
       </div>

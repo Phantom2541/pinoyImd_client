@@ -14,7 +14,6 @@ import {
 import Swal from "sweetalert2";
 import {
   billingAddress,
-  dateFormat,
   fullName,
   VouchersToExcel,
 } from "../../../../../services/utilities";
@@ -121,44 +120,58 @@ const Header = () => {
         confirmButtonColor: "#3085d6",
       });
 
-    const menus = get.menus(cluster);
-    const dealIds = cluster.flatMap(({ deals }) => deals.map(({ _id }) => _id));
-    const gross = cluster.reduce(
-      (total, voucher) =>
-        total + voucher.deals.reduce((sum, deal) => sum + deal.amount, 0),
-      0
-    );
+    Swal.fire({
+      title: "Generate SOA?",
+      text: "Are you sure you want to generate a Statement of Account? This will download an Excel file and create a printout.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, generate SOA!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const menus = get.menus(cluster);
+        const dealIds = cluster.flatMap(({ deals }) =>
+          deals.map(({ _id }) => _id)
+        );
+        const gross = cluster.reduce(
+          (total, voucher) =>
+            total + voucher.deals.reduce((sum, deal) => sum + deal.amount, 0),
+          0
+        );
 
-    const data = {
-      dealIds,
-      clientId: vendor._id,
-      vendorId: activePlatform.branchId,
-      userId: auth._id,
-      amount: gross,
-    };
-    const dateRange = get.dateRange(vendor, cluster);
+        const data = {
+          dealIds,
+          clientId: vendor._id,
+          vendorId: activePlatform.branchId,
+          userId: auth._id,
+          amount: gross,
+        };
+        const dateRange = get.dateRange(vendor, cluster);
 
-    const options = {
-      fileName: get.fileName(vendor, cluster),
-      dateRange,
-      name: get.name(vendor),
-      due: get.due(vendor),
-      gross,
-      createdBy: fullName(auth.fullName),
-      address: billingAddress(vendor.address),
-    };
-    // dispatch(GENERATE_SOA({ data, token }));
+        const options = {
+          fileName: get.fileName(vendor, cluster),
+          dateRange,
+          name: get.name(vendor),
+          due: get.due(vendor),
+          gross,
+          createdBy: fullName(auth.fullName),
+          address: billingAddress(vendor.address),
+        };
+        // dispatch(GENERATE_SOA({ data, token }));
 
-    localStorage.setItem("vendor", JSON.stringify(vendor));
-    localStorage.setItem("soa", JSON.stringify({ menus, gross, options }));
-    window.open(
-      "/printout/soa",
-      "OutsourceRequestForm", // Unique window name 2
-      "top=100px,left=0px,width=1050px,height=750px"
-    );
-    setTimeout(() => {
-      VouchersToExcel({ array: cluster, menus, options });
-    }, 1000);
+        localStorage.setItem("vendor", JSON.stringify(vendor));
+        localStorage.setItem("soa", JSON.stringify({ menus, gross, options }));
+        window.open(
+          "/printout/soa",
+          "OutsourceRequestForm", // Unique window name 2
+          "top=100px,left=0px,width=1050px,height=750px"
+        );
+        setTimeout(() => {
+          VouchersToExcel({ array: cluster, menus, options });
+        }, 1000);
+      }
+    });
   };
 
   return (
@@ -169,11 +182,9 @@ const Header = () => {
       <div>
         <i>Voucher List</i>
       </div>
-      <div
-        className="text-right d-flex align-items-center "
-        style={{ width: "20rem" }}
-      >
+      <div className="text-right d-flex align-items-center ">
         <select
+          style={{ width: "20rem" }}
           className="custom-select mr-2"
           value={source}
           onChange={(e) => setSource(e.target.value)}
@@ -212,12 +223,10 @@ const Header = () => {
           <MDBBtn
             size="sm"
             color="primary"
-            className="px-2 m-0 ml-1"
             onClick={handleGenerateSOA}
-            rounded
             title="Generate SOA"
           >
-            <MDBIcon icon="print" />
+            <MDBIcon icon="file-invoice" className="mr-2" /> Generate SOA
           </MDBBtn>
         )}
       </div>

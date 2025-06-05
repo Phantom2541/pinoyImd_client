@@ -12,20 +12,26 @@ const Printout = ({ task }) => {
 
   return (
     <div className="laboratory-container ">
-      <Banner company={branchId.companyId.name} branch={branchId.name} />
+      <Banner
+        company={branchId.companyId.name}
+        branch={branchId.name}
+        className="laboratory-banner"
+      />
       <div className="laboratory-body">
         <Header task={task} />
         <BodySwitcher task={task} />
         <div className="flex-spacer" />
       </div>
-      <div className="remarks-section d-flex px-1">
+      <div className="laboratory-remarks d-flex px-1">
         <div style={{ paddingTop: "2px" }} className="mr-1 mb-1">
           Remarks:
         </div>
         <h5 className="fw-bold">{remarks}</h5>
       </div>
-      <Signatories signatories={signatories} />
-      <Footer />
+      <div className="laboratory-footer">
+        <Signatories signatories={signatories} />
+        <Footer />
+      </div>
     </div>
   );
 };
