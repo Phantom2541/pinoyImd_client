@@ -6,7 +6,6 @@ import {
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBInput,
   MDBTypography,
 } from "mdbreact";
 import {
