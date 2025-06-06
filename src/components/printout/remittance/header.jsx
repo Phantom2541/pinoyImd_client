@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { MDBRow, MDBCol } from "mdbreact";
 import { currency, dateFormat, fullName } from "../../../services/utilities";
 export default function Header() {
-  const { cashier, updatedAt, department, expenses, opening, patients, shift } =
+  const { cashier, createdAt, department, expenses, opening, patients, shift } =
     useSelector(({ remittances }) => remittances.selected);
 
   return (
@@ -16,7 +16,15 @@ export default function Header() {
           </h5>
         </MDBCol>
         <MDBCol className="text-right">
-          <span>Date: {dateFormat(updatedAt)}</span>
+          <span>
+            Date: {dateFormat(createdAt)} (
+            {
+              ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][
+                new Date(createdAt).getDay()
+              ]
+            }
+            )
+          </span>
         </MDBCol>
       </MDBRow>
       <MDBRow>
