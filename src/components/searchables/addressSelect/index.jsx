@@ -4,6 +4,7 @@ import { Philippines } from "../../../services/fakeDb";
 export default function AddressSelect({
   // disabledAllExceptSelected = false,
   handleChange,
+  required = false,
   address = { region: "", province: "", city: "", barangay: "" },
   // size = "3",
   label = "Address Information",
@@ -39,6 +40,7 @@ export default function AddressSelect({
         <span>Region</span>
         <select
           value={address?.region}
+          required={required}
           onChange={({ target }) => handleAddress("region", target.value)}
         >
           {Philippines.Regions?.map(({ name }) => (
@@ -52,6 +54,7 @@ export default function AddressSelect({
         <span>Province</span>
         <select
           value={address.province}
+          required={required}
           onChange={({ target }) => handleAddress("province", target.value)}
         >
           {Philippines.Provinces(address?.region)?.map(({ name }) => (
@@ -65,6 +68,7 @@ export default function AddressSelect({
         <span>City/Municipality</span>
         <select
           value={address?.city}
+          required={required}
           onChange={({ target }) => handleAddress("city", target.value)}
         >
           {Philippines.Cities(address.province)?.map(({ name }) => (
@@ -78,6 +82,7 @@ export default function AddressSelect({
         <span>Barangay</span>
         <select
           value={address?.barangay}
+          required={required}
           onChange={({ target }) => handleAddress("barangay", target.value)}
         >
           {Philippines.Barangays(address.city)?.map(({ name }) => (

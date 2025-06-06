@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 /**
@@ -18,7 +17,6 @@ import "./style.css";
 const Input = ({
   className = "form-control",
   formSubmitted = false,
-  isSuccess = false,
   label = "",
   _key, //this key is for value
   type = "text",
@@ -27,11 +25,6 @@ const Input = ({
   handleCheck = () => {},
   handleClose = () => {},
 }) => {
-  // useEffect(() => {
-  //   if (!formSubmitted && isSuccess) {
-  //     handleClose();
-  //   }
-  // }, [formSubmitted, isSuccess, handleClose]);
   return (
     <div className="d-flex align-items-center customizable-input-container">
       <input

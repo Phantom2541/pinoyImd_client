@@ -62,10 +62,10 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
-    console.log("obj", obj);
 
     return (
       <tr key={task.key}>
+        {/* remove by darrel className={`${hasDone && "table-active"}`} */}
         <td className="fw-bold">
           {capitalize(department)}
           {obj?.hasDone && (
@@ -139,8 +139,9 @@ export default function CollapseTable({ menu }) {
     source,
     category,
     _id,
-    diagnostic = {},
+    diagnostics = [],
   } = menu;
+
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">
@@ -153,16 +154,18 @@ export default function CollapseTable({ menu }) {
           </tr>
         </thead>
         <tbody>
-          {diagnostic &&
-            Object.entries(diagnostic).map(([key, value], index) => {
-              if (Array.isArray(value?.result)) {
-                return value.result.map((obj, i) =>
-                  handleIndividual(key.toLowerCase(), obj, index + i, i)
+          {diagnostics &&
+            diagnostics?.map((diagnostic, index) => {
+              if (Array.isArray(diagnostic.result))
+                return diagnostic.result.map((obj, i) =>
+                  handleIndividual(diagnostic.key, obj, index + i, i)
                 );
-              }
-              console.log("value", value);
 
-              return handleIndividual(key.toLowerCase(), value, index);
+              return handleIndividual(
+                diagnostic.key.toLowerCase(),
+                diagnostic.result,
+                index
+              );
             })}
         </tbody>
       </MDBTable>

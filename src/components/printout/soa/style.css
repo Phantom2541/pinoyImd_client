@@ -1,0 +1,5 @@
+@media print {
+  .soa-container {
+    width: 99% !important;
+  }
+}
