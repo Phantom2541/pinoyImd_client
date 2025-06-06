@@ -7,8 +7,6 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
-  MDBTypography,
-  MDBModaltable,
 } from "mdbreact";
 import {
   SAVE,
@@ -60,13 +58,13 @@ export default function Modal() {
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log("form", form);
+    console.log("form", form);
 
-    // if (willCreate) {
-    //   return handleCreate();
-    // }
+    if (willCreate) {
+      return handleCreate();
+    }
 
-    // handleUpdate();
+    handleUpdate();
   };
 
   // Handle change sa inputs
@@ -108,10 +106,17 @@ export default function Modal() {
             onChange={(e) => handleChange("name", e.target.value)}
           />
           <MDBInput
-            label="subname"
+            label="expense"
             type="text"
-            value={handleValue("subname")}
-            onChange={(e) => handleChange("subname", e.target.value)}
+            value={handleValue("expense")}
+            onChange={(e) => handleChange("expense", e.target.value)}
+          />
+          <MDBInput
+            label="section"
+            type="text"
+            value={handleValue("section")}
+            required
+            onChange={(e) => handleChange("section", e.target.value)}
           />
 
           {/* Submit button */}

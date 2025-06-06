@@ -3,11 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { Input } from "../../../../../components/customizable";
 import {
+  DESTROY,
   ProductsGenerics,
   SetEDIT,
 } from "../../../../../services/redux/slices/market/productsGenerics";
+import Swal from "sweetalert2";
 
 const Body = () => {
+  const { token } = useSelector(({ auth }) => auth);
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
       ({ productsGenerics }) => productsGenerics
     ),
@@ -43,7 +46,22 @@ const Body = () => {
   const handleUpdate = (item) => {
     dispatch(SetEDIT(item));
   };
-  const handleDelete = (id) => console.log("handleDelete : ", id);
+
+  const handleDelete = (_id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(DESTROY({ token, data: { _id } }));
+      }
+    });
+  };
 
   return (
     <MDBTable responsive hover bordered>
@@ -51,7 +69,6 @@ const Body = () => {
         <tr>
           <th>#</th>
           <th>Name</th>
-          <th>Subname</th>
           <th>Expense</th>
           <th>Section</th>
           <th>Actions</th>
@@ -59,7 +76,7 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { _id, name, subname, expense, section } = item;
+          const { _id, name, expense, section } = item;
           const isSelected = selected._id === _id;
           return (
             <tr key={index}>
@@ -101,8 +118,8 @@ const Body = () => {
                     />
                   </div>
                 ) : (
-                  <strong onClick={() => handleSelected({ _id, subname })}>
-                    {subname}
+                  <strong onClick={() => handleSelected({ _id, expense })}>
+                    {expense}
                   </strong>
                 )}
               </td>
@@ -122,13 +139,10 @@ const Body = () => {
                     />
                   </div>
                 ) : (
-                  <strong onClick={() => handleSelected({ _id, expense })}>
-                    {expense}
+                  <strong onClick={() => handleSelected({ _id, section })}>
+                    {section}
                   </strong>
                 )}
-              </td>
-              <td>
-                <strong>{section}</strong>
               </td>
               <td>
                 <button
