@@ -15,7 +15,7 @@ const Footer = () => {
         className="d-flex px-3 align-items-center justify-content-between"
         style={{ gap: "1rem" }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <div>
           <img
             alt="QR Code"
             src={pinoyImd}
@@ -52,10 +52,10 @@ const Footer = () => {
             </p>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <div>
           <img
             alt="QR Code"
-            className="p-1"
+            className="p-1 ml-4"
             src={qr}
             style={{
               height: "5rem",

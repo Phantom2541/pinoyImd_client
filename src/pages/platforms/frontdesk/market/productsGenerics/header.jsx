@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
+import { MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
 import {
   BROWSE,
+  SAVE,
   SetFILTER,
 } from "../../../../../services/redux/slices/market/productsGenerics";
 
@@ -13,6 +14,7 @@ const Header = () => {
       ({ productsGenerics }) => productsGenerics
     ),
     dispatch = useDispatch();
+
   // console.log("collections", collections);
 
   //initial values
@@ -22,7 +24,7 @@ const Header = () => {
         BROWSE({ token, params: { branchId: activePlatform?.branchId } })
       );
   }, [dispatch, token]);
-
+  const handleAdd = () => {};
   return (
     <MDBView
       cascade
@@ -30,7 +32,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} generics
+          {collections.length} Generics
         </span>
       </div>
       <div>
@@ -39,7 +41,7 @@ const Header = () => {
             collections={collections}
             setFiltered={(items) => dispatch(SetFILTER(items))}
             placeholder="Search generics"
-            // haveAction={false}
+            haveAction={true}
             reset={() => dispatch(SetFILTER(collections))}
             hideButton={false}
           />

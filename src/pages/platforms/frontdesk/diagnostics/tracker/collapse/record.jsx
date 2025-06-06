@@ -48,7 +48,8 @@ export default function CollapseTable({ menu }) {
     const _packages = Array.isArray(obj?.packages)
       ? obj.packages
       : Object.keys(obj?.packages || {}).map(Number);
-    var task = {
+
+    const task = {
       ...obj,
       key: `${form}-${index}`,
       form,
@@ -65,7 +66,6 @@ export default function CollapseTable({ menu }) {
 
     return (
       <tr key={task.key}>
-        {/* remove by darrel className={`${hasDone && "table-active"}`} */}
         <td className="fw-bold">
           {capitalize(department)}
           {obj?.hasDone && (
@@ -88,7 +88,6 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>
           <MDBBtnGroup>
-            {/* {menu?.branchId === activePlatform?.branchId && ( */}
             <MDBBtn
               title="Modal"
               rounded
@@ -99,7 +98,6 @@ export default function CollapseTable({ menu }) {
             >
               <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
             </MDBBtn>
-            {/* )} */}
             {Array.isArray(obj?.signatories) &&
               obj.signatories.length >= 2 &&
               obj?.signatories[0] &&
@@ -133,14 +131,9 @@ export default function CollapseTable({ menu }) {
     );
   };
 
-  const {
-    customerId,
-    physicianId,
-    source,
-    category,
-    _id,
-    diagnostics = [],
-  } = menu;
+  const { customerId, physicianId, source, category, _id, diagnostic } = menu;
+  console.log("menu", menu);
+  console.log("diagnostic", diagnostic);
 
   return (
     <>
@@ -150,32 +143,27 @@ export default function CollapseTable({ menu }) {
             <th>Department</th>
             <th>Template</th>
             <th>Services</th>
-            <th>Action </th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {diagnostics &&
-            diagnostics?.map((diagnostic, index) => {
-              if (Array.isArray(diagnostic.result))
-                return diagnostic.result.map((obj, i) =>
-                  handleIndividual(diagnostic.key, obj, index + i, i)
-                );
+          {diagnostic &&
+            Object.keys(diagnostic)?.map((key, index) => {
+              const rawEntry = diagnostic[key];
+              const entry = { ...rawEntry, key }; // ✅ avoid modifying frozen object
 
-              return handleIndividual(
-                diagnostic.key.toLowerCase(),
-                diagnostic.result,
-                index
-              );
+              if (Array.isArray(entry.result)) {
+                return entry.result.map((obj, i) =>
+                  handleIndividual(key, obj, index + i, i)
+                );
+              }
+
+              return handleIndividual(key.toLowerCase(), entry.result, index);
             })}
         </tbody>
       </MDBTable>
-      {/* onProcess */}
-      <Modal
-        show={showModal}
-        toggle={toggleModal}
-        task={menu}
-        // setTask={setMenu}
-      />
+
+      <Modal show={showModal} toggle={toggleModal} task={menu} />
     </>
   );
 }

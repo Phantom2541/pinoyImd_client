@@ -44,7 +44,7 @@ export default function Signatories({ signatories = [] }) {
       <Signature
         person={dr}
         label="Pathologist"
-        style={{ marginTop: "20px" }}
+        style={{ marginTop: "-0.5rem" }}
         withSignature
       />
     </div>

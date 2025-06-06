@@ -18,8 +18,7 @@ export default function LabTaskPrintout() {
     }, 500);
   }, []);
 
-  const { branchId, remarks, signatories } = task;
-  const { companyId, name } = branchId || {};
+  const { companyId, name } = task?.branchId || {};
 
   return (
     <div className="print-container position-relative" id="printableArea">
@@ -33,9 +32,9 @@ export default function LabTaskPrintout() {
         <div style={{ paddingTop: "2px" }} className="mr-1 mb-1">
           Remarks:
         </div>
-        <h5 className="fw-bold">{remarks}</h5>
+        <h5 className="fw-bold">{task?.remarks}</h5>
       </div>
-      <Signatories signatories={signatories} form={task.form} />
+      <Signatories signatories={task?.signatories} form={task?.form} />
     </div>
   );
 }
