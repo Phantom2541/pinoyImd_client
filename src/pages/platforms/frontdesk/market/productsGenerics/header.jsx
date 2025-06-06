@@ -24,7 +24,7 @@ const Header = () => {
         BROWSE({ token, params: { branchId: activePlatform?.branchId } })
       );
   }, [dispatch, token]);
-
+  const handleAdd = () => {};
   return (
     <MDBView
       cascade
