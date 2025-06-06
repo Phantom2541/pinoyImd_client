@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS, SetTASK} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import {
   MDBCol,
   MDBRow,
@@ -10,17 +12,18 @@ import {
 
 const phs = ["5.0", "6.0", "6.5", "7.0", "7.5", "8.0", "8.5"],
   occults = ["Negative", "Positive"];
-export default function Chemical({ task, setTask }) {
-  const handleSelectChange = (index, value) => {
-    const _ce = [...task.ce];
-    _ce[index] = value;
+export default function Chemical() {
+  const { task } = useSelector(({ validator }) => validator);
+  const dispatch = useDispatch();
+  const ce = task?.ce || []; // Ensure ce is always an array
 
-    setTask({
-      ...task,
-      ce: _ce,
-    });
+  const handleSelectChange = (index, value) => {
+    const updatedCe = [...ce]; // Create a new array to avoid mutation
+    updatedCe[index] = Number(value);
+    
+    dispatch(SetPARAMS({ key: "ce", value: updatedCe }));
+    dispatch(SetTASK({ task: { ...task, ce: updatedCe } }));
   };
-  const { ce } = task;
   return (
     <MDBRow>
       <MDBCol md="6">
@@ -29,9 +32,12 @@ export default function Chemical({ task, setTask }) {
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
-            selected={`Stool pH${phs[ce[0]] && `: ${phs[ce[0]]}`}`}
+            selected={`Stool pH :${phs[ce[0]] ? `: ${phs[ce[0]]}` : ""}`}
           />
           <MDBSelectOptions>
+            <MDBSelectOption>
+              <span className="d-none">Stool pH: </span>
+            </MDBSelectOption>
             {phs.map((ph, index) => (
               <MDBSelectOption key={`Stool pH-${index}`} value={String(index)}>
                 <span className="d-none">Stool pH: </span>
@@ -47,9 +53,14 @@ export default function Chemical({ task, setTask }) {
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
-            selected={`Occult Blood${occults[ce[1]] && `: ${occults[ce[1]]}`}`}
+            selected={`Occult Blood${
+              occults[ce[1]] ? `: ${occults[ce[1]]}` : ""
+            }`}
           />
           <MDBSelectOptions>
+            <MDBSelectOption>
+              <span className="d-none">Occult Blood: </span>
+            </MDBSelectOption>
             {occults.map((occult, index) => (
               <MDBSelectOption
                 key={`Occult Blood-${index}`}

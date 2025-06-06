@@ -100,7 +100,7 @@ export default function Body() {
         {canGenerateSOA && (
           <MDBBtn size="sm" rounded color="primary" onClick={handleGenerateSOA}>
             <MDBIcon icon="file-invoice-dollar" className="mr-2" />
-            Generate SOA{" "}
+            Verified SOA
             {formSubmitted && <MDBIcon icon="spinner" pulse className="ml-2" />}
           </MDBBtn>
         )}

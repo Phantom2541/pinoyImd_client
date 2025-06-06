@@ -643,6 +643,10 @@ export const reduxSlice = createSlice({
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
+    SetToggleMODAL: (state, { payload }) => {
+      state.showModal = !state.showModal;
+      state.patient = payload;
+    },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
       state.activePage = 1;
@@ -1192,6 +1196,7 @@ export const reduxSlice = createSlice({
 
 export const {
   SetTOTAL,
+  SetToggleModal,
   SetFILTERED,
   SetFilterByCASHIER,
   SetFilterBySOURCE,

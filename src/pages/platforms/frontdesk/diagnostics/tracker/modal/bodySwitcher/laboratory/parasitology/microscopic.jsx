@@ -1,4 +1,7 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+
 import {
   MDBCol,
   MDBRow,
@@ -29,24 +32,24 @@ const hpfs = [
   bacterias = ["+1", "+2", "+3", "+4"],
   cells = ["RARE", "FEW", "MODERATE", "PLENTY"];
 
-export default function Microscopic({ task, setTask }) {
-  const handleSelectChange = (index, value) => {
-    const _me = [...task.me];
-    _me[index] = value;
 
-    setTask({
-      ...task,
-      me: _me,
-    });
-  };
-
+export default function Microscopic() {
+  const { task } = useSelector(({ validator }) => validator),
+    dispatch = useDispatch();
   const { me } = task;
+  const handleSelectChange = (index, value) => {
+    const _me = [...me];
+    _me[index] = Number(value);
+    dispatch(SetPARAMS({ key: "me", value: _me }));
+    dispatch(SetTASK({ task: { ...task, me: _me } }));
+    
+  };
 
   return (
     <MDBRow>
       <MDBCol md="6">
         <MDBSelect
-          getValue={e => handleSelectChange(0, Number(e[0]))}
+          getValue={(e) => handleSelectChange(0, Number(e[0]))}
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
@@ -64,7 +67,7 @@ export default function Microscopic({ task, setTask }) {
       </MDBCol>
       <MDBCol md="6">
         <MDBSelect
-          getValue={e => handleSelectChange(1, Number(e[0]))}
+          getValue={(e) => handleSelectChange(1, Number(e[0]))}
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
@@ -82,7 +85,7 @@ export default function Microscopic({ task, setTask }) {
       </MDBCol>
       <MDBCol md="6">
         <MDBSelect
-          getValue={e => handleSelectChange(2, Number(e[0]))}
+          getValue={(e) => handleSelectChange(2, Number(e[0]))}
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
@@ -100,13 +103,16 @@ export default function Microscopic({ task, setTask }) {
       </MDBCol>
       <MDBCol md="6">
         <MDBSelect
-          getValue={e => handleSelectChange(3, Number(e[0]))}
+          getValue={(e) => handleSelectChange(3, Number(e[0]))}
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
-            selected={`Yeast Cells${cells[me[3]] && `: ${cells[me[3]]}`}`}
+            selected={`Yeast Cells${cells[me[3]] ? `: ${cells[me[3]]}` : ""}`}
           />
           <MDBSelectOptions>
+            <MDBSelectOption>
+              <span className="d-none">Yeast Cells: </span>
+            </MDBSelectOption>
             {cells.map((cell, index) => (
               <MDBSelectOption key={`Yeast-${index}`} value={String(index)}>
                 <span className="d-none">Yeast Cells: </span>
@@ -118,13 +124,16 @@ export default function Microscopic({ task, setTask }) {
       </MDBCol>
       <MDBCol md="6">
         <MDBSelect
-          getValue={e => handleSelectChange(4, Number(e[0]))}
+          getValue={(e) => handleSelectChange(4, Number(e[0]))}
           className="colorful-select dropdown-primary hidden-md-down"
         >
           <MDBSelectInput
-            selected={`Fat Globules${cells[me[4]] && `: ${cells[me[4]]}`}`}
+            selected={`Fat Globules${cells[me[4]] ? `: ${cells[me[4]]}` : ""}`}
           />
           <MDBSelectOptions>
+            <MDBSelectOption>
+              <span className="d-none">Fat Globules: </span>
+            </MDBSelectOption>
             {cells.map((cell, index) => (
               <MDBSelectOption key={`Fat-${index}`} value={String(index)}>
                 <span className="d-none">Fat Globules: </span>

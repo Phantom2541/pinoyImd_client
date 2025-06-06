@@ -25,7 +25,6 @@ export default function Body() {
     dispatch(SetCluster(filtered));
     setVouchers(filtered);
   }, [filtered, dispatch]);
-
   const isChecked = (date, deal) => {
     if (cluster.length > 0) {
       const _cluster = [...cluster];

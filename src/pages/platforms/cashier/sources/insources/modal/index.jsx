@@ -171,6 +171,16 @@ export default function Modal() {
               />
             </MDBCol>
             <MDBCol>
+              <Select
+                label={"Monthly Due Date"}
+                collections={new Array(30).fill("").map((_, i) => i + 1)}
+                onChange={(value) => setForm({ ...form, due: Number(value) })}
+                preValue={form.due}
+              />
+            </MDBCol>
+          </MDBRow>
+          <MDBRow>
+            <MDBCol>
               <MDBInput
                 type="number"
                 label="Credit Limit"
@@ -179,7 +189,6 @@ export default function Modal() {
               />
             </MDBCol>
           </MDBRow>
-
           <span className="mb-2" style={{ fontWeight: 300 }}>
             Categories:
           </span>
