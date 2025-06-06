@@ -735,7 +735,6 @@ export const reduxSlice = createSlice({
           }
           return groups;
         }, []);
-
         state.totalPages =
           Math.ceil((groupByDate?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);

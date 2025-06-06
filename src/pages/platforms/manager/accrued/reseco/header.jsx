@@ -52,7 +52,9 @@ const Header = () => {
     .reduce((acc, item) => acc + item, 0);
 
   const handlePrintOut = () => {
-    const source = sources.find(({ _id }) => String(_id) === String(vendor));
+    const source = sources.find(
+      ({ _id }) => String(_id) === String(vendor?._id)
+    );
 
     localStorage.setItem("resecos", JSON.stringify(filtered));
     localStorage.setItem(
@@ -81,7 +83,7 @@ const Header = () => {
 
     // Get source displayname from the first deal
     const source =
-      sources.find((s) => String(s._id) === String(vendor))?.displayname ??
+      sources.find((s) => String(s._id) === String(vendor?._id))?.displayname ??
       "Unknown Source";
 
     // Add source header
@@ -165,7 +167,17 @@ const Header = () => {
           <select
             id="cashier-select"
             className="custom-select mr-2"
-            onChange={(e) => dispatch(SetFilterBySOURCE(e.target.value))}
+            onChange={(e) => {
+              const value = e.target.value;
+              dispatch(
+                SetFilterBySOURCE({
+                  value: e.target.value,
+                  vendor: {
+                    _id: value === "all" ? "" : value,
+                  },
+                })
+              );
+            }}
           >
             <option value="" disabled>
               Select a Source
