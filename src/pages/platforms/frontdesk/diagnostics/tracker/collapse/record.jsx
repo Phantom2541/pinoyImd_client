@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { capitalize } from "../../../../../../services/utilities";
 import { Services, Templates } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import { useSelector } from "react-redux";
-// import Modal from "../modal";
+import { useDispatch, useSelector } from "react-redux";
+import Modal from "../modal";
+import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+
 export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    [showModal, setShowModal] = useState(false);
+    [showModal, setShowModal] = useState(false),
+    dispatch = useDispatch();
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -59,10 +62,10 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
     };
-    console.log("obj", obj);
 
     return (
       <tr key={task.key}>
+        {/* remove by darrel className={`${hasDone && "table-active"}`} */}
         <td className="fw-bold">
           {capitalize(department)}
           {obj?.hasDone && (
@@ -89,7 +92,7 @@ export default function CollapseTable({ menu }) {
             <MDBBtn
               title="Modal"
               rounded
-              onClick={() => toggleModal()}
+              onClick={() => dispatch(SetTASK({ task }))}
               color={obj?.hasDone ? "info" : "primary"}
               size="sm"
               className="py-1 px-3 m-0"
@@ -136,8 +139,9 @@ export default function CollapseTable({ menu }) {
     source,
     category,
     _id,
-    diagnostic = {},
+    diagnostics = [],
   } = menu;
+
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">
@@ -150,21 +154,28 @@ export default function CollapseTable({ menu }) {
           </tr>
         </thead>
         <tbody>
-          {diagnostic &&
-            Object.entries(diagnostic).map(([key, value], index) => {
-              if (Array.isArray(value?.result)) {
-                return value.result.map((obj, i) =>
-                  handleIndividual(key.toLowerCase(), obj, index + i, i)
+          {diagnostics &&
+            diagnostics?.map((diagnostic, index) => {
+              if (Array.isArray(diagnostic.result))
+                return diagnostic.result.map((obj, i) =>
+                  handleIndividual(diagnostic.key, obj, index + i, i)
                 );
-              }
-              console.log("value", value);
 
-              return handleIndividual(key.toLowerCase(), value, index);
+              return handleIndividual(
+                diagnostic.key.toLowerCase(),
+                diagnostic.result,
+                index
+              );
             })}
         </tbody>
       </MDBTable>
       {/* onProcess */}
-      {/* <Modal toggle={toggleModal} title="Update Laboratory Task" /> */}
+      <Modal
+        show={showModal}
+        toggle={toggleModal}
+        task={menu}
+        // setTask={setMenu}
+      />
     </>
   );
 }

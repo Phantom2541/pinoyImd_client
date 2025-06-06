@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS,SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 
 const _troupe = {
@@ -6,19 +8,19 @@ const _troupe = {
   esr: 0,
 };
 
-export default function SpecialTest({ task, setTask }) {
-  const { troupe = _troupe, packages } = task,
-    { retic, esr } = troupe;
+export default function SpecialTest() {
+  const { task } = useSelector(
+      ({ validator }) => validator
+    ),
+    dispatch = useDispatch();
+  const { retic, esr } = task.troupe;
 
-  const handleChange = (key, value) =>
-    setTask({
-      ...task,
-      troupe: {
-        ...troupe,
-        [key]: Number(value),
-      },
-    });
-
+  const handleChange = (key, value) => {
+    dispatch(SetTASK({ form: task?.form, task: { ...task, troupe: { ...troupe, [key]: value } } }));
+    
+    dispatch(SetPARAMS({ key: "troupe", value: { ...troupe, [key]: value } }));
+  }
+const {troupe = _troupe, packages} = task;
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>
@@ -36,7 +38,7 @@ export default function SpecialTest({ task, setTask }) {
               <input
                 type="number"
                 value={retic}
-                onChange={e => handleChange("retic", e.target.value)}
+                onChange={(e) => handleChange("retic", e.target.value)}
                 className="w-100 text-center fw-bold"
               />
             </td>
@@ -50,7 +52,7 @@ export default function SpecialTest({ task, setTask }) {
               <input
                 type="number"
                 value={esr}
-                onChange={e => handleChange("esr", e.target.value)}
+                onChange={(e) => handleChange("esr", e.target.value)}
                 className="w-100 text-center fw-bold"
               />
             </td>

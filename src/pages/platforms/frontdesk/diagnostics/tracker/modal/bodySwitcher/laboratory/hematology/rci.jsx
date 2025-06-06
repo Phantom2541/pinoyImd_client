@@ -1,13 +1,16 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SetPARAMS,SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import {
   Cellcount,
   Rci as RCI,
-} from "../../../../../../../../../services/fakeDb";
+} from "./../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
 
-export default function Rci({ task, setTask }) {
-  const { rci = [] } = task,
+export default function Rci() {
+   const {task} = useSelector(({validator}) => validator),
+    dispatch = useDispatch(),
     { Preferences } = Cellcount,
     { Category } = RCI;
 
@@ -15,18 +18,16 @@ export default function Rci({ task, setTask }) {
     const { name, value } = e.target,
       _name = Number(name),
       _value = Number(value),
-      _rci = [...rci];
+      _rci = [...task.rci];
 
     _rci[_name] = _name === 2 ? parseInt(_value) : parseFloat(_value);
 
     while (_rci.length < 4) {
       _rci.push(0);
     }
-
-    setTask({
-      ...task,
-      rci: _rci,
-    });
+        dispatch(SetTASK({form: task?.form, task:{ ...task, rci: _rci }}));
+    
+dispatch(SetPARAMS({ key: "rci", value: _rci }));
   };
 
   return (
@@ -39,7 +40,7 @@ export default function Rci({ task, setTask }) {
         </tr>
       </thead>
       <tbody>
-        {(!!rci.length ? rci : [0, 0, 0, 0]).map((value, index) => {
+        {(!!task.rci.length ? task.rci : [0, 0, 0, 0]).map((value, index) => {
           const category = Category[index],
             { lo, hi, unit } = Preferences.rci[category];
 

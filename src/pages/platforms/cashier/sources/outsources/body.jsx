@@ -51,7 +51,7 @@ const Body = () => {
   const paginatedData = filtered?.slice(startIndex, endIndex);
 
   return (
-    <MDBTable responsive hover bordered>
+    <MDBTable responsive hover>
       <thead>
         <tr>
           <th>#</th>
@@ -61,32 +61,43 @@ const Body = () => {
           <th>Credit</th>
           <th>Cutoff</th>
           <th>Status</th>
-          <th colSpan="2">Action</th>
+          <th className="text-center">Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((provider, index) => {
-          const { vendors = {}, status = "", credit, cutoff } = provider,
-            { displayname, address, companyId } = vendors;
+          const {
+              vendors = {},
+              status = "",
+              credit,
+              cutoff,
+              category = "",
+            } = provider,
+            { displayname, address, companyId, name } = vendors;
+          const isGhost = category === "ghost";
           return (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{companyId?.name}</td>
-              <td>{displayname}</td>
+              <td className={isGhost && "text-primary"}>
+                {isGhost && "👻"} {displayname || name}
+              </td>
               <td>{billingAddress(address)}</td>
               <td>{currency(credit)}</td>
               <td>{cutoff || "-"}</td>
               <td>{capitalize(status)}</td>
               <td className="text-center" style={{ width: "200px" }}>
                 <MDBBtnGroup>
-                  <MDBBtn
-                    size="sm"
-                    rounded
-                    color="primary"
-                    onClick={() => handleEdit(provider)}
-                  >
-                    <MDBIcon icon="pencil-alt" />
-                  </MDBBtn>
+                  {status === "pending" && (
+                    <MDBBtn
+                      size="sm"
+                      rounded
+                      color="primary"
+                      onClick={() => handleEdit(provider)}
+                    >
+                      <MDBIcon icon="pencil-alt" />
+                    </MDBBtn>
+                  )}
                   <MDBBtn
                     onClick={() => handleDelete(provider._id)}
                     size="sm"

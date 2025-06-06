@@ -51,6 +51,7 @@ export default function Summary() {
 
   useEffect(() => {
     if (abbr === "hmo") setPayment("voucher");
+    else setPayment("cash");
   }, [abbr]);
 
   const handleCheckout = async (e) => {

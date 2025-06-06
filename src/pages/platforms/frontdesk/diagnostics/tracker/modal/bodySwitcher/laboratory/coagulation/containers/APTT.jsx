@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { MDBInput, MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
+import { useSelector, useDispatch } from "react-redux";
+import { SETPARAMS } from "./../../../../../../../../../redux/slices/task/forms";
 
-const Aptt = ({ task, setTask }) => {
-  const [data, setData] = useState([0, 0]);
+const Aptt = () => {
+  const { theme } = useSelector(({ auth }) => auth),
+    { params } = useSelector(({ task }) => task),
+    [data, setData] = useState([0, 0]),
+    dispatch = useDispatch();
 
   useEffect(() => {
-    const _aptt = !!task.aptt?.length ? task.aptt : [0, 0];
+    const _aptt = !!params.aptt?.length ? params.aptt : [0, 0];
     setData(_aptt);
-  }, [task]);
+  }, [params]);
 
   const handleAptt = (e) => {
     const { name, value } = e.target;
@@ -17,10 +22,18 @@ const Aptt = ({ task, setTask }) => {
     } else {
       aptt[1] = parseFloat(value);
     }
-    setTask({ ...task, aptt });
+    dispatch(SETPARAMS({ ...params, aptt }));
   };
   return (
-    <MDBTable align="middle" hover responsive small className="mt-2" striped>
+    <MDBTable
+      align="middle"
+      hover
+      responsive
+      small
+      color={theme.color}
+      className="mt-2"
+      striped
+    >
       <MDBTableHead>
         <tr className="text-center border">
           <th>Name</th>
@@ -34,7 +47,7 @@ const Aptt = ({ task, setTask }) => {
           <td>
             <MDBInput
               label="Patient"
-              // icon="user"
+              icon="user"
               group
               type="number"
               name="patient"
@@ -50,7 +63,7 @@ const Aptt = ({ task, setTask }) => {
           <td>
             <MDBInput
               label="Control"
-              // icon="cog"
+              icon="cog"
               group
               type="number"
               name="control"
