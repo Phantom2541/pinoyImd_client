@@ -19,6 +19,11 @@ const Footer = () => {
   );
   const dispatch = useDispatch();
   const department = activePlatform?.department;
+
+  // Utility function to normalize task.form
+  const formatForm = (form) =>
+    form?.charAt(0).toUpperCase() + form?.slice(1).toLowerCase();
+
   useEffect(() => {
     if (success) {
       dispatch(SetHEALTHY(false));
@@ -51,13 +56,9 @@ const Footer = () => {
       "physicians",
       physicians.find(({ user }) => user === _user)
     );
-  const handleSave = (hasDone) => {
-    const { form } = task;
 
-    // if laboratory =pathogist
-    // if radiologist  and xray = radiologist
-    // if radiologist  and ultrasound = sonographer
-    // if radiologist  and ecg   = cardiologist
+  const handleSave = (hasDone) => {
+    const form = formatForm(task?.form);
 
     const head = findSignatoryId(form.toLowerCase());
     let dr;
@@ -68,9 +69,8 @@ const Footer = () => {
     } else {
       dr = findPhysicianId(task.signatories[1]._id);
     }
-    // console.log("dr", dr);
 
-    const data = ["xray", "ultrasound", "miscellaneous"].includes(form)
+    const data = ["Xray", "Ultrasound", "Miscellaneous"].includes(form)
       ? (() => {
           const { _id, ...rest } = task;
           return {
@@ -86,6 +86,7 @@ const Footer = () => {
           department,
           signatories: [head, dr, auth._id],
         };
+
     setIsLoading(true);
     dispatch(
       LABRESULT({
@@ -100,9 +101,9 @@ const Footer = () => {
   };
 
   const generateHealthyStats = () => {
-    if (task?.form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
-    else if (task?.form === "Parasitology")
-      dispatch(SetHEALTHY("parasitology"));
+    const form = formatForm(task?.form);
+    if (form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
+    else if (form === "Parasitology") dispatch(SetHEALTHY("parasitology"));
   };
 
   return (
@@ -124,7 +125,7 @@ const Footer = () => {
       {/* Button Layout */}
       <div className="d-flex justify-content-between align-items-center my-2">
         {/* Left: Healthy Client Button (if applicable) */}
-        {(task.form === "Urinalysis" || task.form === "Parasitology") && (
+        {["Urinalysis", "Parasitology"].includes(formatForm(task?.form)) && (
           <MDBBtn onClick={generateHealthyStats} color="success">
             Healthy client
           </MDBBtn>
@@ -136,7 +137,8 @@ const Footer = () => {
             <MDBBtn
               disabled={isLoading}
               onClick={() => {
-                if (task?.form === "Hematology") return computeHemaDiff(true);
+                if (formatForm(task?.form) === "Hematology")
+                  return computeHemaDiff(true);
                 handleSave(true);
               }}
               color="success"
@@ -146,7 +148,8 @@ const Footer = () => {
             <MDBBtn
               disabled={isLoading}
               onClick={() => {
-                if (task?.form === "Hematology") return computeHemaDiff(false);
+                if (formatForm(task?.form) === "Hematology")
+                  return computeHemaDiff(false);
                 handleSave(false);
               }}
               color="info"
