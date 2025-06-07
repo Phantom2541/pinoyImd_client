@@ -19,6 +19,7 @@ import {
   SETPHYSICIAN,
   SETSOURCE,
   SETSSX,
+  SETHMO,
 } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import {
   INSOURCE,
@@ -182,34 +183,59 @@ export default function PosCard() {
               ))}
           </select>
         </div>
-        {source ? (
+        {baseCategory === "hmo" ? (
           <div className="patient-form">
-            <span>Physician</span>
+            <span>Health Management Organization</span>
             <select
               disabled={!didSelect}
-              onChange={({ target }) => handlePhysician(target.value)}
+              onChange={({ target }) => dispatch(SETHMO(target.value))}
             >
               <option value="">None</option>
-              {physicians?.length === 0 && (
-                <option value="" disabled>
-                  No Physicians where tag to this company
-                </option>
-              )}
-              {physicians?.map(({ user }) => (
-                <option key={user?._id} value={user?._id}>
-                  {properFullname(user?.fullName)}
-                </option>
-              ))}
+              {sources
+                ?.filter(({ category: c }) => c === "hmo")
+                .map(({ _id, clients, membership }) => (
+                  <option key={_id} value={_id} title={membership}>
+                    {
+                      Memberships.find(({ value }) => value === membership)
+                        ?.emoji
+                    }
+                    {clients?.displayname}
+                  </option>
+                ))}
             </select>
           </div>
         ) : (
-          <PickPhysician
-            label="Search Physician (lname,mname,fname)"
-            selectedClassName="mt-2"
-            disabled={!didSelect}
-            globalSearch
-            onClick={({ user }) => handlePhysician(user?._id)}
-          />
+          <>
+            {source ? (
+              <div className="patient-form">
+                <span>Physician</span>
+                <select
+                  disabled={!didSelect}
+                  onChange={({ target }) => handlePhysician(target.value)}
+                >
+                  <option value="">None</option>
+                  {physicians?.length === 0 && (
+                    <option value="" disabled>
+                      No Physicians where tag to this company
+                    </option>
+                  )}
+                  {physicians?.map(({ user }) => (
+                    <option key={user?._id} value={user?._id}>
+                      {properFullname(user?.fullName)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <PickPhysician
+                label="Search Physician (lname,mname,fname)"
+                selectedClassName="mt-2"
+                disabled={!didSelect}
+                globalSearch
+                onClick={({ user }) => handlePhysician(user?._id)}
+              />
+            )}
+          </>
         )}
       </div>
       {_id ? (

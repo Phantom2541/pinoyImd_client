@@ -50,6 +50,7 @@ const defaultState = {
   hasActiveCustomer: false,
   category: 0,
   privilege: 0,
+  hmo: "",
   payment: "cash",
   cash: 0,
   amount: 0,
@@ -185,6 +186,9 @@ export const reduxSlice = createSlice({
     SETCATEGORY: (state, { payload }) => {
       state.category = payload;
     },
+    SETHMO: (state, { payload }) => {
+      state.hmo = payload;
+    },
     SETPRIVILEGE: (state, { payload }) => {
       state.privilege = payload;
     },
@@ -298,6 +302,7 @@ export const {
   SETGROSS,
   SETPHYSICIAN,
   SETSOURCE,
+  SETHMO,
   ADDTOCART,
   REMOVEFROMCART,
   RESET,
