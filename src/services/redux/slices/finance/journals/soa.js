@@ -185,8 +185,14 @@ export const reduxSlice = createSlice({
     },
 
     SetSELECTED: (state, { payload }) => {
-      console.log("selected paylaod:", payload);
       state.selected = payload;
+    },
+    SetPAYMENT: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+    },
+    ToggleMODAL: (state) => {
+      state.showModal = !state.showModal;
     },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
@@ -282,6 +288,8 @@ export const {
   SetSoaCluster,
   SetFilterByOUTSOURCE,
   SetSELECTED,
+  SetPAYMENT,
+  ToggleMODAL,
   RESET,
 } = reduxSlice.actions;
 

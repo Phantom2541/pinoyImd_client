@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
-  VOUCHERS,
+  BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/commerce/pos/services/deals";
+} from "../../../../../services/redux/slices/finance/journals/soa";
+import Search from "../../../../../components/searchables/search";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { filtered } = useSelector(({ deals }) => deals),
@@ -15,11 +16,9 @@ const Header = () => {
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       dispatch(
-        VOUCHERS({
+        BROWSE({
           token,
-          key: {
-            key: "services",
-            type: "accrued",
+          keys: {
             branchId: activePlatform?.branchId,
           },
         })
@@ -35,15 +34,17 @@ const Header = () => {
   return (
     <MDBView
       cascade
-      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4  d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {services.length} Services
+          Account Receivable List
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center"></div>
+        <div className="text-right d-flex items-center">
+          <Search />
+        </div>
       </div>
     </MDBView>
   );

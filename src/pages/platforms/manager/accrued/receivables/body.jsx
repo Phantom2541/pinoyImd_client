@@ -1,11 +1,18 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { MDBTable } from "mdbreact";
+import { useDispatch, useSelector } from "react-redux";
+import { MDBTable, MDBBtn, MDBIcon } from "mdbreact";
+import React, { useState } from "react";
+import Deals from "./deals";
+import {
+  currency,
+  dateFormat,
+  paymentMethod,
+} from "../../../../../services/utilities";
+import { SetPAYMENT } from "../../../../../services/redux/slices/finance/journals/soa";
 
 const Body = () => {
-  const { filtered, activePage, maxPage } = useSelector(
-    ({ services }) => services
-  );
+  const { filtered, activePage, maxPage } = useSelector(({ soa }) => soa),
+    [activeId, setActiveId] = useState(""),
+    dispatch = useDispatch();
 
   /**
    * Pagination: Calculate the start and end index for the current page
@@ -15,24 +22,159 @@ const Body = () => {
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
   return (
-    <MDBTable responsive hover bordered>
+    <MDBTable responsive>
       <thead>
         <tr>
-          <th>#</th>
-          <th>Service</th>
-          <th>Abbreviation</th>
-          <th>Specimen</th>
+          <th>Client</th>
+          <th>Due Date</th>
+          <th>Amount</th>
+          <th>Payment </th>
+          <th>Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((service, index) => (
-          <tr key={index}>
-            <td key={index}>{index + startIndex + 1}</td>
-            <td>{service.name}</td>
-            <td>{service.abbreviation} </td>
-            <td>{service.specimen}</td>
-          </tr>
-        ))}
+        {paginatedData?.map((soa, index) => {
+          const { clientId, due = 2, amount, deals = [], _id } = soa;
+          const isOpen = activeId === _id;
+          const breakdDown = [
+            { type: "cash", amount: 600, datePaid: dateFormat(new Date()) },
+            {
+              type: "gcash",
+              amount: 1200,
+              datePaid: dateFormat(new Date()),
+            },
+          ];
+          const imageSrc = (type) => paymentMethod.getImage(type).img;
+          return (
+            <React.Fragment key={index}>
+              <tr key={index} className={isOpen && "border border-black"}>
+                <td key={index} style={{ fontWeight: 400 }}>
+                  <span className="font-weight-bold ">{index + 1}.</span>
+                  <span className="ml-2">{clientId?.name}</span>
+                </td>
+                <td key={index} style={{ fontWeight: 400 }}>
+                  May 2025
+                </td>
+                <td key={index} style={{ fontWeight: 400 }}>
+                  {currency(amount)}{" "}
+                </td>
+                <td>
+                  <div
+                    style={{
+                      borderLeft: "2px solid #ccc",
+                      paddingLeft: "15px",
+                    }}
+                  >
+                    {breakdDown.map(
+                      (
+                        { type, amount, chequeNo, clearingDate, datePaid },
+                        i
+                      ) => (
+                        <div
+                          key={i}
+                          style={{ position: "relative", marginBottom: "12px" }}
+                        >
+                          <div style={{ position: "relative" }}>
+                            <span
+                              className="bg-primary"
+                              style={{
+                                display: "inline-block",
+                                width: "10px",
+                                height: "10px",
+                                borderRadius: "50%",
+                                position: "absolute",
+                                left: "-18px",
+                                top: "3px",
+                              }}
+                            ></span>
+                            <img
+                              src={imageSrc(type)}
+                              alt={`no-image-${type}`}
+                              className="mr-2"
+                              style={{ height: "0.8rem" }}
+                            />
+                            ₱{amount.toLocaleString()}
+                            <span
+                              style={{
+                                float: "right",
+                                fontSize: "0.75rem",
+                                color: "#888",
+                              }}
+                            >
+                              {datePaid}
+                            </span>
+                          </div>
+
+                          {type === "cheque" && (
+                            <div
+                              style={{
+                                fontSize: "0.85rem",
+                                color: "#555",
+                                marginLeft: "10px",
+                                marginTop: "4px",
+                              }}
+                            >
+                              Cheque No: <strong>{chequeNo}</strong> <br />
+                              Clearing: <strong>{clearingDate}</strong>
+                            </div>
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                </td>
+                <td>Unpaid</td>
+                <td>
+                  <div className="d-flex justify-content-between">
+                    <MDBBtn
+                      size="sm"
+                      color="info"
+                      rounded
+                      onClick={() => dispatch(SetPAYMENT(soa))}
+                    >
+                      Pay <MDBIcon icon="money-bill-wave" className="ml-1" />
+                    </MDBBtn>
+
+                    <div className="m-0 p-0 d-flex align-items-center">
+                      <MDBBtn
+                        size="sm"
+                        color="white"
+                        rounded
+                        title="View Deals"
+                        onClick={() =>
+                          setActiveId((prev) => (prev === _id ? -1 : _id))
+                        }
+                        className="m-0 p-0 transition-all float-right "
+                        style={{
+                          width: isOpen ? "1.5rem" : "2.5rem",
+                          height: isOpen ? "2rem" : "1.5rem",
+                        }}
+                      >
+                        <i
+                          style={{ rotate: `${isOpen ? 0 : 90}deg` }}
+                          className="fa fa-angle-down transition-all "
+                        />
+                      </MDBBtn>
+                      {!isOpen && deals.length > 0 && (
+                        <span
+                          className="counter"
+                          style={{
+                            marginBottom: "-10px",
+                            marginRight: "-10px !important",
+                          }}
+                        >
+                          {deals?.length}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <Deals deals={deals} isOpen={isOpen} _id={_id} />
+            </React.Fragment>
+          );
+        })}
       </tbody>
     </MDBTable>
   );
