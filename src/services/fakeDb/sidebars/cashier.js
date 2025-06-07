@@ -8,6 +8,7 @@ import {
   Insources,
   Outsources,
   Utilities,
+  HMO,
   Remittances,
   Hotlines,
   Suppliers,
@@ -161,9 +162,16 @@ const cashier = [
       {
         name: "Contract",
         path: "/contract",
-        icon: "warehouse",
+        icon: "handshake",
         title: "List of Companies who send out their services",
         component: Contract,
+      },
+      {
+        name: "HMO",
+        path: "/hmo",
+        icon: "hospital",
+        title: "Health Management Organization",
+        component: HMO,
       },
 
       {

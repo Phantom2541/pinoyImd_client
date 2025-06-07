@@ -1,13 +1,9 @@
-import { MDBCollapseHeader, MDBBtn, MDBBadge } from "mdbreact";
-import {
-  capitalize,
-  collapse,
-  currency,
-} from "../../../../../../../services/utilities";
-import { Select, Input } from "../../../../../../../components/customizable";
-import PopOver from "./popOver";
+import { MDBCollapseHeader, MDBBtn } from "mdbreact";
+import { collapse } from "../../../../../../../services/utilities";
 import { Memberships } from "../../../../../../../services/fakeDb";
-import { useSelector } from "react-redux";
+import EditableSelect from "../../../../../../../components/customizable/editableSelect";
+import EditableField from "../../../../../../../components/customizable/editableField";
+import PopOver from "./popOver";
 
 const Header = ({
   insource,
@@ -18,24 +14,10 @@ const Header = ({
   activeId,
   didHoverId,
   index,
-  update,
-  setUpdate,
   handleUpdate,
   formSubmitted,
 }) => {
-  const { categories, category: activeCategory } = useSelector(
-    ({ providers }) => providers
-  );
-  const {
-    clients,
-    _id,
-    category,
-    membership = "",
-    subName: ghostSubName,
-    cutoff = 0,
-    credit = 0,
-    due,
-  } = insource;
+  const { clients, _id, subName: ghostSubName, cutoff = 0 } = insource;
   const isGhost = clients?._id ? false : true;
 
   const { abbr, displayname } = clients || "";
@@ -50,8 +32,6 @@ const Header = ({
     !clients?.companyId && !clients?.isVerified && !isGhost;
 
   const isWhiteColor = color === "text-white"; //para sa color ng small tag
-
-  const _category = categories.find((c) => c.value === category)?.text;
 
   return (
     <MDBCollapseHeader
@@ -81,249 +61,121 @@ const Header = ({
             >
               Branch
             </small>
-            {update.updatedKey === "branch" &&
-            update.providerID === _id &&
-            isEditableBranch ? (
-              <Input
+            <EditableField
+              enableEditMode={isEditableBranch}
+              inputStyle={{ maxWidth: "10rem" }}
+              displayStyle={{ maxWidth: "20rem" }}
+              className="mt-2 form-control form-control-sm"
+              formSubmitted={formSubmitted}
+              keyForValue="displayname"
+              fieldData={{
+                displayname: baseSubname,
+                _id: clients._id,
+                providerID: _id,
+              }}
+              onSave={(editedData) => handleUpdate(editedData, false)}
+            />
+
+            <div style={{ marginTop: "-0.3rem" }}>
+              <EditableField
                 className="mt-2 form-control form-control-sm"
-                _key={"newName"}
-                selected={update}
                 formSubmitted={formSubmitted}
-                onChange={(value) => setUpdate({ ...update, newName: value })}
-                handleCheck={() => handleUpdate(false)}
-                handleClose={() => setUpdate({})}
-              />
-            ) : (
-              <h6
-                style={{ marginBottom: "-4px", maxWidth: "20rem" }}
-                onClick={() =>
-                  setUpdate({
-                    ...clients,
-                    newName: clients.displayname,
-                    updatedKey: "branch",
-                    providerID: _id,
-                  })
-                }
-              >
-                {baseSubname}
-              </h6>
-            )}
-            {update?.updatedKey === "abbr" && update?.providerID === _id ? (
-              <div style={{ width: "6rem" }}>
-                <Input
-                  _key={"newAbbr"}
-                  className="mt-2 form-control form-control-sm"
-                  type="string"
-                  selected={update}
-                  formSubmitted={formSubmitted}
-                  handleClose={() => setUpdate({})}
-                  handleCheck={() => handleUpdate()}
-                  onChange={(_, value) =>
-                    setUpdate({
-                      updatedKey: "abbr",
-                      newAbbr: value,
-                      abbr,
-                      newKey: "newAbbr",
-                      providerID: _id,
-                    })
-                  }
-                />
-              </div>
-            ) : (
-              <MDBBadge
-                style={{ fontSize: "10px" }}
-                onClick={() => {
-                  setUpdate({
-                    updatedKey: "abbr",
-                    newAbbr: abbr,
-                    providerID: _id,
-                  });
+                width="8rem"
+                displayStyle={{
+                  fontSize: "0.7rem",
                 }}
-              >
-                {abbr ? abbr : "N/A"}
-              </MDBBadge>
-            )}
-          </div>
-          {!activeCategory && (
-            <div className="mr-5">
-              <small
-                className={!isWhiteColor && "grey-text"}
-                style={{ fontSize: "0.7rem" }}
-              >
-                Category
-              </small>
-              <h6>{_category}</h6>
+                displayTag="badge"
+                keyForValue="abbr"
+                fieldData={{
+                  abbr,
+                  _id: clients._id,
+                  providerID: _id,
+                }}
+                onSave={(editedData) => handleUpdate(editedData, false)}
+              />
             </div>
+          </div>
+          {[
+            {
+              label: "Membership",
+              keys: "membership",
+              values: "text",
+              collections: Memberships.map(({ value, text }) => ({
+                membership: value,
+                text,
+              })),
+              width: "7rem",
+            },
+            {
+              label: "Monthly Cutoff",
+              keys: "cutoff",
+              collections: new Array(27).fill(0).map((_, i) => i + 1),
+              width: "2rem",
+            },
+            {
+              label: "Monthly Due Date",
+              collections: new Array(cutoff > 0 ? Number(27 - cutoff) + 1 : 27)
+                .fill(0)
+                .map((_, i) => i + cutoff),
+              keys: "due",
+              width: "2rem",
+            },
+            {
+              label: "Credit",
+              keys: "credit",
+              isMoney: true,
+              isSelect: false,
+            },
+          ].map(
+            (
+              {
+                label,
+                keys,
+                collections,
+                values = "",
+                width = "2rem",
+                tag = "h6",
+                isSelect = true,
+                isMoney = false,
+              },
+              index
+            ) => (
+              <div className="mr-5" key={index}>
+                <small
+                  style={{ fontSize: "0.7rem" }}
+                  className={!isWhiteColor && "grey-text"}
+                >
+                  {label}
+                </small>
+                {isSelect ? (
+                  <EditableSelect
+                    collections={collections}
+                    className="m-0 p-0"
+                    isEditable={true}
+                    fieldData={{ [keys]: insource[keys], _id }}
+                    keys={keys}
+                    values={values}
+                    formSubmitted={formSubmitted}
+                    onSave={(editedData) => handleUpdate(editedData)}
+                    selectStyle={{ width }}
+                    isMoney={isMoney}
+                  />
+                ) : (
+                  <EditableField
+                    tag={tag}
+                    width="8rem"
+                    className="mt-2 form-control form-control-sm"
+                    formSubmitted={formSubmitted}
+                    isMoney={isMoney}
+                    keyForValue="credit"
+                    fieldData={{ [keys]: insource[keys], _id }}
+                    onSave={(editedData) => handleUpdate(editedData)}
+                  />
+                )}
+              </div>
+            )
           )}
-          <div className="mr-5">
-            <small
-              style={{ fontSize: "0.7rem" }}
-              className={!isWhiteColor && "grey-text"}
-            >
-              Membership
-            </small>
-            {update?.updatedKey === "membership" &&
-            update?.providerID === _id ? (
-              <Select
-                className="m-0 p-0"
-                collections={Memberships}
-                preValue={update.updatedValue}
-                handleCheck={() => handleUpdate()}
-                handleClose={() => setUpdate({})}
-                formSubmitted={formSubmitted}
-                onChange={(value) =>
-                  setUpdate({
-                    updatedKey: "membership",
-                    newMembership: value,
-                    membership,
-                    newKey: "newMembership",
-                    providerID: _id,
-                  })
-                }
-                values={"text"}
-                soloUpdate
-                keys={"value"}
-              />
-            ) : (
-              <h6
-                onClick={() => {
-                  setUpdate({
-                    updatedKey: "membership",
-                    updatedValue: membership,
-                    providerID: _id,
-                  });
-                }}
-              >
-                {membership ? capitalize(membership) : "N/A"}
-              </h6>
-            )}
-          </div>
-          <div className="mr-5">
-            <small
-              style={{ fontSize: "0.7rem" }}
-              className={!isWhiteColor && "grey-text"}
-            >
-              Monthly Cutoff
-            </small>
-            {update?.updatedKey === "cutoff" && update?.providerID === _id ? (
-              <div style={{ width: "6rem" }}>
-                <Select
-                  className="m-0 p-0"
-                  collections={new Array(27).fill(0).map((_, i) => i + 1)}
-                  preValue={update.updatedValue}
-                  handleCheck={() => handleUpdate()}
-                  handleClose={() => setUpdate({})}
-                  formSubmitted={formSubmitted}
-                  onChange={(value) =>
-                    setUpdate({
-                      updatedKey: "cutoff",
-                      newCutoff: value,
-                      cutoff,
-                      newKey: "newCutoff",
-                      providerID: _id,
-                    })
-                  }
-                  soloUpdate
-                />
-              </div>
-            ) : (
-              <h6
-                onClick={() => {
-                  setUpdate({
-                    updatedKey: "cutoff",
-                    updatedValue: cutoff,
-                    providerID: _id,
-                  });
-                }}
-              >
-                {cutoff ? cutoff : "N/A"}
-              </h6>
-            )}
-          </div>
-          <div className="mr-5">
-            <small
-              style={{ fontSize: "0.7rem" }}
-              className={!isWhiteColor && "grey-text"}
-            >
-              Monthly Due Date
-            </small>
-            {update?.updatedKey === "due" && update?.providerID === _id ? (
-              <div style={{ width: "6rem" }}>
-                <Select
-                  className="m-0 p-0"
-                  collections={new Array(27).fill(0).map((_, i) => i + 1)}
-                  preValue={update.updatedValue}
-                  handleCheck={() => handleUpdate()}
-                  handleClose={() => setUpdate({})}
-                  formSubmitted={formSubmitted}
-                  onChange={(value) =>
-                    setUpdate({
-                      updatedKey: "due",
-                      newDue: value,
-                      due,
-                      newKey: "newDue",
-                      providerID: _id,
-                    })
-                  }
-                  soloUpdate
-                />
-              </div>
-            ) : (
-              <h6
-                onClick={() => {
-                  setUpdate({
-                    updatedKey: "due",
-                    updatedValue: due,
-                    providerID: _id,
-                  });
-                }}
-              >
-                {due ? due : "N/A"}
-              </h6>
-            )}
-          </div>
-          <div>
-            <small
-              style={{ fontSize: "0.7rem" }}
-              className={!isWhiteColor && "grey-text"}
-            >
-              Credit
-            </small>
-            {update.updatedKey === "credit" && update?.providerID === _id ? (
-              <div style={{ width: "9rem" }}>
-                <Input
-                  _key={"newCredit"}
-                  className="mt-2 form-control form-control-sm"
-                  type="number"
-                  selected={update}
-                  formSubmitted={formSubmitted}
-                  handleClose={() => setUpdate({})}
-                  handleCheck={() => handleUpdate()}
-                  onChange={(_, value) =>
-                    setUpdate({
-                      updatedKey: "credit",
-                      credit,
-                      newCredit: Number(value),
-                      newKey: "newCredit",
-                      providerID: _id,
-                    })
-                  }
-                />
-              </div>
-            ) : (
-              <h6
-                onClick={() => {
-                  setUpdate({
-                    updatedKey: "credit",
-                    newCredit: credit,
-                    providerID: _id,
-                  });
-                }}
-              >
-                {credit ? currency(credit) : "N/A"}
-              </h6>
-            )}
-          </div>
+
           {isGhost && (
             <span
               style={{ fontSize: "20px" }}

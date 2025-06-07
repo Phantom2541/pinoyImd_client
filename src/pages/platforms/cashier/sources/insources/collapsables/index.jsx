@@ -171,15 +171,9 @@ export default function MenuCollapse() {
     });
   };
 
-  const handleUpdateClient = () => {
-    const { newName, displayname, providerID } = update;
-    if (displayname.toLowerCase() === newName.toLowerCase()) {
-      setUpdate({});
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-    dispatch(UPDATE({ data: { ...update, displayname: newName }, token }))
+  const handleUpdateClient = (editedData) => {
+    const { providerID } = editedData;
+    dispatch(UPDATE({ data: { ...editedData }, token }))
       .then(({ payload: branch }) => {
         dispatch(
           SetBRANCHES({
@@ -194,20 +188,10 @@ export default function MenuCollapse() {
       .catch((error) => console.error("Update Error:", error));
   };
 
-  const handleUpdate = () => {
-    const { providerID, updatedKey, newKey } = update;
-    const oldValue = update[updatedKey] || "";
-    const newValue = update[newKey] || "";
-
-    if (String(oldValue)?.toLowerCase() === String(newValue)?.toLowerCase()) {
-      setUpdate({});
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
+  const handleUpdate = (editedData) => {
     dispatch(
       SPECIFIC_UPDATE({
-        data: { _id: providerID, [updatedKey]: update[newKey], updatedKey },
+        data: editedData,
         token,
       })
     );
@@ -247,8 +231,10 @@ export default function MenuCollapse() {
                 setSelected={setSelected}
                 update={update}
                 setUpdate={setUpdate}
-                handleUpdate={(isSpecific = true) =>
-                  isSpecific ? handleUpdate() : handleUpdateClient()
+                handleUpdate={(editedData, isSpecific = true) =>
+                  isSpecific
+                    ? handleUpdate(editedData)
+                    : handleUpdateClient(editedData)
                 }
                 registerGhostCompany={registerGhostCompany}
                 formSubmitted={formSubmitted || formSubmittedBranch}

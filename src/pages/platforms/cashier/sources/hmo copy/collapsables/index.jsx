@@ -22,15 +22,14 @@ import { fullName } from "../../../../../../services/utilities";
 import Header from "./header";
 
 export default function MenuCollapse() {
-  const { token, maxPage } = useSelector(({ auth }) => auth),
+  const { token } = useSelector(({ auth }) => auth),
     {
-      filtered,
+      collections,
       searchResults,
       didSearch,
       formSubmitted,
       isSuccess,
       message,
-      activePage,
     } = useSelector(({ providers }) => providers),
     { formSubmitted: formSubmittedBranch, isSuccess: isSuccessBranch } =
       useSelector(({ branches }) => branches),
@@ -46,9 +45,9 @@ export default function MenuCollapse() {
     if (didSearch && searchResults.length > 0) {
       setInsources(searchResults || []);
     } else {
-      setInsources(filtered || []);
+      setInsources(collections || []);
     }
-  }, [filtered, didSearch, searchResults]);
+  }, [collections, didSearch, searchResults]);
 
   useEffect(() => {
     if (message) {
@@ -171,9 +170,15 @@ export default function MenuCollapse() {
     });
   };
 
-  const handleUpdateClient = (editedData) => {
-    const { providerID } = editedData;
-    dispatch(UPDATE({ data: { ...editedData }, token }))
+  const handleUpdateClient = () => {
+    const { newName, displayname, providerID } = update;
+    if (displayname.toLowerCase() === newName.toLowerCase()) {
+      setUpdate({});
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
+    dispatch(UPDATE({ data: { ...update, displayname: newName }, token }))
       .then(({ payload: branch }) => {
         dispatch(
           SetBRANCHES({
@@ -188,19 +193,25 @@ export default function MenuCollapse() {
       .catch((error) => console.error("Update Error:", error));
   };
 
-  const handleUpdate = (editedData) => {
+  const handleUpdate = () => {
+    const { providerID, updatedKey, newKey } = update;
+    const oldValue = update[updatedKey] || "";
+    const newValue = update[newKey] || "";
+
+    if (String(oldValue)?.toLowerCase() === String(newValue)?.toLowerCase()) {
+      setUpdate({});
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
+    }
     dispatch(
       SPECIFIC_UPDATE({
-        data: editedData,
+        data: { _id: providerID, [updatedKey]: update[newKey], updatedKey },
         token,
       })
     );
   };
 
-  const itemsPerPage = maxPage; // Number of items per page
-  const startIndex = (activePage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = insources?.slice(startIndex, endIndex); // Get only items for the active page
   return (
     <MDBContainer
       style={{
@@ -208,8 +219,8 @@ export default function MenuCollapse() {
       }}
       fluid
     >
-      {paginatedData?.length > 0 ? (
-        paginatedData?.map((insource, index) => {
+      {insources?.length > 0 ? (
+        insources?.map((insource, index) => {
           const { clients, _id } = insource;
           const isGhost = clients?._id ? false : true;
           const affiliated = clients?.affiliated || [];
@@ -231,10 +242,8 @@ export default function MenuCollapse() {
                 setSelected={setSelected}
                 update={update}
                 setUpdate={setUpdate}
-                handleUpdate={(editedData, isSpecific = true) =>
-                  isSpecific
-                    ? handleUpdate(editedData)
-                    : handleUpdateClient(editedData)
+                handleUpdate={(isSpecific = true) =>
+                  isSpecific ? handleUpdate() : handleUpdateClient()
                 }
                 registerGhostCompany={registerGhostCompany}
                 formSubmitted={formSubmitted || formSubmittedBranch}
@@ -268,7 +277,7 @@ export default function MenuCollapse() {
           );
         })
       ) : (
-        <p className="text-center">No record.</p>
+        <p>No record</p>
       )}
       {/* <Modal toggle={toggle} show={show} selected={ghostCompany} /> */}
     </MDBContainer>

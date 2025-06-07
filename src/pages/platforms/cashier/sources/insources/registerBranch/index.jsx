@@ -40,7 +40,6 @@ export default function Modal() {
       formSubmitted,
       isSuccess,
       category: defaultCategory,
-      categories,
       selected,
       showRegisterModal: show,
     } = useSelector(({ providers }) => providers),
@@ -82,21 +81,14 @@ export default function Modal() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { branchId } = activePlatform;
-    if (!category)
-      return Swal.fire({
-        icon: "warning",
-        title: "Category is required!",
-        text: "Please select a category before proceeding.",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#d33",
-      });
+
     dispatch(
       REGISTER_BRANCH({
         token,
         data: {
           branch: form,
           providerID: form?.providerId || "",
-          category,
+          category: "insource",
           vendors: branchId,
         },
       })
@@ -129,17 +121,7 @@ export default function Modal() {
           </div>
 
           <MDBRow className="mt-4">
-            <MDBCol md="6">
-              <Select
-                label="Category"
-                preValue={category}
-                onChange={(e) => setCategory(e)}
-                keys={"value"}
-                values={"text"}
-                collections={categories}
-              />
-            </MDBCol>
-            <MDBCol md="6">
+            <MDBCol>
               <MDBInput
                 label="Name"
                 required

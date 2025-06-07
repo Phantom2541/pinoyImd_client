@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -23,7 +23,6 @@ import { Select } from "../../../../../../components/customizable";
 import Search from "../../../../../../components/searchables/ao";
 import { Memberships } from "../../../../../../services/fakeDb";
 import Checkbox from "./checkbox";
-import Swal from "sweetalert2";
 
 // declare your expected items
 const _form = {
@@ -40,7 +39,6 @@ export default function Modal() {
   const {
       showModal,
       selected,
-      categories,
       category: defaultCategory,
       formSubmitted,
       isSuccess,
@@ -77,15 +75,6 @@ export default function Modal() {
       delete form.ao;
     }
 
-    if (!category)
-      return Swal.fire({
-        icon: "warning",
-        title: "Category is required!",
-        text: "Please select a category before proceeding.",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#d33",
-      });
-
     dispatch(
       SAVE({
         token,
@@ -93,7 +82,7 @@ export default function Modal() {
           ...form,
           clients: selected._id,
           status: "approved",
-          category,
+          category: "insource",
           vendors: activePlatform.branchId,
         },
       })
@@ -138,16 +127,6 @@ export default function Modal() {
             label="Administrative Officer"
           />
           <MDBRow>
-            <MDBCol>
-              <Select
-                label="Category"
-                preValue={category}
-                onChange={(e) => setCategory(e)}
-                keys={"value"}
-                values={"text"}
-                collections={categories}
-              />
-            </MDBCol>
             <MDBCol>
               <Select
                 collections={Memberships}
