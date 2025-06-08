@@ -10,6 +10,7 @@ import {
 } from "../../../../../../../../services/utilities";
 import {
   Categories,
+  HMO,
   Memberships,
   Privileges,
 } from "../../../../../../../../services/fakeDb";
@@ -110,6 +111,10 @@ export default function PosCard() {
   var baseCategory = Categories[category]?.abbr;
   const hasMembership = ["is", "sbc", "ssc", "hmo"].includes(baseCategory);
   baseCategory = baseCategory === "is" ? "insource" : baseCategory;
+
+  const { branch = {} } = activePlatform;
+  const { companyId = {} } = branch;
+  const { hmo = [] } = companyId;
   return (
     <>
       <div>
@@ -183,7 +188,7 @@ export default function PosCard() {
               ))}
           </select>
         </div>
-        {baseCategory === "hmo" ? (
+        {baseCategory === "wns" ? (
           <div className="patient-form">
             <span>Health Management Organization</span>
             <select
@@ -191,17 +196,11 @@ export default function PosCard() {
               onChange={({ target }) => dispatch(SETHMO(target.value))}
             >
               <option value="">None</option>
-              {sources
-                ?.filter(({ category: c }) => c === "hmo")
-                .map(({ _id, clients, membership }) => (
-                  <option key={_id} value={_id} title={membership}>
-                    {
-                      Memberships.find(({ value }) => value === membership)
-                        ?.emoji
-                    }
-                    {clients?.displayname}
-                  </option>
-                ))}
+              {hmo.map(({ code }) => (
+                <option key={_id} value={code}>
+                  {HMO.getName(code)}
+                </option>
+              ))}
             </select>
           </div>
         ) : (
