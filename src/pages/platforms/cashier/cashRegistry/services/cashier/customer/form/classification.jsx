@@ -127,7 +127,7 @@ export default function PosCard() {
             onChange={({ target }) => dispatch(SETSSX(target.value))}
           />
         </div>
-        <div className="patient-form">
+        <div className="patient-form mt-2">
           <span>Category</span>
           <select
             disabled={!didSelect}
@@ -141,7 +141,7 @@ export default function PosCard() {
             ))}
           </select>
         </div>
-        <div className="patient-form">
+        <div className="patient-form mt-2">
           <span>Privilege</span>
           <select
             disabled={!didSelect}
@@ -168,7 +168,7 @@ export default function PosCard() {
           </select>
         </div>
 
-        <div className="patient-form">
+        <div className="patient-form mt-2">
           <span>Source</span>
           <select
             disabled={!didSelect}
@@ -189,7 +189,7 @@ export default function PosCard() {
           </select>
         </div>
         {baseCategory === "wns" ? (
-          <div className="patient-form">
+          <div className="patient-form mt-2">
             <span>Health Management Organization</span>
             <select
               disabled={!didSelect}
@@ -206,7 +206,7 @@ export default function PosCard() {
         ) : (
           <>
             {source ? (
-              <div className="patient-form">
+              <div className="patient-form mt-2">
                 <span>Physician</span>
                 <select
                   disabled={!didSelect}
@@ -237,41 +237,7 @@ export default function PosCard() {
           </>
         )}
       </div>
-      {_id ? (
-        <div className="mt-2">
-          <MDBRow>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>Birthday:</span>
-                <p>{new Date(dob).toDateString()}</p>
-              </div>
-            </MDBCol>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>Age:</span>
-                <p>{getAge(dob)}</p>
-              </div>
-            </MDBCol>
-          </MDBRow>
-          <MDBRow>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>{_mobile ? "Contact Number" : "E-mail address"}:</span>
-                <p>{_mobile ? mobile(_mobile) : email}</p>
-              </div>
-            </MDBCol>
-          </MDBRow>
-          <MDBRow>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>Address:</span>
-
-                <p>{fullAddress(address)}</p>
-              </div>
-            </MDBCol>
-          </MDBRow>
-        </div>
-      ) : (
+      {!_id && (
         <MDBTypography note noteColor="info" className="mt-3 mb-0">
           Please search a patron first.
         </MDBTypography>

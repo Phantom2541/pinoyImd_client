@@ -12,13 +12,14 @@ import {
   MDBDatePicker,
 } from "mdbreact";
 import { ToggleMODAL as TOGGLE } from "../../../../../services/redux/slices/finance/journals/soa";
-import { useToasts } from "react-toast-notifications";
 import cash from "../../../../../assets/paymentMethods/cash.png";
 import transfer from "../../../../../assets/paymentMethods/transfer.png";
 import gcash from "../../../../../assets/paymentMethods/gcash.png";
 import cheque from "../../../../../assets/paymentMethods/cheque.png";
 import { currency } from "../../../../../services/utilities";
 import "./style.css";
+import { UPDATE } from "../../../../../services/redux/slices/finance/journals/soa";
+import Spinner from "../../../../../components/spinner";
 
 const paymentMethods = [
   { text: "Cash", img: cash },
@@ -27,11 +28,17 @@ const paymentMethods = [
   { text: "Cheque", img: cheque },
 ];
 
+const _form = {
+  method: "cash",
+  amount: 0,
+  chequeNo: "",
+  clearDate: new Date(),
+};
 export default function PaymentModal() {
-  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { showModal, selected, willCreate } = useSelector(({ soa }) => soa),
-    [form, setForm] = useState(selected),
-    [penalty, setPenalty] = useState(0),
+  const { token } = useSelector(({ auth }) => auth),
+    { showModal, selected, formSubmitted } = useSelector(({ soa }) => soa),
+    [form, setForm] = useState(_form),
+    [totalPaidAmount, setTotalPaidAmount] = useState(0),
     dispatch = useDispatch();
 
   // Handle modal close
@@ -39,38 +46,30 @@ export default function PaymentModal() {
     dispatch(TOGGLE(false));
   }, [dispatch]);
 
-  // Check if payment is past due
   useEffect(() => {
-    setForm({
-      ...selected,
-      orOption: selected?.orOption ? selected?.orOption : "Cash",
-    });
-    if (selected?.due) {
-      const dueDate = new Date(selected.due);
-      const today = new Date();
-      if (dueDate < today) {
-        setPenalty(0); // Default penalty value
-      }
+    if (showModal) {
+      const { payments } = selected;
+      const _total = [...payments].reduce((a, b) => a + b.amount, 0);
+      setTotalPaidAmount(_total);
     }
-  }, [selected, willCreate]);
-
-  // Handle input changes
-  const handleChange = (key, value) => {
-    setForm((prevForm) => ({
-      ...prevForm,
-      [key]: key === "orOption" ? value : Number(value),
-      userId: auth._id,
-      branchId: activePlatform.branchId,
-    }));
-  };
-
-  // Handle update function
-
-  // Handle create function
-
-  // Handle form submit
+  }, [showModal, selected]);
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { method, amount, chequeNo, clearDate } = form;
+    const remaining = selected.amount - (totalPaidAmount + amount);
+    dispatch(
+      UPDATE({
+        token,
+        data: {
+          _id: selected?._id,
+          status: remaining === 0 ? "settled" : "partial",
+          method,
+          amount,
+          createdAt: new Date(),
+          ...(method === "cheque" && { chequeNo, clearDate }),
+        },
+      })
+    );
   };
 
   return (
@@ -98,7 +97,7 @@ export default function PaymentModal() {
               <div className="d-flex align-items-center">
                 <h6 className="grey-text mr-2">Remaining:</h6>
                 <h5 style={{ fontWeight: 400 }} className="text-danger">
-                  {currency(selected?.amount)}
+                  {currency(selected?.amount - totalPaidAmount)}
                 </h5>
               </div>
 
@@ -106,10 +105,10 @@ export default function PaymentModal() {
               <div className="d-flex align-items-center justify-content-center ">
                 {paymentMethods.map(({ img, text }, index) => (
                   <MDBCard
-                    key={index}
-                    onClick={() => handleChange("orOption", text)}
+                    key={`paymentMethods-${index}-${text}`}
+                    onClick={() => setForm({ ...form, method: text })}
                     className={`mr-2 d-flex align-items-center justify-content-center cursor-pointer ${
-                      text === form.orOption
+                      text === form.method
                         ? "active-payment-method"
                         : "payment-method"
                     }`}
@@ -140,10 +139,12 @@ export default function PaymentModal() {
                 type="number"
                 className="mt-2"
                 step="0.01"
-                value={form.amount || ""}
-                onChange={(e) => handleChange("amount", e.target.value)}
+                value={String(form.amount) || ""}
+                onChange={({ target }) =>
+                  setForm({ ...form, amount: Number(target.value) })
+                }
               />
-              {form.orOption === "Cheque" && (
+              {form.method === "Cheque" && (
                 <>
                   <MDBInput
                     label="Cheque No."
@@ -151,11 +152,17 @@ export default function PaymentModal() {
                     className="mt-2"
                     step="0.01"
                     value={form.chequeNo || ""}
-                    onChange={(e) => handleChange("chequeNo", e.target.value)}
+                    onChange={({ target }) =>
+                      setForm({ ...form, chequeNo: target.value })
+                    }
                   />
                   <div className="d-flex align-items-center justify-content-between">
                     <span className="grey-text">Clearing Date:</span>
                     <MDBDatePicker
+                      valueDefault={form.clearDate}
+                      getValue={(value) =>
+                        setForm({ ...form, clearDate: value })
+                      }
                       className=" m-0 p-0"
                       style={{ width: "19rem" }}
                     />
@@ -165,7 +172,7 @@ export default function PaymentModal() {
               <div className="text-center mt-4">
                 <MDBBtn type="submit" color="info" rounded>
                   Pay
-                  {/* <MDBIcon icon="spinner" pulse className="ml-2" /> */}
+                  <Spinner formSubmitted={formSubmitted} />
                 </MDBBtn>
               </div>
             </form>

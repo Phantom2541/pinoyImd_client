@@ -13,13 +13,14 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos.js";
 
 export default function Menus({ patronPresent }) {
-  const { category, privilege, cart, membership } = useSelector(
+  const { category, privilege, cart, membership, hmo } = useSelector(
       ({ pos }) => pos
     ),
     dispatch = useDispatch();
 
   const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
   const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
+
   return (
     <>
       <table className="menus-table">
@@ -61,7 +62,7 @@ export default function Menus({ patronPresent }) {
               up = 0,
               title = "",
               color = "",
-            } = computeGD(item, category, privilege, membership);
+            } = computeGD(item, category, privilege, membership, hmo);
 
             return (
               <tr key={_id}>

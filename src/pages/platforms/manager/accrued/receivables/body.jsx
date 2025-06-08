@@ -47,15 +47,13 @@ const Body = () => {
           ];
           const imageSrc = (type) => paymentMethod.getImage(type).img;
           return (
-            <React.Fragment key={index}>
-              <tr key={index} className={isOpen && "border border-black"}>
-                <td key={index} style={{ fontWeight: 400 }}>
+            <React.Fragment key={`body-${index}`}>
+              <tr className={isOpen ? "border border-black" : ""}>
+                <td style={{ fontWeight: 400 }}>
                   <span className="font-weight-bold ">{index + 1}.</span>
                   <span className="ml-2">{clientId?.name}</span>
                 </td>
-                <td key={index} style={{ fontWeight: 400 }}>
-                  May 2025
-                </td>
+                <td style={{ fontWeight: 400 }}>May 2025</td>
                 <td key={index} style={{ fontWeight: 400 }}>
                   {currency(amount)}{" "}
                 </td>
@@ -72,7 +70,7 @@ const Body = () => {
                         i
                       ) => (
                         <div
-                          key={i}
+                          key={`breakdown-${type}-${i}`}
                           style={{ position: "relative", marginBottom: "12px" }}
                         >
                           <div style={{ position: "relative" }}>
@@ -171,7 +169,7 @@ const Body = () => {
                   </div>
                 </td>
               </tr>
-              <Deals deals={deals} isOpen={isOpen} _id={_id} />
+              <Deals deals={deals} isOpen={isOpen} _id={_id} key={_id} />
             </React.Fragment>
           );
         })}

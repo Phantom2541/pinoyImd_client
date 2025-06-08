@@ -31,6 +31,7 @@ export default function Summary() {
       authorizedBy,
       department,
       membership,
+      hmo,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState("cash"),
@@ -43,7 +44,8 @@ export default function Summary() {
       cart,
       category,
       privilege,
-      membership
+      membership,
+      hmo
     ),
     amount = gross - discount,
     { abbr = undefined } = Categories[category],

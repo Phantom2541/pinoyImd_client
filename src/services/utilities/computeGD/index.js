@@ -1,17 +1,21 @@
 import { Categories, Memberships } from "../../fakeDb";
-
-const individual = (menu, category, privilege, membership) => {
+const getHmoSrp = (menu, code) => {
+  const { hmo = [] } = menu;
+  const match = hmo?.find((obj) => Object.keys(obj)[0] === code);
+  return match ? match[code] : 0;
+};
+const individual = (menu, category, privilege, membership, hmo) => {
   const { isPromo, promo = 0, discountable } = menu;
 
   const _abbr = ["wi", "bp", "mc", "is", "sc"].includes(category)
     ? "opd"
     : category;
-  const gross = menu[_abbr];
 
-  const hasMembership = ["is", "hmo"].includes(category);
+  var gross = menu[_abbr];
+  if (_abbr === "wns") gross = getHmoSrp(menu, hmo);
 
   let up = (gross * 80) / 100;
-  if (membership && hasMembership && discountable) {
+  if (membership && category === "is" && discountable) {
     const dr = Memberships.find((m) => m.value === membership)?.discount || 0;
     const discount = gross * dr;
     up = gross - discount;
@@ -66,14 +70,14 @@ const individual = (menu, category, privilege, membership) => {
   };
 };
 
-const computeGD = (menu, categoryIndex, privilege, membership) => {
+const computeGD = (menu, categoryIndex, privilege, membership, hmo) => {
   const category = Categories[categoryIndex] || {}; // Ensure category is always an object
   // console.log("category", category);
 
   const abbr = category.abbr || ""; // Fallback to an empty string if undefined
 
   if (!Array.isArray(menu))
-    return individual(menu, abbr, privilege, membership);
+    return individual(menu, abbr, privilege, membership, hmo);
 
   const accumulator = {
     gross: 0,
@@ -81,7 +85,13 @@ const computeGD = (menu, categoryIndex, privilege, membership) => {
   };
 
   for (const item of menu) {
-    const { gross, discount } = individual(item, abbr, privilege, membership);
+    const { gross, discount } = individual(
+      item,
+      abbr,
+      privilege,
+      membership,
+      hmo
+    );
     accumulator.gross += gross;
     accumulator.discount += discount;
   }

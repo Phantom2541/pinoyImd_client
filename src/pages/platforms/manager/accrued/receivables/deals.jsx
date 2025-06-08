@@ -29,7 +29,7 @@ const Deals = ({ deals, isOpen, _id }) => {
               {deals.map((deal, index) => {
                 const { customerId, services, amount } = deal;
                 return (
-                  <tr key={deal._id}>
+                  <tr key={`deals-${deal._id}`}>
                     <td style={{ fontWeight: "400", width: "40%" }}>
                       <span className="font-weight-bold mr-2">
                         {index + 1}.

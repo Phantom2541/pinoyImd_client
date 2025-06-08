@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -8,8 +8,6 @@ import {
 import Search from "../../../../../components/searchables/search";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ deals }) => deals),
-    [services, setServices] = useState([]),
     dispatch = useDispatch();
 
   //initial values
@@ -26,10 +24,6 @@ const Header = () => {
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform]);
-
-  useEffect(() => {
-    if (filtered) setServices(filtered);
-  }, [filtered]);
 
   return (
     <MDBView

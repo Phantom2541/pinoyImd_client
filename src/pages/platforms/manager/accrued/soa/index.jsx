@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody, MDBAnimation } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
