@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody, MDBAnimation } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
+import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/billing";
+import { SOA } from "../../../../../../src/services/redux/slices/finance/journals/payables";
 import TableLoading from "../../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./collapse";
 import Footer from "./footer";
-import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/billing";
-import { SOA } from "../../../../../../src/services/redux/slices/finance/journals/payables";
 const Statements = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { isLoading, month, year } = useSelector(({ deals }) => deals),

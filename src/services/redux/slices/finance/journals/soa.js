@@ -255,7 +255,7 @@ export const reduxSlice = createSlice({
           const index = collections.findIndex(
             (item) => item._id === payload._id
           );
-          collections[index] = payload;
+          collections[index] = { ...collections[index], ...payload };
         };
         updateCollections(state.collections);
         updateCollections(state.filtered);

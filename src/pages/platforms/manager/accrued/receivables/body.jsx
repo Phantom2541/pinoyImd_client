@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { MDBTable, MDBBtn, MDBIcon } from "mdbreact";
+import { MDBTable, MDBBtn, MDBIcon, MDBBadge } from "mdbreact";
 import React, { useState } from "react";
 import Deals from "./deals";
 import {
@@ -8,6 +8,7 @@ import {
   paymentMethod,
 } from "../../../../../services/utilities";
 import { SetPAYMENT } from "../../../../../services/redux/slices/finance/journals/soa";
+import { capitalize } from "lodash";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(({ soa }) => soa),
@@ -26,34 +27,42 @@ const Body = () => {
       <thead>
         <tr>
           <th>Client</th>
-          <th>Due Date</th>
           <th>Amount</th>
           <th>Payment </th>
-          <th>Status</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((soa, index) => {
-          const { clientId, due = 2, amount, deals = [], _id } = soa;
+          const {
+            clientId,
+            status,
+            amount,
+            deals = [],
+            _id,
+            payments = [],
+          } = soa;
           const isOpen = activeId === _id;
-          const breakdDown = [
-            { type: "cash", amount: 600, datePaid: dateFormat(new Date()) },
-            {
-              type: "gcash",
-              amount: 1200,
-              datePaid: dateFormat(new Date()),
-            },
-          ];
+
           const imageSrc = (type) => paymentMethod.getImage(type).img;
           return (
             <React.Fragment key={`body-${index}`}>
               <tr className={isOpen ? "border border-black" : ""}>
                 <td style={{ fontWeight: 400 }}>
                   <span className="font-weight-bold ">{index + 1}.</span>
-                  <span className="ml-2">{clientId?.name}</span>
+                  <span className="ml-2">{clientId?.name}</span>{" "}
+                  <MDBBadge
+                    color={
+                      status === "fully_paid"
+                        ? "success"
+                        : status === "partial"
+                        ? "primary"
+                        : "grey"
+                    }
+                  >
+                    {capitalize(status)}
+                  </MDBBadge>
                 </td>
-                <td style={{ fontWeight: 400 }}>May 2025</td>
                 <td key={index} style={{ fontWeight: 400 }}>
                   {currency(amount)}{" "}
                 </td>
@@ -64,9 +73,15 @@ const Body = () => {
                       paddingLeft: "15px",
                     }}
                   >
-                    {breakdDown.map(
+                    {payments.map(
                       (
-                        { type, amount, chequeNo, clearingDate, datePaid },
+                        {
+                          method: type,
+                          amount,
+                          chequeNo,
+                          clearDate,
+                          createdAt,
+                        },
                         i
                       ) => (
                         <div
@@ -100,11 +115,11 @@ const Body = () => {
                                 color: "#888",
                               }}
                             >
-                              {datePaid}
+                              {dateFormat(createdAt)}
                             </span>
                           </div>
 
-                          {type === "cheque" && (
+                          {type.toLowerCase() === "cheque" && (
                             <div
                               style={{
                                 fontSize: "0.85rem",
@@ -114,7 +129,7 @@ const Body = () => {
                               }}
                             >
                               Cheque No: <strong>{chequeNo}</strong> <br />
-                              Clearing: <strong>{clearingDate}</strong>
+                              Clearing: <strong>{dateFormat(clearDate)}</strong>
                             </div>
                           )}
                         </div>
@@ -122,17 +137,20 @@ const Body = () => {
                     )}
                   </div>
                 </td>
-                <td>Unpaid</td>
                 <td>
                   <div className="d-flex justify-content-between">
-                    <MDBBtn
-                      size="sm"
-                      color="info"
-                      rounded
-                      onClick={() => dispatch(SetPAYMENT(soa))}
-                    >
-                      Pay <MDBIcon icon="money-bill-wave" className="ml-1" />
-                    </MDBBtn>
+                    {status !== "settled" ? (
+                      <MDBBtn
+                        size="sm"
+                        color="info"
+                        rounded
+                        onClick={() => dispatch(SetPAYMENT(soa))}
+                      >
+                        Pay <MDBIcon icon="money-bill-wave" className="ml-1" />
+                      </MDBBtn>
+                    ) : (
+                      <div></div>
+                    )}
 
                     <div className="m-0 p-0 d-flex align-items-center">
                       <MDBBtn

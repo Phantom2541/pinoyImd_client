@@ -11,15 +11,18 @@ import {
   MDBIcon,
   MDBDatePicker,
 } from "mdbreact";
+import {
+  UPDATE,
+  RESET,
+} from "../../../../../services/redux/slices/finance/journals/soa";
 import { ToggleMODAL as TOGGLE } from "../../../../../services/redux/slices/finance/journals/soa";
+import { currency } from "../../../../../services/utilities";
 import cash from "../../../../../assets/paymentMethods/cash.png";
 import transfer from "../../../../../assets/paymentMethods/transfer.png";
 import gcash from "../../../../../assets/paymentMethods/gcash.png";
 import cheque from "../../../../../assets/paymentMethods/cheque.png";
-import { currency } from "../../../../../services/utilities";
-import "./style.css";
-import { UPDATE } from "../../../../../services/redux/slices/finance/journals/soa";
 import Spinner from "../../../../../components/spinner";
+import "./style.css";
 
 const paymentMethods = [
   { text: "Cash", img: cash },
@@ -36,20 +39,31 @@ const _form = {
 };
 export default function PaymentModal() {
   const { token } = useSelector(({ auth }) => auth),
-    { showModal, selected, formSubmitted } = useSelector(({ soa }) => soa),
+    { showModal, selected, formSubmitted, isSuccess } = useSelector(
+      ({ soa }) => soa
+    ),
     [form, setForm] = useState(_form),
     [totalPaidAmount, setTotalPaidAmount] = useState(0),
     dispatch = useDispatch();
 
   // Handle modal close
   const handleClose = useCallback(() => {
-    dispatch(TOGGLE(false));
+    dispatch(TOGGLE());
   }, [dispatch]);
 
   useEffect(() => {
+    if (isSuccess && !formSubmitted && showModal) {
+      dispatch(TOGGLE());
+      dispatch(RESET());
+    }
+  }, [isSuccess, formSubmitted, showModal, dispatch]);
+
+  useEffect(() => {
     if (showModal) {
-      const { payments } = selected;
-      const _total = [...payments].reduce((a, b) => a + b.amount, 0);
+      const { payments = [] } = selected;
+      const _total = [...payments]?.reduce((a, b) => a + b.amount, 0);
+      const remaining = selected.amount - _total;
+      setForm((prev) => ({ ...prev, amount: remaining }));
       setTotalPaidAmount(_total);
     }
   }, [showModal, selected]);
@@ -57,6 +71,7 @@ export default function PaymentModal() {
     e.preventDefault();
     const { method, amount, chequeNo, clearDate } = form;
     const remaining = selected.amount - (totalPaidAmount + amount);
+    console.log("remaining", remaining);
     dispatch(
       UPDATE({
         token,
@@ -66,7 +81,7 @@ export default function PaymentModal() {
           method,
           amount,
           createdAt: new Date(),
-          ...(method === "cheque" && { chequeNo, clearDate }),
+          ...(method.toLowerCase() === "cheque" && { chequeNo, clearDate }),
         },
       })
     );
