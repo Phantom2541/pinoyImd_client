@@ -183,7 +183,13 @@ export const reduxSlice = createSlice({
         })
       );
     },
-
+    SetSTATUS: (state, { payload }) => {
+      if (payload === "all") state.filtered = state.collections;
+      else
+        state.filtered = state.collections.filter(
+          ({ status }) => status === payload
+        );
+    },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
     },
@@ -279,6 +285,7 @@ export const {
   SetSoaCluster,
   SetFilterByOUTSOURCE,
   SetSELECTED,
+  SetSTATUS,
   SetPAYMENT,
   ToggleMODAL,
   RESET,

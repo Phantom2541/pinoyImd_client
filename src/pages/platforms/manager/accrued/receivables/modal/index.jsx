@@ -14,14 +14,14 @@ import {
 import {
   UPDATE,
   RESET,
-} from "../../../../../services/redux/slices/finance/journals/soa";
-import { ToggleMODAL as TOGGLE } from "../../../../../services/redux/slices/finance/journals/soa";
-import { currency } from "../../../../../services/utilities";
-import cash from "../../../../../assets/paymentMethods/cash.png";
-import transfer from "../../../../../assets/paymentMethods/transfer.png";
-import gcash from "../../../../../assets/paymentMethods/gcash.png";
-import cheque from "../../../../../assets/paymentMethods/cheque.png";
-import Spinner from "../../../../../components/spinner";
+} from "../../../../../../services/redux/slices/finance/journals/soa";
+import { ToggleMODAL as TOGGLE } from "../../../../../../services/redux/slices/finance/journals/soa";
+import { currency } from "../../../../../../services/utilities";
+import cash from "../../../../../../assets/paymentMethods/cash.png";
+import transfer from "../../../../../../assets/paymentMethods/transfer.png";
+import gcash from "../../../../../../assets/paymentMethods/gcash.png";
+import cheque from "../../../../../../assets/paymentMethods/cheque.png";
+import Spinner from "../../../../../../components/spinner";
 import "./style.css";
 
 const paymentMethods = [
@@ -32,7 +32,7 @@ const paymentMethods = [
 ];
 
 const _form = {
-  method: "cash",
+  method: "Cash",
   amount: 0,
   chequeNo: "",
   clearDate: new Date(),
@@ -63,7 +63,7 @@ export default function PaymentModal() {
       const { payments = [] } = selected;
       const _total = [...payments]?.reduce((a, b) => a + b.amount, 0);
       const remaining = selected.amount - _total;
-      setForm((prev) => ({ ...prev, amount: remaining }));
+      setForm((prev) => ({ ...prev, amount: remaining, method: "Cash" }));
       setTotalPaidAmount(_total);
     }
   }, [showModal, selected]);
@@ -71,7 +71,6 @@ export default function PaymentModal() {
     e.preventDefault();
     const { method, amount, chequeNo, clearDate } = form;
     const remaining = selected.amount - (totalPaidAmount + amount);
-    console.log("remaining", remaining);
     dispatch(
       UPDATE({
         token,

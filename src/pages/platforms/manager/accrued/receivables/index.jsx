@@ -6,7 +6,7 @@ import { RESET } from "../../../../../services/redux/slices/finance/journals/soa
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
-import PaymentModal from "./payments";
+import PaymentModal from "./modal";
 import TableLoading from "../../../../../components/tableLoading";
 
 const Index = () => {

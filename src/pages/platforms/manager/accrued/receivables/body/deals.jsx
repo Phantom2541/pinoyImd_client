@@ -5,8 +5,8 @@ import {
   MDBTableBody,
   MDBBadge,
 } from "mdbreact";
-import { currency, fullName } from "../../../../../services/utilities";
-import { Services } from "../../../../../services/fakeDb";
+import { currency, fullName } from "../../../../../../services/utilities";
+import { Services } from "../../../../../../services/fakeDb";
 
 const Deals = ({ deals, isOpen, _id }) => {
   return (

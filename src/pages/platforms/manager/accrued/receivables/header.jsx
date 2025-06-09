@@ -4,6 +4,7 @@ import { MDBView } from "mdbreact";
 import {
   BROWSE,
   RESET,
+  SetSTATUS,
 } from "../../../../../services/redux/slices/finance/journals/soa";
 import Search from "../../../../../components/searchables/search";
 const Header = () => {
@@ -30,12 +31,24 @@ const Header = () => {
       cascade
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4  d-flex justify-content-between align-items-center"
     >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+      <div className="d-flex justify-items-center">
         <span className="white-text mx-3 text-nowrap mt-0">
           Account Receivable List
         </span>
       </div>
-      <div>
+      <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center">
+          <span className="mr-2">Status:</span>
+          <select
+            className="form-control mr-4 bg-light"
+            onChange={({ target }) => dispatch(SetSTATUS(target.value))}
+          >
+            <option value="all">All</option>
+            <option value="sent">Sent</option>
+            <option value="partial">Partial</option>
+            <option value="settled">Settled</option>
+          </select>
+        </div>
         <div className="text-right d-flex items-center">
           <Search />
         </div>

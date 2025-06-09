@@ -2,13 +2,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBTable, MDBBtn, MDBIcon, MDBBadge } from "mdbreact";
 import React, { useState } from "react";
 import Deals from "./deals";
-import {
-  currency,
-  dateFormat,
-  paymentMethod,
-} from "../../../../../services/utilities";
-import { SetPAYMENT } from "../../../../../services/redux/slices/finance/journals/soa";
+import { currency, paymentMethod } from "../../../../../../services/utilities";
+import { SetPAYMENT } from "../../../../../../services/redux/slices/finance/journals/soa";
 import { capitalize } from "lodash";
+import PaymentDetails from "./paymentDetails";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(({ soa }) => soa),
@@ -43,7 +40,8 @@ const Body = () => {
             payments = [],
           } = soa;
           const isOpen = activeId === _id;
-
+          const totalPaid = [...payments].reduce((a, b) => a + b.amount, 0);
+          const remaining = amount - totalPaid;
           const imageSrc = (type) => paymentMethod.getImage(type).img;
           return (
             <React.Fragment key={`body-${index}`}>
@@ -53,7 +51,7 @@ const Body = () => {
                   <span className="ml-2">{clientId?.name}</span>{" "}
                   <MDBBadge
                     color={
-                      status === "fully_paid"
+                      status === "settled"
                         ? "success"
                         : status === "partial"
                         ? "primary"
@@ -67,75 +65,17 @@ const Body = () => {
                   {currency(amount)}{" "}
                 </td>
                 <td>
-                  <div
-                    style={{
-                      borderLeft: "2px solid #ccc",
-                      paddingLeft: "15px",
-                    }}
-                  >
-                    {payments.map(
-                      (
-                        {
-                          method: type,
-                          amount,
-                          chequeNo,
-                          clearDate,
-                          createdAt,
-                        },
-                        i
-                      ) => (
-                        <div
-                          key={`breakdown-${type}-${i}`}
-                          style={{ position: "relative", marginBottom: "12px" }}
-                        >
-                          <div style={{ position: "relative" }}>
-                            <span
-                              className="bg-primary"
-                              style={{
-                                display: "inline-block",
-                                width: "10px",
-                                height: "10px",
-                                borderRadius: "50%",
-                                position: "absolute",
-                                left: "-18px",
-                                top: "3px",
-                              }}
-                            ></span>
-                            <img
-                              src={imageSrc(type)}
-                              alt={`no-image-${type}`}
-                              className="mr-2"
-                              style={{ height: "0.8rem" }}
-                            />
-                            ₱{amount.toLocaleString()}
-                            <span
-                              style={{
-                                float: "right",
-                                fontSize: "0.75rem",
-                                color: "#888",
-                              }}
-                            >
-                              {dateFormat(createdAt)}
-                            </span>
-                          </div>
-
-                          {type.toLowerCase() === "cheque" && (
-                            <div
-                              style={{
-                                fontSize: "0.85rem",
-                                color: "#555",
-                                marginLeft: "10px",
-                                marginTop: "4px",
-                              }}
-                            >
-                              Cheque No: <strong>{chequeNo}</strong> <br />
-                              Clearing: <strong>{dateFormat(clearDate)}</strong>
-                            </div>
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
+                  <strong>Amount:</strong> ₱{totalPaid.toLocaleString()}{" "}
+                  {remaining ? (
+                    <>
+                      &nbsp;|&nbsp;
+                      <strong className="text-danger">Remaining:</strong> ₱
+                      {remaining.toLocaleString()}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  <PaymentDetails payments={payments} imageSrc={imageSrc} />
                 </td>
                 <td>
                   <div className="d-flex justify-content-between">
