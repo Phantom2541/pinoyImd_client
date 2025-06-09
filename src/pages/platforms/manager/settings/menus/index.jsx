@@ -15,6 +15,7 @@ import Pagination from "../../../../../components/pagination";
 import Swal from "sweetalert2";
 import Search from "../../../../../components/searchables/search";
 import TableLoading from "../../../../../components/tableLoading";
+import { fullName, MenusToExcel } from "../../../../../services/utilities";
 
 const Menus = () => {
   const [menus, setMenus] = useState([]),
@@ -25,7 +26,7 @@ const Menus = () => {
     [totalPages, setTotalPages] = useState(1),
     [willCreate, setWillCreate] = useState(true),
     [visible, setVisible] = useState(false),
-    { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
+    { token, activePlatform, maxPage, auth } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading, filtered } = useSelector(
       ({ menus }) => menus
     ),
@@ -105,7 +106,12 @@ const Menus = () => {
   // const handleGenerate = () => {
   //   setVisible(!visible);
   // };
-
+  const handleExport = () => {
+    MenusToExcel({
+      array: collections,
+      createdBy: fullName(auth.fullName),
+    });
+  };
   const handleChangePage = (isAdd) => {
     setPage((prev) => (isAdd ? prev + 1 : prev - 1));
   };
@@ -144,18 +150,18 @@ const Menus = () => {
             >
               <MDBIcon icon="plus" className="mt-0" />
             </MDBBtn>
-            {/* <MDBBtn
-              onClick={handleGenerate}
+            <MDBBtn
+              onClick={handleExport}
               disabled={isLoading}
               outline
-              title="Generate"
               color="white"
               rounded
               size="sm"
               className="px-2"
+              title="Export Menus"
             >
-              <MDBIcon icon="arrow-down" className="mt-0" />
-            </MDBBtn> */}
+              <MDBIcon icon="file-export" />
+            </MDBBtn>
           </div>
         </MDBView>
         <MDBCardBody className="pb-0">

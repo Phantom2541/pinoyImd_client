@@ -1,4 +1,4 @@
-import { orderBy, sortBy } from "lodash";
+import { orderBy } from "lodash";
 import { dateFormat } from "../../../../../../services/utilities";
 
 const PaymentDetails = ({ payments, imageSrc = () => {} }) => {
