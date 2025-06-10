@@ -157,23 +157,37 @@ const cashier = [
         path: "/insources",
         icon: "warehouse",
         title: "List of Companies who send out their services",
-        component: Insources,
-      },
-      {
-        name: "Contract",
-        path: "/contract",
-        icon: "handshake",
-        title: "List of Companies who send out their services",
-        component: Contract,
+        children: [
+          {
+            name: "Wellness",
+            path: "/wellness",
+            icon: "hospital",
+            title: "List of Companies who have HMO",
+            // component: HMO,
+          },
+          {
+            name: "Membership",
+            path: "/membership",
+            icon: "handshake",
+            title: "List of Companies who send their employees",
+            component: Insources,
+          },
+          {
+            name: "Contract",
+            path: "/contract",
+            icon: "handshake",
+            title: "List of Laboratory who send out their services",
+            component: Contract,
+          },
+        ],
       },
       {
         name: "HMO",
         path: "/hmo",
         icon: "hospital",
-        title: "Health Management Organization",
+        title: "List of Companies who have HMO",
         component: HMO,
       },
-
       {
         name: "Suppliers",
         path: "/suppliers",
