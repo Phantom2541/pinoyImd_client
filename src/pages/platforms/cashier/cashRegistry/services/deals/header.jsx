@@ -60,7 +60,7 @@ const Header = () => {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <i>Patient List</i>
+        <i>Transactions List</i>
       </div>
       <div>
         <div className="text-right d-flex items-center">
