@@ -22,7 +22,7 @@ const Header = () => {
           token,
           key: {
             vendors: activePlatform?.branchId,
-            categories: ["insource"],
+            categories: ["mbs"],
           },
         })
       );

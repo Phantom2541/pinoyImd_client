@@ -128,20 +128,6 @@ export default function PosCard() {
           />
         </div>
         <div className="patient-form mt-2">
-          <span>Category</span>
-          <select
-            disabled={!didSelect}
-            value={category}
-            onChange={({ target }) => handleCategory(Number(target.value))}
-          >
-            {Categories.map(({ name, color }, index) => (
-              <option value={index} key={`category-${index}`} style={{ color }}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="patient-form mt-2">
           <span>Privilege</span>
           <select
             disabled={!didSelect}
@@ -167,7 +153,20 @@ export default function PosCard() {
             })}
           </select>
         </div>
-
+        <div className="patient-form mt-2">
+          <span>Category</span>
+          <select
+            disabled={!didSelect}
+            value={category}
+            onChange={({ target }) => handleCategory(Number(target.value))}
+          >
+            {Categories.map(({ name, color }, index) => (
+              <option value={index} key={`category-${index}`} style={{ color }}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="patient-form mt-2">
           <span>Source</span>
           <select
@@ -188,7 +187,7 @@ export default function PosCard() {
               ))}
           </select>
         </div>
-        {baseCategory === "wns" ? (
+        {baseCategory === "wls" ? (
           <div className="patient-form mt-2">
             <span>Health Management Organization</span>
             <select

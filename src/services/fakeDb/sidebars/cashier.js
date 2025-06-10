@@ -179,6 +179,13 @@ const cashier = [
             title: "List of Laboratory who send out their services",
             component: Contract,
           },
+          {
+            name: "Referrals",
+            path: "/referrals",
+            icon: "handshake",
+            title: "List of Medical Providers who send thier clients",
+            // component: Referrals,
+          },
         ],
       },
       {
