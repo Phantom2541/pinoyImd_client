@@ -8,6 +8,10 @@ import {
   RESET,
   SetFILTERED,
 } from "../../../../../services/redux/slices/commerce/catalog/menus";
+import {
+  INSOURCE as BROWSE_PROVIDERS,
+  RESET as RESET_PROVIDERS,
+} from "../../../../../services/redux/slices/assets/providers";
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
 import TableRowCount from "../../../../../components/pagination/rows";
@@ -54,6 +58,24 @@ const Menus = () => {
     }
 
     return () => dispatch(RESET());
+  }, [token, dispatch, activePlatform]);
+
+  //Initial Browse
+  useEffect(() => {
+    if (token && activePlatform?.branchId) {
+      dispatch(
+        BROWSE_PROVIDERS({
+          token,
+          key: {
+            vendors: activePlatform?.branchId,
+            status: "approved",
+            categories: ["ctr", "mbs", "wls"],
+          },
+        })
+      );
+    }
+
+    return () => dispatch(RESET_PROVIDERS());
   }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping

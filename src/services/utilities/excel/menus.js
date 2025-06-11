@@ -1,12 +1,14 @@
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import fullName from "../fullName";
-import { Privileges, Services } from "../../fakeDb";
-import currency from "../currency";
-import logo from "../../../assets/failedLogo.png";
-import axios from "axios";
-import { ENDPOINT } from "..";
+import { HMO, Services } from "../../fakeDb";
+import { ENDPOINT, mobile } from "..";
 
+const border = {
+  top: { style: "thin" },
+  left: { style: "thin" },
+  right: { style: "thin" },
+  bottom: { style: "thin" },
+};
 const getBanner = async () => {
   try {
     const { branch } = JSON.parse(
@@ -59,10 +61,44 @@ const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     return result;
   };
 
+const handleHeader = (worksheet, form) => {
+  const { menuType, hmo } = form;
+  const generateStaticCell = (mergeCell, label, value, position = "left") => {
+    worksheet.mergeCells(mergeCell);
+    const startCell = mergeCell.split(":")[0];
+    const data = worksheet.getCell(startCell);
+
+    // Set rich text value
+    data.value = {
+      richText: [
+        { text: `${label}: `, font: { bold: true, size: 13 } },
+        { text: value, font: { bold: false, size: 13 } },
+      ],
+    };
+
+    data.border = border;
+    data.alignment = { horizontal: position, vertical: "middle" };
+  };
+
+  if (menuType === "hmo") {
+    const { branch = {} } = JSON.parse(localStorage.getItem("activePlatform"));
+    const { companyId = {} } = branch;
+    const { hmo: h } = companyId;
+    const { cp } = h.find(({ code }) => code === hmo) || {};
+    const { phone, agent } = cp;
+    generateStaticCell("A5:C5", "Name", HMO.getName(hmo));
+    generateStaticCell("D5:H5", "Contact Person", agent);
+    generateStaticCell("I5:L5", "Phone No.", mobile(phone));
+  }
+};
+
 const set = {
-  image: async ({ worksheet, workbook }) => {
+  image: async ({ worksheet, workbook, form }) => {
     // Load image from public folder
     try {
+      const { priceCategories = [], menuType = "" } = form;
+      const isInhouse = menuType === "inhouse";
+
       const image = await getBanner();
       const base64 = image.replace(/^data:image\/\w+;base64,/, "");
 
@@ -71,7 +107,6 @@ const set = {
         extension: "png",
       });
 
-      // ✅ Insert image into worksheet
       worksheet.mergeCells("A1:J4");
       const borderedCell = worksheet.getCell("A1");
       borderedCell.border = {
@@ -81,43 +116,53 @@ const set = {
         right: { style: "thin" },
       };
 
-      // Add image using cell-based positioning (no static width/height)
+      const additionalCol = isInhouse ? priceCategories.length * 2 : 2;
+
       worksheet.addImage(imageId, {
         tl: { col: 0, row: 0.05 }, // A4 = col 0, row 3 (zero-based)
-        br: { col: 12, row: 4 }, // J4 = col 9, so br.col = 10 (non-inclusive), row 4 = next row
+        br: { col: 10 + additionalCol, row: 4 },
       });
-
-      console.log("Image successfully added to Excel!");
     } catch (err) {
       console.error("Failed to add image to Excel:", err);
     }
   },
-  banner: ({ worksheet }) => {
-    const border = {
-      top: { style: "thin" },
-      left: { style: "thin" },
-      right: { style: "thin" },
-      bottom: { style: "thin" },
-    };
-    worksheet.mergeCells("A5:L5");
-    const title = worksheet.getCell("A5");
+  banner: ({ worksheet, form }) => {
+    const { priceCategories = [], menuType } = form;
+    const isInhouse = menuType === "inhouse";
+
+    const baseColumns = 10; // A to J → index 0 to 9
+    const extraColumns = priceCategories.length * 2;
+    const endColIndex = baseColumns + extraColumns - 1; // zero-based index
+    const endColumnLetter = getAlpha(endColIndex); // e.g., "P"
+
+    if (!isInhouse) handleHeader(worksheet, form);
+
+    const column = isInhouse ? 5 : 6;
+
+    worksheet.mergeCells(
+      `A${column}:${isInhouse ? endColumnLetter : "L"}${column}`
+    );
+    const title = worksheet.getCell(`A${column}`);
     title.value = "MENUS PRICE LIST";
     title.font = { bold: true, size: 20 };
     title.border = border;
     title.alignment = { horizontal: "center" };
   },
-  main: ({ worksheet, menus }) => {
+  main: ({ worksheet, menus, form }) => {
+    const { priceCategories = [], menuType = "", hmo = "" } = form;
+    const isInhouse = menuType === "inhouse";
+    const isHMO = menuType === "hmo";
     worksheet.addRow([]);
     worksheet.addRow([]);
 
-    let startingRow = 6;
+    let startingRow = isInhouse ? 6 : 7;
 
     let prevCol = 0;
 
     const headers = [
       { text: "Name", space: 6 },
       { text: "Services", space: 4 },
-      { text: "SRP", space: 2 },
+      ...(isInhouse ? priceCategories : [{ text: "Srp", space: 2 }]),
     ];
 
     for (const { text, space = 2 } of headers) {
@@ -131,13 +176,7 @@ const set = {
         wrapText: true,
       };
       head.font = { bold: true, size: 12 };
-      head.border = {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        right: { style: "thin" },
-        bottom: { style: "thin" },
-      };
-
+      head.border = border;
       if (space > 1) {
         worksheet.mergeCells(
           `${headPos}:${getAlpha(prevCol + space - 1)}${startingRow}`
@@ -147,25 +186,47 @@ const set = {
       prevCol += space;
     }
 
+    const handlePrices = (obj) => {
+      if (isInhouse) {
+        return priceCategories.map(({ value }) => obj?.[value]);
+      }
+      if (isHMO) {
+        return [HMO.getSrp(hmo, obj?.hmo)];
+      }
+    };
+
     processArray(menus, startingRow + 1);
 
     function processArray(array, startPos) {
       for (let i = 0; i < array?.length; i++) {
         const {
           packages,
-          opd,
           description: name = "",
           abbreviation = "",
         } = array[i] || {};
 
-        const services = Services.whereIn(packages)
-          .map((service) => service.abbreviation)
-          .join(",");
+        const rawServices = Services.whereIn(packages);
 
-        const element = [`${i + 1}. ${name || abbreviation}`, services, opd];
+        // Build richText with A., B., C. labels in bold
+        const servicesRichText = rawServices.flatMap((service, index) => {
+          const label = String.fromCharCode(65 + index); // A, B, C...
+          return [
+            { text: `${label}. `, font: { bold: true } },
+            {
+              text: service.abbreviation + " ",
+              // (index !== rawServices.length - 1 ? ", " : ""),
+            },
+          ];
+        });
+
+        const element = [
+          `${i + 1}. ${name || abbreviation}`,
+          { richText: servicesRichText },
+          ...handlePrices(array[i]),
+        ];
 
         let _prevCol = 0;
-        let maxLength = 0; // Reset for each row
+        let maxLength = 0;
 
         for (let j = 0; j < element.length; j++) {
           const value = element[j];
@@ -175,26 +236,28 @@ const set = {
 
           cell.font = { size: 13 };
 
-          if (j === 2) {
+          if (j > 1) {
             cell.numFmt = '"₱"#,##0.00';
           }
 
           cell.value = value;
+
           cell.alignment = {
             horizontal: "left",
             vertical: "middle",
             wrapText: true,
           };
 
-          cell.border = {
-            top: { style: "thin" },
-            left: { style: "thin" },
-            right: { style: "thin" },
-            bottom: { style: "thin" },
-          };
+          cell.border = border;
 
-          if (typeof value === "string" && value.length > maxLength) {
-            maxLength = value.length;
+          // Only count plain string lengths for height calculation
+          const valueLength =
+            typeof value === "string"
+              ? value.length
+              : value?.richText?.map((t) => t.text).join("").length || 0;
+
+          if (valueLength > maxLength) {
+            maxLength = valueLength;
           }
 
           if (space > 1) {
@@ -206,12 +269,11 @@ const set = {
           _prevCol += space;
         }
 
-        // 🔧 Adjust row height based on content length
-        const charsPerLine = 32; // Fewer chars per line = more frequent wrapping
+        // Adjust row height
+        const charsPerLine = 32;
         const lines = Math.ceil(maxLength / charsPerLine);
-
-        const baseHeight = 22; // Slightly taller than default
-        const lineHeight = 13; // Slightly reduced line gap
+        const baseHeight = 22;
+        const lineHeight = 13;
 
         worksheet.getRow(startPos).height =
           baseHeight + (lines - 1) * lineHeight;
@@ -249,8 +311,8 @@ const set = {
         }),
       },
       {
-        label: "Valid Until: ",
-        value: validUntil,
+        label: "Remarks: ",
+        value: `This price list is valid until ${validUntil}`,
       },
     ];
 
@@ -269,8 +331,14 @@ const set = {
   },
 };
 // options list
-const excel = async ({ array = [], createdBy }) => {
+
+const filterMenus = ({ array = [], form }) => {
+  return array.filter((menu) => HMO.getSrp(form.hmo, menu?.hmo) > 0);
+};
+const excel = async ({ array = [], form, createdBy }) => {
   if (!array.length) return;
+  const isInhouse = form.menuType === "inhouse";
+  const menus = isInhouse ? array : filterMenus({ array, form });
 
   const workbook = new ExcelJS.Workbook(),
     worksheet = workbook.addWorksheet("Price List");
@@ -278,11 +346,11 @@ const excel = async ({ array = [], createdBy }) => {
   //  Set the showGridLines property to false to hide grid lines
   worksheet.views = [{ showGridLines: false }];
 
-  await set.image({ worksheet, workbook });
-  set.banner({ worksheet });
-  set.main({ worksheet, menus: array });
+  await set.image({ worksheet, workbook, form });
+  set.banner({ worksheet, form });
+  set.main({ worksheet, menus, form });
 
-  const skip = array.length + 7;
+  const skip = menus.length + (isInhouse ? 7 : 8);
   set.footer({ worksheet, skip, createdBy });
 
   // Save the workbook
