@@ -74,7 +74,7 @@ export const SAVE = createAsyncThunk(
 
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
-    return axioKit.update(url, form.data, form.token, "update_dealOutSource");
+    return axioKit.update(url, form.data, form.token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -183,10 +183,22 @@ export const reduxSlice = createSlice({
         })
       );
     },
-
+    SetSTATUS: (state, { payload }) => {
+      if (payload === "all") state.filtered = state.collections;
+      else
+        state.filtered = state.collections.filter(
+          ({ status }) => status === payload
+        );
+    },
     SetSELECTED: (state, { payload }) => {
-      console.log("selected paylaod:", payload);
       state.selected = payload;
+    },
+    SetPAYMENT: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+    },
+    ToggleMODAL: (state) => {
+      state.showModal = !state.showModal;
     },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
@@ -245,23 +257,14 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const getIndex = (collections) =>
-          collections.findIndex((item) => item._id === payload._id);
-
-        const collectionIndex = getIndex(state.collections);
-        const filteredIndex = getIndex(state.filtered);
-
-        const existingSoa = state.collections[collectionIndex];
-        const existingFiltered = state.filtered[filteredIndex];
-
-        state.collections[collectionIndex] = {
-          ...existingSoa,
-          services: payload,
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
+          collections[index] = { ...collections[index], ...payload };
         };
-        state.filtered[filteredIndex] = {
-          ...existingFiltered,
-          services: payload,
-        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
         state.message = success;
         state.formSubmitted = false;
         state.isSuccess = true;
@@ -282,6 +285,9 @@ export const {
   SetSoaCluster,
   SetFilterByOUTSOURCE,
   SetSELECTED,
+  SetSTATUS,
+  SetPAYMENT,
+  ToggleMODAL,
   RESET,
 } = reduxSlice.actions;
 
