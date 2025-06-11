@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
-import { HMO } from "../../../../../services/fakeDb";
-import { mobile } from "../../../../../services/utilities";
+import { HMO } from "../../../../../../services/fakeDb";
+import { mobile } from "../../../../../../services/utilities";
 const Body = () => {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { branch = {} } = activePlatform;

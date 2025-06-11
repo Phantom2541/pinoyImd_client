@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { MDBCard, MDBCardBody, MDBCollapse, MDBContainer } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { SearchPhysicians as Search } from "../../../../../../components/searchables";
+import { SearchPhysicians as Search } from "../../../../../../../components/searchables";
 import {
   TagPHYSICIAN,
   UPDATE,
   RESET as RESET_BRANCH,
-} from "../../../../../../services/redux/slices/assets/branches";
+} from "../../../../../../../services/redux/slices/assets/branches";
 
 import {
   SetBRANCHES,
   SPECIFIC_UPDATE,
   SetREGISTER,
-} from "../../../../../../services/redux/slices/assets/providers";
-import { SAVE } from "../../../../../../services/redux/slices/assets/persons/physicians";
+} from "../../../../../../../services/redux/slices/assets/providers";
+import { fullName } from "../../../../../../../services/utilities";
+import { SAVE } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 import { useToasts } from "react-toast-notifications";
-
 import Swal from "sweetalert2";
 import CollapseTable from "./table";
-import { fullName } from "../../../../../../services/utilities";
 import Header from "./header";
 
 export default function MenuCollapse() {

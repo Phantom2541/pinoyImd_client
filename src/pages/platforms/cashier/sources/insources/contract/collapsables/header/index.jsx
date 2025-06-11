@@ -1,6 +1,6 @@
 import { MDBCollapseHeader, MDBBtn, MDBBadge } from "mdbreact";
-import { collapse, currency } from "../../../../../../../services/utilities";
-import { Select, Input } from "../../../../../../../components/customizable";
+import { collapse, currency } from "../../../../../../../../services/utilities";
+import { Select, Input } from "../../../../../../../../components/customizable";
 import PopOver from "./popOver";
 import { useSelector } from "react-redux";
 
@@ -23,7 +23,7 @@ const Header = ({
   const {
     clients,
     _id,
-    category,
+    contract,
     status,
     subName: ghostSubName,
     cutoff = 0,
@@ -44,7 +44,7 @@ const Header = ({
 
   const isWhiteColor = color === "text-white"; //para sa color ng small tag
 
-  const _category = categories.find((c) => c.value === category)?.text;
+  const _category = categories.find((c) => c.value === contract)?.text;
 
   const isDenied = status === "denied";
 

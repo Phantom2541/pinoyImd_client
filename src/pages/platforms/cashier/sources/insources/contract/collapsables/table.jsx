@@ -11,13 +11,13 @@ import {
 } from "mdbreact";
 import "./styles.css";
 
-import { fullName } from "../../../../../../services/utilities";
-import { UntagPHYSICIAN } from "../../../../../../services/redux/slices/assets/branches";
-import { SetBRANCHES } from "../../../../../../services/redux/slices/assets/providers";
-import { UPDATE as UPDATEGHOST } from "../../../../../../services/redux/slices/assets/persons/physicians";
-import { SAVE } from "../../../../../../services/redux/slices/assets/persons/users";
-import { Input } from "../../../../../../components/customizable";
-import { RESET } from "../../../../../../services/redux/slices/assets/persons/physicians";
+import { fullName } from "../../../../../../../services/utilities";
+import { UntagPHYSICIAN } from "../../../../../../../services/redux/slices/assets/branches";
+import { SetBRANCHES } from "../../../../../../../services/redux/slices/assets/providers";
+import { UPDATE as UPDATEGHOST } from "../../../../../../../services/redux/slices/assets/persons/physicians";
+import { SAVE } from "../../../../../../../services/redux/slices/assets/persons/users";
+import { Input } from "../../../../../../../components/customizable";
+import { RESET } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 import { useToasts } from "react-toast-notifications";
 
 export default function CollapseTable({ BranchId, affiliated, providerId }) {

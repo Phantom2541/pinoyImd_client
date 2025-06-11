@@ -1,5 +1,4 @@
-import React from "react";
-import { capitalize } from "../../../../../../services/utilities";
+import { capitalize } from "../../../../../../../services/utilities";
 
 const Checkbox = ({
   setChecked = () => {},

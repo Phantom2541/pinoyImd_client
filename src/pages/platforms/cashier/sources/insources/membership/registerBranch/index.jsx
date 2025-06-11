@@ -12,16 +12,13 @@ import {
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 
-import AddressSelect from "../../../../../../components/searchables/addressSelect";
+import AddressSelect from "../../../../../../../components/searchables/addressSelect";
 import { useDispatch, useSelector } from "react-redux";
 import {
   REGISTER_BRANCH,
   ToggleRegister,
   RESET,
-  SetCATEGORY,
-} from "../../../../../../services/redux/slices/assets/providers";
-import { Select } from "../../../../../../components/customizable";
-import Swal from "sweetalert2";
+} from "../../../../../../../services/redux/slices/assets/providers";
 
 const _form = {
   name: "",
@@ -39,23 +36,16 @@ export default function Modal() {
     {
       formSubmitted,
       isSuccess,
-      category: defaultCategory,
-      categories,
       selected,
       showRegisterModal: show,
     } = useSelector(({ providers }) => providers),
     [form, setForm] = useState(_form),
-    [category, setCategory] = useState(),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
   const toggle = useCallback(() => {
     dispatch(ToggleRegister());
   }, [dispatch]);
-
-  useEffect(() => {
-    setCategory(defaultCategory);
-  }, [defaultCategory]);
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -82,26 +72,18 @@ export default function Modal() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { branchId } = activePlatform;
-    if (!category)
-      return Swal.fire({
-        icon: "warning",
-        title: "Category is required!",
-        text: "Please select a category before proceeding.",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#d33",
-      });
+
     dispatch(
       REGISTER_BRANCH({
         token,
         data: {
           branch: form,
           providerID: form?.providerId || "",
-          category,
+          category: "mbs",
           vendors: branchId,
         },
       })
     );
-    dispatch(SetCATEGORY(category));
   };
 
   const isGhost = selected?.providerID ? true : false;
@@ -129,17 +111,7 @@ export default function Modal() {
           </div>
 
           <MDBRow className="mt-4">
-            <MDBCol md="6">
-              <Select
-                label="Category"
-                preValue={category}
-                onChange={(e) => setCategory(e)}
-                keys={"value"}
-                values={"text"}
-                collections={categories}
-              />
-            </MDBCol>
-            <MDBCol md="6">
+            <MDBCol>
               <MDBInput
                 label="Name"
                 required

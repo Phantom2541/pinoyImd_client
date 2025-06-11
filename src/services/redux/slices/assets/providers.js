@@ -215,7 +215,7 @@ export const reduxSlice = createSlice({
 
     SetCATEGORY: (state, { payload }) => {
       const filter = state.collections.filter(
-        ({ category, status }) => (category || status) === payload
+        ({ contract, status }) => (contract || status) === payload
       );
       const baseCollections = !payload ? state.collections : filter;
       state.filtered = baseCollections;
@@ -475,7 +475,7 @@ export const reduxSlice = createSlice({
         const index = _collections.findIndex((item) => item._id === data._id);
         state.collections[index] = data;
         state.filtered = _collections.filter(
-          ({ category, status }) => (category || status) === state.category
+          ({ contract, status }) => (contract || status) === state.category
         );
         state.isSuccess = true;
         state.formSubmitted = false;

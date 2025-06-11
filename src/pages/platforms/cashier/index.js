@@ -1,14 +1,15 @@
 import { Cashier, Deals, Sales, Remittances, Onboarding } from "./cashRegistry";
 import { Menus, Services } from "./catalog";
 import {
-  Insources,
   Outsources,
-  HMO,
   Utilities,
   Hotlines,
-  Contract,
   Suppliers,
+  Contract,
+  Membership,
+  Wellness,
 } from "./sources";
+
 import {
   Payables,
   Receivables,
@@ -25,9 +26,9 @@ export {
   Remittances,
   Menus,
   Services,
-  Insources,
+  Membership,
   Contract,
-  HMO,
+  Wellness,
   Outsources,
   Utilities,
   Hotlines,

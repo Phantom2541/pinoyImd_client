@@ -18,13 +18,13 @@ import {
   RESET,
   UPDATE,
   SetCATEGORY,
-} from "../../../../../../services/redux/slices/assets/providers";
-import { Select } from "../../../../../../components/customizable";
+} from "../../../../../../../services/redux/slices/assets/providers";
+import { Select } from "../../../../../../../components/customizable";
 import Swal from "sweetalert2";
 
 // declare your expected items
 const _form = {
-  category: "",
+  contract: "",
   credit: 0,
 };
 
@@ -90,7 +90,7 @@ export default function Modal() {
           ...form,
           _id: selected.providerId,
           status: "approved",
-          category,
+          contract: category,
         },
       })
     );
@@ -132,7 +132,7 @@ export default function Modal() {
           <MDBRow>
             <MDBCol>
               <Select
-                label="Category"
+                label="Contract"
                 preValue={category}
                 onChange={(e) => setCategory(e)}
                 keys={"value"}

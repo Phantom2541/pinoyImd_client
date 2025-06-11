@@ -10,9 +10,8 @@ import Swal from "sweetalert2";
 import {
   DESTROY,
   RESET,
-  SetSOURCE,
-} from "../../../../../../../services/redux/slices/assets/providers";
-const PopOver = ({ index, _id, clients, isApplicant }) => {
+} from "../../../../../../../../services/redux/slices/assets/providers";
+const PopOver = ({ index, _id, setActiveId = () => {} }) => {
   const { token } = useSelector((state) => state.auth),
     dispatch = useDispatch();
 
@@ -39,6 +38,7 @@ const PopOver = ({ index, _id, clients, isApplicant }) => {
         className="m-0 p-0 ml-2"
         rounded
         color="light"
+        onClick={() => setActiveId(index)}
         style={{
           width: "1.8rem",
           boxShadow: "0px 0px 0px 0px",
@@ -49,18 +49,6 @@ const PopOver = ({ index, _id, clients, isApplicant }) => {
       <div>
         <MDBPopoverHeader className="text-center">Action</MDBPopoverHeader>
         <MDBPopoverBody className="d-flex flex-column m-0 p-0">
-          {isApplicant && (
-            <MDBBtn
-              size="sm"
-              color="success"
-              onClick={() =>
-                dispatch(SetSOURCE({ ...clients, providerId: _id }))
-              }
-            >
-              <MDBIcon icon="eye" className="mr-2" />
-              See Application
-            </MDBBtn>
-          )}
           <MDBBtn size="sm" color="danger" onClick={() => handleUntag(_id)}>
             <MDBIcon icon="unlink" className="mr-2" />
             Untag

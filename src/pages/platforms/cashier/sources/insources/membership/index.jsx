@@ -3,13 +3,13 @@ import { MDBCard, MDBCardBody } from "mdbreact";
 
 import Collapsable from "./collapsables";
 import TopHeader from "./header";
-import Pagination from "../../../../../components/pagination";
-import TableRowCount from "../../../../../components/pagination/rows";
-import { SetActivePAGE } from "../../../../../services/redux/slices/assets/providers";
-import TableLoading from "../../../../../components/tableLoading";
+import Pagination from "../../../../../../components/pagination";
+import TableRowCount from "../../../../../../components/pagination/rows";
+import { SetActivePAGE } from "../../../../../../services/redux/slices/assets/providers";
+import TableLoading from "../../../../../../components/tableLoading";
 import Modal from "./modal";
 import RegisterBranch from "./registerBranch";
-const Contract = () => {
+const Membership = () => {
   const { totalPages, activePage, isLoading } = useSelector(
       ({ providers }) => providers
     ),
@@ -45,4 +45,4 @@ const Contract = () => {
   );
 };
 
-export default Contract;
+export default Membership;
