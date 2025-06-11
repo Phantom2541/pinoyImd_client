@@ -62,8 +62,8 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     dispatch = useDispatch();
 
   useEffect(() => {
-    const { hmo } = selected;
-    if (selected._id)
+    const { hmo = [] } = selected || {};
+    if (selected?._id)
       setForm({ ...selected, hmo: Array.isArray(hmo) ? hmo : [] });
   }, [selected]);
 
@@ -113,7 +113,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   // use for direct values like strings and numbers
   const handleValue = (key) =>
-    willCreate ? form[key] : form[key] || selected[key];
+    willCreate ? form[key] : form[key] || selected?.[key] || "";
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
 
@@ -139,7 +139,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <MDBInput
                 type="text"
                 label="Description"
-                value={handleValue("description")}
+                value={handleValue("description") || ""}
                 onChange={(e) =>
                   handleChange("description", e.target.value.toUpperCase())
                 }

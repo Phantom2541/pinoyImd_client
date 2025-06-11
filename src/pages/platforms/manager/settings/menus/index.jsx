@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import Search from "../../../../../components/searchables/search";
 import TableLoading from "../../../../../components/tableLoading";
 import { fullName, MenusToExcel } from "../../../../../services/utilities";
+import ExportToExcel from "./exportToExcel";
 
 const Menus = () => {
   const [menus, setMenus] = useState([]),
@@ -26,6 +27,7 @@ const Menus = () => {
     [totalPages, setTotalPages] = useState(1),
     [willCreate, setWillCreate] = useState(true),
     [visible, setVisible] = useState(false),
+    [showExport, setShowExport] = useState(false),
     { token, activePlatform, maxPage, auth } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading, filtered } = useSelector(
       ({ menus }) => menus
@@ -151,7 +153,7 @@ const Menus = () => {
               <MDBIcon icon="plus" className="mt-0" />
             </MDBBtn>
             <MDBBtn
-              onClick={handleExport}
+              onClick={() => setShowExport(true)}
               disabled={isLoading}
               outline
               color="white"
@@ -196,6 +198,10 @@ const Menus = () => {
         toggle={toggleModal}
       />
       <Generate visible={visible} setVisible={setVisible} />
+      <ExportToExcel
+        show={showExport}
+        toggle={() => setShowExport(!showExport)}
+      />
     </>
   );
 };
