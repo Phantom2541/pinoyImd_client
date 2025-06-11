@@ -6,7 +6,7 @@ import {
   MDBModalHeader,
   MDBTypography,
 } from "mdbreact";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { fullName, MenusToExcel } from "../../../../../../services/utilities";
 import { useSelector } from "react-redux";
 import BodySwitcher from "./bodySwitcher";
@@ -18,7 +18,13 @@ export default function ExportToExcel({ show, toggle }) {
       menuType: "",
       priceCategories: [],
     });
-  // Handle form submit
+
+  useEffect(() => {
+    if (show) {
+      //RESET FORM EVERY EXPORT
+      setForm({ menuType: "", priceCategories: [] });
+    }
+  }, [show]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const sortedCollections = [...collections].sort((a, b) => {
