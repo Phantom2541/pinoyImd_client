@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit, dateFormat, getAge } from "../../../../../utilities";
+import physician from "../../../../../fakeDb/sidebars/physician";
 
 const url = "commerce/pos/services/deals";
 const today = new Date();
@@ -17,6 +18,9 @@ const initialState = {
   patient: {},
   cluster: [],
   sources: [],
+  source: "all",
+  physicians: [],
+  physician: "all",
   showModal: false,
   showRevertModal: false,
   showDiscountModal: false,
@@ -421,24 +425,29 @@ export const reduxSlice = createSlice({
     },
 
     SetFilterBySOURCE: (state, { payload }) => {
+      const { value, vendor } = payload;
       let filtered = [];
-      if (payload.value === "all") {
+
+      // Filter logic based on source
+      if (value === "all") {
         filtered = state.collections;
         state.vendor = {};
-      } else if (payload.value === "NoSource") {
+      } else if (value === "NoSource") {
         filtered = state.collections.filter(({ source }) => !source);
         state.vendor = "noSource";
       } else {
         filtered = state.collections.filter(
-          ({ source }) => source?._id.toString() === payload?.value?.toString()
+          ({ source }) => source?.displayname === value.toString()
         );
-        state.vendor = payload.vendor;
+        state.vendor = vendor;
       }
+
+      // Group filtered results by date
       const groupByDate = filtered.reduce((groups, item) => {
         const date = dateFormat(item.createdAt);
-        const index = groups.findIndex((group) => group.date === date);
-        if (index > -1) {
-          groups[index].deals.push({ ...item, isSelected: false });
+        const group = groups.find((g) => g.date === date);
+        if (group) {
+          group.deals.push({ ...item, isSelected: false });
         } else {
           groups.push({
             date,
@@ -449,13 +458,73 @@ export const reduxSlice = createSlice({
         return groups;
       }, []);
 
-      state.totalPages =
-        Math.ceil((groupByDate?.length || 0) / state.maxPage) || 1;
+      // Set pagination and state
+      state.totalPages = Math.ceil(groupByDate.length / state.maxPage) || 1;
       state.activePage = Math.min(state.activePage, state.totalPages);
       state.filtered = groupByDate;
-      // state.filtered = filtered;
     },
 
+    SetFilterByPhysician: (state, { payload }) => {
+      // Only update filter if it changed
+      if (payload !== state.filterByPhysician) {
+        if (payload === "all") {
+          state.filtered = state.collections;
+        } else {
+          state.filtered = state.collections.filter(
+            ({ physicianId }) =>
+              physicianId?._id?.toString() === payload.toString()
+          );
+        }
+        state.filterByPhysician = payload;
+      }
+    },
+    SetFilterBySourceAndPhysician: (state, { payload }) => {
+      const { source, physician } = payload;
+      let filtered = state.collections;
+
+      // Filter by physician if not 'all'
+      if (physician !== "all") {
+        filtered = filtered.filter(
+          ({ physicianId }) =>
+            physicianId?._id?.toString() === physician.toString()
+        );
+      }
+
+      // Filter by source
+      if (source === "NoSource") {
+        filtered = filtered.filter(({ source }) => !source);
+        state.vendor = "noSource";
+      } else if (source !== "all") {
+        filtered = filtered.filter(
+          ({ source: src }) => src?.displayname === source.toString()
+        );
+        state.vendor = source;
+      } else {
+        state.vendor = {};
+      }
+
+      // Group the filtered results by date
+      const groupByDate = filtered.reduce((groups, item) => {
+        const date = dateFormat(item.createdAt);
+        const group = groups.find((g) => g.date === date);
+        if (group) {
+          group.deals.push({ ...item, isSelected: false });
+        } else {
+          groups.push({
+            date,
+            deals: [{ ...item, isSelected: false }],
+            isSelected: false,
+          });
+        }
+        return groups;
+      }, []);
+
+      // Set pagination and assign to state
+      state.totalPages = Math.ceil(groupByDate.length / state.maxPage) || 1;
+      state.activePage = Math.min(state.activePage, state.totalPages);
+      state.filtered = groupByDate;
+      state.filterByPhysician = physician;
+    },
     SetFilterByOUTSOURCE: (state, { payload }) => {
       if (payload !== state.filterBySource)
         if (payload === "all") {
@@ -689,13 +758,6 @@ export const reduxSlice = createSlice({
       state.selected = { ...selected };
     },
   },
-  /**
-   * Handles extra actions not handled by the reducer itself.
-   *
-   * @param {Object} builder - The builder object from `createSlice`.
-   *
-   * @returns {Object} The extra reducers.
-   */
   extraReducers: (builder) => {
     builder
       .addCase(BROWSE.pending, (state) => {
@@ -1199,6 +1261,8 @@ export const {
   SetFILTERED,
   SetFilterByCASHIER,
   SetFilterBySOURCE,
+  SetFilterByPhysician,
+  SetFilterBySourceAndPhysician,
   SetFilterByOUTSOURCE,
   CHECK_CUTOFF,
   SetSELECTED,
