@@ -7,8 +7,6 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
-  MDBTypography,
-  MDBModaltable,
 } from "mdbreact";
 import {
   SAVE,
@@ -24,15 +22,21 @@ export default function Modal() {
       ({ productsGenerics }) => productsGenerics
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected),
+    [form, setForm] = useState(selected || {}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  // Handle update function
-  const handleUpdate = () => {
-    TOGGLE();
+  // Sync form state with selected when modal opens
+  useEffect(() => {
+    if (selected) {
+      setForm(selected);
+    }
+  }, [selected]);
 
-    // Check if object has changed
+  // Handle updating an existing product
+  const handleUpdate = () => {
+    dispatch(TOGGLE());
+
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
@@ -47,34 +51,29 @@ export default function Modal() {
     );
   };
 
-  // Handle create function
+  // Handle creating a new product
   const handleCreate = () => {
     dispatch(
       SAVE({
         data: form,
         token,
       })
-    ).then(() => TOGGLE()); // Close modal after successful save
+    ).then(() => dispatch(TOGGLE())); // Close modal after save
   };
 
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log("form", form);
 
-    // if (willCreate) {
-    //   return handleCreate();
-    // }
+    if (willCreate) {
+      return handleCreate();
+    }
 
-    // handleUpdate();
+    handleUpdate();
   };
 
-  // Handle change sa inputs
+  // Handle input change
   const handleChange = (key, value) => {
-    console.log("key :", key);
-    console.log("value :", value);
-    console.log("form :", form);
-
     setForm({
       ...form,
       [key]: value,
@@ -83,20 +82,20 @@ export default function Modal() {
     });
   };
 
-  // Fix: Return correct form value
-  const handleValue = (key) => form[key] || "";
+  // Retrieve value for inputs
+  const handleValue = (key) => form[key] ?? "";
 
   // Handle modal close
   const handleClose = () => dispatch(TOGGLE());
 
   return (
-    <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
+    <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="sm">
       <MDBModalHeader
         toggle={handleClose}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Products
+        {willCreate ? "Create" : "Update"} Product
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
@@ -108,7 +107,7 @@ export default function Modal() {
             onChange={(e) => handleChange("name", e.target.value)}
           />
           <MDBInput
-            label="subname"
+            label="Subname"
             type="text"
             value={handleValue("subname")}
             onChange={(e) => handleChange("subname", e.target.value)}
