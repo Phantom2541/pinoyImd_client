@@ -8,6 +8,8 @@ import {
   Contract,
   Membership,
   Wellness,
+  Referrals,
+  HMO,
 } from "./sources";
 
 import {
@@ -29,6 +31,8 @@ export {
   Membership,
   Contract,
   Wellness,
+  HMO,
+  Referrals,
   Outsources,
   Utilities,
   Hotlines,
