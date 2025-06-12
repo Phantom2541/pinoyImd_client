@@ -22,10 +22,10 @@ const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
   };
 
 const set = {
-  image: async ({ worksheet, workbook }) => {
+  banner: async ({ worksheet, workbook }) => {
     // worksheet.mergeCells("A1", "Z8");
   },
-  banner: ({ worksheet, options }) => {
+  header: ({ worksheet, options }) => {
     const { name, gross, due, dateRange, address } = options;
     const border = {
       top: { style: "thin" },
@@ -356,8 +356,8 @@ const excel = async ({ array = [], menus = [], options }) => {
   //  Set the showGridLines property to false to hide grid lines
   worksheet.views = [{ showGridLines: false }];
 
-  set.image({ worksheet, workbook });
-  set.banner({ worksheet, options: rest });
+  set.banner({ worksheet, workbook });
+  set.header({ worksheet, options: rest });
   set.main({ worksheet, vouchers: array });
   const datesLength = array.length * 2;
   const dealsLength = array.reduce(

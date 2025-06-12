@@ -129,7 +129,7 @@ export default function Modal() {
           <MDBRow>
             <MDBCol>
               <Select
-                collections={Memberships}
+                collections={Memberships.collections}
                 label={"Membership"}
                 onChange={(value) => setForm({ ...form, membership: value })}
                 values={"text"}
