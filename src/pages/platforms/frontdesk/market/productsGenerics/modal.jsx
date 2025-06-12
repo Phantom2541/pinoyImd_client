@@ -107,10 +107,17 @@ export default function Modal() {
             onChange={(e) => handleChange("name", e.target.value)}
           />
           <MDBInput
-            label="Subname"
+            label="expense"
             type="text"
-            value={handleValue("subname")}
-            onChange={(e) => handleChange("subname", e.target.value)}
+            value={handleValue("expense")}
+            onChange={(e) => handleChange("expense", e.target.value)}
+          />
+          <MDBInput
+            label="section"
+            type="text"
+            value={handleValue("section")}
+            required
+            onChange={(e) => handleChange("section", e.target.value)}
           />
 
           {/* Submit button */}

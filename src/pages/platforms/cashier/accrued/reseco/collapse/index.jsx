@@ -28,7 +28,7 @@ export default function Index() {
     index > -1 ? _cluster.splice(index, 1) : _cluster.push(deal);
     setCluster(_cluster);
   };
-
+  console.log("filtered", filtered);
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>
       {filtered?.map((voucher, index) => {
@@ -42,7 +42,7 @@ export default function Index() {
 
         return (
           <MDBCard
-            key={`service-${date}`}
+            key={`service-${date}-reseco-${index}`}
             style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
           >
             <MDBCollapseHeader

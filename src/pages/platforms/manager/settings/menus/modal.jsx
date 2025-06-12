@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -21,7 +21,15 @@ import {
   UPDATE,
   SAVE,
 } from "../../../../../services/redux/slices/commerce/catalog/menus";
-import { SRP, Contracts, Memberships, Expenses, Others } from "./component";
+import {
+  SRP,
+  Contracts,
+  Memberships,
+  Expenses,
+  Others,
+  HMO,
+} from "./component";
+import { currency } from "../../../../../services/utilities";
 
 // declare your expected items
 const _form = {
@@ -35,7 +43,7 @@ const _form = {
     er: 0,
     promo: 0,
     pw: 0,
-    hmo: 0,
+    hmo: [],
     sc: 0,
     ssc: 0,
     vp: 0,
@@ -44,7 +52,7 @@ const _form = {
     onPromo: false,
     hasReseco: false,
   },
-  tabs = ["SRP", "Contracts", "Memberships", "Expenses", "Others"];
+  tabs = ["SRP", "HMO", "Contracts", "Memberships", "Expenses", "Others"];
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { formSubmitted = false, isSuccess } = useSelector(({ menus }) => menus),
@@ -54,7 +62,9 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (selected._id) setForm(selected);
+    const { hmo = [] } = selected || {};
+    if (selected?._id)
+      setForm({ ...selected, hmo: Array.isArray(hmo) ? hmo : [] });
   }, [selected]);
 
   useEffect(() => {
@@ -103,7 +113,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   // use for direct values like strings and numbers
   const handleValue = (key) =>
-    willCreate ? form[key] : form[key] || selected[key];
+    willCreate ? form[key] : form[key] || selected?.[key] || "";
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
 
@@ -124,13 +134,12 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       </MDBModalHeader>
       <MDBModalBody className="mb-0 ">
         <form onSubmit={handleSubmit}>
-          <h5 className="mb-0">Information</h5>
           <MDBRow>
             <MDBCol md="8">
               <MDBInput
                 type="text"
                 label="Description"
-                value={handleValue("description")}
+                value={handleValue("description") || ""}
                 onChange={(e) =>
                   handleChange("description", e.target.value.toUpperCase())
                 }
@@ -149,7 +158,11 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               />
             </MDBCol>
           </MDBRow>
-          <MDBNav color="primary" tabs className="nav-justified">
+          <h5 className="mb-2 text-center">
+            <span className="grey-text">SRP:</span>
+            <span className="ml-2">{currency(Number(form?.opd))}</span>
+          </h5>
+          <MDBNav classicTabs color="info" tabs className="nav-justified">
             {tabs.map((title, index) => (
               <MDBNavItem key={`tab-${index}`}>
                 <MDBNavLink
@@ -164,35 +177,30 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             ))}
           </MDBNav>
 
-          <MDBTabContent activeItem={activeTab}>
+          <MDBTabContent activeItem={activeTab} className="card mb-4">
             <MDBTabPane tabId={"menu-0"}>
               <SRP handleValue={handleValue} handleChange={handleChange} />
             </MDBTabPane>
-          </MDBTabContent>
-          <MDBTabContent activeItem={activeTab}>
             <MDBTabPane tabId={"menu-1"}>
+              <HMO form={form} setForm={setForm} />
+            </MDBTabPane>
+            <MDBTabPane tabId={"menu-2"}>
               <Contracts
                 handleValue={handleValue}
                 handleChange={handleChange}
               />
             </MDBTabPane>
-          </MDBTabContent>
-          <MDBTabContent activeItem={activeTab}>
-            <MDBTabPane tabId={"menu-2"} className="m-0 p-0">
+            <MDBTabPane tabId={"menu-3"} className="m-0 p-0">
               <Memberships
                 form={form}
                 handleValue={handleValue}
                 handleChange={handleChange}
               />
             </MDBTabPane>
-          </MDBTabContent>
-          <MDBTabContent activeItem={activeTab}>
-            <MDBTabPane tabId={"menu-3"}>
+            <MDBTabPane tabId={"menu-4"}>
               <Expenses handleValue={handleValue} handleChange={handleChange} />
             </MDBTabPane>
-          </MDBTabContent>
-          <MDBTabContent activeItem={activeTab}>
-            <MDBTabPane tabId={"menu-4"}>
+            <MDBTabPane tabId={"menu-5"}>
               <Others handleValue={handleValue} handleChange={handleChange} />
             </MDBTabPane>
           </MDBTabContent>

@@ -53,6 +53,7 @@ import Female from "../../assets/female.jpg";
 import PresetIMD from "../../assets/iMD.jpg";
 import paymentMethod from "./paymentMethod";
 import VouchersToExcel from "./excel/vouchers";
+import MenusToExcel from "./excel/menus";
 import Deals from "./deals";
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
@@ -82,7 +83,6 @@ export {
   socket,
   paymentMethod,
   Deals,
-  VouchersToExcel,
   handlePagination,
   getBday,
   fullName,
@@ -122,4 +122,7 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  //export to excel
+  VouchersToExcel,
+  MenusToExcel,
 };

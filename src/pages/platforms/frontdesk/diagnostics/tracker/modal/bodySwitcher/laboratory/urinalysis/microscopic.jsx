@@ -1,6 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  SetPARAMS,
+  SetTASK,
+} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 import { MDBCol, MDBRow } from "mdbreact";
 // import { Select } from "./../../../../../../../../../components/customizable";
@@ -18,7 +21,6 @@ export default function Microscopic() {
     _me[index] = Number(value);
     dispatch(SetPARAMS({ key: "me", value: _me }));
     dispatch(SetTASK({ task: { ...task, me: _me } }));
-    
   };
 
   const microscopicSelects = [
@@ -33,6 +35,8 @@ export default function Microscopic() {
   return (
     <MDBRow className="text-left">
       {microscopicSelects.map((label, index) => {
+        console.log("me", me);
+
         const choices =
           index > 1 ? MicroscopicResultInWord : MicroscopicInRange;
 
@@ -47,18 +51,21 @@ export default function Microscopic() {
               values="index"
               onChange={(e) => handleSelectChange(index, Number(e))}
             /> */}
-            <label htmlFor="">{ label}</label>
-             <select value={me[index]} className="form-control mb-2" onChange={(e) => handleSelectChange(index, e.target.value)}>
-            <option ></option>
-            {choices.map((choice, i) => {
-              
-             return (
-
-              <option key={i} value={i}>
-                {choice}
-              </option>
-            )})}  
-          </select>
+            <label htmlFor="">{label}</label>
+            <select
+              value={me[index]}
+              className="form-control mb-2"
+              onChange={(e) => handleSelectChange(index, e.target.value)}
+            >
+              <option></option>
+              {choices.map((choice, i) => {
+                return (
+                  <option key={i} value={i}>
+                    {choice}
+                  </option>
+                );
+              })}
+            </select>
           </MDBCol>
         );
       })}

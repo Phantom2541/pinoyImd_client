@@ -42,7 +42,7 @@ import {
 
 import {
   Outsources,
-  Insources,
+  // Insources,
   Utilities,
   Hotlines,
   Suppliers,
@@ -264,7 +264,7 @@ const manager = [
             name: "Insourcing",
             path: "/insourcing",
             icon: "download",
-            component: Insources,
+            // component: Insources,
           },
           {
             name: "Suppliers",

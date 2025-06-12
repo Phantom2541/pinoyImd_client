@@ -1,37 +1,51 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import * as ExcelJS from "exceljs";
-import { saveAs } from "file-saver";
-import {
-  BROWSE,
-  SetFilterBySOURCE,
-  RESET,
-  SetMONTH,
-  ResetDATE,
-} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 import CalendarPicker from "../../../../../components/header/calendars";
 import { currency } from "../../../../../services/utilities";
 import { Calendar } from "../../../../../services/fakeDb";
+import {
+  SetMONTH,
+  ResetDATE,
+  BROWSE,
+  RESET,
+  SetFilterBySourceAndPhysician,
+} from "../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const Header = () => {
-  const { maxPage, token, activePlatform, auth } = useSelector(
-    ({ auth }) => auth
-  );
+  const dispatch = useDispatch();
   const {
-      sources,
-      month,
-      year,
-      filtered = [],
-      vendor,
-    } = useSelector(({ deals }) => deals),
-    dispatch = useDispatch();
-  // Fetch vouchers
+    sources,
+    month,
+    year,
+    filtered = [],
+    physicianId,
+    vendor,
+    physicians = [],
+  } = useSelector(({ deals }) => deals);
+  const { token, auth, activePlatform, maxPage } = useSelector(
+    ({ auth, platform }) => ({ ...auth, ...platform })
+  );
+
+  const [selectedSource, setSelectedSource] = useState("all");
+  const [selectedPhysician, setSelectedPhysician] = useState("all");
+
+  // 🔁 Combined filtering
+  useEffect(() => {
+    dispatch(
+      SetFilterBySourceAndPhysician({
+        source: selectedSource,
+        physician: selectedPhysician,
+      })
+    );
+  }, [selectedSource, selectedPhysician, dispatch]);
+
+  // 🔁 Refresh on date/platform change
   useEffect(() => {
     const startDate = new Date(year, month - 1, 1);
-    startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(year, month, 0, 23, 59, 59, 999);
-    endDate.setHours(23, 59, 59, 999);
     dispatch(
       BROWSE({
         token,
@@ -43,105 +57,112 @@ const Header = () => {
         },
       })
     );
-
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
-  const sum = filtered
-    ?.flatMap(({ deals = [] }) => deals?.map((item) => item.amount))
-    .reduce((acc, item) => acc + item, 0);
+  // 💰 Total Calculations
+  const dealsWithPhysician = filtered.flatMap(({ deals }) =>
+    deals.filter((d) => d.physicianId)
+  );
+  const totalPhysicianAmount = dealsWithPhysician.reduce(
+    (acc, deal) => acc + (Number(deal.amount) || 0),
+    0
+  );
 
+  const summarizedSourcesMap = {};
+  filtered?.forEach(({ deals = [] }) => {
+    deals.forEach(({ source, amount }) => {
+      const id = source?._id || "NoSource";
+      const displayname = source?.displayname || "No Source";
+      summarizedSourcesMap[id] ??= { displayname, total: 0 };
+      summarizedSourcesMap[id].total += Number(amount) || 0;
+    });
+  });
+
+  const summarizedSources = Object.entries(summarizedSourcesMap).map(
+    ([id, data]) => ({ _id: id, ...data })
+  );
+
+  const totalAmount = filtered
+    .flatMap(({ deals = [] }) => deals.map((d) => Number(d.amount) || 0))
+    .reduce((a, b) => a + b, 0);
+
+  // 🖨️ Print
   const handlePrintOut = () => {
-    const source = sources.find(({ _id }) => String(_id) === String(vendor));
-
+    const source =
+      sources.find(({ _id }) => String(_id) === String(vendor?._id)) ?? {};
     localStorage.setItem("resecos", JSON.stringify(filtered));
     localStorage.setItem(
       "header",
       JSON.stringify({ month: Calendar.Months[month - 1], year, source })
     );
-
     window.open(
       "/printout/reseco",
-      "Reseco", // Unique window name 2
+      "Reseco",
       "top=100px,left=0px,width=1050px,height=750px"
     );
   };
+
+  // 📤 Excel Export
   const handleSoftCopy = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Deals");
+
     const { branch } = activePlatform;
     const { companyId } = branch;
-    // Add company name header - Add the row first
-    const companyName = `${companyId?.name} ${companyId?.subName}`;
-    const companyHeader = worksheet.addRow([`Company: ${companyName}`]);
-    companyHeader.font = { bold: true, size: 14 };
+    const companyName = `${companyId?.name} ${companyId?.subName || ""}`;
+    worksheet.addRow([`Company: ${companyName}`]).font = {
+      bold: true,
+      size: 14,
+    };
+    worksheet.mergeCells("A1:E1");
 
-    // Merge the row correctly
-    worksheet.mergeCells(`A${companyHeader.number}:E${companyHeader.number}`);
+    const selectedSourceName =
+      summarizedSourcesMap[selectedSource]?.displayname || "All Sources";
 
-    // Get source displayname from the first deal
-    const source =
-      sources.find((s) => String(s._id) === String(vendor))?.displayname ??
-      "Unknown Source";
-
-    // Add source header
-    const sourceAndGrossRow = worksheet.addRow([
-      `SOURCE: ${source.toUpperCase()}`,
+    worksheet.addRow([
+      `SOURCE: ${selectedSourceName}`,
       "",
       "",
-      `GROSS:  ${currency(sum)}`,
-      "",
-    ]);
-    sourceAndGrossRow.font = { bold: true };
+      `GROSS: ${currency(totalAmount)}`,
+    ]).font = { bold: true };
+    worksheet.mergeCells("A2:C2");
+    worksheet.mergeCells("D2:E2");
 
-    // Merge cells for layout
-    worksheet.mergeCells(
-      `A${sourceAndGrossRow.number}:C${sourceAndGrossRow.number}`
-    );
-    worksheet.mergeCells(
-      `D${sourceAndGrossRow.number}:E${sourceAndGrossRow.number}`
-    );
+    worksheet.addRow([]);
 
-    worksheet.addRow([]); // empty spacer row
-
-    // Add table headers
-    const columns = [
+    worksheet.columns = [
       { header: "Date", key: "date", width: 15 },
       { header: "Customer", key: "customer", width: 25 },
       { header: "Services", key: "services", width: 25 },
       { header: "Payment Type", key: "payment", width: 15 },
       { header: "Amount", key: "amount", width: 10 },
     ];
+    worksheet.addRow(worksheet.columns.map((c) => c.header)).font = {
+      bold: true,
+    };
 
-    // Set column widths manually (without adding auto headers)
-    worksheet.columns = columns.map(({ width }) => ({ width }));
-
-    // Now manually add headers
-    const tableHeader = worksheet.addRow(columns.map((col) => col.header));
-    tableHeader.font = { bold: true };
-
-    // Add each deal
     filtered.forEach(({ date, deals }) => {
       deals.forEach((deal) => {
         worksheet.addRow([
           date,
-          `${deal.customerId?.fullName?.fname ?? ""} ${
-            deal.customerId?.fullName?.lname ?? ""
-          }`,
-          deal.cart?.map(({ abbreviation = "" }) => abbreviation).join(",  "),
-          deal.payment ?? "",
-          deal.amount ?? 0,
+          `${deal.customerId?.fullName?.fname || ""} ${
+            deal.customerId?.fullName?.lname || ""
+          }`.trim(),
+          deal.cart?.map(({ abbreviation }) => abbreviation).join(", "),
+          deal.payment || "",
+          Number(deal.amount) || 0,
         ]);
       });
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-    const fileName =
-      source === `Unknown Source` ? `${companyName} - Resco` : source;
-    saveAs(blob, `${fileName} ${Calendar.Months[month - 1]} ${year}.xlsx`);
+    saveAs(
+      new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }),
+      `${selectedSourceName} - ${Calendar.Months[month - 1]} ${year}.xlsx`
+    );
   };
 
   return (
@@ -155,37 +176,54 @@ const Header = () => {
         moved={(next) => dispatch(SetMONTH(next))}
         reset={() => dispatch(ResetDATE())}
       />
-      <div>
-        <h5 className="mt-1">
-          Gross : <strong> {currency(sum)}</strong>
-        </h5>
-      </div>
+
       <div className="d-flex align-items-center">
-        <div className="text-right d-flex items-center ">
+        <div className="text-right d-flex items-center">
+          {/* 🔹 Source Dropdown */}
           <select
-            id="cashier-select"
+            id="source-select"
             className="custom-select mr-2"
-            onChange={(e) => dispatch(SetFilterBySOURCE(e.target.value))}
+            value={selectedSource}
+            onChange={(e) => setSelectedSource(e.target.value)}
           >
-            <option value="" disabled>
-              Select a Source
+            <option value="all">All Sources ({currency(totalAmount)})</option>
+            <option value="NoSource">
+              No Source (
+              {currency(summarizedSourcesMap["NoSource"]?.total || 0)})
             </option>
-            <option key="all" value="all">
-              Select all
+            {summarizedSources
+              .filter(({ _id }) => _id !== "NoSource")
+              .map(({ _id, displayname, total }) => (
+                <option key={_id} value={_id}>
+                  {displayname} ({currency(total)})
+                </option>
+              ))}
+          </select>
+
+          {/* 🔹 Physician Dropdown */}
+          <select
+            id="physician-select"
+            className="custom-select mr-2"
+            value={selectedPhysician}
+            onChange={(e) => setSelectedPhysician(e.target.value)}
+          >
+            <option value="all">
+              All Physicians ({currency(totalPhysicianAmount)})
             </option>
-            {sources?.map((source, index) => (
-              <option key={`source-${index}`} value={source?._id}>
-                {source?.displayname}
+            {physicians.map((p) => (
+              <option key={p._id} value={p._id}>
+                {p.fullName}
               </option>
             ))}
           </select>
         </div>
+
         <MDBBtn
           color="white"
           rounded
           size="sm"
           className="px-2"
-          onClick={() => handlePrintOut("lol")}
+          onClick={handlePrintOut}
         >
           <MDBIcon icon="print" />
         </MDBBtn>

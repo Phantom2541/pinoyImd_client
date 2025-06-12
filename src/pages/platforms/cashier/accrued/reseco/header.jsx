@@ -64,7 +64,15 @@ const Header = () => {
           <select
             id="cashier-select"
             className="custom-select mr-2"
-            onChange={(e) => dispatch(SetFilterBySOURCE(e.target.value))}
+            onChange={(e) => {
+              const value = e.target.value;
+              dispatch(
+                SetFilterBySOURCE({
+                  value,
+                  vendor: { _id: value === "all" ? "" : value },
+                })
+              );
+            }}
           >
             <option value="" disabled>
               Select a Source

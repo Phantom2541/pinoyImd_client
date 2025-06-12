@@ -1,0 +1,11 @@
+.active-payment-method {
+  border: 1px solid green;
+}
+
+.payment-method {
+  border: 1px solid transparent;
+}
+
+.dashed-border-payment {
+  border: 1px dashed gray !important;
+}
