@@ -257,9 +257,16 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
     },
   };
 
-  pdfMake
-    .createPdf(docDefinition)
-    .download(`${menuTypes[form.menuType]} Menus Price List.pdf`);
+  pdfMake.createPdf(docDefinition).download(
+    `${menuTypes[form.menuType]} Menus Price List ${new Date().toLocaleString(
+      "en-US",
+      {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }
+    )}.pdf`
+  );
 };
 
 export default MenuToPdf;
