@@ -17,13 +17,14 @@ const Header = () => {
 
   // console.log("collections", collections);
 
-  //initial values
   useEffect(() => {
-    if (token)
+    if (token) {
       dispatch(
         BROWSE({ token, params: { branchId: activePlatform?.branchId } })
       );
+    }
   }, [dispatch, token]);
+
   const handleAdd = () => {};
   return (
     <MDBView
@@ -44,6 +45,7 @@ const Header = () => {
             haveAction={true}
             reset={() => dispatch(SetFILTER(collections))}
             hideButton={false}
+            handleAdd={(item) => handleAdd(item)} // ✅ FIXED HERE
           />
         </div>
       </div>

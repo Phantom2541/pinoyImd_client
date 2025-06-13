@@ -1,0 +1,56 @@
+[
+  {
+    "value": "bronze",
+    "text": "Bronze - Recognized Member",
+    "discount": 0,
+    "emoji": "🥉"
+  },
+  {
+    "value": "silver",
+    "text": "Silver 5% discount",
+    "discount": 0.05,
+    "emoji": "🥈"
+  },
+  {
+    "value": "gold",
+    "text": "Gold 10% discount",
+    "discount": 0.1,
+    "emoji": "🥇"
+  },
+  {
+    "value": "platinum",
+    "text": "Platinum 15% discount",
+    "discount": 0.15,
+    "emoji": "🔳"
+  },
+  {
+    "value": "diamond",
+    "text": "Diamond 20% discount",
+    "discount": 0.2,
+    "emoji": "💎"
+  },
+  {
+    "value": "crown",
+    "text": "Crown 25% discount",
+    "discount": 0.25,
+    "emoji": "👑"
+  },
+  {
+    "value": "titanium",
+    "text": "Titanium 30% discount",
+    "discount": 0.3,
+    "emoji": "🦾"
+  },
+  {
+    "value": "obsidian",
+    "text": "Obsidian 35% discount",
+    "discount": 0.35,
+    "emoji": "🌑"
+  },
+  {
+    "value": "elysium",
+    "text": "Elysium 40% discount",
+    "discount": 0.4,
+    "emoji": "🌌"
+  }
+]

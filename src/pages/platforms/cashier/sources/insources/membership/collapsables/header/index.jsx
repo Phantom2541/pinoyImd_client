@@ -100,7 +100,7 @@ const Header = ({
               label: "Membership",
               keys: "membership",
               values: "text",
-              collections: Memberships.map(({ value, text }) => ({
+              collections: Memberships.collections.map(({ value, text }) => ({
                 membership: value,
                 text,
               })),
