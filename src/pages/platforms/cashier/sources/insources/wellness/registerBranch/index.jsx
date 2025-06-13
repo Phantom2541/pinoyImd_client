@@ -55,7 +55,8 @@ export default function Modal() {
 
   useEffect(() => {
     setCategory(defaultCategory);
-  }, [defaultCategory]);
+    console.log("categories", categories);
+  }, [defaultCategory, categories]);
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -133,7 +134,10 @@ export default function Modal() {
               <Select
                 label="Category"
                 preValue={category}
-                onChange={(e) => setCategory(e)}
+                onChange={(e) => {
+                  setForm({ ...form, category: e });
+                  setCategory("wls");
+                }}
                 keys={"value"}
                 values={"text"}
                 collections={categories}

@@ -2,10 +2,10 @@ import collections from "./collections.json";
 
 export const Policy = {};
 
-const Roles = {
+const HMO = {
   collections,
   findById: (pk) => collections.find(({ id }) => id === Number(pk)),
-  getName: (code) => collections.find(({ abbr }) => abbr === code)?.name,
+  getName: (_code) => collections.find(({ code }) => code === _code)?.name,
   getSrp: (code, hmo = []) => {
     const match =
       (Array.isArray(hmo) &&
@@ -16,4 +16,4 @@ const Roles = {
   },
 };
 
-export default Roles;
+export default HMO;

@@ -26,7 +26,7 @@ const Header = () => {
           token,
           key: {
             vendors: activePlatform?.branchId,
-            categories: ["rfr"],
+            categories: ["wls"],
           },
         })
       );
@@ -64,30 +64,11 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          Contract (Insource) List
+          Wellness (Insource) List
         </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <div className="d-flex align-items-center mr-4">
-            <span className="mr-1">Category:</span>
-            <select
-              className="form-control bg-light"
-              value={category}
-              onChange={(e) => dispatch(SetCATEGORY(e.target.value))}
-            >
-              <option value="">All</option>
-              <option value="pending">Applicant</option>
-              {contractCategories.map((c, index) => (
-                <option key={index} value={c.value}>
-                  {c.text}
-                </option>
-              ))}
-              <option value="denied" className="bg-danger text-white">
-                Denied
-              </option>
-            </select>
-          </div>
           <Search setSource={setSource} handleRegister={handleRegister} />
         </div>
       </div>

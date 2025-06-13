@@ -2,18 +2,18 @@
   {
     "id": 1,
     "name": "Maxicare",
-    "abbr": "mxc",
+    "code": "mxc",
     "icon": "medkit"
   },
   {
     "id": 2,
     "name": "Cocolife",
-    "abbr": "ccl",
+    "code": "ccl",
     "category": ["premium", "plus", "regular"]
   },
   {
     "id": 3,
     "name": "Medicare",
-    "abbr": "mdc"
+    "code": "mdc"
   }
 ]
