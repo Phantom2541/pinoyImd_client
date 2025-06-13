@@ -60,25 +60,6 @@ const Body = () => {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex);
-  const handleUpdate = (item) => {
-    dispatch(SetEDIT(item));
-  };
-
-  const handleDelete = (_id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { _id } }));
-      }
-    });
-  };
 
   return (
     <MDBTable responsive hover>
@@ -96,7 +77,7 @@ const Body = () => {
           const { _id, name, expense, section } = item;
           const isSelected = selected._id === _id;
           return (
-            <tr key={id}>
+            <tr key={_id}>
               <td>{index + startIndex + 1}</td>
 
               {/* Name column */}
@@ -116,7 +97,7 @@ const Body = () => {
                     />
                   </div>
                 ) : (
-                  <strong onClick={() => handleSelected(id, "name", name)}>
+                  <strong onClick={() => handleSelected(_id, "name", name)}>
                     {name}
                   </strong>
                 )}
@@ -165,7 +146,7 @@ const Body = () => {
               </td>
 
               {/* Specimen column */}
-              <td>{specimen}</td>
+              {/* <td>{specimen}</td> */}
 
               {/* Action buttons */}
               <td>
