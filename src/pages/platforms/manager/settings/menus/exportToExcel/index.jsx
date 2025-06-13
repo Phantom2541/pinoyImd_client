@@ -7,7 +7,11 @@ import {
   MDBTypography,
 } from "mdbreact";
 import { useEffect, useState } from "react";
-import { fullName, MenusToExcel } from "../../../../../../services/utilities";
+import {
+  fullName,
+  MenusToExcel,
+  MenusToPDF,
+} from "../../../../../../services/utilities";
 import { useSelector } from "react-redux";
 import BodySwitcher from "./bodySwitcher";
 import { HMO } from "../../../../../../services/fakeDb";
@@ -41,7 +45,7 @@ export default function ExportToExcel({ show, toggle }) {
     }
     return menus;
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { menuType, insource, hmo, priceCategories = [] } = form;
 
@@ -114,16 +118,36 @@ export default function ExportToExcel({ show, toggle }) {
       }
     }
 
-    MenusToExcel({
-      menus,
-      form: {
-        ...form,
-        priceCategories: form.priceCategories.sort((a, b) => {
-          return a.value === "opd" ? -1 : b.value === "opd" ? 1 : 0;
-        }),
-      },
-      createdBy: fullName(auth.fullName),
+    const _form = {
+      ...form,
+      priceCategories: form.priceCategories.sort((a, b) => {
+        return a.value === "opd" ? -1 : b.value === "opd" ? 1 : 0;
+      }),
+    };
+    const result = await Swal.fire({
+      icon: "info",
+      title: "Are you sure you want to export this menus price list??",
+      text: "This will generate both a PDF and Excel file.",
+      showCancelButton: true,
+      confirmButtonText: "Yes, export it!",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
     });
+
+    if (result.isConfirmed) {
+      MenusToExcel({
+        menus,
+        form: _form,
+        createdBy: fullName(auth.fullName),
+      });
+
+      await MenusToPDF({
+        menus,
+        form: _form,
+        createdBy: fullName(auth.fullName),
+      });
+    }
   };
 
   return (

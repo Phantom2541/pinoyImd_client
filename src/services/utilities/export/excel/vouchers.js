@@ -1,8 +1,8 @@
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import fullName from "../fullName";
-import { Privileges, Services } from "../../fakeDb";
-import currency from "../currency";
+import fullName from "../../fullName";
+import { Privileges, Services } from "../../../fakeDb";
+import currency from "../../currency";
 
 const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
   getAlpha = (pos) => {

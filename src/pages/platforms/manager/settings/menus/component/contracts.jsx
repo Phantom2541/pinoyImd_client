@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBInput, MDBRow, MDBCol } from "mdbreact";
 
 export default function SRP({ handleChange, handleValue }) {

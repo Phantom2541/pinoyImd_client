@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import Patient from "./form/patient";
 import Classification from "./form/classification";
 import {
+  RESET_INSOURCE,
   SETPATIENT,
   SETSEARCHKEY,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
-import {
-  fullName,
-  getAge,
-  getBday,
-} from "../../../../../../../services/utilities";
+import { fullName, getAge } from "../../../../../../../services/utilities";
 import { SearchUser as Search } from "../../../../../../../components/searchables";
 
 export default function POS() {
@@ -63,7 +60,10 @@ export default function POS() {
                   color="danger"
                   title="Clear"
                   size="sm"
-                  onClick={() => dispatch(SETPATIENT({}))}
+                  onClick={() => {
+                    dispatch(SETPATIENT({}));
+                    dispatch(RESET_INSOURCE());
+                  }}
                   className="px-2"
                 >
                   <MDBIcon icon="times" />

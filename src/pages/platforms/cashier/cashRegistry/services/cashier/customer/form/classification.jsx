@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBTypography } from "mdbreact";
+import { MDBBadge, MDBTypography } from "mdbreact";
 
 import { properFullname } from "../../../../../../../../services/utilities";
 import {
@@ -14,6 +14,7 @@ import {
   SETPHYSICIAN,
   SETSOURCE,
   SETSSX,
+  RESET_INSOURCE,
 } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import {
   INSOURCE,
@@ -21,6 +22,11 @@ import {
   RESET as SOURCERESET,
 } from "../../../../../../../../services/redux/slices/assets/providers";
 import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
+import { capitalize } from "lodash";
+const contracts = {
+  sbc: "Subcontract",
+  ssc: "Special Subcontract",
+};
 
 export default function PosCard() {
   const { category, privilege, customer, ssx } = useSelector(({ pos }) => pos),
@@ -31,7 +37,6 @@ export default function PosCard() {
     [sources, setSources] = useState([]),
     [source, setSource] = useState(),
     dispatch = useDispatch();
-  console.log("source", source);
 
   useEffect(() => {
     const { abbr } = Categories[category];
@@ -104,6 +109,8 @@ export default function PosCard() {
 
   const handleCategory = (category) => {
     setCategorySelected(category);
+    setSource({});
+    dispatch(RESET_INSOURCE());
     dispatch(SETCATEGORY(category));
   };
   const handlePrivilege = (privilege) => dispatch(SETPRIVILEGE(privilege));
@@ -114,8 +121,6 @@ export default function PosCard() {
     setPhysicians(_physicians); // Update the physicians list based on the filtered data
     // Dispatch the selected source
     // if membership is not null
-    const { membership = "", clients } =
-      sources?.find((source) => source?._id.toString() === _id) || {};
 
     handlePhysician(""); // reset the selected pyhisican if change the source
 
@@ -123,11 +128,10 @@ export default function PosCard() {
     //   dispatch(FIND({ token, key: { _id } }));
     // }
     const _source = sources?.find((source) => source?._id.toString() === _id);
+    const { membership = "", contract = "", hmo = "", clients } = _source || {};
     setSource(_source);
-
-    console.log("_source", _source);
-
-    dispatch(SETSOURCE({ _id: clients?._id, membership }));
+    dispatch(RESET_INSOURCE());
+    dispatch(SETSOURCE({ _id: clients?._id, membership, contract, hmo }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
 
@@ -200,9 +204,42 @@ export default function PosCard() {
         </div>
         <div className="patient-form mt-2">
           {/* // wls */}
-          {category === 5 && <span>HMO : {source?.hmo}</span>}
-          {category === 6 && <span>Membership : {source?.membership} </span>}
-          {category === 7 && <span>Contract : {source?.contract}</span>}
+          {category === 5 && (
+            <span>
+              HMO :
+              <MDBBadge
+                color="warning"
+                className="ml-1"
+                style={{ fontSize: "0.8rem" }}
+              >
+                {capitalize(HMO.getName(source?.hmo))}
+              </MDBBadge>
+            </span>
+          )}
+          {category === 6 && (
+            <span>
+              Membership :
+              <MDBBadge
+                color="warning"
+                className="ml-1"
+                style={{ fontSize: "0.8rem" }}
+              >
+                {capitalize(source?.membership)}{" "}
+              </MDBBadge>
+            </span>
+          )}
+          {category === 7 && (
+            <span>
+              Contract :
+              <MDBBadge
+                color="warning"
+                className="ml-1"
+                style={{ fontSize: "0.8rem" }}
+              >
+                {capitalize(contracts[source?.contract])}
+              </MDBBadge>
+            </span>
+          )}
         </div>
 
         {source ? (
