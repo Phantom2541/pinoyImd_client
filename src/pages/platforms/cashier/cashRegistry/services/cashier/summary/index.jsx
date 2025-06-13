@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import {
   RESET,
+  RESET_INSOURCE,
   SAVE,
   SETCART,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
@@ -32,6 +33,7 @@ export default function Summary() {
       department,
       membership,
       hmo,
+      contract,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState("cash"),
@@ -45,7 +47,8 @@ export default function Summary() {
       category,
       privilege,
       membership,
-      hmo
+      hmo,
+      contract
     ),
     amount = gross - discount,
     { abbr = undefined } = Categories[category],
@@ -137,6 +140,7 @@ export default function Summary() {
       setCash(0);
       setPayment(0);
       dispatch(RESET());
+      dispatch(RESET_INSOURCE());
     }
   };
   return (

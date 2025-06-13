@@ -39,12 +39,9 @@ const Header = ({
         code,
         name: HMO.getName(code),
       }));
-      console.log("tags", tags);
-
       setHmoTags(tags);
     }
   }, [activePlatform]);
-  console.log("hmoTags", hmoTags);
 
   const isGhost = clients?._id ? false : true;
 
@@ -165,6 +162,7 @@ const Header = ({
                   className="m-0 p-0"
                   collections={hmoTags}
                   preValue={hmo}
+                  values={"name"}
                   keys={"code"}
                   handleCheck={handleUpdate}
                   handleClose={() => setUpdate({})}
@@ -191,7 +189,7 @@ const Header = ({
                   });
                 }}
               >
-                {hmo ? hmo : "N/A"}
+                {hmo ? HMO.getName(hmo) : "N/A"}
               </h6>
             )}
           </div>
