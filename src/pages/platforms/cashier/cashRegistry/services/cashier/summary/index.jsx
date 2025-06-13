@@ -52,8 +52,7 @@ export default function Summary() {
     providedPaymentOptions = Payments[abbr];
 
   useEffect(() => {
-    if (abbr === "hmo") setPayment("voucher");
-    else setPayment("cash");
+    setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
   }, [abbr]);
 
   const handleCheckout = async (e) => {
