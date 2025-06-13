@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const url = "/commerce/catalog/productsGenerics";
+const url = "//commerce/catalog/medicines";
 
 const initialState = {
   filter: [],
@@ -97,25 +97,17 @@ export const reduxSlice = createSlice({
       state.willCreate = false;
       state.showModal = true;
     },
-    SetCREATE: (state) => {
+    SetCREATE: (state, { payload }) => {
       state.selected = {
-        brand: "",
-        name: "",
-        subname: "",
-        description: "",
-        prescription: false,
-        expense: 0,
-        forsale: false,
-        remarks: "",
-        section: "",
-        store: "",
+        lo: "",
+        norm: "",
+        hi: "",
+        serviceId: payload.serviceId,
       };
       state.willCreate = true;
       state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
-      console.log("payload", payload);
-
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
@@ -125,7 +117,7 @@ export const reduxSlice = createSlice({
           state.page = totalPages;
         }
       }
-      state.filtered = payload;
+      state.filter = payload;
     },
     SetPagination: (state) => {
       // {
@@ -134,7 +126,7 @@ export const reduxSlice = createSlice({
       const { page, max } = state;
       // if (getPage) return array;
 
-      state.paginated = state.filtered.slice(
+      state.paginated = state.filter.slice(
         (page - 1) * max,
         max + (page - 1) * max
       );
@@ -169,7 +161,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-
         state.collections = state.filtered = payload; // Fix typo
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -187,8 +178,10 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, { payload }) => {
+      .addCase(SAVE.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
         state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
@@ -206,17 +199,14 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-
-        const updateCollections = (collections) => {
-          const index = collections.findIndex(
-            (item) => item._id === payload._id
-          );
-
-          collections[index] = payload;
-        };
-        updateCollections(state.collections);
-        updateCollections(state.filtered);
-
+        const index = state.collections.findIndex(
+          (item) => item._id === payload._id
+        );
+        state.collections[index] = payload;
+        const findex = state.filtered.findIndex(
+          (item) => item._id === payload._id
+        );
+        state.filtered[findex] = payload;
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
@@ -233,16 +223,16 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success } = action;
         const index = state.collections.findIndex(
-          (item) => item?._id === payload
+          (item) => item?._id === action.payload.payload
         );
         state.collections.splice(index, 1);
 
-        const index2 = state.filtered.findIndex(
-          (item) => item?._id === payload
+        const findex = state.filtered.findIndex(
+          (item) => item._id === action.payload.payload
         );
-        state.filtered.splice(index2, 1);
+        state.filtered.splice(findex, 1);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;

@@ -51,7 +51,12 @@ import {
   soa,
 } from "./slices/finance";
 
-import { products, productsGenerics } from "./slices/market";
+import {
+  products,
+  productsGenerics,
+  machines,
+  medicine,
+} from "./slices/market";
 import { appointments } from "./slices/clinical";
 
 const store = configureStore({
@@ -100,6 +105,8 @@ const store = configureStore({
     ecg,
     productsGenerics,
     appointments,
+    machines,
+    medicine,
     //for templates only
     dragDrop,
     table,
