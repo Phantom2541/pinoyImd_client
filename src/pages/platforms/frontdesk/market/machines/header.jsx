@@ -14,9 +14,8 @@ const Header = () => {
     dispatch = useDispatch();
   console.log("collections");
 
-  //initial values
   useEffect(() => {
-    if (token)
+    if (token) {
       dispatch(
         BROWSE({ token, params: { branchId: activePlatform?.branchId } })
       );

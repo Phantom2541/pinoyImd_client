@@ -10,6 +10,7 @@ import {
 } from "../../../../../../../../services/utilities";
 import {
   Categories,
+  HMO,
   Memberships,
   Privileges,
 } from "../../../../../../../../services/fakeDb";
@@ -19,6 +20,7 @@ import {
   SETPHYSICIAN,
   SETSOURCE,
   SETSSX,
+  SETHMO,
 } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import {
   INSOURCE,
@@ -109,6 +111,10 @@ export default function PosCard() {
   var baseCategory = Categories[category]?.abbr;
   const hasMembership = ["is", "sbc", "ssc", "hmo"].includes(baseCategory);
   baseCategory = baseCategory === "is" ? "insource" : baseCategory;
+
+  const { branch = {} } = activePlatform;
+  const { companyId = {} } = branch;
+  const { hmo = [] } = companyId;
   return (
     <>
       <div>
@@ -121,21 +127,7 @@ export default function PosCard() {
             onChange={({ target }) => dispatch(SETSSX(target.value))}
           />
         </div>
-        <div className="patient-form">
-          <span>Category</span>
-          <select
-            disabled={!didSelect}
-            value={category}
-            onChange={({ target }) => handleCategory(Number(target.value))}
-          >
-            {Categories.map(({ name, color }, index) => (
-              <option value={index} key={`category-${index}`} style={{ color }}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="patient-form">
+        <div className="patient-form mt-2">
           <span>Privilege</span>
           <select
             disabled={!didSelect}
@@ -161,8 +153,21 @@ export default function PosCard() {
             })}
           </select>
         </div>
-
-        <div className="patient-form">
+        <div className="patient-form mt-2">
+          <span>Category</span>
+          <select
+            disabled={!didSelect}
+            value={category}
+            onChange={({ target }) => handleCategory(Number(target.value))}
+          >
+            {Categories.map(({ name, color }, index) => (
+              <option value={index} key={`category-${index}`} style={{ color }}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="patient-form mt-2">
           <span>Source</span>
           <select
             disabled={!didSelect}
@@ -182,71 +187,56 @@ export default function PosCard() {
               ))}
           </select>
         </div>
-        {source ? (
-          <div className="patient-form">
-            <span>Physician</span>
+        {baseCategory === "wls" ? (
+          <div className="patient-form mt-2">
+            <span>Health Management Organization</span>
             <select
               disabled={!didSelect}
-              onChange={({ target }) => handlePhysician(target.value)}
+              onChange={({ target }) => dispatch(SETHMO(target.value))}
             >
               <option value="">None</option>
-              {physicians?.length === 0 && (
-                <option value="" disabled>
-                  No Physicians where tag to this company
-                </option>
-              )}
-              {physicians?.map(({ user }) => (
-                <option key={user?._id} value={user?._id}>
-                  {properFullname(user?.fullName)}
+              {hmo.map(({ code }) => (
+                <option key={_id} value={code}>
+                  {HMO.getName(code)}
                 </option>
               ))}
             </select>
           </div>
         ) : (
-          <PickPhysician
-            label="Search Physician (lname,mname,fname)"
-            selectedClassName="mt-2"
-            disabled={!didSelect}
-            globalSearch
-            onClick={({ user }) => handlePhysician(user?._id)}
-          />
+          <>
+            {source ? (
+              <div className="patient-form mt-2">
+                <span>Physician</span>
+                <select
+                  disabled={!didSelect}
+                  onChange={({ target }) => handlePhysician(target.value)}
+                >
+                  <option value="">None</option>
+                  {physicians?.length === 0 && (
+                    <option value="" disabled>
+                      No Physicians where tag to this company
+                    </option>
+                  )}
+                  {physicians?.map(({ user }) => (
+                    <option key={user?._id} value={user?._id}>
+                      {properFullname(user?.fullName)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <PickPhysician
+                label="Search Physician (lname,mname,fname)"
+                selectedClassName="mt-2"
+                disabled={!didSelect}
+                globalSearch
+                onClick={({ user }) => handlePhysician(user?._id)}
+              />
+            )}
+          </>
         )}
       </div>
-      {_id ? (
-        <div className="mt-2">
-          <MDBRow>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>Birthday:</span>
-                <p>{new Date(dob).toDateString()}</p>
-              </div>
-            </MDBCol>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>Age:</span>
-                <p>{getAge(dob)}</p>
-              </div>
-            </MDBCol>
-          </MDBRow>
-          <MDBRow>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>{_mobile ? "Contact Number" : "E-mail address"}:</span>
-                <p>{_mobile ? mobile(_mobile) : email}</p>
-              </div>
-            </MDBCol>
-          </MDBRow>
-          <MDBRow>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>Address:</span>
-
-                <p>{fullAddress(address)}</p>
-              </div>
-            </MDBCol>
-          </MDBRow>
-        </div>
-      ) : (
+      {!_id && (
         <MDBTypography note noteColor="info" className="mt-3 mb-0">
           Please search a patron first.
         </MDBTypography>

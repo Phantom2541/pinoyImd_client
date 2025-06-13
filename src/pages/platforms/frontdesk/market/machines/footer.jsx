@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import TableRowCount from "../../../../../components/pagination/rows";
-import Pagination from "../../../../../components/pagination";
+import Rows from "../../../../components/pagination/rows";
+import Pagination from "../../../../components/pagination";
 import {
+  SetACTIVEPAGE,
   SetMaxPage,
   SetActivePAGE,
 } from "../../../../../services/redux/slices/market/machines";
@@ -21,13 +22,13 @@ const Footer = () => {
     const newPage =
       typeof action === "number" ? action : activePage + (action ? 1 : -1);
     if (newPage >= 1 && newPage <= totalPages) {
-      dispatch(SetActivePAGE(newPage));
+      dispatch(SetACTIVEPAGE(newPage));
     }
   };
 
   return (
     <div className="mb-auto d-flex justify-content-between align-items-center px-4">
-      <TableRowCount disablePageSelect={false} />
+      <Rows disablePageSelect={false} />
       <Pagination
         isLoading={isLoading}
         total={totalPages}

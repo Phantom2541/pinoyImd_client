@@ -20,20 +20,22 @@ const Body = () => {
     setSelected({});
   };
 
-  const handleSelected = (data) => {
-    const { id, ...val } = data; // note: on handling data from collection, please use _id
-    const [key] = Object.keys(val);
-    const value = val[key];
+  const handleUpdate = () => {
+    const { id, key, value, old } = selected;
+    if (value !== old) {
+      console.log("Updating:", { id, [key]: value });
 
-    console.log("data", data);
+      // Uncomment and implement this in Redux
+      // dispatch(UpdateService({ id, key, value }));
+    }
+    setSelected({});
+  };
 
-    console.log("selected", { id, key, value });
-
-    // If already selected, toggle off
-    if (selected?._id === id) {
+  const handleSelected = (id, key, value) => {
+    if (selected.id === id && selected.key === key) {
       setSelected({});
     } else {
-      setSelected({ id, key, value, old: val[key] });
+      setSelected({ id, key, value, old: value });
     }
   };
 
@@ -74,20 +76,22 @@ const Body = () => {
           const { id, name, abbreviation, specimen } = item;
           const isSelected = selected.id === id;
           return (
-            <tr key={index}>
-              <td key={index}>{index + startIndex + 1}</td>
+            <tr key={_id}>
+              <td>{index + startIndex + 1}</td>
+
+              {/* Name column */}
               <td>
                 {isSelected && selected.key === "name" ? (
                   <div style={{ width: "13rem" }}>
                     <Input
-                      _key={"value"}
+                      _key="value"
                       className="mt-2 form-control form-control-sm"
                       isSuccess={isSuccess}
                       selected={selected}
                       onChange={(key, val) =>
                         setSelected({ ...selected, [key]: val })
                       }
-                      handleCheck={() => handleUpdate()}
+                      handleCheck={handleUpdate}
                       handleClose={() => setSelected({})}
                     />
                   </div>
@@ -101,14 +105,14 @@ const Body = () => {
                 {isSelected && selected.key === "abbreviation" ? (
                   <div style={{ width: "13rem" }}>
                     <Input
-                      _key={"value"}
+                      _key="value"
                       className="mt-2 form-control form-control-sm"
                       isSuccess={isSuccess}
                       selected={selected}
                       onChange={(key, val) =>
                         setSelected({ ...selected, [key]: val })
                       }
-                      handleCheck={() => handleUpdate()}
+                      handleCheck={handleUpdate}
                       handleClose={() => setSelected({})}
                     />
                   </div>

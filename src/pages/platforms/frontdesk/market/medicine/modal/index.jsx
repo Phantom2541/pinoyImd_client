@@ -24,11 +24,17 @@ export default function Modal() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  // Handle update function
-  const handleUpdate = () => {
-    TOGGLE();
+  // Sync form state with selected when modal opens
+  useEffect(() => {
+    if (selected) {
+      setForm(selected);
+    }
+  }, [selected]);
 
-    // Check if object has changed
+  // Handle updating an existing product
+  const handleUpdate = () => {
+    dispatch(TOGGLE());
+
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
@@ -43,7 +49,7 @@ export default function Modal() {
     // );
   };
 
-  // Handle create function
+  // Handle creating a new product
   const handleCreate = () => {
     // dispatch(
     //   SAVE({
@@ -69,7 +75,7 @@ export default function Modal() {
     // handleUpdate();
   };
 
-  // Handle change sa inputs
+  // Handle input change
   const handleChange = (key, value) => {
     setForm({
       ...form,
@@ -79,14 +85,14 @@ export default function Modal() {
     });
   };
 
-  // Fix: Return correct form value
-  const handleValue = (key) => form[key] || "";
+  // Retrieve value for inputs
+  const handleValue = (key) => form[key] ?? "";
 
   // Handle modal close
   const handleClose = () => dispatch(TOGGLE());
 
   return (
-    <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
+    <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="sm">
       <MDBModalHeader
         toggle={handleClose}
         className="light-blue darken-3 white-text"
