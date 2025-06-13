@@ -3,8 +3,15 @@ import { axioKit } from "../../../utilities";
 
 const url = "assets/providers";
 const categories = [
-  { text: "Vendors", value: "insource" },
-  { text: "Health Management Organization", value: "hmo" },
+  { text: "supplier", value: "supplier" },
+  { text: "laboratory", value: "laboratory" },
+  { text: "radiology", value: "radiology" },
+  { text: "diagnostic", value: "diagnostic" },
+  { text: "pharmacy", value: "pharmacy" },
+  { text: "infirmary", value: "infirmary" },
+  { text: "rehabilitation", value: "rehabilitation" },
+  { text: "support", value: "support" },
+  { text: "ghost", value: "ghost" },
 ];
 const contractCategories = [
   { text: "Subcontract", value: "sbc" },

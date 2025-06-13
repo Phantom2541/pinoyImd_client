@@ -7,15 +7,11 @@ import {
   SetSOURCE,
   RESET_COLLECTIONS,
   SetREGISTER,
-  SetCATEGORY,
-} from "../../../../../../services/redux/slices/assets/providers";
-import Search from "../../../../../../components/searchables/sources";
+} from "../../../../../services/redux/slices/assets/providers";
+import Search from "../../../../../components/searchables/sources";
 import Swal from "sweetalert2";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { category, contractCategories } = useSelector(
-      ({ providers }) => providers
-    ),
     dispatch = useDispatch();
 
   // initial values
@@ -26,7 +22,7 @@ const Header = () => {
           token,
           key: {
             vendors: activePlatform?.branchId,
-            categories: ["wls"],
+            categories: ["wns"],
           },
         })
       );
@@ -64,7 +60,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          Wellness (Insource) List
+          Health Management Organization
         </span>
       </div>
       <div>

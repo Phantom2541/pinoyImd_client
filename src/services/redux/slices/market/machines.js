@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const url = "/commerce/catalog/productsGenerics";
+const url = "/procurements/commodity";
 
 const initialState = {
   filter: [],
@@ -97,7 +97,7 @@ export const reduxSlice = createSlice({
       state.willCreate = false;
       state.showModal = true;
     },
-    SetCREATE: (state) => {
+    SetCREATE: (state, { payload }) => {
       state.selected = {
         brand: "",
         name: "",
@@ -205,18 +205,17 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
+        console.log("action", action);
         const { success, payload } = action.payload;
-
-        const updateCollections = (collections) => {
-          const index = collections.findIndex(
-            (item) => item._id === payload._id
-          );
-
-          collections[index] = payload;
-        };
-        updateCollections(state.collections);
-        updateCollections(state.filtered);
-
+        console.log("payload", payload);
+        const index = state.collections.findIndex(
+          (item) => item._id === payload._id
+        );
+        state.collections[index] = payload;
+        const findex = state.filtered.findIndex(
+          (item) => item._id === payload._id
+        );
+        state.filtered[findex] = payload;
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;

@@ -1,31 +1,28 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
 import {
   BROWSE,
-  SAVE,
   SetFILTER,
-} from "../../../../../services/redux/slices/market/productsGenerics";
+  SetCREATE,
+} from "../../../../../services/redux/slices/market/machines";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(
-      ({ productsGenerics }) => productsGenerics
-    ),
+  const { collections } = useSelector(({ machines }) => machines),
     dispatch = useDispatch();
-
-  // console.log("collections", collections);
+  console.log("collections");
 
   useEffect(() => {
     if (token) {
       dispatch(
         BROWSE({ token, params: { branchId: activePlatform?.branchId } })
       );
-    }
-  }, [dispatch, token]);
+  }, [dispatch, token, activePlatform]);
 
-  const handleAdd = () => {};
+  const handleAdd = (item) => dispatch(SetCREATE(item));
+
   return (
     <MDBView
       cascade
@@ -33,19 +30,19 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Generics
+          {collections.length} Machines
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center">
+        <div className="text-right d flex items-center">
           <Search
             collections={collections}
             setFiltered={(items) => dispatch(SetFILTER(items))}
-            placeholder="Search generics"
-            haveAction={true}
+            placeholder="Search machines "
+            HaveAction={true}
             reset={() => dispatch(SetFILTER(collections))}
             hideButton={false}
-            handleAdd={(item) => handleAdd(item)} // ✅ FIXED HERE
+            handleAdd={(item) => handleAdd(item)}
           />
         </div>
       </div>

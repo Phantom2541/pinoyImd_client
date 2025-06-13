@@ -28,7 +28,6 @@ const Header = ({
     subName: ghostSubName,
     cutoff = 0,
     credit = 0,
-    due = 0,
   } = insource;
   const isGhost = clients?._id ? false : true;
 
@@ -161,6 +160,7 @@ const Header = ({
               <h6 className={isDenied && "text-danger"}>{handleCategory()}</h6>
             </div>
           )}
+
           <div className="mr-5">
             <small
               style={{ fontSize: "0.7rem" }}
@@ -173,7 +173,7 @@ const Header = ({
                 <Select
                   className="m-0 p-0"
                   collections={new Array(27).fill(0).map((_, i) => i + 1)}
-                  preValue={cutoff}
+                  preValue={update.updatedValue}
                   handleCheck={() => handleUpdate()}
                   handleClose={() => setUpdate({})}
                   formSubmitted={formSubmitted}
@@ -200,48 +200,6 @@ const Header = ({
                 }}
               >
                 {cutoff ? cutoff : "N/A"}
-              </h6>
-            )}
-          </div>
-          <div className="mr-5">
-            <small
-              style={{ fontSize: "0.7rem" }}
-              className={!isWhiteColor && "grey-text"}
-            >
-              Monthly Due
-            </small>
-            {update?.updatedKey === "due" && update?.providerID === _id ? (
-              <div style={{ width: "6rem" }}>
-                <Select
-                  className="m-0 p-0"
-                  collections={new Array(27).fill(0).map((_, i) => i + 1)}
-                  preValue={due}
-                  handleCheck={handleUpdate}
-                  handleClose={() => setUpdate({})}
-                  formSubmitted={formSubmitted}
-                  onChange={(value) =>
-                    setUpdate({
-                      updatedKey: "due",
-                      newDue: value,
-                      due,
-                      newKey: "newDue",
-                      providerID: _id,
-                    })
-                  }
-                  soloUpdate
-                />
-              </div>
-            ) : (
-              <h6
-                onClick={() => {
-                  setUpdate({
-                    updatedKey: "due",
-                    updatedValue: due,
-                    providerID: _id,
-                  });
-                }}
-              >
-                {due ? due : "N/A"}
               </h6>
             )}
           </div>

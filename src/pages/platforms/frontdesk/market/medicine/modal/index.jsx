@@ -7,22 +7,20 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
+  MDBTypography,
+  MDBModaltable,
 } from "mdbreact";
-import {
-  SAVE,
-  UPDATE,
-  TOGGLE,
-} from "../../../../../services/redux/slices/market/productsGenerics";
+import { TOGGLE } from "../../../../services/redux/slices/reusable/table";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
   const { showModal, selected, willCreate, isLoading } = useSelector(
-      ({ productsGenerics }) => productsGenerics
+      ({ table }) => table
     ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected || {}),
+    { auth, activePlatform } = useSelector(({ auth }) => auth),
+    [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -43,33 +41,38 @@ export default function Modal() {
       });
     }
 
-    dispatch(
-      UPDATE({
-        data: { ...form, _id: selected._id },
-        token,
-      })
-    );
+    // dispatch(
+    //   UPDATE({
+    //     data: { ...form, _id: selected._id },
+    //     token,
+    //   })
+    // );
   };
 
   // Handle creating a new product
   const handleCreate = () => {
-    dispatch(
-      SAVE({
-        data: form,
-        token,
-      })
-    ).then(() => dispatch(TOGGLE())); // Close modal after save
+    // dispatch(
+    //   SAVE({
+    //     data: form,
+    //     token,
+    //   })
+    // ).then(() => TOGGLE()); // Close modal after successful save
   };
 
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (willCreate) {
-      return handleCreate();
-    }
-
+    if (willCreate) return handleCreate();
     handleUpdate();
+
+    // console.log("form", form);
+
+    // if (willCreate) {
+    //   return handleCreate();
+    // }
+
+    // handleUpdate();
   };
 
   // Handle input change
@@ -95,7 +98,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Product
+        {willCreate ? "Create" : "Update"} Services
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
@@ -107,17 +110,10 @@ export default function Modal() {
             onChange={(e) => handleChange("name", e.target.value)}
           />
           <MDBInput
-            label="expense"
+            label="subname"
             type="text"
-            value={handleValue("expense")}
-            onChange={(e) => handleChange("expense", e.target.value)}
-          />
-          <MDBInput
-            label="section"
-            type="text"
-            value={handleValue("section")}
-            required
-            onChange={(e) => handleChange("section", e.target.value)}
+            value={handleValue("subname")}
+            onChange={(e) => handleChange("subname", e.target.value)}
           />
 
           {/* Submit button */}

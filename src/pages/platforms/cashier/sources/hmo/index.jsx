@@ -1,20 +1,19 @@
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody } from "mdbreact";
-
-import Collapsable from "./collapsables";
+import { SetActivePAGE } from "../../../../../services/redux/slices/assets/providers";
 import TopHeader from "./header";
-import Pagination from "../../../../../../components/pagination";
-import TableRowCount from "../../../../../../components/pagination/rows";
-import { SetActivePAGE } from "../../../../../../services/redux/slices/assets/providers";
-import TableLoading from "../../../../../../components/tableLoading";
-import Modal from "./modal";
-import RegisterBranch from "./registerBranch";
-const Referral = () => {
-  const { totalPages, activePage, isLoading } = useSelector(
+import Pagination from "../../../../../components/pagination";
+import TableRowCount from "../../../../../components/pagination/rows";
+import TableLoading from "../../../../../components/tableLoading";
+import Body from "./body";
+const Wellness = () => {
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { totalPages, activePage, isLoading } = useSelector(
       ({ providers }) => providers
     ),
     dispatch = useDispatch();
 
+  console.log("activePlatform", activePlatform);
   const handlePageChange = (action) => {
     const newPage = activePage + (action ? 1 : -1);
     if (newPage >= 1 && newPage <= totalPages) {
@@ -26,10 +25,7 @@ const Referral = () => {
     <>
       <MDBCard narrow className="pb-3 mt-3" style={{ minHeight: "600px" }}>
         <TopHeader />
-        <MDBCardBody>
-          {!isLoading ? <Collapsable /> : <TableLoading />}
-        </MDBCardBody>
-        <RegisterBranch />
+        <MDBCardBody>{!isLoading ? <Body /> : <TableLoading />}</MDBCardBody>
         <div className="mb-auto d-flex justify-content-between align-items-center px-4">
           <TableRowCount disablePageSelect={false} />
           <Pagination
@@ -40,9 +36,8 @@ const Referral = () => {
           />
         </div>
       </MDBCard>
-      <Modal />
     </>
   );
 };
 
-export default Referral;
+export default Wellness;

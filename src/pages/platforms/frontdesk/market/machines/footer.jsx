@@ -5,14 +5,14 @@ import Pagination from "../../../../components/pagination";
 import {
   SetACTIVEPAGE,
   SetMaxPage,
-} from "../../../../services/redux/slices/market/products";
-
+  SetActivePAGE,
+} from "../../../../../services/redux/slices/market/machines";
 const Footer = () => {
   const { isLoading, totalPages, activePage } = useSelector(
-    ({ services }) => services
-  );
-  const { maxPage } = useSelector(({ auth }) => auth);
-  const dispatch = useDispatch();
+      ({ machines }) => machines
+    ),
+    { maxPage } = useSelector(({ auth }) => auth),
+    dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(SetMaxPage(maxPage));

@@ -5,6 +5,9 @@ import Suppliers from "./suppliers";
 import Contract from "./insources/contract";
 import Wellness from "./insources/wellness";
 import Membership from "./insources/membership";
+import Referrals from "./insources/referrals";
+import HMO from "./hmo";
+
 export {
   Membership,
   Outsources,
@@ -13,4 +16,6 @@ export {
   Suppliers,
   Wellness,
   Contract,
+  Referrals,
+  HMO,
 };

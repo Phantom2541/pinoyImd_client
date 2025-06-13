@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { MDBCollapseHeader, MDBBtn, MDBBadge } from "mdbreact";
 import { collapse, currency } from "../../../../../../../../services/utilities";
 import { Select, Input } from "../../../../../../../../components/customizable";
 import PopOver from "./popOver";
-import { useSelector } from "react-redux";
+import { HMO } from "../../../../../../../../services/fakeDb";
 
 const Header = ({
   insource,
@@ -18,18 +20,32 @@ const Header = ({
   handleUpdate,
   formSubmitted,
 }) => {
-  const { contractCategories: categories, category: activeCategory } =
-    useSelector(({ providers }) => providers);
   const {
-    clients,
-    _id,
-    contract,
-    status,
-    subName: ghostSubName,
-    cutoff = 0,
-    credit = 0,
-    due = 0,
-  } = insource;
+      clients,
+      _id,
+      status,
+      subName: ghostSubName,
+      cutoff = 0,
+      due = 0,
+      credit = 0,
+      hmo = "",
+    } = insource,
+    { activePlatform } = useSelector(({ auth }) => auth);
+  const [hmoTags, setHmoTags] = useState([]);
+
+  useEffect(() => {
+    if (activePlatform) {
+      const tags = activePlatform?.branch?.companyId?.hmo?.map(({ code }) => ({
+        code,
+        name: HMO.getName(code),
+      }));
+      console.log("tags", tags);
+
+      setHmoTags(tags);
+    }
+  }, [activePlatform]);
+  console.log("hmoTags", hmoTags);
+
   const isGhost = clients?._id ? false : true;
 
   const { abbr, displayname } = clients || "";
@@ -45,20 +61,6 @@ const Header = ({
 
   const isWhiteColor = color === "text-white"; //para sa color ng small tag
 
-  const _category = categories.find((c) => c.value === contract)?.text;
-
-  const isDenied = status === "denied";
-
-  const handleCategory = () => {
-    switch (status) {
-      case "pending":
-        return "-";
-      case "denied":
-        return "Denied";
-      default:
-        return _category;
-    }
-  };
   return (
     <MDBCollapseHeader
       onMouseLeave={() => setDidHoverId(-1)}
@@ -150,17 +152,50 @@ const Header = ({
               </MDBBadge>
             )}
           </div>
-          {!activeCategory && (
-            <div className="mr-5">
-              <small
-                className={!isWhiteColor && "grey-text"}
-                style={{ fontSize: "0.7rem" }}
+          <div className="mr-5">
+            <small
+              style={{ fontSize: "0.7rem" }}
+              className={!isWhiteColor && "grey-text"}
+            >
+              HMO
+            </small>
+            {update?.updatedKey === "hmo" && update?.providerID === _id ? (
+              <div style={{ width: "6rem" }}>
+                <Select
+                  className="m-0 p-0"
+                  collections={hmoTags}
+                  preValue={hmo}
+                  keys={"code"}
+                  handleCheck={handleUpdate}
+                  handleClose={() => setUpdate({})}
+                  formSubmitted={formSubmitted}
+                  onChange={(value) =>
+                    setUpdate({
+                      updatedKey: "hmo",
+                      newHmo: value,
+                      hmo,
+                      newKey: "newHmo",
+                      providerID: _id,
+                    })
+                  }
+                  soloUpdate
+                />
+              </div>
+            ) : (
+              <h6
+                onClick={() => {
+                  setUpdate({
+                    updatedKey: "hmo",
+                    updatedValue: hmo,
+                    providerID: _id,
+                  });
+                }}
               >
-                Category
-              </small>
-              <h6 className={isDenied && "text-danger"}>{handleCategory()}</h6>
-            </div>
-          )}
+                {hmo ? hmo : "N/A"}
+              </h6>
+            )}
+          </div>
+
           <div className="mr-5">
             <small
               style={{ fontSize: "0.7rem" }}
@@ -173,8 +208,8 @@ const Header = ({
                 <Select
                   className="m-0 p-0"
                   collections={new Array(27).fill(0).map((_, i) => i + 1)}
-                  preValue={cutoff}
-                  handleCheck={() => handleUpdate()}
+                  preValue={update.updatedValue}
+                  handleCheck={handleUpdate}
                   handleClose={() => setUpdate({})}
                   formSubmitted={formSubmitted}
                   onChange={(value) =>

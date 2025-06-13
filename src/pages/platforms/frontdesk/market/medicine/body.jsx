@@ -1,22 +1,35 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { MDBTable } from "mdbreact";
-import { Input } from "../../../../../components/customizable";
-import {
-  DESTROY,
-  ProductsGenerics,
-  SetEDIT,
-} from "../../../../../services/redux/slices/market/productsGenerics";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
+import { Input } from "../../../components/customizable";
+import { SetEDIT } from "../../../services/redux/slices/reusable/table";
 import Swal from "sweetalert2";
+import { RESET } from "../../../services/redux/slices/assets/companies";
 
 const Body = () => {
-  const { token } = useSelector(({ auth }) => auth);
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
-    ({ services }) => services
-  );
+      ({ services }) => services
+    ),
+    [selected, setSelected] = useState({}),
+    dispatch = useDispatch();
 
-  const [selected, setSelected] = useState({});
-  const dispatch = useDispatch();
+  const handleUpdate = () => {
+    const { id, key, value } = selected;
+    console.log("selected", { id, [key]: value });
+    // dispatch here to update the selected item
+    setSelected({});
+  };
+
+  const handleUpdate = () => {
+    const { id, key, value, old } = selected;
+    if (value !== old) {
+      console.log("Updating:", { id, [key]: value });
+
+      // Uncomment and implement this in Redux
+      // dispatch(UpdateService({ id, key, value }));
+    }
+    setSelected({});
+  };
 
   const handleSelected = (id, key, value) => {
     if (selected.id === id && selected.key === key) {
@@ -26,13 +39,13 @@ const Body = () => {
     }
   };
 
-  const itemsPerPage = maxPage || 10;
+  /**
+   * Pagination: Calculate the start and end index for the current page
+   */
+  const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex);
-  const handleUpdate = (item) => {
-    dispatch(SetEDIT(item));
-  };
+  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
   const handleDelete = (_id) => {
     Swal.fire({
@@ -44,27 +57,24 @@ const Body = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { _id } }));
-      }
+      // dispatch(DESTROY({ token, data: { _id  } }));
     });
   };
-
   return (
     <MDBTable responsive hover>
-      <thead style={{ backgroundColor: "#f8f9fa", color: "black" }}>
+      <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
-          <th>Name</th>
-          <th>Expense</th>
-          <th>Section</th>
-          <th>Actions</th>
+          <th>Service</th>
+          <th>Abbreviation</th>
+          <th>Specimen</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { _id, name, expense, section } = item;
-          const isSelected = selected._id === _id;
+          const { id, name, abbreviation, specimen } = item;
+          const isSelected = selected.id === id;
           return (
             <tr key={_id}>
               <td>{index + startIndex + 1}</td>
@@ -86,29 +96,8 @@ const Body = () => {
                     />
                   </div>
                 ) : (
-                  <strong onClick={() => handleSelected(_id, "name", name)}>
+                  <strong onClick={() => handleSelected({ id, name })}>
                     {name}
-                  </strong>
-                )}
-              </td>
-              <td>
-                {isSelected && selected.key === "subname" ? (
-                  <div style={{ width: "13rem" }}>
-                    <Input
-                      _key={"value"}
-                      className="mt-2 form-control form-control-sm"
-                      isSuccess={isSuccess}
-                      selected={selected}
-                      onChange={(key, val) =>
-                        setSelected({ ...selected, [key]: val })
-                      }
-                      handleCheck={() => handleUpdate()}
-                      handleClose={() => setSelected({})}
-                    />
-                  </div>
-                ) : (
-                  <strong onClick={() => handleSelected({ _id, expense })}>
-                    {expense}
                   </strong>
                 )}
               </td>
@@ -128,29 +117,31 @@ const Body = () => {
                     />
                   </div>
                 ) : (
-                  <strong onClick={() => handleSelected({ _id, section })}>
-                    {section}
+                  <strong onClick={() => handleSelected({ id, abbreviation })}>
+                    {abbreviation}
                   </strong>
                 )}
               </td>
-
-              {/* Specimen column */}
-              {/* <td>{specimen}</td> */}
-
-              {/* Action buttons */}
+              <td>{specimen}</td>
               <td>
-                <button
-                  onClick={() => handleUpdate(item)}
-                  className="btn btn-primary btn-sm mr-2"
-                >
-                  Update
-                </button>
-                <button
-                  onClick={() => handleDelete(_id)}
-                  className="btn btn-danger btn-sm"
-                >
-                  Delete
-                </button>
+                <MDBBtnGroup>
+                  <MDBBtn
+                    color="danger"
+                    size="sm"
+                    rounded
+                    onClick={() => dispatch(RESET(id))}
+                  >
+                    <MDBIcon icon="trash" />
+                  </MDBBtn>
+                  <MDBBtn
+                    color="primary"
+                    size="sm"
+                    rounded
+                    onClick={() => dispatch(SetEDIT(item))}
+                  >
+                    <MDBIcon icon="pencil-alt" />
+                  </MDBBtn>
+                </MDBBtnGroup>
               </td>
             </tr>
           );
