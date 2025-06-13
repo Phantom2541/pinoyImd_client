@@ -21,6 +21,7 @@ import Search from "../../../../../components/searchables/search";
 import TableLoading from "../../../../../components/tableLoading";
 import { fullName, MenusToExcel } from "../../../../../services/utilities";
 import ExportToExcel from "./exportToExcel";
+import PDFExport from "../../../../../services/utilities/export/pdf/menus";
 
 const Menus = () => {
   const [menus, setMenus] = useState([]),
@@ -130,12 +131,7 @@ const Menus = () => {
   // const handleGenerate = () => {
   //   setVisible(!visible);
   // };
-  const handleExport = () => {
-    MenusToExcel({
-      array: collections,
-      createdBy: fullName(auth.fullName),
-    });
-  };
+
   const handleChangePage = (isAdd) => {
     setPage((prev) => (isAdd ? prev + 1 : prev - 1));
   };

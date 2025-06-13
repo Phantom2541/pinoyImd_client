@@ -1,7 +1,7 @@
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { HMO, Memberships, Services } from "../../fakeDb";
-import { ENDPOINT, mobile } from "..";
+import { HMO, Memberships, Services } from "../../../fakeDb";
+import { ENDPOINT, mobile } from "../..";
 
 const border = {
   top: { style: "thin" },
@@ -237,7 +237,7 @@ const set = {
           return [
             { text: `${label}. `, font: { bold: true } },
             {
-              text: service.abbreviation + " ",
+              text: service.abbreviation + "     ",
             },
           ];
         });
