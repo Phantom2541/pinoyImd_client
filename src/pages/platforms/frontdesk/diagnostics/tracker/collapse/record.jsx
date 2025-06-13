@@ -132,8 +132,6 @@ export default function CollapseTable({ menu }) {
   };
 
   const { customerId, physicianId, source, category, _id, diagnostic } = menu;
-  console.log("menu", menu);
-  console.log("diagnostic", diagnostic);
 
   return (
     <>

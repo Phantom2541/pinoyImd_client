@@ -18,42 +18,12 @@ const Body = () => {
   const [selected, setSelected] = useState({});
   const dispatch = useDispatch();
 
-  const handleUpdate = () => {
-    const { id, key, value, old } = selected;
-    if (value !== old) {
-      console.log("Updating:", { id, [key]: value });
-
-      // Uncomment and implement this in Redux
-      // dispatch(UpdateService({ id, key, value }));
-    }
-    setSelected({});
-  };
-
   const handleSelected = (id, key, value) => {
     if (selected.id === id && selected.key === key) {
       setSelected({});
     } else {
       setSelected({ id, key, value, old: value });
     }
-  };
-
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        console.log("Deleted ID:", id);
-
-        // Optionally dispatch delete action here
-        // dispatch(DeleteService(id));
-      }
-    });
   };
 
   const itemsPerPage = maxPage || 10;
@@ -96,7 +66,7 @@ const Body = () => {
           const { _id, name, expense, section } = item;
           const isSelected = selected._id === _id;
           return (
-            <tr key={id}>
+            <tr key={_id}>
               <td>{index + startIndex + 1}</td>
 
               {/* Name column */}
@@ -116,7 +86,7 @@ const Body = () => {
                     />
                   </div>
                 ) : (
-                  <strong onClick={() => handleSelected(id, "name", name)}>
+                  <strong onClick={() => handleSelected(_id, "name", name)}>
                     {name}
                   </strong>
                 )}
@@ -165,7 +135,7 @@ const Body = () => {
               </td>
 
               {/* Specimen column */}
-              <td>{specimen}</td>
+              {/* <td>{specimen}</td> */}
 
               {/* Action buttons */}
               <td>

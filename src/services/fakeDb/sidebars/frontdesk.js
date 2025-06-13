@@ -27,7 +27,7 @@ import {
 } from "../../../pages/platforms/diagnostics/management";
 
 import Products from "../../../pages/platforms/frontdesk/market/oldproducts";
-import productGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
+// import productGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
 import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../pages/platforms/cashier";
 
@@ -145,12 +145,12 @@ const frontdesk = [
     path: "/merchandise",
     icon: "boxes",
     children: [
-      {
-        name: "Products",
-        path: "/products",
-        icon: "cogs",
-        component: productGenerics,
-      },
+      // {
+      //   name: "Products",
+      //   path: "/products",
+      //   icon: "cogs",
+      //   component: productGenerics,
+      // },
       {
         name: "Machines",
         path: "/merchandise/machines",
