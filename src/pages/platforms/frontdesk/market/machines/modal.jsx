@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -7,25 +7,41 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
+  MDBTypography,
+  MDBModaltable,
 } from "mdbreact";
 import {
+  TOGGLE,
   SAVE,
   UPDATE,
-  TOGGLE,
-} from "../../../../../services/redux/slices/market/productsGenerics";
+} from "../../../../../services/redux/slices/market/machines";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
   const { showModal, selected, willCreate, isLoading } = useSelector(
-      ({ productsGenerics }) => productsGenerics
+      ({ machines }) => machines
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  useEffect(() => {
+    if (selected) {
+      setForm({
+        ...selected,
+        waranty: selected.waranty || getTodayDate(),
+      });
+    } else {
+      // When creating new entry
+      setForm((prev) => ({
+        ...prev,
+        waranty: getTodayDate(),
+      }));
+    }
+  }, [selected]);
   // Handle update function
   const handleUpdate = () => {
     TOGGLE();
@@ -55,10 +71,18 @@ export default function Modal() {
     ).then(() => TOGGLE()); // Close modal after successful save
   };
 
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0]; // Formats date to "YYYY-MM-DD"
+  };
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("form", form);
+
+    if (willCreate) return handleCreate();
+    handleUpdate();
+
+    // console.log("form", form);
 
     if (willCreate) {
       return handleCreate();
@@ -72,7 +96,6 @@ export default function Modal() {
     console.log("key :", key);
     console.log("value :", value);
     console.log("form :", form);
-
     setForm({
       ...form,
       [key]: value,
@@ -88,37 +111,65 @@ export default function Modal() {
   const handleClose = () => dispatch(TOGGLE());
 
   return (
-    <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
+    <MDBModal
+      isOpen={showModal}
+      toggle={() => handleClose()}
+      backdrop
+      size="md"
+    >
       <MDBModalHeader
-        toggle={handleClose}
+        toggle={() => handleClose()}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Products
+        {willCreate ? "Create" : "Update"} Machines
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBInput
-            label="Name"
+            label="Brand"
             type="text"
-            value={handleValue("name")}
+            value={handleValue("brand")}
             required
-            onChange={(e) => handleChange("name", e.target.value)}
+            onChange={(e) => handleChange("brand", e.target.value)}
           />
           <MDBInput
-            label="expense"
+            label="Model"
             type="text"
-            value={handleValue("expense")}
-            onChange={(e) => handleChange("expense", e.target.value)}
+            value={handleValue("model")}
+            onChange={(e) => handleChange("model", e.target.value)}
           />
           <MDBInput
-            label="section"
+            label="Serial no."
             type="text"
-            value={handleValue("section")}
-            required
-            onChange={(e) => handleChange("section", e.target.value)}
+            value={handleValue("serial")}
+            onChange={(e) => handleChange("serial", e.target.value)}
+          />
+          <MDBInput
+            label="Accuqired"
+            type="text"
+            value={handleValue("accuqired")}
+            onChange={(e) => handleChange("accuqired", e.target.value)}
+          />
+          <MDBInput
+            label="Status"
+            type="text"
+            value={handleValue("status")}
+            onChange={(e) => handleChange("status", e.target.value)}
+          />
+          <MDBInput
+            label="Price"
+            type="number"
+            value={handleValue("price")}
+            onChange={(e) => handleChange("price", e.target.value)}
           />
 
+          <MDBInput
+            label="Warranty"
+            type="date"
+            value={handleValue("warranty")}
+            onChange={(e) => handleChange("warranty", e.target.value)}
+          />
           {/* Submit button */}
           <div className="text-center mb-1-half">
             <MDBBtn
