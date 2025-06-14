@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Rows from "../../../../components/pagination/rows";
-import Pagination from "../../../../components/pagination";
+import Rows from "../../../../../components/pagination/rows";
+import Pagination from "../../../../../components/pagination";
 import {
-  SetACTIVEPAGE,
-  SetMaxPage,
   SetActivePAGE,
+  SetMaxPage,
 } from "../../../../../services/redux/slices/market/machines";
 const Footer = () => {
   const { isLoading, totalPages, activePage } = useSelector(
@@ -22,7 +21,7 @@ const Footer = () => {
     const newPage =
       typeof action === "number" ? action : activePage + (action ? 1 : -1);
     if (newPage >= 1 && newPage <= totalPages) {
-      dispatch(SetACTIVEPAGE(newPage));
+      dispatch(SetActivePAGE(newPage));
     }
   };
 

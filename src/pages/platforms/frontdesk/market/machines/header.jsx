@@ -19,6 +19,7 @@ const Header = () => {
       dispatch(
         BROWSE({ token, params: { branchId: activePlatform?.branchId } })
       );
+    }
   }, [dispatch, token, activePlatform]);
 
   const handleAdd = (item) => dispatch(SetCREATE(item));

@@ -12,16 +12,17 @@ const Inhouse = ({ form, setForm }) => {
         Select one or more price categories to include:
       </MDBTypography>
       {[
-        { value: "opd", text: "Srp" },
+        { value: "opd", text: "SRP ( OPD/Walkin )" },
         { value: "er", text: "Emergency Room" },
         { value: "cw", text: "Charity Ward" },
         { value: "pw", text: "Private Ward" },
+        { value: "sr", text: "Suite Room" },
       ].map((menuType, index) => {
         const selectedIndex = form.priceCategories.findIndex(
           ({ value }) => value === menuType.value
         );
         return (
-          <div key={index} className="form-check form-check-inline mt-2 mr-2">
+          <div key={index} className="form-check mt-2 mr-2">
             <input
               className="form-check-input"
               type="checkbox"

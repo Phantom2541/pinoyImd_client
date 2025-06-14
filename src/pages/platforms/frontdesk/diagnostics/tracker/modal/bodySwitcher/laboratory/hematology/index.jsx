@@ -43,7 +43,7 @@ const tabs = {
 export default function Hematology() {
   const { task } = useSelector(({ validator }) => validator),
     [activeTab, setActiveTab] = useState("CELL COUNT");
-  console.log("task", task);
+  console.log("validator", task);
 
   const { packages = [] } = task;
 
