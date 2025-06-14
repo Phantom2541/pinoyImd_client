@@ -65,7 +65,7 @@ export default function CollapseTable({ menu }) {
       remarks: obj?.remarks,
       department,
       miscIndex,
-      packages: _packages,
+      packages: obj?.packages,
     };
 
     return (
@@ -164,7 +164,7 @@ export default function CollapseTable({ menu }) {
 
               if (Array.isArray(entry.packages)) {
                 return entry.packages.map((obj, i) =>
-                  handleIndividual(key, entry.packages, index + i, i)
+                  handleIndividual(key, entry, index + i, i)
                 );
               }
 
