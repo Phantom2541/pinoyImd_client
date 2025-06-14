@@ -148,22 +148,21 @@ const handleHeader = (form) => {
 
 export const MenuToPdf = async ({ menus, form, createdBy }) => {
   const isPrices = form.menuType === "inhouse" || form.menuType === "mbs";
-  const lastDay = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() + 1,
-    0
-  ).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  const lastDay = new Date(new Date().getFullYear(), 12, 0).toLocaleDateString(
+    "en-US",
+    {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }
+  );
 
   const imageBase64 = await getBase64Image(
     `${ENDPOINT}/public/companies/Smart Care/Pantabangan/banner.png`
   );
 
   const tableBody = [
-    ["Name", "Services", isPrices ? "Prices" : "SRP"],
+    ["Name", "Services Inclusion", isPrices ? "Prices" : "SRP"],
     ...menus.map((menu, index) => [
       {
         text: [
@@ -226,7 +225,7 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
         margin: [0, 10, 0, 0], // [left, top, right, bottom]
       },
       {
-        text: `Date: ${new Date().toLocaleString("en-US", {
+        text: `Issued on: ${new Date().toLocaleString("en-US", {
           month: "long",
           day: "numeric",
           year: "numeric",
@@ -237,7 +236,7 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
         margin: [0, 5, 0, 0],
       },
       {
-        text: `Remarks: Valid until ${lastDay}`,
+        text: `Note: Prices are exclusive of additional services unless stated. Valid until ${lastDay}`,
         style: "remarks",
         margin: [0, 5, 0, 0],
       },

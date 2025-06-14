@@ -4,6 +4,7 @@ const Categories = [
   { abbr: "er", name: "Emergency Room", color: "blue" },
   { abbr: "cw", name: "Charity Ward", color: "blue" },
   { abbr: "pw", name: "Private Ward", color: "blue" },
+  { abbr: "sr", name: "Suite Room", color: "blue" },
   { abbr: "wls", name: "Insourcing (Wellness)", color: "orange" },
   { abbr: "mbs", name: "Insourcing (Membership)", color: "orange" },
   { abbr: "ctr", name: "Insourcing (Contract )", color: "orange" },

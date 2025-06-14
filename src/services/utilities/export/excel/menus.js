@@ -178,9 +178,9 @@ const set = {
 
     const headers = [
       { text: "Name", space: 6 },
-      { text: "Services", space: 4 },
-      ...(isInhouse ? priceCategories : [{ text: "Srp", space: 2 }]),
-      ...(isMembership ? [{ text: "Up", space: 2 }] : []),
+      { text: "Services Inclusion", space: 4 },
+      ...(isInhouse ? priceCategories : [{ text: "SRP", space: 2 }]),
+      ...(isMembership ? [{ text: "UP", space: 2 }] : []),
     ];
 
     for (const { text, space = 2 } of headers) {
@@ -314,21 +314,14 @@ const set = {
   },
   footer: ({ worksheet, skip, createdBy }) => {
     var startPos = skip + 1;
-    const now = new Date();
-
-    // Get current month and year
-    const month = now.toLocaleString("en-US", { month: "long" });
-    const year = now.getFullYear();
-
-    // Get last day of current month
-    const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
+    const year = new Date().getFullYear();
 
     // Final formatted string (e.g., "June 30, 2025")
-    const validUntil = `${month} ${lastDay}, ${year}`;
+    const validUntil = `December 31, ${year}`;
     const infoRows = [
       { label: "Prepared by: ", value: createdBy },
       {
-        label: "Date: ",
+        label: "Issued on: ",
         value: new Date().toLocaleString("en-US", {
           month: "long",
           day: "numeric",
@@ -339,8 +332,8 @@ const set = {
         }),
       },
       {
-        label: "Remarks: ",
-        value: `This price list is valid until ${validUntil}`,
+        label: "Note: ",
+        value: `Prices are exclusive of additional services unless stated. Valid until ${validUntil}`,
       },
     ];
 
