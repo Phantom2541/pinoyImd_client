@@ -11,6 +11,7 @@ export default function Chemistry() {
   const { task } = useSelector(({ validator }) => validator),
     { collections: services } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
+  console.log("task", task);
 
   const { packages = {}, key: mapKey, patient } = task || {};
   const handleChange = (target) => {

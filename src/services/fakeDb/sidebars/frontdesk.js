@@ -28,7 +28,7 @@ import {
 
 // import products from "../../../pages/platforms/frontdesk/market/products";
 // import productGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
-import machines from "../../../pages/platforms/frontdesk/market/machines";
+// import machines from "../../../pages/platforms/frontdesk/market/machines";
 import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../pages/platforms/cashier";
 
@@ -162,7 +162,7 @@ const frontdesk = [
         name: "Machines",
         path: "/merchandise/machines",
         icon: "laptop-code",
-        component: machines, // add your component here
+        // component: machines, // add your component here
       },
       {
         name: "Stocks",

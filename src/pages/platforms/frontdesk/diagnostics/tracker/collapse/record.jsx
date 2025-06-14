@@ -43,11 +43,14 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
+    console.log("obj", obj);
+
     const { department } = Templates.findByComponentName(form);
 
     const _packages = Array.isArray(obj?.packages)
       ? obj.packages
       : Object.keys(obj?.packages || {}).map(Number);
+    console.log("_packages", _packages);
 
     const task = {
       ...obj,
@@ -62,6 +65,7 @@ export default function CollapseTable({ menu }) {
       remarks: obj?.remarks,
       department,
       miscIndex,
+      packages: _packages,
     };
 
     return (
@@ -91,7 +95,12 @@ export default function CollapseTable({ menu }) {
             <MDBBtn
               title="Modal"
               rounded
-              onClick={() => dispatch(SetTASK({ task }))}
+              onClick={() => {
+                console.log("onClick-menu", menu);
+                console.log("onClick-task", task);
+
+                dispatch(SetTASK({ task }));
+              }}
               color={obj?.hasDone ? "info" : "primary"}
               size="sm"
               className="py-1 px-3 m-0"
@@ -132,6 +141,7 @@ export default function CollapseTable({ menu }) {
   };
 
   const { customerId, physicianId, source, category, _id, diagnostic } = menu;
+  console.log("diagnostic", diagnostic);
 
   return (
     <>
@@ -149,14 +159,16 @@ export default function CollapseTable({ menu }) {
             Object.keys(diagnostic)?.map((key, index) => {
               const rawEntry = diagnostic[key];
               const entry = { ...rawEntry, key }; // ✅ avoid modifying frozen object
+              console.log("rawEntry", rawEntry);
+              console.log("entry", entry);
 
-              if (Array.isArray(entry.result)) {
-                return entry.result.map((obj, i) =>
-                  handleIndividual(key, obj, index + i, i)
+              if (Array.isArray(entry.packages)) {
+                return entry.packages.map((obj, i) =>
+                  handleIndividual(key, entry.packages, index + i, i)
                 );
               }
 
-              return handleIndividual(key.toLowerCase(), entry.result, index);
+              return handleIndividual(key.toLowerCase(), entry, index);
             })}
         </tbody>
       </MDBTable>
