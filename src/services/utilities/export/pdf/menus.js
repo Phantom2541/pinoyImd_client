@@ -1,6 +1,6 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { ENDPOINT } from "../..";
+import { currency, ENDPOINT } from "../..";
 import { HMO, Memberships, Services } from "../../../fakeDb";
 
 pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
@@ -42,44 +42,21 @@ const handlePrices = (form, menu) => {
         margin: [0, 0, 0, i + 1 === priceCategories.length ? 0 : 5],
         text: [
           { text: `${cat.text}: `, color: "#666" },
-          { text: `₱${menu[cat.value]?.toFixed(2) || "0.00"}` },
+          { text: currency(menu[cat.value]) },
         ],
       }));
 
     case "ctr":
       return [
         {
-          text: `₱${menu[insource?.contract]?.toFixed(2) || "0.00"}`,
+          text: currency(menu[insource?.contract]),
         },
       ];
 
     case "hmo":
       return [
         {
-          text: `₱${HMO.getSrp(hmo, menu.hmo)?.toFixed(2) || "0.00"}`,
-        },
-      ];
-
-    case "mbs":
-      return [
-        {
-          text: [
-            { text: `SRP: `, color: "#666" },
-            { text: `₱${menu?.opd?.toFixed(2) || "0.00"}` },
-          ],
-        },
-        {
-          text: [
-            { text: `UP: `, color: "#666" },
-            {
-              text: `₱${
-                Memberships.getDiscountedSRP(
-                  insource?.membership,
-                  menu
-                )?.toFixed(2) || "0.00"
-              }`,
-            },
-          ],
+          text: currency(HMO.getSrp(hmo, menu.hmo)),
         },
       ];
 
@@ -117,6 +94,7 @@ const handleHeader = (form) => {
       },
     ];
   }
+
   if (menuType === "ctr" || menuType === "mbs") {
     const isContract = menuType === "ctr";
     return [
@@ -146,8 +124,21 @@ const handleHeader = (form) => {
   return [];
 };
 
+const handleTableHeader = (form) => {
+  const { menuType } = form;
+  if (menuType === "inhouse") {
+    return ["Prices"];
+  }
+  if (menuType === "mbs") {
+    return ["UP", "SRP"];
+  }
+
+  return ["SRP"];
+};
+
 export const MenuToPdf = async ({ menus, form, createdBy }) => {
-  const isPrices = form.menuType === "inhouse" || form.menuType === "mbs";
+  const { menuType } = form;
+  const isMembership = menuType === "mbs";
   const lastDay = new Date(new Date().getFullYear(), 12, 0).toLocaleDateString(
     "en-US",
     {
@@ -162,7 +153,7 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
   );
 
   const tableBody = [
-    ["Name", "Services Inclusion", isPrices ? "Prices" : "SRP"],
+    ["Name", "Services Inclusion", ...handleTableHeader(form)],
     ...menus.map((menu, index) => [
       {
         text: [
@@ -171,28 +162,36 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
         ],
       },
       {
-        text: Services.whereIn(menu.packages).flatMap(
-          ({ abbreviation }, index) => [
-            { text: `${String.fromCharCode(65 + index)}. `, bold: true },
+        text: Services.whereIn(menu.packages)
+          .map(({ abbreviation }) => abbreviation)
+          .join(",    "),
+        fontSize: 9,
+        color: "#333",
+      },
+      ...(isMembership
+        ? [
+            { text: `${currency(menu?.opd)}` },
             {
-              text: `${abbreviation}     `,
-              fontSize: 9,
-              color: "#333",
+              text: `${currency(
+                Memberships.getDiscountedSRP(form?.insource?.membership, menu)
+              )}`,
             },
           ]
-        ),
-      },
-      {
-        stack: [...handlePrices(form, menu)],
-      },
+        : [
+            {
+              stack: [...handlePrices(form, menu)],
+            },
+          ]),
     ]),
   ];
+
+  const widths = isMembership ? ["*", "*", "auto", "auto"] : ["*", "*", "*"];
 
   const docDefinition = {
     pageSize: "A4",
     pageMargins: [10, 65, 10, 60],
 
-    background: function (currentPage, pageSize) {
+    background: function (_, pageSize) {
       return {
         image: imageBase64,
         width: pageSize.width,
@@ -215,14 +214,14 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
       {
         table: {
           headerRows: 1,
-          widths: ["*", "*", "*"],
+          widths,
           body: tableBody,
         },
         layout: "lightHorizontalLines",
       },
       {
         text: `Prepared By: ${createdBy}`,
-        margin: [0, 10, 0, 0], // [left, top, right, bottom]
+        margin: [0, 10, 0, 0],
       },
       {
         text: `Issued on: ${new Date().toLocaleString("en-US", {

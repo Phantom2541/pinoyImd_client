@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 const url = "/finance/journals/soa";
+const today = new Date();
 
 const initialState = {
   /**
@@ -207,6 +208,28 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
+    SetMONTH: (state, { payload }) => {
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
@@ -287,7 +310,9 @@ export const {
   SetSELECTED,
   SetSTATUS,
   SetPAYMENT,
+  SetMONTH,
   ToggleMODAL,
+  ResetDATE,
   RESET,
 } = reduxSlice.actions;
 

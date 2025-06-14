@@ -437,11 +437,10 @@ export const reduxSlice = createSlice({
         state.vendor = "noSource";
       } else {
         filtered = state.collections.filter(
-          ({ source }) => source?.displayname === value.toString()
+          ({ source }) => source?._id === value.toString()
         );
         state.vendor = vendor;
       }
-
       // Group filtered results by date
       const groupByDate = filtered.reduce((groups, item) => {
         const date = dateFormat(item.createdAt);
