@@ -61,7 +61,7 @@ export default function CollapseTable({ menu }) {
       source: source || {},
       hasDone: obj?.hasDone,
       category,
-      id: _id,
+      _id: _id,
       remarks: obj?.remarks,
       department,
       miscIndex,
