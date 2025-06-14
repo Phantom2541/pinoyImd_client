@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
 import ExcelJS from "exceljs";
@@ -21,9 +21,9 @@ const Header = () => {
     month,
     year,
     filtered = [],
-    physicianId,
+    collections = [],
     vendor,
-    physicians = [],
+    filteredPhysicians: physicians = [],
   } = useSelector(({ deals }) => deals);
   const { token, auth, activePlatform, maxPage } = useSelector(
     ({ auth, platform }) => ({ ...auth, ...platform })
@@ -60,23 +60,18 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [dispatch, maxPage, activePlatform, auth._id, year, month, token]);
 
-  // 💰 Total Calculations
-  const dealsWithPhysician = filtered.flatMap(({ deals }) =>
-    deals.filter((d) => d.physicianId)
-  );
-  const totalPhysicianAmount = dealsWithPhysician.reduce(
-    (acc, deal) => acc + (Number(deal.amount) || 0),
+  const totalPhysicianAmount = physicians.reduce(
+    (acc, curr) => acc + (Number(curr.total) || 0),
     0
   );
 
   const summarizedSourcesMap = {};
-  filtered?.forEach(({ deals = [] }) => {
-    deals.forEach(({ source, amount }) => {
-      const id = source?._id || "NoSource";
-      const displayname = source?.displayname || "No Source";
-      summarizedSourcesMap[id] ??= { displayname, total: 0 };
-      summarizedSourcesMap[id].total += Number(amount) || 0;
-    });
+  collections?.forEach(({ amount, source }) => {
+    const id = source?._id || "NoSource";
+    const displayname = source?.displayname || "No Source";
+    //for sources
+    summarizedSourcesMap[id] ??= { displayname, total: 0 };
+    summarizedSourcesMap[id].total += Number(amount) || 0;
   });
 
   const summarizedSources = Object.entries(summarizedSourcesMap).map(
@@ -137,6 +132,7 @@ const Header = () => {
       { header: "Services", key: "services", width: 25 },
       { header: "Payment Type", key: "payment", width: 15 },
       { header: "Amount", key: "amount", width: 10 },
+      { header: "Rebate", key: "amount", width: 10 },
     ];
     worksheet.addRow(worksheet.columns.map((c) => c.header)).font = {
       bold: true,
@@ -152,6 +148,7 @@ const Header = () => {
           deal.cart?.map(({ abbreviation }) => abbreviation).join(", "),
           deal.payment || "",
           Number(deal.amount) || 0,
+          Number(deal.amount * 0.1) || 0,
         ]);
       });
     });
@@ -177,14 +174,17 @@ const Header = () => {
         reset={() => dispatch(ResetDATE())}
       />
 
-      <div className="d-flex align-items-center">
+      <div className="d-flex align-items-center ml-2">
         <div className="text-right d-flex items-center">
           {/* 🔹 Source Dropdown */}
           <select
             id="source-select"
             className="custom-select mr-2"
             value={selectedSource}
-            onChange={(e) => setSelectedSource(e.target.value)}
+            onChange={(e) => {
+              setSelectedSource(e.target.value);
+              setSelectedPhysician("all");
+            }}
           >
             <option value="all">All Sources ({currency(totalAmount)})</option>
             <option value="NoSource">
@@ -212,7 +212,7 @@ const Header = () => {
             </option>
             {physicians.map((p) => (
               <option key={p._id} value={p._id}>
-                {p.fullName}
+                {p.fullName} ({currency(p.total)})
               </option>
             ))}
           </select>

@@ -31,7 +31,6 @@ const Deals = ({ deals: collections, isOpen, _id }) => {
       }
       return acc;
     }, []);
-    // console.log("arrangeDeals", arrangeDeals);
     setCluster(arrangeDeals);
   }, [collections]);
 
