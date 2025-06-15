@@ -29,6 +29,8 @@ import {
 // import products from "../../../pages/platforms/frontdesk/market/products";
 // import productGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
 import machines from "../../../pages/platforms/frontdesk/market/machines";
+import generics from "../../../pages/platforms/frontdesk/market/generics";
+import medicines from "../../../pages/platforms/frontdesk/market/medicine";
 import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../pages/platforms/cashier";
 
@@ -163,6 +165,18 @@ const frontdesk = [
         path: "/merchandise/machines",
         icon: "laptop-code",
         component: machines, // add your component here
+      },
+      {
+        name: "Generics",
+        path: "/generics",
+        icon: "laptop-code",
+        component: generics, // add your component here
+      },
+      {
+        name: "Medicines",
+        path: "/medicines",
+        icon: "laptop-code",
+        component: medicines, // add your component here
       },
       {
         name: "Stocks",

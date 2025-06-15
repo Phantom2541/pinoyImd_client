@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Rows from "../../../../../components/pagination/rows";
+import TableRowCount from "../../../../../components/pagination/rows";
 import Pagination from "../../../../../components/pagination";
 import {
-  SetActivePAGE,
   SetMaxPage,
-} from "../../../../../services/redux/slices/market/machines";
+  SetActivePAGE,
+} from "../../../../../services/redux/slices/market/generics";
 const Footer = () => {
   const { isLoading, totalPages, activePage } = useSelector(
-      ({ machines }) => machines
+      ({ generics }) => generics
     ),
     { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
@@ -27,7 +27,7 @@ const Footer = () => {
 
   return (
     <div className="mb-auto d-flex justify-content-between align-items-center px-4">
-      <Rows disablePageSelect={false} />
+      <TableRowCount disablePageSelect={false} />
       <Pagination
         isLoading={isLoading}
         total={totalPages}

@@ -55,7 +55,8 @@ import {
   products,
   productsGenerics,
   machines,
-  medicine,
+  medicines,
+  generics,
 } from "./slices/market";
 import { appointments } from "./slices/clinical";
 
@@ -106,7 +107,8 @@ const store = configureStore({
     productsGenerics,
     appointments,
     machines,
-    medicine,
+    medicines,
+    generics,
     //for templates only
     dragDrop,
     table,
