@@ -34,6 +34,7 @@ const initialState = {
   showModal: false,
   showRegisterModal: false,
   showCompanyModal: false,
+  showPriceModal: false,
   willCreate: false,
   /**
    * Footer
@@ -283,6 +284,12 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.willCreate = false;
     },
+    SetPricelist: (state, { payload }) => {
+      console.log("payload", payload);
+
+      state.showPriceModal = true;
+      state.selected = payload;
+    },
     SetCREATE: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = true;
@@ -294,6 +301,11 @@ export const reduxSlice = createSlice({
     },
     ToggleRegister: (state) => {
       state.showRegisterModal = !state.showRegisterModal;
+      state.selected = {};
+    },
+
+    TogglePrice: (state) => {
+      state.showPriceModal = !state.showPriceModal;
       state.selected = {};
     },
     SetFILTER: (state, { payload }) => {
@@ -575,6 +587,8 @@ export const {
   SetPAGE,
   SETSOURCES,
   SetSEARCHRESULTS,
+  SetPricelist,
+  TogglePrice,
   ToggleDidSearch,
   RESET_COLLECTIONS,
   SetREGISTER,

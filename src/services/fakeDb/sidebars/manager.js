@@ -80,7 +80,7 @@ const manager = [
         component: ExperimentalLedger,
       },
       {
-        name: "Mobile Services",
+        name: "Mobile Clinic",
         path: "/mobile",
         icon: "mobile-alt",
         title: "Quest System for Mobile Clinic Lab Team",
