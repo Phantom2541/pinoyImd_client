@@ -1,16 +1,45 @@
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable, MDBBtn, MDBIcon, MDBBadge } from "mdbreact";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Deals from "./deals";
-import { currency, paymentMethod } from "../../../../../../services/utilities";
+import {
+  currency,
+  dateFormat,
+  paymentMethod,
+} from "../../../../../../services/utilities";
 import { SetPAYMENT } from "../../../../../../services/redux/slices/finance/journals/soa";
 import { capitalize } from "lodash";
 import PaymentDetails from "./paymentDetails";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(({ soa }) => soa),
+    [receivables, setReceivables] = useState([]),
     [activeId, setActiveId] = useState(""),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    const statusPriority = {
+      settled: 2,
+      partial: 1,
+      default: 0, // for all other statuses
+    };
+
+    const sorted = [...filtered].sort((a, b) => {
+      const aPriority =
+        statusPriority[a.status?.toLowerCase()] ?? statusPriority.default;
+      const bPriority =
+        statusPriority[b.status?.toLowerCase()] ?? statusPriority.default;
+
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority; // sort by status priority
+      }
+
+      // If same priority, sort by createdAt DESC
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
+    setReceivables(sorted);
+  }, [filtered]);
 
   /**
    * Pagination: Calculate the start and end index for the current page
@@ -18,14 +47,15 @@ const Body = () => {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = receivables.slice(startIndex, endIndex); // Get only items for the active page
   return (
     <MDBTable responsive>
       <thead>
         <tr>
-          <th>Client</th>
-          <th>Amount</th>
+          <th>Particular</th>
+          <th>Title</th>
           <th>Payment </th>
+          <th>Amount</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -38,45 +68,66 @@ const Body = () => {
             deals = [],
             _id,
             payments = [],
+            createdAt,
           } = soa;
           const isOpen = activeId === _id;
           const totalPaid = [...payments].reduce((a, b) => a + b.amount, 0);
           const remaining = amount - totalPaid;
           const imageSrc = (type) => paymentMethod.getImage(type).img;
+          const soaTitle = `${new Date(createdAt).toLocaleString("en-US", {
+            month: "long",
+            year: "numeric",
+          })} - SOA`;
+
           return (
             <React.Fragment key={`body-${index}`}>
               <tr className={isOpen ? "border border-black" : ""}>
                 <td style={{ fontWeight: 400 }}>
-                  <span className="font-weight-bold ">{index + 1}.</span>
-                  <span className="ml-2">{clientId?.name}</span>{" "}
-                  <MDBBadge
-                    color={
-                      status === "settled"
-                        ? "success"
-                        : status === "partial"
-                        ? "primary"
-                        : "grey"
-                    }
+                  <div>
+                    <span className="font-weight-bold ">{index + 1}.</span>
+                    <span className="ml-2">{clientId?.name}</span>
+                    <MDBBadge
+                      className="ml-2"
+                      color={
+                        status === "settled"
+                          ? "grey"
+                          : status === "partial"
+                          ? "primary"
+                          : "success"
+                      }
+                    >
+                      {capitalize(status)}
+                    </MDBBadge>
+                  </div>
+                  <span
+                    style={{ marginLeft: "1.3rem" }}
+                    className="text-primary"
                   >
-                    {capitalize(status)}
-                  </MDBBadge>
+                    {dateFormat(createdAt)}
+                  </span>
+                </td>
+                <td style={{ fontWeight: 400 }}>{soaTitle}</td>
+                <td>
+                  {totalPaid <= 0 ? (
+                    currency(totalPaid)
+                  ) : (
+                    <>
+                      <PaymentDetails payments={payments} imageSrc={imageSrc} />
+                      {remaining ? (
+                        <span className="font-weight-bold">
+                          <span className="text-danger">Balance:</span> ₱
+                          <span>{remaining.toLocaleString()}</span>
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                    </>
+                  )}
                 </td>
                 <td key={index} style={{ fontWeight: 400 }}>
                   {currency(amount)}{" "}
                 </td>
-                <td>
-                  <strong>Amount:</strong> ₱{totalPaid.toLocaleString()}{" "}
-                  {remaining ? (
-                    <>
-                      &nbsp;|&nbsp;
-                      <strong className="text-danger">Remaining:</strong> ₱
-                      {remaining.toLocaleString()}
-                    </>
-                  ) : (
-                    ""
-                  )}
-                  <PaymentDetails payments={payments} imageSrc={imageSrc} />
-                </td>
+
                 <td>
                   <div className="d-flex justify-content-between">
                     {status !== "settled" ? (

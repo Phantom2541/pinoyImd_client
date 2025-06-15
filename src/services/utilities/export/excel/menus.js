@@ -233,11 +233,10 @@ const set = {
 
         // Build richText with A., B., C. labels in bold
         const servicesRichText = rawServices.flatMap((service, index) => {
-          const label = String.fromCharCode(65 + index); // A, B, C...
           return [
-            { text: `${label}. `, font: { bold: true } },
             {
-              text: service.abbreviation + "     ",
+              text: service.abbreviation + ",    ",
+              font: { size: 11 },
             },
           ];
         });

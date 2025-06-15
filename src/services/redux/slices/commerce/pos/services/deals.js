@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, dateFormat, getAge } from "../../../../../utilities";
-import physician from "../../../../../fakeDb/sidebars/physician";
+import {
+  axioKit,
+  dateFormat,
+  fullName,
+  getAge,
+} from "../../../../../utilities";
 
 const url = "commerce/pos/services/deals";
 const today = new Date();
@@ -20,6 +24,7 @@ const initialState = {
   sources: [],
   source: "all",
   physicians: [],
+  filteredPhysicians: [],
   physician: "all",
   showModal: false,
   showRevertModal: false,
@@ -385,6 +390,65 @@ export const MANAGERUPDATE = createAsyncThunk(
   }
 );
 
+const arrangeDealsByDate = (state, collections) => {
+  // Group the filtered results by date
+  const groupByDate = collections.reduce((groups, item) => {
+    const date = dateFormat(item.createdAt);
+    const group = groups.find((g) => g.date === date);
+    if (group) {
+      group.deals.push({ ...item, isSelected: false });
+    } else {
+      groups.push({
+        date,
+        deals: [{ ...item, isSelected: false }],
+        isSelected: false,
+      });
+    }
+    return groups;
+  }, []);
+  state.filtered = groupByDate;
+  // Set pagination and assign to state
+  state.totalPages = Math.ceil(groupByDate.length / state.maxPage) || 1;
+  state.activePage = Math.min(state.activePage, state.totalPages);
+};
+
+const getPhysicians = (collections) => {
+  let uniquePhysicians = [];
+  if (collections.length > 0)
+    uniquePhysicians = [
+      ...new Map(
+        collections.map(({ physicianId }) => [
+          physicianId?._id || "NoPhysician",
+          {
+            _id: physicianId?._id || "",
+            fullName: physicianId?.fullName || "No Physician",
+          },
+        ])
+      ).values(),
+    ].filter(({ _id }) => _id);
+
+  const physicianWithAmount = [...uniquePhysicians].map((p) => {
+    const total = collections
+      .filter(({ physicianId }) => physicianId?._id === p._id)
+      .reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+    return { ...p, total, fullName: fullName(p.fullName) };
+  });
+
+  // Compute and append "No Physician" entry
+  const noPhysicianAmount = collections
+    .filter(({ physicianId }) => !physicianId?._id)
+    .reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+
+  if (noPhysicianAmount > 0) {
+    physicianWithAmount.unshift({
+      _id: "NoPhysician",
+      fullName: "No Physician",
+      total: noPhysicianAmount,
+    });
+  }
+  return physicianWithAmount;
+};
+
 export const reduxSlice = createSlice({
   name: url,
   initialState,
@@ -427,7 +491,6 @@ export const reduxSlice = createSlice({
     SetFilterBySOURCE: (state, { payload }) => {
       const { value, vendor } = payload;
       let filtered = [];
-
       // Filter logic based on source
       if (value === "all") {
         filtered = state.collections;
@@ -437,46 +500,26 @@ export const reduxSlice = createSlice({
         state.vendor = "noSource";
       } else {
         filtered = state.collections.filter(
-          ({ source }) => source?.displayname === value.toString()
+          ({ source }) => source?._id === value.toString()
         );
         state.vendor = vendor;
       }
-
-      // Group filtered results by date
-      const groupByDate = filtered.reduce((groups, item) => {
-        const date = dateFormat(item.createdAt);
-        const group = groups.find((g) => g.date === date);
-        if (group) {
-          group.deals.push({ ...item, isSelected: false });
-        } else {
-          groups.push({
-            date,
-            deals: [{ ...item, isSelected: false }],
-            isSelected: false,
-          });
-        }
-        return groups;
-      }, []);
-
-      // Set pagination and state
-      state.totalPages = Math.ceil(groupByDate.length / state.maxPage) || 1;
-      state.activePage = Math.min(state.activePage, state.totalPages);
-      state.filtered = groupByDate;
+      arrangeDealsByDate(state, filtered);
     },
 
     SetFilterByPhysician: (state, { payload }) => {
       // Only update filter if it changed
-      if (payload !== state.filterByPhysician) {
-        if (payload === "all") {
-          state.filtered = state.collections;
-        } else {
-          state.filtered = state.collections.filter(
-            ({ physicianId }) =>
-              physicianId?._id?.toString() === payload.toString()
-          );
-        }
-        state.filterByPhysician = payload;
-      }
+      // if (payload !== state.filterByPhysician) {
+      //   if (payload === "all") {
+      //     state.filtered = state.collections;
+      //   } else {
+      //     state.filtered = state.collections.filter(
+      //       ({ physicianId }) =>
+      //         physicianId?._id?.toString() === payload.toString()
+      //     );
+      //   }
+      //   state.filterByPhysician = payload;
+      // }
     },
     SetFilterBySourceAndPhysician: (state, { payload }) => {
       const { source, physician } = payload;
@@ -484,46 +527,59 @@ export const reduxSlice = createSlice({
 
       // Filter by physician if not 'all'
       if (physician !== "all") {
-        filtered = filtered.filter(
-          ({ physicianId }) =>
-            physicianId?._id?.toString() === physician.toString()
-        );
+        const haveSource = source !== "all" && source !== "NoSource";
+
+        if (physician === "NoPhysician") {
+          // Filtering for items with NO physician
+          if (haveSource) {
+            filtered = filtered.filter(
+              ({ physicianId, source: s }) =>
+                !physicianId?._id && source === s?._id
+            );
+          } else {
+            filtered = filtered.filter(({ physicianId }) => !physicianId?._id);
+          }
+        } else {
+          // Filtering for specific physician
+          if (haveSource) {
+            filtered = filtered.filter(
+              ({ physicianId, source: s }) =>
+                physicianId?._id === physician && source === s?._id
+            );
+          } else {
+            filtered = filtered.filter(
+              ({ physicianId }) => physicianId?._id === physician
+            );
+          }
+        }
       }
 
       // Filter by source
       if (source === "NoSource") {
-        filtered = filtered.filter(({ source }) => !source);
+        const noSource = filtered.filter(({ source }) => !source);
+        state.filteredPhysicians = getPhysicians(noSource);
+        filtered = noSource;
         state.vendor = "noSource";
       } else if (source !== "all") {
-        filtered = filtered.filter(
-          ({ source: src }) => src?.displayname === source.toString()
+        const foundDeals = filtered.filter(
+          ({ source: src }) => src?._id === source
         );
+
+        const _deals = state.collections.filter(
+          ({ source: src }) => src?._id === source
+        );
+
+        filtered = foundDeals;
+        state.filteredPhysicians = getPhysicians(_deals);
         state.vendor = source;
       } else {
+        state.filteredPhysicians = state.physicians;
         state.vendor = {};
       }
 
-      // Group the filtered results by date
-      const groupByDate = filtered.reduce((groups, item) => {
-        const date = dateFormat(item.createdAt);
-        const group = groups.find((g) => g.date === date);
-        if (group) {
-          group.deals.push({ ...item, isSelected: false });
-        } else {
-          groups.push({
-            date,
-            deals: [{ ...item, isSelected: false }],
-            isSelected: false,
-          });
-        }
-        return groups;
-      }, []);
+      arrangeDealsByDate(state, filtered);
 
-      // Set pagination and assign to state
-      state.totalPages = Math.ceil(groupByDate.length / state.maxPage) || 1;
-      state.activePage = Math.min(state.activePage, state.totalPages);
-      state.filtered = groupByDate;
-      state.filterByPhysician = physician;
+      // state.filterByPhysician = physician;
     },
     SetFilterByOUTSOURCE: (state, { payload }) => {
       if (payload !== state.filterBySource)
@@ -533,8 +589,6 @@ export const reduxSlice = createSlice({
         } else {
           state.filtered = state.collections.filter(
             ({ outsource }) => outsource?._id.toString() === payload.toString()
-
-            // source?._id.toString() === payload.toString()
           );
           state.outsource = payload;
         }
@@ -777,30 +831,16 @@ export const reduxSlice = createSlice({
                 {
                   _id: source?._id || "NoSource",
                   displayname: source?.displayname || "No Source",
+                  affiliated: source?.affiliated || [],
                 },
               ])
             ).values(),
           ];
         state.sources = uniqueSource;
-
-        const groupByDate = payload.reduce((groups, item) => {
-          const date = dateFormat(item.createdAt);
-          const index = groups.findIndex((group) => group.date === date);
-          if (index > -1) {
-            groups[index].deals.push({ ...item, isSelected: false });
-          } else {
-            groups.push({
-              date,
-              deals: [{ ...item, isSelected: false }],
-              isSelected: false,
-            });
-          }
-          return groups;
-        }, []);
-        state.totalPages =
-          Math.ceil((groupByDate?.length || 0) / state.maxPage) || 1;
-        state.activePage = Math.min(state.activePage, state.totalPages);
-        state.filtered = groupByDate;
+        const physicianWithAmount = getPhysicians(payload);
+        state.physicians = physicianWithAmount;
+        state.filteredPhysicians = physicianWithAmount;
+        arrangeDealsByDate(state, payload);
         state.isSuccess = success;
         state.isLoading = false;
       })
