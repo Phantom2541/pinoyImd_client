@@ -1,28 +1,18 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import { Input } from "../../../../../components/customizable";
 import {
   SetEDIT,
   DESTROY,
-  RESET,
-} from "../../../../../services/redux/slices/market/medicines";
+} from "../../../../../services/redux/slices/market/generics";
 import Swal from "sweetalert2";
 
 const Body = () => {
+  const { token } = useSelector(({ auth }) => auth);
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
-      ({ medicines }) => medicines
+      ({ generics }) => generics
     ),
-    [selected, setSelected] = useState({}),
     dispatch = useDispatch();
-
-  const handleUpdate = () => {
-    const { id, key, value, old } = selected;
-    if (value !== old) {
-      console.log("Updating:", { id, [key]: value });
-    }
-    setSelected({});
-  };
 
   /**
    * Pagination: Calculate the start and end index for the current page
@@ -32,6 +22,9 @@ const Body = () => {
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
+  const handleUpdate = (item) => {
+    dispatch(SetEDIT(item));
+  };
   const handleDelete = (_id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -50,24 +43,31 @@ const Body = () => {
       <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
-          <th>Service</th>
-          <th>Abbreviation</th>
-          <th>Specimen</th>
+          <th>Generic Name</th>
+          <th>Dosage Form</th>
+          <th>Strength</th>
+          <th>Route</th>
+          <th>Drug Class</th>
+          <th>Status</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { _id, name, abbreviation, specimen } = item;
-          const isSelected = selected.id === id;
+          const { _id, name, dosageForm, strength, route, drugClass, status } =
+            item;
           return (
             <tr key={_id}>
               <td>{index + startIndex + 1}</td>
-
-              <td>{specimen}</td>
+              <td style={{ textTransform: "capitalize" }}>{name}</td>
+              <td style={{ textTransform: "capitalize" }}>{dosageForm}</td>
+              <td>{strength}</td>
+              <td style={{ textTransform: "capitalize" }}>{route}</td>
+              <td style={{ textTransform: "capitalize" }}>{drugClass}</td>
+              <td style={{ textTransform: "capitalize" }}>{status}</td>
               <td>
                 <button
-                  onclick={() => handleUpdate(items)}
+                  onClick={() => handleUpdate(item)}
                   className="btn btn-primary"
                 >
                   UPDATE

@@ -1,37 +1,26 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import { Input } from "../../../../../components/customizable";
-import {
-  SetEDIT,
-  DESTROY,
-  RESET,
-} from "../../../../../services/redux/slices/market/medicines";
+import { SetEDIT, DESTROY } from "../../../../../services/redux/slices/market/mentainance";
 import Swal from "sweetalert2";
 
 const Body = () => {
+  const {token} = useSelector(({auth}) => auth)
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
-      ({ medicines }) => medicines
+      ({ mentainance }) => mentainance
     ),
     [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
-  const handleUpdate = () => {
-    const { id, key, value, old } = selected;
-    if (value !== old) {
-      console.log("Updating:", { id, [key]: value });
-    }
-    setSelected({});
-  };
-
-  /**
-   * Pagination: Calculate the start and end index for the current page
-   */
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
-
+const handleUpdate = (item) => {
+dispatch(SetEDIT(item));
+console.log("item", item);
+};
+  
   const handleDelete = (_id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -42,7 +31,7 @@ const Body = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-      if (result.isConfirmed) dispatch(DESTROY({ token, data: { _id } }));
+      dispatch(DESTROY({ token, data: { _id  } }));
     });
   };
   return (
@@ -50,33 +39,37 @@ const Body = () => {
       <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
-          <th>Service</th>
-          <th>Abbreviation</th>
-          <th>Specimen</th>
+          <th>Machine</th>
+          <th>Engineer</th>
+          <th>Purpose</th>
+          <th>Recommendation</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { _id, name, abbreviation, specimen } = item;
-          const isSelected = selected.id === id;
-          return (
-            <tr key={_id}>
-              <td>{index + startIndex + 1}</td>
+          const { _id, machineId,engineer, purpose, recommendations } = item;
 
-              <td>{specimen}</td>
+          return (
+            <tr key={index}>
+              <td key={index}>{index + startIndex + 1}</td>
+              
+            
+              <td>{machineId?.brand} {machineId?.model}</td>
+              <td>{engineer}</td>
+              <td>{purpose}</td>
+              <td>{recommendations}</td>
+              
               <td>
-                <button
-                  onclick={() => handleUpdate(items)}
-                  className="btn btn-primary"
+                <button onClick={()=>handleUpdate(item)}
+                className="btn btn-sm btn-primary"
                 >
-                  UPDATE
+                update
                 </button>
-                <button
-                  onClick={() => handleDelete(_id)}
-                  className="btn btn-danger"
+                <button onClick={()=>handleDelete(_id)}
+                className="btn btn-sm btn-danger"
                 >
-                  DELETE
+                delete
                 </button>
               </td>
             </tr>

@@ -1,11 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
-import TableLoading from "../../../../../components/tableLoading";
+import TableLoading from "../../../../../services/redux/slices/market/mentainance";
 import Header from "./header";
 import Body from "./body";
 // import Footer from "./footer";
-// import Modal from "./modal";
+import Modal from "./modal";
 
 const Index = () => {
   // const services = useSelector((state) => state.services);
@@ -13,7 +13,7 @@ const Index = () => {
   // const isSuccess = services.isSuccess;
   // const isError = services.isError;
 
-  const { isLoading } = useSelector(({ medicines }) => medicines);
+  const { isLoading } = useSelector(({ services }) => services);
 
   return (
     <>
@@ -24,7 +24,7 @@ const Index = () => {
           {/* <Footer /> */}
         </MDBCard>
       </MDBAnimation>
-      {/* <Modal /> */}
+      <Modal />
     </>
   );
 };

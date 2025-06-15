@@ -6,14 +6,13 @@ import {
   BROWSE,
   SetFILTER,
   SetCREATE,
-} from "../../../../../services/redux/slices/market/machines";
-
+} from "../../../../../services/redux/slices/market/generics";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(({ machines }) => machines),
+  const { collections } = useSelector(({ generics }) => generics),
     dispatch = useDispatch();
-  console.log("collections");
 
+  //initial values
   useEffect(() => {
     if (token) {
       dispatch(
@@ -31,16 +30,16 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Machines
+          {collections?.length} Generics
         </span>
       </div>
       <div>
-        <div className="text-right d flex items-center">
+        <div className="text-right d-flex items-center">
           <Search
             collections={collections}
             setFiltered={(items) => dispatch(SetFILTER(items))}
-            placeholder="Search machines "
-            haveAction={true}
+            placeholder="Search generics "
+            haveaction={true}
             reset={() => dispatch(SetFILTER(collections))}
             hideButton={false}
             handleAdd={(item) => handleAdd(item)}

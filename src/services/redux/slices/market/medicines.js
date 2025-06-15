@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const url = "/procurements/commodity";
+const url = "/commerce/catalog/medicines";
 
 const initialState = {
   filter: [],
@@ -74,7 +74,6 @@ export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
     try {
-      console.log("data", data);
       return axioKit.destroy(url, data, token);
     } catch (error) {
       const message =
@@ -98,26 +97,17 @@ export const reduxSlice = createSlice({
       state.willCreate = false;
       state.showModal = true;
     },
-    SetCREATE: (state) => {
+    SetCREATE: (state, { payload }) => {
       state.selected = {
-        brand: "",
-        model: "",
-        serial: "",
-        accuqired: "",
-        status: "",
-        price: 0,
-        warranty: 0,
-        pm: {
-          value: 0,
-          unit: "",
-        },
+        lo: "",
+        norm: "",
+        hi: "",
+        serviceId: payload.serviceId,
       };
       state.willCreate = true;
       state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
-      console.log("payload", payload);
-
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
@@ -127,7 +117,7 @@ export const reduxSlice = createSlice({
           state.page = totalPages;
         }
       }
-      state.filtered = payload;
+      state.filter = payload;
     },
     SetPagination: (state) => {
       // {
@@ -136,7 +126,7 @@ export const reduxSlice = createSlice({
       const { page, max } = state;
       // if (getPage) return array;
 
-      state.paginated = state.filtered.slice(
+      state.paginated = state.filter.slice(
         (page - 1) * max,
         max + (page - 1) * max
       );
@@ -171,7 +161,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-
         state.collections = state.filtered = payload; // Fix typo
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -189,9 +178,10 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, { payload }) => {
-        state.collections.unshift(payload?.data);
-        state.filtered.unshift(payload.data);
+      .addCase(SAVE.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        state.collections.unshift(payload);
+        state.filtered.unshift(payload);
         state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
@@ -208,9 +198,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        console.log("action", action);
         const { success, payload } = action.payload;
-        console.log("payload", payload);
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
@@ -235,16 +223,16 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success } = action;
         const index = state.collections.findIndex(
-          (item) => item?._id === payload
+          (item) => item?._id === action.payload.payload
         );
         state.collections.splice(index, 1);
 
-        const index2 = state.filtered.findIndex(
-          (item) => item?._id === payload
+        const findex = state.filtered.findIndex(
+          (item) => item._id === action.payload.payload
         );
-        state.filtered.splice(index2, 1);
+        state.filtered.splice(findex, 1);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;

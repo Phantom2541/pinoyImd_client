@@ -55,7 +55,9 @@ import {
   products,
   productsGenerics,
   machines,
-  medicine,
+  medicines,
+  generics,
+  mentainance,
 } from "./slices/market";
 import { appointments } from "./slices/clinical";
 
@@ -104,12 +106,15 @@ const store = configureStore({
     ultrasound,
     ecg,
     productsGenerics,
-    appointments,
     machines,
-    medicine,
+    medicines,
+    generics,
+    mentainance,
+    appointments,
     //for templates only
     dragDrop,
     table,
+    procurements,
   },
 });
 
