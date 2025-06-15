@@ -42,7 +42,7 @@ const Body = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-      if (result.isConfirmed) dispatch(DESTROY({ token, data: { _id } }));
+      // if (result.isConfirmed) dispatch(DESTROY({ token, data: { _id } }));
     });
   };
   return (
@@ -59,7 +59,7 @@ const Body = () => {
       <tbody>
         {paginatedData?.map((item, index) => {
           const { _id, name, abbreviation, specimen } = item;
-          const isSelected = selected.id === id;
+          // const isSelected = selected.id === id;
           return (
             <tr key={_id}>
               <td>{index + startIndex + 1}</td>
@@ -67,7 +67,7 @@ const Body = () => {
               <td>{specimen}</td>
               <td>
                 <button
-                  onclick={() => handleUpdate(items)}
+                  // onclick={() => handleUpdate(items)}
                   className="btn btn-primary"
                 >
                   UPDATE
