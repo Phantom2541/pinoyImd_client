@@ -30,6 +30,7 @@ const _form = {
   category: "insource",
   ao: "",
   membership: "",
+  cutoff: 10,
   credit: 0,
   voucher_approval_status: false,
   invoice: false,
@@ -70,7 +71,7 @@ export default function Modal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { ao = "" } = form;
+    const { ao = "", cutoff } = form;
     if (!ao) {
       delete form.ao;
     }
@@ -144,7 +145,10 @@ export default function Modal() {
                 label={"Monthly Cut off"}
                 collections={new Array(30).fill("").map((_, i) => i + 1)}
                 onChange={(value) =>
-                  setForm({ ...form, cutoff: Number(value) })
+                  setForm({
+                    ...form,
+                    cutoff: Number(value) <= 0 ? 1 : Number(value),
+                  })
                 }
                 preValue={form.cutoff}
               />

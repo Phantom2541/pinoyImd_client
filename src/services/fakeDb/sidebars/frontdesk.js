@@ -27,10 +27,11 @@ import {
 } from "../../../pages/platforms/diagnostics/management";
 
 // import products from "../../../pages/platforms/frontdesk/market/products";
-// import productGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
+// import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
 import machines from "../../../pages/platforms/frontdesk/market/machines";
 import generics from "../../../pages/platforms/frontdesk/market/generics";
 import medicines from "../../../pages/platforms/frontdesk/market/medicine";
+import mentainance from "../../../pages/platforms/frontdesk/market/mentainance";
 import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../pages/platforms/cashier";
 
@@ -177,6 +178,12 @@ const frontdesk = [
         path: "/medicines",
         icon: "laptop-code",
         component: medicines, // add your component here
+      },
+      {
+        name: "Mentainance",
+        path: "/merchandise/mentainance",
+        icon: "laptop-code",
+        component: mentainance,
       },
       {
         name: "Stocks",

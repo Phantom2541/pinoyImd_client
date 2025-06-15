@@ -44,7 +44,7 @@ export default function Cellcount() {
       <tbody>
         {(!!cc.length ? cc : [0, 0, 0, 0]).map((cell, index) => {
           const { lo, hi, unit } =
-            Preferences[selected.customerId.isMale ? "Male" : "Female"][
+            Preferences[selected?.customerId?.isMale ? "Male" : "Female"][
               Abbreviation[index]
             ];
 

@@ -4,89 +4,62 @@ import {
   SetPARAMS,
   SetTASK,
 } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
-
-import {
-  MDBCol,
-  MDBRow,
-  MDBSelect,
-  MDBSelectInput,
-  MDBSelectOption,
-  MDBSelectOptions,
-} from "mdbreact";
+import { MDBCol, MDBRow } from "mdbreact";
 
 const colors = [
-    "Dark Brown (Healthy)",
-    "Brown",
-    "Light Brown",
-    "Dark Yellow",
-    "Yellow",
-    "Reddish",
-    "Greenish",
-    "Gray",
-  ],
-  consistencies = [
-    "Formed",
-    "Semi-Formed",
-    "Soft",
-    "Watery",
-    "Mucoid",
-    "Watery Mucoid",
-  ];
+  "Dark Brown (Healthy)",
+  "Brown",
+  "Light Brown",
+  "Dark Yellow",
+  "Yellow",
+  "Reddish",
+  "Greenish",
+  "Gray",
+];
+
+const consistencies = [
+  "Formed",
+  "Semi-Formed",
+  "Soft",
+  "Watery",
+  "Mucoid",
+  "Watery Mucoid",
+];
+
+const labels = ["Color", "Consistency"];
+const choices = [colors, consistencies];
 
 export default function Physical() {
-  const { task } = useSelector(({ validator }) => validator),
-    dispatch = useDispatch();
-  const { pe } = task;
+  const { task } = useSelector(({ validator }) => validator);
+  const dispatch = useDispatch();
+  const pe = task?.pe || [];
+
   const handleSelectChange = (index, value) => {
-    const _pe = [...pe];
-    _pe[index] = value;
-    dispatch(SetPARAMS({ key: "pe", value: _pe }));
-    dispatch(SetTASK({ task: { ...task, pe: _pe } }));
+    const updatedPe = [...pe];
+    updatedPe[index] = Number(value);
+    dispatch(SetPARAMS({ key: "pe", value: updatedPe }));
+    dispatch(SetTASK({ task: { ...task, pe: updatedPe } }));
   };
 
   return (
     <MDBRow>
-      <MDBCol md="6">
-        <MDBSelect
-          getValue={(e) => handleSelectChange(0, Number(e[0]))}
-          className="colorful-select dropdown-primary hidden-md-down"
-        >
-          <MDBSelectInput
-            selected={`Color${colors[pe[0]] && `: ${colors[pe[0]]}`}`}
-          />
-          <MDBSelectOptions>
-            {colors.map((color, index) => (
-              <MDBSelectOption key={`color-${index}`} value={String(index)}>
-                <span className="d-none">Color: </span>
-                {color}
-              </MDBSelectOption>
+      {labels.map((label, index) => (
+        <MDBCol md="6" key={label}>
+          <label>{label}</label>
+          <select
+            className="form-control mb-2"
+            value={pe[index] ?? ""}
+            onChange={(e) => handleSelectChange(index, e.target.value)}
+          >
+            <option value="">Select</option>
+            {choices[index].map((item, i) => (
+              <option key={`${label}-${i}`} value={i}>
+                {item}
+              </option>
             ))}
-          </MDBSelectOptions>
-        </MDBSelect>
-      </MDBCol>
-      <MDBCol md="6">
-        <MDBSelect
-          getValue={(e) => handleSelectChange(1, Number(e[0]))}
-          className="colorful-select dropdown-primary hidden-md-down"
-        >
-          <MDBSelectInput
-            selected={`Consistency${
-              consistencies[pe[1]] && `: ${consistencies[pe[1]]}`
-            }`}
-          />
-          <MDBSelectOptions>
-            {consistencies.map((consistency, index) => (
-              <MDBSelectOption
-                key={`consistency-${index}`}
-                value={String(index)}
-              >
-                <span className="d-none">Consistency: </span>
-                {consistency}
-              </MDBSelectOption>
-            ))}
-          </MDBSelectOptions>
-        </MDBSelect>
-      </MDBCol>
+          </select>
+        </MDBCol>
+      ))}
     </MDBRow>
   );
 }
