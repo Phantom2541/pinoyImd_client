@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
+import { MDBView, MDBBtn, MDBIcon, MDBAnimation, MDBProgress } from "mdbreact";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import CalendarPicker from "../../../../../components/header/calendars";
-import { currency } from "../../../../../services/utilities";
+import { currency, ResecoToExcel } from "../../../../../services/utilities";
 import { Calendar } from "../../../../../services/fakeDb";
 import {
   SetMONTH,
@@ -13,6 +13,7 @@ import {
   RESET,
   SetFilterBySourceAndPhysician,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import TableLoading from "../../../../../components/tableLoading";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -22,8 +23,11 @@ const Header = () => {
     year,
     filtered = [],
     collections = [],
-    vendor,
     filteredPhysicians: physicians = [],
+    vendor,
+    source: displaySource,
+    physician: displayPhysician,
+    isLoading = false,
   } = useSelector(({ deals }) => deals);
   const { token, auth, activePlatform, maxPage } = useSelector(
     ({ auth, platform }) => ({ ...auth, ...platform })
@@ -97,69 +101,77 @@ const Header = () => {
       "top=100px,left=0px,width=1050px,height=750px"
     );
   };
-
+  console.log("source", displaySource);
+  console.log("physician", displayPhysician);
+  console.log("filtered", filtered);
   // 📤 Excel Export
-  const handleSoftCopy = async () => {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Deals");
-
-    const { branch } = activePlatform;
-    const { companyId } = branch;
-    const companyName = `${companyId?.name} ${companyId?.subName || ""}`;
-    worksheet.addRow([`Company: ${companyName}`]).font = {
-      bold: true,
-      size: 14,
-    };
-    worksheet.mergeCells("A1:E1");
-
-    const selectedSourceName =
-      summarizedSourcesMap[selectedSource]?.displayname || "All Sources";
-
-    worksheet.addRow([
-      `SOURCE: ${selectedSourceName}`,
-      "",
-      "",
-      `GROSS: ${currency(totalAmount)}`,
-    ]).font = { bold: true };
-    worksheet.mergeCells("A2:C2");
-    worksheet.mergeCells("D2:E2");
-
-    worksheet.addRow([]);
-
-    worksheet.columns = [
-      { header: "Date", key: "date", width: 15 },
-      { header: "Customer", key: "customer", width: 25 },
-      { header: "Services", key: "services", width: 25 },
-      { header: "Payment Type", key: "payment", width: 15 },
-      { header: "Amount", key: "amount", width: 10 },
-      { header: "Rebate", key: "amount", width: 10 },
-    ];
-    worksheet.addRow(worksheet.columns.map((c) => c.header)).font = {
-      bold: true,
-    };
-
-    filtered.forEach(({ date, deals }) => {
-      deals.forEach((deal) => {
-        worksheet.addRow([
-          date,
-          `${deal.customerId?.fullName?.fname || ""} ${
-            deal.customerId?.fullName?.lname || ""
-          }`.trim(),
-          deal.cart?.map(({ abbreviation }) => abbreviation).join(", "),
-          deal.payment || "",
-          Number(deal.amount) || 0,
-          Number(deal.amount * 0.1) || 0,
-        ]);
-      });
+  const handleSoftCopy = () => {
+    const gross = filtered
+      .flatMap(({ deals = [] }) => deals.map((d) => Number(d.amount) || 0))
+      ?.reduce((a, b) => a + b, 0);
+    const rebate = gross * 0.1;
+    ResecoToExcel({
+      array: filtered,
+      options: {
+        gross,
+        rebate,
+        physician: displayPhysician,
+        source: displaySource,
+      },
     });
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    saveAs(
-      new Blob([buffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      }),
-      `${selectedSourceName} - ${Calendar.Months[month - 1]} ${year}.xlsx`
-    );
+    // const workbook = new ExcelJS.Workbook();
+    // const worksheet = workbook.addWorksheet("Deals");
+    // const { branch } = activePlatform;
+    // const { companyId } = branch;
+    // const companyName = `${companyId?.name} ${companyId?.subName || ""}`;
+    // worksheet.addRow([`Company: ${companyName}`]).font = {
+    //   bold: true,
+    //   size: 14,
+    // };
+    // worksheet.mergeCells("A1:E1");
+    // const selectedSourceName =
+    //   summarizedSourcesMap[selectedSource]?.displayname || "All Sources";
+    // worksheet.addRow([
+    //   `SOURCE: ${selectedSourceName}`,
+    //   "",
+    //   "",
+    //   `GROSS: ${currency(totalAmount)}`,
+    // ]).font = { bold: true };
+    // worksheet.mergeCells("A2:C2");
+    // worksheet.mergeCells("D2:E2");
+    // worksheet.addRow([]);
+    // worksheet.columns = [
+    //   { header: "Date", key: "date", width: 15 },
+    //   { header: "Customer", key: "customer", width: 25 },
+    //   { header: "Services", key: "services", width: 25 },
+    //   { header: "Payment Type", key: "payment", width: 15 },
+    //   { header: "Amount", key: "amount", width: 10 },
+    //   { header: "Rebate", key: "amount", width: 10 },
+    // ];
+    // worksheet.addRow(worksheet.columns.map((c) => c.header)).font = {
+    //   bold: true,
+    // };
+    // filtered.forEach(({ date, deals }) => {
+    //   deals.forEach((deal) => {
+    //     worksheet.addRow([
+    //       date,
+    //       `${deal.customerId?.fullName?.fname || ""} ${
+    //         deal.customerId?.fullName?.lname || ""
+    //       }`.trim(),
+    //       deal.cart?.map(({ abbreviation }) => abbreviation).join(", "),
+    //       deal.payment || "",
+    //       Number(deal.amount) || 0,
+    //       Number(deal.amount * 0.1) || 0,
+    //     ]);
+    //   });
+    // });
+    // const buffer = await workbook.xlsx.writeBuffer();
+    // saveAs(
+    //   new Blob([buffer], {
+    //     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    //   }),
+    //   `${selectedSourceName} - ${Calendar.Months[month - 1]} ${year}.xlsx`
+    // );
   };
 
   return (
@@ -175,10 +187,13 @@ const Header = () => {
       />
 
       <div className="d-flex align-items-center ml-2">
-        <div className="text-right d-flex items-center">
+        <div
+          className="text-right d-flex items-center"
+          style={{ width: "100%" }}
+        >
           {/* 🔹 Source Dropdown */}
           <select
-            id="source-select"
+            style={{ width: "100%" }}
             className="custom-select mr-2"
             value={selectedSource}
             onChange={(e) => {
@@ -202,7 +217,7 @@ const Header = () => {
 
           {/* 🔹 Physician Dropdown */}
           <select
-            id="physician-select"
+            style={{ width: "100%" }}
             className="custom-select mr-2"
             value={selectedPhysician}
             onChange={(e) => setSelectedPhysician(e.target.value)}
@@ -221,6 +236,7 @@ const Header = () => {
         <MDBBtn
           color="white"
           rounded
+          disabled={isLoading}
           size="sm"
           className="px-2"
           onClick={handlePrintOut}
@@ -231,6 +247,7 @@ const Header = () => {
           color="white"
           rounded
           size="sm"
+          disabled={isLoading}
           className="px-2"
           onClick={handleSoftCopy}
         >

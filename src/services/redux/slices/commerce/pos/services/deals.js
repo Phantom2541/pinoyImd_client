@@ -391,15 +391,22 @@ export const MANAGERUPDATE = createAsyncThunk(
 );
 
 const arrangeDealsByDate = (state, collections) => {
-  // Group the filtered results by date
+  // Group the filtered results by date and assign to state filtered,totalpages,activepage
   const groupByDate = collections.reduce((groups, item) => {
     const date = dateFormat(item.createdAt);
+    const time = new Date(item.createdAt).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
     const group = groups.find((g) => g.date === date);
     if (group) {
       group.deals.push({ ...item, isSelected: false });
     } else {
       groups.push({
         date,
+        time,
         deals: [{ ...item, isSelected: false }],
         isSelected: false,
       });
@@ -524,34 +531,21 @@ export const reduxSlice = createSlice({
     SetFilterBySourceAndPhysician: (state, { payload }) => {
       const { source, physician } = payload;
       let filtered = state.collections;
-
       // Filter by physician if not 'all'
       if (physician !== "all") {
-        const haveSource = source !== "all" && source !== "NoSource";
-
         if (physician === "NoPhysician") {
-          // Filtering for items with NO physician
-          if (haveSource) {
-            filtered = filtered.filter(
-              ({ physicianId, source: s }) =>
-                !physicianId?._id && source === s?._id
-            );
-          } else {
-            filtered = filtered.filter(({ physicianId }) => !physicianId?._id);
-          }
+          state.physician = "No Physician";
+          filtered = filtered.filter(({ physicianId }) => !physicianId?._id);
         } else {
-          // Filtering for specific physician
-          if (haveSource) {
-            filtered = filtered.filter(
-              ({ physicianId, source: s }) =>
-                physicianId?._id === physician && source === s?._id
-            );
-          } else {
-            filtered = filtered.filter(
-              ({ physicianId }) => physicianId?._id === physician
-            );
-          }
+          filtered = filtered.filter(
+            ({ physicianId }) => physicianId?._id === physician
+          );
+          state.physician = state.physicians.find(
+            ({ _id }) => _id === physician
+          )?.fullName;
         }
+      } else {
+        state.physician = "All";
       }
 
       // Filter by source
@@ -560,26 +554,28 @@ export const reduxSlice = createSlice({
         state.filteredPhysicians = getPhysicians(noSource);
         filtered = noSource;
         state.vendor = "noSource";
+        state.source = "No Source";
       } else if (source !== "all") {
         const foundDeals = filtered.filter(
           ({ source: src }) => src?._id === source
         );
-
-        const _deals = state.collections.filter(
+        //to get all physicians in collections because the filtered is already filtered by physician
+        const dealsWithoutPhysicians = state.collections.filter(
           ({ source: src }) => src?._id === source
         );
-
         filtered = foundDeals;
-        state.filteredPhysicians = getPhysicians(_deals);
+        state.filteredPhysicians = getPhysicians(dealsWithoutPhysicians);
+
+        //for displaying of header in filter
         state.vendor = source;
+        const { displayname } = state.sources.find(({ _id }) => _id === source);
+        state.source = displayname;
       } else {
         state.filteredPhysicians = state.physicians;
         state.vendor = {};
+        state.source = "All";
       }
-
       arrangeDealsByDate(state, filtered);
-
-      // state.filterByPhysician = physician;
     },
     SetFilterByOUTSOURCE: (state, { payload }) => {
       if (payload !== state.filterBySource)
