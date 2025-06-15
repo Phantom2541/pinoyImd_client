@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "name": "Maxicare",
+    "code": "mxc",
+    "icon": "medkit"
+  },
+  {
+    "id": 2,
+    "name": "Cocolife",
+    "code": "ccl",
+    "category": ["premium", "plus", "regular"]
+  },
+  {
+    "id": 3,
+    "name": "Medicare",
+    "code": "mdc"
+  }
+]

@@ -7,7 +7,7 @@ import {
 } from "../../../pages/platforms/headquarter/file201";
 import {
   Outsources,
-  Insources,
+  // Insources,
   Utilities,
   Hotlines,
   Suppliers,
@@ -158,7 +158,7 @@ const headquarter = [
             name: "Insourcing",
             path: "/insourcing",
             icon: "download",
-            component: Insources,
+            // component: Insources,
           },
           {
             name: "Suppliers",

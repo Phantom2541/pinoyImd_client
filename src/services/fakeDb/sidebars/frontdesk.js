@@ -26,8 +26,8 @@ import {
   Controls,
 } from "../../../pages/platforms/diagnostics/management";
 
-import products from "../../../pages/platforms/frontdesk/market/products";
-import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
+// import products from "../../../pages/platforms/frontdesk/market/products";
+// import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
 import machines from "../../../pages/platforms/frontdesk/market/machines";
 import mentainance from "../../../pages/platforms/frontdesk/market/mentainance";
 import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
@@ -151,13 +151,13 @@ const frontdesk = [
         name: "ProductsGenerics",
         path: "/productsGenerics",
         icon: "cogs",
-        component: productsGenerics,
+        // component: productGenerics,
       },
       {
         name: "Products",
         path: "/products",
         icon: "cogs",
-        component: products,
+        // component: products,
       },
       {
         name: "Machines",
@@ -293,7 +293,7 @@ const frontdesk = [
         name: "Products",
         path: "/offers/products",
         icon: "cogs",
-        // component: Products,
+        // component: products,
       },
       {
         name: "Consumables",

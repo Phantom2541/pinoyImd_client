@@ -20,6 +20,7 @@ const Header = () => {
     { collections: deals } = useSelector(({ deals }) => deals),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [expenses, setExpenses] = useState(0),
+    [preExpenses, setPreExpenses] = useState(0),
     [nonCash, setNonCash] = useState(0),
     [sum, setSum] = useState(0),
     [remitted, setRemitted] = useState(0),
@@ -31,6 +32,15 @@ const Header = () => {
         .filter(({ deletedAt }) => !deletedAt)
         .reduce((acc, { amount }) => acc + amount, 0);
       setSum(totalSales);
+
+      const totalPreExpenses = deals
+        .filter((item) => !item.deletedAt)
+        .reduce(
+          (acc, item) =>
+            acc + (item?.cart?.reduce((a, b) => a + (b?.capital || 0), 0) || 0),
+          0
+        );
+      setPreExpenses(totalPreExpenses);
     }
   }, [deals]);
 
@@ -39,10 +49,12 @@ const Header = () => {
       const totalRemitted = remittances
         .filter((item) => !item.deletedAt)
         .reduce((acc, item) => acc + (item?.coh - item?.opening?.sum), 0);
+      setRemitted(totalRemitted);
 
       const totalExpenses = remittances
         .filter((item) => !item.deletedAt)
         .reduce((acc, item) => acc + (item?.expenses || 0), 0);
+      setExpenses(totalExpenses);
 
       const totalNonCash = remittances
         .filter((item) => !item.deletedAt)
@@ -55,9 +67,6 @@ const Header = () => {
           } = item.breakdown || {};
           return acc + (gcash + voucher + cheque + credit);
         }, 0);
-
-      setRemitted(totalRemitted);
-      setExpenses(totalExpenses);
       setNonCash(totalNonCash);
     }
   }, [remittances]);
@@ -109,8 +118,11 @@ const Header = () => {
       />
 
       <div className="d-flex align-items-center">
-        <span className="mx-3 text-nowrap mt-0">
-          Sales: <strong className="text-white">{currency(sum)}</strong>
+        <span
+          className="mx-3 text-nowrap mt-0"
+          title={`predictable expenses: ${currency(preExpenses)}`}
+        >
+          Collections: <strong className="text-white">{currency(sum)}</strong>
         </span>
         |<span> Expenses : {currency(expenses)}</span>|
         <span title="Gcash, Voucher, Cheque, Credit">

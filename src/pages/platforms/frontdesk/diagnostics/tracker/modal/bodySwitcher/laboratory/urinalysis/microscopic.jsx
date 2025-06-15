@@ -1,24 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  SetPARAMS,
+  SetTASK,
+} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 import { MDBCol, MDBRow } from "mdbreact";
-// import { Select } from "./../../../../../../../../../components/customizable";
 import {
   MicroscopicInRange,
   MicroscopicResultInWord,
 } from "./../../../../../../../../../services/fakeDb";
 
 export default function Microscopic() {
-  const { task } = useSelector(({ validator }) => validator),
-    dispatch = useDispatch();
-  const { me } = task;
+  const dispatch = useDispatch();
+  const { task } = useSelector(({ validator }) => validator);
+
+  // Ensure `me` exists in task
+  useEffect(() => {
+    if (!task?.me || !Array.isArray(task.me)) {
+      const defaultMe = Array(6).fill(0);
+      dispatch(SetTASK({ task: { ...task, me: defaultMe } }));
+    }
+  }, [task, dispatch]);
+
   const handleSelectChange = (index, value) => {
-    const _me = [...me];
+    const _me = [...(task?.me || Array(6).fill(0))];
     _me[index] = Number(value);
     dispatch(SetPARAMS({ key: "me", value: _me }));
     dispatch(SetTASK({ task: { ...task, me: _me } }));
-    
   };
 
   const microscopicSelects = [
@@ -38,27 +47,19 @@ export default function Microscopic() {
 
         return (
           <MDBCol key={`${label}-${index}`} md="6">
-            {/* <Select
-              disableSearch
-              collections={choices}
-              label={label}
-              preValue={String(me[index])}
-              texts="str"
-              values="index"
-              onChange={(e) => handleSelectChange(index, Number(e))}
-            /> */}
-            <label htmlFor="">{ label}</label>
-             <select value={me[index]} className="form-control mb-2" onChange={(e) => handleSelectChange(index, e.target.value)}>
-            <option ></option>
-            {choices.map((choice, i) => {
-              
-             return (
-
-              <option key={i} value={i}>
-                {choice}
-              </option>
-            )})}  
-          </select>
+            <label htmlFor="">{label}</label>
+            <select
+              value={task?.me?.[index] ?? ""}
+              className="form-control mb-2"
+              onChange={(e) => handleSelectChange(index, e.target.value)}
+            >
+              <option value="">Select</option>
+              {choices.map((choice, i) => (
+                <option key={i} value={i}>
+                  {choice}
+                </option>
+              ))}
+            </select>
           </MDBCol>
         );
       })}

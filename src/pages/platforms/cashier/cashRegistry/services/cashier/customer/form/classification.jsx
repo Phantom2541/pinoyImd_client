@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBCol, MDBRow, MDBTypography } from "mdbreact";
+import { MDBBadge, MDBTypography } from "mdbreact";
 
-import {
-  fullAddress,
-  getAge,
-  mobile,
-  properFullname,
-} from "../../../../../../../../services/utilities";
+import { properFullname } from "../../../../../../../../services/utilities";
 import {
   Categories,
-  Memberships,
+  HMO,
   Privileges,
 } from "../../../../../../../../services/fakeDb";
 import {
@@ -19,6 +14,7 @@ import {
   SETPHYSICIAN,
   SETSOURCE,
   SETSSX,
+  RESET_INSOURCE,
 } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import {
   INSOURCE,
@@ -26,14 +22,40 @@ import {
   RESET as SOURCERESET,
 } from "../../../../../../../../services/redux/slices/assets/providers";
 import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
+import { capitalize } from "lodash";
+const contracts = {
+  sbc: "Subcontract",
+  ssc: "Special Subcontract",
+};
 
 export default function PosCard() {
   const { category, privilege, customer, ssx } = useSelector(({ pos }) => pos),
-    { collections: sources } = useSelector(({ providers }) => providers),
+    { collections } = useSelector(({ providers }) => providers),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [physicians, setPhysicians] = useState([]),
-    [source, setSource] = useState(""),
+    [categorySelected, setCategorySelected] = useState(),
+    [sources, setSources] = useState([]),
+    [source, setSource] = useState(),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    const { abbr } = Categories[category];
+    const _abbr = [
+      "wi",
+      "opd",
+      "er",
+      "cw",
+      "pw",
+      "bp",
+      "mc",
+      "prm",
+      "sc",
+    ].includes(abbr)
+      ? "rfr"
+      : abbr;
+    const _sources = collections?.filter(({ category }) => category === _abbr);
+    setSources(_sources);
+  }, [category, collections]);
 
   useEffect(() => {
     if (token && activePlatform.branchId) {
@@ -53,7 +75,10 @@ export default function PosCard() {
         dispatch(
           INSOURCE({
             token,
-            key: { vendors: activePlatform.branchId, status: "approved" },
+            key: {
+              vendors: activePlatform.branchId,
+              status: "approved",
+            },
           })
         )
           .then(({ payload }) => {
@@ -77,19 +102,17 @@ export default function PosCard() {
         dispatch(SOURCERESET());
       };
     }
-  }, [token, dispatch, activePlatform]);
+  }, [token, dispatch, activePlatform, categorySelected]);
 
-  const {
-      dob,
-      _id,
-      email,
-      mobile: _mobile,
-      address,
-      privilege: userPrivilege = 0,
-    } = customer,
+  const { _id, privilege: userPrivilege = 0 } = customer,
     didSelect = Boolean(_id);
 
-  const handleCategory = (category) => dispatch(SETCATEGORY(category));
+  const handleCategory = (category) => {
+    setCategorySelected(category);
+    setSource({});
+    dispatch(RESET_INSOURCE());
+    dispatch(SETCATEGORY(category));
+  };
   const handlePrivilege = (privilege) => dispatch(SETPRIVILEGE(privilege));
   const handleSource = (_id) => {
     const _physicians =
@@ -98,17 +121,20 @@ export default function PosCard() {
     setPhysicians(_physicians); // Update the physicians list based on the filtered data
     // Dispatch the selected source
     // if membership is not null
-    const { membership = "", clients } =
-      sources?.find((source) => source?._id.toString() === _id) || {};
 
     handlePhysician(""); // reset the selected pyhisican if change the source
-    setSource(_id);
-    dispatch(SETSOURCE({ _id: clients?._id, membership }));
+
+    // if ([5, 6, 7].includes(category)) {
+    //   dispatch(FIND({ token, key: { _id } }));
+    // }
+    const _source = sources?.find((source) => source?._id.toString() === _id);
+    const { membership = "", contract = "", hmo = "", clients } = _source || {};
+    setSource(_source);
+    dispatch(RESET_INSOURCE());
+    dispatch(SETSOURCE({ _id: clients?._id, membership, contract, hmo }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
-  var baseCategory = Categories[category]?.abbr;
-  const hasMembership = ["is", "sbc", "ssc", "hmo"].includes(baseCategory);
-  baseCategory = baseCategory === "is" ? "insource" : baseCategory;
+
   return (
     <>
       <div>
@@ -121,21 +147,7 @@ export default function PosCard() {
             onChange={({ target }) => dispatch(SETSSX(target.value))}
           />
         </div>
-        <div className="patient-form">
-          <span>Category</span>
-          <select
-            disabled={!didSelect}
-            value={category}
-            onChange={({ target }) => handleCategory(Number(target.value))}
-          >
-            {Categories.map(({ name, color }, index) => (
-              <option value={index} key={`category-${index}`} style={{ color }}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="patient-form">
+        <div className="patient-form mt-2">
           <span>Privilege</span>
           <select
             disabled={!didSelect}
@@ -161,32 +173,80 @@ export default function PosCard() {
             })}
           </select>
         </div>
-
-        <div className="patient-form">
+        <div className="patient-form mt-2">
+          <span>Category</span>
+          <select
+            disabled={!didSelect}
+            value={category}
+            onChange={({ target }) => handleCategory(Number(target.value))}
+          >
+            {Categories.map(({ name, color }, index) => (
+              <option value={index} key={`category-${index}`} style={{ color }}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="patient-form mt-2">
           <span>Source</span>
           <select
             disabled={!didSelect}
             onChange={({ target }) => handleSource(target.value)}
           >
             <option value="">None</option>
-            {sources
-              ?.filter(
-                ({ category: c }) =>
-                  c === (hasMembership ? baseCategory : "insource")
-              )
-              .map(({ _id, clients, membership }) => (
-                <option key={_id} value={_id} title={membership}>
-                  {Memberships.find(({ value }) => value === membership)?.emoji}
-                  {clients?.displayname}
-                </option>
-              ))}
+            {sources?.map(({ _id, clients }) => (
+              <option key={_id} value={_id}>
+                {/* {Memberships.find(({ value }) => value)?.emoji} */}
+                {clients?.displayname}
+              </option>
+            ))}
           </select>
         </div>
+        <div className="patient-form mt-2">
+          {/* // wls */}
+          {category === 5 && (
+            <span>
+              HMO :
+              <MDBBadge
+                color="warning"
+                className="ml-1"
+                style={{ fontSize: "0.8rem" }}
+              >
+                {capitalize(HMO.getName(source?.hmo))}
+              </MDBBadge>
+            </span>
+          )}
+          {category === 6 && (
+            <span>
+              Membership :
+              <MDBBadge
+                color="warning"
+                className="ml-1"
+                style={{ fontSize: "0.8rem" }}
+              >
+                {capitalize(source?.membership)}{" "}
+              </MDBBadge>
+            </span>
+          )}
+          {category === 7 && (
+            <span>
+              Contract :
+              <MDBBadge
+                color="warning"
+                className="ml-1"
+                style={{ fontSize: "0.8rem" }}
+              >
+                {capitalize(contracts[source?.contract])}
+              </MDBBadge>
+            </span>
+          )}
+        </div>
+
         {source ? (
-          <div className="patient-form">
+          <div className="patient-form mt-2">
             <span>Physician</span>
             <select
-              disabled={!didSelect}
+              // disabled={!didSelect}
               onChange={({ target }) => handlePhysician(target.value)}
             >
               <option value="">None</option>
@@ -212,41 +272,7 @@ export default function PosCard() {
           />
         )}
       </div>
-      {_id ? (
-        <div className="mt-2">
-          <MDBRow>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>Birthday:</span>
-                <p>{new Date(dob).toDateString()}</p>
-              </div>
-            </MDBCol>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>Age:</span>
-                <p>{getAge(dob)}</p>
-              </div>
-            </MDBCol>
-          </MDBRow>
-          <MDBRow>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>{_mobile ? "Contact Number" : "E-mail address"}:</span>
-                <p>{_mobile ? mobile(_mobile) : email}</p>
-              </div>
-            </MDBCol>
-          </MDBRow>
-          <MDBRow>
-            <MDBCol>
-              <div className="pos-card-details">
-                <span>Address:</span>
-
-                <p>{fullAddress(address)}</p>
-              </div>
-            </MDBCol>
-          </MDBRow>
-        </div>
-      ) : (
+      {!_id && (
         <MDBTypography note noteColor="info" className="mt-3 mb-0">
           Please search a patron first.
         </MDBTypography>

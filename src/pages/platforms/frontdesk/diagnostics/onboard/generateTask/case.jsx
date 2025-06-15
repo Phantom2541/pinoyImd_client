@@ -104,7 +104,7 @@ const Body = ({ setOutSource, outSource }) => {
         </option>
         {outSources.map(({ text, value, category }, index) => (
           <option key={index} value={value}>
-            {category == "ghost" && "👻"} {text}
+            {category === "ghost" && "👻"} {text}
           </option>
         ))}
       </select>

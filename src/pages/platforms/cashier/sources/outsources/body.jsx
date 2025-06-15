@@ -5,6 +5,7 @@ import { billingAddress, currency } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
+  SetPricelist,
   DESTROY,
   RESET,
 } from "../../../../../services/redux/slices/assets/providers";
@@ -44,6 +45,11 @@ const Body = () => {
       }
     });
   };
+  const handlePriceList = (data) => {
+    console.log("data", data);
+
+    dispatch(SetPricelist(data));
+  };
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -58,8 +64,10 @@ const Body = () => {
           <th>Company</th>
           <th>Branch</th>
           <th>Address</th>
+          <th>Contract</th>
           <th>Credit</th>
           <th>Cutoff</th>
+          <th>Due Date</th>
           <th>Status</th>
           <th className="text-center">Action</th>
         </tr>
@@ -72,6 +80,8 @@ const Body = () => {
               credit,
               cutoff,
               category = "",
+              contract,
+              due,
             } = provider,
             { displayname, address, companyId, name } = vendors;
           const isGhost = category === "ghost";
@@ -83,8 +93,12 @@ const Body = () => {
                 {isGhost && "👻"} {displayname || name}
               </td>
               <td>{billingAddress(address)}</td>
+              <td>
+                {contract === "sbc" ? "Sub Contract" : "Special Sub Contract"}
+              </td>
               <td>{currency(credit)}</td>
               <td>{cutoff || "-"}</td>
+              <td>{due}</td>
               <td>{capitalize(status)}</td>
               <td className="text-center" style={{ width: "200px" }}>
                 <MDBBtnGroup>
@@ -98,6 +112,15 @@ const Body = () => {
                       <MDBIcon icon="pencil-alt" />
                     </MDBBtn>
                   )}
+                  <MDBBtn
+                    onClick={() => handlePriceList(provider)}
+                    size="sm"
+                    rounded
+                    color="success"
+                    title="Price list"
+                  >
+                    <MDBIcon icon="file-invoice-dollar" />
+                  </MDBBtn>
                   <MDBBtn
                     onClick={() => handleDelete(provider._id)}
                     size="sm"

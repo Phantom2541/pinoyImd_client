@@ -1,17 +1,41 @@
-import React from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBModal, MDBModalBody, MDBModalHeader, MDBAlert } from "mdbreact";
 import Patient from "./patient";
 import { formColor } from "./../../../../../../services/utilities";
-import { TOGGLE } from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import {
+  TOGGLE,
+  HEADS,
+  SetHEADS,
+} from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import BodySwitcher from "./bodySwitcher";
-
 import Footer from "./footer.jsx";
+
 export default function Modal() {
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { task, showModal } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
-  console.log("task", task);
-  console.log("");
+
+  useEffect(() => {
+    if (token && activePlatform?.branchId) {
+      const branchId = activePlatform.branchId;
+
+      const headsData = localStorage.getItem(`heads-${branchId}`);
+
+      if (headsData) {
+        dispatch(SetHEADS(JSON.parse(headsData)));
+      } else {
+        dispatch(HEADS({ token, branchId })).then((res) => {
+          if (res?.payload) {
+            localStorage.setItem(
+              `heads-${branchId}`,
+              JSON.stringify(res.payload?.payload)
+            );
+          }
+        });
+      }
+    }
+  }, [token, dispatch, activePlatform]);
 
   return (
     <MDBModal

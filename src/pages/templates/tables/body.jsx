@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { Input } from "../../../components/customizable";
 import { SetEDIT } from "../../../services/redux/slices/reusable/table";
 import Swal from "sweetalert2";
+import { RESET } from "../../../services/redux/slices/assets/companies";
 
 const Body = () => {
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
@@ -124,7 +125,7 @@ const Body = () => {
                     color="danger"
                     size="sm"
                     rounded
-                    onClick={() => handleDelete(id)}
+                    onClick={() => dispatch(RESET(id))}
                   >
                     <MDBIcon icon="trash" />
                   </MDBBtn>

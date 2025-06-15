@@ -1,8 +1,8 @@
 .confidential-box {
   background-color: #e0eac9; /* light green like in the image */
-  background-image: radial-gradient(black 0.5px, transparent 0.5px);
-  background-size: 5px 5px;
-  color: black;
+  background-image: radial-gradient(black 0.5px, transparent 0.5px) !important;
+  background-size: 5px 5px !important;
+  color: black !important;
   font-weight: bold;
   font-family: "Arial", sans-serif;
   border: 1px solid black;

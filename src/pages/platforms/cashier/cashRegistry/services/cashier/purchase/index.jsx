@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchMenu } from "../../../../../../../components/searchables";
 import { MDBIcon, MDBBadge } from "mdbreact";
@@ -13,13 +12,14 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos.js";
 
 export default function Menus({ patronPresent }) {
-  const { category, privilege, cart, membership } = useSelector(
+  const { category, privilege, cart, membership, hmo, contract } = useSelector(
       ({ pos }) => pos
     ),
     dispatch = useDispatch();
 
   const handleADDtoCart = (item) => dispatch(ADDTOCART(item));
   const handleRemovedToCart = (_id) => dispatch(REMOVEFROMCART(_id));
+
   return (
     <>
       <table className="menus-table">
@@ -61,7 +61,7 @@ export default function Menus({ patronPresent }) {
               up = 0,
               title = "",
               color = "",
-            } = computeGD(item, category, privilege, membership);
+            } = computeGD(item, category, privilege, membership, hmo, contract);
 
             return (
               <tr key={_id}>

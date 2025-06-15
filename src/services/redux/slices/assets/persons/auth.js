@@ -337,12 +337,15 @@ export const reduxSlice = createSlice({
           );
 
           const _access = access
-            .filter(({ branchId }) => branchId === activePlatform.branchId)
+            .filter(
+              ({ branchId }) =>
+                String(branchId) === String(activePlatform.branchId)
+            )
             .map((a) => a.platform);
+
           const { contract = { designation: -1 } } = branch || {};
           const department = Policy.getDepartment(contract.designation) || {};
           const role = Policy.getPosition(contract.designation) || {};
-
           state.activePlatform = {
             ...activePlatform,
             branch,

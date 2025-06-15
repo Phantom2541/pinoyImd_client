@@ -46,7 +46,6 @@ class TopNavigation extends Component {
       transition: "padding-left .3s",
     };
     const { isPatient, department, aka } = this.props;
-
     return (
       <MDBNavbar
         className="flexible-MDBNavbar"

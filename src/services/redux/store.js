@@ -51,10 +51,10 @@ import {
   soa,
 } from "./slices/finance";
 
-import { products, productsGenerics, machines, mentainance} from "./slices/market";
+import { products, productsGenerics, machines, mentainance, } from "./slices/market";
 import { appointments } from "./slices/clinical";
 
-const store = configureStore({
+const store = configureStore({  
   reducer: {
     remittances,
     payables,

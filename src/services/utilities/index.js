@@ -52,6 +52,9 @@ import Male from "../../assets/male.jpg";
 import Female from "../../assets/female.jpg";
 import PresetIMD from "../../assets/iMD.jpg";
 import paymentMethod from "./paymentMethod";
+import VouchersToExcel from "./export/excel/vouchers";
+import MenusToExcel from "./export/excel/menus";
+import MenusToPDF from "./export/pdf/menus";
 import Deals from "./deals";
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
@@ -120,4 +123,8 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  //export to excel
+  VouchersToExcel,
+  MenusToExcel,
+  MenusToPDF,
 };

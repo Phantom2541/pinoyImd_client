@@ -3,8 +3,15 @@ import { axioKit } from "../../../utilities";
 
 const url = "assets/providers";
 const categories = [
-  { text: "Vendors", value: "insource" },
-  { text: "Health Management Organization", value: "hmo" },
+  { text: "supplier", value: "supplier" },
+  { text: "laboratory", value: "laboratory" },
+  { text: "radiology", value: "radiology" },
+  { text: "diagnostic", value: "diagnostic" },
+  { text: "pharmacy", value: "pharmacy" },
+  { text: "infirmary", value: "infirmary" },
+  { text: "rehabilitation", value: "rehabilitation" },
+  { text: "support", value: "support" },
+  { text: "ghost", value: "ghost" },
 ];
 const contractCategories = [
   { text: "Subcontract", value: "sbc" },
@@ -27,6 +34,7 @@ const initialState = {
   showModal: false,
   showRegisterModal: false,
   showCompanyModal: false,
+  showPriceModal: false,
   willCreate: false,
   /**
    * Footer
@@ -215,7 +223,7 @@ export const reduxSlice = createSlice({
 
     SetCATEGORY: (state, { payload }) => {
       const filter = state.collections.filter(
-        ({ category, status }) => (category || status) === payload
+        ({ contract, status }) => (contract || status) === payload
       );
       const baseCollections = !payload ? state.collections : filter;
       state.filtered = baseCollections;
@@ -276,6 +284,12 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.willCreate = false;
     },
+    SetPricelist: (state, { payload }) => {
+      console.log("payload", payload);
+
+      state.showPriceModal = true;
+      state.selected = payload;
+    },
     SetCREATE: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = true;
@@ -287,6 +301,11 @@ export const reduxSlice = createSlice({
     },
     ToggleRegister: (state) => {
       state.showRegisterModal = !state.showRegisterModal;
+      state.selected = {};
+    },
+
+    TogglePrice: (state) => {
+      state.showPriceModal = !state.showPriceModal;
       state.selected = {};
     },
     SetFILTER: (state, { payload }) => {
@@ -475,7 +494,7 @@ export const reduxSlice = createSlice({
         const index = _collections.findIndex((item) => item._id === data._id);
         state.collections[index] = data;
         state.filtered = _collections.filter(
-          ({ category, status }) => (category || status) === state.category
+          ({ contract, status }) => (contract || status) === state.category
         );
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -493,6 +512,7 @@ export const reduxSlice = createSlice({
         const { updatedKey, _id } = data;
         const updateCollections = (collections) => {
           const index = collections.findIndex((item) => item._id === _id);
+          console.log("specific update index", index);
           collections[index] = {
             ...collections[index],
             [updatedKey]: data[updatedKey],
@@ -567,6 +587,8 @@ export const {
   SetPAGE,
   SETSOURCES,
   SetSEARCHRESULTS,
+  SetPricelist,
+  TogglePrice,
   ToggleDidSearch,
   RESET_COLLECTIONS,
   SetREGISTER,

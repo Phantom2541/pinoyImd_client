@@ -51,6 +51,7 @@ export default function Chemistry() {
       })
     );
   };
+  console.log("packages", packages);
 
   return (
     <MDBTable hover responsive className="mb-0">
@@ -70,6 +71,8 @@ export default function Chemistry() {
       </thead>
       <tbody>
         {Object.entries(packages).map(([key, value], index) => {
+          console.log("key", key, "value", value);
+
           const service = services.find((s) => s.id === Number(key)) || {};
           const { preference, abbreviation, name, references } = service;
           const { lo, hi, warn, alert, critical, units, _id } = findReference(
