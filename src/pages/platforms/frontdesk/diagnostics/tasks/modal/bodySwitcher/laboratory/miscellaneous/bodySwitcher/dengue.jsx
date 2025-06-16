@@ -36,13 +36,13 @@ export default function Dengue({ task, setTask }) {
           /> */}
           <select
             name="ns1"
-            onChange={(e) => handleSelectChange("ns1", Number(e))}
+            onChange={(e) => handleSelectChange("ns1", Number(e.target.value))}
             value={String(results.ns1)}
             className="form-control"
           >
             <option> NS1 Antigen </option>
             {choices.map((data) => (
-              <option value={data.index}></option>
+              <option value={data.index}>{data.str}</option>
             ))}
           </select>
         </MDBCol>
@@ -59,13 +59,13 @@ export default function Dengue({ task, setTask }) {
         /> */}
         <select
           name="igg"
-          onChange={(e) => handleSelectChange("ns1", Number(e))}
-          value={String(results.ns1)}
+          onChange={(e) => handleSelectChange("igg", Number(e.target.value))}
+          value={String(results.igg)}
           className="form-control"
         >
           <option> Antibody IgG </option>
           {choices.map((data) => (
-            <option value={data.index}></option>
+            <option value={data.index}>{data.str}</option>
           ))}
         </select>
       </MDBCol>
@@ -81,13 +81,13 @@ export default function Dengue({ task, setTask }) {
         /> */}
         <select
           name="igm"
-          onChange={(e) => handleSelectChange("ns1", Number(e))}
-          value={String(results.ns1)}
+          onChange={(e) => handleSelectChange("igm", Number(e.target.value))}
+          value={String(results.igm)}
           className="form-control"
         >
           <option> Antibody IgM </option>
           {choices.map((data) => (
-            <option value={data.index}></option>
+            <option value={data.index}>{data.str}</option>
           ))}
         </select>
       </MDBCol>
