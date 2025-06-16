@@ -7,8 +7,6 @@ import {
 } from "../../../../../../services/utilities";
 
 export default function Patient({ patient }) {
-  console.log("patient", patient);
-
   const { fullName, isMale, dob } = patient;
 
   return (

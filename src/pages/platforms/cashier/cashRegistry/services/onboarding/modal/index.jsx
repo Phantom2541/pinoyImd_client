@@ -44,7 +44,6 @@ export default function Modal() {
     sendouts = {},
     branchId = {},
     privilege = 0,
-    category,
   } = selected || {};
 
   const {

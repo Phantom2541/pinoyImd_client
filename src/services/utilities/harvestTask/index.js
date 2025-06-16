@@ -1,12 +1,9 @@
 import { Services, Templates } from "../../fakeDb";
 
 const harvestTask = (menu) => {
-  console.log("menu", menu);
-  
   return Services.whereIn(
     menu?.reduce((collection, deal) => collection.concat(deal.packages), [])
   ).reduce((collection, service) => {
-
     // Find the matching template for the department
     const foundTemplate = Templates.collections.find(
       ({ department }) => department === service.department
@@ -17,7 +14,6 @@ const harvestTask = (menu) => {
       return collection; // Skip this iteration
     }
 
-
     // Ensure service.template exists in components
     let forms = foundTemplate.components[service.template];
 
@@ -27,7 +23,6 @@ const harvestTask = (menu) => {
       );
       return collection; // Skip this iteration
     }
-
 
     switch (forms) {
       case "Chemistry":

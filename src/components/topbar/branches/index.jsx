@@ -44,8 +44,8 @@ export default function Branches() {
 
   return (
     <MDBDropdown>
-      {branches.length > 1 &&
-        branches[0].name === activePlatform.branch.name && (
+      {branches?.length > 1 &&
+        branches[0]?.name === activePlatform?.branch?.name && (
           <MDBDropdownToggle nav caret>
             <MDBIcon icon="code-branch" />
             &nbsp;
@@ -55,13 +55,13 @@ export default function Branches() {
           </MDBDropdownToggle>
         )}
       <MDBDropdownMenu right>
-        {branches.map(({ name, _id }, index) => (
+        {branches?.map(({ name, _id }, index) => (
           <MDBDropdownItem
             active={_id === activePlatform?.branchId}
             key={`branch-${index}`}
             onClick={() => handleActivePlatform(_id)}
           >
-            {capitalize(name)}
+            {capitalize(name)}()
           </MDBDropdownItem>
         ))}
       </MDBDropdownMenu>

@@ -77,6 +77,7 @@ const Footer = () => {
             ...rest,
             hasDone,
             department,
+            _id: task?._id,
             signatories: [head, dr, auth._id],
           };
         })()
@@ -84,6 +85,7 @@ const Footer = () => {
           ...task,
           hasDone,
           department,
+          _id: task?._id,
           signatories: [head, dr, auth._id],
         };
 
@@ -94,6 +96,8 @@ const Footer = () => {
         data,
       })
     ).then(({ payload }) => {
+      console.log("payload", payload);
+
       setIsLoading(false);
       dispatch(SetVALIDATOR(payload?.item || payload?.payload));
       dispatch(SetMODAL(false));

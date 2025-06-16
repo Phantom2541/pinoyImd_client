@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
-import { MDBIcon } from "mdbreact";
+import { MDBBadge, MDBIcon } from "mdbreact";
 import "./style.css";
 import { useToasts } from "react-toast-notifications";
+import { currency } from "../../../services/utilities";
+import { capitalize } from "lodash";
+
+const tagMap = {
+  badge: MDBBadge,
+  h6: "h6",
+  p: "p",
+  span: "span",
+};
 
 /**
  * EditableField Component
@@ -23,17 +32,22 @@ import { useToasts } from "react-toast-notifications";
  * @param {function} [onSave=() => {}] - Callback function fired when the check icon is clicked to save changes.
  *
  * @returns {JSX.Element} Editable inline input with save/cancel icons.
+ *
  */
 const EditableField = ({
+  displayTag = "h6", //h6,badge this is available tag for this component
   className = "form-control",
-  formSubmitted = false,
   placeholder = "",
   keyForValue = "", //this key is for value
   type = "text",
   width = "",
-  value = "No props for value",
   fieldData = {},
+  displayStyle = {},
+  inputStyle = {},
   onSave = () => {},
+  isMoney = false,
+  enableEditMode = true,
+  formSubmitted = false,
 }) => {
   const [editedData, setEditedData] = useState({}),
     { addToast } = useToasts();
@@ -56,8 +70,22 @@ const EditableField = ({
   };
 
   const isEditable =
+    enableEditMode &&
     keyForValue === editedData?.editingKey &&
     fieldData?._id === editedData?._id;
+
+  const Tag = tagMap[displayTag] || "h6";
+  const displayValue = (
+    <Tag
+      style={displayStyle}
+      onClick={() => setEditedData({ ...fieldData, editingKey: keyForValue })}
+      className="cursor-pointer"
+    >
+      {(isMoney
+        ? currency(fieldData[keyForValue])
+        : capitalize(fieldData[keyForValue])) || "N/A"}
+    </Tag>
+  );
 
   return (
     <div style={{ width: isEditable && width }}>
@@ -65,6 +93,7 @@ const EditableField = ({
         <div className="d-flex align-items-center customizable-input-container">
           <input
             placeholder={placeholder}
+            style={inputStyle}
             className={className}
             value={editedData[keyForValue] || ""}
             type={type}
@@ -106,14 +135,7 @@ const EditableField = ({
           </div>
         </div>
       ) : (
-        <h6
-          onClick={() =>
-            setEditedData({ ...fieldData, editingKey: keyForValue })
-          }
-          className="cursor-pointer"
-        >
-          {value || "N/A"}
-        </h6>
+        <>{displayValue}</>
       )}
     </div>
   );

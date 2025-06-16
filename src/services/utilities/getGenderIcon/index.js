@@ -7,7 +7,9 @@ const getPhysicianGenderIcon = (isMale, isGhost) => (
 );
 
 const getGenderIcon = (isMale) => (
-  <span style={{ fontSize: "20px" }}>{isMale ? "♂️" : "♀️"}</span>
+  <span style={{ fontSize: "20px" }} title={isMale ? "Male" : "Female"}>
+    {isMale ? "♂️" : "♀️"}
+  </span>
 );
 
 export { getPhysicianGenderIcon, getGenderIcon };

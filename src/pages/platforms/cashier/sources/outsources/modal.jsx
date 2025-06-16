@@ -41,6 +41,7 @@ export default function Modal() {
         ...selected,
         userId: auth._id,
         clients: activePlatform.branchId,
+        category: "ctr",
         address: {},
         status: "pending",
         isRegister: true,
@@ -59,7 +60,7 @@ export default function Modal() {
     const isGhost = companies.find(
       ({ _id }) => _id === form.companyId
     )?.isGhost;
-    if (!isGhost && !form.isRegister) return {};
+    if (!isGhost && form.isRegister) return {};
     return { status: "approved", category: "ghost" };
   };
   // Handle update function

@@ -104,7 +104,6 @@ export default function ClaimStub() {
         <tbody>
           {cart?.map((menu, index) => {
             const { description, abbreviation, packages = [], srp } = menu;
-            console.log("menu", menu);
 
             return (
               <tr key={`menu-${index}`}>

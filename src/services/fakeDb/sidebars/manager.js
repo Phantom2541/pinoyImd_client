@@ -42,7 +42,7 @@ import {
 
 import {
   Outsources,
-  Insources,
+  // Insources,
   Utilities,
   Hotlines,
   Suppliers,
@@ -80,7 +80,7 @@ const manager = [
         component: ExperimentalLedger,
       },
       {
-        name: "Mobile Services",
+        name: "Mobile Clinic",
         path: "/mobile",
         icon: "mobile-alt",
         title: "Quest System for Mobile Clinic Lab Team",
@@ -264,7 +264,7 @@ const manager = [
             name: "Insourcing",
             path: "/insourcing",
             icon: "download",
-            component: Insources,
+            // component: Insources,
           },
           {
             name: "Suppliers",

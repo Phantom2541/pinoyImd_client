@@ -97,12 +97,18 @@ export const reduxSlice = createSlice({
       state.willCreate = false;
       state.showModal = true;
     },
-    SetCREATE: (state, { payload }) => {
+    SetCREATE: (state) => {
       state.selected = {
-        lo: "",
-        norm: "",
-        hi: "",
-        serviceId: payload.serviceId,
+        brand: "",
+        name: "",
+        subname: "",
+        description: "",
+        prescription: false,
+        expense: 0,
+        forsale: false,
+        remarks: "",
+        section: "",
+        store: "",
       };
       state.willCreate = true;
       state.showModal = true;
@@ -227,18 +233,15 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success } = action;
+        const { success, payload } = action.payload;
         const index = state.collections.findIndex(
-          (item) => item?._id === action.payload.payload
+          (item) => item?._id === payload
         );
         state.collections.splice(index, 1);
 
         const index2 = state.filtered.findIndex(
-          (item) => item?._id === action.payload.payload
+          (item) => item?._id === payload
         );
-
-        console.log("index2", index2);
-
         state.filtered.splice(index2, 1);
         state.message = success;
         state.isSuccess = true;

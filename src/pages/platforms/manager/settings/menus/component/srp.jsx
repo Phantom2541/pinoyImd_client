@@ -31,7 +31,7 @@ export default function SRP({ handleChange, handleValue }) {
         </MDBCol>
       </MDBRow>
       <MDBRow>
-        <MDBCol md="4">
+        <MDBCol md="6">
           <MDBInput
             type="number"
             label="Private Ward"
@@ -39,21 +39,12 @@ export default function SRP({ handleChange, handleValue }) {
             onChange={(e) => handleChange("pw", e.target.value)}
           />
         </MDBCol>
-        <MDBCol md="3">
+        <MDBCol md="6">
           <MDBInput
             type="number"
             label="Promo"
             value={handleValue("promo")}
             onChange={(e) => handleChange("promo", e.target.value)}
-          />
-        </MDBCol>
-        <MDBCol md="5">
-          <MDBInput
-            type="number"
-            label="Health Maintenance Organization"
-            value={handleValue("hmo")}
-            onChange={(e) => handleChange("hmo", e.target.value.toLowerCase())}
-            className="mb-0"
           />
         </MDBCol>
       </MDBRow>

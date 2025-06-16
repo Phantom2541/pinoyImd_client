@@ -26,8 +26,12 @@ import {
   Controls,
 } from "../../../pages/platforms/diagnostics/management";
 
-import Products from "../../../pages/platforms/frontdesk/market/oldproducts";
-import productGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
+// import products from "../../../pages/platforms/frontdesk/market/products";
+// import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
+import machines from "../../../pages/platforms/frontdesk/market/machines";
+import generics from "../../../pages/platforms/frontdesk/market/generics";
+import medicines from "../../../pages/platforms/frontdesk/market/medicine";
+import mentainance from "../../../pages/platforms/frontdesk/market/mentainance";
 import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../pages/platforms/cashier";
 
@@ -146,16 +150,40 @@ const frontdesk = [
     icon: "boxes",
     children: [
       {
+        name: "ProductsGenerics",
+        path: "/productsGenerics",
+        icon: "cogs",
+        // component: productGenerics,
+      },
+      {
         name: "Products",
         path: "/products",
         icon: "cogs",
-        component: productGenerics,
+        // component: products,
       },
       {
         name: "Machines",
         path: "/merchandise/machines",
         icon: "laptop-code",
-        // component: MachinesComponent, // add your component here
+        component: machines, // add your component here
+      },
+      {
+        name: "Generics",
+        path: "/generics",
+        icon: "laptop-code",
+        component: generics, // add your component here
+      },
+      {
+        name: "Medicines",
+        path: "/medicines",
+        icon: "laptop-code",
+        component: medicines, // add your component here
+      },
+      {
+        name: "Mentainance",
+        path: "/merchandise/mentainance",
+        icon: "laptop-code",
+        component: mentainance,
       },
       {
         name: "Stocks",
@@ -279,7 +307,7 @@ const frontdesk = [
         name: "Products",
         path: "/offers/products",
         icon: "cogs",
-        component: Products,
+        // component: products,
       },
       {
         name: "Consumables",

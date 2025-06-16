@@ -51,8 +51,16 @@ import {
   soa,
 } from "./slices/finance";
 
-import { products, productsGenerics } from "./slices/market";
+import {
+  products,
+  productsGenerics,
+  machines,
+  medicines,
+  generics,
+  mentainance,
+} from "./slices/market";
 import { appointments } from "./slices/clinical";
+import results from "./slices/portal/results";
 
 const store = configureStore({
   reducer: {
@@ -99,10 +107,17 @@ const store = configureStore({
     ultrasound,
     ecg,
     productsGenerics,
+    machines,
+    medicines,
+    generics,
+    mentainance,
     appointments,
+    //this is results for viewing the results online
+    results,
     //for templates only
     dragDrop,
     table,
+    procurements,
   },
 });
 

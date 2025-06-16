@@ -1,5 +1,6 @@
 import qr from "../../../../assets/qr.png";
 import pinoyImd from "../../../../assets/iMD.png";
+import { mobile } from "../../../../services/utilities";
 const Footer = () => {
   return (
     <div
@@ -12,7 +13,7 @@ const Footer = () => {
       }}
     >
       <div
-        className="d-flex px-3 align-items-center justify-content-between"
+        className="d-flex px-4 align-items-center justify-content-between"
         style={{ gap: "1rem" }}
       >
         <div>
@@ -40,7 +41,7 @@ const Footer = () => {
             >
               PINOY-IMD
             </h5>
-            <p
+            {/* <p
               style={{
                 margin: 0,
                 fontSize: "0.8rem",
@@ -49,8 +50,29 @@ const Footer = () => {
               }}
             >
               PINOY INTEGRATED MEDICAL DIAGNOSTICS
-            </p>
+            </p> */}
           </div>
+        </div>
+        <div className="mt-2">
+          {/* <h5
+            className="font-weight-bold text-center"
+            style={{ fontSize: "1.5rem", fontWeight: 600 }}
+          >
+            PINOY-IMD
+          </h5> */}
+          <h5 style={{ fontWeight: 500 }}>
+            PINOY INTEGRATED MEDICAL DIAGNOSTICS
+          </h5>
+          <h5
+            className="grey-text text-center"
+            style={{
+              marginTop: "-0.5rem",
+              fontSize: "1.5rem",
+              fontWeight: 400,
+            }}
+          >
+            <i> {mobile("09814563813")}</i>
+          </h5>
         </div>
         <div>
           <img
@@ -78,7 +100,7 @@ const Footer = () => {
             >
               Scan this QR code
             </h5>
-            <p
+            {/* <p
               style={{
                 margin: 0,
                 fontSize: "0.8rem",
@@ -87,7 +109,7 @@ const Footer = () => {
               }}
             >
               to view this result online
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

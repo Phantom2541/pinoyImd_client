@@ -6,12 +6,12 @@ const Payments = {
   pw: ["cash", "gcash", "cheque", "voucher"],
   promo: ["cash", "gcash", "cheque"],
   hmo: ["voucher"], // need SOA
-  is: ["cash", "gcash", "voucher"], // v 5% and up discount from srp
+  mbs: ["cash", "gcash", "voucher"], // v 5% and up discount from srp
   bp: ["cash", "gcash", "voucher"],
   mc: ["cash", "gcash"],
   sc: ["cash", "gcash"],
-  sbc: ["voucher"], // sub contract
-  ssc: ["voucher"], // special sub contract
+  ctr: ["voucher"], //  contract
+  wls: ["voucher"],
 };
 
 export default Payments;
@@ -25,9 +25,9 @@ export default Payments;
 // pw: private ward
 // promo: promotion
 // hmo: health maintenance organization
-// is: insource
+// mbs: membership
+// ctr: contract
+// wls: wellness
 // bp: business permit
 // mc: medical clearance
 // sc: surgical clearance
-// sbc : sub contract
-// ssc: special sub contract

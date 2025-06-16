@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SetPARAMS,
   SetTASK,
 } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBCol, MDBRow } from "mdbreact";
-// import { Select } from "./../../../../../../../../../components/customizable";
 import {
   Transparency,
   UrineColors,
@@ -14,16 +13,8 @@ import {
 } from "./../../../../../../../../../services/fakeDb";
 
 export default function Physical() {
-  const { task } = useSelector(({ validator }) => validator),
-    dispatch = useDispatch();
-  const { pe } = task;
-  const handleSelectChange = (index, value) => {
-    const _pe = [...pe];
-    _pe[index] = value;
-
-    dispatch(SetPARAMS({ key: "pe", value: _pe }));
-    dispatch(SetTASK({ task: { ...task, pe: _pe } }));
-  };
+  const dispatch = useDispatch();
+  const { task } = useSelector(({ validator }) => validator);
 
   const physicalSelects = [
     {
@@ -43,38 +34,41 @@ export default function Physical() {
       choices: PH,
     },
   ];
+
+  // Initialize `pe` if missing or incomplete
+  useEffect(() => {
+    if (!Array.isArray(task?.pe) || task.pe.length !== physicalSelects.length) {
+      const defaultPe = Array(physicalSelects.length).fill(0);
+      dispatch(SetTASK({ task: { ...task, pe: defaultPe } }));
+    }
+  }, [task, dispatch]);
+
+  const handleSelectChange = (index, value) => {
+    const _pe = [...(task?.pe || Array(physicalSelects.length).fill(0))];
+    _pe[index] = Number(value);
+    dispatch(SetPARAMS({ key: "pe", value: _pe }));
+    dispatch(SetTASK({ task: { ...task, pe: _pe } }));
+  };
+
   return (
     <MDBRow className="text-left">
-      {physicalSelects.map(({ label, choices }, index) => {
-        return (
-          <MDBCol md="6" key={`${label}-${index}`}>
-            {/* <Select
-            collections={choices}
-            label={label}
-            preValue={pe[index]}
-            texts="str"
-            values="index"
-            onChange={(e) => handleSelectChange(index, Number(e))}
-          /> */}
-            <label htmlFor="">{label}</label>
-
-            <select
-              value={pe[index]}
-              className="form-control mb-2"
-              onChange={(e) => handleSelectChange(index, e.target.value)}
-            >
-              <option></option>
-              {choices.map((choice, i) => {
-                return (
-                  <option key={i} value={i}>
-                    {choice}
-                  </option>
-                );
-              })}
-            </select>
-          </MDBCol>
-        );
-      })}
+      {physicalSelects.map(({ label, choices }, index) => (
+        <MDBCol md="6" key={`${label}-${index}`}>
+          <label>{label}</label>
+          <select
+            value={task?.pe?.[index] ?? ""}
+            className="form-control mb-2"
+            onChange={(e) => handleSelectChange(index, e.target.value)}
+          >
+            <option value="">Select...</option>
+            {choices.map((choice, i) => (
+              <option key={i} value={i}>
+                {choice}
+              </option>
+            ))}
+          </select>
+        </MDBCol>
+      ))}
     </MDBRow>
   );
 }
