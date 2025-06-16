@@ -42,7 +42,7 @@ export default function Dengue({ task, setTask }) {
           >
             <option> NS1 Antigen </option>
             {choices.map((data) => (
-              <option value={data.index}></option>
+              <option value={data.index}>{data.str}</option>
             ))}
           </select>
         </MDBCol>
@@ -65,7 +65,7 @@ export default function Dengue({ task, setTask }) {
         >
           <option> Antibody IgG </option>
           {choices.map((data) => (
-            <option value={data.index}></option>
+            <option value={data.index}>{data.str}</option>
           ))}
         </select>
       </MDBCol>
@@ -87,7 +87,7 @@ export default function Dengue({ task, setTask }) {
         >
           <option> Antibody IgM </option>
           {choices.map((data) => (
-            <option value={data.index}></option>
+            <option value={data.index}>{data.str}</option>
           ))}
         </select>
       </MDBCol>
