@@ -13,6 +13,9 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     const services = collections.filter(({ id }) => task.services.includes(id));
     const taskData = { ...task, services };
 
+    console.log("task", services);
+    console.log("preferences", collections);
+
     // Store data in localStorage
     localStorage.setItem("taskPrintout", JSON.stringify(taskData));
     console.log("Data stored in localStorage:", taskData);

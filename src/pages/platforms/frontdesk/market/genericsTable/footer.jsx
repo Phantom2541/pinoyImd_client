@@ -7,10 +7,10 @@ import {
   SetActivePAGE,
 } from "../../../../../services/redux/slices/market/generics";
 const Footer = () => {
-  const { maxPage } = useSelector(({ auth }) => auth),
-    { isLoading, totalPages, activePage } = useSelector(
+  const { isLoading, totalPages, activePage } = useSelector(
       ({ generics }) => generics
     ),
+    { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {
