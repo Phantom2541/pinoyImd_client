@@ -828,6 +828,7 @@ export const reduxSlice = createSlice({
                   _id: source?._id || "NoSource",
                   displayname: source?.displayname || "No Source",
                   affiliated: source?.affiliated || [],
+                  isMembership: source?.category === "mbs",
                 },
               ])
             ).values(),
