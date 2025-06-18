@@ -57,14 +57,13 @@ const CountDown = () => {
   }, [secondsLeft, dispatch]);
 
   const formatTime = (totalSeconds) => {
-    const sign = totalSeconds < 0 ? "-" : "";
     const absSeconds = Math.abs(totalSeconds);
 
     const hrs = String(Math.floor(absSeconds / 3600)).padStart(1, "0");
     const mins = String(Math.floor((absSeconds % 3600) / 60)).padStart(2, "0");
     const secs = String(absSeconds % 60).padStart(2, "0");
 
-    return `${sign}${hrs}:${mins}:${secs}`;
+    return `${hrs}:${mins}:${secs}`;
   };
 
   return (
