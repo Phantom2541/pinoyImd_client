@@ -92,21 +92,23 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>
           <MDBBtnGroup>
-            <MDBBtn
-              title="Modal"
-              rounded
-              onClick={() => {
-                console.log("onClick-menu", menu);
-                console.log("onClick-task", task);
+            {menu?.branchId === activePlatform.branchId && (
+              <MDBBtn
+                title="Modal"
+                rounded
+                onClick={() => {
+                  console.log("onClick-menu", menu);
+                  console.log("onClick-task", task);
 
-                dispatch(SetTASK({ task }));
-              }}
-              color={obj?.hasDone ? "info" : "primary"}
-              size="sm"
-              className="py-1 px-3 m-0"
-            >
-              <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
-            </MDBBtn>
+                  dispatch(SetTASK({ task }));
+                }}
+                color={obj?.hasDone ? "info" : "primary"}
+                size="sm"
+                className="py-1 px-3 m-0"
+              >
+                <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
+              </MDBBtn>
+            )}
             {Array.isArray(obj?.signatories) &&
               obj.signatories.length >= 2 &&
               obj?.signatories[0] &&

@@ -13,6 +13,7 @@ const Body = () => {
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
       ({ medicines }) => medicines
     ),
+    { token } = useSelector(({ auth }) => auth),
     [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 

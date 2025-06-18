@@ -8,7 +8,6 @@ import Footer from "./footer";
 import "./style.css";
 const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
-  console.log();
 
   return (
     <div className="laboratory-container ">

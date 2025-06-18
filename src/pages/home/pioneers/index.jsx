@@ -2,6 +2,7 @@ import React from "react";
 import { MDBCol, MDBRow, MDBIcon } from "mdbreact";
 
 export default function Pioneers() {
+  const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
   const EMMAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/emman.jpg`;
   const TOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
   const BENEDICT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/earle.jpg`;
@@ -10,7 +11,11 @@ export default function Pioneers() {
   // const ROVAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rovan.jpg`;
   const VARGILIO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/vargilio.jpg`;
   const RIC = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/ric.jpg`;
-  const LIMBO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/limbo.jpg`;
+  const JERWIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/jerwin.jpg`;
+  const RICO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rico.png`;
+  const MAGTALAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kevin.jpg`;
+  const NICK = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/nick.jpg`;
+  // const LIMBO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/limbo.jpg`;
 
   const PIONEERS = [
     {
@@ -74,31 +79,31 @@ export default function Pioneers() {
       name: "Reynald Nick P. Magtalas",
       role: "Junior Software Engineer",
       quote: "Success is a series of small wins.",
-      img: RIC,
+      img: NICK,
     },
     {
       name: "Kevin P. Magtalas",
       role: "Lead Software Engineer",
       quote: "I'm not a magician, I'm a software engineer.",
-      img: RIC,
+      img: MAGTALAS,
     },
     {
       name: "Jerwin Jay J. Romero",
       role: "Project Manager",
       quote: "Think. Code. Debug. Repeat.",
-      img: RIC,
+      img: JERWIN,
     },
     {
       name: "John Rico S. Avila",
       role: "Junior Software Engineer",
       quote: "First, solve the problem. Then, write the code.",
-      img: RIC,
+      img: RICO,
     },
     {
       name: "Dan Meluin M. Palaris",
       role: "Junior Software Engineer",
       quote: "Software grows, evolves, and never finishes.",
-      img: RIC,
+      img: DEFAULT,
     },
   ];
   return (
