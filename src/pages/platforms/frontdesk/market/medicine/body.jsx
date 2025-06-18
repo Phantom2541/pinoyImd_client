@@ -13,6 +13,7 @@ const Body = () => {
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
       ({ medicines }) => medicines
     ),
+    { token } = useSelector(({ auth }) => auth),
     [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
@@ -58,8 +59,7 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { _id, name, abbreviation, specimen } = item;
-          const isSelected = selected.id === id;
+          const { _id, specimen } = item;
           return (
             <tr key={_id}>
               <td>{index + startIndex + 1}</td>
@@ -67,7 +67,7 @@ const Body = () => {
               <td>{specimen}</td>
               <td>
                 <button
-                  onclick={() => handleUpdate(items)}
+                  onclick={() => handleUpdate(item)}
                   className="btn btn-primary"
                 >
                   UPDATE

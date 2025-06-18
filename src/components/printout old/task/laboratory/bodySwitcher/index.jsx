@@ -10,7 +10,7 @@ import Bacteriology from "./bacteriology";
 import Compatibility from "./compatibility";
 import Pbs from "./pbs";
 
-const Blank = ({ task }) => <div>{task.form} is not working</div>;
+const Blank = ({ task }) => <div>{task?.form} is not working</div>;
 
 const componentMap = {
   hematology: Hematology,
@@ -28,7 +28,7 @@ const componentMap = {
 
 export default function BodySwitcher({ task }) {
   const contentRef = useRef(null);
-  const Component = componentMap[task.form?.toLowerCase()] || Blank;
+  const Component = componentMap[task?.form?.toLowerCase()] || Blank;
   return (
     <div>
       <div ref={contentRef}>
