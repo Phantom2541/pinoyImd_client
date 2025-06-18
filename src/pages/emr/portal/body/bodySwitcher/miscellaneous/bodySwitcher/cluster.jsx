@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBCol } from "mdbreact";
-import { Services } from "../../../../../../services/fakeDb";
+import { Services } from "../../../../../../../services/fakeDb";
 
 // HIV : 68
 // Syphilis |RPR :69

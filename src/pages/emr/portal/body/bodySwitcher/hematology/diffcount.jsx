@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBTable } from "mdbreact";
-import { Cellcount, Diffcount } from "../../../../../services/fakeDb";
+import { Cellcount, Diffcount } from "../../../../../../services/fakeDb";
 
 export default function DiffCount({ dc, style }) {
   const { Category } = Diffcount,

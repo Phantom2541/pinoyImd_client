@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { QRCodeCanvas } from "qrcode.react";
 import {
   billingAddress,
   capitalize,
   currency,
+  ENDPOINT,
+  mobile,
 } from "../../../services/utilities";
-import { Developer, Privileges, Services } from "../../../services/fakeDb";
+import { Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
 
-const Hr = () => (
+const Hr = ({ className = "" }) => (
   <hr
     style={{
       border: "none",
       borderTop: "1px dashed #000",
       height: 0,
     }}
-    className="my-1"
+    className={`my-1 ${className}`}
   />
 );
 
@@ -152,13 +155,28 @@ const Stub = ({ sale }) => {
         Relationship<div className="w-100 border-bottom border-dark">:</div>
       </div>
       <br />
-      <Hr />
+      <Hr className="mt-1" />
       <div className="mt-2">
         THIS SHALL SERVE AS YOUR ACKNOWLEDGEMENT RECEIPT AND IS VALID FORs
         <b> FIVE(5) </b>
         DAYS
       </div>
-      <img width={75} src={Developer.icon} alt="Developer Icon" />
+      <Hr />
+      <div className="mt-2">
+        <QRCodeCanvas value={`${ENDPOINT}/emr/portal/${_id}`} size={170} />
+      </div>
+      <h6>Scan this QR Code </h6>
+      <h6 style={{ marginTop: "-0.7rem" }}>To check transaction status </h6>
+      <Hr />
+      <h6 className="font-weight-bold">PINOY-iMD </h6>
+      <h6 style={{ marginTop: "-0.3rem" }}>Health within reached </h6>
+      <h6 style={{ marginTop: "-0.2rem" }} className="text-nowrap text-left">
+        Powered By: <strong>Techonowiz Solution Provider</strong>
+      </h6>
+      <h6 style={{ marginTop: "-0.4rem" }} className="text-left">
+        Contact Number: <strong>{mobile("09350339777")}</strong>
+      </h6>
+      {/* <img width={75} src={Developer.icon} alt="Developer Icon" /> */}
     </div>
   );
 };

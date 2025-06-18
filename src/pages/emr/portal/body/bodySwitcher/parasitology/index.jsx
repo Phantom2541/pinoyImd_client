@@ -7,7 +7,7 @@ import {
   MicroscopicInRange,
   MicroscopicResultInWord,
   PH,
-} from "../../../../../services/fakeDb";
+} from "../../../../../../services/fakeDb";
 
 export default function Parasitology({ fontSize, task }) {
   const style = { fontSize: `${fontSize}rem` },

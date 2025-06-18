@@ -6,26 +6,19 @@ const url = "portal/results";
 
 const initialState = {
   preferences: [],
-  filtered: [],
-  formSubmitted: false,
-  didSearch: false,
-  selected: {},
   result: {},
-  page: 0,
+  activeType: "",
+  hasRender: false,
+  isResultAvailable: false,
+  isResultReady: false,
+  countdownCompleted: false,
+  rendered: {},
+  forms: [],
   isSuccess: false,
   // main loading
   isLoading: false,
   // form loading
-  isLoadingForm: false,
-  willCreate: false,
   message: "",
-  showModal: false,
-  /**
-   * Footer
-   */
-  maxPage: 5,
-  activePage: 1,
-  totalPages: 0,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -48,6 +41,16 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
+const getDepartmentIndex = (departments) => {
+  const department = departments[0];
+  switch (department) {
+    case "LAB":
+      return 0;
+    default:
+      return 1;
+  }
+};
+
 export const reduxSlice = createSlice({
   name: url,
   initialState,
@@ -55,8 +58,18 @@ export const reduxSlice = createSlice({
     RESET: (state) => {
       state.isSuccess = false;
       state.isLoading = false;
-      state.formSubmitted = false;
       state.message = "";
+    },
+    SetCOUNTDOWN_COMPLETED: (state, { payload }) => {
+      state.countdownCompleted = payload;
+    },
+    SetHAS_RESULT: (state, _) => {
+      state.hasResult = true;
+    },
+    SetACTIVE_TYPE: (state, { payload }) => {
+      const { diagnostic } = state.result;
+      state.isResultReady = diagnostic[payload]?.hasDone || false;
+      state.activeType = payload;
     },
   },
   extraReducers: (builder) => {
@@ -69,16 +82,39 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
         const { result, preferences } = data;
+        const { diagnostic = {}, department, rendered: rendereds } = result;
+        const departmentIndex = getDepartmentIndex(department);
+        const rendered = rendereds[departmentIndex]; // get the rendered for the current department
+        var forms = [];
 
+        if (rendered?._id) {
+          const resultTypes = Object.keys(diagnostic);
+          if (resultTypes?.length > 0) {
+            const activeType = resultTypes[0];
+            state.isResultAvailable = true;
+            state.activeType = activeType;
+            state.hasRender = true;
+            state.isResultReady = diagnostic[activeType]?.hasDone || false;
+          }
+        } else {
+          state.hasRender = false;
+        }
+
+        //for services
         const services = [...Services.collections].map((service) => {
           const references = preferences.filter(
             ({ serviceId }) => serviceId === service.id
           );
           return { ...service, references };
         });
-        state.result = result;
 
+        if (result?.forms) {
+          forms = result?.forms[departmentIndex];
+        }
+        state.result = result;
         state.preferences = services;
+        state.rendered = rendered;
+        state.forms = forms;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -89,6 +125,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const { SetACTIVE_TYPE, SetHAS_RESULT, SetCOUNTDOWN_COMPLETED, RESET } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

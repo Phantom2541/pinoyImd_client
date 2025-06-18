@@ -3,7 +3,7 @@ import {
   calculateIndicators,
   findReference,
   formatToSI,
-} from "../../../../../services/utilities";
+} from "../../../../../../services/utilities";
 
 export default function Chemistry({ task, fontSize }) {
   const style = { fontSize: `${fontSize}px` },

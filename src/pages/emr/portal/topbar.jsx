@@ -1,5 +1,5 @@
 import { MDBCard, MDBCardBody, MDBIcon } from "mdbreact";
-import pinoyImd from "../../assets/iMD.png";
+import pinoyImd from "../../../assets/iMD.png";
 const Header = () => {
   return (
     <MDBCard className="mb-4  bg-primary text-white">
@@ -11,7 +11,7 @@ const Header = () => {
             style={{ fontSize: "1.8rem", color: "white" }}
           />
           <h5 style={{ fontWeight: 500 }} className="mt-1">
-            PINOY-IMD
+            PINOY-iMD
           </h5>
           <img src={pinoyImd} alt="Pinoy IMD" style={{ height: "2.5rem" }} />
         </div>
