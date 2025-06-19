@@ -1,7 +1,6 @@
-import React from "react";
 import { ENDPOINT, properFullname } from "../../../../services/utilities";
 
-const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
+const Signature = ({ person, label, style = {}, withSignature }) => {
   return (
     <div style={style} className="text-center position-relative">
       {withSignature && (
