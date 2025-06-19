@@ -3,12 +3,11 @@ import {
   calculateIndicators,
   findReference,
   formatToSI,
-} from "../../../../../../services/utilities";
+} from "../../../../../../../services/utilities";
 
 export default function Chemistry({ task, fontSize }) {
   const style = { fontSize: `${fontSize}px` },
     { packages, services, patient } = task;
-
   return (
     <MDBTable hover striped bordered responsive className="mb-0 text-center">
       <thead>

@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCol } from "mdbreact";
 
 export default function Troupe({ task, fontSize }) {
@@ -7,9 +6,7 @@ export default function Troupe({ task, fontSize }) {
   return (
     <MDBCol
       size="12"
-      className="ml-5"
       style={{
-        marginLeft: 20,
         fontSize: `${fontSize}rem`,
       }}
     >

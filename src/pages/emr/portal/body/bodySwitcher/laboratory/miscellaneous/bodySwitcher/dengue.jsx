@@ -1,14 +1,13 @@
-import React from "react";
 import { MDBCol } from "mdbreact";
 
 export default function Dengue({ task, fontSize }) {
   const { ns1, igg, igm } = task?.results;
   return (
-    <div className="offset-1" style={{ fontSize: `${fontSize}rem` }}>
+    <div style={{ fontSize: `${fontSize}rem` }}>
       <MDBCol>
         <h6>
-          {task.packages.includes(77) && "DENGUE SCREENING"}
-          {task.packages.includes(120) && "TYPHOID ANTIBODY"}
+          {task.packages.includes(77) && "DENGUE SCREENING "}
+          {task.packages.includes(120) && "TYPHOID ANTIBODY "}
           RESULTS :
         </h6>
         <div>
@@ -24,7 +23,7 @@ export default function Dengue({ task, fontSize }) {
                 <br />
               </>
             )}
-            <MDBCol md="11" className="offset-1">
+            <MDBCol md="11">
               IgG:&nbsp;
               <b style={{ color: igg ? "red" : "black" }}>
                 {igg ? "POSITIVE" : "NEGATIVE"}

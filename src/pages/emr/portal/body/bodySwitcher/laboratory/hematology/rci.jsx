@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBTable } from "mdbreact";
-import { Cellcount, Rci as RCI } from "../../../../../../services/fakeDb";
+import { Cellcount, Rci as RCI } from "../../../../../../../services/fakeDb";
 // import { calculateIndicators } from "../../../../../services/utilities";
 
 const options = ["00", "15", "30", "45"];

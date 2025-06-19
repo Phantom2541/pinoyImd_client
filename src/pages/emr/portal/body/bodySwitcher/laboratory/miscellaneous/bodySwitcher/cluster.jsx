@@ -1,6 +1,5 @@
-import React from "react";
 import { MDBCol } from "mdbreact";
-import { Services } from "../../../../../../../services/fakeDb";
+import { Services } from "../../../../../../../../services/fakeDb";
 
 // HIV : 68
 // Syphilis |RPR :69
@@ -16,12 +15,12 @@ export default function Cluster({ task, fontSize }) {
     .map((key) => Services.find(key));
 
   return (
-    <div className="pl-5 mb-5" style={{ fontSize: `${fontSize}rem` }}>
+    <div style={{ fontSize: `${fontSize}rem` }}>
       <MDBCol>
-        <h6>Results :</h6>
+        <h6>Results:</h6>
         <div>
           {services.map((service, i) => (
-            <MDBCol size="12" className="offset-1" key={`cluster-${i}`}>
+            <MDBCol size="12" key={`cluster-${i}`}>
               {service?.name || service?.abbreviation}:&nbsp;
               <b
                 style={{

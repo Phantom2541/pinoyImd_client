@@ -1,4 +1,3 @@
-import React from "react";
 import BodySwitcher from "./bodySwitcher";
 import Troupe from "./troupe";
 import Category from "./category";
@@ -11,15 +10,13 @@ export default function Miscellaneous({ task, fontSize }) {
     <div
       style={{
         border: "solid 1px",
-        marginBottom: "3%",
-        minHeight: "300px",
       }}
     >
       {!packages.includes(146, 11) && (
-        <label className="mt-2 ml-5" style={style}>
+        <label style={style} className="ml-2">
           <h6>
-            Specimen :
-            <strong>
+            Specimen:
+            <strong className="ml-1">
               <b>
                 <u>{String(specimen).toUpperCase()}</u>
               </b>
