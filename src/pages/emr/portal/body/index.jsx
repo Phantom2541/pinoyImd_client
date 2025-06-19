@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { MDBAlert, MDBTypography } from "mdbreact";
 import { formColor } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
@@ -19,12 +19,14 @@ const Body = () => {
       rendered,
       isLoading = false,
     } = useSelector(({ portal }) => portal),
-    [task, setTask] = useState({}),
+    // [task, setTask] = useState({}),
     dispatch = useDispatch();
   const { diagnostic = {}, department = [] } = result;
-  const handleChange = (type) => {
-    const _result = diagnostic[type];
+  const task = useMemo(() => {
+    if (!result?._id || Object.keys(diagnostic).length === 0) return {};
+    const _result = diagnostic[activeType];
     const { packages } = _result;
+
     const _packages =
       packages && typeof packages === "object"
         ? Array.isArray(packages)
@@ -36,24 +38,51 @@ const Body = () => {
 
     const services = preferences.filter(({ id }) => _packages.includes(id));
 
-    const _task = {
+    return {
       ..._result,
-      form: type,
+      form: activeType,
       patient: result.customerId,
       generateHealthyClient: [
         "Urinalysis",
         "Parasitology",
         "Xray",
         "Ultrasound",
-      ].includes(type)
-        ? true
-        : false,
+      ].includes(activeType),
       services,
     };
+  }, [activeType, diagnostic, preferences, result]);
+  // const handleChange = (type) => {
+  //   const _result = diagnostic[type];
+  //   const { packages } = _result;
+  //   const _packages =
+  //     packages && typeof packages === "object"
+  //       ? Array.isArray(packages)
+  //         ? packages
+  //         : Object.keys(packages).map((k) => Number(k))
+  //       : packages
+  //       ? [packages]
+  //       : [];
 
-    setTask(_task);
-    dispatch(SetACTIVE_TYPE(type));
-  };
+  //   const services = preferences.filter(({ id }) => _packages.includes(id));
+
+  //   const _task = {
+  //     ..._result,
+  //     form: type,
+  //     patient: result.customerId,
+  //     generateHealthyClient: [
+  //       "Urinalysis",
+  //       "Parasitology",
+  //       "Xray",
+  //       "Ultrasound",
+  //     ].includes(type)
+  //       ? true
+  //       : false,
+  //     services,
+  //   };
+
+  //   setTask(_task);
+  //   dispatch(SetACTIVE_TYPE(type));
+  // };
 
   console.log("rendered", rendered);
   const getDepartment = () => {
@@ -78,7 +107,7 @@ const Body = () => {
               className="form-control"
               style={{ width: "70%", height: "2rem" }}
               value={activeType}
-              onChange={({ target }) => handleChange(target.value)}
+              onChange={({ target }) => dispatch(SetACTIVE_TYPE(target.value))}
             >
               {Object.keys(diagnostic)?.map((key) => (
                 <option key={key} value={key}>

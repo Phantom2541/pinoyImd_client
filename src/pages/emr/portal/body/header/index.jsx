@@ -50,30 +50,32 @@ const Header = () => {
       <hr style={{ marginTop: "0.5rem" }} />
 
       {/* Diagnostic and Branch */}
-      {[
-        { label: "Diagnostic", value: companyId?.name },
-        { label: "Branch", value: name },
-      ].map(({ label, value }, i) => (
-        <div
-          key={i}
-          className="d-flex align-items-center"
-          style={{ marginTop: i === 0 ? "-0.3rem" : "-0.4rem" }}
-        >
-          <h5 style={{ fontSize: "0.9rem" }}>{label}:</h5>
-          {isLoading ? (
-            <div
-              style={{ width: "10rem", marginTop: "-0.6rem" }}
-              className="ml-1"
-            >
-              <Loading loadingFor="company" />
-            </div>
-          ) : (
-            <span style={{ marginTop: "-0.6rem" }} className="ml-1">
-              <strong>{value}</strong>
-            </span>
-          )}
-        </div>
-      ))}
+      <div className="d-flex align-items-center justify-content-between">
+        {[
+          { label: "Diagnostic", value: companyId?.name },
+          { label: "Branch", value: name },
+        ].map(({ label, value }, i) => (
+          <div
+            key={i}
+            className="d-flex align-items-center"
+            style={{ marginTop: i === 0 ? "-0.3rem" : "-0.4rem" }}
+          >
+            <h5 style={{ fontSize: "0.9rem" }}>{label}:</h5>
+            {isLoading ? (
+              <div
+                style={{ width: "5rem", marginTop: "-0.6rem" }}
+                className="ml-1"
+              >
+                <Loading loadingFor="company" />
+              </div>
+            ) : (
+              <span style={{ marginTop: "-0.6rem" }} className="ml-1">
+                <strong>{value}</strong>
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
 
       <div className="d-flex justify-content-between align-items-center mt-n1">
         {[

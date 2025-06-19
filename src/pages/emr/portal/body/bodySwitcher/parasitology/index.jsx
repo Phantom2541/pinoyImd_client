@@ -18,11 +18,22 @@ export default function Parasitology({ fontSize, task }) {
   return (
     <MDBTable bordered responsive className="mb-0">
       <thead>
-        <tr>
-          <th style={{ ...style, fontSize: "1.2rem" }} className="py-0 fw-bold">
+        <tr
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // black with 10% opacity
+            color: "#fff", // optional: white text for contrast
+          }}
+        >
+          <th
+            style={{ ...style, fontSize: "1rem", fontWeight: 400 }}
+            className="py-0 "
+          >
             Physical Examination
           </th>
-          <th style={{ ...style, fontSize: "1.2rem" }} className="py-0 fw-bold">
+          <th
+            style={{ ...style, fontSize: "1rem", fontWeight: 400 }}
+            className="py-0 "
+          >
             Result
           </th>
         </tr>
@@ -50,11 +61,16 @@ export default function Parasitology({ fontSize, task }) {
             {Consistency[consistency]}
           </td>
         </tr>
-        <tr>
+        <tr
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // black with 10% opacity
+            color: "#fff", // optional: white text for contrast
+          }}
+        >
           <td
             colSpan={2}
-            style={{ fontSize: "1.2rem" }}
-            className="py-0 fw-bold"
+            style={{ fontSize: "1rem", fontWeight: 400 }}
+            className="py-0 "
           >
             Microscopy Examination
           </td>
@@ -114,11 +130,16 @@ export default function Parasitology({ fontSize, task }) {
             {MicroscopicResultInWord[fat]}
           </td>
         </tr>
-        <tr>
+        <tr
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // black with 10% opacity
+            color: "#fff", // optional: white text for contrast
+          }}
+        >
           <td
             colSpan={2}
-            style={{ fontSize: "1.2rem" }}
-            className="py-0 fw-bold"
+            style={{ fontSize: "1rem", fontWeight: 400 }}
+            className="py-0 "
           >
             Chemiscal Examination
           </td>

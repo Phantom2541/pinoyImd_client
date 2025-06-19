@@ -46,7 +46,9 @@ const CountDown = () => {
   }, [result, rendered, activeType, forms]);
 
   useEffect(() => {
-    if (secondsLeft <= 0) {
+    console.log("seconds left:", secondsLeft);
+    if (secondsLeft <= 0 && !secondsLeft === null) {
+      console.log("running seconds left");
       dispatch(SetCOUNTDOWN_COMPLETED(true));
     }
     const interval = setInterval(() => {
@@ -55,7 +57,7 @@ const CountDown = () => {
 
     return () => clearInterval(interval);
   }, [secondsLeft, dispatch]);
-
+  console.log("count completed:", countdownCompleted);
   const formatTime = (totalSeconds) => {
     const absSeconds = Math.abs(totalSeconds);
 
@@ -68,12 +70,19 @@ const CountDown = () => {
 
   return (
     <div className="countdown-container">
+      <h6
+        className="text-center"
+        style={{ marginBottom: "-10px", fontWeight: 400 }}
+      >
+        {countdownCompleted ? "Result Time Delayed" : "Expected Time Released"}
+      </h6>
       <h1
         className={`digital-text text-center countdown-anim ${
-          countdownCompleted ? "text-danger" : ""
+          countdownCompleted ? "text-danger" : "text-warning"
         }`}
       >
-        {formatTime(secondsLeft)}
+        {formatTime(secondsLeft)}{" "}
+        <span style={{ fontSize: "1.2rem", marginLeft: "-1rem" }}> hrs</span>
       </h1>
       {countdownCompleted ? (
         <p className="text-danger">

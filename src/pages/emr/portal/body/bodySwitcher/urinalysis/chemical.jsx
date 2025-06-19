@@ -19,10 +19,10 @@ const Chemical = ({ style, Chemical }) => {
       <MDBTableHead>
         <tr>
           <th
-            className="py-0 text-left p-1"
+            className="py-0 text-left"
             style={{
               fontWeight: 400,
-              fontSize: "1.2rem",
+              fontSize: "1rem",
               backgroundColor: "rgba(0, 0, 0, 0.6)", // black with 10% opacity
               color: "#fff", // optional: white text for contrast
             }}

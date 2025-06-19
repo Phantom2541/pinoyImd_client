@@ -20,9 +20,9 @@ const Microscopic = ({ Microscopic, style }) => {
         <tr>
           <th
             colSpan={8}
-            className="py-0 text-left  p-1"
+            className="py-0 text-left "
             style={{
-              fontSize: "1.2rem",
+              fontSize: "1rem",
               fontWeight: 400,
 
               backgroundColor: "rgba(0, 0, 0, 0.6)", // black with 10% opacity
