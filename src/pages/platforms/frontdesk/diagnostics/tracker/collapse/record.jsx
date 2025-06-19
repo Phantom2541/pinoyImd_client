@@ -15,8 +15,22 @@ export default function CollapseTable({ menu }) {
   const toggleModal = () => setShowModal(!showModal);
 
   const handleLabPrint = (task) => {
+    const _task = {
+      ...task,
+      signatories: Array.isArray(task?.signatories)
+        ? task.signatories.map((s, i) => ({
+            ...s,
+            withSignature: (i === 0 || i === 1) && true,
+          }))
+        : undefined,
+    };
+    console.log("_task", _task);
+
     const services = collections.filter(({ id }) => task.services.includes(id));
-    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+    localStorage.setItem(
+      "taskPrintout",
+      JSON.stringify({ ..._task, services })
+    );
 
     const URL = `${window.location.origin}/printout/laboratory/task`;
     const title = `Laboratory Task Printout`;
@@ -33,8 +47,21 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleRadPrint = (task) => {
+    const _task = {
+      ...task,
+      signatories: Array.isArray(task?.signatories)
+        ? task.signatories.map((s, i) => ({
+            ...s,
+            withSignature: (i === 0 || i === 1) && true,
+          }))
+        : undefined,
+    };
+    console.log("_task", _task);
     const services = Services.find(task.services);
-    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+    localStorage.setItem(
+      "taskPrintout",
+      JSON.stringify({ ..._task, services })
+    );
     window.open(
       "/printout/radiology/task",
       "Radiology Task Printout",
@@ -43,14 +70,11 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
-    console.log("obj", obj);
-
     const { department } = Templates.findByComponentName(form);
 
     const _packages = Array.isArray(obj?.packages)
       ? obj.packages
       : Object.keys(obj?.packages || {}).map(Number);
-    console.log("_packages", _packages);
 
     const task = {
       ...obj,
@@ -97,9 +121,6 @@ export default function CollapseTable({ menu }) {
                 title="Modal"
                 rounded
                 onClick={() => {
-                  console.log("onClick-menu", menu);
-                  console.log("onClick-task", task);
-
                   dispatch(SetTASK({ task }));
                 }}
                 color={obj?.hasDone ? "info" : "primary"}
@@ -143,7 +164,6 @@ export default function CollapseTable({ menu }) {
   };
 
   const { customerId, physicianId, source, category, _id, diagnostic } = menu;
-  console.log("diagnostic", diagnostic);
 
   return (
     <>
@@ -161,9 +181,6 @@ export default function CollapseTable({ menu }) {
             Object.keys(diagnostic)?.map((key, index) => {
               const rawEntry = diagnostic[key];
               const entry = { ...rawEntry, key }; // ✅ avoid modifying frozen object
-              console.log("rawEntry", rawEntry);
-              console.log("entry", entry);
-
               if (Array.isArray(entry.packages)) {
                 return entry.packages.map((obj, i) =>
                   handleIndividual(key, entry, index + i, i)

@@ -120,7 +120,6 @@ export default function DataTable({
       _selected.push(item);
       if (array.length === _selected.length) setSelectedAll(true);
     }
-
     if (liveSelector) liveSelector(_selected);
     setSelected(_selected);
   };

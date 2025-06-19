@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBTable } from "mdbreact";
 import { handlePagination } from "../../services/utilities";
 import { useSelector } from "react-redux";

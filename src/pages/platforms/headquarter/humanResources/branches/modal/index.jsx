@@ -95,7 +95,7 @@ export default function Modal() {
             ...form,
             companyId: activePlatform?.branch?.companyId?._id,
           },
-          authID: auth._id,
+          auth,
         },
       })
     );
@@ -152,7 +152,6 @@ export default function Modal() {
           <MDBRow>
             <MDBCol>
               <MDBInput
-                required
                 label="Mobile"
                 value={form.contact?.mobile}
                 onChange={({ target }) =>
@@ -165,7 +164,6 @@ export default function Modal() {
             </MDBCol>
             <MDBCol>
               <MDBInput
-                required
                 label="Email"
                 type="email"
                 value={form.contact?.email}

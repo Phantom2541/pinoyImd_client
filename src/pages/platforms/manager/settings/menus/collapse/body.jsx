@@ -89,7 +89,7 @@ export default function CollapseTable({
       }
     });
   };
-
+  console.log("services", services);
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-2">
