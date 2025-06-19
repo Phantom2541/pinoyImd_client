@@ -3,11 +3,10 @@ import { MDBBtn, MDBIcon } from "mdbreact";
 import { Templates } from "../../../../../../services/fakeDb";
 
 const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
-  const { name, abbreviation, template } = branch;
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div>
-        {index + 1}. {name} {abbreviation}
+        {index + 1}. {branch?.name} {branch?.abbreviation}
         {!branch?.ao && (
           <MDBIcon
             fas
@@ -19,7 +18,7 @@ const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
       </div>
       <div className="d-flex">
         <small className="mr-2 mt-1">
-          {Templates.getComponentName(template)}
+          {Templates.getComponentName(branch?.template)}
         </small>
         <MDBBtn
           size="sm"

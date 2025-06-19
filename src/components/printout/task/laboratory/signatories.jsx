@@ -8,8 +8,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
           {console.log(
             `${ENDPOINT}/public/users/${person?.email}/signature.png`
           )}
-
-          {/* <img
+          <img
             style={{
               position: "absolute",
               height: 100,
@@ -18,7 +17,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
             }}
             src={`${ENDPOINT}/public/users/${person?.email}/signature.png`}
             alt={person?.email || "signature"}
-          /> */}
+          />
         </>
       )}
 
