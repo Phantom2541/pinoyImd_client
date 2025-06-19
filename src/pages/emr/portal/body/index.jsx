@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { MDBAlert, MDBTypography } from "mdbreact";
 import { formColor } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
@@ -16,7 +16,6 @@ const Body = () => {
       isResultReady = false,
       hasRender = false,
       activeType = "",
-      rendered,
       isLoading = false,
     } = useSelector(({ portal }) => portal),
     // [task, setTask] = useState({}),
@@ -51,40 +50,6 @@ const Body = () => {
       services,
     };
   }, [activeType, diagnostic, preferences, result]);
-  // const handleChange = (type) => {
-  //   const _result = diagnostic[type];
-  //   const { packages } = _result;
-  //   const _packages =
-  //     packages && typeof packages === "object"
-  //       ? Array.isArray(packages)
-  //         ? packages
-  //         : Object.keys(packages).map((k) => Number(k))
-  //       : packages
-  //       ? [packages]
-  //       : [];
-
-  //   const services = preferences.filter(({ id }) => _packages.includes(id));
-
-  //   const _task = {
-  //     ..._result,
-  //     form: type,
-  //     patient: result.customerId,
-  //     generateHealthyClient: [
-  //       "Urinalysis",
-  //       "Parasitology",
-  //       "Xray",
-  //       "Ultrasound",
-  //     ].includes(type)
-  //       ? true
-  //       : false,
-  //     services,
-  //   };
-
-  //   setTask(_task);
-  //   dispatch(SetACTIVE_TYPE(type));
-  // };
-
-  console.log("rendered", rendered);
   const getDepartment = () => {
     switch (department[0]) {
       case "LAB":
