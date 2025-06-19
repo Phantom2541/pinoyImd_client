@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
-import { ResultInRange } from "../../../../../../services/fakeDb";
+import { ResultInRange } from "../../../../../../../services/fakeDb";
 
 const Chemical = ({ style, Chemical }) => {
   const [

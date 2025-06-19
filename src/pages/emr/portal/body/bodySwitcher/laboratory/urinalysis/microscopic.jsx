@@ -2,7 +2,7 @@ import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import {
   MicroscopicInRange,
   MicroscopicResultInWord,
-} from "../../../../../../services/fakeDb";
+} from "../../../../../../../services/fakeDb";
 
 const Microscopic = ({ Microscopic, style }) => {
   const [pus, red, epithelial, mucus, amorphous, bacteria] = Microscopic || [

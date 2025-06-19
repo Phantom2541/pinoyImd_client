@@ -25,8 +25,6 @@ export const BROWSE = createAsyncThunk(
   `${url}/browse`,
   ({ token, key }, thunkAPI) => {
     try {
-      console.log("key", key);
-
       return axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       const message =
@@ -49,6 +47,29 @@ const getDepartmentIndex = (departments) => {
     default:
       return 1;
   }
+};
+
+const arrangeDiagnostic = (department, diagnostic) => {
+  var _diagnostic = {};
+  const sections = Object.keys(diagnostic);
+  sections.forEach((element) => {
+    if (Array.isArray(diagnostic[element])) {
+      for (let index = 0; index < diagnostic[element].length; index++) {
+        const result = diagnostic[element][index];
+        const { packages } = result;
+        const label = Services.whereIn(
+          department === "LAB" ? packages : [packages]
+        )
+          .map(({ abbreviation }) => abbreviation)
+          .join(",");
+        // const element = array[index];
+        _diagnostic[label] = { ...result, form: element };
+      }
+    } else {
+      _diagnostic[element] = diagnostic[element];
+    }
+  });
+  return _diagnostic;
 };
 
 export const reduxSlice = createSlice({
@@ -82,9 +103,14 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
         const { result, preferences } = data;
-        const { diagnostic = {}, department, rendered: rendereds } = result;
+        const {
+          diagnostic: _diagnostic = {},
+          department,
+          rendered: rendereds,
+        } = result;
+        const diagnostic = arrangeDiagnostic(department[0], _diagnostic);
         const departmentIndex = getDepartmentIndex(department);
-        const rendered = rendereds[departmentIndex]; // get the rendered for the current department
+        const rendered = rendereds[0]; // get the rendered for the current department
         var forms = [];
 
         if (rendered?._id) {
@@ -111,7 +137,8 @@ export const reduxSlice = createSlice({
         if (result?.forms) {
           forms = result?.forms[departmentIndex];
         }
-        state.result = result;
+
+        state.result = { ...result, diagnostic };
         state.preferences = services;
         state.rendered = rendered;
         state.forms = forms;

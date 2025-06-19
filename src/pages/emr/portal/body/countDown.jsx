@@ -39,16 +39,15 @@ const CountDown = () => {
       const isShortCountdown = forms.some((i) =>
         specialForms.includes(Number(i))
       );
-      if (isShortCountdown) baseTime = 3600;
+      if (isShortCountdown && result?.department[0] === "LAB") baseTime = 3600;
     }
     const remaining = baseTime - elapsed;
     setSecondsLeft(remaining);
   }, [result, rendered, activeType, forms]);
 
   useEffect(() => {
-    console.log("seconds left:", secondsLeft);
-    if (secondsLeft <= 0 && !secondsLeft === null) {
-      console.log("running seconds left");
+    if (secondsLeft === null) return;
+    if (secondsLeft <= 0) {
       dispatch(SetCOUNTDOWN_COMPLETED(true));
     }
     const interval = setInterval(() => {
@@ -82,7 +81,7 @@ const CountDown = () => {
         }`}
       >
         {formatTime(secondsLeft)}{" "}
-        <span style={{ fontSize: "1.2rem", marginLeft: "-1rem" }}> hrs</span>
+        {/* <span style={{ fontSize: "1.2rem", marginLeft: "-1rem" }}> hrs</span> */}
       </h1>
       {countdownCompleted ? (
         <p className="text-danger">

@@ -4,7 +4,7 @@ import {
   UrineColors,
   SpecificGravity,
   PH,
-} from "../../../../../../services/fakeDb";
+} from "../../../../../../../services/fakeDb";
 
 const Physical = ({ physical, style }) => {
   const [color, transparency, sg, pH] = physical;

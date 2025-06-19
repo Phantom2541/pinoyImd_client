@@ -8,6 +8,7 @@ import Header from "./header";
 import { SetACTIVE_TYPE } from "../../../../services/redux/slices/emr/portal";
 import "./style.css";
 import Loading from "./loading";
+import { Services } from "../../../../services/fakeDb";
 const Body = () => {
   const {
       result,
@@ -18,13 +19,12 @@ const Body = () => {
       activeType = "",
       isLoading = false,
     } = useSelector(({ portal }) => portal),
-    // [task, setTask] = useState({}),
     dispatch = useDispatch();
   const { diagnostic = {}, department = [] } = result;
   const task = useMemo(() => {
     if (!result?._id || Object.keys(diagnostic).length === 0) return {};
     const _result = diagnostic[activeType];
-    const { packages } = _result;
+    const { packages, form } = _result;
 
     const _packages =
       packages && typeof packages === "object"
@@ -35,11 +35,14 @@ const Body = () => {
         ? [packages]
         : [];
 
-    const services = preferences.filter(({ id }) => _packages.includes(id));
+    const services =
+      department[0] === "LAB"
+        ? preferences.filter(({ id }) => _packages.includes(id))
+        : Services.find(_packages);
 
     return {
       ..._result,
-      form: activeType,
+      form: form || activeType,
       patient: result.customerId,
       generateHealthyClient: [
         "Urinalysis",
@@ -49,7 +52,7 @@ const Body = () => {
       ].includes(activeType),
       services,
     };
-  }, [activeType, diagnostic, preferences, result]);
+  }, [activeType, diagnostic, preferences, result, department]);
   const getDepartment = () => {
     switch (department[0]) {
       case "LAB":
@@ -59,6 +62,9 @@ const Body = () => {
         return "radiology";
     }
   };
+
+  const form = diagnostic[activeType]?.form || activeType;
+
   return (
     <div className="mx-2">
       <Header />
@@ -66,7 +72,7 @@ const Body = () => {
         <>
           <div className="d-flex aling-items-center justify-content-between">
             <span className="mt-1" style={{ fontWeight: 400 }}>
-              Services Type:
+              Sections Type:
             </span>
             <select
               className="form-control"
@@ -83,11 +89,11 @@ const Body = () => {
           </div>
           <div className="my-4">
             <MDBAlert
-              color={formColor(activeType)}
+              color={formColor(form)}
               className="text-uppercase text-center py-0 mb-1 p-1"
             >
               <h5 style={{ letterSpacing: "10px" }} className="mb-0 fw-bold">
-                {activeType}
+                {form}
               </h5>
             </MDBAlert>
             {!isResultReady && (
@@ -105,7 +111,7 @@ const Body = () => {
       ) : (
         <>
           {isResultReady ? (
-            <BodySwitcher task={task} />
+            <BodySwitcher task={task} department={department[0]} />
           ) : !hasRender ? (
             <MDBTypography
               note

@@ -1,8 +1,8 @@
 import React from "react";
 import { MDBTable } from "mdbreact";
 import { Markup } from "interweave";
-import { Cellcount } from "../../../../../../services/fakeDb";
-import { calculateIndicators } from "../../../../../../services/utilities";
+import { Cellcount } from "../../../../../../../services/fakeDb";
+import { calculateIndicators } from "../../../../../../../services/utilities";
 export default function CellCount({ cc, isMale, style, apc }) {
   const { Preferences, Abbreviation, Title } = Cellcount;
 

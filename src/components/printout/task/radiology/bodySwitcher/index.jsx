@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Xray from "./xray";
 import Ecg from "./ecg";
 import Ultrasound from "./ultrasound";
