@@ -72,7 +72,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       !willCreate ? capitalize(selected.department) : department
     ).map(({ id }) => id);
     const _crew = collections.filter(({ contract }) =>
-      positions.includes(contract.designation)
+      positions.includes(contract?.designation)
     );
     setCrews(_crew);
   }, [collections, department, selected, willCreate]);
