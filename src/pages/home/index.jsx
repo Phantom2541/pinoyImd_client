@@ -22,6 +22,7 @@ import ContactUs from "./contact";
 import Login from "./login";
 import Description from "./description";
 import Pioneers from "./pioneers";
+import LOGO from "./../../assets/iMD.png";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -29,8 +30,36 @@ export default class Home extends React.Component {
     this.state = {
       collapseID: "",
       show: false,
+      scrolled: false,
+      flipped: false,
     };
   }
+
+  componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  handleScroll = () => {
+    const isScrolled = window.scrollY > 50;
+    if (isScrolled !== this.state.scrolled) {
+      this.setState({ scrolled: isScrolled });
+    }
+  };
+
+  scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  handleFlip = () => {
+    this.setState({ flipped: !this.state.flipped });
+  };
 
   toggle = () => this.setState({ show: !this.state.show });
 
@@ -42,7 +71,89 @@ export default class Home extends React.Component {
   render() {
     return (
       <div id="landing">
-        <MDBNavbar dark expand="md" fixed="top" scrolling transparent>
+        <div className="frontPage-topBar d-flex justify-content-between align-items-center">
+          <div
+            className={`frontPage-topBar-animation ${
+              this.state.scrolled ? "scrolled" : ""
+            }`}
+          ></div>
+          <div className="d-flex" style={{ gap: "120px" }}>
+            <div className="d-flex align-items-center" style={{ gap: "3px" }}>
+              <img src={LOGO} alt="Logo" width="45px" className="logoImg" />
+              <span
+                className={`logo-imd ${this.state.scrolled ? "scrolled" : ""}`}
+              >
+                Pinoy iMD
+              </span>
+            </div>
+            <div className={`menu ${this.state.scrolled ? "scrolled" : ""}`}>
+              <a
+                href="#home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("home");
+                }}
+              >
+                Home
+              </a>
+              <a
+                href="#about"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("about");
+                }}
+              >
+                Features
+              </a>
+              <a
+                href="#pioneers"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("pioneers");
+                }}
+              >
+                Pricing
+              </a>
+              <a
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("contact");
+                }}
+              >
+                Testimonials
+              </a>
+              <a
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("contact");
+                }}
+              >
+                Contact Us
+              </a>
+            </div>
+          </div>
+          <div className="d-flex" style={{ gap: "20px" }}>
+            <button
+              className={`frontPage-login ${
+                this.state.scrolled ? "scrolled" : ""
+              }`}
+              onClick={this.toggle}
+            >
+              Login
+            </button>
+            <button
+              className={`frontPage-signup ${
+                this.state.scrolled ? "scrolled" : ""
+              }`}
+              onClick={this.handleFlip}
+            >
+              Sign Up
+            </button>
+          </div>
+        </div>
+        {/* <MDBNavbar dark expand="md" scrolling transparent>
           <MDBContainer>
             <MDBNavbarBrand>
               <strong className="white-text">Pinoy IMD</strong>
@@ -53,11 +164,11 @@ export default class Home extends React.Component {
               isOpen={this.state.collapseID}
               navbar
             >
-              <MDBNavbarNav right>
-                {/* <MDBNavItem>
+              <MDBNavbarNav right> */}
+        {/* <MDBNavItem>
                   <MDBNavLink to="/FAQ">FAQ</MDBNavLink>
                 </MDBNavItem> */}
-                <MDBNavItem>
+        {/* <MDBNavItem>
                   <MDBNavLink onClick={this.toggle} to="#">
                     Login
                   </MDBNavLink>
@@ -65,7 +176,7 @@ export default class Home extends React.Component {
               </MDBNavbarNav>
             </MDBCollapse>
           </MDBContainer>
-        </MDBNavbar>
+        </MDBNavbar> */}
 
         <section id="home">
           <Login show={this.state.show} toggle={this.toggle} />
@@ -74,28 +185,36 @@ export default class Home extends React.Component {
               className="d-flex justify-content-center align-items-center"
               overlay="gradient"
             >
-              <MDBContainer className="h-100 d-flex justify-content-center align-items-center">
-                <Register />
+              <MDBContainer
+                id="home"
+                fluid
+                style={{
+                  padding: "0 300px",
+                }}
+              >
+                <Register
+                  handleFlip={this.handleFlip}
+                  flipped={this.state.flipped}
+                />
               </MDBContainer>
             </MDBMask>
           </MDBView>
         </section>
-        <MDBContainer>
-          <Description />
+        <MDBContainer fluid style={{ padding: "0 180px" }}>
+          <div id="about">
+            <Description />
+          </div>
           <hr className="mb-5" />
 
-          <Pioneers />
+          <div id="pioneers">
+            <Pioneers />
+          </div>
 
           <hr className="mb-4" />
 
-          <section id="contact">
-            <h2 className="text-center my-5 h1">Contact us</h2>
-            <p className="text-center mb-5 w-responsive mx-auto">
-              We look forward to hearing from you and discussing how we can
-              assist you with your needs.
-            </p>
+          <div id="contact">
             <ContactUs />
-          </section>
+          </div>
         </MDBContainer>
         <MDBFooter className="mt-5 text-center text-md-left">
           <MDBContainer>

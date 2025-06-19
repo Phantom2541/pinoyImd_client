@@ -1,0 +1,118 @@
+.homeSlideContainer {
+  position: relative;
+  width: 1300px;
+}
+
+.homeSlideStyle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  padding: 0 10px;
+  gap: 30px;
+}
+
+.hometextContainerStyle {
+  flex: 1;
+  padding: "20px";
+  text-align: "left";
+}
+
+.hometextContainerStyle h1 {
+  text-align: left;
+  font-weight: 500;
+}
+
+.hometextContainerStyle h5 {
+  text-align: left;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.hometextContainerStyle p {
+  text-align: left;
+  margin-top: 40px;
+  font-size: 1.1rem;
+  font-weight: 300;
+}
+
+.homeimageStyle {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.homeimageContainerStyle {
+  flex: 1;
+}
+
+.homeimageContainerStyle img {
+  border-radius: 10px;
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* flip container */
+.homePage-flip-container {
+  width: 100%;
+  height: 400px;
+  perspective: 1000px;
+}
+
+.homePage-flip-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s;
+}
+
+.homePage-flip-card-front,
+.homePage-flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 8px;
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; */
+}
+
+.homePage-flip-card-front {
+  background-color: transparent;
+}
+
+.homePage-flip-card-back {
+  position: relative;
+  height: 450px;
+  background-color: #f8f8f8;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: rotateY(180deg);
+  padding: 20px;
+  text-align: left;
+}
+
+.homePage-flip-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(50%, 20%);
+  background-color: transparent;
+  border: none;
+}
+
+.homePage-flip-container.homePage-flipped .homePage-flip-card {
+  transform: rotateY(180deg);
+}
+
+.homePage-flip-card-back h2 {
+  margin-left: 50px;
+}
+
+.homePage-flip-card-back form {
+  width: 70%;
+}

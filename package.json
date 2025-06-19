@@ -33,6 +33,7 @@
     "react-hook-form": "^7.56.3",
     "react-jvectormap": "^0.0.4",
     "react-redux": "^8.0.7",
+    "react-responsive-carousel": "^3.2.23",
     "react-router": "^5.1.2",
     "react-scripts": "^5.0.1",
     "react-toast-notifications": "^2.5.1",
