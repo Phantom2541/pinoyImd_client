@@ -288,19 +288,7 @@
     "specimen": "Serum",
     "template": 2
   },
-  {
-    "id": 218,
-    "name": "Total Calcium",
-    "abbreviation": "TCa",
-    "lo_ssx": "",
-    "department": "LAB",
-    "frequency": null,
-    "hi_ssx": "",
-    "preference": "gender",
-    "preparation": "none",
-    "specimen": "SERUM",
-    "template": 2
-  },
+
   {
     "id": 24,
     "name": "CHLORIDE",
@@ -2448,5 +2436,18 @@
     "name": "Sports Injury Recovery",
     "abbreviation": "SIR",
     "department": "REHAB"
+  },
+  {
+    "id": 317,
+    "name": "Total Calcium",
+    "abbreviation": "TCa",
+    "lo_ssx": "",
+    "department": "LAB",
+    "frequency": null,
+    "hi_ssx": "",
+    "preference": "gender",
+    "preparation": "none",
+    "specimen": "SERUM",
+    "template": 2
   }
 ]

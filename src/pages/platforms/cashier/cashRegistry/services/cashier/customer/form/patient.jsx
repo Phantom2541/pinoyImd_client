@@ -29,9 +29,8 @@ export default function Patient({ setActiveIndex }) {
   // inject searched name if no match
   useEffect(() => {
     if (customer) {
-      const { address } = JSON.parse(
-        localStorage.getItem("activePlatform")
-      )?.branch;
+      const { address = {} } =
+        JSON.parse(localStorage.getItem("activePlatform"))?.branch || {};
 
       const _address = customer?.address?.province
         ? customer.address

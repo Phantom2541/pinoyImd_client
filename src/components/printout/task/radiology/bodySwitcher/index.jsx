@@ -50,7 +50,7 @@ export default function BodySwitcher({ task }) {
 
   const Component = componentMap[task?.form?.toLowerCase()] || Blank;
   return (
-    <div style={{ maxHeight: "500px", minHeight: "400px", overflow: "hidden" }}>
+    <div>
       <div ref={contentRef}>
         <Component task={task} fontSize={fontSize} />
       </div>

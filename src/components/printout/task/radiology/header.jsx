@@ -1,11 +1,12 @@
 import React from "react";
 import {
-  formColor,
   getAge,
   fullName as nameFormatter,
 } from "../../../../services/utilities";
 import { MDBRow, MDBCol, MDBAlert } from "mdbreact";
 import { Categories } from "../../../../services/fakeDb";
+import { formColor } from "../../../../services/utilities";
+
 export default function Header({ task }) {
   const { category, patient, source, referral, form, updatedAt } = task;
   const { fullName: pFull, isMale = false, dob = "", _id } = patient;
@@ -16,10 +17,7 @@ export default function Header({ task }) {
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center">
           Name:&nbsp;
-          <h5
-            className="mb-0 fw-bold text-wrap"
-            style={{ flex: 1, whiteSpace: "normal" }}
-          >
+          <h5 className="mb-0 fw-bold ">
             <u>{nameFormatter(pFull, true)}</u>
           </h5>
         </div>
@@ -30,7 +28,7 @@ export default function Header({ task }) {
 
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center">
-          Patient ID :&nbsp;
+          Patient CODE :&nbsp;
           <span
             className="mb-0 fw-bold text-wrap"
             style={{ flex: 1, whiteSpace: "normal" }}
@@ -50,9 +48,10 @@ export default function Header({ task }) {
           </span>
         </div>
         <div>
-          <span>Case# : {task._id}</span>
+          <span>Transaction # : {task._id}</span>
         </div>
       </div>
+
       <MDBRow>
         <MDBCol style={{ alignItems: "baseline" }} className="text-left">
           <span style={{ width: categoryWidth }}>
@@ -63,16 +62,16 @@ export default function Header({ task }) {
           </span>
         </MDBCol>
       </MDBRow>
-      <MDBRow>
-        <MDBCol style={{ alignItems: "baseline" }} className="text-left">
-          <span style={{ width: categoryWidth }}>
-            Physician: Dr. {referral?.fullName?.lname}
-          </span>
-        </MDBCol>
-        <MDBCol className="text-right">
+
+      <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center">
+          <span>Physician: Dr. {referral?.fullName?.lname}</span>
+        </div>
+        <div>
           <span>Source: {source?.displayname}</span>
-        </MDBCol>
-      </MDBRow>
+        </div>
+      </div>
+
       <MDBAlert
         color={formColor(form)}
         className="text-uppercase d-flex align-items-center justify-content-center text-center py-0 mb-1 mt-2"

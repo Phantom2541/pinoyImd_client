@@ -60,7 +60,7 @@ import {
   mentainance,
 } from "./slices/market";
 import { appointments } from "./slices/clinical";
-import results from "./slices/portal/results";
+import portal from "./slices/emr/portal";
 
 const store = configureStore({
   reducer: {
@@ -113,11 +113,10 @@ const store = configureStore({
     mentainance,
     appointments,
     //this is results for viewing the results online
-    results,
+    portal,
     //for templates only
     dragDrop,
     table,
-    procurements,
   },
 });
 

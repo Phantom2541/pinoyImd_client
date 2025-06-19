@@ -1,9 +1,6 @@
-import React from "react";
 import { ENDPOINT, properFullname } from "../../../../services/utilities";
 
-const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
-  console.log(`withSignature`, withSignature);
-
+const Signature = ({ person, label, style = {}, withSignature }) => {
   return (
     <div style={style} className="text-center position-relative">
       {withSignature && (
@@ -44,7 +41,7 @@ export default function Signatories({ signatories = [] }) {
     dr = signatories[1],
     frontdesk = signatories[2];
   return (
-    <div className="pt-4 print-footer">
+    <div className="pt-4 px-3 laboratory-signatories">
       <div className="d-flex justify-content-between">
         <Signature
           person={head}
@@ -57,7 +54,7 @@ export default function Signatories({ signatories = [] }) {
       <Signature
         person={dr}
         label="Pathologist"
-        style={{ marginTop: "20px" }}
+        style={{ marginTop: "-0.5rem" }}
         withSignature
       />
     </div>

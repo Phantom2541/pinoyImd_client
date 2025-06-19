@@ -1,4 +1,3 @@
-import React from "react";
 import { ENDPOINT, properFullname } from "../../../../services/utilities";
 
 const Signature = ({ person, label, style = {}, withSignature }) => {
@@ -40,7 +39,7 @@ export default function Signatories({ signatories, form }) {
       : "RADIOLOGIC TECHNOLOGIST";
 
   return (
-    <div className="pt-4 print-footer ">
+    <div className="pt-4 px-3 laboratory-signatories ">
       <div className="d-flex justify-content-between ">
         <Signature person={head} label={title} isHalf />
         <Signature person={frontdesk} label="Receptionist" isHalf />
