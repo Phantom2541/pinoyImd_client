@@ -89,58 +89,65 @@ export default function Register({ handleFlip, flipped }) {
               showArrows={false}
             >
               <div className="homeSlideStyle">
-                <div className="hometextContainerStyle">
-                  <h1>Your Complete Diagnostic Information System</h1>
-                  <h5>Simplified, Integrated, Scalable.</h5>
-                  <p>
-                    Empowering medical providers with seamless laboratory
-                    management, advanced reporting, and patient-centric care.
-                  </p>
-                </div>
-                <div className="homeimageContainerStyle">
-                  <img src={IMG1} alt="Slide 1" className="homeimageStyle" />
-                </div>
-              </div>
-
-              <div className="homeSlideStyle">
-                <div className="hometextContainerStyle">
-                  <h1>Seamless Device Integration</h1>
-                  <h5>Connect Your Laboratory Analyzers with Ease.</h5>
-                  <p>
-                    Full compatibility with hematology, chemistry, and
-                    immunology analyzers. HL7-ready for EMR and LIS integration.
-                  </p>
-                </div>
-                <div className="homeimageContainerStyle">
-                  <img src={IMG2} alt="Slide 2" className="homeimageStyle" />
+                <div className="homeSlideContent">
+                  <div className="hometextContainerStyle">
+                    <h1>Your Complete Diagnostic Information System</h1>
+                    <h5>Simplified, Integrated, Scalable.</h5>
+                    <p>
+                      Empowering medical providers with seamless laboratory
+                      management, advanced reporting, and patient-centric care.
+                    </p>
+                  </div>
+                  <div className="homeimageContainerStyle">
+                    <img src={IMG1} alt="Slide 1" className="homeimageStyle" />
+                  </div>
                 </div>
               </div>
 
               <div className="homeSlideStyle">
-                <div className="hometextContainerStyle">
-                  <h1>Built for Clinics, Hospitals, and Mobile Units</h1>
-                  <h5>
-                    From small clinics to nationwide chains — scalable as you
-                    grow.
-                  </h5>
-                  <p>
-                    Manage patient records, results, billing, inventory, and
-                    mobile laboratory operations — all in one platform.
-                  </p>
+                <div className="homeSlideContent">
+                  <div className="hometextContainerStyle">
+                    <h1>Seamless Device Integration</h1>
+                    <h5>Connect Your Laboratory Analyzers with Ease.</h5>
+                    <p>
+                      Full compatibility with hematology, chemistry, and
+                      immunology analyzers. HL7-ready for EMR and LIS
+                      integration.
+                    </p>
+                  </div>
+                  <div className="homeimageContainerStyle">
+                    <img src={IMG2} alt="Slide 2" className="homeimageStyle" />
+                  </div>
                 </div>
-                <div className="homeimageContainerStyle">
-                  <img src={IMG3} alt="Slide 3" className="homeimageStyle" />
+              </div>
+
+              <div className="homeSlideStyle">
+                <div className="homeSlideContent">
+                  <div className="hometextContainerStyle">
+                    <h1>Built for Clinics, Hospitals, and Mobile Units</h1>
+                    <h5>
+                      From small clinics to nationwide chains — scalable as you
+                      grow.
+                    </h5>
+                    <p>
+                      Manage patient records, results, billing, inventory, and
+                      mobile laboratory operations — all in one platform.
+                    </p>
+                  </div>
+                  <div className="homeimageContainerStyle">
+                    <img src={IMG3} alt="Slide 3" className="homeimageStyle" />
+                  </div>
                 </div>
               </div>
             </Carousel>
           </div>
-          <div className="homePage-flip-card-back ">
+          <div className="homePage-flip-card-back">
             <div className="d-flex align-items-center">
               <div>
                 <h2 style={{ fontWeight: "400" }}>Patient Registration Form</h2>
                 <form style={{ width: "100%" }}>
                   <MDBRow>
-                    <MDBCol>
+                    <MDBCol md="6">
                       <MDBInput
                         label="First Name"
                         icon="user"
@@ -159,7 +166,7 @@ export default function Register({ handleFlip, flipped }) {
                         className="d-flex align-items-center"
                         style={{ marginTop: "-25px" }}
                       >
-                        <MDBCol md="8" className="pr-0">
+                        <MDBCol className="pr-0">
                           <MDBInput
                             label="Last Name"
                             icon="user"
@@ -168,7 +175,7 @@ export default function Register({ handleFlip, flipped }) {
                             required
                           />
                         </MDBCol>
-                        <MDBCol md="4" className="pl-0">
+                        <MDBCol className="pl-0">
                           <MDBSelect
                             getValue={(value) => setSuffix(value[0])}
                             label={"Suffix"}
@@ -186,7 +193,7 @@ export default function Register({ handleFlip, flipped }) {
                         </MDBCol>
                       </MDBRow>
 
-                      <div className="d-flex align-items-center">
+                      <div className="d-flex align-items-center mt-1 mb-4">
                         <MDBInput
                           label="Male"
                           type="checkbox"
@@ -205,7 +212,7 @@ export default function Register({ handleFlip, flipped }) {
                         />
                       </div>
                     </MDBCol>
-                    <MDBCol>
+                    <MDBCol md="6">
                       <MDBInput
                         label="E-mail Address"
                         icon="envelope"
@@ -272,15 +279,12 @@ export default function Register({ handleFlip, flipped }) {
                   </div>
                 </form>
               </div>
-              <img src={REGISTRATIONIMG} alt="registrationImg" height="350px" />
+              <img
+                src={REGISTRATIONIMG}
+                className="homePage-register-img"
+                alt="registrationImg"
+              />
             </div>
-            <button
-              onClick={handleFlip}
-              className="homePage-flip-btn"
-              style={{ marginTop: "10px" }}
-            >
-              <MDBIcon icon="arrow-left" />
-            </button>
           </div>
         </div>
       </div>

@@ -8,7 +8,6 @@
 .homePage-pioneers-card {
   position: relative;
   width: 100%;
-  max-width: 320px;
   height: 360px;
   display: flex;
   flex-direction: column;
@@ -40,6 +39,7 @@
 
 .homePage-pioneers-card:hover {
   transform: translateY(-10px);
+  box-shadow: 0 4px 8px rgba(0, 121, 107, 0.2);
 }
 
 .homePage-pioneers-card img {
@@ -66,4 +66,21 @@
 
 .pioneerAvatarLink:hover {
   color: #1266f1;
+}
+
+/* responsive design */
+@media (max-width: 1280px) {
+  .homePage-pioneers-container {
+    grid-template-columns: repeat(2, 320px);
+  }
+  .homePage-pioneers-card span {
+    font-size: 1.3rem;
+  }
+  .homePage-pioneers-card p {
+    font-size: 1rem;
+  }
+  .homePage-pioneers-card img {
+    width: 120px;
+    margin-top: 10px;
+  }
 }
