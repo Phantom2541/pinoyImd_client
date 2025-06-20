@@ -1,6 +1,6 @@
-import React from "react";
-import Phone from "../../../assets/landing/phone.jpg";
-import { MDBRow, MDBCol, MDBIcon, MDBAnimation } from "mdbreact";
+// import React from "react";
+// import Phone from "../../../assets/landing/phone.jpg";
+// import { MDBRow, MDBCol, MDBIcon, MDBAnimation } from "mdbreact";
 
 export default function Description() {
   return (

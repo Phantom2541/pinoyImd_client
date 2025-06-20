@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBCol, MDBRow, MDBIcon } from "mdbreact";
+import { MDBIcon } from "mdbreact";
 import "./index.css";
 
 export default function Pioneers() {
@@ -7,10 +7,10 @@ export default function Pioneers() {
   const EMMAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/emman.jpg`;
   const TOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
   const BENEDICT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/earle.jpg`;
-  const CHANNEY = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/channey.jpg`;
-  const KEVIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kev.jpg`;
+  // const CHANNEY = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/channey.jpg`;
+  // const KEVIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kev.jpg`;
   // const ROVAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rovan.jpg`;
-  const VARGILIO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/vargilio.jpg`;
+  // const VARGILIO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/vargilio.jpg`;
   const RIC = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/ric.jpg`;
   const JERWIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/jerwin.jpg`;
   const RICO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rico.png`;

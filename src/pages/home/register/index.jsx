@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   MDBAnimation,
   MDBBtn,
-  MDBCard,
-  MDBCardBody,
   MDBCol,
   MDBIcon,
   MDBInput,

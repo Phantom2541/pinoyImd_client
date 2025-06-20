@@ -32,7 +32,7 @@ export default function Search({
   excludes = [],
   excludeKey = "",
 }) {
-  const { filtered, isLoading } = useSelector(({ users }) => users),
+  const { filtered } = useSelector(({ users }) => users),
     { token } = useSelector((state) => state.auth),
     [patients, setPatients] = useState([]),
     [didSearch, setDidSearch] = useState(false),
