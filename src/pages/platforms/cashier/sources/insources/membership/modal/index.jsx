@@ -71,7 +71,7 @@ export default function Modal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { ao = "", cutoff } = form;
+    const { ao = "" } = form;
     if (!ao) {
       delete form.ao;
     }

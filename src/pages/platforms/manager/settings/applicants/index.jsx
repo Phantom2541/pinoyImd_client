@@ -61,7 +61,7 @@ export default function Applicants() {
                     <MDBIcon icon="sort" title="Sort by Name" />
                   </th>
                   <th>Position</th>
-                  <th> Pds</th>
+                  <th> PDS</th>
                   <th>Resume</th>
                   <th>Letter</th>
                   <th>Remarks</th>

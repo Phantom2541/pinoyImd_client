@@ -1,5 +1,5 @@
 import {
-  Onboard,
+  // Onboard,
   Tasks,
   Reports,
 } from "../../../pages/platforms/frontdesk/diagnostics";

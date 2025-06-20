@@ -179,7 +179,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { payload } = action.payload;
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.showModal = false;
