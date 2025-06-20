@@ -11,10 +11,11 @@ import {
   MDBIcon,
 } from "mdbreact";
 import {
-  SAVE,
+  // SAVE,
   UPDATE,
   TOGGLE,
 } from "../../../../../../services/redux/slices/finance/journals/payables";
+import { SAVE } from "../../../../../../services/redux/slices/finance/journals/payments";
 import "./style.css";
 import { Statements } from "../../../../../../services/fakeDb";
 import { isEqual } from "lodash";
@@ -23,7 +24,11 @@ import cash from "../../../../../../assets/paymentMethods/cash.png";
 import transfer from "../../../../../../assets/paymentMethods/transfer.png";
 import gcash from "../../../../../../assets/paymentMethods/gcash.png";
 import cheque from "../../../../../../assets/paymentMethods/cheque.png";
-import { currency, dateFormat } from "../../../../../../services/utilities";
+import {
+  currency,
+  dateFormat,
+  properFullname,
+} from "../../../../../../services/utilities";
 
 const paymentMethods = [
   { text: "Cash", img: cash },
@@ -66,16 +71,31 @@ export default function PaymentModal() {
 
   // Handle update function
   const handleUpdate = () => {
+    console.log("handle update form", form);
+    console.log("handle update selected", selected);
+
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
-    dispatch(UPDATE({ data: { ...form, _id: selected._id }, token }));
+    dispatch(
+      UPDATE({
+        data: { ...form, _id: selected._id, status: "paid", hasPaid: true },
+        token,
+      })
+    ).then(() => {
+      dispatch(SAVE({ data: { ...form, payableId: selected._id }, token }));
+      dispatch(TOGGLE());
+    });
   };
 
   // Handle create function
-  const handleCreate = () => dispatch(SAVE({ data: form, token }));
+  const handleCreate = () => {
+    console.log("handle create form", form);
+    console.log("handle create selected", selected);
+    dispatch(SAVE({ data: form, token }));
+  };
 
   // Handle form submit
   const handleSubmit = (e) => {
@@ -99,14 +119,26 @@ export default function PaymentModal() {
           <MDBCardBody className="dashed-border-payment">
             <form onSubmit={handleSubmit}>
               {/* Supplier Name */}
-              <div className="d-flex align-items-center">
-                <h6 className="grey-text" style={{ marginRight: "2rem" }}>
-                  Supplier:
-                </h6>
-                <h5 style={{ fontWeight: 500 }}>
-                  {selected?.supplier?.name || "N/A"}
-                </h5>
-              </div>
+              {selected?.supplier && (
+                <div className="d-flex align-items-center">
+                  <h6 className="grey-text" style={{ marginRight: "2rem" }}>
+                    Supplier:
+                  </h6>
+                  <h5 style={{ fontWeight: 500 }}>
+                    {selected?.supplier?.name || "N/A"}
+                  </h5>
+                </div>
+              )}
+              {selected?.particular && (
+                <div className="d-flex align-items-center">
+                  <h6 className="grey-text" style={{ marginRight: "2rem" }}>
+                    Particular:
+                  </h6>
+                  <h5 style={{ fontWeight: 500 }}>
+                    {properFullname(selected?.particular?.fullName)}
+                  </h5>
+                </div>
+              )}
               <div className="d-flex align-items-center">
                 <h6 className="grey-text mr-2">Statements:</h6>
                 <h5 style={{ fontWeight: 500 }}>
