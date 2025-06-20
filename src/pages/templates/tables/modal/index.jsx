@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -7,8 +7,6 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
-  MDBTypography,
-  MDBModaltable,
 } from "mdbreact";
 import { TOGGLE } from "../../../../services/redux/slices/reusable/table";
 
