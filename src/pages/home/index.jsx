@@ -32,6 +32,9 @@ export default class Home extends React.Component {
       show: false,
       scrolled: false,
       flipped: false,
+      menuOpen: false,
+      buttonOpen: false,
+      connectOpen: false,
     };
   }
 
@@ -68,25 +71,45 @@ export default class Home extends React.Component {
       collapseID: prevState.collapseID !== collapseID ? collapseID : "",
     }));
 
+  toggleMenu = () => {
+    this.setState((prevState) => ({
+      menuOpen: !prevState.menuOpen,
+    }));
+  };
+
+  toggleButtons = () => {
+    this.setState((prevState) => ({ buttonOpen: !prevState.buttonOpen }));
+  };
+
+  toggleConnect = () => {
+    this.setState((prevState) => ({
+      connectOpen: !prevState.connectOpen,
+    }));
+  };
+
   render() {
     return (
       <div id="landing">
-        <div className="frontPage-topBar d-flex justify-content-between align-items-center">
+        <div className="homePage-topbar">
           <div
-            className={`frontPage-topBar-animation ${
+            className={`homePage-topbar-animation ${
               this.state.scrolled ? "scrolled" : ""
             }`}
           ></div>
-          <div className="d-flex" style={{ gap: "120px" }}>
-            <div className="d-flex align-items-center" style={{ gap: "3px" }}>
-              <img src={LOGO} alt="Logo" width="45px" className="logoImg" />
-              <span
-                className={`logo-imd ${this.state.scrolled ? "scrolled" : ""}`}
-              >
-                Pinoy iMD
-              </span>
+          <div className="homePage-topbar-left">
+            <div
+              className={`homePage-logo ${
+                this.state.scrolled ? "scrolled" : ""
+              }`}
+            >
+              <img src={LOGO} alt="logo" />
+              Pinoy iMD
             </div>
-            <div className={`menu ${this.state.scrolled ? "scrolled" : ""}`}>
+            <div
+              className={`homePage-menu ${
+                this.state.menuOpen ? "homePage-open" : ""
+              } ${this.state.scrolled ? "scrolled" : ""}`}
+            >
               <a
                 href="#home"
                 onClick={(e) => {
@@ -115,10 +138,10 @@ export default class Home extends React.Component {
                 Pricing
               </a>
               <a
-                href="#contact"
+                href="#testimonials"
                 onClick={(e) => {
                   e.preventDefault();
-                  this.scrollToSection("contact");
+                  this.scrollToSection("testimonials");
                 }}
               >
                 Testimonials
@@ -134,49 +157,90 @@ export default class Home extends React.Component {
               </a>
             </div>
           </div>
-          <div className="d-flex" style={{ gap: "20px" }}>
-            <button
-              className={`frontPage-login ${
-                this.state.scrolled ? "scrolled" : ""
+
+          <div className="homePage-topbar-right">
+            {/* Desktop Buttons */}
+            <div className="homePage-desktop-buttons">
+              <button
+                className={`homePage-btn-login ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+                onClick={this.toggle}
+              >
+                Login
+              </button>
+              <button
+                className={`homePage-btn-signup ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+                onClick={this.handleFlip}
+              >
+                Sign Up
+              </button>
+            </div>
+
+            {/* Hamburger for mobile */}
+            <div
+              className={`homePage-hamburger  ${
+                this.state.menuOpen ? "homePage-active" : ""
               }`}
-              onClick={this.toggle}
+              onClick={this.toggleMenu}
             >
-              Login
-            </button>
-            <button
-              className={`frontPage-signup ${
-                this.state.scrolled ? "scrolled" : ""
-              }`}
-              onClick={this.handleFlip}
-            >
-              Sign Up
-            </button>
+              <div
+                className={`homePage-bar ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+              ></div>
+              <div
+                className={`homePage-bar ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+              ></div>
+              <div
+                className={`homePage-bar ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+              ></div>
+            </div>
+
+            {/* Mobile Connect Button */}
+            <div className="homePage-mobile-connect">
+              <button
+                className={`homePage-btn-connect ${
+                  this.state.connectOpen ? "activeConnect" : ""
+                } ${this.state.scrolled ? "scrolled" : ""}`}
+                onClick={this.toggleConnect}
+              >
+                Connect ▾
+              </button>
+
+              <div
+                className={`homePage-connect-dropdown ${
+                  this.state.connectOpen ? "activeConnect" : ""
+                }`}
+              >
+                <button
+                  className="homePage-btn-login-dropdown"
+                  onClick={this.toggle}
+                >
+                  Login
+                </button>
+                <button
+                  className="homePage-btn-signup-dropdown"
+                  onClick={this.handleFlip}
+                >
+                  Sign Up
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-        {/* <MDBNavbar dark expand="md" scrolling transparent>
-          <MDBContainer>
-            <MDBNavbarBrand>
-              <strong className="white-text">Pinoy IMD</strong>
-            </MDBNavbarBrand>
-            <MDBNavbarToggler onClick={this.toggleCollapse("navbarCollapse")} />
-            <MDBCollapse
-              id="navbarCollapse"
-              isOpen={this.state.collapseID}
-              navbar
-            >
-              <MDBNavbarNav right> */}
-        {/* <MDBNavItem>
-                  <MDBNavLink to="/FAQ">FAQ</MDBNavLink>
-                </MDBNavItem> */}
-        {/* <MDBNavItem>
-                  <MDBNavLink onClick={this.toggle} to="#">
-                    Login
-                  </MDBNavLink>
-                </MDBNavItem>
-              </MDBNavbarNav>
-            </MDBCollapse>
-          </MDBContainer>
-        </MDBNavbar> */}
+        <div
+          className={`homePage-overlay ${this.state.menuOpen ? "active" : ""}`}
+          onClick={() => {
+            this.setState({ menuOpen: false });
+          }}
+        ></div>
 
         <section id="home">
           <Login show={this.state.show} toggle={this.toggle} />
@@ -185,22 +249,16 @@ export default class Home extends React.Component {
               className="d-flex justify-content-center align-items-center"
               overlay="gradient"
             >
-              <MDBContainer
-                id="home"
-                fluid
-                style={{
-                  padding: "0 300px",
-                }}
-              >
+              <div className="homePage-container" id="home">
                 <Register
                   handleFlip={this.handleFlip}
                   flipped={this.state.flipped}
                 />
-              </MDBContainer>
+              </div>
             </MDBMask>
           </MDBView>
         </section>
-        <MDBContainer fluid style={{ padding: "0 180px" }}>
+        <MDBContainer fluid>
           <div id="about">
             <Description />
           </div>

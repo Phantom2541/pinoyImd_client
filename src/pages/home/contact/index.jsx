@@ -11,6 +11,22 @@ import {
 import { useToasts } from "react-toast-notifications";
 import GoogleMapReact from "google-map-react";
 
+import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+
+import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+// Fix Leaflet default icon issue in React
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
+
 export default function ContactUs() {
   const { addToast } = useToasts(),
     [alreadySent, setAlreadySent] = useState(false),
@@ -21,11 +37,29 @@ export default function ContactUs() {
       message: "",
     });
 
+  // For geolocation
+  const [userPosition, setUserPosition] = useState([15.1494, 120.6566]); // default sa Angeles
+  const [locationLoaded, setLocationLoaded] = useState(false);
+
   useEffect(() => {
     const feedback = localStorage.getItem("feedback");
     if (feedback) {
       setAlreadySent(true);
       setForm(JSON.parse(feedback));
+    }
+
+    // Get user's current location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setUserPosition([pos.coords.latitude, pos.coords.longitude]);
+          setLocationLoaded(true);
+        },
+        (err) => {
+          console.error(err);
+          setLocationLoaded(true);
+        }
+      );
     }
   }, []);
 
@@ -132,13 +166,25 @@ export default function ContactUs() {
 
         <MDBCol lg="7">
           <div style={{ height: 400 }} className="z-depth-2">
-            <GoogleMapReact
-              defaultCenter={{
-                lat: 15.484518034325571,
-                lng: 120.97312852671597,
-              }}
-              defaultZoom={7}
-            />
+            <div style={{ height: "500px", width: "100%" }}>
+              <Map
+                center={userPosition}
+                zoom={13}
+                style={{ height: "100%", width: "100%" }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={userPosition}>
+                  <Popup>
+                    {locationLoaded
+                      ? "You are here!"
+                      : "Loading your location..."}
+                  </Popup>
+                </Marker>
+              </Map>
+            </div>
           </div>
           <br />
           <MDBRow className="text-center">
