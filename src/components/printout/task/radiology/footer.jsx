@@ -1,7 +1,7 @@
-import qr from "../../../../assets/qr.png";
+import { QRCodeCanvas } from "qrcode.react";
+import { ENDPOINT, mobile } from "../../../../services/utilities";
 import pinoyImd from "../../../../assets/iMD.png";
-import { mobile } from "../../../../services/utilities";
-const Footer = () => {
+const Footer = ({ dealId }) => {
   return (
     <div
       style={{
@@ -41,25 +41,9 @@ const Footer = () => {
             >
               PINOY-IMD
             </h5>
-            {/* <p
-              style={{
-                margin: 0,
-                fontSize: "0.8rem",
-                color: "#666",
-                fontStyle: "italic",
-              }}
-            >
-              PINOY INTEGRATED MEDICAL DIAGNOSTICS
-            </p> */}
           </div>
         </div>
         <div className="mt-2">
-          {/* <h5
-            className="font-weight-bold text-center"
-            style={{ fontSize: "1.5rem", fontWeight: 600 }}
-          >
-            PINOY-IMD
-          </h5> */}
           <h5 style={{ fontWeight: 500 }}>
             PINOY INTEGRATED MEDICAL DIAGNOSTICS
           </h5>
@@ -75,20 +59,14 @@ const Footer = () => {
           </h5>
         </div>
         <div>
-          <img
-            alt="QR Code"
-            className="p-1 ml-4"
-            src={qr}
-            style={{
-              height: "5rem",
-              width: "5rem",
-              objectFit: "contain",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              boxShadow: "0 0 5px rgba(0,0,0,0.1)",
-            }}
-          />
-          <div>
+          <div className="m-0 p-1 ml-4">
+            <QRCodeCanvas
+              value={`${ENDPOINT}/emr/portal/${dealId}`}
+              size={75}
+            />
+          </div>
+
+          <div className="mt-n2">
             <h5
               style={{
                 margin: 0,
@@ -100,16 +78,6 @@ const Footer = () => {
             >
               Scan this QR code
             </h5>
-            {/* <p
-              style={{
-                margin: 0,
-                fontSize: "0.8rem",
-                color: "#666",
-                fontStyle: "italic",
-              }}
-            >
-              to view this result online
-            </p> */}
           </div>
         </div>
       </div>

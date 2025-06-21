@@ -1,16 +1,46 @@
 import React from "react";
-import { MDBBtn } from "mdbreact";
-import { Templates } from "../../../../../../services/fakeDb";
+import { MDBBtn, MDBIcon } from "mdbreact";
+import { useDispatch } from "react-redux";
+import { SetEDIT } from "../../../../../../services/redux/slices/market/generics";
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
-  const { name, abbreviation, template } = item;
+  const { name, status, drugClass, SystemTarget } = item,
+    dispatch = useDispatch();
+
+  const bgClass =
+    status === "approved"
+      ? "bg-success"
+      : status === "banned"
+      ? "bg-dark gray"
+      : status === "pending"
+      ? "bg-warning"
+      : status === "halt"
+      ? "bg-danger"
+      : "bg-light";
+
+  const handleAdd = () => dispatch(SetEDIT(item));
+
   return (
-    <div className={`d-flex justify-content-between ${textColor} `}>
-      {index + 1}. {name} {abbreviation}
+    <div
+      className={`d-flex justify-content-between ${textColor} text-capitalize `}
+    >
+      {index + 1}. {name}
+      <div style={{ textTransform: "capitalize" }}>{drugClass}</div>
+      <div className={`text center ${textColor} `}>{SystemTarget} System</div>
       <div className="d-flex">
-        <small className="mr-2 mt-1">
-          {Templates.getComponentName(template)}
-        </small>
+        <small className="mr-2 mt-1"></small>
+        <span
+          className={`text-white mr-3 ${bgClass}`}
+          style={{ borderRadius: "10px", padding: "3.5px 10px" }}
+        >
+          {status}
+        </span>
+
+        <div>
+          <MDBBtn color="primary" size="sm" rounded onClick={handleAdd}>
+            <MDBIcon icon="pencil-alt" />
+          </MDBBtn>
+        </div>
         <MDBBtn
           size="sm"
           color="white"

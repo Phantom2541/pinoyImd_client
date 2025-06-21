@@ -18,7 +18,10 @@ const Header = () => {
     dispatch(BROWSE({ token, params: { branchId: activePlatform?.branchId } }));
   }, [dispatch, token, activePlatform]);
 
-  const handleAdd = (item) => dispatch(SetCREATE(item));
+  const handleAdd = (item) => {
+    console.log("dispatch", SetCREATE);
+    dispatch(SetCREATE(item));
+  };
 
   return (
     <MDBView
@@ -31,16 +34,17 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center"></div>
-        <Search
-          collections={collections}
-          setFiltered={(items) => dispatch(SetFILTER(items))}
-          placeHolder="Search Generics"
-          haveAction={true}
-          reset={() => dispatch(SetFILTER(collections))}
-          hideButton={false}
-          handleAdd={(item) => handleAdd(item)}
-        />
+        <div className="text-right d-flex items-center">
+          <Search
+            collections={collections}
+            setFiltered={(items) => dispatch(SetFILTER(items))}
+            placeHolder="Search Generics"
+            haveAction={true}
+            reset={() => dispatch(SetFILTER(collections))}
+            hideButton={false}
+            handleAdd={(item) => handleAdd(item)}
+          />
+        </div>
       </div>
     </MDBView>
   );

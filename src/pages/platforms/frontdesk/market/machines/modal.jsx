@@ -224,7 +224,9 @@ export default function Modal() {
                 onChange={(e) => handleChange("pm.unit", e.target.value)}
               >
                 <option value="">Select Schedule</option>
-                <option value="day">Days</option>
+                <o tion value="day">
+                  Days
+                </o>
                 <option value="month">Months</option>
                 <option value="year">Years</option>
               </select>

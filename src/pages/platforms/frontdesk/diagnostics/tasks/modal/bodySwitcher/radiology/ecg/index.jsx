@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBCard,
@@ -19,8 +19,6 @@ export default function Ecg() {
   const [findings, setFindings] = useState("");
   const [activeTab, setActiveTab] = useState("results");
 
-  const descTimeout = useRef(null);
-
   // Load values from task
   useEffect(() => {
     if (task?.findings) {
@@ -32,20 +30,6 @@ export default function Ecg() {
       }
     }
   }, [task?.findings]);
-
-  const delayedSave = useCallback(
-    (field, value, timeoutRef) => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
-        const updatedTask = {
-          ...task,
-          [field]: value,
-        };
-        dispatch(SetTASK({ form: task?.form, task: updatedTask }));
-      }, 500);
-    },
-    [dispatch, task]
-  );
 
   return (
     <div className="mx-auto">
@@ -78,7 +62,12 @@ export default function Ecg() {
                 onChange={(e) => {
                   const val = e.target.value;
                   setFindings(val);
-                  delayedSave("findings", val, descTimeout);
+                  const updatedTask = {
+                    ...task,
+                    findings: val,
+                  };
+                  dispatch(SetTASK({ form: task?.form, task: updatedTask }));
+                  // delayedSave("findings", val, descTimeout);
                 }}
               />
             </MDBTabPane>
