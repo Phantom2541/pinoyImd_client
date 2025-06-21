@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -11,11 +11,18 @@ import {
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse } from "../../../../../../services/utilities";
+import { SetAddChild } from "../../../../../../services/redux/slices/market/generics";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(
-    ({ generics }) => generics
-  );
+      ({ generics }) => generics
+    ),
+    { isSuccess, selected } = useSelector(({ medicines }) => medicines),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(SetAddChild({ id: "684ced9a1a92a2bbe365e5c4", child: selected }));
+  }, [selected, isSuccess, dispatch]);
 
   /**
    * Pagination: Calculate the start and end index for the current page
@@ -71,7 +78,7 @@ export default function Body() {
               isOpen={actualIndex === activeId}
             >
               <MDBCardBody className="m-0 p-0">
-                <CollapsableBody item={item} />
+                <CollapsableBody generics={item} brands={item.brands} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

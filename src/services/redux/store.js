@@ -114,7 +114,6 @@ const store = configureStore({
     //for templates only
     dragDrop,
     table,
-    procurements,
   },
 });
 

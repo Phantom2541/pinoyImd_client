@@ -7,8 +7,6 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
-  MDBTypography,
-  MDBModaltable,
 } from "mdbreact";
 import {
   TOGGLE,
@@ -34,7 +32,6 @@ export default function Modal() {
       setForm(selected);
     }
   }, [selected]);
-
   // Handle updating an existing product
   const handleUpdate = () => {
     dispatch(TOGGLE());
@@ -69,8 +66,6 @@ export default function Modal() {
 
     if (willCreate) return handleCreate();
     handleUpdate();
-
-    console.log("form", form);
 
     if (willCreate) {
       return handleCreate();
@@ -107,7 +102,7 @@ export default function Modal() {
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBInput
-            label="Generic Name"
+            label="GenericName"
             type="text"
             value={handleValue("name")}
             required
