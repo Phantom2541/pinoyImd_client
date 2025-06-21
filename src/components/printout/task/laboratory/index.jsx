@@ -8,7 +8,6 @@ import Footer from "./footer";
 import "./style.css";
 const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
-
   return (
     <div className="laboratory-container ">
       <Banner
@@ -29,7 +28,7 @@ const Printout = ({ task }) => {
       </div>
       <div className="laboratory-footer">
         <Signatories signatories={signatories} />
-        <Footer />
+        <Footer dealId={task?._id} />
       </div>
     </div>
   );
