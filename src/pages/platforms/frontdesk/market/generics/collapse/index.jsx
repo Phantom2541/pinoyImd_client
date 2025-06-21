@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -11,18 +11,18 @@ import {
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse } from "../../../../../../services/utilities";
-import { SetAddChild } from "../../../../../../services/redux/slices/market/generics";
+// import { SetAddChild } from "../../../../../../services/redux/slices/market/generics";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(
-      ({ generics }) => generics
-    ),
-    { isSuccess, selected } = useSelector(({ medicines }) => medicines),
-    dispatch = useDispatch();
+    ({ generics }) => generics
+  );
+  // { isSuccess, selected } = useSelector(({ medicines }) => medicines),
+  // dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(SetAddChild({ id: "684ced9a1a92a2bbe365e5c4", child: selected }));
-  }, [selected, isSuccess, dispatch]);
+  // useEffect(() => {
+  //   dispatch(SetAddChild({ id: "684ced9a1a92a2bbe365e5c4", child: selected }));
+  // }, [selected, isSuccess, dispatch]);
 
   /**
    * Pagination: Calculate the start and end index for the current page

@@ -49,13 +49,13 @@ export default function Collapsable({ generics, brands }) {
             Action
             <Search
               collections={brands}
-              SetFiltered={(items) => dispatch(SetFILTER(items))}
-              placeHolder="Search Medicines"
-              HaveAction={true}
+              setFiltered={(items) => dispatch(SetFILTER(items))}
+              placeHolder="Search Generics"
+              haveAction={true}
               reset={() => dispatch(SetFILTER(brands))}
               hideButton={false}
               handleAdd={(item) => handleAdd(item)}
-            ></Search>
+            />
           </th>
         </tr>
       </MDBTableHead>

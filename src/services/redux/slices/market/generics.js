@@ -273,7 +273,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
-  SetAddChild,
+  // SetAddChild,
   RESET,
 } = reduxSlice.actions;
 
