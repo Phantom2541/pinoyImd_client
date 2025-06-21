@@ -128,6 +128,10 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.showAccessModal = true;
     },
+    SetREQUIREMENTS: (state, { payload }) => {
+      state.selected = payload;
+      state.showAccessModal = true;
+    },
     UPDATEACCESS: (state, data) => {
       // used for updating access in file201
       const { _id, access, isNew = false } = data.payload,
@@ -277,7 +281,12 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, UPDATEACCESS, ToggleAccessModal, SetSELECTED } =
-  reduxSlice.actions;
+export const {
+  RESET,
+  UPDATEACCESS,
+  ToggleAccessModal,
+  SetSELECTED,
+  SetREQUIREMENTS,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;
