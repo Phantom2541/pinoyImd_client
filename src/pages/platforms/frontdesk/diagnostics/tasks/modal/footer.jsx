@@ -66,7 +66,7 @@ const Footer = () => {
         department === "Laboratory" ? "pathologist" : "radiologist"
       );
     } else {
-      dr = findPhysicianId(task.signatories[1]._id);
+      dr = findPhysicianId(task.signatories[1]?._id);
     }
     // console.log("dr", dr);
 

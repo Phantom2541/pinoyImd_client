@@ -10,6 +10,8 @@ import {
   SetSELECTED,
   TOGGLE,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+// import { QRCodeCanvas } from "qrcode.react";
+
 import Denominations from "../remittances/modal/denominations";
 
 export default function Cashier() {
@@ -63,20 +65,25 @@ export default function Cashier() {
   }, [transaction, isSuccess]);
 
   return (
-    <MDBRow
-      className="res-container"
-      style={{ marginLeft: "4rem", marginRight: "1rem" }}
-    >
-      <MDBCol size="5" className="pr-1">
-        <Customer />
-      </MDBCol>
-      <MDBCol size="4" className="px-1">
-        <Purchase />
-      </MDBCol>
-      <MDBCol size="3" className="px-1">
-        <Summary />
-      </MDBCol>
-      <Denominations />
-    </MDBRow>
+    <>
+      {/* <div>
+        <QRCodeCanvas value="https://youtube.com" size={200} />
+      </div> */}
+      <MDBRow
+        className="res-container"
+        style={{ marginLeft: "4rem", marginRight: "1rem" }}
+      >
+        <MDBCol size="5" className="pr-1">
+          <Customer />
+        </MDBCol>
+        <MDBCol size="4" className="px-1">
+          <Purchase />
+        </MDBCol>
+        <MDBCol size="3" className="px-1">
+          <Summary />
+        </MDBCol>
+        <Denominations />
+      </MDBRow>
+    </>
   );
 }

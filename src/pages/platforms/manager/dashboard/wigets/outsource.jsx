@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { MDBCard, MDBRow, MDBCol, MDBBtn, MDBIcon } from "mdbreact";
-import { currency, axioKit } from "../../../../../services/utilities";
+import { currency } from "../../../../../services/utilities";
 
 const Outsource = ({ currentMonthOutsources, lastMonthOutsources }) => {
   return (

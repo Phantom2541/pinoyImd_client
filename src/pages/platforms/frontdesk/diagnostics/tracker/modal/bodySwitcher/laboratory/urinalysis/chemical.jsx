@@ -28,7 +28,7 @@ export default function Chemical() {
       const defaultCe = Array(chemSelects.length).fill(0);
       dispatch(SetTASK({ task: { ...task, ce: defaultCe } }));
     }
-  }, [task, dispatch]);
+  }, [task, dispatch, chemSelects.length]);
 
   const handleSelectChange = (index, value) => {
     const updatedCe = [...(task?.ce || Array(chemSelects.length).fill(0))];

@@ -9,7 +9,7 @@ import {
 import {
   RequestForm,
   RequestOutSource,
-} from "../../../../../components/printout old";
+} from "../../../../../components/printout";
 import { SetPrinting } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const printoutMap = {

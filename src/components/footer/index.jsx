@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBFooter } from "mdbreact";
 
 export default function Copyrights() {

@@ -128,7 +128,7 @@ const set = {
       generateCell(mergeCell, label, value, position);
     }
   },
-  main: ({ worksheet, reseco }) => {
+  main: ({ worksheet, reseco, isMembership }) => {
     worksheet.addRow([]);
     worksheet.addRow([]);
 
@@ -212,7 +212,7 @@ const set = {
           amount,
           discount,
           Privileges[privilege],
-          amount * 0.1,
+          !isMembership ? amount * 0.1 : 0,
         ];
 
         let _prevCol = 0;
@@ -430,7 +430,7 @@ const excel = async ({ array = [], options }) => {
 
   await set.banner({ worksheet, workbook });
   set.header({ worksheet, options });
-  set.main({ worksheet, reseco: array, options });
+  set.main({ worksheet, reseco: array, isMembership: options?.isMembership });
   // const datesLength = array.length * 2;
   // const dealsLength = array.reduce(
   //   (acc, curr) => (acc += curr.deals?.length),

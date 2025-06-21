@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { Input } from "../../../components/customizable";
 import { SetEDIT } from "../../../services/redux/slices/reusable/table";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import { RESET } from "../../../services/redux/slices/assets/companies";
 
 const Body = () => {
@@ -45,19 +45,19 @@ const Body = () => {
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
 
-  const handleDelete = (_id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      // dispatch(DESTROY({ token, data: { _id  } }));
-    });
-  };
+  // const handleDelete = (_id) => {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "You won't be able to revert this!",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, delete it!",
+  //   }).then((result) => {
+  //     // dispatch(DESTROY({ token, data: { _id  } }));
+  //   });
+  // };
   return (
     <MDBTable responsive hover>
       <thead style={{ backgroundColor: "#", color: "black" }}>

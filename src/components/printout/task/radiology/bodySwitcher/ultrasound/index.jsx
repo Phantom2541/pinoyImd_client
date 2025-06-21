@@ -1,20 +1,31 @@
-import React from "react";
-
 export default function Xray({ fontSize = "16px", task }) {
   if (!task) return <div>No task data provided</div>;
 
   const { description = "", impression = "", services } = task;
 
   const formatText = (text) => {
-    return text
-      .replace(/\\n/g, "\n") // handles escaped newlines if needed
-      .split("\n")
-      .map((line, index) => (
-        <p key={index} style={{ margin: "0 0 5px 0", textIndent: "20px" }}>
-          {line.trim()}
-        </p>
-      ));
+    return (
+      <p
+        style={{
+          margin: "0 0 5px 0",
+          paddingLeft: "30px",
+        }}
+      >
+        {text.trim()}
+      </p>
+    );
   };
+
+  //   const formatText = (text) => {
+  //   return text
+  //     .replace(/\\n/g, "\n") // handles escaped newlines if needed
+  //     .split("\n")
+  //     .map((line, index) => (
+  //       <p key={index} style={{ margin: "0 0 5px 0", textIndent: "20px" }}>
+  //         {line.trim()}
+  //       </p>
+  //     ));
+  // };
 
   return (
     <div

@@ -1,19 +1,19 @@
 import React from "react";
 import {
   MDBContainer,
-  MDBNavbar,
-  MDBNavbarBrand,
-  MDBNavbarToggler,
-  MDBCollapse,
-  MDBNavbarNav,
-  MDBNavItem,
+  // MDBNavbar,
+  // MDBNavbarBrand,
+  // MDBNavbarToggler,
+  // MDBCollapse,
+  // MDBNavbarNav,
+  // MDBNavItem,
   MDBRow,
   MDBCol,
   MDBMask,
   MDBIcon,
   MDBView,
   MDBFooter,
-  MDBNavLink,
+  // MDBNavLink,
 } from "mdbreact";
 import "./index.css";
 import Copyrights from "../../components/footer";
@@ -22,6 +22,7 @@ import ContactUs from "./contact";
 import Login from "./login";
 import Description from "./description";
 import Pioneers from "./pioneers";
+import LOGO from "./../../assets/iMD.png";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -29,8 +30,39 @@ export default class Home extends React.Component {
     this.state = {
       collapseID: "",
       show: false,
+      scrolled: false,
+      flipped: false,
+      menuOpen: false,
+      buttonOpen: false,
+      connectOpen: false,
     };
   }
+
+  componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  handleScroll = () => {
+    const isScrolled = window.scrollY > 50;
+    if (isScrolled !== this.state.scrolled) {
+      this.setState({ scrolled: isScrolled });
+    }
+  };
+
+  scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  handleFlip = () => {
+    this.setState({ flipped: !this.state.flipped });
+  };
 
   toggle = () => this.setState({ show: !this.state.show });
 
@@ -39,33 +71,176 @@ export default class Home extends React.Component {
       collapseID: prevState.collapseID !== collapseID ? collapseID : "",
     }));
 
+  toggleMenu = () => {
+    this.setState((prevState) => ({
+      menuOpen: !prevState.menuOpen,
+    }));
+  };
+
+  toggleButtons = () => {
+    this.setState((prevState) => ({ buttonOpen: !prevState.buttonOpen }));
+  };
+
+  toggleConnect = () => {
+    this.setState((prevState) => ({
+      connectOpen: !prevState.connectOpen,
+    }));
+  };
+
   render() {
     return (
       <div id="landing">
-        <MDBNavbar dark expand="md" fixed="top" scrolling transparent>
-          <MDBContainer>
-            <MDBNavbarBrand>
-              <strong className="white-text">Pinoy IMD</strong>
-            </MDBNavbarBrand>
-            <MDBNavbarToggler onClick={this.toggleCollapse("navbarCollapse")} />
-            <MDBCollapse
-              id="navbarCollapse"
-              isOpen={this.state.collapseID}
-              navbar
+        <div className="homePage-topbar">
+          <div
+            className={`homePage-topbar-animation ${
+              this.state.scrolled ? "scrolled" : ""
+            }`}
+          ></div>
+          <div className="homePage-topbar-left">
+            <div
+              className={`homePage-logo ${
+                this.state.scrolled ? "scrolled" : ""
+              }`}
             >
-              <MDBNavbarNav right>
-                {/* <MDBNavItem>
-                  <MDBNavLink to="/FAQ">FAQ</MDBNavLink>
-                </MDBNavItem> */}
-                <MDBNavItem>
-                  <MDBNavLink onClick={this.toggle} to="#">
-                    Login
-                  </MDBNavLink>
-                </MDBNavItem>
-              </MDBNavbarNav>
-            </MDBCollapse>
-          </MDBContainer>
-        </MDBNavbar>
+              <img src={LOGO} alt="logo" />
+              Pinoy iMD
+            </div>
+            <div
+              className={`homePage-menu ${
+                this.state.menuOpen ? "homePage-open" : ""
+              } ${this.state.scrolled ? "scrolled" : ""}`}
+            >
+              <a
+                href="#home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("home");
+                }}
+              >
+                Home
+              </a>
+              <a
+                href="#about"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("about");
+                }}
+              >
+                Features
+              </a>
+              <a
+                href="#pioneers"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("pioneers");
+                }}
+              >
+                Pricing
+              </a>
+              <a
+                href="#testimonials"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("testimonials");
+                }}
+              >
+                Testimonials
+              </a>
+              <a
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.scrollToSection("contact");
+                }}
+              >
+                Contact Us
+              </a>
+            </div>
+          </div>
+
+          <div className="homePage-topbar-right">
+            {/* Desktop Buttons */}
+            <div className="homePage-desktop-buttons">
+              <button
+                className={`homePage-btn-login ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+                onClick={this.toggle}
+              >
+                Login
+              </button>
+              <button
+                className={`homePage-btn-signup ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+                onClick={this.handleFlip}
+              >
+                Sign Up
+              </button>
+            </div>
+
+            {/* Hamburger for mobile */}
+            <div
+              className={`homePage-hamburger  ${
+                this.state.menuOpen ? "homePage-active" : ""
+              }`}
+              onClick={this.toggleMenu}
+            >
+              <div
+                className={`homePage-bar ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+              ></div>
+              <div
+                className={`homePage-bar ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+              ></div>
+              <div
+                className={`homePage-bar ${
+                  this.state.scrolled ? "scrolled" : ""
+                }`}
+              ></div>
+            </div>
+
+            {/* Mobile Connect Button */}
+            <div className="homePage-mobile-connect">
+              <button
+                className={`homePage-btn-connect ${
+                  this.state.connectOpen ? "activeConnect" : ""
+                } ${this.state.scrolled ? "scrolled" : ""}`}
+                onClick={this.toggleConnect}
+              >
+                Connect ▾
+              </button>
+
+              <div
+                className={`homePage-connect-dropdown ${
+                  this.state.connectOpen ? "activeConnect" : ""
+                }`}
+              >
+                <button
+                  className="homePage-btn-login-dropdown"
+                  onClick={this.toggle}
+                >
+                  Login
+                </button>
+                <button
+                  className="homePage-btn-signup-dropdown"
+                  onClick={this.handleFlip}
+                >
+                  Sign Up
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className={`homePage-overlay ${this.state.menuOpen ? "active" : ""}`}
+          onClick={() => {
+            this.setState({ menuOpen: false });
+          }}
+        ></div>
 
         <section id="home">
           <Login show={this.state.show} toggle={this.toggle} />
@@ -74,28 +249,30 @@ export default class Home extends React.Component {
               className="d-flex justify-content-center align-items-center"
               overlay="gradient"
             >
-              <MDBContainer className="h-100 d-flex justify-content-center align-items-center">
-                <Register />
-              </MDBContainer>
+              <div className="homePage-container" id="home">
+                <Register
+                  handleFlip={this.handleFlip}
+                  flipped={this.state.flipped}
+                />
+              </div>
             </MDBMask>
           </MDBView>
         </section>
-        <MDBContainer>
-          <Description />
+        <MDBContainer fluid>
+          <div id="about">
+            <Description />
+          </div>
           <hr className="mb-5" />
 
-          <Pioneers />
+          <div id="pioneers">
+            <Pioneers />
+          </div>
 
           <hr className="mb-4" />
 
-          <section id="contact">
-            <h2 className="text-center my-5 h1">Contact us</h2>
-            <p className="text-center mb-5 w-responsive mx-auto">
-              We look forward to hearing from you and discussing how we can
-              assist you with your needs.
-            </p>
+          <div id="contact">
             <ContactUs />
-          </section>
+          </div>
         </MDBContainer>
         <MDBFooter className="mt-5 text-center text-md-left">
           <MDBContainer>

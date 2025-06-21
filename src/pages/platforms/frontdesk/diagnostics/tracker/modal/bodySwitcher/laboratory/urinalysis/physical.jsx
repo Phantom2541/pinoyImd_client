@@ -41,7 +41,7 @@ export default function Physical() {
       const defaultPe = Array(physicalSelects.length).fill(0);
       dispatch(SetTASK({ task: { ...task, pe: defaultPe } }));
     }
-  }, [task, dispatch]);
+  }, [task, dispatch, physicalSelects.length]);
 
   const handleSelectChange = (index, value) => {
     const _pe = [...(task?.pe || Array(physicalSelects.length).fill(0))];

@@ -26,6 +26,7 @@ import {
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
+import Portal from "./pages/emr/portal";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),
@@ -79,6 +80,9 @@ export default function App() {
       <Route path="/printout/payslip" exact component={Payslip} />
       <Route path="/printout/personnel" exact component={PersonnelPrintOut} />
       <Route path="/printout/soa" exact component={SOA} />
+
+      {/* Diagnostic Portal */}
+      <Route path="/emr/portal/:dealId" exact component={Portal} />
       <Platforms />
     </Switch>
   );

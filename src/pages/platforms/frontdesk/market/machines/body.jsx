@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
@@ -7,14 +6,12 @@ import {
 } from "../../.././../../services/redux/slices/market/machines";
 import Swal from "sweetalert2";
 import { currency } from "../../../../../services/utilities";
-import { capitalize } from "lodash";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth);
   const { filtered, activePage, maxPage } = useSelector(
       ({ machines }) => machines
     ),
-    [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
   console.log("filtered", filtered);

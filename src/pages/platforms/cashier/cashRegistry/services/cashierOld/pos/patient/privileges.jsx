@@ -1,12 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import {
-  MDBCol,
-  MDBSelect,
-  MDBSelectInput,
-  MDBSelectOption,
-  MDBSelectOptions,
-} from "mdbreact";
+import { MDBCol } from "mdbreact";
 import { Privileges } from "../../../../../../../../services/fakeDb";
 
 export default function PatientPrivileges({

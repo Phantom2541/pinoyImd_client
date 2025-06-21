@@ -19,9 +19,8 @@ import Pagination from "../../../../../components/pagination";
 import Swal from "sweetalert2";
 import Search from "../../../../../components/searchables/search";
 import TableLoading from "../../../../../components/tableLoading";
-import { fullName, MenusToExcel } from "../../../../../services/utilities";
 import ExportToExcel from "./exportToExcel";
-import PDFExport from "../../../../../services/utilities/export/pdf/menus";
+// import PDFExport from "../../../../../services/utilities/export/pdf/menus";
 
 const Menus = () => {
   const [menus, setMenus] = useState([]),
@@ -33,7 +32,7 @@ const Menus = () => {
     [willCreate, setWillCreate] = useState(true),
     [visible, setVisible] = useState(false),
     [showExport, setShowExport] = useState(false),
-    { token, activePlatform, maxPage, auth } = useSelector(({ auth }) => auth),
+    { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading, filtered } = useSelector(
       ({ menus }) => menus
     ),

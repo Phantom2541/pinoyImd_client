@@ -1,0 +1,13 @@
+.footer-container {
+  position: absolute;
+  bottom: 0;
+}
+.portal-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.portal-container .body-content {
+  flex: 1;
+}

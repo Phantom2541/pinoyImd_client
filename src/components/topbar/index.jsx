@@ -89,12 +89,8 @@ class TopNavigation extends Component {
           right
           style={{ flexDirection: "row", gap: "5px" }}
         >
-          {!isPatient && (
-            <>
-              <DTR />
-              <Branches />
-            </>
-          )}
+          {!isPatient && <DTR />}
+          <Branches />
           <Platforms />
           <Profile />
         </MDBNavbarNav>

@@ -1,0 +1,47 @@
+@font-face {
+  font-family: "DS-Digital";
+  src: url("../../../../assets/fonts/DS-DIGIB.TTF") format("truetype");
+  font-style: normal;
+}
+
+.digital-text {
+  font-family: "DS-Digital", sans-serif;
+  font-size: 5rem !important;
+}
+.text-center {
+  text-align: center;
+}
+
+.description {
+  font-weight: 400;
+}
+
+.countdown-container {
+  margin-top: 1rem;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#portal-name-loading {
+  height: 24px;
+}
+
+#portal-gender-loading {
+  height: 20px;
+}
+
+#portal-address-loading {
+  height: 30px;
+}
+
+#portal-company-loading {
+  height: 15px;
+}
+#portal-body-loading {
+  margin-top: 20px;
+  height: 300px;
+}

@@ -1,17 +1,10 @@
 import React from "react";
-import {
-  MDBCol,
-  MDBSelect,
-  MDBSelectInput,
-  MDBSelectOption,
-  MDBSelectOptions,
-} from "mdbreact";
+import { MDBCol } from "mdbreact";
 import { useSelector } from "react-redux";
 import { properFullname } from "../../../../../../../../services/utilities";
 
 export default function PatientPhysicians({ setPhysicianId, didCheckout }) {
-  const { collections } = useSelector(({ physicians }) => physicians),
-    { selected } = useSelector(({ deals }) => deals);
+  const { selected } = useSelector(({ deals }) => deals);
 
   // console.log("PatientPhysicians selected :", selected.physicianId);
 

@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { MDBTable } from "mdbreact";
 import { toWords } from "number-to-words";
 import Header from "./header";
 import { currency } from "../../../../services/utilities";
