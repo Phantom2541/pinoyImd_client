@@ -1,5 +1,4 @@
-import React from "react";
-
+import provinces from "../../../services/fakeDb/finance/philippines/provinces.json";
 const fullAddress = (address, isComplete = true) => {
   if (typeof address !== "object") return <i>Datatype mismatch</i>;
 
@@ -17,7 +16,9 @@ const fullAddress = (address, isComplete = true) => {
 const billingAddress = (address) => {
   if (typeof address !== "object") return <i>Datatype mismatch</i>;
   const { province, city, barangay } = address;
-  return `${barangay} - ${city}, ${province}`;
+  return `${barangay} - ${city}, ${
+    provinces.find((p) => p.name === province)?.abbrev
+  } `;
 };
 
 export { billingAddress, fullAddress };

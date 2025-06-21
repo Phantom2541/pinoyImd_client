@@ -10,8 +10,8 @@ const patron = [
     component: Dashboard,
   },
   {
-    name: "e-chart",
-    path: "/echart",
+    name: "Electronic Medical Records",
+    path: "/emr",
     icon: "user-tag",
     children: [
       {

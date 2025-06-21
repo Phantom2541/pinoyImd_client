@@ -99,10 +99,9 @@ export const reduxSlice = createSlice({
     },
     SetCREATE: (state, { payload }) => {
       state.selected = {
-        lo: "",
-        norm: "",
-        hi: "",
-        serviceId: payload.serviceId,
+        name: "",
+        drugClass: "",
+        status: "",
       };
       state.willCreate = true;
       state.showModal = true;
@@ -117,7 +116,7 @@ export const reduxSlice = createSlice({
           state.page = totalPages;
         }
       }
-      state.filter = payload;
+      state.filtered = payload;
     },
     SetPagination: (state) => {
       // {
@@ -131,8 +130,25 @@ export const reduxSlice = createSlice({
         max + (page - 1) * max
       );
     },
+    // SetAddChild: (state, { payload }) => {
+    // const { id, child } = payload;
+    // const gen = state.collections.find((coll) => coll._id === id);
+
+    // const br = gen.brand.find((b) => b._id === child._id);
+    // },
     SetPAGE: (state, { payload }) => {
       state.page = payload;
+    },
+    SetBrands: (state, { payload }) => {
+      // const { success, payload } = action.payload;
+      const index = state.collections.findIndex(
+        (item) => item._id === payload._id
+      );
+      state.collections[index] = payload;
+      const findex = state.filtered.findIndex(
+        (item) => item._id === payload._id
+      );
+      state.filtered[findex] = payload;
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -250,12 +266,14 @@ export const {
   SetEDIT,
   SetFILTER,
   SetPAGE,
+  SetBrands,
   /**
    * for pagination
    */
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
+  // SetAddChild,
   RESET,
 } = reduxSlice.actions;
 

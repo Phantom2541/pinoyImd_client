@@ -29,7 +29,7 @@ const Printout = ({ task }) => {
       </div>
       <div className="laboratory-footer">
         <Signatories signatories={signatories} />
-        <Footer />
+        <Footer dealId={task?._id} />
       </div>
     </div>
   );

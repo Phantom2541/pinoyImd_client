@@ -69,20 +69,22 @@ class TopNavigation extends Component {
         </div>
 
         <MDBNavbarBrand href="#" style={navStyle}>
-          <MDBBadge
-            className="py-2 px-3"
-            color="warning-color-dark"
-            style={{
-              fontSize: "1rem",
-              fontWeight: 400,
-              boxShadow: "0px 0px 0px 0px",
-            }}
-            pill
-          >
-            {isPatient
-              ? "Welcome to Pinoy iMD"
-              : `${capitalize(department)} :) ${capitalize(aka)}`}
-          </MDBBadge>
+          {!department && (
+            <MDBBadge
+              className="py-2 px-3"
+              color="warning-color-dark"
+              style={{
+                fontSize: "1rem",
+                fontWeight: 400,
+                boxShadow: "0px 0px 0px 0px",
+              }}
+              pill
+            >
+              {isPatient
+                ? "Welcome to Pinoy iMD"
+                : `${capitalize(department)} :) ${capitalize(aka)}`}
+            </MDBBadge>
+          )}
         </MDBNavbarBrand>
         <MDBNavbarNav
           expand="sm"

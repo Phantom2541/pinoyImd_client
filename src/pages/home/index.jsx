@@ -1,19 +1,19 @@
 import React from "react";
 import {
   MDBContainer,
-  MDBNavbar,
-  MDBNavbarBrand,
-  MDBNavbarToggler,
-  MDBCollapse,
-  MDBNavbarNav,
-  MDBNavItem,
+  // MDBNavbar,
+  // MDBNavbarBrand,
+  // MDBNavbarToggler,
+  // MDBCollapse,
+  // MDBNavbarNav,
+  // MDBNavItem,
   MDBRow,
   MDBCol,
   MDBMask,
   MDBIcon,
   MDBView,
   MDBFooter,
-  MDBNavLink,
+  // MDBNavLink,
 } from "mdbreact";
 import "./index.css";
 import Copyrights from "../../components/footer";

@@ -9,7 +9,7 @@ import {
   MDBCardBody,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import GoogleMapReact from "google-map-react";
+// import GoogleMapReact from "google-map-react";
 
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
