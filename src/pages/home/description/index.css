@@ -1,0 +1,51 @@
+.homePage-aboutUs-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+}
+
+.homePage-aboutUs-title {
+  font-size: 2.3rem;
+  font-weight: 500;
+}
+
+.homePage-aboutUs-semi-title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-top: -15px;
+  color: #00796b;
+}
+
+.homePage-aboutUs-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.homePage-aboutUs-description {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.homePage-aboutUs-description span {
+  font-size: 1.9rem;
+  font-weight: 500;
+  color: #00796b;
+}
+
+.homePage-aboutUs-description p {
+  font-size: 1.2rem;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* responsive design */
+
+@media (max-width: 1600px) {
+  .homePage-aboutUs-container {
+    flex-direction: column;
+  }
+}

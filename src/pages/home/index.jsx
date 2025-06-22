@@ -23,6 +23,7 @@ import Login from "./login";
 import Description from "./description";
 import Pioneers from "./pioneers";
 import LOGO from "./../../assets/iMD.png";
+import Testimonials from "./testimonials";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -263,6 +264,11 @@ export default class Home extends React.Component {
             <Description />
           </div>
           <hr className="mb-5" />
+
+          <div id="testimonials">
+            <Testimonials />
+          </div>
+          <hr className="mb-4" />
 
           <div id="pioneers">
             <Pioneers />
