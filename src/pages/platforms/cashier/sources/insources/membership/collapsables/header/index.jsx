@@ -98,7 +98,8 @@ const Header = ({
           {[
             {
               label: "Membership",
-              keys: "membership",
+              keyForValue: "membership",
+              keyForText: "membership",
               values: "text",
               collections: Memberships.collections.map(({ value, text }) => ({
                 membership: value,
@@ -108,21 +109,21 @@ const Header = ({
             },
             {
               label: "Monthly Cutoff",
-              keys: "cutoff",
+              keyForValue: "cutoff",
               collections: new Array(27).fill(0).map((_, i) => i + 1),
-              width: "2rem",
+              width: "7rem",
             },
             {
               label: "Monthly Due Date",
               collections: new Array(cutoff > 0 ? Number(27 - cutoff) + 1 : 27)
                 .fill(0)
                 .map((_, i) => i + cutoff),
-              keys: "due",
-              width: "2rem",
+              keyForValue: "due",
+              width: "7rem",
             },
             {
               label: "Credit",
-              keys: "credit",
+              keyForValue: "credit",
               isMoney: true,
               isSelect: false,
             },
@@ -130,9 +131,9 @@ const Header = ({
             (
               {
                 label,
-                keys,
+                keyForValue,
+                keyForText = "",
                 collections,
-                values = "",
                 width = "2rem",
                 tag = "h6",
                 isSelect = true,
@@ -152,9 +153,14 @@ const Header = ({
                     collections={collections}
                     className="m-0 p-0"
                     isEditable={true}
-                    fieldData={{ [keys]: insource[keys], _id }}
-                    keys={keys}
-                    values={values}
+                    fieldData={{
+                      [keyForValue]: insource[keyForValue],
+                      _id,
+                      [keyForText || keyForValue]:
+                        insource[keyForText || keyForValue],
+                    }}
+                    keyForValue={keyForValue}
+                    keyForText={keyForText || keyForValue}
                     formSubmitted={formSubmitted}
                     onSave={(editedData) => handleUpdate(editedData)}
                     selectStyle={{ width }}
@@ -168,7 +174,7 @@ const Header = ({
                     formSubmitted={formSubmitted}
                     isMoney={isMoney}
                     keyForValue="credit"
-                    fieldData={{ [keys]: insource[keys], _id }}
+                    fieldData={{ [keyForValue]: insource[keyForValue], _id }}
                     onSave={(editedData) => handleUpdate(editedData)}
                   />
                 )}

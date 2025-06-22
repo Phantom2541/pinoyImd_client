@@ -40,7 +40,10 @@ const Policy = {
       collections.find(({ positions = [] }) =>
         positions.some(({ id }) => id === pk)
       ) || {};
-    if (positions.length === 0) return "unknown designation";
+    if (positions.length === 0) {
+      console.warn("Unknown Designation");
+      return "-";
+    }
     const role = [...positions].find(({ id }) => id === pk).display_name;
     return role;
   },
