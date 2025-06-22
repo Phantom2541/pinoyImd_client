@@ -10,7 +10,8 @@ export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     [showModal, setShowModal] = useState(false),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    department = menu?.department[0];
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -164,35 +165,43 @@ export default function CollapseTable({ menu }) {
   };
 
   const { customerId, physicianId, source, category, _id, diagnostic } = menu;
-
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">
         <thead>
           <tr>
             <th>Department</th>
-            <th>Template</th>
+            <th>Section</th>
             <th>Services</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {diagnostic &&
+          {diagnostic ? (
             Object.keys(diagnostic)?.map((key, index) => {
               const rawEntry = diagnostic[key];
-              const entry = { ...rawEntry, key }; // ✅ avoid modifying frozen object
-              if (Array.isArray(entry.packages)) {
-                return entry.packages.map((obj, i) =>
-                  handleIndividual(key, entry, index + i, i)
+              const entry = { ...rawEntry, key };
+              if (Array.isArray(rawEntry))
+                return rawEntry.map((result, i) =>
+                  handleIndividual(
+                    key.toLowerCase(),
+                    result,
+                    index,
+                    i,
+                    rawEntry.length > 1
+                  )
                 );
-              }
-
               return handleIndividual(key.toLowerCase(), entry, index);
-            })}
+            })
+          ) : (
+            <tr>
+              <td colSpan={4} className="font-weight-bold text-center">
+                Go to the {department === "LAB" ? "laboratory" : "radiology"}
+              </td>
+            </tr>
+          )}
         </tbody>
       </MDBTable>
-
-      <Modal show={showModal} toggle={toggleModal} task={menu} />
     </>
   );
 }

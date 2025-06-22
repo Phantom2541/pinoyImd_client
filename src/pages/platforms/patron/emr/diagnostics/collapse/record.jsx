@@ -77,20 +77,21 @@ export default function CollapseTable({ menu }) {
       : [packages];
 
     const task = {
-      ...obj,
-      key: `${form}-${index}`,
-      form,
-      generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
-      patient: customerId,
-      source: source || {},
-      hasDone: obj?.hasDone,
-      category,
-      _id: _id,
-      remarks: obj?.remarks,
-      department,
-      miscIndex,
-      packages: obj?.packages,
-    };
+        ...obj,
+        key: `${form}-${index}`,
+        form,
+        generateHealthyClient: form === "Urinalysis" || form === "Parasitology",
+        patient: customerId,
+        source: source || {},
+        hasDone: obj?.hasDone,
+        category,
+        _id: _id,
+        remarks: obj?.remarks,
+        department,
+        miscIndex,
+        packages: obj?.packages,
+      },
+      rad = radiology.includes(form);
     return (
       <tr key={`${task.key}-${index}`}>
         <td>
@@ -98,10 +99,7 @@ export default function CollapseTable({ menu }) {
           {typeof miscIndex === "number" && multipleTask
             ? `-${miscIndex + 1}`
             : ""}
-          .{" "}
-          <strong>
-            {capitalize(radiology.includes(form) ? "Radiology" : "Laboratory")}
-          </strong>
+          . <strong>{capitalize(rad ? "Radiology" : "Laboratory")}</strong>
         </td>
         <td>{capitalize(form)}</td>
         <td>
@@ -131,9 +129,7 @@ export default function CollapseTable({ menu }) {
                     signatories: obj?.signatories,
                     isPrint: true,
                   };
-                  department === "LAB"
-                    ? handleLabPrint(selected)
-                    : handleRadPrint(selected);
+                  !rad ? handleLabPrint(selected) : handleRadPrint(selected);
                 }}
                 color="warning"
                 size="sm"
