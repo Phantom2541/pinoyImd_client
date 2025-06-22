@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable, MDBIcon, MDBBadge, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
@@ -98,6 +98,8 @@ const Tables = () => {
     customer: {
       fullName: customerId?.fullName,
       address: customerId?.address,
+      email: customerId?.email,
+      verified: customerId?.verified || false,
     },
     cashier: cashierId?.fullName,
     cart,

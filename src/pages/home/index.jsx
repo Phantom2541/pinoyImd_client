@@ -15,7 +15,7 @@ import {
   MDBFooter,
   // MDBNavLink,
 } from "mdbreact";
-import "./index.css";
+import "./style.css";
 import Copyrights from "../../components/footer";
 import Register from "./register";
 import ContactUs from "./contact";
@@ -23,6 +23,8 @@ import Login from "./login";
 import Description from "./description";
 import Pioneers from "./pioneers";
 import LOGO from "./../../assets/iMD.png";
+import Testimonials from "./testimonials";
+import AboutUs from "./aboutUs";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -135,7 +137,7 @@ export default class Home extends React.Component {
                   this.scrollToSection("pioneers");
                 }}
               >
-                Pricing
+                Pioneers
               </a>
               <a
                 href="#testimonials"
@@ -263,6 +265,15 @@ export default class Home extends React.Component {
             <Description />
           </div>
           <hr className="mb-5" />
+          <div id="about">
+            <AboutUs />
+          </div>
+          <hr className="mb-5" />
+
+          <div id="testimonials">
+            <Testimonials />
+          </div>
+          <hr className="mb-4" />
 
           <div id="pioneers">
             <Pioneers />

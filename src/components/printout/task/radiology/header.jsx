@@ -1,4 +1,3 @@
-import React from "react";
 import {
   getAge,
   fullName as nameFormatter,

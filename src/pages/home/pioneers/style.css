@@ -1,6 +1,6 @@
 .homePage-pioneers-container {
   display: grid;
-  grid-template-columns: repeat(3, 320px);
+  grid-template-columns: repeat(3, 310px);
   gap: 20px;
   justify-content: center;
 }
@@ -8,14 +8,15 @@
 .homePage-pioneers-card {
   position: relative;
   width: 100%;
-  height: 360px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  padding: 10px;
   background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 1s ease;
 }
@@ -39,24 +40,24 @@
 
 .homePage-pioneers-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 4px 8px rgba(0, 121, 107, 0.2);
+  box-shadow: 0 0 8px rgba(0, 121, 107, 0.2);
 }
 
 .homePage-pioneers-card img {
-  width: 150px;
+  width: 130px;
   border-radius: 50%;
   margin-top: 17px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .homePage-pioneers-card span {
-  font-size: 1.4rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .homePage-pioneers-card p {
-  font-size: 1.1rem;
-  font-weight: 400;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .pioneerAvatarLink {

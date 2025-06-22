@@ -28,6 +28,11 @@ const Printout = ({ task }) => {
       </div>
       <div className="laboratory-footer">
         <Signatories signatories={signatories} />
+        {task?.isDuplicate && (
+          <h6 style={{ marginTop: "-2rem", fontWeight: 400 }} className="ml-2">
+            Duplicate Copy
+          </h6>
+        )}
         <Footer dealId={task?._id} />
       </div>
     </div>

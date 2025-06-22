@@ -40,6 +40,7 @@ import generateCalendar from "./generateCalendar";
 import fullNameSearch from "./fullNameSearch";
 import dateFormat from "./dateFormat";
 import getTime from "./getTime";
+import getDay from "./getDay";
 import getBday from "./getBday";
 import getWeekend from "./getWeekend";
 import isClosingTime from "./isClosingTime";
@@ -102,6 +103,7 @@ export {
   getAge,
   getDate,
   getTime,
+  getDay,
   contacts,
   dateFormat,
   getWeekend,

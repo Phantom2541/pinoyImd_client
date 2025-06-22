@@ -11,7 +11,7 @@ import {
   MDBSelectOption,
   MDBSelectOptions,
 } from "mdbreact";
-import "./index.css";
+import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CUSTOMALERT,

@@ -38,7 +38,9 @@ const initialState = {
   maxPage,
   loginSuccess: false,
   isSuccess: false,
+  isRejected: false,
   isLoading: false,
+  formSubmitted: false,
   message: "",
 };
 
@@ -167,6 +169,8 @@ export const reduxSlice = createSlice({
     },
     RESET: (state) => {
       state.isSuccess = false;
+      state.formSubmitted = false;
+      state.isRejected = false;
       state.loginSuccess = false;
       state.message = "";
     },
@@ -214,15 +218,16 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(CHANGEPASSWORD.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(CHANGEPASSWORD.fulfilled, (state, action) => {
         const { success } = action.payload;
         state.isSuccess = true;
+        state.isRejected = false;
         state.message = success;
-        state.isLoading = false;
+        state.formSubmitted = false;
 
         setTimeout(() => {
           localStorage.clear();
@@ -232,7 +237,8 @@ export const reduxSlice = createSlice({
       .addCase(CHANGEPASSWORD.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
+        state.isRejected = true;
       })
 
       .addCase(LOGIN.pending, (state) => {

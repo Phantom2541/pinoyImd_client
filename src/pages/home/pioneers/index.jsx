@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBIcon } from "mdbreact";
-import "./index.css";
+import "./style.css";
 
 export default function Pioneers() {
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
