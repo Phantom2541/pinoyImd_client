@@ -43,9 +43,13 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   margin: 10px;
   padding: 10px 15px;
+}
+
+.homePage-testiminials-sliderCard:hover {
+  box-shadow: 0 0 8px rgba(0, 121, 107, 0.3);
 }
 
 .homePage-testiminials-sliderCard img {
