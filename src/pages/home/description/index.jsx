@@ -1,18 +1,18 @@
 import React from "react";
-import "./index.css";
+import "./style.css";
 import ABOUTUS from "./../../../assets/Aboutus.png";
 
 export default function Description() {
   return (
     <section className="d-flex justify-content-center">
-      <div className="homePage-aboutUs-section">
-        <h1 className="homePage-aboutUs-title">
+      <div className="homePage-description-section">
+        <h1 className="homePage-description-title">
           HOW TO BE AN INSPIRING MEDICAL LEADER
         </h1>
-        <span className="homePage-aboutUs-semi-title">with Pinoy iMD</span>
-        <div className="homePage-aboutUs-container mt-5">
+        <span className="homePage-description-semi-title">with Pinoy iMD</span>
+        <div className="homePage-description-container mt-5">
           <img src={ABOUTUS} alt="aboutUs" width="700px" />
-          <div className="homePage-aboutUs-description">
+          <div className="homePage-description">
             <span>The Pinoy iMD Leadership Mindset:</span>
             <p>
               "True leadership isn’t about micromanaging systems — it’s about
