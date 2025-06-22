@@ -69,7 +69,7 @@ class TopNavigation extends Component {
         </div>
 
         <MDBNavbarBrand href="#" style={navStyle}>
-          {!department && (
+          {department && (
             <MDBBadge
               className="py-2 px-3"
               color="warning-color-dark"

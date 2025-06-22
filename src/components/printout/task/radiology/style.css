@@ -1,18 +1,18 @@
 @media print {
-  .laboratory-container {
+  .radiology-container {
     background: white;
     height: 100%;
     margin: 0 !important;
     padding: 0 !important;
   }
-  .laboratory-banner img {
+  .radiology-banner img {
     height: 100px;
   }
-  .laboratory-banner {
+  .radiology-banner {
     padding: 14px;
     border-bottom: 1px solid #ccc;
   }
-  .laboratory-remarks {
+  .radiology-remarks {
     position: fixed;
     bottom: 19.5rem;
     left: 0;
@@ -23,11 +23,11 @@
     z-index: 1000;
   }
 
-  .laboratory-body {
+  .radiology-body {
     margin-top: 10px;
     padding: 15px;
   }
-  .laboratory-footer {
+  .radiology-footer {
     position: fixed;
     bottom: 4rem;
     left: 0;
