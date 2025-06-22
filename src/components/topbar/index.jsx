@@ -45,7 +45,8 @@ class TopNavigation extends Component {
       paddingLeft: this.props.toggle ? "16px" : "240px",
       transition: "padding-left .3s",
     };
-    const { isPatient, department, aka } = this.props;
+    const { isPatient, department = "", aka } = this.props;
+
     return (
       <MDBNavbar
         className="flexible-MDBNavbar"
@@ -69,7 +70,7 @@ class TopNavigation extends Component {
         </div>
 
         <MDBNavbarBrand href="#" style={navStyle}>
-          {!department && (
+          {department && (
             <MDBBadge
               className="py-2 px-3"
               color="warning-color-dark"

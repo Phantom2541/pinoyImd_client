@@ -3,7 +3,10 @@ import collections from "./collections.json";
 const Policy = {
   collections,
   getDepartment: (pk) => {
-    if (pk < 0) return "unknown department";
+    if (pk < 0) {
+      console.warn("Unknown Department");
+      return "";
+    }
     const { department = "" } =
       collections.find(({ positions = [] }) =>
         positions.some(({ id }) => id === Number(pk))
@@ -11,7 +14,10 @@ const Policy = {
     return department || "";
   },
   getDepname: (pk) => {
-    if (pk < 0) return "unknown department";
+    if (pk < 0) {
+      console.warn("Unknown Department");
+      return "";
+    }
     const { department = "" } =
       collections.find(({ department: dep }) => dep === pk) || "";
     return department || "";
@@ -26,7 +32,10 @@ const Policy = {
    * return  position display_name by department id
    */
   getPosition: (pk) => {
-    if (pk < 0) return "unknown department";
+    if (pk < 0) {
+      console.warn("Unknown Department");
+      return "";
+    }
     const { positions = [] } =
       collections.find(({ positions = [] }) =>
         positions.some(({ id }) => id === pk)
