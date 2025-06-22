@@ -174,13 +174,15 @@ export default function EditableSelect({
               search={utils.disableSearch(disableSearch, collections)}
             >
               {collections?.map((choice, index) => {
+                const isCollectionsOfObjects =
+                  utils.isArrayOfObjects(collections);
                 const value =
-                  keyForValue && utils.isArrayOfObjects(collections)
+                  keyForValue && isCollectionsOfObjects
                     ? String(choice[keyForValue]) || ""
                     : choice;
-                let text = keyForText?.includes(".")
+                let text = isCollectionsOfObjects
                   ? get(choice, keyForText)
-                  : choice[keyForText] || choice;
+                  : choice;
 
                 if (typeof text === "object" && !allowObjectValue) {
                   console.warn(

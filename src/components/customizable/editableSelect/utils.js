@@ -25,9 +25,6 @@ const utils = {
     },
   },
   isChecked: (value, multiple = false, preValues, preValue) => {
-    console.log(value === preValue);
-    console.log("preValue", preValue);
-    console.log("value", value);
     return multiple
       ? preValues?.includes(value)
       : String(preValue) === String(value);
