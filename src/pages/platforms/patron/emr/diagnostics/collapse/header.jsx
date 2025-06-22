@@ -1,14 +1,11 @@
 import { MDBCollapseHeader, MDBBadge, MDBBtn } from "mdbreact";
 // import { useDispatch, useSelector } from "react-redux";
 import {
-  // axioKit,
   dateFormat,
   sourceColor,
-  // harvestTask,
   collapse,
+  getDay,
 } from "../../../../../../services/utilities";
-// import { Services } from "../../../../../../services/fakeDb";
-// import { REFORM } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 
 export default function TaskHeader({
   task,
@@ -36,7 +33,7 @@ export default function TaskHeader({
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center">
           <span>
-            {number}. {dateFormat(task?.createdAt)}
+            {number}. {dateFormat(task?.createdAt)} | {getDay(task?.createdAt)}
           </span>
           <span>
             <MDBBadge

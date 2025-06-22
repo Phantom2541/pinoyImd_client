@@ -10,7 +10,7 @@ const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
 
   return (
-    <div className="radiology-container ">
+    <div className="radiology-container">
       <Banner
         company={branchId.companyId.name}
         branch={branchId.name}
@@ -21,13 +21,14 @@ const Printout = ({ task }) => {
         <BodySwitcher task={task} />
         <div className="flex-spacer" />
       </div>
-      <div className="radiology-remarks d-flex px-1">
-        <div style={{ paddingTop: "2px" }} className="mr-1 mb-1">
-          Remarks:
-        </div>
-        <h5 className="fw-bold">{remarks}</h5>
-      </div>
+
       <div className="radiology-footer">
+        <div className="radiology-remarks d-flex mb-3 mx-5">
+          <div style={{ paddingTop: "2px" }} className="mr-1 mb-1">
+            Remarks:
+          </div>
+          <h5 className="fw-bold">{remarks}</h5>
+        </div>
         <Signatories signatories={signatories} />
         {task?.isDuplicate && (
           <h6 style={{ marginTop: "-2rem", fontWeight: 400 }} className="ml-2">

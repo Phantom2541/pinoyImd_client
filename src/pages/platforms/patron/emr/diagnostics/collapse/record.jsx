@@ -3,6 +3,8 @@ import { Services } from "../../../../../../services/fakeDb";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import { useSelector } from "react-redux";
 
+const radiology = ["ecg", "xray", "ultrasound", "utz"];
+
 export default function CollapseTable({ menu }) {
   const { collections } = useSelector(({ preferences }) => preferences);
   const department = menu?.department[0];
@@ -60,11 +62,19 @@ export default function CollapseTable({ menu }) {
     );
   };
 
-  const handleIndividual = (form, obj = {}, index, miscIndex = null) => {
-    console.log("miscIndex", miscIndex);
-    const _packages = Array.isArray(obj?.packages)
-      ? obj.packages
-      : Object.keys(obj?.packages || {}).map(Number);
+  const handleIndividual = (
+    form,
+    obj = {},
+    index,
+    miscIndex = null,
+    multipleTask = false //example if the sections is miscellenious and the task of mis
+  ) => {
+    const { packages } = obj;
+    const _packages = Array.isArray(packages)
+      ? packages
+      : typeof packages === "object"
+      ? Object.keys(obj?.packages || {}).map(Number)
+      : [packages];
 
     const task = {
       ...obj,
@@ -84,56 +94,56 @@ export default function CollapseTable({ menu }) {
     return (
       <tr key={`${task.key}-${index}`}>
         <td>
-          {index + 1} {typeof miscIndex === "number" ? `-${miscIndex + 1}` : ""}
-          . <strong>{capitalize(department)}</strong>
-          <MDBBadge
-            color={obj.hasDone ? "success" : "primary"}
-            className="ml-2"
-          >
-            {obj.hasDone ? "done" : "processing"}
-          </MDBBadge>
+          {index + 1}{" "}
+          {typeof miscIndex === "number" && multipleTask
+            ? `-${miscIndex + 1}`
+            : ""}
+          .{" "}
+          <strong>
+            {capitalize(radiology.includes(form) ? "Radiology" : "Laboratory")}
+          </strong>
         </td>
         <td>{capitalize(form)}</td>
         <td>
-          {Services.whereIn(department === "LAB" ? _packages : [_packages]).map(
-            ({ abbreviation }, index) => (
-              <MDBBadge
-                pill
-                key={`${task.key}-service-${index}`}
-                className="pt-1"
-              >
-                {abbreviation}
-              </MDBBadge>
-            )
-          )}
+          {Services.whereIn(_packages).map(({ abbreviation }, index) => (
+            <MDBBadge
+              pill
+              key={`${task.key}-service-${index}`}
+              className="pt-1"
+            >
+              {abbreviation}
+            </MDBBadge>
+          ))}
         </td>
         <td>
           <MDBBtnGroup>
             {Array.isArray(obj?.signatories) &&
-              obj?.signatories?.length >= 2 &&
-              obj?.hasDone && (
-                <MDBBtn
-                  rounded
-                  onClick={() => {
-                    const selected = {
-                      ...task,
-                      branchId: menu?.branchId,
-                      referral: physicianId || {},
-                      services: _packages,
-                      signatories: obj?.signatories,
-                      isPrint: true,
-                    };
-                    department === "LAB"
-                      ? handleLabPrint(selected)
-                      : handleRadPrint(selected);
-                  }}
-                  color="warning"
-                  size="sm"
-                  className="py-1 px-3 m-0"
-                >
-                  <MDBIcon icon="print" />
-                </MDBBtn>
-              )}
+            obj?.signatories?.length >= 2 &&
+            obj?.hasDone ? (
+              <MDBBtn
+                rounded
+                onClick={() => {
+                  const selected = {
+                    ...task,
+                    branchId: menu?.branchId,
+                    referral: physicianId || {},
+                    services: _packages,
+                    signatories: obj?.signatories,
+                    isPrint: true,
+                  };
+                  department === "LAB"
+                    ? handleLabPrint(selected)
+                    : handleRadPrint(selected);
+                }}
+                color="warning"
+                size="sm"
+                className="py-1 px-3 m-0"
+              >
+                <MDBIcon icon="print" />
+              </MDBBtn>
+            ) : (
+              <span className="text-primary fw-bold"> In progress</span>
+            )}
           </MDBBtnGroup>
         </td>
       </tr>
@@ -147,7 +157,7 @@ export default function CollapseTable({ menu }) {
         <thead>
           <tr>
             <th>Department</th>
-            <th>Template</th>
+            <th>Section</th>
             <th>Services</th>
             <th>Action</th>
           </tr>
@@ -159,7 +169,13 @@ export default function CollapseTable({ menu }) {
               const entry = { ...rawEntry, key };
               if (Array.isArray(rawEntry))
                 return rawEntry.map((result, i) =>
-                  handleIndividual(key.toLowerCase(), result, index, i)
+                  handleIndividual(
+                    key.toLowerCase(),
+                    result,
+                    index,
+                    i,
+                    rawEntry.length > 1
+                  )
                 );
               return handleIndividual(key.toLowerCase(), entry, index);
             })

@@ -1,11 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TRACKER } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import { fullName, getAge } from "../../../../../services/utilities";
+import {
+  fullName,
+  getAge,
+  getDevelopment,
+  getGenderIcon,
+} from "../../../../../services/utilities";
 import { MDBView } from "mdbreact";
 export default function Header() {
   const { token, auth } = useSelector(({ auth }) => auth),
-    { _id, dob, fullName: fullname } = auth,
+    { dob, fullName: fullname, isMale } = auth,
     dispatch = useDispatch();
 
   /**
@@ -34,8 +39,11 @@ export default function Header() {
       className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <span className="mb-0">
-        {_id ? fullName(fullname) : "Tracker"} | &nbsp;
-        {_id && getAge(dob)}
+        {getGenderIcon(isMale)} {fullName(fullname)}
+      </span>
+      <span>
+        {getAge(dob)} | &nbsp;
+        {getDevelopment(dob)}
       </span>
     </MDBView>
   );

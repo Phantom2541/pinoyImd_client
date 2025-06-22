@@ -39,19 +39,21 @@ export default function Signatories({ signatories, form }) {
       : "RADIOLOGIC TECHNOLOGIST";
 
   return (
-    <div className="pt-4 px-3 laboratory-signatories ">
-      <div className="d-flex justify-content-between ">
-        <Signature person={head} label={title} isHalf />
-        <Signature person={frontdesk} label="Receptionist" isHalf />
+    <div className="px-3 radiology-signatories ">
+      <div className="mt-3">
+        <div className="d-flex justify-content-between ">
+          <Signature person={head} label={title} isHalf />
+          <Signature person={frontdesk} label="Receptionist" isHalf />
+        </div>
+        {form !== "ecg" && (
+          <Signature
+            person={dr}
+            label="Radiologist"
+            style={{ marginTop: "20px" }}
+            withSignature
+          />
+        )}
       </div>
-      {form !== "ecg" && (
-        <Signature
-          person={dr}
-          label="Radiologist"
-          style={{ marginTop: "20px" }}
-          withSignature
-        />
-      )}
     </div>
   );
 }
