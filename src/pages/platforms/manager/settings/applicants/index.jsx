@@ -1,15 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { MDBCard, MDBCardBody, MDBIcon, MDBTable, MDBView } from "mdbreact";
+import { useEffect, useState } from "react";
+import {
+  MDBBtn,
+  MDBBtnGroup,
+  MDBCard,
+  MDBCardBody,
+  MDBIcon,
+  MDBTable,
+  MDBView,
+} from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
+  SetCREDENTIAL,
   SetSELECTED,
+  UPDATE,
 } from "../../../../../services/redux/slices/assets/persons/applicants";
+import { BROWSE as BROWSE_BRANCHES } from "../../../../../services/redux/slices/assets/branches";
 import { useToasts } from "react-toast-notifications";
 import { fullName } from "../../../../../services/utilities";
 import Access from "./modal";
 import TableLoading from "../../../../../components/tableLoading";
 import { Policy } from "../../../../../services/fakeDb";
+import ViewCredential from "./viewCredential";
+import Swal from "sweetalert2";
 
 export default function Applicants() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -33,6 +46,13 @@ export default function Applicants() {
       dispatch(BROWSE({ token, data: { branchId: activePlatform?.branchId } }));
     }
   }, [dispatch, token, activePlatform]);
+  useEffect(() => {
+    if (token && activePlatform?.branchId) {
+      const { branch = {} } = activePlatform;
+      const { companyId = {} } = branch;
+      dispatch(BROWSE_BRANCHES({ token, key: { companyId: companyId?._id } }));
+    }
+  }, [dispatch, token, activePlatform]);
 
   useEffect(() => {
     const _collections = [...collections].filter(
@@ -40,6 +60,51 @@ export default function Applicants() {
     );
     setApplicants(_collections);
   }, [collections]);
+
+  const handleDeny = (applicant) => {
+    Swal.fire({
+      title: "Confirm Denial",
+      html: `Are you certain you want to deny the application of <strong>${fullName(
+        applicant?.user?.fullName
+      )}</strong>? This action cannot be undone.`,
+      icon: "warning",
+      showCancelButton: true,
+      reverseButtons: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, deny application",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(
+          UPDATE({ token, data: { _id: applicant._id, status: "denied" } })
+        ).then(() => {
+          Swal.fire({
+            title: "Application Denied",
+            html: `The application of <strong>${fullName(
+              applicant?.user?.fullName
+            )}</strong> has been successfully denied.`,
+            icon: "success",
+          });
+        });
+      }
+    });
+  };
+
+  const CredentialChecker = ({ user, type, hasUpload = false }) => {
+    return (
+      <MDBIcon
+        style={{ color: hasUpload ? "green" : "red" }}
+        title={hasUpload ? "View Credential" : "No Uploaded Credential"}
+        className={hasUpload ? "cursor-pointer" : ""}
+        icon={hasUpload ? "eye" : "times"}
+        onClick={() =>
+          hasUpload
+            ? dispatch(SetCREDENTIAL({ user, type }))
+            : console.log("no credential")
+        }
+      />
+    );
+  };
 
   return (
     <>
@@ -61,11 +126,11 @@ export default function Applicants() {
                     <MDBIcon icon="sort" title="Sort by Name" />
                   </th>
                   <th>Position</th>
-                  <th> PDS</th>
+                  <th>PDS</th>
                   <th>Resume</th>
                   <th>Letter</th>
                   <th>Remarks</th>
-                  <th>Actions</th>
+                  <th className="text-center">Actions</th>
                 </tr>
               </thead>
 
@@ -94,33 +159,50 @@ export default function Applicants() {
                           {Policy.getDepartment(contract?.designation)}
                         </small>
                       </td>
+
                       <td>
-                        <MDBIcon
-                          icon={hasPds ? "check" : "times"}
-                          style={{ color: hasPds ? "green" : "red" }}
+                        <CredentialChecker
+                          hasUpload={hasPds}
+                          user={user}
+                          type="DataSheet"
                         />
                       </td>
                       <td>
-                        <MDBIcon
-                          icon={hasResume ? "check" : "times"}
-                          style={{ color: hasResume ? "green" : "red" }}
+                        <CredentialChecker
+                          hasUpload={hasResume}
+                          user={user}
+                          type="Resume"
                         />
                       </td>
                       <td>
-                        <MDBIcon
-                          icon={hasLetter ? "check" : "times"}
-                          style={{ color: hasLetter ? "green" : "red" }}
+                        <CredentialChecker
+                          hasUpload={hasLetter}
+                          user={user}
+                          type="AppLetter"
                         />
                       </td>
                       <td>{remarks}</td>
-                      <td>
-                        <button
-                          className="btn btn-sm btn-primary"
-                          onClick={() => dispatch(SetSELECTED(applicant))}
-                        >
-                          <MDBIcon icon="eye" className="mr-1" />
-                          Accept
-                        </button>
+                      <td className="text-center">
+                        <MDBBtnGroup>
+                          <MDBBtn
+                            rounded
+                            size="sm"
+                            color="danger"
+                            onClick={() => handleDeny(applicant)}
+                          >
+                            <MDBIcon icon="user-times" className="mr-2" />
+                            Deny
+                          </MDBBtn>
+                          <MDBBtn
+                            rounded
+                            size="sm"
+                            color="primary"
+                            onClick={() => dispatch(SetSELECTED(applicant))}
+                          >
+                            <MDBIcon icon="user-check" className="mr-2" />
+                            Accept
+                          </MDBBtn>
+                        </MDBBtnGroup>
                       </td>
                     </tr>
                   );
@@ -133,6 +215,7 @@ export default function Applicants() {
         </MDBCardBody>
       </MDBCard>
       <Access />
+      <ViewCredential />
     </>
   );
 }

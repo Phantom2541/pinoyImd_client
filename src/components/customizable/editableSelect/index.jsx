@@ -13,28 +13,38 @@ import ConfirmButtons from "./confirmButtons";
 import { currency } from "../../../services/utilities";
 
 /**
- * A customizable select component with support for single and multiple selections, search, and more.
+ * EditableSelect is a dynamic select component with support for:
+ * - Single or multiple selection
+ * - Inline editing
+ * - Optional label, search, and formatting
+ * - Predefined selected values
+ * - Support for monetary display, blacklisting, whitelisting, and custom logic
  *
- * @param {array} [collections=[]] - An array of objects to be used as options.
- * @param {string|number} [preValue=""] - The pre-selected value.
- * @param {array} [preValues=[]] - The pre-selected values.
- * @param {boolean} [getObject=false] - Whether to return the selected object or value.
- * @param {string} [label] - The label text.
- * @param {string} [keys] - The key to use for the value.
- * @param {string} [values] - The key to use for the text.
- * @param {string} [className=""] - The class name to apply to the wrapper element.
- * @param {string} [inputClassName=""] - The class name to apply to the input element.
- * @param {boolean} [disableAll=false] - Whether to disable all options.
- * @param {boolean} [hideLabel=false] - Whether to hide the label.
- * @param {boolean} [multiple=false] - Whether to allow multiple selections.
- * @param {boolean} [soloUpdate=false] - Whether to update a single selected item only.
- * @param {boolean} [blacklisted=false] - Whether to disable all options except the pre-selected ones.
- * @param {boolean} [whitelisted=false] - Whether to disable all options except the pre-selected ones.
- * @param {object} [disableByKey={}] - An object containing key-value pairs to disable options based on.
- * @param {boolean} [disableSearch=false] - Whether to disable the search feature.
- * @param {boolean} [formSubmitted=false] - Whether the form has been submitted.
- * @param {function} [onChange=() => {}] - The function to call when the selected value changes.
- * @param {function} [onSave=() => {}] - The function to call when the check icon is clicked.
+ * Props:
+ * @param {Array} collections - List of option values (either primitive or objects).
+ * @param {string|number} preValue - Pre-selected value (for single selection).
+ * @param {Array} preValues - Pre-selected values (for multi-selection).
+ * @param {boolean} getObject - If true, returns full object instead of value on select.
+ * @param {boolean} allowObjectValue - If true, allows complex objects as select values.
+ * @param {string} label - Optional label to display above the select.
+ * @param {string} keyForValue - Key to use for option value mapping (e.g., "id").
+ * @param {string} keyForText - Key to use for option label mapping (e.g., "name").
+ * @param {string} className - Custom class for select wrapper.
+ * @param {string} inputClassName - Custom class for the select input display.
+ * @param {boolean} disableAll - Disables all options.
+ * @param {boolean} hideLabel - Hides the select label.
+ * @param {boolean} multiple - Enables multiple selection mode.
+ * @param {boolean} isEditable - Enables inline editing (toggle between text and select).
+ * @param {boolean} blacklisted - Disables all options except those in preValues.
+ * @param {boolean} whitelisted - Enables only the options in preValues.
+ * @param {Object} disableByKey - An object where keys are values to disable, value is boolean.
+ * @param {boolean} disableSearch - Disables search functionality inside the dropdown.
+ * @param {boolean} isMoney - Formats value using currency display if true.
+ * @param {boolean} formSubmitted - Indicates whether the parent form was submitted.
+ * @param {Function} onChange - Callback when selection changes.
+ * @param {Function} onSave - Callback when user confirms value change.
+ * @param {Object} fieldData - Original field data for comparison/edit tracking.
+ * @param {Object} selectStyle - Inline styles for the select wrapper.
  */
 export default function EditableSelect({
   collections = [],
@@ -45,8 +55,8 @@ export default function EditableSelect({
   getObject = false,
   allowObjectValue = false, // if true its mean the value is  a object because we have a emoji so hinid na niya ichecheck kung object ba yung value irerender parin niya
   label,
-  keys, // old name values
-  values, // old name texts
+  keyForValue,
+  keyForText,
   className = "",
   inputClassName = "",
   disableAll = false,
@@ -91,27 +101,29 @@ export default function EditableSelect({
   const handleSelection = (array) => {
     if (multiple) {
       const selectedItems = getObject
-        ? collections?.filter((c) => array.includes(String(c[keys] || c)))
+        ? collections?.filter((c) =>
+            array.includes(String(c[keyForValue] || c))
+          )
         : array;
 
       return !isEditable
         ? onChange(selectedItems)
-        : setEditedData({ ...editedData, [keys]: selectedItems });
+        : setEditedData({ ...editedData, [keyForValue]: selectedItems });
     }
 
     const selectedItem = getObject
       ? collections?.find(
-          (choice) => String(choice[keys] || choice) === String(array[0])
+          (choice) => String(choice[keyForValue] || choice) === String(array[0])
         )
       : array[0];
 
     return !isEditable
       ? onChange(selectedItem)
-      : setEditedData({ ...editedData, [keys]: selectedItem });
+      : setEditedData({ ...editedData, [keyForValue]: selectedItem });
   };
 
   const handleCheck = () => {
-    if (String(fieldData[keys]) === String(editedData?.[keys])) {
+    if (String(fieldData[keyForValue]) === String(editedData?.[keyForValue])) {
       setEditedData({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",
@@ -123,7 +135,7 @@ export default function EditableSelect({
 
   const editMode =
     isEditable &&
-    keys === editedData?.editingKey &&
+    keyForValue === editedData?.editingKey &&
     editedData?._id === fieldData?._id;
 
   const showSelect = !isEditable ? true : editMode;
@@ -131,7 +143,12 @@ export default function EditableSelect({
   return (
     <div className="d-flex align-items-center w-100">
       {showSelect ? (
-        <div style={selectStyle}>
+        <div
+          className="d-flex align-items-center"
+          style={{
+            ...selectStyle,
+          }}
+        >
           <MDBSelect
             label={!hideLabel && label}
             getValue={handleSelection}
@@ -143,9 +160,9 @@ export default function EditableSelect({
             <MDBSelectInput
               className={inputClassName}
               selected={utils.getSelectedText({
-                preValue: isEditable ? fieldData[keys] : preValue,
-                values,
-                keys,
+                preValue: isEditable ? fieldData[keyForValue] : preValue,
+                keyForText,
+                keyForValue,
                 getObject,
                 multiple,
                 preValues,
@@ -157,15 +174,15 @@ export default function EditableSelect({
               search={utils.disableSearch(disableSearch, collections)}
             >
               {collections?.map((choice, index) => {
-                const key =
-                  keys && utils.isArrayOfObjects(collections)
-                    ? String(choice[keys]) || ""
+                const value =
+                  keyForValue && utils.isArrayOfObjects(collections)
+                    ? String(choice[keyForValue]) || ""
                     : choice;
-                let value = values?.includes(".")
-                  ? get(choice, values)
-                  : choice[values] || choice;
+                let text = keyForText?.includes(".")
+                  ? get(choice, keyForText)
+                  : choice[keyForText] || choice;
 
-                if (typeof value === "object" && !allowObjectValue) {
+                if (typeof text === "object" && !allowObjectValue) {
                   console.warn(
                     "%c[Select] Invalid Values:",
                     "color: orange; font-weight: bold;",
@@ -194,14 +211,20 @@ export default function EditableSelect({
                       preValues,
                       preValue
                     )}
-                    value={String(key) || "--"}
+                    value={String(value) || "--"}
                   >
-                    {value || "--"}
+                    {capitalize(text) || "--"}
                   </MDBSelectOption>
                 );
               })}
             </MDBSelectOptions>
           </MDBSelect>
+          <ConfirmButtons
+            isEditMode={isEditable && editMode}
+            formSubmitted={formSubmitted}
+            handleCheck={handleCheck}
+            handleClose={() => setEditedData({})}
+          />
         </div>
       ) : (
         <h6
@@ -213,20 +236,14 @@ export default function EditableSelect({
                 detail: { excludeId: instanceId },
               })
             );
-            setEditedData({ ...fieldData, editingKey: keys });
+            setEditedData({ ...fieldData, editingKey: keyForValue });
           }}
         >
           {isMoney
-            ? currency(fieldData[keys])
-            : capitalize(fieldData[keys]) || "N/A"}
+            ? currency(utils.getValue(keyForText, fieldData))
+            : capitalize(utils.getValue(keyForText, fieldData)) || "N/A"}
         </h6>
       )}
-      <ConfirmButtons
-        isEditMode={isEditable && editMode}
-        formSubmitted={formSubmitted}
-        handleCheck={handleCheck}
-        handleClose={() => setEditedData({})}
-      />
     </div>
   );
 }
