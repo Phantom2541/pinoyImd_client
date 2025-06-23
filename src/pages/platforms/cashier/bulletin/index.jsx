@@ -70,7 +70,6 @@ export default function Dashboard() {
 
   return (
     <MDBContainer fluid id="v6" className="mb-5">
-      <h1>Gumagana naba ?</h1>
       <section className="mb-4">
         <MDBRow>
           <Sales
