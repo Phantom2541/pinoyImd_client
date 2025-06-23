@@ -1,7 +1,11 @@
 import { QRCodeCanvas } from "qrcode.react";
 import pinoyImd from "../../../../assets/iMD.png";
 import { ENDPOINT, mobile } from "../../../../services/utilities";
+import { useSelector } from "react-redux";
 const Footer = ({ dealId }) => {
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { branch = {} } = activePlatform || {},
+    { companyId = {} } = branch || {};
   return (
     <div
       style={{
@@ -70,7 +74,7 @@ const Footer = ({ dealId }) => {
         <div>
           <div className="m-0 p-1 ml-4">
             <QRCodeCanvas
-              value={`${ENDPOINT}/emr/portal/${dealId}`}
+              value={`${ENDPOINT}/emr/portal/${companyId?._id}/${dealId}`}
               size={78}
             />
           </div>
