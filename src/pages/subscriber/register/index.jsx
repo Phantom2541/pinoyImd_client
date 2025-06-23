@@ -24,7 +24,6 @@ import IMG3 from "./../../../assets/homePatient.jpg";
 import REGISTRATIONIMG from "./../../../assets/homePageRegistrationImg.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-import { set } from "lodash";
 
 export default function Register({ handleFlip, flipped }) {
   const [isMale, setIsMale] = useState(false);
@@ -66,7 +65,7 @@ export default function Register({ handleFlip, flipped }) {
 
   useEffect(() => {
     if (isSuccess) {
-      document.getElementById("registration-form").reset();
+      document.getElementById("registration-form")?.reset();
     }
   }, [isSuccess]);
 
@@ -143,7 +142,11 @@ export default function Register({ handleFlip, flipped }) {
             <div className="d-flex align-items-center">
               <div>
                 <h2 style={{ fontWeight: "400" }}>Patient Registration Form</h2>
-                <form style={{ width: "100%" }}>
+                <form
+                  style={{ width: "100%" }}
+                  onSubmit={handleSubmit}
+                  id="registration-form"
+                >
                   <MDBRow>
                     <MDBCol md="6">
                       <MDBInput
@@ -198,7 +201,6 @@ export default function Register({ handleFlip, flipped }) {
                           id="male"
                           checked={isMale}
                           onChange={handleMaleChange}
-                          required
                         />
                         <MDBInput
                           label="Female"
@@ -206,7 +208,6 @@ export default function Register({ handleFlip, flipped }) {
                           id="female"
                           checked={!isMale}
                           onChange={() => setIsMale(false)}
-                          required
                         />
                       </div>
                     </MDBCol>
@@ -250,6 +251,7 @@ export default function Register({ handleFlip, flipped }) {
                         label="I read and agree with the Terms and Conditions"
                         type="checkbox"
                         id="agreement"
+                        name="agreement"
                         required
                       />
                     </MDBCol>
