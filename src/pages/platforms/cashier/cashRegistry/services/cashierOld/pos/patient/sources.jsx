@@ -1,16 +1,8 @@
-import React from "react";
-import {
-  MDBCol,
-  MDBSelect,
-  MDBSelectInput,
-  MDBSelectOption,
-  MDBSelectOptions,
-} from "mdbreact";
+import { MDBCol } from "mdbreact";
 import { useSelector } from "react-redux";
 
 export default function PatientSources({ didCheckout }) {
-  const { collections } = useSelector(({ providers }) => providers),
-    { selected } = useSelector(({ deals }) => deals);
+  const { selected } = useSelector(({ deals }) => deals);
 
   return (
     <MDBCol md="6">

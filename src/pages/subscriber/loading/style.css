@@ -1,0 +1,32 @@
+.subscriber-loading-container {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.subscriber-loading {
+  display: block;
+  width: 200px; /* or whatever size you want */
+}
+
+/* This animated overlay simulates the grayscale slowly being removed from bottom to top */
+.subscriber-loading-container::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 1);
+  animation: revealColor 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes revealColor {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: -100%;
+  }
+}

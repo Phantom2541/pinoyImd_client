@@ -7,8 +7,8 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
-  MDBTypography,
-  MDBModaltable,
+  MDBRow,
+  MDBCol,
 } from "mdbreact";
 import {
   TOGGLE,
@@ -32,13 +32,13 @@ export default function Modal() {
     if (selected) {
       setForm({
         ...selected,
-        waranty: selected.waranty || getTodayDate(),
+        warranty: selected.warranty || getTodayDate(),
       });
     } else {
       // When creating new entry
       setForm((prev) => ({
         ...prev,
-        waranty: getTodayDate(),
+        warranty: getTodayDate(),
       }));
     }
   }, [selected]);
@@ -93,15 +93,25 @@ export default function Modal() {
 
   // Handle change sa inputs
   const handleChange = (key, value) => {
-    console.log("key :", key);
-    console.log("value :", value);
-    console.log("form :", form);
-    setForm({
-      ...form,
-      [key]: value,
-      userId: auth._id,
-      branchId: activePlatform.branchId,
-    });
+    if (key.startsWith("pm.")) {
+      const pmKey = key.split(".")[1];
+      setForm((prev) => ({
+        ...prev,
+        pm: {
+          ...prev.pm,
+          [pmKey]: value,
+        },
+        userId: auth._id,
+        branchId: activePlatform.branchId,
+      }));
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [key]: value,
+        userId: auth._id,
+        branchId: activePlatform.branchId,
+      }));
+    }
   };
 
   // Fix: Return correct form value
@@ -126,37 +136,64 @@ export default function Modal() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
-          <MDBInput
-            label="Brand"
-            type="text"
-            value={handleValue("brand")}
-            required
-            onChange={(e) => handleChange("brand", e.target.value)}
-          />
-          <MDBInput
-            label="Model"
-            type="text"
-            value={handleValue("model")}
-            onChange={(e) => handleChange("model", e.target.value)}
-          />
+          <MDBRow>
+            <MDBCol md="6">
+              <MDBInput
+                label="Brand"
+                type="text"
+                value={handleValue("brand")}
+                required
+                onChange={(e) => handleChange("brand", e.target.value)}
+              />
+            </MDBCol>
+            <MDBCol md="6">
+              <MDBInput
+                label="Model"
+                type="text"
+                value={handleValue("model")}
+                onChange={(e) => handleChange("model", e.target.value)}
+              />
+            </MDBCol>
+          </MDBRow>
           <MDBInput
             label="Serial no."
             type="text"
             value={handleValue("serial")}
             onChange={(e) => handleChange("serial", e.target.value)}
           />
-          <MDBInput
-            label="Accuqired"
-            type="text"
-            value={handleValue("accuqired")}
-            onChange={(e) => handleChange("accuqired", e.target.value)}
-          />
-          <MDBInput
-            label="Status"
-            type="text"
-            value={handleValue("status")}
-            onChange={(e) => handleChange("status", e.target.value)}
-          />
+          <MDBRow>
+            <MDBCol md="6">
+              <label className="small ">Accuqired</label>
+              <select
+                className="form-control form-control-sm"
+                value={handleValue("accuqired") || ""}
+                onChange={(e) => handleChange("accuqired", e.target.value)}
+              >
+                <option disabled value="">
+                  Options
+                </option>
+                <option value="brand-new">Brand-new</option>
+                <option value="refurbish">Refurbish</option>
+              </select>
+            </MDBCol>
+            <MDBCol md="6">
+              <label className="small ">Status</label>
+              <select
+                className="form-control form-control-sm"
+                value={handleValue("status") || ""}
+                onChange={(e) => handleChange("status", e.target.value)}
+              >
+                <option disabled value="">
+                  Options
+                </option>
+                <option value="fully functional">Fully Functional</option>
+                <option value="functional">Functional</option>
+                <option value="damaged">Damaged</option>
+                <option value="broken">Broken</option>
+              </select>
+            </MDBCol>
+          </MDBRow>
+
           <MDBInput
             label="Price"
             type="number"
@@ -166,10 +203,35 @@ export default function Modal() {
 
           <MDBInput
             label="Warranty"
-            type="date"
+            type="number"
             value={handleValue("warranty")}
             onChange={(e) => handleChange("warranty", e.target.value)}
           />
+          <MDBRow className="d-flex align-items-center">
+            <MDBCol md="5">
+              <MDBInput
+                className="text-right"
+                label="Preventive Maintenance"
+                type="number"
+                value={handleValue("pm")?.value || ""}
+                onChange={(e) => handleChange("pm.value", e.target.value)}
+              />
+            </MDBCol>
+            <MDBCol md="7">
+              <select
+                className="form-control form-control-sm ml-2"
+                value={handleValue("pm")?.unit || ""}
+                onChange={(e) => handleChange("pm.unit", e.target.value)}
+              >
+                <option value="">Select Schedule</option>
+                <o tion value="day">
+                  Days
+                </o>
+                <option value="month">Months</option>
+                <option value="year">Years</option>
+              </select>
+            </MDBCol>
+          </MDBRow>
           {/* Submit button */}
           <div className="text-center mb-1-half">
             <MDBBtn

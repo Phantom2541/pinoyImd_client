@@ -33,6 +33,15 @@ const getBase64Image = (url) => {
     img.onerror = reject;
   });
 };
+
+const getImage = async () => {
+  const { branch } = JSON.parse(localStorage.getItem("activePlatform"));
+  const { companyId } = branch;
+  return await getBase64Image(
+    `${ENDPOINT}/public/companies/${companyId?.name}/${branch?.name}/banner.png`
+  );
+};
+
 const handlePrices = (form, menu) => {
   const { priceCategories = [], menuType = "", insource, hmo } = form;
 
@@ -148,10 +157,7 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
     }
   );
 
-  const imageBase64 = await getBase64Image(
-    `${ENDPOINT}/public/companies/Smart Care/Pantabangan/banner.png`
-  );
-
+  const imageBase64 = await getImage();
   const tableBody = [
     ["Name", "Services Inclusion", ...handleTableHeader(form)],
     ...menus.map((menu, index) => [

@@ -20,12 +20,11 @@ import {
   Logo,
   Tagline,
   Description,
-  Applicants,
   Tieups,
 } from "../../../pages/platforms/manager/settings";
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
-
+import Applicants from "../../../pages/platforms/headquarter/settings/personnels/applicants";
 const headquarter = [
   {
     name: "Human Resources",

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
@@ -6,13 +5,13 @@ import {
   DESTROY,
 } from "../../.././../../services/redux/slices/market/machines";
 import Swal from "sweetalert2";
+import { currency } from "../../../../../services/utilities";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth);
   const { filtered, activePage, maxPage } = useSelector(
       ({ machines }) => machines
     ),
-    [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
   console.log("filtered", filtered);
@@ -37,6 +36,7 @@ const Body = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log("handleDelete id", _id);
         dispatch(DESTROY({ token, data: { _id } }));
       }
     });
@@ -50,17 +50,18 @@ const Body = () => {
           <th>Brand</th>
           <th>Model</th>
           <th>Serial no.</th>
-          <th>Accuqired</th>
+          <th>Acquired</th>
           <th>Status</th>
           <th>Price</th>
           <th>Warranty</th>
+          <th title="Preventive maintenance">PM</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
           const {
-            id,
+            _id,
             brand,
             model,
             serial,
@@ -68,6 +69,7 @@ const Body = () => {
             status,
             warranty,
             price,
+            pm,
           } = item;
           return (
             <tr key={index}>
@@ -76,10 +78,11 @@ const Body = () => {
               <td>{brand}</td>
               <td>{model}</td>
               <td>{serial}</td>
-              <td>{accuqired}</td>
-              <td>{status}</td>
-              <td>{price}</td>
+              <td style={{ textTransform: "capitalize" }}>{accuqired}</td>
+              <td style={{ textTransform: "capitalize" }}>{status}</td>
+              <td>{currency(price)}</td>
               <td>{warranty}</td>
+              <td>{`${pm.value} ${pm.unit}`}</td>
               <td>
                 <button
                   onClick={() => handleUpdate(item)}
@@ -88,7 +91,7 @@ const Body = () => {
                   Update
                 </button>
                 <button
-                  onClick={() => handleDelete(id)}
+                  onClick={() => handleDelete(_id)}
                   className="btn btn-sm btn-danger"
                 >
                   Delete

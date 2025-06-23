@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
@@ -40,7 +40,7 @@ const Header = () => {
             collections={collections}
             setFiltered={(items) => dispatch(SetFILTER(items))}
             placeholder="Search machines "
-            HaveAction={true}
+            haveAction={true}
             reset={() => dispatch(SetFILTER(collections))}
             hideButton={false}
             handleAdd={(item) => handleAdd(item)}

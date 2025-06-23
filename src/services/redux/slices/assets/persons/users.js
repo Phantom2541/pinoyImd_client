@@ -55,18 +55,23 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   }
 });
 
-export const REGISTER = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
-  try {
-    return axioKit.save(url, form);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const REGISTER = createAsyncThunk(
+  `${url}/register`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.save(url, form);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
@@ -167,25 +172,25 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
-      });
-    // .addCase(REGISTER.pending, state => {
-    //   state.isLoading = true;
-    //   state.isSuccess = false;
-    //   state.message = "";
-    // })
-    // .addCase(REGISTER.fulfilled, (state, action) => {
-    //   const { success, payload } = action.payload;
+      })
+      .addCase(REGISTER.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(REGISTER.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
 
-    //   state.message = success;
-    //   state.collections.unshift(payload);
-    //   state.isSuccess = true;
-    //   state.isLoading = false;
-    // })
-    // .addCase(REGISTER.rejected, (state, action) => {
-    //   const { error } = action;
-    //   state.message = error.message;
-    //   state.isLoading = false;
-    // });
+        state.message = success;
+        state.collections.unshift(payload);
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(REGISTER.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      });
   },
 });
 

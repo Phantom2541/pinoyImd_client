@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
-import ExcelJS from "exceljs";
-import { saveAs } from "file-saver";
 import CalendarPicker from "../../../../../components/header/calendars";
-import { currency } from "../../../../../services/utilities";
+import { currency, ResecoToExcel } from "../../../../../services/utilities";
 import { Calendar } from "../../../../../services/fakeDb";
 import {
   SetMONTH,
@@ -13,6 +11,7 @@ import {
   RESET,
   SetFilterBySourceAndPhysician,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import Loading from "./loading";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -22,8 +21,11 @@ const Header = () => {
     year,
     filtered = [],
     collections = [],
-    vendor,
     filteredPhysicians: physicians = [],
+    vendor,
+    source: displaySource,
+    physician: displayPhysician,
+    isLoading,
   } = useSelector(({ deals }) => deals);
   const { token, auth, activePlatform, maxPage } = useSelector(
     ({ auth, platform }) => ({ ...auth, ...platform })
@@ -97,69 +99,26 @@ const Header = () => {
       "top=100px,left=0px,width=1050px,height=750px"
     );
   };
-
   // 📤 Excel Export
-  const handleSoftCopy = async () => {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Deals");
+  const handleSoftCopy = () => {
+    const isMembership = sources.find(
+      ({ _id }) => selectedSource === _id
+    ).isMembership;
 
-    const { branch } = activePlatform;
-    const { companyId } = branch;
-    const companyName = `${companyId?.name} ${companyId?.subName || ""}`;
-    worksheet.addRow([`Company: ${companyName}`]).font = {
-      bold: true,
-      size: 14,
-    };
-    worksheet.mergeCells("A1:E1");
-
-    const selectedSourceName =
-      summarizedSourcesMap[selectedSource]?.displayname || "All Sources";
-
-    worksheet.addRow([
-      `SOURCE: ${selectedSourceName}`,
-      "",
-      "",
-      `GROSS: ${currency(totalAmount)}`,
-    ]).font = { bold: true };
-    worksheet.mergeCells("A2:C2");
-    worksheet.mergeCells("D2:E2");
-
-    worksheet.addRow([]);
-
-    worksheet.columns = [
-      { header: "Date", key: "date", width: 15 },
-      { header: "Customer", key: "customer", width: 25 },
-      { header: "Services", key: "services", width: 25 },
-      { header: "Payment Type", key: "payment", width: 15 },
-      { header: "Amount", key: "amount", width: 10 },
-      { header: "Rebate", key: "amount", width: 10 },
-    ];
-    worksheet.addRow(worksheet.columns.map((c) => c.header)).font = {
-      bold: true,
-    };
-
-    filtered.forEach(({ date, deals }) => {
-      deals.forEach((deal) => {
-        worksheet.addRow([
-          date,
-          `${deal.customerId?.fullName?.fname || ""} ${
-            deal.customerId?.fullName?.lname || ""
-          }`.trim(),
-          deal.cart?.map(({ abbreviation }) => abbreviation).join(", "),
-          deal.payment || "",
-          Number(deal.amount) || 0,
-          Number(deal.amount * 0.1) || 0,
-        ]);
-      });
+    const gross = filtered
+      .flatMap(({ deals = [] }) => deals.map((d) => Number(d.amount) || 0))
+      ?.reduce((a, b) => a + b, 0);
+    const rebate = !isMembership ? gross * 0.1 : 0;
+    ResecoToExcel({
+      array: filtered,
+      options: {
+        gross,
+        rebate,
+        physician: displayPhysician,
+        source: displaySource,
+        isMembership,
+      },
     });
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    saveAs(
-      new Blob([buffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      }),
-      `${selectedSourceName} - ${Calendar.Months[month - 1]} ${year}.xlsx`
-    );
   };
 
   return (
@@ -173,54 +132,71 @@ const Header = () => {
         moved={(next) => dispatch(SetMONTH(next))}
         reset={() => dispatch(ResetDATE())}
       />
+      {isLoading && (
+        <>
+          <Loading />
+          <Loading />
+        </>
+      )}
 
       <div className="d-flex align-items-center ml-2">
-        <div className="text-right d-flex items-center">
-          {/* 🔹 Source Dropdown */}
-          <select
-            id="source-select"
-            className="custom-select mr-2"
-            value={selectedSource}
-            onChange={(e) => {
-              setSelectedSource(e.target.value);
-              setSelectedPhysician("all");
-            }}
-          >
-            <option value="all">All Sources ({currency(totalAmount)})</option>
-            <option value="NoSource">
-              No Source (
-              {currency(summarizedSourcesMap["NoSource"]?.total || 0)})
-            </option>
-            {summarizedSources
-              .filter(({ _id }) => _id !== "NoSource")
-              .map(({ _id, displayname, total }) => (
-                <option key={_id} value={_id}>
-                  {displayname} ({currency(total)})
-                </option>
-              ))}
-          </select>
+        {!isLoading && (
+          <>
+            <div
+              className="text-right d-flex items-center"
+              style={{ width: "100%" }}
+            >
+              {/* 🔹 Source Dropdown */}
 
-          {/* 🔹 Physician Dropdown */}
-          <select
-            id="physician-select"
-            className="custom-select mr-2"
-            value={selectedPhysician}
-            onChange={(e) => setSelectedPhysician(e.target.value)}
-          >
-            <option value="all">
-              All Physicians ({currency(totalPhysicianAmount)})
-            </option>
-            {physicians.map((p) => (
-              <option key={p._id} value={p._id}>
-                {p.fullName} ({currency(p.total)})
-              </option>
-            ))}
-          </select>
-        </div>
+              <select
+                style={{ width: "100%" }}
+                className="custom-select mr-2"
+                value={selectedSource}
+                onChange={(e) => {
+                  setSelectedSource(e.target.value);
+                  setSelectedPhysician("all");
+                }}
+              >
+                <option value="all">
+                  All Sources ({currency(totalAmount)})
+                </option>
+                <option value="NoSource">
+                  No Source (
+                  {currency(summarizedSourcesMap["NoSource"]?.total || 0)})
+                </option>
+                {summarizedSources
+                  .filter(({ _id }) => _id !== "NoSource")
+                  .map(({ _id, displayname, total }) => (
+                    <option key={_id} value={_id}>
+                      {displayname} ({currency(total)})
+                    </option>
+                  ))}
+              </select>
+
+              {/* 🔹 Physician Dropdown */}
+              <select
+                style={{ width: "100%" }}
+                className="custom-select mr-2"
+                value={selectedPhysician}
+                onChange={(e) => setSelectedPhysician(e.target.value)}
+              >
+                <option value="all">
+                  All Physicians ({currency(totalPhysicianAmount)})
+                </option>
+                {physicians.map((p) => (
+                  <option key={p._id} value={p._id}>
+                    {p.fullName} ({currency(p.total)})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
 
         <MDBBtn
           color="white"
           rounded
+          disabled={isLoading}
           size="sm"
           className="px-2"
           onClick={handlePrintOut}
@@ -231,6 +207,7 @@ const Header = () => {
           color="white"
           rounded
           size="sm"
+          disabled={isLoading}
           className="px-2"
           onClick={handleSoftCopy}
         >

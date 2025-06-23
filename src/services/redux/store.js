@@ -53,8 +53,18 @@ import {
 
 import { products, productsGenerics, machines, mentainance, } from "./slices/market";
 import { appointments, quest } from "./slices/diagnostics";
+import {
+  products,
+  productsGenerics,
+  machines,
+  medicines,
+  generics,
+  mentainance,
+} from "./slices/market";
+import { appointments } from "./slices/clinical";
+import portal from "./slices/emr/portal";
 
-const store = configureStore({  
+const store = configureStore({
   reducer: {
     remittances,
     payables,
@@ -100,9 +110,13 @@ const store = configureStore({
     ecg,
     productsGenerics,
     machines,
+    medicines,
+    generics,
     mentainance,
     appointments,
     quest,
+    //this is results for viewing the results online
+    portal,
     //for templates only
     dragDrop,
     table,

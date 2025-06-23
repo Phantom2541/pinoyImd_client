@@ -40,6 +40,7 @@ import generateCalendar from "./generateCalendar";
 import fullNameSearch from "./fullNameSearch";
 import dateFormat from "./dateFormat";
 import getTime from "./getTime";
+import getDay from "./getDay";
 import getBday from "./getBday";
 import getWeekend from "./getWeekend";
 import isClosingTime from "./isClosingTime";
@@ -52,10 +53,15 @@ import Male from "../../assets/male.jpg";
 import Female from "../../assets/female.jpg";
 import PresetIMD from "../../assets/iMD.jpg";
 import paymentMethod from "./paymentMethod";
+import Deals from "./deals";
+// Clear's Cache
+import clearSiteData from "./clearSiteData";
+//EXCEL
 import VouchersToExcel from "./export/excel/vouchers";
 import MenusToExcel from "./export/excel/menus";
+import ResecoToExcel from "./export/excel/reseco";
+//PDF
 import MenusToPDF from "./export/pdf/menus";
-import Deals from "./deals";
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -99,6 +105,7 @@ export {
   getAge,
   getDate,
   getTime,
+  getDay,
   contacts,
   dateFormat,
   getWeekend,
@@ -123,8 +130,12 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  // Cache's Clear
+  clearSiteData,
   //export to excel
   VouchersToExcel,
   MenusToExcel,
+  ResecoToExcel,
+  //export to pdf
   MenusToPDF,
 };

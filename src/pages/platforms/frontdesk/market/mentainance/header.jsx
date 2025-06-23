@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
-import { BROWSE,SetFILTER, SetCREATE } from "../../../../../services/redux/slices/market/mentainance";
-  const Header = () => {
+import {
+  BROWSE,
+  SetFILTER,
+  SetCREATE,
+} from "../../../../../services/redux/slices/market/mentainance";
+const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ mentainance }) => mentainance),
     dispatch = useDispatch();
@@ -11,25 +15,19 @@ import { BROWSE,SetFILTER, SetCREATE } from "../../../../../services/redux/slice
   //initial values
 
   useEffect(() => {
-    if (token){
+    if (token) {
       dispatch(
         BROWSE({ token, params: { branchId: activePlatform?.branchId } })
       );
     }
-  }, [dispatch, token]);
-  
+  }, [activePlatform, dispatch, token]);
 
+  const handleAdd = (item) => {
+    console.log("handleAdd item:", item);
+    dispatch(SetCREATE(item));
+  };
 
-
-    const handleAdd = (item) => 
-  {
-console.log("handleAdd item:",item);
-  dispatch(SetCREATE(item));
-  }
-    
-  
-  
-    return (
+  return (
     <MDBView
       cascade
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
@@ -48,7 +46,7 @@ console.log("handleAdd item:",item);
             placeholder="Search mentainance"
             haveAction={true}
             handleAdd={(item) => handleAdd(item)}
-            reset={() => dispatch(SetFILTER( collections))}
+            reset={() => dispatch(SetFILTER(collections))}
           />
         </div>
       </div>

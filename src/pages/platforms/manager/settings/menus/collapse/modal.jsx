@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MDBModal, MDBModalBody, MDBIcon, MDBModalHeader } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb";
 import DataTable from "../../../../../../components/dataTable";
 import { capitalize, globalSearch } from "../../../../../../services/utilities";
 import { useSelector } from "react-redux";
 
-export default function Modal({ show, toggle, handlePick, _isLoading }) {
+export default function Modal({ show, toggle, handlePick }) {
   const { formSubmitted } = useSelector(({ menus }) => menus);
   const [services, setServices] = useState([]);
 
@@ -14,6 +14,7 @@ export default function Modal({ show, toggle, handlePick, _isLoading }) {
   }, []);
 
   const handleSearch = async (willSearch, key) => {
+    if (!key) return setServices(Services.collections);
     if (willSearch) {
       setServices(globalSearch(Services.collections, key));
     } else {
@@ -32,7 +33,6 @@ export default function Modal({ show, toggle, handlePick, _isLoading }) {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <DataTable
-          minHeight="0px"
           title="Services Available"
           array={services}
           actions={[
@@ -69,6 +69,7 @@ export default function Modal({ show, toggle, handlePick, _isLoading }) {
             },
           ]}
           handleSearch={handleSearch}
+          isLocal={true}
         />
       </MDBModalBody>
     </MDBModal>

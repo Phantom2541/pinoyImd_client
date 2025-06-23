@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -24,7 +24,6 @@ export default function Header() {
           token,
           key: {
             customerId: auth._id,
-            department: "LAB",
           },
         })
       );

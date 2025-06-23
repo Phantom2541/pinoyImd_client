@@ -45,7 +45,8 @@ class TopNavigation extends Component {
       paddingLeft: this.props.toggle ? "16px" : "240px",
       transition: "padding-left .3s",
     };
-    const { isPatient, department, aka } = this.props;
+    const { isPatient, department = "", aka } = this.props;
+
     return (
       <MDBNavbar
         className="flexible-MDBNavbar"
@@ -69,32 +70,30 @@ class TopNavigation extends Component {
         </div>
 
         <MDBNavbarBrand href="#" style={navStyle}>
-          <MDBBadge
-            className="py-2 px-3"
-            color="warning-color-dark"
-            style={{
-              fontSize: "1rem",
-              fontWeight: 400,
-              boxShadow: "0px 0px 0px 0px",
-            }}
-            pill
-          >
-            {isPatient
-              ? "Welcome to Pinoy iMD"
-              : `${capitalize(department)} :) ${capitalize(aka)}`}
-          </MDBBadge>
+          {department && (
+            <MDBBadge
+              className="py-2 px-3"
+              color="warning-color-dark"
+              style={{
+                fontSize: "1rem",
+                fontWeight: 400,
+                boxShadow: "0px 0px 0px 0px",
+              }}
+              pill
+            >
+              {isPatient
+                ? "Welcome to Pinoy iMD"
+                : `${capitalize(department)} :) ${capitalize(aka)}`}
+            </MDBBadge>
+          )}
         </MDBNavbarBrand>
         <MDBNavbarNav
           expand="sm"
           right
           style={{ flexDirection: "row", gap: "5px" }}
         >
-          {!isPatient && (
-            <>
-              <DTR />
-              <Branches />
-            </>
-          )}
+          {!isPatient && <DTR />}
+          <Branches />
           <Platforms />
           <Profile />
         </MDBNavbarNav>

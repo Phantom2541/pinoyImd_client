@@ -112,7 +112,7 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.showPaymentModal = true;
       state.showPayablesModal = false;
-      state.willCreate = true;
+      state.willCreate = false;
     },
     SetPAYOR: (state, { payload }) => {
       const { payableId, payor } = payload;

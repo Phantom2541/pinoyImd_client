@@ -74,6 +74,7 @@ export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
     try {
+      console.log("data", data);
       return axioKit.destroy(url, data, token);
     } catch (error) {
       const message =
@@ -97,18 +98,19 @@ export const reduxSlice = createSlice({
       state.willCreate = false;
       state.showModal = true;
     },
-    SetCREATE: (state, { payload }) => {
+    SetCREATE: (state) => {
       state.selected = {
         brand: "",
-        name: "",
-        subname: "",
-        description: "",
-        prescription: false,
-        expense: 0,
-        forsale: false,
-        remarks: "",
-        section: "",
-        store: "",
+        model: "",
+        serial: "",
+        accuqired: "",
+        status: "",
+        price: 0,
+        warranty: 0,
+        pm: {
+          value: 0,
+          unit: "",
+        },
       };
       state.willCreate = true;
       state.showModal = true;
@@ -188,7 +190,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, { payload }) => {
-        state.collections.unshift(payload);
+        state.collections.unshift(payload?.data);
+        state.filtered.unshift(payload.data);
         state.showModal = false;
         state.isSuccess = true;
         state.isLoading = false;
