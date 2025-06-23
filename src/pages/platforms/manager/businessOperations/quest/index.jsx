@@ -5,11 +5,14 @@ import { MDBCard, MDBCardBody, MDBAnimation } from "mdbreact";
 import TableLoading from "../../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./collapse";
+import Modal from "./modal";
+import ModalTeams from "./collapse/modal";
 import Footer from "./footer";
-const Collapsable = () => {
-  const { isLoading } = useSelector(({ services }) => services);
+const Index = () => {
+  const { isLoading } = useSelector(({quest}) => quest);
 
   return (
+    <>
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <Header />
@@ -17,7 +20,10 @@ const Collapsable = () => {
         <Footer />
       </MDBCard>
     </MDBAnimation>
+    <Modal/>
+    <ModalTeams/>
+    </>
   );
 };
 
-export default Collapsable;
+export default Index;

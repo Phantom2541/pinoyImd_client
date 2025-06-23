@@ -54,15 +54,7 @@ const Subscriber = ({ match }) => {
   const { name } = details;
 
   return (
-    <>
-      <Loading />
-    </>
-  );
-};
-
-export default Subscriber;
-{
-  /* <div id="landing">
+    <div id="landing">
       <div className="homePage-topbar">
         <div
           className={`homePage-topbar-animation ${scrolled ? "scrolled" : ""}`}
@@ -245,5 +237,8 @@ export default Subscriber;
         </MDBContainer>
         <Copyrights />
       </MDBFooter>
-    </div> */
-}
+    </div>
+  );
+};
+
+export default Subscriber;
