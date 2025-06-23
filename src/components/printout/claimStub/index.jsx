@@ -188,32 +188,24 @@ const Stub = ({ sale }) => {
 };
 
 export default function ClaimStub() {
-  const { claimstub = {} } = useSelector(({ printout }) => printout),
-    [sale, setSale] = useState({});
+  const [sale, setSale] = useState({});
 
   useEffect(() => {
-    setSale(claimstub);
-  }, [claimstub]);
-
-  console.log("sales", sale);
+    try {
+      const raw = localStorage.getItem("claimStub");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setSale(parsed);
+      }
+    } catch (error) {
+      console.error("Failed to parse claimStub:", error);
+    }
+  }, []);
 
   if (!sale || !sale?._id) return <div>Sale is Empty</div>;
 
   return (
     <>
-      {/* <pre
-        style={{
-          textAlign: "left",
-          fontSize: "12px",
-          background: "#f4f4f4",
-          padding: "10px",
-          border: "1px solid #ccc",
-          maxHeight: "300px",
-          overflowY: "auto",
-        }}
-      >
-        {JSON.stringify(sale, null, 2)}
-      </pre> */}
       <Stub sale={sale} />
     </>
   );

@@ -17,7 +17,6 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 import { Input, Select } from "../../../../../../../components/customizable";
-import { SetCLAIMSTUB } from "../../../../../../../services/redux/slices/printout/printout";
 const Tables = () => {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
@@ -76,9 +75,7 @@ const Tables = () => {
   // Sample generateStub function
 
   const handlePrintout = (selected) => {
-    // localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
-    console.log("selected", selected);
-    dispatch(SetCLAIMSTUB(generateStub(selected)));
+    localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
     setTimeout(() => {
       window.open(
         "/printout/claimstub",
