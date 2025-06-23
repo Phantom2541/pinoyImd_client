@@ -51,7 +51,6 @@ import {
   soa,
 } from "./slices/finance";
 
-import { products, productsGenerics, machines, mentainance, } from "./slices/market";
 import { appointments, quest } from "./slices/diagnostics";
 import {
   products,
@@ -61,7 +60,6 @@ import {
   generics,
   mentainance,
 } from "./slices/market";
-import { appointments } from "./slices/clinical";
 import portal from "./slices/emr/portal";
 
 const store = configureStore({
