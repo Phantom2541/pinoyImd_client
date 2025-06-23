@@ -52,7 +52,7 @@ import {
 } from "./slices/finance";
 
 import { products, productsGenerics, machines, mentainance, } from "./slices/market";
-import { appointments } from "./slices/clinical";
+import { appointments, quest } from "./slices/diagnostics";
 
 const store = configureStore({  
   reducer: {
@@ -102,10 +102,10 @@ const store = configureStore({
     machines,
     mentainance,
     appointments,
+    quest,
     //for templates only
     dragDrop,
     table,
-    procurements
   },
 });
 
