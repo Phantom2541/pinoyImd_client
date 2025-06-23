@@ -189,15 +189,11 @@ const Stub = ({ sale }) => {
 
 export default function ClaimStub() {
   const { claimstub = {} } = useSelector(({ printout }) => printout),
-    { auth } = useSelector(({ auth }) => auth),
     [sale, setSale] = useState({});
 
   useEffect(() => {
-    console.log("claimstub", claimstub);
     setSale(claimstub);
   }, [claimstub]);
-  console.log("claimstub1", claimstub);
-  console.log("auth", auth);
 
   if (!sale || !sale?._id) return <div>Sale is Empty</div>;
 

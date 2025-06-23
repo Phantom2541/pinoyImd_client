@@ -1,7 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  claimstub: JSON.parse(localStorage.getItem("claimStub")) || {},
+  claimstub: (() => {
+    try {
+      const stored = localStorage.getItem("claimStub");
+      return stored ? JSON.parse(stored) : {};
+    } catch (e) {
+      return {};
+    }
+  })(),
 };
 
 const printoutSlice = createSlice({
