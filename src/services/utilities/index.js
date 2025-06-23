@@ -54,14 +54,16 @@ import Female from "../../assets/female.jpg";
 import PresetIMD from "../../assets/iMD.jpg";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
+// Clear's Cache
+import clearSiteData from "./clearSiteData";
 //EXCEL
 import VouchersToExcel from "./export/excel/vouchers";
 import MenusToExcel from "./export/excel/menus";
 import ResecoToExcel from "./export/excel/reseco";
 //PDF
 import MenusToPDF from "./export/pdf/menus";
-const ENDPOINT = "http://localhost:5000";
-// const ENDPOINT = window.location.origin;
+// const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = window.location.origin;
 
 // endpoint ni kuya kevin
 // const ENDPOINT = "https://pinoy-imd-deed6e69cc41.herokuapp.com";
@@ -128,6 +130,8 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  // Cache's Clear
+  clearSiteData,
   //export to excel
   VouchersToExcel,
   MenusToExcel,

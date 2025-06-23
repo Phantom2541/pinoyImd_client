@@ -43,19 +43,19 @@ const patron = [
     icon: "user-tie",
   },
   {
-    name: "Application",
+    name: "Job Application",
     path: "/application",
     icon: "user-tag",
     children: [
       {
-        name: "Resume",
-        path: "/resume",
+        name: "Companies",
+        path: "/companies",
         icon: "user-tag",
         component: Apply,
       },
       {
-        name: "Documents",
-        path: "/documents",
+        name: "Applied",
+        path: "/applied",
         icon: "user-tag",
         component: Documents,
       },

@@ -34,17 +34,22 @@ const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
 const Stub = ({ sale }) => {
   const {
       _id,
-      createdAt,
-      payment,
-      customer,
+      createdAt = "",
+      payment = 0,
+      customer = {},
       privilege,
-      amount,
-      cash,
-      discount,
-      cashier,
+      amount = 0,
+      cash = 0,
+      discount = 0,
+      cashier = {},
       cart = [],
     } = sale,
-    { fullName, address, email, verified = false } = customer;
+    {
+      fullName = {},
+      address = {},
+      email = "",
+      verified = false,
+    } = customer || {};
 
   return (
     <div
@@ -63,7 +68,7 @@ const Stub = ({ sale }) => {
       <Text
         className="mt-2"
         title="Name"
-        value={capitalize(`${fullName.fname} ${fullName.lname}`)}
+        value={capitalize(`${fullName.fname || ""} ${fullName.lname || ""}`)}
       />
       {!verified && (
         <Text title="Email" value={email} isAddress fontSize="0.8rem" />
@@ -87,41 +92,43 @@ const Stub = ({ sale }) => {
           </tr>
         </thead>
         <tbody>
-          {cart?.map((menu, index) => {
-            const { description, abbreviation, packages = [], up } = menu;
+          {Array.isArray(cart) &&
+            cart?.map((menu, index) => {
+              const { description, abbreviation, packages = [], up } = menu;
 
-            return (
-              <tr key={`menu-${index}`}>
-                <td
-                  style={{ fontSize: "17.5px" }}
-                  className="text-left py-0 px-0 text-uppercase"
-                >
-                  {description || abbreviation}
-                  {packages.length > 1 &&
-                    packages.map((id, index) => {
-                      console.log("id", id);
-                      console.log("here", Services?.find(id));
-                      const { name, abbreviation } = Services?.find(id);
+              return (
+                <tr key={`menu-${index}`}>
+                  <td
+                    style={{ fontSize: "17.5px" }}
+                    className="text-left py-0 px-0 text-uppercase"
+                  >
+                    {description || abbreviation}
+                    {Array.isArray(packages) &&
+                      packages.length > 1 &&
+                      packages.map((id, pIndex) => {
+                        const service = Services?.find?.(id);
+                        if (!service) return null;
 
-                      return (
-                        <div
-                          key={`package-${index}`}
-                          className="ml-4 stub-item"
-                        >
-                          -{abbreviation || name}
-                        </div>
-                      );
-                    })}
-                </td>
-                <td
-                  style={{ fontSize: "17.5px" }}
-                  className="text-right py-0 px-0 fw-bold"
-                >
-                  {currency(up)}
-                </td>
-              </tr>
-            );
-          })}
+                        const { name, abbreviation } = service;
+                        return (
+                          <div
+                            key={`package-${pIndex}`}
+                            className="ml-4 stub-item"
+                          >
+                            -{abbreviation || name}
+                          </div>
+                        );
+                      })}
+                  </td>
+                  <td
+                    style={{ fontSize: "17.5px" }}
+                    className="text-right py-0 px-0 fw-bold"
+                  >
+                    {currency(up)}
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </MDBTable>
       <Hr />
@@ -137,7 +144,9 @@ const Stub = ({ sale }) => {
       <Hr />
       <Text
         title="Cashier"
-        value={capitalize(`${cashier.fname.split(" ")[0]} ${cashier.lname}`)}
+        value={capitalize(
+          `${cashier?.fname?.split?.(" ")[0] || ""} ${cashier?.lname || ""}`
+        )}
       />
       <Hr />
       <br />
@@ -154,7 +163,7 @@ const Stub = ({ sale }) => {
       <br />
       <Hr className="mt-1" />
       <div className="mt-2">
-        THIS SHALL SERVE AS YOUR ACKNOWLEDGEMENT RECEIPT AND IS VALID FORs
+        THIS SHALL SERVE AS YOUR ACKNOWLEDGEMENT RECEIPT AND IS VALID FOR
         <b> FIVE(5) </b>
         DAYS
       </div>
@@ -173,19 +182,30 @@ const Stub = ({ sale }) => {
       <h6 style={{ marginTop: "-0.4rem" }} className="text-left">
         Contact Number: <strong>{mobile("09350339777")}</strong>
       </h6>
-      {/* <img width={75} src={Developer.icon} alt="Developer Icon" /> */}
     </div>
   );
 };
 
 export default function ClaimStub() {
-  const [sale, setSale] = useState({ _id: "" });
+  const [sale, setSale] = useState({});
 
   useEffect(() => {
-    setSale(JSON.parse(localStorage.getItem("claimStub")));
+    try {
+      const raw = localStorage.getItem("claimStub");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setSale(parsed);
+      }
+    } catch (error) {
+      console.error("Failed to parse claimStub:", error);
+    }
   }, []);
 
-  if (sale?._id) return <Stub sale={sale} />;
+  if (!sale || !sale?._id) return <div>Sale is Empty</div>;
 
-  return <div>Sale is Empty</div>;
+  return (
+    <>
+      <Stub sale={sale} />
+    </>
+  );
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
@@ -11,17 +11,17 @@ import {
   MDBModalFooter,
   MDBTypography,
 } from "mdbreact";
-import { fullName } from "../../../../../../services/utilities";
 
-import { Access, Policy } from "../../../../../../services/fakeDb";
-import { UPDATE_ACCESS } from "../../../../../../services/redux/slices/assets/persons/personnels";
+import { Access, Policy } from "../../../../../../../services/fakeDb";
+import { UPDATE_ACCESS } from "../../../../../../../services/redux/slices/assets/persons/personnels";
 import {
   ToggleAccessModal,
   UPDATE,
   RESET,
-} from "../../../../../../services/redux/slices/assets/persons/applicants";
+} from "../../../../../../../services/redux/slices/assets/persons/applicants";
 import Bucket from "./bucket";
 import Swal from "sweetalert2";
+import { fullName } from "../../../../../../../services/utilities";
 
 /**
  * AccessModal component manages user access roles through a modal interface.
