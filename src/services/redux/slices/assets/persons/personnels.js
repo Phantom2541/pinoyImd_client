@@ -16,6 +16,7 @@ const initialState = {
   granted: [], // Permissions that have been acquired or activated or stock
   queued: [], // permissions are lined up for activation.
   revoked: [], // Permissions that have been removed or denied
+  company: [],
   updateTracker: {
     isLoading: false,
     fieldName: "",
@@ -53,6 +54,24 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+export const COMPANY = createAsyncThunk(
+  `${url}/company`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/company`, token, params);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 
 export const PAYROLL = createAsyncThunk(
   `${url}/payroll`,
@@ -329,6 +348,22 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+        .addCase(COMPANY.pending, state => {
+              state.isLoading = true;
+              state.isSuccess = false;
+              state.message = "";
+            })
+            .addCase(COMPANY.fulfilled, (state, action) => {
+              const { success, payload } = action.payload;
+              state.company = payload; // Fix typo
+              state.isSuccess = success;
+              state.isLoading = false;
+            })
+            .addCase(COMPANY.rejected, (state, action) => {
+              const { error } = action;
+              state.message = error.message;
+              state.isLoading = false;
+            })
       .addCase(APPLICATION.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

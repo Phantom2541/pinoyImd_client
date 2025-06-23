@@ -51,6 +51,8 @@ import {
   soa,
 } from "./slices/finance";
 
+import { products, productsGenerics, machines, mentainance, } from "./slices/market";
+import { appointments, quest } from "./slices/diagnostics";
 import {
   products,
   productsGenerics,
@@ -112,6 +114,7 @@ const store = configureStore({
     generics,
     mentainance,
     appointments,
+    quest,
     //this is results for viewing the results online
     portal,
     //for templates only
