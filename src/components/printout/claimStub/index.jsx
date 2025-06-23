@@ -93,7 +93,7 @@ const Stub = ({ sale }) => {
           </tr>
         </thead>
         <tbody>
-          {/* {Array.isArray(cart || []) &&
+          {Array.isArray(cart || []) &&
             cart?.map((menu, index) => {
               const { description, abbreviation, packages = [], up } = menu;
 
@@ -129,7 +129,7 @@ const Stub = ({ sale }) => {
                   </td>
                 </tr>
               );
-            })} */}
+            })}
         </tbody>
       </MDBTable>
       <Hr />
