@@ -10,6 +10,7 @@ import {
 import { Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
+import { useSelector } from "react-redux";
 
 const Hr = ({ className = "" }) => (
   <hr
@@ -31,7 +32,7 @@ const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
   );
 };
 
-const Stub = ({ sale }) => {
+const Stub = ({ sale, companyId }) => {
   const {
       _id,
       createdAt = "",
@@ -169,7 +170,10 @@ const Stub = ({ sale }) => {
       </div>
       <Hr />
       <div className="mt-2">
-        <QRCodeCanvas value={`${ENDPOINT}/emr/portal/${_id}`} size={170} />
+        <QRCodeCanvas
+          value={`${ENDPOINT}/emr/portal/${companyId}/${_id}`}
+          size={170}
+        />
       </div>
       <h6>Scan this QR Code </h6>
       <h6 style={{ marginTop: "-0.7rem" }}>To check transaction status </h6>
@@ -187,7 +191,10 @@ const Stub = ({ sale }) => {
 };
 
 export default function ClaimStub() {
-  const [sale, setSale] = useState({});
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { branch = {} } = activePlatform,
+    { companyId = {} } = branch,
+    [sale, setSale] = useState({});
 
   useEffect(() => {
     try {
@@ -205,7 +212,7 @@ export default function ClaimStub() {
 
   return (
     <>
-      <Stub sale={sale} />
+      <Stub sale={sale} companyId={companyId?._id} />
     </>
   );
 }

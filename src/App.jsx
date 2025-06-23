@@ -83,7 +83,7 @@ export default function App() {
       <Route path="/printout/soa" exact component={SOA} />
 
       {/* Diagnostic Portal */}
-      <Route path="/emr/portal/:dealId" exact component={Portal} />
+      <Route path="/emr/portal/:companyId/:dealId" exact component={Portal} />
       <Route path="/subscriber/:companyId" exact component={Subscriber} />
       <Platforms />
     </Switch>

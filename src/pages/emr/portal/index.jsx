@@ -7,7 +7,7 @@ import Footer from "./footer";
 import "./style.css";
 
 const Portal = ({ match }) => {
-  const dealId = match.params.dealId,
+  const { dealId, companyId } = match.params,
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Portal = ({ match }) => {
   }, [dispatch, dealId]);
   return (
     <div className="portal-container bg-white">
-      <Topbar />
+      <Topbar companyId={companyId} />
       <div className="body-content">
         <Body />
       </div>

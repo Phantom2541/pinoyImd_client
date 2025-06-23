@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBContainer,
   MDBRow,
@@ -18,307 +18,226 @@ import LOGO from "./../../assets/iMD.png";
 import Testimonials from "./testimonials";
 import AboutUs from "./aboutUs";
 import Affliated from "./affliated";
+import { useDispatch, useSelector } from "react-redux";
+import { GET_DETAILS } from "../../services/redux/slices/assets/companies";
+import { ENDPOINT } from "../../services/utilities";
 
-export default class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapseID: "",
-      show: false,
-      scrolled: false,
-      flipped: false,
-      menuOpen: false,
-      buttonOpen: false,
-      connectOpen: false,
+const Subscriber = ({ match }) => {
+  const { details } = useSelector(({ companies }) => companies),
+    [show, setShow] = useState(false),
+    [scrolled, setScrolled] = useState(false),
+    [flipped, setFlipped] = useState(false),
+    [menuOpen, setMenuOpen] = useState(false),
+    [connectOpen, setConnectOpen] = useState(false),
+    dispatch = useDispatch(),
+    companyId = match?.params?.companyId;
+
+  useEffect(() => {
+    dispatch(GET_DETAILS({ key: { companyId } }));
+  }, [companyId]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
     };
-  }
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  componentDidMount() {
-    window.addEventListener("scroll", this.handleScroll);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.handleScroll);
-  }
-
-  handleScroll = () => {
-    const isScrolled = window.scrollY > 50;
-    if (isScrolled !== this.state.scrolled) {
-      this.setState({ scrolled: isScrolled });
-    }
-  };
-
-  scrollToSection = (id) => {
+  const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
+  const { name } = details;
 
-  handleFlip = () => {
-    this.setState({ flipped: !this.state.flipped });
-  };
-
-  toggle = () => this.setState({ show: !this.state.show });
-
-  toggleCollapse = (collapseID) => () =>
-    this.setState((prevState) => ({
-      collapseID: prevState.collapseID !== collapseID ? collapseID : "",
-    }));
-
-  toggleMenu = () => {
-    this.setState((prevState) => ({
-      menuOpen: !prevState.menuOpen,
-    }));
-  };
-
-  toggleButtons = () => {
-    this.setState((prevState) => ({ buttonOpen: !prevState.buttonOpen }));
-  };
-
-  toggleConnect = () => {
-    this.setState((prevState) => ({
-      connectOpen: !prevState.connectOpen,
-    }));
-  };
-
-  render() {
-    return (
-      <div id="landing">
-        <div className="homePage-topbar">
+  return (
+    <div id="landing">
+      <div className="homePage-topbar">
+        <div
+          className={`homePage-topbar-animation ${scrolled ? "scrolled" : ""}`}
+        />
+        <div className="homePage-topbar-left">
+          <div className={`homePage-logo ${scrolled ? "scrolled" : ""}`}>
+            <img
+              src={`${ENDPOINT}/public/companies/${name}/logo.png`}
+              alt="logo"
+              onError={(e) => (e.target.src = LOGO)}
+              className="mr-2"
+            />
+            {name}
+          </div>
           <div
-            className={`homePage-topbar-animation ${
-              this.state.scrolled ? "scrolled" : ""
+            className={`homePage-menu ${menuOpen ? "homePage-open" : ""} ${
+              scrolled ? "scrolled" : ""
             }`}
-          ></div>
-          <div className="homePage-topbar-left">
-            <div
-              className={`homePage-logo ${
-                this.state.scrolled ? "scrolled" : ""
-              }`}
+          >
+            {["home", "about", "pioneers", "testimonials", "contact"].map(
+              (id) => (
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection(id);
+                  }}
+                >
+                  {id.charAt(0).toUpperCase() +
+                    id
+                      .slice(1)
+                      .replace("about", "Features")
+                      .replace("contact", "Contact Us")}
+                </a>
+              )
+            )}
+          </div>
+        </div>
+
+        <div className="homePage-topbar-right">
+          <div className="homePage-desktop-buttons">
+            <button
+              className={`homePage-btn-login ${scrolled ? "scrolled" : ""}`}
+              onClick={() => setShow(!show)}
             >
-              <img src={LOGO} alt="logo" />
-              Pinoy iMD
-            </div>
-            <div
-              className={`homePage-menu ${
-                this.state.menuOpen ? "homePage-open" : ""
-              } ${this.state.scrolled ? "scrolled" : ""}`}
+              Login
+            </button>
+            <button
+              className={`homePage-btn-signup ${scrolled ? "scrolled" : ""}`}
+              onClick={() => setFlipped(!flipped)}
             >
-              <a
-                href="#home"
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.scrollToSection("home");
-                }}
-              >
-                Home
-              </a>
-              <a
-                href="#about"
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.scrollToSection("about");
-                }}
-              >
-                Features
-              </a>
-              <a
-                href="#pioneers"
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.scrollToSection("pioneers");
-                }}
-              >
-                Pioneers
-              </a>
-              <a
-                href="#testimonials"
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.scrollToSection("testimonials");
-                }}
-              >
-                Testimonials
-              </a>
-              <a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  this.scrollToSection("contact");
-                }}
-              >
-                Contact Us
-              </a>
-            </div>
+              Sign Up
+            </button>
           </div>
 
-          <div className="homePage-topbar-right">
-            {/* Desktop Buttons */}
-            <div className="homePage-desktop-buttons">
+          <div
+            className={`homePage-hamburger ${
+              menuOpen ? "homePage-active" : ""
+            }`}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <div className={`homePage-bar ${scrolled ? "scrolled" : ""}`} />
+            <div className={`homePage-bar ${scrolled ? "scrolled" : ""}`} />
+            <div className={`homePage-bar ${scrolled ? "scrolled" : ""}`} />
+          </div>
+
+          <div className="homePage-mobile-connect">
+            <button
+              className={`homePage-btn-connect ${
+                connectOpen ? "activeConnect" : ""
+              } ${scrolled ? "scrolled" : ""}`}
+              onClick={() => setConnectOpen(!connectOpen)}
+            >
+              Connect ▾
+            </button>
+            <div
+              className={`homePage-connect-dropdown ${
+                connectOpen ? "activeConnect" : ""
+              }`}
+            >
               <button
-                className={`homePage-btn-login ${
-                  this.state.scrolled ? "scrolled" : ""
-                }`}
-                onClick={this.toggle}
+                className="homePage-btn-login-dropdown"
+                onClick={() => setShow(!show)}
               >
                 Login
               </button>
               <button
-                className={`homePage-btn-signup ${
-                  this.state.scrolled ? "scrolled" : ""
-                }`}
-                onClick={this.handleFlip}
+                className="homePage-btn-signup-dropdown"
+                onClick={() => setFlipped(!flipped)}
               >
                 Sign Up
               </button>
             </div>
-
-            {/* Hamburger for mobile */}
-            <div
-              className={`homePage-hamburger  ${
-                this.state.menuOpen ? "homePage-active" : ""
-              }`}
-              onClick={this.toggleMenu}
-            >
-              <div
-                className={`homePage-bar ${
-                  this.state.scrolled ? "scrolled" : ""
-                }`}
-              ></div>
-              <div
-                className={`homePage-bar ${
-                  this.state.scrolled ? "scrolled" : ""
-                }`}
-              ></div>
-              <div
-                className={`homePage-bar ${
-                  this.state.scrolled ? "scrolled" : ""
-                }`}
-              ></div>
-            </div>
-
-            {/* Mobile Connect Button */}
-            <div className="homePage-mobile-connect">
-              <button
-                className={`homePage-btn-connect ${
-                  this.state.connectOpen ? "activeConnect" : ""
-                } ${this.state.scrolled ? "scrolled" : ""}`}
-                onClick={this.toggleConnect}
-              >
-                Connect ▾
-              </button>
-
-              <div
-                className={`homePage-connect-dropdown ${
-                  this.state.connectOpen ? "activeConnect" : ""
-                }`}
-              >
-                <button
-                  className="homePage-btn-login-dropdown"
-                  onClick={this.toggle}
-                >
-                  Login
-                </button>
-                <button
-                  className="homePage-btn-signup-dropdown"
-                  onClick={this.handleFlip}
-                >
-                  Sign Up
-                </button>
-              </div>
-            </div>
           </div>
         </div>
-        <div
-          className={`homePage-overlay ${this.state.menuOpen ? "active" : ""}`}
-          onClick={() => {
-            this.setState({ menuOpen: false });
-          }}
-        ></div>
-
-        <section id="home">
-          <Login show={this.state.show} toggle={this.toggle} />
-          <MDBView>
-            <MDBMask
-              className="d-flex justify-content-center align-items-center"
-              overlay="gradient"
-            >
-              <div className="homePage-container" id="home">
-                <Register
-                  handleFlip={this.handleFlip}
-                  flipped={this.state.flipped}
-                />
-              </div>
-            </MDBMask>
-          </MDBView>
-        </section>
-        <MDBContainer fluid>
-          <div id="about">
-            <AboutUs />
-          </div>
-          <hr className="mb-5" />
-          <div id="about">
-            <Affliated />
-          </div>
-          <hr className="mb-5" />
-
-          <div id="testimonials">
-            <Testimonials />
-          </div>
-          <hr className="mb-4" />
-
-          <div id="pioneers">
-            <Pioneers />
-          </div>
-
-          <hr className="mb-4" />
-
-          <div id="contact">
-            <ContactUs />
-          </div>
-        </MDBContainer>
-        <MDBFooter className="mt-5 text-center text-md-left">
-          <MDBContainer>
-            <MDBRow>
-              <MDBCol md="12">
-                <ul className="list-unstyled d-flex justify-content-center mb-0 pb-0 pt-2 list-inline">
-                  <li
-                    className="list-inline-item cursor-pointer"
-                    onClick={() =>
-                      window.open("https://www.facebook.com/z3.star/", "_blank")
-                    }
-                  >
-                    <MDBIcon
-                      fab
-                      icon="facebook"
-                      size="2x"
-                      className="white-text p-2 m-2"
-                    />
-                  </li>
-                  <li
-                    className="list-inline-item cursor-pointer"
-                    onClick={() =>
-                      window.open(
-                        "https://www.linkedin.com/in/benedict-pajarillaga-98b864222/",
-                        "_blank"
-                      )
-                    }
-                  >
-                    <MDBIcon
-                      fab
-                      icon="linkedin"
-                      size="2x"
-                      className="white-text p-2 m-2"
-                    />
-                  </li>
-                </ul>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
-          <Copyrights />
-        </MDBFooter>
       </div>
-    );
-  }
-}
+
+      <div
+        className={`homePage-overlay ${menuOpen ? "active" : ""}`}
+        onClick={() => setMenuOpen(false)}
+      />
+
+      <section id="home">
+        <Login show={show} toggle={() => setShow(!show)} />
+        <MDBView>
+          <MDBMask
+            className="d-flex justify-content-center align-items-center"
+            overlay="gradient"
+          >
+            <div className="homePage-container" id="home">
+              <Register
+                handleFlip={() => setFlipped(!flipped)}
+                flipped={flipped}
+              />
+            </div>
+          </MDBMask>
+        </MDBView>
+      </section>
+
+      <MDBContainer fluid>
+        <div id="about">
+          <AboutUs />
+        </div>
+        <hr className="mb-5" />
+        <div id="about">
+          <Affliated />
+        </div>
+        <hr className="mb-5" />
+        <div id="testimonials">
+          <Testimonials />
+        </div>
+        <hr className="mb-4" />
+        <div id="pioneers">
+          <Pioneers />
+        </div>
+        <hr className="mb-4" />
+        <div id="contact">
+          <ContactUs />
+        </div>
+      </MDBContainer>
+
+      <MDBFooter className="mt-5 text-center text-md-left">
+        <MDBContainer>
+          <MDBRow>
+            <MDBCol md="12">
+              <ul className="list-unstyled d-flex justify-content-center mb-0 pb-0 pt-2 list-inline">
+                <li
+                  className="list-inline-item cursor-pointer"
+                  onClick={() =>
+                    window.open("https://www.facebook.com/z3.star/", "_blank")
+                  }
+                >
+                  <MDBIcon
+                    fab
+                    icon="facebook"
+                    size="2x"
+                    className="white-text p-2 m-2"
+                  />
+                </li>
+                <li
+                  className="list-inline-item cursor-pointer"
+                  onClick={() =>
+                    window.open(
+                      "https://www.linkedin.com/in/benedict-pajarillaga-98b864222/",
+                      "_blank"
+                    )
+                  }
+                >
+                  <MDBIcon
+                    fab
+                    icon="linkedin"
+                    size="2x"
+                    className="white-text p-2 m-2"
+                  />
+                </li>
+              </ul>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+        <Copyrights />
+      </MDBFooter>
+    </div>
+  );
+};
+
+export default Subscriber;
