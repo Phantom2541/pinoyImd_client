@@ -82,7 +82,8 @@ export default function ContactUs() {
                 src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
                 alt="logo"
                 onError={(e) => (e.target.src = LOGO)}
-                width={"90px"}
+                width="90px"
+                height="90px"
               />
               <span>{details?.name}</span>
             </div>
