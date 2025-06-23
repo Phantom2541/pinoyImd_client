@@ -10,7 +10,6 @@ import {
 import { Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
-import { useSelector } from "react-redux";
 
 const Hr = ({ className = "" }) => (
   <hr
