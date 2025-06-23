@@ -25,6 +25,7 @@ import Pioneers from "./pioneers";
 import LOGO from "./../../assets/iMD.png";
 import Testimonials from "./testimonials";
 import AboutUs from "./aboutUs";
+import Affliated from "./affliated";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -267,6 +268,10 @@ export default class Home extends React.Component {
           <hr className="mb-5" />
           <div id="about">
             <AboutUs />
+          </div>
+          <hr className="mb-5" />
+          <div id="about">
+            <Affliated />
           </div>
           <hr className="mb-5" />
 
