@@ -37,6 +37,11 @@
   width: 100%;
   height: 180px;
   object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.homePage-AboutUs-card:hover .homePage-AboutUs-card-image img {
+  filter: brightness(75%);
 }
 
 .homePage-AboutUs-card-body {
