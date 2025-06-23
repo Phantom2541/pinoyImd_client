@@ -93,7 +93,7 @@ const Stub = ({ sale }) => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(cart) &&
+          {/* {Array.isArray(cart || []) &&
             cart?.map((menu, index) => {
               const { description, abbreviation, packages = [], up } = menu;
 
@@ -129,7 +129,7 @@ const Stub = ({ sale }) => {
                   </td>
                 </tr>
               );
-            })}
+            })} */}
         </tbody>
       </MDBTable>
       <Hr />
@@ -194,6 +194,8 @@ export default function ClaimStub() {
   useEffect(() => {
     setSale(claimstub);
   }, [claimstub]);
+
+  console.log("sales", sale);
 
   if (!sale || !sale?._id) return <div>Sale is Empty</div>;
 
