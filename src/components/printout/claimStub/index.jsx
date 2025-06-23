@@ -10,6 +10,7 @@ import {
 import { Privileges, Services } from "../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
+import { useSelector } from "react-redux";
 
 const Hr = ({ className = "" }) => (
   <hr
@@ -34,17 +35,22 @@ const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
 const Stub = ({ sale }) => {
   const {
       _id,
-      createdAt,
-      payment,
-      customer,
+      createdAt = "",
+      payment = 0,
+      customer = {},
       privilege,
-      amount,
-      cash,
-      discount,
-      cashier,
+      amount = 0,
+      cash = 0,
+      discount = 0,
+      cashier = {},
       cart = [],
     } = sale,
-    { fullName, address, email, verified = false } = customer;
+    {
+      fullName = {},
+      address = {},
+      email = "",
+      verified = false,
+    } = customer || {};
 
   return (
     <div
@@ -88,7 +94,7 @@ const Stub = ({ sale }) => {
         </thead>
         <tbody>
           {Array.isArray(cart) &&
-            cart.map((menu, index) => {
+            cart?.map((menu, index) => {
               const { description, abbreviation, packages = [], up } = menu;
 
               return (
@@ -140,7 +146,7 @@ const Stub = ({ sale }) => {
       <Text
         title="Cashier"
         value={capitalize(
-          `${cashier.fname?.split?.(" ")[0] || ""} ${cashier.lname || ""}`
+          `${cashier?.fname?.split?.(" ")[0] || ""} ${cashier?.lname || ""}`
         )}
       />
       <Hr />
@@ -182,26 +188,22 @@ const Stub = ({ sale }) => {
 };
 
 export default function ClaimStub() {
-  const [sale, setSale] = useState(null);
+  const { claimstub = {} } = useSelector(({ printout }) => printout),
+    { auth } = useSelector(({ auth }) => auth),
+    [sale, setSale] = useState({});
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("claimStub");
-      console.log("Retrieved claimStub:", raw);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        setSale(parsed);
-      }
-    } catch (error) {
-      console.error("Failed to parse claimStub:", error);
-    }
-  }, []);
+    console.log("claimstub", claimstub);
+    setSale(claimstub);
+  }, [claimstub]);
+  console.log("claimstub1", claimstub);
+  console.log("auth", auth);
 
-  if (!sale || !sale._id) return <div>Sale is Empty</div>;
+  if (!sale || !sale?._id) return <div>Sale is Empty</div>;
 
   return (
     <>
-      <pre
+      {/* <pre
         style={{
           textAlign: "left",
           fontSize: "12px",
@@ -213,7 +215,7 @@ export default function ClaimStub() {
         }}
       >
         {JSON.stringify(sale, null, 2)}
-      </pre>
+      </pre> */}
       <Stub sale={sale} />
     </>
   );
