@@ -21,7 +21,7 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { useSelector } from "react-redux";
-import { ENDPOINT, mobile } from "../../../services/utilities";
+import { ENDPOINT, fullAddress, mobile } from "../../../services/utilities";
 
 // Fix Leaflet default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -70,7 +70,39 @@ export default function ContactUs() {
   };
 
   const { name, subject, email, message } = form;
-  const { contacts = {} } = details || {};
+  const { contacts = {}, address = "" } = details || {};
+
+  const [coordinates, setCoordinates] = useState([15.35, 121.05]); // default lang
+
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+            `San Pedro, General Tinio, Nueva Ecija, Philippines`
+          )}&format=json`,
+          {
+            headers: {
+              "User-Agent": "PinoyIMD/1.0 (your_email@example.com)", // required by Nominatim
+            },
+          }
+        );
+
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        const data = await response.json();
+        if (data.length > 0) {
+          const lat = parseFloat(data[0].lat);
+          const lon = parseFloat(data[0].lon);
+          setCoordinates([lat, lon]);
+        }
+      } catch (error) {
+        console.error("Geocoding error:", error);
+      }
+    };
+
+    fetchCoordinates();
+  }, [address]);
 
   return (
     <section className="d-flex justify-content-center align-content-center">
@@ -90,10 +122,7 @@ export default function ContactUs() {
             <span className="contactUs-quote">{details?.tagline}</span>
             <div className="contactUs-address">
               <MDBIcon fas icon="map-marker-alt" />
-              <span>
-                Labanos Compound, Gulod street, barangay San pedro, General
-                Tinio(Papaya), Nueva Ecija, Philippines
-              </span>
+              <span>{fullAddress(address)}</span>
             </div>
             <div className="contactUs-email">
               <MDBIcon fas icon="envelope" />
@@ -107,7 +136,7 @@ export default function ContactUs() {
           <div className="contactUs-middleSide">
             <div style={{ height: "100%", width: "100%" }}>
               <Map
-                center={userPosition}
+                center={coordinates}
                 zoom={12}
                 style={{ height: "100%", width: "100%", borderRadius: "5px" }}
               >
@@ -115,7 +144,7 @@ export default function ContactUs() {
                   attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={userPosition}>
+                <Marker position={coordinates}>
                   <Popup>
                     Pinoy iMD — Labanos Compound, Gulod street, barangay San
                     pedro, General Tinio(Papaya)
