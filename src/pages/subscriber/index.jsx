@@ -21,6 +21,7 @@ import Affliated from "./affliated";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_DETAILS } from "../../services/redux/slices/assets/companies";
 import { ENDPOINT } from "../../services/utilities";
+import Loading from "./loading";
 
 const Subscriber = ({ match }) => {
   const { details } = useSelector(({ companies }) => companies),
@@ -53,7 +54,15 @@ const Subscriber = ({ match }) => {
   const { name } = details;
 
   return (
-    <div id="landing">
+    <>
+      <Loading />
+    </>
+  );
+};
+
+export default Subscriber;
+{
+  /* <div id="landing">
       <div className="homePage-topbar">
         <div
           className={`homePage-topbar-animation ${scrolled ? "scrolled" : ""}`}
@@ -236,8 +245,5 @@ const Subscriber = ({ match }) => {
         </MDBContainer>
         <Copyrights />
       </MDBFooter>
-    </div>
-  );
-};
-
-export default Subscriber;
+    </div> */
+}
