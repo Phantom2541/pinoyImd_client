@@ -1,24 +1,20 @@
+import React from "react";
 import { ENDPOINT, properFullname } from "../../../../services/utilities";
 
-const Signature = ({ person, label, style = {}, withSignature }) => {
+const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
   return (
     <div style={style} className="text-center position-relative">
       {withSignature && (
-        <>
-          {console.log(
-            `${ENDPOINT}/public/users/${person?.email}/signature.png`
-          )}
-          <img
-            style={{
-              position: "absolute",
-              height: 100,
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-            src={`${ENDPOINT}/public/users/${person?.email}/signature.png`}
-            alt={person?.email || "signature"}
-          />
-        </>
+        <img
+          style={{
+            position: "absolute",
+            height: 100,
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+          src={`${ENDPOINT}/public/users/${person?.email}/signature.png`}
+          alt={person?.email || "signature"}
+        />
       )}
 
       <h5
@@ -45,8 +41,8 @@ export default function Signatories({ signatories = [] }) {
         <Signature
           person={head}
           label="Medical Laboratory Scientist"
-          style={{ marginTop: "20px" }}
-          withSignature
+          style={{ marginTop: "-0.5rem" }}
+          withSignature={head?.withSignature}
         />
         <Signature person={frontdesk} label="Receptionist" isHalf />
       </div>

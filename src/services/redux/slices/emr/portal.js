@@ -62,7 +62,6 @@ const arrangeDiagnostic = (department, diagnostic) => {
         )
           .map(({ abbreviation }) => abbreviation)
           .join(",");
-        // const element = array[index];
         _diagnostic[label] = { ...result, form: element };
       }
     } else {

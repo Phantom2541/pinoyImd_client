@@ -4,28 +4,15 @@ export default function Xray({ fontSize = "16px", task }) {
   const { description = "", impression = "", services } = task;
 
   const formatText = (text) => {
-    return (
-      <p
-        style={{
-          margin: "0 0 5px 0",
-          paddingLeft: "22px",
-        }}
-      >
-        {text.trim()}
-      </p>
-    );
+    return text
+      .replace(/\\n/g, "\n") // handles escaped newlines if needed
+      .split("\n")
+      .map((line, index) => (
+        <p key={index} style={{ margin: "0 0 5px 0", paddingLeft: "22px" }}>
+          {line.trim()}
+        </p>
+      ));
   };
-
-  //   const formatText = (text) => {
-  //   return text
-  //     .replace(/\\n/g, "\n") // handles escaped newlines if needed
-  //     .split("\n")
-  //     .map((line, index) => (
-  //       <p key={index} style={{ margin: "0 0 5px 0", textIndent: "20px" }}>
-  //         {line.trim()}
-  //       </p>
-  //     ));
-  // };
 
   return (
     <div

@@ -1,6 +1,6 @@
 import { Apply, Documents } from "../../../pages/platforms/patron/application";
 import Dashboard from "../../../pages/platforms/patron/dashboard";
-import { Diagnostics } from "../../../pages/platforms/patron/echart";
+import { Diagnostics } from "../../../pages/platforms/patron/emr";
 
 const patron = [
   {
@@ -10,8 +10,8 @@ const patron = [
     component: Dashboard,
   },
   {
-    name: "e-chart",
-    path: "/echart",
+    name: "Electronic Medical Records",
+    path: "/emr",
     icon: "user-tag",
     children: [
       {
@@ -43,19 +43,19 @@ const patron = [
     icon: "user-tie",
   },
   {
-    name: "Application",
+    name: "Job Application",
     path: "/application",
     icon: "user-tag",
     children: [
       {
-        name: "Resume",
-        path: "/resume",
+        name: "Companies",
+        path: "/companies",
         icon: "user-tag",
         component: Apply,
       },
       {
-        name: "Documents",
-        path: "/documents",
+        name: "Applied",
+        path: "/applied",
         icon: "user-tag",
         component: Documents,
       },

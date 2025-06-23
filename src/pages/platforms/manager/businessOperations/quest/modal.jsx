@@ -12,14 +12,15 @@ import {
 import {
   SAVE,
   UPDATE,
-} from "../../../../../services/redux/slices/commerce/pos/services/pos";
+  TOGGLE,
+} from "../../../../../services/redux/slices/diagnostics/clinician/quest";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 export default function Modal() {
-  const { show, toggle, selected, willCreate, isLoading } = useSelector(
-      ({ assurances }) => assurances
+  const { showModal, selected, willCreate, isLoading } = useSelector(
+      ({ quest }) => quest
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
@@ -28,7 +29,7 @@ export default function Modal() {
 
   // Handle update function
   const handleUpdate = () => {
-    toggle();
+    TOGGLE();
 
     // Check if object has changed
     if (isEqual(form, selected)) {
@@ -52,7 +53,7 @@ export default function Modal() {
         data: form,
         token,
       })
-    ).then(() => toggle()); // Close modal after successful save
+    ).then(() => TOGGLE()); // Close modal after successful save
   };
 
   // Handle form submit
@@ -70,7 +71,7 @@ export default function Modal() {
   const handleChange = (key, value) => {
     setForm({
       ...form,
-      [key]: Number(value),
+      [key]:value,
       userId: auth._id,
       branchId: activePlatform.branchId,
     });
@@ -80,10 +81,10 @@ export default function Modal() {
   const handleValue = (key) => form[key] || "";
 
   // Handle modal close
-  const handleClose = () => toggle();
+  const handleClose = () => dispatch(TOGGLE());
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop size="sm">
+    <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="sm">
       <MDBModalHeader
         toggle={handleClose}
         className="light-blue darken-3 white-text"
@@ -100,27 +101,42 @@ export default function Modal() {
           ></MDBTypography>
 
           {/* Input fields */}
+      
           <MDBInput
-            label="Abnormal"
-            type="number"
-            value={handleValue("abnormal")}
+            label="Company"
+            type="text"
+            value={handleValue("company")}
             required
-            onChange={(e) => handleChange("abnormal", e.target.value)}
+            onChange={(e) => {handleChange("company", e.target.value)}}
           />
-          <MDBInput
-            label="High"
-            type="number"
-            value={handleValue("high")}
+              <MDBInput
+            label="Location"
+            type="text"
+            value={handleValue("location")}
             required
-            onChange={(e) => handleChange("high", e.target.value)}
+            onChange={(e) => handleChange("location", e.target.value)}
           />
-          <MDBInput
-            label="Normal"
-            type="number"
-            value={handleValue("normal")}
+                <MDBInput
+            label=""
+            type="datetime-local"
+            value={handleValue("schedule")}
             required
-            onChange={(e) => handleChange("normal", e.target.value)}
+            onChange={(e) => handleChange("schedule", e.target.value)}
           />
+          <label>Staus</label>
+          <select
+          className="form-control form-control"
+          value={handleValue("status")||""}
+          onChange={(e) => handleChange("status", e.target.value)}
+          >
+          <option disable value="">Options
+          </option>
+          <option value="posted">Posted</option>
+          <option value="reschedule">Reschedule</option>
+          <option value="pending">Pending</option>
+
+          </select>
+          
 
           {/* Submit button */}
           <div className="text-center mb-1-half">

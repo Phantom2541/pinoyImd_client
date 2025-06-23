@@ -14,6 +14,7 @@ const initialState = {
   showModal: false,
   willCreate: false,
   willUPDATE: false,
+  details: {}, //this is for subscriber home page
   selected: {},
   /**
    * for pagination
@@ -35,6 +36,23 @@ export const BROWSE = createAsyncThunk(
   ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const GET_DETAILS = createAsyncThunk(
+  `${url}/get_details`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/get_details`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -266,6 +284,20 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(GET_DETAILS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GET_DETAILS.fulfilled, (state, action) => {
+        state.details = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(GET_DETAILS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

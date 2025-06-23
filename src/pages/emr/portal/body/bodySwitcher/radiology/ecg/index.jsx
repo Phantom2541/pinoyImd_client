@@ -4,16 +4,14 @@ export default function ECG({ fontSize = "16px", task }) {
   const { findings = "", services } = task;
 
   const formatText = (text) => {
-    return (
-      <p
-        style={{
-          margin: "0 0 5px 0",
-          paddingLeft: "22px",
-        }}
-      >
-        {text.trim()}
-      </p>
-    );
+    return text
+      .replace(/\\n/g, "\n") // handles escaped newlines if needed
+      .split("\n")
+      .map((line, index) => (
+        <p key={index} style={{ margin: "0 0 5px 0", paddingLeft: "22px" }}>
+          {line.trim()}
+        </p>
+      ));
   };
 
   return (

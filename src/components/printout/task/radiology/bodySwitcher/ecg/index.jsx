@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function ECG({ fontSize = "16px", task }) {
   if (!task) return <div>No task data provided</div>;
 

@@ -1,7 +1,7 @@
 import { useHistory } from "react-router";
 import { MDBCard, MDBCardBody, MDBIcon } from "mdbreact";
 import pinoyImd from "../../../assets/iMD.png";
-const Header = () => {
+const Header = ({ companyId }) => {
   const history = useHistory();
 
   return (
@@ -11,7 +11,7 @@ const Header = () => {
           <MDBIcon
             far
             icon="arrow-alt-circle-left"
-            onClick={() => history.push("/")}
+            onClick={() => history.push(`/subscriber/${companyId}`)}
             style={{ fontSize: "1.8rem", color: "white" }}
           />
           <h5 style={{ fontWeight: 500 }} className="mt-1">

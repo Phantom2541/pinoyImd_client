@@ -8,7 +8,6 @@ import Footer from "./footer";
 import "./style.css";
 const Printout = ({ task }) => {
   const { branchId, remarks, signatories } = task;
-
   return (
     <div className="laboratory-container ">
       <Banner
@@ -29,7 +28,12 @@ const Printout = ({ task }) => {
       </div>
       <div className="laboratory-footer">
         <Signatories signatories={signatories} />
-        <Footer />
+        {task?.isDuplicate && (
+          <h6 style={{ marginTop: "-2rem", fontWeight: 400 }} className="ml-2">
+            Duplicate Copy
+          </h6>
+        )}
+        <Footer dealId={task?._id} />
       </div>
     </div>
   );

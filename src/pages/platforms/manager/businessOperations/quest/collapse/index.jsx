@@ -14,8 +14,11 @@ import { collapse } from "../../../../../../services/utilities";
 
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(
-    ({ services }) => services
+    ({ quest }) => quest
   );
+
+  // console.log("filtered", filtered);
+  
 
   /**
    * Pagination: Calculate the start and end index for the current page
@@ -38,7 +41,8 @@ export default function Body() {
       }}
       fluid
     >
-      {paginatedData?.map((item, index) => {
+      {paginatedData&&
+      paginatedData?.map((item, index) => {
         const actualIndex = startIndex + index; // Get the real index in filtered array
         const { color, border } = collapse.getStyle(
           actualIndex,
@@ -55,7 +59,7 @@ export default function Body() {
               className={border}
               onMouseLeave={() => setDidHoverId(-1)}
               onMouseEnter={() => setDidHoverId(actualIndex)}
-              style={{ borderRadius: "50%" }}
+              style={{ borderRadius: "25%" }}
             >
               <CollapsableHeader
                 item={item}
@@ -72,7 +76,7 @@ export default function Body() {
               isOpen={actualIndex === activeId}
             >
               <MDBCardBody className="pt-2">
-                <CollapsableBody item={item} />
+                <CollapsableBody team={item.team} _id={item._id} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

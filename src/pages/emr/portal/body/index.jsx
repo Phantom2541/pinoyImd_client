@@ -75,7 +75,7 @@ const Body = () => {
               Sections Type:
             </span>
             <select
-              className="form-control"
+              className="form-control text-primary"
               style={{ width: "70%", height: "2rem" }}
               value={activeType}
               onChange={({ target }) => dispatch(SetACTIVE_TYPE(target.value))}
