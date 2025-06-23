@@ -28,6 +28,7 @@ import {
 } from "../../../../../../services/redux/slices/assets/persons/auth";
 import { FailedBanner } from "../../../../../../services/utilities";
 import ImageCropper from "../../../../../../components/imageCropper";
+import { BROWSE } from "../../../../../../services/redux/slices/assets/branches";
 
 const array = new Array(5).fill().map((_, index) => index);
 
@@ -35,9 +36,14 @@ const Banner = () => {
   const { auth, message, isSuccess } = useSelector(({ auth }) => auth);
   const { addToast } = useToasts();
   const [preview, setPreview] = useState("");
-  const { activePlatform, company, token } = useSelector(({ auth }) => auth);
-  const [showImgCropper, setShowImgCropper] = useState(false);
-  const dispatch = useDispatch();
+  const { activePlatform, company, token } = useSelector(({ auth }) => auth),
+    [showImgCropper, setShowImgCropper] = useState(false),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(BROWSE({ token, params: { branchId: activePlatform?.branchId } }));
+    console.log("activePlatform", activePlatform);
+  }, [dispatch, token, activePlatform]);
 
   useEffect(() => {
     setShowImgCropper(false);
@@ -99,6 +105,13 @@ const Banner = () => {
         noteTitle={"Description: "}
       >
         Hover over the banner to upload or download a new one.
+        <div>
+          <select
+            className="form-control form-control"
+            // value={handleValue("branch") || ""}
+            onChange
+          ></select>
+        </div>
       </MDBTypography>
       <MDBCard>
         <MDBCardBody>
@@ -137,7 +150,7 @@ const Banner = () => {
           <MDBRow className="my-2">
             <MDBCol md="6">
               <h6>
-                Name2: <strong>{fullName(auth?.fullName)}</strong>
+                Name: <strong>{fullName(auth?.fullName)}</strong>
               </h6>
               <h6>
                 Age: {getAge(auth?.dob)} | Gender:&nbsp;
@@ -157,7 +170,7 @@ const Banner = () => {
             className="text-uppercase text-center py-0 mb-1"
           >
             <h5 style={{ letterSpacing: "30px" }} className="mb-0 fw-bold">
-              CHEMISTRY
+              CHEMISTRY 2
             </h5>
           </MDBAlert>
           <MDBTable hover bordered responsive className="mb-0 text-center">
