@@ -17,6 +17,7 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 import { Input, Select } from "../../../../../../../components/customizable";
+import { SetCLAIMSTUB } from "../../../../../../../services/redux/slices/printout/printout";
 const Tables = () => {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
@@ -74,13 +75,17 @@ const Tables = () => {
 
   // Sample generateStub function
 
-  const handlePrintout = async (selected) => {
-    localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
-    window.open(
-      "/printout/claimstub",
-      "Claim Stub",
-      "top=100px,left=150px,width=450px,height=850px"
-    );
+  const handlePrintout = (selected) => {
+    // localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
+    console.log("selected", selected);
+    dispatch(SetCLAIMSTUB(generateStub(selected)));
+    setTimeout(() => {
+      window.open(
+        "/printout/claimstub",
+        "Claim Stub",
+        "top=100px,left=150px,width=450px,height=850px"
+      );
+    }, 50);
   };
 
   const handleCashRegister = (selected) => {
