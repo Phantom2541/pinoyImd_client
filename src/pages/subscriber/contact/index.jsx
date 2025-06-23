@@ -20,6 +20,8 @@ import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { useSelector } from "react-redux";
+import { ENDPOINT, mobile } from "../../../services/utilities";
 
 // Fix Leaflet default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -30,7 +32,8 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function ContactUs() {
-  const { addToast } = useToasts(),
+  const { details } = useSelector(({ companies }) => companies),
+    { addToast } = useToasts(),
     [alreadySent, setAlreadySent] = useState(false),
     [form, setForm] = useState({
       name: "",
@@ -67,6 +70,7 @@ export default function ContactUs() {
   };
 
   const { name, subject, email, message } = form;
+  const { contacts = {} } = details || {};
 
   return (
     <section className="d-flex justify-content-center align-content-center">
@@ -74,13 +78,15 @@ export default function ContactUs() {
         <div className="contactUs-top">
           <div className="contactUs-leftSide">
             <div className="contactUs-logo">
-              <img src={LOGO} alt="LOGO" width="90px" />
-              <span>Pinoy iMD</span>
+              <img
+                src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
+                alt="logo"
+                onError={(e) => (e.target.src = LOGO)}
+                width={"90px"}
+              />
+              <span>{details?.name}</span>
             </div>
-            <span className="contactUs-quote">
-              "Built on reliable technology, driven by compassionate service —
-              for every Filipino patient."
-            </span>
+            <span className="contactUs-quote">{details?.tagline}</span>
             <div className="contactUs-address">
               <MDBIcon fas icon="map-marker-alt" />
               <span>
@@ -90,11 +96,11 @@ export default function ContactUs() {
             </div>
             <div className="contactUs-email">
               <MDBIcon fas icon="envelope" />
-              <span> technowiz.tomas.pajarillaga@gmail.com</span>
+              <span> {contacts?.email}</span>
             </div>
             <div className="contactUs-phone">
               <MDBIcon fas icon="phone-alt" />
-              <span> 0935-033-9777</span>
+              <span> {mobile(contacts?.mobile)}</span>
             </div>
           </div>
           <div className="contactUs-middleSide">
