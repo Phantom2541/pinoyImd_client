@@ -7,7 +7,7 @@ import {
   MDBDropdownItem,
 } from "mdbreact";
 import { useSelector } from "react-redux";
-import { PresetImage } from "../../../services/utilities";
+import { PresetImage, clearSiteData } from "../../../services/utilities";
 
 export default function Profile() {
   const { auth, isPatient, image, activePlatform } = useSelector(
@@ -53,7 +53,8 @@ export default function Profile() {
         )}
         <MDBDropdownItem
           onClick={() => {
-            localStorage.clear();
+            clearSiteData();
+            // localStorage.clear();
             window.location.href = "/";
           }}
         >

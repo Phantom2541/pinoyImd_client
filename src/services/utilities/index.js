@@ -54,6 +54,8 @@ import Female from "../../assets/female.jpg";
 import PresetIMD from "../../assets/iMD.jpg";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
+// Clear's Cache
+import clearSiteData from "./clearSiteData";
 //EXCEL
 import VouchersToExcel from "./export/excel/vouchers";
 import MenusToExcel from "./export/excel/menus";
@@ -128,6 +130,8 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  // Cache's Clear
+  clearSiteData,
   //export to excel
   VouchersToExcel,
   MenusToExcel,
