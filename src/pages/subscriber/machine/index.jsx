@@ -64,7 +64,7 @@ const collections = [
 export default function Machines() {
   return (
     <section className="subscriber-aboutUs-section">
-      <h1 className="text-center">Our Machines</h1>
+      <h1 className="text-center">Features</h1>
       <div className="subscriber-aboutUs-container">
         {collections.map((item, index) => (
           <div className="subscriber-AboutUs-card" key={index}>
