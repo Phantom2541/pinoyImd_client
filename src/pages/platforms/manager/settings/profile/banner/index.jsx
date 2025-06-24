@@ -137,7 +137,7 @@ const Banner = () => {
           <MDBRow className="my-2">
             <MDBCol md="6">
               <h6>
-                Name: <strong>{fullName(auth?.fullName)}</strong>
+                Name2: <strong>{fullName(auth?.fullName)}</strong>
               </h6>
               <h6>
                 Age: {getAge(auth?.dob)} | Gender:&nbsp;

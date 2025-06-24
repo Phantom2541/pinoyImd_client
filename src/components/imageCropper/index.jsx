@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./modal";
 
 export default function ImageCropper({
@@ -23,7 +23,6 @@ export default function ImageCropper({
     if (!file) return;
 
     if (!file.type.includes("image")) return;
-
     if (file.type.includes("png")) setExt("png");
 
     const reader = new FileReader();

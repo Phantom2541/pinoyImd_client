@@ -95,6 +95,8 @@ export default function Tasks() {
   // } else if (activePlatform.department === "Radiology" && print) {
   //   return <RadTaskPrintout />;
   // }
+
+  console.log("isLoading", isLoading);
   return (
     <MDBCard narrow>
       <Header />
