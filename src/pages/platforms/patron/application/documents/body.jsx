@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { Policy } from "../../../../../services/fakeDb";
@@ -16,7 +15,7 @@ const Body = () => {
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = collections.slice(startIndex, endIndex); // Get only items for the active page
   return (
-    <MDBTable responsive hover bordered>
+    <MDBTable responsive hover>
       <thead>
         <tr>
           <th>#</th>
@@ -37,7 +36,7 @@ const Body = () => {
               <td key={index}>{index + startIndex + 1}</td>
               <td>
                 <h5>{companyId?.name}</h5>
-                <small>{companyId?.subName}</small>
+                <small className="mt-n2 d-block">{companyId?.subName}</small>
               </td>
               <td>{name} </td>
               <td>{Policy.getPositions(designation)}</td>

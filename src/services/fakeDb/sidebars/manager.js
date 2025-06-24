@@ -47,6 +47,7 @@ import {
   Hotlines,
   Suppliers,
 } from "../../../pages/platforms/cashier";
+import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
 
 const manager = [
   {
@@ -160,6 +161,12 @@ const manager = [
         path: "/payroll",
         icon: "money-bill",
         component: Payrolls,
+      },
+      {
+        name: "Clearance Pay",
+        path: "/clearance-pay",
+        icon: "scroll",
+        component: ClearancePay,
       },
     ],
   },

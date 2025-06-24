@@ -160,7 +160,7 @@ export default function EditableSelect({
             <MDBSelectInput
               className={inputClassName}
               selected={utils.getSelectedText({
-                preValue: isEditable ? fieldData[keyForValue] : preValue,
+                preValue: preValue ? preValue : fieldData[keyForValue],
                 keyForText,
                 keyForValue,
                 getObject,
