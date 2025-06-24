@@ -84,41 +84,44 @@ const physicians = [
 
 export default function Doctors() {
   return (
-    <div className="subscriber-doctors-section">
-      <div className="subscriber-doctors-img">
-        <div className="subscriber-doctors-img-mask"></div>
-      </div>
-      <h1 className="subscriber-doctors-title">Meet Our Doctors</h1>
-      <div className="subscriber-doctors-carousel-container">
-        <Carousel
-          autoPlay
-          infiniteLoop
-          emulateTouch
-          showThumbs={false}
-          showStatus={false}
-          showArrows={false}
-          transitionTime={200}
-        >
-          {physicians.map((physician, index) => (
-            <div className="subscriber-doctors-homeSlideStyle" key={index}>
-              <div className="subscriber-doctors-homeimageContainerStyle">
-                <img
-                  src={physician.image || PHYSICIAN1}
-                  alt={physician.name}
-                  className="subscriber-doctors-homeimageStyle"
-                />
+    <div>
+      <h1 className="subscriber-doctors-title mb-5">Meet Our Doctors</h1>
+      <div className="subscriber-doctors-section">
+        <div className="subscriber-doctors-img">
+          <div className="subscriber-doctors-img-mask"></div>
+        </div>
+
+        <div className="subscriber-doctors-carousel-container">
+          <Carousel
+            autoPlay
+            infiniteLoop
+            emulateTouch
+            showThumbs={false}
+            showStatus={false}
+            showArrows={false}
+            transitionTime={200}
+          >
+            {physicians.map((physician, index) => (
+              <div className="subscriber-doctors-homeSlideStyle" key={index}>
+                <div className="subscriber-doctors-homeimageContainerStyle">
+                  <img
+                    src={physician.image || PHYSICIAN1}
+                    alt={physician.name}
+                    className="subscriber-doctors-homeimageStyle"
+                  />
+                </div>
+                <div className="subscriber-doctors-hometextContainerStyle">
+                  <h1>{physician.name}</h1>
+                  <h5>
+                    {physician.position} - {physician.schedule}
+                  </h5>
+                  <p>"{physician.quote}"</p>
+                  <h6>- {physician.location}</h6>
+                </div>
               </div>
-              <div className="subscriber-doctors-hometextContainerStyle">
-                <h1>{physician.name}</h1>
-                <h5>
-                  {physician.position} - {physician.schedule}
-                </h5>
-                <p>"{physician.quote}"</p>
-                <h6>- {physician.location}</h6>
-              </div>
-            </div>
-          ))}
-        </Carousel>
+            ))}
+          </Carousel>
+        </div>
       </div>
     </div>
   );

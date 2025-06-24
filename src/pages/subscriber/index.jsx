@@ -23,8 +23,6 @@ import { ENDPOINT } from "../../services/utilities";
 import Loading from "./loading";
 import Doctors from "./doctor";
 
-// ...imports remain unchanged
-
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
     [show, setShow] = useState(false),
@@ -56,10 +54,14 @@ const Subscriber = ({ match }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isSignUp]);
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      const yOffset = -110; // adjust this value based on your topbar height
+      const y =
+        element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
 
@@ -68,15 +70,15 @@ const Subscriber = ({ match }) => {
   return (
     <>
       {!isLoading ? (
-        <div id="landing">
-          <div className="homePage-topbar">
+        <div id="subscriber-landing">
+          <div className="subscriber-topbar">
             <div
-              className={`homePage-topbar-animation ${
+              className={`subscriber-topbar-animation ${
                 scrolled ? "scrolled" : ""
               }`}
             />
-            <div className="homePage-topbar-left">
-              <div className={`homePage-logo ${scrolled ? "scrolled" : ""}`}>
+            <div className="subscriber-topbar-left">
+              <div className={`subscriber-logo ${scrolled ? "scrolled" : ""}`}>
                 <img
                   src={`${ENDPOINT}/public/companies/${name}/logo.png`}
                   alt="logo"
@@ -86,47 +88,53 @@ const Subscriber = ({ match }) => {
                 {name}
               </div>
               <div
-                className={`homePage-menu ${menuOpen ? "homePage-open" : ""} ${
-                  scrolled ? "scrolled" : ""
-                }`}
+                className={`subscriber-menu ${
+                  menuOpen ? "subscriber-open" : ""
+                } ${scrolled ? "scrolled" : ""}`}
               >
-                {["home", "about", "pioneers", "testimonials", "contact"].map(
-                  (id) => (
-                    <a
-                      key={id}
-                      href={`#${id}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        scrollToSection(id);
-                      }}
-                    >
-                      {id.charAt(0).toUpperCase() +
-                        id
-                          .slice(1)
-                          .replace("about", "Features")
-                          .replace("contact", "Contact Us")}
-                    </a>
-                  )
-                )}
+                {[
+                  "home",
+                  "machines",
+                  "doctors",
+                  "staffs",
+                  "testimonials",
+                  "contact",
+                ].map((id) => (
+                  <a
+                    key={id}
+                    href={`#${id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection(id);
+                    }}
+                  >
+                    {id.charAt(0).toUpperCase() +
+                      id
+                        .slice(1)
+                        .replace("about", "Features")
+                        .replace("contact", "Contact Us")}
+                  </a>
+                ))}
               </div>
             </div>
 
-            <div className="homePage-topbar-right">
-              <div className="homePage-desktop-buttons">
+            <div className="subscriber-topbar-right">
+              <div className="subscriber-desktop-buttons">
                 <button
-                  className={`homePage-btn-login ${scrolled ? "scrolled" : ""}`}
+                  className={`subscriber-btn-login ${
+                    scrolled ? "scrolled" : ""
+                  }`}
                   onClick={() => setShow(!show)}
                 >
                   Login
                 </button>
                 <button
-                  className={`homePage-btn-signup ${
+                  className={`subscriber-btn-signup ${
                     scrolled ? "scrolled" : ""
                   }`}
                   onClick={() => {
                     setIsSignUp(true);
-                    // setFlipped(!flipped);
-                    window.scrollTo({ top: 0, behavior: "smooth" }); // ito ang scroll to top
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
                   Sign Up
@@ -134,19 +142,25 @@ const Subscriber = ({ match }) => {
               </div>
 
               <div
-                className={`homePage-hamburger ${
-                  menuOpen ? "homePage-active" : ""
+                className={`subscriber-hamburger ${
+                  menuOpen ? "subscriber-active" : ""
                 }`}
                 onClick={() => setMenuOpen(!menuOpen)}
               >
-                <div className={`homePage-bar ${scrolled ? "scrolled" : ""}`} />
-                <div className={`homePage-bar ${scrolled ? "scrolled" : ""}`} />
-                <div className={`homePage-bar ${scrolled ? "scrolled" : ""}`} />
+                <div
+                  className={`subscriber-bar ${scrolled ? "scrolled" : ""}`}
+                />
+                <div
+                  className={`subscriber-bar ${scrolled ? "scrolled" : ""}`}
+                />
+                <div
+                  className={`subscriber-bar ${scrolled ? "scrolled" : ""}`}
+                />
               </div>
 
-              <div className="homePage-mobile-connect">
+              <div className="subscriber-mobile-connect">
                 <button
-                  className={`homePage-btn-connect ${
+                  className={`subscriber-btn-connect ${
                     connectOpen ? "activeConnect" : ""
                   } ${scrolled ? "scrolled" : ""}`}
                   onClick={() => setConnectOpen(!connectOpen)}
@@ -154,18 +168,18 @@ const Subscriber = ({ match }) => {
                   Connect ▾
                 </button>
                 <div
-                  className={`homePage-connect-dropdown ${
+                  className={`subscriber-connect-dropdown ${
                     connectOpen ? "activeConnect" : ""
                   }`}
                 >
                   <button
-                    className="homePage-btn-login-dropdown"
+                    className="subscriber-btn-login-dropdown"
                     onClick={() => setShow(!show)}
                   >
                     Login
                   </button>
                   <button
-                    className="homePage-btn-signup-dropdown"
+                    className="subscriber-btn-signup-dropdown"
                     onClick={() => setFlipped(!flipped)}
                   >
                     Sign Up
@@ -176,7 +190,7 @@ const Subscriber = ({ match }) => {
           </div>
 
           <div
-            className={`homePage-overlay ${menuOpen ? "active" : ""}`}
+            className={`subscriber-overlay ${menuOpen ? "active" : ""}`}
             onClick={() => setMenuOpen(false)}
           />
 
@@ -187,7 +201,7 @@ const Subscriber = ({ match }) => {
                 className="d-flex justify-content-center align-items-center"
                 overlay="gradient"
               >
-                <div className="homePage-container" id="home">
+                <div className="subscriber-container" id="home">
                   <Register
                     handleFlip={() => setFlipped(!flipped)}
                     flipped={flipped}
@@ -197,12 +211,12 @@ const Subscriber = ({ match }) => {
             </MDBView>
           </section>
 
-          <MDBContainer fluid>
-            <div id="about">
+          <MDBContainer fluid className="p-0">
+            <div id="machines">
               <Machines />
             </div>
             <hr className="mb-5" />
-            <div id="about">
+            <div id="doctors">
               <Doctors />
             </div>
             <hr className="mb-5" />
@@ -210,7 +224,7 @@ const Subscriber = ({ match }) => {
               <Testimonials />
             </div>
             <hr className="mb-4" />
-            <div id="pioneers">
+            <div id="staffs">
               <Staffs />
             </div>
             <hr className="mb-4" />

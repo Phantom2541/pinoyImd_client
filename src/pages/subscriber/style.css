@@ -18,7 +18,7 @@
 
 #subscriber-landing #home .view {
   background-size: cover;
-  height: 83vh;
+  height: 90vh;
 }
 
 #subscriber-landing .rgba-gradient {
@@ -47,7 +47,7 @@
 }
 
 .subscriber-container {
-  width: 70%;
+  width: 80%;
   height: auto;
 }
 
@@ -132,7 +132,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 500;
   opacity: 0;
   visibility: hidden;
@@ -278,7 +278,6 @@
   position: absolute;
   top: 50px;
   right: 0;
-  transform: translateX(-10px);
   opacity: 0;
   background-color: var(--background-color);
   border: 1px solid #ccc;
@@ -292,7 +291,6 @@
 }
 
 .subscriber-connect-dropdown.activeConnect {
-  transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
 }
@@ -315,6 +313,12 @@
 .subscriber-connect-dropdown .subscriber-btn-login-dropdown:hover,
 .subscriber-connect-dropdown .subscriber-btn-signup-dropdown:hover {
   background-color: var(--primary-color);
+}
+
+@media (max-width: 760px) {
+  #subscriber-landing #home .view {
+    height: 100vh;
+  }
 }
 
 @media (max-width: 980px) {
