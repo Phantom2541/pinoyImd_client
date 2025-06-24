@@ -50,7 +50,6 @@ export default function Search({
         });
       });
     }
-
     setPatients(_filtered);
   }, [filtered, excludes, excludeKey]);
   /**
@@ -72,8 +71,9 @@ export default function Search({
     () =>
       debounce((searchKey) => {
         const key = formatNameToObj(searchKey);
-        setIsFetching(false);
-        dispatch(GETPATIENTS({ token, key }));
+        dispatch(GETPATIENTS({ token, key })).then(() => {
+          setIsFetching(false);
+        });
       }, 1000),
     [token, dispatch]
   );
@@ -108,6 +108,8 @@ export default function Search({
     dispatch(RESET());
     setDidSearch(false);
   };
+
+  console.log("isFetching", isFetching);
 
   return (
     <div
