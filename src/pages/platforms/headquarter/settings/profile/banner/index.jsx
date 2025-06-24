@@ -34,16 +34,22 @@ const array = new Array(5).fill().map((_, index) => index);
 
 const Banner = () => {
   const { auth, message, isSuccess } = useSelector(({ auth }) => auth);
+  const { collections } = useSelector(({ branches }) => branches);
   const { addToast } = useToasts();
   const [preview, setPreview] = useState("");
   const { activePlatform, company, token } = useSelector(({ auth }) => auth),
     [showImgCropper, setShowImgCropper] = useState(false),
     dispatch = useDispatch();
+  console.log("collections", collections);
+  console.log("activePlatform", activePlatform);
+  console.log("branch", activePlatform?.branch);
+
+  const { branch = {} } = activePlatform;
+  const { companyId = {} } = branch;
 
   useEffect(() => {
-    dispatch(BROWSE({ token, params: { branchId: activePlatform?.branchId } }));
-    console.log("activePlatform", activePlatform);
-  }, [dispatch, token, activePlatform]);
+    dispatch(BROWSE({ token, key: { companyId: companyId._id } }));
+  }, [dispatch, token, companyId]);
 
   useEffect(() => {
     setShowImgCropper(false);
@@ -96,131 +102,148 @@ const Banner = () => {
     link.click();
   };
   return (
-    <div style={{ width: "850px" }} className="mx-auto">
-      <MDBTypography
-        variant="h6"
-        noteColor="warning"
-        className="mt-2 "
-        note
-        noteTitle={"Description: "}
-      >
-        Hover over the banner to upload or download a new one.
-        <div>
-          <select
-            className="form-control form-control"
-            // value={handleValue("branch") || ""}
-            onChange
-          ></select>
-        </div>
-      </MDBTypography>
-      <MDBCard>
-        <MDBCardBody>
-          <MDBView hover={!showImgCropper}>
-            <img
-              src={
-                preview ||
-                `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`
-              }
-              className="img-fluid"
-              alt={company?.name || "Default Banner"}
-              onError={(e) => (e.target.src = FailedBanner)}
-            />
-            <MDBMask overlay="grey-strong d-flex align-items-center">
-              <MDBBtnGroup className="mx-auto">
-                <MDBBtn color="warning" size="sm" onClick={handleDownload}>
-                  <MDBIcon icon="download" />
-                </MDBBtn>
+    <div>
+      {" "}
+      {collections?.map((collection, index) => {
+        const { name } = collection;
+        return (
+          <div style={{ width: "850px" }} className="mx-auto">
+            <MDBTypography
+              variant="h6"
+              noteColor="warning"
+              className="mt-2 "
+              note
+              noteTitle={"Description: "}
+            >
+              Hover over the banner to upload or download a new one.
+            </MDBTypography>
+            <MDBCard>
+              <MDBCardBody>
+                <MDBView hover={!showImgCropper}>
+                  <img
+                    src={
+                      preview ||
+                      `${ENDPOINT}/public/companies/${companyId.name}/${name}/banner.png`
+                    }
+                    className="img-fluid"
+                    alt={companyId?.name || "Default Banner"}
+                    onError={(e) => (e.target.src = FailedBanner)}
+                  />
+                  <MDBMask overlay="grey-strong d-flex align-items-center">
+                    <MDBBtnGroup className="mx-auto">
+                      <MDBBtn
+                        color="warning"
+                        size="sm"
+                        onClick={handleDownload}
+                      >
+                        <MDBIcon icon="download" />
+                      </MDBBtn>
 
-                <ImageCropper
-                  handleUpload={handleUpload}
-                  cropSize={{ width: 850, height: 85 }}
-                  modalSize="xl"
-                  setIsShow={(show) => setShowImgCropper(show)}
-                  isUpload
-                  label={
-                    <>
-                      <MDBIcon icon="upload" />
-                    </>
-                  }
-                  accept={".png"}
-                />
-              </MDBBtnGroup>
-            </MDBMask>
-          </MDBView>
-          <MDBRow className="my-2">
-            <MDBCol md="6">
-              <h6>
-                Name: <strong>{fullName(auth?.fullName)}</strong>
-              </h6>
-              <h6>
-                Age: {getAge(auth?.dob)} | Gender:&nbsp;
-                {auth?.isMale ? "Male" : "Female"}
-              </h6>
-              <h6>Category: Walkin</h6>
-            </MDBCol>
-            <MDBCol md="6">
-              <h6 className="text-md-end">
-                Date: {new Date().toDateString()},&nbsp;
-                {new Date().toLocaleTimeString()}
-              </h6>
-            </MDBCol>
-          </MDBRow>
-          <MDBAlert
-            color="primary"
-            className="text-uppercase text-center py-0 mb-1"
-          >
-            <h5 style={{ letterSpacing: "30px" }} className="mb-0 fw-bold">
-              CHEMISTRY 2
-            </h5>
-          </MDBAlert>
-          <MDBTable hover bordered responsive className="mb-0 text-center">
-            <thead>
-              <tr>
-                <th className="py-0" />
-                <th className="text-center py-0" colSpan={2}>
-                  Conventional Unit
-                </th>
-                <th className="text-center py-0" colSpan={2}>
-                  System International Unit
-                </th>
-              </tr>
-              <tr>
-                <th className="py-0 text-left">Service</th>
-                <th className="py-0">Result</th>
-                <th className="py-0">Reference</th>
-                <th className="py-0">Result</th>
-                <th className="py-0">Reference</th>
-              </tr>
-            </thead>
-            <tbody>
-              {array
-                .sort(() => Math.random() - 0.5)
-                .map((num, rI) => (
-                  <tr key={`presetRow-${rI}`}>
-                    {new Array(5).fill().map((_, cI) => (
-                      <td key={`presetCol-${cI}`}>
-                        <div
-                          style={{
-                            width: cI === 0 && `${num * 50 + 100}px`,
-                          }}
-                        >
-                          <MDBAnimation
-                            type="fadeIn"
-                            infinite
-                            delay={`${rI + cI}00ms`}
-                            duration="5000ms"
-                          >
-                            <MDBProgress animated color="light" value={100} />
-                          </MDBAnimation>
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-            </tbody>
-          </MDBTable>
-        </MDBCardBody>
-      </MDBCard>
+                      <ImageCropper
+                        handleUpload={handleUpload}
+                        cropSize={{ width: 850, height: 85 }}
+                        modalSize="xl"
+                        setIsShow={(show) => setShowImgCropper(show)}
+                        isUpload
+                        label={
+                          <>
+                            <MDBIcon icon="upload" />
+                          </>
+                        }
+                        accept={".png"}
+                      />
+                    </MDBBtnGroup>
+                  </MDBMask>
+                </MDBView>
+                <MDBRow className="my-2">
+                  <MDBCol md="6">
+                    <h6>
+                      Name2: <strong>{fullName(auth?.fullName)}</strong>
+                    </h6>
+                    <h6>
+                      Age: {getAge(auth?.dob)} | Gender:&nbsp;
+                      {auth?.isMale ? "Male" : "Female"}
+                    </h6>
+                    <h6>Category: Walkin</h6>
+                  </MDBCol>
+                  <MDBCol md="6">
+                    <h6 className="text-md-end">
+                      Date: {new Date().toDateString()},&nbsp;
+                      {new Date().toLocaleTimeString()}
+                    </h6>
+                  </MDBCol>
+                </MDBRow>
+                <MDBAlert
+                  color="primary"
+                  className="text-uppercase text-center py-0 mb-1"
+                >
+                  <h5
+                    style={{ letterSpacing: "30px" }}
+                    className="mb-0 fw-bold"
+                  >
+                    CHEMISTRY
+                  </h5>
+                </MDBAlert>
+                <MDBTable
+                  hover
+                  bordered
+                  responsive
+                  className="mb-0 text-center"
+                >
+                  <thead>
+                    <tr>
+                      <th className="py-0" />
+                      <th className="text-center py-0" colSpan={2}>
+                        Conventional Unit
+                      </th>
+                      <th className="text-center py-0" colSpan={2}>
+                        System International Unit
+                      </th>
+                    </tr>
+                    <tr>
+                      <th className="py-0 text-left">Service</th>
+                      <th className="py-0">Result</th>
+                      <th className="py-0">Reference</th>
+                      <th className="py-0">Result</th>
+                      <th className="py-0">Reference</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {array
+                      .sort(() => Math.random() - 0.5)
+                      .map((num, rI) => (
+                        <tr key={`presetRow-${rI}`}>
+                          {new Array(5).fill().map((_, cI) => (
+                            <td key={`presetCol-${cI}`}>
+                              <div
+                                style={{
+                                  width: cI === 0 && `${num * 50 + 100}px`,
+                                }}
+                              >
+                                <MDBAnimation
+                                  type="fadeIn"
+                                  infinite
+                                  delay={`${rI + cI}00ms`}
+                                  duration="5000ms"
+                                >
+                                  <MDBProgress
+                                    animated
+                                    color="light"
+                                    value={100}
+                                  />
+                                </MDBAnimation>
+                              </div>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                  </tbody>
+                </MDBTable>
+              </MDBCardBody>
+            </MDBCard>
+          </div>
+        );
+      })}
     </div>
   );
 };
