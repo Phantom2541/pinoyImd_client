@@ -1,13 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  MDBCol,
-  MDBIcon,
-  MDBInput,
-  MDBRow,
-  MDBBtn,
-  MDBCard,
-  MDBCardBody,
-} from "mdbreact";
+import { useState, useEffect } from "react";
+import { MDBIcon, MDBInput, MDBBtn } from "mdbreact";
 import "./style.css";
 import { useToasts } from "react-toast-notifications";
 // import GoogleMapReact from "google-map-react";
@@ -47,9 +39,6 @@ export default function ContactUs() {
       subject: "",
       message: "",
     });
-
-  // For geolocation
-  const userPosition = [15.35, 121.05];
 
   useEffect(() => {
     const feedback = localStorage.getItem("feedback");

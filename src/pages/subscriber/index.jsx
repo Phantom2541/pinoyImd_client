@@ -36,7 +36,7 @@ const Subscriber = ({ match }) => {
 
   useEffect(() => {
     dispatch(GET_DETAILS({ key: { companyId } }));
-  }, [companyId]);
+  }, [companyId, dispatch]);
 
   useEffect(() => {
     const handleScroll = () => {
