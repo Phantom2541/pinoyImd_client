@@ -21,4 +21,18 @@ const billingAddress = (address) => {
   } `;
 };
 
-export { billingAddress, fullAddress };
+const cleanLocationName = (location) =>
+  location
+    .replace(/\(.*?\)/g, "") // remove (Pob.) or any ()
+    .replace(/\bI{1,3}\b$/g, "") // remove Roman numerals I, II, III at end
+    .trim();
+
+const LatitudeAddress = (address) => {
+  var { barangay, city, province } = address;
+
+  return `${`${cleanLocationName(barangay)},`}${cleanLocationName(
+    city
+  )}, ${cleanLocationName(province)}, philippines`.replace(/^\s+|\s+$/gm, "");
+};
+
+export { billingAddress, fullAddress, LatitudeAddress };

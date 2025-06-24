@@ -21,7 +21,13 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { useSelector } from "react-redux";
-import { ENDPOINT, fullAddress, mobile } from "../../../services/utilities";
+import {
+  ENDPOINT,
+  fullAddress,
+  LatitudeAddress,
+  mobile,
+} from "../../../services/utilities";
+import { capitalize } from "lodash";
 
 // Fix Leaflet default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -79,7 +85,7 @@ export default function ContactUs() {
       try {
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-            `San Pedro, General Tinio, Nueva Ecija, Philippines`
+            LatitudeAddress(address)
           )}&format=json`,
           {
             headers: {
@@ -145,10 +151,7 @@ export default function ContactUs() {
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <Marker position={coordinates}>
-                  <Popup>
-                    Pinoy iMD — Labanos Compound, Gulod street, barangay San
-                    pedro, General Tinio(Papaya)
-                  </Popup>
+                  <Popup>{capitalize(fullAddress(address))}</Popup>
                 </Marker>
               </Map>
             </div>
