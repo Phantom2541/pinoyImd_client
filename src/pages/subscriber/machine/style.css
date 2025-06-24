@@ -1,15 +1,25 @@
-.homePage-aboutUs-section {
+:root {
+  --primary-color: #1266f1;
+  --seconday-color: #5c8dfb;
+  --accent-color: #f1c40f; /* Main accent */
+  --accent-alt: #2ecc71; /* Suggested: Emerald Green */
+  --background-color: #f9fafb;
+  --text-black: #212529;
+  --text-white: #f9fafb;
+}
+
+.subscriber-aboutUs-section {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.homePage-aboutUs-section h1 {
+.subscriber-aboutUs-section h1 {
   font-weight: bold;
 }
 
-.homePage-aboutUs-container {
+.subscriber-aboutUs-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   width: 70%;
@@ -19,8 +29,8 @@
   align-items: stretch;
 }
 
-.homePage-AboutUs-card {
-  background-color: #fff;
+.subscriber-AboutUs-card {
+  background-color: var(--background-color);
   border-radius: 10px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -29,36 +39,36 @@
   transition: transform 0.2s ease;
 }
 
-.homePage-AboutUs-card:hover {
+.subscriber-AboutUs-card:hover {
   transform: translateY(-5px);
 }
 
-.homePage-AboutUs-card-image img {
+.subscriber-AboutUs-card-image img {
   width: 100%;
   height: 180px;
   object-fit: cover;
   transition: all 0.3s ease;
 }
 
-.homePage-AboutUs-card:hover .homePage-AboutUs-card-image img {
+.subscriber-AboutUs-card:hover .subscriber-AboutUs-card-image img {
   filter: brightness(75%);
 }
 
-.homePage-AboutUs-card-body {
+.subscriber-AboutUs-card-body {
   padding: 15px 20px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
-.homePage-AboutUs-card-title {
+.subscriber-AboutUs-card-title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #00796b;
+  color: var(--primary-color);
   margin-bottom: 10px;
 }
 
-.homePage-AboutUs-card-description {
+.subscriber-AboutUs-card-description {
   font-size: 0.95rem;
   font-weight: 400;
   color: #444;

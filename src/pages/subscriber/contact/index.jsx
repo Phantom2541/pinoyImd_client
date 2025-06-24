@@ -178,16 +178,13 @@ export default function ContactUs() {
               />
 
               <div className="text-right">
-                <MDBBtn disabled={alreadySent} type="submit" color="primary">
+                <MDBBtn disabled={alreadySent} type="submit" color="info">
                   {alreadySent ? "E-mail Sent" : "Send"}
                 </MDBBtn>
               </div>
             </form>
           </div>
         </div>
-
-        <div></div>
-        <div></div>
       </div>
     </section>
   );

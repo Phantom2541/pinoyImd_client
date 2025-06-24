@@ -28,12 +28,13 @@ import { Carousel } from "react-responsive-carousel";
 export default function Register({ handleFlip, flipped }) {
   const [isMale, setIsMale] = useState(false);
   const [isLocked, setIsLocked] = useState({
-      password: true,
-      confirmPassword: true,
-    }),
-    { message, isLoading, isSuccess } = useSelector(({ users }) => users),
-    [suffix, setSuffix] = useState("NONE"),
-    dispatch = useDispatch();
+    password: true,
+    confirmPassword: true,
+  });
+
+  const { message, isLoading, isSuccess } = useSelector(({ users }) => users);
+  const [suffix, setSuffix] = useState("NONE");
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,12 +73,12 @@ export default function Register({ handleFlip, flipped }) {
   return (
     <MDBAnimation reveal type="fadeIn">
       <div
-        className={`homePage-flip-container ${
-          flipped ? "homePage-flipped" : ""
+        className={`subscriber-flip-container ${
+          flipped ? "subscriber-flipped" : ""
         }`}
       >
-        <div className="homePage-flip-card">
-          <div className="homePage-flip-card-front">
+        <div className="subscriber-flip-card">
+          <div className="subscriber-flip-card-front">
             <Carousel
               autoPlay
               infiniteLoop
@@ -85,60 +86,46 @@ export default function Register({ handleFlip, flipped }) {
               showStatus={false}
               showArrows={false}
             >
-              <div className="homeSlideStyle">
-                <div className="homeSlideContent">
-                  <div className="hometextContainerStyle">
-                    <h1>Your Complete Diagnostic Information System</h1>
-                    <h5>Simplified, Integrated, Scalable.</h5>
-                    <p>
-                      Empowering medical providers with seamless laboratory
-                      management, advanced reporting, and patient-centric care.
-                    </p>
-                  </div>
-                  <div className="homeimageContainerStyle">
-                    <img src={IMG1} alt="Slide 1" className="homeimageStyle" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="homeSlideStyle">
-                <div className="homeSlideContent">
-                  <div className="hometextContainerStyle">
-                    <h1>Seamless Device Integration</h1>
-                    <h5>Connect Your Laboratory Analyzers with Ease.</h5>
-                    <p>
-                      Full compatibility with hematology, chemistry, and
-                      immunology analyzers. HL7-ready for EMR and LIS
-                      integration.
-                    </p>
-                  </div>
-                  <div className="homeimageContainerStyle">
-                    <img src={IMG2} alt="Slide 2" className="homeimageStyle" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="homeSlideStyle">
-                <div className="homeSlideContent">
-                  <div className="hometextContainerStyle">
-                    <h1>Built for Clinics, Hospitals, and Mobile Units</h1>
-                    <h5>
-                      From small clinics to nationwide chains — scalable as you
-                      grow.
-                    </h5>
-                    <p>
-                      Manage patient records, results, billing, inventory, and
-                      mobile laboratory operations — all in one platform.
-                    </p>
-                  </div>
-                  <div className="homeimageContainerStyle">
-                    <img src={IMG3} alt="Slide 3" className="homeimageStyle" />
+              {[IMG1, IMG2, IMG3].map((img, i) => (
+                <div className="subscriber-slide-style" key={i}>
+                  <div className="subscriber-slide-content">
+                    <div className="subscriber-text-container-style">
+                      <h1>
+                        {i === 0
+                          ? "Your Complete Diagnostic Information System"
+                          : i === 1
+                          ? "Seamless Device Integration"
+                          : "Built for Clinics, Hospitals, and Mobile Units"}
+                      </h1>
+                      <h5>
+                        {i === 0
+                          ? "Simplified, Integrated, Scalable."
+                          : i === 1
+                          ? "Connect Your Laboratory Analyzers with Ease."
+                          : "From small clinics to nationwide chains — scalable as you grow."}
+                      </h5>
+                      <p>
+                        {i === 0
+                          ? "Empowering medical providers with seamless laboratory management, advanced reporting, and patient-centric care."
+                          : i === 1
+                          ? "Full compatibility with hematology, chemistry, and immunology analyzers. HL7-ready for EMR and LIS integration."
+                          : "Manage patient records, results, billing, inventory, and mobile laboratory operations — all in one platform."}
+                      </p>
+                    </div>
+                    <div className="subscriber-image-container-style">
+                      <img
+                        src={img}
+                        alt={`Slide ${i + 1}`}
+                        className="subscriber-image-style"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </Carousel>
           </div>
-          <div className="homePage-flip-card-back">
+
+          <div className="subscriber-flip-card-back">
             <div className="d-flex align-items-center">
               <div>
                 <h2 style={{ fontWeight: "400" }}>Patient Registration Form</h2>
@@ -156,7 +143,6 @@ export default function Register({ handleFlip, flipped }) {
                         name="fname"
                         required
                       />
-
                       <MDBInput
                         label="Middle Name"
                         icon="user"
@@ -180,7 +166,7 @@ export default function Register({ handleFlip, flipped }) {
                           <MDBSelect
                             getValue={(value) => setSuffix(value[0])}
                             label={"Suffix"}
-                            className={`colorful-select dropdown-primary  hidden-md-down ml-3`}
+                            className="colorful-select dropdown-primary hidden-md-down ml-3"
                           >
                             <MDBSelectInput name="suffix" selected={`NONE`} />
                             <MDBSelectOptions>
@@ -211,6 +197,7 @@ export default function Register({ handleFlip, flipped }) {
                         />
                       </div>
                     </MDBCol>
+
                     <MDBCol md="6">
                       <MDBInput
                         label="E-mail Address"
@@ -281,14 +268,14 @@ export default function Register({ handleFlip, flipped }) {
               </div>
               <img
                 src={REGISTRATIONIMG}
-                className="homePage-register-img"
+                className="subscriber-register-img"
                 alt="registrationImg"
               />
             </div>
           </div>
         </div>
       </div>
-      <div className="homeSlideContainer"></div>
+      <div className="subscriber-slide-container"></div>
     </MDBAnimation>
   );
 }

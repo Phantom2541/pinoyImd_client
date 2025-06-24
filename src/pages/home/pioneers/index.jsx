@@ -16,7 +16,7 @@ export default function Pioneers() {
   const RICO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rico.png`;
   const MAGTALAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kevin.jpg`;
   const NICK = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/nick.jpg`;
-  // const LIMBO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/limbo.jpg`;
+  const MELUIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/meluin.jpg`;
 
   const PIONEERS = [
     {
@@ -75,7 +75,7 @@ export default function Pioneers() {
       name: "Dan Meluin M. Palaris",
       role: "Junior Software Engineer",
       quote: "Software grows, evolves, and never finishes.",
-      img: DEFAULT,
+      img: MELUIN,
     },
   ];
   return (
