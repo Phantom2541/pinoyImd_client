@@ -125,7 +125,7 @@ export default function CollapseTable({
     setDep(Policy.getDepname(e.target.value));
     setFilteredPositions(Policy.getPositionsByDepartmentName(selectedDeptCode));
   };
-
+  const isHonorarium = employment?.soe === "Honorarium";
   return (
     <>
       <MDBRow>
@@ -270,17 +270,31 @@ export default function CollapseTable({
         </MDBCol>
 
         {/* Rate */}
-        <MDBCol md={3}>
+        <MDBCol md={!isHonorarium ? 3 : 4}>
           <h5>Rate</h5>
           <hr />
           {[
-            {
-              label: "Monthly Rate",
-              name: "rateMonthly",
-              value: rate?.monthly,
-            },
-            { label: "COLA", name: "rateCola", value: rate?.cola },
-            { label: "Daily Rate", name: "rateDaily", value: rate?.daily },
+            ...(!isHonorarium
+              ? [
+                  {
+                    label: "Monthly Rate",
+                    name: "rateMonthly",
+                    value: rate?.monthly,
+                  },
+                  { label: "COLA", name: "rateCola", value: rate?.cola },
+                  {
+                    label: "Daily Rate",
+                    name: "rateDaily",
+                    value: rate?.daily,
+                  },
+                ]
+              : [
+                  {
+                    label: "Incentive Rate",
+                    name: "incentive",
+                    value: rate?.incentive,
+                  },
+                ]),
           ].map((field) => (
             <EditableField
               key={field.name}
@@ -307,56 +321,62 @@ export default function CollapseTable({
         </MDBCol>
 
         {/* Contributions */}
-        <MDBCol md={2}>
-          <h5>Contribution</h5>
-          <hr />
-          {[
-            { label: "PH", name: "contributionPh", value: contribution?.ph },
-            {
-              label: "Pag Ibig",
-              name: "contributionPi",
-              value: contribution?.pi,
-            },
-            { label: "SSS", name: "contributionSss", value: contribution?.sss },
-          ].map((field) => (
-            <EditableField
-              key={field.name}
-              label={field.label}
-              fieldName={field.name}
-              {...{
-                editField,
-                setEditField,
-                errors,
-                saveField,
-                handleCancel,
-                value: field.value,
-              }}
-            >
-              <input
-                type="number"
-                {...register(field.name)}
-                className={`form-control form-control-sm ${
-                  errors[field.name] ? "is-invalid" : ""
-                }`}
-              />
-            </EditableField>
-          ))}
-        </MDBCol>
+        {!isHonorarium && (
+          <MDBCol md={2}>
+            <h5>Contribution</h5>
+            <hr />
+            {[
+              { label: "PH", name: "contributionPh", value: contribution?.ph },
+              {
+                label: "Pag Ibig",
+                name: "contributionPi",
+                value: contribution?.pi,
+              },
+              {
+                label: "SSS",
+                name: "contributionSss",
+                value: contribution?.sss,
+              },
+            ].map((field) => (
+              <EditableField
+                key={field.name}
+                label={field.label}
+                fieldName={field.name}
+                {...{
+                  editField,
+                  setEditField,
+                  errors,
+                  saveField,
+                  handleCancel,
+                  value: field.value,
+                }}
+              >
+                <input
+                  type="number"
+                  {...register(field.name)}
+                  className={`form-control form-control-sm ${
+                    errors[field.name] ? "is-invalid" : ""
+                  }`}
+                />
+              </EditableField>
+            ))}
+          </MDBCol>
+        )}
 
         {/* Access */}
-        <MDBCol md={3}>
-          <div className="d-flex justify-content-between align-items-center">
+        <MDBCol md={!isHonorarium ? 3 : 4}>
+          <div className="d-flex  align-items-center">
             <h5 className="mb-0">Access</h5>
             {access.length > 0 && (
               <MDBIcon
                 icon="pencil-alt"
-                className="mt-2 cursor-pointer"
+                className="cursor-pointer ml-2"
                 onClick={handleOnHotSeat}
-                style={{ fontSize: "1.2rem", color: "blue" }}
+                style={{ fontSize: "1rem", color: "blue" }}
               />
             )}
           </div>
-          <hr className="mt-2 mb-3" />
+          <hr />
           {access.length > 0 ? (
             access.map((acc, index) => (
               <MDBBadge

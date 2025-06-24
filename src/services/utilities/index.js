@@ -62,6 +62,9 @@ import MenusToExcel from "./export/excel/menus";
 import ResecoToExcel from "./export/excel/reseco";
 //PDF
 import MenusToPDF from "./export/pdf/menus";
+//status
+import employment from "../fakeDb/employment";
+
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -128,6 +131,8 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  //status of employment
+  employment,
   //address formatter,
   fullAddress,
   billingAddress,

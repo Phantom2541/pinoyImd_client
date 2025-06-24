@@ -257,7 +257,7 @@ export const reduxSlice = createSlice({
 
           const branch = branches.find((branch) => branch._id === branchId);
           const { contract = { designation: -1 } } = branch || {};
-          const department = Policy.getDepartment(contract.designation) || {};
+          const department = Policy.getDepartment(contract.designation) || "";
           const role = Policy.getPosition(contract.designation) || {};
           const activePlatform = {
             ...auth.activePlatform,
@@ -350,7 +350,7 @@ export const reduxSlice = createSlice({
             .map((a) => a.platform);
 
           const { contract = { designation: -1 } } = branch || {};
-          const department = Policy.getDepartment(contract.designation) || {};
+          const department = Policy.getDepartment(contract.designation) || "";
           const role = Policy.getPosition(contract.designation) || {};
           state.activePlatform = {
             ...activePlatform,
