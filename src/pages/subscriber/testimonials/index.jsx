@@ -153,21 +153,21 @@ export default function Testimonials() {
   const displayValue = hover || rating;
   return (
     <>
-      <h1 className="homePage-testimonials-title mb-5">Testimonials</h1>
-      <div className="homPage-testimonials-section">
-        <div className="homPage-testimonials-container">
-          <div className="homePage-testimonials-text">
+      <h1 className="subscriber-testimonials-title mb-5">Testimonials</h1>
+      <div className="subscriber-testimonials-section">
+        <div className="subscriber-testimonials-container">
+          <div className="subscriber-testimonials-text">
             <h1>We believe in the power of community</h1>
             <p>
-              Our goal is to create a product and service that your're satisfied
-              with and use it every day. This is why we're constantly working on
-              our services to make it better every day and really listen to what
-              our users has to say.
+              Our goal is to create a product and service that you're satisfied
+              with and use every day. This is why we're constantly working on
+              our services to make them better and really listen to what our
+              users have to say.
             </p>
           </div>
 
-          <div className="homePage-testimonials-sliderContainer-responsive">
-            <div className="homePage-testiminials-sliderContainer">
+          <div className="subscriber-testimonials-sliderContainer-responsive">
+            <div className="subscriber-testimonials-sliderContainer">
               <Swiper
                 modules={[Autoplay]}
                 direction="vertical"
@@ -185,15 +185,15 @@ export default function Testimonials() {
               >
                 {testimonials.map((t, index) => (
                   <SwiperSlide key={index}>
-                    <div className="homePage-testiminials-sliderCard">
+                    <div className="subscriber-testimonials-sliderCard">
                       <img src={AVATAR} alt={t.name} />
-                      <div className="homePage-testimonials-review">
+                      <div className="subscriber-testimonials-review">
                         <div
-                          className="homePage-testimonials-star-rating"
+                          className="subscriber-testimonials-star-rating"
                           onMouseLeave={handleMouseLeave}
                         >
                           {[0, 1, 2, 3, 4].map((_, index) => {
-                            let className = "homePage-testimonials-star";
+                            let className = "subscriber-testimonials-star";
                             if (displayValue >= index + 1) {
                               className += " full";
                             } else if (displayValue >= index + 0.5) {
@@ -212,10 +212,10 @@ export default function Testimonials() {
                             );
                           })}
                         </div>
-                        <span className="homePage-testimonials-review-text">
+                        <span className="subscriber-testimonials-review-text">
                           "{t.review}"
                         </span>
-                        <span className="homePage-testimonials-review-name">
+                        <span className="subscriber-testimonials-review-name">
                           - {t.name}
                         </span>
                       </div>
@@ -224,7 +224,8 @@ export default function Testimonials() {
                 ))}
               </Swiper>
             </div>
-            <div className="homePage-testiminials-sliderContainer">
+
+            <div className="subscriber-testimonials-sliderContainer">
               <Swiper
                 modules={[Autoplay]}
                 direction="vertical"
@@ -243,15 +244,15 @@ export default function Testimonials() {
               >
                 {testimonials.map((t, index) => (
                   <SwiperSlide key={index}>
-                    <div className="homePage-testiminials-sliderCard">
+                    <div className="subscriber-testimonials-sliderCard">
                       <img src={AVATAR} alt={t.name} />
-                      <div className="homePage-testimonials-review">
+                      <div className="subscriber-testimonials-review">
                         <div
-                          className="homePage-testimonials-star-rating"
+                          className="subscriber-testimonials-star-rating"
                           onMouseLeave={handleMouseLeave}
                         >
                           {[0, 1, 2, 3, 4].map((_, index) => {
-                            let className = "homePage-testimonials-star";
+                            let className = "subscriber-testimonials-star";
                             if (displayValue >= index + 1) {
                               className += " full";
                             } else if (displayValue >= index + 0.5) {
@@ -270,10 +271,10 @@ export default function Testimonials() {
                             );
                           })}
                         </div>
-                        <span className="homePage-testimonials-review-text">
+                        <span className="subscriber-testimonials-review-text">
                           "{t.review}"
                         </span>
-                        <span className="homePage-testimonials-review-name">
+                        <span className="subscriber-testimonials-review-name">
                           - {t.name}
                         </span>
                       </div>

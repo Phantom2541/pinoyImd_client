@@ -1,3 +1,13 @@
+:root {
+  --primary-color: #1266f1;
+  --seconday-color: #5c8dfb;
+  --accent-color: #f1c40f; /* Main accent */
+  --accent-alt: #2ecc71; /* Suggested: Emerald Green */
+  --background-color: #f9fafb;
+  --text-black: #212529;
+  --text-white: #f9fafb;
+}
+
 .contactUs-container {
   display: flex;
   flex-direction: row;
@@ -7,7 +17,7 @@
   height: 450px;
   gap: 10px 25px;
   padding: 25px 60px;
-  background-color: rgba(0, 121, 107, 1);
+  background-color: var(--primary-color);
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   flex-wrap: nowrap;
@@ -24,7 +34,7 @@
 
 .contactUs-leftSide {
   flex: 1;
-  color: white;
+  color: var(--text-white);
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -66,7 +76,7 @@
 .contactUs-emailUs {
   font-size: 2rem;
   font-weight: 500;
-  color: white;
+  color: var(--text-white);
 }
 
 .contactUs-quote {
