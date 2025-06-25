@@ -54,6 +54,7 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+
 export const COMPANY = createAsyncThunk(
   `${url}/company`,
   ({ token, params }, thunkAPI) => {
@@ -72,12 +73,11 @@ export const COMPANY = createAsyncThunk(
   }
 );
 
-
 export const PAYROLL = createAsyncThunk(
   `${url}/payroll`,
-  ({ token, branchId }, thunkAPI) => {
+  ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/payroll`, token, { branchId });
+      return axioKit.universal(`${url}/payroll`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -228,8 +228,6 @@ export const reduxSlice = createSlice({
       const index = state?.collections?.findIndex(
         ({ user }) => user?._id === payload?.particular
       );
-      console.log("payroll user", payload);
-      console.log("index", index);
       state.collections[index]?.payroll.push(payload);
     },
     SETOnHotSEAT: (state, { payload }) => {
@@ -268,6 +266,9 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.willCreate = false;
       state.showModal = true;
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
     },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
@@ -333,7 +334,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload.sort((a, b) => {
+        state.collections = state.filtered = payload.sort((a, b) => {
           const aDesignation = String(a?.contract?.designation || "");
           const bDesignation = String(b?.contract?.designation || "");
           return aDesignation.localeCompare(bDesignation);
@@ -348,22 +349,22 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-        .addCase(COMPANY.pending, state => {
-              state.isLoading = true;
-              state.isSuccess = false;
-              state.message = "";
-            })
-            .addCase(COMPANY.fulfilled, (state, action) => {
-              const { success, payload } = action.payload;
-              state.company = payload; // Fix typo
-              state.isSuccess = success;
-              state.isLoading = false;
-            })
-            .addCase(COMPANY.rejected, (state, action) => {
-              const { error } = action;
-              state.message = error.message;
-              state.isLoading = false;
-            })
+      .addCase(COMPANY.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(COMPANY.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        state.company = payload; // Fix typo
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(COMPANY.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
       .addCase(APPLICATION.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -454,6 +455,7 @@ export const reduxSlice = createSlice({
 
       .addCase(UPDATE.pending, (state) => {
         state.updateTracker.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -467,6 +469,7 @@ export const reduxSlice = createSlice({
         state.collections[index] = { ...oldPersonnel, ...payload };
         state.message = success;
         state.isSuccess = true;
+        state.formSubmitted = false;
         state.updateTracker = {
           fieldName: "",
           isLoading: false,
@@ -474,6 +477,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
+        state.formSubmitted = true;
         state.message = error.message;
         state.isUpdating = false;
       });

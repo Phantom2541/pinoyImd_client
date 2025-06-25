@@ -12,7 +12,6 @@ const Header = () => {
   const { collections } = useSelector(({ generics }) => generics),
     dispatch = useDispatch();
 
-  //initial values
   useEffect(() => {
     if (token) {
       dispatch(
@@ -28,11 +27,12 @@ const Header = () => {
       cascade
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
+      <div className="d-flex justify-items-center" style={{ width: "22rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
           {collections?.length} Generics
         </span>
       </div>
+
       <div>
         <div className="text-right d-flex items-center">
           <Search
@@ -47,7 +47,8 @@ const Header = () => {
         </div>
       </div>
     </MDBView>
+
+    // return() only return one container/tags(?) so you cant have a <div> outside of the mdbview since you will be returning two containers on the export side
   );
 };
-
 export default Header;

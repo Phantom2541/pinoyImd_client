@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -21,7 +21,9 @@ export default function Modal() {
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
+  useEffect(() => {
+    if (selected) setForm(selected);
+  }, [selected]);
   // Handle update function
   const handleUpdate = () => {
     TOGGLE();
@@ -86,7 +88,7 @@ export default function Modal() {
   return (
     <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
       <MDBModalHeader
-        toggle={handleClose}
+        toggle={() => handleClose()}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />

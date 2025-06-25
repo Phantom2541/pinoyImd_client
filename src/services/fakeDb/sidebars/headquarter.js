@@ -4,7 +4,9 @@ import {
   Physicians,
   Procurments as Procurement,
   Staffs,
+  Hmo,
 } from "../../../pages/platforms/headquarter/file201";
+import { banner } from "../../../pages/platforms/headquarter/settings/profile";
 import {
   Outsources,
   // Insources,
@@ -16,7 +18,6 @@ import {
 import {
   Menus,
   Services,
-  Banner,
   Logo,
   Tagline,
   Description,
@@ -120,7 +121,7 @@ const headquarter = [
             name: "Banner",
             path: "/banners",
             icon: "layout",
-            component: Banner,
+            component: banner,
           },
           {
             name: "Logos",
@@ -158,6 +159,12 @@ const headquarter = [
             path: "/insourcing",
             icon: "download",
             // component: Insources,
+          },
+          {
+            name: "HMO",
+            path: "/hmo",
+            icon: "external-link",
+            component: Hmo,
           },
           {
             name: "Suppliers",

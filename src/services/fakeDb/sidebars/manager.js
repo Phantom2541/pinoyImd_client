@@ -9,6 +9,7 @@ import {
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Payrolls from "../../../pages/platforms/finance/payroll";
+import Banners from "../../../pages/platforms/manager/settings/profile/banner";
 
 import {
   Employees,
@@ -18,6 +19,7 @@ import {
   Procurments,
   Heads,
 } from "../../../pages/platforms/headquarter/file201";
+// import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
 
 import {
   Remittances,
@@ -47,6 +49,7 @@ import {
   Hotlines,
   Suppliers,
 } from "../../../pages/platforms/cashier";
+import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
 
 const manager = [
   {
@@ -161,6 +164,12 @@ const manager = [
         icon: "money-bill",
         component: Payrolls,
       },
+      {
+        name: "Clearance Pay",
+        path: "/clearance-pay",
+        icon: "scroll",
+        component: ClearancePay,
+      },
     ],
   },
   {
@@ -250,6 +259,19 @@ const manager = [
     icon: "cogs",
     children: [
       {
+        name: "Profile",
+        path: "/profile",
+        icon: "user-cog",
+        children: [
+          {
+            name: "Banner",
+            path: "/banner",
+            icon: "banners",
+            component: Banners,
+          },
+        ],
+      },
+      {
         name: "Sources",
         path: "/sources",
         icon: "cogs",
@@ -299,6 +321,12 @@ const manager = [
         icon: "users-round",
         path: "/faculties",
         children: [
+          {
+            name: "Stock Holder",
+            path: "/stockHolder",
+            icon: "user",
+            // component: stockHolder,
+          },
           {
             name: "Staff",
             path: "/staff",

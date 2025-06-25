@@ -8,7 +8,7 @@ import FailedBanner from "../../assets/failedBanner.jpg";
 import FailedLogo from "../../assets/failedLogo.png";
 import PresetUser from "../../assets/default.jpg";
 import isJpegOrJpgFile from "./isJpegOrJpgFile";
-import { fullAddress, billingAddress } from "./fullAddress";
+import { fullAddress, billingAddress, LatitudeAddress } from "./fullAddress";
 import bulkPayload from "./bulkPayload";
 import globalSearch from "./globalSearch";
 import taskBadge from "./taskBadge";
@@ -62,6 +62,9 @@ import MenusToExcel from "./export/excel/menus";
 import ResecoToExcel from "./export/excel/reseco";
 //PDF
 import MenusToPDF from "./export/pdf/menus";
+//status
+import employment from "../fakeDb/employment";
+
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -95,8 +98,6 @@ export {
   fullName,
   calculateDiff,
   isJpegOrJpgFile,
-  fullAddress,
-  billingAddress,
   bulkPayload,
   globalSearch,
   taskBadge,
@@ -130,6 +131,12 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  //status of employment
+  employment,
+  //address formatter,
+  fullAddress,
+  billingAddress,
+  LatitudeAddress,
   // Cache's Clear
   clearSiteData,
   //export to excel

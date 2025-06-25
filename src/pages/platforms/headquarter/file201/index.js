@@ -5,3 +5,4 @@ export { default as Physicians } from "./physicians";
 export { default as Procurments } from "./procurments";
 export { default as Staffs } from "./staffs";
 export { default as Employees } from "./employees";
+export { default as Hmo } from "./hmo";

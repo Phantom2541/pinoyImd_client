@@ -82,6 +82,7 @@ const Banner = () => {
       })
     );
   };
+  console.log("company", activePlatform?.branch?.name);
 
   const handleDownload = () => {
     const link = document.createElement("a");

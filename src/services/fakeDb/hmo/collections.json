@@ -1,19 +1,227 @@
 [
   {
-    "id": 1,
-    "name": "Maxicare",
-    "code": "mxc",
-    "icon": "medkit"
-  },
-  {
-    "id": 2,
-    "name": "Cocolife",
-    "code": "ccl",
+    "id": 0,
+    "name": "",
+    "abbr": "abbreviation",
+    "tl": "tagline",
+    "code": "",
+    "icon": "",
     "category": ["premium", "plus", "regular"]
   },
   {
+    "id": 1,
+    "name": "Maxicare Healthcare Corporation",
+    "abbr": "Maxicare",
+    "tl": "Live your best life",
+    "code": "mhc",
+    "icon": ""
+  },
+  {
+    "id": 2,
+    "name": "Asalus Corporation (Intellicare)",
+    "abbr": "Intellicare",
+    "tl": "HMO of First Choice",
+    "code": "itc",
+    "icon": ""
+  },
+  {
     "id": 3,
-    "name": "Medicare",
-    "code": "mdc"
+    "name": "PhilhealthCare, Inc.",
+    "abbr": "PhilCare",
+    "tl": "health care made smarter",
+    "code": "phc",
+    "icon": ""
+  },
+  {
+    "id": 4,
+    "name": "Medicard Philippines, Inc.",
+    "abbr": "Medicard",
+    "tl": "Brave the World",
+    "code": "mcp",
+    "icon": ""
+  },
+  {
+    "id": 5,
+    "name": "Insular Health Care, Inc.",
+    "abbr": "iCare",
+    "tl": "Say YES to Better Health",
+    "code": "ihc",
+    "icon": ""
+  },
+  {
+    "id": 6,
+    "name": "Kaiser International Healthgroup, Inc.",
+    "abbr": "Kaiser",
+    "tl": "The First Name in Healthcare",
+    "code": "kih",
+    "icon": ""
+  },
+  {
+    "id": 7,
+    "name": "EastWest Healthcare, Inc.",
+    "abbr": "EastWest",
+    "tl": "Securing a Healthy Horizon",
+    "code": "ewh",
+    "icon": ""
+  },
+  {
+    "id": 8,
+    "name": "Avega Managed Care, Inc.",
+    "abbr": "Avega",
+    "tl": "Healthcare Made Simple",
+    "code": "amc",
+    "icon": ""
+  },
+  {
+    "id": 9,
+    "name": "Cocolife Healthcare",
+    "abbr": "Cocolife",
+    "tl": "Believing in the Filipino",
+    "code": "clh",
+    "icon": ""
+  },
+  {
+    "id": 10,
+    "name": "CareHealth Plus Systems International, Inc.",
+    "abbr": "CareHealth Plus",
+    "tl": "Connecting Dreams to Reality like Building Bridges",
+    "code": "cps",
+    "icon": ""
+  },
+  {
+    "id": 11,
+    "name": "Caritas Health Shield, Inc.",
+    "abbr": "Caritas",
+    "tl": "",
+    "code": "chs",
+    "icon": ""
+  },
+  {
+    "id": 12,
+    "name": "Value Care Health Systems, Inc.",
+    "abbr": "ValuCare",
+    "tl": "HealthCare You Can Count On",
+    "code": "vch",
+    "icon": ""
+  },
+  {
+    "id": 13,
+    "name": "WellCare Health Maintenance, Inc.",
+    "abbr": "WellCare",
+    "tl": "Alaga ka ng WellCare, di ka mapapabayaan",
+    "code": "whm",
+    "icon": ""
+  },
+  {
+    "id": 14,
+    "name": "Health Plan Philippines, Inc.",
+    "abbr": "HPPI",
+    "tl": "",
+    "code": "hpp",
+    "icon": ""
+  },
+  {
+    "id": 15,
+    "name": "Fortunecare, Inc.",
+    "abbr": "Fortunecare",
+    "tl": "",
+    "code": "fci",
+    "icon": ""
+  },
+  {
+    "id": 16,
+    "name": "MedAsia Philippines, Inc.",
+    "abbr": "MedAsia",
+    "tl": "",
+    "code": "map",
+    "icon": ""
+  },
+  {
+    "id": 17,
+    "name": "Pacific Cross Health Care, Inc.",
+    "abbr": "Pacific Cross",
+    "tl": "Here For You",
+    "code": "pch",
+    "icon": ""
+  },
+  {
+    "id": 18,
+    "name": "MediAccess Philippines, Inc.",
+    "abbr": "MediAccess",
+    "tl": "",
+    "code": "mda",
+    "icon": ""
+  },
+  {
+    "id": 19,
+    "name": "OmniCare Medical Access System, Inc.",
+    "abbr": "OmniCare",
+    "tl": "We make healthcare Understandable, Accessible and Affordable",
+    "code": "oma",
+    "icon": ""
+  },
+  {
+    "id": 20,
+    "name": "AsianLife & General Assurance Corp.",
+    "abbr": "AsianLife",
+    "tl": "",
+    "code": "alg",
+    "icon": ""
+  },
+  {
+    "id": 21,
+    "name": "IMS Wellth Care, Inc.",
+    "abbr": "WellthCare",
+    "tl": "Delivery of a Sustainable Healthcare Accessibility to the Masses",
+    "code": "iwc",
+    "icon": ""
+  },
+  {
+    "id": 22,
+    "name": "Medicare Plus, Inc.",
+    "abbr": "Medicare Plus",
+    "tl": "Get the peace of mind you deserve for you & your family",
+    "code": "mdp",
+    "icon": ""
+  },
+  {
+    "id": 23,
+    "name": "Life & Health HMP, Inc.",
+    "abbr": "Life & Health",
+    "tl": "Trusted Corporate HMO Provider in the Philippines",
+    "code": "lph",
+    "icon": ""
+  },
+  {
+    "id": 25,
+    "name": "Getwell Health Systems, Inc.",
+    "abbr": "Getwell",
+    "tl": "To be the no. 1 Health Maintenance Organization in the Philippines",
+    "code": "ghs",
+    "icon": ""
+  },
+  {
+    "id": 26,
+    "name": "Carewell Health Systems, Inc.",
+    "abbr": "Carewell",
+    "tl": "",
+    "code": "cwh",
+    "icon": ""
+  },
+  {
+    "id": 27,
+    "name": "Dynamic Care Corporation",
+    "abbr": "Dynamic Care",
+    "tl": "",
+    "code": "dcc",
+    "icon": ""
+  },
+  {
+    "id": 28,
+    "name": "Etiqa Life and General Assurance Corp.",
+    "abbr": "Etiqa",
+    "tl": "Humanizing Life, Health and Non‑Life Insurance for the Filipino",
+    "code": "elg",
+    "icon": ""
   }
 ]

@@ -24,7 +24,6 @@ export default function Search({
       if (hideButton && items.length === 0) setShowBtn(true);
       if (hideButton && items.length > 0) setShowBtn(false);
       console.log("items", items);
-
       setFiltered(items);
     }, 300);
   }, [collections, setFiltered, hideButton]);
