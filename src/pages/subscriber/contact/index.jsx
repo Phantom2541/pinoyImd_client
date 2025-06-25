@@ -100,45 +100,24 @@ export default function ContactUs() {
   }, [address]);
 
   return (
-    <section className="subscriber-contactUs-section">
+    <section className="subscriber-contactUs-section d-flex justify-content-center align-content-center">
       <div className="subscriber-contactUs-container">
-        <div className="subscriber-contactUs-info-container">
-          <div className="subscriber-contactUs-logo">
-            <img
-              src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
-              alt="logo"
-              onError={(e) => (e.target.src = LOGO)}
-              width="90px"
-              height="90px"
-            />
-            <span>{details?.name}</span>
-          </div>
-          <div className="subscriber-contactUs-details">
-            <span className="subscriber-contactUs-quote">
-              "{details?.tagline}"
-            </span>
+        <div className="subscriber-contactUs-top">
+          <div className="subscriber-contactUs-leftSide">
+            <div className="subscriber-contactUs-logo">
+              <img
+                src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
+                alt="logo"
+                onError={(e) => (e.target.src = LOGO)}
+                width="90px"
+                height="90px"
+              />
+              <span>{details?.name}</span>
+            </div>
+            <span className="contactUs-quote">"{details?.tagline}"</span>
             <div className="subscriber-contactUs-address">
               <MDBIcon fas icon="map-marker-alt" />
               <span>{fullAddress(address)}</span>
-              <div className="subscriber-contactUs-map">
-                <Map
-                  center={coordinates}
-                  zoom={12}
-                  style={{
-                    height: "90%",
-                    width: "100%",
-                    borderRadius: "5px",
-                  }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Marker position={coordinates}>
-                    <Popup>{capitalize(fullAddress(address))}</Popup>
-                  </Marker>
-                </Map>
-              </div>
             </div>
             <div className="subscriber-contactUs-email">
               <MDBIcon fas icon="envelope" />
@@ -149,60 +128,51 @@ export default function ContactUs() {
               <span> {mobile(contacts?.mobile)}</span>
             </div>
           </div>
-        </div>
-
-        <div className="subscriber-contactUs-quickLinks-container">
-          <p>Quick Links</p>
-          <div className="subscriber-contactUs-quickLinks">
-            <a href="/">Home</a>
-            <a href="/">Features</a>
-            <a href="/">Doctors</a>
-            <a href="/">Employees</a>
-            <a href="/">Testimonials</a>
-            <a href="/">Contact Us</a>
+          <div className="subscriber-contactUs-middleSide">
+            <div style={{ height: "100%", width: "100%" }}>
+              <Map
+                center={coordinates}
+                zoom={12}
+                style={{ height: "90%", width: "100%", borderRadius: "5px" }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={coordinates}>
+                  <Popup>
+                    Pinoy iMD — Labanos Compound, Gulod street, barangay San
+                    pedro, General Tinio(Papaya)
+                  </Popup>
+                </Marker>
+              </Map>
+            </div>
           </div>
         </div>
-
-        <div className="subscriber-contactUs-branches-container">
-          <p>Branches</p>
-          <div className="subscriber-contactUs-branches">
-            {branches.map(({ name, contacts = {} }, index) => {
-              console.log("contacts", contacts);
-              return (
-                <React.Fragment key={index}>
-                  <span>{name}</span>
-                  <span>{contacts?.email}</span>
-                  <span>{mobile(contacts?.mobile)}</span>
-                  <span>{contacts?.person}</span>
-                </React.Fragment>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="subscriber-contactUs-schedule-container">
-          <p>Opening Hours</p>
-          <div className="subscriber-contactUs-schedule">
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Monday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Tuesday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Wednesday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Thursday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Friday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Saturday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Sunday :</span> <span>8:00am - 5:00pm</span>
+        <div className="subscriber-contactUs-rightSide">
+          <div className="subscriber-contactUs-branches-container">
+            <p>Branches</p>
+            <div className="subscriber-contactUs-branches">
+              {branches.map(({ name, contacts = {} }, index) => {
+                console.log("contacts", contacts);
+                return (
+                  <div
+                    className="subscriber-contactUs-branch-wrapper"
+                    key={index}
+                  >
+                    <div className="subscriber-contactUs-branch-line">
+                      <span className="subscriber-contactUs-branch-name">
+                        {name}
+                      </span>
+                    </div>
+                    <div className="subscriber-contactUs-branchInfo">
+                      <span>{contacts?.person}</span>
+                      <span>{mobile(contacts?.mobile)}</span>
+                      <span>{contacts?.email}</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
