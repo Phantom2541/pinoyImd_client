@@ -140,7 +140,7 @@ export default function MenuCollapse({ staffs }) {
                 <div
                   className={`d-flex align-items-center justify-content-between ${color}`}
                 >
-                  <div className="position-relative">
+                  <div className="position-relative ">
                     <span>
                       <small> {index + 1}</small>.{" "}
                       {user && `${fullName(user?.fullName)} | `}
@@ -148,18 +148,17 @@ export default function MenuCollapse({ staffs }) {
                     </span>
                     {viewHistory && (
                       <div
-                        className="shadow-lg"
+                        className="shadow-sm border border-gray"
                         style={{
                           position: "absolute",
-                          bottom: "-60px",
-                          left: "1.3rem",
+                          top: "100%", // ⬅️ always below the span
+                          left: "1rem",
+                          marginTop: "0rem", // spacing from the name
                           width: "25rem",
-                          zIndex: 20,
+                          zIndex: 10,
+                          backgroundColor: "#fff",
                           borderRadius: "0.5rem",
-
                           padding: "1rem",
-                          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.25)",
-                          border: "1px solid #e0e0e0",
                         }}
                       >
                         <CharacterHistory remarks={remarks} />
