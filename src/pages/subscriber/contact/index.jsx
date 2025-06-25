@@ -100,110 +100,103 @@ export default function ContactUs() {
   }, [address]);
 
   return (
-    <section className="d-flex justify-content-center align-content-center">
-      <div className="contactUs-container">
-        <div className="contactUs-top">
-          <div className="contactUs-leftSide">
-            <div className="contactUs-logo">
-              <img
-                src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
-                alt="logo"
-                onError={(e) => (e.target.src = LOGO)}
-                width="90px"
-                height="90px"
-              />
-              <span>{details?.name}</span>
-            </div>
-            <span className="contactUs-quote">{details?.tagline}</span>
-            <div className="contactUs-address">
+    <section className="subscriber-contactUs-section">
+      <div className="subscriber-contactUs-container">
+        <div className="subscriber-contactUs-info-container">
+          <div className="subscriber-contactUs-logo">
+            <img
+              src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
+              alt="logo"
+              onError={(e) => (e.target.src = LOGO)}
+              width="90px"
+              height="90px"
+            />
+            <span>{details?.name}</span>
+          </div>
+          <div className="subscriber-contactUs-details">
+            <span className="subscriber-contactUs-quote">
+              "{details?.tagline}"
+            </span>
+            <div className="subscriber-contactUs-address">
               <MDBIcon fas icon="map-marker-alt" />
               <span>{fullAddress(address)}</span>
+              <div className="subscriber-contactUs-map">
+                <Map
+                  center={coordinates}
+                  zoom={12}
+                  style={{
+                    height: "90%",
+                    width: "100%",
+                    borderRadius: "5px",
+                  }}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={coordinates}>
+                    <Popup>{capitalize(fullAddress(address))}</Popup>
+                  </Marker>
+                </Map>
+              </div>
             </div>
-            <div className="contactUs-email">
+            <div className="subscriber-contactUs-email">
               <MDBIcon fas icon="envelope" />
               <span> {contacts?.email}</span>
             </div>
-            <div className="contactUs-phone">
+            <div className="subscriber-contactUs-phone">
               <MDBIcon fas icon="phone-alt" />
               <span> {mobile(contacts?.mobile)}</span>
             </div>
           </div>
-          <div className="contactUs-middleSide">
-            <div style={{ height: "100%", width: "100%" }}>
-              <Map
-                center={coordinates}
-                zoom={12}
-                style={{ height: "100%", width: "100%", borderRadius: "5px" }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={coordinates}>
-                  <Popup>{capitalize(fullAddress(address))}</Popup>
-                </Marker>
-              </Map>
-            </div>
+        </div>
+
+        <div className="subscriber-contactUs-quickLinks-container">
+          <p>Quick Links</p>
+          <div className="subscriber-contactUs-quickLinks">
+            <a href="/">Home</a>
+            <a href="/">Features</a>
+            <a href="/">Doctors</a>
+            <a href="/">Employees</a>
+            <a href="/">Testimonials</a>
+            <a href="/">Contact Us</a>
           </div>
         </div>
-        <div className="contactUs-rightSide">
-          <span className="contactUs-emailUs">Contact Us:</span>
-          <div style={{ marginTop: "-20px" }}>
-            <form onSubmit={handleSubmit}>
-              <MDBInput
-                icon="user"
-                label="Your name"
-                labelClass="white-text"
-                className="text-white"
-                iconClass="white-text"
-                type="text"
-                value={name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                id="form-name"
-              />
-              <MDBInput
-                icon="envelope"
-                label="Your email"
-                labelClass="white-text"
-                className="text-white"
-                iconClass="white-text"
-                type="email"
-                value={email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-              />
 
-              <MDBInput
-                icon="tag"
-                label="Subject"
-                labelClass="white-text"
-                className="text-white"
-                iconClass="white-text"
-                value={subject}
-                onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                required
-                type="text"
-              />
+        <div className="subscriber-contactUs-branches-container">
+          <p>Branches</p>
+          <div className="subscriber-contactUs-branches">
+            <span>Quezon City Branch</span>
+            <span>Makati Medical Center</span>
+            <span>Cebu City Diagnostic Hub</span>
+            <span>Davao Health and Wellness Center</span>
+          </div>
+        </div>
 
-              <MDBInput
-                icon="pencil-alt"
-                label="Your message"
-                labelClass="white-text"
-                className="text-white"
-                iconClass="white-text "
-                type="textarea"
-                rows={1}
-                value={message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                required
-              />
-
-              <div className="text-right">
-                <MDBBtn disabled={alreadySent} type="submit" color="info">
-                  {alreadySent ? "E-mail Sent" : "Send"}
-                </MDBBtn>
-              </div>
-            </form>
+        <div className="subscriber-contactUs-schedule-container">
+          <p>Opening Hours</p>
+          <div className="subscriber-contactUs-schedule">
+            <div className="subscriber-contactUs-schedule-day">
+              <span>Monday :</span> <span>8:00am - 5:00pm</span>
+            </div>
+            <div className="subscriber-contactUs-schedule-day">
+              <span>Tuesday :</span> <span>8:00am - 5:00pm</span>
+            </div>
+            <div className="subscriber-contactUs-schedule-day">
+              <span>Wednesday :</span> <span>8:00am - 5:00pm</span>
+            </div>
+            <div className="subscriber-contactUs-schedule-day">
+              <span>Thursday :</span> <span>8:00am - 5:00pm</span>
+            </div>
+            <div className="subscriber-contactUs-schedule-day">
+              <span>Friday :</span> <span>8:00am - 5:00pm</span>
+            </div>
+            <div className="subscriber-contactUs-schedule-day">
+              <span>Saturday :</span> <span>8:00am - 5:00pm</span>
+            </div>
+            <div className="subscriber-contactUs-schedule-day">
+              <span>Sunday :</span> <span>8:00am - 5:00pm</span>
+            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 :root {
   --primary-color: #1266f1;
-  --seconday-color: #5c8dfb;
+  --primaryDark-color: #0b429f;
+  --secondary-color: #5c8dfb;
   --accent-color: #f1c40f; /* Main accent */
   --accent-alt: #2ecc71; /* Suggested: Emerald Green */
   --background-color: #f9fafb;
@@ -8,113 +9,189 @@
   --text-white: #f9fafb;
 }
 
-.contactUs-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: stretch;
-  width: 80%;
-  height: 450px;
-  gap: 10px 25px;
-  padding: 25px 60px;
-  background-color: var(--primary-color);
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  flex-wrap: nowrap;
-}
-
-/* 🆕 Flex wrapper for left and middle */
-.contactUs-top {
-  display: flex;
-  flex-direction: row;
-  flex: 2;
-  gap: 20px;
+.subscriber-contactUs-section {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary-color);
+  padding: 20px 0;
+  opacity: 0.9;
 }
 
-.contactUs-leftSide {
-  flex: 1;
-  color: var(--text-white);
+.subscriber-contactUs-container {
+  /* display: flex;
+  justify-content: center;
+  width: 70%;
+  height: 450px;
+  gap: 10px;
+  padding: 10px; */
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  width: 70%;
+  margin: auto;
+  padding: 10px;
+}
+
+.subscriber-contactUs-info-container,
+.subscriber-contactUs-quickLinks-container,
+.subscriber-contactUs-branches-container,
+.subscriber-contactUs-schedule-container {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 5px;
+  padding: 10px;
 }
 
-.contactUs-middleSide {
-  flex: 1;
+.subscriber-contactUs-quickLinks-container {
+  width: 60%;
 }
 
-.contactUs-rightSide {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.contactUs-logo {
+.subscriber-contactUs-logo {
   display: flex;
   flex-direction: column;
   width: fit-content;
   text-align: center;
 }
 
-.contactUs-logo span {
+.subscriber-contactUs-logo span {
   font-size: 1.2rem;
   font-weight: 500;
   margin-top: -5px;
-}
-
-.contactUs-address,
-.contactUs-email,
-.contactUs-phone {
-  display: flex;
-  align-items: center;
-  font-size: 17px;
-  font-weight: 400;
-  gap: 10px;
-}
-
-.contactUs-emailUs {
-  font-size: 2rem;
-  font-weight: 500;
   color: var(--text-white);
 }
 
-.contactUs-quote {
+.subscriber-contactUs-quote {
   font-size: 16px;
   font-weight: 400;
   margin-top: -10px;
   margin-bottom: 20px;
+  color: var(--text-white);
+}
+
+.subscriber-contactUs-address,
+.subscriber-contactUs-email,
+.subscriber-contactUs-phone {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  gap: 10px;
+  color: var(--text-white);
+}
+
+.subscriber-contactUs-address {
+  font-size: 0.95rem;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+.subscriber-contactUs-address span {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.subscriber-contactUs-address:hover {
+  color: var(--primaryDark-color);
+}
+
+.subscriber-contactUs-map {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(60%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 350px;
+  height: 0;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.subscriber-contactUs-address:hover .subscriber-contactUs-map {
+  opacity: 1;
+  transform: translate(80%, -50%);
+  height: 350px;
+}
+
+.subscriber-contactUs-quickLinks-container p,
+.subscriber-contactUs-branches-container p,
+.subscriber-contactUs-schedule-container p {
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: var(--primaryDark-color);
+}
+
+.subscriber-contactUs-quickLinks,
+.subscriber-contactUs-branches,
+.subscriber-contactUs-details {
+  display: flex;
+  align-items: left;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subscriber-contactUs-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subscriber-contactUs-schedule-day {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--primaryDark-color);
+}
+
+.subscriber-contactUs-quickLinks a,
+.subscriber-contactUs-branches span,
+.subscriber-contactUs-schedule span {
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: var(--text-white);
+}
+
+.subscriber-contactUs-quickLinks a:hover {
+  color: var(--primaryDark-color);
 }
 
 /* ✅ Responsive design: ≤ 1600px */
 @media (max-width: 1600px) {
-  .contactUs-container {
-    flex-direction: column;
-    height: auto;
-    padding: 25px;
-  }
+  .subscriber-contactUs-container {
+    display: grid;
+    grid-template-columns: 1fr;
 
-  .contactUs-top {
-    flex-direction: row; /* keep left + middle side by side */
-    width: 100%;
-    gap: 20px;
-  }
-
-  .contactUs-leftSide,
-  .contactUs-middleSide {
-    flex: 1;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "info quick"
+      "branches schedule";
     height: auto;
   }
+  .subscriber-contactUs-info-container {
+    grid-area: info;
+  }
 
-  .contactUs-rightSide {
-    width: 100%;
-    margin-top: 20px;
+  .subscriber-contactUs-quickLinks-container {
+    grid-area: quick;
+  }
+
+  .subscriber-contactUs-branches-container {
+    grid-area: branches;
+  }
+
+  .subscriber-contactUs-schedule-container {
+    grid-area: schedule;
   }
 }
 
-/* 📱 Extra responsive for smaller screens */
-@media (max-width: 768px) {
-  .contactUs-top {
-    flex-direction: column;
+@media (max-width: 920px) {
+  .subscriber-contactUs-container {
+    grid-template-areas:
+      "info" "quick"
+      "branches" "schedule";
   }
 }
