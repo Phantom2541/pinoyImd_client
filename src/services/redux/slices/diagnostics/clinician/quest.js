@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url ="/diagnostics/clinician/quest";
+const url = "/diagnostics/clinician/quest";
 
 const initialState = {
   filter: [],
@@ -15,7 +15,6 @@ const initialState = {
   showModal: false,
   willAdd: false,
   showMemberModal: false,
-  
 
   /**
    * pagination
@@ -47,8 +46,6 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
-
-
 
 export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   try {
@@ -110,11 +107,10 @@ export const reduxSlice = createSlice({
         role: "",
         phone: "",
         status: "",
-
       };
       state.willCreate = true;
       state.showModal = true;
-        },
+    },
     SetTeam: (state, { payload }) => {
       console.log("SetCREATE payload", payload);
       state.team = payload;
@@ -133,7 +129,7 @@ export const reduxSlice = createSlice({
       }
       state.filtered = payload;
     },
-    SetPagination: state => {
+    SetPagination: (state) => {
       // {
       //   payload;
       // }getPage
@@ -148,7 +144,7 @@ export const reduxSlice = createSlice({
     SetPAGE: (state, { payload }) => {
       state.page = payload;
     },
-    RESET: state => {
+    RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
     },
@@ -162,26 +158,24 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
-    TOGGLE: state => {
+    TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
-    TOGGLETeam: state => {
+    TOGGLETeam: (state) => {
       state.showModalTeam = !state.showModalTeam;
     },
-    
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(BROWSE.pending, state => {
+      .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        state.collections = state.filtered =payload; // Fix typo
-        state.totalPages =
-          Math.ceil(payload.length / state.maxPage) || 1;
+        state.collections = state.filtered = payload; // Fix typo
+        state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
         state.isLoading = false;
@@ -192,14 +186,12 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-  
-
-      .addCase(SAVE.pending, state => {
+      .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state,  action ) => {
+      .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
@@ -213,7 +205,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
-      .addCase(UPDATE.pending, state => {
+      .addCase(UPDATE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -221,14 +213,14 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
-          item => item._id === payload._id
+          (item) => item._id === payload._id
         );
         const findex = state.filtered.findIndex(
-          item => item._id === payload._id
+          (item) => item._id === payload._id
         );
 
         state.collections[index] = payload;
-        
+
         state.filtered[findex] = payload;
         state.showModal = false;
         state.message = success;
@@ -240,7 +232,7 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
-      .addCase(DESTROY.pending, state => {
+      .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
@@ -248,13 +240,13 @@ export const reduxSlice = createSlice({
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success } = action;
         const index = state.collections.findIndex(
-          item => item?._id === action.payload.payload
+          (item) => item?._id === action.payload.payload
         );
         state.collections.splice(index, 1);
         const findex = state.filtered.findIndex(
-          item => item._id === action.payload.payload
+          (item) => item._id === action.payload.payload
         );
-      
+
         state.filtered.splice(findex, 1);
         state.message = success;
         state.isSuccess = true;
