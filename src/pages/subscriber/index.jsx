@@ -224,16 +224,16 @@ const Subscriber = ({ match }) => {
               <Testimonials />
             </div>
             <hr className="mb-4" />
-            <div id="staffs">
+            <div id="staffs" className="mb-4">
               <Staffs />
             </div>
-            <hr className="mb-4" />
-            <div id="contact">
+            <div id="contact" className="mt-5">
               <ContactUs />
+              <Copyrights />
             </div>
           </MDBContainer>
 
-          <MDBFooter className="mt-5 text-center text-md-left">
+          {/* <MDBFooter className="mt-5 text-center text-md-left">
             <MDBContainer>
               <MDBRow>
                 <MDBCol md="12">
@@ -275,7 +275,7 @@ const Subscriber = ({ match }) => {
               </MDBRow>
             </MDBContainer>
             <Copyrights />
-          </MDBFooter>
+          </MDBFooter> */}
         </div>
       ) : (
         <Loading />
