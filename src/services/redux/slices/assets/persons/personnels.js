@@ -54,6 +54,7 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+
 export const COMPANY = createAsyncThunk(
   `${url}/company`,
   ({ token, params }, thunkAPI) => {

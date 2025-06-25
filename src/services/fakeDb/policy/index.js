@@ -75,5 +75,12 @@ const Policy = {
       collections.find(({ department: d }) => d === department) || {};
     return positions.some(({ id }) => id === Number(designation));
   },
+
+  getBoardMembersIds: () => {
+    const positions =
+      collections.find(({ department: d }) => d?.toUpperCase() === "BOARD")
+        ?.positions || [];
+    return positions.map(({ id }) => id);
+  },
 };
 export default Policy;
