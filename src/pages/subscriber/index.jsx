@@ -225,7 +225,7 @@ const Subscriber = ({ match }) => {
             </div>
             <hr className="mb-4" />
             <div id="staffs">
-              <Staffs />
+              <Staffs match={match} />
             </div>
             <hr className="mb-4" />
             <div id="contact">
