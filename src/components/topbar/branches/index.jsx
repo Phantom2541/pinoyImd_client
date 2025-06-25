@@ -19,6 +19,7 @@ export default function Branches() {
       auth,
     } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
+  console.log("branches:", branches);
 
   const handleActivePlatform = (branchId) => {
     const _access =
@@ -41,21 +42,21 @@ export default function Branches() {
   };
 
   const { branch = {} } = activePlatform || {};
-
+  // &&
+  // branches[0]?.name === activePlatform?.branch?.name
   return (
     <MDBDropdown>
-      {branches.length > 1 &&
-        branches[0].name === activePlatform.branch.name && (
-          <MDBDropdownToggle nav caret>
-            <MDBIcon icon="code-branch" />
-            &nbsp;
-            <div className="d-none d-md-inline">
-              {branch?.name ? capitalize(branch?.name) : ""}
-            </div>
-          </MDBDropdownToggle>
-        )}
+      {branches.length > 1 && (
+        <MDBDropdownToggle nav caret>
+          <MDBIcon icon="code-branch" />
+          &nbsp;
+          <div className="d-none d-md-inline">
+            {branch?.name ? capitalize(branch?.name) : ""}
+          </div>
+        </MDBDropdownToggle>
+      )}
       <MDBDropdownMenu right>
-        {branches.map(({ name, _id }, index) => (
+        {branches?.map(({ name, _id }, index) => (
           <MDBDropdownItem
             active={_id === activePlatform?.branchId}
             key={`branch-${index}`}

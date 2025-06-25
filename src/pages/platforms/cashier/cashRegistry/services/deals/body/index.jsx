@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { capitalize } from "lodash";
 import { MDBTable, MDBIcon, MDBBadge, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
   currency,
@@ -68,15 +67,6 @@ const Tables = () => {
         view === "all"
           ? collections
           : collections.filter(({ perform }) => perform === view);
-
-      console.log("collections", collections);
-      console.log("view", view);
-      console.log("deals", _deals);
-
-      // if any items inside deals has sourceKeyAsDeclared value, show sources in table head
-      // if (_deals.find((s) => s.physicianId)) setShowPhysicians(true);
-      // if (_deals.find((s) => s.source)) setShowSources(true);
-
       dispatch(SetTOTAL(_deals.reduce((a, c) => a + c.amount, 0)));
       dispatch(SetFILTERED(_deals));
     }
@@ -84,13 +74,15 @@ const Tables = () => {
 
   // Sample generateStub function
 
-  const handlePrintout = async (selected) => {
+  const handlePrintout = (selected) => {
     localStorage.setItem("claimStub", JSON.stringify(generateStub(selected)));
-    window.open(
-      "/printout/claimstub",
-      "Claim Stub",
-      "top=100px,left=150px,width=450px,height=850px"
-    );
+    setTimeout(() => {
+      window.open(
+        "/printout/claimstub",
+        "Claim Stub",
+        "top=100px,left=150px,width=450px,height=850px"
+      );
+    }, 50);
   };
 
   const handleCashRegister = (selected) => {
@@ -108,6 +100,8 @@ const Tables = () => {
     customer: {
       fullName: customerId?.fullName,
       address: customerId?.address,
+      email: customerId?.email,
+      verified: customerId?.verified || false,
     },
     cashier: cashierId?.fullName,
     cart,
@@ -156,8 +150,8 @@ const Tables = () => {
             <th>Patient Name</th>
             <th>SSX</th>
             <th>Physician/Source</th>
-            <th>Amount</th>
-            <th className="text-center">Services</th>
+            <th>Services</th>
+            <th className="text-center">Amount</th>
           </tr>
         </thead>
         <tbody>
@@ -209,6 +203,13 @@ const Tables = () => {
                         className="mr-2 cursor-pointer"
                         onClick={() =>
                           setSelected({ ...deal, updatedKey: "category" })
+                        }
+                        title={
+                          deal.category === "walkin"
+                            ? deal.category
+                            : Categories.find(
+                                ({ abbr }) => abbr === deal.category
+                              ).name
                         }
                       >
                         {deal.category === "walkin"
@@ -354,26 +355,15 @@ const Tables = () => {
                     )}
                   </td>
                   <td className="cursor-pointer">
-                    <div className="d-flex align-items-center">
-                      <h6
-                        className="mt-2"
-                        style={{ fontWeight: 600 }}
-                        title="Amount"
+                    {deal.cart?.map((menu) => (
+                      <MDBBadge
+                        key={menu.referenceId}
+                        className="mx-1 "
+                        title={menu.description}
                       >
-                        {currency(deal.amount)}
-                      </h6>
-
-                      <img
-                        src={img}
-                        alt={text}
-                        className="ml-1"
-                        title={text}
-                        style={{
-                          ...style,
-                        }}
-                      />
-                    </div>
-                    <h6 title="Cash"> {currency(deal.cash)}</h6>
+                        {menu?.abbreviation}
+                      </MDBBadge>
+                    ))}
                   </td>
 
                   <td>
@@ -402,15 +392,35 @@ const Tables = () => {
                           </MDBBtnGroup>
                         </div>
                       )}
-                      {deal.cart?.map((menu) => (
-                        <MDBBadge
-                          key={menu.referenceId}
-                          className="mx-1 "
-                          style={{ opacity: index === didHoverID ? 0 : 1 }}
+
+                      <div
+                        className="d-flex align-items-center"
+                        style={{ opacity: index === didHoverID ? 0 : 1 }}
+                      >
+                        <h6
+                          className="mt-2"
+                          style={{ fontWeight: 600 }}
+                          title="Amount"
                         >
-                          {menu?.abbreviation}
-                        </MDBBadge>
-                      ))}
+                          {currency(deal.amount)}
+                        </h6>
+
+                        <img
+                          src={img}
+                          alt={text}
+                          className="ml-1"
+                          title={text}
+                          style={{
+                            ...style,
+                          }}
+                        />
+                      </div>
+                      <h6
+                        title="Cash"
+                        style={{ opacity: index === didHoverID ? 0 : 1 }}
+                      >
+                        {currency(deal.cash)}
+                      </h6>
                     </>
                   </td>
                 </tr>

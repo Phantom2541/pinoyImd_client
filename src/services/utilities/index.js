@@ -8,7 +8,7 @@ import FailedBanner from "../../assets/failedBanner.jpg";
 import FailedLogo from "../../assets/failedLogo.png";
 import PresetUser from "../../assets/default.jpg";
 import isJpegOrJpgFile from "./isJpegOrJpgFile";
-import { fullAddress, billingAddress } from "./fullAddress";
+import { fullAddress, billingAddress, LatitudeAddress } from "./fullAddress";
 import bulkPayload from "./bulkPayload";
 import globalSearch from "./globalSearch";
 import taskBadge from "./taskBadge";
@@ -40,6 +40,7 @@ import generateCalendar from "./generateCalendar";
 import fullNameSearch from "./fullNameSearch";
 import dateFormat from "./dateFormat";
 import getTime from "./getTime";
+import getDay from "./getDay";
 import getBday from "./getBday";
 import getWeekend from "./getWeekend";
 import isClosingTime from "./isClosingTime";
@@ -53,6 +54,17 @@ import Female from "../../assets/female.jpg";
 import PresetIMD from "../../assets/iMD.jpg";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
+// Clear's Cache
+import clearSiteData from "./clearSiteData";
+//EXCEL
+import VouchersToExcel from "./export/excel/vouchers";
+import MenusToExcel from "./export/excel/menus";
+import ResecoToExcel from "./export/excel/reseco";
+//PDF
+import MenusToPDF from "./export/pdf/menus";
+//status
+import employment from "../fakeDb/employment";
+
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -86,8 +98,6 @@ export {
   fullName,
   calculateDiff,
   isJpegOrJpgFile,
-  fullAddress,
-  billingAddress,
   bulkPayload,
   globalSearch,
   taskBadge,
@@ -96,6 +106,7 @@ export {
   getAge,
   getDate,
   getTime,
+  getDay,
   contacts,
   dateFormat,
   getWeekend,
@@ -120,4 +131,18 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  //status of employment
+  employment,
+  //address formatter,
+  fullAddress,
+  billingAddress,
+  LatitudeAddress,
+  // Cache's Clear
+  clearSiteData,
+  //export to excel
+  VouchersToExcel,
+  MenusToExcel,
+  ResecoToExcel,
+  //export to pdf
+  MenusToPDF,
 };

@@ -5,6 +5,7 @@ import { billingAddress, currency } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
+  SetPricelist,
   DESTROY,
   RESET,
 } from "../../../../../services/redux/slices/assets/providers";
@@ -44,6 +45,11 @@ const Body = () => {
       }
     });
   };
+  const handlePriceList = (data) => {
+    console.log("data", data);
+
+    dispatch(SetPricelist(data));
+  };
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -51,41 +57,69 @@ const Body = () => {
   const paginatedData = filtered?.slice(startIndex, endIndex);
 
   return (
-    <MDBTable responsive hover bordered>
+    <MDBTable responsive hover>
       <thead>
         <tr>
           <th>#</th>
           <th>Company</th>
           <th>Branch</th>
           <th>Address</th>
+          <th>Contract</th>
           <th>Credit</th>
           <th>Cutoff</th>
+          <th>Due Date</th>
           <th>Status</th>
-          <th colSpan="2">Action</th>
+          <th className="text-center">Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((provider, index) => {
-          const { vendors = {}, status = "", credit, cutoff } = provider,
-            { displayname, address, companyId } = vendors;
+          const {
+              vendors = {},
+              status = "",
+              credit,
+              cutoff,
+              category = "",
+              contract,
+              due,
+            } = provider,
+            { displayname, address, companyId, name } = vendors;
+          const isGhost = category === "ghost";
           return (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{companyId?.name}</td>
-              <td>{displayname}</td>
+              <td className={isGhost && "text-primary"}>
+                {isGhost && "👻"} {displayname || name}
+              </td>
               <td>{billingAddress(address)}</td>
+              <td>
+                {contract === "sbc" ? "Sub Contract" : "Special Sub Contract"}
+              </td>
               <td>{currency(credit)}</td>
               <td>{cutoff || "-"}</td>
+              <td>{due}</td>
               <td>{capitalize(status)}</td>
               <td className="text-center" style={{ width: "200px" }}>
                 <MDBBtnGroup>
+                  {status === "pending" && (
+                    <MDBBtn
+                      size="sm"
+                      rounded
+                      color="primary"
+                      onClick={() => handleEdit(provider)}
+                    >
+                      <MDBIcon icon="pencil-alt" />
+                    </MDBBtn>
+                  )}
                   <MDBBtn
+                    onClick={() => handlePriceList(provider)}
                     size="sm"
                     rounded
-                    color="primary"
-                    onClick={() => handleEdit(provider)}
+                    color="success"
+                    title="Price list"
                   >
-                    <MDBIcon icon="pencil-alt" />
+                    <MDBIcon icon="file-invoice-dollar" />
                   </MDBBtn>
                   <MDBBtn
                     onClick={() => handleDelete(provider._id)}

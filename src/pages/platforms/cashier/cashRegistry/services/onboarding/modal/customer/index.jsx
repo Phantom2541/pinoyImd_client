@@ -31,7 +31,7 @@ const Customer = ({ deal }) => {
               value: Categories[category],
             },
             {
-              title: "Request Services:",
+              title: "Request Services",
               value: (
                 <>
                   {sendouts?.servicesId?.map((id, key) => (

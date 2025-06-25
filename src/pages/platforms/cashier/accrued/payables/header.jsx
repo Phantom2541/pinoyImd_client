@@ -71,6 +71,7 @@ export default function TopHeader() {
             handleAdd={(key) => dispatch(SetPAYABLES(key))}
             reset={() => dispatch(SetFILTERED(collections))}
             hideButton={false}
+            haveAction
           />
         </div>
       </div>

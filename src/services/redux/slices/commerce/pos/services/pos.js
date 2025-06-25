@@ -50,6 +50,8 @@ const defaultState = {
   hasActiveCustomer: false,
   category: 0,
   privilege: 0,
+  hmo: "",
+  contract: "",
   payment: "cash",
   cash: 0,
   amount: 0,
@@ -185,6 +187,9 @@ export const reduxSlice = createSlice({
     SETCATEGORY: (state, { payload }) => {
       state.category = payload;
     },
+    SETHMO: (state, { payload }) => {
+      state.hmo = payload;
+    },
     SETPRIVILEGE: (state, { payload }) => {
       state.privilege = payload;
     },
@@ -204,9 +209,11 @@ export const reduxSlice = createSlice({
       state.physicianId = payload;
     },
     SETSOURCE: (state, { payload }) => {
-      const { _id, membership } = payload;
+      const { _id, membership, hmo, contract } = payload;
       state.sourceId = _id;
       state.membership = membership;
+      state.hmo = hmo;
+      state.contract = contract;
     },
     ADDTOCART: (state, { payload }) => {
       const index = state.cart.findIndex((item) => item._id === payload._id);
@@ -243,6 +250,12 @@ export const reduxSlice = createSlice({
       state.customer = {};
       state.ssx = "";
       if (payload?.resetCollections) state.collections = [];
+    },
+    RESET_INSOURCE: (state) => {
+      state.sourceId = null;
+      state.membership = null;
+      state.hmo = null;
+      state.contract = null;
     },
   },
   extraReducers: (builder) => {
@@ -298,9 +311,11 @@ export const {
   SETGROSS,
   SETPHYSICIAN,
   SETSOURCE,
+  SETHMO,
   ADDTOCART,
   REMOVEFROMCART,
   RESET,
+  RESET_INSOURCE,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

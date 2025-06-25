@@ -1,5 +1,4 @@
-import React from "react";
-
+import provinces from "../../../services/fakeDb/finance/philippines/provinces.json";
 const fullAddress = (address, isComplete = true) => {
   if (typeof address !== "object") return <i>Datatype mismatch</i>;
 
@@ -17,7 +16,23 @@ const fullAddress = (address, isComplete = true) => {
 const billingAddress = (address) => {
   if (typeof address !== "object") return <i>Datatype mismatch</i>;
   const { province, city, barangay } = address;
-  return `${barangay} - ${city}, ${province}`;
+  return `${barangay} - ${city}, ${
+    provinces.find((p) => p.name === province)?.abbrev
+  } `;
 };
 
-export { billingAddress, fullAddress };
+const cleanLocationName = (location) =>
+  location
+    .replace(/\(.*?\)/g, "") // remove (Pob.) or any ()
+    .replace(/\bI{1,3}\b$/g, "") // remove Roman numerals I, II, III at end
+    .trim();
+
+const LatitudeAddress = (address) => {
+  var { barangay, city, province } = address;
+
+  return `${`${cleanLocationName(barangay)},`}${cleanLocationName(
+    city
+  )}, ${cleanLocationName(province)}, philippines`.replace(/^\s+|\s+$/gm, "");
+};
+
+export { billingAddress, fullAddress, LatitudeAddress };

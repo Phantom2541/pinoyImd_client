@@ -8,10 +8,7 @@ import {
   RESET,
 } from "../../../../../services/redux/slices/market/products";
 const Header = () => {
-  // Hooks should be used at the top level inside the function
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ products }) => products),
-    dispatch = useDispatch();
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -31,7 +28,7 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <FilterProducts setFiltered={key => dispatch(SetFILTER(key))} />
+          <FilterProducts setFiltered={(key) => dispatch(SetFILTER(key))} />
         </div>
       </div>
     </MDBView>

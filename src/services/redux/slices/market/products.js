@@ -181,7 +181,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { payload } = action.payload;
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.showModal = false;
@@ -200,7 +200,6 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        console.log("rikoActionzzz111.", action.payload);
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
@@ -208,7 +207,6 @@ export const reduxSlice = createSlice({
         const findex = state.filtered.findIndex(
           (item) => item._id === payload._id
         );
-
         state.collections[index] = payload;
         state.filtered[findex] = payload;
         state.showModal = false;
@@ -234,7 +232,6 @@ export const reduxSlice = createSlice({
         const findex = state.filtered.findIndex(
           (item) => item?._id === action.payload.payload
         );
-        console.log("WHAT THE: ", action.payload.payload);
 
         state.collections.splice(index, 1);
         state.filtered.splice(findex, 1);

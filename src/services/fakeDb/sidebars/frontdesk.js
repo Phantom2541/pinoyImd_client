@@ -26,9 +26,18 @@ import {
   Controls,
 } from "../../../pages/platforms/diagnostics/management";
 
+<<<<<<< HEAD
 import Products from "../../../pages/platforms/frontdesk/market/products";
 import productGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
 import machines from "../../../pages/platforms/frontdesk/market/machines";
+=======
+// import products from "../../../pages/platforms/frontdesk/market/products";
+// import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
+import machines from "../../../pages/platforms/frontdesk/market/machines";
+import generics from "../../../pages/platforms/frontdesk/market/generics";
+// import medicines from "../../../pages/platforms/frontdesk/market/medicine";
+import mentainance from "../../../pages/platforms/frontdesk/market/mentainance";
+>>>>>>> 46e8acdb4d21de04176a0008122be7eeb7aca9db
 import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../pages/platforms/cashier";
 
@@ -147,6 +156,12 @@ const frontdesk = [
     icon: "boxes",
     children: [
       {
+        name: "ProductsGenerics",
+        path: "/productsGenerics",
+        icon: "cogs",
+        // component: productGenerics,
+      },
+      {
         name: "Products",
         path: "/merchandise/products",
         icon: "cogs",
@@ -156,13 +171,35 @@ const frontdesk = [
         name: "Product Generics",
         path: "/products",
         icon: "cogs",
-        component: productGenerics,
+        // component: products,
       },
       {
         name: "Machines",
         path: "/merchandise/machines",
         icon: "laptop-code",
+<<<<<<< HEAD
         component: machines,
+=======
+        component: machines, // add your component here
+      },
+      {
+        name: "Medicines",
+        path: "/medicines",
+        icon: "laptop-code",
+        component: generics, // add your component here
+      },
+      // {
+      //   name: "Medicines",
+      //   path: "/medicines",
+      //   icon: "laptop-code",
+      //   component: medicines, // add your component here
+      // },
+      {
+        name: "Mentainance",
+        path: "/merchandise/mentainance",
+        icon: "laptop-code",
+        component: mentainance,
+>>>>>>> 46e8acdb4d21de04176a0008122be7eeb7aca9db
       },
       {
         name: "Stocks",
@@ -286,7 +323,7 @@ const frontdesk = [
         name: "Products",
         path: "/offers/products",
         icon: "cogs",
-        component: Products,
+        // component: products,
       },
       {
         name: "Consumables",

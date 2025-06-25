@@ -51,8 +51,10 @@ const Footer = () => {
       "physicians",
       physicians.find(({ user }) => user === _user)
     );
+
   const handleSave = (hasDone) => {
     const { form } = task;
+    console.log("task", task);
 
     // if laboratory =pathogist
     // if radiologist  and xray = radiologist
@@ -66,7 +68,7 @@ const Footer = () => {
         department === "Laboratory" ? "pathologist" : "radiologist"
       );
     } else {
-      dr = findPhysicianId(task.signatories[1]._id);
+      dr = findPhysicianId(task.signatories[1]?._id);
     }
     // console.log("dr", dr);
 

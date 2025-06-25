@@ -1,0 +1,13 @@
+export { default as Hematology } from "./hematology";
+export { default as Urinalysis } from "./urinalysis";
+export { default as Chemistry } from "./chemistry";
+export { default as Drugtest } from "./drugtest";
+export { default as Parasitology } from "./parasitology";
+export { default as Coagulation } from "./coagulation";
+export { default as Serology } from "./serology";
+export { default as Miscellaneous } from "./miscellaneous";
+export { default as Analysis } from "./analysis";
+export { default as Bacteriology } from "./bacteriology";
+export { default as Compatibility } from "./compatibility";
+export { default as Electrolyte } from "./electrolyte";
+export { default as Pbs } from "./pbs";

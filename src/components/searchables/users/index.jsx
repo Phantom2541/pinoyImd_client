@@ -32,7 +32,7 @@ export default function Search({
   excludes = [],
   excludeKey = "",
 }) {
-  const { filtered, isLoading } = useSelector(({ users }) => users),
+  const { filtered } = useSelector(({ users }) => users),
     { token } = useSelector((state) => state.auth),
     [patients, setPatients] = useState([]),
     [didSearch, setDidSearch] = useState(false),
@@ -50,7 +50,6 @@ export default function Search({
         });
       });
     }
-
     setPatients(_filtered);
   }, [filtered, excludes, excludeKey]);
   /**
@@ -72,8 +71,9 @@ export default function Search({
     () =>
       debounce((searchKey) => {
         const key = formatNameToObj(searchKey);
-        setIsFetching(false);
-        dispatch(GETPATIENTS({ token, key }));
+        dispatch(GETPATIENTS({ token, key })).then(() => {
+          setIsFetching(false);
+        });
       }, 1000),
     [token, dispatch]
   );
@@ -108,6 +108,8 @@ export default function Search({
     dispatch(RESET());
     setDidSearch(false);
   };
+
+  console.log("isFetching", isFetching);
 
   return (
     <div

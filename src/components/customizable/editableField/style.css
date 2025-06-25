@@ -1,0 +1,16 @@
+.customizable-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.customizable-input-container input {
+  padding-right: 3.8rem; /* Adjust para may space sa icons */
+}
+
+.customizable-input-icons {
+  position: absolute;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+}

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   MDBAnimation,
   MDBBtn,
-  MDBCard,
-  MDBCardBody,
   MDBCol,
   MDBIcon,
   MDBInput,
@@ -13,14 +11,23 @@ import {
   MDBSelectOption,
   MDBSelectOptions,
 } from "mdbreact";
+import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CUSTOMALERT,
   REGISTER,
 } from "../../../services/redux/slices/assets/persons/users";
 import { Suffixes } from "../../../services/fakeDb";
+import IMG1 from "./../../../assets/homeImg.jpg";
+import IMG2 from "./../../../assets/homeMachine.jpg";
+import IMG3 from "./../../../assets/homePatient.jpg";
+import REGISTRATIONIMG from "./../../../assets/homePageRegistrationImg.png";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
+import { set } from "lodash";
 
-export default function Register() {
+export default function Register({ handleFlip, flipped }) {
+  const [isMale, setIsMale] = useState(false);
   const [isLocked, setIsLocked] = useState({
       password: true,
       confirmPassword: true,
@@ -29,7 +36,7 @@ export default function Register() {
     [suffix, setSuffix] = useState("NONE"),
     dispatch = useDispatch();
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const { email, password, confirmPassword, fname, mname, lname } = e.target;
@@ -53,6 +60,10 @@ export default function Register() {
     }
   };
 
+  const handleMaleChange = (e) => {
+    setIsMale(e.target.checked);
+  };
+
   useEffect(() => {
     if (isSuccess) {
       document.getElementById("registration-form").reset();
@@ -60,201 +71,222 @@ export default function Register() {
   }, [isSuccess]);
 
   return (
-    <MDBRow className="flex-center pt-5 mt-3">
-      <MDBCol md="4" className="text-center text-md-left mb-5">
-        <MDBAnimation type="fadeInLeft">
-          <div className="white-text">
-            <h1 className="h1-responsive font-weight-bold">
-              Join us right now!
-            </h1>
-            <hr className="hr-light" />
-            <h6>
-              As a solution provider company, we specialize in understanding and
-              addressing the needs of our clients by offering tailored and
-              innovative solutions. Through close collaboration and utilizing
-              our expertise, we develop comprehensive strategies that encompass
-              software implementation, process optimization, consultancy
-              services, and specialized products. Our goal is to deliver
-              effective and efficient solutions that resolve complex problems
-              and help our clients achieve their objectives.
-            </h6>
-          </div>
-        </MDBAnimation>
-      </MDBCol>
-      <MDBCol md="7" className=" offset-xl-1">
-        <MDBAnimation type="fadeInRight">
-          <form
-            onSubmit={handleSubmit}
-            id="registration-form"
-            autoComplete="off"
-          >
-            <MDBCard>
-              <MDBCardBody>
-                <div className="text-center">
-                  <h3 className="white-text">
-                    <MDBIcon icon="user" className="white-text" /> Register
-                  </h3>
-                  <hr className="hr-light" />
-                </div>
-                <MDBRow>
-                  <MDBCol md="6">
-                    <MDBInput
-                      className="white-text"
-                      label="First Name"
-                      icon="user"
-                      type="text"
-                      labelClass="white-text"
-                      iconClass="white-text"
-                      name="fname"
-                      required
-                    />
-                  </MDBCol>
-                  <MDBCol md="6">
-                    <MDBInput
-                      className="white-text"
-                      label="Middle Name"
-                      icon="user"
-                      type="text"
-                      labelClass="white-text"
-                      iconClass="white-text"
-                      name="mname"
-                    />
-                  </MDBCol>
-                  <MDBCol md="6">
-                    <MDBInput
-                      className="white-text"
-                      label="Last Name"
-                      icon="user"
-                      type="text"
-                      labelClass="white-text"
-                      iconClass="white-text"
-                      name="lname"
-                      required
-                    />
-                  </MDBCol>
-                  <MDBCol md="6">
-                    <MDBSelect
-                      getValue={value => setSuffix(value[0])}
-                      label={"Suffix"}
-                      labelClass="white-text"
-                      className={`colorful-select dropdown-primary  hidden-md-down white-text`}
-                    >
-                      <MDBSelectInput
-                        name="suffix"
-                        className="white-text"
-                        selected={`NONE`}
-                      />
-                      <MDBSelectOptions>
-                        {Suffixes.map(sfx => (
-                          <MDBSelectOption key={sfx} value={sfx}>
-                            {sfx}
-                          </MDBSelectOption>
-                        ))}
-                      </MDBSelectOptions>
-                    </MDBSelect>
-                  </MDBCol>
-                </MDBRow>
-
-                <MDBInput
-                  className="white-text"
-                  label="E-mail Address"
-                  icon="envelope"
-                  type="email"
-                  labelClass="white-text"
-                  iconClass="white-text"
-                  name="email"
-                  required
-                />
-                <MDBInput
-                  className="white-text"
-                  label="Password"
-                  minLength={8}
-                  icon={isLocked.password ? "lock" : "unlock"}
-                  onIconMouseEnter={() =>
-                    setIsLocked({ ...isLocked, password: false })
-                  }
-                  onIconMouseLeave={() =>
-                    setIsLocked({ ...isLocked, password: true })
-                  }
-                  type={isLocked.password ? "password" : "text"}
-                  labelClass="white-text"
-                  iconClass="white-text"
-                  name="password"
-                  required
-                />
-                <MDBInput
-                  className="white-text"
-                  label="Confirm your password"
-                  minLength={8}
-                  icon={isLocked.confirmPassword ? "lock" : "unlock"}
-                  onIconMouseEnter={() =>
-                    setIsLocked({ ...isLocked, confirmPassword: false })
-                  }
-                  onIconMouseLeave={() =>
-                    setIsLocked({ ...isLocked, confirmPassword: true })
-                  }
-                  type={isLocked.confirmPassword ? "password" : "text"}
-                  labelClass="white-text"
-                  iconClass="white-text"
-                  name="confirmPassword"
-                  required
-                />
-
-                <MDBInput
-                  label="I read and agree with the Terms and Conditions"
-                  labelClass="white-text"
-                  type="checkbox"
-                  id="agreement"
-                  required
-                />
-
-                {message && (
-                  <div
-                    className={`alert alert-${
-                      isSuccess ? "success" : "warning"
-                    } text-center mt-3`}
-                  >
-                    {message}
+    <MDBAnimation reveal type="fadeIn">
+      <div
+        className={`homePage-flip-container ${
+          flipped ? "homePage-flipped" : ""
+        }`}
+      >
+        <div className="homePage-flip-card">
+          <div className="homePage-flip-card-front">
+            <Carousel
+              autoPlay
+              infiniteLoop
+              showThumbs={false}
+              showStatus={false}
+              showArrows={false}
+            >
+              <div className="homeSlideStyle">
+                <div className="homeSlideContent">
+                  <div className="hometextContainerStyle">
+                    <h1>Your Complete Diagnostic Information System</h1>
+                    <h5>Simplified, Integrated, Scalable.</h5>
+                    <p>
+                      Empowering medical providers with seamless laboratory
+                      management, advanced reporting, and patient-centric care.
+                    </p>
                   </div>
-                )}
-
-                <div className="text-center mt-4">
-                  <MDBBtn
-                    disabled={isLoading}
-                    type="submit"
-                    color="light-blue"
-                    rounded
-                  >
-                    {isLoading ? <MDBIcon icon="spinner" spin /> : "Sign up"}
-                  </MDBBtn>
-                  <hr className="hr-light mb-3 mt-4" />
-
-                  {/* <div className="inline-ul text-center d-flex justify-content-center">
-                  <MDBIcon
-                    fab
-                    icon="google"
-                    size="lg"
-                    className="white-text p-2 m-2 cursor-pointer"
-                  />
-                  <MDBIcon
-                    fab
-                    icon="facebook"
-                    size="lg"
-                    className="white-text p-2 m-2 cursor-pointer"
-                  />
-                  <MDBIcon
-                    fab
-                    icon="yahoo"
-                    size="lg"
-                    className="white-text p-2 m-2 cursor-pointer"
-                  />
-                </div> */}
+                  <div className="homeimageContainerStyle">
+                    <img src={IMG1} alt="Slide 1" className="homeimageStyle" />
+                  </div>
                 </div>
-              </MDBCardBody>
-            </MDBCard>
-          </form>
-        </MDBAnimation>
-      </MDBCol>
-    </MDBRow>
+              </div>
+
+              <div className="homeSlideStyle">
+                <div className="homeSlideContent">
+                  <div className="hometextContainerStyle">
+                    <h1>Seamless Device Integration</h1>
+                    <h5>Connect Your Laboratory Analyzers with Ease.</h5>
+                    <p>
+                      Full compatibility with hematology, chemistry, and
+                      immunology analyzers. HL7-ready for EMR and LIS
+                      integration.
+                    </p>
+                  </div>
+                  <div className="homeimageContainerStyle">
+                    <img src={IMG2} alt="Slide 2" className="homeimageStyle" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="homeSlideStyle">
+                <div className="homeSlideContent">
+                  <div className="hometextContainerStyle">
+                    <h1>Built for Clinics, Hospitals, and Mobile Units</h1>
+                    <h5>
+                      From small clinics to nationwide chains — scalable as you
+                      grow.
+                    </h5>
+                    <p>
+                      Manage patient records, results, billing, inventory, and
+                      mobile laboratory operations — all in one platform.
+                    </p>
+                  </div>
+                  <div className="homeimageContainerStyle">
+                    <img src={IMG3} alt="Slide 3" className="homeimageStyle" />
+                  </div>
+                </div>
+              </div>
+            </Carousel>
+          </div>
+          <div className="homePage-flip-card-back">
+            <div className="d-flex align-items-center">
+              <div>
+                <h2 style={{ fontWeight: "400" }}>Patient Registration Form</h2>
+                <form style={{ width: "100%" }}>
+                  <MDBRow>
+                    <MDBCol md="6">
+                      <MDBInput
+                        label="First Name"
+                        icon="user"
+                        type="text"
+                        name="fname"
+                        required
+                      />
+
+                      <MDBInput
+                        label="Middle Name"
+                        icon="user"
+                        type="text"
+                        name="mname"
+                      />
+                      <MDBRow
+                        className="d-flex align-items-center"
+                        style={{ marginTop: "-25px" }}
+                      >
+                        <MDBCol className="pr-0">
+                          <MDBInput
+                            label="Last Name"
+                            icon="user"
+                            type="text"
+                            name="lname"
+                            required
+                          />
+                        </MDBCol>
+                        <MDBCol className="pl-0">
+                          <MDBSelect
+                            getValue={(value) => setSuffix(value[0])}
+                            label={"Suffix"}
+                            className={`colorful-select dropdown-primary  hidden-md-down ml-3`}
+                          >
+                            <MDBSelectInput name="suffix" selected={`NONE`} />
+                            <MDBSelectOptions>
+                              {Suffixes.map((sfx) => (
+                                <MDBSelectOption key={sfx} value={sfx}>
+                                  {sfx}
+                                </MDBSelectOption>
+                              ))}
+                            </MDBSelectOptions>
+                          </MDBSelect>
+                        </MDBCol>
+                      </MDBRow>
+
+                      <div className="d-flex align-items-center mt-1 mb-4">
+                        <MDBInput
+                          label="Male"
+                          type="checkbox"
+                          id="male"
+                          checked={isMale}
+                          onChange={handleMaleChange}
+                          required
+                        />
+                        <MDBInput
+                          label="Female"
+                          type="checkbox"
+                          id="female"
+                          checked={!isMale}
+                          onChange={() => setIsMale(false)}
+                          required
+                        />
+                      </div>
+                    </MDBCol>
+                    <MDBCol md="6">
+                      <MDBInput
+                        label="E-mail Address"
+                        icon="envelope"
+                        type="email"
+                        name="email"
+                        required
+                      />
+                      <MDBInput
+                        label="Password"
+                        minLength={8}
+                        icon={isLocked.password ? "lock" : "unlock"}
+                        onIconMouseEnter={() =>
+                          setIsLocked({ ...isLocked, password: false })
+                        }
+                        onIconMouseLeave={() =>
+                          setIsLocked({ ...isLocked, password: true })
+                        }
+                        type={isLocked.password ? "password" : "text"}
+                        name="password"
+                        required
+                      />
+                      <MDBInput
+                        label="Confirm your password"
+                        minLength={8}
+                        icon={isLocked.confirmPassword ? "lock" : "unlock"}
+                        onIconMouseEnter={() =>
+                          setIsLocked({ ...isLocked, confirmPassword: false })
+                        }
+                        onIconMouseLeave={() =>
+                          setIsLocked({ ...isLocked, confirmPassword: true })
+                        }
+                        type={isLocked.confirmPassword ? "password" : "text"}
+                        name="confirmPassword"
+                        required
+                      />
+                      <MDBInput
+                        label="I read and agree with the Terms and Conditions"
+                        type="checkbox"
+                        id="agreement"
+                        required
+                      />
+                    </MDBCol>
+                  </MDBRow>
+
+                  {message && (
+                    <div
+                      className={`alert alert-${
+                        isSuccess ? "success" : "warning"
+                      } text-center mt-3`}
+                    >
+                      {message}
+                    </div>
+                  )}
+
+                  <div className="text-center mt-4">
+                    <MDBBtn
+                      disabled={isLoading}
+                      type="submit"
+                      color="light-blue"
+                      rounded
+                    >
+                      {isLoading ? <MDBIcon icon="spinner" spin /> : "Sign up"}
+                    </MDBBtn>
+                  </div>
+                </form>
+              </div>
+              <img
+                src={REGISTRATIONIMG}
+                className="homePage-register-img"
+                alt="registrationImg"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="homeSlideContainer"></div>
+    </MDBAnimation>
   );
 }

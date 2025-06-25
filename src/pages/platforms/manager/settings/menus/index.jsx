@@ -8,6 +8,10 @@ import {
   RESET,
   SetFILTERED,
 } from "../../../../../services/redux/slices/commerce/catalog/menus";
+import {
+  INSOURCE as BROWSE_PROVIDERS,
+  RESET as RESET_PROVIDERS,
+} from "../../../../../services/redux/slices/assets/providers";
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
 import TableRowCount from "../../../../../components/pagination/rows";
@@ -15,6 +19,8 @@ import Pagination from "../../../../../components/pagination";
 import Swal from "sweetalert2";
 import Search from "../../../../../components/searchables/search";
 import TableLoading from "../../../../../components/tableLoading";
+import ExportToExcel from "./exportToExcel";
+// import PDFExport from "../../../../../services/utilities/export/pdf/menus";
 
 const Menus = () => {
   const [menus, setMenus] = useState([]),
@@ -25,6 +31,7 @@ const Menus = () => {
     [totalPages, setTotalPages] = useState(1),
     [willCreate, setWillCreate] = useState(true),
     [visible, setVisible] = useState(false),
+    [showExport, setShowExport] = useState(false),
     { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess, isLoading, filtered } = useSelector(
       ({ menus }) => menus
@@ -51,6 +58,24 @@ const Menus = () => {
     }
 
     return () => dispatch(RESET());
+  }, [token, dispatch, activePlatform]);
+
+  //Initial Browse
+  useEffect(() => {
+    if (token && activePlatform?.branchId) {
+      dispatch(
+        BROWSE_PROVIDERS({
+          token,
+          key: {
+            vendors: activePlatform?.branchId,
+            status: "approved",
+            categories: ["ctr", "mbs", "wls"],
+          },
+        })
+      );
+    }
+
+    return () => dispatch(RESET_PROVIDERS());
   }, [token, dispatch, activePlatform]);
 
   //Set fetched data for mapping
@@ -144,18 +169,18 @@ const Menus = () => {
             >
               <MDBIcon icon="plus" className="mt-0" />
             </MDBBtn>
-            {/* <MDBBtn
-              onClick={handleGenerate}
+            <MDBBtn
+              onClick={() => setShowExport(true)}
               disabled={isLoading}
               outline
-              title="Generate"
               color="white"
               rounded
               size="sm"
               className="px-2"
+              title="Export Menus"
             >
-              <MDBIcon icon="arrow-down" className="mt-0" />
-            </MDBBtn> */}
+              <MDBIcon icon="file-export" />
+            </MDBBtn>
           </div>
         </MDBView>
         <MDBCardBody className="pb-0">
@@ -190,6 +215,10 @@ const Menus = () => {
         toggle={toggleModal}
       />
       <Generate visible={visible} setVisible={setVisible} />
+      <ExportToExcel
+        show={showExport}
+        toggle={() => setShowExport(!showExport)}
+      />
     </>
   );
 };

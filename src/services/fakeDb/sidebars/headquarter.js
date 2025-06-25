@@ -4,10 +4,12 @@ import {
   Physicians,
   Procurments as Procurement,
   Staffs,
+  Hmo,
 } from "../../../pages/platforms/headquarter/file201";
+import { banner } from "../../../pages/platforms/headquarter/settings/profile";
 import {
   Outsources,
-  Insources,
+  // Insources,
   Utilities,
   Hotlines,
   Suppliers,
@@ -20,12 +22,11 @@ import {
   Logo,
   Tagline,
   Description,
-  Applicants,
   Tieups,
 } from "../../../pages/platforms/manager/settings";
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
-
+import Applicants from "../../../pages/platforms/headquarter/settings/personnels/applicants";
 const headquarter = [
   {
     name: "Human Resources",
@@ -121,7 +122,7 @@ const headquarter = [
             name: "Banner",
             path: "/banners",
             icon: "layout",
-            component: Banner,
+            component: banner,
           },
           {
             name: "Logos",
@@ -158,7 +159,13 @@ const headquarter = [
             name: "Insourcing",
             path: "/insourcing",
             icon: "download",
-            component: Insources,
+            // component: Insources,
+          },
+          {
+            name: "HMO",
+            path: "/hmo",
+            icon: "external-link",
+            component: Hmo,
           },
           {
             name: "Suppliers",

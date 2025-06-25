@@ -1,41 +1,34 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { debounce, isArrayLikeObject } from "lodash";
+import { debounce } from "lodash";
 import "./search.css";
 import { globalSearch } from "../../services/utilities";
 import { MDBBtn, MDBIcon } from "mdbreact";
 
 export default function Search({
   collections = [],
-  hideButton = true,
-  haveAction = true,
+  hideButton = false,
+  haveAction = false,
   setFiltered = () => {},
   reset = () => {},
   handleAdd = () => {},
 }) {
   const [showBtn, setShowBtn] = useState(false),
     [searchValue, setSearchValue] = useState("");
-  console.log("collections", collections);
 
   useEffect(() => {
     if (!hideButton) setShowBtn(true);
   }, [hideButton]);
   const debouncedSearch = useMemo(() => {
     return debounce((key) => {
-      console.log("key", key);
-      // console.log("collections", collections);
-
       const items = globalSearch(collections, key);
-      // if (hideButton && items.length === 0) setShowBtn(true);
-      // if (hideButton && items.length > 0) setShowBtn(false);
+      if (hideButton && items.length === 0) setShowBtn(true);
+      if (hideButton && items.length > 0) setShowBtn(false);
       console.log("items", items);
-
       setFiltered(items);
     }, 300);
   }, [collections, setFiltered, hideButton]);
 
   const handleChange = (value) => {
-    console.log("value", value);
-
     if (!value) {
       debouncedSearch.cancel();
       if (hideButton) setShowBtn(false);

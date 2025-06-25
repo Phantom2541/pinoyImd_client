@@ -1,0 +1,192 @@
+.homePage-affliated-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.homePage-affliated-container {
+  width: 80%;
+  height: 800px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #4cae9e;
+  overflow: hidden;
+}
+
+.homePage-affliated-tabs {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #00796b;
+  overflow: hidden;
+}
+
+.homePage-affliated-tabs button {
+  width: 100%;
+  height: auto;
+  border: none;
+  font-size: 1.35rem;
+  background: none;
+  color: white;
+  padding: 10px 0;
+  cursor: pointer;
+  z-index: 1;
+  position: relative;
+}
+
+/* Sliding background highlight */
+.tab-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  background-color: #4cae9e;
+  transition: left 0.4s ease, width 0.4s ease;
+  z-index: 0;
+}
+
+.homePage-affliated-tabs button.active {
+  background-color: #4cae9e;
+}
+
+.homePage-affliated-suppliers.active,
+.homePage-affliated-diagnostics.active,
+.homePage-affliated-physicians.active {
+  display: block;
+}
+
+.homePage-affliated-suppliers,
+.homePage-affliated-diagnostics,
+.homePage-affliated-physicians {
+  display: none;
+}
+
+.homePage-affliated-content-suppliers,
+.homePage-affliated-content-diagnostics,
+.homePage-affliated-content-physicians {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.homePage-affliated-content-suppliers.active,
+.homePage-affliated-content-diagnostics.active,
+.homePage-affliated-content-physicians.active {
+  background-color: #4cae9e;
+}
+
+.homePage-affliated-physicians-card-container {
+  width: 100%;
+  height: 100%;
+  /* display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+  background-color: green;
+  display: flex;
+}
+
+.homePage-affliated-physicians-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.homePage-affliated-physicians-card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 2px;
+}
+
+.homePage-affliated-physicians-card .homePage-affliated-physicians-card-img {
+  width: 200px;
+  border-radius: 5px;
+}
+
+.homePage-affliated-physicians-card .homePage-affliated-physicians-card-name {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.homePage-affliated-physicians-card
+  .homePage-affliated-physicians-card-position {
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-align: right;
+}
+
+.homeSlideStyle-affliated {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  padding: 0 10px;
+  gap: 30px;
+}
+
+.homeSlideContent-affliated {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+}
+
+.homeimageContainerStyle-affliated {
+  flex: 1;
+}
+
+.homeimageContainerStyle-affliated img {
+  border-radius: 10px;
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.homeimageStyle-affliated {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hometextContainerStyle-affliated {
+  flex: 1;
+  padding: "20px";
+  text-align: "left";
+}
+
+.hometextContainerStyle-affliated h1 {
+  text-align: left;
+  font-weight: 500;
+  color: white;
+}
+
+.hometextContainerStyle-affliated h5 {
+  text-align: left;
+  font-weight: 400;
+  font-style: italic;
+  color: white;
+}
+
+.hometextContainerStyle-affliated p {
+  text-align: left;
+  margin-top: 40px;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: white;
+}
+
+.affliated-indicator-arrow {
+  border: none;
+  background-color: transparent;
+  font-size: 40px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  outline: black;
+  margin-top: -6.5px;
+  font-weight: bold;
+}

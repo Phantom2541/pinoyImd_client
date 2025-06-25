@@ -1,21 +1,30 @@
-import { Categories, Memberships } from "../../fakeDb";
+import { Categories, HMO, Memberships } from "../../fakeDb";
 
-const individual = (menu, category, privilege, membership) => {
+const individual = (
+  menu,
+  category,
+  privilege,
+  membership,
+  hmoCode,
+  contract
+) => {
   const { isPromo, promo = 0, discountable } = menu;
 
-  const _abbr = ["wi", "bp", "mc", "is", "sc"].includes(category)
+  const _abbr = ["wi", "bp", "mc", "mbs", "sc"].includes(category)
     ? "opd"
     : category;
-  const gross = menu[_abbr];
 
-  const hasMembership = ["is", "hmo"].includes(category);
+  var gross = menu[_abbr];
+  if (_abbr === "wls") gross = HMO.getSrp(hmoCode, menu?.hmo);
+  if (_abbr === "ctr") gross = menu?.[contract];
 
   let up = (gross * 80) / 100;
-  if (membership && hasMembership && discountable) {
-    const dr = Memberships.find((m) => m.value === membership)?.discount || 0;
+  if (membership && category === "mbs" && discountable) {
+    const dr = Memberships.getDiscount(membership) || 0;
+    console.log("discount", dr);
     const discount = gross * dr;
     up = gross - discount;
-
+    console.log("up", up);
     return {
       gross,
       up,
@@ -66,14 +75,21 @@ const individual = (menu, category, privilege, membership) => {
   };
 };
 
-const computeGD = (menu, categoryIndex, privilege, membership) => {
+const computeGD = (
+  menu,
+  categoryIndex,
+  privilege,
+  membership,
+  hmoCode,
+  contract
+) => {
   const category = Categories[categoryIndex] || {}; // Ensure category is always an object
   // console.log("category", category);
 
   const abbr = category.abbr || ""; // Fallback to an empty string if undefined
 
   if (!Array.isArray(menu))
-    return individual(menu, abbr, privilege, membership);
+    return individual(menu, abbr, privilege, membership, hmoCode, contract);
 
   const accumulator = {
     gross: 0,
@@ -81,7 +97,14 @@ const computeGD = (menu, categoryIndex, privilege, membership) => {
   };
 
   for (const item of menu) {
-    const { gross, discount } = individual(item, abbr, privilege, membership);
+    const { gross, discount } = individual(
+      item,
+      abbr,
+      privilege,
+      membership,
+      hmoCode,
+      contract
+    );
     accumulator.gross += gross;
     accumulator.discount += discount;
   }

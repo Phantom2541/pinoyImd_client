@@ -66,22 +66,7 @@ export default function ApplicationModal({
       );
   }, [dispatch, token, auth, visibility]);
 
-  //console.log("unused variable setPositions", setPositions);
-
   const handleToggle = () => setVisibility(!visibility);
-
-  // const handleApplication = (e) => {
-  //   e.preventDefault();
-  //   if (!!company.branches.length) {
-  //     // console.log({
-  //     //   userId: auth._id,
-  //     //   ...application,
-  //     // });
-  //   } else {
-  //     // toast.warn("Sorry, there are no available branches for this company.");
-  //     alert("Sorry, there are no available branches for this company.");
-  //   }
-  // };
 
   const handleDepartment = ({ value }) => {
     setDepartment(value);
@@ -201,10 +186,19 @@ export default function ApplicationModal({
     );
   };
 
-  const sortByAscending = (array, key) => {
-    return [...array].sort((a, b) =>
-      String(a[key]).localeCompare(String(b[key]))
-    );
+  const sortByAscending = (array, key, isBranches = false) => {
+    return [...array].sort((a, b) => {
+      if (isBranches) {
+        // Unahin ang `true`, ilagay sa taas
+        if (a[key] === b[key]) {
+          return 0;
+        }
+        return a[key] ? -1 : 1;
+      }
+
+      // Default string-based sort
+      return String(a[key]).localeCompare(String(b[key]));
+    });
   };
   return (
     <MDBModal size="xl" isOpen={visibility} toggle={setVisibility} backdrop>
@@ -232,24 +226,34 @@ export default function ApplicationModal({
                 onChange={(e) => handleChange(e)}
               >
                 <option value={""}>Select a branch</option>
-                {sortByAscending(company.branches, "name")?.map((branch) => {
-                  const disabler = collections?.find(
-                    (catalog) => catalog?.branch?._id === branch?._id
-                  );
-                  return (
-                    <option
-                      value={branch._id}
-                      key={branch._id}
-                      disabled={disabler}
-                      style={{
-                        backgroundColor: disabler ? "yellow" : "white",
-                      }}
-                    >
-                      {branch?.name}
-                      {disabler ? " (Application on process)" : ""}
-                    </option>
-                  );
-                })}
+                {sortByAscending(company.branches, "isHiring", true)?.map(
+                  (branch) => {
+                    const { isHiring = false } = branch;
+                    const disabler = collections?.find(
+                      (catalog) => catalog?.branch?._id === branch?._id
+                    );
+                    return (
+                      <option
+                        value={branch._id}
+                        key={branch._id}
+                        disabled={disabler || !isHiring}
+                        className={
+                          disabler
+                            ? "bg-info text-white"
+                            : !isHiring
+                            ? "grey-text"
+                            : ""
+                        }
+                        // style={{
+                        //   backgroundColor: disabler ? "purple" : "white",
+                        // }}
+                      >
+                        {branch?.name}
+                        {disabler ? " (Application on process)" : ""}
+                      </option>
+                    );
+                  }
+                )}
               </select>
             </MDBCol>
             <MDBCol md="4">

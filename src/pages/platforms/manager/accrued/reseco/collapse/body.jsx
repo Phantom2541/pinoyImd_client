@@ -9,7 +9,7 @@ export default function Collapsable({ deals }) {
     <MDBTable bordered className="m-0 p-0">
       <MDBTableHead>
         <tr>
-          {!vendor && <th>Source</th>}
+          {!vendor?._id && <th>Source</th>}
           <th>Customer</th>
           <th>Category</th>
           <th>Services</th>
@@ -32,7 +32,7 @@ export default function Collapsable({ deals }) {
           } = deal;
           return (
             <tr key={_id}>
-              {!vendor && (
+              {!vendor?._id && (
                 <td>
                   <span className="fw-bold mr-1"> {++index}.</span>
                   {source?.displayname}
