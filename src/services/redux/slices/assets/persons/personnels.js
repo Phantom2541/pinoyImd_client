@@ -111,9 +111,9 @@ export const USER = createAsyncThunk(
 
 export const EMPLOYEES = createAsyncThunk(
   `${url}/employees`,
-  ({ token, branch }, thunkAPI) => {
+  ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/employees`, token, { branch });
+      return axioKit.universal(`${url}/employees`, token, params);
     } catch (error) {
       const message =
         (error.response &&

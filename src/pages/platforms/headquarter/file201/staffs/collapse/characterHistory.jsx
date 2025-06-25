@@ -1,14 +1,20 @@
-const CharacterHistory = () => {
+import { orderBy } from "lodash";
+import { dateFormat, employment } from "../../../../../../services/utilities";
+
+const CharacterHistory = ({ remarks }) => {
+  console.log("remarks", remarks);
   return (
     <div
-      className="bg-white w-100"
+      className="bg-white w-100 text-dark"
       style={{
         borderLeft: "2px solid #ccc",
-        paddingLeft: "15px",
+        position: "absolute",
+        width: "100%",
+        bottom: "0",
       }}
     >
-      {orderBy(payments, ["createdAt"], ["desc"]).map(
-        ({ method: type, amount, chequeNo, clearDate, createdAt }, i) => (
+      {orderBy(remarks, ["createdAt"], ["desc"]).map(
+        ({ method: type, createdAt, title }, i) => (
           <div
             key={`breakdown-${type}-${i}`}
             style={{ position: "relative", marginBottom: "12px" }}
@@ -26,13 +32,7 @@ const CharacterHistory = () => {
                   top: "3px",
                 }}
               ></span>
-              <img
-                src={imageSrc(type)}
-                alt={`no-image-${type}`}
-                className="mr-2"
-                style={{ height: "0.8rem" }}
-              />
-              ₱{amount.toLocaleString()}
+              <small>{title}</small>
               <span
                 style={{
                   float: "right",
@@ -44,19 +44,16 @@ const CharacterHistory = () => {
               </span>
             </div>
 
-            {type.toLowerCase() === "cheque" && (
-              <div
-                style={{
-                  fontSize: "0.85rem",
-                  color: "#555",
-                  marginLeft: "10px",
-                  marginTop: "4px",
-                }}
-              >
-                Cheque No: <strong>{chequeNo}</strong> <br />
-                Clearing: <strong>{dateFormat(clearDate)}</strong>
-              </div>
-            )}
+            <div
+              style={{
+                fontSize: "0.85rem",
+                color: "#555",
+                marginLeft: "10px",
+                marginTop: "4px",
+              }}
+            >
+              Cheque No: <strong>{"tes"}</strong> <br />
+            </div>
           </div>
         )
       )}
