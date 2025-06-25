@@ -93,7 +93,7 @@ export default function Staffs({ match }) {
   }, [dispatch, match]);
   return (
     <section className="team-section text-center">
-      <h1 className="text-center mt-5 h1">Staffs</h1>
+      <h1 className="text-center mt-5 h1">Employees</h1>
       <p
         className="text-center mb-5 w-responsive mx-auto"
         style={{ fontWeight: "400" }}

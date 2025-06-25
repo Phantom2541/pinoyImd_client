@@ -2,17 +2,14 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import TableRowCount from "../../../../../components/pagination/rows";
 import Pagination from "../../../../../components/pagination";
-import {SetMaxPage,SetActivePAGE} from "../../../../../services/redux/slices/market/products";
-const Footer = () => {
-  const { isLoading, totalPages, activePage } = useSelector(
-      ({ products }) => products
-    ),
-    { maxPage } = useSelector(({ auth }) => auth),
-    dispatch = useDispatch();
+import { SetMaxPage, SetActivePAGE } from "../../../../../services/redux/slices/market/attendances";
 
-  useEffect(() => {
-    dispatch(SetMaxPage(maxPage));
-  }, [dispatch, maxPage]);
+const Footer = () => {
+  const { isLoading, totalPages, activePage } = useSelector(({ attendances }) => attendances),
+  { maxPage } = useSelector(({ auth }) => auth),
+  dispatch = useDispatch();
+
+  useEffect(() => {dispatch(SetMaxPage(maxPage));}, [dispatch, maxPage]);
 
   const handlePageChange = (action) => {
     const newPage =

@@ -35,6 +35,7 @@ import Calendar from "./calendar";
 import Policy from "./policy";
 import Roles from "./roles";
 import HMO from "./hmo";
+import Quotes from "./quotes";
 
 export {
   Denominations,
@@ -70,4 +71,5 @@ export {
   Access,
   Policy,
   HMO,
+  Quotes,
 };

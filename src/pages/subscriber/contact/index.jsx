@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { MDBIcon, MDBInput, MDBBtn } from "mdbreact";
 import "./style.css";
 import { useToasts } from "react-toast-notifications";
@@ -65,7 +65,7 @@ export default function ContactUs() {
   };
 
   const { name, subject, email, message } = form;
-  const { contacts = {}, address = "" } = details || {};
+  const { contacts = {}, address = "", branches = [] } = details || {};
 
   const [coordinates, setCoordinates] = useState([15.35, 121.05]); // default lang
 
@@ -100,11 +100,11 @@ export default function ContactUs() {
   }, [address]);
 
   return (
-    <section className="d-flex justify-content-center align-content-center">
-      <div className="contactUs-container">
-        <div className="contactUs-top">
-          <div className="contactUs-leftSide">
-            <div className="contactUs-logo">
+    <section className="subscriber-contactUs-section d-flex justify-content-center align-content-center">
+      <div className="subscriber-contactUs-container">
+        <div className="subscriber-contactUs-top">
+          <div className="subscriber-contactUs-leftSide">
+            <div className="subscriber-contactUs-logo">
               <img
                 src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
                 alt="logo"
@@ -114,96 +114,66 @@ export default function ContactUs() {
               />
               <span>{details?.name}</span>
             </div>
-            <span className="contactUs-quote">{details?.tagline}</span>
-            <div className="contactUs-address">
+            <span className="contactUs-quote">"{details?.tagline}"</span>
+            <div className="subscriber-contactUs-address">
               <MDBIcon fas icon="map-marker-alt" />
               <span>{fullAddress(address)}</span>
             </div>
-            <div className="contactUs-email">
+            <div className="subscriber-contactUs-email">
               <MDBIcon fas icon="envelope" />
               <span> {contacts?.email}</span>
             </div>
-            <div className="contactUs-phone">
+            <div className="subscriber-contactUs-phone">
               <MDBIcon fas icon="phone-alt" />
               <span> {mobile(contacts?.mobile)}</span>
             </div>
           </div>
-          <div className="contactUs-middleSide">
+          <div className="subscriber-contactUs-middleSide">
             <div style={{ height: "100%", width: "100%" }}>
               <Map
                 center={coordinates}
                 zoom={12}
-                style={{ height: "100%", width: "100%", borderRadius: "5px" }}
+                style={{ height: "90%", width: "100%", borderRadius: "5px" }}
               >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <Marker position={coordinates}>
-                  <Popup>{capitalize(fullAddress(address))}</Popup>
+                  <Popup>
+                    Pinoy iMD — Labanos Compound, Gulod street, barangay San
+                    pedro, General Tinio(Papaya)
+                  </Popup>
                 </Marker>
               </Map>
             </div>
           </div>
         </div>
-        <div className="contactUs-rightSide">
-          <span className="contactUs-emailUs">Contact Us:</span>
-          <div style={{ marginTop: "-20px" }}>
-            <form onSubmit={handleSubmit}>
-              <MDBInput
-                icon="user"
-                label="Your name"
-                labelClass="white-text"
-                className="text-white"
-                iconClass="white-text"
-                type="text"
-                value={name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                id="form-name"
-              />
-              <MDBInput
-                icon="envelope"
-                label="Your email"
-                labelClass="white-text"
-                className="text-white"
-                iconClass="white-text"
-                type="email"
-                value={email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-              />
-
-              <MDBInput
-                icon="tag"
-                label="Subject"
-                labelClass="white-text"
-                className="text-white"
-                iconClass="white-text"
-                value={subject}
-                onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                required
-                type="text"
-              />
-
-              <MDBInput
-                icon="pencil-alt"
-                label="Your message"
-                labelClass="white-text"
-                className="text-white"
-                iconClass="white-text "
-                type="textarea"
-                rows={1}
-                value={message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                required
-              />
-
-              <div className="text-right">
-                <MDBBtn disabled={alreadySent} type="submit" color="info">
-                  {alreadySent ? "E-mail Sent" : "Send"}
-                </MDBBtn>
-              </div>
-            </form>
+        <div className="subscriber-contactUs-rightSide">
+          <div className="subscriber-contactUs-branches-container">
+            <p>Branches</p>
+            <div className="subscriber-contactUs-branches">
+              {branches.map(({ name, contacts = {} }, index) => {
+                console.log("contacts", contacts);
+                return (
+                  <div
+                    className="subscriber-contactUs-branch-wrapper"
+                    key={index}
+                  >
+                    <div className="subscriber-contactUs-branch-line">
+                      <span className="subscriber-contactUs-branch-name">
+                        {name}
+                      </span>
+                    </div>
+                    <div className="subscriber-contactUs-branchInfo">
+                      <span>{contacts?.person}</span>
+                      <span>{mobile(contacts?.mobile)}</span>
+                      <span>{contacts?.email}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

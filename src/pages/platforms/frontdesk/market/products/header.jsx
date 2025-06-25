@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
-import {
-  BROWSE,
-  SetFILTER,
-} from "../../../../../services/redux/slices/market/products";
-import { SetCREATE } from "../../../../../services/redux/slices/market/products";
+import {BROWSE, SetCREATE, SetFILTER} from "../../../../../services/redux/slices/market/products";
+
+
 
 const Header = () => {
+
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ products }) => products),
     dispatch = useDispatch();
-
+  
   useEffect(() => {
-    if (token)
-      dispatch(
-        BROWSE({ token, params: { branchId: activePlatform.branchId } })
-      );
-  }, [token, dispatch, activePlatform]);
+      if (token) {
+        dispatch(BROWSE({ token, params: { branchId: activePlatform.branchId} }));
+      }
+    }, [token, dispatch, activePlatform]);
+    
+    useEffect(() => { console.log("HUH", collections); }, [collections]);
 
   return (
     <MDBView
@@ -27,8 +27,8 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Product
-          {console.log("collections of 1700 idk why are you here", collections)}
+          
+          {collections.length} Productss
         </span>
       </div>
       <div>
