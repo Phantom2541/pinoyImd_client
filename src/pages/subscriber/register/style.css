@@ -1,9 +1,16 @@
-.homeSlideContainer {
-  position: relative;
-  width: 1300px;
+.subscriber-register-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.homeSlideStyle {
+.subscriber-slide-container {
+  position: relative;
+  width: 100%;
+}
+
+.subscriber-slide-style {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,41 +19,41 @@
   gap: 30px;
 }
 
-.hometextContainerStyle {
+.subscriber-text-container-style {
   flex: 1;
   padding: "20px";
   text-align: "left";
 }
 
-.hometextContainerStyle h1 {
+.subscriber-text-container-style h1 {
   text-align: left;
   font-weight: 500;
 }
 
-.hometextContainerStyle h5 {
+.subscriber-text-container-style h5 {
   text-align: left;
   font-weight: 400;
   font-style: italic;
 }
 
-.hometextContainerStyle p {
+.subscriber-text-container-style p {
   text-align: left;
   margin-top: 40px;
   font-size: 1.1rem;
-  font-weight: 300;
+  font-weight: 400;
 }
 
-.homeimageStyle {
+.subscriber-image-style {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.homeimageContainerStyle {
+.subscriber-image-container-style {
   flex: 1;
 }
 
-.homeimageContainerStyle img {
+.subscriber-image-container-style img {
   border-radius: 10px;
   width: 100%;
   height: 400px;
@@ -55,22 +62,25 @@
 }
 
 /* flip container */
-.homePage-flip-container {
+.subscriber-flip-container {
   width: 100%;
   height: 450px;
   perspective: 1000px;
 }
 
-.homePage-flip-card {
+.subscriber-flip-card {
   width: 100%;
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.8s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.homePage-flip-card-front,
-.homePage-flip-card-back {
+.subscriber-flip-card-front,
+.subscriber-flip-card-back {
   position: absolute;
   top: 0;
   left: 0;
@@ -83,13 +93,13 @@
   align-items: center;
 }
 
-.homePage-flip-card-front {
+.subscriber-flip-card-front {
   background-color: transparent;
 }
 
-.homePage-flip-card-back {
+.subscriber-flip-card-back {
   position: relative;
-  width: 100%;
+  width: 80%;
   height: 450px;
   background-color: #f8f8f8;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -98,33 +108,34 @@
   padding: 20px 40px;
 }
 
-.homePage-flip-btn {
+.subscriber-back-button {
   position: absolute;
   top: 0;
   left: 0;
-  transform: translate(50%, 20%);
+  transform: translate(100%, 100%);
   background-color: transparent;
   border: none;
 }
 
-.homePage-flip-container.homePage-flipped .homePage-flip-card {
+.subscriber-flip-container.subscriber-flipped .subscriber-flip-card {
   transform: rotateY(180deg);
 }
 
-.homePage-flip-card-back h2 {
+.subscriber-flip-card-back h2 {
   margin-left: 50px;
 }
 
-.homePage-flip-card-back form {
+.subscriber-flip-card-back form {
   width: 100%;
 }
 
-.homePage-register-img {
+.subscriber-register-img {
   display: block !important;
   width: 350px;
 }
 
-.homeSlideContent {
+.subscriber-slide-content {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -133,54 +144,79 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1660px) {
+  .subscriber-flip-card-back {
+    width: 100%;
+    height: auto;
+  }
+}
+
 @media (max-width: 1280px) {
-  .homePage-register-img {
+  .subscriber-flip-container {
+    width: 85%;
+  }
+  .subscriber-slide-style {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  .subscriber-register-img {
     display: none !important;
   }
-}
+  .subscriber-text-container-style {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0 30px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: black;
+    opacity: 0;
+    border-radius: 10px;
+    transition: all 0.5s ease;
+  }
 
-@media (max-width: 768px) {
-  .homeSlideContent {
-    flex-direction: column-reverse; /* Ito ang key: reverse para mauna yung image */
+  .subscriber-slide-style:hover .subscriber-text-container-style {
+    opacity: 1;
   }
-  .homeimageStyle {
-    width: 100px;
+  .subscriber-image-container-style img {
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  .subscriber-text-container-style h1 {
+    font-size: 2.5rem;
   }
 
-  .hometextContainerStyle h1,
-  .hometextContainerStyle h5,
-  .hometextContainerStyle p {
-    text-align: left !important;
+  .subscriber-text-container-style h5 {
+    font-size: 1.3rem;
   }
-  .hometextContainerStyle h1 {
-    font-size: 1.5rem;
-  }
-  .hometextContainerStyle h5 {
+
+  .subscriber-text-container-style p {
     font-size: 1.2rem;
   }
-  .hometextContainerStyle p {
-    display: none;
-  }
 }
 
-/* General responsive adjustments for registration form */
-@media (max-width: 768px) {
-  .homePage-flip-card-back {
-    min-width: 480px;
-    padding: 10px 20px;
-    height: 100%;
+@media (max-width: 1024px) {
+  .subscriber-text-container-style h1 {
+    font-size: 2.15rem;
   }
 
-  .homePage-flip-card-back form {
-    width: 100%;
+  .subscriber-text-container-style h5 {
+    font-size: 1.2rem;
   }
 
-  .homePage-flip-card-back h2 {
-    margin-left: 0;
-    text-align: center;
-  }
-
-  .homePage-flip-card {
-    height: auto;
+  .subscriber-text-container-style p {
+    font-size: 1.1rem;
   }
 }

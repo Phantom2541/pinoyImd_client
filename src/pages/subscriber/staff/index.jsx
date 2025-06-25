@@ -2,7 +2,7 @@ import React from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 
-export default function Pioneers() {
+export default function Staffs() {
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
   const EMMAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/emman.jpg`;
   const TOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
@@ -16,7 +16,7 @@ export default function Pioneers() {
   const RICO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rico.png`;
   const MAGTALAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kevin.jpg`;
   const NICK = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/nick.jpg`;
-  // const LIMBO = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/limbo.jpg`;
+  const MELUIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/meluin.jpg`;
 
   const PIONEERS = [
     {
@@ -75,12 +75,12 @@ export default function Pioneers() {
       name: "Dan Meluin M. Palaris",
       role: "Junior Software Engineer",
       quote: "Software grows, evolves, and never finishes.",
-      img: DEFAULT,
+      img: MELUIN,
     },
   ];
   return (
     <section className="team-section text-center">
-      <h1 className="text-center mt-5 h1">Pioneers</h1>
+      <h1 className="text-center mt-5 h1">Staffs</h1>
       <p
         className="text-center mb-5 w-responsive mx-auto"
         style={{ fontWeight: "400" }}
@@ -89,9 +89,9 @@ export default function Pioneers() {
         working collaboratively to deliver exceptional results for our clients.
       </p>
 
-      <div className="homePage-pioneers-container">
+      <div className="subscriber-pioneers-container">
         {PIONEERS.map((pioneer, index) => (
-          <div className="homePage-pioneers-card" key={index}>
+          <div className="subscriber-pioneers-card" key={index}>
             <img src={pioneer.img} alt="avatar" />
             <span>{pioneer.name}</span>
             <p>{pioneer.role}</p>
@@ -102,7 +102,7 @@ export default function Pioneers() {
                 rel="noopener noreferrer"
                 className="pioneerAvatarLink"
               >
-                <MDBIcon fab icon="linkedin" />
+                <MDBIcon fab icon="google" />
               </a>
               <a
                 href="https://www.facebook.com/yourpage"

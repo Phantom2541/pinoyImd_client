@@ -5,16 +5,20 @@ import {
   PAYROLL,
   RESET,
 } from "../../../../services/redux/slices/assets/persons/personnels";
-
+import { employment } from "../../../../services/utilities";
 // import { Select } from "../../../../components/customizable";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
-
+  console.log("employment", employment);
   //Initial Browse
   useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(PAYROLL({ token, branchId: activePlatform?.branchId }));
+    if (token && activePlatform?.branchId) {
+      const abbr = [...employment.employed].map(({ abbr }) => abbr);
+      dispatch(
+        PAYROLL({ token, params: { branchId: activePlatform?.branchId, abbr } })
+      );
+    }
 
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform]);

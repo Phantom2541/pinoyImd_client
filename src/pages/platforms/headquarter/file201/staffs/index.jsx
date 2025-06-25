@@ -1,26 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
-// import Modal from "./modal";
 import {
   BROWSE,
   SetActivePAGE,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/personnels";
-// import { globalSearch } from "../../../../../services/utilities";
-import { MDBBtn, MDBCard, MDBCardBody, MDBIcon, MDBView } from "mdbreact";
+import { MDBCard, MDBCardBody, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
 import TableLoading from "../../../../../components/tableLoading";
 import Pagination from "../../../../../components/pagination";
 import TableRowCount from "../../../../../components/pagination/rows";
+import Search from "../../../../../components/searchables/search";
+import { employment } from "../../../../../services/utilities";
 
 export default function Staffs() {
   const [staffs, setStaffs] = useState([]),
-    // [selected, setSelected] = useState({}),
-    // [showModal, setShowModal] = useState(false),
-    [searchKey, setSearchKey] = useState(""),
-    [willCreate, setWillCreate] = useState(true),
-    // [visible, setVisible] = useState(false),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     {
       collections,
@@ -31,6 +26,9 @@ export default function Staffs() {
       totalPages,
       maxPage,
     } = useSelector(({ personnels }) => personnels),
+    [status, setStatus] = useState(""),
+    [searchKey, setSearchKey] = useState(""),
+    [willCreate, setWillCreate] = useState(true),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -41,29 +39,34 @@ export default function Staffs() {
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform]);
 
-  //Set fetched data for mapping
-  useEffect(() => {
-    setStaffs(collections);
-  }, [collections]);
+  const arrangeStaffs = useCallback(
+    (status) => {
+      var _staffs = collections;
+      if (status) {
+        _staffs = [...collections].filter(({ status: stats }) => {
+          if (status === "active") {
+            return employment.isEmployed(stats);
+          } else {
+            return !employment.isEmployed(stats);
+          }
+        });
+      }
+      return _staffs;
+    },
+    [collections]
+  );
 
-  //Modal toggle
-  // const toggleModal = () => setShowModal(!showModal);
+  useEffect(() => {
+    setStaffs(arrangeStaffs(status));
+    document.getElementById("item-search").value = "";
+  }, [status, arrangeStaffs]);
 
   //Trigger for update
-  const handleUpdate = (selected) => {
+  const handleUpdate = (_) => {
     // setSelected(selected);
     if (willCreate) {
       setWillCreate(false);
     }
-    // setShowModal(true);
-  };
-
-  //Trigger for create
-  const handleCreate = () => {
-    if (!willCreate) {
-      setWillCreate(true);
-    }
-    // setShowModal(true);
   };
 
   //Toast for errors or success
@@ -78,34 +81,6 @@ export default function Staffs() {
   }, [isSuccess, message, addToast, dispatch]);
 
   const resetSearch = () => setSearchKey("");
-
-  //Search function
-  // const handleSearch = async () => {
-  //   if (searchKey) {
-  //     setSearchKey("");
-  //     setStaffs(collections);
-  //   } else {
-  //     const { value: search } = await Swal.fire({
-  //       title: "What are you looking for?",
-  //       text: "Provide a keyword and we will find it for you.",
-  //       icon: "question",
-  //       input: "text",
-  //       confirmButtonText: "Search",
-  //       inputValidator: (value) => {
-  //         if (!value) {
-  //           return "You need to write something!";
-  //         }
-  //       },
-  //     });
-
-  //     if (search) {
-  //       const value = search.toUpperCase();
-
-  //       setSearchKey(value);
-  //       setStaffs(globalSearch(collections, value));
-  //     }
-  //   }
-  // };
 
   const handlePageChange = (action) => {
     const newPage = activePage + (action ? 1 : -1);
@@ -126,19 +101,26 @@ export default function Staffs() {
           cascade
           className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
         >
-          <span className="white-text mx-3">{staffs.length} Staffs</span>
-          <div className="text-right">
-            <MDBBtn
-              onClick={handleCreate}
-              disabled={isLoading}
-              outline
-              color="white"
-              rounded
-              size="sm"
-              className="px-2"
-            >
-              <MDBIcon icon="plus" className="mt-0" />
-            </MDBBtn>
+          <span className="white-text mx-3">Staff List</span>
+          <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center">
+              <span className="mr-2">Status: </span>
+              <select
+                className="form-control mr-3 bg-light"
+                value={status}
+                onChange={({ target }) => setStatus(target.value)}
+              >
+                <option value={""}>All</option>
+                <option value={"active"}>Active</option>
+                <option value={"inactive"}>Inactive</option>
+              </select>
+            </div>
+            <Search
+              haveAction={false}
+              collections={arrangeStaffs(status)}
+              setFiltered={(results) => setStaffs(results)}
+              reset={() => setStaffs(arrangeStaffs(status))}
+            />
           </div>
         </MDBView>
         <MDBCardBody className="pb-0">

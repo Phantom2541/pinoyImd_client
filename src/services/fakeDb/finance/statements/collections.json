@@ -64,6 +64,14 @@
     "profitable": false
   },
   {
+    "id": 14,
+    "title": "Backpay",
+    "abbreviation": "bkp",
+    "meaning": "Final compensation given to a separated employee, including remaining salary, prorated benefits, and any applicable deductions.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
     "id": 20,
     "title": "Utilities Expense - Water",
     "abbreviation": "UE-W",

@@ -11,7 +11,7 @@ import {
   fullName,
 } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Deals = ({ deals: collections, isOpen, _id }) => {
   const [cluster, setCluster] = useState([]);
@@ -59,7 +59,7 @@ const Deals = ({ deals: collections, isOpen, _id }) => {
                 {cluster.map((c, index) => {
                   const { createdAt, deals } = c;
                   return (
-                    <>
+                    <React.Fragment key={index}>
                       <tr>
                         <td
                           colSpan={3}
@@ -70,7 +70,7 @@ const Deals = ({ deals: collections, isOpen, _id }) => {
                         </td>
                       </tr>
                       <Children deals={deals} />
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </MDBTableBody>
