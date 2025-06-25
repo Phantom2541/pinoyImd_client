@@ -18,7 +18,6 @@ import {
 import {
   Menus,
   Services,
-  Banner,
   Logo,
   Tagline,
   Description,

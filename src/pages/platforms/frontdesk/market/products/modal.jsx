@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -7,17 +7,22 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
+  MDBTypography,
 } from "mdbreact";
-import { TOGGLE } from "../../../../services/redux/slices/reusable/table";
+import {
+  SAVE,
+  UPDATE,
+  TOGGLE,
+} from "../../../../../services/redux/slices/market/products";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
-export default function Modal() {
-  const { showModal, selected, willCreate, isLoading } = useSelector(
-      ({ table }) => table
+const Modal = () => {
+  const { showModal, toggle, selected, willCreate, isLoading } = useSelector(
+      ({ products }) => products
     ),
-    { auth, activePlatform } = useSelector(({ auth }) => auth),
+    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -26,47 +31,39 @@ export default function Modal() {
   }, [selected]);
   // Handle update function
   const handleUpdate = () => {
-    TOGGLE();
-
-    // Check if object has changed
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
-
-    // dispatch(
-    //   UPDATE({
-    //     data: { ...form, _id: selected._id },
-    //     token,
-    //   })
-    // );
+    dispatch(
+      UPDATE({
+        data: { ...form, _id: selected._id },
+        token,
+      })
+    );
+    TOGGLE();
   };
 
   // Handle create function
   const handleCreate = () => {
-    // dispatch(
-    //   SAVE({
-    //     data: form,
-    //     token,
-    //   })
-    // ).then(() => TOGGLE()); // Close modal after successful save
+    dispatch(
+      SAVE({
+        data: form,
+        token,
+      })
+    ).then(() => TOGGLE()); // Close modal after successful save
   };
 
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (willCreate) return handleCreate();
+    if (willCreate) {
+      return handleCreate();
+    }
+
     handleUpdate();
-
-    // console.log("form", form);
-
-    // if (willCreate) {
-    //   return handleCreate();
-    // }
-
-    // handleUpdate();
   };
 
   // Handle change sa inputs
@@ -83,19 +80,31 @@ export default function Modal() {
   const handleValue = (key) => form[key] || "";
 
   // Handle modal close
-  const handleClose = () => dispatch(TOGGLE());
+  const handleClose = () => TOGGLE();
 
   return (
-    <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
+    <MDBModal
+      isOpen={showModal}
+      toggle={() => handleClose()}
+      backdrop
+      size="sm"
+    >
       <MDBModalHeader
         toggle={() => handleClose()}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Services
+        {willCreate ? "Create" : "Update"} Controls
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
+          <MDBTypography
+            tag="h4"
+            variant="h4-responsive"
+            className="text-center"
+          ></MDBTypography>
+
+          {/* Input fields */}
           <MDBInput
             label="Name"
             type="text"
@@ -104,10 +113,18 @@ export default function Modal() {
             onChange={(e) => handleChange("name", e.target.value)}
           />
           <MDBInput
-            label="subname"
+            label="Subname"
             type="text"
             value={handleValue("subname")}
+            required
             onChange={(e) => handleChange("subname", e.target.value)}
+          />
+          <MDBInput
+            label="barcode"
+            type="text"
+            value={handleValue("barcode")}
+            required
+            onChange={(e) => handleChange("barcode", e.target.value)}
           />
 
           {/* Submit button */}
@@ -126,4 +143,6 @@ export default function Modal() {
       </MDBModalBody>
     </MDBModal>
   );
-}
+};
+
+export default Modal;

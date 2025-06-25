@@ -157,6 +157,12 @@ const frontdesk = [
       },
       {
         name: "Products",
+        path: "/merchandise/products",
+        icon: "cogs",
+        // component: Products,
+      },
+      {
+        name: "Product Generics",
         path: "/products",
         icon: "cogs",
         // component: products,

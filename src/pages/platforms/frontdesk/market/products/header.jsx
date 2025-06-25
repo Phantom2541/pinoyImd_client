@@ -5,50 +5,47 @@ import { Search } from "../../../../../components/searchables";
 import {
   BROWSE,
   SetFILTER,
-  SetCREATE,
-} from "../../../../../services/redux/slices/market/generics";
+} from "../../../../../services/redux/slices/market/products";
+import { SetCREATE } from "../../../../../services/redux/slices/market/products";
+
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(({ generics }) => generics),
+  const { collections } = useSelector(({ products }) => products),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token) {
+    if (token)
       dispatch(
-        BROWSE({ token, params: { branchId: activePlatform?.branchId } })
+        BROWSE({ token, params: { branchId: activePlatform.branchId } })
       );
-    }
-  }, [dispatch, token, activePlatform]);
-
-  const handleAdd = (item) => dispatch(SetCREATE(item));
+  }, [token, dispatch, activePlatform]);
 
   return (
     <MDBView
       cascade
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <div className="d-flex justify-items-center" style={{ width: "22rem" }}>
+      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections?.length} Generics
+          {collections.length} Product
+          {console.log("collections of 1700 idk why are you here", collections)}
         </span>
       </div>
-
       <div>
         <div className="text-right d-flex items-center">
           <Search
             collections={collections}
             setFiltered={(items) => dispatch(SetFILTER(items))}
-            placeholder="Search generics "
-            haveaction={true}
+            placeholder="Search generics..."
+            haveAction={true}
             reset={() => dispatch(SetFILTER(collections))}
             hideButton={false}
-            handleAdd={(item) => handleAdd(item)}
+            handleAdd={(item) => dispatch(SetCREATE({ displayname: item }))}
           />
         </div>
       </div>
     </MDBView>
-
-    // return() only return one container/tags(?) so you cant have a <div> outside of the mdbview since you will be returning two containers on the export side
   );
 };
+
 export default Header;

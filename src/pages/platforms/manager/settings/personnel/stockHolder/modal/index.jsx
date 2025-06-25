@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -21,9 +21,7 @@ export default function Modal() {
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  useEffect(() => {
-    if (selected) setForm(selected);
-  }, [selected]);
+
   // Handle update function
   const handleUpdate = () => {
     TOGGLE();
@@ -35,22 +33,22 @@ export default function Modal() {
       });
     }
 
-    // dispatch(
-    //   UPDATE({
-    //     data: { ...form, _id: selected._id },
-    //     token,
-    //   })
-    // );
+    dispatch(
+      UPDATE({
+        data: { ...form, _id: selected._id },
+        token,
+      })
+    );
   };
 
   // Handle create function
   const handleCreate = () => {
-    // dispatch(
-    //   SAVE({
-    //     data: form,
-    //     token,
-    //   })
-    // ).then(() => TOGGLE()); // Close modal after successful save
+    dispatch(
+      SAVE({
+        data: form,
+        token,
+      })
+    ).then(() => TOGGLE()); // Close modal after successful save
   };
 
   // Handle form submit
@@ -60,13 +58,13 @@ export default function Modal() {
     if (willCreate) return handleCreate();
     handleUpdate();
 
-    // console.log("form", form);
+    console.log("form", form);
 
-    // if (willCreate) {
-    //   return handleCreate();
-    // }
+    if (willCreate) {
+      return handleCreate();
+    }
 
-    // handleUpdate();
+    handleUpdate();
   };
 
   // Handle change sa inputs
@@ -88,7 +86,7 @@ export default function Modal() {
   return (
     <MDBModal isOpen={showModal} toggle={TOGGLE} backdrop size="sm">
       <MDBModalHeader
-        toggle={() => handleClose()}
+        toggle={handleClose}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
