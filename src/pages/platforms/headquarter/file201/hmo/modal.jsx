@@ -12,8 +12,7 @@ import {
   TOGGLE,
   UPDATE,
 } from "../../../../../services/redux/slices/assets/companies";
-import _, { isEqual } from "lodash";
-import { useToasts } from "react-toast-notifications";
+// import { useToasts } from "react-toast-notifications";
 import { HMO } from "../../../../../services/fakeDb";
 
 export default function Modal() {
@@ -22,7 +21,7 @@ export default function Modal() {
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
-    { addToast } = useToasts(),
+    // { addToast } = useToasts(),
     [collections, setCollections] = useState([]),
     dispatch = useDispatch();
 

@@ -19,16 +19,16 @@ const initialState = {
   /**
    * for pagination
    */
-  collections: [],
-  filtered: [],
+  // collections: [],
+  // filtered: [],
   paginated: [],
   page: 0,
   maxPage: 5,
   activePage: 1,
   totalPages: 0,
-  isSuccess: false,
+  // isSuccess: false,
   isloading: false,
-  message: "",
+  // message: "",
 };
 
 export const BROWSE = createAsyncThunk(
@@ -218,10 +218,10 @@ export const reduxSlice = createSlice({
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPAges = Math.floor(payload.length / state.maxPage);
-        if (payload.length % state.maxPage > 0) totalPAges += 1;
+        if (payload.length % maxPage > 0) totalPAges += 1;
         state.totalPages = totalPAges;
-        if (state.activePage > totalPAges) {
-          state.activePage = totalPAges;
+        if (page > totalPAges) {
+          state.page = totalPAges;
         }
       }
       state.filtered = payload;

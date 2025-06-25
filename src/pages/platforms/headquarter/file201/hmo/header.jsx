@@ -10,7 +10,6 @@ import {
 } from "../../../../../services/redux/slices/assets/providers";
 import {
   SetUPDATE,
-  SetCREATE,
   SetFILTER,
   SetHMO,
 } from "../../../../../services/redux/slices/assets/companies";
@@ -23,6 +22,7 @@ const Header = () => {
     { branch = {} } = activePlatform,
     { companyId = {} } = branch,
     dispatch = useDispatch();
+  console.log("hmo", hmo);
 
   const handleAdd = (item) => dispatch(SetUPDATE(item));
 
@@ -82,7 +82,7 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center">
+        <div className="text-right d flex items-center">
           <Search
             collections={hmo}
             setFiltered={(items) => dispatch(SetFILTER(items))}

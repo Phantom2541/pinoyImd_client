@@ -82,6 +82,7 @@ const Banner = () => {
       })
     );
   };
+  console.log("company", activePlatform?.branch?.name);
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -137,7 +138,7 @@ const Banner = () => {
           <MDBRow className="my-2">
             <MDBCol md="6">
               <h6>
-                Name2: <strong>{fullName(auth?.fullName)}</strong>
+                Name: <strong>{fullName(auth?.fullName)}</strong>
               </h6>
               <h6>
                 Age: {getAge(auth?.dob)} | Gender:&nbsp;
