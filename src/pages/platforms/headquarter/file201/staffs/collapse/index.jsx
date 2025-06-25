@@ -19,6 +19,7 @@ import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/p
 import { capitalize } from "lodash";
 import EditableSelect from "../../../../../../components/customizable/editableSelect";
 import Swal from "sweetalert2";
+import CharacterHistory from "./characterHistory";
 export default function MenuCollapse({ staffs }) {
   const { token } = useSelector(({ auth }) => auth),
     { formSubmitted, isSuccess } = useSelector(({ personnels }) => personnels),
@@ -124,6 +125,7 @@ export default function MenuCollapse({ staffs }) {
             didHoverId
           );
           const isOpen = activeId === index;
+          const viewHistory = didHoverId === index;
           return (
             <MDBCard
               key={`staffs-${index}`}
@@ -138,11 +140,32 @@ export default function MenuCollapse({ staffs }) {
                 <div
                   className={`d-flex align-items-center justify-content-between ${color}`}
                 >
-                  <span>
-                    <small> {index + 1}</small>.{" "}
-                    {user && `${fullName(user?.fullName)} | `}
-                    {contract?.designation && `${department}`}
-                  </span>
+                  <div className="position-relative">
+                    <span>
+                      <small> {index + 1}</small>.{" "}
+                      {user && `${fullName(user?.fullName)} | `}
+                      {contract?.designation && `${department}`}
+                    </span>
+                    {viewHistory && (
+                      <div
+                        className="shadow-lg"
+                        style={{
+                          position: "absolute",
+                          bottom: "-60px",
+                          left: "1.3rem",
+                          width: "25rem",
+                          zIndex: 20,
+                          borderRadius: "0.5rem",
+
+                          padding: "1rem",
+                          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.25)",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
+                        <CharacterHistory remarks={remarks} />
+                      </div>
+                    )}
+                  </div>
 
                   <div className="d-flex">
                     <span
