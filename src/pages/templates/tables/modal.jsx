@@ -94,6 +94,9 @@ export default function Modal() {
         {willCreate ? "Create" : "Update"} Controls
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
+
+
+
         <form onSubmit={handleSubmit}>
           <MDBTypography
             tag="h4"
@@ -103,7 +106,32 @@ export default function Modal() {
             {Services.getName(selected?.serviceId)}
           </MDBTypography>
 
-          {/* Input fields */}
+          {/* ------------------------------Input fields ---------------------------------- */}
+
+          <MDBInput
+          label="Name"
+          type="text"
+          value={handleValue("name")}
+          onChange={(e) => handleChange("name", e.target.value)}
+          required
+        />
+        <MDBInput
+          label="Subname"
+          type="text"
+          value={handleValue("subname")}
+          onChange={(e) => handleChange("subname", e.target.value)}
+          required
+        />
+        <MDBInput
+          label="isConsumable"
+          type="boolean"
+          value={handleValue("isConsumable")}
+          onChange={(e) => handleChange("isConsumable", e.target.value)}
+          required
+        />
+
+          {/* ------------------------------Preset input fields ---------------------------------- */}
+
           <MDBInput
             label="Abnormal"
             type="number"
@@ -128,6 +156,24 @@ export default function Modal() {
 
           {/* Submit button */}
           <div className="text-center mb-1-half">
+            <MDBBtn
+            color="success"
+            size="sm"
+            className="me-1"
+            onClick={() => {
+              dispatch({
+                type: "assurances/toggle",
+                payload: {
+                  show: true,
+                  selected: item,
+                  willCreate: false,
+                },
+              });
+            }}
+          >
+            Update
+          </MDBBtn>
+
             <MDBBtn
               type="submit"
               disabled={isLoading}

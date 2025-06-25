@@ -26,8 +26,12 @@ import {
   Controls,
 } from "../../../pages/platforms/diagnostics/management";
 
+import products from "../../../pages/platforms/frontdesk/market/products";
 import Products from "../../../pages/platforms/frontdesk/market/oldproducts";
-import productGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
+import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
+import machines from "../../../pages/platforms/frontdesk/market/machines";
+// import attendances from "../../../pages/platforms/frontdesk/market/attendances";
+import temperaturez from "../../../pages/platforms/frontdesk/market/temperaturez";
 import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../pages/platforms/cashier";
 
@@ -38,6 +42,7 @@ import {
   DragDrop,
   Search,
 } from "../../../pages/templates";
+import { temperatures } from "../../redux/slices/diagnostics";
 
 const frontdesk = [
   {
@@ -146,16 +151,34 @@ const frontdesk = [
     icon: "boxes",
     children: [
       {
-        name: "Products",
+        name: "productsGenerics",
+        path: "/productsGenerics",
+        icon: "cogs",
+        component: productsGenerics
+      },
+      {
+        name: "products",
         path: "/products",
         icon: "cogs",
-        component: productGenerics,
+        component: products
       },
       {
         name: "Machines",
         path: "/merchandise/machines",
         icon: "laptop-code",
-        // component: MachinesComponent, // add your component here
+        component: machines
+      },
+      {
+        // name: "Attendance",
+        // path: "/merchandise/attendances",
+        // icon: "file-alt",
+        // component: attendances
+      },
+      {
+        name: "Temperatures",
+        path: "/merchandise/temperaturez",
+        icon: "vials",
+        component: temperaturez
       },
       {
         name: "Stocks",
