@@ -1,20 +1,17 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"; 
+import { axioKit } from "../../../utilities";
 
-const url = "/diagnostics/clinician/quest";
+const url = "/liability/attendances";
 
 const initialState = {
   filter: [],
   paginated: [],
-  team: [],
 
   // Bread attributes
   selected: {}, // assurance
   page: 0,
   willCreate: false,
   showModal: false,
-  willAdd: false,
-  showMemberModal: false,
 
   /**
    * pagination
@@ -96,26 +93,23 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetEDIT: (state, { payload }) => {
+      console.log("SetEDIT payload:", payload);
+
       state.selected = payload;
       state.willCreate = false;
       state.showModal = true;
     },
     SetCREATE: (state, { payload }) => {
-      console.log("SetCREATE payload", payload);
+      console.log("SetCREATE CALLED LOL:");
+      
       state.selected = {
-        fullName: "",
-        role: "",
-        phone: "",
-        status: "",
+        lo: "",
+        norm: "",
+        hi: "",
+        serviceId: payload.serviceId,
       };
       state.willCreate = true;
       state.showModal = true;
-    },
-    SetTeam: (state, { payload }) => {
-      console.log("SetCREATE payload", payload);
-      state.team = payload;
-      state.willAdd = true;
-      state.showMemberModal = true;
     },
     SetFILTER: (state, { payload }) => {
       const { page, maxPage } = state;
@@ -161,9 +155,6 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
-    TOGGLETeam: (state) => {
-      state.showModalTeam = !state.showModalTeam;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -193,6 +184,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { payload } = action.payload;
+
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.showModal = false;
@@ -212,16 +204,13 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
-        const findex = state.filtered.findIndex(
+
+        const fIndex = state.filtered.findIndex(
           (item) => item._id === payload._id
         );
 
-        state.collections[index] = payload;
-
-        state.filtered[findex] = payload;
+        // state.collections[index] = payload;
+        state.filtered[fIndex] = payload;
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
@@ -238,16 +227,18 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success } = action;
+        const { success, payload } = action.payload;
+          console.log("payload", payload);
+          
         const index = state.collections.findIndex(
-          (item) => item?._id === action.payload.payload
-        );
-        state.collections.splice(index, 1);
-        const findex = state.filtered.findIndex(
-          (item) => item._id === action.payload.payload
+          (item) => item?._id === action.payload
         );
 
-        state.filtered.splice(findex, 1);
+        const fIndex = state.filtered.findIndex(
+          (item) => item._id === payload
+        );
+        state.collections.splice(index, 1);
+        state.filtered.splice(fIndex, 1);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -262,7 +253,6 @@ export const reduxSlice = createSlice({
 
 export const {
   SetCREATE,
-  SetTeam,
   SetEDIT,
   SetFILTER,
   SetPAGE,
@@ -272,7 +262,6 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
-  TOGGLETeam,
   RESET,
 } = reduxSlice.actions;
 

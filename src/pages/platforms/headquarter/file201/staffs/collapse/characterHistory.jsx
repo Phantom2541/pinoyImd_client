@@ -1,21 +1,25 @@
-const CharacterHistory = () => {
+import { capitalize, orderBy } from "lodash";
+import { dateFormat, employment } from "../../../../../../services/utilities";
+
+const CharacterHistory = ({ remarks }) => {
+  console.log("remarks", remarks);
   return (
     <div
-      className="bg-white w-100"
+      className="bg-white w-100 text-dark"
       style={{
         borderLeft: "2px solid #ccc",
-        paddingLeft: "15px",
+        width: "100%",
       }}
     >
-      {orderBy(payments, ["createdAt"], ["desc"]).map(
-        ({ method: type, amount, chequeNo, clearDate, createdAt }, i) => (
+      {orderBy(remarks, ["createdAt"], ["desc"]).map(
+        ({ method: type, createdAt, title, reason }, i) => (
           <div
             key={`breakdown-${type}-${i}`}
             style={{ position: "relative", marginBottom: "12px" }}
           >
             <div style={{ position: "relative" }}>
               <span
-                className="bg-primary"
+                className="bg-danger ml-1"
                 style={{
                   display: "inline-block",
                   width: "10px",
@@ -26,13 +30,7 @@ const CharacterHistory = () => {
                   top: "3px",
                 }}
               ></span>
-              <img
-                src={imageSrc(type)}
-                alt={`no-image-${type}`}
-                className="mr-2"
-                style={{ height: "0.8rem" }}
-              />
-              ₱{amount.toLocaleString()}
+              <small className="text- ml-1">{capitalize(title)}</small>
               <span
                 style={{
                   float: "right",
@@ -44,19 +42,16 @@ const CharacterHistory = () => {
               </span>
             </div>
 
-            {type.toLowerCase() === "cheque" && (
-              <div
-                style={{
-                  fontSize: "0.85rem",
-                  color: "#555",
-                  marginLeft: "10px",
-                  marginTop: "4px",
-                }}
-              >
-                Cheque No: <strong>{chequeNo}</strong> <br />
-                Clearing: <strong>{dateFormat(clearDate)}</strong>
-              </div>
-            )}
+            <div
+              style={{
+                fontSize: "0.85rem",
+                color: "#555",
+                marginLeft: "10px",
+                marginTop: "4px",
+              }}
+            >
+              <strong>{reason}</strong> <br />
+            </div>
           </div>
         )
       )}

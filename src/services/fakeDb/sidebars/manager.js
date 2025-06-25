@@ -9,15 +9,17 @@ import {
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Payrolls from "../../../pages/platforms/finance/payroll";
+import Banners from "../../../pages/platforms/manager/settings/profile/banner";
 
 import {
   Employees,
   Equipments,
   Staffs,
-  Physicians,
+  Physicians, 
   Procurments,
   Heads,
 } from "../../../pages/platforms/headquarter/file201";
+// import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
 
 import {
   Remittances,
@@ -30,6 +32,8 @@ import {
   ProductGenerics,
   Products,
 } from "../../../pages/platforms/manager/commerce/merchandise";
+
+import { Attendances } from "../../../pages/platforms/manager/humanResources";
 
 import {
   Vouchers,
@@ -250,12 +254,37 @@ const manager = [
         component: Products,
       },
     ],
-  },
-  {
+  }, {
+    name: "Human Resources",
+    path: "/humaRresources",
+    icon: "users",
+    children:[
+      {
+        name: "Attendance",
+        path: "/attendances",
+        icon: "clock",
+        component: Attendances,
+
+      },
+    ],
+  }, {
     name: "Settings",
     path: "/settings",
     icon: "cogs",
     children: [
+      {
+        name: "Profile",
+        path: "/profile",
+        icon: "user-cog",
+        children: [
+          {
+            name: "Banner",
+            path: "/banner",
+            icon: "banners",
+            component: Banners,
+          },
+        ],
+      },
       {
         name: "Sources",
         path: "/sources",
@@ -306,6 +335,12 @@ const manager = [
         icon: "users-round",
         path: "/faculties",
         children: [
+          {
+            name: "Stock Holder",
+            path: "/stockHolder",
+            icon: "user",
+            // component: stockHolder,
+          },
           {
             name: "Staff",
             path: "/staff",
@@ -360,7 +395,7 @@ const manager = [
     ],
   },
   {
-    name: "Markey Place",
+    name: "Market Place",
     icon: "shopping-cart",
     path: "/marketplace",
     children: [

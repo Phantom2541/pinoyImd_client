@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"; 
 import { axioKit } from "../../../utilities";
 
 const url = "/commerce/merchandise/products";
@@ -93,6 +93,8 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetEDIT: (state, { payload }) => {
+      console.log("SetEDIT payload:", payload);
+
       state.selected = payload;
       state.willCreate = false;
       state.showModal = true;
@@ -117,7 +119,7 @@ export const reduxSlice = createSlice({
           state.page = totalPages;
         }
       }
-      state.filter = payload;
+      state.filtered = payload;
     },
     SetPagination: (state) => {
       // {
@@ -202,10 +204,10 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-        state.collections[index] = payload;
         const findex = state.filtered.findIndex(
           (item) => item._id === payload._id
         );
+        state.collections[index] = payload;
         state.filtered[findex] = payload;
         state.showModal = false;
         state.message = success;
@@ -223,16 +225,22 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success } = action;
+        const { success, payload } = action.payload;
+          console.log("payload", payload);
+          
         const index = state.collections.findIndex(
+          (item) => item?._id === action.payload
+        );
+
+        const fIndex = state.filtered.findIndex(
+          (item) => item._id === payload
+        );
+        const findex = state.filtered.findIndex(
           (item) => item?._id === action.payload.payload
         );
-        state.collections.splice(index, 1);
 
-        const findex = state.filtered.findIndex(
-          (item) => item._id === action.payload.payload
-        );
-        state.filtered.splice(findex, 1);
+        state.collections.splice(index, 1);
+        state.filtered.splice(fIndex, 1);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;

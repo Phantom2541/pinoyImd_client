@@ -5,7 +5,7 @@ import { Services } from "../../../../../services/fakeDb/index";
 const url = "commerce/catalog/services";
 
 const initialState = {
-  /**
+  /** 
    * for search and custom select.
    */
   collections: [],

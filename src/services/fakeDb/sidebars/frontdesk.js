@@ -26,8 +26,8 @@ import {
   Controls,
 } from "../../../pages/platforms/diagnostics/management";
 
-// import products from "../../../pages/platforms/frontdesk/market/products";
-// import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
+import Products from "../../../pages/platforms/frontdesk/market/products";
+import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
 import machines from "../../../pages/platforms/frontdesk/market/machines";
 import generics from "../../../pages/platforms/frontdesk/market/generics";
 // import medicines from "../../../pages/platforms/frontdesk/market/medicine";
@@ -42,6 +42,7 @@ import {
   DragDrop,
   Search,
 } from "../../../pages/templates";
+import { temperatures } from "../../redux/slices/diagnostics";
 
 const frontdesk = [
   {
@@ -150,16 +151,16 @@ const frontdesk = [
     icon: "boxes",
     children: [
       {
-        name: "ProductsGenerics",
+        name: "productsGenerics",
         path: "/productsGenerics",
         icon: "cogs",
-        // component: productGenerics,
+        component: productsGenerics
       },
       {
-        name: "Products",
+        name: "products",
         path: "/products",
         icon: "cogs",
-        // component: products,
+        component: Products
       },
       {
         name: "Machines",
