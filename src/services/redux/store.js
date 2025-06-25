@@ -59,7 +59,8 @@ import {
   medicines,
   generics,
   mentainance,
-  attendances, temperaturez
+  attendances,
+  // temperaturez
 } from "./slices/market";
 import portal from "./slices/emr/portal";
 
@@ -111,7 +112,7 @@ const store = configureStore({
     productsGenerics,
     machines,
     attendances,
-    temperaturez,
+    // temperaturez,
     medicines,
     generics,
     mentainance,

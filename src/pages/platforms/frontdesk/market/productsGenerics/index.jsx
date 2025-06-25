@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
 import Body from "./body";
-import Footer from "./footer";
+// import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
-import Modal from "./modal";
+// import Modal from "./modal";
 
 const Index = () => {
   const { isLoading } = useSelector(({ services }) => services);
@@ -15,9 +15,9 @@ const Index = () => {
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <Header />
         <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
-        <Footer />
+        {/* <Footer /> */}
       </MDBCard>
-      <Modal />
+      {/* <Modal /> */}
     </MDBAnimation>
   );
 };
