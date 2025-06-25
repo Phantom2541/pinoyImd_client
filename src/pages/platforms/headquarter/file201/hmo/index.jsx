@@ -1,21 +1,30 @@
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody } from "mdbreact";
-import { SetActivePAGE } from "../../../../../services/redux/slices/assets/companies";
+import {
+  SetActivePAGE,
+  SetMaxPage,
+} from "../../../../../services/redux/slices/assets/companies";
 import TopHeader from "./header";
 import Pagination from "../../../../../components/pagination";
 import TableRowCount from "../../../../../components/pagination/rows";
 import TableLoading from "../../../../../components/tableLoading";
 import Body from "./body";
 import Modal from "./modal";
-const Wellness = () => {
-  const { activePlatform } = useSelector(({ auth }) => auth),
+import { useEffect } from "react";
+const Index = () => {
+  const { maxPage } = useSelector(({ auth }) => auth),
     { totalPages, activePage, isLoading } = useSelector(
       ({ companies }) => companies
     ),
     dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(SetMaxPage(maxPage));
+  }, [dispatch, maxPage]);
+
   const handlePageChange = (action) => {
-    const newPage = activePage + (action ? 1 : -1);
+    const newPage =
+      typeof action === "number" ? action : activePage + (action ? 1 : -1);
     if (newPage >= 1 && newPage <= totalPages) {
       dispatch(SetActivePAGE(newPage));
     }
@@ -41,4 +50,4 @@ const Wellness = () => {
   );
 };
 
-export default Wellness;
+export default Index;

@@ -65,7 +65,7 @@ const Banner = () => {
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
 
-  const handleUpload = (base64) => {
+  const handleUpload = (base64, branch) => {
     const byteString = atob(base64.split(",")[1]);
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
@@ -86,7 +86,7 @@ const Banner = () => {
     dispatch(
       UPLOAD({
         data: {
-          path: `companies/${company.name}/${activePlatform?.branch?.name}`,
+          path: `companies/${companyId.name}/${branch}`,
           base64: base64.split(",")[1],
           name: "banner.png",
         },
@@ -120,6 +120,12 @@ const Banner = () => {
             <MDBCard>
               <MDBCardBody>
                 <MDBView hover={!showImgCropper}>
+                  <MDBTypography
+                    tag="h4"
+                    className="text-center my-3 text-uppercase"
+                  >
+                    {company?.name} — {name}
+                  </MDBTypography>
                   <img
                     src={
                       preview ||
@@ -132,6 +138,7 @@ const Banner = () => {
                   <MDBMask overlay="grey-strong d-flex align-items-center">
                     <MDBBtnGroup className="mx-auto">
                       <MDBBtn
+                        title="Download"
                         color="warning"
                         size="sm"
                         onClick={handleDownload}
@@ -140,14 +147,14 @@ const Banner = () => {
                       </MDBBtn>
 
                       <ImageCropper
-                        handleUpload={handleUpload}
+                        handleUpload={(base64) => handleUpload(base64, name)}
                         cropSize={{ width: 850, height: 85 }}
                         modalSize="xl"
                         setIsShow={(show) => setShowImgCropper(show)}
                         isUpload
                         label={
                           <>
-                            <MDBIcon icon="upload" />
+                            <MDBIcon icon="upload" title="Upload" />
                           </>
                         }
                         accept={".png"}
@@ -158,7 +165,7 @@ const Banner = () => {
                 <MDBRow className="my-2">
                   <MDBCol md="6">
                     <h6>
-                      Name2: <strong>{fullName(auth?.fullName)}</strong>
+                      Name: <strong>{fullName(auth?.fullName)}</strong>
                     </h6>
                     <h6>
                       Age: {getAge(auth?.dob)} | Gender:&nbsp;
