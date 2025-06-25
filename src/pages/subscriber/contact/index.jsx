@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { MDBIcon, MDBInput, MDBBtn } from "mdbreact";
 import "./style.css";
 import { useToasts } from "react-toast-notifications";
@@ -65,7 +65,7 @@ export default function ContactUs() {
   };
 
   const { name, subject, email, message } = form;
-  const { contacts = {}, address = "" } = details || {};
+  const { contacts = {}, address = "", branches = [] } = details || {};
 
   const [coordinates, setCoordinates] = useState([15.35, 121.05]); // default lang
 
@@ -166,10 +166,17 @@ export default function ContactUs() {
         <div className="subscriber-contactUs-branches-container">
           <p>Branches</p>
           <div className="subscriber-contactUs-branches">
-            <span>Quezon City Branch</span>
-            <span>Makati Medical Center</span>
-            <span>Cebu City Diagnostic Hub</span>
-            <span>Davao Health and Wellness Center</span>
+            {branches.map(({ name, contacts = {} }, index) => {
+              console.log("contacts", contacts);
+              return (
+                <React.Fragment key={index}>
+                  <span>{name}</span>
+                  <span>{contacts?.email}</span>
+                  <span>{mobile(contacts?.mobile)}</span>
+                  <span>{contacts?.person}</span>
+                </React.Fragment>
+              );
+            })}
           </div>
         </div>
 
