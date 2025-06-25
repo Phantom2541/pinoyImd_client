@@ -59,6 +59,7 @@ import {
   medicines,
   generics,
   mentainance,
+  attendances, temperaturez
 } from "./slices/market";
 import portal from "./slices/emr/portal";
 
@@ -106,8 +107,11 @@ const store = configureStore({
     xray,
     ultrasound,
     ecg,
+    appointments,
     productsGenerics,
     machines,
+    attendances,
+    temperaturez,
     medicines,
     generics,
     mentainance,
