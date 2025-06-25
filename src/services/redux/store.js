@@ -51,7 +51,7 @@ import {
   soa,
 } from "./slices/finance";
 
-import { products, productsGenerics } from "./slices/market";
+import { machines, products, productsGenerics } from "./slices/market";
 import { appointments } from "./slices/clinical";
 
 const store = configureStore({
@@ -99,8 +99,9 @@ const store = configureStore({
     xray,
     ultrasound,
     ecg,
-    productsGenerics,
     appointments,
+    productsGenerics,
+    machines,
   },
 });
 

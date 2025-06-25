@@ -13,14 +13,14 @@ import {
   SAVE,
   UPDATE,
   TOGGLE,
-} from "../../../../../services/redux/slices/market/productsGenerics";
+} from "../../../../../services/redux/slices/market/products";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
 const Modal = () => {
   const { showModal, toggle, selected, willCreate, isLoading } = useSelector(
-      ({ productsGenerics }) => productsGenerics
+      ({ products }) => products
     ),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
@@ -113,18 +113,18 @@ const Modal = () => {
             onChange={(e) => handleChange("name", e.target.value)}
           />
           <MDBInput
-            label="Section"
+            label="Subname"
             type="text"
-            value={handleValue("section")}
+            value={handleValue("subname")}
             required
-            onChange={(e) => handleChange("section", e.target.value)}
+            onChange={(e) => handleChange("subname", e.target.value)}
           />
           <MDBInput
-            label="Expense"
+            label="barcode"
             type="text"
-            value={handleValue("expense")}
+            value={handleValue("barcode")}
             required
-            onChange={(e) => handleChange("expense", e.target.value)}
+            onChange={(e) => handleChange("barcode", e.target.value)}
           />
 
           {/* Submit button */}

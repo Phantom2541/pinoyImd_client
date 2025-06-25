@@ -93,6 +93,8 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetEDIT: (state, { payload }) => {
+      console.log("SetEDIT payload:", payload);
+
       state.selected = payload;
       state.willCreate = false;
       state.showModal = true;
@@ -108,8 +110,6 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
-      console.log("payload", payload);
-
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
@@ -128,7 +128,7 @@ export const reduxSlice = createSlice({
       const { page, max } = state;
       // if (getPage) return array;
 
-      state.paginated = state.filtered.slice(
+      state.paginated = state.filter.slice(
         (page - 1) * max,
         max + (page - 1) * max
       );
@@ -163,7 +163,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-
         state.collections = state.filtered = payload; // Fix typo
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);

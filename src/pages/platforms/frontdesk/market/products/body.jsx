@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBBtn } from "mdbreact";
-import { Input } from "../../../../../components/customizable";
+import Swal from "sweetalert2";
+
 import {
   SetEDIT,
   DESTROY,
-} from "../../../../../services/redux/slices/market/productsGenerics";
+} from "../../../../../services/redux/slices/market/products";
 
 const Body = () => {
+  const { filtered, activePage, maxPage } = useSelector(
+      ({ products }) => products
+    ),
+    [selected, setSelected] = useState({});
+
+  console.log("filteredzzzz", filtered);
+
   //THIS IS NOT NESSECARY(?) SAID BY MELUIN. the two lines under these are called by dispatch
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
@@ -16,18 +24,10 @@ const Body = () => {
   //const dispatch = useDispatch();
 
   //note here for this function (MADE BY MELUIN) MY NOTE: THIS IS THE DISPATCH AND THE USESELECTOR. USERSELECTOR IS THE REDUX STORE AND IT GETS THE DATA FROM THE REDUX STORE PLS REMEMBER IM LOSING IT HERE
-  const { collections } = useSelector(
-      ({ productsGenerics }) => productsGenerics
-    ),
+  const { collections } = useSelector(({ products }) => products),
     { token } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
   console.log("collections", collections);
-
-  //THIS IS ... asky tommy abou this???(idk reeall ejhaoefoifhPHPEIFHPOEHPO4ihjf)
-  const { filtered, activePage, maxPage, isSuccess } = useSelector(
-      ({ productsGenerics }) => productsGenerics
-    ),
-    [selected, setSelected] = useState({}); // so this bassically is the selected item and its properties. useState({});  means nothing is selected
 
   // let it go, let it go, dont use this code anymore~
   const handleUpdate = () => {
@@ -65,53 +65,67 @@ const Body = () => {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = filtered?.slice(startIndex, endIndex); // Get only items for the active page
+
+  const handleDelete = (_id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this! if you want to you will be not so sigmaballs",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(DESTROY({ data: { _id }, token }));
+      }
+    });
+  };
 
   const handleModal = (item) => dispatch(SetEDIT(item));
-
+  console.log("paginatedData", paginatedData);
   return (
     <MDBTable responsive hover bordered>
       <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
-          <th>Name</th>
-          <th>Section</th>
-          <th>Expense</th>
-          <th>Action Man</th>
+          <th>name</th>
+          <th>Soob Name</th>
+          <th>Barcode</th>
+          <th>Actions button</th>
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((item, index) => {
-          const { _id, name, section, expense } = item;
-          const isSelected = selected._id === _id;
-          return (
-            <tr key={index}>
-              <td key={index}>{index + startIndex + 1}</td>
-              <td>
-                <strong>{name}</strong>
-              </td>
-              <td>
-                <strong>{section}</strong>
-              </td>
-              <td>
-                <strong>{expense}</strong>
-              </td>
+        {paginatedData &&
+          paginatedData?.map((item, index) => {
+            const { _id, name, subname, barcode } = item;
+            const isSelected = selected._id === _id;
+            return (
+              <tr key={index}>
+                <td key={index}>{index + startIndex + 1}</td>
+                <td>
+                  <strong>{name}</strong>
+                </td>
+                <td>
+                  <strong>{subname}</strong>
+                </td>
+                <td>
+                  <strong>{barcode}</strong>
+                </td>
 
-              <td>
-                <MDBBtn color="primary" onClick={() => handleModal(item)}>
-                  EDIT
-                </MDBBtn>
+                <td>
+                  <MDBBtn color="primary" onClick={() => handleModal(item)}>
+                    EDIT
+                  </MDBBtn>
 
-                <MDBBtn
-                  color="secondary"
-                  onClick={() => dispatch(DESTROY({ data: { _id }, token }))}
-                >
-                  DELETE
-                </MDBBtn>
-              </td>
-            </tr>
-          );
-        })}
+                  <MDBBtn color="secondary" onClick={() => handleDelete(_id)}>
+                    DELETE
+                  </MDBBtn>
+                </td>
+              </tr>
+            );
+          })}
       </tbody>
     </MDBTable>
   );
