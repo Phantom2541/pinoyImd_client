@@ -14,7 +14,7 @@ export default function Search({
 }) {
   const [showBtn, setShowBtn] = useState(false),
     [searchValue, setSearchValue] = useState("");
-  console.log("collections", collections);
+ 
 
   useEffect(() => {
     if (!hideButton) setShowBtn(true);
