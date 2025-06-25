@@ -93,23 +93,29 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetEDIT: (state, { payload }) => {
+      console.log("SetEDIT payload:", payload);
+
       state.selected = payload;
       state.willCreate = false;
       state.showModal = true;
     },
-    SetCREATE: (state, { payload }) => {
+    SetCREATE: (state) => {
       state.selected = {
-        lo: "",
-        norm: "",
-        hi: "",
-        serviceId: payload.serviceId,
+        brand: "",
+        name: "",
+        subname: "",
+        description: "",
+        prescription: false,
+        expense: 0,
+        forsale: false,
+        remarks: "",
+        section: "",
+        store: "",
       };
       state.willCreate = true;
       state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
-      console.log("payload", payload);
-
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
@@ -128,7 +134,7 @@ export const reduxSlice = createSlice({
       const { page, max } = state;
       // if (getPage) return array;
 
-      state.paginated = state.filtered.slice(
+      state.paginated = state.filter.slice(
         (page - 1) * max,
         max + (page - 1) * max
       );
@@ -163,7 +169,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-
         state.collections = state.filtered = payload; // Fix typo
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -199,12 +204,18 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
+        const { success, payload } = action.payload;
 
-        state.collections[index] = payload;
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
+
+          collections[index] = payload;
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
@@ -221,11 +232,16 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success } = action;
+        const { success, payload } = action.payload;
         const index = state.collections.findIndex(
-          (item) => item?._id === action.payload
+          (item) => item?._id === payload
         );
         state.collections.splice(index, 1);
+
+        const index2 = state.filtered.findIndex(
+          (item) => item?._id === payload
+        );
+        state.filtered.splice(index2, 1);
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;

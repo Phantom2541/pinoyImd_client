@@ -25,7 +25,6 @@ const Body = () => {
     });
   };
 
-  console.log("filteredzzz", filtered);
   // Pagination: Calculate the start and end index for the current page
   const itemsPerPage = maxPage; 
   const startIndex = (activePage - 1) * itemsPerPage;

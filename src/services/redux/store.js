@@ -12,7 +12,7 @@ import {
   providers,
   tieups,
 } from "./slices/assets";
-import { dragDrop } from "./slices/reusable";
+import { dragDrop, table } from "./slices/reusable";
 import {
   menus,
   services,
@@ -51,8 +51,17 @@ import {
   soa,
 } from "./slices/finance";
 
-import { products, productsGenerics, machines, attendances, temperaturez } from "./slices/market";
-import { appointments } from "./slices/clinical";
+import { appointments, quest } from "./slices/diagnostics";
+import {
+  products,
+  productsGenerics,
+  machines,
+  medicines,
+  generics,
+  mentainance,
+  attendances, temperaturez
+} from "./slices/market";
+import portal from "./slices/emr/portal";
 
 const store = configureStore({
   reducer: {
@@ -94,7 +103,6 @@ const store = configureStore({
     providers,
     controls,
     assurances,
-    dragDrop,
     products,
     xray,
     ultrasound,
@@ -103,7 +111,17 @@ const store = configureStore({
     productsGenerics,
     machines,
     attendances,
-    temperaturez
+    temperaturez,
+    medicines,
+    generics,
+    mentainance,
+    appointments,
+    quest,
+    //this is results for viewing the results online
+    portal,
+    //for templates only
+    dragDrop,
+    table,
   },
 });
 

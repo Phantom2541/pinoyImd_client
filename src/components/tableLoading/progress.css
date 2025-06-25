@@ -3,6 +3,10 @@
   height: 25px !important;
 }
 
+#progress-select {
+  height: 37px !important;
+}
+
 #thead-loading {
   height: 40px;
 }

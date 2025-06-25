@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import Patient from "./form/patient";
 import Classification from "./form/classification";
 import {
+  RESET_INSOURCE,
   SETPATIENT,
   SETSEARCHKEY,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
-import { fullName } from "../../../../../../../services/utilities";
+import { fullName, getAge } from "../../../../../../../services/utilities";
 import { SearchUser as Search } from "../../../../../../../components/searchables";
 
 export default function POS() {
@@ -37,25 +38,49 @@ export default function POS() {
       >
         {customer?._id && (
           <div
-            className="d-flex justify-content-between align-items-center"
-            style={{ width: "100%" }}
+            style={{ width: "100%", marginBottom: "-0.5rem" }}
+            className="d-flex "
           >
-            <div>
-              <h5 style={{ fontWeight: "500" }}>
-                <MDBIcon icon="mars" className="text-primary mr-2" />
-                {fullName(customer?.fullName)}{" "}
-              </h5>
+            <h5>
+              <MDBIcon icon="mars" className="text-primary mr-2 mt-2" />
+            </h5>
+            <div style={{ width: "100%" }}>
+              <div
+                className="d-flex justify-content-between align-items-center"
+                style={{ width: "100%" }}
+              >
+                <div>
+                  <h5 style={{ fontWeight: "500" }}>
+                    {fullName(customer?.fullName)} |{" "}
+                    <span>{getAge(customer?.dob)}</span>
+                  </h5>
+                </div>
+                <MDBBtn
+                  rounded
+                  color="danger"
+                  title="Clear"
+                  size="sm"
+                  onClick={() => {
+                    dispatch(SETPATIENT({}));
+                    dispatch(RESET_INSOURCE());
+                  }}
+                  className="px-2"
+                >
+                  <MDBIcon icon="times" />
+                </MDBBtn>
+              </div>
+              <h6
+                style={{
+                  marginTop: "-0.6rem",
+                  display: "block",
+                }}
+              >
+                <span className="grey-text">Birthday:</span>
+                <span style={{ fontWeight: 400 }} className="ml-1">
+                  {new Date(customer?.dob).toDateString()}
+                </span>
+              </h6>
             </div>
-            <MDBBtn
-              rounded
-              color="danger"
-              title="Clear"
-              size="sm"
-              onClick={() => dispatch(SETPATIENT({}))}
-              className="px-2"
-            >
-              <MDBIcon icon="times" />
-            </MDBBtn>
           </div>
         )}
         {!customer?.fullName && (

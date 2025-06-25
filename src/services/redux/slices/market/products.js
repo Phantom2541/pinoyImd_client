@@ -182,7 +182,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.showModal = false;
@@ -202,13 +201,14 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-
-        const fIndex = state.filtered.findIndex(
+        const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
-
-        // state.collections[index] = payload;
-        state.filtered[fIndex] = payload;
+        const findex = state.filtered.findIndex(
+          (item) => item._id === payload._id
+        );
+        state.collections[index] = payload;
+        state.filtered[findex] = payload;
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
@@ -235,6 +235,10 @@ export const reduxSlice = createSlice({
         const fIndex = state.filtered.findIndex(
           (item) => item._id === payload
         );
+        const findex = state.filtered.findIndex(
+          (item) => item?._id === action.payload.payload
+        );
+
         state.collections.splice(index, 1);
         state.filtered.splice(fIndex, 1);
         state.message = success;

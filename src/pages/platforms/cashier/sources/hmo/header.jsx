@@ -1,28 +1,28 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
   RESET,
-  BROWSE,
+  INSOURCE,
   SetSOURCE,
   RESET_COLLECTIONS,
-  TOGGLE,
   SetREGISTER,
 } from "../../../../../services/redux/slices/assets/providers";
-import Search from "../../../../../components/searchables/search";
+import Search from "../../../../../components/searchables/sources";
 import Swal from "sweetalert2";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
+
   // initial values
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       dispatch(
-        BROWSE({
+        INSOURCE({
           token,
           key: {
             vendors: activePlatform?.branchId,
-            category: "hmo",
+            categories: ["wns"],
           },
         })
       );
@@ -30,8 +30,8 @@ const Header = () => {
     return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
 
-  const handleRegister = (displayname = "") => {
-    dispatch(SetREGISTER({ displayname }));
+  const handleRegister = (name = "") => {
+    dispatch(SetREGISTER({ name }));
   };
 
   const setSource = (source) => {
@@ -60,12 +60,12 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          Health Management Organizations{" "}
+          Health Management Organization
         </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <Search hideButton={false} handleAdd={() => dispatch(TOGGLE())} />
+          <Search setSource={setSource} handleRegister={handleRegister} />
         </div>
       </div>
     </MDBView>

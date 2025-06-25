@@ -15,16 +15,11 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
 
     // Store data in localStorage
     localStorage.setItem("taskPrintout", JSON.stringify(taskData));
-    console.log("Data stored in localStorage:", taskData);
 
     // Construct the URL
     const URL = `${window.location.origin}/printout/laboratory/task`;
     const title = `Laboratory Task Printout`;
     const features = "top=100px,left=100px,width=794px,height=1123px";
-
-    console.log("Current Window Location:", window.location);
-    console.log("Origin:", window.location.origin);
-    console.log("URL:", URL);
 
     setTimeout(() => {
       const printWindow = window.open(URL, title, features);

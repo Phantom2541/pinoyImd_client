@@ -34,6 +34,6 @@ const componentMap = {
 };
 
 export default function BodySwitcher({ task, setTask }) {
-  const Component = componentMap[task.form?.toLowerCase()] || Blank;
+  const Component = componentMap[task?.form?.toLowerCase()] || Blank;
   return <Component task={task} setTask={setTask} />;
 }

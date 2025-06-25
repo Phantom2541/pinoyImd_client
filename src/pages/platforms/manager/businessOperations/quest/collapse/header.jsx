@@ -1,16 +1,35 @@
 import React from "react";
-import { MDBBtn } from "mdbreact";
-import { Templates } from "../../../../../../services/fakeDb";
+import { MDBBtn, MDBIcon } from "mdbreact";
+import { useDispatch } from "react-redux";
+import { dateFormat } from "../../../../../../services/utilities";
+import { SetEDIT } from "../../../../../../services/redux/slices/diagnostics/clinician/quest";
+
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
-  const { name, abbreviation, template } = item;
+  const {  company, location, schedule, status  } = item,
+  dispatch = useDispatch();
+
+  /**
+   * Sets the quest to edit mode by dispatching the SetEDIT action to the store
+   * @function
+   * @param {Object} item the quest to edit
+   */
+  const handleAdd = () =>
+    dispatch(SetEDIT(item));
+  
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
-      {index + 1}. {name} {abbreviation}
+      {index + 1}. {company} {location} {dateFormat( schedule)}
       <div className="d-flex">
         <small className="mr-2 mt-1">
-          {Templates.getComponentName(template)}
+      {status}
         </small>
+        <MDBBtn
+          color="primary" size="sm" rounded onclick={handleAdd}>
+          <MDBIcon icon="pencil-alt"/>
+
+        </MDBBtn>
+
         <MDBBtn
           size="sm"
           color="white"

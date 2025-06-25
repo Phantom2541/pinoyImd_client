@@ -94,6 +94,24 @@ export default function Payments() {
                   {currency(paymentTotals.voucher)}
                 </strong>
               </div>
+              <div className="d-flex justify-content-between border-bottom py-2 ml-3">
+                <span title="Wellness">HMO :</span>
+                <strong className="text-primary">
+                  {currency(paymentTotals.voucher)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2 ml-3">
+                <span title="Insource : Membership">Membership :</span>
+                <strong className="text-primary">
+                  {currency(paymentTotals.voucher)}
+                </strong>
+              </div>
+              <div className="d-flex justify-content-between border-bottom py-2 ml-3">
+                <span title="Insource : Contracts">Contracts :</span>
+                <strong className="text-primary">
+                  {currency(paymentTotals.voucher)}
+                </strong>
+              </div>
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Downpayment:</span>
                 <strong className="text-danger">

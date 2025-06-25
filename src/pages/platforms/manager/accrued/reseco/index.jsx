@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBAnimation, MDBCard } from "mdbreact";
 
 import Header from "./header";

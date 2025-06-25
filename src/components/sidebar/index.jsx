@@ -35,7 +35,7 @@ export default function SideNavigation({
   useEffect(() => {
     if (company?.name && activePlatform?.platform && !isLoading) {
       const url = `${ENDPOINT}/public/companies/${
-        company.name
+        company?.name
       }/logo.png?${new Date().getTime()}`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);

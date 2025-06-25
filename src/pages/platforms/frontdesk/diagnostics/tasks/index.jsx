@@ -24,7 +24,6 @@ import {
   RESET as PHYRESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
-import Printout from "./modal/printout";
 
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -96,13 +95,14 @@ export default function Tasks() {
   // } else if (activePlatform.department === "Radiology" && print) {
   //   return <RadTaskPrintout />;
   // }
+
+  console.log("isLoading", isLoading);
   return (
     <MDBCard narrow>
       <Header />
       {isLoading ? <TableLoading /> : <DealCollapse />}
       <Footer />
       <ResultEntry />
-      <Printout />
     </MDBCard>
   );
 }

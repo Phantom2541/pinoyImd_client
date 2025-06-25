@@ -8,6 +8,7 @@ import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import Modal from "./modal";
+import PriceList from "./pricelist";
 
 const Index = () => {
   const { token } = useSelector(({ auth }) => auth),
@@ -31,6 +32,7 @@ const Index = () => {
         </MDBCard>
       </MDBAnimation>
       <Modal />
+      <PriceList />
     </>
   );
 };

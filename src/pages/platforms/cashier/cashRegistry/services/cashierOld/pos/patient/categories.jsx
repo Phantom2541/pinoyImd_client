@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  MDBCol,
-  MDBSelect,
-  MDBSelectInput,
-  MDBSelectOption,
-  MDBSelectOptions,
-} from "mdbreact";
+import { MDBCol } from "mdbreact";
 import { Categories } from "../../../../../../../../services/fakeDb";
 
 export default function PatientCategories({

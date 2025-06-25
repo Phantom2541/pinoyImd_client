@@ -58,7 +58,7 @@ export default function AccessModal() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (isSuccess && !formSubmitted) {
+    if (isSuccess && !formSubmitted && show) {
       toggle();
       dispatch(RESET());
       Swal.fire({
@@ -68,7 +68,7 @@ export default function AccessModal() {
         confirmButtonText: "OK",
       });
     }
-  }, [isSuccess, formSubmitted, toggle, dispatch]);
+  }, [isSuccess, formSubmitted, show, toggle, dispatch]);
 
   const handleSetRoles = useCallback((_roles) => {
     setRoles(_roles);

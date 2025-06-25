@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MDBBtn,
   MDBModal,
@@ -141,15 +141,16 @@ export default function Modal() {
           break;
         case "Ultrasound":
         case "Xray":
-          bucket.map(
-            async (test) =>
-              await saveRequest(lowercaseKey, {
+          await Promise.all(
+            bucket.map((test) =>
+              saveRequest(lowercaseKey, {
                 dealId: _id,
                 packages: test,
                 hasRead: false,
                 customerId: customerId?._id,
                 branchId: activePlatform.branchId,
               })
+            )
           );
           break;
         case "ECG":

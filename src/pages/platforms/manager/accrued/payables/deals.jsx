@@ -10,7 +10,7 @@ import { Services } from "../../../../../services/fakeDb";
 
 const Deals = ({ deals, isOpen, _id }) => {
   return (
-    <tr className="border-left border-right border-black">
+    <tr className="border-left border-right border-bottom border-black ">
       <td colSpan={6} className="m-0 p-0">
         <MDBCollapse id={`collapse-${_id}`} isOpen={isOpen} className="m-0 p-0">
           <MDBTable

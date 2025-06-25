@@ -27,7 +27,6 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {console.log("collectiondz", collections)}
           
           {collections.length} Productss
         </span>
@@ -36,12 +35,12 @@ const Header = () => {
         <div className="text-right d-flex items-center">
           <Search
             collections={collections}
+            setFiltered={(items) => dispatch(SetFILTER(items))}
+            placeholder="Search generics..."
+            haveAction={true}
+            reset={() => dispatch(SetFILTER(collections))}
             hideButton={false}
-            setFiltered={(dapak)=>dispatch(SetFILTER(dapak))}
-            handleAdd={(huh) => dispatch(SetCREATE(huh))}
-            reset={()=> dispatch(SetFILTER(collections))}
-          
-          
+            handleAdd={(item) => dispatch(SetCREATE({ displayname: item }))}
           />
         </div>
       </div>
