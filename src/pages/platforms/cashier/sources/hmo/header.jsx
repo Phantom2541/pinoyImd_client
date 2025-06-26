@@ -38,7 +38,7 @@ const Header = () => {
     const { displayname } = source;
     Swal.fire({
       title: `${displayname || ""}`,
-      text: `Do you want to register as a new provider?`,
+      text: `Do you want to register as a new HMO?`,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
