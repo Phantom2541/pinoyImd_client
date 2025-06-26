@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   MDBContainer,
   MDBRow,
@@ -31,7 +31,11 @@ const Subscriber = ({ match }) => {
     [isSignUp, setIsSignUp] = useState(false),
     [menuOpen, setMenuOpen] = useState(false),
     [connectOpen, setConnectOpen] = useState(false),
+    [activeSection, setActiveSection] = useState("home"),
+    [indicatorStyle, setIndicatorStyle] = useState({}),
     dispatch = useDispatch(),
+    linkRefs = useRef({}),
+    menuRef = useRef(null),
     companyId = match?.params?.companyId;
 
   useEffect(() => {
@@ -54,6 +58,17 @@ const Subscriber = ({ match }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isSignUp]);
+
+  useEffect(() => {
+    const el = linkRefs.current[activeSection];
+    if (el && menuRef.current) {
+      const { offsetLeft, offsetWidth } = el;
+      setIndicatorStyle({
+        left: offsetLeft,
+        width: offsetWidth,
+      });
+    }
+  }, [activeSection, menuOpen]);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -91,7 +106,15 @@ const Subscriber = ({ match }) => {
                 className={`subscriber-menu ${
                   menuOpen ? "subscriber-open" : ""
                 } ${scrolled ? "scrolled" : ""}`}
+                ref={menuRef}
               >
+                <div
+                  // className="menu-indicator home-indicator"
+                  className={`menu-indicator ${
+                    scrolled ? "" : "home-indicator"
+                  }`}
+                  style={indicatorStyle}
+                ></div>
                 {[
                   "home",
                   "machines",
@@ -103,9 +126,12 @@ const Subscriber = ({ match }) => {
                   <a
                     key={id}
                     href={`#${id}`}
+                    ref={(el) => (linkRefs.current[id] = el)}
+                    className={activeSection === id ? "active-menu" : ""}
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToSection(id);
+                      setActiveSection(id);
                     }}
                   >
                     {id.charAt(0).toUpperCase() +
