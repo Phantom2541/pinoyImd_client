@@ -63,10 +63,29 @@ export default function Applicants() {
 
   const handleDeny = (applicant) => {
     Swal.fire({
-      title: "Confirm Denial",
-      html: `Are you certain you want to deny the application of <strong>${fullName(
-        applicant?.user?.fullName
-      )}</strong>? This action cannot be undone.`,
+      html: `
+      <h5 style="margin-bottom: 0.5rem;">
+        Are you sure you want to deny <strong>${fullName(
+          applicant?.user?.fullName
+        )}</strong>?
+      </h5>
+      <p style="font-size: 0.9rem; color: #555;">
+        This action is irreversible. Please provide a reason for denying the application.
+      </p>
+       <label for="swal-input" style="display:block; font-weight: 400; margin-bottom: 0rem;">Reason for denial</label>
+    `,
+      input: "textarea",
+      inputPlaceholder: "Type your reason here...",
+      inputAttributes: {
+        "aria-label": "Reason for denial",
+        id: "swal-input",
+      },
+      inputValidator: (value) => {
+        if (!value?.trim()) {
+          return "You must provide a reason before proceeding.";
+        }
+        return null;
+      },
       icon: "warning",
       showCancelButton: true,
       reverseButtons: true,
@@ -75,15 +94,25 @@ export default function Applicants() {
       confirmButtonText: "Yes, deny application",
     }).then((result) => {
       if (result.isConfirmed) {
+        const { remarks = [] } = applicant;
+        const _remarks = [...remarks];
+        _remarks.push({
+          title: "Denied",
+          reason: result.value,
+          createdAt: new Date(),
+        });
         dispatch(
-          UPDATE({ token, data: { _id: applicant._id, status: "denied" } })
+          UPDATE({
+            token,
+            data: { _id: applicant._id, status: "denied", remarks: _remarks },
+          })
         ).then(() => {
           Swal.fire({
+            icon: "success",
             title: "Application Denied",
             html: `The application of <strong>${fullName(
               applicant?.user?.fullName
-            )}</strong> has been successfully denied.`,
-            icon: "success",
+            )}</strong> has been denied with the provided reason.`,
           });
         });
       }

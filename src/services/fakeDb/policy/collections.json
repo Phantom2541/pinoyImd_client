@@ -29,11 +29,6 @@
         "display_name": "Chief Executive Officer"
       },
       {
-        "id": 5,
-        "name": "stock holder",
-        "display_name": "Stock Holder"
-      },
-      {
         "id": 6,
         "name": "proprietor",
         "display_name": "Proprietor"

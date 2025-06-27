@@ -72,7 +72,8 @@ const Body = () => {
       <tbody>
         {paginatedData?.map((item, index) => {
           const { id, name, abbreviation, specimen } = item;
-          const isSelected = selected.id === id;
+          const isSelected 
+          = selected.id === id;
           return (
             <tr key={index}>
               <td key={index}>{index + startIndex + 1}</td>

@@ -27,165 +27,142 @@ import StaffSchedule from "../../../pages/platforms/cashier/scheduler";
 const cashier = [
   {
     name: "Bulletin",
-    icon: "tachometer-alt",
+    icon: "bullhorn",
     path: "/bulletin",
-    title: "news and updates",
+    title: "News and Updates",
     component: Bulletin,
   },
   {
     name: "Cash Register",
     path: "/cash/register",
-    icon: "money-bill",
-    title: "cash register",
+    icon: "cash-register",
+    title: "Cash Register Functions",
     children: [
       {
-        name: "pos", // Point Of Sales
+        name: "POS",
         path: "/pos",
         icon: "shopping-cart",
-        title: "point of sales",
+        title: "Point of Sales",
         component: Cashier,
       },
       {
         name: "Deals",
         path: "/deals",
-        icon: "handshake",
-        title: "Census of services deals of the day",
+        icon: "tags",
+        title: "Service Deals of the Day",
         component: Deals,
       },
       {
         name: "Remittances",
         path: "/remittances",
-        icon: "money-check",
-        title: "Ledger of daily remittances",
+        icon: "exchange-alt",
+        title: "Daily Remittance Ledger",
         component: Remittances,
       },
       {
         name: "Onboarding",
         path: "/onboarding",
-        icon: "user-check",
-        title: "Onboarding of insources",
+        icon: "user-plus",
+        title: "Insourcing Onboarding",
         component: Onboarding,
       },
     ],
   },
   {
-    name: "Accrued", // liabilities
+    name: "Accrued",
     path: "/accrued",
-    icon: "tv",
-    title: "liabilities and obligations",
+    icon: "file-invoice",
+    title: "Liabilities and Obligations",
     children: [
-      /**
-       * obligation for services or goods received but not yet paid for by the accounting period's en
-       *  unpaid bills (Water, Electricity, SOA  & etc.)
-       * Electric bill
-       * Water bill
-       * WIFI bill
-       * Rental
-       */
       {
         name: "Accounts Payable (A/P)",
         path: "/payables",
         icon: "file-invoice-dollar",
-        title: "Outstanding payments for suppliers and utilities.",
+        title: "Outstanding Payments to Suppliers & Utilities",
         component: Payables,
       },
       {
         name: "Payments",
         path: "/payments",
-        icon: "dollar-sign",
-        title: "List of payments made.",
+        icon: "money-check-alt",
+        title: "List of Payments Made",
         component: Payments,
       },
-      /**
-       * SOA from A/P
-       * confirming the SOA listed in A/P
-       */
       {
         name: "Statement of Account (SOA)",
         path: "/soa",
-        icon: "balance-scale",
-        title: "Outsourced services from monthly sales",
+        icon: "file-contract",
+        title: "Outsourced Services from Monthly Sales",
         component: SOA,
       },
-      /**
-       * Generated monthly Collections from vouchers  (SOA)
-       */
       {
         name: "Accounts Receivable (A/R)",
         path: "/receivables",
-        icon: "money-bill",
-        title: "Unpaid invoices from corporate accounts or HMOs",
+        icon: "wallet",
+        title: "Unpaid Corporate & HMO Invoices",
         component: Receivables,
       },
-      /**
-       * Unproessed Vouchers
-       * from daily sales
-       */
       {
         name: "Vouchers",
         path: "/vouchers",
         icon: "receipt",
-        title: "Vouchers from daily sales",
+        title: "Vouchers from Daily Sales",
         component: Vouchers,
       },
       {
         name: "Reseco",
         path: "/reseco",
-        icon: "handshake",
+        icon: "calendar-check",
         title: "Monthly Reseco Deals",
         component: Reseco,
       },
     ],
   },
-  /**
-   * at this point its only viewing
-   */
   {
     name: "Sources",
     path: "/sources",
-    icon: "cogs",
-    title: "sources",
+    icon: "building",
+    title: "Outsources & Insources",
     children: [
       {
         name: "Outsources",
         path: "/outsources",
-        icon: "truck",
-        title:
-          "List of Companies that provide services that are not yet available",
+        icon: "people-carry",
+        title: "External Service Providers",
         component: Outsources,
       },
       {
         name: "Insources",
         path: "/insources",
-        icon: "warehouse",
-        title: "List of Companies who send out their services",
+        icon: "user-friends",
+        title: "Service Senders",
         children: [
           {
             name: "Wellness",
             path: "/wellness",
-            icon: "hospital",
-            title: "List of Companies who have HMO",
+            icon: "heartbeat",
+            title: "Companies with Wellness Packages",
             component: Wellness,
           },
           {
             name: "Membership",
             path: "/membership",
-            icon: "handshake",
-            title: "List of Companies who send their employees",
+            icon: "id-card",
+            title: "Employee Senders",
             component: Membership,
           },
           {
             name: "Contract",
             path: "/contract",
-            icon: "handshake",
-            title: "List of Laboratory who send out their services",
+            icon: "file-signature",
+            title: "Laboratory Contract Providers",
             component: Contract,
           },
           {
             name: "Referrals",
             path: "/referrals",
-            icon: "handshake",
-            title: "List of Medical Providers who send thier clients",
+            icon: "paper-plane",
+            title: "Medical Referral Sources",
             component: Referrals,
           },
         ],
@@ -193,29 +170,29 @@ const cashier = [
       {
         name: "HMO",
         path: "/hmo",
-        icon: "hospital",
-        title: "List of Companies who have HMO",
+        icon: "user-md",
+        title: "Companies with HMO",
         component: HMO,
       },
       {
         name: "Suppliers",
         path: "/suppliers",
-        icon: "handshake",
-        title: "List of company that provides supplies",
+        icon: "boxes",
+        title: "Suppliers for Goods & Services",
         component: Suppliers,
       },
       {
         name: "Utilities",
         path: "/utilities",
-        icon: "tools",
-        title: "List of Company that provides Utilities or supports",
+        icon: "plug",
+        title: "Utilities & Support Services",
         component: Utilities,
       },
       {
         name: "Hotlines",
         path: "/hotlines",
-        icon: "phone",
-        title: "List of Hotlines",
+        icon: "phone-alt",
+        title: "Emergency & Support Hotlines",
         component: Hotlines,
       },
     ],
@@ -224,29 +201,29 @@ const cashier = [
     name: "Services Catalog",
     path: "/catalogs",
     icon: "clipboard-list",
-    title: "services catalog",
+    title: "Service Listings",
     children: [
       {
         name: "Menus",
         path: "/menus",
         icon: "utensils",
-        title: "Menus",
+        title: "List of Menus",
         component: Menus,
       },
       {
         name: "Services",
         path: "/services",
-        icon: "list",
-        title: "Services",
+        icon: "concierge-bell",
+        title: "List of Services",
         component: Services,
       },
     ],
   },
   {
     name: "Schedule",
-    icon: "tachometer-alt",
     path: "/schedule",
-    title: "news and updates",
+    icon: "calendar-alt",
+    title: "Staff Schedules",
     component: StaffSchedule,
   },
 ];

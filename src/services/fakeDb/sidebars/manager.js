@@ -15,7 +15,7 @@ import {
   Employees,
   Equipments,
   Staffs,
-  Physicians,
+  Physicians, 
   Procurments,
   Heads,
 } from "../../../pages/platforms/headquarter/file201";
@@ -32,6 +32,8 @@ import {
   ProductGenerics,
   Products,
 } from "../../../pages/platforms/manager/commerce/merchandise";
+
+import { Attendances } from "../../../pages/platforms/manager/humanResources";
 
 import {
   Vouchers,
@@ -252,8 +254,20 @@ const manager = [
         component: Products,
       },
     ],
-  },
-  {
+  }, {
+    name: "Human Resources",
+    path: "/humaRresources",
+    icon: "users",
+    children:[
+      {
+        name: "Attendance",
+        path: "/attendances",
+        icon: "clock",
+        component: Attendances,
+
+      },
+    ],
+  }, {
     name: "Settings",
     path: "/settings",
     icon: "cogs",
@@ -381,7 +395,7 @@ const manager = [
     ],
   },
   {
-    name: "Markey Place",
+    name: "Market Place",
     icon: "shopping-cart",
     path: "/marketplace",
     children: [

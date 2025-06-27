@@ -16,7 +16,7 @@ const fullAddress = (address, isComplete = true) => {
 const billingAddress = (address) => {
   if (typeof address !== "object") return <i>Datatype mismatch</i>;
   const { province, city, barangay } = address;
-  return `${barangay} - ${city}, ${
+  return `${barangay} , ${city}, ${
     provinces.find((p) => p.name === province)?.abbrev
   } `;
 };

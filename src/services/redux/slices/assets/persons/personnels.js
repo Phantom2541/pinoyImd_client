@@ -128,9 +128,9 @@ export const USER = createAsyncThunk(
 
 export const EMPLOYEES = createAsyncThunk(
   `${url}/employees`,
-  ({ token, branch }, thunkAPI) => {
+  ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/employees`, token, { branch });
+      return axioKit.universal(`${url}/employees`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -467,11 +467,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(EMPLOYEES.fulfilled, (state, { payload }) => {
+        console.log("payload", payload);
+        
         state.collections = payload.sort((a, b) => {
           const aDesignation = String(a?.contract?.designation || "");
           const bDesignation = String(b?.contract?.designation || "");
           return aDesignation.localeCompare(bDesignation);
         });
+          state.isLoading = false;
       })
       .addCase(EMPLOYEES.rejected, (state, action) => {
         const { error } = action;
