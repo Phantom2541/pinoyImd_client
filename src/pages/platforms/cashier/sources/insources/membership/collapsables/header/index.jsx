@@ -99,8 +99,9 @@ const Header = ({
             {
               label: "Membership",
               keyForValue: "membership",
-              keyForText: "membership",
+              keyForText: "text",
               values: "text",
+              isMembership: true,
               collections: Memberships.collections.map(({ value, text }) => ({
                 membership: value,
                 text,
@@ -138,6 +139,7 @@ const Header = ({
                 tag = "h6",
                 isSelect = true,
                 isMoney = false,
+                isMembership = false,
               },
               index
             ) => (
@@ -156,11 +158,17 @@ const Header = ({
                     fieldData={{
                       [keyForValue]: insource[keyForValue],
                       _id,
-                      [keyForText || keyForValue]:
-                        insource[keyForText || keyForValue],
+                      [keyForText || keyForValue]: isMembership
+                        ? `${Memberships.getMembership(insource?.membership)}`
+                        : insource[keyForText || keyForValue],
                     }}
                     keyForValue={keyForValue}
                     keyForText={keyForText || keyForValue}
+                    preValue={
+                      isMembership
+                        ? insource?.membership
+                        : insource[keyForText || keyForValue]
+                    }
                     formSubmitted={formSubmitted}
                     onSave={(editedData) => handleUpdate(editedData)}
                     selectStyle={{ width }}
