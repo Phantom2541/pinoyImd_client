@@ -1,61 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  MDBBtn,
-  MDBModal,
-  MDBModalBody,
-  MDBIcon,
-  MDBModalHeader,
-  MDBInput,
-  MDBTypography,
-} from "mdbreact";
-import {
-  SAVE,
-  UPDATE,
-  TOGGLE,
-} from "../../../../../services/redux/slices/market/products";
-
+import { MDBBtn,MDBModal,MDBModalBody,MDBIcon,MDBModalHeader,MDBInput,MDBTypography, MDBSelect} from "mdbreact";
+import { SAVE, UPDATE, TOGGLE } from "../../../../../services/redux/slices/market/products"
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
-const Modal = () => {
-  const { showModal, toggle, selected, willCreate, isLoading } = useSelector(
-      ({ products }) => products
-    ),
+export default function Modal() {
+  const { showModal, selected, willCreate, isLoading } = useSelector(({ products }) => products),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected),
+    [form, setForm] = useState({}),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+  
+
   useEffect(() => {
-    if (selected) setForm(selected);
-  }, [selected]);
-  // Handle update function
+    if (selected)
+      setForm(selected);
+  }, [selected]); 
+
   const handleUpdate = () => {
+    TOGGLE();
+
+    // Check if object has changed
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
+
     dispatch(
-      UPDATE({
-        data: { ...form, _id: selected._id },
-        token,
-      })
-    );
-    TOGGLE();
+      UPDATE({ data: { ...form, id: selected._id },token}));
   };
 
-  // Handle create function
   const handleCreate = () => {
-    dispatch(
-      SAVE({
-        data: form,
-        token,
-      })
-    ).then(() => TOGGLE()); // Close modal after successful save
+    console.log("saved datass", {data: { ...form, id: selected._id}, token });
+    dispatch(SAVE({ data: { ...form, id: selected._id }, token})); 
   };
 
-  // Handle form submit
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -66,69 +48,74 @@ const Modal = () => {
     handleUpdate();
   };
 
-  // Handle change sa inputs
   const handleChange = (key, value) => {
     setForm({
       ...form,
       [key]: value,
       userId: auth._id,
-      branchId: activePlatform.branchId,
+      branchId: activePlatform.branchId
     });
   };
 
-  // Fix: Return correct form value
+
   const handleValue = (key) => form[key] || "";
 
-  // Handle modal close
-  const handleClose = () => TOGGLE();
+
+  const handleClose = () => dispatch(TOGGLE());
 
   return (
-    <MDBModal
-      isOpen={showModal}
-      toggle={() => handleClose()}
-      backdrop
-      size="sm"
-    >
+    <MDBModal isOpen={showModal} toggle={()=>handleClose()} backdrop size="sm">
       <MDBModalHeader
-        toggle={() => handleClose()}
+        handleClose={()=>handleClose()}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
         {willCreate ? "Create" : "Update"} Controls
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
+
+
+
         <form onSubmit={handleSubmit}>
           <MDBTypography
             tag="h4"
             variant="h4-responsive"
             className="text-center"
-          ></MDBTypography>
+          >
+        
+          </MDBTypography>
 
-          {/* Input fields */}
+          {/* ------------------------------Input fields ---------------------------------- */}
+
           <MDBInput
-            label="Name"
-            type="text"
-            value={handleValue("name")}
-            required
-            onChange={(e) => handleChange("name", e.target.value)}
+          label="Name"
+          type="text"
+          value={handleValue("name")}
+          onChange={(e) => handleChange("name", e.target.value)}
+          required
+        />
+        <MDBInput
+          label="Subname"
+          type="text"
+          value={handleValue("subname")}
+          onChange={(e) => handleChange("subname", e.target.value)}
+          required
           />
-          <MDBInput
-            label="Subname"
-            type="text"
-            value={handleValue("subname")}
-            required
-            onChange={(e) => handleChange("subname", e.target.value)}
-          />
-          <MDBInput
-            label="barcode"
-            type="text"
-            value={handleValue("barcode")}
-            required
-            onChange={(e) => handleChange("barcode", e.target.value)}
-          />
+
+
+          <label for="sele">IS CONSUMES????</label>
+          <select id="sele" className="form-control mb-3" onChange={(e) => handleChange("isConsumable", e.target.value ==="true")}
+
+          value={handleValue("isConsumable") ? "true" : "false"}
+        >
+          <option value="true">YES</option>
+          <option value="false">NO</option>
+          </select>
+
+
 
           {/* Submit button */}
-          <div className="text-center mb-1-half">
+          <div className="text-center mb-1-half" >
             <MDBBtn
               type="submit"
               disabled={isLoading}
@@ -143,6 +130,4 @@ const Modal = () => {
       </MDBModalBody>
     </MDBModal>
   );
-};
-
-export default Modal;
+}

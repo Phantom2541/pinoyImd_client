@@ -18,7 +18,7 @@ const Header = () => {
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4  d-flex justify-content-between align-items-center"
     >
       <div
-        className="d-flex justify-items-center my-2"
+        className="d-flex justify-items-center my-1"
         style={{ width: "20rem" }}
       >
         <span className="white-text mx-3 text-nowrap mt-0">

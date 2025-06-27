@@ -13,8 +13,7 @@ import {
   LOGIN,
   RESET,
 } from "../../../services/redux/slices/assets/persons/auth";
-import { PresetImage } from "../../../services/utilities";
-
+import { Logo } from "../../../services/utilities";
 export default function Login({ show, toggle = null }) {
   const {
       activePlatform,
@@ -116,7 +115,7 @@ export default function Login({ show, toggle = null }) {
           <img
             loading="eager"
             src={image}
-            onError={(e) => (e.target.src = PresetImage(auth.isMale))}
+            onError={(e) => (e.target.src = Logo)}
             alt={`avatar-${auth._id}`}
             className="rounded-circle img-responsive"
           />

@@ -8,10 +8,10 @@ import {
   SetByTEMPLATES,
 } from "../../../services/redux/slices/commerce/catalog/services";
 const Header = () => {
-  const { maxPage } = useSelector(({ auth }) => auth);
-  const { filtered } = useSelector(({ services }) => services);
+  const { maxPage } = useSelector(({ auth }) => auth); //get the max page
+  const { filtered } = useSelector(({ services }) => services);// 
   const [component, setComponent] = useState("");
-  const [services, setServices] = useState([]),
+  const [services, setServices] = useState([]), //make a state component  
     dispatch = useDispatch();
 
   //initial values

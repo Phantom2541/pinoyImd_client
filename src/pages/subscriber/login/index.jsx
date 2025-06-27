@@ -13,7 +13,7 @@ import {
   LOGIN,
   RESET,
 } from "../../../services/redux/slices/assets/persons/auth";
-import { PresetImage } from "../../../services/utilities";
+import { Logo } from "../../../services/utilities";
 
 export default function Login({ show, toggle = null }) {
   const {
@@ -113,13 +113,16 @@ export default function Login({ show, toggle = null }) {
         className={`${email ? "mx-auto" : "light-blue darken-3 white-text"}`}
       >
         {auth ? (
-          <img
-            loading="eager"
-            src={image}
-            onError={(e) => (e.target.src = PresetImage(auth.isMale))}
-            alt={`avatar-${auth._id}`}
-            className="rounded-circle img-responsive"
-          />
+          <div>
+            <img
+              loading="eager"
+              src={image}
+              onError={(e) => (e.target.src = Logo)}
+              style={{ width: "100px", height: "100px" }}
+              alt={`avatar-${auth._id}`}
+              className="rounded-circle img-responsive"
+            />
+          </div>
         ) : (
           "Login"
         )}

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"; 
 import { axioKit } from "../../../utilities";
 
-const url = "/commerce/merchandise/products";
+const url = "/liability/attendances";
 
 const initialState = {
   filter: [],
@@ -100,6 +100,8 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetCREATE: (state, { payload }) => {
+      console.log("SetCREATE CALLED LOL:");
+      
       state.selected = {
         lo: "",
         norm: "",
@@ -182,6 +184,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { payload } = action.payload;
+
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.showModal = false;
@@ -201,14 +204,13 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
+
+        const fIndex = state.filtered.findIndex(
           (item) => item._id === payload._id
         );
-        const findex = state.filtered.findIndex(
-          (item) => item._id === payload._id
-        );
-        state.collections[index] = payload;
-        state.filtered[findex] = payload;
+
+        // state.collections[index] = payload;
+        state.filtered[fIndex] = payload;
         state.showModal = false;
         state.message = success;
         state.isSuccess = true;
@@ -235,10 +237,6 @@ export const reduxSlice = createSlice({
         const fIndex = state.filtered.findIndex(
           (item) => item._id === payload
         );
-        const findex = state.filtered.findIndex(
-          (item) => item?._id === action.payload.payload
-        );
-
         state.collections.splice(index, 1);
         state.filtered.splice(fIndex, 1);
         state.message = success;
