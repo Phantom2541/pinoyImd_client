@@ -87,7 +87,6 @@ export default function Employees({ match }) {
     currentPage * CARDS_PER_PAGE,
     (currentPage + 1) * CARDS_PER_PAGE
   );
-
   return (
     <section className=" subscriber-pioneers-section">
       <MDBAnimation reveal type="fadeIn" duration="1000ms">
