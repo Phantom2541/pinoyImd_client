@@ -5,7 +5,6 @@ import TableLoading from "../../../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
-// import Modal from "./modal";
 
 const Index = () => {
   const { isLoading } = useSelector(({ personnels }) => personnels);
@@ -19,7 +18,6 @@ const Index = () => {
           <Footer />
         </MDBCard>
       </MDBAnimation>
-      {/* <Modal /> */}
     </>
   );
 };
