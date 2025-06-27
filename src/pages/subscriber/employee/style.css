@@ -10,7 +10,7 @@
 
 .subscriber-pioneers-container {
   display: grid;
-  grid-template-columns: repeat(3, 310px);
+  grid-template-columns: repeat(4, 250px);
   gap: 20px;
   justify-content: center;
 }
@@ -18,17 +18,53 @@
 .subscriber-pioneers-card {
   position: relative;
   width: 100%;
-  height: 320px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 10px;
+  gap: 15px;
+  padding: 20px 10px;
   background-color: var(--background-color);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   transition: transform 1s ease;
+}
+
+.subscriber-pioneers-card-header,
+.subscriber-pioneers-card-body,
+.subscriber-pioneers-footer {
+  width: 100%;
+  height: 100%;
+}
+
+.subscriber-pioneers-card-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.subscriber-pioneers-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.subscriber-pioneers-card-body span {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.subscriber-pioneers-card-body p {
+  font-weight: 400;
+}
+
+.subscriber-pioneers-footer {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 15px;
 }
 
 .subscriber-pioneers-card::before {
@@ -58,20 +94,11 @@
 }
 
 .subscriber-pioneers-card img {
-  width: 130px;
+  width: 100px;
+  height: 100px;
+  object-fit: fill;
   border-radius: 50%;
-  margin-top: 17px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-}
-
-.subscriber-pioneers-card span {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.subscriber-pioneers-card p {
-  font-size: 1rem;
-  font-weight: 500;
 }
 
 .pioneerAvatarLink {
@@ -84,18 +111,25 @@
 }
 
 /* responsive design */
-@media (max-width: 1280px) {
+/* @media (max-width: 1400px) {
   .subscriber-pioneers-container {
-    grid-template-columns: repeat(2, 320px);
+    grid-template-columns: repeat(4, 250px);
   }
-  .subscriber-pioneers-card span {
-    font-size: 1.3rem;
+} */
+
+@media (max-width: 1200px) {
+  .subscriber-pioneers-container {
+    grid-template-columns: repeat(3, 250px);
   }
-  .subscriber-pioneers-card p {
-    font-size: 1rem;
+}
+
+@media (max-width: 1200px) {
+  .subscriber-pioneers-card-body span {
+    font-size: 1.1rem;
+    font-weight: 600;
   }
-  .subscriber-pioneers-card img {
-    width: 120px;
-    margin-top: 10px;
+  .subscriber-pioneers-card-body p {
+    font-weight: 500;
+    font-size: 0.9rem;
   }
 }

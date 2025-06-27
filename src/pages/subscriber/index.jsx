@@ -13,7 +13,6 @@ import Copyrights from "../../components/footer";
 import Register from "./register";
 import ContactUs from "./contact";
 import Login from "./login";
-import Staffs from "./staff";
 import LOGO from "./../../assets/iMD.png";
 import Testimonials from "./testimonials";
 import Machines from "./machine";
@@ -22,6 +21,7 @@ import { GET_DETAILS } from "../../services/redux/slices/assets/companies";
 import { ENDPOINT } from "../../services/utilities";
 import Loading from "./loading";
 import Doctors from "./doctor";
+import Employees from "./employee";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
@@ -117,9 +117,9 @@ const Subscriber = ({ match }) => {
                 ></div>
                 {[
                   "home",
-                  "machines",
+                  "features",
                   "doctors",
-                  "staffs",
+                  "employees",
                   "testimonials",
                   "contact",
                 ].map((id) => (
@@ -132,6 +132,7 @@ const Subscriber = ({ match }) => {
                       e.preventDefault();
                       scrollToSection(id);
                       setActiveSection(id);
+                      setMenuOpen(false);
                     }}
                   >
                     {id.charAt(0).toUpperCase() +
@@ -244,7 +245,7 @@ const Subscriber = ({ match }) => {
           </section>
 
           <MDBContainer fluid className="p-0">
-            <div id="machines">
+            <div id="features">
               <Machines />
             </div>
             <hr className="mb-5" />
@@ -256,8 +257,8 @@ const Subscriber = ({ match }) => {
               <Testimonials />
             </div>
             <hr className="mb-4" />
-            <div id="staffs">
-              <Staffs match={match} />
+            <div id="employees">
+              <Employees match={match} />
             </div>
             <div id="contact" className="mt-5">
               <ContactUs />
