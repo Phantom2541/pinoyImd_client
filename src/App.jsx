@@ -22,6 +22,7 @@ import {
   SeroLog,
   RequestOutSource,
   SOA,
+  Machines,
 } from "./components/printout";
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
@@ -81,7 +82,7 @@ export default function App() {
       <Route path="/printout/payslip" exact component={Payslip} />
       <Route path="/printout/personnel" exact component={PersonnelPrintOut} />
       <Route path="/printout/soa" exact component={SOA} />
-
+      <Route path="/printout/machines" exact component={Machines}/>
       {/* Diagnostic Portal */}
       <Route path="/emr/portal/:companyId/:dealId" exact component={Portal} />
       <Route path="/subscriber/:companyId" exact component={Subscriber} />
