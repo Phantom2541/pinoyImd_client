@@ -13,7 +13,6 @@ import Copyrights from "../../components/footer";
 import Register from "./register";
 import ContactUs from "./contact";
 import Login from "./login";
-import Staffs from "./staff";
 import LOGO from "./../../assets/iMD.png";
 import Testimonials from "./testimonials";
 import Machines from "./machine";
@@ -22,6 +21,7 @@ import { GET_DETAILS } from "../../services/redux/slices/assets/companies";
 import { ENDPOINT } from "../../services/utilities";
 import Loading from "./loading";
 import Doctors from "./doctor";
+import Employees from "./employee";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
@@ -117,9 +117,9 @@ const Subscriber = ({ match }) => {
                 ></div>
                 {[
                   "home",
-                  "machines",
+                  "features",
                   "doctors",
-                  "staffs",
+                  "employees",
                   "testimonials",
                   "contact",
                 ].map((id) => (
@@ -132,6 +132,7 @@ const Subscriber = ({ match }) => {
                       e.preventDefault();
                       scrollToSection(id);
                       setActiveSection(id);
+                      setMenuOpen(false);
                     }}
                   >
                     {id.charAt(0).toUpperCase() +
@@ -171,7 +172,10 @@ const Subscriber = ({ match }) => {
                 className={`subscriber-hamburger ${
                   menuOpen ? "subscriber-active" : ""
                 }`}
-                onClick={() => setMenuOpen(!menuOpen)}
+                onClick={() => {
+                  setConnectOpen(false);
+                  setMenuOpen(!menuOpen);
+                }}
               >
                 <div
                   className={`subscriber-bar ${scrolled ? "scrolled" : ""}`}
@@ -189,7 +193,10 @@ const Subscriber = ({ match }) => {
                   className={`subscriber-btn-connect ${
                     connectOpen ? "activeConnect" : ""
                   } ${scrolled ? "scrolled" : ""}`}
-                  onClick={() => setConnectOpen(!connectOpen)}
+                  onClick={() => {
+                    setConnectOpen(!connectOpen);
+                    setMenuOpen(false);
+                  }}
                 >
                   Connect ▾
                 </button>
@@ -238,7 +245,7 @@ const Subscriber = ({ match }) => {
           </section>
 
           <MDBContainer fluid className="p-0">
-            <div id="machines">
+            <div id="features">
               <Machines />
             </div>
             <hr className="mb-5" />
@@ -250,58 +257,14 @@ const Subscriber = ({ match }) => {
               <Testimonials />
             </div>
             <hr className="mb-4" />
-            <div id="staffs">
-              <Staffs match={match} />
+            <div id="employees">
+              <Employees match={match} />
             </div>
             <div id="contact" className="mt-5">
               <ContactUs />
               <Copyrights />
             </div>
           </MDBContainer>
-
-          {/* <MDBFooter className="mt-5 text-center text-md-left">
-            <MDBContainer>
-              <MDBRow>
-                <MDBCol md="12">
-                  <ul className="list-unstyled d-flex justify-content-center mb-0 pb-0 pt-2 list-inline">
-                    <li
-                      className="list-inline-item cursor-pointer"
-                      onClick={() =>
-                        window.open(
-                          "https://www.facebook.com/z3.star/",
-                          "_blank"
-                        )
-                      }
-                    >
-                      <MDBIcon
-                        fab
-                        icon="facebook"
-                        size="2x"
-                        className="white-text p-2 m-2"
-                      />
-                    </li>
-                    <li
-                      className="list-inline-item cursor-pointer"
-                      onClick={() =>
-                        window.open(
-                          "https://www.linkedin.com/in/benedict-pajarillaga-98b864222/",
-                          "_blank"
-                        )
-                      }
-                    >
-                      <MDBIcon
-                        fab
-                        icon="linkedin"
-                        size="2x"
-                        className="white-text p-2 m-2"
-                      />
-                    </li>
-                  </ul>
-                </MDBCol>
-              </MDBRow>
-            </MDBContainer>
-            <Copyrights />
-          </MDBFooter> */}
         </div>
       ) : (
         <Loading />

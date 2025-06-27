@@ -195,7 +195,7 @@
   font-size: 1.3rem;
   color: var(--text-white);
   border-radius: 5px;
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
   padding: 3px 8px;
 }
 
@@ -210,7 +210,8 @@
 }
 
 .subscriber-btn-login.scrolled:hover {
-  background-color: var(--text-black);
+  background-color: var(--primary-color);
+  border: 2px solid var(--primary-color);
   color: var(--text-white);
 }
 
@@ -219,7 +220,7 @@
   border: none;
   font-size: 1.3rem;
   color: var(--text-white);
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 }
 
 .subscriber-btn-signup:hover {
@@ -228,6 +229,10 @@
 
 .subscriber-btn-signup.scrolled {
   color: var(--text-black);
+}
+
+.subscriber-btn-signup.scrolled:hover {
+  color: var(--primary-color);
 }
 
 .subscriber-hamburger {
@@ -348,9 +353,36 @@
   background-color: var(--primary-color);
 }
 
-@media (max-width: 760px) {
-  #subscriber-landing #home .view {
-    height: 100vh;
+@media (max-width: 1280px) {
+  .subscriber-container {
+    width: 100%;
+    height: auto;
+    padding: 0 20px;
+  }
+  .subscriber-logo img {
+    width: 45px;
+    height: 45px;
+  }
+  .subscriber-logo {
+    font-size: 1.3rem;
+  }
+
+  .subscriber-menu a {
+    font-size: 1.1rem;
+  }
+  .subscriber-menu .menu-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    background-color: var(--primary-color);
+    transition: left 0.3s ease, width 0.3s ease;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .subscriber-btn-login,
+  .subscriber-btn-signup {
+    font-size: 1.1rem;
   }
 }
 
@@ -368,7 +400,7 @@
     gap: 10px;
     transform: translateY(-20px);
     pointer-events: none;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease transform 0.3s ease;
   }
 
   .subscriber-menu.subscriber-open {
@@ -401,36 +433,16 @@
   .subscriber-menu .menu-indicator {
     display: none;
   }
+  .subscriber-menu a.active-menu {
+    color: black;
+  }
+  .subscriber-menu a:hover.active-menu {
+    color: var(--primary-color);
+  }
 }
 
-@media (max-width: 1280px) {
-  .subscriber-container {
-    width: 100%;
-    height: auto;
-    padding: 0 20px;
-  }
-  .subscriber-logo img {
-    width: 45px;
-    height: 45px;
-  }
-  .subscriber-logo {
-    font-size: 1.3rem;
-  }
-
-  .subscriber-menu a {
-    font-size: 1.1rem;
-  }
-  .subscriber-menu .menu-indicator {
-    position: absolute;
-    bottom: 0;
-    height: 3px;
-    background-color: var(--primary-color);
-    transition: left 0.3s ease, width 0.3s ease;
-    border-radius: 2px;
-    pointer-events: none;
-  }
-  .subscriber-btn-login,
-  .subscriber-btn-signup {
-    font-size: 1.1rem;
+@media (max-width: 760px) {
+  #subscriber-landing #home .view {
+    height: 100vh;
   }
 }

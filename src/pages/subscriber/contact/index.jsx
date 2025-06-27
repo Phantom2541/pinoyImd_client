@@ -112,7 +112,7 @@ export default function ContactUs() {
   };
 
   return (
-    <section className="subscriber-contactUs-section d-flex justify-content-center align-content-center">
+    <section className="subscriber-contactUs-section">
       <div className="subscriber-contactUs-container">
         <div className="subscriber-contactUs-leftSide">
           <div className="subscriber-contactUs-logo">
@@ -147,7 +147,6 @@ export default function ContactUs() {
             <div className="subscriber-contactUs-branches">
               {branches.map((branch, index) => {
                 const { name, contacts = {} } = branch;
-                console.log("Branch:", branch);
                 return (
                   <div
                     className="subscriber-contactUs-branch-wrapper"
