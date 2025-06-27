@@ -27,8 +27,6 @@ const Header = () => {
         <div className="text-right d-flex items-center">
           <Search
           collections={collections}
-          hideButton={false}
-            handleAdd={(huh) => dispatch(SetCREATE(huh))}
             setFiltered={(huh) => dispatch(SetFILTER(huh))}
             reset={()=>dispatch(SetFILTER(collections))}
           

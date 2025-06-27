@@ -103,7 +103,7 @@ export default function Modal() {
           />
 
 
-          <label for="sele">IS CONSUMES????</label>
+          <label for="sele">Is Consumable</label>
           <select id="sele" className="form-control mb-3" onChange={(e) => handleChange("isConsumable", e.target.value ==="true")}
 
           value={handleValue("isConsumable") ? "true" : "false"}

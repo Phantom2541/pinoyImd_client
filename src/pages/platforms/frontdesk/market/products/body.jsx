@@ -9,21 +9,21 @@ const Body = () => {
     dispatch = useDispatch();
   const { token } = useSelector(({ auth }) => auth);
 
-  const handleDelete = (_id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "THIS IS INEVITABLE!! ",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(DESTROY({ data: { _id }, token }));
-      }
-    });
-  };
+  const handleDelete = (item) => {
+      Swal.fire({
+        title: `Delete "${item.name}"?`,
+        text: "This process cannot be reverted!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(DESTROY({ data: { _id: item._id }, token }));
+        }
+      });
+    };
 
   // Pagination: Calculate the start and end index for the current page
   const itemsPerPage = maxPage; 
@@ -37,7 +37,7 @@ const Body = () => {
           <th>#</th>
           <th>Name</th>
           <th>SubName</th>
-          <th>Is Consumes</th>
+          <th>Consumable</th>
           <th>Actions</th>
           
         </tr>
@@ -51,19 +51,19 @@ const Body = () => {
               <td key={index}>{index + startIndex + 1}</td>
               <td><b>{name}</b></td>
               <td><b>{subname}</b></td>
-              <td><b>{isConsumable ? "Yes" : "No"}</b></td>
+              <td><b>{isConsumable ? "✔" : "✘"}</b></td>
               <td>
                 <MDBBtn
-                  color="warning"
+                  color="blue"
                   size="sm"
                   onClick={()=> dispatch(SetEDIT(item))}
-                >UPDATEZ</MDBBtn>
+                >Update</MDBBtn>
 
                 <MDBBtn
-                  color="red"
+                  color="danger"
                   size="sm"
-                onClick={() => handleDelete(_id)}
-                >DELETEZ</MDBBtn>
+                onClick={() => handleDelete(item)}
+                >Delete</MDBBtn>
 
 
               </td>
