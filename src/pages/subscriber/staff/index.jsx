@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
+import { useDispatch, useSelector } from "react-redux";
+import { COMPANY } from "../../../services/redux/slices/assets/persons/personnels";
 
-export default function Staffs() {
+export default function Staffs({ match }) {
+  console.log("match", match);
+
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
   const EMMAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/emman.jpg`;
   const TOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
@@ -78,6 +82,15 @@ export default function Staffs() {
       img: MELUIN,
     },
   ];
+
+  const [staffs, setStaffs] = useState([]),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    if (match) {
+      dispatch(COMPANY({ params: match.params }));
+    }
+  }, [dispatch, match]);
   return (
     <section className="team-section text-center">
       <h1 className="text-center mt-5 h1">Employees</h1>

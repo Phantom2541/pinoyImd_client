@@ -18,7 +18,6 @@ import {
   LatitudeAddress,
   mobile,
 } from "../../../services/utilities";
-import { capitalize } from "lodash";
 
 // Fix Leaflet default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -65,10 +64,54 @@ export default function ContactUs() {
     fetchCoordinates();
   }, [address]);
 
+  const mapRef = useRef(null);
+
+  const handleBranchClick = async (branch) => {
+    if (!branch?.address) return;
+
+    try {
+      const convertedAddress = LatitudeAddress(branch.address);
+
+      console.log("Converted Address:", convertedAddress);
+
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          convertedAddress
+        )}&format=json`,
+        {
+          headers: {
+            "User-Agent": "PinoyIMD/1.0 (your_email@example.com)",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      const data = await response.json();
+      console.log("Geocode Data:", data);
+
+      if (data.length > 0) {
+        const lat = parseFloat(data[0].lat);
+        const lon = parseFloat(data[0].lon);
+
+        setCoordinates([lat, lon]);
+
+        if (mapRef.current && mapRef.current.leafletElement) {
+          mapRef.current.leafletElement.setView([lat, lon], 16);
+        }
+      } else {
+        addToast("Street location not found.", { appearance: "error" });
+      }
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      addToast("Error detecting location.", { appearance: "error" });
+    }
+  };
+
   return (
-    <section className="subscriber-contactUs-section">
+    <section className="subscriber-contactUs-section d-flex justify-content-center align-content-center">
       <div className="subscriber-contactUs-container">
-        <div className="subscriber-contactUs-info-container">
+        <div className="subscriber-contactUs-leftSide">
           <div className="subscriber-contactUs-logo">
             <img
               src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
@@ -79,97 +122,73 @@ export default function ContactUs() {
             />
             <span>{details?.name}</span>
           </div>
-          <div className="subscriber-contactUs-details">
-            <span className="subscriber-contactUs-quote">
-              "{details?.tagline}"
+          <span className="contactUs-quote">"{details?.tagline}"</span>
+          <div className="subscriber-contactUs-address">
+            <MDBIcon fas icon="map-marker-alt" />
+            <span onClick={() => handleBranchClick({ address })}>
+              {fullAddress(address)}
             </span>
-            <div className="subscriber-contactUs-address">
-              <MDBIcon fas icon="map-marker-alt" />
-              <span>{fullAddress(address)}</span>
-              <div className="subscriber-contactUs-map">
-                <Map
-                  center={coordinates}
-                  zoom={12}
-                  style={{
-                    height: "90%",
-                    width: "100%",
-                    borderRadius: "5px",
-                  }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Marker position={coordinates}>
-                    <Popup>{capitalize(fullAddress(address))}</Popup>
-                  </Marker>
-                </Map>
-              </div>
-            </div>
-            <div className="subscriber-contactUs-email">
-              <MDBIcon fas icon="envelope" />
-              <span> {contacts?.email}</span>
-            </div>
-            <div className="subscriber-contactUs-phone">
-              <MDBIcon fas icon="phone-alt" />
-              <span> {mobile(contacts?.mobile)}</span>
+          </div>
+          <div className="subscriber-contactUs-email">
+            <MDBIcon fas icon="envelope" />
+            <span> {contacts?.email}</span>
+          </div>
+          <div className="subscriber-contactUs-phone">
+            <MDBIcon fas icon="phone-alt" />
+            <span> {mobile(contacts?.mobile)}</span>
+          </div>
+        </div>
+        <div className="subscriber-contactUs-middleSide">
+          <div className="subscriber-contactUs-branches-container">
+            <p>Branches</p>
+            <div className="subscriber-contactUs-branches">
+              {branches.map((branch, index) => {
+                const { name, contacts = {} } = branch;
+                console.log("Branch:", branch);
+                return (
+                  <div
+                    className="subscriber-contactUs-branch-wrapper"
+                    key={index}
+                  >
+                    <div className="subscriber-contactUs-branch-line">
+                      <span
+                        className="subscriber-contactUs-branch-name"
+                        onClick={() => handleBranchClick(branch)}
+                      >
+                        {name}
+                      </span>
+                    </div>
+                    <div className="subscriber-contactUs-branchInfo">
+                      <span>{contacts?.person}</span>
+                      <span>{mobile(contacts?.mobile)}</span>
+                      <span>{contacts?.email}</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        <div className="subscriber-contactUs-quickLinks-container">
-          <p>Quick Links</p>
-          <div className="subscriber-contactUs-quickLinks">
-            <a href="/">Home</a>
-            <a href="/">Features</a>
-            <a href="/">Doctors</a>
-            <a href="/">Employees</a>
-            <a href="/">Testimonials</a>
-            <a href="/">Contact Us</a>
-          </div>
-        </div>
-
-        <div className="subscriber-contactUs-branches-container">
-          <p>Branches</p>
-          <div className="subscriber-contactUs-branches">
-            {branches.map(({ name, contacts = {} }, index) => {
-              console.log("contacts", contacts);
-              return (
-                <React.Fragment key={index}>
-                  <span>{name}</span>
-                  <span>{contacts?.email}</span>
-                  <span>{mobile(contacts?.mobile)}</span>
-                  <span>{contacts?.person}</span>
-                </React.Fragment>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="subscriber-contactUs-schedule-container">
-          <p>Opening Hours</p>
-          <div className="subscriber-contactUs-schedule">
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Monday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Tuesday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Wednesday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Thursday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Friday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Saturday :</span> <span>8:00am - 5:00pm</span>
-            </div>
-            <div className="subscriber-contactUs-schedule-day">
-              <span>Sunday :</span> <span>8:00am - 5:00pm</span>
-            </div>
+        <div className="subscriber-contactUs-rightSide">
+          <div style={{ height: "100%", width: "100%" }}>
+            <Map
+              center={coordinates}
+              zoom={16}
+              ref={mapRef}
+              style={{ height: "100%", width: "100%", borderRadius: "5px" }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={coordinates}>
+                <Popup>
+                  Pinoy iMD — Labanos Compound, Gulod street, barangay San
+                  pedro, General Tinio(Papaya)
+                </Popup>
+              </Marker>
+            </Map>
           </div>
         </div>
       </div>

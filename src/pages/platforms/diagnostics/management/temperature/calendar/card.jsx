@@ -26,6 +26,7 @@ const Card = ({ txt, num, index }) => {
   useEffect(() => {
     if (!formSubmitted && isSuccess) {
       dispatch(RESET());
+      dispatch(SetSelected({})); // ✅ close the editor
     }
   }, [formSubmitted, isSuccess, dispatch]);
   const entry = collections?.find(
@@ -41,15 +42,13 @@ const Card = ({ txt, num, index }) => {
     const { meridiem, type } = selected;
     const dateWith9AM = new Date(dateCell);
     dateWith9AM.setHours(9, 0, 0, 0);
+
     if (temp) {
       dispatch(
         entry
           ? UPDATE({
               data: {
                 _id: entry._id,
-                branchId: activePlatform?.branchId,
-                userId: auth._id,
-                createdAt: entry.createdAt,
                 [meridiem]: {
                   ...entry?.[meridiem],
                   [type]: temp,
@@ -61,7 +60,7 @@ const Card = ({ txt, num, index }) => {
               data: {
                 branchId: activePlatform?.branchId,
                 userId: auth._id,
-                createdAt: dateWith9AM,
+                createdAt: dateWith9AM.toISOString(),
                 [meridiem]: { [type]: temp },
               },
               token,
