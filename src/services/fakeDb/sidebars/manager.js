@@ -19,7 +19,7 @@ import {
   Procurments,
   Heads,
 } from "../../../pages/platforms/headquarter/file201";
-// import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
+import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
 
 import {
   Remittances,
@@ -325,7 +325,7 @@ const manager = [
             name: "Stock Holder",
             path: "/stockHolder",
             icon: "user",
-            // component: stockHolder,
+            component: stockHolder,
           },
           {
             name: "Staff",

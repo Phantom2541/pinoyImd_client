@@ -54,6 +54,23 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+export const BOARD_MEMBERS = createAsyncThunk(
+  `${url}/board_members`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/board_members`, token, params);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const COMPANY = createAsyncThunk(
   `${url}/company`,
@@ -270,6 +287,10 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
@@ -345,6 +366,29 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(BOARD_MEMBERS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(BOARD_MEMBERS.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = state.filtered = payload.sort((a, b) => {
+          const aDesignation = String(a?.contract?.designation || "");
+          const bDesignation = String(b?.contract?.designation || "");
+          return aDesignation.localeCompare(bDesignation);
+        });
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isLoading = false;
+      })
+
+      .addCase(BOARD_MEMBERS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -492,6 +536,7 @@ export const {
   UPDATEACCESS,
   SetSELECTED,
   SetActivePAGE,
+  SetMaxPage,
   TOGGLE,
   RESET,
   SetUPDATE_TRACKER,
