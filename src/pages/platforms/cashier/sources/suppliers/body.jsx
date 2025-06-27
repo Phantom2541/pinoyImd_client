@@ -56,7 +56,6 @@ const Body = () => {
         <tr>
           <th>#</th>
           <th>Name</th>
-          <th>Membership</th>
           <th>Mobile</th>
           <th>Address</th>
           <th>Actions</th>
@@ -64,8 +63,7 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((supplier, index) => {
-          const { _id, displayname, name, abbr, number, address, membership } =
-            supplier;
+          const { _id, displayname, name, abbr, number, address } = supplier;
 
           return (
             <tr key={_id}>
@@ -86,7 +84,6 @@ const Body = () => {
                   )}
                 </div>
               </td>
-              <td>{membership}</td>
               <td>{mobile(number)}</td>
               <td>{address}</td>
               <td className="text-center">
