@@ -187,7 +187,6 @@ export default function MenuCollapse() {
   };
 
   const handleUpdate = (editedData) => {
-    console.log("edited", editedData);
     dispatch(
       SPECIFIC_UPDATE({
         data: editedData,

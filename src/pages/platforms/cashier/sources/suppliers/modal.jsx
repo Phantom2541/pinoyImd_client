@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -17,16 +17,24 @@ import {
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
+import Spinner from "../../../../../components/spinner";
 
 export default function Modal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { showModal, selected, willCreate, isLoading } = useSelector(
+    { showModal, selected, willCreate, isSuccess, formSubmitted } = useSelector(
       ({ providers }) => providers
     ),
-    { collections } = useSelector(({ branches }) => branches),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  const toggle = useCallback(() => dispatch(TOGGLE()), [dispatch]);
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess && showModal) {
+      toggle();
+    }
+  }, [formSubmitted, isSuccess, showModal, toggle]);
 
   //Listener
   useEffect(() => {
@@ -39,10 +47,9 @@ export default function Modal() {
       });
     }
   }, [showModal, selected, auth, activePlatform]);
+
   // Handle update function
   const handleUpdate = () => {
-    TOGGLE();
-
     // Check if object has changed
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
@@ -58,18 +65,15 @@ export default function Modal() {
     );
   };
 
-  // Handle create function
   const handleCreate = () => {
     dispatch(
       SAVE({
         data: form,
         token,
       })
-    ).then(() => TOGGLE()); // Close modal after successful save
-    //console.log("Add Button : ", form);
+    );
   };
 
-  // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
     willCreate ? handleCreate() : handleUpdate();
@@ -86,13 +90,13 @@ export default function Modal() {
   return (
     <MDBModal
       isOpen={showModal}
-      TOGGLE={TOGGLE}
+      toggle={toggle}
       backdrop
       size="sm"
       disableFocusTrap={false}
     >
       <MDBModalHeader
-        toggle={() => dispatch(TOGGLE())}
+        toggle={() => toggle()}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
@@ -105,39 +109,27 @@ export default function Modal() {
             variant="h4-responsive"
             className="text-center"
           ></MDBTypography>
-          <select
-            onChange={(e) => handleChange("vendors", e.target.value)}
-            className="form-control"
-          >
-            <option value="" disabled>
-              Select a branch
-            </option>
-            {Array.isArray(collections) &&
-              collections.map((branch, index) => (
-                <option key={index} value={branch._id}>
-                  {branch.displayname || (branch.name && branch.subname)}
-                </option>
-              ))}
-          </select>
-
-          {/* Input fields */}
           <MDBInput
             label="Name"
-            type="string"
             value={form?.displayname}
             required
             onChange={(e) => handleChange("displayname", e.target.value)}
           />
 
           <MDBInput
+            label="Abbreviation"
+            value={form?.abbr}
+            required
+            onChange={(e) => handleChange("abbr", e.target.value)}
+          />
+
+          <MDBInput
             label="Number"
-            type="string"
             value={form?.number}
             onChange={(e) => handleChange("number", e.target.value)}
           />
           <MDBInput
             label="address"
-            type="string"
             value={form?.address}
             onChange={(e) => handleChange("address", e.target.value)}
           />
@@ -145,12 +137,13 @@ export default function Modal() {
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"
-              disabled={isLoading}
+              disabled={formSubmitted}
               color="info"
               className="mb-2"
               rounded
             >
               {willCreate ? "Submit" : "Update"}
+              <Spinner formSubmitted={formSubmitted} />
             </MDBBtn>
           </div>
         </form>

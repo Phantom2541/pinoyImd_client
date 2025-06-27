@@ -101,18 +101,7 @@ const Body = () => {
                   className="text"
                   onClick={() => handleChange(utilities, "abbr")} // Set selected to the full service object
                 >
-                  {selected?._id === _id && !showModal && soloUpdate ? (
-                    // If this supplier is selected, show the input field for editing
-                    <Input
-                      formSubmitted={formSubmitted}
-                      isSuccess={isSuccess}
-                      _key={key}
-                      value={selected.cutoff || 1}
-                      selected={selected}
-                      onChange={handleAbbreviationChange} // Handle input change
-                      handleCheck={handleUpdate} // Trigger update when editing is finished
-                    />
-                  ) : abbr != null && abbr !== "" ? (
+                  {abbr ? (
                     // If not editing, show the abbreviation as a badge
                     <MDBBadge
                       title="Click me to update"

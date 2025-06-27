@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup, MDBBadge } from "mdbreact";
 // import { Input } from "../../../../../components/customizable";
@@ -7,17 +7,15 @@ import {
   SetSELECTED,
   DESTROY,
   RESET,
-  UPDATE,
 } from "../../../../../services/redux/slices/assets/providers";
 import Swal from "sweetalert2";
-import { Input } from "../../../../../components/customizable";
+import { mobile } from "../../../../../services/utilities";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage, formSubmitted, isSuccess, showModal } =
-      useSelector(({ providers }) => providers),
-    [selected, setSelected] = useState(null), // Start with null instead of -1
-    [soloUpdate, setSoloUpdate] = useState(false),
+    { filtered, activePage, maxPage, formSubmitted, isSuccess } = useSelector(
+      ({ providers }) => providers
+    ),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,7 +24,6 @@ const Body = () => {
 
   const handleEdit = (supplier) => {
     dispatch(SetSELECTED(supplier));
-    setSelected(supplier);
   };
 
   const handleDelete = (_id) => {
@@ -45,29 +42,6 @@ const Body = () => {
     });
   };
 
-  const handleUpdate = () => {
-    if (selected && selected.newAbbreviation !== selected.abbr) {
-      const { _id, abbr } = selected;
-      dispatch(
-        UPDATE({
-          token,
-          data: { _id, abbr },
-        })
-      );
-    }
-  };
-
-  const handleChange = (supplier) => {
-    setSelected({
-      ...supplier,
-      abbrOld: supplier?.abbr || "", // Ensure it has a default value
-    });
-    setSoloUpdate(true);
-  };
-
-  const handleAbbreviationChange = (key, value) =>
-    setSelected({ ...selected, [key]: value });
-
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -83,7 +57,7 @@ const Body = () => {
           <th>#</th>
           <th>Name</th>
           <th>Membership</th>
-          <th>Number</th>
+          <th>Mobile</th>
           <th>Address</th>
           <th>Actions</th>
         </tr>
@@ -99,22 +73,8 @@ const Body = () => {
               <td style={{ fontWeight: 400 }}>
                 <div>{displayname || name}</div>
 
-                <div
-                  className="text-muted"
-                  onClick={() => handleChange(supplier)} // Set selected to the full service object
-                >
-                  {selected?._id === _id && !showModal && soloUpdate ? (
-                    // If this supplier is selected, show the input field for editing
-                    <Input
-                      formSubmitted={formSubmitted}
-                      isSuccess={isSuccess}
-                      _key="abbr"
-                      selected={selected}
-                      onChange={handleAbbreviationChange} // Handle input change
-                      handleCheck={handleUpdate} // Trigger update when editing is finished
-                    />
-                  ) : abbr != null && abbr !== "" ? (
-                    // If not editing, show the abbreviation as a badge
+                <div className="text-muted">
+                  {abbr ? (
                     <MDBBadge
                       title="Click me to update"
                       className="cursor-pointer"
@@ -127,7 +87,7 @@ const Body = () => {
                 </div>
               </td>
               <td>{membership}</td>
-              <td>{number}</td>
+              <td>{mobile(number)}</td>
               <td>{address}</td>
               <td className="text-center">
                 <MDBBtnGroup>
