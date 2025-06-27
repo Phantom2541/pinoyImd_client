@@ -35,7 +35,7 @@ export default function TopHeader() {
   useEffect(() => {
     if (collections.length > 0) {
       const total = collections.reduce((acc, payment) => {
-        return acc + payment.amount;
+        return acc + payment?.amount || 0;
       }, 0);
       setTotal(total);
     } else {
@@ -44,7 +44,6 @@ export default function TopHeader() {
   }, [collections]);
   const handleCategories = (categories) => {
     dispatch(SetFILTERByCategories(categories));
-    // console.log(categories);
   };
 
   return (
@@ -64,7 +63,8 @@ export default function TopHeader() {
         Payments ({currency(total)}){" "}
       </span>
       <div>
-        <div className="text-right d-flex items-center">
+        <div className="text-right d-flex align-items-center">
+          <span className="mr-2">Category:</span>
           <Statements setCategories={handleCategories} />
         </div>
       </div>
