@@ -1,5 +1,6 @@
 import Staffs from "../../../pages/platforms/accredetations/staff";
 import Temperature from "../../../pages/platforms/accredetations/temperatures";
+import qualityControls from "../../../pages/platforms/accredetations/qualityControl";
 
 const accreditation = [
   {
@@ -120,6 +121,7 @@ const accreditation = [
       {
         name: "Quality Control",
         path: "/documents/quality",
+        component: qualityControls,
         icon: "cogs",
       },
       {
