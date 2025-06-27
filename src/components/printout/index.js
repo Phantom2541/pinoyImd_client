@@ -9,3 +9,4 @@ export { default as ResecoPrintout } from "./reseco";
 export { default as RequestOutSource } from "./requestOutSource";
 export { default as SOA } from "./soa";
 export { default as Remittance } from "../printout/remittance";
+export { default as Machines } from "./machines";

@@ -502,12 +502,17 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
 
-        const _collections = state.collections;
+        var _collections = state.collections;
         const index = _collections.findIndex((item) => item._id === data._id);
-        state.collections[index] = data;
-        state.filtered = _collections.filter(
-          ({ contract, status }) => (contract || status) === state.category
-        );
+        _collections[index] = data;
+        state.filtered = _collections.filter(({ contract, status }) => {
+          if (state.category) {
+            return (contract || status) === state.category;
+          } else {
+            return true;
+          }
+        });
+        state.collections = _collections;
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -524,7 +529,6 @@ export const reduxSlice = createSlice({
         const { updatedKey, _id } = data;
         const updateCollections = (collections) => {
           const index = collections.findIndex((item) => item._id === _id);
-          console.log("specific update index", index);
           collections[index] = {
             ...collections[index],
             [updatedKey]: data[updatedKey],

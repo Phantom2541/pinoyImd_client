@@ -1,14 +1,14 @@
 import { MDBCol, MDBCardBody, MDBCard, MDBBadge } from "mdbreact";
 import { Privileges, Services } from "../../../../../../../../services/fakeDb";
 import { mobile } from "../../../../../../../../services/utilities";
-const Categories = {
+const Contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
 };
 const Customer = ({ deal }) => {
   const { customerId, branchId, ssx, privilege, sendouts } = deal;
   const { mobile: _mobile } = customerId;
-  const { category } = sendouts || {};
+  const { contract } = sendouts || {};
 
   return (
     <MDBCol md="4">
@@ -28,7 +28,7 @@ const Customer = ({ deal }) => {
             },
             {
               title: "Contract",
-              value: Categories[category],
+              value: Contracts[contract],
             },
             {
               title: "Request Services",

@@ -6,12 +6,16 @@ import {
   MDBDropdownToggle,
   MDBIcon,
 } from "mdbreact";
+import { useHistory } from "react-router";
+import { useSelector } from "react-redux";
 
 export default function DTR() {
+  const { activePlatform } = useSelector(({ auth }) => auth);
   const [date, setDate] = useState(null);
   const [timer, setTimer] = useState(null);
   const [clockedIn, setClockedIn] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const [elapsedTime, setElapsedTime] = useState(0),
+    history = useHistory();
 
   useEffect(() => {
     const savedClockedIn = localStorage.getItem("clockedIn");
@@ -76,6 +80,8 @@ export default function DTR() {
     }
   };
 
+  const handleShifts = () => {};
+
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
@@ -92,7 +98,16 @@ export default function DTR() {
             </span>
           )}
         </MDBDropdownItem>
-        <MDBDropdownItem href="#!">Shifts</MDBDropdownItem>
+        <MDBDropdownItem
+          onClick={() => {
+            const target = `${activePlatform?.platform?.toLowerCase()}/shifts`;
+            if (history.location.pathname !== `/${target}`) {
+              history.push(`/${target}`);
+            }
+          }}
+        >
+          Shifts
+        </MDBDropdownItem>
       </MDBDropdownMenu>
     </MDBDropdown>
   );

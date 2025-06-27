@@ -10,8 +10,6 @@ export default function Calendar() {
     { collections, month, year, isLoading } = useSelector(
       ({ remittances }) => remittances
     );
-  console.log("deals", deals);
-  console.log("collections", collections);
 
   return (
     <div className="cashier-remittance-calendar p-3">

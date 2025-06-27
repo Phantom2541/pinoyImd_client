@@ -81,7 +81,6 @@ export default function Index() {
                   }}
                 >
                   <MDBCardBody className="pt-2">
-                    {/* {fsid === 13 && */}
                     <Body deals={deals} />
                   </MDBCardBody>
                 </MDBCollapse>

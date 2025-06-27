@@ -1,24 +1,19 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  SetMaxPage,
-  SetActivePAGE,
-} from "../../../../services/redux/slices/diagnostics/management/temperatures";
 import TableRowCount from "../../../../components/pagination/rows";
 import Pagination from "../../../../components/pagination";
-const Footer = () => {
-  const { isLoading, totalPages, activePage } = useSelector(
-      ({ services }) => services
-    ),
-    { maxPage } = useSelector(({ auth }) => auth),
-    dispatch = useDispatch();
+import { SetMaxPage, SetActivePAGE } from "../../../../services/redux/slices/market/machines";
 
-  useEffect(() => {
-    dispatch(SetMaxPage(maxPage));
-  }, [dispatch, maxPage]);
+const Footer = () => {
+  const { isLoading, totalPages, activePage } = useSelector(({ machines }) => machines),
+  { maxPage } = useSelector(({ auth }) => auth),
+  dispatch = useDispatch();
+
+  useEffect(() => {dispatch(SetMaxPage(maxPage));}, [dispatch, maxPage]);
 
   const handlePageChange = (action) => {
-    const newPage = activePage + (action ? 1 : -1);
+    const newPage =
+      typeof action === "number" ? action : activePage + (action ? 1 : -1);
     if (newPage >= 1 && newPage <= totalPages) {
       dispatch(SetActivePAGE(newPage));
     }

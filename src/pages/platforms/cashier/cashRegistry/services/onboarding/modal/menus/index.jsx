@@ -9,13 +9,13 @@ const Menus = ({
   selected,
   cart,
   category, //category index
+  contract,
   matchMenus,
   handleAddToCart,
   handleRemovedToCart,
 }) => {
   const { sendouts = {}, privilege } = selected || {};
   const { membership = "" } = sendouts;
-  console.log("cart", cart);
   return (
     <MDBCol md="4">
       <table className="menus-table">
@@ -45,7 +45,7 @@ const Menus = ({
               up = 0,
               title = "",
               color = "",
-            } = computeGD(item, category, privilege, membership);
+            } = computeGD(item, category, privilege, membership, "", contract);
             return (
               <tr key={_id}>
                 <td className="text-left" title={title}>

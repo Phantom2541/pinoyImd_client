@@ -275,7 +275,6 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
         //  printing remittances
         state.selected = payload;
-        state.onPrint = true;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
