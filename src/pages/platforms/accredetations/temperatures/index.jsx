@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
-// import Header from "./header";
-// import Body from "./body";
+import Header from "./header";
+import Body from "./body";
 import TableLoading from "../../../../components/tableLoading";
 
 const Index = () => {
@@ -11,8 +11,8 @@ const Index = () => {
   return (
     <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-        {/* <Header /> */}
-        {/* <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody> */}
+        <Header />
+        <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
       </MDBCard>{" "}
     </MDBAnimation>
   );
