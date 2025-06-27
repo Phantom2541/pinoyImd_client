@@ -8,11 +8,142 @@
   --text-white: #f9fafb;
 }
 
+.subscriber-pioneers-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.subscriber-pioneers-pagination-wrapper {
+  width: fit-content;
+  display: flex;
+  position: relative;
+  padding: 10px;
+}
+
 .subscriber-pioneers-container {
   display: grid;
   grid-template-columns: repeat(4, 250px);
   gap: 20px;
-  justify-content: center;
+}
+
+/* Page transition animation */
+.subscriber-pioneers-container.slide-next {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.subscriber-pioneers-container.slide-prev {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.subscriber-pioneers-arrow-button-right,
+.subscriber-pioneers-arrow-button-left {
+  position: absolute;
+  background-color: transparent;
+  font-size: 1.7rem;
+  border: none;
+  cursor: pointer;
+}
+
+.subscriber-pioneers-arrow-button-right {
+  right: 0;
+  top: 50%;
+  transform: translate(100%, -50%);
+  transition: color 0.3s ease;
+}
+
+.subscriber-pioneers-arrow-button-left {
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Wrapper for arrow layers */
+.subscriber-pioneers-arrow-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 2em;
+  height: 1.5em;
+}
+
+/* Common arrow */
+.subscriber-pioneers-arrow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 1.7rem;
+  color: var(--primary-color);
+  opacity: 0;
+  transform: translateX(0);
+  animation: arrow-slide-right 1.2s ease-in-out infinite;
+}
+
+/* Trail delays */
+.subscriber-pioneers-main {
+  animation-delay: 0s;
+  opacity: 1;
+}
+
+.subscriber-pioneers-trail1 {
+  animation-delay: 0.2s;
+}
+
+.subscriber-pioneers-trail2 {
+  animation-delay: 0.4s;
+}
+
+/* Right arrow animation */
+@keyframes arrow-slide-right {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  30% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateX(8px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+/* Left arrow animation override */
+.subscriber-pioneers-arrow-button-left .subscriber-pioneers-arrow {
+  animation-name: arrow-slide-left;
+}
+
+@keyframes arrow-slide-left {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  30% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateX(-8px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+}
+
+.subscriber-pioneers-arrow-wrapper.no-animation .subscriber-pioneers-arrow {
+  animation: none !important;
+  opacity: 1;
+  transform: translateX(0);
+  color: grey;
 }
 
 .subscriber-pioneers-card {
@@ -49,6 +180,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
   gap: 15px;
 }
 
@@ -110,20 +242,10 @@
   color: #1266f1;
 }
 
-/* responsive design */
-/* @media (max-width: 1400px) {
-  .subscriber-pioneers-container {
-    grid-template-columns: repeat(4, 250px);
-  }
-} */
-
 @media (max-width: 1200px) {
   .subscriber-pioneers-container {
     grid-template-columns: repeat(3, 250px);
   }
-}
-
-@media (max-width: 1200px) {
   .subscriber-pioneers-card-body span {
     font-size: 1.1rem;
     font-weight: 600;
@@ -131,5 +253,17 @@
   .subscriber-pioneers-card-body p {
     font-weight: 500;
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .subscriber-pioneers-container {
+    grid-template-columns: repeat(3, 220px);
+  }
+}
+
+@media (max-width: 900px) {
+  .subscriber-pioneers-container {
+    grid-template-columns: repeat(2, 250px);
   }
 }

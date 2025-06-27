@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MDBIcon } from "mdbreact";
+import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
 // import GoogleMapReact from "google-map-react";
 import LOGO from "./../../../assets/iMD.png";
@@ -114,7 +114,12 @@ export default function ContactUs() {
   return (
     <section className="subscriber-contactUs-section">
       <div className="subscriber-contactUs-container">
-        <div className="subscriber-contactUs-leftSide">
+        <MDBAnimation
+          reveal
+          type="fadeIn"
+          duration="1000ms"
+          className="subscriber-contactUs-leftSide"
+        >
           <div className="subscriber-contactUs-logo">
             <img
               src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
@@ -140,8 +145,14 @@ export default function ContactUs() {
             <MDBIcon fas icon="phone-alt" />
             <span> {mobile(contacts?.mobile)}</span>
           </div>
-        </div>
-        <div className="subscriber-contactUs-middleSide">
+        </MDBAnimation>
+        <MDBAnimation
+          reveal
+          type="fadeIn"
+          duration="1000ms"
+          delay="500ms"
+          className="subscriber-contactUs-middleSide"
+        >
           <div className="subscriber-contactUs-branches-container">
             <p>Branches</p>
             <div className="subscriber-contactUs-branches">
@@ -155,10 +166,13 @@ export default function ContactUs() {
                     <div className="subscriber-contactUs-branch-line">
                       <span
                         className="subscriber-contactUs-branch-name"
+                        title="Click to view location on the map"
                         onClick={() => handleBranchClick(branch)}
                       >
                         {name}
                       </span>
+
+                      <i className="fas fa-chevron-right subscriber-contactUs-arrow subscriber-contactUs-main"></i>
                     </div>
                     <div className="subscriber-contactUs-branchInfo">
                       <span>{contacts?.person}</span>
@@ -170,9 +184,15 @@ export default function ContactUs() {
               })}
             </div>
           </div>
-        </div>
+        </MDBAnimation>
 
-        <div className="subscriber-contactUs-rightSide">
+        <MDBAnimation
+          reveal
+          type="fadeIn"
+          duration="1000ms"
+          delay="1000ms"
+          className="subscriber-contactUs-rightSide"
+        >
           <div style={{ height: "100%", width: "100%" }}>
             <Map
               center={coordinates}
@@ -192,7 +212,7 @@ export default function ContactUs() {
               </Marker>
             </Map>
           </div>
-        </div>
+        </MDBAnimation>
       </div>
     </section>
   );

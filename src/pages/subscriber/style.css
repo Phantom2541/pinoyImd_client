@@ -18,7 +18,7 @@
 
 #subscriber-landing #home .view {
   background-size: cover;
-  height: 90vh;
+  height: 80vh;
 }
 
 #subscriber-landing .rgba-gradient {
@@ -353,6 +353,18 @@
   background-color: var(--primary-color);
 }
 
+@media (max-width: 1660px) {
+  #subscriber-landing #home .view {
+    height: 75vh;
+  }
+}
+
+@media (max-width: 1400px) {
+  #subscriber-landing #home .view {
+    height: 70vh;
+  }
+}
+
 @media (max-width: 1280px) {
   .subscriber-container {
     width: 100%;
@@ -386,7 +398,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1080px) {
   .subscriber-menu {
     flex-direction: column;
     position: absolute;
@@ -439,10 +451,13 @@
   .subscriber-menu a:hover.active-menu {
     color: var(--primary-color);
   }
+  #subscriber-landing #home .view {
+    height: 65vh;
+  }
 }
 
 @media (max-width: 760px) {
   #subscriber-landing #home .view {
-    height: 100vh;
+    height: 65vh;
   }
 }

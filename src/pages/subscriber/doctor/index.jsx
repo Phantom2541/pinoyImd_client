@@ -10,6 +10,7 @@ import {
 } from "../../../services/utilities";
 import { Quotes } from "../../../services/fakeDb";
 import DEFAULT from "../../../assets/iMD.png";
+import { MDBAnimation } from "mdbreact";
 
 export default function Doctors() {
   const { details } = useSelector(({ companies }) => companies);
@@ -48,9 +49,15 @@ export default function Doctors() {
           <div className="subscriber-doctors-img-mask"></div>
         </div>
 
-        <div className="subscriber-doctors-carousel-container">
+        <MDBAnimation
+          reveal
+          type="zoomIn"
+          duration="1000ms"
+          delay="500ms"
+          className="subscriber-doctors-carousel-container"
+        >
           <Carousel
-            // autoPlay
+            autoPlay
             infiniteLoop
             emulateTouch
             showThumbs={false}
@@ -92,7 +99,7 @@ export default function Doctors() {
               );
             })}
           </Carousel>
-        </div>
+        </MDBAnimation>
       </div>
     </div>
   );
