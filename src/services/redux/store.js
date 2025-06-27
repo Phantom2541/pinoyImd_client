@@ -59,8 +59,7 @@ import {
   medicines,
   generics,
   mentainance,
-  attendances,
-  // temperaturez
+  attendances
 } from "./slices/market";
 import portal from "./slices/emr/portal";
 
@@ -115,7 +114,6 @@ const store = configureStore({
     medicines,
     generics,
     mentainance,
-    appointments,
     quest,
     //this is results for viewing the results online
     portal,

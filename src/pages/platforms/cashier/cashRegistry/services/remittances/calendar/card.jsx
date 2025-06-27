@@ -1,4 +1,3 @@
-import React from "react";
 import Indicator from "./indicator";
 import Footer from "./footer";
 import {
@@ -29,6 +28,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
   const { cash, ...rest } = breakdown;
   const nonCash = Object.entries(rest);
   const net = (opening.sum || 0) + cash - expenses;
+
   return (
     <div className="position-relative">
       <div
@@ -238,6 +238,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                 </div>
               )}
             </div>
+
             {!isFuture && !isRemitted && deals.length > 0 && (
               <Footer num={num} item={item} deals={deals} />
             )}

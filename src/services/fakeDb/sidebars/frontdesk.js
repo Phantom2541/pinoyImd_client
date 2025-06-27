@@ -154,7 +154,7 @@ const frontdesk = [
         name: "productsGenerics",
         path: "/productsGenerics",
         icon: "cogs",
-        component: productsGenerics
+        // component: productsGenerics
       },
       {
         name: "products",

@@ -175,7 +175,28 @@ export default function Modal() {
             _id: selected._id,
           },
         })
-      );
+      ).then(() => {
+        localStorage.setItem(
+          "remittance",
+          JSON.stringify({
+            ...selected,
+            closing: {
+              time: new Date().toLocaleTimeString("en-PH", {
+                timeZone: "Asia/Manila",
+                hour12: false,
+              }),
+              ..._floating,
+              sum, // floating is included
+            },
+            sales: selected.sales,
+          })
+        );
+        window.open(
+          "/printout/remittance",
+          "remittance",
+          "top=100px,left=0px,width=1050px,height=750px"
+        );
+      });
     }
   };
 

@@ -21,7 +21,7 @@ import {
   fullName,
   getAge,
 } from "../../../../../../services/utilities";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; 
 import {
   UPLOAD,
   RESET,

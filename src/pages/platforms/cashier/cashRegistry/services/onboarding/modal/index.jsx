@@ -46,11 +46,7 @@ export default function Modal() {
     privilege = 0,
   } = selected || {};
 
-  const {
-    membership = "",
-    servicesId = [],
-    category: contractCategory,
-  } = sendouts;
+  const { membership = "", servicesId = [], contract } = sendouts;
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -58,8 +54,10 @@ export default function Modal() {
     }
   }, [formSubmitted, isSuccess, show, toggle]);
 
+  console.log("services id", servicesId);
+
   useEffect(() => {
-    if (show) {
+    if (show && servicesId?.length > 0) {
       const defaultMenus = [];
       for (const menu of menus) {
         const { packages, isProfile = false } = menu;
@@ -80,10 +78,11 @@ export default function Modal() {
           return isSubset && !isProfile;
         }
       );
+
       setMatchMenus(_matchMenus);
       setCart(defaultMenus);
     }
-  }, [show, servicesId, menus]);
+  }, [show, menus, servicesId]);
 
   const handleRemovedToCart = (_id) => {
     const _cart = [...cart];
@@ -125,16 +124,15 @@ export default function Modal() {
       cart,
       cIndex,
       privilege,
-      membership
+      membership,
+      "",
+      contract
     );
     const amount = gross - discount;
     return !getObj ? amount : { gross, discount, amount };
   };
 
-  // const pAmount = getTotal(getCategoryIndex(category)); //privilege amount
-  // const iAmount = getTotal(getCategoryIndex("is")); // insourcing membership amount
-  // const categoryIndex = getCategoryIndex(iAmount < pAmount ? "is" : category);
-  const categoryIndex = getCategoryIndex(contractCategory);
+  const categoryIndex = getCategoryIndex("ctr");
   const { discount, amount, gross } = getTotal(categoryIndex, true);
 
   const handleSubmit = () => {
@@ -261,6 +259,7 @@ export default function Modal() {
             cart={cart}
             selected={selected}
             category={categoryIndex}
+            contract={contract}
             // discount={discountPercentage}
             matchMenus={matchMenus}
             handleAddToCart={handleAddToCart}

@@ -8,6 +8,8 @@ import {
   MDBModalHeader,
   MDBInput,
   MDBTypography,
+  MDBRow,
+  MDBCol,
 } from "mdbreact";
 import {
   SAVE,
@@ -18,11 +20,13 @@ import {
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import Spinner from "../../../../../components/spinner";
+import Swal from "sweetalert2";
 
 export default function Modal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { showModal, selected, willCreate, isLoading, isSuccess, formSubmitted } =
-      useSelector(({ providers }) => providers),
+    { showModal, selected, willCreate, isSuccess, formSubmitted } = useSelector(
+      ({ providers }) => providers
+    ),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -79,6 +83,16 @@ export default function Modal() {
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { number } = form;
+    if (number.length < 11) {
+      return Swal.fire({
+        title: "Invalid Phone Number",
+        text: "Please check and correct the phone number format. It seems to be incorrect.",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
+      });
+    }
     willCreate ? handleCreate() : handleUpdate();
   };
 
@@ -131,16 +145,30 @@ export default function Modal() {
             onChange={(e) => handleChange("abbr", e.target.value)}
           />
 
-          <MDBInput
-            label="Monthly Cut Off"
-            type="number" // Use 'number' input type for better validation
-            value={form?.cutoff}
-            onChange={({ target }) => handleChange("cutoff", target.value)}
-            min="1" // Min value is 1
-            max="31" // Max value is 31
-            required
-          />
-
+          <MDBRow>
+            <MDBCol>
+              <MDBInput
+                label="Billing Day"
+                type="number"
+                value={form?.cutoff}
+                onChange={({ target }) => handleChange("cutoff", target.value)}
+                min="1" // Min value is 1
+                max="31" // Max value is 31
+                required
+              />
+            </MDBCol>
+            <MDBCol>
+              <MDBInput
+                label="Due Date"
+                type="number"
+                value={form?.due}
+                onChange={({ target }) => handleChange("due", target.value)}
+                min="1" // Min value is 1
+                max="31" // Max value is 31
+                required
+              />
+            </MDBCol>
+          </MDBRow>
           <MDBInput
             label="Phone Number"
             value={form?.number}
