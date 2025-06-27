@@ -22,7 +22,6 @@ import {
   Reseco,
   Onboarding,
 } from "../../../pages/platforms/cashier";
-import StaffSchedule from "../../../pages/platforms/cashier/scheduler";
 
 const cashier = [
   {
@@ -218,13 +217,6 @@ const cashier = [
         component: Services,
       },
     ],
-  },
-  {
-    name: "Schedule",
-    path: "/schedule",
-    icon: "calendar-alt",
-    title: "Staff Schedules",
-    component: StaffSchedule,
   },
 ];
 

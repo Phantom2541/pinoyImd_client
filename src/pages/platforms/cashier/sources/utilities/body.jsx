@@ -50,7 +50,8 @@ const Body = () => {
         <tr>
           <th>#</th>
           <th>Name</th>
-          <th className="text-center">Monthly CutOff</th>
+          <th className="text-center">Billing Day</th>
+          <th className="text-center">Due Date</th>
           <th>Number</th>
           <th>Address</th>
           <th>Actions</th>
@@ -58,7 +59,8 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((utilities, index) => {
-          const { _id, displayname, cutoff, abbr, number, address } = utilities;
+          const { _id, displayname, cutoff, abbr, number, address, due } =
+            utilities;
           return (
             <tr key={`${index}-${_id}`}>
               <td>{index + startIndex + 1}</td>
@@ -80,6 +82,9 @@ const Body = () => {
               </td>
               <td className="text-center" style={{ fontWeight: 400 }}>
                 {cutoff}
+              </td>
+              <td className="text-center" style={{ fontWeight: 400 }}>
+                {due}
               </td>
               <td>{number} </td>
               <td>{address}</td>
