@@ -1,59 +1,56 @@
-import React from "react";
-import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { currency } from "../../../services/utilities";
 
-const Body = () => {
-  const { closing, sales } = useSelector(
-    ({ remittances }) => remittances.selected
-  );
-  const { coins = {}, bills = {} } = closing || {};
-
-  let rowIndex = 1;
-
+const Body = ({ remittance = {} }) => {
+  const { closing, sales } = remittance;
+  const { coins = {}, bills = {}, sum = 0 } = closing || {};
+  var tableRaw = 1;
   return (
-    <MDBTable responsive hover bordered>
+    <MDBTable small responsive hover bordered>
       <thead>
         <tr>
-          <th style={{ textAlign: "center" }}>#</th>
+          <th>#</th>
           <th style={{ textAlign: "center" }}>Denomination</th>
-          <th style={{ textAlign: "center" }}>Qnty</th>
+          <th style={{ textAlign: "center" }}>Qty</th>
           <th style={{ textAlign: "center" }}>Amount</th>
         </tr>
       </thead>
       <tbody>
-        {Object.entries(coins).map(([denomination, quantity]) => {
+        {Object.entries(coins).map(([denomination, quantity], index) => {
+          tableRaw = index++;
           const amount = denomination * quantity;
           return (
             <tr key={`coin-${denomination}`}>
-              <td>{rowIndex++}</td>
-              <td>{currency(denomination)}</td>
-              <td>{quantity}</td>
-              <td style={{ textAlign: "right", fontWeight: "bold" }}>
-                {currency(amount)}
-              </td>
+              <td>{tableRaw + 1}</td>
+              <td className="text-center">{currency(denomination)}</td>
+              <td className="text-center">{quantity}</td>
+              <td className="text-center">{currency(amount)}</td>
             </tr>
           );
         })}
-        {Object.entries(bills).map(([denomination, quantity]) => {
+        {Object.entries(bills).map(([denomination, quantity], index) => {
           const amount = denomination * quantity;
           return (
             <tr key={`bill-${denomination}`}>
-              <td>{rowIndex++}</td>
-              <td>{currency(denomination)}</td>
-              <td>{quantity}</td>
-              <td style={{ textAlign: "right", fontWeight: "bold" }}>
-                {currency(amount)}
-              </td>
+              <td>{index + 2 + tableRaw}.</td>
+              <td className="text-center">{currency(denomination)}</td>
+              <td className="text-center">{quantity}</td>
+              <td className="text-center">{currency(amount)}</td>
             </tr>
           );
         })}
         <tr>
-          <td style={{ textAlign: "right" }} colSpan={3}>
+          <td
+            style={{ textAlign: "right", verticalAlign: "middle" }}
+            colSpan={3}
+          >
             Total Remit :
           </td>
-          <td style={{ textAlign: "right", fontWeight: "bold" }}>
-            <h4>{currency(sales)}</h4>
+          <td
+            className="text-center"
+            style={{ verticalAlign: "middle", fontWeight: 700 }}
+          >
+            <h4>{currency(sum)}</h4>
           </td>
         </tr>
       </tbody>
