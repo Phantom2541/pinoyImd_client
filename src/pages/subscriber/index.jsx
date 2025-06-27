@@ -171,7 +171,10 @@ const Subscriber = ({ match }) => {
                 className={`subscriber-hamburger ${
                   menuOpen ? "subscriber-active" : ""
                 }`}
-                onClick={() => setMenuOpen(!menuOpen)}
+                onClick={() => {
+                  setConnectOpen(false);
+                  setMenuOpen(!menuOpen);
+                }}
               >
                 <div
                   className={`subscriber-bar ${scrolled ? "scrolled" : ""}`}
@@ -189,7 +192,10 @@ const Subscriber = ({ match }) => {
                   className={`subscriber-btn-connect ${
                     connectOpen ? "activeConnect" : ""
                   } ${scrolled ? "scrolled" : ""}`}
-                  onClick={() => setConnectOpen(!connectOpen)}
+                  onClick={() => {
+                    setConnectOpen(!connectOpen);
+                    setMenuOpen(false);
+                  }}
                 >
                   Connect ▾
                 </button>

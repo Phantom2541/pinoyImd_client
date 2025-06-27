@@ -53,19 +53,15 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin: 10px;
   padding: 10px 15px;
-}
-
-.subscriber-testimonials-sliderCard:hover {
-  box-shadow: 0 4px 8px rgba(18, 102, 241, 0.2);
 }
 
 .subscriber-testimonials-sliderCard img {
   width: 70px;
   border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 
 .subscriber-testimonials-sliderCard .subscriber-testimonials-review {
@@ -128,7 +124,9 @@
 }
 
 /* responsive design */
-@media (max-width: 1600px) {
+@media (max-width: 1660px) {
+}
+@media (max-width: 1400px) {
   .subscriber-testimonials-container {
     display: grid;
   }

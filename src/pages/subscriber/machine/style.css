@@ -32,7 +32,7 @@
 .subscriber-AboutUs-card {
   background-color: var(--background-color);
   border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -72,4 +72,27 @@
   font-size: 0.95rem;
   font-weight: 400;
   color: #444;
+}
+
+@media (max-width: 1660px) {
+  .subscriber-aboutUs-container {
+    width: 75%;
+  }
+}
+@media (max-width: 1400px) {
+  .subscriber-aboutUs-container {
+    width: 80%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .subscriber-aboutUs-container {
+    width: 85%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .subscriber-aboutUs-container {
+    width: 100%;
+  }
 }

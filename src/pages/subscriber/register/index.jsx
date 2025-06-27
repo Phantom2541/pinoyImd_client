@@ -105,7 +105,7 @@ export default function Register({ handleFlip, flipped }) {
           <div className="subscriber-flip-card">
             <div className="subscriber-flip-card-front">
               <Carousel
-                autoPlay
+                // autoPlay
                 infiniteLoop
                 showThumbs={false}
                 showStatus={false}
@@ -120,11 +120,7 @@ export default function Register({ handleFlip, flipped }) {
                         <p>"{slide.description}"</p>
                       </div>
                       <div className="subscriber-image-container-style">
-                        <img
-                          src={slide.image}
-                          alt={`Slide ${i + 1}`}
-                          className="subscriber-image-style"
-                        />
+                        <img src={slide.image} alt={`Slide ${i + 1}`} />
                       </div>
                     </div>
                   </div>
