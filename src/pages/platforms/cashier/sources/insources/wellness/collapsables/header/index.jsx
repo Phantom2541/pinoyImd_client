@@ -5,6 +5,8 @@ import { collapse, currency } from "../../../../../../../../services/utilities";
 import { Select, Input } from "../../../../../../../../components/customizable";
 import PopOver from "./popOver";
 import { HMO } from "../../../../../../../../services/fakeDb";
+import EditableSelect from "../../../../../../../../components/customizable/editableSelect";
+import EditableField from "../../../../../../../../components/customizable/editableField";
 
 const Header = ({
   insource,
@@ -80,6 +82,11 @@ const Header = ({
       >
         <div className="d-flex align-items-start">
           <div className="mr-5">
+            <EditableField
+              keyForValue="displayname"
+              fieldData={{ _id, displayname: clients?.displayname }}
+              onSave={(data) => handleUpdate(false, data)}
+            />
             <small
               style={{ fontSize: "0.7rem" }}
               className={!isWhiteColor && "grey-text"}

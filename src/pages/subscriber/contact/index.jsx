@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MDBIcon, MDBInput, MDBBtn } from "mdbreact";
+import { MDBIcon } from "mdbreact";
 import "./style.css";
-import { useToasts } from "react-toast-notifications";
 // import GoogleMapReact from "google-map-react";
 import LOGO from "./../../../assets/iMD.png";
 
@@ -12,6 +11,8 @@ import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { useToasts } from "react-toast-notifications";
+
 import { useSelector } from "react-redux";
 import {
   ENDPOINT,
@@ -19,7 +20,6 @@ import {
   LatitudeAddress,
   mobile,
 } from "../../../services/utilities";
-import { capitalize } from "lodash";
 
 // Fix Leaflet default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -30,44 +30,12 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function ContactUs() {
-  const { details } = useSelector(({ companies }) => companies),
-    { addToast } = useToasts(),
-    [alreadySent, setAlreadySent] = useState(false),
-    [form, setForm] = useState({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
+  const { details } = useSelector(({ companies }) => companies);
 
-  useEffect(() => {
-    const feedback = localStorage.getItem("feedback");
-    if (feedback) {
-      setAlreadySent(true);
-      setForm(JSON.parse(feedback));
-    }
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    //console.log(auth._id);
-
-    addToast("Thank you for the feedback.", {
-      appearance: "success",
-    });
-    addToast("Thank you for the feedback.", {
-      appearance: "success",
-    });
-
-    setAlreadySent(true);
-    localStorage.setItem("feedback", JSON.stringify(form));
-  };
-
-  const { name, subject, email, message } = form;
   const { contacts = {}, address = "", branches = [] } = details || {};
 
-  const [coordinates, setCoordinates] = useState([15.35, 121.05]); // default lang
+  const [coordinates, setCoordinates] = useState([15.35, 121.05]), // default lang
+    { addToast } = useToasts();
 
   useEffect(() => {
     const fetchCoordinates = async () => {
