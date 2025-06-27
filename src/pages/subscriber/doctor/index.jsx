@@ -50,7 +50,7 @@ export default function Doctors() {
 
         <div className="subscriber-doctors-carousel-container">
           <Carousel
-            autoPlay
+            // autoPlay
             infiniteLoop
             emulateTouch
             showThumbs={false}
@@ -74,9 +74,12 @@ export default function Doctors() {
                   <div className="subscriber-doctors-homeimageContainerStyle">
                     <img
                       src={`${ENDPOINT}/public/companies/${details?.name}/physicians/${user.email}/corporate.png`}
-                      onError={(e) => (e.target.src = DEFAULT)}
                       alt={physician.name}
                       className="subscriber-doctors-homeimageStyle"
+                      onError={(e) => {
+                        e.target.src = DEFAULT;
+                        e.target.classList.add("default");
+                      }}
                     />
                   </div>
                   <div className="subscriber-doctors-hometextContainerStyle">

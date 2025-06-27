@@ -41,6 +41,7 @@
 .subscriber-contactUs-logo {
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: fit-content;
   text-align: center;
 }
@@ -149,30 +150,28 @@
 
 /* ✅ Responsive design: ≤ 1600px */
 @media (max-width: 1600px) {
-  /* .subscriber-contactUs-container {
-    flex-direction: column;
-    height: auto;
-    padding: 25px;
-  } */
+  .subscriber-contactUs-container {
+    width: 80%;
+  }
   .subscriber-contactUs-section {
     height: auto;
-    background-color: green;
   }
+
   .subscriber-contactUs-logo img {
     width: 70px;
     height: 70px;
   }
   .contactUs-quote {
-    font-size: 0.95rem;
-  }
-  .subscriber-contactUs-logo span {
     font-size: 1rem;
   }
-  .subscriber-contactUs-address span,
+  .subscriber-contactUs-logo span {
+    font-size: 1.3rem;
+  }
+  .subscriber-contactUs-address,
   .subscriber-contactUs-email,
   .subscriber-contactUs-phone,
   .subscriber-contactUs-branch-name {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   .subscriber-contactUs-branches-container p {
     font-size: 1.3rem;
@@ -183,8 +182,13 @@
   }
 }
 
-/* 📱 Extra responsive for smaller screens */
-@media (max-width: 1280px) {
+@media (max-width: 1400px) {
+  .subscriber-contactUs-container {
+    width: 85%;
+  }
+}
+
+@media (max-width: 1200px) {
   .subscriber-contactUs-container {
     display: grid;
     grid-template-areas:
@@ -192,7 +196,7 @@
       "rightSide rightSide";
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
-    width: 70%;
+    width: 100%;
     height: auto;
   }
   .subscriber-contactUs-rightSide {

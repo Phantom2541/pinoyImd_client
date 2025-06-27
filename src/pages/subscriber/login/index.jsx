@@ -118,7 +118,10 @@ export default function Login({ show, toggle = null }) {
               loading="eager"
               src={image}
               onError={(e) => (e.target.src = Logo)}
-              style={{ width: "100px", height: "100px" }}
+              style={{
+                width: "100px",
+                height: "100px",
+              }}
               alt={`avatar-${auth._id}`}
               className="rounded-circle img-responsive"
             />
