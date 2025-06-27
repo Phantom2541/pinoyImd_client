@@ -9,8 +9,7 @@ const url = "auth",
   activePlatform =
     localStorage.getItem("activePlatform") !== "undefined" &&
     localStorage.getItem("activePlatform"),
-  fileUrl = `/public/users/companies/${email}`,
-  profileUrl = `/public/users/${email}`;
+  fileUrl = `/public/users/companies/${email}`;
 
 const initialState = {
   auth: {}, // user details
@@ -284,7 +283,7 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
-        state.image = `${ENDPOINT}${profileUrl}/profile.jpg`;
+        state.image = `${ENDPOINT}/public/users/${auth.email}/profile.jpg`;
         state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
         state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
         state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
@@ -361,7 +360,7 @@ export const reduxSlice = createSlice({
             position: contract.designation,
           };
           state.company = branch?.companyId;
-          state.image = `${ENDPOINT}${profileUrl}/profile.jpg`;
+          state.image = `${ENDPOINT}/public/users/${auth.email}/profile.jpg`;
           state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
           state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
           state.board = `${ENDPOINT}${fileUrl}/board.jpg`;

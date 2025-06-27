@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable, MDBBadge } from "mdbreact";
-import { Input } from "../../../../../components/customizable";
 import Swal from "sweetalert2";
 import {
   SetSELECTED,
   DESTROY,
   RESET,
-  UPDATE,
 } from "../../../../../services/redux/slices/assets/providers";
 
 const Body = () => {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage, isSuccess, formSubmitted, showModal } =
-      useSelector(({ providers }) => providers),
-    [soloUpdate, setSoloUpdate] = useState(false),
-    [selected, setSelected] = useState(-1),
+    { filtered, activePage, maxPage, isSuccess, formSubmitted } = useSelector(
+      ({ providers }) => providers
+    ),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,7 +21,6 @@ const Body = () => {
 
   const handleEdit = (hotlines) => {
     dispatch(SetSELECTED(hotlines));
-    setSelected(hotlines);
     //console.log("SetSelected service :", service);
   };
 
@@ -44,31 +40,6 @@ const Body = () => {
     });
   };
 
-  const handleUpdate = () => {
-    if (selected && selected.newAbbreviation !== selected.abbr) {
-      const { _id, abbr } = selected;
-      dispatch(
-        UPDATE({
-          token,
-          data: { _id, abbr },
-        })
-      );
-    }
-  };
-
-  const handleChange = (hotlines) => {
-    setSelected({
-      ...hotlines,
-      abbrOld: hotlines?.abbr || "", // Ensure it has a default value
-    });
-    setSoloUpdate(true);
-  };
-
-  const handleAbbreviationChange = (key, value) =>
-    setSelected({ ...selected, [key]: value });
-  /**
-   * Pagination: Calculate the start and end index for the current page
-   */
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -88,26 +59,13 @@ const Body = () => {
         {paginatedData?.map((hotlines, index) => {
           const { _id, abbr, displayname, number, address } = hotlines;
           return (
-            <tr key={index}>
+            <tr key={`${index}-${_id}`}>
               <td key={index}>{index + startIndex + 1}</td>
               <td style={{ fontWeight: 400 }}>
                 <div>{displayname}</div>
 
-                <div
-                  className="text-muted"
-                  onClick={() => handleChange(hotlines)} // Set selected to the full service object
-                >
-                  {selected?._id === _id && !showModal && soloUpdate ? (
-                    // If this supplier is selected, show the input field for editing
-                    <Input
-                      formSubmitted={formSubmitted}
-                      isSuccess={isSuccess}
-                      _key="abbr"
-                      selected={selected}
-                      onChange={handleAbbreviationChange} // Handle input change
-                      handleCheck={handleUpdate} // Trigger update when editing is finished
-                    />
-                  ) : abbr != null && abbr !== "" ? (
+                <div className="text-muted">
+                  {abbr ? (
                     // If not editing, show the abbreviation as a badge
                     <MDBBadge
                       title="Click me to update"

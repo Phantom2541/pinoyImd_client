@@ -78,7 +78,7 @@ const Policy = {
 
   getBoardMembersIds: () => {
     const positions =
-      collections.find(({ department: d }) => d?.toUpperCase() === "BOARD")
+      collections.find(({ code }) => code?.toUpperCase() === "BOARD")
         ?.positions || [];
     return positions.map(({ id }) => id);
   },

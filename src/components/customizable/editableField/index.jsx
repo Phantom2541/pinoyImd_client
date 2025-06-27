@@ -39,6 +39,7 @@ const EditableField = ({
   className = "form-control",
   placeholder = "",
   keyForValue = "", //this key is for value
+  keyForText = "",
   type = "text",
   width = "",
   fieldData = {},
@@ -82,8 +83,8 @@ const EditableField = ({
       className="cursor-pointer"
     >
       {(isMoney
-        ? currency(fieldData[keyForValue])
-        : capitalize(fieldData[keyForValue])) || "N/A"}
+        ? currency(fieldData[keyForText || keyForValue])
+        : capitalize(fieldData[keyForText || keyForValue])) || "N/A"}
     </Tag>
   );
 

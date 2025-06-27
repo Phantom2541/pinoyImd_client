@@ -1,39 +1,54 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-// import { Select } from "../../../../../../components/customizable";
 import { BROWSE } from "../../../../services/redux/slices/diagnostics/management/temperatures";
-import { temperatures } from "../../../../services/redux/slices/diagnostics";
+import {
+  SetMONTH,
+  ResetDATE,
+} from "../../../../services/redux/slices/diagnostics/management/temperatures";
+import CalendarPicker from "../../../../components/header/calendars";
 
 const Header = () => {
-  const { maxPage, token, activePlatform } = useSelector(({ auth }) => auth),
-    {
-      collections = {},
-      month,
-      year,
-    } = useSelector(({ temperatures }) => temperatures),
-    [ecg, setEcg] = useState([]),
-    dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { maxPage, token, activePlatform } = useSelector(({ auth }) => auth);
+  const {
+    collections = [],
+    month,
+    year,
+  } = useSelector(({ temperatures }) => temperatures);
+  const [ecg, setEcg] = useState([]);
 
-  //initial values
+  // Fetch data based on month/year
   useEffect(() => {
-    if (maxPage)
+    if (maxPage) {
       dispatch(
         BROWSE({
           token,
-          data: { branchId: activePlatform.branchId, month, year },
+          data: {
+            branchId: activePlatform?.branchId,
+            month,
+            year,
+          },
         })
       );
+    }
   }, [dispatch, maxPage, month, year, token, activePlatform]);
 
+  // Set local state
   useEffect(() => {
     if (collections) setEcg(collections);
   }, [collections]);
-  console.log("ecg", ecg);
 
-  // const handleMoved = (month, year) => {
-  //   console.log("month", month, year);
-  // };
+  // Handle dropdown change
+  const handleMonthChange = (selected) => {
+    dispatch(SetMONTH(selected.value));
+  };
+
+  // Get full month name
+  const getMonthName = (m) => {
+    if (!m) return new Date().toLocaleString("default", { month: "long" });
+    return new Date(2000, m - 1).toLocaleString("default", { month: "long" });
+  };
 
   return (
     <MDBView
@@ -41,21 +56,18 @@ const Header = () => {
       className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        {/* <CalendarPicker month={month} year={year} moved={handleMoved} /> */}
         <span className="white-text mx-3 text-nowrap mt-0">
-          {temperatures?.length} Temperatures
+          {getMonthName(month)} {year} Room Temperatures
         </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          {/* <Select
-            className="m-0 p-0 calendar mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
-            inputClassName="m-0 p-0"
-            preValue={component}
-            collections={Templates.getComponents("LAB")}
-          /> */}
+          <CalendarPicker
+            month={month}
+            moved={(action) => dispatch(SetMONTH(action))}
+            year={year}
+            reset={() => dispatch(ResetDATE())}
+          />
         </div>
       </div>
     </MDBView>

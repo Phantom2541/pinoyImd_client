@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
+import { useDispatch, useSelector } from "react-redux";
+import { COMPANY } from "../../../services/redux/slices/assets/persons/personnels";
 
-export default function Staffs() {
+export default function Employees({ match }) {
+  console.log("match", match);
+
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
   const EMMAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/emman.jpg`;
   const TOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
@@ -78,9 +82,18 @@ export default function Staffs() {
       img: MELUIN,
     },
   ];
+
+  const [staffs, setStaffs] = useState([]),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    if (match) {
+      dispatch(COMPANY({ params: match.params }));
+    }
+  }, [dispatch, match]);
   return (
     <section className="team-section text-center">
-      <h1 className="text-center mt-5 h1">Staffs</h1>
+      <h1 className="text-center mt-5 h1">Employees</h1>
       <p
         className="text-center mb-5 w-responsive mx-auto"
         style={{ fontWeight: "400" }}
@@ -92,10 +105,15 @@ export default function Staffs() {
       <div className="subscriber-pioneers-container">
         {PIONEERS.map((pioneer, index) => (
           <div className="subscriber-pioneers-card" key={index}>
-            <img src={pioneer.img} alt="avatar" />
-            <span>{pioneer.name}</span>
-            <p>{pioneer.role}</p>
-            <div className="d-flex align-items-center" style={{ gap: "15px" }}>
+            <div className="subscriber-pioneers-card-header">
+              <img src={pioneer.img} alt="avatar" />
+            </div>
+            <div className="subscriber-pioneers-card-body">
+              <span>{pioneer.name}</span>
+              <p>{pioneer.role}</p>
+            </div>
+
+            <div className="subscriber-pioneers-footer">
               <a
                 href="https://www.facebook.com/yourpage"
                 target="_blank"

@@ -1,4 +1,4 @@
-import { orderBy } from "lodash";
+import { capitalize, orderBy } from "lodash";
 import { dateFormat, employment } from "../../../../../../services/utilities";
 
 const CharacterHistory = ({ remarks }) => {
@@ -8,20 +8,18 @@ const CharacterHistory = ({ remarks }) => {
       className="bg-white w-100 text-dark"
       style={{
         borderLeft: "2px solid #ccc",
-        position: "absolute",
         width: "100%",
-        bottom: "0",
       }}
     >
       {orderBy(remarks, ["createdAt"], ["desc"]).map(
-        ({ method: type, createdAt, title }, i) => (
+        ({ method: type, createdAt, title, reason }, i) => (
           <div
             key={`breakdown-${type}-${i}`}
             style={{ position: "relative", marginBottom: "12px" }}
           >
             <div style={{ position: "relative" }}>
               <span
-                className="bg-primary"
+                className="bg-danger ml-1"
                 style={{
                   display: "inline-block",
                   width: "10px",
@@ -32,7 +30,7 @@ const CharacterHistory = ({ remarks }) => {
                   top: "3px",
                 }}
               ></span>
-              <small>{title}</small>
+              <small className="text- ml-1">{capitalize(title)}</small>
               <span
                 style={{
                   float: "right",
@@ -52,7 +50,7 @@ const CharacterHistory = ({ remarks }) => {
                 marginTop: "4px",
               }}
             >
-              Cheque No: <strong>{"tes"}</strong> <br />
+              <strong>{reason}</strong> <br />
             </div>
           </div>
         )

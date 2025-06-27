@@ -10,7 +10,7 @@ import {
 } from "../../../../../services/redux/slices/assets/providers";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ providers }) => providers),
+    { filtered, collections } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
 
   //initial values
@@ -40,12 +40,12 @@ const Header = () => {
       <div>
         <div className="text-right d-flex items-center">
           <Search
-            collection={filtered}
-            handleFiltered={handleFiltered}
+            collections={collections}
+            setFiltered={handleFiltered}
             handleAdd={handleAdd}
             reset={() => dispatch(ResetFILTER())}
             willcreate={true}
-            hideButton={false}
+            hideButton={true}
           />
         </div>
       </div>

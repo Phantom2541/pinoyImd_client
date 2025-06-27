@@ -29,11 +29,6 @@
         "display_name": "Chief Executive Officer"
       },
       {
-        "id": 5,
-        "name": "stock holder",
-        "display_name": "Stock Holder"
-      },
-      {
         "id": 6,
         "name": "proprietor",
         "display_name": "Proprietor"
@@ -466,25 +461,44 @@
       {
         "id": 115,
         "name": "Chairman",
-        "display_name": "Head ng Board"
+        "display_name": "Head of the Board",
+        "description": "Leads the Board of Directors."
       },
       {
         "id": 116,
         "name": "Vice Chairman",
         "display_name": "Vice Chairman",
-        "description": "Pangalawang namumuno"
+        "description": "Second in command on the Board."
       },
       {
         "id": 117,
         "name": "Board Member",
         "display_name": "Board Member",
-        "description": "Mga miyembro ng lupon"
+        "description": "Members of the Board."
       },
       {
         "id": 118,
         "name": "Stock Holder",
         "display_name": "Stock Holder",
         "description": "Owns shares in the company."
+      },
+      {
+        "id": 119,
+        "name": "Individual Holder",
+        "display_name": "Individual Investor",
+        "description": "An individual who owns shares."
+      },
+      {
+        "id": 120,
+        "name": "Institutional Holder",
+        "display_name": "Institutional Holder",
+        "description": "An institution that owns shares."
+      },
+      {
+        "id": 121,
+        "name": "Silent Holder",
+        "display_name": "Silent Partner",
+        "description": "Owns shares but does not take part in decisions."
       }
     ]
   }

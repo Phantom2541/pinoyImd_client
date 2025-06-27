@@ -107,7 +107,6 @@ const store = configureStore({
     xray,
     ultrasound,
     ecg,
-    appointments,
     productsGenerics,
     machines,
     attendances,

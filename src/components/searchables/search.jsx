@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import "./search.css";
 import { globalSearch } from "../../services/utilities";
@@ -23,7 +23,6 @@ export default function Search({
       const items = globalSearch(collections, key);
       if (hideButton && items.length === 0) setShowBtn(true);
       if (hideButton && items.length > 0) setShowBtn(false);
-      console.log("items", items);
       setFiltered(items);
     }, 300);
   }, [collections, setFiltered, hideButton]);
@@ -55,7 +54,7 @@ export default function Search({
           spellCheck={false}
         />
       </div>
-      {haveAction && (
+      {(haveAction || showBtn) && (
         <MDBBtn
           onClick={() => handleAdd(searchValue)}
           size="sm"

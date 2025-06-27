@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MDBCard, MDBCardBody, MDBCollapse, MDBContainer } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchPhysicians as Search } from "../../../../../../../components/searchables";
 import {
   TagPHYSICIAN,
-  UPDATE,
   RESET as RESET_BRANCH,
 } from "../../../../../../../services/redux/slices/assets/branches";
 
 import {
   SetBRANCHES,
-  SPECIFIC_UPDATE,
   SetREGISTER,
 } from "../../../../../../../services/redux/slices/assets/providers";
 import { fullName } from "../../../../../../../services/utilities";
@@ -22,20 +20,12 @@ import Header from "./header";
 
 export default function MenuCollapse() {
   const { token, maxPage } = useSelector(({ auth }) => auth),
-    {
-      filtered,
-      searchResults,
-      didSearch,
-      formSubmitted,
-      isSuccess,
-      message,
-      activePage,
-    } = useSelector(({ providers }) => providers),
+    { filtered, searchResults, didSearch, isSuccess, message, activePage } =
+      useSelector(({ providers }) => providers),
     { formSubmitted: formSubmittedBranch, isSuccess: isSuccessBranch } =
       useSelector(({ branches }) => branches),
     [insources, setInsources] = useState([]),
     [selected, setSelected] = useState({}),
-    [update, setUpdate] = useState({}),
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),
     { addToast } = useToasts(),
@@ -63,13 +53,6 @@ export default function MenuCollapse() {
       dispatch(RESET_BRANCH());
     }
   }, [dispatch, formSubmittedBranch, isSuccessBranch]);
-
-  useEffect(() => {
-    if (!formSubmitted && isSuccess) {
-      setUpdate({});
-      dispatch(RESET_BRANCH());
-    }
-  }, [dispatch, formSubmitted, isSuccess]);
 
   const handleTag = (physician) => {
     const { isPhysician, physicianId, isGhost = false } = physician;
@@ -170,48 +153,6 @@ export default function MenuCollapse() {
     });
   };
 
-  const handleUpdateClient = () => {
-    const { newName, displayname, providerID } = update;
-    if (displayname.toLowerCase() === newName.toLowerCase()) {
-      setUpdate({});
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-    dispatch(UPDATE({ data: { ...update, displayname: newName }, token }))
-      .then(({ payload: branch }) => {
-        dispatch(
-          SetBRANCHES({
-            branch,
-            providerId: providerID,
-            isUpdateBranch: true,
-          })
-        );
-
-        setUpdate({}); // Reset state after update
-      })
-      .catch((error) => console.error("Update Error:", error));
-  };
-
-  const handleUpdate = () => {
-    const { providerID, updatedKey, newKey } = update;
-    const oldValue = update[updatedKey] || "";
-    const newValue = update[newKey] || "";
-
-    if (String(oldValue)?.toLowerCase() === String(newValue)?.toLowerCase()) {
-      setUpdate({});
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-    dispatch(
-      SPECIFIC_UPDATE({
-        data: { _id: providerID, [updatedKey]: update[newKey], updatedKey },
-        token,
-      })
-    );
-  };
-
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -244,13 +185,7 @@ export default function MenuCollapse() {
                 didHoverId={didHoverId}
                 setDidHoverId={setDidHoverId}
                 setSelected={setSelected}
-                update={update}
-                setUpdate={setUpdate}
-                handleUpdate={(isSpecific = true) =>
-                  isSpecific ? handleUpdate() : handleUpdateClient()
-                }
                 registerGhostCompany={registerGhostCompany}
-                formSubmitted={formSubmitted || formSubmittedBranch}
                 insource={insource}
               />
               <MDBCollapse
