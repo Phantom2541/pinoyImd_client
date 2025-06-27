@@ -12,7 +12,7 @@ import {
   REFORM,
   TOGGLE,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-import { axioKit } from "../../../../../../services/utilities";
+import { axioKit, fullName } from "../../../../../../services/utilities";
 import CaseBox from "./case";
 import { Services } from "../../../../../../services/fakeDb";
 
@@ -228,6 +228,8 @@ export default function Modal() {
     dispatch(TOGGLE());
   };
 
+  console.log("deal", deal);
+
   return (
     <MDBModal isOpen={show} backdrop toggle={toggle} size="lg">
       <MDBModalHeader
@@ -235,7 +237,17 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon className="mr-2" icon="tasks" />
-        Task Generator
+        {fullName(deal?.customerId?.fullName)} <br />
+        <h6
+          style={{
+            fontWeight: 400,
+            marginTop: "-0px",
+            marginBottom: "-0.5rem",
+            marginLeft: "2.1rem",
+          }}
+        >
+          Task Generator
+        </h6>
       </MDBModalHeader>
       <form>
         <MDBModalBody className="mb-0">
