@@ -21,7 +21,10 @@ const Tables = () => {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const sortedData = [...filtered].sort(
+    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+  );
+  const paginatedData = sortedData.slice(startIndex, endIndex); // Get only items for the active page
 
   const handleDelete = (_id) => {
     Swal.fire({

@@ -95,7 +95,7 @@ export default function Register({ handleFlip, flipped }) {
   }, [isSuccess]);
 
   return (
-    <MDBAnimation reveal type="fadeIn">
+    <MDBAnimation reveal type="fadeIn" duration="1000ms">
       <div className="subscriber-register-section">
         <div
           className={`subscriber-flip-container ${

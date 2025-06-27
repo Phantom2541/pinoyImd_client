@@ -1,6 +1,6 @@
 .subscriber-contactUs-section {
   background: linear-gradient(to top, #1266f1 30%, white);
-  height: auto;
+  height: 60vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,7 +13,7 @@
   width: 70%;
   height: 450px;
   gap: 20px;
-  padding: 25px 60px;
+  padding: 50px 60px;
 }
 
 .subscriber-contactUs-leftSide {
@@ -146,6 +146,54 @@
   color: white;
   font-size: 1rem;
   font-weight: 400;
+}
+
+.subscriber-contactUs-branch-line {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Animate the arrow by default */
+.subscriber-contactUs-main {
+  animation: arrow-slide-right 1.2s ease-in-out infinite;
+  animation-delay: 0s;
+  opacity: 1;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Keyframe for the arrow animation */
+@keyframes arrow-slide-right {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  30% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateX(8px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+/* EXCLUDE the hovered branch from animation — keep animating others */
+.subscriber-contactUs-branches:hover
+  .subscriber-contactUs-branch-wrapper:not(:hover)
+  .subscriber-contactUs-main {
+  animation: arrow-slide-right 1.2s ease-in-out infinite;
+  opacity: 1;
+}
+
+/* ON HOVER: stop the animation and rotate only the hovered wrapper */
+.subscriber-contactUs-branch-wrapper:hover .subscriber-contactUs-main {
+  animation: none !important;
+  transform: rotate(90deg);
+  opacity: 0.5;
 }
 
 /* ✅ Responsive design: ≤ 1600px */
