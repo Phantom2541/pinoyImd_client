@@ -35,13 +35,14 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
+          <div className="circle"></div>
           <Search
             collections={collections}
             setFiltered={(items) => dispatch(SetFILTER(items))}
             placeHolder="Search Generics"
             haveAction={true}
             reset={() => dispatch(SetFILTER(collections))}
-            hideButton={false}
+            hideButton={true}
             handleAdd={(item) => handleAdd(item)}
           />
         </div>

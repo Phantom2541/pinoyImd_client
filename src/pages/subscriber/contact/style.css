@@ -1,6 +1,6 @@
 .subscriber-contactUs-section {
   background: linear-gradient(to top, #1266f1 30%, white);
-  height: 70vh;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,46 +8,40 @@
 
 .subscriber-contactUs-container {
   display: flex;
-  flex-direction: row;
   justify-content: center;
-  align-items: stretch;
+  align-items: center;
   width: 70%;
   height: 450px;
   gap: 20px;
   padding: 25px 60px;
-  flex-wrap: nowrap;
-}
-
-/* 🆕 Flex wrapper for left and middle */
-.subscriber-contactUs-top {
-  display: flex;
-  flex-direction: row;
-  flex: 2;
-  gap: 20px;
-  width: 100%;
 }
 
 .subscriber-contactUs-leftSide {
-  flex: 1;
+  /* flex: 1; */
   color: white;
   display: flex;
   flex-direction: column;
+  grid-area: leftSide;
   gap: 15px;
 }
 
 .subscriber-contactUs-middleSide {
-  flex: 1;
+  grid-area: middleSide;
 }
 
 .subscriber-contactUs-rightSide {
-  flex: 1;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  grid-area: rightSide;
+  width: 100%;
+  height: 100%;
 }
 
 .subscriber-contactUs-logo {
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: fit-content;
   text-align: center;
 }
@@ -69,6 +63,18 @@
   gap: 10px;
 }
 
+.subscriber-contactUs-address {
+  transition: color 0.3s ease;
+}
+
+.subscriber-contactUs-address span {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.subscriber-contactUs-address:hover {
+  color: #0f58d1;
+}
+
 .subscriber-contactUs-emailUs {
   font-size: 2rem;
   font-weight: 500;
@@ -85,7 +91,7 @@
 .subscriber-contactUs-branches-container {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .subscriber-contactUs-branches {
@@ -145,32 +151,55 @@
 /* ✅ Responsive design: ≤ 1600px */
 @media (max-width: 1600px) {
   .subscriber-contactUs-container {
-    flex-direction: column;
-    height: auto;
-    padding: 25px;
+    width: 80%;
   }
-
-  .subscriber-contactUs-top {
-    flex-direction: row; /* keep left + middle side by side */
-    width: 100%;
-    gap: 20px;
-  }
-
-  .subscriber-contactUs-leftSide,
-  .subscriber-contactUs-middleSide {
-    flex: 1;
+  .subscriber-contactUs-section {
     height: auto;
   }
 
-  .subscriber-contactUs-rightSide {
-    width: 100%;
-    margin-top: 20px;
+  .subscriber-contactUs-logo img {
+    width: 70px;
+    height: 70px;
+  }
+  .contactUs-quote {
+    font-size: 1rem;
+  }
+  .subscriber-contactUs-logo span {
+    font-size: 1.3rem;
+  }
+  .subscriber-contactUs-address,
+  .subscriber-contactUs-email,
+  .subscriber-contactUs-phone,
+  .subscriber-contactUs-branch-name {
+    font-size: 1rem;
+  }
+  .subscriber-contactUs-branches-container p {
+    font-size: 1.3rem;
+  }
+
+  .subscriber-contactUs-branches {
+    gap: 0;
   }
 }
 
-/* 📱 Extra responsive for smaller screens */
-@media (max-width: 768px) {
-  .subscriber-contactUs-top {
-    flex-direction: column;
+@media (max-width: 1400px) {
+  .subscriber-contactUs-container {
+    width: 85%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .subscriber-contactUs-container {
+    display: grid;
+    grid-template-areas:
+      "leftSide middleSide"
+      "rightSide rightSide";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    width: 100%;
+    height: auto;
+  }
+  .subscriber-contactUs-rightSide {
+    height: 350px;
   }
 }

@@ -4,7 +4,7 @@ import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { COMPANY } from "../../../services/redux/slices/assets/persons/personnels";
 
-export default function Staffs({ match }) {
+export default function Employees({ match }) {
   console.log("match", match);
 
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
@@ -105,10 +105,15 @@ export default function Staffs({ match }) {
       <div className="subscriber-pioneers-container">
         {PIONEERS.map((pioneer, index) => (
           <div className="subscriber-pioneers-card" key={index}>
-            <img src={pioneer.img} alt="avatar" />
-            <span>{pioneer.name}</span>
-            <p>{pioneer.role}</p>
-            <div className="d-flex align-items-center" style={{ gap: "15px" }}>
+            <div className="subscriber-pioneers-card-header">
+              <img src={pioneer.img} alt="avatar" />
+            </div>
+            <div className="subscriber-pioneers-card-body">
+              <span>{pioneer.name}</span>
+              <p>{pioneer.role}</p>
+            </div>
+
+            <div className="subscriber-pioneers-footer">
               <a
                 href="https://www.facebook.com/yourpage"
                 target="_blank"

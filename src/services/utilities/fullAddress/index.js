@@ -2,7 +2,7 @@ import provinces from "../../../services/fakeDb/finance/philippines/provinces.js
 const fullAddress = (address, isComplete = true) => {
   if (typeof address !== "object") return <i>Datatype mismatch</i>;
 
-  const { region, province, city, barangay, street } = address;
+  const { region, province, city, barangay, street = "" } = address;
 
   if (isComplete)
     return `${street && `${street},`} ${

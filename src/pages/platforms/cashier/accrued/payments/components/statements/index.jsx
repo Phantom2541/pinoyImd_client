@@ -1,4 +1,3 @@
-import React from "react";
 import { Statements } from "../../../../../../../services/fakeDb";
 
 export default function CategorySelect({ setCategories }) {
@@ -12,9 +11,7 @@ export default function CategorySelect({ setCategories }) {
       className="browser-default custom-select"
       style={{ width: "115px", marginRight: "20px" }}
     >
-      <option value="" disabled>
-        Select a category
-      </option>
+      <option value="">All</option>
       {Array.isArray(categories) &&
         categories.map((category, index) => (
           <option key={index} value={category}>

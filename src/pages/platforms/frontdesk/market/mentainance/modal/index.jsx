@@ -13,7 +13,6 @@ import {
   SAVE,
   UPDATE,
 } from "../../../../../../services/redux/slices/market/mentainance";
-import { BROWSE } from "../../../../../../services/redux/slices/market/machines";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
@@ -27,18 +26,21 @@ export default function Modal() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
   useEffect(() => {
-    if (selected) {
-      setForm(selected);
-    }
-  }, [selected]);
-  useEffect(() => {
-    if (token)
-      dispatch(
-        BROWSE({ token, params: { branchId: activePlatform?.branchId } })
-      );
-  }, [activePlatform, dispatch, token]);
+  if (selected) {
+    setForm(selected);
+  } else if (willCreate) {
+    setForm({
+      machineId: "",
+      engineer: "",
+      purpose: "Routine maintenance",
+      recommendations: "No issues found",
+    });
+  }
 
-  // Handle update function
+    
+  }, [selected, willCreate]);
+
+
   const handleUpdate = () => {
     TOGGLE();
 
@@ -140,12 +142,13 @@ export default function Modal() {
             onChange={(e) => handleChange("purpose", e.target.value)}
           />
           <MDBInput
-            label="Recommendation"
+            label="Recommendations / Next Steps"
             type="text"
             value={handleValue("recommendations")}
             required
             onChange={(e) => handleChange("recommendations", e.target.value)}
-          />
+/>
+
           {/* Submit button */}
           <div className="text-center mb-1-half">
             <MDBBtn

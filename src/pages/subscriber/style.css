@@ -87,15 +87,15 @@
 }
 
 .subscriber-topbar-left img {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.1));
 }
 
 .subscriber-logo {
   font-weight: bold;
-  font-size: 24px;
-  margin-right: 40px;
+  font-size: 1.6rem;
+  margin-right: 60px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   color: white;
   transition: all 0.5s ease;
@@ -106,24 +106,57 @@
 }
 
 .subscriber-menu {
+  position: relative;
   display: flex;
+  align-items: center;
+}
+
+.subscriber-menu .menu-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  background-color: var(--primary-color);
+  transition: left 0.3s ease, width 0.3s ease;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.subscriber-menu .menu-indicator.home-indicator {
+  background-color: white;
 }
 
 .subscriber-menu a {
-  margin-right: 20px;
+  position: relative;
+  padding: 5px 15px;
   color: white;
   text-decoration: none;
   font-weight: 500;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   transition: all 0.5s ease;
+}
+
+.subscriber-menu a.active-menu {
+  color: var(--text-white);
+}
+
+.subscriber-menu.scrolled a.active-menu {
+  color: var(--text-white);
 }
 
 .subscriber-menu.scrolled a {
   color: black;
 }
 
+.subscriber-menu.scrolled a.active-menu {
+  color: var(--primary-color);
+}
+
 .subscriber-menu a:hover {
   color: var(--text-black);
+}
+
+.subscriber-menu.scrolled a:hover {
+  color: var(--primary-color);
 }
 
 .subscriber-overlay {
@@ -162,7 +195,7 @@
   font-size: 1.3rem;
   color: var(--text-white);
   border-radius: 5px;
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
   padding: 3px 8px;
 }
 
@@ -177,7 +210,8 @@
 }
 
 .subscriber-btn-login.scrolled:hover {
-  background-color: var(--text-black);
+  background-color: var(--primary-color);
+  border: 2px solid var(--primary-color);
   color: var(--text-white);
 }
 
@@ -186,7 +220,7 @@
   border: none;
   font-size: 1.3rem;
   color: var(--text-white);
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 }
 
 .subscriber-btn-signup:hover {
@@ -195,6 +229,10 @@
 
 .subscriber-btn-signup.scrolled {
   color: var(--text-black);
+}
+
+.subscriber-btn-signup.scrolled:hover {
+  color: var(--primary-color);
 }
 
 .subscriber-hamburger {
@@ -315,13 +353,40 @@
   background-color: var(--primary-color);
 }
 
-@media (max-width: 760px) {
-  #subscriber-landing #home .view {
-    height: 100vh;
+@media (max-width: 1280px) {
+  .subscriber-container {
+    width: 100%;
+    height: auto;
+    padding: 0 20px;
+  }
+  .subscriber-logo img {
+    width: 45px;
+    height: 45px;
+  }
+  .subscriber-logo {
+    font-size: 1.3rem;
+  }
+
+  .subscriber-menu a {
+    font-size: 1.1rem;
+  }
+  .subscriber-menu .menu-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    background-color: var(--primary-color);
+    transition: left 0.3s ease, width 0.3s ease;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .subscriber-btn-login,
+  .subscriber-btn-signup {
+    font-size: 1.1rem;
   }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1024px) {
   .subscriber-menu {
     flex-direction: column;
     position: absolute;
@@ -335,7 +400,7 @@
     gap: 10px;
     transform: translateY(-20px);
     pointer-events: none;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease transform 0.3s ease;
   }
 
   .subscriber-menu.subscriber-open {
@@ -365,12 +430,19 @@
   #landing #home .view {
     height: 100vh;
   }
+  .subscriber-menu .menu-indicator {
+    display: none;
+  }
+  .subscriber-menu a.active-menu {
+    color: black;
+  }
+  .subscriber-menu a:hover.active-menu {
+    color: var(--primary-color);
+  }
 }
 
-@media (max-width: 1280px) {
-  .subscriber-container {
-    width: 100%;
-    height: auto;
-    padding: 0 20px;
+@media (max-width: 760px) {
+  #subscriber-landing #home .view {
+    height: 100vh;
   }
 }

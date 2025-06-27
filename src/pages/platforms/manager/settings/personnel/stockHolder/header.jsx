@@ -1,12 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
-import { Select } from "../../../components/customizable";
-
+import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
+import { Policy } from "../../../../../../services/fakeDb";
+import { BOARD_MEMBERS } from "../../../../../../services/redux/slices/assets/persons/personnels";
 const Header = () => {
-  const { maxPage } = useSelector(({ auth }) => auth);
-  const { filtered } = useSelector(({ services }) => services);
-  dispatch = useDispatch();
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { collections } = useSelector(({ personnels }) => personnels),
+    { branchId = {} } = activePlatform,
+    dispatch = useDispatch();
+  const handlePrintout = () => {
+    window.print();
+  };
+
+  // keys keys:{branchId,designations:Policy.getBoardMembersIds()}
+  useEffect(() => {
+    if (token) {
+      dispatch(
+        BOARD_MEMBERS({
+          token,
+          params: {
+            branchId,
+            designations: Policy.getBoardMembersIds(),
+          },
+        })
+      );
+    }
+  }, [dispatch, token, branchId, activePlatform]);
 
   //initial values
 
@@ -17,13 +36,13 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {services.length} Stock Holders
+          {collections.length} Stock Holders
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center">
-          <Select className="m-0 p-0 calendar mr-4" />
-        </div>
+        <MDBBtn size="sm" color="info" onClick={() => handlePrintout()}>
+          <MDBIcon icon="print" />
+        </MDBBtn>
       </div>
     </MDBView>
   );

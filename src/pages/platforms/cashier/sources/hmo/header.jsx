@@ -38,7 +38,7 @@ const Header = () => {
     const { displayname } = source;
     Swal.fire({
       title: `${displayname || ""}`,
-      text: `Do you want to register as a new provider?`,
+      text: `Do you want to register as a new HMO?`,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -60,7 +60,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          Health Management Organization
+          Health Management Organization Partnerships
         </span>
       </div>
       <div>

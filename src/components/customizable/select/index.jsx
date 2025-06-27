@@ -197,6 +197,7 @@ export default function Select({
             return (
               <MDBSelectOption
                 key={`${label}-${index}`}
+                title={choice?.title ? choice?.title : choice || ""}
                 className={
                   handleChoiceDisabling(key, choice)
                     ? "custom-select-disabled"

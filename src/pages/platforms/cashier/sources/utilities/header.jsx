@@ -11,7 +11,7 @@ import {
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { filtered } = useSelector(({ providers }) => providers),
+    { filtered, collections } = useSelector(({ providers }) => providers),
     dispatch = useDispatch();
   //initial values
   useEffect(() => {
@@ -40,8 +40,8 @@ const Header = () => {
       <div>
         <div className="text-right d-flex items-center">
           <Search
-            collection={filtered}
-            handleFiltered={handleFiltered}
+            collections={collections}
+            setFiltered={handleFiltered}
             handleAdd={handleAdd}
             reset={() => dispatch(ResetFILTER())}
           />

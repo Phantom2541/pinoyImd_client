@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { MDBIcon, MDBInput, MDBBtn } from "mdbreact";
+import React, { useState, useEffect, useRef } from "react";
+import { MDBIcon } from "mdbreact";
 import "./style.css";
-import { useToasts } from "react-toast-notifications";
 // import GoogleMapReact from "google-map-react";
 import LOGO from "./../../../assets/iMD.png";
 
@@ -12,6 +11,8 @@ import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { useToasts } from "react-toast-notifications";
+
 import { useSelector } from "react-redux";
 import {
   ENDPOINT,
@@ -19,7 +20,6 @@ import {
   LatitudeAddress,
   mobile,
 } from "../../../services/utilities";
-import { capitalize } from "lodash";
 
 // Fix Leaflet default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -30,44 +30,12 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function ContactUs() {
-  const { details } = useSelector(({ companies }) => companies),
-    { addToast } = useToasts(),
-    [alreadySent, setAlreadySent] = useState(false),
-    [form, setForm] = useState({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
+  const { details } = useSelector(({ companies }) => companies);
 
-  useEffect(() => {
-    const feedback = localStorage.getItem("feedback");
-    if (feedback) {
-      setAlreadySent(true);
-      setForm(JSON.parse(feedback));
-    }
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    //console.log(auth._id);
-
-    addToast("Thank you for the feedback.", {
-      appearance: "success",
-    });
-    addToast("Thank you for the feedback.", {
-      appearance: "success",
-    });
-
-    setAlreadySent(true);
-    localStorage.setItem("feedback", JSON.stringify(form));
-  };
-
-  const { name, subject, email, message } = form;
   const { contacts = {}, address = "", branches = [] } = details || {};
 
-  const [coordinates, setCoordinates] = useState([15.35, 121.05]); // default lang
+  const [coordinates, setCoordinates] = useState([15.35, 121.05]), // default lang
+    { addToast } = useToasts();
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -99,69 +67,96 @@ export default function ContactUs() {
     fetchCoordinates();
   }, [address]);
 
+  const mapRef = useRef(null);
+
+  const handleBranchClick = async (branch) => {
+    if (!branch?.address) return;
+
+    try {
+      const convertedAddress = LatitudeAddress(branch.address);
+
+      console.log("Converted Address:", convertedAddress);
+
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          convertedAddress
+        )}&format=json`,
+        {
+          headers: {
+            "User-Agent": "PinoyIMD/1.0 (your_email@example.com)",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      const data = await response.json();
+      console.log("Geocode Data:", data);
+
+      if (data.length > 0) {
+        const lat = parseFloat(data[0].lat);
+        const lon = parseFloat(data[0].lon);
+
+        setCoordinates([lat, lon]);
+
+        if (mapRef.current && mapRef.current.leafletElement) {
+          mapRef.current.leafletElement.setView([lat, lon], 16);
+        }
+      } else {
+        addToast("Street location not found.", { appearance: "error" });
+      }
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      addToast("Error detecting location.", { appearance: "error" });
+    }
+  };
+
   return (
-    <section className="subscriber-contactUs-section d-flex justify-content-center align-content-center">
+    <section className="subscriber-contactUs-section">
       <div className="subscriber-contactUs-container">
-        <div className="subscriber-contactUs-top">
-          <div className="subscriber-contactUs-leftSide">
-            <div className="subscriber-contactUs-logo">
-              <img
-                src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
-                alt="logo"
-                onError={(e) => (e.target.src = LOGO)}
-                width="90px"
-                height="90px"
-              />
-              <span>{details?.name}</span>
-            </div>
-            <span className="contactUs-quote">"{details?.tagline}"</span>
-            <div className="subscriber-contactUs-address">
-              <MDBIcon fas icon="map-marker-alt" />
-              <span>{fullAddress(address)}</span>
-            </div>
-            <div className="subscriber-contactUs-email">
-              <MDBIcon fas icon="envelope" />
-              <span> {contacts?.email}</span>
-            </div>
-            <div className="subscriber-contactUs-phone">
-              <MDBIcon fas icon="phone-alt" />
-              <span> {mobile(contacts?.mobile)}</span>
-            </div>
+        <div className="subscriber-contactUs-leftSide">
+          <div className="subscriber-contactUs-logo">
+            <img
+              src={`${ENDPOINT}/public/companies/${details?.name}/logo.png`}
+              alt="logo"
+              onError={(e) => (e.target.src = LOGO)}
+              width="90px"
+              height="90px"
+            />
+            <span>{details?.name}</span>
           </div>
-          <div className="subscriber-contactUs-middleSide">
-            <div style={{ height: "100%", width: "100%" }}>
-              <Map
-                center={coordinates}
-                zoom={12}
-                style={{ height: "90%", width: "100%", borderRadius: "5px" }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={coordinates}>
-                  <Popup>
-                    Pinoy iMD — Labanos Compound, Gulod street, barangay San
-                    pedro, General Tinio(Papaya)
-                  </Popup>
-                </Marker>
-              </Map>
-            </div>
+          <span className="contactUs-quote">"{details?.tagline}"</span>
+          <div className="subscriber-contactUs-address">
+            <MDBIcon fas icon="map-marker-alt" />
+            <span onClick={() => handleBranchClick({ address })}>
+              {fullAddress(address)}
+            </span>
+          </div>
+          <div className="subscriber-contactUs-email">
+            <MDBIcon fas icon="envelope" />
+            <span> {contacts?.email}</span>
+          </div>
+          <div className="subscriber-contactUs-phone">
+            <MDBIcon fas icon="phone-alt" />
+            <span> {mobile(contacts?.mobile)}</span>
           </div>
         </div>
-        <div className="subscriber-contactUs-rightSide">
+        <div className="subscriber-contactUs-middleSide">
           <div className="subscriber-contactUs-branches-container">
             <p>Branches</p>
             <div className="subscriber-contactUs-branches">
-              {branches.map(({ name, contacts = {} }, index) => {
-                console.log("contacts", contacts);
+              {branches.map((branch, index) => {
+                const { name, contacts = {} } = branch;
                 return (
                   <div
                     className="subscriber-contactUs-branch-wrapper"
                     key={index}
                   >
                     <div className="subscriber-contactUs-branch-line">
-                      <span className="subscriber-contactUs-branch-name">
+                      <span
+                        className="subscriber-contactUs-branch-name"
+                        onClick={() => handleBranchClick(branch)}
+                      >
                         {name}
                       </span>
                     </div>
@@ -174,6 +169,28 @@ export default function ContactUs() {
                 );
               })}
             </div>
+          </div>
+        </div>
+
+        <div className="subscriber-contactUs-rightSide">
+          <div style={{ height: "100%", width: "100%" }}>
+            <Map
+              center={coordinates}
+              zoom={16}
+              ref={mapRef}
+              style={{ height: "100%", width: "100%", borderRadius: "5px" }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={coordinates}>
+                <Popup>
+                  Pinoy iMD — Labanos Compound, Gulod street, barangay San
+                  pedro, General Tinio(Papaya)
+                </Popup>
+              </Marker>
+            </Map>
           </div>
         </div>
       </div>

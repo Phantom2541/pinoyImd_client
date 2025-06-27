@@ -170,15 +170,10 @@ export default function MenuCollapse() {
     });
   };
 
-  const handleUpdateClient = () => {
-    const { newName, displayname, providerID } = update;
-    if (displayname.toLowerCase() === newName.toLowerCase()) {
-      setUpdate({});
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-    dispatch(UPDATE({ data: { ...update, displayname: newName }, token }))
+  const handleUpdateClient = (data) => {
+    const { providerID } = data;
+
+    dispatch(UPDATE({ data, token }))
       .then(({ payload: branch }) => {
         dispatch(
           SetBRANCHES({
@@ -187,35 +182,23 @@ export default function MenuCollapse() {
             isUpdateBranch: true,
           })
         );
-
-        setUpdate({}); // Reset state after update
       })
       .catch((error) => console.error("Update Error:", error));
   };
 
-  const handleUpdate = () => {
-    const { providerID, updatedKey, newKey } = update;
-    const oldValue = update[updatedKey] || "";
-    const newValue = update[newKey] || "";
-
-    if (String(oldValue)?.toLowerCase() === String(newValue)?.toLowerCase()) {
-      setUpdate({});
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
+  const handleUpdate = (editedData) => {
     dispatch(
       SPECIFIC_UPDATE({
-        data: { _id: providerID, [updatedKey]: update[newKey], updatedKey },
+        data: editedData,
         token,
       })
     );
   };
-
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = insources?.slice(startIndex, endIndex); // Get only items for the active page
+
   return (
     <MDBContainer
       style={{
@@ -246,11 +229,12 @@ export default function MenuCollapse() {
                 setSelected={setSelected}
                 update={update}
                 setUpdate={setUpdate}
-                handleUpdate={(isSpecific = true) =>
-                  isSpecific ? handleUpdate() : handleUpdateClient()
+                handleUpdate={(data, isSpecific = true) =>
+                  isSpecific ? handleUpdate(data) : handleUpdateClient(data)
                 }
                 registerGhostCompany={registerGhostCompany}
                 formSubmitted={formSubmitted || formSubmittedBranch}
+                isSucess={isSuccess || isSuccessBranch}
                 insource={insource}
               />
               <MDBCollapse

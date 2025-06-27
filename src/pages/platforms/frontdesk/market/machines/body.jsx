@@ -16,9 +16,9 @@ const Body = () => {
 
   const { token } = useSelector(({ auth }) => auth);
 
-  const handleDelete = (_id) => {
+  const handleDelete = (item) => {
     Swal.fire({
-      title: "Are you sure?",
+      title: `Delete "${item.model} ${item.brand}"?`,
       text: "This process cannot be reverted!",
       icon: "warning",
       showCancelButton: true,
@@ -27,7 +27,7 @@ const Body = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DESTROY({ data: { _id }, token }));
+        dispatch(DESTROY({ data: { _id: item._id }, token }));
       }
     });
   };
@@ -44,13 +44,16 @@ const Body = () => {
           <th>#</th>
           <th>Model</th>
           <th>Brand</th>
-          <th>Serial</th>
+          <th>Serial No.</th>
+          <th>Accuqired</th>
+          <th>Status</th>
+          <th>Price</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { _id, model, brand, serial } = item;
+          const { _id, model, brand, serial, accuqired, status, price } = item;
 
           return (
             <tr key={index}>
@@ -69,20 +72,32 @@ const Body = () => {
               </td>
 
               <td>
+                <b>{accuqired}</b>
+              </td>
+
+              <td>
+                <b>{status}</b>
+              </td>
+
+              <td>
+                <b>{price}</b>
+              </td>
+
+              <td>
                 <MDBBtn
                   size="sm"
-                  color="light-green"
+                  color="blue"
                   onClick={() => dispatch(SetEDIT(item))}
                 >
-                  UPDATEEE
+                  Update
                 </MDBBtn>
 
                 <MDBBtn
                   size="sm"
                   color="danger"
-                  onClick={() => handleDelete(_id)}
+                  onClick={() => handleDelete(item)}
                 >
-                  DELETEEE
+                  Delete
                 </MDBBtn>
               </td>
             </tr>
