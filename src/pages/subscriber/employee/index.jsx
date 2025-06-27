@@ -3,6 +3,7 @@ import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { COMPANY } from "../../../services/redux/slices/assets/persons/personnels";
+import { ENDPOINT } from "../../../services/utilities";
 
 export default function Employees({ match }) {
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
@@ -132,13 +133,20 @@ export default function Employees({ match }) {
         >
           {displayedPersonnels.map((person, index) => {
             const { user } = person || {};
-            const { fullName } = user || {};
+            const { fullName, email } = user || {};
             const { fname, lname, mname, postnominal } = fullName || {};
 
             return (
               <div className="subscriber-pioneers-card" key={index}>
                 <div className="subscriber-pioneers-card-header">
-                  <img src={DEFAULT} alt="avatar" />
+                  <img
+                    src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
+                    onError={(e) => {
+                      e.target.onerror = null; // prevent infinite loop
+                      e.target.src = DEFAULT;
+                    }}
+                    alt={email}
+                  />
                 </div>
                 <div className="subscriber-pioneers-card-body">
                   <span>{`${fname ?? ""} ${mname ?? ""} ${lname ?? ""}`}</span>
