@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 // import GoogleMapReact from "google-map-react";
@@ -11,6 +11,8 @@ import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { useToasts } from "react-toast-notifications";
+
 import { useSelector } from "react-redux";
 import {
   ENDPOINT,
@@ -32,7 +34,8 @@ export default function ContactUs() {
 
   const { contacts = {}, address = "", branches = [] } = details || {};
 
-  const [coordinates, setCoordinates] = useState([15.35, 121.05]); // default lang
+  const [coordinates, setCoordinates] = useState([15.35, 121.05]), // default lang
+    { addToast } = useToasts();
 
   useEffect(() => {
     const fetchCoordinates = async () => {
