@@ -1,6 +1,8 @@
 import { MDBCollapseHeader, MDBBtn, MDBBadge } from "mdbreact";
-import { collapse, currency } from "../../../../../../../../services/utilities";
-import { Select, Input } from "../../../../../../../../components/customizable";
+import {
+  collapse,
+  fullAddress,
+} from "../../../../../../../../services/utilities";
 import PopOver from "./popOver";
 import { useSelector } from "react-redux";
 
@@ -13,25 +15,14 @@ const Header = ({
   activeId,
   didHoverId,
   index,
-  update,
-  setUpdate,
-  handleUpdate,
-  formSubmitted,
 }) => {
-  const { contractCategories: categories, category: activeCategory } =
-    useSelector(({ providers }) => providers);
-  const {
-    clients,
-    _id,
-    contract,
-    status,
-    subName: ghostSubName,
-    cutoff = 0,
-    credit = 0,
-  } = insource;
+  const { contractCategories: categories } = useSelector(
+    ({ providers }) => providers
+  );
+  const { clients, _id, contract, status, subName: ghostSubName } = insource;
   const isGhost = clients?._id ? false : true;
 
-  const { abbr, displayname } = clients || "";
+  const { abbr, displayname, address = {} } = clients || "";
 
   const baseSubname = isGhost ? ghostSubName : displayname;
 
@@ -39,25 +30,10 @@ const Header = ({
 
   const isPopOver = (activeId === index || didHoverId === index) && !isGhost;
 
-  const isEditableBranch =
-    !clients?.companyId && !clients?.isVerified && !isGhost;
-
   const isWhiteColor = color === "text-white"; //para sa color ng small tag
 
   const _category = categories.find((c) => c.value === contract)?.text;
 
-  const isDenied = status === "denied";
-
-  const handleCategory = () => {
-    switch (status) {
-      case "pending":
-        return "-";
-      case "denied":
-        return "Denied";
-      default:
-        return _category;
-    }
-  };
   return (
     <MDBCollapseHeader
       onMouseLeave={() => setDidHoverId(-1)}
@@ -86,165 +62,26 @@ const Header = ({
             >
               Branch
             </small>
-            {update.updatedKey === "branch" &&
-            update.providerID === _id &&
-            isEditableBranch ? (
-              <Input
-                className="mt-2 form-control form-control-sm"
-                _key={"newName"}
-                selected={update}
-                formSubmitted={formSubmitted}
-                onChange={(value) => setUpdate({ ...update, newName: value })}
-                handleCheck={() => handleUpdate(false)}
-                handleClose={() => setUpdate({})}
-              />
-            ) : (
-              <h6
-                style={{ marginBottom: "-4px", maxWidth: "28rem" }}
-                onClick={() =>
-                  setUpdate({
-                    ...clients,
-                    newName: clients.displayname,
-                    updatedKey: "branch",
-                    providerID: _id,
-                  })
-                }
-              >
-                {baseSubname}
-              </h6>
-            )}
-            {update?.updatedKey === "abbr" && update?.providerID === _id ? (
-              <div style={{ width: "6rem" }}>
-                <Input
-                  _key={"newAbbr"}
-                  className="mt-2 form-control form-control-sm"
-                  type="string"
-                  selected={update}
-                  formSubmitted={formSubmitted}
-                  handleClose={() => setUpdate({})}
-                  handleCheck={() => handleUpdate()}
-                  onChange={(_, value) =>
-                    setUpdate({
-                      updatedKey: "abbr",
-                      newAbbr: value,
-                      abbr,
-                      newKey: "newAbbr",
-                      providerID: _id,
-                    })
-                  }
-                />
-              </div>
-            ) : (
-              <MDBBadge
-                style={{ fontSize: "10px" }}
-                onClick={() => {
-                  setUpdate({
-                    updatedKey: "abbr",
-                    newAbbr: abbr,
-                    providerID: _id,
-                  });
-                }}
-              >
-                {abbr ? abbr : "N/A"}
-              </MDBBadge>
-            )}
-          </div>
-          {!activeCategory && (
-            <div className="mr-5">
-              <small
-                className={!isWhiteColor && "grey-text"}
-                style={{ fontSize: "0.7rem" }}
-              >
-                Category
-              </small>
-              <h6 className={isDenied && "text-danger"}>{handleCategory()}</h6>
-            </div>
-          )}
+            <h6 style={{ marginBottom: "-4px", maxWidth: "28rem" }}>
+              {baseSubname}
+            </h6>
 
-          <div className="mr-5">
+            <MDBBadge style={{ fontSize: "10px" }}>
+              {abbr ? abbr : "N/A"}
+            </MDBBadge>
+          </div>
+          <div className="mr-1">
             <small
               style={{ fontSize: "0.7rem" }}
               className={!isWhiteColor && "grey-text"}
             >
-              Monthly Cutoff
+              Address
             </small>
-            {update?.updatedKey === "cutoff" && update?.providerID === _id ? (
-              <div style={{ width: "6rem" }}>
-                <Select
-                  className="m-0 p-0"
-                  collections={new Array(27).fill(0).map((_, i) => i + 1)}
-                  preValue={update.updatedValue}
-                  handleCheck={() => handleUpdate()}
-                  handleClose={() => setUpdate({})}
-                  formSubmitted={formSubmitted}
-                  onChange={(value) =>
-                    setUpdate({
-                      updatedKey: "cutoff",
-                      newCutoff: value,
-                      cutoff,
-                      newKey: "newCutoff",
-                      providerID: _id,
-                    })
-                  }
-                  soloUpdate
-                />
-              </div>
-            ) : (
-              <h6
-                onClick={() => {
-                  setUpdate({
-                    updatedKey: "cutoff",
-                    updatedValue: cutoff,
-                    providerID: _id,
-                  });
-                }}
-              >
-                {cutoff ? cutoff : "N/A"}
-              </h6>
-            )}
+            <h6 style={{ marginBottom: "-4px", maxWidth: "28rem" }}>
+              {fullAddress(address)}
+            </h6>
           </div>
-          <div>
-            <small
-              style={{ fontSize: "0.7rem" }}
-              className={!isWhiteColor && "grey-text"}
-            >
-              Credit
-            </small>
-            {update.updatedKey === "credit" && update?.providerID === _id ? (
-              <div style={{ width: "9rem" }}>
-                <Input
-                  _key={"newCredit"}
-                  className="mt-2 form-control form-control-sm"
-                  type="number"
-                  selected={update}
-                  formSubmitted={formSubmitted}
-                  handleClose={() => setUpdate({})}
-                  handleCheck={() => handleUpdate()}
-                  onChange={(_, value) =>
-                    setUpdate({
-                      updatedKey: "credit",
-                      credit,
-                      newCredit: Number(value),
-                      newKey: "newCredit",
-                      providerID: _id,
-                    })
-                  }
-                />
-              </div>
-            ) : (
-              <h6
-                onClick={() => {
-                  setUpdate({
-                    updatedKey: "credit",
-                    newCredit: credit,
-                    providerID: _id,
-                  });
-                }}
-              >
-                {credit ? currency(credit) : "N/A"}
-              </h6>
-            )}
-          </div>
+
           {isGhost && (
             <span
               style={{ fontSize: "20px" }}

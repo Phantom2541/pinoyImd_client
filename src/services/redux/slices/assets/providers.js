@@ -524,7 +524,6 @@ export const reduxSlice = createSlice({
         const { updatedKey, _id } = data;
         const updateCollections = (collections) => {
           const index = collections.findIndex((item) => item._id === _id);
-          console.log("specific update index", index);
           collections[index] = {
             ...collections[index],
             [updatedKey]: data[updatedKey],

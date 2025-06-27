@@ -4,13 +4,13 @@ import { MDBView } from "mdbreact";
 import {
   RESET,
   INSOURCE,
-  SetSOURCE,
-  RESET_COLLECTIONS,
   SetREGISTER,
   SetCATEGORY,
+  SAVE,
 } from "../../../../../../services/redux/slices/assets/providers";
 import Search from "../../../../../../components/searchables/sources";
 import Swal from "sweetalert2";
+import { fullAddress } from "../../../../../../services/utilities";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { category, contractCategories } = useSelector(
@@ -39,10 +39,18 @@ const Header = () => {
   };
 
   const setSource = (source) => {
-    const { displayname } = source;
+    const { name, displayname = "", _id } = source;
     Swal.fire({
-      title: `${displayname || ""}`,
-      text: `Do you want to register as a new Referrals?`,
+      title: `<strong>${name || "New Referral"}</strong>`,
+      html: `
+    <p style="margin-bottom: 12px;">Do you want to register this referral with the following details?</p>
+    <div style="text-align: left; font-size: 14px; line-height: 1.6; background-color: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+      <div><strong>Name:</strong> ${name}${
+        displayname ? ` – ${displayname}` : ""
+      }</div>
+      <div><strong>Address:</strong> ${fullAddress(source?.address)}</div>
+    </div>
+  `,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -50,9 +58,24 @@ const Header = () => {
       confirmButtonText: "Yes, register it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(SetSOURCE(source));
-      } else {
-        dispatch(RESET_COLLECTIONS());
+        dispatch(
+          SAVE({
+            token,
+            data: {
+              clients: _id,
+              status: "approved",
+              category: "rfr",
+              vendors: activePlatform.branchId,
+            },
+          })
+        ).then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Successfully Registered",
+            text: `${name} has been registered as a new referral.`,
+            confirmButtonColor: "#3085d6",
+          });
+        });
       }
     });
   };
@@ -67,30 +90,8 @@ const Header = () => {
           Insource-Referrals List
         </span>
       </div>
-      <div>
-        <div className="text-right d-flex items-center">
-          <div className="d-flex align-items-center mr-4">
-            <span className="mr-1">Category:</span>
-            <select
-              className="form-control bg-light"
-              value={category}
-              onChange={(e) => dispatch(SetCATEGORY(e.target.value))}
-            >
-              <option value="">All</option>
-              <option value="pending">Applicant</option>
-              {contractCategories.map((c, index) => (
-                <option key={index} value={c.value}>
-                  {c.text}
-                </option>
-              ))}
-              <option value="denied" className="bg-danger text-white">
-                Denied
-              </option>
-            </select>
-          </div>
-          <Search setSource={setSource} handleRegister={handleRegister} />
-        </div>
-      </div>
+
+      <Search setSource={setSource} handleRegister={handleRegister} />
     </MDBView>
   );
 };

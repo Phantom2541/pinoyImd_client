@@ -18,7 +18,6 @@ import {
   REGISTER_BRANCH,
   ToggleRegister,
   RESET,
-  SetCATEGORY,
 } from "../../../../../../../services/redux/slices/assets/providers";
 import { Select } from "../../../../../../../components/customizable";
 import Swal from "sweetalert2";
@@ -39,23 +38,17 @@ export default function Modal() {
     {
       formSubmitted,
       isSuccess,
-      category: defaultCategory,
       categories,
       selected,
       showRegisterModal: show,
     } = useSelector(({ providers }) => providers),
     [form, setForm] = useState(_form),
-    [category, setCategory] = useState(),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
   const toggle = useCallback(() => {
     dispatch(ToggleRegister());
   }, [dispatch]);
-
-  useEffect(() => {
-    setCategory(defaultCategory);
-  }, [defaultCategory]);
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
@@ -82,6 +75,7 @@ export default function Modal() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { branchId } = activePlatform;
+    const { category } = form;
     if (!category)
       return Swal.fire({
         icon: "warning",
@@ -96,12 +90,11 @@ export default function Modal() {
         data: {
           branch: form,
           providerID: form?.providerId || "",
-          category,
+          category: "rfr",
           vendors: branchId,
         },
       })
     );
-    dispatch(SetCATEGORY(category));
   };
 
   const isGhost = selected?.providerID ? true : false;
@@ -124,7 +117,7 @@ export default function Modal() {
               note
               noteTitle={"Notice: "}
             >
-              This branch will be registered and set as your new provider.
+              This branch will be registered and set as your new referral.
             </MDBTypography>
           </div>
 
@@ -132,8 +125,8 @@ export default function Modal() {
             <MDBCol md="6">
               <Select
                 label="Category"
-                preValue={category}
-                onChange={(e) => setCategory(e)}
+                preValue={form.category}
+                onChange={(e) => setForm({ ...form, category: e })}
                 keys={"value"}
                 values={"text"}
                 collections={categories}
