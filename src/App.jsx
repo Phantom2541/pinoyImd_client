@@ -43,7 +43,10 @@ export default function App() {
 
   return (
     <Switch>
-      <Route path="/" exact component={Home} />
+      {/* <Route path="/" exact component={Home} /> */}
+      <Route path="/" exact component={Subscriber} />
+      <Route path="/subscriber/:companyId" exact component={Subscriber} />
+
       {/* Frequent Ask Questions */}
       <Route path="/printout/FAQ" exact component={FAQ} />
       <Route path="/printout/claimstub" exact component={ClaimStub} />
@@ -88,7 +91,6 @@ export default function App() {
       <Route path="/printout/machines" exact component={Machines} />
       {/* Diagnostic Portal */}
       <Route path="/emr/portal/:companyId/:dealId" exact component={Portal} />
-      <Route path="/subscriber/:companyId" exact component={Subscriber} />
       <Platforms />
     </Switch>
   );
