@@ -6,12 +6,14 @@ import { mobile } from "../../../../../services/utilities";
 import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
 import Swal from "sweetalert2";
 const Body = () => {
-  const { hmo } = useSelector(({ companies }) => companies),
+  const { filtered, activePage, maxPage, isSuccess } = useSelector(
+      ({ companies }) => companies
+    ),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const handleRemoved = (code) => {
-    const newHO = hmo.filter((item) => item.code !== code);
+    const newHO = filtered.filter((item) => item.code !== code);
     Swal.fire({
       title: `are you sure to remove this ${HMO.getName(code)}?`,
       text: "You won't be able to revert this!",
@@ -37,6 +39,10 @@ const Body = () => {
     //   });
     // }
   };
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex);
 
   return (
     <MDBTable>
@@ -50,7 +56,7 @@ const Body = () => {
         </tr>
       </MDBTableHead>
       <MDBTableBody>
-        {hmo.map((data, index) => {
+        {paginatedData.map((data, index) => {
           const { code, cp } = data;
           const { phone, email, agent } = cp;
           return (
