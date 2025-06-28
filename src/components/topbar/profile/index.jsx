@@ -8,17 +8,31 @@ import {
 } from "mdbreact";
 import { useSelector } from "react-redux";
 import { PresetImage, clearSiteData } from "../../../services/utilities";
+import { useHistory } from "react-router";
 
 export default function Profile() {
   const { auth, isPatient, image, activePlatform } = useSelector(
       ({ auth }) => auth
     ),
-    [platform, setPlatform] = useState("patron");
+    [platform, setPlatform] = useState("patron"),
+    history = useHistory();
 
   useEffect(() => {
     setPlatform(activePlatform?.platform);
   }, [activePlatform]);
-
+  const handleLogout = () => {
+    const { branch = {} } = activePlatform || {};
+    const { companyId: company = "" } = branch || {};
+    var companyId = company?._id;
+    const fakeDB = localStorage.getItem("companyId");
+    if (fakeDB && !company?._id) {
+      console.log("running");
+      companyId = JSON.parse(fakeDB);
+    }
+    // localStorage.clear();
+    history.push(`/subscriber/${companyId}`);
+    clearSiteData();
+  };
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
@@ -51,15 +65,7 @@ export default function Profile() {
             Contract
           </MDBDropdownItem>
         )}
-        <MDBDropdownItem
-          onClick={() => {
-            clearSiteData();
-            // localStorage.clear();
-            window.location.href = "/";
-          }}
-        >
-          Log Out
-        </MDBDropdownItem>
+        <MDBDropdownItem onClick={handleLogout}>Log Out</MDBDropdownItem>
       </MDBDropdownMenu>
     </MDBDropdown>
   );
