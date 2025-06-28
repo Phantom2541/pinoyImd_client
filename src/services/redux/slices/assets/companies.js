@@ -229,7 +229,7 @@ export const reduxSlice = createSlice({
     SetHMO: (state, { payload }) => {
       console.log("payload", payload);
 
-      state.hmo = payload;
+      state.hmo = state.filtered = payload;
     },
     SetPagination: (state) => {
       // {

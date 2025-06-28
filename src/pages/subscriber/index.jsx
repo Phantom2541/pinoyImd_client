@@ -1,13 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBMask,
-  MDBIcon,
-  MDBView,
-  MDBFooter,
-} from "mdbreact";
+import { MDBContainer, MDBMask, MDBView } from "mdbreact";
 import "./style.css";
 import Copyrights from "../../components/footer";
 import Register from "./register";
@@ -39,6 +31,7 @@ const Subscriber = ({ match }) => {
     companyId = match?.params?.companyId;
 
   useEffect(() => {
+    localStorage.setItem("companyId", companyId);
     dispatch(GET_DETAILS({ key: { companyId } }));
   }, [companyId, dispatch]);
 
