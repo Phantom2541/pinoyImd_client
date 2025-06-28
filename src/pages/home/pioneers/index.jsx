@@ -6,7 +6,6 @@ export default function Pioneers() {
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
   const EMMAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/emman.jpg`;
   const TOMAS = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/tomas.jpg`;
-  const BENEDICT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/earle.jpg`;
   // const CHANNEY = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/channey.jpg`;
   // const KEVIN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/kev.jpg`;
   // const ROVAN = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/rovan.jpg`;
@@ -31,14 +30,6 @@ export default function Pioneers() {
       quote:
         "Powering applications with robust and efficient server-side functionality.",
       img: TOMAS,
-    },
-    {
-      name: "Benedict Earle Gabriel R. Pajarillaga",
-      role: "COO",
-      title: "Chief Operating Officer",
-      quote:
-        "Transforming visions into pixel-perfect designs that leave a lasting impression.",
-      img: BENEDICT,
     },
     {
       name: "Jerwin Jay J. Romero",
