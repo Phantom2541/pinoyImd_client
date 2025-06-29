@@ -41,7 +41,7 @@ export default function Urinalysis() {
             {components.map((Component, index) => {
               return (
                 <MDBTabPane key={`component-${index}`} tabId={index}>
-                  <Component  />
+                  <Component />
                 </MDBTabPane>
               );
             })}
