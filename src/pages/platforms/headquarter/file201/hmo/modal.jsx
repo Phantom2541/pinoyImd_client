@@ -85,7 +85,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willUPDATE ? "Remove" : "Add"} HMO
+        {willUPDATE ? "Add" : "Remove"} HMO
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>

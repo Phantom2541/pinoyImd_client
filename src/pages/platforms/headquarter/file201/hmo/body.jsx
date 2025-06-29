@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { HMO } from "../../../../../services/fakeDb";
 import { mobile } from "../../../../../services/utilities";
 import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
+import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 import Swal from "sweetalert2";
 const Body = () => {
   const { filtered, activePage, maxPage, isSuccess } = useSelector(
@@ -13,7 +14,7 @@ const Body = () => {
     dispatch = useDispatch();
 
   const handleRemoved = (code) => {
-    const newHO = filtered.filter((item) => item.code !== code);
+    const newHMO = filtered.filter((item) => item.code !== code);
     Swal.fire({
       title: `are you sure to remove this ${HMO.getName(code)}?`,
       text: "You won't be able to revert this!",
@@ -26,10 +27,13 @@ const Body = () => {
       if (result.isConfirmed)
         dispatch(
           UPDATE({
-            data: { _id: activePlatform.branch.companyId._id, hmo: newHO },
+            data: { _id: activePlatform.branch.companyId._id, hmo: newHMO },
             token,
           })
-        );
+        ).then(() => {
+          dispatch(SetActivePlatform(newHMO));
+          console.log("handleRemoved", newHMO);
+        });
     });
 
     // // Check if object has changed

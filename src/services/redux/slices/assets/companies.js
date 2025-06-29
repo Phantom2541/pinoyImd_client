@@ -409,15 +409,7 @@ export const reduxSlice = createSlice({
           );
         }
 
-        state.hmo = payload?.hmo;
-
-        const findex = state.filtered?.findIndex(
-          (item) => item._id === payload._id
-        );
-        if (findex !== -1 && findex !== undefined) {
-          state.filtered[findex] = payload;
-        }
-
+        state.filtered = payload?.hmo;
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
