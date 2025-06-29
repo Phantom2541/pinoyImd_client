@@ -16,18 +16,21 @@ export default function Remmitances() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (activePlatform?.branchId) {
-      dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
+    if (activePlatform?.branchId && token && year && month && auth?._id) {
       const createdAt = new Date(year, month - 1, 1);
       const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+      dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));
+
       dispatch(
         DEALS({
           token,
           key: {
-            branchId: activePlatform?.branchId,
+            branchId: activePlatform.branchId,
             cashierId: auth._id,
-            createdAt,
-            endDate,
+            startDate: createdAt.toISOString(), // ✅ FIXED: renamed + string
+            endDate: endDate.toISOString(), // ✅ FIXED: string format
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // optional
           },
         })
       );
