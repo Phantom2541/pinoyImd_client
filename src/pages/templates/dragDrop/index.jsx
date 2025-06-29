@@ -119,7 +119,7 @@ const DragDrop = () => {
     <MDBAnimation type="bounceInDown">
       <MDBCard>
         <MDBCardBody>
-          <MDBRow>
+          <MDBRow md="12">
             <List
               collections={collections}
               addID={addID}

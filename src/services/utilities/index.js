@@ -38,7 +38,7 @@ import generateCode from "./generateCode";
 import Search from "./search";
 import generateCalendar from "./generateCalendar";
 import fullNameSearch from "./fullNameSearch";
-import dateFormat from "./dateFormat";
+import { dateFormat, timeFormat } from "./dateFormat";
 import getTime from "./getTime";
 import getDay from "./getDay";
 import getBday from "./getBday";
@@ -110,6 +110,7 @@ export {
   getDay,
   contacts,
   dateFormat,
+  timeFormat,
   getWeekend,
   currency,
   removeRedundantPackages,

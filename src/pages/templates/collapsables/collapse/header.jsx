@@ -1,29 +1,30 @@
 import React from "react";
-import { MDBBtn } from "mdbreact";
 import { Templates } from "../../../../services/fakeDb";
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
   const { name, abbreviation, template } = item;
   return (
-    <div className={`d-flex justify-content-between ${textColor} `}>
+    <div
+      className={`d-flex justify-content-between align-items-center ${textColor} `}
+      onClick={() => setActiveId((prev) => (index === prev ? -1 : index))}
+      style={{ padding: "1rem" }}
+    >
       {index + 1}. {name} {abbreviation}
-      <div className="d-flex">
-        <small className="mr-2 mt-1">
-          {Templates.getComponentName(template)}
-        </small>
-        <MDBBtn
-          size="sm"
-          color="white"
-          rounded
-          onClick={() => setActiveId((prev) => (index === prev ? -1 : index))}
-          className="m-0 p-0 transition-all "
-          style={{ width: isOpen ? "1.5rem" : "2rem" }}
+      <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+        <small>{Templates.getComponentName(template)}</small>
+        <button
+          className="transition-all"
+          style={{
+            border: "none",
+            backgroundColor: "transparent",
+            rotate: `${isOpen ? -90 : 0}deg`,
+          }}
         >
           <i
-            style={{ rotate: `${isOpen ? 0 : 90}deg` }}
-            className="fa fa-angle-down transition-all "
+            className="fa fa-angle-left transition-all "
+            style={{ color: `${isOpen ? "white" : ""}` }}
           />
-        </MDBBtn>
+        </button>
       </div>
     </div>
   );

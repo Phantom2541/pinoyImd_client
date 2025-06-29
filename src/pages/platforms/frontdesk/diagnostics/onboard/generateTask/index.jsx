@@ -29,7 +29,7 @@ export default function Modal() {
       inhouse,
       outsource,
     } = useSelector(({ taskGenerator }) => taskGenerator),
-    { collections } = useSelector(({ providers }) => providers),
+    // { collections } = useSelector(({ providers }) => providers),
     [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
 
@@ -65,24 +65,24 @@ export default function Modal() {
     const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);
     const _forms = Services.getTemplates(inhouseIDS, department);
     const { _id, customerId, ssx, forms: oldForms } = deal;
-    const sentOut = [...collections].find(
-      ({ vendors }) => vendors?._id === outSourceId
-    );
+    // const sentOut = [...collections].find(
+    //   ({ vendors }) => vendors?._id === outSourceId
+    // );
 
     localStorage.setItem(
       "inhouse",
       JSON.stringify({ deal, forms: { ..._forms } })
     );
-    localStorage.setItem(
-      "outsource_request",
-      JSON.stringify({
-        deal: { ...deal, ssx },
-        sentOut,
-        isRad: department === "RAD",
-        outsources: outsource,
-      })
-    );
-    localStorage.setItem("ssx", JSON.stringify(ssx));
+    // localStorage.setItem(
+    //   "outsource_request",
+    //   JSON.stringify({
+    //     deal: { ...deal, ssx },
+    //     sentOut,
+    //     isRad: department === "RAD",
+    //     outsources: outsource,
+    //   })
+    // );
+    // localStorage.setItem("ssx", JSON.stringify(ssx));
 
     const deptIndexMap = {
       LAB: 0,
@@ -171,15 +171,11 @@ export default function Modal() {
     }
 
     const haveOutSource =
-      outsource.length > 0 && (outSourceId || department === "RAD");
+      outsource.length > 0 && (outSourceId || department === "RAD")
+        ? true
+        : false;
 
     if (haveOutSource) {
-      window.open(
-        "/printout/request/outsource",
-        "OutsourceRequestForm",
-        "top=100px,left=0px,width=1050px,height=750px"
-      );
-
       if (department !== "RAD") {
         await saveRequest(
           `/commerce/pos/services/dealOutSources`,

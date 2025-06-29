@@ -167,17 +167,20 @@ export default function Select({
         label={!hideLabel && label}
         getValue={handleSelection}
         key={JSON.stringify(isEmpty(preValues) ? preValue : preValues)}
-        className={`${className} w-100`}
+        className={`${className} w-100 customizable-select-design`}
         multiple={multiple}
         color="primary"
       >
         {/* ✅ Ensure the selected value is displayed properly */}
         <MDBSelectInput
-          className={inputClassName}
+          className={`${inputClassName} customizable-selectInput-design`}
           selected={getSelectedText()}
         />
 
-        <MDBSelectOptions search={handleSearchDisabling()}>
+        <MDBSelectOptions
+          search={handleSearchDisabling()}
+          className="customizable-selectSearch-design"
+        >
           {collections?.map((choice, index) => {
             const key =
               keys && isArrayofObjects ? String(choice[keys]) || "" : choice;
