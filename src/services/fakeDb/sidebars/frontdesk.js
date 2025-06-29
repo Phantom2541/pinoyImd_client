@@ -43,6 +43,7 @@ import {
   Search,
 } from "../../../pages/templates";
 import { temperatures } from "../../redux/slices/diagnostics";
+import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 
 const frontdesk = [
   {
@@ -73,6 +74,12 @@ const frontdesk = [
         path: "/diagnostics/reports",
         icon: "file-alt",
         component: Reports,
+      },
+      {
+        name: "Sendouts",
+        path: "/diagnostics/sendouts",
+        icon: "arrow-left",
+        component: Sendouts,
       },
       {
         name: "Quality Management",
@@ -107,16 +114,16 @@ const frontdesk = [
     path: "/outsource",
     children: [
       {
-        name: "Logbook",
-        path: "/outsource/logbook",
-        icon: "balance-scale",
-        component: SOA,
-      },
-      {
         name: "Billing",
         path: "/outsource/billing",
         icon: "file-invoice",
         component: Billings,
+      },
+      {
+        name: "Logbook",
+        path: "/outsource/logbook",
+        icon: "balance-scale",
+        component: SOA,
       },
     ],
   },
@@ -160,7 +167,7 @@ const frontdesk = [
         name: "products",
         path: "/products",
         icon: "cogs",
-        component: Products
+        component: Products,
       },
       {
         name: "Machines",

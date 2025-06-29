@@ -5,14 +5,14 @@ const collapse = {
     const color =
       activeId !== index
         ? didHoverId === index
-          ? "text-primary"
+          ? "text-white"
           : "text-black"
         : "text-white";
     const border =
       activeId === index
         ? " bg-info transition"
         : didHoverId === index
-        ? "rounded border border-info bg-transparent ease-out"
+        ? "border-info bg-info ease-out"
         : "bg-transparent ease-out";
 
     return { border, color };

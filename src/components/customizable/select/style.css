@@ -1,6 +1,6 @@
-.custom-select-disabled.active {
-  pointer-events: none; /* Prevent interactions */
-  opacity: 0.2 !important; /* Ensure visibility */
+/* .custom-select-disabled.active {
+  pointer-events: none;
+  opacity: 0.2 !important;
   box-shadow: none !important;
   background: transparent !important;
 }
@@ -19,4 +19,23 @@ select.custom-select-disabled {
 
 .selectSearchInput {
   color: black !important;
+} */
+
+.customizable-select-design .caret {
+  color: white !important;
+}
+
+.customizable-select-design label {
+  color: white !important;
+  text-align: left;
+  transform: translateY(10%);
+}
+
+.customizable-selectSearch-design label {
+  color: grey !important;
+  transform: translateY(60%);
+}
+
+.customizable-selectInput-design {
+  color: white !important;
 }
