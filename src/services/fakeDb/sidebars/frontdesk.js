@@ -219,12 +219,6 @@ const frontdesk = [
             component: Chemistry,
           },
           {
-            name: "Electrolytes",
-            path: "/reports/laboratory/electrolytes",
-            icon: "vials",
-            component: Electrolyte,
-          },
-          {
             name: "Hematology",
             path: "/reports/laboratory/hematology",
             icon: "blood",

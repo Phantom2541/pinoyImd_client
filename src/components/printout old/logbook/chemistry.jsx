@@ -132,8 +132,8 @@ export default function ChemsPrint() {
   return (
     <div>
       <Banner
-        company={activePlatform?.companyId?.name}
-        branch={activePlatform?.name}
+        company={activePlatform?.branch?.companyId?.name}
+        branch={activePlatform?.branch?.name}
       />
 
       <h3 className="text-center">

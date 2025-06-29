@@ -127,13 +127,13 @@ export default function ChemsPrint() {
       );
     });
   };
-  //console.log(activePlatform);
+  console.log(activePlatform);
 
   return (
     <div>
       <Banner
-        company={activePlatform?.companyId?.name}
-        branch={activePlatform?.name}
+        company={activePlatform?.branch?.companyId?.name}
+        branch={activePlatform?.branch?.name}
       />
 
       <h3 className="text-center">

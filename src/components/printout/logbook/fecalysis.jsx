@@ -127,8 +127,8 @@ export default function FecalysisPrint() {
   return (
     <div>
       <Banner
-        company={activePlatform?.companyId?.name}
-        branch={activePlatform?.name}
+        company={activePlatform?.branch?.companyId?.name}
+        branch={activePlatform?.branch?.name}
       />
       <h3 className="text-center">
         Fecalysis Report for {Months[month - 1]} {year}
