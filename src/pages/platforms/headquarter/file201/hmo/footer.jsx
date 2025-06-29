@@ -5,11 +5,11 @@ import Pagination from "../../../../../components/pagination";
 import {
   SetMaxPage,
   SetActivePAGE,
-} from "../../../../../services/redux/slices/assets/persons/personnels";
+} from "../../../../../services/redux/slices/assets/companies";
 const Footer = () => {
   const { maxPage } = useSelector(({ auth }) => auth),
     { isLoading, totalPages, activePage } = useSelector(
-      ({ personnels }) => personnels
+      ({ companies }) => companies
     ),
     dispatch = useDispatch();
 
