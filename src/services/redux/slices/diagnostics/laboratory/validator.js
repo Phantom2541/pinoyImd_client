@@ -151,6 +151,8 @@ export const reduxSlice = createSlice({
       state.activeCOLAPSE = activeCOLAPSE;
     },
     SetTASK: (state, { payload }) => {
+      console.log("payload", payload);
+
       const { task } = payload;
       state.task = task;
       state.showModal = true;

@@ -57,7 +57,6 @@ export default function CollapseTable({ menu }) {
           }))
         : undefined,
     };
-    console.log("_task", _task);
     const services = Services.find(task.services);
     localStorage.setItem(
       "taskPrintout",
@@ -93,6 +92,11 @@ export default function CollapseTable({ menu }) {
       packages: obj?.packages,
     };
 
+    const handleModal = () => {
+      dispatch(SetTASK({ task }));
+      toggleModal();
+    };
+
     return (
       <tr key={task.key}>
         <td className="fw-bold">
@@ -117,13 +121,14 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>
           <MDBBtnGroup>
-            {console.log(menu?.branchId, activePlatform.branchId)}
             {menu?.branchId?._id === activePlatform.branchId && (
               <MDBBtn
                 title="Modal"
                 rounded
                 onClick={() => {
-                  dispatch(SetTASK({ task }));
+                  console.log("task", task);
+
+                  handleModal(task);
                 }}
                 color={obj?.hasDone ? "info" : "primary"}
                 size="sm"
@@ -203,6 +208,7 @@ export default function CollapseTable({ menu }) {
           )}
         </tbody>
       </MDBTable>
+      <Modal />
     </>
   );
 }
