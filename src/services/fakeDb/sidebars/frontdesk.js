@@ -160,7 +160,7 @@ const frontdesk = [
         name: "products",
         path: "/products",
         icon: "cogs",
-        component: Products
+        component: Products,
       },
       {
         name: "Machines",
@@ -209,12 +209,6 @@ const frontdesk = [
             path: "/reports/laboratory/chemistry",
             icon: "flask",
             component: Chemistry,
-          },
-          {
-            name: "Electrolytes",
-            path: "/reports/laboratory/electrolytes",
-            icon: "vials",
-            component: Electrolyte,
           },
           {
             name: "Hematology",

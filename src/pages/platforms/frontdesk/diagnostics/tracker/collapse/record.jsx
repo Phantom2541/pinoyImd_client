@@ -117,7 +117,8 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>
           <MDBBtnGroup>
-            {menu?.branchId === activePlatform.branchId && (
+            {console.log(menu?.branchId, activePlatform.branchId)}
+            {menu?.branchId?._id === activePlatform.branchId && (
               <MDBBtn
                 title="Modal"
                 rounded
