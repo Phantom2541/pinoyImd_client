@@ -1,0 +1,37 @@
+.input-inline {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.input-inline .form-control {
+  flex-grow: 1;
+}
+
+.icon-inline {
+  margin-left: 8px;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.icon-inline.cancel {
+  color: #dc3545;
+  margin-left: 5px;
+}
+
+.custom-header {
+  border: none !important;
+}
+
+.spin {
+  display: inline-block; /* Ensures proper rotation */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(100deg);
+  }
+}
