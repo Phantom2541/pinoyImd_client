@@ -67,26 +67,26 @@ export default function Machines() {
   const [delays, setDelays] = useState([]);
 
   // Measure layout after rendering
-  useLayoutEffect(() => {
-    const rowMap = new Map();
-    cardRefs.current.forEach((el, index) => {
-      if (el) {
-        const top = el.offsetTop;
-        if (!rowMap.has(top)) rowMap.set(top, []);
-        rowMap.get(top).push(index);
-      }
-    });
+  // useLayoutEffect(() => {
+  //   const rowMap = new Map();
+  //   cardRefs.current.forEach((el, index) => {
+  //     if (el) {
+  //       const top = el.offsetTop;
+  //       if (!rowMap.has(top)) rowMap.set(top, []);
+  //       rowMap.get(top).push(index);
+  //     }
+  //   });
 
-    const newDelays = Array(collections.length).fill("0ms");
+  //   const newDelays = Array(collections.length).fill("0ms");
 
-    rowMap.forEach((rowIndexes) => {
-      rowIndexes.forEach((cardIndex, i) => {
-        newDelays[cardIndex] = `${i * 150}ms`;
-      });
-    });
+  //   rowMap.forEach((rowIndexes) => {
+  //     rowIndexes.forEach((cardIndex, i) => {
+  //       newDelays[cardIndex] = `${i * 150}ms`;
+  //     });
+  //   });
 
-    setDelays(newDelays);
-  }, [collections.length, cardRefs, setDelays, delays]);
+  //   setDelays(newDelays);
+  // }, [collections.length, cardRefs, setDelays, delays]);
 
   useEffect(() => {
     const handleResize = () => {
