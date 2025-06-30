@@ -14,6 +14,7 @@ import { ENDPOINT } from "../../services/utilities";
 import Loading from "./loading";
 import Doctors from "./doctor";
 import Employees from "./employee";
+import Partners from "./partners";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
@@ -112,6 +113,7 @@ const Subscriber = ({ match }) => {
                   "home",
                   "features",
                   "doctors",
+                  "partners",
                   "employees",
                   "testimonials",
                   "contact",
@@ -242,14 +244,19 @@ const Subscriber = ({ match }) => {
               <Machines />
             </div>
             <hr className="mb-5" />
+
             <div id="doctors">
               <Doctors />
+            </div>
+            <hr className="mb-5" />
+            <div id="partners">
+              <Partners />
             </div>
             <hr className="mb-5" />
             <div id="testimonials">
               <Testimonials />
             </div>
-            <hr className="mb-4" />
+            <hr className="mb-5" />
             <div id="employees">
               <Employees match={match} />
             </div>
