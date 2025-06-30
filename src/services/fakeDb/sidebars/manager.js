@@ -261,9 +261,9 @@ const SidebarItems = [
         component: Employees,
       },
       {
-        name: "Heads",
-        title: "List of department heads.",
-        path: "/heads",
+        name: "Signatories",
+        title: "List of section signatories.",
+        path: "/signatories",
         icon: "user-check",
         component: Heads,
       },
