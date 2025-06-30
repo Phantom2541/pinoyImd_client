@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  MDBBadge,
   MDBBtn,
   MDBCard,
   MDBCardBody,
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
+  MDBListGroup,
+  MDBListGroupItem,
 } from "mdbreact";
 
 import CollapsableBody from "./body";
@@ -152,6 +155,8 @@ export default function Body() {
     });
   };
 
+  const [isPersonnelTab, setIsPersonnelTab] = useState(true);
+
   return (
     <MDBContainer
       style={{
@@ -168,9 +173,10 @@ export default function Body() {
               activeId,
               didHoverId
             );
+            const isOpen = activeId === actualIndex;
             return (
               <MDBCard
-                key={`branch-${actualIndex}`}
+                key={`branch-${actualIndex}-${branch._id}`}
                 style={{
                   boxShadow: "0px 0px 0px 0px",
                   backgroundColor: "white",
@@ -201,21 +207,50 @@ export default function Body() {
                     style={{ marginBottom: "-0.2rem" }}
                   >
                     <div className="d-flex">
-                      <MDBBtn color="primary" size="md" className="shadow-sm">
-                        Employee List
-                      </MDBBtn>
-                      <MDBBtn color="white" size="md" className="shadow-sm">
-                        Employee List
-                      </MDBBtn>
+                      {[
+                        {
+                          label: "Personnel List",
+                          value: branch?.personnels?.length,
+                          isSelected: isPersonnelTab,
+                        },
+                        {
+                          label: "Patient Categories",
+                          value: branch?.pc?.length,
+                          isSelected: !isPersonnelTab,
+                        },
+                      ].map(
+                        ({ label, value = 0, isSelected = false }, index) => (
+                          <MDBListGroup
+                            key={index}
+                            style={{
+                              height: "40px",
+                              overflowX: "auto",
+                              whiteSpace: "nowrap",
+                            }}
+                            className="d-flex flex-row"
+                            onClick={() => setIsPersonnelTab(!isPersonnelTab)}
+                          >
+                            <MDBListGroupItem
+                              style={{ minWidth: "100px" }}
+                              className={`d-flex justify-content-between  align-items-center rounded py-2 mx-2 h-100 cursor-pointer ${
+                                isSelected && "bg-primary text-white"
+                              }`}
+                            >
+                              <b className="mr-2"> {label}</b>
+                              <MDBBadge
+                                color={isSelected ? "light" : "primary"}
+                                className="pt-1"
+                                pill
+                              >
+                                {value ? value : ""}
+                              </MDBBadge>
+                            </MDBListGroupItem>
+                          </MDBListGroup>
+                        )
+                      )}
                     </div>
-                    {/* <div className="d-flex align-items-center">
-                      <span className="fw-bold mr-5">Personnel List</span>
-                      <PatientCategories
-                        branch={branch}
-                        isOpen={activeId === actualIndex}
-                      />
-                    </div> */}
-                    {activeId === actualIndex && (
+
+                    {isOpen && (
                       <Search
                         excludes={branch.personnels}
                         excludeKey="user._id"
@@ -225,10 +260,11 @@ export default function Body() {
                       />
                     )}
                   </div>
-                  <div>
-                    {/* <CollapsableBody branch={branch || {}} /> */}
-                    <PatientCategories />
-                  </div>
+                  {isPersonnelTab ? (
+                    <CollapsableBody branch={branch || {}} />
+                  ) : (
+                    <PatientCategories branch={branch || {}} isOpen={isOpen} />
+                  )}
                 </MDBCollapse>
               </MDBCard>
             );

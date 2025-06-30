@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import { axioKit, getAge } from "../../../../utilities";
+import { capitalize } from "lodash";
 
 const url = "commerce/pos/services/deals";
 const healthyClient = {
@@ -21,6 +22,8 @@ const initialState = {
    */
   heads: [],
   preferences: [],
+  patient: {},
+  privilege: -1,
   /**
    *  Active forms
    */
@@ -102,14 +105,32 @@ export const HEADS = createAsyncThunk(
   }
 );
 
+export const TRACKER = createAsyncThunk(
+  `${url}/tracker`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/tracker`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name: "validator",
   initialState,
   reducers: {
     SetVALIDATOR: (state, { payload }) => {
-      const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(
-        payload?.form
-      )
+      const form = capitalize(payload.form);
+      console.log("SetVALIDATOR", payload);
+      const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(form)
         ? "dealId"
         : "_id";
 
@@ -119,15 +140,16 @@ export const reduxSlice = createSlice({
         forms.findIndex((item) => item?._id === payload?._id);
 
       const updateCollection = (collections, index) => {
+        console.log("index", index);
         if (index > -1) {
           if (identifier === "_id") {
-            collections[index].diagnostic[payload.form] = payload;
+            collections[index].diagnostic[form] = payload;
           } else {
             const formIndex = findFormIndex(
-              collections[index].diagnostic[payload.form]
+              collections[index].diagnostic[form]
             );
             if (formIndex > -1) {
-              collections[index].diagnostic[payload.form][formIndex] = payload;
+              collections[index].diagnostic[form][formIndex] = payload;
             }
           }
         }
@@ -149,6 +171,11 @@ export const reduxSlice = createSlice({
       const { activeCOLAPSE, deal } = payload;
       state.selected = { ...deal };
       state.activeCOLAPSE = activeCOLAPSE;
+    },
+    SetPatient: (state, { payload }) => {
+      state.patient = payload;
+      const isSenior = getAge(payload.dob, true) > 59; // Use payload instead of customer
+      state.privilege = payload.privilege || (isSenior ? 2 : 0);
     },
     SetTASK: (state, { payload }) => {
       console.log("payload", payload);
@@ -200,6 +227,7 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
       .addCase(TASKS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -216,6 +244,22 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(TASKS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(TRACKER.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(TRACKER.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = state.filtered = payload;
+        state.isLoading = false;
+      })
+      .addCase(TRACKER.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -253,6 +297,7 @@ export const reduxSlice = createSlice({
 
 export const {
   SetSELECTED,
+  SetPatient,
   SetTASK,
   SetPARAMS,
   SetPrint,
