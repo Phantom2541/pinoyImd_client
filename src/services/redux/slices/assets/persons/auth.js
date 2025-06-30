@@ -156,6 +156,20 @@ export const reduxSlice = createSlice({
     UPLOADBAR: (state, data) => {
       state.progressBar = data.payload;
     },
+    SetActivePlatform: (state, action) => {
+      const { branch } = state.activePlatform;
+      const { companyId } = branch;
+
+      const _activePlatform = {
+        ...state.activePlatform,
+        branch: {
+          ...branch,
+          companyId: { ...companyId, hmo: action.payload },
+        },
+      };
+      state.activePlatform = _activePlatform;
+    },
+
     IMAGE: (state, { payload }) => {
       state.image = payload;
       state.progressBar = -1;
@@ -261,6 +275,7 @@ export const reduxSlice = createSlice({
           const activePlatform = {
             ...auth.activePlatform,
             branch,
+            company: branch?.companyId || {},
             access: [..._access, "patron"],
             department,
             role,
@@ -354,6 +369,7 @@ export const reduxSlice = createSlice({
           state.activePlatform = {
             ...activePlatform,
             branch,
+            company: branch?.companyId || {},
             access: [..._access],
             department,
             role,
@@ -404,7 +420,14 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SetCOMPANY, MAXPAGE, UPLOADBAR, IMAGE, NETWORK } =
-  reduxSlice.actions;
+export const {
+  RESET,
+  SetCOMPANY,
+  MAXPAGE,
+  UPLOADBAR,
+  IMAGE,
+  NETWORK,
+  SetActivePlatform,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

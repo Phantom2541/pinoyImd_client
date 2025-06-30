@@ -1,7 +1,13 @@
-import React from "react";
 import { MDBInput, MDBRow, MDBCol } from "mdbreact";
+import { useSelector } from "react-redux";
+import { Categories } from "../../../../../../services/fakeDb";
 
 export default function SRP({ handleChange, handleValue }) {
+  const { activePlatform = {} } = useSelector(({ auth }) => auth);
+  const { branch = {} } = activePlatform;
+  const { pc = [] } = branch;
+  const srpIndexs = [2, 3, 4];
+  const foundIndexs = [...pc].filter((pk) => srpIndexs.includes(pk));
   return (
     <>
       <MDBRow>
@@ -13,40 +19,28 @@ export default function SRP({ handleChange, handleValue }) {
             onChange={(e) => handleChange("opd", e.target.value)}
           />
         </MDBCol>
-        <MDBCol md="4">
-          <MDBInput
-            type="number"
-            label="Charity Ward"
-            value={handleValue("cw")}
-            onChange={(e) => handleChange("cw", e.target.value)}
-          />
-        </MDBCol>
-        <MDBCol md="4">
-          <MDBInput
-            type="number"
-            label="Emergency Room"
-            value={handleValue("er")}
-            onChange={(e) => handleChange("er", e.target.value)}
-          />
-        </MDBCol>
-      </MDBRow>
-      <MDBRow>
-        <MDBCol md="6">
-          <MDBInput
-            type="number"
-            label="Private Ward"
-            value={handleValue("pw")}
-            onChange={(e) => handleChange("pw", e.target.value)}
-          />
-        </MDBCol>
-        <MDBCol md="6">
+        {foundIndexs.map((pk) => {
+          const { name, abbr } = Categories[pk];
+          return (
+            <MDBCol md="4" key={pk}>
+              <MDBInput
+                type="number"
+                label={name}
+                value={handleValue(abbr)}
+                onChange={(e) => handleChange(abbr, e.target.value)}
+              />
+            </MDBCol>
+          );
+        })}
+
+        {/* <MDBCol md="6">
           <MDBInput
             type="number"
             label="Promo"
             value={handleValue("promo")}
             onChange={(e) => handleChange("promo", e.target.value)}
           />
-        </MDBCol>
+        </MDBCol> */}
       </MDBRow>
     </>
   );

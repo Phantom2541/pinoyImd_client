@@ -19,6 +19,7 @@ const Header = () => {
   const { month, year, filtered } = useSelector(({ controls }) => controls);
   const [template, setTemplate] = useState(1);
   const dispatch = useDispatch();
+  console.log("biltered", filtered);
 
   // Get unique templates and services that have data
   const availableTemplates = useMemo(() => {

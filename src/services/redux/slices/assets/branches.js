@@ -228,6 +228,13 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload;
+
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % state.maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (state.activePage > totalPAges) {
+          state.activePage = totalPAges;
+        }
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

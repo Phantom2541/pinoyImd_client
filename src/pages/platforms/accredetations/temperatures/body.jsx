@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { Line } from "react-chartjs-2";
 import { Chart } from "chart.js";
@@ -24,6 +24,7 @@ Chart.register(
 );
 
 const Body = () => {
+  const chartRef = useRef(null); // ✅ for printing
   const { collections = [] } = useSelector(({ temperatures }) => temperatures);
 
   const NORMAL_ROOM_RANGE = { min: 20, max: 25 };
@@ -32,9 +33,10 @@ const Body = () => {
   if (!collections.length) {
     return <p className="text-center mt-4">No temperature records found.</p>;
   }
-  const sortedCollections = [...collections].sort((a, b) => {
-    return new Date(a.createdAt) - new Date(b.createdAt);
-  });
+
+  const sortedCollections = [...collections].sort(
+    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+  );
 
   const labels = sortedCollections.map((item) => {
     const date = new Date(item.createdAt);
@@ -147,9 +149,59 @@ const Body = () => {
     },
   };
 
+  const printChart = () => {
+    if (chartRef.current) {
+      const chartCanvas = chartRef.current.canvas;
+      const chartImage = chartCanvas.toDataURL("image/png");
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write(`
+        <html>
+        <head>
+          <title>Print Chart</title>
+          <style>
+            @media print {
+              body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+              img { width: 100vw; height: 100vh; object-fit: contain; }
+            }
+            body { text-align: center; margin: 0; }
+            img { width: 100%; max-width: 1000px; }
+          </style>
+        </head>
+        <body>
+          <img src="${chartImage}" />
+          <script>
+            const img = document.querySelector("img");
+            img.onload = function() {
+              window.print();
+            };
+          </script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+  };
+
   return (
-    <div style={{ height: "400px" }}>
-      <Line data={data} options={options} />
+    <div style={{ width: "100%", height: "100%" }}>
+      <div style={{ height: "400px" }}>
+        <Line ref={chartRef} data={data} options={options} />
+      </div>
+      <div className="text-center" style={{ marginTop: "16px" }}>
+        <button
+          onClick={printChart}
+          style={{
+            padding: "8px 16px",
+            background: "#007bff",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          Print Chart
+        </button>
+      </div>
     </div>
   );
 };
