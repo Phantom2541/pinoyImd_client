@@ -10,22 +10,40 @@ const Chemistry = ({ data = {} }) => {
 
   return (
     <div style={{ fontSize: "12px", fontFamily: "Helvetica, sans-serif" }}>
-      {testList.map((test, index) => (
-        <MDBRow key={index}>
-          <MDBCol md="5">
-            <span>{Services.find(test)?.abbreviation}</span>
-          </MDBCol>
-          <MDBCol md="4">
-            <span
-              style={{
-                borderBottom: "1px dotted black",
-                display: "inline-block", // Ensures it's treated like a block-level element
-                width: "100%", // Make sure it occupies the available width
-              }}
-            ></span>
-          </MDBCol>
-        </MDBRow>
-      ))}
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+        }}
+      >
+        <thead>
+          <tr>
+            <th style={{ textAlign: "left", padding: "1px" }}>Test</th>
+            <th style={{ textAlign: "left", padding: "1px" }}>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {testList.map((test, index) => {
+            return (
+              <tr key={index}>
+                <td style={{ padding: "1px" }} className="text-left">
+                  <span>{Services.find(test)?.abbreviation}</span>
+                </td>
+                <td style={{ padding: "1px" }}>
+                  <span
+                    style={{
+                      borderBottom: "1px dotted black",
+                      display: "inline-block",
+                      width: "100%",
+                      minHeight: "1em",
+                    }}
+                  ></span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

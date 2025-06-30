@@ -10,11 +10,14 @@ import {
   SETSOURCES,
   RESET,
 } from "../../../../../services/redux/slices/assets/providers.js";
+
 import GenerateTask from "./generateTask/index.jsx";
+
+import Footer from "./footer.jsx";
 // import Printout from "./printout";
 
 export default function Sales() {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
     { isLoading } = useSelector(({ taskGenerator }) => taskGenerator),
     dispatch = useDispatch();
 
@@ -54,7 +57,7 @@ export default function Sales() {
   }, [token, dispatch, activePlatform]);
 
   return (
-    <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+    <MDBCard narrow className="" style={{ minHeight: "600px" }}>
       <Header />
       {isLoading ? (
         <div className="text-center mt-5">
@@ -63,8 +66,9 @@ export default function Sales() {
       ) : (
         <Body />
       )}
+
+      {!isLoading && <Footer />}
       <GenerateTask />
-      {/* <Printout /> */}
     </MDBCard>
   );
 }
