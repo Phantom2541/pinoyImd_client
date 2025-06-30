@@ -5,7 +5,6 @@ import {
   Hematology,
   Urinalysis,
   Chemistry,
-  Electrolyte,
   Serology,
   Xray,
   Ultrasound,
@@ -43,7 +42,6 @@ import {
   Search,
   Cards,
 } from "../../../pages/templates";
-import { temperatures } from "../../redux/slices/diagnostics";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 
 const frontdesk = [
@@ -162,7 +160,7 @@ const frontdesk = [
         name: "productsGenerics",
         path: "/productsGenerics",
         icon: "cogs",
-        // component: productsGenerics
+        component: productsGenerics,
       },
       {
         name: "products",
@@ -333,7 +331,7 @@ const frontdesk = [
             name: "Postanalytical",
             path: "/offers/consumables/postanalytical",
             icon: "thermometer-half",
-            component: Temperature,
+            // component: ,
           },
         ],
       },
