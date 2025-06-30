@@ -33,34 +33,56 @@ import { currency } from "../../../../../services/utilities";
 
 // declare your expected items
 const _form = {
-    description: "",
-    abbreviation: "",
-    capital: 0,
-    expenses: 0,
-    refund: 0,
-    opd: 0,
-    cw: 0,
-    er: 0,
-    promo: 0,
-    pw: 0,
-    hmo: [],
-    sc: 0,
-    ssc: 0,
-    vp: 0,
-    hasDiscount: true,
-    isProfile: false,
-    onPromo: false,
-    hasReseco: false,
-  },
-  tabs = ["SRP", "HMO", "Contracts", "Memberships", "Expenses", "Others"];
+  description: "",
+  abbreviation: "",
+  capital: 0,
+  expenses: 0,
+  refund: 0,
+  opd: 0,
+  cw: 0,
+  er: 0,
+  promo: 0,
+  pw: 0,
+  hmo: [],
+  sc: 0,
+  ssc: 0,
+  vp: 0,
+  hasDiscount: true,
+  isProfile: false,
+  onPromo: false,
+  hasReseco: false,
+};
+
+const COMPONENTS = {
+  SRP: SRP,
+  HMO: HMO,
+  Contracts: Contracts,
+  Memberships: Memberships,
+  Expenses: Expenses,
+  Others: Others,
+};
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { formSubmitted = false, isSuccess } = useSelector(({ menus }) => menus),
     [form, setForm] = useState(_form),
-    [activeTab, setActiveTab] = useState("menu-0"),
+    [activeTab, setActiveTab] = useState(0),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  const { branch = {} } = activePlatform;
+  const { pc = [] } = branch;
+
+  const _tabs = [
+    "SRP",
+    pc?.includes(6) && "HMO",
+    pc?.includes(8) && "Contracts",
+    pc?.includes(7) && "Memberships",
+    "Expenses",
+    "Others",
+  ];
+
+  const tabs = _tabs.filter((tab) => tab);
+  const components = tabs.map((tab) => COMPONENTS[tab]);
   useEffect(() => {
     const { hmo = [] } = selected || {};
     if (selected?._id)
@@ -116,7 +138,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     willCreate ? form[key] : form[key] || selected?.[key] || "";
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
-
   return (
     <MDBModal
       size="lg"
@@ -167,9 +188,9 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               <MDBNavItem key={`tab-${index}`}>
                 <MDBNavLink
                   link
-                  active={`menu-${index}` === activeTab}
+                  active={index === activeTab}
                   to="#!"
-                  onClick={() => setActiveTab(`menu-${index}`)}
+                  onClick={() => setActiveTab(index)}
                 >
                   {title}
                 </MDBNavLink>
@@ -178,31 +199,18 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           </MDBNav>
 
           <MDBTabContent activeItem={activeTab} className="card mb-4">
-            <MDBTabPane tabId={"menu-0"}>
-              <SRP handleValue={handleValue} handleChange={handleChange} />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-1"}>
-              <HMO form={form} setForm={setForm} />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-2"}>
-              <Contracts
-                handleValue={handleValue}
-                handleChange={handleChange}
-              />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-3"} className="m-0 p-0">
-              <Memberships
-                form={form}
-                handleValue={handleValue}
-                handleChange={handleChange}
-              />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-4"}>
-              <Expenses handleValue={handleValue} handleChange={handleChange} />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-5"}>
-              <Others handleValue={handleValue} handleChange={handleChange} />
-            </MDBTabPane>
+            {components.map((Component, index) => {
+              return (
+                <MDBTabPane key={`component-${index}`} tabId={index}>
+                  <Component
+                    form={form}
+                    setForm={setForm}
+                    handleValue={handleValue}
+                    handleChange={handleChange}
+                  />
+                </MDBTabPane>
+              );
+            })}
           </MDBTabContent>
 
           <div className="text-center mb-1-half">

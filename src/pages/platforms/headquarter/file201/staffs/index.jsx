@@ -26,7 +26,6 @@ export default function Staffs() {
       totalPages,
       maxPage,
     } = useSelector(({ personnels }) => personnels),
-    [status, setStatus] = useState(""),
     [searchKey, setSearchKey] = useState(""),
     [willCreate, setWillCreate] = useState(true),
     { addToast } = useToasts(),
@@ -39,31 +38,19 @@ export default function Staffs() {
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform]);
 
-  const arrangeStaffs = useCallback(
-    (status) => {
-      var _staffs = collections;
-      if (status) {
-        _staffs = [...collections].filter(({ status: stats }) => {
-          if (status === "active") {
-            return employment.isEmployed(stats);
-          } else {
-            return !employment.isEmployed(stats);
-          }
-        });
-      }
-      return _staffs;
-    },
-    [collections]
-  );
+  const arrangeStaffs = useCallback(() => {
+    return [...collections].filter(({ status: stats }) =>
+      employment.isEmployed(stats)
+    );
+  }, [collections]);
 
   useEffect(() => {
-    setStaffs(arrangeStaffs(status));
+    setStaffs(arrangeStaffs());
     document.getElementById("item-search").value = "";
-  }, [status, arrangeStaffs]);
+  }, [arrangeStaffs]);
 
   //Trigger for update
   const handleUpdate = (_) => {
-    // setSelected(selected);
     if (willCreate) {
       setWillCreate(false);
     }
@@ -89,10 +76,10 @@ export default function Staffs() {
     }
   };
 
-  const itemsPerPage = maxPage; // Number of items per page
+  const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = staffs.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = staffs.slice(startIndex, endIndex);
 
   return (
     <>
@@ -103,23 +90,11 @@ export default function Staffs() {
         >
           <span className="white-text mx-3">Staff List</span>
           <div className="d-flex align-items-center">
-            <div className="d-flex align-items-center">
-              <span className="mr-2">Status: </span>
-              <select
-                className="form-control mr-3 bg-light"
-                value={status}
-                onChange={({ target }) => setStatus(target.value)}
-              >
-                <option value={""}>All</option>
-                <option value={"active"}>Active</option>
-                <option value={"inactive"}>Inactive</option>
-              </select>
-            </div>
             <Search
               haveAction={false}
-              collections={arrangeStaffs(status)}
+              collections={arrangeStaffs()}
               setFiltered={(results) => setStaffs(results)}
-              reset={() => setStaffs(arrangeStaffs(status))}
+              reset={() => setStaffs(arrangeStaffs())}
             />
           </div>
         </MDBView>

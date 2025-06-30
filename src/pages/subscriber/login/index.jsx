@@ -113,19 +113,18 @@ export default function Login({ show, toggle = null }) {
         className={`${email ? "mx-auto" : "light-blue darken-3 white-text"}`}
       >
         {auth ? (
-          <div>
-            <img
-              loading="eager"
-              src={image}
-              onError={(e) => (e.target.src = Logo)}
-              style={{
-                width: "100px",
-                height: "100px",
-              }}
-              alt={`avatar-${auth._id}`}
-              className="rounded-circle img-responsive"
-            />
-          </div>
+          <img
+            loading="eager"
+            src={image}
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "contain",
+              borderRadius: image ? "50%" : "0px",
+            }}
+            onError={(e) => (e.target.src = Logo)}
+            alt={`avatar-${auth._id}`}
+          />
         ) : (
           "Login"
         )}

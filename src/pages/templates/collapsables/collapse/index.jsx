@@ -49,10 +49,10 @@ export default function Body() {
         return (
           <MDBCard
             key={`item-${actualIndex}`}
-            style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
+            style={{ boxShadow: "0px 0px 0px 0px" }}
           >
             <MDBCollapseHeader
-              className={border}
+              className={`${border} p-0`}
               onMouseLeave={() => setDidHoverId(-1)}
               onMouseEnter={() => setDidHoverId(actualIndex)}
               style={{ borderRadius: "50%" }}

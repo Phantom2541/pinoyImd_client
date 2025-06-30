@@ -38,6 +38,8 @@ export default function PosCard() {
     [source, setSource] = useState(),
     dispatch = useDispatch();
 
+  const { branch, company } = activePlatform;
+  console.log("company", company);
   useEffect(() => {
     const { abbr } = Categories[category];
     const _abbr = [
@@ -180,11 +182,14 @@ export default function PosCard() {
             value={category}
             onChange={({ target }) => handleCategory(Number(target.value))}
           >
-            {Categories.map(({ name, color }, index) => (
-              <option value={index} key={`category-${index}`} style={{ color }}>
-                {name}
-              </option>
-            ))}
+            {branch?.pc?.map((c, index) => {
+              const { name = "", color = "" } = Categories[c];
+              return (
+                <option value={c} key={`category-${index}`} style={{ color }}>
+                  {name}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div className="patient-form mt-2">
@@ -204,19 +209,18 @@ export default function PosCard() {
         </div>
         <div className="patient-form mt-2">
           {/* // wls */}
-          {category === 5 && (
-            <span>
-              HMO :
-              <MDBBadge
-                color="warning"
-                className="ml-1"
-                style={{ fontSize: "0.8rem" }}
-              >
-                {capitalize(HMO.getName(source?.hmo))}
-              </MDBBadge>
-            </span>
-          )}
           {category === 6 && (
+            <>
+              <span>HMO:</span>
+              <select>
+                <option value={""}>None</option>
+                {company?.hmo?.map(({ code }) => (
+                  <option>{HMO.getName(code)}</option>
+                ))}
+              </select>
+            </>
+          )}
+          {category === 7 && (
             <span>
               Membership :
               <MDBBadge
@@ -228,7 +232,7 @@ export default function PosCard() {
               </MDBBadge>
             </span>
           )}
-          {category === 7 && (
+          {category === 8 && (
             <span>
               Contract :
               <MDBBadge

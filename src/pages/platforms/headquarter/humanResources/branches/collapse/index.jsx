@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  MDBBtn,
   MDBCard,
   MDBCardBody,
   MDBCollapse,
@@ -12,6 +13,7 @@ import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse, fullName } from "../../../../../../services/utilities";
 import Search from "../../../../../../components/searchables/users";
+import PatientCategories from "./patientCategories";
 import Swal from "sweetalert2";
 import { Policy } from "../../../../../../services/fakeDb";
 import {
@@ -198,7 +200,21 @@ export default function Body() {
                     className="mx-1 d-flex align-items-center justify-content-between mt-2"
                     style={{ marginBottom: "-0.2rem" }}
                   >
-                    <span className="fw-bold">Personnel List</span>
+                    <div className="d-flex">
+                      <MDBBtn color="primary" size="md" className="shadow-sm">
+                        Employee List
+                      </MDBBtn>
+                      <MDBBtn color="white" size="md" className="shadow-sm">
+                        Employee List
+                      </MDBBtn>
+                    </div>
+                    {/* <div className="d-flex align-items-center">
+                      <span className="fw-bold mr-5">Personnel List</span>
+                      <PatientCategories
+                        branch={branch}
+                        isOpen={activeId === actualIndex}
+                      />
+                    </div> */}
                     {activeId === actualIndex && (
                       <Search
                         excludes={branch.personnels}
@@ -209,9 +225,10 @@ export default function Body() {
                       />
                     )}
                   </div>
-                  <MDBCardBody className="m-0 p-0 ">
-                    <CollapsableBody branch={branch || {}} />
-                  </MDBCardBody>
+                  <div>
+                    {/* <CollapsableBody branch={branch || {}} /> */}
+                    <PatientCategories />
+                  </div>
                 </MDBCollapse>
               </MDBCard>
             );
