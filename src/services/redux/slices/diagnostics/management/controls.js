@@ -130,7 +130,6 @@ export const reduxSlice = createSlice({
     },
 
     SetMONTH: (state, { payload }) => {
-      console.log("SetMONTH payload :", payload);
       if (payload === "next") {
         if (state.month === 12) {
           state.month = 1;
