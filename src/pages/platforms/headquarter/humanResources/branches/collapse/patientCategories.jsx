@@ -28,7 +28,6 @@ const PatientCategories = ({ branch, isOpen = false }) => {
   }, [formSubmitted, isSuccess, isOpen, dispatch]);
 
   const handleUpdate = (pk) => {
-    alert(JSON.stringify(branch));
     const _categories = [...categories];
     const removeIndex = _categories.indexOf(pk);
     setIndexUpdated(pk);
@@ -37,7 +36,6 @@ const PatientCategories = ({ branch, isOpen = false }) => {
     } else {
       _categories.unshift(pk);
     }
-    // setCategories(_categories);
     dispatch(
       UPDATE({ token, data: { _id: branch._id, pc: _categories } })
     ).then(() => {

@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCard, MDBCollapse } from "mdbreact";
 import TaskHeader from "./header";
 import TaskBody from "./body";

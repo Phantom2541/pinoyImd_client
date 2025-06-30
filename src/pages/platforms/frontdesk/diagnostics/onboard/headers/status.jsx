@@ -1,5 +1,5 @@
 import React from "react";
-const choices = ["All", "onboarded", "on process"];
+const choices = ["All", "generated", "on process"];
 
 const Status = ({ setStatus, status }) => {
   const handleChange = (value) => setStatus(value);

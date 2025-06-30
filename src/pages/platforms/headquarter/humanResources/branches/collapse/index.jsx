@@ -156,6 +156,8 @@ export default function Body() {
   };
 
   const [isPersonnelTab, setIsPersonnelTab] = useState(true);
+  const [selectedBranch, setSelectedBranch] = useState({});
+  console.log("branch", selectedBranch);
 
   return (
     <MDBContainer
@@ -192,13 +194,16 @@ export default function Body() {
                     branch={branch}
                     isOpen={activeId === actualIndex}
                     textColor={color}
-                    setActiveId={setActiveId}
+                    setActiveId={(id) => {
+                      setActiveId(id);
+                      setSelectedBranch(branch);
+                    }}
                     index={actualIndex}
                   />
                 </MDBCollapseHeader>
 
                 <MDBCollapse
-                  id={`collapse-${actualIndex}`}
+                  id={`collapse-${actualIndex}-${branch._id}`}
                   className="  m-0 p-0 border border-black"
                   isOpen={actualIndex === activeId}
                 >
@@ -260,10 +265,19 @@ export default function Body() {
                       />
                     )}
                   </div>
+                  {branch._id}
                   {isPersonnelTab ? (
-                    <CollapsableBody branch={branch || {}} />
+                    <CollapsableBody
+                      branch={branch || {}}
+                      key={`${branch._id}-collapse-body`}
+                    />
                   ) : (
-                    <PatientCategories branch={branch || {}} isOpen={isOpen} />
+                    <PatientCategories
+                      branch={selectedBranch || {}}
+                      key={`${branch._id}-categories`}
+                      isOpen={isOpen}
+                      index={index}
+                    />
                   )}
                 </MDBCollapse>
               </MDBCard>

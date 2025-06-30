@@ -1,35 +1,53 @@
-import React from "react";
-import { getAge, fullName as nameFormatter } from "../../../services/utilities";
-import { MDBRow, MDBCol } from "mdbreact";
-import { isEmpty } from "lodash";
-// import { Categories } from "../../services/fakeDb";
-export default function Header({ patient, category, ssx = "" }) {
-  const { fullName: pFull, isMale = false, dob = "" } = patient;
+import { useSelector } from "react-redux";
+
+export default function Header({ date, dealId }) {
+  const { company, activePlatform } = useSelector(({ auth }) => auth);
 
   return (
-    <div className="px-1">
-      <MDBRow>
-        <MDBCol md="12" style={{ alignItems: "baseline" }} className="d-flex">
-          Name:&nbsp;
-          <h5 className="mb-0 fw-bold">
-            <u>{nameFormatter(pFull, true)}</u>
-          </h5>
-        </MDBCol>
-      </MDBRow>
+    <>
+      <h4
+        onClick={() => {
+          window.print();
+          window.close();
+        }}
+        style={{ marginBottom: -5 }}
+        className="fw-bold"
+      >
+        {company?.name}
+      </h4>
+      <h6 className="mb-0">{company?.subName}</h6>
 
-      <MDBRow>
-        <MDBCol style={{ alignItems: "baseline" }} md="" className="text-left">
-          <span style={{ width: "30%" }}>
-            Age:&nbsp;{getAge(dob)} | Gender: {isMale ? "Male" : "Female"}
-          </span>
-        </MDBCol>
-        <MDBCol style={{ alignItems: "baseline" }} className="text-right">
-          <span>Category:&nbsp;{category} </span>
-        </MDBCol>
-      </MDBRow>
-      <h5>
-        Sign and Symptoms: <span>{!isEmpty(ssx) ? ssx : ""}</span>
-      </h5>
-    </div>
+      <p className="mb-0">
+        <small>{activePlatform?.branch?.name} Branch</small>
+      </p>
+      <small className="fw-bold">
+        {new Date(date).toDateString()}, {new Date(date).toLocaleTimeString()}
+      </small>
+
+      <div
+        style={{
+          border: "1px dashed #000",
+          borderRadius: "5px",
+          padding: "10px",
+          position: "relative",
+          marginTop: "7.5px",
+        }}
+      >
+        <small
+          style={{
+            position: "absolute",
+            fontWeight: "bold",
+            top: "-10px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "#eee",
+            padding: "0 7.5px",
+          }}
+        >
+          Transaction ID
+        </small>
+        12312312312312312312312
+      </div>
+    </>
   );
 }
