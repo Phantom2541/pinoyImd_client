@@ -50,8 +50,8 @@ import {
   ledger,
   soa,
 } from "./slices/finance";
-
-import { appointments, quest } from "./slices/diagnostics";
+// appointments;
+import { quest } from "./slices/diagnostics";
 import {
   products,
   productsGenerics,
@@ -59,7 +59,7 @@ import {
   medicines,
   generics,
   mentainance,
-  attendances
+  attendances,
 } from "./slices/market";
 import portal from "./slices/emr/portal";
 

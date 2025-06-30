@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { MDBAnimation } from "mdbreact";
 import "./style.css";
-import LIS from "./../../../assets/LIS.jpg";
+// import LIS from "./../../../assets/LIS.jpg";
 import ECG from "./../../../assets/subscriber/Electrocardiogram.jpg";
 import MRI from "./../../../assets/subscriber/MRI.jpg";
 import CT from "./../../../assets/subscriber/CT.jpg";
@@ -86,7 +86,7 @@ export default function Machines() {
     });
 
     setDelays(newDelays);
-  }, [collections.length]);
+  }, [collections.length, cardRefs, setDelays, delays]);
 
   useEffect(() => {
     const handleResize = () => {
