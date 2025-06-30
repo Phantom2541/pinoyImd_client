@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBPagination, MDBPageItem, MDBPageNav } from "mdbreact";
 import Swal from "sweetalert2";
 

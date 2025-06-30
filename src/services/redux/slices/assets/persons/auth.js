@@ -261,6 +261,7 @@ export const reduxSlice = createSlice({
           const activePlatform = {
             ...auth.activePlatform,
             branch,
+            company: branch?.companyId || {},
             access: [..._access, "patron"],
             department,
             role,
@@ -354,6 +355,7 @@ export const reduxSlice = createSlice({
           state.activePlatform = {
             ...activePlatform,
             branch,
+            company: branch?.companyId || {},
             access: [..._access],
             department,
             role,
