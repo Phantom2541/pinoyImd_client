@@ -41,6 +41,7 @@ import {
   Calendar,
   DragDrop,
   Search,
+  Cards,
 } from "../../../pages/templates";
 import { temperatures } from "../../redux/slices/diagnostics";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
@@ -218,12 +219,6 @@ const frontdesk = [
             component: Chemistry,
           },
           {
-            name: "Electrolytes",
-            path: "/reports/laboratory/electrolytes",
-            icon: "vials",
-            component: Electrolyte,
-          },
-          {
             name: "Hematology",
             path: "/reports/laboratory/hematology",
             icon: "blood",
@@ -383,7 +378,7 @@ const frontdesk = [
         name: "Cards",
         path: "/templates/cards",
         icon: "card",
-        // component: Card, // add your component here
+        component: Cards,
       },
     ],
   },
