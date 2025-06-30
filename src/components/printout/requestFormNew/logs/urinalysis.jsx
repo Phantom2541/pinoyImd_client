@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBRow, MDBCol } from "mdbreact";
+import { MDBRow, MDBCol, MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
 
 const UrinalysisData = [
   ["Color", "SG", "pH"],
@@ -17,40 +17,56 @@ const UrinalysisData = [
 const Urinalysis = () => {
   return (
     <div style={{ fontSize: "12px", fontFamily: "Helvetica, sans-serif" }}>
-      {UrinalysisData.map((group, index) => (
-        <div key={index} style={{ marginBottom: "5px" }}>
-          {group.map((test, subindex) => (
-            <MDBRow
-              key={subindex}
-              style={{ display: "flex", alignItems: "center" }}
-            >
-              <MDBCol md="4">
-                <span>{test} </span>
-              </MDBCol>
-              <MDBCol md="4">
-                <span
-                  style={{
-                    borderBottom: "1px dotted black",
-                    display: "block",
-                    flexGrow: 1, // Allows it to expand naturally
-                    minHeight: "1em", // Ensures consistent height
-                  }}
-                ></span>
-              </MDBCol>
-            </MDBRow>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+        }}
+      >
+        <thead>
+          <tr>
+            <th style={{ textAlign: "left", padding: "1px" }}>Test</th>
+            <th style={{ textAlign: "left", padding: "1px" }}>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {UrinalysisData.map((group, index) => (
+            <React.Fragment key={index}>
+              {group.map((test, subindex) => (
+                <tr key={subindex}>
+                  <td style={{ padding: "1px" }} className="text-left">
+                    {test}
+                  </td>
+                  <td style={{ padding: "1px" }}>
+                    <span
+                      style={{
+                        borderBottom: "1px dotted black",
+                        display: "inline-block",
+                        width: "100%",
+                        minHeight: "1em",
+                      }}
+                    ></span>
+                  </td>
+                </tr>
+              ))}
+              {index !== UrinalysisData.length - 1 && (
+                <tr>
+                  <td colSpan="2">
+                    <hr
+                      style={{
+                        border: "none",
+                        borderTop: "1px dashed #000",
+                        height: 0,
+                      }}
+                      className={`my-1 `}
+                    />
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
           ))}
-          {/* Add a separator except for the last group */}
-          {index !== UrinalysisData.length - 1 && (
-            <MDBRow>
-              <MDBCol md="8">
-                <div
-                  style={{ borderTop: "1px solid black", margin: "5px 0" }}
-                ></div>
-              </MDBCol>
-            </MDBRow>
-          )}
-        </div>
-      ))}
+        </tbody>
+      </table>
     </div>
   );
 };

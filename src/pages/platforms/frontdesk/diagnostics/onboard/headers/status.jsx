@@ -1,15 +1,27 @@
-import React from "react";
-const choices = ["All", "generated", "on process"];
+import { useDispatch, useSelector } from "react-redux";
+import { SetSTATUS } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
+import { capitalize } from "lodash";
 
-const Status = ({ setStatus, status }) => {
-  const handleChange = (value) => setStatus(value);
+const choices = ["All", "Generated", "On process"];
+
+const Status = () => {
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { activeStatus } = useSelector(({ taskGenerator }) => taskGenerator),
+    dispatch = useDispatch();
 
   return (
     <div className="d-flex align-items-center">
       <select
-        onChange={({ target }) => handleChange(target.value)}
+        value={capitalize(activeStatus)}
+        onChange={({ target }) =>
+          dispatch(
+            SetSTATUS({
+              status: target.value,
+              department: activePlatform?.department,
+            })
+          )
+        }
         className="form-control w-auto cursor-pointer pr-5"
-        value={status}
       >
         {choices?.map((choice, index) => {
           return (

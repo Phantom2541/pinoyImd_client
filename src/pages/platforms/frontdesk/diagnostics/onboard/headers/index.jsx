@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
-
-import Sourcing from "./sourcing.jsx";
 import Status from "./status.jsx";
-import Search from "./search.jsx";
-
 import {
   BROWSE,
   RESET,
+  SetFILTERED,
+  SetACTIVE_STATUS,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator.js";
+import Search from "../../../../../../components/searchables/search.jsx";
 
-export default function Header({ view, setView }) {
+export default function Header() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ taskGenerator }) => taskGenerator),
     [status, setStatus] = useState("All"),
-    [searchKey, setSearchKey] = useState(""),
     dispatch = useDispatch();
 
   //Initial Browse and Fetch Data
@@ -58,14 +56,20 @@ export default function Header({ view, setView }) {
         </span>
       </div>
 
-      <div className="text-right d-flex items-center">
-        <span className="mr-3 font-weight-bold">Status:</span>
-        <Status setStatus={setStatus} status={status} />
-        <span className="mx-3 font-weight-bold">Sources:</span>
-        <Sourcing onChange={setView} view={view} />
-      </div>
-      <div className="text-right">
-        <Search searchKey={searchKey} setSearchKey={setSearchKey} didSearch />
+      <div className="d-flex align-items-center">
+        <div className=" d-flex align-items-center mr-4">
+          <span className="mr-1 ">Status:</span>
+          <Status setStatus={setStatus} status={status} />
+        </div>
+        <Search
+          collections={collections}
+          haveAction={false}
+          setFiltered={(results) => dispatch(SetFILTERED(results))}
+          reset={() => {
+            dispatch(SetFILTERED(collections));
+            dispatch(SetACTIVE_STATUS("All"));
+          }}
+        />
       </div>
     </MDBView>
   );

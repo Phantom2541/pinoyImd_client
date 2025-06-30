@@ -1,27 +1,26 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { MDBTypography, MDBRow, MDBCardBody } from "mdbreact";
 import Card from "./card";
 
 const Body = () => {
-  const { collections, isLoading } = useSelector(
+  const { filtered, isLoading, maxPage, activePage } = useSelector(
     ({ taskGenerator }) => taskGenerator
   );
 
+  const itemsPerPage = maxPage;
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = filtered.slice(startIndex, endIndex);
   return (
     <MDBCardBody>
-      {!collections?.length && !isLoading && (
+      {!paginatedData?.length && !isLoading && (
         <MDBTypography noteColor="info" note>
           Tasks are empty
         </MDBTypography>
       )}
       <MDBRow>
-        {collections?.map((sale, index) => (
-          <Card
-            item={sale}
-            index={collections.length - 1 - index}
-            key={index}
-          />
+        {paginatedData?.map((sale, index) => (
+          <Card item={sale} index={filtered.length - 1 - index} key={index} />
         ))}
       </MDBRow>
     </MDBCardBody>

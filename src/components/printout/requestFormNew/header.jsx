@@ -46,7 +46,7 @@ export default function Header({ date, dealId }) {
         >
           Transaction ID
         </small>
-        12312312312312312312312
+        {dealId}
       </div>
     </>
   );
