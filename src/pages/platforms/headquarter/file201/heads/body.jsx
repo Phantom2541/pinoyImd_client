@@ -78,7 +78,7 @@ export default function Body() {
   return (
     <div className="container mt-4">
       {heads.map(({ _id, department, section, user }, index) => {
-        const { email } = user;
+        const { email, prc } = user;
 
         return (
           <div
@@ -87,7 +87,7 @@ export default function Body() {
             style={{ backgroundColor: "#fff", maxWidth: 600 }}
           >
             {/* Left: Profile Image */}
-            <div className="me-3">
+            <div className="me-5" style={{ marginRight: "80px" }}>
               <img
                 src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
                 alt="Profile"
@@ -148,10 +148,29 @@ export default function Body() {
                 {fullName(user.fullName)}
               </h5>
               {/* PRC Info */}
-              {user?.prc && (
+              {prc ? (
                 <p className="mt-2 small text-secondary">
-                  PRC ID: <strong>{user.prc?.id}</strong> | Expiration:{" "}
-                  <strong>{user.prc?.to}</strong>
+                  PRC ID: <strong>{prc?.id}</strong>
+                  {prc?.to ? (
+                    <strong
+                      className={
+                        new Date(prc.to) < new Date() ? "text-danger" : ""
+                      }
+                    >
+                      | Expiration: {prc.to}
+                    </strong>
+                  ) : (
+                    <strong className="text-warning">
+                      | No expiration date set
+                    </strong>
+                  )}
+                </p>
+              ) : (
+                <p className="mt-2 small text-danger">
+                  <strong>PRC license is required</strong> for this user to be
+                  assigned as a head. This is a{" "}
+                  <strong>DOH qualification</strong> for publishing laboratory
+                  results.
                 </p>
               )}
             </div>
