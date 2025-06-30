@@ -127,24 +127,26 @@ const SidebarItems = [
         component: Payments,
       },
       {
-        name: "Vouchers",
-        title: "Generated vouchers from clinic sales.",
+        name: "Client SOA Generator",
+        title:
+          "Generate Statements of Account for HMO, Contract, and Membership Clients",
         path: "/vouchers",
-        icon: "receipt",
+        icon: "file-invoice",
         component: Vouchers,
       },
       {
-        name: "SOA",
-        title: "Statements of account from transactions.",
+        name: "SOA Records",
+        title: "View and track all generated Statements of Account",
         path: "/soa",
-        icon: "balance-scale",
+        icon: "folder-open",
         component: SOA,
       },
       {
-        name: "Rebates",
-        title: "Special deals or partnerships managed monthly.",
+        name: "Referral Rebates",
+        title:
+          "Generate and track monthly rebates for referring doctors and companies",
         path: "/reseco",
-        icon: "handshake",
+        icon: "hand-holding-usd",
         component: Reseco,
       },
       {
@@ -155,10 +157,11 @@ const SidebarItems = [
         component: Payrolls,
       },
       {
-        name: "Clearance Pay",
-        title: "Final pay for cleared staff.",
+        name: "Final Pay",
+        title:
+          "Compute and process final pay for resigned or separated employees",
         path: "/clearance-pay",
-        icon: "scroll",
+        icon: "file-export",
         component: ClearancePay,
       },
     ],
@@ -261,9 +264,9 @@ const SidebarItems = [
         component: Employees,
       },
       {
-        name: "Heads",
-        title: "List of department heads.",
-        path: "/heads",
+        name: "Signatories",
+        title: "List of section signatories.",
+        path: "/signatories",
         icon: "user-check",
         component: Heads,
       },
