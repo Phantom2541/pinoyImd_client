@@ -7,7 +7,7 @@ import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
 import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 import Swal from "sweetalert2";
 const Body = () => {
-  const { filtered, activePage, maxPage, isSuccess } = useSelector(
+  const { filtered, activePage, maxPage } = useSelector(
       ({ companies }) => companies
     ),
     { token, activePlatform } = useSelector(({ auth }) => auth),

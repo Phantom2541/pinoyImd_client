@@ -20,7 +20,7 @@ export default function Modal() {
   const { showModal, selected, willUPDATE, isLoading, hmo } = useSelector(
       ({ companies }) => companies
     ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     // { addToast } = useToasts(),
     [collections, setCollections] = useState([]),
