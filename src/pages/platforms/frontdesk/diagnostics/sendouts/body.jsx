@@ -43,14 +43,14 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { sendouts = {}, outsource = {}, customerId } = item;
+          const { sendouts = {}, outsource = {}, customerId = {} } = item;
           const { name = "", displayname = "" } = outsource;
           const baseOutsource = name || displayname;
           return (
             <tr key={index}>
               <td>{index + startIndex + 1}</td>
               <td>{baseOutsource}</td>
-              <td>{fullName(customerId.fullName)}</td>
+              <td>{fullName(customerId?.fullName)}</td>
               <td className="mb-1">
                 {sendouts?.servicesId
                   ?.map((id) => Services.getAbbr(id))

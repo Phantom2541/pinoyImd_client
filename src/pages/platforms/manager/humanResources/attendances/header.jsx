@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { BROWSE, SetCREATE, SetFILTER  } from "../../../../../services/redux/slices/market/attendances"
+import {
+  BROWSE,
+  SetFILTER,
+} from "../../../../../services/redux/slices/market/attendances";
 import { Search } from "../../../../../components/searchables";
 
 const Header = () => {
   const { collections } = useSelector(({ attendances }) => attendances);
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-  dispatch = useDispatch();
+    dispatch = useDispatch();
 
-  useEffect(() => { dispatch(BROWSE({ token, params: { branchId: activePlatform.branchId } })); }
-    , [token, dispatch, activePlatform]);
-  
-  
+  useEffect(() => {
+    dispatch(BROWSE({ token, params: { branchId: activePlatform.branchId } }));
+  }, [token, dispatch, activePlatform]);
+
   return (
     <MDBView
       cascade
@@ -26,12 +29,9 @@ const Header = () => {
       <div>
         <div className="text-right d-flex items-center">
           <Search
-          collections={collections}
+            collections={collections}
             setFiltered={(huh) => dispatch(SetFILTER(huh))}
-            reset={()=>dispatch(SetFILTER(collections))}
-          
-          
-          
+            reset={() => dispatch(SetFILTER(collections))}
           />
         </div>
       </div>

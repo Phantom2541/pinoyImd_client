@@ -8,8 +8,7 @@ import { ENDPOINT } from "../../../services/utilities";
 export default function Employees({ match }) {
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
 
-  const [staffs, setStaffs] = useState([]),
-    dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [transitioning, setTransitioning] = useState(false);
   const [direction, setDirection] = useState("next");
   const [currentPage, setCurrentPage] = useState(0);

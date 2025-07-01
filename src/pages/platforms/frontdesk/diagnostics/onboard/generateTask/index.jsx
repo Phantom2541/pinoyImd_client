@@ -34,7 +34,6 @@ export default function Modal() {
     dispatch = useDispatch();
 
   const toggle = () => {
-    console.log("toggle clickeddd");
     dispatch(TOGGLE());
   };
 
@@ -64,14 +63,15 @@ export default function Modal() {
     const _outsource = getIDS(outsource);
     const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);
     const _forms = Services.getTemplates(inhouseIDS, department);
-    const { _id, customerId, ssx, forms: oldForms } = deal;
+    const { _id, customerId, ssx, forms: oldForms, pn } = deal;
+
     // const sentOut = [...collections].find(
     //   ({ vendors }) => vendors?._id === outSourceId
     // );
 
     localStorage.setItem(
       "inhouse",
-      JSON.stringify({ deal, forms: { ..._forms } })
+      JSON.stringify({ deal, forms: { ..._forms }, isResult: false })
     );
     // localStorage.setItem(
     //   "outsource_request",
@@ -107,6 +107,7 @@ export default function Modal() {
       const lowercaseKey = key.toLowerCase();
       let bucket = _forms[key];
       let requestData = {
+        pn,
         _id,
         packages: bucket,
         customerId: customerId?._id,
@@ -120,6 +121,7 @@ export default function Modal() {
             bucket = bucket.filter((item) => !panel.includes(item));
             await saveRequest(lowercaseKey, {
               dealId: _id,
+              pn,
               packages: panelAvail,
               customerId: customerId?._id,
               branchId: activePlatform.branchId,
@@ -131,6 +133,7 @@ export default function Modal() {
               async (test) =>
                 await saveRequest(lowercaseKey, {
                   dealId: _id,
+                  pn,
                   packages: [test],
                   customerId: customerId?._id,
                   branchId: activePlatform.branchId,
@@ -144,6 +147,7 @@ export default function Modal() {
           await Promise.all(
             bucket.map((test) =>
               saveRequest(lowercaseKey, {
+                pn,
                 dealId: _id,
                 packages: test,
                 hasRead: false,
@@ -223,8 +227,6 @@ export default function Modal() {
     );
     dispatch(TOGGLE());
   };
-
-  console.log("deal", deal);
 
   return (
     <MDBModal isOpen={show} backdrop toggle={toggle} size="lg">

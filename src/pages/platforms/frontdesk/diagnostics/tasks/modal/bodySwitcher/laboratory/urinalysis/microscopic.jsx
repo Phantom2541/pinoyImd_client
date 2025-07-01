@@ -1,27 +1,28 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  SetPARAMS,
+  SetTASK,
+} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 import { MDBCol, MDBRow } from "mdbreact";
-// import { Select } from "./../../../../../../../../../components/customizable";
 import {
   MicroscopicInRange,
   MicroscopicResultInWord,
 } from "./../../../../../../../../../services/fakeDb";
 
 export default function Microscopic() {
-  const { task } = useSelector(({ validator }) => validator),
-    dispatch = useDispatch();
+  const { task } = useSelector(({ validator }) => validator);
+  const dispatch = useDispatch();
   const { me } = task;
-  const handleSelectChange = (index, value) => {
+
+  const handleChange = (index, value) => {
     const _me = [...me];
     _me[index] = Number(value);
     dispatch(SetPARAMS({ key: "me", value: _me }));
     dispatch(SetTASK({ task: { ...task, me: _me } }));
-    
   };
 
-  const microscopicSelects = [
+  const microscopicLabels = [
     "Pus Cells",
     "Red Cells",
     "Epithelial Cells",
@@ -32,33 +33,49 @@ export default function Microscopic() {
 
   return (
     <MDBRow className="text-left">
-      {microscopicSelects.map((label, index) => {
-        const choices =
-          index > 1 ? MicroscopicResultInWord : MicroscopicInRange;
+      {microscopicLabels.map((label, index) => {
+        const isWordResult = index > 1; // indices 2‑5 use words
+        const choices = isWordResult
+          ? MicroscopicResultInWord
+          : MicroscopicInRange;
 
         return (
           <MDBCol key={`${label}-${index}`} md="6">
-            {/* <Select
-              disableSearch
-              collections={choices}
-              label={label}
-              preValue={String(me[index])}
-              texts="str"
-              values="index"
-              onChange={(e) => handleSelectChange(index, Number(e))}
-            /> */}
-            <label htmlFor="">{ label}</label>
-             <select value={me[index]} className="form-control mb-2" onChange={(e) => handleSelectChange(index, e.target.value)}>
-            <option ></option>
-            {choices.map((choice, i) => {
-              
-             return (
+            <label className="d-block mb-1">{label}</label>
 
-              <option key={i} value={i}>
-                {choice}
-              </option>
-            )})}  
-          </select>
+            {/* WORD RESULTS → RADIO BUTTONS */}
+            {isWordResult ? (
+              choices.map((choice, i) => (
+                <div className="form-check mb-1" key={i}>
+                  <input
+                    type="radio"
+                    className="form-check-input"
+                    id={`${label}-${i}`}
+                    name={label} // groups radios per label
+                    value={i}
+                    checked={me[index] === i}
+                    onChange={(e) => handleChange(index, e.target.value)}
+                  />
+                  <label className="form-check-label" htmlFor={`${label}-${i}`}>
+                    {choice}
+                  </label>
+                </div>
+              ))
+            ) : (
+              /* RANGE RESULTS → SELECT */
+              <select
+                value={me[index]}
+                className="form-control mb-2"
+                onChange={(e) => handleChange(index, e.target.value)}
+              >
+                <option value=""></option>
+                {choices.map((choice, i) => (
+                  <option key={i} value={i}>
+                    {choice}
+                  </option>
+                ))}
+              </select>
+            )}
           </MDBCol>
         );
       })}

@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { MDBTypography } from "mdbreact";
 import Collapse from "./collapse";
 
 export default function Body() {
-  const { collections, patient } = useSelector(({ deals }) => deals),
+  const { collections, patient } = useSelector(({ validator }) => validator),
     [activeCollapse, setActiveCollapse] = useState(""),
+    [patients, setPatients] = useState([]),
     [didHoverID, setDidHoverID] = useState(-1);
+
+  useEffect(() => {
+    setPatients([...collections]);
+  }, [collections]);
 
   if (!patient?._id)
     return (
@@ -24,7 +29,7 @@ export default function Body() {
 
   return (
     <>
-      {collections.map((task, index) => (
+      {patients.map((task, index) => (
         <Collapse
           key={task?._id}
           task={task}

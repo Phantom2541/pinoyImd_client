@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"; 
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
 const url = "/commerce/merchandise/products";
@@ -226,19 +226,13 @@ export const reduxSlice = createSlice({
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-          console.log("payload", payload);
-          
+        console.log("payload", payload);
+
         const index = state.collections.findIndex(
           (item) => item?._id === action.payload
         );
 
-        const fIndex = state.filtered.findIndex(
-          (item) => item._id === payload
-        );
-        const findex = state.filtered.findIndex(
-          (item) => item?._id === action.payload.payload
-        );
-
+        const fIndex = state.filtered.findIndex((item) => item._id === payload);
         state.collections.splice(index, 1);
         state.filtered.splice(fIndex, 1);
         state.message = success;

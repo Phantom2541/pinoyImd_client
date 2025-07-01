@@ -7,7 +7,7 @@ import { MDBBtn, MDBIcon } from "mdbreact";
 export default function Search({
   collections = [],
   hideButton = false,
-  haveAction = false,
+  haveAction = true,
   setFiltered = () => {},
   reset = () => {},
   handleAdd = () => {},
@@ -16,11 +16,13 @@ export default function Search({
     [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    if (!hideButton) setShowBtn(true);
+    if (!hideButton && haveAction) setShowBtn(true);
   }, [hideButton]);
+
   const debouncedSearch = useMemo(() => {
     return debounce((key) => {
       const items = globalSearch(collections, key);
+      console.log("items", items);
       if (hideButton && items.length === 0) setShowBtn(true);
       if (hideButton && items.length > 0) setShowBtn(false);
       setFiltered(items);

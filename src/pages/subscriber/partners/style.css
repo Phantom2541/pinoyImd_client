@@ -1,0 +1,156 @@
+.subscriber-partners-section {
+  position: relative;
+  padding: 10px 0;
+}
+
+.subscriber-partners-container {
+  display: flex;
+  justify-content: center;
+}
+
+.subscriber-partners-image {
+  background-color: white;
+  width: 200px;
+  height: 100px;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.subscriber-partners-imageAll-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  padding: 0 300px;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease;
+}
+
+/* partners arrow down design */
+.subscriber-partners-arrow-button-down {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  background-color: transparent;
+  font-size: 1.7rem;
+  border: none;
+  cursor: pointer;
+}
+
+.subscriber-partners-arrow-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 2em;
+  height: 1.5em;
+}
+
+.subscriber-partners-arrow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 1.7rem;
+  color: var(--primary-color);
+  opacity: 0;
+  transform: translateX(0);
+}
+
+.subscriber-partners-arrowDownAnimaton.subscriber-partners-main {
+  animation: arrow-slide-down 1.2s ease-in-out 0s infinite;
+}
+
+.subscriber-partners-arrowDownAnimaton.subscriber-partners-trail1 {
+  animation: arrow-slide-down 1.2s ease-in-out 0.2s infinite;
+}
+
+.subscriber-partners-arrowDownAnimaton.subscriber-partners-trail2 {
+  animation: arrow-slide-down 1.2s ease-in-out 0.4s infinite;
+}
+
+.subscriber-partners-arrowUpAnimaton.subscriber-partners-main {
+  animation: arrow-slide-up 1.2s ease-in-out 0s infinite;
+}
+
+.subscriber-partners-arrowUpAnimaton.subscriber-partners-trail1 {
+  animation: arrow-slide-up 1.2s ease-in-out 0.2s infinite;
+}
+
+.subscriber-partners-arrowUpAnimaton.subscriber-partners-trail2 {
+  animation: arrow-slide-up 1.2s ease-in-out 0.4s infinite;
+}
+
+.subscriber-partners-arrowDownAnimaton {
+  animation: arrow-slide-down 1.2s ease-in-out infinite;
+}
+
+@keyframes arrow-slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.subscriber-partners-arrowUpAnimaton {
+  animation: arrow-slide-up 1.2s ease-in-out infinite;
+}
+
+@keyframes arrow-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+.hideHMO {
+  animation: fadeOutHMO 0.5s ease forwards;
+}
+
+@keyframes fadeOutHMO {
+  from {
+    opacity: 1;
+    display: block;
+  }
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
+
+.showHMO {
+  animation: fadeInHMO 1s ease forwards;
+}
+
+@keyframes fadeInHMO {
+  from {
+    opacity: 0;
+    display: none;
+  }
+  to {
+    opacity: 1;
+    display: block;
+  }
+}

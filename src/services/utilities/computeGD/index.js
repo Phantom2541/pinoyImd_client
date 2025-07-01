@@ -9,6 +9,7 @@ const individual = (
   contract
 ) => {
   const { isPromo, promo = 0, discountable } = menu;
+  console.log("menu", menu);
 
   const _abbr = ["wi", "bp", "mc", "mbs", "sc"].includes(category)
     ? "opd"

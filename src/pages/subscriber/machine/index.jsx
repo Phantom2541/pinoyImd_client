@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import React from "react";
 import { MDBAnimation } from "mdbreact";
 import "./style.css";
-import LIS from "./../../../assets/LIS.jpg";
+// import LIS from "./../../../assets/LIS.jpg";
 import ECG from "./../../../assets/subscriber/Electrocardiogram.jpg";
 import MRI from "./../../../assets/subscriber/MRI.jpg";
 import CT from "./../../../assets/subscriber/CT.jpg";
@@ -63,38 +63,6 @@ const collections = [
 ];
 
 export default function Machines() {
-  const cardRefs = useRef([]);
-  const [delays, setDelays] = useState([]);
-
-  // Measure layout after rendering
-  useLayoutEffect(() => {
-    const rowMap = new Map();
-    cardRefs.current.forEach((el, index) => {
-      if (el) {
-        const top = el.offsetTop;
-        if (!rowMap.has(top)) rowMap.set(top, []);
-        rowMap.get(top).push(index);
-      }
-    });
-
-    const newDelays = Array(collections.length).fill("0ms");
-
-    rowMap.forEach((rowIndexes) => {
-      rowIndexes.forEach((cardIndex, i) => {
-        newDelays[cardIndex] = `${i * 150}ms`;
-      });
-    });
-
-    setDelays(newDelays);
-  }, [collections.length]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setDelays([]); // Reset delays to trigger re-measurement
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
   return (
     <section className="subscriber-aboutUs-section">
       <h1 className="text-center">Features</h1>
@@ -104,10 +72,8 @@ export default function Machines() {
             key={index}
             reveal
             type="fadeInUp"
-            delay={delays[index] || "0ms"}
             duration="1000ms"
             className="subscriber-AboutUs-card"
-            ref={(el) => (cardRefs.current[index] = el)}
           >
             <div className="subscriber-AboutUs-card-image">
               <img src={item.image} alt={item.title} />

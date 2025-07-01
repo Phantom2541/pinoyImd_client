@@ -209,10 +209,9 @@ export const reduxSlice = createSlice({
       state.physicianId = payload;
     },
     SETSOURCE: (state, { payload }) => {
-      const { _id, membership, hmo, contract } = payload;
+      const { _id, membership, contract } = payload;
       state.sourceId = _id;
       state.membership = membership;
-      state.hmo = hmo;
       state.contract = contract;
     },
     ADDTOCART: (state, { payload }) => {
