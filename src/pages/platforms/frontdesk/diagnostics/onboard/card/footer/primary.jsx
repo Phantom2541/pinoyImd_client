@@ -37,6 +37,40 @@ const PrimaryFooter = ({ deal }) => {
   return (
     <>
       <MDBBtnGroup className="sales-card-footer w-100 d-flex flex-row">
+        {dept && (
+          <>
+            <MDBBtn
+              type="button"
+              onClick={() => handlePrintOut(false)}
+              className="m-0 "
+              size="sm"
+              title="Ingridients"
+              color="primary"
+            >
+              <MDBIcon fas icon="tools" />
+            </MDBBtn>
+            <MDBBtn
+              type="button"
+              onClick={() => handlePrintOut(false)}
+              className="m-0 "
+              title="Print Barcode"
+              size="sm"
+              color="primary"
+            >
+              <MDBIcon icon="barcode" />
+            </MDBBtn>
+            <MDBBtn
+              type="button"
+              onClick={() => handlePrintOut(true)}
+              className="m-0 "
+              title="Print Results"
+              size="sm"
+              color="primary"
+            >
+              <MDBIcon icon="print" />
+            </MDBBtn>
+          </>
+        )}
         <MDBBtn
           type="button"
           onClick={() => preAnalytical(deal)}
@@ -57,30 +91,6 @@ const PrimaryFooter = ({ deal }) => {
         >
           <MDBIcon icon="user-injured" />
         </MDBBtn>
-        {dept && (
-          <>
-            <MDBBtn
-              type="button"
-              onClick={() => handlePrintOut(false)}
-              className="m-0 "
-              title="Print Barcode"
-              size="sm"
-              color="primary"
-            >
-              <MDBIcon icon="barcode" />
-            </MDBBtn>
-            <MDBBtn
-              type="button"
-              onClick={() => handlePrintOut(true)}
-              className="m-0 "
-              title="Print Results"
-              size="sm"
-              color="primary"
-            >
-              <MDBIcon icon="vials" />
-            </MDBBtn>
-          </>
-        )}
       </MDBBtnGroup>
     </>
   );
