@@ -14,6 +14,7 @@ import {
 } from "../../../../../services/redux/slices/assets/companies";
 // import { useToasts } from "react-toast-notifications";
 import { HMO } from "../../../../../services/fakeDb";
+import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function Modal() {
   const { showModal, selected, willUPDATE, isLoading, hmo } = useSelector(
@@ -36,22 +37,22 @@ export default function Modal() {
   }, [hmo, dispatch]);
 
   useEffect(() => {
-    if (selected) {
-      setForm(selected);
+    if (showModal) {
+      setForm({});
     }
-  }, [selected]);
-  // Handle update function
+  }, [showModal]);
 
   // Handle create function
   const handleAdd = () => {
     let newHmo = [...hmo, form];
-
     dispatch(
       UPDATE({
         data: { _id: activePlatform.branch.companyId._id, hmo: newHmo },
         token,
       })
-    );
+    ).then(() => {
+      dispatch(SetActivePlatform({ data: newHmo, isHMO: true }));
+    });
     // Close modal after successful save
     dispatch(TOGGLE());
   };
@@ -63,20 +64,13 @@ export default function Modal() {
   };
 
   // Handle change sa inputs
-  const handleChange = (key, value) => {
-    setForm({
-      ...form,
-      [key]: value,
-      userId: auth._id,
-      branchId: activePlatform.branchId,
-    });
-  };
 
   // Fix: Return correct form value
-  const handleValue = (key) => form[key] ?? "";
 
   // Handle modal close
   const handleClose = () => dispatch(TOGGLE());
+
+  const { cp = {}, code } = form;
 
   return (
     <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="md">
@@ -93,8 +87,9 @@ export default function Modal() {
           <label>HMO</label>
           <select
             className="form-control form-control"
-            value={handleValue("code") || ""}
-            onChange={(e) => handleChange("code", e.target.value)}
+            value={code || ""}
+            required
+            onChange={(e) => setForm({ ...form, code: e.target.value })}
           >
             <option value="">Select</option>
             {collections.map((item) => (
@@ -103,27 +98,34 @@ export default function Modal() {
               </option>
             ))}
           </select>
+
           <MDBInput
             label="Phone"
             type="number"
             maxLength="11"
-            value={handleValue("cp.phone")}
+            value={cp.phone}
             required
-            onChange={(e) => handleChange("cp.phone", e.target.value)}
+            onChange={(e) =>
+              setForm({ ...form, cp: { ...form.cp, phone: e.target.value } })
+            }
           />
           <MDBInput
             label="Email"
             type="text"
-            value={handleValue("cp.email")}
+            value={cp.email}
             required
-            onChange={(e) => handleChange("cp.email", e.target.value)}
+            onChange={(e) =>
+              setForm({ ...form, cp: { ...form.cp, email: e.target.value } })
+            }
           />
           <MDBInput
             label="Contact Person"
             type="text"
-            value={handleValue("cp.agent")}
+            value={cp.agent}
             required
-            onChange={(e) => handleChange("cp.agent", e.target.value)}
+            onChange={(e) =>
+              setForm({ ...form, cp: { ...form.cp, agent: e.target.value } })
+            }
           />
           {/* Submit button */}
           <div className="text-center mb-1-half">
