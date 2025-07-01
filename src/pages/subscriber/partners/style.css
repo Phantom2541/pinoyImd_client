@@ -20,10 +20,12 @@
 .subscriber-partners-imageAll-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
-  display: none;
-  height: 400px;
-  background-color: green;
+  gap: 20px;
+  width: 100%;
+  padding: 0 300px;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease;
 }
 
 /* partners arrow down design */
@@ -53,20 +55,34 @@
   color: var(--primary-color);
   opacity: 0;
   transform: translateX(0);
+}
+
+.subscriber-partners-arrowDownAnimaton.subscriber-partners-main {
+  animation: arrow-slide-down 1.2s ease-in-out 0s infinite;
+}
+
+.subscriber-partners-arrowDownAnimaton.subscriber-partners-trail1 {
+  animation: arrow-slide-down 1.2s ease-in-out 0.2s infinite;
+}
+
+.subscriber-partners-arrowDownAnimaton.subscriber-partners-trail2 {
+  animation: arrow-slide-down 1.2s ease-in-out 0.4s infinite;
+}
+
+.subscriber-partners-arrowUpAnimaton.subscriber-partners-main {
+  animation: arrow-slide-up 1.2s ease-in-out 0s infinite;
+}
+
+.subscriber-partners-arrowUpAnimaton.subscriber-partners-trail1 {
+  animation: arrow-slide-up 1.2s ease-in-out 0.2s infinite;
+}
+
+.subscriber-partners-arrowUpAnimaton.subscriber-partners-trail2 {
+  animation: arrow-slide-up 1.2s ease-in-out 0.4s infinite;
+}
+
+.subscriber-partners-arrowDownAnimaton {
   animation: arrow-slide-down 1.2s ease-in-out infinite;
-}
-
-.subscriber-partners-main {
-  animation-delay: 0s;
-  opacity: 1;
-}
-
-.subscriber-partners-trail1 {
-  animation-delay: 0.2s;
-}
-
-.subscriber-partners-trail2 {
-  animation-delay: 0.4s;
 }
 
 @keyframes arrow-slide-down {
@@ -87,6 +103,28 @@
   }
 }
 
+.subscriber-partners-arrowUpAnimaton {
+  animation: arrow-slide-up 1.2s ease-in-out infinite;
+}
+
+@keyframes arrow-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
 .hideHMO {
   animation: fadeOutHMO 0.5s ease forwards;
 }
@@ -103,40 +141,10 @@
 }
 
 .showHMO {
-  animation: fadeInHMO 0.5s ease forwards;
+  animation: fadeInHMO 1s ease forwards;
 }
 
 @keyframes fadeInHMO {
-  from {
-    opacity: 0;
-    display: none;
-  }
-  to {
-    opacity: 1;
-    display: block;
-  }
-}
-
-.showAllHMO {
-  animation: fadeOutAllHMO 0.5s ease forwards;
-}
-
-@keyframes fadeOutAllHMO {
-  from {
-    opacity: 0;
-    display: none;
-  }
-  to {
-    opacity: 1;
-    display: block;
-  }
-}
-
-.hideallHMO {
-  animation: fadeInAllHMO 0.5s ease forwards;
-}
-
-@keyframes fadeInAllHMO {
   from {
     opacity: 0;
     display: none;
