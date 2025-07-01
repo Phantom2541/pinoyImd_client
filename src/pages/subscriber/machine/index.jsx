@@ -86,7 +86,7 @@ export default function Machines() {
   //   });
 
   //   setDelays(newDelays);
-  // }, [collections.length, cardRefs, setDelays, delays]);
+  // }, [cardRefs, setDelays, delays]);
 
   useEffect(() => {
     const handleResize = () => {
