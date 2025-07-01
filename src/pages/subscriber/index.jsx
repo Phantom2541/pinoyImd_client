@@ -255,6 +255,7 @@ const Subscriber = ({ match }) => {
                 <Partners />
               </div>
             )}
+
             <hr className="mb-5" />
             <div id="testimonials">
               <Testimonials />

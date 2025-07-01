@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import "./style.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,6 +8,7 @@ import "swiper/css";
 import HMO from "../../../services/fakeDb/hmo";
 
 export default function Partners() {
+  const [showAll, setShowAll] = useState(false);
   const { details } = useSelector(({ companies }) => companies),
     hmoCodes = (details?.hmo || []).map((item) => item.code),
     partners = HMO.collections.filter(
@@ -24,7 +25,7 @@ export default function Partners() {
       </h1>
 
       <Swiper
-        style={{ display: "none" }}
+        className={`${showAll || "active"}`}
         modules={[Autoplay]}
         loop={true}
         speed={4000}
@@ -56,9 +57,14 @@ export default function Partners() {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="subscriber-partners-imageAll-container">
+
+      <div className="subscriber-partners-imageAll-container ">
         {partners.slice(1).map((hmo, index) => (
-          <div className="subscriber-partners-container">
+          <div
+            key={index}
+            className="subscriber-partners-container"
+            style={{ display: "inline-block", margin: "10px" }}
+          >
             <img
               src={hmo.icon}
               alt={hmo.abbr || `Partner ${index}`}
@@ -68,7 +74,10 @@ export default function Partners() {
           </div>
         ))}
       </div>
-      <button className="subscriber-partners-arrow-button-down">
+      <button
+        className="subscriber-partners-arrow-button-down"
+        onClick={() => setShowAll(!showAll)}
+      >
         <span className={`subscriber-partners-arrow-wrapper`}>
           <i className="fas fa-chevron-down subscriber-partners-arrow subscriber-partners-main"></i>
           <i className="fas fa-chevron-down subscriber-partners-arrow subscriber-partners-trail1"></i>
