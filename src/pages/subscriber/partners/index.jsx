@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./style.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -7,6 +7,7 @@ import "swiper/css";
 import HMO from "../../../services/fakeDb/hmo";
 
 export default function Partners() {
+  const [showAll, setShowAll] = useState(false);
   const partners = HMO.collections.filter(
     (hmo) => hmo.icon && hmo.icon !== "/asset/logo/default.png"
   );
@@ -18,15 +19,16 @@ export default function Partners() {
       </h1>
 
       <Swiper
+        style={{ display: "none" }}
         modules={[Autoplay]}
         loop={true}
         speed={4000}
         autoplay={{
           delay: 0,
           disableOnInteraction: false,
-          pauseOnMouseEnter: false,
+          pauseOnMouseEnter: true,
         }}
-        allowTouchMove={false}
+        allowTouchMove={true}
         spaceBetween={0}
         slidesPerView={7}
         breakpoints={{
@@ -36,7 +38,7 @@ export default function Partners() {
           1600: { slidesPerView: 6, spaceBetween: 30 },
         }}
       >
-        {partners.map((hmo, index) => (
+        {partners.slice(1).map((hmo, index) => (
           <SwiperSlide key={index}>
             <div className="subscriber-partners-container">
               <img
@@ -49,6 +51,25 @@ export default function Partners() {
           </SwiperSlide>
         ))}
       </Swiper>
+      <div className="subscriber-partners-imageAll-container">
+        {partners.slice(1).map((hmo, index) => (
+          <div className="subscriber-partners-container">
+            <img
+              src={hmo.icon}
+              alt={hmo.abbr || `Partner ${index}`}
+              style={{ height: "80px", objectFit: "contain" }}
+              className="subscriber-partners-image"
+            />
+          </div>
+        ))}
+      </div>
+      <button className="subscriber-partners-arrow-button-down">
+        <span className={`subscriber-partners-arrow-wrapper`}>
+          <i className="fas fa-chevron-down subscriber-partners-arrow subscriber-partners-main"></i>
+          <i className="fas fa-chevron-down subscriber-partners-arrow subscriber-partners-trail1"></i>
+          <i className="fas fa-chevron-down subscriber-partners-arrow subscriber-partners-trail2"></i>
+        </span>
+      </button>
     </div>
   );
 }

@@ -14,7 +14,7 @@
     "abbr": "Maxicare",
     "tl": "Live your best life",
     "code": "mhc",
-    "icon": "/assets/logo/Maxicare.png"
+    "icon": "/assets/logo/MaxiCare.png"
   },
   {
     "id": 2,
@@ -62,7 +62,7 @@
     "abbr": "EastWest",
     "tl": "Securing a Healthy Horizon",
     "code": "ewh",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/EastWest.png"
   },
   {
     "id": 8,
@@ -86,7 +86,7 @@
     "abbr": "CareHealth Plus",
     "tl": "Connecting Dreams to Reality like Building Bridges",
     "code": "cps",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/CareHealth.png"
   },
   {
     "id": 11,
@@ -94,7 +94,7 @@
     "abbr": "Caritas",
     "tl": "",
     "code": "chs",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/Caritas.png"
   },
   {
     "id": 12,
@@ -110,7 +110,7 @@
     "abbr": "WellCare",
     "tl": "Alaga ka ng WellCare, di ka mapapabayaan",
     "code": "whm",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/WellCare.png"
   },
   {
     "id": 14,
@@ -118,7 +118,7 @@
     "abbr": "HPPI",
     "tl": "",
     "code": "hpp",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/HealthPlan.png"
   },
   {
     "id": 15,
@@ -126,7 +126,7 @@
     "abbr": "Fortunecare",
     "tl": "",
     "code": "fci",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/FortuneCare.png"
   },
   {
     "id": 16,
@@ -150,7 +150,7 @@
     "abbr": "MediAccess",
     "tl": "",
     "code": "mda",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/MediAccess.png"
   },
   {
     "id": 19,
@@ -158,7 +158,7 @@
     "abbr": "OmniCare",
     "tl": "We make healthcare Understandable, Accessible and Affordable",
     "code": "oma",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/OmniCare.png"
   },
   {
     "id": 20,
@@ -166,7 +166,7 @@
     "abbr": "AsianLife",
     "tl": "",
     "code": "alg",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/AsianLife.png"
   },
   {
     "id": 21,
@@ -182,7 +182,7 @@
     "abbr": "Medicare Plus",
     "tl": "Get the peace of mind you deserve for you & your family",
     "code": "mdp",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/MediCare.png"
   },
   {
     "id": 23,
@@ -190,7 +190,7 @@
     "abbr": "Life & Health",
     "tl": "Trusted Corporate HMO Provider in the Philippines",
     "code": "lph",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/LifeAndHealth.png"
   },
   {
     "id": 25,
@@ -198,7 +198,7 @@
     "abbr": "Getwell",
     "tl": "To be the no. 1 Health Maintenance Organization in the Philippines",
     "code": "ghs",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/GetWell.png"
   },
   {
     "id": 26,
@@ -206,7 +206,7 @@
     "abbr": "Carewell",
     "tl": "",
     "code": "cwh",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/CareWell.png"
   },
   {
     "id": 27,
@@ -214,7 +214,7 @@
     "abbr": "Dynamic Care",
     "tl": "",
     "code": "dcc",
-    "icon": "/assets/logo/default.png"
+    "icon": "/assets/logo/DynamicCare.png"
   },
   {
     "id": 28,
