@@ -5,13 +5,17 @@ import { useToasts } from "react-toast-notifications";
 import { fullName, ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBBtn, MDBIcon } from "mdbreact";
+import "./style.css";
 
 export default function Body() {
   const { token } = useSelector(({ auth }) => auth),
     { collections, message, isSuccess } = useSelector(({ heads }) => heads),
     [heads, setHeads] = useState([]),
     { addToast } = useToasts(),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    [currentPage, setCurrentPage] = useState(1),
+    itemsPerPage = 6,
+    [animateClass, setAnimateClass] = useState("");
 
   const [imageErrors, setImageErrors] = useState({});
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
@@ -72,122 +76,173 @@ export default function Body() {
     });
   };
 
+  const totalPages = Math.ceil(heads.length / itemsPerPage);
+  const paginatedHeads = heads.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (direction) => {
+    setAnimateClass("fade-out");
+    setTimeout(() => {
+      setCurrentPage((prev) => (direction === "next" ? prev + 1 : prev - 1));
+      setAnimateClass("fade-in");
+    }, 300); // Delay matches animation duration
+  };
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      handlePageChange("next");
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      handlePageChange("prev");
+    }
+  };
+
   const handleImageError = (email) =>
     setImageErrors((prev) => ({ ...prev, [email]: true }));
 
   return (
-    <div className="container mt-4">
-      {heads.map(({ _id, department, section, user }, index) => {
-        const { email, prc } = user;
+    <div className="signatories-section">
+      <div className={`signatories-card-container mt-4 ${animateClass}`}>
+        {paginatedHeads.map(({ _id, department, section, user }, index) => {
+          const { email, prc } = user;
 
-        return (
-          <div
-            key={_id || index}
-            className="d-flex align-items-center border rounded p-3 mb-3 shadow-sm"
-            style={{ backgroundColor: "#fff", maxWidth: 600 }}
-          >
-            {/* Left: Profile Image */}
-            <div className="me-5" style={{ marginRight: "80px" }}>
-              <img
-                src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
-                alt="Profile"
-                // onError={(e) => {
-                //   e.target.onerror = null;
-                //   e.target.src =
-                //     "https://via.placeholder.com/100x100?text=No+Image";
-                // }}
-                style={{
-                  width: 100,
-                  height: 100,
-                  objectFit: "cover",
-                  borderRadius: "8px",
-                  filter: "grayscale(100%)",
-                }}
-              />
-            </div>
-
-            {/* Right: Info */}
-            <div className="flex-grow-1">
-              <h6 className="text-muted mb-1">
-                {section} - {department}
-              </h6>
-
-              {/* Signature */}
-              {!imageErrors[email] ? (
+          return (
+            <div
+              key={_id || index}
+              className={`signatories-card ${prc || "requiredPRC"}`}
+            >
+              {/* Left: Profile Image */}
+              <div className="signatories-card-header">
                 <img
-                  onClick={() =>
-                    document.getElementById(`file-upload-${email}`).click()
-                  }
-                  alt="Signature"
-                  src={`${ENDPOINT}/public/users/${email}/signature.png?key=${
-                    signatureRefreshKey[email] || 0
-                  }`}
-                  onError={() => handleImageError(email)}
-                  style={{ height: 40, cursor: "pointer" }}
+                  src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
+                  alt="Profile"
+                  // onError={(e) => {
+                  //   e.target.onerror = null;
+                  //   e.target.src =
+                  //     "https://via.placeholder.com/100x100?text=No+Image";
+                  // }}
+                  className="signatories-profile-image"
                 />
-              ) : (
-                <MDBBtn
-                  size="sm"
-                  color="warning"
-                  rounded
-                  onClick={() =>
-                    document.getElementById(`file-upload-${email}`).click()
-                  }
-                >
-                  <MDBIcon icon="upload" /> Upload Signature
-                </MDBBtn>
-              )}
-              <input
-                id={`file-upload-${email}`}
-                type="file"
-                accept="image/png"
-                style={{ display: "none" }}
-                onChange={(e) => handleSignature(e, email)}
-              />
-              <h5 className="fw-bold text-capitalize mb-2">
-                {fullName(user.fullName)}
-              </h5>
-              {/* PRC Info */}
-              {prc ? (
-                <p className="mt-2 small text-secondary">
-                  PRC ID: <strong>{prc?.id}</strong>
-                  {prc?.to ? (
-                    <strong
-                      className={
-                        new Date(prc.to) < new Date() ? "text-danger" : ""
+              </div>
+              <div className="signatories-card-body">
+                <div className="signatories-card-section-department">
+                  <span className="signatories-card-section">{section}</span>
+                  &nbsp;-&nbsp;
+                  <span className="signatories-card-department">
+                    {department}
+                  </span>
+                </div>
+                <div className="signatories-card-signature-container">
+                  {!imageErrors[email] ? (
+                    <img
+                      onClick={() =>
+                        document.getElementById(`file-upload-${email}`).click()
+                      }
+                      alt="Signature"
+                      src={`${ENDPOINT}/public/users/${email}/signature.png?key=${
+                        signatureRefreshKey[email] || 0
+                      }`}
+                      onError={() => handleImageError(email)}
+                      className="signatories-card-signature"
+                    />
+                  ) : (
+                    <button
+                      className="signatories-card-signature-upload-btn"
+                      onClick={() =>
+                        document.getElementById(`file-upload-${email}`).click()
                       }
                     >
-                      | Expiration: {prc.to}
-                    </strong>
-                  ) : (
-                    <strong className="text-warning">
-                      | No expiration date set
-                    </strong>
+                      Upload Signature
+                    </button>
                   )}
-                </p>
-              ) : (
-                <p className="mt-2 small text-danger">
-                  <strong>PRC license is required</strong> for this user to be
-                  assigned as a head. This is a{" "}
-                  <strong>DOH qualification</strong> for publishing laboratory
-                  results.
-                </p>
-              )}
-            </div>
+                </div>
+                <input
+                  id={`file-upload-${email}`}
+                  type="file"
+                  accept="image/png"
+                  onChange={(e) => handleSignature(e, email)}
+                  hidden
+                />
+                <span className="signatories-card-name">
+                  {fullName(user.fullName)}
+                </span>
+              </div>
 
-            {/* Optional Delete Button */}
-            <div className="ms-2">
-              <MDBBtn
-                size="sm"
-                color="danger"
-                onClick={() => handleDelete(_id)}
+              <div
+                className={`signatories-card-footer ${prc || "requiredPRC"}`}
               >
-                <MDBIcon icon="trash" />
-              </MDBBtn>
+                {prc ? (
+                  <span className="signatories-card-expiration">
+                    PRC ID: <strong>{prc?.id}</strong>
+                    {prc?.to ? (
+                      <>
+                        <span>&nbsp;|&nbsp;</span>
+                        <span
+                          className={
+                            new Date(prc.to) < new Date() ? "text-danger" : ""
+                          }
+                        >
+                          Expiration: <strong>{prc.to}</strong>
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span>&nbsp;|&nbsp;</span>
+                        <strong className="text-warning">
+                          No expiration date set
+                        </strong>
+                      </>
+                    )}
+                  </span>
+                ) : (
+                  <span className="mt-2 small text-danger">
+                    <strong>PRC license is required</strong> for this user to be
+                    assigned as a head. This is a&nbsp;
+                    <strong>DOH qualification</strong> for publishing laboratory
+                    results.
+                  </span>
+                )}
+              </div>
+
+              {/* Optional Delete Button */}
+              <div className="signatories-card-actionBtn">
+                <button
+                  className="signatories-card-btn-delete bg-danger"
+                  onClick={() => handleDelete(_id)}
+                >
+                  <MDBIcon icon="trash" />
+                </button>
+                <button
+                  className="signatories-card-btn-edit bg-primary"
+                  onClick={() => handleDelete(_id)}
+                >
+                  <MDBIcon icon="pencil-alt" />
+                </button>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+        <button
+          className="signatories-pagination-btnLeft"
+          onClick={prevPage}
+          disabled={currentPage === 1}
+        >
+          <MDBIcon icon="angle-left" />
+        </button>
+
+        <button
+          className="signatories-pagination-btnRight"
+          onClick={nextPage}
+          disabled={currentPage === totalPages}
+        >
+          <MDBIcon icon="angle-right" />
+        </button>
+      </div>
     </div>
   );
 }
