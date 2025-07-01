@@ -7,13 +7,17 @@ import {
   RESET,
   SetFILTERED,
   SetACTIVE_STATUS,
+  InsertRealtimeOnboard,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator.js";
 import Search from "../../../../../../components/searchables/search.jsx";
+import { socket } from "../../../../../../services/utilities/index.js";
+import { useToasts } from "react-toast-notifications";
 
 export default function Header() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ taskGenerator }) => taskGenerator),
     [status, setStatus] = useState("All"),
+    { addToast } = useToasts(),
     dispatch = useDispatch();
 
   //Initial Browse and Fetch Data
@@ -45,6 +49,23 @@ export default function Header() {
     };
   }, [token, dispatch, activePlatform, auth]);
 
+  useEffect(() => {
+    socket.on("received_onboard", (data) => {
+      const { branchId, department } = activePlatform;
+      if (data?.branchId === branchId && data?.department === department) {
+        const pn = collections.length + 1;
+        dispatch(InsertRealtimeOnboard({ ...data, pn }));
+        addToast(`New patient onboarded. No. ${pn}`, {
+          appearance: "success",
+        });
+      }
+    });
+
+    return () => {
+      socket.off("received_onboard");
+    };
+  }, [activePlatform, dispatch, collections]);
+
   return (
     <MDBView
       cascade
@@ -52,7 +73,7 @@ export default function Header() {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          Total - {collections.length}
+          {collections.length}-Onboarded
         </span>
       </div>
 

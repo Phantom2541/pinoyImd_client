@@ -37,18 +37,18 @@ const PrimaryFooter = ({ deal }) => {
   return (
     <>
       <MDBBtnGroup className="sales-card-footer w-100 d-flex flex-row">
+        <MDBBtn
+          type="button"
+          onClick={() => preAnalytical(deal)}
+          className="m-0 "
+          size="sm"
+          title="Ingridients"
+          color="primary"
+        >
+          <MDBIcon fas icon="tools" />
+        </MDBBtn>
         {dept && (
           <>
-            <MDBBtn
-              type="button"
-              onClick={() => handlePrintOut(false)}
-              className="m-0 "
-              size="sm"
-              title="Ingridients"
-              color="primary"
-            >
-              <MDBIcon fas icon="tools" />
-            </MDBBtn>
             <MDBBtn
               type="button"
               onClick={() => handlePrintOut(false)}
@@ -63,7 +63,7 @@ const PrimaryFooter = ({ deal }) => {
               type="button"
               onClick={() => handlePrintOut(true)}
               className="m-0 "
-              title="Print Results"
+              title="Print Result Notes"
               size="sm"
               color="primary"
             >
@@ -71,16 +71,7 @@ const PrimaryFooter = ({ deal }) => {
             </MDBBtn>
           </>
         )}
-        <MDBBtn
-          type="button"
-          onClick={() => preAnalytical(deal)}
-          title="Pre-Analytical Supply Dispense"
-          className="m-0 "
-          size="sm"
-          color="primary"
-        >
-          <MDBIcon icon="cog" spin />
-        </MDBBtn>
+
         <MDBBtn
           type="button"
           onClick={() => dispatch(SetSELECTED(deal))}
@@ -89,7 +80,7 @@ const PrimaryFooter = ({ deal }) => {
           size="sm"
           color="primary"
         >
-          <MDBIcon icon="user-injured" />
+          <MDBIcon icon="cog" spin />
         </MDBBtn>
       </MDBBtnGroup>
     </>

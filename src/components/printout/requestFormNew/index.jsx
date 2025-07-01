@@ -24,13 +24,13 @@ const RequestForms = () => {
   console.log("sale", sale);
   if (!sale || !sale?._id) return <div>Sale is Empty</div>;
   return (
-    <>
+    <div className="bg-white vh-100">
       {isResult ? (
         <ResultPrintout sale={sale} forms={forms} ssx={ssx} />
       ) : (
         <BarcodePrintout sale={sale} forms={forms} />
       )}
-    </>
+    </div>
   );
 };
 
