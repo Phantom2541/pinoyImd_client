@@ -1,5 +1,4 @@
-import { Services } from "../../../../services/fakeDb";
-import { MDBRow, MDBCol } from "mdbreact";
+import { Services } from "../../../../../services/fakeDb";
 
 const Chemistry = ({ data = {} }) => {
   // Convert object keys to an array (assuming keys are test names)

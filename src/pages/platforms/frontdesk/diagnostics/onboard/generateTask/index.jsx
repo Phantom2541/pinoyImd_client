@@ -71,7 +71,7 @@ export default function Modal() {
 
     localStorage.setItem(
       "inhouse",
-      JSON.stringify({ deal, forms: { ..._forms } })
+      JSON.stringify({ deal, forms: { ..._forms }, isResult: false })
     );
     // localStorage.setItem(
     //   "outsource_request",
@@ -93,78 +93,78 @@ export default function Modal() {
     const deptIndex = deptIndexMap[department];
     const newFormKeys = Object.keys(_inhouse);
 
-    // const forms = {
-    //   ...(oldForms || {}),
-    //   [deptIndex]: [
-    //     ...(oldForms?.[deptIndex] || []),
-    //     ...newFormKeys.filter(
-    //       (key) => !(oldForms?.[deptIndex] || []).includes(Number(key))
-    //     ),
-    //   ],
-    // };
+    const forms = {
+      ...(oldForms || {}),
+      [deptIndex]: [
+        ...(oldForms?.[deptIndex] || []),
+        ...newFormKeys.filter(
+          (key) => !(oldForms?.[deptIndex] || []).includes(Number(key))
+        ),
+      ],
+    };
 
-    // for (const key in _forms) {
-    //   const lowercaseKey = key.toLowerCase();
-    //   let bucket = _forms[key];
-    //   let requestData = {
-    //     pn,
-    //     _id,
-    //     packages: bucket,
-    //     customerId: customerId?._id,
-    //     branchId: activePlatform.branchId,
-    //     hasRead: false,
-    //   };
-    //   switch (key) {
-    //     case "Miscellaneous":
-    //       const panelAvail = bucket.filter((test) => panel.includes(test));
-    //       if (panelAvail.length) {
-    //         bucket = bucket.filter((item) => !panel.includes(item));
-    //         await saveRequest(lowercaseKey, {
-    //           dealId: _id,
-    //           pn,
-    //           packages: panelAvail,
-    //           customerId: customerId?._id,
-    //           branchId: activePlatform.branchId,
-    //           buntis: true,
-    //         });
-    //       }
-    //       if (bucket.length > 0) {
-    //         bucket.map(
-    //           async (test) =>
-    //             await saveRequest(lowercaseKey, {
-    //               dealId: _id,
-    //               pn,
-    //               packages: [test],
-    //               customerId: customerId?._id,
-    //               branchId: activePlatform.branchId,
-    //               _buntis: false,
-    //             })
-    //         );
-    //       }
-    //       break;
-    //     case "Ultrasound":
-    //     case "Xray":
-    //       await Promise.all(
-    //         bucket.map((test) =>
-    //           saveRequest(lowercaseKey, {
-    //             pn,
-    //             dealId: _id,
-    //             packages: test,
-    //             hasRead: false,
-    //             customerId: customerId?._id,
-    //             branchId: activePlatform.branchId,
-    //           })
-    //         )
-    //       );
-    //       break;
-    //     case "ECG":
-    //       requestData.packages = bucket[0];
-    //       await saveRequest(lowercaseKey, requestData);
-    //       break;
-    //     default:
-    //       await saveRequest(lowercaseKey, requestData);
-    //   }
-    // }
+    for (const key in _forms) {
+      const lowercaseKey = key.toLowerCase();
+      let bucket = _forms[key];
+      let requestData = {
+        pn,
+        _id,
+        packages: bucket,
+        customerId: customerId?._id,
+        branchId: activePlatform.branchId,
+        hasRead: false,
+      };
+      switch (key) {
+        case "Miscellaneous":
+          const panelAvail = bucket.filter((test) => panel.includes(test));
+          if (panelAvail.length) {
+            bucket = bucket.filter((item) => !panel.includes(item));
+            await saveRequest(lowercaseKey, {
+              dealId: _id,
+              pn,
+              packages: panelAvail,
+              customerId: customerId?._id,
+              branchId: activePlatform.branchId,
+              buntis: true,
+            });
+          }
+          if (bucket.length > 0) {
+            bucket.map(
+              async (test) =>
+                await saveRequest(lowercaseKey, {
+                  dealId: _id,
+                  pn,
+                  packages: [test],
+                  customerId: customerId?._id,
+                  branchId: activePlatform.branchId,
+                  _buntis: false,
+                })
+            );
+          }
+          break;
+        case "Ultrasound":
+        case "Xray":
+          await Promise.all(
+            bucket.map((test) =>
+              saveRequest(lowercaseKey, {
+                pn,
+                dealId: _id,
+                packages: test,
+                hasRead: false,
+                customerId: customerId?._id,
+                branchId: activePlatform.branchId,
+              })
+            )
+          );
+          break;
+        case "ECG":
+          requestData.packages = bucket[0];
+          await saveRequest(lowercaseKey, requestData);
+          break;
+        default:
+          await saveRequest(lowercaseKey, requestData);
+      }
+    }
 
     if (inhouse.length > 0) {
       window.open(
@@ -174,58 +174,58 @@ export default function Modal() {
       );
     }
 
-    // const haveOutSource =
-    //   outsource.length > 0 && (outSourceId || department === "RAD")
-    //     ? true
-    //     : false;
+    const haveOutSource =
+      outsource.length > 0 && (outSourceId || department === "RAD")
+        ? true
+        : false;
 
-    // if (haveOutSource) {
-    //   if (department !== "RAD") {
-    //     await saveRequest(
-    //       `/commerce/pos/services/dealOutSources`,
-    //       {
-    //         _id: deal._id,
-    //         servicesId: _outsource,
-    //       },
-    //       true
-    //     );
-    //   } else {
-    //     const officialReadingXray = _outsource;
-    //     officialReadingXray.map(
-    //       async (test) =>
-    //         await saveRequest("x-ray", {
-    //           dealId: _id,
-    //           packages: test,
-    //           hasRead: true,
-    //           customerId: customerId?._id,
-    //           branchId: activePlatform.branchId,
-    //         })
-    //     );
-    //   }
-    // }
+    if (haveOutSource) {
+      if (department !== "RAD") {
+        await saveRequest(
+          `/commerce/pos/services/dealOutSources`,
+          {
+            _id: deal._id,
+            servicesId: _outsource,
+          },
+          true
+        );
+      } else {
+        const officialReadingXray = _outsource;
+        officialReadingXray.map(
+          async (test) =>
+            await saveRequest("x-ray", {
+              dealId: _id,
+              packages: test,
+              hasRead: true,
+              customerId: customerId?._id,
+              branchId: activePlatform.branchId,
+            })
+        );
+      }
+    }
 
-    // const data = {
-    //   _id,
-    //   ssx,
-    //   rendered: [
-    //     ...deal.rendered,
-    //     {
-    //       dept: department,
-    //       by: auth._id,
-    //       at: new Date().toLocaleString(),
-    //     },
-    //   ],
-    //   forms,
-    //   ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
-    // };
+    const data = {
+      _id,
+      ssx,
+      rendered: [
+        ...deal.rendered,
+        {
+          dept: department,
+          by: auth._id,
+          at: new Date().toLocaleString(),
+        },
+      ],
+      forms,
+      ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
+    };
 
-    // dispatch(
-    //   REFORM({
-    //     token,
-    //     data,
-    //   })
-    // );
-    // dispatch(TOGGLE());
+    dispatch(
+      REFORM({
+        token,
+        data,
+      })
+    );
+    dispatch(TOGGLE());
   };
 
   return (

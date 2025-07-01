@@ -131,6 +131,11 @@ const Templates = {
 
     return departments;
   },
+
+  getAbbr: (section) => {
+    const match = collections.find((c) => c.components.includes(section));
+    return match ? match.codes[match.components.indexOf(section)] : null;
+  },
 };
 
 export default Templates;

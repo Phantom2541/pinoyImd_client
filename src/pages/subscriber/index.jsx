@@ -18,6 +18,7 @@ import Partners from "./partners";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
+    { hmo } = details,
     [show, setShow] = useState(false),
     [scrolled, setScrolled] = useState(false),
     [flipped, setFlipped] = useState(false),
@@ -249,10 +250,12 @@ const Subscriber = ({ match }) => {
               <Doctors />
             </div>
             <hr className="mb-5" />
-            <div id="partners">
-              <Partners />
-            </div>
-            <hr className="mb-5 mt-5" />
+            {hmo.length > 0 && (
+              <div id="partners">
+                <Partners />
+              </div>
+            )}
+            <hr className="mb-5" />
             <div id="testimonials">
               <Testimonials />
             </div>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import "./style.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -7,10 +8,14 @@ import "swiper/css";
 import HMO from "../../../services/fakeDb/hmo";
 
 export default function Partners() {
-  const [showAll, setShowAll] = useState(false);
-  const partners = HMO.collections.filter(
-    (hmo) => hmo.icon && hmo.icon !== "/asset/logo/default.png"
-  );
+  const { details } = useSelector(({ companies }) => companies),
+    hmoCodes = (details?.hmo || []).map((item) => item.code),
+    partners = HMO.collections.filter(
+      (item) =>
+        hmoCodes.includes(item.code) &&
+        item.icon &&
+        item.icon !== "/assets/logo/default.png"
+    );
 
   return (
     <div className="subscriber-partners-section">
