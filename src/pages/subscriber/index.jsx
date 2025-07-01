@@ -250,11 +250,16 @@ const Subscriber = ({ match }) => {
               <Doctors />
             </div>
             <hr className="mb-5" />
-            {hmo.length > 0 && (
+            {/* {hmo.length > 0 && (
               <div id="partners">
                 <Partners />
               </div>
-            )}
+            )} */}
+
+            <div id="partners">
+              <Partners />
+            </div>
+
             <hr className="mb-5" />
             <div id="testimonials">
               <Testimonials />
