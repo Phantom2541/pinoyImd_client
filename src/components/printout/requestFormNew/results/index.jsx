@@ -63,53 +63,68 @@ const Stub = ({ sale, forms }) => {
 
   return (
     <div>
-      {Object?.keys(forms)?.map((key, index) => {
+      {Object?.keys(forms)?.map((key, index, arr) => {
+        const isLast = index === arr.length - 1;
         const FormComponent = getComponents(key);
         return (
-          <div
-            key={index}
-            style={{
-              width: "105mm",
-              lineHeight: "20px",
-              cursor: "default",
-              fontFamily: "Courier New, monospace",
-              letterSpacing: "-0.5px",
-              fontSize: "20px",
-              wordSpacing: "-1px",
-            }}
-            className="text-center thermal-font mb-5"
-          >
-            <Header date={createdAt} dealId={_id} />
-            <Text
-              className="mt-2"
-              title="Name"
-              value={capitalize(
-                `${fullName.fname || ""} ${fullName.lname || ""}`
+          <div key={index}>
+            <div
+              style={{
+                width: "105mm",
+                lineHeight: "20px",
+                cursor: "default",
+                fontFamily: "Courier New, monospace",
+                letterSpacing: "-0.5px",
+                fontSize: "20px",
+                wordSpacing: "-1px",
+              }}
+              className="text-center thermal-font "
+            >
+              <Header date={createdAt} dealId={_id} />
+              <Text
+                className="mt-2"
+                title="Name"
+                value={capitalize(
+                  `${fullName.fname || ""} ${fullName.lname || ""}`
+                )}
+              />
+              <Text title="SSX" value={ssx} />
+              <Text title="Patient No." value={pn} />
+
+              <Hr />
+              <h6>{key}</h6>
+
+              {FormComponent && (
+                <div style={{ fontSize: "10px", padding: "2px" }}>
+                  <FormComponent data={forms[key]} />
+                </div>
               )}
-            />
-            <Text title="SSX" value={ssx} />
-            <Text title="Patient No." value={pn} />
 
-            <Hr />
-            <h6>{key}</h6>
+              <Hr />
 
-            {FormComponent && (
-              <div style={{ fontSize: "10px", padding: "2px" }}>
-                <FormComponent data={forms[key]} />
-              </div>
+              <Text
+                title="Performer"
+                value={capitalize(
+                  `${cashier?.fname?.split?.(" ")[0] || ""} ${
+                    cashier?.lname || ""
+                  }`
+                )}
+              />
+              <Hr />
+            </div>
+            {!isLast && (
+              <div
+                style={{
+                  height: "1.7px",
+                  width: "25.9%",
+                  backgroundImage:
+                    "repeating-linear-gradient(to right, black 0, black 10px, transparent 10px, transparent 20px)",
+                  backgroundRepeat: "repeat-x",
+                  backgroundPosition: "center",
+                }}
+                className={`my-4 `}
+              />
             )}
-
-            <Hr />
-
-            <Text
-              title="Performer"
-              value={capitalize(
-                `${cashier?.fname?.split?.(" ")[0] || ""} ${
-                  cashier?.lname || ""
-                }`
-              )}
-            />
-            <Hr />
           </div>
         );
       })}
