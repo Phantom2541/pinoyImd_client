@@ -25,7 +25,7 @@ export default function Partners() {
       </h1>
 
       <Swiper
-        className={`${showAll || "active"}`}
+        className={`${showAll ? "hideHMO" : "showHMO"}`}
         modules={[Autoplay]}
         loop={true}
         speed={4000}
@@ -58,7 +58,9 @@ export default function Partners() {
         ))}
       </Swiper>
 
-      <div className="subscriber-partners-imageAll-container ">
+      <div
+        className={`subscriber-partners-imageAll-container ${showAll || ""}`}
+      >
         {partners.slice(1).map((hmo, index) => (
           <div
             key={index}

@@ -21,6 +21,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
+  display: none;
+  height: 400px;
+  background-color: green;
 }
 
 /* partners arrow down design */
@@ -84,16 +87,62 @@
   }
 }
 
-.active {
-  animation: fadeOut 0.5s ease forwards;
+.hideHMO {
+  animation: fadeOutHMO 0.5s ease forwards;
 }
 
-@keyframes fadeOut {
+@keyframes fadeOutHMO {
   from {
     opacity: 1;
+    display: block;
   }
   to {
     opacity: 0;
     display: none;
+  }
+}
+
+.showHMO {
+  animation: fadeInHMO 0.5s ease forwards;
+}
+
+@keyframes fadeInHMO {
+  from {
+    opacity: 0;
+    display: none;
+  }
+  to {
+    opacity: 1;
+    display: block;
+  }
+}
+
+.showAllHMO {
+  animation: fadeOutAllHMO 0.5s ease forwards;
+}
+
+@keyframes fadeOutAllHMO {
+  from {
+    opacity: 0;
+    display: none;
+  }
+  to {
+    opacity: 1;
+    display: block;
+  }
+}
+
+.hideallHMO {
+  animation: fadeInAllHMO 0.5s ease forwards;
+}
+
+@keyframes fadeInAllHMO {
+  from {
+    opacity: 0;
+    display: none;
+  }
+  to {
+    opacity: 1;
+    display: block;
   }
 }
