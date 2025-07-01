@@ -10,6 +10,7 @@ import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Payrolls from "../../../pages/platforms/finance/payroll";
 import Banners from "../../../pages/platforms/manager/settings/profile/banner";
+import TatServices from "../../../pages/platforms/manager/commerce/tatServices";
 
 import {
   Employees,
@@ -313,6 +314,13 @@ const SidebarItems = [
         path: "/services",
         icon: "concierge-bell",
         component: Services,
+      },
+      {
+        name: "TAT Services",
+        title: "Turn around Time for services.",
+        path: "/tatServices",
+        icon: "concierge-bell",
+        component: TatServices,
       },
       {
         name: "Duty Schedule",

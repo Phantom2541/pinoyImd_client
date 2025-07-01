@@ -1,96 +1,79 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
+
 const url = "/finance/journals/soa";
 const today = new Date();
 
 const initialState = {
-  /**
-   * for search and custom select.
-   */
   collections: [],
   filtered: [],
   cluster: [],
   vendor: { _id: "" },
   selected: {},
   formSubmitted: false,
-  month: new Date().getMonth() + 1,
-  year: new Date().getFullYear(),
-  /**
-   * for footer pagination
-   */
-  maxPage: 5, // for max page
-  totalPages: 0, // for pages
-  activePage: 1, // for active page
+  month: today.getMonth() + 1,
+  year: today.getFullYear(),
+  maxPage: 5,
+  totalPages: 0,
+  activePage: 1,
   isSuccess: false,
-  isLoading: false, // for loading
+  isLoading: false,
   message: "",
   showModal: false,
 };
 
-/**
- * Asynchronous thunk action to browse items.
- *
- * @function BROWSE
- * @param {Object} payload - The payload object containing token and key.
- * @param {string} payload.token - The authentication token.
- * @param {string} payload.key - The key for browsing.
- * @param {Object} thunkAPI - The thunk API object.
- * @returns {Promise<Object>} The response data or an error message.
- */
+// ✅ BROWSE
 export const BROWSE = createAsyncThunk(
-  `${url}`,
-  ({ token, keys }, thunkAPI) => {
+  `${url}/browse`,
+  async ({ token, keys }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, keys);
+      return await axioKit.universal(`${url}/browse`, token, keys);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
-
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
+// ✅ SAVE
 export const SAVE = createAsyncThunk(
   `${url}/save`,
-  ({ data, token }, thunkAPI) => {
+  async ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(url, data, token);
+      return await axioKit.save(url, data, token);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
-
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
-  try {
-    return axioKit.update(url, form.data, form.token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+// ✅ UPDATE
+export const UPDATE = createAsyncThunk(
+  `${url}/update`,
+  async ({ data, token }, thunkAPI) => {
+    try {
+      return await axioKit.update(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
-    // for template use only
     SetFilterByOUTSOURCE: (state, { payload }) => {
       const { value, vendor } = payload;
       if (value === "all") {
@@ -103,8 +86,7 @@ export const reduxSlice = createSlice({
         state.vendor = vendor;
       }
     },
-
-    SetSoaCluster: (state, { payload }) => {
+    SetSoaCluster: (state) => {
       const { soa, _id } = state.vendor;
       const fakeDB = localStorage.getItem("billing");
       let parseVoucher = fakeDB ? JSON.parse(fakeDB) : {};
@@ -127,42 +109,27 @@ export const reduxSlice = createSlice({
         if (index > -1) cluster.splice(index, 1);
         cluster.push({ date, deals, hasSelected: true });
       }
-
       state.cluster = cluster;
-
       localStorage.setItem(
         "billing",
         JSON.stringify({
-          ...JSON.parse(localStorage.getItem("billing" || "{}")),
+          ...JSON.parse(localStorage.getItem("billing") || "{}"),
           [state.vendor?._id]: cluster,
         })
       );
     },
-
     CHECK_SOA: (state, { payload }) => {
       if (!state.vendor._id)
         return "please select source first to proceed in picking voucher";
-
-      const { date, deal, totalDeals } = payload; //ex. totalDeals=5
-      /* 
-          The purpose of 'totalDeals' is to determine how many deals exist on a specific date. 
-          If 'totalDeals' is equal to the number of deals in the local storage store for that date,
-          it means that all deals for that date have already been checked.
-      */
+      const { date, deal, totalDeals } = payload;
       const _cluster = [...state.cluster];
       const _clusterIndex = _cluster.findIndex((item) => item?.date === date);
       if (_clusterIndex > -1) {
-        //if cluster is already exist
         const { deals = [] } = _cluster[_clusterIndex];
         const _deals = [...deals];
-
         const dealIndex = _deals.findIndex((item) => item?._id === deal?._id);
-        // if deal is already exist remove it
-        // if deal is not exist push it to deals
         dealIndex > -1 ? _deals.splice(dealIndex, 1) : _deals.push(deal);
-        // update cluster deals
         const _oldCluster = _cluster[_clusterIndex];
-
         if (_deals.length === 0) {
           _cluster.splice(_clusterIndex, 1);
         } else {
@@ -179,7 +146,7 @@ export const reduxSlice = createSlice({
       localStorage.setItem(
         "billing",
         JSON.stringify({
-          ...JSON.parse(localStorage.getItem("billing" || "{}")),
+          ...JSON.parse(localStorage.getItem("billing") || "{}"),
           [state.vendor?._id]: _cluster,
         })
       );
@@ -216,7 +183,7 @@ export const reduxSlice = createSlice({
         } else {
           state.month += 1;
         }
-      } else {
+      } else if (payload === "prev") {
         if (state.month === 1) {
           state.month = 12;
           state.year -= 1;
@@ -225,7 +192,12 @@ export const reduxSlice = createSlice({
         }
       }
     },
-
+    SetMONTH_VALUE: (state, { payload }) => {
+      state.month = payload;
+    },
+    SetYEAR: (state, { payload }) => {
+      state.year = payload;
+    },
     ResetDATE: (state) => {
       state.month = today.getMonth() + 1;
       state.year = today.getFullYear();
@@ -237,7 +209,6 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
       .addCase(BROWSE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -250,27 +221,24 @@ export const reduxSlice = createSlice({
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
       })
-      .addCase(BROWSE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+      .addCase(BROWSE.rejected, (state, { payload }) => {
+        state.message = payload;
         state.isLoading = false;
       })
-
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
-        state.collections.unshift(payload);
+      .addCase(SAVE.fulfilled, (state, { payload }) => {
+        const { success, payload: item } = payload;
+        state.collections.unshift(item);
         state.isSuccess = true;
+        state.message = success;
         state.isLoading = false;
       })
-      .addCase(SAVE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+      .addCase(SAVE.rejected, (state, { payload }) => {
+        state.message = payload;
         state.isLoading = false;
       })
       .addCase(UPDATE.pending, (state) => {
@@ -278,28 +246,26 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        const updateCollections = (collections) => {
-          const index = collections.findIndex(
-            (item) => item._id === payload._id
-          );
-          collections[index] = { ...collections[index], ...payload };
+      .addCase(UPDATE.fulfilled, (state, { payload }) => {
+        const { success, payload: updated } = payload;
+        const update = (list) => {
+          const index = list.findIndex((x) => x._id === updated._id);
+          if (index !== -1) list[index] = { ...list[index], ...updated };
         };
-        updateCollections(state.collections);
-        updateCollections(state.filtered);
-        state.message = success;
-        state.formSubmitted = false;
+        update(state.collections);
+        update(state.filtered);
         state.isSuccess = true;
+        state.formSubmitted = false;
+        state.message = success;
       })
-      .addCase(UPDATE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+      .addCase(UPDATE.rejected, (state, { payload }) => {
+        state.message = payload;
         state.formSubmitted = false;
       });
   },
 });
 
+// Exports
 export const {
   SetMaxPage,
   SetActivePAGE,
@@ -311,6 +277,8 @@ export const {
   SetSTATUS,
   SetPAYMENT,
   SetMONTH,
+  SetMONTH_VALUE,
+  SetYEAR,
   ToggleMODAL,
   ResetDATE,
   RESET,
