@@ -64,7 +64,7 @@ export default function Header() {
     return () => {
       socket.off("received_onboard");
     };
-  }, [activePlatform, dispatch, collections]);
+  }, [activePlatform, dispatch, collections, addToast]);
 
   return (
     <MDBView

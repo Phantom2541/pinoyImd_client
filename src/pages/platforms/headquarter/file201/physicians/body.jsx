@@ -5,9 +5,8 @@ import {
   DESTROY,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import { useToasts } from "react-toast-notifications";
-import DataTable from "../../../../../components/dataTable";
 import {
-  globalSearch,
+  // globalSearch,
   properFullname,
   getGenderIcon,
 } from "../../../../../services/utilities";
@@ -15,7 +14,7 @@ import Swal from "sweetalert2";
 // mobile;
 export default function Body() {
   const { token } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, isLoading } = useSelector(
+    { collections, message, isSuccess } = useSelector(
       ({ physicians }) => physicians
     ),
     [tieups, setTieups] = useState([]),
