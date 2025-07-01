@@ -15,6 +15,7 @@ import {
   SETSOURCE,
   SETSSX,
   RESET_INSOURCE,
+  SETHMO,
 } from "../../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import {
   INSOURCE,
@@ -130,10 +131,10 @@ export default function PosCard() {
     //   dispatch(FIND({ token, key: { _id } }));
     // }
     const _source = sources?.find((source) => source?._id.toString() === _id);
-    const { membership = "", contract = "", hmo = "", clients } = _source || {};
+    const { membership = "", contract = "", clients } = _source || {};
     setSource(_source);
     dispatch(RESET_INSOURCE());
-    dispatch(SETSOURCE({ _id: clients?._id, membership, contract, hmo }));
+    dispatch(SETSOURCE({ _id: clients?._id, membership, contract }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
 
@@ -212,10 +213,10 @@ export default function PosCard() {
           {category === 6 && (
             <>
               <span>HMO:</span>
-              <select>
+              <select onChange={({ target }) => dispatch(SETHMO(target.value))}>
                 <option value={""}>None</option>
                 {company?.hmo?.map(({ code }) => (
-                  <option>{HMO.getName(code)}</option>
+                  <option value={code}>{HMO.getName(code)}</option>
                 ))}
               </select>
             </>
