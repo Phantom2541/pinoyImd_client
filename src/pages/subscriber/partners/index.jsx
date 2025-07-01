@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import "./style.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,6 +9,8 @@ import HMO from "../../../services/fakeDb/hmo";
 
 export default function Partners() {
   const [showAll, setShowAll] = useState(false);
+  const [height, setHeight] = useState(0);
+  const containerRef = useRef(null);
   const { details } = useSelector(({ companies }) => companies),
     hmoCodes = (details?.hmo || []).map((item) => item.code),
     partners = HMO.collections.filter(
@@ -18,8 +20,16 @@ export default function Partners() {
         item.icon !== "/assets/logo/default.png"
     );
 
+  useEffect(() => {
+    if (showAll && containerRef.current) {
+      setHeight(containerRef.current.scrollHeight);
+    } else {
+      setHeight(0);
+    }
+  }, [showAll]);
+
   return (
-    <div className="subscriber-partners-section">
+    <div className={`subscriber-partners-section`}>
       <h1 className="subscriber-testimonials-title mb-5">
         Accredited HMO Partners
       </h1>
@@ -57,9 +67,10 @@ export default function Partners() {
           </SwiperSlide>
         ))}
       </Swiper>
-
       <div
-        className={`subscriber-partners-imageAll-container ${showAll || ""}`}
+        ref={containerRef}
+        className="subscriber-partners-imageAll-container"
+        style={{ height: `${height}px` }}
       >
         {partners.slice(1).map((hmo, index) => (
           <div
@@ -80,10 +91,34 @@ export default function Partners() {
         className="subscriber-partners-arrow-button-down"
         onClick={() => setShowAll(!showAll)}
       >
-        <span className={`subscriber-partners-arrow-wrapper`}>
-          <i className="fas fa-chevron-down subscriber-partners-arrow subscriber-partners-main"></i>
-          <i className="fas fa-chevron-down subscriber-partners-arrow subscriber-partners-trail1"></i>
-          <i className="fas fa-chevron-down subscriber-partners-arrow subscriber-partners-trail2"></i>
+        <span className="subscriber-partners-arrow-wrapper">
+          <i
+            className={`fas fa-chevron-${
+              showAll ? "up" : "down"
+            } subscriber-partners-arrow ${
+              showAll
+                ? "subscriber-partners-arrowUpAnimaton"
+                : "subscriber-partners-arrowDownAnimaton"
+            } subscriber-partners-main`}
+          ></i>
+          <i
+            className={`fas fa-chevron-${
+              showAll ? "up" : "down"
+            } subscriber-partners-arrow ${
+              showAll
+                ? "subscriber-partners-arrowUpAnimaton"
+                : "subscriber-partners-arrowDownAnimaton"
+            } subscriber-partners-trail1`}
+          ></i>
+          <i
+            className={`fas fa-chevron-${
+              showAll ? "up" : "down"
+            } subscriber-partners-arrow ${
+              showAll
+                ? "subscriber-partners-arrowUpAnimaton"
+                : "subscriber-partners-arrowDownAnimaton"
+            } subscriber-partners-trail2`}
+          ></i>
         </span>
       </button>
     </div>
