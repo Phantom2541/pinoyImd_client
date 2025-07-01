@@ -17,7 +17,7 @@ import Footer from "./footer.jsx";
 // import Printout from "./printout";
 
 export default function Sales() {
-  const { token, activePlatform, maxPage } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { isLoading } = useSelector(({ taskGenerator }) => taskGenerator),
     dispatch = useDispatch();
 
@@ -25,6 +25,7 @@ export default function Sales() {
    * Fetch source provider from the server and store it in localStorage
    * this data is not slow moving info
    */
+
   useEffect(() => {
     if (typeof window !== "undefined" && token && activePlatform.branchId) {
       const branchId = activePlatform.branchId;
@@ -66,7 +67,6 @@ export default function Sales() {
       ) : (
         <Body />
       )}
-
       {!isLoading && <Footer />}
       <GenerateTask />
     </MDBCard>

@@ -1,13 +1,37 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { SetSELECTED } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
+import { Services } from "../../../../../../../services/fakeDb";
 
 const PrimaryFooter = ({ deal }) => {
+  const { activePlatform } = useSelector(({ auth }) => auth);
+  const { rendered = [], cart = [] } = deal;
   const dispatch = useDispatch();
+
+  const department = activePlatform.department === "Laboratory" ? "LAB" : "RAD";
 
   const preAnalytical = async (deal) => {
     console.log("preAnalytical", deal);
+  };
+
+  const { dept } =
+    rendered?.find(
+      ({ dept }) =>
+        dept === (activePlatform.department === "Laboratory" ? "LAB" : "RAD")
+    ) || {};
+
+  const handlePrintOut = (isResult = false) => {
+    const list = cart?.flatMap((item) => item.packages || []);
+    const _inhouse = Services.whereIn(list);
+    const inhouseIDS = _inhouse.map(({ id }) => id);
+    const forms = Services.getTemplates(inhouseIDS, department);
+
+    localStorage.setItem("inhouse", JSON.stringify({ deal, forms, isResult }));
+    window.open(
+      "/printout/request/form",
+      "RequestForm",
+      "top=100px,left=100px,width=1050px,height=750px"
+    );
   };
 
   return (
@@ -33,6 +57,30 @@ const PrimaryFooter = ({ deal }) => {
         >
           <MDBIcon icon="user-injured" />
         </MDBBtn>
+        {dept && (
+          <>
+            <MDBBtn
+              type="button"
+              onClick={() => handlePrintOut(false)}
+              className="m-0 "
+              title="Print Barcode"
+              size="sm"
+              color="primary"
+            >
+              <MDBIcon icon="barcode" />
+            </MDBBtn>
+            <MDBBtn
+              type="button"
+              onClick={() => handlePrintOut(true)}
+              className="m-0 "
+              title="Print Results"
+              size="sm"
+              color="primary"
+            >
+              <MDBIcon icon="vials" />
+            </MDBBtn>
+          </>
+        )}
       </MDBBtnGroup>
     </>
   );

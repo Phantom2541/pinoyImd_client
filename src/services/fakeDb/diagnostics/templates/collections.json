@@ -16,14 +16,32 @@
       "PAPs",
       "PBS",
       "Drugtest"
+    ],
+    "codes": [
+      "UA",
+      "HE",
+      "CH",
+      "PA",
+      "MI",
+      "CO",
+      "SE",
+      "AN",
+      "BA",
+      "BX",
+      "CP",
+      "PAP",
+      "PBS",
+      "DT"
     ]
   },
   {
     "department": "RAD",
-    "components": ["ECG", "Ultrasound", "Xray", "2DEcho"]
+    "components": ["ECG", "Ultrasound", "Xray", "2DEcho"],
+    "codes": ["ECG", "US", "XR", "2D"]
   },
   {
     "department": "CLINIC",
-    "components": ["Certicifate", "Examination"]
+    "components": ["Certicifate", "Examination"],
+    "codes": ["CERT", "EXAM"]
   }
 ]

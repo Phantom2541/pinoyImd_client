@@ -1,13 +1,99 @@
 .subscriber-partners-section {
-  /* background-color: green; */
+  position: relative;
+  padding: 10px 0;
 }
 
 .subscriber-partners-container {
-  /* background-color: red; */
+  display: flex;
+  justify-content: center;
 }
 
 .subscriber-partners-image {
   background-color: white;
   width: 200px;
   height: 100px;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.subscriber-partners-imageAll-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+/* partners arrow down design */
+.subscriber-partners-arrow-button-down {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  background-color: transparent;
+  font-size: 1.7rem;
+  border: none;
+  cursor: pointer;
+}
+
+.subscriber-partners-arrow-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 2em;
+  height: 1.5em;
+}
+
+.subscriber-partners-arrow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 1.7rem;
+  color: var(--primary-color);
+  opacity: 0;
+  transform: translateX(0);
+  animation: arrow-slide-down 1.2s ease-in-out infinite;
+}
+
+.subscriber-partners-main {
+  animation-delay: 0s;
+  opacity: 1;
+}
+
+.subscriber-partners-trail1 {
+  animation-delay: 0.2s;
+}
+
+.subscriber-partners-trail2 {
+  animation-delay: 0.4s;
+}
+
+@keyframes arrow-slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.active {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    display: none;
+  }
 }
