@@ -54,6 +54,19 @@ export const SAVE = createAsyncThunk(`${url}/save`, async (form, thunkAPI) => {
   }
 });
 
+export const CLEARANCE_PAY = createAsyncThunk(
+  `${url}/clearance_pay`,
+  async (form, thunkAPI) => {
+    try {
+      return await axioKit.save(url, form.data, form.token, "clearance_pay");
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
 export const UPDATE = createAsyncThunk(
   `${url}/update`,
   async (form, thunkAPI) => {
@@ -237,11 +250,22 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
         state.formSubmitted = false;
       })
-      .addCase(SAVE.rejected, (state, { payload }) => {
-        state.message = payload;
+      .addCase(SAVE.rejected, (state, action) => {
+        state.message = action.payload;
         state.formSubmitted = false;
       })
 
+      .addCase(CLEARANCE_PAY.pending, (state) => {
+        state.formSubmitted = true;
+      })
+      .addCase(CLEARANCE_PAY.fulfilled, (state, _) => {
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(CLEARANCE_PAY.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.formSubmitted = false;
+      })
       .addCase(UPDATE.pending, (state) => {
         state.formSubmitted = true;
       })
