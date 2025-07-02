@@ -7,6 +7,7 @@ import {
   SetFILTERED,
   SetByGroup,
   SetByStatus,
+  setFilterByHasDone,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { Search as SEARCH } from "../../../../../components/searchables";
 import { Templates } from "../../../../../services/fakeDb";
@@ -36,6 +37,7 @@ const Headers = ({ searchKey }) => {
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, departmentCode]);
+  console.log("filtered", filtered);
 
   return (
     <MDBView
@@ -72,14 +74,17 @@ const Headers = ({ searchKey }) => {
             <select
               className="form-control"
               style={{ width: 150 }}
-              onChange={(e) => dispatch(SetByStatus(e.target.value))}
+              onChange={(e) => {
+                dispatch(SetByStatus(e.target.value));
+                dispatch(setFilterByHasDone(e.target.value));
+              }}
             >
               <option value="" disabled style={{ fontWeight: "bold" }}>
                 Status ...
               </option>
               <option value="all">All</option>
-              <option value="pending">Pending</option>
-              <option value="done">Done</option>
+              <option value={false}>Pending</option>
+              <option value={true}>Done</option>
             </select>
           </div>
           <div>
