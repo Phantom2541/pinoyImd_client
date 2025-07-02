@@ -194,6 +194,41 @@ export const reduxSlice = createSlice({
       state.task = task;
       state.showModal = true;
     },
+    setFilterByHasDone: (state, action) => {
+      const filter = action.payload;
+
+      if (filter === "all") {
+        state.filtered = state.collections;
+      } else {
+        const isDone = filter === "true";
+
+        state.filtered = state.collections.filter((task) => {
+          if (!task.diagnostic) return false;
+
+          const diagnostics = Object.values(task.diagnostic);
+
+          if (isDone) {
+            // Keep if any diagnostic hasDone === true
+            return diagnostics.some((d) => d.hasDone === true);
+          } else {
+            // Keep if all diagnostics are missing hasDone or have hasDone !== true
+            return diagnostics.every((d) => d.hasDone !== true);
+          }
+        });
+      }
+    },
+    setFilterByDiagnosticKey: (state, action) => {
+      const selectedKey = action.payload; // e.g., "Chemistry"
+
+      if (selectedKey === "all") {
+        state.filtered = state.collections;
+      } else {
+        state.filtered = state.collections.filter((task) => {
+          return task.diagnostic && task.diagnostic[selectedKey];
+        });
+      }
+    },
+
     /**
      * for U/A, CBC, Feca
      */
@@ -308,6 +343,8 @@ export const {
   SetSELECTED,
   SetPatient,
   SetTASK,
+  setFilterByHasDone,
+  setFilterByDiagnosticKey,
   SetPARAMS,
   SetPrint,
   SetPackages,
