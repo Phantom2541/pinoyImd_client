@@ -13,7 +13,7 @@ import Profile from "../components/profile";
 import Contract from "../components/contract";
 
 import { useSelector } from "react-redux";
-import StaffSchedule from "./platforms/cashier/scheduler";
+import { Attendances } from "./platforms/dtr";
 
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
@@ -73,11 +73,7 @@ export default function Routes() {
     <Switch>
       {renderSidebars()}
       <Route path={`${platformPrefix}/profile`} exact component={Profile} />
-      <Route
-        path={`${platformPrefix}/shifts`}
-        exact
-        component={StaffSchedule}
-      />
+      <Route path={`${platformPrefix}/shifts`} exact component={Attendances} />
       <Route path={`${platformPrefix}/contract`} exact component={Contract} />
       <Route component={NotFound} />
     </Switch>

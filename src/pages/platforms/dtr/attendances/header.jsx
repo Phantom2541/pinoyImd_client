@@ -4,8 +4,8 @@ import { MDBView } from "mdbreact";
 import {
   BROWSE,
   SetFILTER,
-} from "../../../../../services/redux/slices/market/attendances";
-import { Search } from "../../../../../components/searchables";
+} from "./../../../../services/redux/slices/market/attendances";
+import { Search } from "./../../../../components/searchables";
 
 const Header = () => {
   const { collections } = useSelector(({ attendances }) => attendances);
@@ -23,7 +23,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Attendances
+          {collections.length} Attendances ni bayaw
         </span>
       </div>
       <div>

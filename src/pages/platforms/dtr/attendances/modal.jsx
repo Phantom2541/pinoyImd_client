@@ -12,7 +12,7 @@ import {
   SAVE,
   UPDATE,
   TOGGLE,
-} from "../../../../../services/redux/slices/market/attendances";
+} from "./../../../../services/redux/slices/market/attendances";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 
