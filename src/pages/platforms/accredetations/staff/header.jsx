@@ -43,28 +43,5 @@ return (
   </>
 );
 
-}
-  const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const dispatch = useDispatch();
-  const handlePrintOut = () => window.print();
-  // Or if it's from Redux or context
-  useEffect(() => {
-    const abbr = [...employment.employed].map(({ abbr }) => abbr);
-    dispatch(
-      EMPLOYEES({ token, params: { branch: activePlatform?.branchId, abbr } })
-    );
-  }, [token, dispatch, activePlatform]);
-  //initial values
-  return (
-    <MDBView
-      cascade
-      className="gradient-card-header blue-gradient py-2 mx-4 d-flex justify-content-between align-items-center"
-    >
-      <span className="ml-3 ">Personnels List</span>
-      <MDBBtn size="sm" rounded color="info" onClick={() => handlePrintOut()}>
-        <MDBIcon icon="print" />
-      </MDBBtn>
-    </MDBView>
-  );
 };
 export default Header;
