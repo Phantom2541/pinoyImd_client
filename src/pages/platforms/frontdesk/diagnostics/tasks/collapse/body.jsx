@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBTable, MDBCardBody } from "mdbreact";
 import Record from "./record";
 import { useSelector } from "react-redux";

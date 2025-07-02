@@ -18,7 +18,6 @@ const Header = () => {
     { branch = {} } = activePlatform,
     { companyId = {} } = branch,
     dispatch = useDispatch();
-  console.log("hmo", hmo);
 
   const handleAdd = (item) => dispatch(SetUPDATE(item));
 

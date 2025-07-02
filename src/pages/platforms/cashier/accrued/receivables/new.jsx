@@ -17,10 +17,10 @@ const Body = () => {
   return (
     <MDBTable responsive hover bordered>
       <thead>
-        <tr>
+        <tr> 
           <th>#</th>
           <th>Patient</th>
-          <th>Menu</th>
+          <th>Services</th>
           <th>Amount</th>
         </tr>
       </thead>

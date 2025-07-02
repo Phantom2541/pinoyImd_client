@@ -147,6 +147,12 @@ export const reduxSlice = createSlice({
       state.activePage = Math.min(state.activePage, state.totalPages);
     },
 
+    InsertRealtimeOnboard: (state, { payload }) => {
+      //this reducer is for received realtime onboard and set into the filtered and collections
+      state.collections.unshift(payload);
+      state.filtered.unshift(payload);
+    },
+
     SetACTIVE_STATUS: (state, { payload }) => {
       state.activeStatus = payload;
     },
@@ -339,6 +345,8 @@ export const {
   SetMaxPage,
   SetACTIVE_STATUS,
   SetFILTERED,
+  //socket
+  InsertRealtimeOnboard,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

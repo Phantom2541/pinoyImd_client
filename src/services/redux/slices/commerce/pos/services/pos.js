@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, getAge } from "../../../../../utilities";
+import { axioKit, getAge, socket } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
 // import _ from "lodash";
 const url = "commerce/pos/services/deals";
@@ -280,7 +280,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload, dealForOnboard } = action.payload;
+        const fakeDB = localStorage.getItem("activePlatform");
+        if (fakeDB) {
+          //this is realtime send it to the onboarding
+          const { department } = JSON.parse(fakeDB);
+          socket.emit("send_onboard", { ...dealForOnboard, department });
+        }
+
         state.message = success;
         state.transaction = payload;
         state.ssx = "";
