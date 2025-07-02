@@ -37,15 +37,35 @@ const Body = () => {
 
   return (
     <MDBTable responsive hover bordered>
-      <thead style={{ backgroundColor: "#", color: "black" }}>
+      <thead
+        style={{
+          backgroundColor: "#f0f0f0",
+          color: "black",
+          textAlign: "center",
+        }}
+      >
         <tr>
-          <th>#</th>
-          <th>IN</th>
-          <th>OUT</th>
-          <th>Status</th>
-          <th>Action</th>
+          <th rowSpan="2" style={{ textTransform: "uppercase" }}>
+            #
+          </th>
+          <th colSpan="2" style={{ textTransform: "uppercase" }}>
+            AM
+          </th>
+          <th colSpan="2" style={{ textTransform: "uppercase" }}>
+            PM
+          </th>
+          <th rowSpan="2" style={{ textTransform: "uppercase" }}>
+            Status
+          </th>
+        </tr>
+        <tr>
+          <th style={{ textTransform: "uppercase" }}>In</th>
+          <th style={{ textTransform: "uppercase" }}>Out</th>
+          <th style={{ textTransform: "uppercase" }}>In</th>
+          <th style={{ textTransform: "uppercase" }}>Out</th>
         </tr>
       </thead>
+
       <tbody>
         {paginatedData?.map((item, index) => {
           const { _id, in: inVal, out, status } = item;
