@@ -46,6 +46,7 @@ import {
 } from "../../../pages/platforms/manager/accrued";
 
 import {
+  Philhealth,
   Outsources,
   Utilities,
   Hotlines,
@@ -398,6 +399,13 @@ const SidebarItems = [
         path: "/sources",
         icon: "cogs",
         children: [
+          {
+            name: "PhilHealth",
+            title: "???",
+            path: "/Philhealth",
+            icon: "file-invoice",
+            component: Philhealth,
+          },
           {
             name: "Outsourcing",
             title: "External service providers.",

@@ -75,7 +75,7 @@ const Machines = () => {
             })}
           </tbody>
             </MDBTable>
-         
+      
 
 
 
