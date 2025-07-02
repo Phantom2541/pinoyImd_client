@@ -5,3 +5,4 @@ export { default as DragDrop } from "./dragDrop";
 export { default as Search } from "./search";
 export { default as Cards } from "./cards";
 export { default as Schedule } from "./schedule";
+export { default as ImageDragAndDrop } from "./imageDragAndDrop";

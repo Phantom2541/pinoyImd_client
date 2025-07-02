@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
@@ -52,8 +52,17 @@ const coinSize = {
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { showModal, title, selected, day, month, year, isSuccess, formSubmitted } =
-      useSelector(({ remittances }) => remittances),
+    {
+      showModal,
+      title,
+      selected,
+      day,
+      month,
+      year,
+      isSuccess,
+      formSubmitted,
+      description = "",
+    } = useSelector(({ remittances }) => remittances),
     [floating, setFloating] = useState({ bills: {}, coins: {} }),
     [sum, setSum] = useState(0),
     [coh, setCoh] = useState(0),
@@ -73,8 +82,6 @@ export default function Modal() {
   }, [formSubmitted, isSuccess, showModal, dispatch]);
 
   useEffect(() => {
-    console.log("selected?.coh", selected);
-
     setCoh(selected?.coh);
   }, [selected]);
 
@@ -136,7 +143,7 @@ export default function Modal() {
 
     setSum(total);
   };
-
+  console.log("selected", selected);
   const handleSubmit = () => {
     const _floating = removeUndefinedValues(floating);
     if (!selected?._id) {
@@ -176,6 +183,7 @@ export default function Modal() {
           },
         })
       ).then(() => {
+        dispatch(TOGGLE({ key: "closed" }));
         localStorage.setItem(
           "remittance",
           JSON.stringify({
@@ -209,17 +217,16 @@ export default function Modal() {
       },
     }));
   };
-  console.log("coh", coh);
 
   return (
     <MDBModal
       isOpen={showModal}
-      toggle={() => dispatch(TOGGLE({ key: "open" }))}
+      toggle={() => dispatch(TOGGLE({ key: "closed" }))}
       size="xl"
       backdrop
     >
       <MDBModalHeader
-        toggle={() => dispatch(TOGGLE({ key: "open" }))}
+        toggle={() => dispatch(TOGGLE({ key: "closed" }))}
         className="d-flex align-items-center justify-content-between darken-3 light-blue white-text"
       >
         <div className="d-flex justify-content-between">
@@ -255,7 +262,9 @@ export default function Modal() {
           </MDBTypography>
         ) : (
           <MDBTypography note noteTitle="Note: " tag="h6" noteColor="primary">
-            Declare your floating cash by selecting each denomination.
+            {description
+              ? description
+              : "Declare your floating cash by selecting each denomination."}
           </MDBTypography>
         )}
         <MDBRow>

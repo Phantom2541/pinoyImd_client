@@ -19,6 +19,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  description: "",
 };
 
 export const BROWSE = createAsyncThunk(
@@ -154,17 +155,23 @@ export const reduxSlice = createSlice({
       state.day = payload;
     },
     TOGGLE: (state, { payload = {} }) => {
-      const { key, value } = payload;
-      if (key === "census") {
-        state.showCensus = !state.showCensus;
-        return;
-      }
-      state.showModal = !state.showModal;
-      if (value) {
-        state.title =
-          key === "open" ? "Floating Cash" : "Closing Cash Register";
-        state.day = value;
-        state.showModal = true;
+      const { key, value, description = "" } = payload;
+      if (key === "closed") {
+        state.showModal = !state.showModal;
+        state.description = "";
+      } else {
+        if (key === "census") {
+          state.showCensus = !state.showCensus;
+          return;
+        }
+        // state.showModal = !state.showModal;
+        if (value) {
+          state.title =
+            key === "open" ? "Floating Cash" : "Closing Cash Register";
+          state.day = value;
+          state.showModal = true;
+          state.description = description;
+        }
       }
     },
 
