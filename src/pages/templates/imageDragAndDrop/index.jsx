@@ -17,8 +17,6 @@ const ImageDragAndDrop = () => {
   const [dragCounter, setDragCounter] = useState(0);
   const [showIcons, setShowIcons] = useState(false);
 
-  console.log("dragCounter", dragCounter);
-
   const handleFiles = (files) => {
     const file = files[0];
     if (file && file.type.startsWith("image/")) {

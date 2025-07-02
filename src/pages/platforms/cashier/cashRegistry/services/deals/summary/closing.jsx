@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -12,16 +12,47 @@ import {
 import SummaryLoading from "./loading";
 import { Services } from "../../../../../../../services/fakeDb";
 import Modal from "../modal";
+import { TOGGLE } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 export default function Vouchers() {
   const { collections, total, isLoading } = useSelector(({ deals }) => deals),
     { selected } = useSelector(({ remittances }) => remittances),
     [menuCensus, setMenuCensus] = useState([]),
+    [isDeclareFC, setIsDeclareFC] = useState(true),
     [serviceCensus, setServiceCensus] = useState([]),
     [breakdown, setBreakdown] = useState({}),
     [activeTab, setActiveTab] = useState("menus"),
     [show, setShow] = useState(false),
-    [selectedCensus, setSelectedCensus] = useState({});
+    [selectedCensus, setSelectedCensus] = useState({}),
+    dispatch = useDispatch();
+
+  const handleSummary = useCallback(() => {
+    if (selected?._id) {
+      const menus = menuCensus.reduce((acc, { _id, count }) => {
+        acc[_id] = count;
+        return acc;
+      }, {});
+
+      const data = {
+        _id: selected?._id,
+        census: {
+          menus,
+          services: serviceCensus,
+        },
+        breakdown,
+        patient: collections.length,
+        gross: total,
+      };
+      setSelectedCensus(data);
+      toggle();
+    }
+  }, [selected, collections]);
+
+  useEffect(() => {
+    if (!isDeclareFC && selected?._id) {
+      handleSummary();
+    }
+  }, [isDeclareFC, handleSummary, selected]);
 
   useEffect(() => {
     if (collections && collections.length > 0 && !isLoading) {
@@ -63,27 +94,21 @@ export default function Vouchers() {
 
   const handleSubmit = () => {
     if (!selected) {
-      alert("Please set a floating cash first.");
-      return;
+      dispatch(
+        TOGGLE({
+          key: "open",
+          value: new Date().getDate(),
+          seleted: {},
+          description:
+            "Looks like you haven't set your floating cash yet. Go ahead and declare it now!",
+        })
+      );
+      setIsDeclareFC(false);
+      // alert("Please set a floating cash first.");
+    } else {
+      setIsDeclareFC(true);
+      handleSummary();
     }
-
-    const menus = menuCensus.reduce((acc, { _id, count }) => {
-      acc[_id] = count;
-      return acc;
-    }, {});
-
-    const data = {
-      _id: selected._id,
-      census: {
-        menus,
-        services: serviceCensus,
-      },
-      breakdown,
-      patient: collections.length,
-      gross: total,
-    };
-    setSelectedCensus(data);
-    toggle();
   };
 
   return (

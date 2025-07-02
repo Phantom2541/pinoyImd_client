@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CashRegister from "../cashierOld/pos";
 import { MDBCard, MDBCardBody, MDBContainer } from "mdbreact";
@@ -13,6 +13,7 @@ import {
   RESET,
   SetSOURCE,
 } from "../../../../../../services/redux/slices/assets/providers.js";
+import { Denomination } from "../remittances/modal/index.js";
 
 export default function Deals() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
@@ -88,6 +89,7 @@ export default function Deals() {
         {filtered.length > 0 && <Payments />}
         <Closing />
       </div>
+      <Denomination />
     </MDBContainer>
   );
 }

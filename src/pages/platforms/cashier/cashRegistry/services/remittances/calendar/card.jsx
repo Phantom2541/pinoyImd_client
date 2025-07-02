@@ -20,7 +20,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
     collector,
     closing,
     breakdown = {},
-    expenses,
+    expenses = 0,
   } = item;
 
   const isRemitted = !!collector;
@@ -28,8 +28,6 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
   const { cash, ...rest } = breakdown;
   const nonCash = Object.entries(rest);
   const net = (opening.sum || 0) + cash - expenses;
-
-  console.log("breakdown : ", breakdown);
 
   return (
     <div className="position-relative">
