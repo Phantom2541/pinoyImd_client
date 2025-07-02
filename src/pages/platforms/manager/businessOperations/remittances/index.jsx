@@ -25,7 +25,7 @@ export default function Remittances() {
         BROWSE({
           token,
           key: {
-            branch: activePlatform?.branchId,
+            branchId: activePlatform?.branchId,
             startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
           },

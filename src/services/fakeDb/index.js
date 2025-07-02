@@ -1,4 +1,5 @@
 import Sidebars from "./sidebars";
+import Developer from "./developer";
 import {
   Statements,
   Menus,
@@ -11,7 +12,6 @@ import {
   Categories,
   Memberships,
 } from "./finance";
-import Developer from "./developer";
 import {
   MicroscopicInRange,
   MicroscopicResultInWord,

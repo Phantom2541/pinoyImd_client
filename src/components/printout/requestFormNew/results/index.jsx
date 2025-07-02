@@ -9,6 +9,7 @@ import {
 import { capitalize } from "../../../../services/utilities";
 import Header from "./header";
 import { useSelector } from "react-redux";
+import "./style.css";
 
 const formComponents = {
   Chemistry,
@@ -62,12 +63,17 @@ const Stub = ({ sale, forms }) => {
     { fullName = {} } = customerId || {};
 
   return (
-    <div>
+    <div className="bg-white">
       {Object?.keys(forms)?.map((key, index, arr) => {
-        const isLast = index === arr.length - 1;
+        // const isLast = index === arr.length - 1;
         const FormComponent = getComponents(key);
         return (
-          <div key={index}>
+          <div
+            key={index}
+            style={{
+              pageBreakAfter: index !== arr.length - 1 ? "always" : "auto",
+            }}
+          >
             <div
               style={{
                 width: "105mm",
@@ -93,6 +99,7 @@ const Stub = ({ sale, forms }) => {
 
               <Hr />
               <h6>{key}</h6>
+              <Hr />
 
               {FormComponent && (
                 <div style={{ fontSize: "10px", padding: "2px" }}>
@@ -112,7 +119,8 @@ const Stub = ({ sale, forms }) => {
               />
               <Hr />
             </div>
-            {!isLast && (
+            <div className="my-5"></div>
+            {/* {!isLast && (
               <div
                 style={{
                   height: "1.7px",
@@ -124,7 +132,7 @@ const Stub = ({ sale, forms }) => {
                 }}
                 className={`my-4 `}
               />
-            )}
+            )} */}
           </div>
         );
       })}
