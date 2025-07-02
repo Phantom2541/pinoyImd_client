@@ -96,7 +96,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user-alt-slash" className="mr-2" />
-        Clerance Pay
+        Clearance Pay
       </MDBModalHeader>
       <form onSubmit={handleSubmit}>
         <MDBModalBody>
