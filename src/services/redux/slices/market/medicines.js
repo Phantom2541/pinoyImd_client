@@ -178,7 +178,6 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
-        state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { payload } = action.payload;
