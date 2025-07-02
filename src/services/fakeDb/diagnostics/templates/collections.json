@@ -13,9 +13,9 @@
       "Bacteriology",
       "Biopsy",
       "Compatibility",
-      "PAPs",
-      "PBS",
-      "Drugtest"
+      "PAP Smear",
+      "Pheripheral Blood Smear",
+      "Drug test"
     ],
     "codes": [
       "UA",
@@ -24,7 +24,7 @@
       "PA",
       "MSC",
       "CO",
-      "SE",
+      "SI",
       "AN",
       "BA",
       "BX",

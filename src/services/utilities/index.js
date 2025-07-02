@@ -51,7 +51,7 @@ import removeUndefinedValues from "./dataCleaner";
 import collapse from "./collapse";
 import Male from "../../assets/male.jpg";
 import Female from "../../assets/female.jpg";
-import PresetIMD from "../../assets/iMD.jpg";
+import PresetIMD from "../../assets/iMD.png";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
 // Clear's Cache

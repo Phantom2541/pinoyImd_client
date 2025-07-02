@@ -34,6 +34,8 @@ const initialState = {
   //   attributes,
   collections: [],
   filtered: [],
+  byGroup: "all",
+  byStatus: "all",
   showModal: false,
   totalPages: 0,
   page: 1,
@@ -167,6 +169,14 @@ export const reduxSlice = createSlice({
       }
       state.filtered = payload;
     },
+    SetByGroup: (state, action) => {
+      state.byGroup = action.payload;
+      console.log("SetByGroup action.payload :", action.payload);
+    },
+    SetByStatus: (state, action) => {
+      state.byStatus = action.payload;
+      console.log("SetByStatus action.payload :", action.payload);
+    },
     SetSELECTED: (state, { payload }) => {
       const { activeCOLAPSE, deal } = payload;
       state.selected = { ...deal };
@@ -227,7 +237,6 @@ export const reduxSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
       .addCase(TASKS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -303,6 +312,8 @@ export const {
   SetPrint,
   SetPackages,
   SetFILTERED,
+  SetByGroup,
+  SetByStatus,
   SetMODAL,
   SetPREFERENCES,
   SetHEADS,
