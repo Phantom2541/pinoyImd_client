@@ -30,7 +30,7 @@ const PrimaryFooter = ({ deal }) => {
     window.open(
       "/printout/request/form",
       "RequestForm",
-      "top=100px,left=100px,width=1050px,height=750px"
+      "top=100px,left=100px,width=500px,height=750px"
     );
   };
 
