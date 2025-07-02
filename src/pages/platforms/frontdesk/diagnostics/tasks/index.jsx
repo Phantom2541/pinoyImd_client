@@ -24,11 +24,12 @@ import {
   RESET as PHYRESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
+import Table from "./table";
 
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { message, isSuccess } = useSelector(({ deals }) => deals),
-    { isLoading } = useSelector(({ validator }) => validator),
+    { isLoading, byGroup } = useSelector(({ validator }) => validator),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -90,17 +91,17 @@ export default function Tasks() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
-  // if (activePlatform.department === "Laboratory" && print) {
-  //   return <LabTaskPrintout />;
-  // } else if (activePlatform.department === "Radiology" && print) {
-  //   return <RadTaskPrintout />;
-  // }
 
-  console.log("isLoading", isLoading);
   return (
     <MDBCard narrow>
       <Header />
-      {isLoading ? <TableLoading /> : <DealCollapse />}
+      {isLoading ? (
+        <TableLoading />
+      ) : byGroup === "all" ? (
+        <DealCollapse />
+      ) : (
+        <Table />
+      )}
       <Footer />
       <ResultEntry />
     </MDBCard>

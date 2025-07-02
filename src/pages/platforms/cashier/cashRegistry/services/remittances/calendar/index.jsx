@@ -34,7 +34,6 @@ export default function Calendar() {
             const dt = new Date(createdAt);
             return dt >= localDate && dt < nextDate;
           });
-
           return (
             <Card
               key={num}

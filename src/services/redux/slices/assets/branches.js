@@ -6,6 +6,7 @@ const url = "assets/branches";
 const initialState = {
   collections: [],
   filtered: [],
+  tat: [],
   formSubmitted: false,
   didSearch: false,
   selected: {},
@@ -66,6 +67,24 @@ export const SAVE = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const UPDATE_TAT = createAsyncThunk(
+  `${url}/update_tat`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "update_tat");
     } catch (error) {
       const message =
         (error.response &&
@@ -187,10 +206,29 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetCREATE: (state) => {
+      state.selected = {
+        department: "",
+        mode: "",
+        section: "",
+        expectedAt: "",
+      };
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;
       state.willCreate = false;
+    },
+    SetTAT: (state, { payload }) => {
+      state.collections = state.filtered = payload;
+      console.log("Settat", payload);
     },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
@@ -272,6 +310,27 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE_TAT.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE_TAT.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        state.message = success;
+        state.collections.unshift(payload);
+        console.log("colload", payload);
+
+        state.filtered.unshift(payload);
+        console.log("filload", payload);
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE_TAT.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.formSubmitted = false;
@@ -469,6 +528,9 @@ export const {
   SetFILTERED,
   SetSELECTED,
   TOGGLE,
+  SetCREATE,
+  SetEDIT,
+  SetTAT,
   RESET,
   SetMaxPage,
   SetActivePAGE,

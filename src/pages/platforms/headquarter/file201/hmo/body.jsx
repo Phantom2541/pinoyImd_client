@@ -7,14 +7,14 @@ import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
 import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 import Swal from "sweetalert2";
 const Body = () => {
-  const { filtered, activePage, maxPage, isSuccess } = useSelector(
+  const { filtered, activePage, maxPage } = useSelector(
       ({ companies }) => companies
     ),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   const handleRemoved = (code) => {
-    const newHMO = filtered.filter((item) => item.code !== code);
+    const newHMO = filtered.filter((item) => item.code !== code && item.code);
     Swal.fire({
       title: `are you sure to remove this ${HMO.getName(code)}?`,
       text: "You won't be able to revert this!",
@@ -31,17 +31,9 @@ const Body = () => {
             token,
           })
         ).then(() => {
-          dispatch(SetActivePlatform(newHMO));
-          console.log("handleRemoved", newHMO);
+          dispatch(SetActivePlatform({ data: newHMO, isHMO: true }));
         });
     });
-
-    // // Check if object has changed
-    // if (isEqual(form, selected)) {
-    //   return addToast("No changes found, skipping update.", {
-    //     appearance: "info",
-    //   });
-    // }
   };
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -61,8 +53,8 @@ const Body = () => {
       </MDBTableHead>
       <MDBTableBody>
         {paginatedData.map((data, index) => {
-          const { code, cp } = data;
-          const { phone, email, agent } = cp;
+          const { code = "", cp = {} } = data;
+          const { phone = "", email = "", agent = "" } = cp;
           return (
             <tr key={index}>
               <td>{index + 1}</td>

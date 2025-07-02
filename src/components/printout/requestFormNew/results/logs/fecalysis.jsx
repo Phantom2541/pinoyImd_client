@@ -1,6 +1,4 @@
 import React from "react";
-import { MDBRow, MDBCol } from "mdbreact";
-
 const FecalysisData = [
   ["Color", "Consistency", "Mucus"],
   ["Occult Blood", "Fat Globules", "Starch Granules"],

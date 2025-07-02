@@ -12,20 +12,18 @@ import {
   MDBCol,
 } from "mdbreact";
 import {
-  SAVE,
   UPDATE,
   TOGGLETeam,
 } from "../../../../../../services/redux/slices/diagnostics/clinician/quest";
-import { SearchUser } from "../../../../../../components/searchables";
+// import { SearchUser } from "../../../../../../components/searchables";
 import { COMPANY } from "../../../../../../services/redux/slices/assets/persons/personnels";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { properFullname } from "../../../../../../services/utilities";
 
 export default function Modal() {
-  const { showModalTeam, selected, team, willCreateTeam, isLoading } = useSelector(
-      ({ quest }) => quest
-    ),
+  const { showModalTeam, selected, team, willCreateTeam, isLoading } =
+      useSelector(({ quest }) => quest),
     { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
@@ -100,13 +98,13 @@ export default function Modal() {
   const handleClose = () => dispatch(TOGGLETeam());
 
   // Handle selected member from search
-  const handleMember = (patient) => {
-    setForm({
-      ...form,
-      userId: patient._id,
-      user: patient,
-    });
-  };
+  // const handleMember = (patient) => {
+  //   setForm({
+  //     ...form,
+  //     userId: patient._id,
+  //     user: patient,
+  //   });
+  // };
 
   return (
     <MDBModal isOpen={showModalTeam} toggle={handleClose} backdrop size="sm">
@@ -188,7 +186,9 @@ export default function Modal() {
                 ? "false"
                 : ""
             }
-            onChange={(e) => handleChange("hasInformed", e.target.value === "true")}
+            onChange={(e) =>
+              handleChange("hasInformed", e.target.value === "true")
+            }
           >
             <option disabled value="">
               Options

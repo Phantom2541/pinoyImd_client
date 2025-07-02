@@ -129,6 +129,7 @@ export default function Census() {
     dispatch(CENSUS({ token, data }));
     // dispatch(TOGGLE({ key: "census" }));
   };
+  console.log("breakdown", breakdown);
 
   const tabStyle = (tab) =>
     `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;
@@ -193,7 +194,39 @@ export default function Census() {
             </div>
           ))}
         </div>
-
+        <div className=" d-flex justify-content-between align-items-center mb-3">
+          {[
+            {
+              icon: "money-bill",
+              text: "Cash",
+              value: currency(breakdown?.cash),
+              color: "text-primary",
+            },
+            {
+              icon: "money-bill",
+              text: "Gcash",
+              value: currency(breakdown?.gcash),
+              color: "text-primary",
+            },
+            {
+              icon: "money-bill",
+              text: "Downpayment",
+              value: currency(breakdown?.downpayment),
+              color: "text-primary",
+            },
+          ].map(({ icon, text, value, color }, index) => (
+            <div
+              key={index}
+              size="3"
+              className={index === 2 ? "text-right" : ""}
+            >
+              <h6 className="mb-0">
+                <MDBIcon icon={icon} className={`${color} mr-2`} />
+                {text}: <strong>{value}</strong>
+              </h6>
+            </div>
+          ))}
+        </div>
         <div className="mb-3 d-flex">
           <MDBBtn
             className={tabStyle("menus")}

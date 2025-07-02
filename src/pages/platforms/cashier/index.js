@@ -1,6 +1,7 @@
 import { Cashier, Deals, Sales, Remittances, Onboarding } from "./cashRegistry";
 import { Menus, Services } from "./catalog";
 import {
+  Philhealth,
   Outsources,
   Utilities,
   Hotlines,
@@ -33,6 +34,7 @@ export {
   Wellness,
   HMO,
   Referrals,
+  Philhealth,
   Outsources,
   Utilities,
   Hotlines,

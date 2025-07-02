@@ -227,8 +227,15 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetHMO: (state, { payload }) => {
-      console.log("payload", payload);
-
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (page > totalPAges) {
+          state.page = totalPAges;
+        }
+      }
       state.hmo = state.filtered = payload;
     },
     SetPagination: (state) => {

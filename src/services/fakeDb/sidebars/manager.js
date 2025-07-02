@@ -10,6 +10,7 @@ import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Payrolls from "../../../pages/platforms/finance/payroll";
 import Banners from "../../../pages/platforms/manager/settings/profile/banner";
+import TatServices from "../../../pages/platforms/manager/commerce/tatServices";
 
 import {
   Employees,
@@ -45,6 +46,7 @@ import {
 } from "../../../pages/platforms/manager/accrued";
 
 import {
+  Philhealth,
   Outsources,
   Utilities,
   Hotlines,
@@ -315,6 +317,13 @@ const SidebarItems = [
         component: Services,
       },
       {
+        name: "TAT Services",
+        title: "Turn around Time for services.",
+        path: "/tatServices",
+        icon: "concierge-bell",
+        component: TatServices,
+      },
+      {
         name: "Duty Schedule",
         title: "Scheduling of personnel duties.",
         path: "/duty",
@@ -390,6 +399,13 @@ const SidebarItems = [
         path: "/sources",
         icon: "cogs",
         children: [
+          {
+            name: "PhilHealth",
+            title: "???",
+            path: "/Philhealth",
+            icon: "file-invoice",
+            component: Philhealth,
+          },
           {
             name: "Outsourcing",
             title: "External service providers.",

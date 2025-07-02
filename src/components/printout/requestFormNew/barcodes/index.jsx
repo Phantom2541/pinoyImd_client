@@ -41,7 +41,7 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
         );
       }
     });
-  }, [forms]);
+  }, [forms, sale, refs, customerName, pn]);
 
   return (
     <div>

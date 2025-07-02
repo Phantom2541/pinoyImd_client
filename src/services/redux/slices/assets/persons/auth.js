@@ -157,6 +157,8 @@ export const reduxSlice = createSlice({
       state.progressBar = data.payload;
     },
     SetActivePlatform: (state, action) => {
+      //this function is for setHMO and setTAT
+      const { isHMO = false, data } = action.payload;
       const { branch } = state.activePlatform;
       const { companyId } = branch;
 
@@ -164,9 +166,10 @@ export const reduxSlice = createSlice({
         ...state.activePlatform,
         branch: {
           ...branch,
-          companyId: { ...companyId, hmo: action.payload },
+          companyId: { ...companyId, ...(isHMO && { hmo: data }) },
         },
       };
+      localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
       state.activePlatform = _activePlatform;
     },
 
