@@ -15,6 +15,7 @@ import Loading from "./loading";
 import Doctors from "./doctor";
 import Employees from "./employee";
 import Partners from "./partners";
+import Philhealth from "./philhealth";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
@@ -255,7 +256,10 @@ const Subscriber = ({ match }) => {
                 <Partners />
               </div>
             )}
-
+            <hr className="mb-5" />
+            <div id="testimonials">
+              <Philhealth />
+            </div>
             <hr className="mb-5 mt-5" />
             <div id="testimonials">
               <Testimonials />

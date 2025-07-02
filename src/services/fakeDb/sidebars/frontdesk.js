@@ -41,6 +41,7 @@ import {
   DragDrop,
   Search,
   Cards,
+  Schedule,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 
@@ -377,6 +378,12 @@ const frontdesk = [
         path: "/templates/cards",
         icon: "card",
         component: Cards,
+      },
+      {
+        name: "Schedule",
+        path: "/templates/schedule",
+        icon: "calendar-alt",
+        component: Schedule,
       },
     ],
   },

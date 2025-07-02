@@ -35,7 +35,9 @@ export default function Partners() {
       </h1>
 
       <Swiper
-        className={`${showAll ? "hideHMO" : "showHMO"}`}
+        className={`subscriber-partners-wrapper ${
+          showAll ? "hideHMO" : "showHMO"
+        }`}
         modules={[Autoplay]}
         loop={true}
         speed={4000}
@@ -73,17 +75,14 @@ export default function Partners() {
         style={{ height: `${height}px` }}
       >
         {partners.slice(1).map((hmo, index) => (
-          <div
-            key={index}
-            className="subscriber-partners-container"
-            style={{ display: "inline-block", margin: "10px" }}
-          >
+          <div key={index} className="subscriber-partners-container">
             <img
               src={hmo.icon}
               alt={hmo.abbr || `Partner ${index}`}
               style={{ height: "80px", objectFit: "contain" }}
               className="subscriber-partners-image"
             />
+            <span>{hmo.abbr}</span>
           </div>
         ))}
       </div>
