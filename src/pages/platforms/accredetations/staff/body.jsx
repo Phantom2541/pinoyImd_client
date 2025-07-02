@@ -21,10 +21,10 @@ const Body = () => {
         </div>
         <div>Annex A</div>
         <div>
-          Name of Laboratory: <strong>ALPHAMED DIAGNOSTIC LABORATORY - Sto. Rosario Branch</strong>
+          Name of Laboratory: <strong>ALPHAMED DIAGNOSTIC LABORATORY - STO. ROSARIO BRANCH</strong>
         </div>
         <div>
-          Address of Laboratory: <strong>JLO BLDG, B. MENDOZA ST. STO. ROSARIO, City of San Fernando, Pampanga</strong>
+          Address of Laboratory: <strong>JLO BLDG, B. MENDOZA ST. STO. ROSARIO, CITY OF SAN FERNANDO, PAMPANGA</strong>
         </div>
 
         <MDBTable bordered>
