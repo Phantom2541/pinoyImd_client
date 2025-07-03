@@ -9,23 +9,22 @@ const individual = (
   contract
 ) => {
   const { isPromo, promo = 0, discountable } = menu;
-  console.log("menu", menu);
 
   const _abbr = ["wi", "bp", "mc", "mbs", "sc"].includes(category)
     ? "opd"
     : category;
 
   var gross = menu[_abbr];
+
+  const isWellness = _abbr === "wls";
   if (_abbr === "wls") gross = HMO.getSrp(hmoCode, menu?.hmo);
   if (_abbr === "ctr") gross = menu?.[contract];
 
   let up = (gross * 80) / 100;
   if (membership && category === "mbs" && discountable) {
     const dr = Memberships.getDiscount(membership) || 0;
-    console.log("discount", dr);
     const discount = gross * dr;
     up = gross - discount;
-    console.log("up", up);
     return {
       gross,
       up,
@@ -35,7 +34,7 @@ const individual = (
     };
   }
 
-  if (privilege === 4) {
+  if (privilege === 4 && !isWellness) {
     up = promo > 0 ? promo : up;
 
     return {
@@ -47,7 +46,7 @@ const individual = (
     };
   }
 
-  if (category === "opd" && isPromo)
+  if (category === "opd" && isPromo && !isWellness)
     return {
       gross,
       up: promo,
@@ -56,7 +55,7 @@ const individual = (
       title: "Promo Price",
     };
 
-  if (privilege > 0 && discountable)
+  if (privilege > 0 && discountable && !isWellness)
     return {
       gross,
       up,
