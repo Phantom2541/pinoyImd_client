@@ -7,7 +7,6 @@ import {
   SetFILTERED,
   SetByGroup,
   SetByStatus,
-  setFilterByHasDone,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { Search as SEARCH } from "../../../../../components/searchables";
 import { Templates } from "../../../../../services/fakeDb";
@@ -37,7 +36,6 @@ const Headers = ({ searchKey }) => {
     }
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, departmentCode]);
-  console.log("filtered", filtered);
 
   return (
     <MDBView
@@ -76,7 +74,6 @@ const Headers = ({ searchKey }) => {
               style={{ width: 150 }}
               onChange={(e) => {
                 dispatch(SetByStatus(e.target.value));
-                dispatch(setFilterByHasDone(e.target.value));
               }}
             >
               <option value="" disabled style={{ fontWeight: "bold" }}>
