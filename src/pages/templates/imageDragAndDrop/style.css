@@ -25,7 +25,7 @@
 }
 
 .template-dragNdrop-dropImgArea.show-border {
-  border: 2px dashed #aaa;
+  border: 2px dashed #aaa !important;
 }
 
 .template-dragNdrop-dropImgArea img {

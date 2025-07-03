@@ -26,7 +26,11 @@ const ImageDragAndDrop = () => {
   };
 
   const handleDragOver = (e) => e.preventDefault();
-  const handleDragEnter = () => setIsDraggingOver(true);
+
+  const handleDragEnter = () => {
+    setIsDraggingOver(true);
+    setIsAccepted(false); // Reset accept state when dragging new image
+  };
 
   const handleDragLeave = (e) => {
     if (!e.currentTarget.contains(e.relatedTarget)) {
@@ -81,9 +85,7 @@ const ImageDragAndDrop = () => {
         <img
           src={preview}
           alt="preview"
-          className={
-            isDefault && isDraggingOver ? "dragging-preview" : "normal-preview"
-          }
+          className={isDraggingOver ? "dragging-preview" : "normal-preview"}
         />
 
         {isDefault && isDraggingOver && (
