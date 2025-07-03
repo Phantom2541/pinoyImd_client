@@ -1,12 +1,21 @@
 import React from "react";
 import "./style.css";
 
+/**
+ * Loader component that displays a loading indicator in various styles.
+ *
+ * @param {number} progress - The current progress value (0 to 100).
+ * @param {string} displayType  - The style of the loader ("circle", "bar", or "segmented-bar").
+ * @param {string} color - The color of the progress indicator.
+ * @returns {JSX.Element} A JSX element representing the loader.
+ */
+
 export default function Loader({
   progress = 0,
-  loadStyle = "circle",
+  displayType = "circle",
   color = "#3498db",
 }) {
-  if (loadStyle === "bar") {
+  if (displayType === "bar") {
     return (
       <div className="template-bar-container">
         <div
@@ -23,7 +32,7 @@ export default function Loader({
     );
   }
 
-  if (loadStyle === "segmented-bar") {
+  if (displayType === "segmented-bar") {
     const segments = 20;
     const filled = Math.round((progress / 100) * segments);
 
