@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
-  SetTAT,
+  SetCOLLECTIONS,
   SetCREATE,
   SetFILTERED,
+  SetDepartment,
 } from "../../../../../services/redux/slices/assets/branches";
 import { Search } from "../../../../../components/searchables";
 
@@ -12,18 +13,12 @@ const Header = () => {
   const { activePlatform } = useSelector(({ auth }) => auth); //get the max page
   const { filtered, collections } = useSelector(({ branches }) => branches), //
     dispatch = useDispatch();
-  console.log("activePlatform", activePlatform);
 
-  const handleAdd = (item) => {
-    dispatch(SetCREATE(item));
-  };
-
+  // initial value
   useEffect(() => {
     const { branch = {} } = activePlatform;
-
-    dispatch(SetTAT(branch?.tat));
+    dispatch(SetCOLLECTIONS(branch?.tat));
   }, [dispatch, activePlatform]);
-  //initial values
 
   return (
     <MDBView
@@ -38,12 +33,18 @@ const Header = () => {
 
       <div className="d-flex align-items-center gap-2">
         <select
+          onChange={(e) => dispatch(SetDepartment(e.target.value))}
           className="custom-select form-control form-control-sm"
           style={{ width: "150px" }}
         >
-          <option value="1">Laboratory</option>
-          <option value="2">Radiology</option>
-          <option value="3">Clinic</option>
+          <option value="" disabled>
+            Choose a department
+          </option>
+          <option value="LAB" selected>
+            Laboratory
+          </option>
+          <option value="RAD">Radiology</option>
+          <option value="Clinic">Clinic</option>
         </select>
         <Search
           collections={collections}
@@ -52,7 +53,7 @@ const Header = () => {
           haveAction={true}
           reset={() => dispatch(SetFILTERED(collections))}
           hideButton={true}
-          handleAdd={(item) => handleAdd(item)}
+          handleAdd={() => dispatch(SetCREATE())}
         />
       </div>
     </MDBView>
