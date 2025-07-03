@@ -1,12 +1,12 @@
-import React from "react";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import { Templates } from "../../../../../../services/fakeDb";
+import { capitalize } from "lodash";
 
 const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div>
-        {index + 1}. {branch?.name} {branch?.abbreviation}
+        {index + 1}. {capitalize(branch?.name)} {branch?.abbreviation}
         {!branch?.ao && (
           <MDBIcon
             fas

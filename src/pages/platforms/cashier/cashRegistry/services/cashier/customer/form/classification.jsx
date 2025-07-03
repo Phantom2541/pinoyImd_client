@@ -39,7 +39,8 @@ export default function PosCard() {
     [source, setSource] = useState(),
     dispatch = useDispatch();
 
-  const { branch, company } = activePlatform;
+  const { branch = {} } = activePlatform;
+  const { companyId: company = {} } = branch || {};
   console.log("company", company);
   useEffect(() => {
     const { abbr } = Categories[category];

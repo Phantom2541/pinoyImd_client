@@ -6,7 +6,6 @@ const url = "assets/branches";
 const initialState = {
   collections: [],
   filtered: [],
-  tat: [],
   formSubmitted: false,
   didSearch: false,
   selected: {},
@@ -19,6 +18,7 @@ const initialState = {
   willCreate: false,
   message: "",
   showModal: false,
+  department: "LAB",
   /**
    * Footer
    */
@@ -208,7 +208,7 @@ export const reduxSlice = createSlice({
   reducers: {
     SetCREATE: (state) => {
       state.selected = {
-        department: "",
+        department: state.department,
         mode: "",
         section: "",
         expectedAt: "",
@@ -226,10 +226,7 @@ export const reduxSlice = createSlice({
       state.showModal = true;
       state.willCreate = false;
     },
-    SetTAT: (state, { payload }) => {
-      state.collections = state.filtered = payload;
-      console.log("Settat", payload);
-    },
+
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
@@ -249,6 +246,18 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
       state.selected = {};
+    },
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+      state.filtered = payload.filter(
+        ({ department }) => department === state.department
+      );
+    },
+    SetDepartment: (state, { payload }) => {
+      state.department = payload;
+      state.filtered = state.collections.filter(
+        ({ department }) => department === state.department
+      );
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -320,13 +329,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE_TAT.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
-        state.collections.unshift(payload);
-        console.log("colload", payload);
+        const { success } = action.payload;
+        // state.collections = payload;
+        // state.filtered = payload.filter(
+        //   ({ department }) => department === state.department
+        // );
+        // console.log("state.department", state.department);
 
-        state.filtered.unshift(payload);
-        console.log("filload", payload);
+        state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -466,8 +476,11 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item._id === payload
         );
+        const findex = state.filtered.findIndex((item) => item._id === payload);
 
         state.collections.splice(index, 1);
+        state.filtered.splice(findex, 1);
+
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -527,10 +540,11 @@ export const reduxSlice = createSlice({
 export const {
   SetFILTERED,
   SetSELECTED,
+  SetCOLLECTIONS,
+  SetDepartment,
   TOGGLE,
   SetCREATE,
   SetEDIT,
-  SetTAT,
   RESET,
   SetMaxPage,
   SetActivePAGE,

@@ -12,7 +12,6 @@ const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ machines }) => machines),
     dispatch = useDispatch();
-  console.log("collections");
 
   useEffect(() => {
     if (token) {

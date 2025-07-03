@@ -30,6 +30,7 @@ import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 import Portal from "./pages/emr/portal";
 import Subscriber from "./pages/subscriber";
+import Staff from "./components/printout/staff";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),
@@ -86,6 +87,7 @@ export default function App() {
       <Route path="/printout/remittance" exact component={Remittance} />
 
       <Route path="/printout/machines" exact component={Machines} />
+      <Route path="/printout/staffs" exact component={Staff} />
       {/* Diagnostic Portal */}
       <Route path="/emr/portal/:companyId/:dealId" exact component={Portal} />
       <Route path="/subscriber/:companyId" exact component={Subscriber} />

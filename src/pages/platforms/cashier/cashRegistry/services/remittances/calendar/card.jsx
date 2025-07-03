@@ -20,7 +20,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
     collector,
     closing,
     breakdown = {},
-    expenses,
+    expenses = 0,
   } = item;
 
   const isRemitted = !!collector;
@@ -28,11 +28,6 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
   const { cash, ...rest } = breakdown;
   const nonCash = Object.entries(rest);
   const net = (opening.sum || 0) + cash - expenses;
-  // console.log("gross", gross);
-  // console.log("nonCash", nonCash);
-  // console.log("breakdown", breakdown);
-  // console.log("opening", opening);
-  // console.log("total", breakdown?.cash + opening.sum);
 
   return (
     <div className="position-relative">
@@ -55,7 +50,6 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                   >
                     Sales:
                   </h6>
-
                   <div
                     style={{
                       flexGrow: 1,
@@ -129,10 +123,9 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                   ))}
                 </>
               )}
-
               {[
                 {
-                  label: "Cash Sales:",
+                  label: "Cash Payment",
                   value: breakdown?.cash !== gross ? breakdown?.cash : 0,
                 },
                 {

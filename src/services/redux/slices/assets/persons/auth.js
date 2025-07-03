@@ -166,11 +166,27 @@ export const reduxSlice = createSlice({
         ...state.activePlatform,
         branch: {
           ...branch,
+          tat: data,
           companyId: { ...companyId, ...(isHMO && { hmo: data }) },
         },
       };
       localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
       state.activePlatform = _activePlatform;
+    },
+
+    SetPatientCategories: (state, { payload }) => {
+      const { branchId, categories = [] } = payload;
+      if (branchId === state.activePlatform.branchId) {
+        const _activePlatform = {
+          ...state.activePlatform,
+          branch: {
+            ...state.activePlatform.branch,
+            pc: categories,
+          },
+        };
+        localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
+        state.activePlatform = _activePlatform;
+      }
     },
 
     IMAGE: (state, { payload }) => {
@@ -431,6 +447,7 @@ export const {
   IMAGE,
   NETWORK,
   SetActivePlatform,
+  SetPatientCategories,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

@@ -21,10 +21,7 @@ export default function Modal({ show, selected, toggle }) {
     [expenses, setExpenses] = useState(0),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
   useEffect(() => {
-    console.log("filtered", filtered);
-
     if (filtered.length > 0) {
       const amount =
         filtered?.reduce((sum, voucher) => sum + voucher.amount, 0) || 0;
