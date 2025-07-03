@@ -53,6 +53,7 @@ import {
   Suppliers,
 } from "../../../pages/platforms/cashier";
 import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
+import LIS from "../../../pages/platforms/manager/settings/lis";
 
 const ManagerSidebar = [
   {
@@ -336,6 +337,14 @@ const ManagerSidebar = [
     icon: "sliders-h",
     path: "/config",
     children: [
+      {
+        name: "LIS",
+        title: "Laboratory information system.",
+        path: "/lis",
+        icon: "tram",
+        component: LIS,
+      },
+
       {
         name: "Profile Settings",
         path: "/profile",

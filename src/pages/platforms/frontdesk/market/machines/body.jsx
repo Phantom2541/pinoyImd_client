@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { MDBBtn, MDBTable } from "mdbreact";
+import { MDBBtn, MDBIcon, MDBTable } from "mdbreact";
 import {
   SetEDIT,
   DESTROY,
@@ -42,10 +42,10 @@ const Body = () => {
       <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
-          <th>Model</th>
-          <th>Brand</th>
+          <th>Name</th>
           <th>Serial No.</th>
           <th>Accuqired</th>
+          <th className="text-center">LIS Capable</th>
           <th>Status</th>
           <th>Price</th>
           <th>Action</th>
@@ -53,32 +53,46 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { _id, model, brand, serial, accuqired, status, price } = item;
+          const {
+            _id,
+            model,
+            brand,
+            serial,
+            accuqired,
+            status,
+            price,
+            lisCapable = false,
+            section = "",
+          } = item;
 
           return (
-            <tr key={index}>
-              <td key={index}>{index + startIndex + 1}</td>
-
+            <tr key={_id}>
+              <td>{index + startIndex + 1}</td>
               <td>
-                <b>{model}</b>
+                <b>
+                  <h6>{model}</h6>
+                  <small className="mt-n1 d-block">{brand}</small>
+                </b>
               </td>
-
-              <td>
-                <b>{brand}</b>
-              </td>
-
               <td>
                 <b>{serial}</b>
               </td>
-
               <td>
                 <b>{accuqired}</b>
               </td>
-
+              <td className="text-center">
+                {lisCapable ? (
+                  <>
+                    <MDBIcon icon="check" className="mr-2 text-success" />
+                    {section}
+                  </>
+                ) : (
+                  <MDBIcon icon="times" className="text-danger" />
+                )}
+              </td>
               <td>
                 <b>{status}</b>
               </td>
-
               <td>
                 <b>{price}</b>
               </td>

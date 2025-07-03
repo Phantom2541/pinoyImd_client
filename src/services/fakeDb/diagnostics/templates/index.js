@@ -14,7 +14,7 @@ const Templates = {
    */
   getComponents: (key) => {
     const department = collections.find(
-      ({ department }) => department.toLowerCase() === key.toLowerCase()
+      ({ department }) => department?.toLowerCase() === key?.toLowerCase()
     );
     return department
       ? [...department.components].sort((a, b) => a.localeCompare(b))
