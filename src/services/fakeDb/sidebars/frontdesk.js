@@ -44,6 +44,7 @@ import {
   Schedule,
   ImageDragAndDrop,
   Loader,
+  InputSearch,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 
@@ -398,6 +399,12 @@ const frontdesk = [
         path: "/templates/loader",
         icon: "calendar-alt",
         component: Loader,
+      },
+      {
+        name: "InputSearch",
+        path: "/templates/inputSearch",
+        icon: "calendar-alt",
+        component: InputSearch,
       },
     ],
   },

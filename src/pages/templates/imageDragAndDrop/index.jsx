@@ -88,8 +88,13 @@ const ImageDragAndDrop = () => {
           className={isDraggingOver ? "dragging-preview" : "normal-preview"}
         />
 
-        {isDefault && isDraggingOver && (
-          <span className="drop-text">Drop image here</span>
+        {isDraggingOver && (
+          <span
+            className="drop-text"
+            style={{ opacity: isDraggingOver ? 1 : 0 }}
+          >
+            Drop image here
+          </span>
         )}
 
         <input
