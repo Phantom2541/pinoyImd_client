@@ -20,8 +20,12 @@ const ParentComponent = () => {
 
   return (
     <div>
-      {/* available loadstyle: circle, bar, segmented-bar */}
-      <Loader progress={progress} displayType="bar" color="#0d6efd" />
+      <Loader
+        progress={progress}
+        displayType="segmented-bar"
+        color="#0d6efd"
+        size="sm"
+      />
     </div>
   );
 };

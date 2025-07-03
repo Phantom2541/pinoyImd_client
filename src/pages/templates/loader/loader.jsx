@@ -2,28 +2,40 @@ import React from "react";
 import "./style.css";
 
 /**
- * Loader component that displays a loading indicator in various styles.
+ * Loader component with size and style support.
  *
- * @param {number} progress - The current progress value (0 to 100).
- * @param {string} displayType  - The style of the loader ("circle", "bar", or "segmented-bar").
- * @param {string} color - The color of the progress indicator.
- * @returns {JSX.Element} A JSX element representing the loader.
+ * @param {number} progress - Progress (0–100)
+ * @param {string} displayType - "circle", "bar", "segmented-bar"
+ * @param {string} color - Progress color
+ * @param {string} size - "sm", "md", "l", "xl"
  */
-
 export default function Loader({
   progress = 0,
   displayType = "circle",
   color = "#3498db",
+  size = "md",
 }) {
+  const sizeMap = {
+    sm: 60,
+    md: 100,
+    l: 140,
+    xl: 180,
+  };
+
+  const diameter = sizeMap[size] || 100;
+  const radius = diameter / 2 - 10;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference * (1 - progress / 100);
+
   if (displayType === "bar") {
     return (
-      <div className="template-bar-container">
+      <div className={`template-bar-container template-bar-${size}`}>
         <div
           className="template-bar-fill"
           style={{ width: `${progress}%`, backgroundColor: color }}
         ></div>
         <div
-          className="template-bar-text"
+          className={`template-bar-text template-text-${size}`}
           style={{ color: progress >= 50 ? "white" : "black" }}
         >
           {progress >= 100 ? "Download Complete" : `${progress}%`}
@@ -37,7 +49,7 @@ export default function Loader({
     const filled = Math.round((progress / 100) * segments);
 
     return (
-      <div className="template-segmented-wrapper">
+      <div className={`template-segmented-wrapper template-segmented-${size}`}>
         <div className="template-segmented-container">
           {[...Array(segments)].map((_, i) => (
             <div
@@ -49,28 +61,77 @@ export default function Loader({
             ></div>
           ))}
         </div>
-        <div className="template-segmented-text">
+        <div className={`template-segmented-text template-text-${size}`}>
           {progress >= 100 ? "Download Complete" : `${progress}%`}
         </div>
       </div>
     );
   }
 
-  // Default: Circle
-  const radius = 50;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - progress / 100);
+  // Circle loader
+  if (size === "sm") {
+    return (
+      <div
+        className="template-circle-wrapper"
+        style={{ width: diameter, textAlign: "center" }}
+      >
+        <div
+          className="template-progress-container"
+          style={{ width: diameter, height: diameter }}
+        >
+          <svg
+            className="template-progress-ring"
+            width={diameter}
+            height={diameter}
+          >
+            <circle
+              stroke="#e0e0e0"
+              strokeWidth="5"
+              fill="transparent"
+              r={radius}
+              cx={diameter / 2}
+              cy={diameter / 2}
+            />
+            <circle
+              className="template-progress-ring__circle"
+              stroke={color}
+              strokeWidth="5"
+              fill="transparent"
+              r={radius}
+              cx={diameter / 2}
+              cy={diameter / 2}
+              style={{
+                strokeDasharray: circumference,
+                strokeDashoffset: offset,
+              }}
+            />
+          </svg>
+        </div>
+        <div className="template-progress-text-outside">
+          {progress >= 100 ? "Download Complete" : `${progress}%`}
+        </div>
+      </div>
+    );
+  }
 
+  // Circle loader for md, l, xl
   return (
-    <div className="template-progress-container">
-      <svg className="template-progress-ring" width="120" height="120">
+    <div
+      className="template-progress-container"
+      style={{ width: diameter, height: diameter }}
+    >
+      <svg
+        className="template-progress-ring"
+        width={diameter}
+        height={diameter}
+      >
         <circle
           stroke="#e0e0e0"
           strokeWidth="5"
           fill="transparent"
           r={radius}
-          cx="60"
-          cy="60"
+          cx={diameter / 2}
+          cy={diameter / 2}
         />
         <circle
           className="template-progress-ring__circle"
@@ -78,15 +139,15 @@ export default function Loader({
           strokeWidth="5"
           fill="transparent"
           r={radius}
-          cx="60"
-          cy="60"
+          cx={diameter / 2}
+          cy={diameter / 2}
           style={{
             strokeDasharray: circumference,
             strokeDashoffset: offset,
           }}
         />
       </svg>
-      <div className="template-progress-text">
+      <div className={`template-progress-text template-text-${size}`}>
         {progress >= 100 ? "Download Complete" : `${progress}%`}
       </div>
     </div>

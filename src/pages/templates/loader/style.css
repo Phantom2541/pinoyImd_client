@@ -1,8 +1,6 @@
-/* === Circle Style === */
+/* === Circle === */
 .template-progress-container {
   position: relative;
-  width: 120px;
-  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +12,6 @@
 
 .template-progress-ring__circle {
   transition: stroke-dashoffset 0.3s ease;
-  transform: rotate(0deg);
   transform-origin: 50% 50%;
 }
 
@@ -23,18 +20,25 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 15px;
   font-weight: bold;
   color: black;
   text-align: center;
-  width: 100%; /* optional: in case text wraps */
+  width: 90%;
+  word-wrap: break-word;
+  line-height: 1.2;
 }
 
-/* === Bar Style === */
+/* If text is below circle */
+.template-progress-text-outside {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  color: black;
+}
+
+/* === Bar === */
 .template-bar-container {
   position: relative;
-  width: 300px;
-  height: 30px;
   background-color: #e0e0e0;
   border-radius: 20px;
   overflow: hidden;
@@ -51,15 +55,17 @@
 .template-bar-text {
   position: absolute;
   width: 100%;
-  text-align: center;
-  font-weight: bold;
+  height: 100%;
   top: 0;
-  line-height: 30px;
-  color: black;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
   transition: color 0.3s ease;
 }
 
-/* Segmented Bar Wrapper */
+/* === Segmented Bar === */
 .template-segmented-wrapper {
   display: flex;
   flex-direction: column;
@@ -67,27 +73,71 @@
   margin: 20px auto;
 }
 
-/* Container ng segments */
 .template-segmented-container {
   display: flex;
   gap: 5px;
 }
 
-/* Individual segment block */
 .template-segment {
-  width: 8px;
-  height: 30px;
   background-color: #ccc;
   border-radius: 3px;
   transition: background-color 0.3s ease;
 }
 
-.template-segment.filled {
-  background-color: #3498db;
-}
-
 .template-segmented-text {
-  margin-top: 10px;
+  margin-top: 5px;
   font-weight: bold;
   color: #333;
+}
+
+/* === Size Variants === */
+
+/* Bar Widths + Heights */
+.template-bar-sm {
+  width: 150px;
+  height: 20px;
+}
+.template-bar-md {
+  width: 300px;
+  height: 30px;
+}
+.template-bar-l {
+  width: 450px;
+  height: 40px;
+}
+.template-bar-xl {
+  width: 600px;
+  height: 50px;
+}
+
+/* Segments Sizes */
+.template-segmented-sm .template-segment {
+  width: 6px;
+  height: 20px;
+}
+.template-segmented-md .template-segment {
+  width: 8px;
+  height: 30px;
+}
+.template-segmented-l .template-segment {
+  width: 10px;
+  height: 40px;
+}
+.template-segmented-xl .template-segment {
+  width: 12px;
+  height: 50px;
+}
+
+/* Text Sizes */
+.template-text-sm {
+  font-size: 12px;
+}
+.template-text-md {
+  font-size: 15px;
+}
+.template-text-l {
+  font-size: 18px;
+}
+.template-text-xl {
+  font-size: 22px;
 }
