@@ -11,24 +11,34 @@ import {
   TOGGLE,
   UPDATE_TAT,
 } from "../../../../../../services/redux/slices/assets/branches";
+import { Templates } from "../../../../../../services/fakeDb";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { SetActivePlatform } from "../../../../../../services/redux/slices/assets/persons/auth";
-const departments = [
-  { label: "Laboratory", value: "LAB" },
-  { label: "Radiology", value: "RAD" },
-  { label: "Clinic", value: "CLINIC" },
-];
 
 export default function Modal() {
-  const { showModal, selected, willCreate, isLoading } = useSelector(
-      ({ branches }) => branches
-    ),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+  const {
+      showModal,
+      selected,
+      willCreate,
+      isLoading,
+      department,
+      collections,
+    } = useSelector(({ branches }) => branches),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
+    [existingSection, setExistingSection] = useState([]),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    // Extract only the used sections (by name, case-insensitive)
+    const used = collections.map((item) =>
+      (item.section || "").toLowerCase().trim()
+    );
+    setExistingSection(used); // Now it's an array of strings
+  }, [collections, showModal]);
 
   const { branch } = activePlatform;
 
@@ -57,10 +67,6 @@ export default function Modal() {
 
   // Handle create function
   const handleCreate = () => {
-    // if (!form || !form.mode || !form.section) {
-    //   alert("Please complete all required fields.");
-    //   return;
-    // }
     const { tat = [] } = branch;
     const _tat = [...tat];
     _tat.unshift(form);
@@ -71,27 +77,20 @@ export default function Modal() {
       })
     ).then(() => {
       dispatch(SetActivePlatform({ data: _tat }));
-      console.log("update_tat", _tat);
-
-      TOGGLE();
+      dispatch(TOGGLE());
     }); // Close modal after successful save
   };
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // sample Data {_id:id of branch,tat:[]}
+    const finalForm = {
+      ...form,
+      department,
+    };
 
-    if (willCreate) return handleCreate();
-    handleUpdate();
-
-    // console.log("form", form);
-
-    if (willCreate) {
-      return handleCreate();
-    }
-
-    handleUpdate();
+    if (willCreate) return handleCreate(finalForm);
+    handleUpdate(finalForm);
   };
 
   // Handle change sa inputs
@@ -99,8 +98,8 @@ export default function Modal() {
     setForm({
       ...form,
       [key]: value,
-      userId: auth._id,
     });
+    console.log("form", form);
   };
 
   // Fix: Return correct form value
@@ -109,6 +108,10 @@ export default function Modal() {
   // Handle modal close
   const handleClose = () => dispatch(TOGGLE());
 
+  console.log(
+    "selecte sections"
+    // [...filtered].map(({ section }) => section)
+  );
   return (
     <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="sm">
       <MDBModalHeader
@@ -120,36 +123,29 @@ export default function Modal() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
-          <label>Department</label>
-          <select
-            className="form-control form-control-sm"
-            value={handleValue("department")}
-            required
-            onChange={(e) => handleChange("department", e.target.value)}
-          >
-            <option value="">Select</option>
-            {departments.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-
-          <label>Section</label>
+          <h5>
+            Department: {department === "LAB" ? "Laboratory" : "Radiology"}
+          </h5>
           <select
             className="form-control form-control-sm"
             value={handleValue("section")}
             required
             onChange={(e) => handleChange("section", e.target.value)}
           >
-            <option value="">Select</option>
-            <option value="urinalysis">Urinalysis</option>
-            <option value="hematology">Hematology</option>
-            <option value="chemistry">Chemistry</option>
-            <option value="microbiology">Microbiology</option>
-            <option value="miscellaneous">Miscellaneous</option>
+            <option value="" disabled>
+              Select Section
+            </option>
+            {Templates.getComponents(department)
+              .filter(
+                (sec) =>
+                  !existingSection.includes((sec || "").toLowerCase().trim())
+              )
+              .map((component) => (
+                <option key={component} value={component}>
+                  {component}
+                </option>
+              ))}
           </select>
-
           <label>Mode</label>
           <select
             className="form-control form-control-sm"
@@ -161,7 +157,6 @@ export default function Modal() {
             <option value="default">Default</option>
             <option value="custom">Custom</option>
           </select>
-
           {form.mode === "custom" && (
             <div className="mb-3">
               <label htmlFor="customMode" className="form-label mb-1">
@@ -176,7 +171,6 @@ export default function Modal() {
               />
             </div>
           )}
-
           {/* Submit button */}
           <div className="text-center mb-1-half">
             <MDBBtn
