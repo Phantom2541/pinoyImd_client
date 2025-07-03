@@ -40,7 +40,8 @@ export default function Header({ date, dealId }) {
             top: "-10px",
             left: "50%",
             transform: "translateX(-50%)",
-            backgroundColor: "#eee",
+            // backgroundColor: "#eee",
+            backgroundColor: "white",
             padding: "0 7.5px",
           }}
         >

@@ -4,7 +4,7 @@ import { DESTROY } from "../../../../../services/redux/slices/assets/persons/hea
 import { useToasts } from "react-toast-notifications";
 import { fullName, ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
-import { MDBBtn, MDBIcon } from "mdbreact";
+import { MDBIcon } from "mdbreact";
 import "./style.css";
 
 export default function Body() {

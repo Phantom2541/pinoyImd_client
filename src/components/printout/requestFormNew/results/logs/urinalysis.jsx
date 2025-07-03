@@ -1,6 +1,4 @@
 import React from "react";
-import { MDBRow, MDBCol, MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
-
 const UrinalysisData = [
   ["Color", "SG", "pH"],
   ["Sugar", "Protein", "Leucocyte", "Nitrate", "Bacteria", "Blood"],

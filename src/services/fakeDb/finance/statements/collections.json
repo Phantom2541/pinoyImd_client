@@ -230,5 +230,13 @@
     "meaning": "Partial remittance of the daily sales.",
     "category": "expenses",
     "profitable": false
+  },
+  {
+    "id": 45,
+    "title": "Clearance Pay",
+    "abbreviation": "CP",
+    "meaning": "The final compensation given to an employee after completing the clearance process upon resignation, end of contract, or termination. It includes unpaid salary, prorated 13th month pay, convertible leave credits, and other benefits minus any deductions.",
+    "category": "expenses",
+    "profitable": false
   }
 ]

@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 
@@ -8,8 +7,6 @@ import {
 } from "../../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 const Footer = ({ num, item = {}, deals }) => {
-  console.log("item", item);
-
   const { month, year } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
   /**

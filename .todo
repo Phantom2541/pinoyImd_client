@@ -1,16 +1,28 @@
+- Diagnostic
+    - task
+        - filtration
+            - by patient @done
+                - done @done
+                - pending @done
+                - all @done
+            - by sections
+                - done
+                - pending
+                - all
+-Remittance money 
 
-- Wellness -> insource instead of HMO
+
+
+
+
+
+
 - Remittance -> missing buttons @done
-- Date format -> changed (diagnostic is affected) @done
-- Request form -> add barcode & request form
-- Timer -> editable for TAT/overwritable
-- Send out -> printout tab
-- Menus opd only 
-- Check the laboratory logbooks
+- Date format -> changed (diagnostic is affected)
     - Chemistry printout @done
     - Remove electrolytes printout @done
-    - Hematology printout
+    - Hematology printout @done
     - Urinalysis printout @done
     - Parasitology printout @done
     - Serology printout @done
-    - Miscellanous printout
+    - Miscellanous printout 

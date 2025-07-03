@@ -4,7 +4,6 @@ import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import {
   SetEDIT,
   SetFILTER,
-  SetTeam
 } from "../../../../../../services/redux/slices/diagnostics/clinician/quest";
 import { Search } from "../../../../../../components/searchables";
 import Swal from "sweetalert2";
@@ -16,7 +15,7 @@ export default function Collapsable({ team, _id }) {
   const dispatch = useDispatch();
 
   const handleUpdate = (item) => dispatch(SetEDIT(item));
-  const handleAdd = (item) => dispatch(SetTeam(item));
+  // const handleAdd = (item) => dispatch(SetTeam(item));
 
   const handleRemove = (member) => {
     const newTeam = team.filter(
@@ -24,7 +23,9 @@ export default function Collapsable({ team, _id }) {
     );
 
     Swal.fire({
-      title: `Are you sure you want to untag ${fullName(member.userId.fullName)}?`,
+      title: `Are you sure you want to untag ${fullName(
+        member.userId.fullName
+      )}?`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -55,14 +56,14 @@ export default function Collapsable({ team, _id }) {
           <th>
             <div className="d-flex align-items-center">
               <span className="mr-2">Action</span>
-          <Search
-              collection={team}
-              setFiltered={(selected) => dispatch(SetFILTER(selected))}
-              placeHolder="Search name"
-              HaveAction={false}
-              hideButton={true}
-              reset={() => dispatch(SetFILTER(team))}
-/>
+              <Search
+                collection={team}
+                setFiltered={(selected) => dispatch(SetFILTER(selected))}
+                placeHolder="Search name"
+                HaveAction={false}
+                hideButton={true}
+                reset={() => dispatch(SetFILTER(team))}
+              />
             </div>
           </th>
         </tr>
@@ -72,7 +73,7 @@ export default function Collapsable({ team, _id }) {
           const { hasInformed, role, userId } = member;
           const { fullName: uFullName, alias, phoneNumber } = userId;
 
-          return (  
+          return (
             <tr key={index}>
               <td>{index + 1}</td>
               <td title={properFullname(uFullName)}>{alias}</td>

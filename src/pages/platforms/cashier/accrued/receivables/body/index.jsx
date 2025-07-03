@@ -1,5 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
-import { MDBTable, MDBBtn, MDBIcon, MDBBadge } from "mdbreact";
+import { useSelector } from "react-redux";
+import { MDBTable, MDBBtn, MDBBadge } from "mdbreact";
 import React, { useEffect, useState } from "react";
 import Deals from "./deals";
 import {
@@ -13,8 +13,7 @@ import PaymentDetails from "./paymentDetails";
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(({ soa }) => soa),
     [receivables, setReceivables] = useState([]),
-    [activeId, setActiveId] = useState(""),
-    dispatch = useDispatch();
+    [activeId, setActiveId] = useState("");
 
   useEffect(() => {
     const statusPriority = {

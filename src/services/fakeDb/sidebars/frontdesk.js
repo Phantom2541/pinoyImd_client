@@ -41,6 +41,9 @@ import {
   DragDrop,
   Search,
   Cards,
+  Schedule,
+  ImageDragAndDrop,
+  Loader,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 
@@ -373,10 +376,28 @@ const frontdesk = [
         component: Search,
       },
       {
+        name: "Image Drag and Drop",
+        path: "/templates/image",
+        icon: "calendar-alt",
+        component: ImageDragAndDrop,
+      },
+      {
         name: "Cards",
         path: "/templates/cards",
         icon: "card",
         component: Cards,
+      },
+      {
+        name: "Schedule",
+        path: "/templates/schedule",
+        icon: "calendar-alt",
+        component: Schedule,
+      },
+      {
+        name: "Loader",
+        path: "/templates/loader",
+        icon: "calendar-alt",
+        component: Loader,
       },
     ],
   },
