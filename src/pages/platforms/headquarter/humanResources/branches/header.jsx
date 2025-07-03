@@ -15,14 +15,16 @@ const Header = () => {
 
   //initial values
   useEffect(() => {
-    if (token && activePlatform?.branchId)
+    if (token)
       dispatch(
         BROWSE({
           token,
           key: { companyId: activePlatform?.branch?.companyId._id },
         })
       );
-  }, [dispatch, activePlatform, token]);
+  }, [dispatch, activePlatform?.branch?.companyId?._id, token]);
+
+  console.log("patientCategoires", activePlatform?.branch?.pc);
 
   return (
     <MDBView

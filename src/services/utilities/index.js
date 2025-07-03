@@ -1,5 +1,6 @@
 import io from "socket.io-client";
 import axioKit from "./axioKit";
+import axiosMiddleware from "./axioKit/sender";
 import Banner from "./banner";
 import handlePagination from "./pagination";
 import fullName from "./fullName";
@@ -91,6 +92,7 @@ export {
   PresetImage,
   ENDPOINT,
   axioKit,
+  axiosMiddleware,
   socket,
   paymentMethod,
   Deals,
