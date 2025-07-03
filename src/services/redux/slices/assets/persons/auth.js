@@ -166,6 +166,7 @@ export const reduxSlice = createSlice({
         ...state.activePlatform,
         branch: {
           ...branch,
+          tat: data,
           companyId: { ...companyId, ...(isHMO && { hmo: data }) },
         },
       };

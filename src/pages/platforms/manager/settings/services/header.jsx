@@ -14,6 +14,7 @@ const Header = () => {
     { cluster, filtered } = useSelector(({ preferences }) => preferences),
     [department, setDepartment] = useState("LAB"),
     dispatch = useDispatch();
+  console.log("cluster", cluster);
 
   // Initial Browse
   useEffect(() => {

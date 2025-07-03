@@ -34,7 +34,7 @@ import {
   Products,
 } from "../../../pages/platforms/manager/commerce/merchandise";
 
-import { Calender } from "../../../pages/platforms/dtr";
+import { Calender, Scheduler, Schedule } from "../../../pages/platforms/dtr";
 
 import {
   Vouchers,
@@ -112,6 +112,20 @@ const ManagerSidebar = [
         path: "/attendances",
         icon: "clock",
         component: Calender,
+      },
+      {
+        name: "Scheduler",
+        title: "Employee daily attendance tracker.",
+        path: "/scheduler",
+        icon: "clock",
+        component: Scheduler,
+      },
+      {
+        name: "Schedule",
+        title: "Employee daily attendance tracker.",
+        path: "/schedule",
+        icon: "clock",
+        component: Schedule,
       },
       {
         name: "Staff",

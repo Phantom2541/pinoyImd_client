@@ -43,6 +43,7 @@ import {
   Cards,
   Schedule,
   ImageDragAndDrop,
+  Loader,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 
@@ -391,6 +392,12 @@ const frontdesk = [
         path: "/templates/schedule",
         icon: "calendar-alt",
         component: Schedule,
+      },
+      {
+        name: "Loader",
+        path: "/templates/loader",
+        icon: "calendar-alt",
+        component: Loader,
       },
     ],
   },
