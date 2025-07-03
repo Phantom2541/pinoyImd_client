@@ -1,0 +1,25 @@
+.template-progress-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.template-progress-ring {
+  transform: rotate(-90deg);
+}
+
+.template-progress-ring__circle {
+  transition: stroke-dashoffset 0.3s ease;
+  transform: rotate(0deg);
+  transform-origin: 50% 50%;
+}
+
+.template-progress-text {
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+}
