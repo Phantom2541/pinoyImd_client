@@ -5,8 +5,13 @@ const url = "assets/persons/heads";
 
 const initialState = {
   collections: [],
-  isSuccess: false,
+  filtered: [],
+  showModal: false,
+  willCreate: false,
+  willUpdate: false,
+  selected: {},
   formSubmitted: false,
+  isSuccess: false,
   isLoading: false,
   message: "",
 };
@@ -92,7 +97,76 @@ export const reduxSlice = createSlice({
       state.formSubmitted = false;
       state.message = "";
     },
+    SetCREATE: (state) => {
+      state.selected = {
+        user: "",
+        department: "",
+        section: "",
+        fullName: {
+          fname: "",
+          mname: "",
+          lname: "",
+          suffix: "",
+        },
+        prc: {
+          id: "",
+          from: "",
+          to: "",
+        },
+      };
+
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetEDIT: (state, { payload }) => {
+      const { user = {}, ...rest } = payload;
+      const { fullName = {}, prc = {} } = user;
+
+      // Remove `from` from prc dynamically
+      const { from, ...filteredPrc } = prc;
+
+      state.selected = {
+        ...rest,
+        ...fullName, // all keys from fullName (fname, lname, etc.)
+        ...filteredPrc, // all keys from prc, except `from`
+      };
+
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetUPDATE: (state, { payload }) => {
+      state.selected = payload;
+      state.willUpdate = true;
+      state.showModal = true;
+    },
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+      state.willCreate = false;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+      state.selected = {};
+    },
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+    RESET: (state) => {
+      state.isSuccess = false;
+      state.message = "";
+    },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(BROWSE.pending, (state) => {
@@ -174,6 +248,17 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const {
+  RESET,
+  SetCREATE,
+  SetEDIT,
+  SetUPDATE,
+  SetCOLLECTIONS,
+  SetSELECTED,
+  SetFILTERED,
+  TOGGLE,
+  SetMaxPage,
+  SetActivePAGE,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

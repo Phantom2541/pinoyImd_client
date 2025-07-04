@@ -68,12 +68,7 @@ export default function SignaturePreview({
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <div className="d-flex justify-content-center">
-          <img
-            src={img}
-            alt={selected.email}
-            height={"120px"}
-            width={"120px"}
-          />
+          <img src={img} alt={selected.email} height="120px" width="120px" />
         </div>
         <div className="d-flex justify-content-center mt-3">
           <MDBBtn

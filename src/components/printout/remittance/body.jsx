@@ -2,7 +2,7 @@ import { MDBTable } from "mdbreact";
 import { currency } from "../../../services/utilities";
 
 const Body = ({ remittance = {} }) => {
-  const { closing, sales } = remittance;
+  const { closing } = remittance; // sales
   const { coins = {}, bills = {}, sum = 0 } = closing || {};
   var tableRaw = 1;
   return (

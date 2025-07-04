@@ -27,6 +27,7 @@ import { Branches } from "../../../pages/platforms/headquarter/humanResources";
 import Applicants from "../../../pages/platforms/headquarter/settings/personnels/applicants";
 import PatientCategories from "../../../pages/platforms/headquarter/patientCategories";
 // import Dashboard from "../../../pages/platforms/headquarter/dashboard";
+// import Dashboard from "../../../pages/platforms/headquarter/dashboard";
 
 const headquarter = [
   {

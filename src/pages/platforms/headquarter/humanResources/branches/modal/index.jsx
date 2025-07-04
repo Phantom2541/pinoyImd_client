@@ -13,6 +13,7 @@ import {
   TOGGLE,
   SAVE,
   RESET,
+  UPDATE,
 } from "../../../../../../services/redux/slices/assets/branches";
 import { useDispatch, useSelector } from "react-redux";
 import AddressSelect from "../../../../../../components/searchables/addressSelect";
@@ -23,7 +24,8 @@ const _form = {
   ao: "",
   name: "",
   displayname: "",
-  contact: {
+  code: "",
+  contacts: {
     mobile: "",
     email: "",
   },
@@ -45,27 +47,37 @@ export default function Modal() {
     } = useSelector(({ branches }) => branches),
     [form, setForm] = useState(_form),
     [isDuplicate, setIsDuplicate] = useState(false),
+    [isDuplicateCode, setIsDuplicateCode] = useState(false),
     dispatch = useDispatch();
 
   const toggle = useCallback(() => dispatch(TOGGLE()), [dispatch]);
 
   useEffect(() => {
+    setIsDuplicate(false);
+    setIsDuplicateCode(false);
     if (show && !formSubmitted && isSuccess) {
       toggle();
       Swal.fire({
         title: "Success!",
-        text: "Branch has been successfully created.",
+        text: `Branch has been successfully ${
+          selected._id ? "updated" : "created"
+        }.`,
         icon: "success",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "OK",
       });
       dispatch(RESET());
     }
-  }, [show, dispatch, toggle, formSubmitted, isSuccess]);
+  }, [show, dispatch, toggle, formSubmitted, isSuccess, selected]);
 
   useEffect(() => {
     if (show) {
-      setForm((prev) => ({ ...prev, name: selected.name }));
+      setForm({});
+      if (selected._id) {
+        setForm(selected);
+      } else {
+        setForm((prev) => ({ ...prev, name: selected.name }));
+      }
     }
   }, [show, selected]);
 
@@ -78,27 +90,45 @@ export default function Modal() {
       .replace(/[^a-zA-Z0-9]/g, "");
   const validateName = (name) => {
     const isExist = [...collections].some(
-      (branch) => normalize(branch.name) === normalize(name)
+      (branch) =>
+        normalize(branch.displayname) === normalize(name) &&
+        branch?._id !== selected?._id
     );
 
     setIsDuplicate(isExist);
-    setForm({ ...form, name });
+    setForm({ ...form, displayname: name });
+  };
+
+  const validateCode = (code) => {
+    const isExist = [...collections].some(
+      (branch) =>
+        normalize(branch.code) === normalize(code) &&
+        branch?._id !== selected?._id
+    );
+
+    setIsDuplicateCode(isExist);
+    setForm({ ...form, code });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(
-      SAVE({
-        token,
-        data: {
-          branch: {
-            ...form,
-            companyId: activePlatform?.branch?.companyId?._id,
+
+    if (selected?._id) {
+      dispatch(UPDATE({ token, data: form }));
+    } else {
+      dispatch(
+        SAVE({
+          token,
+          data: {
+            branch: {
+              ...form,
+              companyId: activePlatform?.branch?.companyId?._id,
+            },
+            auth,
           },
-          auth,
-        },
-      })
-    );
+        })
+      );
+    }
   };
 
   const sortByAscending = (array, key) => {
@@ -106,6 +136,7 @@ export default function Modal() {
       String(a[key]).localeCompare(String(b[key]))
     );
   };
+
   return (
     <MDBModal size="lg" isOpen={show} toggle={toggle} backdrop>
       <MDBModalHeader
@@ -113,7 +144,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="code-branch" className="mr-2" />
-        Add a Branch
+        {selected?._id ? "Update" : "Create"} a Branch
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
@@ -122,7 +153,7 @@ export default function Modal() {
               <MDBInput
                 label="Name"
                 required
-                value={form.name}
+                value={form.displayname}
                 onChange={({ target }) => validateName(target.value)}
               />
               {isDuplicate && (
@@ -140,13 +171,23 @@ export default function Modal() {
             </MDBCol>
             <MDBCol>
               <MDBInput
-                label="Display Name"
+                label="Code"
                 required
-                value={form.displayname}
-                onChange={({ target }) =>
-                  setForm({ ...form, displayname: target.value })
-                }
+                value={form.code}
+                onChange={({ target }) => validateCode(target.value)}
               />
+              {isDuplicateCode && (
+                <h6
+                  className="text-nowrap text-danger "
+                  style={{
+                    marginTop: "-1rem",
+                    marginBottom: "-0.5rem",
+                    fontWeight: 500,
+                  }}
+                >
+                  Ooops. this code is already taken
+                </h6>
+              )}
             </MDBCol>
           </MDBRow>
           <MDBRow>
@@ -176,73 +217,78 @@ export default function Modal() {
               />
             </MDBCol>
           </MDBRow>
-          <div className={!form.ao ? "" : "border border-black p-2 mb-3"}>
-            <Search
-              isRequired={true}
-              label="Administrative Officer"
-              setUser={(value) => setForm({ ...form, ao: value?._id || "" })}
-              className="mt-4"
-            />
-            {form.ao && (
-              <MDBRow className="mb-">
-                <MDBCol>
-                  <select
-                    className="form-control"
-                    required
-                    value={form.department}
-                    onChange={({ target }) =>
-                      setForm({
-                        ...form,
-                        department: target.value,
-                        designation: "",
-                      })
-                    }
-                  >
-                    <option value="">Select Department</option>
-                    {sortByAscending(Policy.collections, "department").map(
-                      (p) => (
-                        <option value={p.department}>{p.department}</option>
-                      )
-                    )}
-                  </select>
-                </MDBCol>
-                <MDBCol>
-                  <select
-                    className="form-control"
-                    required
-                    value={form.designation}
-                    onChange={({ target }) =>
-                      setForm({
-                        ...form,
-                        designation: target.value,
-                      })
-                    }
-                  >
-                    <option value={""}>Select Designation</option>
-                    {sortByAscending(
-                      Policy.getPositionsByDepartmentName(form.department),
-                      "display_name"
-                    ).map((p) => (
-                      <option value={p.id}>{p.display_name}</option>
-                    ))}
-                  </select>
-                </MDBCol>
-              </MDBRow>
-            )}
-          </div>
+          {!selected?._id && (
+            <div className={!form.ao ? "" : "border border-black p-2 mb-3"}>
+              <Search
+                isRequired={true}
+                label="Administrative Officer"
+                setUser={(value) => setForm({ ...form, ao: value?._id || "" })}
+                className="mt-4"
+              />
+              {form.ao && (
+                <MDBRow className="mb-">
+                  <MDBCol>
+                    <select
+                      className="form-control"
+                      required
+                      value={form.department}
+                      onChange={({ target }) =>
+                        setForm({
+                          ...form,
+                          department: target.value,
+                          designation: "",
+                        })
+                      }
+                    >
+                      <option value="">Select Department</option>
+                      {sortByAscending(Policy.collections, "department").map(
+                        (p) => (
+                          <option value={p.department}>{p.department}</option>
+                        )
+                      )}
+                    </select>
+                  </MDBCol>
+                  <MDBCol>
+                    <select
+                      className="form-control"
+                      required
+                      value={form.designation}
+                      onChange={({ target }) =>
+                        setForm({
+                          ...form,
+                          designation: target.value,
+                        })
+                      }
+                    >
+                      <option value={""}>Select Designation</option>
+                      {sortByAscending(
+                        Policy.getPositionsByDepartmentName(form.department),
+                        "display_name"
+                      ).map((p) => (
+                        <option value={p.id}>{p.display_name}</option>
+                      ))}
+                    </select>
+                  </MDBCol>
+                </MDBRow>
+              )}
+            </div>
+          )}
           <AddressSelect
             address={form.address}
             handleChange={(key, value) => setForm({ ...form, [key]: value })}
           />
-          <MDBBtn
-            rounded
-            className="float-right mt-4"
-            type="submit"
-            color="primary"
-            disabled={isDuplicate || formSubmitted}
-          >
-            Save {formSubmitted && <MDBIcon icon="spinner" pulse />}
-          </MDBBtn>
+          <div className="text-center">
+            <MDBBtn
+              rounded
+              className=" mt-4"
+              type="submit"
+              color="primary"
+              disabled={isDuplicateCode || isDuplicate || formSubmitted}
+            >
+              {selected._id ? "Update" : "Save"}{" "}
+              {formSubmitted && <MDBIcon icon="spinner" pulse />}
+            </MDBBtn>
+          </div>
         </form>
       </MDBModalBody>
     </MDBModal>
