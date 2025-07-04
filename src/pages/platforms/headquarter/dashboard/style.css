@@ -1,0 +1,118 @@
+.headerquarter-dashboard-section {
+  display: grid;
+  grid-template-areas:
+    "dashboard dashboard"
+    "branch branch";
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 1fr;
+  height: 100%;
+  gap: 10px;
+}
+
+.headquarter-branch-container {
+  grid-area: branch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headquarter-dashboard-container {
+  grid-area: dashboard;
+}
+
+.headquarter-branch-container,
+.headquarter-dashboard-container {
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.headquarter-branch-container span {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.headquarter-branch-list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.headquarter-branch-list button {
+  width: 100%;
+  border: none;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  font-size: 1.2rem;
+  background-color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.headquarter-branch-list button:hover {
+  background-color: #1266f1;
+  color: white;
+}
+
+.headquarter-branch-list button:active {
+  scale: 0.95;
+}
+
+.headquarter-range-buttons {
+  display: flex;
+  justify-content: start;
+  gap: 10px;
+  margin-bottom: 16px;
+  margin-right: 20px;
+}
+
+/* .headquarter-range-btn {
+  background: transparent;
+  border: 1px solid #1266f1;
+  color: #1266f1;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+} */
+
+/* .headquarter-range-btn.active,
+.headquarter-range-btn:hover {
+  background: #1266f1;
+  color: white;
+} */
+
+.month-selection-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.month-btn,
+.headquarter-range-btn {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.month-btn.active,
+.month-btn:hover,
+.headquarter-range-btn.active,
+.headquarter-range-btn:hover {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.headquarter-range-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
