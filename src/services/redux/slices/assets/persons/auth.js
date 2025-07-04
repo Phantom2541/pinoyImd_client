@@ -174,6 +174,21 @@ export const reduxSlice = createSlice({
       state.activePlatform = _activePlatform;
     },
 
+    SetPatientCategories: (state, { payload }) => {
+      const { branchId, categories = [] } = payload;
+      if (branchId === state.activePlatform.branchId) {
+        const _activePlatform = {
+          ...state.activePlatform,
+          branch: {
+            ...state.activePlatform.branch,
+            pc: categories,
+          },
+        };
+        localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
+        state.activePlatform = _activePlatform;
+      }
+    },
+
     IMAGE: (state, { payload }) => {
       state.image = payload;
       state.progressBar = -1;
@@ -433,6 +448,7 @@ export const {
   IMAGE,
   NETWORK,
   SetActivePlatform,
+  SetPatientCategories,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

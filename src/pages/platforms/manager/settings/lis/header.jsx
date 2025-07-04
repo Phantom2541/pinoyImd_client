@@ -16,7 +16,10 @@ const Header = () => {
   useEffect(() => {
     if (token) {
       dispatch(
-        BROWSE({ token, params: { branchId: activePlatform?.branchId } })
+        BROWSE({
+          token,
+          params: { branchId: activePlatform?.branchId, lisCapable: true },
+        })
       );
     }
   }, [dispatch, token, activePlatform]);

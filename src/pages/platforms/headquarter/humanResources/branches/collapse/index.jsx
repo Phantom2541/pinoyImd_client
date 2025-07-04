@@ -2,9 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBadge,
-  MDBBtn,
   MDBCard,
-  MDBCardBody,
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
@@ -23,6 +21,7 @@ import {
   ASSIGN_AO,
   RESET,
 } from "../../../../../../services/redux/slices/assets/branches";
+import { orderBy } from "lodash";
 
 export default function Body() {
   const { auth, token } = useSelector(({ auth }) => auth),
@@ -34,7 +33,12 @@ export default function Body() {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+
+  const paginatedData = orderBy(
+    filtered,
+    [(o) => o.name.toLowerCase().trim()], // field or accessor function
+    ["asc"] // sort order
+  ).slice(startIndex, endIndex);
 
   /**
    * Active states
@@ -148,7 +152,6 @@ export default function Body() {
             ? `${name} has been reassigned to your branch and designated as the Administrative Officer.`
             : `${name} has been registered as personnel and assigned as the Administrative Officer.`,
         });
-
         // 🔥 Your logic here:
         // registerAndAssignAO(selected._id, value.department, value.designation);
       });
@@ -156,8 +159,6 @@ export default function Body() {
   };
 
   const [isPersonnelTab, setIsPersonnelTab] = useState(true);
-  const [selectedBranch, setSelectedBranch] = useState({});
-  console.log("branch", selectedBranch);
 
   return (
     <MDBContainer
@@ -194,10 +195,7 @@ export default function Body() {
                     branch={branch}
                     isOpen={activeId === actualIndex}
                     textColor={color}
-                    setActiveId={(id) => {
-                      setActiveId(id);
-                      setSelectedBranch(branch);
-                    }}
+                    setActiveId={(id) => setActiveId(id)}
                     index={actualIndex}
                   />
                 </MDBCollapseHeader>
@@ -265,7 +263,6 @@ export default function Body() {
                       />
                     )}
                   </div>
-                  {branch._id}
                   {isPersonnelTab ? (
                     <CollapsableBody
                       branch={branch || {}}
@@ -273,8 +270,8 @@ export default function Body() {
                     />
                   ) : (
                     <PatientCategories
-                      branch={selectedBranch || {}}
-                      key={`${branch._id}-categories`}
+                      branch={branch}
+                      key={`patient-cat-${branch._id}-${isOpen}`}
                       isOpen={isOpen}
                       index={index}
                     />

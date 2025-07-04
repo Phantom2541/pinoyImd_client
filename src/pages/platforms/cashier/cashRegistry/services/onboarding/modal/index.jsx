@@ -163,6 +163,7 @@ export default function Modal() {
       category: "opd",
       cashierId: auth._id,
       payment: "voucher",
+      department: ["LAB"],
       discount,
       amount: gross,
     };

@@ -25,7 +25,7 @@
 }
 
 .template-dragNdrop-dropImgArea.show-border {
-  border: 2px dashed #aaa;
+  border: 2px dashed #aaa !important;
 }
 
 .template-dragNdrop-dropImgArea img {
@@ -67,7 +67,7 @@
 
 .icon-actions {
   position: absolute;
-  top: 10px;
+  bottom: 10px;
   right: 10px;
   display: flex;
   gap: 10px;

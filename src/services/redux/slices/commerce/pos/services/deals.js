@@ -1205,6 +1205,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+        console.log("payload", payload);
+
         state.message = success;
         state.showModal = false;
         if (Array.isArray(state.collections) && state.collections.length > 0) {
