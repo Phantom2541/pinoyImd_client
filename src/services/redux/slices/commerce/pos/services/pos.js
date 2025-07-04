@@ -67,6 +67,7 @@ const defaultState = {
   isPrint: true,
   isSuccess: false,
   isLoading: false,
+  formSubmitted: false,
   message: undefined,
   department: [],
 };
@@ -275,7 +276,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -292,12 +293,12 @@ export const reduxSlice = createSlice({
         state.transaction = payload;
         state.ssx = "";
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       });
   },
 });

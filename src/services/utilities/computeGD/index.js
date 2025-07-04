@@ -10,7 +10,7 @@ const individual = (
 ) => {
   const { isPromo, promo = 0, discountable } = menu;
 
-  const _abbr = ["wi", "bp", "mc", "mbs", "sc"].includes(category)
+  const _abbr = ["wi", "bp", "mc", "mbs", "sc", "rfr"].includes(category)
     ? "opd"
     : category;
 
@@ -97,7 +97,7 @@ const computeGD = (
   };
 
   for (const item of menu) {
-    const { gross, discount } = individual(
+    const { gross = 0, discount = 0 } = individual(
       item,
       abbr,
       privilege,
@@ -112,4 +112,19 @@ const computeGD = (
   return accumulator;
 };
 
-export default computeGD;
+const allServicesHavePrices = (cart, categoryIndex) => {
+  if (cart?.length === 0) return false;
+
+  const category = Categories[categoryIndex] || {};
+  const categoryAbbr = category.abbr || ""; // Fallback to an empty string if undefined
+
+  return [...cart].every((menu) => {
+    const _abbr = ["wi", "bp", "mc", "mbs", "sc", "rfr"].includes(categoryAbbr)
+      ? "opd"
+      : category;
+
+    return menu[_abbr] > 0;
+  });
+};
+
+export { computeGD, allServicesHavePrices };

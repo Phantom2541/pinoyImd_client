@@ -48,21 +48,26 @@ export default function Modal() {
 
   // Handle update function
   const handleUpdate = () => {
-    TOGGLE();
-
-    // Check if object has changed
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
     }
 
+    const { tat = [] } = branch;
+    const updatedTat = tat.map((item) =>
+      item._id === selected._id ? form : item
+    );
+
     dispatch(
       UPDATE_TAT({
-        data: { ...form, _id: selected._id },
+        data: { _id: branch._id, tat: updatedTat },
         token,
       })
-    );
+    ).then(() => {
+      dispatch(SetActivePlatform({ data: updatedTat })); // ✅ send full tat array
+      dispatch(TOGGLE());
+    });
   };
 
   // Handle create function
@@ -99,7 +104,6 @@ export default function Modal() {
       ...form,
       [key]: value,
     });
-    console.log("form", form);
   };
 
   // Fix: Return correct form value
@@ -108,10 +112,8 @@ export default function Modal() {
   // Handle modal close
   const handleClose = () => dispatch(TOGGLE());
 
-  console.log(
-    "selecte sections"
-    // [...filtered].map(({ section }) => section)
-  );
+  // [...filtered].map(({ section }) => section)
+
   return (
     <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="sm">
       <MDBModalHeader
@@ -138,7 +140,8 @@ export default function Modal() {
             {Templates.getComponents(department)
               .filter(
                 (sec) =>
-                  !existingSection.includes((sec || "").toLowerCase().trim())
+                  !existingSection.includes((sec || "").toLowerCase().trim()) ||
+                  sec === form.section
               )
               .map((component) => (
                 <option key={component} value={component}>
