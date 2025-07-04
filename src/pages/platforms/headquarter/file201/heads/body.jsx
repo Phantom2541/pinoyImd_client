@@ -6,6 +6,8 @@ import { fullName, ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
+import ImageDragAndDrop from "../../../../templates/imageDragAndDrop/dragNdropimg";
+import logo from "./../../../../../assets/iMD.png";
 
 export default function Body() {
   const { token } = useSelector(({ auth }) => auth),
@@ -15,7 +17,8 @@ export default function Body() {
     dispatch = useDispatch(),
     [currentPage, setCurrentPage] = useState(1),
     itemsPerPage = 6,
-    [animateClass, setAnimateClass] = useState("");
+    [animateClass, setAnimateClass] = useState(""),
+    [savedImage, setSavedImage] = useState(null);
 
   const [imageErrors, setImageErrors] = useState({});
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
@@ -105,6 +108,11 @@ export default function Body() {
   const handleImageError = (email) =>
     setImageErrors((prev) => ({ ...prev, [email]: true }));
 
+  const handleImageChange = (file, imageUrl) => {
+    setSavedImage(imageUrl);
+    console.log("✅ Cropped image passed to parent:", savedImage);
+  };
+
   return (
     <div className="signatories-section">
       <div className={`signatories-card-container mt-4 ${animateClass}`}>
@@ -118,15 +126,14 @@ export default function Body() {
             >
               {/* Left: Profile Image */}
               <div className="signatories-card-header">
-                <img
+                {/* <img
                   src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
                   alt="Profile"
-                  // onError={(e) => {
-                  //   e.target.onerror = null;
-                  //   e.target.src =
-                  //     "https://via.placeholder.com/100x100?text=No+Image";
-                  // }}
                   className="signatories-profile-image"
+                /> */}
+                <ImageDragAndDrop
+                  defaultImage={logo}
+                  savedImg={handleImageChange}
                 />
               </div>
               <div className="signatories-card-body">
