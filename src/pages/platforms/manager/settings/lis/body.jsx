@@ -1,24 +1,25 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { MDBBtn, MDBIcon, MDBTable } from "mdbreact";
-import {
-  DOWNLOAD_MIDDLEWARE,
-  SetEDIT,
-} from "../../../../../services/redux/slices/market/machines";
+// import {
+//   DOWNLOAD_MIDDLEWARE,
+//   SetEDIT,
+// } from "../../../../../services/redux/slices/market/machines";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 const Body = () => {
-  const { token } = useSelector(({ auth }) => auth),
-    { filtered, activePage, maxPage } = useSelector(({ machines }) => machines),
+  const { filtered, activePage, maxPage } = useSelector(
+      ({ machines }) => machines
+    ),
     [loading, setLoading] = useState(false),
-    [progress, setProgress] = useState(0),
-    dispatch = useDispatch();
+    [progress, setProgress] = useState(0);
+  // dispatch = useDispatch();
 
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
-
+  console.log("loading", loading);
   const handleDownload = async () => {
     setLoading(true);
     setProgress(0);

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import {
   billingAddress,
@@ -6,8 +5,8 @@ import {
   currency,
   ENDPOINT,
   mobile,
-} from "../../../services/utilities";
-import { Privileges, Services } from "../../../services/fakeDb";
+} from "../../../../../services/utilities";
+import { Privileges, Services } from "../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
 import Header from "./header";
 import { useSelector } from "react-redux";
@@ -32,30 +31,19 @@ const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
   );
 };
 
-const Stub = ({ sale, companyId }) => {
+const Stub = ({ sale }) => {
   const {
-      _id,
-      createdAt = "",
-      payment = 0,
-      customer = {},
-      privilege,
-      amount = 0,
-      cash = 0,
-      discount = 0,
-      cashier = {},
-      cart = [],
-    } = sale,
-    {
-      fullName = {},
-      address = {},
-      email = "",
-      verified = false,
-    } = customer || {};
+    payment = 0,
+    amount = 0,
+    cash = 0,
+    discount = 0,
+    cart = [],
+    cashierId: cashier = {},
+  } = sale;
 
   return (
     <div
       style={{
-        width: "105mm",
         lineHeight: "20px",
         cursor: "default",
         fontFamily: "Courier New, monospace",
@@ -65,30 +53,11 @@ const Stub = ({ sale, companyId }) => {
       }}
       className="text-center thermal-font"
     >
-      <Header date={createdAt} dealId={_id} />
-      <Text
-        className="mt-2"
-        title="Name"
-        value={capitalize(`${fullName.fname || ""} ${fullName.lname || ""}`)}
-      />
-      {!verified && (
-        <Text title="Email" value={email} isAddress fontSize="0.8rem" />
-      )}
-      <Text
-        title="Address"
-        value={billingAddress(address)}
-        isAddress
-        fontSize="0.9rem"
-      />
-      {privilege !== 0 && (
-        <Text title="Privilege" value={Privileges[privilege] || "-"} />
-      )}
-      <Hr />
       <MDBTable responsive borderless className="mb-0 thermal-font">
         <thead>
           <tr>
             <th colSpan={2} className="py-0" style={{ fontSize: "17.5px" }}>
-              Services
+              <h5 className="fw-bold"> Services</h5>
             </th>
           </tr>
         </thead>
@@ -146,76 +115,24 @@ const Stub = ({ sale, companyId }) => {
       <Text
         title="Cashier"
         value={capitalize(
-          `${cashier?.fname?.split?.(" ")[0] || ""} ${cashier?.lname || ""}`
+          `${cashier?.fullName?.fname?.split?.(" ")[0] || ""} ${
+            cashier?.fullName?.lname || ""
+          }`
         )}
       />
       <Hr />
-      <br />
-      <div className="mt-2">
-        I knowingly and voluntarily permit this Health Care Facility to perform
-        the above services and agree to pay the specified amount
-      </div>
-      <div className="mt-2 text-left d-flex">
-        Name<div className="w-100 border-bottom border-dark">:</div>
-      </div>
-      <div className="mt-2 text-left d-flex">
-        Relationship<div className="w-100 border-bottom border-dark">:</div>
-      </div>
-      <br />
-      <Hr className="mt-1" />
-      <div className="mt-2">
-        THIS SHALL SERVE AS YOUR ACKNOWLEDGEMENT RECEIPT AND IS VALID FOR
-        <b> FIVE(5) </b>
-        DAYS
-      </div>
-      <h6>
-        {companyId}/{_id}
-      </h6>
-      <Hr />
-      <div className="mt-2">
-        <QRCodeCanvas
-          value={`${ENDPOINT}/emr/portal/${companyId}/${_id}`}
-          size={170}
-        />
-      </div>
-      <h6>Scan this QR Code </h6>
-      <h6 style={{ marginTop: "-0.7rem" }}>To check transaction status </h6>
-      <Hr />
-      <h6 className="font-weight-bold">PINOY-iMD </h6>
-      <h6 style={{ marginTop: "-0.3rem" }}>Health within reached </h6>
-      <h6 style={{ marginTop: "-0.2rem" }} className="text-nowrap text-left">
-        Powered By: <strong>Techonowiz Solution Provider</strong>
-      </h6>
-      <h6 style={{ marginTop: "-0.4rem" }} className="text-left">
-        Contact Number: <strong>{mobile("09350339777")}</strong>
-      </h6>
     </div>
   );
 };
 
-export default function ClaimStub() {
-  const { activePlatform } = useSelector(({ auth }) => auth),
-    { branch = {} } = activePlatform,
-    { companyId = {} } = branch,
-    [sale, setSale] = useState({});
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("claimStub");
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        setSale(parsed);
-      }
-    } catch (error) {
-      console.error("Failed to parse claimStub:", error);
-    }
-  }, []);
+export default function Receipt() {
+  const { result: sale } = useSelector(({ portal }) => portal);
 
   if (!sale || !sale?._id) return <div>Sale is Empty</div>;
 
   return (
-    <>
-      <Stub sale={sale} companyId={companyId?._id} />
-    </>
+    <div className="mt-3">
+      <Stub sale={sale} companyId={sale?.branchId?.companyId?._id} />
+    </div>
   );
 }

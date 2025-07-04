@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
+
 const url = "assets/persons/personnels";
+const today = new Date();
 
 const initialState = {
   collections: [],
@@ -29,6 +31,8 @@ const initialState = {
   showModal: false,
   selected: {},
   willCreate: false,
+  month: new Date().getMonth() + 1,
+  year: new Date().getFullYear(),
   /**
    * Footer
    */
@@ -320,6 +324,30 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
+    SetMONTH: (state, { payload }) => {
+      if (payload === "next") {if (state.month === 12) {
+        state.month = 1;
+        state.year += 1;
+      } else {
+        state.month += 1;
+      }}
+      else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+    
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
+    },
+    setYear: (state, action) => {
+    state.year = Number(action.payload);
+  },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
@@ -590,6 +618,8 @@ export const {
   SetMaxPage,
   TOGGLE,
   RESET,
+  ResetDATE,
+  SetMONTH,
   SetUPDATE_TRACKER,
   SetTERMINATED,
 } = reduxSlice.actions;

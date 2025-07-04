@@ -4,11 +4,12 @@ import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../../components/tableLoading";
 import Header from "./header.jsx";
 import Body from "./body";
-// import Modal from "./modal";
+import Modal from "./modal";
 // import SignaturePreview from "./signaturePreview";
 
 const Index = () => {
-  const { isLoading } = useSelector(({ heads }) => heads);
+  const { isLoading, selected, willCreate, toggleModal, showModal } =
+    useSelector(({ heads }) => heads);
 
   return (
     <>
@@ -18,12 +19,12 @@ const Index = () => {
           <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
         </MDBCard>
       </MDBAnimation>
-      {/* <Modal 
-      // selected={selected}
-      // willCreate={willCreate}
-      // show={showModal}
-      // toggle={toggleModal}
-       /> */}
+      <Modal
+        selected={selected}
+        willCreate={willCreate}
+        show={showModal}
+        toggle={toggleModal}
+      />
       {/* <SignaturePreview 
       // show={showPreviewSignature}
       // toggle={togglePreviewSignature}
