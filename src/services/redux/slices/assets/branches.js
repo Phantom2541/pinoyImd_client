@@ -477,7 +477,6 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -493,7 +492,6 @@ export const reduxSlice = createSlice({
 
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
