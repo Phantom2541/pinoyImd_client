@@ -204,6 +204,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(SETACTIVEPLATFORM.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+
         const branch = state.branches.find(
           (branch) => branch._id === payload.activePlatform.branchId
         );

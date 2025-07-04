@@ -1,6 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import { DESTROY } from "../../../../../services/redux/slices/assets/branches";
+import {
+  DESTROY,
+  SetEDIT,
+} from "../../../../../services/redux/slices/assets/branches";
 import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 import Swal from "sweetalert2";
 
@@ -79,6 +82,14 @@ const Body = () => {
 
               <td>
                 <MDBBtnGroup>
+                  <MDBBtn
+                    color="primary"
+                    size="sm"
+                    rounded
+                    onClick={() => dispatch(SetEDIT(item))}
+                  >
+                    <MDBIcon icon="pencil-alt" />
+                  </MDBBtn>
                   <MDBBtn
                     color="danger"
                     size="sm"

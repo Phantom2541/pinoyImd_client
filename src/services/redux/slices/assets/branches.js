@@ -238,6 +238,7 @@ export const reduxSlice = createSlice({
     },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
+
       state.activePage = 1;
     },
     SetActivePAGE: (state, { payload }) => {
@@ -248,6 +249,15 @@ export const reduxSlice = createSlice({
       state.selected = {};
     },
     SetCOLLECTIONS: (state, { payload }) => {
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (page > totalPAges) {
+          state.page = totalPAges;
+        }
+      }
       state.collections = payload;
       state.filtered = payload.filter(
         ({ department }) => department === state.department
@@ -330,11 +340,11 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE_TAT.fulfilled, (state, action) => {
         const { success } = action.payload;
+
         // state.collections = payload;
         // state.filtered = payload.filter(
         //   ({ department }) => department === state.department
         // );
-        // console.log("state.department", state.department);
 
         state.message = success;
         state.isSuccess = true;
