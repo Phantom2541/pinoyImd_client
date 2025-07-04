@@ -23,7 +23,7 @@ import {
   RESET as SOURCERESET,
 } from "../../../../../../../../services/redux/slices/assets/providers";
 import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
-import { capitalize, set } from "lodash";
+import { capitalize } from "lodash";
 const contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
