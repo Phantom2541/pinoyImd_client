@@ -5,7 +5,7 @@ import {
   RESET,
   INSOURCE,
   SetREGISTER,
-  SetCATEGORY,
+  // SetCATEGORY,
   SAVE,
 } from "../../../../../../services/redux/slices/assets/providers";
 import Search from "../../../../../../components/searchables/sources";
@@ -13,9 +13,9 @@ import Swal from "sweetalert2";
 import { fullAddress } from "../../../../../../services/utilities";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { category, contractCategories } = useSelector(
-      ({ providers }) => providers
-    ),
+    // { category, contractCategories } = useSelector(
+    //   ({ providers }) => providers
+    // ),
     dispatch = useDispatch();
 
   // initial values
