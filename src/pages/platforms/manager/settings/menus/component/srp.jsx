@@ -1,13 +1,16 @@
 import { MDBInput, MDBRow, MDBCol } from "mdbreact";
-import { useSelector } from "react-redux";
 import { Categories } from "../../../../../../services/fakeDb";
 
 export default function SRP({ handleChange, handleValue }) {
-  const { activePlatform = {} } = useSelector(({ auth }) => auth);
-  const { branch = {} } = activePlatform;
-  const { pc = [] } = branch;
-  const srpIndexs = [2, 3, 4];
-  const foundIndexs = [...pc].filter((pk) => srpIndexs.includes(pk));
+  const fakeDB = localStorage.getItem("activePlatform");
+  var categories = [];
+  if (fakeDB) {
+    categories = JSON.parse(fakeDB)?.branch?.companyId?.pc;
+  }
+  const srpIndexs = [2, 3, 4, 5]; //Emergency Room,Charity Ward,Private Ward,Suite Room
+  const foundIndexs = [...categories]
+    .filter((pk) => srpIndexs.includes(pk))
+    .sort((a, b) => a - b);
   return (
     <>
       <MDBRow>

@@ -2,9 +2,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { SetSELECTED } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { Services } from "../../../../../../../services/fakeDb";
+import { axiosMiddleware } from "../../../../../../../services/utilities";
 
 const PrimaryFooter = ({ deal }) => {
-  const { activePlatform } = useSelector(({ auth }) => auth);
+  const { activePlatform, token } = useSelector(({ auth }) => auth);
   const { rendered = [], cart = [] } = deal;
   const dispatch = useDispatch();
 
@@ -34,9 +35,30 @@ const PrimaryFooter = ({ deal }) => {
     );
   };
 
+  const handleReWrite = async () => {
+    const patients = ["003 ARNOLD GANIA	SP CHOLESTEROL	SER "];
+    try {
+      const response = await axiosMiddleware.sendToA15(patients, token);
+      console.log("✅ Response from middleware:", response);
+      // You can use: response.success, response.payload, etc.
+    } catch (err) {
+      console.error("❌ Failed to send to A15:", err.message);
+    }
+  };
+
   return (
     <>
       <MDBBtnGroup className="sales-card-footer w-100 d-flex flex-row">
+        <MDBBtn
+          type="button"
+          onClick={handleReWrite}
+          className="m-0 "
+          size="sm"
+          title="Send to middleware"
+          color="primary"
+        >
+          <MDBIcon fas icon="arrow-right" />
+        </MDBBtn>
         <MDBBtn
           type="button"
           onClick={() => preAnalytical(deal)}

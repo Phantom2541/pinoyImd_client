@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MDBBtn } from "mdbreact";
 import {
+  allServicesHavePrices,
   capitalize,
   computeGD,
   currency,
@@ -18,6 +19,7 @@ import {
 import { removeUndefinedValues } from "../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { SetPrinting } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
+import Spinner from "../../../../../../../components/spinner";
 
 export default function Summary() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -34,11 +36,11 @@ export default function Summary() {
       membership,
       hmo,
       contract,
+      formSubmitted = false,
     } = useSelector(({ pos }) => pos),
     [isPickup, setIsPickup] = useState(true),
     [payment, setPayment] = useState("cash"),
     [cash, setCash] = useState(0),
-    [loading, setLoading] = useState(false),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -50,7 +52,7 @@ export default function Summary() {
       hmo,
       contract
     ),
-    amount = gross - discount,
+    amount = (gross || 0) - (discount || 0),
     { abbr = undefined } = Categories[category],
     providedPaymentOptions = Payments[abbr];
 
@@ -58,12 +60,7 @@ export default function Summary() {
     setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
   }, [abbr]);
 
-  const handleCheckout = async (e) => {
-    e.preventDefault();
-
-    if (loading) return; // Prevent multiple clicks
-    setLoading(true); // Disable button while saving
-
+  const checkout = async () => {
     let selected = {
       physicianId: physicianId?.physician || undefined,
       source: sourceId || undefined,
@@ -93,7 +90,7 @@ export default function Summary() {
             isNew,
             discount: soldDiscount,
           } = menu,
-          { up } = computeGD(menu, category, privilege, membership);
+          { up } = computeGD(menu, category, privilege, membership, hmo);
 
         return {
           capital,
@@ -107,6 +104,7 @@ export default function Summary() {
         };
       }),
     };
+    console.log("selected", selected);
 
     const balance = cash - amount;
     if (balance > 0)
@@ -136,11 +134,31 @@ export default function Summary() {
     } catch (error) {
       addToast("Transaction failed", { appearance: "error" });
     } finally {
-      setLoading(false); // Re-enable the button after transaction
       setCash(0);
       setPayment(0);
       dispatch(RESET());
       dispatch(RESET_INSOURCE());
+    }
+  };
+
+  const handleCheckout = async (e) => {
+    e.preventDefault();
+    if (!allServicesHavePrices(cart, category)) {
+      Swal.fire({
+        title: "Service Validator?",
+        text: "Some services do not have a set price. Please double-check. If you're confident everything is correct, you may proceed. Note that the admin will be notified regarding this issue.",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, proceed",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await checkout();
+        }
+      });
+    } else {
+      await checkout();
     }
   };
   return (
@@ -225,11 +243,11 @@ export default function Summary() {
       </table>
       <MDBBtn
         type="submit"
-        disabled={!customer || !cart.length}
+        disabled={formSubmitted || !cart.length}
         className="m-0 w-100 fw-bold mt-4"
         color="success"
       >
-        Complete Transaction
+        Complete Transaction <Spinner formSubmitted={formSubmitted} />
       </MDBBtn>
     </form>
   );

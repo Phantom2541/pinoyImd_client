@@ -1,5 +1,6 @@
 import io from "socket.io-client";
 import axioKit from "./axioKit";
+import axiosMiddleware from "./axioKit/sender";
 import Banner from "./banner";
 import handlePagination from "./pagination";
 import fullName from "./fullName";
@@ -19,7 +20,7 @@ import getAge from "./getAge";
 import getDate from "./getDate";
 import currency from "./currency";
 import removeRedundantPackages from "./removeRedundantPackages";
-import computeGD from "./computeGD";
+import { computeGD, allServicesHavePrices } from "./computeGD";
 import validateContact from "./validateContact";
 import generateEmail from "./generateEmail";
 import { getGenderIcon, getPhysicianGenderIcon } from "./getGenderIcon";
@@ -91,6 +92,7 @@ export {
   PresetImage,
   ENDPOINT,
   axioKit,
+  axiosMiddleware,
   socket,
   paymentMethod,
   Deals,
@@ -115,6 +117,7 @@ export {
   currency,
   removeRedundantPackages,
   computeGD,
+  allServicesHavePrices,
   validateContact,
   generateEmail,
   getGenderIcon,

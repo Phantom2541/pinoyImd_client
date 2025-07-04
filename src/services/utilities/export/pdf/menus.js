@@ -91,13 +91,7 @@ const handleHeader = (form) => {
       },
       {
         width: "*",
-        text: [{ text: "Agent: ", bold: true }, cp?.agent],
-        fontSize: 11,
-        alignment: "center",
-      },
-      {
-        width: "*",
-        text: [{ text: "Phone Number: ", bold: true }, cp?.phone],
+        text: [{ text: "Contact Number: ", bold: true }, cp?.phone],
         fontSize: 11,
         alignment: "right",
       },
@@ -198,12 +192,28 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
     pageMargins: [10, 65, 10, 60],
 
     background: function (_, pageSize) {
-      return {
-        image: imageBase64,
-        width: pageSize.width,
-        height: 50,
-        absolutePosition: { x: 0, y: 0 },
-      };
+      return [
+        {
+          image: imageBase64,
+          width: pageSize.width,
+          height: 50,
+          absolutePosition: { x: 0, y: 0 },
+        },
+        {
+          canvas: [
+            {
+              type: "line",
+              x1: 0,
+              y1: 0,
+              x2: pageSize.width,
+              y2: 0,
+              lineWidth: 1,
+              lineColor: "#333",
+            },
+          ],
+          absolutePosition: { x: 0, y: 52 }, // slightly below the image
+        },
+      ];
     },
 
     content: [
@@ -225,27 +235,58 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
         },
         layout: "lightHorizontalLines",
       },
-      {
-        text: `Prepared By: ${createdBy}`,
-        margin: [0, 10, 0, 0],
-      },
-      {
-        text: `Issued on: ${new Date().toLocaleString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true, // optional, for AM/PM format
-        })}`,
-        margin: [0, 5, 0, 0],
-      },
-      {
-        text: `Note: Prices are exclusive of additional services unless stated. Valid until ${lastDay}`,
-        style: "remarks",
-        margin: [0, 5, 0, 0],
-      },
     ],
+    footer: function () {
+      return {
+        margin: [10, 10, 40, 10],
+        layout: "noBorders",
+        table: {
+          widths: ["*"],
+          body: [
+            [
+              {
+                text: [
+                  { text: "Prepared By: ", bold: false },
+                  { text: createdBy, bold: true },
+                ],
+                fontSize: 9,
+                alignment: "left",
+                margin: [0, 0, 0, 2],
+              },
+            ],
+            [
+              {
+                text: [
+                  { text: "Issued on: ", bold: false },
+                  {
+                    text: new Date().toLocaleString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                      hour12: true,
+                    }),
+                    bold: true,
+                  },
+                ],
+                fontSize: 9,
+                alignment: "left",
+                margin: [0, 0, 0, 2],
+              },
+            ],
+            [
+              {
+                text: `Note: Prices are exclusive of additional services unless stated. Valid until ${lastDay}`,
+                fontSize: 9,
+                italics: true,
+                alignment: "left",
+              },
+            ],
+          ],
+        },
+      };
+    },
 
     styles: {
       header: {

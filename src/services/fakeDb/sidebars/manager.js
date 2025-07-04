@@ -53,6 +53,7 @@ import {
   Suppliers,
 } from "../../../pages/platforms/cashier";
 import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
+import LIS from "../../../pages/platforms/manager/settings/lis";
 
 const ManagerSidebar = [
   {
@@ -160,13 +161,6 @@ const ManagerSidebar = [
         path: "/stockHolder",
         icon: "user-tie",
         component: stockHolder,
-      },
-      {
-        name: "Signatories",
-        title: "List of section signatories.",
-        path: "/signatories",
-        icon: "pen",
-        component: Heads,
       },
     ],
   },
@@ -357,10 +351,38 @@ const ManagerSidebar = [
         children: [
           {
             name: "Banner",
-            title: "Clinic branding banners.",
+            title: "Branch branding banners.",
             path: "/banner",
             icon: "image",
             component: Banners,
+          },
+          {
+            name: "Details",
+            title: "Branch profile details.",
+            path: "/details",
+            icon: "address-card",
+            // component: Details,
+          },
+          {
+            name: "PhilHealth",
+            title: "PhilHealth accounts and contributions.",
+            path: "/Philhealth",
+            icon: "file-invoice",
+            component: Philhealth,
+          },
+          {
+            name: "Turn Around Times",
+            title: "Turn around Time for services.",
+            path: "/tat/Services",
+            icon: "clock",
+            component: TatServices,
+          },
+          {
+            name: "Signatories",
+            title: "List of section signatories.",
+            path: "/signatories",
+            icon: "pen",
+            component: Heads,
           },
         ],
       },
@@ -369,13 +391,6 @@ const ManagerSidebar = [
         path: "/sources",
         icon: "cogs",
         children: [
-          {
-            name: "PhilHealth",
-            title: "PhilHealth accounts and contributions.",
-            path: "/Philhealth",
-            icon: "file-invoice",
-            component: Philhealth,
-          },
           {
             name: "Outsourcing",
             title: "External service providers.",
@@ -433,13 +448,6 @@ const ManagerSidebar = [
             component: Services,
           },
           {
-            name: "Turn Around Times",
-            title: "Turn around Time for services.",
-            path: "/tat/Services",
-            icon: "clock",
-            component: TatServices,
-          },
-          {
             name: "Product Generics",
             title: "Generic product listings for resale.",
             path: "/products/generics",
@@ -454,6 +462,13 @@ const ManagerSidebar = [
             component: Products,
           },
         ],
+      },
+      {
+        name: "LIS",
+        title: "Laboratory information system.",
+        path: "/lis",
+        icon: "tram",
+        component: LIS,
       },
     ],
   },

@@ -21,280 +21,62 @@ import {
   Description,
   Tieups,
 } from "../../../pages/platforms/manager/settings";
+
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
 import Applicants from "../../../pages/platforms/headquarter/settings/personnels/applicants";
-// import { Title } from "chart.js";
-
-// Suggested Components (you can enable these later)
-// import Manuals from "../../../pages/platforms/headquarter/settings/manuals";
-// import Reports from "../../../pages/platforms/headquarter/analytics/reports";
-// import Documents from "../../../pages/platforms/headquarter/documents";
-// import Roles from "../../../pages/platforms/headquarter/settings/users";
-// import Announcements from "../../../pages/platforms/headquarter/settings/announcements";
-// import AuditTrail from "../../../pages/platforms/headquarter/logs";
-// import Calendar from "../../../pages/platforms/headquarter/calendar";
-// import Finance from "../../../pages/platforms/headquarter/finance";
-// import Compliance from "../../../pages/platforms/headquarter/compliance";
-// import Warehouse from "../../../pages/platforms/headquarter/warehouse";
-// import Feedback from "../../../pages/platforms/headquarter/feedback";
+import PatientCategories from "../../../pages/platforms/headquarter/patientCategories";
+// import Dashboard from "../../../pages/platforms/headquarter/dashboard";
+// import Dashboard from "../../../pages/platforms/headquarter/dashboard";
 
 const headquarter = [
   {
-    name: "Company",
-    path: "/company/profile",
-    icon: "users",
-    title: "Manage company-wide settings and info",
-    children: [
-      {
-        name: "Profile",
-        path: "/profile",
-        icon: "user-cog",
-        title: "Company branding and identity",
-        children: [
-          {
-            name: "Banner",
-            path: "/banners",
-            icon: "layout",
-            component: banner,
-            title: "Manage website or app banners",
-          },
-          {
-            name: "Logos",
-            path: "/logos",
-            icon: "image",
-            component: Logo,
-            title: "Upload or change official company logos",
-          },
-          {
-            name: "Tagline",
-            path: "/taglines",
-            icon: "quote",
-            component: Tagline,
-            title: "Set or edit company taglines",
-          },
-          {
-            name: "Description",
-            path: "/descriptions",
-            icon: "file-text",
-            component: Description,
-            title: "Company introduction or overview",
-          },
-        ],
-      },
-      {
-        name: "Branches",
-        path: "/hr/branches",
-        icon: "map",
-        component: Branches,
-        title: "List and manage all company branches",
-      },
-      {
-        name: "Top Branch",
-        path: "/hr/top/branch",
-        icon: "crown",
-        title: "Highlight the top-performing branch",
-      },
-      {
-        name: "Best Employees",
-        path: "/hr/employee",
-        icon: "badge-check",
-        title: "Showcase employees with outstanding performance",
-      },
-    ],
+    name: "Dashboard",
+    path: "/dashboard",
+    icon: "layout-dashboard",
+    title: "Overview of key metrics and activities",
+    // component: Dashboard,
   },
   {
-    name: "Settings",
-    path: "/settings",
-    icon: "sliders-horizontal",
-    title: "Configure internal settings and lists",
+    name: "Personnel",
+    path: "/faculties",
+    icon: "users-round",
+    title: "HR and employee management",
     children: [
       {
-        name: "Sources",
-        path: "/sources",
-        icon: "cogs",
-        title: "Manage company sourcing partners",
-        children: [
-          {
-            name: "Outsourcing",
-            path: "/outsourcing",
-            icon: "external-link",
-            component: Outsources,
-            title: "External service providers (labs, HR, etc.)",
-          },
-          {
-            name: "Insourcing",
-            path: "/insourcing",
-            icon: "download",
-            title: "In-house resources assigned to projects",
-          },
-          {
-            name: "HMO",
-            path: "/hmo",
-            icon: "heart-pulse",
-            component: Hmo,
-            title: "Health maintenance organizations tied to company",
-          },
-          {
-            name: "Suppliers",
-            path: "/suppliers",
-            icon: "briefcase",
-            component: Suppliers,
-            title: "Suppliers of goods and services",
-          },
-          {
-            name: "Utilities",
-            path: "/utilities",
-            icon: "tools",
-            component: Utilities,
-            title: "Water, electricity, internet, support providers",
-          },
-          {
-            name: "Hotlines",
-            path: "/hotlines",
-            icon: "phone",
-            component: Hotlines,
-            title: "List of emergency and operational hotlines",
-          },
-          {
-            name: "Tie Ups",
-            path: "/tieup",
-            icon: "handshake",
-            component: Tieups,
-            title: "Partner companies for shared operations",
-          },
-        ],
+        name: "Staff",
+        path: "/staff",
+        icon: "user",
+        title: "Current employees across branches",
+        component: Staffs,
       },
       {
-        name: "Personnel",
-        path: "/faculties",
-        icon: "users-round",
-        title: "Human resource and employee management",
-        children: [
-          {
-            name: "Staff",
-            path: "/staff",
-            icon: "user",
-            component: Staffs,
-            title: "Current employees across branches",
-          },
-          {
-            name: "Signatories",
-            path: "/heads",
-            icon: "user-check",
-            component: Heads,
-            title: "Department or document approvers",
-          },
-          {
-            name: "Physicians",
-            path: "/physicians",
-            icon: "stethoscope",
-            component: Physicians,
-            title: "Company-affiliated doctors",
-          },
-          {
-            name: "Job Applicants",
-            path: "/petitioners",
-            icon: "user-plus",
-            component: Applicants,
-            title: "List of current and past applicants",
-          },
-          {
-            name: "File 201",
-            path: "/records",
-            icon: "folder-person",
-            component: Records,
-            title: "Employee records including resigned/inactive",
-          },
-        ],
+        name: "Job Applicants",
+        path: "/petitioners",
+        icon: "user-plus",
+        title: "List of current and past applicants",
+        component: Applicants,
       },
       {
-        name: "Assets",
-        path: "/assets",
-        icon: "database",
-        title: "Physical and digital asset registry",
-        children: [
-          {
-            name: "Equipment",
-            path: "/equipments",
-            icon: "cpu",
-            component: Equipments,
-            title: "List of all machines, computers, tools",
-          },
-          {
-            name: "Procurement",
-            path: "/procurement",
-            icon: "clipboard-list",
-            component: Procurement,
-            title: "Manage purchases, orders, and suppliers",
-          },
-        ],
+        name: "Signatories",
+        path: "/heads",
+        icon: "user-check",
+        title: "Department or document approvers",
+        component: Heads,
       },
       {
-        name: "Documents",
-        path: "/documents",
-        icon: "folder-open",
-        title:
-          "Internal company forms and templates" /*, component: Documents */,
+        name: "Physicians",
+        path: "/physicians",
+        icon: "stethoscope",
+        title: "Company-affiliated doctors",
+        component: Physicians,
       },
       {
-        name: "Manuals",
-        path: "/manuals",
-        icon: "book-open",
-        title: "Operation or technical manuals" /*, component: Manuals */,
-      },
-      {
-        name: "Compliance",
-        path: "/compliance",
-        icon: "check-circle",
-        title:
-          "Accreditation and legal compliance files" /*, component: Compliance */,
-      },
-      {
-        name: "User Access",
-        path: "/users",
-        icon: "shield",
-        title: "Manage access levels and permissions" /*, component: Roles */,
-      },
-      {
-        name: "Announcements",
-        path: "/announcements",
-        icon: "megaphone",
-        title: "Company-wide announcements" /*, component: Announcements */,
-      },
-      {
-        name: "Activity Logs",
-        path: "/logs",
-        icon: "clock",
-        title: "System or audit logs" /*, component: AuditTrail */,
-      },
-    ],
-  },
-  {
-    name: "Analytics",
-    path: "/analytics",
-    icon: "bar-chart-3",
-    title: "Business intelligence and reporting",
-    children: [
-      {
-        name: "Reports",
-        path: "/analytics/reports",
-        icon: "file-bar-chart",
-        title: "Charts, summaries, and analytics" /*, component: Reports */,
-      },
-    ],
-  },
-  {
-    name: "Commerce",
-    path: "/commerce",
-    icon: "shopping-basket",
-    title: "Business operation-related scheduling",
-    children: [
-      {
-        name: "Duty Schedule",
-        path: "/commerce/duty",
-        icon: "calendar-days",
-        title: "Shifts and task assignments",
+        name: "File 201",
+        path: "/records",
+        icon: "folder-person",
+        title: "Employee records including resigned/inactive",
+        component: Records,
       },
     ],
   },
@@ -326,8 +108,8 @@ const headquarter = [
         name: "Equipment",
         path: "/duty/equipments",
         icon: "hammer",
-        component: ProcurmentEquipments,
         title: "Unit-specific equipment list",
+        component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",
@@ -335,19 +117,237 @@ const headquarter = [
         icon: "shield-check",
         title: "Scheduled checks and service logs",
       },
+      {
+        name: "Assets",
+        path: "/assets",
+        icon: "database",
+        title: "Physical and digital asset registry",
+        children: [
+          {
+            name: "Equipment",
+            path: "/equipments",
+            icon: "cpu",
+            title: "List of all machines, computers, tools",
+            component: Equipments,
+          },
+          {
+            name: "Procurement",
+            path: "/procurement",
+            icon: "clipboard-list",
+            title: "Manage purchases, orders, and suppliers",
+            component: Procurement,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Analytics",
+    path: "/analytics",
+    icon: "bar-chart-3",
+    title: "Business intelligence and reporting",
+    children: [
+      {
+        name: "Reports",
+        path: "/analytics/reports",
+        icon: "file-bar-chart",
+        title: "Charts, summaries, and analytics",
+      },
+    ],
+  },
+  {
+    name: "System Configuration",
+    icon: "settings",
+    path: "/system-configuration",
+    title: "Company branding, structure, and general setup",
+    children: [
+      {
+        name: "Profile Settings",
+        path: "/profile",
+        icon: "user-cog",
+        children: [
+          {
+            name: "Company Details",
+            path: "/descriptions",
+            icon: "file-text",
+            title: "Company introduction or overview",
+            component: Description,
+          },
+          {
+            name: "Patient Categories",
+            path: "/patient-categoreis",
+            icon: "file-text",
+            title: "Company introduction or overview",
+            component: PatientCategories,
+          },
+          {
+            name: "Logo",
+            path: "/logos",
+            icon: "image",
+            title: "Upload or change official company logos",
+            component: Logo,
+          },
+          {
+            name: "Banner",
+            path: "/banners",
+            icon: "layout",
+            title: "Manage website or app banners",
+            component: banner,
+          },
+          {
+            name: "Tagline",
+            path: "/taglines",
+            icon: "quote",
+            title: "Set or edit company taglines",
+            component: Tagline,
+          },
+          {
+            name: "Branches",
+            path: "/hr/branches",
+            icon: "map",
+            title: "List and manage all company branches",
+            component: Branches,
+          },
+        ],
+      },
+      {
+        name: "Sources",
+        path: "/sources",
+        icon: "cogs",
+        title: "Manage company sourcing partners",
+        children: [
+          {
+            name: "Outsourcing",
+            path: "/outsourcing",
+            icon: "external-link",
+            title: "External service providers (labs, HR, etc.)",
+            component: Outsources,
+          },
+          {
+            name: "Insourcing",
+            path: "/insourcing",
+            icon: "download",
+            title: "In-house resources assigned to projects",
+          },
+          {
+            name: "Suppliers",
+            path: "/suppliers",
+            icon: "briefcase",
+            title: "Suppliers of goods and services",
+            component: Suppliers,
+          },
+          {
+            name: "Utilities",
+            path: "/utilities",
+            icon: "tools",
+            title: "Water, electricity, internet, support providers",
+            component: Utilities,
+          },
+          {
+            name: "Hotlines",
+            path: "/hotlines",
+            icon: "phone",
+            title: "List of emergency and operational hotlines",
+            component: Hotlines,
+          },
+          {
+            name: "Tie Ups",
+            path: "/tieup",
+            icon: "handshake",
+            title: "Partner companies for shared operations",
+            component: Tieups,
+          },
+        ],
+      },
+      {
+        name: "Utilities & Partners",
+        path: "/utilities-partners",
+        icon: "plug",
+        title: "Health, government, and service affiliations",
+        children: [
+          {
+            name: "H M O",
+            path: "/hmo",
+            icon: "heart-pulse",
+            title: "Accredited health maintenance organizations",
+            component: Hmo,
+          },
+          {
+            name: "PhilHealth Accredited",
+            path: "/philhealth",
+            icon: "shield-plus",
+            title: "List of PhilHealth-accredited hospitals and clinics",
+            // component: PhilHealthAccredited,
+          },
+          {
+            name: "Pag-IBIG Partners",
+            path: "/pagibig",
+            icon: "building",
+            title: "Housing loan and employee savings partners",
+            // component: PagibigPartners,
+          },
+          {
+            name: "S S S Partners",
+            path: "/sss",
+            icon: "id-card",
+            title: "Social Security System partners or points of contact",
+            // component: SssPartners,
+          },
+          {
+            name: "Tie Ups",
+            path: "/tieup",
+            icon: "handshake",
+            title: "Partner companies for shared operations",
+            component: Tieups,
+          },
+        ],
+      },
+
+      {
+        name: "User Access",
+        path: "/users",
+        icon: "shield",
+        title: "Manage access levels and permissions",
+      },
+      {
+        name: "Activity Logs",
+        path: "/logs",
+        icon: "clock",
+        title: "System or audit logs",
+      },
     ],
   },
   {
     name: "Calendar",
-    title: "Calendar of activities (staff birthday, anniversary, etc.)",
     path: "/calendar",
-    icon: "calendar" /*, component: Calendar */,
+    icon: "calendar",
+    title: "Calendar of activities (birthdays, events)",
+  },
+  {
+    name: "Announcements",
+    path: "/announcements",
+    icon: "megaphone",
+    title: "Company-wide announcements",
+  },
+  {
+    name: "Commerce",
+    path: "/commerce",
+    icon: "shopping-basket",
+    title: "Business operation-related scheduling (view only)",
+    children: [
+      {
+        name: "Duty Schedule",
+        path: "/commerce/duty",
+        icon: "calendar-days",
+        title: "Shifts and task assignments",
+      },
+    ],
   },
   {
     name: "Finance",
     path: "/finance",
     icon: "credit-card",
-    title: "Financial monitoring and transactions" /*, component: Finance */,
+    title: "Financial monitoring and transactions (view only)",
   },
 ];
 

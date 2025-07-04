@@ -20,7 +20,8 @@ export default function Platforms() {
   useEffect(() => {
     const platforms = activePlatform?.access || [];
     const unique = new Set([...platforms, "patron"]);
-    setAccess(Array.from(unique));
+    const sortedAccess = Array.from(unique).sort((a, b) => a.localeCompare(b));
+    setAccess(sortedAccess);
   }, [activePlatform]);
 
   const handlePlatform = (platform) => {

@@ -167,13 +167,13 @@ export default function Select({
         label={!hideLabel && label}
         getValue={handleSelection}
         key={JSON.stringify(isEmpty(preValues) ? preValue : preValues)}
-        className={`${className} w-100 customizable-select-design`}
+        className={`${className} w-100 `}
         multiple={multiple}
         color="primary"
       >
         {/* ✅ Ensure the selected value is displayed properly */}
         <MDBSelectInput
-          className={`${inputClassName} customizable-selectInput-design`}
+          className={`${inputClassName} `}
           selected={getSelectedText()}
         />
 

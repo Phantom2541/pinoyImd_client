@@ -1,14 +1,18 @@
 import React, { useEffect } from "react";
+import { Search } from "../../../../../components/searchables";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
   BROWSE,
   RESET,
+  SetFILTERED,
+  SetCREATE,
 } from "../../../../../services/redux/slices/assets/persons/heads";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth); //get the max page
   const { collections } = useSelector(({ heads }) => heads),
     dispatch = useDispatch();
+  console.log("collections", collections);
 
   //Initial Browse
   useEffect(() => {
@@ -27,6 +31,20 @@ const Header = () => {
         <span className="white-text mx-3 text-nowrap mt-0">
           {collections.length} Sections Heads
         </span>
+      </div>
+
+      <div>
+        <div className="text-right d-flex items-center">
+          <Search
+            collections={collections}
+            setFiltered={(items) => dispatch(SetFILTERED(items))}
+            placeholder="Search by name"
+            haveAction={true}
+            reset={() => dispatch(SetFILTERED(collections))}
+            hideButton={true}
+            handleAdd={(item) => dispatch(SetCREATE(item))}
+          />
+        </div>
       </div>
     </MDBView>
   );

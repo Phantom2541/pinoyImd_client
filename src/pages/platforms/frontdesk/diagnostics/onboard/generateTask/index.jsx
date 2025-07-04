@@ -15,6 +15,7 @@ import {
 import { axioKit, fullName } from "../../../../../../services/utilities";
 import CaseBox from "./case";
 import { Services } from "../../../../../../services/fakeDb";
+// import MachineSender from "./machines";
 
 /**
  * Common for Buntis and Blood Donors
@@ -226,6 +227,8 @@ export default function Modal() {
       })
     );
     dispatch(TOGGLE());
+
+    // MachineSender(_forms,deal)
   };
 
   return (

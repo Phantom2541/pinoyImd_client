@@ -7,7 +7,7 @@ import Header from "./header";
 
 export default function DealCollapse() {
   const { maxPage } = useSelector(({ auth }) => auth),
-    { filtered, activePage, activeCOLAPSE } = useSelector(
+    { filteredStatus, activePage, activeCOLAPSE } = useSelector(
       ({ validator }) => validator
     );
   return (
@@ -17,28 +17,36 @@ export default function DealCollapse() {
         fluid
         className="md-accordion"
       >
-        {handlePagination(filtered, activePage, maxPage).map((deal, index) => {
-          const { _id, customerId, diagnostic, category, source, physicianId } =
-            deal;
-          return (
-            <MDBCard key={`deal-${index}`}>
-              <Header deal={deal} index={index} />
-              <MDBCollapse
-                id={`collapse-${index}`}
-                isOpen={index === activeCOLAPSE}
-              >
-                <Body
-                  _id={_id}
-                  customer={customerId}
-                  tasks={diagnostic}
-                  category={category}
-                  source={source}
-                  referral={physicianId}
-                />
-              </MDBCollapse>
-            </MDBCard>
-          );
-        })}
+        {handlePagination(filteredStatus, activePage, maxPage).map(
+          (deal, index) => {
+            const {
+              _id,
+              customerId,
+              diagnostic,
+              category,
+              source,
+              physicianId,
+            } = deal;
+            return (
+              <MDBCard key={`deal-${index}`}>
+                <Header deal={deal} index={index} />
+                <MDBCollapse
+                  id={`collapse-${index}`}
+                  isOpen={index === activeCOLAPSE}
+                >
+                  <Body
+                    _id={_id}
+                    customer={customerId}
+                    tasks={diagnostic}
+                    category={category}
+                    source={source}
+                    referral={physicianId}
+                  />
+                </MDBCollapse>
+              </MDBCard>
+            );
+          }
+        )}
       </MDBContainer>
     </MDBCardBody>
   );

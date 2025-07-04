@@ -53,7 +53,7 @@
   grid-template-rows: auto 1fr auto;
   width: 530px;
   max-width: 530px;
-  height: auto;
+  height: 200px;
   background-color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
@@ -74,6 +74,8 @@
 .signatories-card-header {
   grid-area: header;
   margin-right: 10px;
+  width: 100%;
+  height: 100%;
 }
 .signatories-card-body {
   grid-area: body;
@@ -163,22 +165,24 @@
   top: 0;
   right: 0;
   display: grid;
-  height: 100%;
-  transform: translateX(110%);
   transition: transform 0.3s ease;
 }
 
-.signatories-card-btn-delete,
-.signatories-card-btn-edit {
+.signatories-card-btn-delete {
   color: white;
   font-size: 1.1rem;
   border: none;
-  padding: 0 10px;
-  height: 100%;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+  border-bottom-left-radius: 100%;
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 
-.signatories-card:hover .signatories-card-actionBtn {
-  transform: translateX(0);
+.signatories-card:hover .signatories-card-btn-delete {
+  opacity: 1;
 }
 
 .signatories-pagination-btnLeft,

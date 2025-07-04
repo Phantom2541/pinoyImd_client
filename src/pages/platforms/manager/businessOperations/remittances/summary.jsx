@@ -9,7 +9,6 @@ import {
 import Month from "../../../../../services/fakeDb/calendar/months";
 import SummaryLoading from "../../../cashier/cashRegistry/services/deals/summary/loading";
 import "./style.css";
-import { capitalize } from "lodash";
 export default function Summary() {
   const {
     month,
@@ -114,7 +113,7 @@ export default function Summary() {
 
   const handlePaymentIcon = (method) => {
     const { img, style, text } = paymentMethod.getImage(method);
-    return <img src={img} style={style} title={text} />;
+    return <img src={img} style={style} title={text} alt={method} />;
   };
   return (
     <MDBCard narrow>
