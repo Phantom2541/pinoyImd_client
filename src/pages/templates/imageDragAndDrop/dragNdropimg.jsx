@@ -1,15 +1,16 @@
 import { useRef, useState, useEffect } from "react";
 import { MDBIcon } from "mdbreact";
 import Cropper from "react-easy-crop";
+import logo from "./../../../assets/iMD.png";
 import "./style.css";
 
 const ImageDragAndDrop = ({
-  defaultImage = "",
+  img = "",
   savedImg,
   downloadName = "downloaded-image.png",
 }) => {
   const fileInputRef = useRef(null);
-  const [preview, setPreview] = useState(defaultImage);
+  const [preview, setPreview] = useState(img);
   const [fileName, setFileName] = useState(downloadName);
   const [isDefault, setIsDefault] = useState(true);
   const [isAccepted, setIsAccepted] = useState(false);
@@ -22,8 +23,27 @@ const ImageDragAndDrop = ({
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
   useEffect(() => {
-    setPreview(defaultImage);
-  }, [defaultImage]);
+    let blobUrl;
+
+    if (img) {
+      fetch(img)
+        .then((res) => res.blob())
+        .then((blob) => {
+          blobUrl = URL.createObjectURL(blob);
+          setPreview(blobUrl);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch image", err);
+          setPreview(img); // fallback if fetch fails
+        });
+    }
+
+    return () => {
+      if (blobUrl) {
+        URL.revokeObjectURL(blobUrl);
+      }
+    };
+  }, [img]);
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -65,7 +85,7 @@ const ImageDragAndDrop = ({
   };
 
   const handleRemove = () => {
-    setPreview(defaultImage);
+    setPreview(img);
     setIsDefault(true);
     setIsAccepted(false);
     setRawImage(null);
@@ -164,6 +184,7 @@ const ImageDragAndDrop = ({
         <>
           <img
             src={preview}
+            onError={(e) => (e.target.src = logo)}
             alt="preview"
             className={isDraggingOver ? "dragging-preview" : "normal-preview"}
           />
@@ -209,21 +230,23 @@ const ImageDragAndDrop = ({
       {(isAccepted || isDefault) && !showCropper && (
         <div className="hover-buttons">
           <a
+            title="Download"
             href={preview}
             download={fileName}
             className="download-button"
             onClick={(e) => e.stopPropagation()}
           >
-            <MDBIcon icon="download" /> Download
+            <MDBIcon icon="download" />
           </a>
           <button
+            title="Upload"
             className="upload-button"
             onClick={(e) => {
               e.stopPropagation();
               fileInputRef.current.click();
             }}
           >
-            <MDBIcon icon="upload" /> Upload
+            <MDBIcon icon="upload" />
           </button>
         </div>
       )}

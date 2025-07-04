@@ -17,7 +17,6 @@ import {
 import {
   SAVE,
   UPDATE,
-  TOGGLE,
 } from "../../../../../services/redux/slices/assets/persons/heads";
 import { capitalize, isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
@@ -30,11 +29,9 @@ const _form = {
   department: "",
   section: "",
 };
-export default function Modal() {
+export default function Modal({ show, toggle, selected, willCreate }) {
   const { collections } = useSelector(({ personnels }) => personnels),
-    { formSubmitted, isSuccess, showModal, selected, willCreate } = useSelector(
-      ({ heads }) => heads
-    ),
+    { formSubmitted, isSuccess } = useSelector(({ heads }) => heads),
     [crews, setCrews] = useState([]),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
@@ -43,80 +40,78 @@ export default function Modal() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (show && !formSubmitted && isSuccess) {
-  //     toggle();
-  //     // setForm(_form);
-  //   }
-  // }, [formSubmitted, isSuccess, show, toggle, setForm]);
+  useEffect(() => {
+    if (show && !formSubmitted && isSuccess) {
+      toggle();
+      // setForm(_form);
+    }
+  }, [formSubmitted, isSuccess, show, toggle, setForm]);
 
-  // useEffect(() => {
-  //   if (activePlatform?.branchId && show)
-  //     dispatch(EMPLOYEES({ token, branch: activePlatform?.branchId }));
-  //   return () => dispatch(RESET());
-  // }, [activePlatform, show, willCreate, dispatch, token]);
+  useEffect(() => {
+    if (activePlatform?.branchId && show)
+      dispatch(EMPLOYEES({ token, branch: activePlatform?.branchId }));
+    return () => dispatch(RESET());
+  }, [activePlatform, show, willCreate, dispatch, token]);
 
-  // useEffect(() => {
-  //   if (activePlatform?.departments === department) {
-  //     const _sections = Templates.getComponents(
-  //       department === "Laboratory" ? "LAB" : "RAD"
-  //     );
+  useEffect(() => {
+    if (activePlatform?.departments === department) {
+      const _sections = Templates.getComponents(
+        department === "Laboratory" ? "LAB" : "RAD"
+      );
 
-  //     // add new section field
-  //     _sections.push(
-  //       department === "Laboratory" ? "Pathologist" : "Radiologist"
-  //     );
-  //     setSections(_sections);
-  //   }
-  // }, [department, activePlatform]);
+      // add new section field
+      _sections.push(
+        department === "Laboratory" ? "Pathologist" : "Radiologist"
+      );
+      setSections(_sections);
+    }
+  }, [department, activePlatform]);
 
-  // useEffect(() => {
-  //   const positions = Policy.getPositionsByDepartmentName(
-  //     !willCreate && selected?.department
-  //       ? capitalize(selected.department)
-  //       : department
-  //   ).map(({ id }) => id);
-  //   const _crew = collections.filter(({ contract }) =>
-  //     positions.includes(contract?.designation)
-  //   );
-  //   setCrews(_crew);
-  // }, [collections, department, selected, willCreate]);
+  useEffect(() => {
+    const positions = Policy.getPositionsByDepartmentName(
+      !willCreate ? capitalize(selected.department) : department
+    ).map(({ id }) => id);
+    const _crew = collections.filter(({ contract }) =>
+      positions.includes(contract?.designation)
+    );
+    setCrews(_crew);
+  }, [collections, department, selected, willCreate]);
 
-  // useEffect(() => {
-  //   if (show && !willCreate && selected._id) return setForm(selected);
-  //   setForm(_form);
-  // }, [show, willCreate, selected]);
+  useEffect(() => {
+    if (show && !willCreate && selected._id) return setForm(selected);
+    setForm(_form);
+  }, [show, willCreate, selected]);
 
-  // const handleUpdate = () => {
-  //   // check if object has changed
-  //   if (isEqual(form, selected))
-  //     return addToast("No changes found, skipping update.", {
-  //       appearance: "info",
-  //     });
+  const handleUpdate = () => {
+    // check if object has changed
+    if (isEqual(form, selected))
+      return addToast("No changes found, skipping update.", {
+        appearance: "info",
+      });
 
-  //   dispatch(
-  //     UPDATE({
-  //       data: { ...form, id: selected._id },
-  //       token,
-  //     })
-  //   );
-  // };
-  // const handleCreate = () => {
-  //   dispatch(
-  //     SAVE({
-  //       data: { ...form, branch: activePlatform?.branchId },
-  //       token,
-  //     })
-  //   );
-  // };
+    dispatch(
+      UPDATE({
+        data: { ...form, id: selected._id },
+        token,
+      })
+    );
+  };
+  const handleCreate = () => {
+    dispatch(
+      SAVE({
+        data: { ...form, branch: activePlatform?.branchId },
+        token,
+      })
+    );
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    //   if (willCreate) {
-    //     return handleCreate();
-    //   }
+    if (willCreate) {
+      return handleCreate();
+    }
 
-    //   handleUpdate();
+    handleUpdate();
   };
 
   // use for direct values like strings and numbers
@@ -139,41 +134,43 @@ export default function Modal() {
     });
   };
 
-  // const handleDepartmentChange = (department) => {
-  //   setDepartment(department);
-  //   setForm({
-  //     ...form,
-  //     department: department.toLowerCase(),
-  //   });
-  //   const _sections = Templates.getComponents(
-  //     department === "Laboratory" ? "LAB" : "RAD"
-  //   );
-  //   // add new section field
-  //   _sections.push(department === "Laboratory" ? "Pathologist" : "Radiologist");
-  //   setSections(_sections);
-  // };
+  const handleDepartmentChange = (department) => {
+    setDepartment(department);
+    setForm({
+      ...form,
+      department: department.toLowerCase(),
+    });
+    const _sections = Templates.getComponents(
+      department === "Laboratory" ? "LAB" : "RAD"
+    );
+    // add new section field
+    _sections.push(department === "Laboratory" ? "Pathologist" : "Radiologist");
+    setSections(_sections);
+  };
 
-  const handleClose = () => dispatch(TOGGLE());
+  console.log("sections", sections);
+  console.log("form", form);
 
   return (
-    <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="md">
+    <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
       <MDBModalHeader
-        toggle={handleClose}
+        toggle={toggle}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Designate" : "Update"} {selected?.name || " head"}
+        {willCreate ? "Designate" : "Update"} {selected.name || " head"}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBRow>
             <MDBCol md="12">
+              <label className="d-block mb-1">Department</label>
               <Select
                 collections={["Radiology", "Laboratory"]}
                 preValue={capitalize(form.department)}
                 label={"Department"}
                 multiple={false}
-                // onChange={handleDepartmentChange}
+                onChange={handleDepartmentChange}
               />
             </MDBCol>
           </MDBRow>
@@ -181,7 +178,7 @@ export default function Modal() {
             <MDBCol md={"12"} className="mb-3">
               <Select
                 collections={sections}
-                // onChange={handleSectionChange}
+                onChange={handleSectionChange}
                 preValue={selected?.section}
                 label={"Sections"}
                 multiple={false}

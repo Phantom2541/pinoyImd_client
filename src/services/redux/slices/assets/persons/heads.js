@@ -99,18 +99,20 @@ export const reduxSlice = createSlice({
     },
     SetCREATE: (state) => {
       state.selected = {
+        user: "",
         department: "",
         section: "",
-        // Extract all keys from fullName, fallback to empty string if not provided
-        fname: "",
-        mname: "",
-        lname: "",
-        suffix: "",
-        postnominal: "",
-
-        // Extract only needed fields from prc (exclude 'from')
-        prcId: "",
-        prcTo: "",
+        fullName: {
+          fname: "",
+          mname: "",
+          lname: "",
+          suffix: "",
+        },
+        prc: {
+          id: "",
+          from: "",
+          to: "",
+        },
       };
 
       state.willCreate = true;

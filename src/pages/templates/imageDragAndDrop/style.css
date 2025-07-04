@@ -45,10 +45,10 @@
   transform: translate(-50%, -50%);
 }
 
-.template-dragNdrop-dropImgArea.accepted:hover img,
+/* .template-dragNdrop-dropImgArea.accepted:hover img,
 .template-dragNdrop-dropImgArea.default:hover img {
   filter: blur(1.5px);
-}
+} */
 
 .template-dragNdrop-dropImgArea:hover {
   background-color: #f9f9f9;
@@ -87,17 +87,13 @@
 
 .hover-buttons {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
-  transform: translate(-50%, -50%);
   opacity: 0;
-  gap: 10px;
   transition: opacity 0.3s;
   z-index: 10;
   background-color: rgba(0, 0, 0, 0.3);
@@ -109,19 +105,38 @@
 
 .download-button,
 .upload-button {
-  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   color: white;
   padding: 10px 14px;
   border: none;
-  border-radius: 6px;
   font-weight: bold;
   text-decoration: none;
   cursor: pointer;
   display: flex;
-  align-items: center;
   gap: 6px;
 }
 
+.download-button {
+  background-color: #1266f1;
+}
+.download-button:hover {
+  color: white;
+  background-color: #3c80f4;
+}
+
+.upload-button {
+  background-color: #fbc02d;
+}
+
+.upload-button:hover {
+  color: white;
+  background-color: #fccc4d;
+}
+
+/* 
 .upload-button:hover {
   background-color: #007bff;
 }
@@ -129,7 +144,7 @@
 .download-button:hover {
   background-color: #007bff;
   color: white;
-}
+} */
 
 .accept-btn,
 .reject-btn {

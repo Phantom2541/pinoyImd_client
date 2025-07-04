@@ -165,22 +165,24 @@
   top: 0;
   right: 0;
   display: grid;
-  height: 100%;
-  transform: translateX(110%);
   transition: transform 0.3s ease;
 }
 
-.signatories-card-btn-delete,
-.signatories-card-btn-edit {
+.signatories-card-btn-delete {
   color: white;
   font-size: 1.1rem;
   border: none;
-  padding: 0 10px;
-  height: 100%;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+  border-bottom-left-radius: 100%;
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 
-.signatories-card:hover .signatories-card-actionBtn {
-  transform: translateX(0);
+.signatories-card:hover .signatories-card-btn-delete {
+  opacity: 1;
 }
 
 .signatories-pagination-btnLeft,
