@@ -1,12 +1,37 @@
-import { MDBBtn, MDBIcon } from "mdbreact";
-import { Templates } from "../../../../../../services/fakeDb";
+import { MDBBadge, MDBBtn, MDBIcon } from "mdbreact";
 import { capitalize } from "lodash";
 
 const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
+  const { settings = {}, name = "", code = "" } = branch;
+  const { subscription = "demo" } = settings;
+
+  const getColorBySubscriptionType = (type) => {
+    console.log("type", type);
+    switch (type) {
+      case "demo":
+        return "warning";
+      case "monthly":
+        return "info";
+      case "quarterly":
+        return "primary";
+      case "yearly":
+        return "success";
+      case "lifetime":
+        return "dark";
+      default:
+        return "secondary";
+    }
+  };
+
+  const handleTitle = (type) => {
+    if (type === "demo") return "6 months trial";
+    return `Enjoy your ${type} subscription.`;
+  };
+
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div>
-        {index + 1}. {capitalize(branch?.name)} {branch?.abbreviation}
+        {index + 1}. {capitalize(name)} - {code}
         {!branch?.ao && (
           <MDBIcon
             fas
@@ -17,9 +42,14 @@ const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
         )}
       </div>
       <div className="d-flex">
-        <small className="mr-2 mt-1">
-          {Templates.getComponentName(branch?.template)}
-        </small>
+        <MDBBadge
+          color={getColorBySubscriptionType(subscription)}
+          className="mr-3"
+          pill
+          title={handleTitle(subscription)}
+        >
+          <small>{capitalize(subscription)}</small>
+        </MDBBadge>
         <MDBBtn
           size="sm"
           color="white"

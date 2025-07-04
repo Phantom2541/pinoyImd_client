@@ -389,17 +389,20 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+        const { isCategories = false } = payload;
 
         // ✅ Retrieve current localStorage object
         const activePlatform = JSON.parse(
           localStorage.getItem("activePlatform")
         );
+
+        const baseKey = isCategories ? "pc" : "hmo";
 
         if (activePlatform?.branch) {
           const branch = activePlatform?.branch;
@@ -410,7 +413,7 @@ export const reduxSlice = createSlice({
               ...activePlatform,
               branch: {
                 ...branch,
-                companyId: { ...companyId, hmo: payload.hmo },
+                companyId: { ...companyId, [baseKey]: payload[baseKey] },
               },
             })
           );
@@ -419,12 +422,12 @@ export const reduxSlice = createSlice({
         state.filtered = payload?.hmo;
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
