@@ -1,9 +1,12 @@
 import { MDBBadge, MDBBtn, MDBIcon } from "mdbreact";
 import { capitalize } from "lodash";
+import { useDispatch } from "react-redux";
+import { SetSELECTED } from "../../../../../../services/redux/slices/assets/branches";
 
 const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
-  const { settings = {}, name = "", code = "" } = branch;
-  const { subscription = "demo" } = settings;
+  const { settings = {}, displayname = "", code = "" } = branch;
+  const { subscription = "demo" } = settings,
+    dispatch = useDispatch();
 
   const getColorBySubscriptionType = (type) => {
     console.log("type", type);
@@ -31,7 +34,7 @@ const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div>
-        {index + 1}. {capitalize(name)} - {code}
+        {index + 1}. {displayname.toUpperCase()} - {code}
         {!branch?.ao && (
           <MDBIcon
             fas
@@ -40,6 +43,12 @@ const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
             style={{ color: isOpen ? "white" : "orange" }}
           />
         )}
+        <MDBIcon
+          title="Update Branch"
+          className="ml-3"
+          icon="pencil-alt"
+          onClick={() => dispatch(SetSELECTED(branch))}
+        />
       </div>
       <div className="d-flex">
         <MDBBadge
@@ -50,6 +59,7 @@ const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
         >
           <small>{capitalize(subscription)}</small>
         </MDBBadge>
+
         <MDBBtn
           size="sm"
           color="white"
