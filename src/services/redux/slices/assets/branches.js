@@ -368,7 +368,8 @@ export const reduxSlice = createSlice({
             const index = collections.findIndex(
               (item) => item._id === payload._id
             );
-            collections[index] = payload;
+            const oldData = { ...collections[index] };
+            collections[index] = { ...oldData, ...payload };
           };
 
           updateCollections(state.collections);
