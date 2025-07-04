@@ -19,7 +19,6 @@ import {
   Vouchers,
   Payments,
   // SOA,
-  Reseco,
   Onboarding,
 } from "../../../pages/platforms/cashier";
 
@@ -107,13 +106,6 @@ const cashier = [
         icon: "receipt",
         title: "Monthly Vouchers for Referrals (Cashier only)",
         component: Vouchers,
-      },
-      {
-        name: "Rebates",
-        path: "/reseco",
-        icon: "calendar-check",
-        title: "Monthly Referral Rebates",
-        component: Reseco,
       },
     ],
   },

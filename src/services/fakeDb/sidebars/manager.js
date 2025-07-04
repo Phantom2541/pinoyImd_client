@@ -26,15 +26,13 @@ import {
   Remittances,
   Sales,
   ExperimentalLedger,
-  Quest,
 } from "../../../pages/platforms/manager/businessOperations";
+import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
 
 import {
   ProductGenerics,
   Products,
 } from "../../../pages/platforms/manager/commerce/merchandise";
-
-import { Calender, Scheduler, Schedule } from "../../../pages/platforms/dtr";
 
 import {
   Vouchers,
@@ -44,6 +42,7 @@ import {
   SOA,
   Reseco,
 } from "../../../pages/platforms/manager/accrued";
+import { Schedule } from "../../../pages/platforms/dtr";
 
 import {
   Philhealth,
@@ -111,14 +110,7 @@ const ManagerSidebar = [
         title: "Employee daily attendance tracker.",
         path: "/attendances",
         icon: "clock",
-        component: Calender,
-      },
-      {
-        name: "Scheduler",
-        title: "Employee daily attendance tracker.",
-        path: "/scheduler",
-        icon: "clock",
-        component: Scheduler,
+        // component: Calender,
       },
       {
         name: "Schedule",
