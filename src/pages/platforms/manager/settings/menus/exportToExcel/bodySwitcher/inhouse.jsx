@@ -1,5 +1,4 @@
 import { MDBTypography } from "mdbreact";
-import { useEffect, useState } from "react";
 import { Categories } from "../../../../../../../services/fakeDb";
 
 const Inhouse = ({ form, setForm }) => {
