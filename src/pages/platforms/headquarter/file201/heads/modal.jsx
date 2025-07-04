@@ -164,6 +164,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         <form onSubmit={handleSubmit}>
           <MDBRow>
             <MDBCol md="12">
+              <label className="d-block mb-1">Department</label>
               <Select
                 collections={["Radiology", "Laboratory"]}
                 preValue={capitalize(form.department)}
