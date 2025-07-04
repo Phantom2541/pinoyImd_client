@@ -108,78 +108,78 @@ const Body = () => {
         ))}
       </MDBNav>
 
-      <MDBTabContent activeItem={activeItem} className="m-0 p-0">
-        <MDBTabPane tabId={1} className="m-0 p-0">
-          <Receipt />
-        </MDBTabPane>
-        <MDBTabPane tabId={2} className="m-0 p-0">
-          <br />
-          {isResultAvailable && (
-            <>
-              <div className="d-flex aling-items-center justify-content-between">
-                <span className="mt-1" style={{ fontWeight: 400 }}>
-                  Sections Type:
-                </span>
-                <select
-                  className="form-control text-primary"
-                  style={{ width: "70%", height: "2rem" }}
-                  value={activeType}
-                  onChange={({ target }) =>
-                    dispatch(SetACTIVE_TYPE(target.value))
-                  }
-                >
-                  {Object.keys(diagnostic)?.map((key) => (
-                    <option key={key} value={key}>
-                      {key}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="my-4">
-                <MDBAlert
-                  color={formColor(form)}
-                  className="text-uppercase text-center py-0 mb-1 p-1"
-                >
-                  <h5
-                    style={{ letterSpacing: "10px" }}
-                    className="mb-0 fw-bold"
-                  >
-                    {form}
-                  </h5>
-                </MDBAlert>
-                {!isResultReady && (
-                  <span className="text-primary">
-                    Processing of your requested services is still ongoing.
-                  </span>
-                )}
-              </div>
-            </>
-          )}
-
-          {isLoading ? (
-            <div style={{ width: "100%" }}>
-              <Loading loadingFor="body" />
-            </div>
-          ) : (
-            <>
-              {isResultReady ? (
-                <BodySwitcher task={task} department={department[0]} />
-              ) : !hasRender ? (
-                <MDBTypography
-                  note
-                  noteTitle="Note: "
-                  className="mt-5"
-                  noteColor="danger"
-                >
-                  Please proceed to the {getDepartment()}
-                </MDBTypography>
-              ) : (
-                <CountDown />
+      {!isLoading ? (
+        <MDBTabContent activeItem={activeItem} className="m-0 p-0">
+          <MDBTabPane tabId={1} className="m-0 p-0">
+            <Receipt />
+          </MDBTabPane>
+          <MDBTabPane tabId={2} className="m-0 p-0">
+            <div className="mt-3">
+              {isResultAvailable && (
+                <>
+                  <div className="d-flex aling-items-center justify-content-between">
+                    <span className="mt-1" style={{ fontWeight: 400 }}>
+                      Sections Type:
+                    </span>
+                    <select
+                      className="form-control text-primary"
+                      style={{ width: "70%", height: "2rem" }}
+                      value={activeType}
+                      onChange={({ target }) =>
+                        dispatch(SetACTIVE_TYPE(target.value))
+                      }
+                    >
+                      {Object.keys(diagnostic)?.map((key) => (
+                        <option key={key} value={key}>
+                          {key}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="my-4">
+                    <MDBAlert
+                      color={formColor(form)}
+                      className="text-uppercase text-center py-0 mb-1 p-1"
+                    >
+                      <h5
+                        style={{ letterSpacing: "10px" }}
+                        className="mb-0 fw-bold"
+                      >
+                        {form}
+                      </h5>
+                    </MDBAlert>
+                    {!isResultReady && (
+                      <span className="text-primary">
+                        Processing of your requested services is still ongoing.
+                      </span>
+                    )}
+                  </div>
+                </>
               )}
-            </>
-          )}
-        </MDBTabPane>
-      </MDBTabContent>
+              <>
+                {isResultReady ? (
+                  <BodySwitcher task={task} department={department[0]} />
+                ) : !hasRender ? (
+                  <MDBTypography
+                    note
+                    noteTitle="Note: "
+                    className="mt-5"
+                    noteColor="danger"
+                  >
+                    Please proceed to the {getDepartment()}
+                  </MDBTypography>
+                ) : (
+                  <CountDown />
+                )}
+              </>
+            </div>
+          </MDBTabPane>
+        </MDBTabContent>
+      ) : (
+        <div style={{ width: "100%" }}>
+          <Loading loadingFor="body" />
+        </div>
+      )}
     </div>
   );
 };

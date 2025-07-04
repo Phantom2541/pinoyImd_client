@@ -121,10 +121,10 @@ const CountDown = () => {
       {countdownCompleted ? (
         <p className="text-danger">
           <i>
-            If your results are still unavailable shortly after the countdown
-            ends, please allow a few more moments. If the delay persists, kindly
-            follow up with the front desk to check the status of your
-            transaction.
+            Note: If your results are still unavailable shortly after the
+            countdown ends, please allow a few more moments. If the delay
+            persists, kindly follow up with the front desk to check the status
+            of your transaction.
           </i>
         </p>
       ) : (

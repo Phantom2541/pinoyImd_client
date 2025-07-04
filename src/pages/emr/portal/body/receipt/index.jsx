@@ -31,7 +31,7 @@ const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
   );
 };
 
-const Stub = ({ sale, companyId }) => {
+const Stub = ({ sale }) => {
   const {
     payment = 0,
     amount = 0,
@@ -57,7 +57,7 @@ const Stub = ({ sale, companyId }) => {
         <thead>
           <tr>
             <th colSpan={2} className="py-0" style={{ fontSize: "17.5px" }}>
-              Services
+              <h5 className="fw-bold"> Services</h5>
             </th>
           </tr>
         </thead>
