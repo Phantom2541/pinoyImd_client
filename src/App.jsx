@@ -31,6 +31,7 @@ import FAQ from "./pages/others/faq";
 import Portal from "./pages/emr/portal";
 import Subscriber from "./pages/subscriber";
 import Staff from "./components/printout/staff";
+import AttendancePrint from "./components/printout/dtr";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),
@@ -88,6 +89,7 @@ export default function App() {
 
       <Route path="/printout/machines" exact component={Machines} />
       <Route path="/printout/staffs" exact component={Staff} />
+      <Route path="/printout/Attendances" exact component={AttendancePrint} />
       {/* Diagnostic Portal */}
       <Route path="/emr/portal/:companyId/:dealId" exact component={Portal} />
       <Route path="/subscriber/:companyId" exact component={Subscriber} />
