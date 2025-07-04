@@ -90,7 +90,9 @@ export default function Modal() {
       .replace(/[^a-zA-Z0-9]/g, "");
   const validateName = (name) => {
     const isExist = [...collections].some(
-      (branch) => normalize(branch.displayname) === normalize(name)
+      (branch) =>
+        normalize(branch.displayname) === normalize(name) &&
+        branch?._id !== selected?._id
     );
 
     setIsDuplicate(isExist);
@@ -99,7 +101,9 @@ export default function Modal() {
 
   const validateCode = (code) => {
     const isExist = [...collections].some(
-      (branch) => normalize(branch.code) === normalize(code)
+      (branch) =>
+        normalize(branch.code) === normalize(code) &&
+        branch?._id !== selected?._id
     );
 
     setIsDuplicateCode(isExist);
@@ -273,16 +277,18 @@ export default function Modal() {
             address={form.address}
             handleChange={(key, value) => setForm({ ...form, [key]: value })}
           />
-          <MDBBtn
-            rounded
-            className="float-right mt-4"
-            type="submit"
-            color="primary"
-            disabled={isDuplicateCode || isDuplicate || formSubmitted}
-          >
-            {selected._id ? "Update" : "Save"}{" "}
-            {formSubmitted && <MDBIcon icon="spinner" pulse />}
-          </MDBBtn>
+          <div className="text-center">
+            <MDBBtn
+              rounded
+              className=" mt-4"
+              type="submit"
+              color="primary"
+              disabled={isDuplicateCode || isDuplicate || formSubmitted}
+            >
+              {selected._id ? "Update" : "Save"}{" "}
+              {formSubmitted && <MDBIcon icon="spinner" pulse />}
+            </MDBBtn>
+          </div>
         </form>
       </MDBModalBody>
     </MDBModal>

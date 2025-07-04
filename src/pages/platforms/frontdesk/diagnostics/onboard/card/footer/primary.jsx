@@ -5,7 +5,7 @@ import { Services } from "../../../../../../../services/fakeDb";
 import { axiosMiddleware } from "../../../../../../../services/utilities";
 
 const PrimaryFooter = ({ deal }) => {
-  const { activePlatform } = useSelector(({ auth }) => auth);
+  const { activePlatform, token } = useSelector(({ auth }) => auth);
   const { rendered = [], cart = [] } = deal;
   const dispatch = useDispatch();
 
@@ -36,9 +36,9 @@ const PrimaryFooter = ({ deal }) => {
   };
 
   const handleReWrite = async () => {
-    const patients = ["001ARNOLD GANIA	SP CHOLESTEROL	SER"];
+    const patients = ["003 ARNOLD GANIA	SP CHOLESTEROL	SER "];
     try {
-      const response = await axiosMiddleware.sendToA15(patients);
+      const response = await axiosMiddleware.sendToA15(patients, token);
       console.log("✅ Response from middleware:", response);
       // You can use: response.success, response.payload, etc.
     } catch (err) {
