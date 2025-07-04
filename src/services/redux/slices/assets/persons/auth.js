@@ -175,18 +175,18 @@ export const reduxSlice = createSlice({
     },
 
     SetPatientCategories: (state, { payload }) => {
-      const { branchId, categories = [] } = payload;
-      if (branchId === state.activePlatform.branchId) {
-        const _activePlatform = {
-          ...state.activePlatform,
-          branch: {
-            ...state.activePlatform.branch,
-            pc: categories,
+      const _activePlatform = {
+        ...state.activePlatform,
+        branch: {
+          ...state.activePlatform.branch,
+          companyId: {
+            ...state.activePlatform.branch.companyId,
+            pc: payload,
           },
-        };
-        localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
-        state.activePlatform = _activePlatform;
-      }
+        },
+      };
+      state.activePlatform = _activePlatform;
+      localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
     },
 
     IMAGE: (state, { payload }) => {

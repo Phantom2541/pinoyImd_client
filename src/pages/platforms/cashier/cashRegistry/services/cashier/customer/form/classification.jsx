@@ -35,13 +35,21 @@ export default function PosCard() {
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [physicians, setPhysicians] = useState([]),
     [categorySelected, setCategorySelected] = useState(),
+    [categories, setCategories] = useState([]),
     [sources, setSources] = useState([]),
     [source, setSource] = useState(),
     dispatch = useDispatch();
 
   const { branch = {} } = activePlatform;
   const { companyId: company = {} } = branch || {};
-  console.log("company", company);
+
+  useEffect(() => {
+    const fakeDB = localStorage.getItem("activePlatform");
+    if (fakeDB) {
+      setCategories(JSON.parse(fakeDB)?.branch?.companyId?.pc);
+    }
+  }, []);
+
   useEffect(() => {
     const { abbr } = Categories[category];
     const _abbr = [
@@ -184,7 +192,7 @@ export default function PosCard() {
             value={category}
             onChange={({ target }) => handleCategory(Number(target.value))}
           >
-            {branch?.pc?.map((c, index) => {
+            {categories?.map((c, index) => {
               const { name = "", color = "" } = Categories[c];
               return (
                 <option value={c} key={`category-${index}`} style={{ color }}>

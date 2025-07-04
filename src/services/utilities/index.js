@@ -20,7 +20,7 @@ import getAge from "./getAge";
 import getDate from "./getDate";
 import currency from "./currency";
 import removeRedundantPackages from "./removeRedundantPackages";
-import computeGD from "./computeGD";
+import { computeGD, allServicesHavePrices } from "./computeGD";
 import validateContact from "./validateContact";
 import generateEmail from "./generateEmail";
 import { getGenderIcon, getPhysicianGenderIcon } from "./getGenderIcon";
@@ -117,6 +117,7 @@ export {
   currency,
   removeRedundantPackages,
   computeGD,
+  allServicesHavePrices,
   validateContact,
   generateEmail,
   getGenderIcon,

@@ -75,7 +75,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       //access the activePlatform in localstorage instead to auth, to get the updated patient categories
       const fakeDB = localStorage.getItem("activePlatform");
       if (fakeDB) {
-        setCategories(JSON.parse(fakeDB).branch.pc);
+        setCategories(JSON.parse(fakeDB)?.branch?.companyId?.pc);
       }
     }
   }, [show]);

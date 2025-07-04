@@ -32,7 +32,21 @@ const HMO = ({ form, setForm }) => {
       {hmo.map(({ code }) => (
         <MDBCol md="4">
           <MDBInput
-            label={utils.getName(code)}
+            label={
+              <span
+                title={utils.getName(code)}
+                style={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "block",
+                  maxWidth: "60%",
+                }}
+              >
+                {utils.getName(code)}
+              </span>
+            }
+            labelClass="text-ellipsis-label"
             type="number"
             value={String(getValue(code))}
             onChange={({ target }) => handleChange(code, target.value)}
