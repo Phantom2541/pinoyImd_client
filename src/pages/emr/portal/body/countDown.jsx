@@ -13,8 +13,12 @@ const CountDown = () => {
       forms,
     } = useSelector(({ portal }) => portal),
     [secondsLeft, setSecondsLeft] = useState(null),
+    [hasExpected, setHasExpected] = useState(false),
+    [expected, setExpected] = useState(""),
     dispatch = useDispatch();
 
+  const { branchId = {} } = result;
+  const { tat = [] } = branchId;
   useEffect(() => {
     if (!result?.createdAt) return;
 
@@ -27,12 +31,36 @@ const CountDown = () => {
 
     // ✅ Prioritize activeType if it matches one-hour services
     if (rendered?._id) {
-      if (
-        ONE_HOUR_PROCESS_SERVICES.includes(activeType?.toUpperCase()) &&
-        rendered?._id
-      ) {
-        baseTime = 3600;
+      const expectedIndex = [...tat].findIndex(
+        ({ section, mode = "" }) => section === activeType && mode === "custom"
+      );
+      if (expectedIndex > -1) {
+        const { expectedAt = "" } = tat[expectedIndex];
+        setExpected(expectedAt);
+        setHasExpected(true);
+      } else {
+        if (ONE_HOUR_PROCESS_SERVICES.includes(activeType?.toUpperCase())) {
+          baseTime = 3600;
+        }
+        setHasExpected(false);
       }
+
+      // if (
+      //   ONE_HOUR_PROCESS_SERVICES.includes(activeType?.toUpperCase()) &&
+      //   rendered?._id
+      // ) {
+      //   const expectedIndex = [...tat].findIndex(
+      //     ({ section, mode = "" }) =>
+      //       section === activeType && mode === "custom"
+      //   );
+      //   if (expectedIndex > -1) {
+      //     const { expectedAt = "" } = tat[expectedIndex];
+
+      //     setExpected(expected);
+      //     setHasExpected(expectedAt ? true : false);
+      //   }
+      //   baseTime = 3600;
+      // }
     } else {
       //for default countdown if no rendered
       const specialForms = [0, 1, 4];
@@ -43,7 +71,7 @@ const CountDown = () => {
     }
     const remaining = baseTime - elapsed;
     setSecondsLeft(remaining);
-  }, [result, rendered, activeType, forms]);
+  }, [result, rendered, activeType, forms, tat]);
 
   useEffect(() => {
     if (secondsLeft === null) return;
@@ -73,16 +101,23 @@ const CountDown = () => {
         className="text-center"
         style={{ marginBottom: "-10px", fontWeight: 400 }}
       >
-        {countdownCompleted ? "Result Time Delayed" : "Expected Time Released"}
+        {countdownCompleted && !hasExpected
+          ? "Result Time Delayed"
+          : "Expected Time Released"}
       </h6>
-      <h1
-        className={`digital-text text-center countdown-anim ${
-          countdownCompleted ? "text-danger" : "text-warning"
-        }`}
-      >
-        {formatTime(secondsLeft)}{" "}
-        {/* <span style={{ fontSize: "1.2rem", marginLeft: "-1rem" }}> hrs</span> */}
-      </h1>
+      {!hasExpected ? (
+        <h1
+          className={`digital-text text-center countdown-anim ${
+            countdownCompleted ? "text-danger" : "text-warning"
+          }`}
+        >
+          {formatTime(secondsLeft)}{" "}
+        </h1>
+      ) : (
+        <h1 className="text-center my-3" style={{ fontWeight: 400 }}>
+          {expected}
+        </h1>
+      )}
       {countdownCompleted ? (
         <p className="text-danger">
           <i>

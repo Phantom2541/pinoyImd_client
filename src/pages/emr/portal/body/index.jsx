@@ -1,5 +1,17 @@
-import { useMemo } from "react";
-import { MDBAlert, MDBTypography } from "mdbreact";
+import { useMemo, useState } from "react";
+import {
+  MDBAlert,
+  MDBTypography,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBTabContent,
+  MDBTabPane,
+  MDBIcon,
+  MDBNavLink,
+  MDBNav,
+  MDBNavItem,
+} from "mdbreact";
 import { formColor } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +21,7 @@ import { SetACTIVE_TYPE } from "../../../../services/redux/slices/emr/portal";
 import "./style.css";
 import Loading from "./loading";
 import { Services } from "../../../../services/fakeDb";
+import Receipt from "./receipt";
 const Body = () => {
   const {
       result,
@@ -53,6 +66,18 @@ const Body = () => {
       services,
     };
   }, [activeType, diagnostic, preferences, result, department]);
+
+  const [activeItem, setActiveItem] = useState(1);
+
+  const toggle = (tab) => {
+    if (activeItem !== tab) {
+      setActiveItem(tab);
+    }
+  };
+  const tabs = [
+    { id: 1, label: "Stub", icon: "receipt" },
+    { id: 2, label: "Results", icon: "flask" },
+  ];
   const getDepartment = () => {
     switch (department[0]) {
       case "LAB":
@@ -68,64 +93,93 @@ const Body = () => {
   return (
     <div className="mx-2">
       <Header />
-      {isResultAvailable && (
-        <>
-          <div className="d-flex aling-items-center justify-content-between">
-            <span className="mt-1" style={{ fontWeight: 400 }}>
-              Sections Type:
-            </span>
-            <select
-              className="form-control text-primary"
-              style={{ width: "70%", height: "2rem" }}
-              value={activeType}
-              onChange={({ target }) => dispatch(SetACTIVE_TYPE(target.value))}
+      <MDBNav tabs color="indigo" className="nav-justified m-0">
+        {tabs.map((tab) => (
+          <MDBNavItem key={tab.id}>
+            <MDBNavLink
+              link
+              to="#!"
+              active={activeItem === tab.id}
+              onClick={() => toggle(tab.id)}
             >
-              {Object.keys(diagnostic)?.map((key) => (
-                <option key={key} value={key}>
-                  {key}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="my-4">
-            <MDBAlert
-              color={formColor(form)}
-              className="text-uppercase text-center py-0 mb-1 p-1"
-            >
-              <h5 style={{ letterSpacing: "10px" }} className="mb-0 fw-bold">
-                {form}
-              </h5>
-            </MDBAlert>
-            {!isResultReady && (
-              <span className="text-primary">
-                Processing of your requested services is still ongoing.
-              </span>
-            )}
-          </div>
-        </>
-      )}
-      {isLoading ? (
-        <div style={{ width: "100%" }}>
-          <Loading loadingFor="body" />
-        </div>
-      ) : (
-        <>
-          {isResultReady ? (
-            <BodySwitcher task={task} department={department[0]} />
-          ) : !hasRender ? (
-            <MDBTypography
-              note
-              noteTitle="Note: "
-              className="mt-5"
-              noteColor="danger"
-            >
-              Please proceed to the {getDepartment()}
-            </MDBTypography>
-          ) : (
-            <CountDown />
+              <MDBIcon icon={tab.icon} className="mr-3" /> {tab.label}
+            </MDBNavLink>
+          </MDBNavItem>
+        ))}
+      </MDBNav>
+
+      <MDBTabContent activeItem={activeItem} className="m-0 p-0">
+        <MDBTabPane tabId={1} className="m-0 p-0">
+          <Receipt />
+        </MDBTabPane>
+        <MDBTabPane tabId={2} className="m-0 p-0">
+          <br />
+          {isResultAvailable && (
+            <>
+              <div className="d-flex aling-items-center justify-content-between">
+                <span className="mt-1" style={{ fontWeight: 400 }}>
+                  Sections Type:
+                </span>
+                <select
+                  className="form-control text-primary"
+                  style={{ width: "70%", height: "2rem" }}
+                  value={activeType}
+                  onChange={({ target }) =>
+                    dispatch(SetACTIVE_TYPE(target.value))
+                  }
+                >
+                  {Object.keys(diagnostic)?.map((key) => (
+                    <option key={key} value={key}>
+                      {key}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="my-4">
+                <MDBAlert
+                  color={formColor(form)}
+                  className="text-uppercase text-center py-0 mb-1 p-1"
+                >
+                  <h5
+                    style={{ letterSpacing: "10px" }}
+                    className="mb-0 fw-bold"
+                  >
+                    {form}
+                  </h5>
+                </MDBAlert>
+                {!isResultReady && (
+                  <span className="text-primary">
+                    Processing of your requested services is still ongoing.
+                  </span>
+                )}
+              </div>
+            </>
           )}
-        </>
-      )}
+
+          {isLoading ? (
+            <div style={{ width: "100%" }}>
+              <Loading loadingFor="body" />
+            </div>
+          ) : (
+            <>
+              {isResultReady ? (
+                <BodySwitcher task={task} department={department[0]} />
+              ) : !hasRender ? (
+                <MDBTypography
+                  note
+                  noteTitle="Note: "
+                  className="mt-5"
+                  noteColor="danger"
+                >
+                  Please proceed to the {getDepartment()}
+                </MDBTypography>
+              ) : (
+                <CountDown />
+              )}
+            </>
+          )}
+        </MDBTabPane>
+      </MDBTabContent>
     </div>
   );
 };
