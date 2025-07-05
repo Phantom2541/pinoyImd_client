@@ -1,41 +1,77 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
-import {
-  BROWSE,
-  SetFILTER,
-} from "./../../../../services/redux/slices/market/attendances";
-import { Search } from "./../../../../components/searchables";
-
+import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
+import { BROWSE, SetMONTH, ResetDATE } from "../../../../services/redux/slices/market/attendances";
+import CalendarPicker from "../../../../components/header/calendars";
 const Header = () => {
-  const { collections } = useSelector(({ attendances }) => attendances);
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
-    dispatch = useDispatch();
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { collections, month, year } = useSelector(({ attendances }) => attendances);
+  const dispatch = useDispatch();
+
+  const handlePrintOut = () => {
+    console.log("collections: ", collections);
+    
+    localStorage.setItem("attendances", JSON.stringify(collections));
+    window.open(
+      "/printout/attendances",
+      "RequestForm",
+      "top=100px,left=100px,width=1050px,height=750px"
+    );
+  };
 
   useEffect(() => {
-    dispatch(BROWSE({ token, params: { branchId: activePlatform.branchId } }));
-  }, [token, dispatch, activePlatform]);
+    dispatch(
+      BROWSE({
+        token,
+        params: {
+          branchId: activePlatform?.branchId,
+          createdAt: new Date(year, month - 1, 1),
+          endDate: new Date(year, month, 0, 23, 59, 59, 999),
+        },
+      })
+    );
+  }, [token, dispatch, activePlatform, month, year]);
 
   return (
-    <MDBView
-      cascade
-      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
-    >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Attendances ni bayaw
-        </span>
-      </div>
-      <div>
-        <div className="text-right d-flex items-center">
-          <Search
-            collections={collections}
-            setFiltered={(huh) => dispatch(SetFILTER(huh))}
-            reset={() => dispatch(SetFILTER(collections))}
+    <div style={{ position: "relative" }}>
+      <MDBView
+        cascade
+        className="gradient-card-header blue-gradient py-2 d-flex justify-content-between align-items-center"
+      >
+        {/* Left: Calendar */}
+        <div className="d-flex align-items-center">
+          <CalendarPicker
+            month={month}
+            moved={(action) => dispatch(SetMONTH(action))}
+            year={year}
+            reset={() => dispatch(ResetDATE())}
           />
         </div>
-      </div>
-    </MDBView>
+
+        {/* Center: Absolutely Centered Title */}
+        <div
+          className="white-text text-nowrap text-center"
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
+          <span className="h3 m-0 font-weight-bold">Daily Time Record</span>
+        </div>
+
+        {/* Right: Print Button */}
+        <MDBBtn
+          size="sm"
+          rounded
+          color="info"
+          onClick={handlePrintOut}
+          className="no-print"
+        >
+          <MDBIcon icon="print" />
+        </MDBBtn>
+      </MDBView>
+    </div>
   );
 };
 

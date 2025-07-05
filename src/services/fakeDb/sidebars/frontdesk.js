@@ -18,11 +18,11 @@ import {
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import { Menus, Services } from "../../../pages/platforms/cashier";
-import Temperature from "../../../pages/platforms/diagnostics/management/temperature";
 
 import {
   Assurance,
   Controls,
+  Temperature,
 } from "../../../pages/platforms/diagnostics/management";
 
 import Products from "../../../pages/platforms/frontdesk/market/products";
@@ -84,30 +84,32 @@ const frontdesk = [
         icon: "arrow-left",
         component: Sendouts,
       },
+    ],
+  },
+  {
+    name: "Quality Management",
+    icon: "tv",
+    path: "/diagnostics/quality",
+    children: [
       {
-        name: "Quality Management",
-        icon: "tv",
-        path: "/diagnostics/quality",
-        children: [
-          {
-            name: "Quality Assurance (QA)",
-            path: "/diagnostics/quality/external",
-            icon: "check-circle",
-            component: Assurance,
-          },
-          {
-            name: "Quality Control (QC)",
-            path: "/diagnostics/quality/internal",
-            icon: "balance-scale",
-            component: Controls,
-          },
-          {
-            name: "Temperature",
-            path: "/diagnostics/quality/temperature",
-            icon: "thermometer-half",
-            component: Temperature,
-          },
-        ],
+        name: "Quality Assurance (QA)",
+        path: "/diagnostics/quality/external",
+        icon: "check-circle",
+        title: "Quality Control External",
+        component: Assurance,
+      },
+      {
+        name: "Quality Control (QC)",
+        path: "/diagnostics/quality/internal",
+        icon: "balance-scale",
+        title: "Quality Control Internal",
+        component: Controls,
+      },
+      {
+        name: "Temperature",
+        path: "/diagnostics/quality/temperature",
+        icon: "thermometer-half",
+        component: Temperature,
       },
     ],
   },
