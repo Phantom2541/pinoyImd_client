@@ -67,7 +67,7 @@ const Body = () => {
     };
   }, [activeType, diagnostic, preferences, result, department]);
 
-  const [activeItem, setActiveItem] = useState(1);
+  const [activeItem, setActiveItem] = useState(2);
 
   const toggle = (tab) => {
     if (activeItem !== tab) {
