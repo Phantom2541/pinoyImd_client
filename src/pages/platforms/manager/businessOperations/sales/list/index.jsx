@@ -13,7 +13,6 @@ export default function Sales() {
     <>
       <MDBCard narrow>
         <Header />
-        {/* <h5 className="text-right">₱10,880 @ 13 Patient/s</h5> */}
         {isLoading ? <TableLoading /> : <Body />}
         <Footer />
       </MDBCard>

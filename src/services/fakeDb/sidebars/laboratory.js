@@ -70,6 +70,13 @@ const laboratory = [
         title: "Pre-Registered Patients from Partner Clinics",
         component: Onboarding,
       },
+      {
+        name: "Sendout",
+        path: "/sendout",
+        icon: "truck-loading",
+        title: "Sendout Patients to Partner Clinics",
+        // component: Onboarding,
+      },
     ],
   },
   {
