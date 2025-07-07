@@ -1,6 +1,9 @@
 import { Apply, Documents } from "../../../pages/platforms/patron/application";
 import Dashboard from "../../../pages/platforms/patron/dashboard";
 import { Diagnostics } from "../../../pages/platforms/patron/emr";
+// import RequestQuery from "../../../pages/platforms/patron/diagnostics/RequestQuery";
+// import CheckupRecord from "../../../pages/platforms/patron/emr/CheckupRecord";
+// import Appointments from "../../../pages/platforms/patron/appointments/Appointments";
 
 const patron = [
   {
@@ -10,53 +13,73 @@ const patron = [
     component: Dashboard,
   },
   {
-    name: "Electronic Medical Records",
-    path: "/emr",
-    icon: "user-tag",
+    name: "Diagnostics",
+    path: "/diagnostics",
+    icon: "microscope",
     children: [
       {
-        name: "Admission",
-        path: "/admission",
-        icon: "user-tag",
+        name: "Request Query",
+        path: "/request-query",
+        icon: "file-medical",
+        // component: RequestQuery,
       },
       {
-        name: "Diagnostics",
-        path: "/diagnostics",
-        icon: "user-tag",
+        name: "Results",
+        path: "/results",
+        icon: "flask",
         component: Diagnostics,
-      },
-      {
-        name: "Medical Records",
-        path: "/laboratory",
-        icon: "user-tag",
-      },
-      {
-        name: "Medical Certificates",
-        path: "/certificates",
-        icon: "user-tag",
       },
     ],
   },
   {
-    name: "History",
-    path: "/history",
-    icon: "user-tie",
+    name: "Appointments",
+    path: "/appointments",
+    icon: "calendar-check",
+    // component: Appointments,
+  },
+  {
+    name: "Electronic Medical Records",
+    path: "/emr",
+    icon: "file-medical",
+    children: [
+      {
+        name: "Admission",
+        path: "/admission",
+        icon: "notes-medical",
+      },
+      {
+        name: "Medical Records",
+        path: "/laboratory",
+        icon: "vials",
+      },
+      {
+        name: "Medical Certificates",
+        path: "/certificates",
+        icon: "file-medical-alt",
+      },
+      {
+        name: "Checkup Record",
+        path: "/checkup",
+        icon: "stethoscope",
+        // component: CheckupRecord,
+      },
+    ],
   },
   {
     name: "Job Application",
     path: "/application",
-    icon: "user-tag",
+    icon: "briefcase",
     children: [
       {
         name: "Companies",
         path: "/companies",
-        icon: "user-tag",
+        icon: "building",
         component: Apply,
       },
       {
         name: "Applied",
         path: "/applied",
-        icon: "user-tag",
+        icon: "file-alt",
         component: Documents,
       },
     ],
