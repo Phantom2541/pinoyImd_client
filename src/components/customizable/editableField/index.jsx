@@ -123,7 +123,7 @@ const EditableField = ({
               setEditedData({ ...editedData, [keyForValue]: target.value });
             }}
           />
-          <div className="customizable-input-icons mt-2">
+          <div className="customizable-input-icons ">
             {!formSubmitted ? (
               <MDBIcon
                 icon="check"

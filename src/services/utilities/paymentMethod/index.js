@@ -35,8 +35,10 @@ const paymentMethods = [
 
 const paymentMethod = {
   getImage: (method) => {
-    return paymentMethods.find(
-      ({ text }) => text.toLowerCase() === method.toLowerCase()
+    return (
+      paymentMethods.find(
+        ({ text }) => text?.toLowerCase() === method?.toLowerCase()
+      ) || { img: "", text: "", style: {} }
     );
   },
 };

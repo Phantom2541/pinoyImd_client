@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
-import { fullName } from "./../../../../../../services/utilities";
+import { DealsToExcel, fullName } from "./../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { Search } from "./../../../../../../components/searchables";
 import {
   BROWSE,
-  SetFILTERED,
   SetFilterByCASHIER,
   RESET,
+  SetREFINED,
 } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { INSOURCE } from "../../../../../../services/redux/slices/assets/providers";
 
@@ -55,10 +55,6 @@ const Header = () => {
   }, [isSuccess, message, addToast, dispatch]);
 
   useEffect(() => {
-    dispatch(SetFILTERED(collections));
-  }, [dispatch, collections]);
-
-  useEffect(() => {
     if (!collections || collections.length === 0) return;
 
     // Remove duplicate cashier IDs and filter out deleted records
@@ -95,21 +91,23 @@ const Header = () => {
         </select>
       </div>
       <div className="d-flex align-items-center">
-        <MDBIcon
-          title="Download Daily Sales (darrel assignment)"
-          onClick={() => alert("darrel assignment, pa alala nyo Pls.")}
-          icon="file-excel"
-          size="lg"
-          className="mr-2"
-        />
-      </div>
-      <div className="d-flex align-items-center">
         <Search
-          setFiltered={(results) => dispatch(SetFILTERED(results))}
-          reset={() => dispatch(SetFILTERED(collections))}
+          setFiltered={(results) => dispatch(SetREFINED(results))}
+          reset={() => dispatch(SetREFINED(collections))}
           collections={collections}
           haveAction={false}
         />
+        <MDBBtn
+          rounded
+          color="white"
+          size="sm"
+          outline
+          onClick={() => DealsToExcel({ array: collections })}
+          className="px-2 ml-2"
+          title="Download Daily Sales"
+        >
+          <MDBIcon icon="file-excel" size="lg" />
+        </MDBBtn>
       </div>
     </MDBView>
   );

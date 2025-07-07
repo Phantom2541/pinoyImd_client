@@ -61,7 +61,7 @@ import clearSiteData from "./clearSiteData";
 import VouchersToExcel from "./export/excel/vouchers";
 import MenusToExcel from "./export/excel/menus";
 import ResecoToExcel from "./export/excel/reseco";
-import Logo from "../../assets/iMD.png";
+import DealsToExcel from "./export/excel/deals";
 //PDF
 import MenusToPDF from "./export/pdf/menus";
 //status
@@ -145,11 +145,12 @@ export {
   // Cache's Clear
   clearSiteData,
   //export to excel
+  DealsToExcel,
   VouchersToExcel,
   MenusToExcel,
   ResecoToExcel,
   //export to pdf
   MenusToPDF,
   //Logo
-  Logo,
+  // Logo,
 };

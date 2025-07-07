@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Tesseract from "tesseract.js";
+// import Tesseract from "tesseract.js";
 import HMONAME from "./../../../services/fakeDb/hmo/collections.json";
 
 const OCRReader = () => {
@@ -111,19 +111,19 @@ const OCRReader = () => {
     setRawText("");
     setParsedText(null);
 
-    Tesseract.recognize(imageSrc, "eng", {
-      logger: (m) => console.log(m),
-    })
-      .then(({ data: { text } }) => {
-        console.log("OCR TEXT:", text);
-        setRawText(text);
-        setParsedText(parseText(text));
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+    // Tesseract.recognize(imageSrc, "eng", {
+    //   logger: (m) => console.log(m),
+    // })
+    //   .then(({ data: { text } }) => {
+    //     console.log("OCR TEXT:", text);
+    //     setRawText(text);
+    //     setParsedText(parseText(text));
+    //     setLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //     setLoading(false);
+    //   });
   };
 
   const detectHMO = (text) => {
