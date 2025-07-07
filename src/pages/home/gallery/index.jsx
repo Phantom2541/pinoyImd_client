@@ -4,13 +4,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
-import img1 from "./../../../assets/homeImg.jpg";
-import img2 from "./../../../assets/homeMachine.jpg";
-import img3 from "./../../../assets/homeMedical.jpg";
-import img4 from "./../../../assets/male.jpg";
-import img5 from "./../../../assets/physician1.jpg";
+import img1 from "./../../../assets/teamBuilding/1.jpg";
+import img2 from "./../../../assets/teamBuilding/2.jpg";
+import img3 from "./../../../assets/teamBuilding/3.jpg";
+import img4 from "./../../../assets/teamBuilding/4.jpg";
+import img5 from "./../../../assets/teamBuilding/5.jpg";
+import img6 from "./../../../assets/teamBuilding/6.jpg";
+import img7 from "./../../../assets/teamBuilding/7.jpg";
 
-const allImg = [img1, img2, img3, img4, img5];
+const allImg = [img1, img2, img3, img4, img5, img6, img7];
 
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState(allImg[0]);

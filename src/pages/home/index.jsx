@@ -275,17 +275,17 @@ export default class Home extends React.Component {
             <Affliated />
           </div>
           <hr className="mb-5" />
-
           <div id="testimonials">
             <Testimonials />
+          </div>
+
+          <hr className="mb-4" />
+          <div id="pioneers">
+            <Pioneers />
           </div>
           <hr className="mb-4" />
           <div id="pioneers">
             <Gallery />
-          </div>
-          <hr className="mb-4" />
-          <div id="pioneers">
-            <Pioneers />
           </div>
           <hr className="mb-4" />
           <div id="contact">
