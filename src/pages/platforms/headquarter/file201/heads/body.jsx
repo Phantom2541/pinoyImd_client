@@ -13,12 +13,16 @@ import "./style.css";
 import ImageDragAndDrop from "../../../../templates/imageDragAndDrop/dragNdropimg";
 import { isEqual } from "lodash";
 import EditableField from "../../../../../components/customizable/editableField";
-import { UPDATE_INFO } from "../../../../../services/redux/slices/assets/persons/auth";
+import {
+  UPDATE_INFO,
+  UPLOAD,
+} from "../../../../../services/redux/slices/assets/persons/auth";
 import EditableSelect from "../../../../../components/customizable/editableSelect";
 import { Templates } from "../../../../../services/fakeDb";
 
 export default function Body() {
   const {
+      auth,
       token,
       formSubmitted: fsAuth,
       isSuccess: isAuth,
@@ -62,20 +66,43 @@ export default function Body() {
 
   const handleSignature = (e, email) => {
     const file = e.target.files[0];
+
     if (!file) return;
 
-    // Simulate upload success (replace with actual upload logic)
-    setTimeout(() => {
-      // Clear error state and force image refresh
-      setImageErrors((prev) => ({ ...prev, [email]: false }));
-      setSignatureRefreshKey((prev) => ({
-        ...prev,
-        [email]: (prev[email] || 0) + 1,
-      }));
-      addToast("Signature updated!", { appearance: "success" });
-    }, 500);
+    if (file.type === "image/png") {
+      const reader = new FileReader();
 
-    e.target.value = null;
+      reader.onload = (e) => {
+        file.signature = file.name;
+
+        dispatch(
+          UPLOAD({
+            data: {
+              path: `users/${email}`,
+              base64: reader.result.split(",")[1],
+              name: "signature.png",
+            },
+            token,
+          })
+        );
+      };
+
+      reader.readAsDataURL(file);
+
+      setTimeout(() => {
+        setImageErrors((prev) => ({ ...prev, [email]: false }));
+        setSignatureRefreshKey((prev) => ({
+          ...prev,
+          [email]: (prev[email] || 0) + 1,
+        }));
+        addToast("Signature updated!", { appearance: "success" });
+      }, 500);
+
+      e.target.value = null; // ✅ Reset only after success
+    } else {
+      addToast("Only PNG files are allowed!", { appearance: "error" });
+      e.target.value = null; // ✅ Reset if rejected
+    }
   };
 
   const handleDelete = (user) => {
@@ -175,6 +202,10 @@ export default function Body() {
                 <ImageDragAndDrop
                   img={`${ENDPOINT}/public/users/${email}/profile.jpg`}
                   savedImg={handleImageChange}
+                  setImgEmail={email}
+                  setImgName="profile"
+                  token={token}
+                  allowedType="jpg"
                 />
               </div>
               <div className="signatories-card-body ">
@@ -226,9 +257,9 @@ export default function Body() {
                 <div className="signatories-card-signature-container">
                   {!imageErrors[email] ? (
                     <img
-                      onClick={() =>
-                        document.getElementById(`file-upload-${email}`).click()
-                      }
+                      onClick={(e) => {
+                        document.getElementById(`file-upload-${email}`).click();
+                      }}
                       alt="Signature"
                       src={`${ENDPOINT}/public/users/${email}/signature.png?key=${
                         signatureRefreshKey[email] || 0

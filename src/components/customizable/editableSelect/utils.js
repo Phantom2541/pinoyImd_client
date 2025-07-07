@@ -100,7 +100,6 @@ const utils = {
     return isDisable ? "custom-select-disabled" : "";
   },
   getValue: (key, fieldData) => {
-    console.log("fieldData", fieldData);
     return get(fieldData, key);
   },
 };
