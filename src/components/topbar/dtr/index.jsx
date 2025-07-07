@@ -7,8 +7,9 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { UPDATE } from "../../../services/redux/slices/market/attendances";
 
 export default function DTR() {
   const { activePlatform } = useSelector(({ auth }) => auth);
@@ -17,6 +18,7 @@ export default function DTR() {
   const [ipIn, setIPIn] = useState("");
   const [ipOut, setIPOut] = useState("");
   const [clockedIn, setClockedIn] = useState(false);
+  const dispatch = useDispatch();
   const history = useHistory();
 
   // Load stored DTR info
@@ -41,15 +43,19 @@ export default function DTR() {
     if (dateOut) localStorage.setItem("endTime", dateOut.toISOString());
     if (ipIn) localStorage.setItem("publicIP", ipIn);
     if (ipOut) localStorage.setItem("endIP", ipOut);
-
-    console.log("📦 Saved to localStorage:", {
-      clockedIn,
-      startTime: dateIn?.toISOString(),
-      endTime: dateOut?.toISOString(),
-      publicIP: ipIn,
-      endIP: ipOut,
-    });
-  }, [clockedIn, dateIn, dateOut, ipIn, ipOut]);
+    dispatch(
+      UPDATE({
+        data: {
+          clockedIn,
+          startTime: dateIn?.toISOString(),
+          endTime: dateOut?.toISOString(),
+          publicIP: ipIn,
+          endIP: ipOut,
+        },
+        token: activePlatform.token,
+      })
+    );
+  }, [clockedIn, dateIn, dateOut, ipIn, ipOut, dispatch, activePlatform]);
 
   const handleClock = async () => {
     const currentDate = new Date();
