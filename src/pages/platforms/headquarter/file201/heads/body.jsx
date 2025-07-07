@@ -179,8 +179,9 @@ export default function Body() {
               </div>
               <div className="signatories-card-body ">
                 <div className="signatories-card-section-department">
-                  <span className="signatories-card-section">
+                  <span>
                     <EditableSelect
+                      classNameTxt="signatories-card-section"
                       isEditable
                       preValue={section}
                       collections={handleSections(department)}
@@ -199,8 +200,9 @@ export default function Body() {
                     />
                   </span>
                   &nbsp;-&nbsp;
-                  <span className="signatories-card-department">
+                  <span>
                     <EditableSelect
+                      classNameTxt="signatories-card-department"
                       isEditable
                       preValue={department}
                       collections={Templates.collections}
@@ -252,44 +254,39 @@ export default function Body() {
                   onChange={(e) => handleSignature(e, email)}
                   hidden
                 />
-                <div className="ml-5">
-                  <EditableSelect
-                    selectStyle={{
-                      position: "absolute",
-                      zIndex: "9999",
-                      bottom: "-0.1rem",
-                    }}
-                    isEditable
-                    preValue={user._id}
-                    collections={[
-                      ...personnels.map(({ user }) => ({
-                        userId: user._id,
-                        text: fullName(user.fullName),
-                      })),
-                    ]}
-                    fieldData={{
-                      _id,
+                <EditableSelect
+                  classNameTxt="signatories-card-name"
+                  isEditable
+                  preValue={user._id}
+                  collections={[
+                    ...personnels.map(({ user }) => ({
                       userId: user._id,
                       text: fullName(user.fullName),
-                    }}
-                    keyForValue="userId"
-                    keyForText="text"
-                    formSubmitted={formSubmitted}
-                    isSuccess={isSuccess}
-                    onSave={(data) =>
-                      handleUpdate({ id: data._id, user: data.userId })
-                    }
-                  />
-                </div>
+                    })),
+                  ]}
+                  fieldData={{
+                    _id,
+                    userId: user._id,
+                    text: fullName(user.fullName),
+                  }}
+                  keyForValue="userId"
+                  keyForText="text"
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                  onSave={(data) =>
+                    handleUpdate({ id: data._id, user: data.userId })
+                  }
+                />
               </div>
 
               <div
                 className={`signatories-card-footer ${prc || "requiredPRC"}`}
               >
                 {prc ? (
-                  <div className="signatories-card-expiration d-flex align-items-center justify-content-center">
+                  <div className="signatories-card-expiration-container">
                     <EditableField
                       className="form-control form-control-sm"
+                      classNameTxt="signatories-card-expiration"
                       width="8rem"
                       type="string"
                       keyForValue="id"
@@ -311,6 +308,7 @@ export default function Body() {
                     <span className="d-block mt-n2">&nbsp;|&nbsp;</span>
                     <EditableField
                       className="form-control form-control-sm"
+                      classNameTxt="signatories-card-expiration"
                       type="date"
                       width="11rem"
                       keyForValue="to"
@@ -331,7 +329,7 @@ export default function Body() {
                     />
                   </div>
                 ) : (
-                  <span className="mt-2 small text-danger">
+                  <span className="">
                     <strong>PRC license is required</strong> for this user to be
                     assigned as a head. This is a&nbsp;
                     <strong>DOH qualification</strong> for publishing laboratory

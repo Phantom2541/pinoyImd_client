@@ -58,6 +58,7 @@ export default function EditableSelect({
   keyForValue,
   keyForText,
   className = "",
+  classNameTxt = "",
   inputClassName = "",
   disableAll = false,
   hideLabel = false,
@@ -231,8 +232,8 @@ export default function EditableSelect({
           />
         </div>
       ) : (
-        <h6
-          className="cursor-pointer"
+        <span
+          className={`cursor-pointer ${classNameTxt}`}
           onClick={() => {
             // 📣 Close all others before setting self to edit mode
             window.dispatchEvent(
@@ -246,7 +247,7 @@ export default function EditableSelect({
           {isMoney
             ? currency(utils.getValue(keyForText, fieldData))
             : capitalize(utils.getValue(keyForText, fieldData)) || "N/A"}
-        </h6>
+        </span>
       )}
     </div>
   );

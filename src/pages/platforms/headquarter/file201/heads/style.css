@@ -53,11 +53,11 @@
   grid-template-rows: auto 1fr auto;
   width: 530px;
   max-width: 530px;
-  height: 200px;
+  height: fit-content;
   background-color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  overflow: visible !important;
+  overflow: visible;
   transition: scale 0.3s ease;
 }
 
@@ -69,6 +69,7 @@
   grid-template-areas:
     "header body"
     "footer footer";
+  height: auto;
 }
 
 .signatories-card-header {
@@ -89,7 +90,6 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  text-align: end;
   padding-right: 10px;
 }
 
@@ -98,6 +98,22 @@
   text-align: center;
   padding-left: 10px;
   padding-bottom: 5px;
+}
+
+.signatories-card-footer.requiredPRC span {
+  display: block;
+  font-size: 0.85rem;
+  color: #c62828;
+}
+
+.signatories-card-expiration-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.signatories-card-expiration {
+  font-size: 0.85rem;
 }
 
 .signatories-profile-image {
@@ -109,6 +125,7 @@
 
 .signatories-card-section-department {
   display: flex;
+  justify-content: left;
   align-items: center;
 }
 
@@ -150,16 +167,11 @@
 }
 
 .signatories-card-name {
-  text-align: center;
   font-size: 1.1rem;
   font-weight: 500;
   margin-bottom: 5px;
+  margin: auto;
 }
-
-.signatories-card-expiration {
-  font-size: 0.85rem;
-}
-
 .signatories-card-actionBtn {
   position: absolute;
   top: 0;
