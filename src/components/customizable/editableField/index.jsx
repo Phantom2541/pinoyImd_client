@@ -37,6 +37,7 @@ const tagMap = {
 const EditableField = ({
   displayTag = "h6", //h6,badge this is available tag for this component
   className = "form-control",
+  classNameTxt = "",
   placeholder = "",
   keyForValue = "", //this key is for value
   keyForText = "",
@@ -100,7 +101,7 @@ const EditableField = ({
         );
         setEditedData({ ...fieldData, editingKey: keyForValue });
       }}
-      className="cursor-pointer"
+      className={`cursor-pointer ${classNameTxt}`}
     >
       {(isMoney
         ? currency(fieldData[keyForText || keyForValue])
