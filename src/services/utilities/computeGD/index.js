@@ -112,7 +112,7 @@ const computeGD = (
   return accumulator;
 };
 
-const allServicesHavePrices = (cart, categoryIndex) => {
+const allServicesHavePrices = (cart, categoryIndex, hmoCode) => {
   if (cart?.length === 0) return false;
 
   const category = Categories[categoryIndex] || {};
@@ -122,6 +122,9 @@ const allServicesHavePrices = (cart, categoryIndex) => {
     const _abbr = ["wi", "bp", "mc", "mbs", "sc", "rfr"].includes(categoryAbbr)
       ? "opd"
       : category;
+    if (categoryAbbr === "wls") {
+      return HMO.getSrp(hmoCode, menu?.hmo);
+    }
 
     return menu[_abbr] > 0;
   });

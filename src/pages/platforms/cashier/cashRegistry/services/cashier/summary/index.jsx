@@ -71,6 +71,7 @@ export default function Summary() {
       cashierId: auth._id,
       category: category === 0 ? "wi" : abbr,
       payment,
+      hmo,
       cash,
       amount,
       discount,
@@ -104,8 +105,6 @@ export default function Summary() {
         };
       }),
     };
-    console.log("selected", selected);
-
     const balance = cash - amount;
     if (balance > 0)
       Swal.fire({
@@ -143,7 +142,7 @@ export default function Summary() {
 
   const handleCheckout = async (e) => {
     e.preventDefault();
-    if (!allServicesHavePrices(cart, category)) {
+    if (!allServicesHavePrices(cart, category, hmo)) {
       Swal.fire({
         title: "Service Validator?",
         text: "Some services do not have a set price. Please double-check. If you're confident everything is correct, you may proceed. Note that the admin will be notified regarding this issue.",
