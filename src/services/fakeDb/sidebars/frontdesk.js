@@ -410,7 +410,7 @@ const frontdesk = [
         component: InputSearch,
       },
       {
-        name: "ImageText",
+        name: "OCR",
         path: "/templates/imgText",
         icon: "calendar-alt",
         component: ImgText,
