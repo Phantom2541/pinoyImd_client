@@ -53,11 +53,24 @@ const EditableField = ({
   const [editedData, setEditedData] = useState({}),
     { addToast } = useToasts();
 
+  const [instanceId] = useState(() => Math.random().toString(36).substr(2, 9));
+
   useEffect(() => {
     if (!formSubmitted) {
       setEditedData({});
     }
   }, [formSubmitted]);
+
+  useEffect(() => {
+    const handleCloseAll = (e) => {
+      if (e.detail?.excludeId !== instanceId) {
+        setEditedData({});
+      }
+    };
+    window.addEventListener("close-all-editable", handleCloseAll);
+    return () =>
+      window.removeEventListener("close-all-editable", handleCloseAll);
+  }, [instanceId]);
 
   const handleCheck = () => {
     if (fieldData[keyForValue] === editedData[keyForValue]) {
@@ -79,7 +92,14 @@ const EditableField = ({
   const displayValue = (
     <Tag
       style={displayStyle}
-      onClick={() => setEditedData({ ...fieldData, editingKey: keyForValue })}
+      onClick={() => {
+        window.dispatchEvent(
+          new CustomEvent("close-all-editable", {
+            detail: { excludeId: instanceId },
+          })
+        );
+        setEditedData({ ...fieldData, editingKey: keyForValue });
+      }}
       className="cursor-pointer"
     >
       {(isMoney
