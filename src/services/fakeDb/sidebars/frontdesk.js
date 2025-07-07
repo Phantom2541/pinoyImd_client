@@ -47,6 +47,7 @@ import {
   InputSearch,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
+import ImgText from "../../../pages/templates/imgText";
 
 const frontdesk = [
   {
@@ -407,6 +408,12 @@ const frontdesk = [
         path: "/templates/inputSearch",
         icon: "calendar-alt",
         component: InputSearch,
+      },
+      {
+        name: "OCR",
+        path: "/templates/imgText",
+        icon: "calendar-alt",
+        component: ImgText,
       },
     ],
   },

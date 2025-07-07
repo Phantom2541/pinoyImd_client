@@ -26,6 +26,7 @@ import LOGO from "./../../assets/iMD.png";
 import Testimonials from "./testimonials";
 import AboutUs from "./aboutUs";
 import Affliated from "./affliated";
+import Gallery from "./gallery";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -279,13 +280,14 @@ export default class Home extends React.Component {
             <Testimonials />
           </div>
           <hr className="mb-4" />
-
+          <div id="pioneers">
+            <Gallery />
+          </div>
+          <hr className="mb-4" />
           <div id="pioneers">
             <Pioneers />
           </div>
-
           <hr className="mb-4" />
-
           <div id="contact">
             <ContactUs />
           </div>

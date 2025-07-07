@@ -139,6 +139,23 @@ export const reduxSlice = createSlice({
       state.willUpdate = true;
       state.showModal = true;
     },
+    SetPRC: (state, { payload }) => {
+      console.log("payloadd in set prc", payload);
+      const { prc, userId } = payload;
+      const updateCollections = (collections) => {
+        const foundUser = collections.filter(
+          ({ user }) => user?._id === userId
+        );
+        foundUser.forEach((element) => {
+          const index = collections.findIndex(({ _id }) => _id === element._id);
+          const oldData = { ...collections[index] };
+          collections[index] = { ...oldData, user: { ...oldData.user, prc } };
+        });
+      };
+
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
+    },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;
@@ -176,7 +193,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload;
+        state.collections = state.filtered = payload;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -253,6 +270,7 @@ export const {
   SetCREATE,
   SetEDIT,
   SetUPDATE,
+  SetPRC,
   SetCOLLECTIONS,
   SetSELECTED,
   SetFILTERED,
