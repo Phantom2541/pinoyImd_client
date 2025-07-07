@@ -132,6 +132,24 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
+export const UPDATE_INFO = createAsyncThunk(
+  `${url}/update_info`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update("assets/persons/users", data, token, "update_info");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const UPLOAD = createAsyncThunk(`${url}/upload`, (form, thunkAPI) => {
   try {
     return axioKit.upload(form.data, form.token, (progress) => {
@@ -339,7 +357,7 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const branch = state.branches.find(
-          ({ _id }) => _id === payload.activePlatform.branchId
+          ({ _id }) => _id === payload?.activePlatform.branchId
         );
 
         const { contract = { designation: -1 } } = branch || {};
@@ -358,6 +376,22 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+
+      .addCase(UPDATE_INFO.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE_INFO.fulfilled, (state, action) => {
+        // const { success, payload } = action.payload;
+        state.formSubmitted = false;
+        state.isSuccess = true;
+      })
+      .addCase(UPDATE_INFO.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
       })
 
       .addCase(VALIDATEREFRESH.pending, (state) => {

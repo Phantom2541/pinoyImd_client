@@ -119,7 +119,10 @@ export default function EditableSelect({
 
     return !isEditable
       ? onChange(selectedItem)
-      : setEditedData({ ...editedData, [keyForValue]: selectedItem });
+      : setEditedData({
+          ...editedData,
+          [keyForValue ? keyForValue : "value"]: selectedItem,
+        });
   };
 
   const handleCheck = () => {
@@ -139,7 +142,6 @@ export default function EditableSelect({
     editedData?._id === fieldData?._id;
 
   const showSelect = !isEditable ? true : editMode;
-
   return (
     <div className="d-flex align-items-center w-100">
       {showSelect ? (

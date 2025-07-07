@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DESTROY,
+  SetPRC,
   UPDATE,
 } from "../../../../../services/redux/slices/assets/persons/heads";
 import { useToasts } from "react-toast-notifications";
@@ -11,11 +12,21 @@ import { MDBIcon } from "mdbreact";
 import "./style.css";
 import ImageDragAndDrop from "../../../../templates/imageDragAndDrop/dragNdropimg";
 import { isEqual } from "lodash";
-import { Input } from "../../../../../components/customizable";
+import EditableField from "../../../../../components/customizable/editableField";
+import { UPDATE_INFO } from "../../../../../services/redux/slices/assets/persons/auth";
+import EditableSelect from "../../../../../components/customizable/editableSelect";
+import { Templates } from "../../../../../services/fakeDb";
 
 export default function Body() {
-  const { token } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess } = useSelector(({ heads }) => heads),
+  const {
+      token,
+      formSubmitted: fsAuth,
+      isSuccess: isAuth,
+    } = useSelector(({ auth }) => auth),
+    { collections, message, isSuccess, formSubmitted } = useSelector(
+      ({ heads }) => heads
+    ),
+    { collections: personnels } = useSelector(({ personnels }) => personnels),
     [heads, setHeads] = useState([]),
     { addToast } = useToasts(),
     [currentPage, setCurrentPage] = useState(1),
@@ -96,16 +107,10 @@ export default function Body() {
     }, 300); // Delay matches animation duration
   };
 
-  const handleUpdate = (user) => {
-    // check if object has changed
-    if (isEqual(user, selected))
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-
+  const handleUpdate = (data) => {
     dispatch(
       UPDATE({
-        data: { ...user, id: selected._id },
+        data,
         token,
       })
     );
@@ -131,16 +136,28 @@ export default function Body() {
     console.log("✅ Cropped image passed to parent:", savedImage);
   };
 
-  const handleSelected = (data) => {
-    const { id, ...val } = data;
-    const [key] = Object.keys(val);
-    const value = val[key];
+  const updateAuth = (data) => {
+    const { user, prc } = data;
+    dispatch(UPDATE_INFO({ token, data: { _id: user, prc } })).then(
+      ({ payload }) => {
+        const { payload: info } = payload;
+        const { _id, prc } = info;
+        dispatch(SetPRC({ userId: _id, prc }));
+      }
+    );
+  };
 
-    if (selected?.id === id && selected.key === key) {
-      setSelected({});
-    } else {
-      setSelected({ id, key, value, old: value });
-    }
+  const handleSections = (_department = "") => {
+    const department = _department?.toLowerCase();
+    const sections = Templates.getComponents(
+      department === "laboratory"
+        ? "LAB"
+        : department === "radiology"
+        ? "RAD"
+        : "CLINIC"
+    );
+    sections.push(department === "laboratory" ? "Pathologist" : "Radiologist");
+    return sections;
   };
 
   return (
@@ -154,24 +171,54 @@ export default function Body() {
               key={_id || index}
               className={`signatories-card ${prc || "requiredPRC"}`}
             >
-              {/* Left: Profile Image */}
               <div className="signatories-card-header">
-                {/* <img
-                  src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
-                  alt="Profile"
-                  className="signatories-profile-image"
-                /> */}
                 <ImageDragAndDrop
                   img={`${ENDPOINT}/public/users/${email}/profile.jpg`}
                   savedImg={handleImageChange}
                 />
               </div>
-              <div className="signatories-card-body">
+              <div className="signatories-card-body ">
                 <div className="signatories-card-section-department">
-                  <span className="signatories-card-section">{section}</span>
+                  <span className="signatories-card-section">
+                    <EditableSelect
+                      isEditable
+                      preValue={section}
+                      collections={handleSections(department)}
+                      fieldData={{
+                        _id,
+                        section,
+                      }}
+                      keyForValue="section"
+                      selectStyle={{ width: "11rem" }}
+                      keyForText="section"
+                      formSubmitted={formSubmitted}
+                      isSuccess={isSuccess}
+                      onSave={(data) =>
+                        handleUpdate({ id: data._id, section: data.section })
+                      }
+                    />
+                  </span>
                   &nbsp;-&nbsp;
                   <span className="signatories-card-department">
-                    {department}
+                    <EditableSelect
+                      isEditable
+                      preValue={department}
+                      collections={Templates.collections}
+                      fieldData={{
+                        _id,
+                        label: department,
+                      }}
+                      keyForValue="label"
+                      keyForText="label"
+                      formSubmitted={formSubmitted}
+                      isSuccess={isSuccess}
+                      onSave={(data) =>
+                        handleUpdate({
+                          id: data._id,
+                          department: data.label,
+                        })
+                      }
+                    />
                   </span>
                 </div>
                 <div className="signatories-card-signature-container">
@@ -205,194 +252,83 @@ export default function Body() {
                   onChange={(e) => handleSignature(e, email)}
                   hidden
                 />
-
-                <span className="signatories-card-name">
-                  {selected?.id === user._id &&
-                  selected?.key === "fullName" &&
-                  selected?.index === index ? (
-                    <div className="d-flex align-items-center">
-                      <select
-                        className="form-control form-control-sm"
-                        style={{ maxWidth: 120 }}
-                        value={selected.value}
-                        onChange={(e) =>
-                          setSelected({
-                            ...selected,
-                            value: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">Select name</option>
-                        {heads.map(({ user }) => (
-                          <option
-                            key={user._id}
-                            value={fullName(user.fullName)}
-                          >
-                            {fullName(user.fullName)}
-                          </option>
-                        ))}
-                      </select>
-                      <button
-                        className="btn-icon ml-1 text-success"
-                        onClick={() =>
-                          handleUpdate({ ...user, fullName: selected.value })
-                        }
-                      >
-                        ✓
-                      </button>
-                      <button
-                        className="btn-icon ml-1 text-danger"
-                        onClick={() => setSelected({})}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ) : (
-                    <strong
-                      onClick={() =>
-                        setSelected({
-                          id: user._id,
-                          key: "fullName",
-                          index, // store index to isolate editing
-                          value: fullName(user.fullName),
-                        })
-                      }
-                      style={{ cursor: "pointer" }}
-                    >
-                      {fullName(user.fullName)}
-                    </strong>
-                  )}
-                </span>
-
-                {/* <span className="signatories-card-name"> */}
-                {/* {fullName(user.fullName)} */}
-                {/* {selected?.key === fullName ? ( */}
-                {/* <div style={{ width: "13rem" }}> */}
-                {/* lol */}
-                {/* <Input
-                        _key={"value"}
-                        className="mt-2 form-control form-control-sm"
-                        type={type}
-                        isSuccess={true}
-                        selected={selected}
-                        onChange={(key, val) =>
-                          setSelected({ ...selected, [key]: val })
-                        }
-                        handleCheck={handleUpdate}
-                        handleClose={() => setSelected({})}
-                      /> */}
-                {/* </div> */}
-                {/* ) : ( */}
-                {/* <strong */}
-                {/* onClick={() => */}
-                {/* handleSelected({ */}
-                {/* // id: user, */}
-                {/* fullName: user.fullName, */}
-                {/* })
-                      }
-                    >
-                      {fullName(user.fullName)}
-                    </strong>
-                  )}
-                </span> */}
+                <div className="ml-5">
+                  <EditableSelect
+                    selectStyle={{
+                      position: "absolute",
+                      zIndex: "9999",
+                      bottom: "-0.1rem",
+                    }}
+                    isEditable
+                    preValue={user._id}
+                    collections={[
+                      ...personnels.map(({ user }) => ({
+                        userId: user._id,
+                        text: fullName(user.fullName),
+                      })),
+                    ]}
+                    fieldData={{
+                      _id,
+                      userId: user._id,
+                      text: fullName(user.fullName),
+                    }}
+                    keyForValue="userId"
+                    keyForText="text"
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                    onSave={(data) =>
+                      handleUpdate({ id: data._id, user: data.userId })
+                    }
+                  />
+                </div>
               </div>
 
               <div
                 className={`signatories-card-footer ${prc || "requiredPRC"}`}
               >
                 {prc ? (
-                  <div className="signatories-card-expiration d-flex align-items-center">
-                    {/* PRC ID */}
-                    {selected?.id === user._id &&
-                    selected?.key === "prcId" &&
-                    selected?.index === index ? (
-                      <div className="d-flex align-items-center">
-                        <input
-                          type="text"
-                          className="form-control form-control-sm"
-                          style={{ maxWidth: 80 }}
-                          value={selected.value}
-                          onChange={(e) =>
-                            setSelected({ ...selected, value: e.target.value })
-                          }
-                        />
-                        <button
-                          className="btn-icon ml-1 text-success"
-                          onClick={() =>
-                            handleUpdate(user._id, "prcId", selected.value)
-                          }
-                        >
-                          ✓
-                        </button>
-                        <button
-                          className="btn-icon ml-1 text-danger"
-                          onClick={() => setSelected({})}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ) : (
-                      <strong
-                        onClick={() =>
-                          setSelected({
-                            id: user._id,
-                            key: "prcId",
-                            index,
-                            value: prc.id || "",
-                          })
-                        }
-                        style={{ cursor: "pointer" }}
-                      >
-                        PRC ID: {prc.id || "—"}
-                      </strong>
-                    )}
-
-                    <span>&nbsp;|&nbsp;</span>
-
-                    {/* Expiration */}
-                    {selected?.id === user._id &&
-                    selected?.key === "prcTo" &&
-                    selected?.index === index ? (
-                      <div className="d-flex align-items-center">
-                        <input
-                          type="date"
-                          className="form-control form-control-sm"
-                          style={{ maxWidth: 140 }}
-                          value={selected.value}
-                          onChange={(e) =>
-                            setSelected({ ...selected, value: e.target.value })
-                          }
-                        />
-                        <button
-                          className="btn-icon ml-1 text-success"
-                          onClick={() =>
-                            handleUpdate(user._id, "prcTo", selected.value)
-                          }
-                        >
-                          ✓
-                        </button>
-                        <button
-                          className="btn-icon ml-1 text-danger"
-                          onClick={() => setSelected({})}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ) : (
-                      <strong
-                        onClick={() =>
-                          setSelected({
-                            id: user._id,
-                            key: "prcTo",
-                            index,
-                            value: prc.to || "",
-                          })
-                        }
-                        style={{ cursor: "pointer" }}
-                      >
-                        Expiration: {prc.to || "—"}
-                      </strong>
-                    )}
+                  <div className="signatories-card-expiration d-flex align-items-center justify-content-center">
+                    <EditableField
+                      className="form-control form-control-sm"
+                      width="8rem"
+                      type="string"
+                      keyForValue="id"
+                      fieldData={{
+                        _id: `${_id}-id-${index}`,
+                        id: prc?.id,
+                        prc,
+                        user: user._id,
+                      }}
+                      onSave={(data) =>
+                        updateAuth({
+                          ...data,
+                          prc: { ...data.prc, id: data.id },
+                        })
+                      }
+                      formSubmitted={fsAuth}
+                      isSuccess={isAuth}
+                    />
+                    <span className="d-block mt-n2">&nbsp;|&nbsp;</span>
+                    <EditableField
+                      className="form-control form-control-sm"
+                      type="date"
+                      width="11rem"
+                      keyForValue="to"
+                      fieldData={{
+                        _id: `${_id}-to`,
+                        to: prc?.to,
+                        prc,
+                        user: user._id,
+                      }}
+                      onSave={(data) =>
+                        updateAuth({
+                          ...data,
+                          prc: { ...data.prc, to: data.to },
+                        })
+                      }
+                      formSubmitted={fsAuth}
+                      isSuccess={isAuth}
+                    />
                   </div>
                 ) : (
                   <span className="mt-2 small text-danger">
@@ -403,8 +339,6 @@ export default function Body() {
                   </span>
                 )}
               </div>
-
-              {/* Optional Delete Button */}
               <div className="signatories-card-actionBtn">
                 <button
                   className="signatories-card-btn-delete bg-danger"

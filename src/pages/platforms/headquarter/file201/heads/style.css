@@ -57,12 +57,12 @@
   background-color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  overflow: hidden;
+  overflow: visible !important;
   transition: scale 0.3s ease;
 }
 
 .signatories-card:hover {
-  scale: 1.02;
+  /* scale: 1.02; */
 }
 
 .signatories-card.requiredPRC {
