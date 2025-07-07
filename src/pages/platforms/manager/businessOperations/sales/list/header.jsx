@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBView } from "mdbreact";
+import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
 import { fullName } from "./../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { Search } from "./../../../../../../components/searchables";
@@ -93,6 +93,15 @@ const Header = () => {
             </option>
           ))}
         </select>
+      </div>
+      <div className="d-flex align-items-center">
+        <MDBIcon
+          title="Download Daily Sales (darrel assignment)"
+          onClick={() => alert("darrel assignment, pa alala nyo Pls.")}
+          icon="file-excel"
+          size="lg"
+          className="mr-2"
+        />
       </div>
       <div className="d-flex align-items-center">
         <Search
