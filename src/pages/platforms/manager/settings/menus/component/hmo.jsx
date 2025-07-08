@@ -25,8 +25,6 @@ const HMO = ({ form, setForm }) => {
     setForm({ ...form, hmo: _hmos });
   };
 
-  console.log("form", form);
-
   return (
     <MDBRow>
       {hmo.map(({ code }) => (

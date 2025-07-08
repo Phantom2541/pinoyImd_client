@@ -8,7 +8,7 @@ export default function ImgMagnifier({ src }) {
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
-  // ✅ Mouse wheel zoom
+  // ✅ Wheel-based zoom with cursor-focus
   useEffect(() => {
     const container = containerRef.current;
 
@@ -18,17 +18,27 @@ export default function ImgMagnifier({ src }) {
       const offsetX = e.clientX - rect.left;
       const offsetY = e.clientY - rect.top;
 
-      const percentX = `${(offsetX / rect.width) * 100}%`;
-      const percentY = `${(offsetY / rect.height) * 100}%`;
-
       setZoom((prevZoom) => {
         let nextZoom = e.deltaY < 0 ? prevZoom + 0.2 : prevZoom - 0.2;
         nextZoom = Math.min(Math.max(nextZoom, 1), 5);
 
-        // ✅ Reset position when fully zoomed out
+        if (nextZoom === prevZoom) return prevZoom;
+
+        // Adjust translation so zoom focuses where cursor is
+        const zoomFactor = nextZoom / prevZoom;
+        setTranslate((prevTranslate) => {
+          const dx = offsetX - rect.width / 2;
+          const dy = offsetY - rect.height / 2;
+
+          const newX = (prevTranslate.x - dx) * zoomFactor + dx;
+          const newY = (prevTranslate.y - dy) * zoomFactor + dy;
+
+          return { x: newX, y: newY };
+        });
+
         if (nextZoom <= 1.01) {
           setTranslate({ x: 0, y: 0 });
-          nextZoom = 1;
+          return 1;
         }
 
         return nextZoom;
@@ -39,34 +49,22 @@ export default function ImgMagnifier({ src }) {
     return () => container.removeEventListener("wheel", handleWheel);
   }, []);
 
-  // ✅ Clamp translate on zoom change (prevent overshoot)
+  // ✅ Clamp translate after zoom change
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container || zoom <= 1) return;
 
-    const rect = containerRef.current.getBoundingClientRect();
-
-    if (zoom <= 1) {
-      setTranslate({ x: 0, y: 0 }); // Clean reset
-      return;
-    }
-
+    const rect = container.getBoundingClientRect();
     const imgWidth = rect.width * zoom;
     const imgHeight = rect.height * zoom;
 
     const maxOffsetX = (imgWidth - rect.width) / 2;
     const maxOffsetY = (imgHeight - rect.height) / 2;
 
-    setTranslate((prev) => {
-      let x = Math.max(-maxOffsetX, Math.min(prev.x, maxOffsetX));
-      let y = Math.max(-maxOffsetY, Math.min(prev.y, maxOffsetY));
-
-      // ✨ Proportional correction (pulling back to center as we zoom out)
-      const factor = (zoom - 1) / 4; // Adjust denominator for smoother pull
-      x = x * factor;
-      y = y * factor;
-
-      return { x, y };
-    });
+    setTranslate((prev) => ({
+      x: Math.max(-maxOffsetX, Math.min(prev.x, maxOffsetX)),
+      y: Math.max(-maxOffsetY, Math.min(prev.y, maxOffsetY)),
+    }));
   }, [zoom]);
 
   // ✅ Mouse drag start
@@ -77,7 +75,7 @@ export default function ImgMagnifier({ src }) {
     setIsDragging(true);
   };
 
-  // ✅ Mouse drag move (with clamping)
+  // ✅ Mouse drag move
   const handleMouseMove = (e) => {
     if (!dragStart || zoom <= 1) return;
 
