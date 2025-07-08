@@ -189,7 +189,7 @@ const Header = () => {
       <div>
         <i>Voucher List</i>
       </div>
-      <div className="m-0 mt-n1 mr-n5 ">
+      <div className="m-0 mt-n1 mr-n5">
         <MDBBtn
           size="sm"
           color="warning"
