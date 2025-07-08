@@ -126,8 +126,8 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
               {[
                 {
                   label: "Cash Payment",
-                  // value: breakdown?.cash !== gross ? breakdown?.cash : 0,
-                  value: breakdown?.cash ? breakdown?.cash : 0,
+                  value: breakdown?.cash !== gross ? breakdown?.cash : 0,
+                  // value: breakdown?.cash ? breakdown?.cash : 0,
                 },
                 {
                   label: " Add: FC",
