@@ -164,46 +164,38 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
-          <MDBRow>
-            <MDBCol md="12">
-              <Select
-                collections={["Radiology", "Laboratory"]}
-                preValue={capitalize(form.department)}
-                label={"Department"}
-                multiple={false}
-                onChange={handleDepartmentChange}
-              />
-            </MDBCol>
-          </MDBRow>
-          <MDBRow>
-            <MDBCol md={"12"} className="mb-3">
-              <Select
-                collections={sections}
-                onChange={handleSectionChange}
-                preValue={selected?.section}
-                label={"Sections"}
-                multiple={false}
-              />
-            </MDBCol>
-          </MDBRow>
+          <Select
+            className="mb-1"
+            collections={["Radiology", "Laboratory"]}
+            preValue={capitalize(form.department)}
+            label={"Department"}
+            multiple={false}
+            onChange={handleDepartmentChange}
+          />
 
-          <MDBRow>
-            <MDBCol md="12">
-              <Select
-                collections={crews.map((crew) => ({
-                  _id: crew?.user?._id,
-                  fullName: `${fullName(
-                    crew?.user?.fullName
-                  )} - ${Policy.getPosition(crew?.contract?.designation)}`,
-                }))}
-                onChange={handleStaffChange}
-                preValue={willCreate ? form.user : selected?.user?._id}
-                label={"Staff"}
-                keys={"_id"}
-                values={"fullName"}
-              />
-            </MDBCol>
-          </MDBRow>
+          <Select
+            className="mb-1"
+            collections={sections}
+            onChange={handleSectionChange}
+            preValue={selected?.section}
+            label={"Sections"}
+            multiple={false}
+          />
+
+          <Select
+            className="mb-1"
+            collections={crews.map((crew) => ({
+              _id: crew?.user?._id,
+              fullName: `${fullName(
+                crew?.user?.fullName
+              )} - ${Policy.getPosition(crew?.contract?.designation)}`,
+            }))}
+            onChange={handleStaffChange}
+            preValue={willCreate ? form.user : selected?.user?._id}
+            label={"Staff"}
+            keys={"_id"}
+            values={"fullName"}
+          />
 
           {form.user && (
             <MDBRow>
