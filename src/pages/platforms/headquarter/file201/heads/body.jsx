@@ -318,49 +318,55 @@ export default function Body() {
               >
                 {prc ? (
                   <div className="signatories-card-expiration-container">
-                    <EditableField
-                      className="form-control form-control-sm"
-                      classNameTxt="signatories-card-expiration"
-                      width="8rem"
-                      type="string"
-                      keyForValue="id"
-                      fieldData={{
-                        _id: `${_id}-id-${index}`,
-                        id: prc?.id,
-                        prc,
-                        user: user._id,
-                      }}
-                      onSave={(data) =>
-                        updateAuth({
-                          ...data,
-                          prc: { ...data.prc, id: data.id },
-                        })
-                      }
-                      formSubmitted={fsAuth}
-                      isSuccess={isAuth}
-                    />
-                    <span className="d-block mt-n2">&nbsp;|&nbsp;</span>
-                    <EditableField
-                      className="form-control form-control-sm"
-                      classNameTxt="signatories-card-expiration"
-                      type="date"
-                      width="11rem"
-                      keyForValue="to"
-                      fieldData={{
-                        _id: `${_id}-to`,
-                        to: prc?.to,
-                        prc,
-                        user: user._id,
-                      }}
-                      onSave={(data) =>
-                        updateAuth({
-                          ...data,
-                          prc: { ...data.prc, to: data.to },
-                        })
-                      }
-                      formSubmitted={fsAuth}
-                      isSuccess={isAuth}
-                    />
+                    <span className="signatories-card-prc-label">
+                      <strong>PRC ID:&nbsp;</strong>
+                      <EditableField
+                        className="form-control form-control-sm"
+                        classNameTxt="signatories-card-prc"
+                        width="8rem"
+                        type="string"
+                        keyForValue="id"
+                        fieldData={{
+                          _id: `${_id}-id-${index}`,
+                          id: prc?.id,
+                          prc,
+                          user: user._id,
+                        }}
+                        onSave={(data) =>
+                          updateAuth({
+                            ...data,
+                            prc: { ...data.prc, id: data.id },
+                          })
+                        }
+                        formSubmitted={fsAuth}
+                        isSuccess={isAuth}
+                      />
+                    </span>
+                    <span>&nbsp;|&nbsp;</span>
+                    <span className="signatories-card-expiration-label">
+                      <strong>Expiration:&nbsp;</strong>
+                      <EditableField
+                        className="form-control form-control-sm"
+                        classNameTxt="signatories-card-expiration"
+                        type="date"
+                        width="11rem"
+                        keyForValue="to"
+                        fieldData={{
+                          _id: `${_id}-to`,
+                          to: prc?.to,
+                          prc,
+                          user: user._id,
+                        }}
+                        onSave={(data) =>
+                          updateAuth({
+                            ...data,
+                            prc: { ...data.prc, to: data.to },
+                          })
+                        }
+                        formSubmitted={fsAuth}
+                        isSuccess={isAuth}
+                      />
+                    </span>
                   </div>
                 ) : (
                   <span className="">
