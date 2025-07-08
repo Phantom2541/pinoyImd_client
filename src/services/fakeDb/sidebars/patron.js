@@ -1,6 +1,7 @@
 import { Apply, Documents } from "../../../pages/platforms/patron/application";
 import Dashboard from "../../../pages/platforms/patron/dashboard";
 import { Diagnostics } from "../../../pages/platforms/patron/emr";
+import cardHolder from "../../../pages/platforms/patron/emr/cardHolder";
 // import RequestQuery from "../../../pages/platforms/patron/diagnostics/RequestQuery";
 // import CheckupRecord from "../../../pages/platforms/patron/emr/CheckupRecord";
 // import Appointments from "../../../pages/platforms/patron/appointments/Appointments";
@@ -21,7 +22,7 @@ const patron = [
         name: "Request Query",
         path: "/request-query",
         icon: "file-medical",
-        // component: RequestQuery,
+        component: cardHolder,
       },
       {
         name: "Results",

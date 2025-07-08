@@ -4,3 +4,4 @@ export { default as heads } from "./heads";
 export { default as users } from "./users";
 export { default as applicants } from "./applicants";
 export { default as auth } from "./auth";
+export { default as cardHolder } from "./cardHolder";
