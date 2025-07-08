@@ -4,6 +4,7 @@ import {
   DESTROY,
   SetPRC,
   UPDATE,
+  RESET,
 } from "../../../../../services/redux/slices/assets/persons/heads";
 import { useToasts } from "react-toast-notifications";
 import { fullName, ENDPOINT } from "../../../../../services/utilities";
@@ -105,9 +106,9 @@ export default function Body() {
     }
   };
 
-  const handleDelete = (user) => {
+  const handleDelete = (_id, user) => {
     Swal.fire({
-      title: "Are you sure?",
+      title: `Are you sure you want to delete ${fullName(user.fullName)}?`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -116,7 +117,9 @@ export default function Body() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { id: user._id } }));
+        dispatch(DESTROY({ token, data: { id: _id } })).then(() => {
+          dispatch(RESET());
+        });
       }
     });
   };
@@ -371,7 +374,10 @@ export default function Body() {
               <div className="signatories-card-actionBtn">
                 <button
                   className="signatories-card-btn-delete bg-danger"
-                  onClick={() => handleDelete(_id)}
+                  onClick={() => {
+                    console.log("handle delete user", _id);
+                    handleDelete(_id, user);
+                  }}
                 >
                   <MDBIcon fas icon="times" />
                 </button>
