@@ -40,7 +40,6 @@ export default function Census() {
       setGross(selected.gross);
       return;
     }
-
     const fetchCensus = async () => {
       try {
         if (deals.length > 0) {
@@ -80,6 +79,7 @@ export default function Census() {
               menus: menuCountMap,
               services: serviceCountMap,
             });
+
             setBreakdown(paymentSummary);
           }
         }
@@ -113,7 +113,6 @@ export default function Census() {
         amount
     )
     .reduce((sum, { amount }) => sum + Number(amount), 0);
-
   const handleSubmit = () => {
     const { opening } = selected;
     const data = {
@@ -129,7 +128,6 @@ export default function Census() {
     dispatch(CENSUS({ token, data }));
     // dispatch(TOGGLE({ key: "census" }));
   };
-  console.log("breakdown", breakdown);
 
   const tabStyle = (tab) =>
     `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;

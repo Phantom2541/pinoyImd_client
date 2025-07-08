@@ -52,6 +52,7 @@ import removeUndefinedValues from "./dataCleaner";
 import collapse from "./collapse";
 import Male from "../../assets/male.jpg";
 import Female from "../../assets/female.jpg";
+import Logo from "../../assets/iMD.png";
 import PresetIMD from "../../assets/iMD.png";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
@@ -61,7 +62,7 @@ import clearSiteData from "./clearSiteData";
 import VouchersToExcel from "./export/excel/vouchers";
 import MenusToExcel from "./export/excel/menus";
 import ResecoToExcel from "./export/excel/reseco";
-import Logo from "../../assets/iMD.png";
+import DealsToExcel from "./export/excel/deals";
 //PDF
 import MenusToPDF from "./export/pdf/menus";
 //status
@@ -145,6 +146,7 @@ export {
   // Cache's Clear
   clearSiteData,
   //export to excel
+  DealsToExcel,
   VouchersToExcel,
   MenusToExcel,
   ResecoToExcel,

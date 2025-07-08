@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBContainer } from "mdbreact";
 import { Payments, Vouchers } from "./summary";
 import List from "./list";

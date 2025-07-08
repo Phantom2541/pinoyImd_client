@@ -10,10 +10,7 @@ import {
   MDBCol,
   MDBInput,
 } from "mdbreact";
-import {
-  EMPLOYEES,
-  RESET,
-} from "../../../../../services/redux/slices/assets/persons/personnels";
+
 import {
   SAVE,
   UPDATE,
@@ -46,12 +43,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       // setForm(_form);
     }
   }, [formSubmitted, isSuccess, show, toggle, setForm]);
-
-  useEffect(() => {
-    if (activePlatform?.branchId && show)
-      dispatch(EMPLOYEES({ token, branch: activePlatform?.branchId }));
-    return () => dispatch(RESET());
-  }, [activePlatform, show, willCreate, dispatch, token]);
 
   useEffect(() => {
     if (activePlatform?.departments === department) {

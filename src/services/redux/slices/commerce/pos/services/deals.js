@@ -5,6 +5,8 @@ import {
   fullName,
   getAge,
 } from "../../../../../utilities";
+import { HMO, Services } from "../../../../../fakeDb";
+import { orderBy } from "lodash";
 
 const url = "commerce/pos/services/deals";
 const today = new Date();
@@ -16,7 +18,8 @@ const initialState = {
   transaction: { _id: "default" },
   totalPatient: 0,
   formSubmitted: false,
-  filtered: [],
+  filtered: [], //arranged by date
+  refined: [], // filtered by collections use by cashier onboarding
   filterByCashier: "all",
   cashiers: [],
   patient: {},
@@ -495,6 +498,43 @@ export const reduxSlice = createSlice({
       state.filterByCashier = payload;
     },
 
+    SetSORTING: (state, { payload: sortBy }) => {
+      const formattedDeals = [...state.collections].map((deal) => {
+        const { source, customerId, physicianId } = deal;
+        const sourceName = source?.displayname || source?.name;
+        const physician = physicianId?.fullName?.lname;
+        return {
+          ...deal,
+          sourceName,
+          customer: fullName(customerId?.fullName),
+          card: HMO.getName(deal.hmo),
+          physician,
+        };
+      });
+
+      const updateCollections = (collections) => {
+        state.collections = collections;
+        state.refined = collections;
+      };
+      switch (sortBy) {
+        case "patient":
+          updateCollections(orderBy(formattedDeals, "customer", "asc"));
+          break;
+        case "time":
+          updateCollections(orderBy(formattedDeals, "createdAt", "desc"));
+          break;
+        case "source":
+          updateCollections(orderBy(formattedDeals, "sourceName", "asc"));
+          break;
+        case "refined":
+          updateCollections(orderBy(formattedDeals, "card", "asc"));
+          break;
+        default:
+          updateCollections(orderBy(formattedDeals, "physician", "asc"));
+          break;
+      }
+    },
+
     SetFilterBySOURCE: (state, { payload }) => {
       const { value, vendor } = payload;
       let filtered = [];
@@ -754,6 +794,9 @@ export const reduxSlice = createSlice({
       state.showModal = true;
       state.willCreate = false;
     },
+    SetREFINED: (state, { payload }) => {
+      state.refined = payload;
+    },
     SetPatient: (state, { payload }) => {
       state.patient = payload;
       const isSenior = getAge(payload.dob, true) > 59; // Use payload instead of customer
@@ -817,7 +860,23 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
-        state.collections = payload;
+        state.collections = state.refined = payload.map(({ cart, ...rest }) => {
+          const _cart = cart.map(({ menuId, ...etc }) => {
+            const packagesDisplay = Services.whereIn(menuId.packages)
+              .map(({ abbreviation }) => abbreviation)
+              .join(", ");
+            return {
+              ...etc,
+              packagesDisplay,
+              menuId,
+            };
+          });
+
+          return {
+            ...rest,
+            cart: _cart, // ← remains as array of cart items
+          };
+        });
         let uniqueSource = [];
         if (payload.length > 0)
           uniqueSource = [
@@ -1298,6 +1357,8 @@ export const {
   SetTOTAL,
   SetToggleModal,
   SetFILTERED,
+  SetREFINED,
+  SetSORTING,
   SetFilterByCASHIER,
   SetFilterBySOURCE,
   SetFilterByPhysician,

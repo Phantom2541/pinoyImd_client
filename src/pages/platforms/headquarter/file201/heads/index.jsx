@@ -1,15 +1,33 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../../components/tableLoading";
 import Header from "./header.jsx";
 import Body from "./body";
 import Modal from "./modal";
+import {
+  EMPLOYEES,
+  RESET,
+} from "../../../../../services/redux/slices/assets/persons/personnels.js";
+import { useEffect } from "react";
+import { employment } from "../../../../../services/utilities/index.js";
 // import SignaturePreview from "./signaturePreview";
 
 const Index = () => {
-  const { isLoading, selected, willCreate, toggleModal, showModal } =
-    useSelector(({ heads }) => heads);
+  const { activePlatform, token } = useSelector(({ auth }) => auth),
+    { isLoading, selected, willCreate, toggleModal, showModal } = useSelector(
+      ({ heads }) => heads
+    ),
+    dispatch = useDispatch();
+
+  useEffect(() => {
+    if (activePlatform?.branchId) {
+      const abbr = [...employment.employed].map(({ abbr }) => abbr);
+      dispatch(
+        EMPLOYEES({ token, params: { branch: activePlatform?.branchId, abbr } })
+      );
+    }
+    return () => dispatch(RESET());
+  }, [activePlatform, dispatch, token]);
 
   return (
     <>

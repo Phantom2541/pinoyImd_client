@@ -1,7 +1,7 @@
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { HMO, Memberships, Services } from "../../../fakeDb";
-import { ENDPOINT, mobile } from "../..";
+import { ENDPOINT, fullName, properFullname, timeFormat } from "../..";
+import { HMO } from "../../../fakeDb";
 
 const border = {
   top: { style: "thin" },
@@ -58,64 +58,10 @@ const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     return result;
   };
 
-const handleHeader = (worksheet, form) => {
-  const { menuType, hmo } = form;
-  const generateStaticCell = (mergeCell, label, value, position = "left") => {
-    worksheet.mergeCells(mergeCell);
-    const startCell = mergeCell.split(":")[0];
-    const data = worksheet.getCell(startCell);
-
-    // Set rich text value
-    data.value = {
-      richText: [
-        { text: `${label}: `, font: { bold: true, size: 13 } },
-        { text: value, font: { bold: false, size: 13 } },
-      ],
-    };
-
-    data.border = border;
-    data.alignment = { horizontal: position, vertical: "middle" };
-  };
-
-  if (menuType === "hmo") {
-    const { branch = {} } = JSON.parse(localStorage.getItem("activePlatform"));
-    const { companyId = {} } = branch;
-    const { hmo: h } = companyId;
-    const { cp } = h.find(({ code }) => code === hmo) || {};
-    const { phone } = cp;
-    generateStaticCell("A5:F5", "Name", HMO.getName(hmo));
-    generateStaticCell("G5:L5", "Contact Number.", mobile(phone));
-  }
-  if (menuType === "mbs") {
-    const { insource } = form;
-    const { name = "", displayname = "", membership } = insource;
-    console.log("insource", insource);
-    generateStaticCell("A5:G5", "Name", name || displayname);
-    generateStaticCell(
-      "H5:N5",
-      "Membership",
-      Memberships.getMembership(membership),
-      "right"
-    );
-  }
-
-  if (menuType === "ctr") {
-    const { insource } = form;
-    const { name = "", displayname = "", contract } = insource;
-    const contracts = { sbc: "Subcontract", ssc: "Special Subcontract" };
-    generateStaticCell("A5:F5", "Name", name || displayname);
-    generateStaticCell("G5:L5", "Contract", contracts[contract], "right");
-  }
-};
-
 const set = {
-  banner: async ({ worksheet, workbook, form }) => {
+  banner: async ({ worksheet, workbook }) => {
     // Load image from public folder
     try {
-      const { priceCategories = [], menuType = "" } = form;
-      const isInhouse = menuType === "inhouse";
-      const isMembership = menuType === "mbs";
-
       const image = await getBanner();
       const base64 = image.replace(/^data:image\/\w+;base64,/, "");
 
@@ -124,62 +70,45 @@ const set = {
         extension: "png",
       });
 
-      const additionalCol = isInhouse
-        ? priceCategories.length * 2
-        : isMembership
-        ? 4
-        : 2;
-
       worksheet.addImage(imageId, {
         tl: { col: 0, row: 0.05 }, // A4 = col 0, row 3 (zero-based)
-        br: { col: 10 + additionalCol, row: 4 },
+        br: { col: 27, row: 4 },
       });
     } catch (err) {
       console.error("Failed to add image to Excel:", err);
     }
   },
-  header: ({ worksheet, form }) => {
-    const { priceCategories = [], menuType } = form;
-    const isInhouse = menuType === "inhouse";
-    const isMembership = menuType === "mbs";
-
-    const baseColumns = 10; // A to J → index 0 to 9
-    const extraColumns = priceCategories.length * 2;
-    const endColIndex = baseColumns + extraColumns - 1; // zero-based index
-    const endColumnLetter = getAlpha(endColIndex); // e.g., "P"
-
-    if (!isInhouse) handleHeader(worksheet, form);
-
-    const column = isInhouse ? 5 : 6;
-
-    worksheet.mergeCells(
-      `A${column}:${
-        isInhouse ? endColumnLetter : isMembership ? "N" : "L"
-      }${column}`
-    );
-    const title = worksheet.getCell(`A${column}`);
-    title.value = "MENUS PRICE LIST";
-    title.font = { bold: true, size: 20 };
+  header: ({ worksheet }) => {
+    const border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      right: { style: "thin" },
+      bottom: { style: "thin" },
+    };
+    worksheet.mergeCells("A5:AA6");
+    const title = worksheet.getCell("A5");
+    title.value = "DAILY SALES REPORT";
+    title.font = { bold: true, size: 22 };
     title.border = border;
     title.alignment = { horizontal: "center" };
   },
   main: ({ worksheet, menus, form }) => {
-    const { priceCategories = [], menuType = "", hmo = "" } = form;
-    const isInhouse = menuType === "inhouse";
-    const isHMO = menuType === "hmo";
-    const isMembership = menuType === "mbs";
     worksheet.addRow([]);
     worksheet.addRow([]);
 
-    let startingRow = isInhouse ? 6 : 7;
+    let startingRow = 7;
 
     let prevCol = 0;
 
     const headers = [
-      { text: "Name", space: 6 },
+      { text: "Patient", space: 5 },
+      { text: "Time", space: 2 },
+      { text: "Source", space: 4 },
+      { text: "Physician", space: 4 },
+      { text: "Menu", space: 3 },
       { text: "Services Inclusion", space: 4 },
-      ...(isInhouse ? priceCategories : [{ text: "SRP", space: 2 }]),
-      ...(isMembership ? [{ text: "UP", space: 2 }] : []),
+      { text: "Amount", space: 2 },
+      { text: "Card", space: 3 },
     ];
 
     for (const { text, space = 2 } of headers) {
@@ -203,38 +132,32 @@ const set = {
       prevCol += space;
     }
 
-    const handlePrices = (obj) => {
-      if (isInhouse) {
-        return priceCategories.map(({ value }) => obj?.[value]);
-      }
-      if (isHMO) {
-        return [HMO.getSrp(hmo, obj?.hmo)];
-      }
-      if (isMembership) {
-        const { membership } = form?.insource;
-        const { opd = 0 } = obj;
-        return [opd, Memberships.getDiscountedSRP(membership, obj)];
-      }
-      return [obj?.[form?.insource?.contract]];
-    };
-
     processArray(menus, startingRow + 1);
 
     function processArray(array, startPos) {
       for (let i = 0; i < array?.length; i++) {
         const {
-          packages,
-          description: name = "",
-          abbreviation = "",
+          customerId,
+          cart = [],
+          amount = 0,
+          source = {},
+          physicianId = {},
+          createdAt,
+          hmo = "",
         } = array[i] || {};
-
-        const rawServices = Services.whereIn(packages);
-
         // Build richText with A., B., C. labels in bold
-        const servicesRichText = rawServices.flatMap((service, _) => {
+        const menu = cart.flatMap((service, _) => {
           return [
             {
               text: service.abbreviation + ",    ",
+              font: { size: 11 },
+            },
+          ];
+        });
+        const servicesInclusion = cart.flatMap((service, _) => {
+          return [
+            {
+              text: service.packagesDisplay + ",    ",
               font: { size: 11 },
             },
           ];
@@ -244,11 +167,16 @@ const set = {
           {
             richText: [
               { text: `${i + 1}. `, font: { size: 11 } },
-              { text: `${name || abbreviation}`, font: { size: 13 } },
+              { text: `${fullName(customerId?.fullName)}`, font: { size: 13 } },
             ],
           },
-          { richText: servicesRichText },
-          ...handlePrices(array[i]),
+          timeFormat(createdAt),
+          source?.name || source?.displayname,
+          properFullname(physicianId?.fullName),
+          { richText: menu },
+          { richText: servicesInclusion },
+          amount,
+          HMO.getName(hmo),
         ];
 
         let _prevCol = 0;
@@ -352,46 +280,33 @@ const set = {
 };
 // options list
 
-const menuTypes = {
-  inhouse: "Inhouse",
-  mbs: "Membership",
-  ctr: "Contract",
-  hmo: "HMO",
-};
-
-const excel = async ({ menus = [], form, createdBy }) => {
-  if (!menus.length) return;
-  const isInhouse = form.menuType === "inhouse";
+const excel = async ({ array = [] }) => {
+  if (!array.length) return;
+  const today = new Date().toLocaleString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   const workbook = new ExcelJS.Workbook(),
-    worksheet = workbook.addWorksheet("Price List");
+    worksheet = workbook.addWorksheet(today);
 
   //  Set the showGridLines property to false to hide grid lines
   worksheet.views = [{ showGridLines: false }];
 
-  await set.banner({ worksheet, workbook, form });
-  set.header({ worksheet, form });
-  set.main({ worksheet, menus, form });
+  await set.banner({ worksheet, workbook });
+  set.header({ worksheet });
+  set.main({ worksheet, menus: array, form: {} });
 
-  const skip = menus.length + (isInhouse ? 7 : 8);
-  set.footer({ worksheet, skip, createdBy });
+  //   const skip = menus.length + (isInhouse ? 7 : 8);
+  //   set.footer({ worksheet, skip, createdBy });
 
   // Save the workbook
   await workbook.xlsx.writeBuffer().then((buffer) => {
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
-    saveAs(
-      blob,
-      `${menuTypes[form.menuType]} Menus Price List ${new Date().toLocaleString(
-        "en-US",
-        {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        }
-      )}.xlsx`
-    );
+    saveAs(blob, `${today}-Daily sales report.xlsx`);
   });
 };
 

@@ -42,7 +42,12 @@ const Header = () => {
   }, [token, dispatch, activePlatform, auth]);
 
   useEffect(() => {
-    dispatch(INSOURCE({ token, key: { vendors: activePlatform?.branchId } }));
+    dispatch(
+      INSOURCE({
+        token,
+        key: { vendors: activePlatform?.branchId, status: "approved" },
+      })
+    );
   }, [dispatch, activePlatform, token]);
 
   useEffect(() => {
