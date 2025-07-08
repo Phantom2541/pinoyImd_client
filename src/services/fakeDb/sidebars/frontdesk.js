@@ -45,6 +45,7 @@ import {
   ImageDragAndDrop,
   Loader,
   InputSearch,
+  ImageMagnifier,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 import ImgText from "../../../pages/templates/imgText";
@@ -414,6 +415,12 @@ const frontdesk = [
         path: "/templates/imgText",
         icon: "calendar-alt",
         component: ImgText,
+      },
+      {
+        name: "Image Magnifier",
+        path: "/templates/imageMagnifier",
+        icon: "calendar-alt",
+        component: ImageMagnifier,
       },
     ],
   },
