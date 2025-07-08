@@ -28,7 +28,7 @@ export default function Body() {
       formSubmitted: fsAuth,
       isSuccess: isAuth,
     } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, formSubmitted } = useSelector(
+    { filtered, message, isSuccess, formSubmitted } = useSelector(
       ({ heads }) => heads
     ),
     { collections: personnels } = useSelector(({ personnels }) => personnels),
@@ -44,8 +44,8 @@ export default function Body() {
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
 
   useEffect(() => {
-    if (collections.length > 0) {
-      const newArray = collections.map((collection) => ({
+    if (filtered.length > 0) {
+      const newArray = filtered.map((collection) => ({
         ...collection,
         user: {
           ...collection?.user,
@@ -55,7 +55,7 @@ export default function Body() {
       }));
       setHeads(newArray || []);
     }
-  }, [collections]);
+  }, [filtered]);
 
   useEffect(() => {
     if (message) {
