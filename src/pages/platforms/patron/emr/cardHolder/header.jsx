@@ -35,7 +35,7 @@ const Header = () => {
 
         <div>
           {/* Search */}
-          <Search
+          {/* <Search
             collections={collections}
             setFiltered={(items) => dispatch(SetFILTERED(items))}
             placeholder="Search..."
@@ -43,7 +43,7 @@ const Header = () => {
             reset={() => dispatch(SetFILTERED(collections))}
             hideButton={true}
             handleAdd={(item) => dispatch(SetCREATE(item))}
-          />
+          /> */}
         </div>
       </MDBView>
     </>

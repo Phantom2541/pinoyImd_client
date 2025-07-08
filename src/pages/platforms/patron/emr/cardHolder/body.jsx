@@ -6,6 +6,16 @@ import "./style.css";
 const Body = () => {
   const dispatch = useDispatch();
   const { activeTab } = useSelector(({ cardHolder }) => cardHolder);
+  const handleAccept = () => {
+    const isAccredited = false; // Replace with your real logic
+
+    if (!isAccredited) {
+      alert("This company is not accredited for this HMO.");
+    } else {
+      alert("Card accepted successfully!");
+      // You can also dispatch an action or update state here
+    }
+  };
 
   return (
     <div className="tab-wrapper">
@@ -25,41 +35,45 @@ const Body = () => {
           }`}
           onClick={() => dispatch(SetActiveTAB("other"))}
         >
-          Health Suport Card
+          Health Support Card
         </button>
       </div>
 
       {/* Tab Content */}
       <div className="tab-body-content">
         {activeTab === "labRequest" && (
-          <div className="template1-card">
+          <div className="template1-card mx-auto">
             <img
               className="template1-card-image"
               src="https://via.placeholder.com/300x160"
               alt="Lab Request"
             />
             <div className="template1-card-body">
-              <div className="template1-card-title">Request Lab Card</div>
-              <div className="template1-card-subtitle">Lab Department</div>
+              <div className="template1-card-title">Lab Request Card</div>
+              <div className="template1-card-subtitle">Laboratory</div>
               <div className="template1-card-description">
-                This is the lab request card content.
+                This is the content for the lab request card.
               </div>
+              {/* Accept Button */}
+              <button className="btn btn-success mt-3" onClick={handleAccept}>
+                Accept Card
+              </button>
             </div>
           </div>
         )}
 
         {activeTab === "other" && (
-          <div className="template1-card">
+          <div className="template1-card mx-auto">
             <img
               className="template1-card-image"
               src="https://via.placeholder.com/300x160"
-              alt="Other"
+              alt="Health Support"
             />
             <div className="template1-card-body">
-              <div className="template1-card-title">Card Title Other</div>
+              <div className="template1-card-title">Health Support Card</div>
               <div className="template1-card-subtitle">Other Department</div>
               <div className="template1-card-description">
-                This is the content for the Other tab.
+                This is the content for the Health Support card.
               </div>
             </div>
           </div>
