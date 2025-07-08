@@ -60,27 +60,29 @@ export default function Body() {
                   colSpan={isNoVendor ? 7 : 6}
                   style={{ fontWeight: 500, fontSize: "1rem" }}
                 >
-                  <div className="d-flex align-items-center">
-                    {!isNoVendor && (
-                      <>
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id={index}
-                          checked={isChecked(date)}
-                          onChange={() =>
-                            // dispatch(CHECK_BULK({ date: title, hasSelected: !isChecked }))
-                            dispatch(CHECK_BULK({ date, deals }))
-                          }
-                        />
-                        <label
-                          htmlFor={index}
-                          className="form-check-label label-table"
-                        />
-                      </>
-                    )}
-                    {date}
-                    <span className="text-primary ml-2">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center ">
+                      {!isNoVendor && (
+                        <>
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={index}
+                            checked={isChecked(date)}
+                            onChange={() =>
+                              // dispatch(CHECK_BULK({ date: title, hasSelected: !isChecked }))
+                              dispatch(CHECK_BULK({ date, deals }))
+                            }
+                          />
+                          <label
+                            htmlFor={index}
+                            className="form-check-label label-table"
+                          />
+                        </>
+                      )}
+                      {date}
+                    </div>
+                    <span className="text-primary ml-2 d-block">
                       ({currency(total)})
                     </span>
                   </div>
