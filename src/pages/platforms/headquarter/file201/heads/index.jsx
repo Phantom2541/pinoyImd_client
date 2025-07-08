@@ -27,7 +27,7 @@ const Index = () => {
       );
     }
     return () => dispatch(RESET());
-  }, [activePlatform, , dispatch, token]);
+  }, [activePlatform, dispatch, token]);
 
   return (
     <>

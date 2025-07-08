@@ -221,7 +221,7 @@ export default function PosCard() {
           {/* // wls */}
           {category === 6 && (
             <>
-              <span>HMO:</span>
+              <span>Card:</span>
               <select onChange={({ target }) => dispatch(SETHMO(target.value))}>
                 <option value={""}>None</option>
                 {company?.hmo?.map(({ code }) => (
