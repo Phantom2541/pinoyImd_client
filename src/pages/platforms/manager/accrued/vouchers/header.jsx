@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   VOUCHERS,
@@ -50,7 +50,10 @@ const Header = () => {
       const fakeDB = localStorage.getItem("insource");
       if (!fakeDB) {
         dispatch(
-          INSOURCE({ token, key: { vendors: activePlatform.branchId } })
+          INSOURCE({
+            token,
+            key: { vendors: activePlatform.branchId, status: "approved" },
+          })
         );
       } else {
         dispatch(SetINSOURCE(JSON.parse(fakeDB)));
@@ -101,6 +104,7 @@ const Header = () => {
 
   useEffect(() => {
     if (source && collections.length > 0) {
+      console.log("source", getProvider(source));
       dispatch(
         SetFilterBySOURCE({
           value: source,
@@ -175,17 +179,39 @@ const Header = () => {
     });
   };
 
+  const haveSource = vendor?._id && vendor?._id !== "noSource" ? true : false;
+
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-2 d-flex justify-content-between align-items-center"
     >
       <div>
         <i>Voucher List</i>
       </div>
+      <div className="m-0 mt-n1 mr-n5 ">
+        <MDBBtn
+          size="sm"
+          color="warning"
+          disabled={!haveSource}
+          onClick={handleGenerateSOA}
+          title="Generate SOA"
+        >
+          <MDBIcon icon="file-invoice" className="mr-2" /> Generate SOA
+        </MDBBtn>
+        <span className="d-block mt-n1 mb-n1" style={{ fontSize: "0.9rem" }}>
+          <i>
+            Note:
+            {haveSource
+              ? " You can now generate the SOA."
+              : " Select a source to activate Generate SOA."}
+          </i>
+        </span>
+      </div>
       <div className="text-right d-flex align-items-center ">
+        <span className="mr-2">Source:</span>
         <select
-          style={{ width: "20rem" }}
+          style={{ width: "15rem" }}
           className="custom-select mr-2"
           value={source}
           onChange={(e) => setSource(e.target.value)}
@@ -220,16 +246,6 @@ const Header = () => {
             );
           })}
         </select>
-        {vendor?._id && vendor?._id !== "noSource" && (
-          <MDBBtn
-            size="sm"
-            color="primary"
-            onClick={handleGenerateSOA}
-            title="Generate SOA"
-          >
-            <MDBIcon icon="file-invoice" className="mr-2" /> Generate SOA
-          </MDBBtn>
-        )}
       </div>
     </MDBView>
   );
