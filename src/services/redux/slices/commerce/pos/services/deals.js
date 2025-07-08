@@ -543,7 +543,7 @@ export const reduxSlice = createSlice({
         filtered = state.collections;
         state.vendor = {};
       } else if (value === "NoSource") {
-        filtered = state.collections.filter(({ source }) => !source);
+        filtered = state.collections.filter(({ source }) => !source?._id);
         state.vendor = "noSource";
       } else {
         filtered = state.collections.filter(
