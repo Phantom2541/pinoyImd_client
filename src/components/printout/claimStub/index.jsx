@@ -168,9 +168,6 @@ const Stub = ({ sale, companyId }) => {
         <b> FIVE(5) </b>
         DAYS
       </div>
-      <h6>
-        {companyId}/{_id}
-      </h6>
       <Hr />
       <div className="mt-2">
         <QRCodeCanvas

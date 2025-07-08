@@ -225,8 +225,6 @@ export const Tables = () => {
     });
   };
 
-  console.log("filtered", deals);
-
   return (
     <MDBCardBody>
       <div
@@ -607,7 +605,7 @@ export const Tables = () => {
                       <MDBBadge
                         key={menu.referenceId}
                         className="mx-1"
-                        title={menu?.packages}
+                        title={menu?.packagesDisplay}
                       >
                         {menu?.abbreviation}
                       </MDBBadge>

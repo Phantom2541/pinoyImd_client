@@ -862,12 +862,12 @@ export const reduxSlice = createSlice({
         const { payload, success } = action.payload;
         state.collections = state.refined = payload.map(({ cart, ...rest }) => {
           const _cart = cart.map(({ menuId, ...etc }) => {
-            const packages = Services.whereIn(menuId.packages)
+            const packagesDisplay = Services.whereIn(menuId.packages)
               .map(({ abbreviation }) => abbreviation)
               .join(", ");
             return {
               ...etc,
-              packages,
+              packagesDisplay,
               menuId,
             };
           });

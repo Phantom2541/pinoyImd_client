@@ -126,7 +126,8 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
               {[
                 {
                   label: "Cash Payment",
-                  value: breakdown?.cash !== gross ? breakdown?.cash : 0,
+                  // value: breakdown?.cash !== gross ? breakdown?.cash : 0,
+                  value: breakdown?.cash ? breakdown?.cash : 0,
                 },
                 {
                   label: " Add: FC",
@@ -179,7 +180,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                 <div style={{ marginBottom: "1.8rem" }}>
                   <div className="cashier-remittance-breakdown">
                     <hr className="my-1" />
-
+                    {/* 
                     {breakdown &&
                       Object.entries(breakdown).map(([key, value]) => {
                         const paymentData = paymentMethod.getImage(key); // Get payment method data
@@ -208,7 +209,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                             </span>
                           </div>
                         );
-                      })}
+                      })} */}
                   </div>
                   <div
                     className="cashier-remittance-total d-flex align-items-center justify-content-between"
