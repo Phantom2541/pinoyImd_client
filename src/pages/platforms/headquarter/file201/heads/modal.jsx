@@ -14,6 +14,8 @@ import {
 import {
   SAVE,
   UPDATE,
+  TOGGLE,
+  RESET,
 } from "../../../../../services/redux/slices/assets/persons/heads";
 import { capitalize, isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
@@ -39,10 +41,11 @@ export default function Modal({ show, toggle, selected, willCreate }) {
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
-      toggle();
+      dispatch(TOGGLE());
+      dispatch(RESET());
       // setForm(_form);
     }
-  }, [formSubmitted, isSuccess, show, toggle, setForm]);
+  }, [formSubmitted, isSuccess, show, toggle, setForm, dispatch]);
 
   useEffect(() => {
     if (activePlatform?.departments === department) {
@@ -94,6 +97,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         token,
       })
     );
+    dispatch(TOGGLE());
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -139,13 +143,20 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     setSections(_sections);
   };
 
-  console.log("sections", sections);
   console.log("form", form);
+  const handleClose = () => {
+    dispatch(TOGGLE());
+  };
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop disableFocusTrap={false}>
+    <MDBModal
+      isOpen={show}
+      toggle={handleClose}
+      backdrop
+      disableFocusTrap={false}
+    >
       <MDBModalHeader
-        toggle={toggle}
+        toggle={handleClose}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
@@ -155,7 +166,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
         <form onSubmit={handleSubmit}>
           <MDBRow>
             <MDBCol md="12">
-              <label className="d-block mb-1">Department</label>
               <Select
                 collections={["Radiology", "Laboratory"]}
                 preValue={capitalize(form.department)}
