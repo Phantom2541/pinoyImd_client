@@ -12,7 +12,6 @@ import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 import ImageDragAndDrop from "../../../../templates/imageDragAndDrop/dragNdropimg";
-import { isEqual } from "lodash";
 import EditableField from "../../../../../components/customizable/editableField";
 import {
   UPDATE_INFO,
@@ -23,7 +22,6 @@ import { Templates } from "../../../../../services/fakeDb";
 
 export default function Body() {
   const {
-      auth,
       token,
       formSubmitted: fsAuth,
       isSuccess: isAuth,
@@ -32,30 +30,14 @@ export default function Body() {
       ({ heads }) => heads
     ),
     { collections: personnels } = useSelector(({ personnels }) => personnels),
-    [heads, setHeads] = useState([]),
     { addToast } = useToasts(),
     [currentPage, setCurrentPage] = useState(1),
     itemsPerPage = 6,
     [animateClass, setAnimateClass] = useState(""),
     [savedImage, setSavedImage] = useState(null);
-  const [selected, setSelected] = useState({});
   const dispatch = useDispatch();
   const [imageErrors, setImageErrors] = useState({});
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
-
-  useEffect(() => {
-    if (filtered.length > 0) {
-      const newArray = filtered.map((collection) => ({
-        ...collection,
-        user: {
-          ...collection?.user,
-          department: collection?.department,
-          section: collection?.section,
-        },
-      }));
-      setHeads(newArray || []);
-    }
-  }, [filtered]);
 
   useEffect(() => {
     if (message) {
@@ -123,8 +105,8 @@ export default function Body() {
       }
     });
   };
-  const totalPages = Math.ceil(heads.length / itemsPerPage);
-  const paginatedHeads = heads.slice(
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginatedHeads = filtered.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -163,7 +145,6 @@ export default function Body() {
 
   const handleImageChange = (file, imageUrl) => {
     setSavedImage(imageUrl);
-    console.log("✅ Cropped image passed to parent:", savedImage);
   };
 
   const updateAuth = (data) => {
@@ -381,7 +362,6 @@ export default function Body() {
                 <button
                   className="signatories-card-btn-delete bg-danger"
                   onClick={() => {
-                    console.log("handle delete user", _id);
                     handleDelete(_id, user);
                   }}
                 >

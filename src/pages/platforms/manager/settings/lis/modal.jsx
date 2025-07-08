@@ -84,7 +84,7 @@ export default function Modal() {
     if (willCreate) return handleCreate();
     handleUpdate();
 
-    // console.log("form", form);
+    //
 
     if (willCreate) {
       return handleCreate();

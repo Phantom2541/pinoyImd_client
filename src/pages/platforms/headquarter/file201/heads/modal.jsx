@@ -143,7 +143,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     setSections(_sections);
   };
 
-  console.log("form", form);
   const handleClose = () => {
     dispatch(TOGGLE());
   };
