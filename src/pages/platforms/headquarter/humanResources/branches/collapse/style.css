@@ -1,0 +1,15 @@
+.custom-toggle input.form-check-input:checked {
+  background-color: #198754 !important; /* green */
+  border-color: #198754 !important;
+}
+
+/* For unchecked state */
+.custom-toggle .lever:after {
+  background-color: #dc3545 !important; /* red */
+  border-color: #dc3545 !important;
+}
+
+.custom-toggle input[type="checkbox"]:checked + .lever:after {
+  background-color: #198754 !important; /* green */
+  border-color: #198754 !important;
+}

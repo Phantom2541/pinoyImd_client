@@ -20,6 +20,7 @@ import {
   UPDATE,
 } from "../../../../../../services/redux/slices/assets/branches";
 import { orderBy } from "lodash";
+import "./style.css";
 
 export default function Body() {
   const { auth, token } = useSelector(({ auth }) => auth),
@@ -208,8 +209,10 @@ export default function Body() {
                     <h6 style={{ fontWeight: 500 }}>Personnel List</h6>
                     <MDBSwitch
                       checked={isHiring}
-                      labelLeft="Open "
-                      labelRight="Stop Hiring"
+                      labelLeft="Stop"
+                      labelRight="Open Hiring"
+                      label="Toggle Hiring Status"
+                      className="custom-toggle"
                       onChange={() =>
                         dispatch(
                           UPDATE({
@@ -218,7 +221,6 @@ export default function Body() {
                           })
                         )
                       }
-                      label="Toggle Hiring Status"
                     />
                     <Search
                       excludes={branch.personnels}
