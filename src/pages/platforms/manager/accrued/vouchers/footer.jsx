@@ -29,7 +29,7 @@ const Footer = () => {
       <TableRowCount disablePageSelect={false} />
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="black-text mx-3 text-nowrap mt-0">
-          {filtered.length} Total
+          {filtered?.length} Total
         </span>
       </div>
       <Pagination

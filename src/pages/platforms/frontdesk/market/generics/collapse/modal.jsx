@@ -45,7 +45,7 @@ export default function Modal() {
       });
     }
 
-    // console.log("form", form);
+    //
     // console.log("genselected", Genselected);
 
     dispatch(
@@ -125,7 +125,7 @@ export default function Modal() {
       });
     }
 
-    // console.log("form", form);
+    //
   };
 
   // Fix: Return correct form value

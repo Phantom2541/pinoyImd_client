@@ -5,6 +5,7 @@ import {
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
+  MDBSwitch,
 } from "mdbreact";
 
 import CollapsableBody from "./body";
@@ -16,8 +17,10 @@ import { Policy } from "../../../../../../services/fakeDb";
 import {
   ASSIGN_AO,
   RESET,
+  UPDATE,
 } from "../../../../../../services/redux/slices/assets/branches";
 import { orderBy } from "lodash";
+import "./style.css";
 
 export default function Body() {
   const { auth, token } = useSelector(({ auth }) => auth),
@@ -170,6 +173,7 @@ export default function Body() {
               activeId,
               didHoverId
             );
+            const { isHiring = false } = branch;
             return (
               <MDBCard
                 key={`branch-${actualIndex}-${branch._id}`}
@@ -203,6 +207,21 @@ export default function Body() {
                     style={{ marginBottom: "-0.2rem" }}
                   >
                     <h6 style={{ fontWeight: 500 }}>Personnel List</h6>
+                    <MDBSwitch
+                      checked={isHiring}
+                      labelLeft="Stop"
+                      labelRight="Open Hiring"
+                      label="Toggle Hiring Status"
+                      className="custom-toggle"
+                      onChange={() =>
+                        dispatch(
+                          UPDATE({
+                            token,
+                            data: { _id: branch._id, isHiring: !isHiring },
+                          })
+                        )
+                      }
+                    />
                     <Search
                       excludes={branch.personnels}
                       excludeKey="user._id"

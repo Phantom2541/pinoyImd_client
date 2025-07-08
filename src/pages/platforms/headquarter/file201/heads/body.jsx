@@ -12,7 +12,6 @@ import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 import ImageDragAndDrop from "../../../../templates/imageDragAndDrop/dragNdropimg";
-import { isEqual } from "lodash";
 import EditableField from "../../../../../components/customizable/editableField";
 import {
   UPDATE_INFO,
@@ -23,39 +22,22 @@ import { Templates } from "../../../../../services/fakeDb";
 
 export default function Body() {
   const {
-      auth,
       token,
       formSubmitted: fsAuth,
       isSuccess: isAuth,
     } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess, formSubmitted } = useSelector(
+    { filtered, message, isSuccess, formSubmitted } = useSelector(
       ({ heads }) => heads
     ),
     { collections: personnels } = useSelector(({ personnels }) => personnels),
-    [heads, setHeads] = useState([]),
     { addToast } = useToasts(),
     [currentPage, setCurrentPage] = useState(1),
     itemsPerPage = 6,
     [animateClass, setAnimateClass] = useState(""),
     [savedImage, setSavedImage] = useState(null);
-  const [selected, setSelected] = useState({});
   const dispatch = useDispatch();
   const [imageErrors, setImageErrors] = useState({});
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
-
-  useEffect(() => {
-    if (collections.length > 0) {
-      const newArray = collections.map((collection) => ({
-        ...collection,
-        user: {
-          ...collection?.user,
-          department: collection?.department,
-          section: collection?.section,
-        },
-      }));
-      setHeads(newArray || []);
-    }
-  }, [collections]);
 
   useEffect(() => {
     if (message) {
@@ -123,8 +105,8 @@ export default function Body() {
       }
     });
   };
-  const totalPages = Math.ceil(heads.length / itemsPerPage);
-  const paginatedHeads = heads.slice(
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginatedHeads = filtered.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -163,7 +145,6 @@ export default function Body() {
 
   const handleImageChange = (file, imageUrl) => {
     setSavedImage(imageUrl);
-    console.log("✅ Cropped image passed to parent:", savedImage);
   };
 
   const updateAuth = (data) => {
@@ -318,49 +299,55 @@ export default function Body() {
               >
                 {prc ? (
                   <div className="signatories-card-expiration-container">
-                    <EditableField
-                      className="form-control form-control-sm"
-                      classNameTxt="signatories-card-expiration"
-                      width="8rem"
-                      type="string"
-                      keyForValue="id"
-                      fieldData={{
-                        _id: `${_id}-id-${index}`,
-                        id: prc?.id,
-                        prc,
-                        user: user._id,
-                      }}
-                      onSave={(data) =>
-                        updateAuth({
-                          ...data,
-                          prc: { ...data.prc, id: data.id },
-                        })
-                      }
-                      formSubmitted={fsAuth}
-                      isSuccess={isAuth}
-                    />
-                    <span className="d-block mt-n2">&nbsp;|&nbsp;</span>
-                    <EditableField
-                      className="form-control form-control-sm"
-                      classNameTxt="signatories-card-expiration"
-                      type="date"
-                      width="11rem"
-                      keyForValue="to"
-                      fieldData={{
-                        _id: `${_id}-to`,
-                        to: prc?.to,
-                        prc,
-                        user: user._id,
-                      }}
-                      onSave={(data) =>
-                        updateAuth({
-                          ...data,
-                          prc: { ...data.prc, to: data.to },
-                        })
-                      }
-                      formSubmitted={fsAuth}
-                      isSuccess={isAuth}
-                    />
+                    <span className="signatories-card-prc-label">
+                      <strong>PRC ID:&nbsp;</strong>
+                      <EditableField
+                        className="form-control form-control-sm"
+                        classNameTxt="signatories-card-prc"
+                        width="8rem"
+                        type="string"
+                        keyForValue="id"
+                        fieldData={{
+                          _id: `${_id}-id-${index}`,
+                          id: prc?.id,
+                          prc,
+                          user: user._id,
+                        }}
+                        onSave={(data) =>
+                          updateAuth({
+                            ...data,
+                            prc: { ...data.prc, id: data.id },
+                          })
+                        }
+                        formSubmitted={fsAuth}
+                        isSuccess={isAuth}
+                      />
+                    </span>
+                    <span>&nbsp;|&nbsp;</span>
+                    <span className="signatories-card-expiration-label">
+                      <strong>Expiration:&nbsp;</strong>
+                      <EditableField
+                        className="form-control form-control-sm"
+                        classNameTxt="signatories-card-expiration"
+                        type="date"
+                        width="11rem"
+                        keyForValue="to"
+                        fieldData={{
+                          _id: `${_id}-to`,
+                          to: prc?.to,
+                          prc,
+                          user: user._id,
+                        }}
+                        onSave={(data) =>
+                          updateAuth({
+                            ...data,
+                            prc: { ...data.prc, to: data.to },
+                          })
+                        }
+                        formSubmitted={fsAuth}
+                        isSuccess={isAuth}
+                      />
+                    </span>
                   </div>
                 ) : (
                   <span className="">
@@ -375,7 +362,6 @@ export default function Body() {
                 <button
                   className="signatories-card-btn-delete bg-danger"
                   onClick={() => {
-                    console.log("handle delete user", _id);
                     handleDelete(_id, user);
                   }}
                 >
