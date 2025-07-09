@@ -15,12 +15,12 @@ import {
   Suppliers,
 } from "../../../pages/platforms/cashier";
 
+import { Tieups } from "../../../pages/platforms/manager/settings";
 import {
   Logo,
   Tagline,
   Description,
-  Tieups,
-} from "../../../pages/platforms/manager/settings";
+} from "../../../pages/platforms/headquarter/settings";
 
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";

@@ -21,11 +21,11 @@ if verified no password, take email, name, and brithday, and address
 if paid make the pics of hmo when click you will be directed to their website
 check code name of hmo in the fakedb (inlife in care)-kevin
 
-philhealth accredited id number to be taken out and add the branches
+12. philhealth accredited id number to be taken out and add the branches
 
-13.employees filtered out the one that are fired and fix the height and make it by 6
+13. employees filtered out the one that are fired and fix the height and make it by 6
 
-14.footer (check and adjust the details beside the map ) thom
+14. footer (check and adjust the details beside the map ) thom
 
 login
 cashier 15. POS -change the transition to next page of class tab window when click of patient (in the future)
@@ -47,23 +47,21 @@ fakedb address adjust and change
 26.remittance -census downpayment remove
 print out two copies- darrel
 
-manager
-operational 
+manager operational
 27. remittance - sales break down (one line) - kevin
 
 submit button change to "acknowledge or approve"
 
 28. mobile clinic- modal status add in select "draft-default and pending" fix saving
-add time after the date
+    add time after the date human resouces
 
-human resouces 
-29. staff- header hover issue (showing empty white box) 
-30. physician- wala lahat
+29. staff- header hover issue (showing empty white box) 30. physician- wala lahat
 
 finance & receivable
 31.accounts receivable and soa records to be checked 32. rebate should not be seen in the cashier payables 
 33. payroll- add sss and philhealth
-headquarter 
+
+headquarter
 34. logo add detail requiments of pic size and other - kevin
 
 35. banner- remove the text below the banner,
