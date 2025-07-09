@@ -119,7 +119,7 @@ const cashier = [
         name: "Outsources",
         path: "/outsources",
         icon: "people-carry",
-        title: "External Service Providers",
+        title: "External Service Providers (Sendouts)",
         component: Outsources,
       },
       {

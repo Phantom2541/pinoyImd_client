@@ -46,6 +46,7 @@ import {
   Loader,
   InputSearch,
   ImageMagnifier,
+  QrCodePage,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 import ImgText from "../../../pages/templates/imgText";

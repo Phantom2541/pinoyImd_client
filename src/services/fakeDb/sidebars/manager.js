@@ -53,6 +53,7 @@ import {
 } from "../../../pages/platforms/cashier";
 import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
 import LIS from "../../../pages/platforms/manager/settings/lis";
+import QrCodePage from "../../../pages/platforms/manager/settings/qrCode";
 
 const ManagerSidebar = [
   {
@@ -375,6 +376,13 @@ const ManagerSidebar = [
             path: "/signatories",
             icon: "pen",
             component: Heads,
+          },
+          {
+            name: "Q R Code",
+            title: "Qr Code for Homepage.",
+            path: "/qrCode",
+            icon: "pen",
+            component: QrCodePage,
           },
         ],
       },
