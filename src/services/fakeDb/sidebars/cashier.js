@@ -19,7 +19,6 @@ import {
   Vouchers,
   Payments,
   // SOA,
-  Reseco,
   Onboarding,
 } from "../../../pages/platforms/cashier";
 
@@ -62,7 +61,7 @@ const cashier = [
         name: "Onboarding",
         path: "/onboarding",
         icon: "sign-in-alt",
-        title: "Pre-Registered Patients from Partner Clinics",
+        title: "Pre-Registered Patients & HMO Approvals",
         component: Onboarding,
       },
     ],
@@ -108,13 +107,6 @@ const cashier = [
         title: "Monthly Vouchers for Referrals (Cashier only)",
         component: Vouchers,
       },
-      {
-        name: "Rebates",
-        path: "/reseco",
-        icon: "calendar-check",
-        title: "Monthly Referral Rebates",
-        component: Reseco,
-      },
     ],
   },
   {
@@ -127,7 +119,7 @@ const cashier = [
         name: "Outsources",
         path: "/outsources",
         icon: "people-carry",
-        title: "External Service Providers",
+        title: "External Service Providers (Sendouts)",
         component: Outsources,
       },
       {

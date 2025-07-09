@@ -89,7 +89,9 @@ export default function Ledger() {
             getPage={setPage}
             totalPages={totalPages} //custom total page based on db
             isLoading={isLoading}
-            title={`${month >= 0 && `${Months[month]} `}${year} |  ${currency(
+            title={`${
+              month >= 0 && `${Months[month]} `
+            }${year} |  ${currency.format(
               totalSale
             )} @ ${totalPatient} Patients `}
             array={sales}

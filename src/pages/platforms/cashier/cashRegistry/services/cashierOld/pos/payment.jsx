@@ -62,7 +62,7 @@ export default function CashierPayment({
       if (balance > 0)
         Swal.fire({
           icon: "info",
-          title: `Change: ${currency(balance)}`,
+          title: `Change: ${currency.format(balance)}`,
           text: "Please return the change to the customer.",
         });
     }

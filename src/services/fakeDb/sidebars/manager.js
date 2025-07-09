@@ -26,15 +26,13 @@ import {
   Remittances,
   Sales,
   ExperimentalLedger,
-  Quest,
 } from "../../../pages/platforms/manager/businessOperations";
+import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
 
 import {
   ProductGenerics,
   Products,
 } from "../../../pages/platforms/manager/commerce/merchandise";
-
-import { Attendances } from "../../../pages/platforms/manager/humanResources";
 
 import {
   Vouchers,
@@ -44,17 +42,20 @@ import {
   SOA,
   Reseco,
 } from "../../../pages/platforms/manager/accrued";
+import { Schedule } from "../../../pages/platforms/dtr";
 
 import {
+  Philhealth,
   Outsources,
   Utilities,
   Hotlines,
   Suppliers,
 } from "../../../pages/platforms/cashier";
 import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
+import LIS from "../../../pages/platforms/manager/settings/lis";
+import QrCodePage from "../../../pages/platforms/manager/settings/qrCode";
 
-const SidebarItems = [
-  // === Main Navigation ===
+const ManagerSidebar = [
   {
     name: "Dashboard",
     title: "Overview of platform activity.",
@@ -62,15 +63,14 @@ const SidebarItems = [
     path: "/dashboard",
     component: Dashboard,
   },
-  // === Business Operations ===
   {
     name: "Operations",
-    title: "Business-related operations and clinic activities.",
+    title: "Daily business and clinic operations.",
     icon: "cogs",
     path: "/operations",
     children: [
       {
-        name: "Daily Sales",
+        name: "Sales",
         title: "View and manage daily clinic sales data.",
         path: "/sales",
         icon: "money-bill",
@@ -99,26 +99,84 @@ const SidebarItems = [
       },
     ],
   },
-  // === Finance Management ===
+
   {
-    name: "Finance",
+    name: "Human Resources",
+    title: "Employee records, attendance, and roles.",
+    icon: "users",
+    path: "/hr",
+    children: [
+      {
+        name: "Attendance",
+        title: "Employee daily attendance tracker.",
+        path: "/attendances",
+        icon: "clock",
+        // component: Calender,
+      },
+      {
+        name: "Schedule",
+        title: "Employee daily attendance tracker.",
+        path: "/schedule",
+        icon: "clock",
+        component: Schedule,
+      },
+      {
+        name: "Staff",
+        title: "Active staff directory.",
+        path: "/staff",
+        icon: "user",
+        component: Staffs,
+      },
+      {
+        name: "File 201",
+        title: "Comprehensive employee records.",
+        path: "/file201",
+        icon: "folder",
+        component: Employees,
+      },
+      {
+        name: "Physicians",
+        title: "In-house medical doctors.",
+        path: "/physicians",
+        icon: "stethoscope",
+        component: Physicians,
+      },
+      {
+        name: "Applicants",
+        title: "Job applicants and interview status.",
+        path: "/petitioners",
+        icon: "user-plus",
+        component: Applicants,
+      },
+      {
+        name: "Stockholders",
+        title: "Company stakeholders and investors.",
+        path: "/stockHolder",
+        icon: "user-tie",
+        component: stockHolder,
+      },
+    ],
+  },
+
+  {
+    name: "Finance & Accounting",
     title: "Manage financial transactions and ledgers.",
     icon: "wallet",
     path: "/finance",
     children: [
+      {
+        name: "Accounts Receivable",
+        title: "Track receivables from clients or HMOs.",
+        path: "/receivables",
+        icon: "money-check",
+        component: Receivables,
+      },
       {
         name: "Accounts Payable",
         title: "List of pending payables to suppliers.",
         path: "/payables",
         icon: "file-invoice-dollar",
         component: Payables,
-      },
-      {
-        name: "Accounts Receivable",
-        title: "Track receivables from clients or HMOs.",
-        path: "/receivables",
-        icon: "money-bill",
-        component: Receivables,
       },
       {
         name: "Payments",
@@ -128,7 +186,7 @@ const SidebarItems = [
         component: Payments,
       },
       {
-        name: "Client SOA Generator",
+        name: "SOA Generator",
         title:
           "Generate Statements of Account for HMO, Contract, and Membership Clients",
         path: "/vouchers",
@@ -167,11 +225,11 @@ const SidebarItems = [
       },
     ],
   },
-  // === Procurement Process ===
+
   {
     name: "Procurement",
     title: "Track purchasing and supplier interactions.",
-    icon: "book-open",
+    icon: "truck-loading",
     path: "/procurement",
     children: [
       {
@@ -185,23 +243,30 @@ const SidebarItems = [
         name: "Approval",
         title: "Approve or reject procurement requests.",
         path: "/process",
-        icon: "file-invoice",
+        icon: "check-circle",
       },
       {
         name: "Tracking",
         title: "Monitor delivery status of procurements.",
         path: "/tracking",
-        icon: "file-invoice",
+        icon: "map-marker-alt",
       },
       {
         name: "Records",
         title: "View historical procurement records.",
         path: "/records",
-        icon: "file-invoice",
+        icon: "clipboard-list",
+      },
+      {
+        name: "Procurement Records",
+        title: "Procurement log for physical assets.",
+        path: "/procurement",
+        icon: "file-alt",
+        component: Procurments,
       },
     ],
   },
-  // === Asset Management ===
+
   {
     name: "Assets & Maintenance",
     title: "Asset inventory and maintenance schedules.",
@@ -212,15 +277,8 @@ const SidebarItems = [
         name: "Equipments",
         title: "Clinic equipment listing and status.",
         path: "/equipments",
-        icon: "cpu",
+        icon: "cogs",
         component: Equipments,
-      },
-      {
-        name: "Procurement Records",
-        title: "Procurement log for physical assets.",
-        path: "/procurement",
-        icon: "clipboard-list",
-        component: Procurments,
       },
       {
         name: "Supplies",
@@ -229,122 +287,14 @@ const SidebarItems = [
         icon: "box",
       },
       {
-        name: "PMS",
+        name: "Preventive Maintenance",
         title: "Preventive Maintenance Schedule logs.",
         path: "/preventive/maintenance/schedule",
         icon: "calendar-check",
       },
     ],
   },
-  // === Human Resources ===
-  {
-    name: "Human Resources",
-    title: "Employee records, attendance, and roles.",
-    icon: "users",
-    path: "/human-resources",
-    children: [
-      {
-        name: "Attendance",
-        title: "Employee daily attendance tracker.",
-        path: "/attendances",
-        icon: "clock",
-        component: Attendances,
-      },
-      {
-        name: "Staff",
-        title: "Active staff directory.",
-        path: "/staff",
-        icon: "user",
-        component: Staffs,
-      },
-      {
-        name: "File 201",
-        title: "Comprehensive employee records.",
-        path: "/file201",
-        icon: "user",
-        component: Employees,
-      },
-      {
-        name: "Signatories",
-        title: "List of section signatories.",
-        path: "/signatories",
-        icon: "user-check",
-        component: Heads,
-      },
-      {
-        name: "Physicians",
-        title: "In-house medical doctors.",
-        path: "/physicians",
-        icon: "stethoscope",
-        component: Physicians,
-      },
-      {
-        name: "Applicants",
-        title: "Job applicants and interview status.",
-        path: "/petitioners",
-        icon: "user-plus",
-        component: Applicants,
-      },
-      {
-        name: "Stockholders",
-        title: "Company stakeholders and investors.",
-        path: "/stockHolder",
-        icon: "user",
-        component: stockHolder,
-      },
-    ],
-  },
-  // === Commercial Section ===
-  {
-    name: "Commerce",
-    title: "Services and products available in the clinic.",
-    icon: "shopping-basket",
-    path: "/commerce",
-    children: [
-      {
-        name: "Menus",
-        title: "Service menus and offerings.",
-        path: "/menus",
-        icon: "menu",
-        component: Menus,
-      },
-      {
-        name: "Services",
-        title: "List of medical and lab services.",
-        path: "/services",
-        icon: "concierge-bell",
-        component: Services,
-      },
-      {
-        name: "TAT Services",
-        title: "Turn around Time for services.",
-        path: "/tatServices",
-        icon: "concierge-bell",
-        component: TatServices,
-      },
-      {
-        name: "Duty Schedule",
-        title: "Scheduling of personnel duties.",
-        path: "/duty",
-        icon: "calendar-days",
-      },
-      {
-        name: "Product Generics",
-        title: "Generic product listings for resale.",
-        path: "/products/generics",
-        icon: "calendar-days",
-        component: ProductGenerics,
-      },
-      {
-        name: "Products",
-        title: "All available retail products.",
-        path: "/products",
-        icon: "calendar-days",
-        component: Products,
-      },
-    ],
-  },
-  // === Marketplace ===
+
   {
     name: "Marketplace",
     title: "Machines, medicines, and product listings.",
@@ -359,6 +309,7 @@ const SidebarItems = [
       },
       {
         name: "Products",
+        title: "All available retail products.",
         path: "/products",
         icon: "cogs",
         component: Products,
@@ -372,12 +323,19 @@ const SidebarItems = [
       },
     ],
   },
-  // === System Settings ===
+
   {
-    name: "Settings",
+    name: "Clinic",
+    title: "General clinic functions and access.",
+    icon: "clinic-medical",
+    path: "/clinic",
+  },
+
+  {
+    name: "System Configuration",
     title: "Configuration of system profiles and resources.",
-    icon: "cogs",
-    path: "/settings",
+    icon: "sliders-h",
+    path: "/config",
     children: [
       {
         name: "Profile Settings",
@@ -386,10 +344,45 @@ const SidebarItems = [
         children: [
           {
             name: "Banner",
-            title: "Clinic branding banners.",
+            title: "Branch branding banners.",
             path: "/banner",
-            icon: "banners",
+            icon: "image",
             component: Banners,
+          },
+          {
+            name: "Details",
+            title: "Branch profile details.",
+            path: "/details",
+            icon: "address-card",
+            // component: Details,
+          },
+          {
+            name: "PhilHealth",
+            title: "PhilHealth accounts and contributions.",
+            path: "/Philhealth",
+            icon: "file-invoice",
+            component: Philhealth,
+          },
+          {
+            name: "Turn Around Times",
+            title: "Turn around Time for services.",
+            path: "/tat/Services",
+            icon: "clock",
+            component: TatServices,
+          },
+          {
+            name: "Signatories",
+            title: "List of section signatories.",
+            path: "/signatories",
+            icon: "pen",
+            component: Heads,
+          },
+          {
+            name: "Q R Code",
+            title: "Qr Code for Homepage.",
+            path: "/qrCode",
+            icon: "pen",
+            component: QrCodePage,
           },
         ],
       },
@@ -404,12 +397,6 @@ const SidebarItems = [
             path: "/outsourcing",
             icon: "external-link",
             component: Outsources,
-          },
-          {
-            name: "Insourcing",
-            title: "In-house resource integration.",
-            path: "/insourcing",
-            icon: "download",
           },
           {
             name: "Suppliers",
@@ -441,23 +428,58 @@ const SidebarItems = [
           },
         ],
       },
+      {
+        name: "Product & Services Setup",
+        path: "/product-config",
+        icon: "shopping-cart",
+        children: [
+          {
+            name: "Menus",
+            title: "Service menus and offerings.",
+            path: "/menus",
+            icon: "bars",
+            component: Menus,
+          },
+          {
+            name: "Services",
+            title: "List of medical and lab services.",
+            path: "/services",
+            icon: "concierge-bell",
+            component: Services,
+          },
+          {
+            name: "Product Generics",
+            title: "Generic product listings for resale.",
+            path: "/products/generics",
+            icon: "cubes",
+            component: ProductGenerics,
+          },
+          {
+            name: "Products",
+            title: "All available retail products.",
+            path: "/products",
+            icon: "box",
+            component: Products,
+          },
+        ],
+      },
+      {
+        name: "LIS",
+        title: "Laboratory information system.",
+        path: "/lis",
+        icon: "tram",
+        component: LIS,
+      },
     ],
   },
-  // === Documentation ===
+
   {
     name: "User Manual",
     title: "Documentation and user guidance.",
-    icon: "book-open",
+    icon: "book",
     path: "/user/manual",
     component: UserManual,
   },
-  // === Clinic Access ===
-  {
-    name: "Clinic",
-    title: "General clinic functions and access.",
-    icon: "book-open",
-    path: "/clinic",
-  },
 ];
 
-export default SidebarItems;
+export default ManagerSidebar;

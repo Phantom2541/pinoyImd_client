@@ -26,10 +26,10 @@ export default function Calendar({ month, year }) {
         <div className="pos-ledger-calendar-header">
           <span>
             <strong>FINANCIAL PERFORMANCE</strong>
-            <small>Expenses</small> - {currency(expenses)}
+            <small>Expenses</small> - {currency.format(expenses)}
           </span>
           <span>
-            <small> Gross Sales</small> - {currency(grossSales)}
+            <small> Gross Sales</small> - {currency.format(grossSales)}
           </span>
           <span>
             <small>Patients</small> - {patients}
@@ -115,11 +115,11 @@ export default function Calendar({ month, year }) {
                         <strong>Cashier</strong>
                         {Object.entries(employee).map(([key, value]) => (
                           <p key={key}>
-                            <strong>{key}:</strong> {currency(value)}
+                            <strong>{key}:</strong> {currency.format(value)}
                           </p>
                         ))}
                         <hr />
-                        <p>Daily sales - {currency(total)}</p>
+                        <p>Daily sales - {currency.format(total)}</p>
                         <p>Patients - {sales.length}</p>
                       </>
                     )}

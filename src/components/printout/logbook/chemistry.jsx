@@ -127,7 +127,6 @@ export default function ChemsPrint() {
       );
     });
   };
-  console.log(activePlatform);
 
   return (
     <div>

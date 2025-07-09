@@ -26,7 +26,7 @@ export default function Collapsable({ deals }) {
               <td className="mb-1">{fullName(customerId?.fullName)}</td>
               <td>{source?.displayname}</td>
               <td className="mb-1">{ssx}</td>
-              <td className="mb-1">{currency(services?.up)}</td>
+              <td className="mb-1">{currency.format(services?.up)}</td>
               <td className="mb-1">
                 {services?.servicesId
                   ?.map((id) => Services.getAbbr(id))

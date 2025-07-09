@@ -22,7 +22,7 @@ const Outsource = ({ currentMonthOutsources, lastMonthOutsources }) => {
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
             <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
-              {currency(currentMonthOutsources)}
+              {currency.format(currentMonthOutsources)}
             </h5>
             <p className="font-small grey-text">Outsources</p>
           </MDBCol>
@@ -35,7 +35,7 @@ const Outsource = ({ currentMonthOutsources, lastMonthOutsources }) => {
           </MDBCol>
           <MDBCol md="5" col="5" className="text-right pr-5">
             <p className="font-small grey-text">
-              {currency(lastMonthOutsources)}
+              {currency.format(lastMonthOutsources)}
             </p>
           </MDBCol>
         </MDBRow>

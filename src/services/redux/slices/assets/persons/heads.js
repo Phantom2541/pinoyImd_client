@@ -5,8 +5,13 @@ const url = "assets/persons/heads";
 
 const initialState = {
   collections: [],
-  isSuccess: false,
+  filtered: [],
+  showModal: false,
+  willCreate: false,
+  willUpdate: false,
+  selected: {},
   formSubmitted: false,
+  isSuccess: false,
   isLoading: false,
   message: "",
 };
@@ -92,7 +97,93 @@ export const reduxSlice = createSlice({
       state.formSubmitted = false;
       state.message = "";
     },
+    SetCREATE: (state) => {
+      state.selected = {
+        user: "",
+        department: "",
+        section: "",
+        fullName: {
+          fname: "",
+          mname: "",
+          lname: "",
+          suffix: "",
+        },
+        prc: {
+          id: "",
+          from: "",
+          to: "",
+        },
+      };
+
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetEDIT: (state, { payload }) => {
+      const { user = {}, ...rest } = payload;
+      const { fullName = {}, prc = {} } = user;
+
+      // Remove `from` from prc dynamically
+      const { from, ...filteredPrc } = prc;
+
+      state.selected = {
+        ...rest,
+        ...fullName, // all keys from fullName (fname, lname, etc.)
+        ...filteredPrc, // all keys from prc, except `from`
+      };
+
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetUPDATE: (state, { payload }) => {
+      state.selected = payload;
+      state.willUpdate = true;
+      state.showModal = true;
+    },
+    SetPRC: (state, { payload }) => {
+      console.log("payloadd in set prc", payload);
+      const { prc, userId } = payload;
+      const updateCollections = (collections) => {
+        const foundUser = collections.filter(
+          ({ user }) => user?._id === userId
+        );
+        foundUser.forEach((element) => {
+          const index = collections.findIndex(({ _id }) => _id === element._id);
+          const oldData = { ...collections[index] };
+          collections[index] = { ...oldData, user: { ...oldData.user, prc } };
+        });
+      };
+
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
+    },
+    SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showModal = true;
+      state.willCreate = false;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+      state.selected = {};
+    },
+    SetCOLLECTIONS: (state, { payload }) => {
+      state.collections = payload;
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+    RESET: (state) => {
+      state.isSuccess = false;
+      state.message = "";
+    },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(BROWSE.pending, (state) => {
@@ -102,7 +193,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload;
+        state.collections = state.filtered = payload;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -152,28 +243,47 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success } = action.payload;
+        const { success, payload } = action.payload;
+        console.log(action.payload);
+
         const index = state.collections.findIndex(
-          (item) => item?._id === action.payload
+          (item) => item?._id === payload
+        );
+        const findex = state.filtered.findIndex(
+          (item) => item?._id === payload
         );
         state.collections.splice(index, 1);
+        state.filtered.splice(findex, 1);
+
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       });
   },
 });
 
-export const { RESET } = reduxSlice.actions;
+export const {
+  RESET,
+  SetCREATE,
+  SetEDIT,
+  SetUPDATE,
+  SetPRC,
+  SetCOLLECTIONS,
+  SetSELECTED,
+  SetFILTERED,
+  TOGGLE,
+  SetMaxPage,
+  SetActivePAGE,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

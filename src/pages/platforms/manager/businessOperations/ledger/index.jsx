@@ -69,7 +69,7 @@ export default function Ledger() {
   //     ([menus, { capital, walkin, referral }], i) => ({
   //       "#": i + 1,
   //       menus,
-  //       capital: currency(capital),
+  //       capital: currency.format(capital),
   //       "walk-in": walkin,
   //       referral,
   //       total: walkin + referral,
@@ -87,9 +87,9 @@ export default function Ledger() {
   //   );
 
   //   Excel({
-  //     monthlySale: currency(monthlySale),
+  //     monthlySale: currency.format(monthlySale),
   //     patients,
-  //     expenses: currency(expenses),
+  //     expenses: currency.format(expenses),
   //     title: `${activePlatform?.name} Ledger_${calendar.Months[month]}, ${year}`,
   //     preparedBy: fullName(auth?.fullName),
   //     tables: {

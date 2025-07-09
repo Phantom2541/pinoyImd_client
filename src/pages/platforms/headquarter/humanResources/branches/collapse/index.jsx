@@ -1,28 +1,26 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  MDBBadge,
-  MDBBtn,
   MDBCard,
-  MDBCardBody,
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
-  MDBListGroup,
-  MDBListGroupItem,
+  MDBSwitch,
 } from "mdbreact";
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse, fullName } from "../../../../../../services/utilities";
 import Search from "../../../../../../components/searchables/users";
-import PatientCategories from "./patientCategories";
 import Swal from "sweetalert2";
 import { Policy } from "../../../../../../services/fakeDb";
 import {
   ASSIGN_AO,
   RESET,
+  UPDATE,
 } from "../../../../../../services/redux/slices/assets/branches";
+import { orderBy } from "lodash";
+import "./style.css";
 
 export default function Body() {
   const { auth, token } = useSelector(({ auth }) => auth),
@@ -34,7 +32,12 @@ export default function Body() {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+
+  const paginatedData = orderBy(
+    filtered,
+    [(o) => o.name.toLowerCase().trim()], // field or accessor function
+    ["asc"] // sort order
+  ).slice(startIndex, endIndex);
 
   /**
    * Active states
@@ -148,16 +151,11 @@ export default function Body() {
             ? `${name} has been reassigned to your branch and designated as the Administrative Officer.`
             : `${name} has been registered as personnel and assigned as the Administrative Officer.`,
         });
-
         // 🔥 Your logic here:
         // registerAndAssignAO(selected._id, value.department, value.designation);
       });
     });
   };
-
-  const [isPersonnelTab, setIsPersonnelTab] = useState(true);
-  const [selectedBranch, setSelectedBranch] = useState({});
-  console.log("branch", selectedBranch);
 
   return (
     <MDBContainer
@@ -175,7 +173,7 @@ export default function Body() {
               activeId,
               didHoverId
             );
-            const isOpen = activeId === actualIndex;
+            const { isHiring = false } = branch;
             return (
               <MDBCard
                 key={`branch-${actualIndex}-${branch._id}`}
@@ -194,10 +192,7 @@ export default function Body() {
                     branch={branch}
                     isOpen={activeId === actualIndex}
                     textColor={color}
-                    setActiveId={(id) => {
-                      setActiveId(id);
-                      setSelectedBranch(branch);
-                    }}
+                    setActiveId={(id) => setActiveId(id)}
                     index={actualIndex}
                   />
                 </MDBCollapseHeader>
@@ -211,74 +206,33 @@ export default function Body() {
                     className="mx-1 d-flex align-items-center justify-content-between mt-2"
                     style={{ marginBottom: "-0.2rem" }}
                   >
-                    <div className="d-flex">
-                      {[
-                        {
-                          label: "Personnel List",
-                          value: branch?.personnels?.length,
-                          isSelected: isPersonnelTab,
-                        },
-                        {
-                          label: "Patient Categories",
-                          value: branch?.pc?.length,
-                          isSelected: !isPersonnelTab,
-                        },
-                      ].map(
-                        ({ label, value = 0, isSelected = false }, index) => (
-                          <MDBListGroup
-                            key={index}
-                            style={{
-                              height: "40px",
-                              overflowX: "auto",
-                              whiteSpace: "nowrap",
-                            }}
-                            className="d-flex flex-row"
-                            onClick={() => setIsPersonnelTab(!isPersonnelTab)}
-                          >
-                            <MDBListGroupItem
-                              style={{ minWidth: "100px" }}
-                              className={`d-flex justify-content-between  align-items-center rounded py-2 mx-2 h-100 cursor-pointer ${
-                                isSelected && "bg-primary text-white"
-                              }`}
-                            >
-                              <b className="mr-2"> {label}</b>
-                              <MDBBadge
-                                color={isSelected ? "light" : "primary"}
-                                className="pt-1"
-                                pill
-                              >
-                                {value ? value : ""}
-                              </MDBBadge>
-                            </MDBListGroupItem>
-                          </MDBListGroup>
+                    <h6 style={{ fontWeight: 500 }}>Personnel List</h6>
+                    <MDBSwitch
+                      checked={isHiring}
+                      labelLeft="Stop"
+                      labelRight="Open Hiring"
+                      label="Toggle Hiring Status"
+                      className="custom-toggle"
+                      onChange={() =>
+                        dispatch(
+                          UPDATE({
+                            token,
+                            data: { _id: branch._id, isHiring: !isHiring },
+                          })
                         )
-                      )}
-                    </div>
-
-                    {isOpen && (
-                      <Search
-                        excludes={branch.personnels}
-                        excludeKey="user._id"
-                        setPatient={(user) =>
-                          RegisterNewPersonnel(user, branch)
-                        }
-                      />
-                    )}
+                      }
+                    />
+                    <Search
+                      excludes={branch.personnels}
+                      excludeKey="user._id"
+                      setPatient={(user) => RegisterNewPersonnel(user, branch)}
+                    />
                   </div>
-                  {branch._id}
-                  {isPersonnelTab ? (
-                    <CollapsableBody
-                      branch={branch || {}}
-                      key={`${branch._id}-collapse-body`}
-                    />
-                  ) : (
-                    <PatientCategories
-                      branch={selectedBranch || {}}
-                      key={`${branch._id}-categories`}
-                      isOpen={isOpen}
-                      index={index}
-                    />
-                  )}
+
+                  <CollapsableBody
+                    branch={branch || {}}
+                    key={`${branch._id}-collapse-body`}
+                  />
                 </MDBCollapse>
               </MDBCard>
             );

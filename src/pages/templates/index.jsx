@@ -4,3 +4,8 @@ export { default as Calendar } from "./calendars";
 export { default as DragDrop } from "./dragDrop";
 export { default as Search } from "./search";
 export { default as Cards } from "./cards";
+export { default as Schedule } from "./schedule";
+export { default as ImageDragAndDrop } from "./imageDragAndDrop";
+export { default as Loader } from "./loader";
+export { default as InputSearch } from "./inputSearch";
+export { default as ImageMagnifier } from "./imageMagnifier";

@@ -40,7 +40,6 @@ export default function Census() {
       setGross(selected.gross);
       return;
     }
-
     const fetchCensus = async () => {
       try {
         if (deals.length > 0) {
@@ -80,6 +79,7 @@ export default function Census() {
               menus: menuCountMap,
               services: serviceCountMap,
             });
+
             setBreakdown(paymentSummary);
           }
         }
@@ -113,7 +113,6 @@ export default function Census() {
         amount
     )
     .reduce((sum, { amount }) => sum + Number(amount), 0);
-
   const handleSubmit = () => {
     const { opening } = selected;
     const data = {
@@ -159,19 +158,19 @@ export default function Census() {
             {
               icon: "hand-holding-usd",
               text: "Floating Cash",
-              value: currency(selected?.opening?.sum),
+              value: currency.format(selected?.opening?.sum),
               color: "text-success",
             },
             {
               icon: "chart-line",
               text: "Gross Sales",
-              value: currency(gross),
+              value: currency.format(gross),
               color: "text-success",
             },
             {
               icon: "money-bill-wave",
               text: "Expenses",
-              value: currency(paymentsSum),
+              value: currency.format(paymentsSum),
               color: "text-danger",
             },
             {
@@ -193,7 +192,39 @@ export default function Census() {
             </div>
           ))}
         </div>
-
+        <div className=" d-flex justify-content-between align-items-center mb-3">
+          {[
+            {
+              icon: "money-bill",
+              text: "Cash",
+              value: currency.format(breakdown?.cash),
+              color: "text-primary",
+            },
+            {
+              icon: "money-bill",
+              text: "Gcash",
+              value: currency.format(breakdown?.gcash),
+              color: "text-primary",
+            },
+            {
+              icon: "money-bill",
+              text: "Downpayment",
+              value: currency.format(breakdown?.downpayment),
+              color: "text-primary",
+            },
+          ].map(({ icon, text, value, color }, index) => (
+            <div
+              key={index}
+              size="3"
+              className={index === 2 ? "text-right" : ""}
+            >
+              <h6 className="mb-0">
+                <MDBIcon icon={icon} className={`${color} mr-2`} />
+                {text}: <strong>{value}</strong>
+              </h6>
+            </div>
+          ))}
+        </div>
         <div className="mb-3 d-flex">
           <MDBBtn
             className={tabStyle("menus")}

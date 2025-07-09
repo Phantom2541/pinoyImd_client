@@ -65,18 +65,26 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { formSubmitted = false, isSuccess } = useSelector(({ menus }) => menus),
     [form, setForm] = useState(_form),
+    [categories, setCategories] = useState([]),
     [activeTab, setActiveTab] = useState(0),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
-  const { branch = {} } = activePlatform;
-  const { pc = [] } = branch;
+  useEffect(() => {
+    if (show) {
+      //access the activePlatform in localstorage instead to auth, to get the updated patient categories
+      const fakeDB = localStorage.getItem("activePlatform");
+      if (fakeDB) {
+        setCategories(JSON.parse(fakeDB)?.branch?.companyId?.pc);
+      }
+    }
+  }, [show]);
 
   const _tabs = [
     "SRP",
-    pc?.includes(6) && "HMO",
-    pc?.includes(8) && "Contracts",
-    pc?.includes(7) && "Memberships",
+    categories?.includes(6) && "HMO",
+    categories?.includes(8) && "Contracts",
+    categories?.includes(7) && "Memberships",
     "Expenses",
     "Others",
   ];
@@ -181,7 +189,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           </MDBRow>
           <h5 className="mb-2 text-center">
             <span className="grey-text">SRP:</span>
-            <span className="ml-2">{currency(Number(form?.opd))}</span>
+            <span className="ml-2">{currency.format(Number(form?.opd))}</span>
           </h5>
           <MDBNav classicTabs color="info" tabs className="nav-justified">
             {tabs.map((title, index) => (

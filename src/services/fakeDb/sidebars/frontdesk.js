@@ -18,11 +18,11 @@ import {
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import { Menus, Services } from "../../../pages/platforms/cashier";
-import Temperature from "../../../pages/platforms/diagnostics/management/temperature";
 
 import {
   Assurance,
   Controls,
+  Temperature,
 } from "../../../pages/platforms/diagnostics/management";
 
 import Products from "../../../pages/platforms/frontdesk/market/products";
@@ -41,8 +41,15 @@ import {
   DragDrop,
   Search,
   Cards,
+  Schedule,
+  ImageDragAndDrop,
+  Loader,
+  InputSearch,
+  ImageMagnifier,
+  QrCodePage,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
+import ImgText from "../../../pages/templates/imgText";
 
 const frontdesk = [
   {
@@ -80,30 +87,32 @@ const frontdesk = [
         icon: "arrow-left",
         component: Sendouts,
       },
+    ],
+  },
+  {
+    name: "Quality Management",
+    icon: "tv",
+    path: "/diagnostics/quality",
+    children: [
       {
-        name: "Quality Management",
-        icon: "tv",
-        path: "/diagnostics/quality",
-        children: [
-          {
-            name: "Quality Assurance (QA)",
-            path: "/diagnostics/quality/external",
-            icon: "check-circle",
-            component: Assurance,
-          },
-          {
-            name: "Quality Control (QC)",
-            path: "/diagnostics/quality/internal",
-            icon: "balance-scale",
-            component: Controls,
-          },
-          {
-            name: "Temperature",
-            path: "/diagnostics/quality/temperature",
-            icon: "thermometer-half",
-            component: Temperature,
-          },
-        ],
+        name: "Quality Assurance (QA)",
+        path: "/diagnostics/quality/external",
+        icon: "check-circle",
+        title: "Quality Control External",
+        component: Assurance,
+      },
+      {
+        name: "Quality Control (QC)",
+        path: "/diagnostics/quality/internal",
+        icon: "balance-scale",
+        title: "Quality Control Internal",
+        component: Controls,
+      },
+      {
+        name: "Temperature",
+        path: "/diagnostics/quality/temperature",
+        icon: "thermometer-half",
+        component: Temperature,
       },
     ],
   },
@@ -373,10 +382,46 @@ const frontdesk = [
         component: Search,
       },
       {
+        name: "Image Drag and Drop",
+        path: "/templates/image",
+        icon: "calendar-alt",
+        component: ImageDragAndDrop,
+      },
+      {
         name: "Cards",
         path: "/templates/cards",
         icon: "card",
         component: Cards,
+      },
+      {
+        name: "Schedule",
+        path: "/templates/schedule",
+        icon: "calendar-alt",
+        component: Schedule,
+      },
+      {
+        name: "Loader",
+        path: "/templates/loader",
+        icon: "calendar-alt",
+        component: Loader,
+      },
+      {
+        name: "InputSearch",
+        path: "/templates/inputSearch",
+        icon: "calendar-alt",
+        component: InputSearch,
+      },
+      {
+        name: "OCR",
+        path: "/templates/imgText",
+        icon: "calendar-alt",
+        component: ImgText,
+      },
+      {
+        name: "Image Magnifier",
+        path: "/templates/imageMagnifier",
+        icon: "calendar-alt",
+        component: ImageMagnifier,
       },
     ],
   },

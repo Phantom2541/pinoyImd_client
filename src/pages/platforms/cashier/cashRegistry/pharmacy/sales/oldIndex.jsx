@@ -116,7 +116,7 @@ export default function Sales() {
         isLoading={isLoading}
         title={`${
           view === "all" ? "Daily Sales" : capitalize(view)
-        } - Total of ${currency(total)}`}
+        } - Total of ${currency.format(total)}`}
         array={sales}
         extraActions={[
           {

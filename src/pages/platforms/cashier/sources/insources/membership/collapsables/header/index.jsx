@@ -178,7 +178,7 @@ const Header = ({
                   <EditableField
                     tag={tag}
                     width="8rem"
-                    className="mt-2 form-control form-control-sm"
+                    className="form-control form-control-sm"
                     formSubmitted={formSubmitted}
                     isMoney={isMoney}
                     keyForValue="credit"

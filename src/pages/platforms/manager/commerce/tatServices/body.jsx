@@ -1,14 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import { SetEDIT } from "../../../../../services/redux/slices/assets/branches";
+import {
+  DESTROY,
+  SetEDIT,
+} from "../../../../../services/redux/slices/assets/branches";
+import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 import Swal from "sweetalert2";
 
 const Body = () => {
-  const { token } = useSelector(({ auth }) => auth);
-  const { filtered, activePage, maxPage } = useSelector(
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { filtered, activePage, maxPage, collections } = useSelector(
       ({ branches }) => branches
     ),
     dispatch = useDispatch();
+
   /**
    * Pagination: Calculate the start and end index for the current page
    */
@@ -16,10 +21,17 @@ const Body = () => {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
-
-  const handleDelete = (_id) => {
+  const handleDelete = (item) => {
+    const { department, section, _id } = item;
+    const { branch } = activePlatform;
+    const _tat = [...collections];
+    const index = _tat.findIndex((i) => i?._id === _id);
+    _tat.splice(index, 1);
+    // const _tat = collections.filter(
+    //   (item) => item.department !== department && item.section !== section
+    // );
     Swal.fire({
-      title: "Are you sure?",
+      title: `Delete ${department} ${section} ?`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -27,9 +39,19 @@ const Body = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-      dispatch({ token, data: { _id } });
+      if (result.isConfirmed) {
+        // Create a new array excluding the item at index
+        // const updatedTat = _tat.filter((_, i) => i !== indexToDelete);
+
+        dispatch(DESTROY({ token, data: { _id: branch._id, tat: _tat } })).then(
+          () => {
+            dispatch(SetActivePlatform({ data: _tat }));
+          }
+        );
+      }
     });
   };
+
   return (
     <MDBTable responsive hover>
       <thead style={{ backgroundColor: "#", color: "black" }}>
@@ -44,25 +66,22 @@ const Body = () => {
       <tbody>
         {paginatedData?.map((item, index) => {
           const { _id, department, section, expectedAt } = item;
-          console.log("item", item);
 
           return (
-            <tr key={index}>
+            <tr key={_id || index}>
               <td key={index}>{index + startIndex + 1}</td>
-              <td>{department}</td>
+              <td>
+                {department === "RAD"
+                  ? "Radiology"
+                  : department === "LAB"
+                  ? "Laboratory"
+                  : department}
+              </td>
               <td>{section}</td>
               <td>{expectedAt}</td>
 
               <td>
                 <MDBBtnGroup>
-                  <MDBBtn
-                    color="danger"
-                    size="sm"
-                    rounded
-                    onClick={() => dispatch(handleDelete(_id))}
-                  >
-                    <MDBIcon icon="trash" />
-                  </MDBBtn>
                   <MDBBtn
                     color="primary"
                     size="sm"
@@ -70,6 +89,14 @@ const Body = () => {
                     onClick={() => dispatch(SetEDIT(item))}
                   >
                     <MDBIcon icon="pencil-alt" />
+                  </MDBBtn>
+                  <MDBBtn
+                    color="danger"
+                    size="sm"
+                    rounded
+                    onClick={() => handleDelete(item)}
+                  >
+                    <MDBIcon icon="trash" />
                   </MDBBtn>
                 </MDBBtnGroup>
               </td>

@@ -1,5 +1,6 @@
 import io from "socket.io-client";
 import axioKit from "./axioKit";
+import axiosMiddleware from "./axioKit/sender";
 import Banner from "./banner";
 import handlePagination from "./pagination";
 import fullName from "./fullName";
@@ -19,7 +20,7 @@ import getAge from "./getAge";
 import getDate from "./getDate";
 import currency from "./currency";
 import removeRedundantPackages from "./removeRedundantPackages";
-import computeGD from "./computeGD";
+import { computeGD, allServicesHavePrices } from "./computeGD";
 import validateContact from "./validateContact";
 import generateEmail from "./generateEmail";
 import { getGenderIcon, getPhysicianGenderIcon } from "./getGenderIcon";
@@ -51,6 +52,7 @@ import removeUndefinedValues from "./dataCleaner";
 import collapse from "./collapse";
 import Male from "../../assets/male.jpg";
 import Female from "../../assets/female.jpg";
+import Logo from "../../assets/iMD.png";
 import PresetIMD from "../../assets/iMD.png";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
@@ -60,7 +62,7 @@ import clearSiteData from "./clearSiteData";
 import VouchersToExcel from "./export/excel/vouchers";
 import MenusToExcel from "./export/excel/menus";
 import ResecoToExcel from "./export/excel/reseco";
-import Logo from "../../assets/iMD.png";
+import DealsToExcel from "./export/excel/deals";
 //PDF
 import MenusToPDF from "./export/pdf/menus";
 //status
@@ -91,6 +93,7 @@ export {
   PresetImage,
   ENDPOINT,
   axioKit,
+  axiosMiddleware,
   socket,
   paymentMethod,
   Deals,
@@ -115,6 +118,7 @@ export {
   currency,
   removeRedundantPackages,
   computeGD,
+  allServicesHavePrices,
   validateContact,
   generateEmail,
   getGenderIcon,
@@ -142,6 +146,7 @@ export {
   // Cache's Clear
   clearSiteData,
   //export to excel
+  DealsToExcel,
   VouchersToExcel,
   MenusToExcel,
   ResecoToExcel,

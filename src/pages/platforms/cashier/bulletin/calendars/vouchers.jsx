@@ -16,7 +16,7 @@ const Vouchers = () => {
         <MDBCardHeader color="danger-color">Daily Sales</MDBCardHeader>
         <h6 className="ml-4 mt-5 dark-grey-text font-weight-bold">
           <MDBIcon icon="long-arrow-alt-down" className="red-text mr-3" />
-          {currency(2000)}
+          {currency.format(2000)}
         </h6>
         <MDBCardBody>
           <MDBProgress value={45} barClassName="grey darken-2" />

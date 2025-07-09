@@ -72,14 +72,16 @@ const Headers = ({ searchKey }) => {
             <select
               className="form-control"
               style={{ width: 150 }}
-              onChange={(e) => dispatch(SetByStatus(e.target.value))}
+              onChange={(e) => {
+                dispatch(SetByStatus(e.target.value));
+              }}
             >
               <option value="" disabled style={{ fontWeight: "bold" }}>
                 Status ...
               </option>
               <option value="all">All</option>
-              <option value="pending">Pending</option>
-              <option value="done">Done</option>
+              <option value={false}>Pending</option>
+              <option value={true}>Done</option>
             </select>
           </div>
           <div>

@@ -1,7 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { MDBBadge, MDBCard, MDBCardBody, MDBView } from "mdbreact";
-import { currency, fullName } from "../../../../../services/utilities";
+import {
+  currency,
+  fullName,
+  paymentMethod,
+} from "../../../../../services/utilities";
 import Month from "../../../../../services/fakeDb/calendar/months";
 import SummaryLoading from "../../../cashier/cashRegistry/services/deals/summary/loading";
 import "./style.css";
@@ -105,6 +109,12 @@ export default function Summary() {
     return { cluster: filtered, total: totalAmount };
   }, [day, month, year, collections, selectedCashier]);
 
+  console.log("cluster", cluster);
+
+  const handlePaymentIcon = (method) => {
+    const { img, style, text } = paymentMethod.getImage(method);
+    return <img src={img} style={style} title={text} alt={method} />;
+  };
   return (
     <MDBCard narrow>
       <MDBView
@@ -164,7 +174,7 @@ export default function Summary() {
                     >
                       {`${name} ${
                         selectedCashier !== id && !isOnlyOneCashier
-                          ? `- ${currency(gross)}`
+                          ? `- ${currency.format(gross)}`
                           : ""
                       }`}
                     </option>
@@ -176,7 +186,7 @@ export default function Summary() {
                 <p className="font-bold flex-1 text-left">
                   {cluster.length} Patient/s
                 </p>
-                <p className="font-bold flex-1 text-right">{`Total: ${currency(
+                <p className="font-bold flex-1 text-right">{`Total: ${currency.format(
                   total
                 )}`}</p>
               </div>
@@ -188,7 +198,14 @@ export default function Summary() {
                   <ol className="mt-2 list-decimal list-inside">
                     {cluster.map(
                       (
-                        { customerId, amount, createdAt, cart, deletedAt },
+                        {
+                          customerId,
+                          amount,
+                          createdAt,
+                          cart,
+                          deletedAt,
+                          payment,
+                        },
                         index
                       ) => (
                         <li key={index} className="p-2 border-b">
@@ -206,7 +223,9 @@ export default function Summary() {
                             {new Date(createdAt).toLocaleTimeString()}
                           </div>
                           <div className="text-blue-600">
-                            {currency(amount)} {deletedAt ? "(Deleted)" : ""}
+                            {currency.format(amount)}{" "}
+                            {deletedAt ? "(Deleted)" : ""}{" "}
+                            {handlePaymentIcon(payment)}
                           </div>
                           <div className="text-blue-600">
                             {cart.map((i, index) => (

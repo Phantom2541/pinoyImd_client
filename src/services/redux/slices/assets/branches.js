@@ -6,7 +6,6 @@ const url = "assets/branches";
 const initialState = {
   collections: [],
   filtered: [],
-  tat: [],
   formSubmitted: false,
   didSearch: false,
   selected: {},
@@ -19,6 +18,7 @@ const initialState = {
   willCreate: false,
   message: "",
   showModal: false,
+  department: "LAB",
   /**
    * Footer
    */
@@ -208,7 +208,7 @@ export const reduxSlice = createSlice({
   reducers: {
     SetCREATE: (state) => {
       state.selected = {
-        department: "",
+        department: state.department,
         mode: "",
         section: "",
         expectedAt: "",
@@ -226,10 +226,7 @@ export const reduxSlice = createSlice({
       state.showModal = true;
       state.willCreate = false;
     },
-    SetTAT: (state, { payload }) => {
-      state.collections = state.filtered = payload;
-      console.log("Settat", payload);
-    },
+
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
@@ -241,6 +238,7 @@ export const reduxSlice = createSlice({
     },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
+
       state.activePage = 1;
     },
     SetActivePAGE: (state, { payload }) => {
@@ -249,6 +247,27 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
       state.selected = {};
+    },
+    SetCOLLECTIONS: (state, { payload }) => {
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (page > totalPAges) {
+          state.page = totalPAges;
+        }
+      }
+      state.collections = payload;
+      state.filtered = payload.filter(
+        ({ department }) => department === state.department
+      );
+    },
+    SetDepartment: (state, { payload }) => {
+      state.department = payload;
+      state.filtered = state.collections.filter(
+        ({ department }) => department === state.department
+      );
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -320,13 +339,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE_TAT.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
-        state.collections.unshift(payload);
-        console.log("colload", payload);
+        const { success } = action.payload;
 
-        state.filtered.unshift(payload);
-        console.log("filload", payload);
+        // state.collections = payload;
+        // state.filtered = payload.filter(
+        //   ({ department }) => department === state.department
+        // );
+
+        state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -348,7 +368,8 @@ export const reduxSlice = createSlice({
             const index = collections.findIndex(
               (item) => item._id === payload._id
             );
-            collections[index] = payload;
+            const oldData = { ...collections[index] };
+            collections[index] = { ...oldData, ...payload };
           };
 
           updateCollections(state.collections);
@@ -457,7 +478,6 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -466,11 +486,13 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item._id === payload
         );
+        const findex = state.filtered.findIndex((item) => item._id === payload);
 
         state.collections.splice(index, 1);
+        state.filtered.splice(findex, 1);
+
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
@@ -527,10 +549,11 @@ export const reduxSlice = createSlice({
 export const {
   SetFILTERED,
   SetSELECTED,
+  SetCOLLECTIONS,
+  SetDepartment,
   TOGGLE,
   SetCREATE,
   SetEDIT,
-  SetTAT,
   RESET,
   SetMaxPage,
   SetActivePAGE,

@@ -26,20 +26,17 @@ export default function Modal() {
     { addToast } = useToasts(),
     dispatch = useDispatch();
   useEffect(() => {
-  if (selected) {
-    setForm(selected);
-  } else if (willCreate) {
-    setForm({
-      machineId: "",
-      engineer: "",
-      purpose: "Routine maintenance",
-      recommendations: "No issues found",
-    });
-  }
-
-    
+    if (selected) {
+      setForm(selected);
+    } else if (willCreate) {
+      setForm({
+        machineId: "",
+        engineer: "",
+        purpose: "Routine maintenance",
+        recommendations: "No issues found",
+      });
+    }
   }, [selected, willCreate]);
-
 
   const handleUpdate = () => {
     TOGGLE();
@@ -75,8 +72,6 @@ export default function Modal() {
 
     if (willCreate) return handleCreate();
     handleUpdate();
-
-    console.log("form", form);
 
     if (willCreate) {
       return handleCreate();
@@ -147,7 +142,7 @@ export default function Modal() {
             value={handleValue("recommendations")}
             required
             onChange={(e) => handleChange("recommendations", e.target.value)}
-/>
+          />
 
           {/* Submit button */}
           <div className="text-center mb-1-half">

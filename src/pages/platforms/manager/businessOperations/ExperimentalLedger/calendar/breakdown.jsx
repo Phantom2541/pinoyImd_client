@@ -74,7 +74,9 @@ export default function BreakdownTable({ focusedDay, ledger, year, month }) {
                   {key}
                 </td>
                 <td title="Transactions">{_totalTransactionCount}</td>
-                <td title="Gross Sale">{currency(_totalGrossSales, true)}</td>
+                <td title="Gross Sale">
+                  {currency.format(_totalGrossSales, true)}
+                </td>
               </tr>
             );
           })}
@@ -86,7 +88,7 @@ export default function BreakdownTable({ focusedDay, ledger, year, month }) {
               {totalTransactionCount}
             </td>
             <td title="Gross Sale" className="fw-bold">
-              {currency(totalGrossSales, true)}
+              {currency.format(totalGrossSales, true)}
             </td>
           </tr>
           {!cashierMapped.length && (

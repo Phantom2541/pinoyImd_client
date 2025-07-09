@@ -228,7 +228,7 @@ export default function Modal() {
                 className="border border-dark p-1 text-right"
                 style={{ fontWeight: 400 }}
               >
-                {currency(handleCalc(selected?.rate?.monthly))}
+                {currency.format(handleCalc(selected?.rate?.monthly))}
               </td>
               <td
                 className="border border-dark p-1"
@@ -262,7 +262,7 @@ export default function Modal() {
                 className="border border-dark p-1 text-right"
                 style={{ fontWeight: 400 }}
               >
-                {currency(selected?.rate?.daily)}
+                {currency.format(selected?.rate?.daily)}
               </td>
               <td
                 className="border border-dark p-1"
@@ -287,7 +287,9 @@ export default function Modal() {
                     className="form-control"
                   />
                   <h6>
-                    {currency(handleValue("absent") * selected?.rate?.daily)}
+                    {currency.format(
+                      handleValue("absent") * selected?.rate?.daily
+                    )}
                   </h6>
                 </div>
               </td>
@@ -303,7 +305,7 @@ export default function Modal() {
                 className="border border-dark p-1 text-right"
                 style={{ fontWeight: 400 }}
               >
-                {currency(handleCalc(selected?.rate?.cola))}
+                {currency.format(handleCalc(selected?.rate?.cola))}
               </td>
               <td
                 className="border border-dark p-1"
@@ -358,7 +360,7 @@ export default function Modal() {
                       }
                       className="form-control"
                     />
-                    <h6>{currency(holidayAmount?.regular?.present)}</h6>
+                    <h6>{currency.format(holidayAmount?.regular?.present)}</h6>
                   </div>
                   <div className="d-flex align-items-center justify-content-between">
                     <input
@@ -384,7 +386,7 @@ export default function Modal() {
                       }
                       className="form-control"
                     />
-                    <h6>{currency(holidayAmount?.regular?.absent)}</h6>
+                    <h6>{currency.format(holidayAmount?.regular?.absent)}</h6>
                   </div>
                 </div>
               </td>
@@ -398,7 +400,7 @@ export default function Modal() {
                 className="border border-dark p-1 text-right"
                 style={{ fontWeight: 400 }}
               >
-                {currency(selected?.contribution?.ph)}
+                {currency.format(selected?.contribution?.ph)}
               </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
@@ -430,7 +432,7 @@ export default function Modal() {
                     }
                     className="form-control"
                   />
-                  <h6>{currency(holidayAmount?.special)}</h6>
+                  <h6>{currency.format(holidayAmount?.special)}</h6>
                 </div>
               </td>
               <td
@@ -443,7 +445,7 @@ export default function Modal() {
                 className="border border-dark p-1 text-right"
                 style={{ fontWeight: 400 }}
               >
-                {currency(selected?.contribution?.sss)}
+                {currency.format(selected?.contribution?.sss)}
               </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
@@ -470,7 +472,9 @@ export default function Modal() {
                     className="form-control"
                   />
                   <h6>
-                    {currency(handleValue("overtime") * hourlyRate * 1.25)}
+                    {currency.format(
+                      handleValue("overtime") * hourlyRate * 1.25
+                    )}
                   </h6>
                 </div>
               </td>
@@ -484,7 +488,7 @@ export default function Modal() {
                 className="border border-dark text-right p-1"
                 style={{ fontWeight: 400 }}
               >
-                {currency(selected?.contribution?.ph)}{" "}
+                {currency.format(selected?.contribution?.ph)}{" "}
               </td>
             </tr>
             <tr style={{ height: "2.5rem" }}>
@@ -511,7 +515,9 @@ export default function Modal() {
                     className="form-control"
                   />
                   <h6>
-                    {currency(handleValue("nightShift") * dailyRate * 0.1)}
+                    {currency.format(
+                      handleValue("nightShift") * dailyRate * 0.1
+                    )}
                   </h6>
                 </div>
               </td>
@@ -565,7 +571,7 @@ export default function Modal() {
                 className="border border-dark bg-info p-1 text-right"
                 style={{ fontWeight: 400 }}
               >
-                {currency(totEarn)}
+                {currency.format(totEarn)}
               </td>
               <td
                 className="border border-dark bg-info p-1"
@@ -577,7 +583,7 @@ export default function Modal() {
                 className="border border-dark bg-info p-1 text-right"
                 style={{ fontWeight: 400 }}
               >
-                {currency(totDeduc)}
+                {currency.format(totDeduc)}
               </td>
             </tr>
 
@@ -589,7 +595,7 @@ export default function Modal() {
               </td>
               <td className="border border-dark p-1 text-right">
                 <h5 className="mt-1" style={{ fontWeight: 500 }}>
-                  {currency(totEarn - totDeduc)}{" "}
+                  {currency.format(totEarn - totDeduc)}{" "}
                 </h5>
               </td>
             </tr>

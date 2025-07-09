@@ -115,6 +115,7 @@ export default function Login({ show, toggle = null }) {
         {auth ? (
           <img
             loading="eager"
+            className="rounded-circle"
             src={image}
             style={{
               width: "100px",

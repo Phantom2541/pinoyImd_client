@@ -164,7 +164,6 @@ export default function Modal({
 
   const { lo, hi, warn, alert, critical, snug } = form;
   console.log("preference", preference);
-  console.log("form", form);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop>
@@ -203,7 +202,7 @@ export default function Modal({
             </MDBCol>
           </MDBRow>
           <b>
-            <u> Warning Low Value </u>
+            <u> Warning Threshold (Low) </u>
           </b>
 
           <MDBRow className="mb-0">
@@ -213,12 +212,12 @@ export default function Modal({
                 value={snug}
                 onChange={(e) => handleChange("snug", Number(e.target.value))}
                 type="number"
-                label="Lowest Possible Value"
+                label="Minimum Allowable Value"
               />
             </MDBCol>
           </MDBRow>
           <b>
-            <u> Normal Value </u>
+            <u> Normal Range </u>
           </b>
 
           <MDBRow className="mb-0">
@@ -228,7 +227,7 @@ export default function Modal({
                 value={lo}
                 onChange={(e) => handleChange("lo", Number(e.target.value))}
                 type="number"
-                label="Low Normal Value"
+                label="Normal Range (Min)"
               />
             </MDBCol>
             <MDBCol>
@@ -237,7 +236,7 @@ export default function Modal({
                 value={hi}
                 onChange={(e) => handleChange("hi", Number(e.target.value))}
                 type="number"
-                label="High Normal Value"
+                label="Normal Range (Max)"
               />
             </MDBCol>
             <MDBCol>
@@ -257,7 +256,7 @@ export default function Modal({
             </MDBCol>
           </MDBRow>
           <b>
-            <u> Warning High Value</u>
+            <u> Upper Thresholds</u>
           </b>
 
           <MDBRow className="mb-0">
@@ -267,7 +266,7 @@ export default function Modal({
                 onChange={(e) => handleChange("warn", Number(e.target.value))}
                 required
                 type="number"
-                label="Warning Value"
+                label="Warning Threshold (High)"
               />
             </MDBCol>
             <MDBCol>
@@ -276,7 +275,7 @@ export default function Modal({
                 onChange={(e) => handleChange("alert", Number(e.target.value))}
                 required
                 type="number"
-                label="Low Panic Value"
+                label="Panic Range (Min)"
               />
             </MDBCol>
             <MDBCol>
@@ -287,7 +286,7 @@ export default function Modal({
                 }
                 required
                 type="number"
-                label="High Panic Value"
+                label="Panic Range (Max)"
               />
             </MDBCol>
           </MDBRow>

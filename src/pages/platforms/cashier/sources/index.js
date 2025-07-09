@@ -1,3 +1,4 @@
+import Philhealth from "./philhealth";
 import Outsources from "./outsources";
 import Utilities from "./utilities";
 import Hotlines from "./hotlines";
@@ -10,6 +11,7 @@ import HMO from "./hmo";
 
 export {
   Membership,
+  Philhealth,
   Outsources,
   Utilities,
   Hotlines,

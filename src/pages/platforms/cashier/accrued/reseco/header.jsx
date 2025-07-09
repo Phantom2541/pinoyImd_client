@@ -58,7 +58,7 @@ const Header = () => {
         moved={(next) => dispatch(SetMONTH(next))}
         reset={() => dispatch(ResetDATE())}
       />
-      <div>Gross : {currency(sum)}</div>
+      <div>Gross : {currency.format(sum)}</div>
       <div>
         <div className="text-right d-flex items-center ">
           <select

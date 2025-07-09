@@ -109,7 +109,7 @@ const Body = () => {
                 <td style={{ fontWeight: 400 }}>{soaTitle}</td>
                 <td>
                   {totalPaid <= 0 ? (
-                    currency(totalPaid)
+                    currency.format(totalPaid)
                   ) : (
                     <>
                       <PaymentDetails payments={payments} imageSrc={imageSrc} />
@@ -125,7 +125,7 @@ const Body = () => {
                   )}
                 </td>
                 <td key={index} style={{ fontWeight: 400 }}>
-                  {currency(amount)}{" "}
+                  {currency.format(amount)}{" "}
                 </td>
 
                 <td>

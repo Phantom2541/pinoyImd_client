@@ -82,10 +82,9 @@ const handleHeader = (worksheet, form) => {
     const { companyId = {} } = branch;
     const { hmo: h } = companyId;
     const { cp } = h.find(({ code }) => code === hmo) || {};
-    const { phone, agent } = cp;
-    generateStaticCell("A5:C5", "Name", HMO.getName(hmo));
-    generateStaticCell("D5:H5", "Contact Person", agent);
-    generateStaticCell("I5:L5", "Phone No.", mobile(phone));
+    const { phone } = cp;
+    generateStaticCell("A5:F5", "Name", HMO.getName(hmo));
+    generateStaticCell("G5:L5", "Contact Number.", mobile(phone));
   }
   if (menuType === "mbs") {
     const { insource } = form;
@@ -232,7 +231,7 @@ const set = {
         const rawServices = Services.whereIn(packages);
 
         // Build richText with A., B., C. labels in bold
-        const servicesRichText = rawServices.flatMap((service, index) => {
+        const servicesRichText = rawServices.flatMap((service, _) => {
           return [
             {
               text: service.abbreviation + ",    ",

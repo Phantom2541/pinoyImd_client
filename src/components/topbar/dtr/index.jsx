@@ -7,80 +7,138 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { UPDATE } from "../../../services/redux/slices/market/attendances";
 
 export default function DTR() {
   const { activePlatform } = useSelector(({ auth }) => auth);
-  const [date, setDate] = useState(null);
-  const [timer, setTimer] = useState(null);
+  const [dateIn, setDateIn] = useState(null);
+  const [dateOut, setDateOut] = useState(null);
+  const [ipIn, setIPIn] = useState("");
+  const [ipOut, setIPOut] = useState("");
   const [clockedIn, setClockedIn] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(0),
-    history = useHistory();
+  const dispatch = useDispatch();
+  const history = useHistory();
 
+  // Load stored DTR info
   useEffect(() => {
     const savedClockedIn = localStorage.getItem("clockedIn");
     const savedStartTime = localStorage.getItem("startTime");
+    const savedEndTime = localStorage.getItem("endTime");
+    const savedIPIn = localStorage.getItem("publicIP");
+    const savedIPOut = localStorage.getItem("endIP");
 
-    if (savedClockedIn === "true" && savedStartTime) {
-      const savedStartDate = new Date(savedStartTime);
-      const currentTime = new Date();
-      const timeDiff = Math.floor((currentTime - savedStartDate) / 1000);
-      setDate(savedStartDate);
-      setClockedIn(true);
-      setElapsedTime(timeDiff);
-    }
+    setClockedIn(savedClockedIn === "true");
+    if (savedStartTime) setDateIn(new Date(savedStartTime));
+    if (savedEndTime) setDateOut(new Date(savedEndTime));
+    if (savedIPIn) setIPIn(savedIPIn);
+    if (savedIPOut) setIPOut(savedIPOut);
   }, []);
 
+  // Save all DTR data
   useEffect(() => {
-    if (clockedIn) {
-      localStorage.setItem("clockedIn", "true");
-      localStorage.setItem("startTime", date.toISOString());
-    } else {
-      localStorage.removeItem("clockedIn");
-      localStorage.removeItem("startTime");
-    }
-  }, [clockedIn, date]);
+    localStorage.setItem("clockedIn", clockedIn.toString());
+    if (dateIn) localStorage.setItem("startTime", dateIn.toISOString());
+    if (dateOut) localStorage.setItem("endTime", dateOut.toISOString());
+    if (ipIn) localStorage.setItem("publicIP", ipIn);
+    if (ipOut) localStorage.setItem("endIP", ipOut);
+  }, [clockedIn, dateIn, dateOut, ipIn, ipOut, dispatch, activePlatform]);
 
-  useEffect(() => {
-    if (date) {
-      const timerId = setInterval(() => {
-        const currentTime = new Date();
-        const timeDiff = Math.floor((currentTime - date) / 1000);
-        setElapsedTime(timeDiff);
-      }, 1000);
+  const handleClock = async () => {
+    const currentDate = new Date();
+    const hour = currentDate.getHours();
+    const timeString = currentDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
 
-      setTimer(timerId);
+    try {
+      const res = await axios.get("https://api.ipify.org?format=json", {
+        withCredentials: false,
+      });
+      const currentIP = res.data.ip;
 
-      return () => {
-        clearInterval(timerId);
+      const attendanceData = {
+        branchId: activePlatform?.branchId,
+        userId: activePlatform?.userId,
+        publicIP: currentIP,
       };
+
+      if (clockedIn) {
+        console.log("🛑 Clocking out...");
+        setDateOut(currentDate);
+        setIPOut(currentIP);
+        setClockedIn(false);
+
+        // ➕ Save time-out to am or pm
+        if (hour < 12) {
+          attendanceData.am = { out: timeString };
+        } else {
+          attendanceData.pm = { out: timeString };
+        }
+      } else {
+        console.log("✅ Clocking in...");
+        setDateIn(currentDate);
+        setIPIn(currentIP);
+        setDateOut(null);
+        setIPOut("");
+        setClockedIn(true);
+
+        // ➕ Save time-in to am or pm
+        if (hour < 12) {
+          attendanceData.am = { in: timeString };
+        } else {
+          attendanceData.pm = { in: timeString };
+        }
+      }
+
+      console.log("attendanceData", attendanceData);
+
+      dispatch(
+        UPDATE({
+          data: attendanceData,
+          token: activePlatform.token,
+        })
+      );
+    } catch (err) {
+      console.error("❌ Failed to fetch IP address:", err);
+
+      const fallbackData = {
+        branchId: activePlatform?.branchId,
+        userId: activePlatform?.userId,
+        publicIP: "Unavailable",
+      };
+
+      if (clockedIn) {
+        fallbackData.pm = { out: timeString };
+        setDateOut(currentDate);
+        setClockedIn(false);
+      } else {
+        fallbackData.am = { in: timeString };
+        setDateIn(currentDate);
+        setClockedIn(true);
+      }
+
+      dispatch(
+        UPDATE({
+          data: fallbackData,
+          token: activePlatform.token,
+        })
+      );
     }
-  }, [date]);
-
-  const formatTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const handleClock = () => {
-    if (clockedIn) {
-      clearInterval(timer);
-      setDate(null);
-      setClockedIn(false);
-      setElapsedTime(0);
-    } else {
-      const currentDate = new Date();
-      setDate(currentDate);
-      setClockedIn(true);
-    }
-  };
-
-  const handleShifts = () => {};
+  const format = (date) =>
+    date?.toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
 
   return (
     <MDBDropdown>
@@ -89,14 +147,26 @@ export default function DTR() {
         &nbsp;
         <span className="d-none d-md-inline">DTR</span>
       </MDBDropdownToggle>
-      <MDBDropdownMenu right style={{ minWidth: "250px" }}>
+      <MDBDropdownMenu right style={{ minWidth: "300px" }}>
         <MDBDropdownItem onClick={handleClock}>
           {clockedIn ? "Clock Out" : "Clock In"}
-          {date && (
-            <span className="float-right">
-              <MDBIcon icon="clock" /> {formatTime(elapsedTime)}
-            </span>
-          )}
+
+          <div className="text-right mt-2 small">
+            {dateIn && (
+              <div>
+                🟢 In: {format(dateIn)}
+                <br />
+                🌐 {ipIn}
+              </div>
+            )}
+            {dateOut && (
+              <div className="mt-2">
+                🔴 Out: {format(dateOut)}
+                <br />
+                🌐 {ipOut}
+              </div>
+            )}
+          </div>
         </MDBDropdownItem>
         <MDBDropdownItem
           onClick={() => {

@@ -43,13 +43,15 @@ export default function Vouchers() {
                 >
                   <span>{Statements.getName(voucher.fsId)}</span>
                   <strong className="text-primary">
-                    {currency(voucher.amount)}
+                    {currency.format(voucher.amount)}
                   </strong>
                 </div>
               ))}
               <div className="d-flex justify-content-between border-bottom pb-2 mt-3">
                 <span>Total Received:</span>
-                <strong className="text-success">{currency(total)}</strong>
+                <strong className="text-success">
+                  {currency.format(total)}
+                </strong>
               </div>
             </>
           ) : (

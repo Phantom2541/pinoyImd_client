@@ -7,6 +7,7 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/assets/branches";
 import Spinner from "../../../../../../components/spinner";
+import { SetPatientCategories } from "../../../../../../services/redux/slices/assets/persons/auth";
 
 const PatientCategories = ({ branch, isOpen = false }) => {
   const { token } = useSelector(({ auth }) => auth),
@@ -37,10 +38,13 @@ const PatientCategories = ({ branch, isOpen = false }) => {
       _categories.unshift(pk);
     }
     dispatch(
-      UPDATE({ token, data: { _id: branch._id, pc: _categories } })
+      UPDATE({ token, data: { _id: branch?._id, pc: _categories } })
     ).then(() => {
       setIndexUpdated(-1);
       setCategories(_categories);
+      dispatch(
+        SetPatientCategories({ branchId: branch?._id, categories: _categories })
+      );
     });
   };
 
@@ -66,7 +70,7 @@ const PatientCategories = ({ branch, isOpen = false }) => {
                   </div>
                 ) : (
                   <input
-                    id={`category-${index}`}
+                    id={`category-${index}-${branch?._id}`}
                     type="checkbox"
                     className="form-check-input me-2"
                     checked={isSelect}
@@ -76,7 +80,7 @@ const PatientCategories = ({ branch, isOpen = false }) => {
                 )}
 
                 <label
-                  htmlFor={`category-${index}`}
+                  htmlFor={`category-${index}-${branch?._id}`}
                   className="form-check-label"
                 >
                   {cat.name}

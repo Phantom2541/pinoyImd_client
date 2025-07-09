@@ -1,6 +1,7 @@
 [
   {
     "department": "LAB",
+    "label": "Laboratory",
     "components": [
       "Urinalysis",
       "Hematology",
@@ -36,11 +37,13 @@
   },
   {
     "department": "RAD",
+    "label": "Radiology",
     "components": ["ECG", "Ultrasound", "Xray", "2DEcho"],
     "codes": ["ECG", "US", "XR", "2D"]
   },
   {
     "department": "CLINIC",
+    "label": "Clinical",
     "components": ["Certicifate", "Examination"],
     "codes": ["CERT", "EXAM"]
   }

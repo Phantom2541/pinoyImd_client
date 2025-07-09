@@ -1,38 +1,43 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DESTROY } from "../../../../../services/redux/slices/assets/persons/heads";
+import {
+  DESTROY,
+  SetPRC,
+  UPDATE,
+  RESET,
+} from "../../../../../services/redux/slices/assets/persons/heads";
 import { useToasts } from "react-toast-notifications";
 import { fullName, ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
+import ImageDragAndDrop from "../../../../templates/imageDragAndDrop/dragNdropimg";
+import EditableField from "../../../../../components/customizable/editableField";
+import {
+  UPDATE_INFO,
+  UPLOAD,
+} from "../../../../../services/redux/slices/assets/persons/auth";
+import EditableSelect from "../../../../../components/customizable/editableSelect";
+import { Templates } from "../../../../../services/fakeDb";
 
 export default function Body() {
-  const { token } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess } = useSelector(({ heads }) => heads),
-    [heads, setHeads] = useState([]),
+  const {
+      token,
+      formSubmitted: fsAuth,
+      isSuccess: isAuth,
+    } = useSelector(({ auth }) => auth),
+    { filtered, message, isSuccess, formSubmitted } = useSelector(
+      ({ heads }) => heads
+    ),
+    { collections: personnels } = useSelector(({ personnels }) => personnels),
     { addToast } = useToasts(),
-    dispatch = useDispatch(),
     [currentPage, setCurrentPage] = useState(1),
     itemsPerPage = 6,
-    [animateClass, setAnimateClass] = useState("");
-
+    [animateClass, setAnimateClass] = useState(""),
+    [savedImage, setSavedImage] = useState(null);
+  const dispatch = useDispatch();
   const [imageErrors, setImageErrors] = useState({});
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
-
-  useEffect(() => {
-    if (collections.length > 0) {
-      const newArray = collections.map((collection) => ({
-        ...collection,
-        user: {
-          ...collection?.user,
-          department: collection?.department,
-          section: collection?.section,
-        },
-      }));
-      setHeads(newArray || []);
-    }
-  }, [collections]);
 
   useEffect(() => {
     if (message) {
@@ -44,25 +49,48 @@ export default function Body() {
 
   const handleSignature = (e, email) => {
     const file = e.target.files[0];
+
     if (!file) return;
 
-    // Simulate upload success (replace with actual upload logic)
-    setTimeout(() => {
-      // Clear error state and force image refresh
-      setImageErrors((prev) => ({ ...prev, [email]: false }));
-      setSignatureRefreshKey((prev) => ({
-        ...prev,
-        [email]: (prev[email] || 0) + 1,
-      }));
-      addToast("Signature updated!", { appearance: "success" });
-    }, 500);
+    if (file.type === "image/png") {
+      const reader = new FileReader();
 
-    e.target.value = null;
+      reader.onload = (e) => {
+        file.signature = file.name;
+
+        dispatch(
+          UPLOAD({
+            data: {
+              path: `users/${email}`,
+              base64: reader.result.split(",")[1],
+              name: "signature.png",
+            },
+            token,
+          })
+        );
+      };
+
+      reader.readAsDataURL(file);
+
+      setTimeout(() => {
+        setImageErrors((prev) => ({ ...prev, [email]: false }));
+        setSignatureRefreshKey((prev) => ({
+          ...prev,
+          [email]: (prev[email] || 0) + 1,
+        }));
+        addToast("Signature updated!", { appearance: "success" });
+      }, 500);
+
+      e.target.value = null; // ✅ Reset only after success
+    } else {
+      addToast("Only PNG files are allowed!", { appearance: "error" });
+      e.target.value = null; // ✅ Reset if rejected
+    }
   };
 
-  const handleDelete = (user) => {
+  const handleDelete = (_id, user) => {
     Swal.fire({
-      title: "Are you sure?",
+      title: `Are you sure you want to delete ${fullName(user.fullName)}?`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -71,13 +99,14 @@ export default function Body() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { id: user._id } }));
+        dispatch(DESTROY({ token, data: { id: _id } })).then(() => {
+          dispatch(RESET());
+        });
       }
     });
   };
-
-  const totalPages = Math.ceil(heads.length / itemsPerPage);
-  const paginatedHeads = heads.slice(
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginatedHeads = filtered.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -88,6 +117,15 @@ export default function Body() {
       setCurrentPage((prev) => (direction === "next" ? prev + 1 : prev - 1));
       setAnimateClass("fade-in");
     }, 300); // Delay matches animation duration
+  };
+
+  const handleUpdate = (data) => {
+    dispatch(
+      UPDATE({
+        data,
+        token,
+      })
+    );
   };
 
   const nextPage = () => {
@@ -105,6 +143,34 @@ export default function Body() {
   const handleImageError = (email) =>
     setImageErrors((prev) => ({ ...prev, [email]: true }));
 
+  const handleImageChange = (file, imageUrl) => {
+    setSavedImage(imageUrl);
+  };
+
+  const updateAuth = (data) => {
+    const { user, prc } = data;
+    dispatch(UPDATE_INFO({ token, data: { _id: user, prc } })).then(
+      ({ payload }) => {
+        const { payload: info } = payload;
+        const { _id, prc } = info;
+        dispatch(SetPRC({ userId: _id, prc }));
+      }
+    );
+  };
+
+  const handleSections = (_department = "") => {
+    const department = _department?.toLowerCase();
+    const sections = Templates.getComponents(
+      department === "laboratory"
+        ? "LAB"
+        : department === "radiology"
+        ? "RAD"
+        : "CLINIC"
+    );
+    sections.push(department === "laboratory" ? "Pathologist" : "Radiologist");
+    return sections;
+  };
+
   return (
     <div className="signatories-section">
       <div className={`signatories-card-container mt-4 ${animateClass}`}>
@@ -116,33 +182,68 @@ export default function Body() {
               key={_id || index}
               className={`signatories-card ${prc || "requiredPRC"}`}
             >
-              {/* Left: Profile Image */}
               <div className="signatories-card-header">
-                <img
-                  src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
-                  alt="Profile"
-                  // onError={(e) => {
-                  //   e.target.onerror = null;
-                  //   e.target.src =
-                  //     "https://via.placeholder.com/100x100?text=No+Image";
-                  // }}
-                  className="signatories-profile-image"
+                <ImageDragAndDrop
+                  img={`${ENDPOINT}/public/users/${email}/profile.jpg`}
+                  savedImg={handleImageChange}
+                  setImgEmail={email}
+                  setImgName="profile"
+                  token={token}
+                  allowedType="jpg"
                 />
               </div>
-              <div className="signatories-card-body">
+              <div className="signatories-card-body ">
                 <div className="signatories-card-section-department">
-                  <span className="signatories-card-section">{section}</span>
+                  <span>
+                    <EditableSelect
+                      classNameTxt="signatories-card-section"
+                      isEditable
+                      preValue={section}
+                      collections={handleSections(department)}
+                      fieldData={{
+                        _id,
+                        section,
+                      }}
+                      keyForValue="section"
+                      selectStyle={{ width: "11rem" }}
+                      keyForText="section"
+                      formSubmitted={formSubmitted}
+                      isSuccess={isSuccess}
+                      onSave={(data) =>
+                        handleUpdate({ id: data._id, section: data.section })
+                      }
+                    />
+                  </span>
                   &nbsp;-&nbsp;
-                  <span className="signatories-card-department">
-                    {department}
+                  <span>
+                    <EditableSelect
+                      classNameTxt="signatories-card-department"
+                      isEditable
+                      preValue={department}
+                      collections={Templates.collections}
+                      fieldData={{
+                        _id,
+                        label: department,
+                      }}
+                      keyForValue="label"
+                      keyForText="label"
+                      formSubmitted={formSubmitted}
+                      isSuccess={isSuccess}
+                      onSave={(data) =>
+                        handleUpdate({
+                          id: data._id,
+                          department: data.label,
+                        })
+                      }
+                    />
                   </span>
                 </div>
                 <div className="signatories-card-signature-container">
                   {!imageErrors[email] ? (
                     <img
-                      onClick={() =>
-                        document.getElementById(`file-upload-${email}`).click()
-                      }
+                      onClick={(e) => {
+                        document.getElementById(`file-upload-${email}`).click();
+                      }}
                       alt="Signature"
                       src={`${ENDPOINT}/public/users/${email}/signature.png?key=${
                         signatureRefreshKey[email] || 0
@@ -168,39 +269,88 @@ export default function Body() {
                   onChange={(e) => handleSignature(e, email)}
                   hidden
                 />
-                <span className="signatories-card-name">
-                  {fullName(user.fullName)}
-                </span>
+                <EditableSelect
+                  classNameTxt="signatories-card-name"
+                  isEditable
+                  preValue={user._id}
+                  collections={[
+                    ...personnels.map(({ user }) => ({
+                      userId: user._id,
+                      text: fullName(user.fullName),
+                    })),
+                  ]}
+                  fieldData={{
+                    _id,
+                    userId: user._id,
+                    text: fullName(user.fullName),
+                  }}
+                  keyForValue="userId"
+                  keyForText="text"
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                  onSave={(data) =>
+                    handleUpdate({ id: data._id, user: data.userId })
+                  }
+                />
               </div>
 
               <div
                 className={`signatories-card-footer ${prc || "requiredPRC"}`}
               >
                 {prc ? (
-                  <span className="signatories-card-expiration">
-                    PRC ID: <strong>{prc?.id}</strong>
-                    {prc?.to ? (
-                      <>
-                        <span>&nbsp;|&nbsp;</span>
-                        <span
-                          className={
-                            new Date(prc.to) < new Date() ? "text-danger" : ""
-                          }
-                        >
-                          Expiration: <strong>{prc.to}</strong>
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <span>&nbsp;|&nbsp;</span>
-                        <strong className="text-warning">
-                          No expiration date set
-                        </strong>
-                      </>
-                    )}
-                  </span>
+                  <div className="signatories-card-expiration-container">
+                    <span className="signatories-card-prc-label">
+                      <strong>PRC ID:&nbsp;</strong>
+                      <EditableField
+                        className="form-control form-control-sm"
+                        classNameTxt="signatories-card-prc"
+                        width="8rem"
+                        type="string"
+                        keyForValue="id"
+                        fieldData={{
+                          _id: `${_id}-id-${index}`,
+                          id: prc?.id,
+                          prc,
+                          user: user._id,
+                        }}
+                        onSave={(data) =>
+                          updateAuth({
+                            ...data,
+                            prc: { ...data.prc, id: data.id },
+                          })
+                        }
+                        formSubmitted={fsAuth}
+                        isSuccess={isAuth}
+                      />
+                    </span>
+                    <span>&nbsp;|&nbsp;</span>
+                    <span className="signatories-card-expiration-label">
+                      <strong>Expiration:&nbsp;</strong>
+                      <EditableField
+                        className="form-control form-control-sm"
+                        classNameTxt="signatories-card-expiration"
+                        type="date"
+                        width="11rem"
+                        keyForValue="to"
+                        fieldData={{
+                          _id: `${_id}-to`,
+                          to: prc?.to,
+                          prc,
+                          user: user._id,
+                        }}
+                        onSave={(data) =>
+                          updateAuth({
+                            ...data,
+                            prc: { ...data.prc, to: data.to },
+                          })
+                        }
+                        formSubmitted={fsAuth}
+                        isSuccess={isAuth}
+                      />
+                    </span>
+                  </div>
                 ) : (
-                  <span className="mt-2 small text-danger">
+                  <span className="">
                     <strong>PRC license is required</strong> for this user to be
                     assigned as a head. This is a&nbsp;
                     <strong>DOH qualification</strong> for publishing laboratory
@@ -208,20 +358,14 @@ export default function Body() {
                   </span>
                 )}
               </div>
-
-              {/* Optional Delete Button */}
               <div className="signatories-card-actionBtn">
                 <button
                   className="signatories-card-btn-delete bg-danger"
-                  onClick={() => handleDelete(_id)}
+                  onClick={() => {
+                    handleDelete(_id, user);
+                  }}
                 >
-                  <MDBIcon icon="trash" />
-                </button>
-                <button
-                  className="signatories-card-btn-edit bg-primary"
-                  onClick={() => handleDelete(_id)}
-                >
-                  <MDBIcon icon="pencil-alt" />
+                  <MDBIcon fas icon="times" />
                 </button>
               </div>
             </div>

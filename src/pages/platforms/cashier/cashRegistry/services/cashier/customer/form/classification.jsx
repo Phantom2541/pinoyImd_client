@@ -35,12 +35,21 @@ export default function PosCard() {
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [physicians, setPhysicians] = useState([]),
     [categorySelected, setCategorySelected] = useState(),
+    [categories, setCategories] = useState([]),
     [sources, setSources] = useState([]),
     [source, setSource] = useState(),
     dispatch = useDispatch();
 
-  const { branch, company } = activePlatform;
-  console.log("company", company);
+  const { branch = {} } = activePlatform;
+  const { companyId: company = {} } = branch || {};
+
+  useEffect(() => {
+    const fakeDB = localStorage.getItem("activePlatform");
+    if (fakeDB) {
+      setCategories(JSON.parse(fakeDB)?.branch?.companyId?.pc);
+    }
+  }, []);
+
   useEffect(() => {
     const { abbr } = Categories[category];
     const _abbr = [
@@ -183,7 +192,7 @@ export default function PosCard() {
             value={category}
             onChange={({ target }) => handleCategory(Number(target.value))}
           >
-            {branch?.pc?.map((c, index) => {
+            {categories?.map((c, index) => {
               const { name = "", color = "" } = Categories[c];
               return (
                 <option value={c} key={`category-${index}`} style={{ color }}>
@@ -212,7 +221,7 @@ export default function PosCard() {
           {/* // wls */}
           {category === 6 && (
             <>
-              <span>HMO:</span>
+              <span>Card:</span>
               <select onChange={({ target }) => dispatch(SETHMO(target.value))}>
                 <option value={""}>None</option>
                 {company?.hmo?.map(({ code }) => (

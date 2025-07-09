@@ -34,6 +34,7 @@ const initialState = {
   //   attributes,
   collections: [],
   filtered: [],
+  filteredStatus: [],
   byGroup: "all",
   byStatus: "all",
   showModal: false,
@@ -144,12 +145,21 @@ export const reduxSlice = createSlice({
       const updateCollection = (collections, index) => {
         console.log("index", index);
         if (index > -1) {
+          console.log("collections[index]", collections[index]);
+
           if (identifier === "_id") {
             collections[index].diagnostic[form] = payload;
           } else {
             const formIndex = findFormIndex(
               collections[index].diagnostic[form]
             );
+            console.log("formIndex", formIndex);
+            console.log("payload", payload);
+            console.log(
+              "collections[index].diagnostic[form][formIndex]",
+              collections[index].diagnostic[form][formIndex]
+            );
+
             if (formIndex > -1) {
               collections[index].diagnostic[form][formIndex] = payload;
             }
@@ -172,10 +182,38 @@ export const reduxSlice = createSlice({
     SetByGroup: (state, action) => {
       state.byGroup = action.payload;
       console.log("SetByGroup action.payload :", action.payload);
+      const selectedKey = action.payload; // e.g., "Chemistry"
+
+      if (selectedKey === "all") {
+        state.filteredStatus = state.filtered;
+      } else {
+        state.filteredStatus = state.filtered.filter((task) => {
+          return task.diagnostic && task.diagnostic[selectedKey];
+        });
+      }
     },
     SetByStatus: (state, action) => {
-      state.byStatus = action.payload;
-      console.log("SetByStatus action.payload :", action.payload);
+      const filter = action.payload;
+
+      if (filter === "all") {
+        state.filteredStatus = state.filtered;
+      } else {
+        const isDone = filter === "true";
+
+        state.filteredStatus = state.filtered.filter((task) => {
+          if (!task.diagnostic) return false;
+
+          const diagnostics = Object.values(task.diagnostic);
+
+          if (isDone) {
+            // Keep if any diagnostic hasDone === true
+            return diagnostics.some((d) => d.hasDone === true);
+          } else {
+            // Keep if all diagnostics are missing hasDone or have hasDone !== true
+            return diagnostics.every((d) => d.hasDone !== true);
+          }
+        });
+      }
     },
     SetSELECTED: (state, { payload }) => {
       const { activeCOLAPSE, deal } = payload;
@@ -194,6 +232,7 @@ export const reduxSlice = createSlice({
       state.task = task;
       state.showModal = true;
     },
+
     /**
      * for U/A, CBC, Feca
      */
@@ -247,6 +286,7 @@ export const reduxSlice = createSlice({
 
         state.collections = payload;
         state.filtered = payload;
+        state.filteredStatus = payload;
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);

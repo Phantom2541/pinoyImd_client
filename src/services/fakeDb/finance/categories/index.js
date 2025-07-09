@@ -9,7 +9,7 @@ const Categories = [
   { abbr: "mbs", name: "Membership", color: "orange" },
   { abbr: "ctr", name: "Contract", color: "orange" },
   { abbr: "bp", name: "Business Permit", color: "red" },
-  { abbr: "mc", name: "Medical Clearance", color: "red" },
+  { abbr: "mc", name: "Medical Clearance", color: "red" }, // Medical or Employment Clearance
   { abbr: "sc", name: "Surgical Clearance", color: "red" },
   { abbr: "rfr", name: "Referrals", color: "red" },
   { abbr: "prm", name: "Promotion" },
