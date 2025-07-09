@@ -8,23 +8,23 @@ import {
   MDBView,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import { ENDPOINT } from "../../../../../../services/utilities";
+import { ENDPOINT } from "./../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
   RESET,
   SetCOMPANY,
-} from "../../../../../../services/redux/slices/assets/persons/auth";
-import { UPDATE } from "../../../../../../services/redux/slices/assets/companies";
-import { FailedLogo } from "../../../../../../services/utilities";
+} from "./../../../../../services/redux/slices/assets/persons/auth";
+import { UPDATE } from "./../../../../../services/redux/slices/assets/companies";
+import { FailedLogo } from "./../../../../../services/utilities";
 import Swal from "sweetalert2";
 
-export default function Description() {
+export default function Tagline() {
   const { addToast } = useToasts();
   const { company, token, message, isSuccess } = useSelector(
     ({ auth }) => auth
   );
   const dispatch = useDispatch();
-  const [description, setDescription] = useState(""),
+  const [tagline, setTagline] = useState(""),
     [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -40,8 +40,8 @@ export default function Description() {
   const handleUpdate = (e) => {
     e.preventDefault();
     if (
-      company?.description?.toLowerCase() === description?.toLowerCase() ||
-      !description
+      company?.tagline?.toLowerCase() === tagline?.toLowerCase() ||
+      !tagline
     ) {
       return addToast("No changes found, skipping update.", {
         appearance: "warning",
@@ -49,14 +49,14 @@ export default function Description() {
     }
 
     setIsLoading(true);
-    dispatch(UPDATE({ data: { _id: company?._id, description }, token })).then(
+    dispatch(UPDATE({ data: { _id: company?._id, tagline }, token })).then(
       () => {
         setIsLoading(false);
-        setDescription("");
-        dispatch(SetCOMPANY({ ...company, description }));
+        setTagline("");
+        dispatch(SetCOMPANY({ ...company, tagline }));
         Swal.fire({
           title: "Success!",
-          text: "Description Successfully Updated.",
+          text: "Tagline Successfully Updated.",
           icon: "success",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "OK",
@@ -83,10 +83,9 @@ export default function Description() {
             <form onSubmit={handleUpdate}>
               <MDBInput
                 type="textarea"
-                label="Enter description here...."
-                value={description || company?.description}
-                onChange={({ target }) => setDescription(target.value)}
-                style={{ minHeight: "200px" }}
+                label="Enter tagline here...."
+                value={tagline || company?.tagline}
+                onChange={({ target }) => setTagline(target.value)}
                 required
               />
               <MDBBtn

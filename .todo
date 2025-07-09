@@ -1,26 +1,29 @@
     homepage
 
 kevin
-1.buttons on the list of staff (DOH) 2. on the physician on hompage change to companies-kevin 3. chage to "who were we accredteded with"(afflited with)
-4.testimontials of hospitals
-5.pioners change position of the last pic to the side
-6.change the pic of dev building the main pic to be moving and make the pic smaller below 7. change the icon of media
+1. buttons on the list of staff (DOH) 2. on the physician on hompage change to companies-kevin 3. chage to "who were we accredteded with"(afflited with)
+4. testimontials of hospitals
+5. pioners change position of the last pic to the side
+6. change the pic of dev building the main pic to be moving and make the pic smaller below 7. change the icon of media
 
 darrel
-8.the sign up button boarder is the current window
-9.add in the sign up if the user is a previews patient
-if verified no password, take email, name, and brithday, and address 10. for verificaton need of birthday, OTP  
-(no duplicate) 10. add stepper  
-11.make the companies to be carried over thoughtout the session and can be change only in the profile
+8. the sign up button boarder is the current window
+9. add in the sign up if the user is a previews patient
+ if verified no password, take email, name, and brithday, and address   
+
+ 10. for verificaton need of birthday, OTP 
+ add stepper  (no duplicate) 
+
+11. make the companies to be carried over thoughtout the session and can be change only in the profile @high @thom
 
 if paid make the pics of hmo when click you will be directed to their website
 check code name of hmo in the fakedb (inlife in care)-kevin
 
-philhealth accredited id number to be taken out and add the branches
+12. philhealth accredited id number to be taken out and add the branches
 
-13.employees filtered out the one that are fired and fix the height and make it by 6
+13. employees filtered out the one that are fired and fix the height and make it by 6
 
-14.footer (check and adjust the details beside the map ) thom
+14. footer (check and adjust the details beside the map ) thom
 
 login
 cashier 15. POS -change the transition to next page of class tab window when click of patient (in the future)
@@ -42,19 +45,22 @@ and add boarder of the qrcode in the recit
     26.remittance -census downpayment remove
     print out two copies- darrel
 
-manager
-operational 27. remittance - sales break down (one line) - kevin
+manager operational
+ 27. remittance - sales break down (one line) - kevin
+
 submit button change to "acknowledge or approve"
 
 28. mobile clinic- modal status add in select "draft-default and pending" fix saving
-    add time after the date
+    add time after the date human resouces
 
-human resouces 29. staff- header hover issue (showing empty white box) 30. physician- wala lahat
+ 29. staff- header hover issue (showing empty white box) 30. physician- wala lahat
 
 finance & receivable
-31.accounts receivable and soa records to be checked 32. rebate should not be seen in the cashier payables 33. payroll- add sss and philhealth
+31.accounts receivable and soa records to be checked 32. rebate should not be seen in the cashier payables 
+33. payroll- add sss and philhealth
 
-headquarter 34. logo add detail requiments of pic size and other - kevin
+headquarter
+34. logo add detail requiments of pic size and other - kevin
 
 35. banner- remove the text below the banner,
 

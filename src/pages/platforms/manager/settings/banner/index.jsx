@@ -16,18 +16,14 @@ import {
   MDBView,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import {
-  ENDPOINT,
-  fullName,
-  getAge,
-} from "../../../../../../services/utilities";
-import { useDispatch, useSelector } from "react-redux"; 
+import { ENDPOINT, fullName, getAge } from "../../../../../services/utilities";
+import { useDispatch, useSelector } from "react-redux";
 import {
   UPLOAD,
   RESET,
-} from "../../../../../../services/redux/slices/assets/persons/auth";
-import { FailedBanner } from "../../../../../../services/utilities";
-import ImageCropper from "../../../../../../components/imageCropper";
+} from "../../../../../services/redux/slices/assets/persons/auth";
+import { FailedBanner } from "../../../../../services/utilities";
+import ImageCropper from "../../../../../components/imageCropper";
 
 const array = new Array(5).fill().map((_, index) => index);
 
