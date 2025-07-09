@@ -82,7 +82,7 @@ const Header = () => {
                 style={{ color: "green" }}
                 title="Unremitted sales (COH - FC)"
               >
-                Collections:({currency(coh)})
+                Collections:({currency.format(coh)})
               </span>
             )}
           </span>

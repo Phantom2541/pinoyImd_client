@@ -158,17 +158,21 @@ const Header = () => {
                 }}
               >
                 <option value="all">
-                  All Sources ({currency(totalAmount)})
+                  All Sources ({currency.format(totalAmount)})
                 </option>
                 <option value="NoSource">
                   No Source (
-                  {currency(summarizedSourcesMap["NoSource"]?.total || 0)})
+                  {
+                    (currency,
+                    format(summarizedSourcesMap["NoSource"]?.total || 0))
+                  }
+                  )
                 </option>
                 {summarizedSources
                   .filter(({ _id }) => _id !== "NoSource")
                   .map(({ _id, displayname, total }) => (
                     <option key={_id} value={_id}>
-                      {displayname} ({currency(total)})
+                      {displayname} ({currency.format(total)})
                     </option>
                   ))}
               </select>
@@ -181,11 +185,11 @@ const Header = () => {
                 onChange={(e) => setSelectedPhysician(e.target.value)}
               >
                 <option value="all">
-                  All Physicians ({currency(totalPhysicianAmount)})
+                  All Physicians ({currency.format(totalPhysicianAmount)})
                 </option>
                 {physicians.map((p) => (
                   <option key={p._id} value={p._id}>
-                    {p.fullName} ({currency(p.total)})
+                    {p.fullName} ({currency.format(p.total)})
                   </option>
                 ))}
               </select>

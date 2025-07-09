@@ -34,6 +34,7 @@ import {
   Receivables,
   Reseco,
 } from "../../../pages/platforms/manager/accrued";
+import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 
 const laboratory = [
   {
@@ -67,7 +68,7 @@ const laboratory = [
         name: "Onboarding",
         path: "/onboarding",
         icon: "sign-in-alt",
-        title: "Pre-Registered Patients from Partner Clinics",
+        title: "Pre-Registered Patients & HMO Approvals",
         component: Onboarding,
       },
       {
@@ -75,7 +76,7 @@ const laboratory = [
         path: "/sendout",
         icon: "truck-loading",
         title: "Sendout Patients to Partner Clinics",
-        // component: Onboarding,
+        component: Sendouts,
       },
     ],
   },

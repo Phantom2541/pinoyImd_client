@@ -24,7 +24,9 @@ export default function Modal({ title }) {
         {Denominations.bills.map((bill) => (
           <tr key={`bill-${bill}`}>
             <td className="p-0">
-              <div className="pt-1 pl-2">{currency(Number(bill), true)}</div>
+              <div className="pt-1 pl-2">
+                {currency.format(Number(bill), true)}
+              </div>
             </td>
             <td className="p-0">
               <input
@@ -50,7 +52,9 @@ export default function Modal({ title }) {
         {Denominations.coins.map((coin) => (
           <tr key={`coin-${coin}`}>
             <td className="p-0">
-              <div className="pt-1 pl-2">{currency(Number(coin), true)}</div>
+              <div className="pt-1 pl-2">
+                {currency.format(Number(coin), true)}
+              </div>
             </td>
             <td className="p-0">
               <input

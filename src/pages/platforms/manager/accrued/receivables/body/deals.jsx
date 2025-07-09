@@ -114,7 +114,7 @@ const Children = ({ deals }) => {
               ))}
             </td>
             <td style={{ fontWeight: "400", width: "10%" }}>
-              {currency(amount)}
+              {currency.format(amount)}
             </td>
           </tr>
         );

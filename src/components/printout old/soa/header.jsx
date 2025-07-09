@@ -27,7 +27,7 @@ const Header = ({ range, vendor, total }) => {
         </div>
         <div className="d-flex align-items-center mt-1">
           <h6 className="fw-bold">Gross: </h6>
-          <h6 className="ml-1">{currency(total)}</h6>
+          <h6 className="ml-1">{currency.format(total)}</h6>
         </div>
       </div>
     </div>

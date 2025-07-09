@@ -6,7 +6,6 @@ import {
   Payments,
   Philippines,
   Privileges,
-  Denominations,
   Services,
   Suffixes,
   Categories,
@@ -38,7 +37,6 @@ import HMO from "./hmo";
 import Quotes from "./quotes";
 
 export {
-  Denominations,
   Suffixes,
   Calendar,
   Rci,

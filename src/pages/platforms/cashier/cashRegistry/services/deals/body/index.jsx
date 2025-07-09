@@ -137,7 +137,7 @@ const Tables = () => {
         }}
       >
         <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
-          {currency(total)}
+          {currency.format(total)}
         </p>
         <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
         <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
@@ -402,7 +402,7 @@ const Tables = () => {
                           style={{ fontWeight: 600 }}
                           title="Amount"
                         >
-                          {currency(deal.amount)}
+                          {currency.format(deal.amount)}
                         </h6>
 
                         <img
@@ -419,7 +419,7 @@ const Tables = () => {
                         title="Cash"
                         style={{ opacity: index === didHoverID ? 0 : 1 }}
                       >
-                        {currency(deal.cash)}
+                        {currency.format(deal.cash)}
                       </h6>
                     </>
                   </td>

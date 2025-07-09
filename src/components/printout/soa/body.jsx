@@ -24,7 +24,7 @@ const Body = ({ vouchers }) => {
             <span className="ml-1">{voucher.date}</span>
             <span className="ml-2">
               (
-              {currency(
+              {currency.format(
                 voucher?.deals.reduce((sum, deal) => sum + deal.amount, 0)
               )}
               )
@@ -82,8 +82,10 @@ const Body = ({ vouchers }) => {
                         ))}
                       </div>
                     </td>
-                    <td style={{ width: "12%" }}>{currency(amount)}</td>
-                    <td style={{ width: "10%" }}>{currency(discount)}</td>
+                    <td style={{ width: "12%" }}>{currency.format(amount)}</td>
+                    <td style={{ width: "10%" }}>
+                      {currency.format(discount)}
+                    </td>
                     <td className="text-center">{Privileges[privilege]}</td>
                   </tr>
                 )

@@ -104,7 +104,7 @@ const EditableField = ({
       className={`cursor-pointer ${classNameTxt}`}
     >
       {(isMoney
-        ? currency(fieldData[keyForText || keyForValue])
+        ? currency.format(fieldData[keyForText || keyForValue])
         : capitalize(fieldData[keyForText || keyForValue])) || "N/A"}
     </Tag>
   );

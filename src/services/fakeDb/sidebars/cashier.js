@@ -61,7 +61,7 @@ const cashier = [
         name: "Onboarding",
         path: "/onboarding",
         icon: "sign-in-alt",
-        title: "Pre-Registered Patients from Partner Clinics",
+        title: "Pre-Registered Patients & HMO Approvals",
         component: Onboarding,
       },
     ],
@@ -119,7 +119,7 @@ const cashier = [
         name: "Outsources",
         path: "/outsources",
         icon: "people-carry",
-        title: "External Service Providers",
+        title: "External Service Providers (Sendouts)",
         component: Outsources,
       },
       {

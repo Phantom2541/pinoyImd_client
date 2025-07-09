@@ -23,15 +23,15 @@ const Summary = ({
         <tbody>
           <tr>
             <td>Gross Amount</td>
-            <td className="table-price">{currency(gross)}</td>
+            <td className="table-price">{currency.format(gross)}</td>
           </tr>
           <tr>
             <td>Discount</td>
-            <td className="table-price">{currency(discount)}</td>
+            <td className="table-price">{currency.format(discount)}</td>
           </tr>
           <tr>
             <td>Net Amount</td>
-            <td className="table-price">{currency(amount)}</td>
+            <td className="table-price">{currency.format(amount)}</td>
           </tr>
           <tr>
             <td>Payment</td>

@@ -283,7 +283,7 @@ const Header = ({
                   });
                 }}
               >
-                {credit ? currency(credit) : "N/A"}
+                {credit ? currency.format(credit) : "N/A"}
               </h6>
             )}
           </div>

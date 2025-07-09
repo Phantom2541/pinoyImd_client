@@ -115,12 +115,12 @@ const set = {
 
       {
         mergeCell: "A6:H6",
-        value: currency(gross),
+        value: currency.format(gross),
         label: "Gross",
       },
       {
         mergeCell: "I6:P6",
-        value: currency(rebate),
+        value: currency.format(rebate),
         label: "Rebate",
       },
     ];
@@ -137,7 +137,7 @@ const set = {
       const { deals, date, time } = reseco[i];
       const dateCell = worksheet.getCell(`A${startPos}`);
       const amount = deals.reduce((acc, item) => acc + item.amount, 0);
-      dateCell.value = `${date} ${time} | ${currency(amount)}`;
+      dateCell.value = `${date} ${time} | ${currency.format(amount)}`;
       dateCell.font = { color: { argb: "FFFFFFFF" }, size: 13 };
       dateCell.fill = {
         type: "pattern",

@@ -34,7 +34,7 @@ const Deals = ({ deals, isOpen, _id }) => {
                     <td style={{ fontWeight: "400" }}>
                       {fullName(customerId?.fullName)}
                     </td>
-                    <td style={{ fontWeight: "400" }}>{currency(up)}</td>
+                    <td style={{ fontWeight: "400" }}>{currency.format(up)}</td>
                     <td>
                       {servicesId?.map((id) => (
                         <MDBBadge key={id} className="ml-2">

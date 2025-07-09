@@ -47,13 +47,13 @@ export default function Header({ remittance }) {
         <div className="d-flex align-items-center">
           <h6>Floating Cash:</h6>
           <h6 className="ml-1" style={{ fontWeight: 700 }}>
-            {currency(opening?.sum)}
+            {currency.format(opening?.sum)}
           </h6>
         </div>
         <div className="d-flex align-items-center" style={{ width: "25%" }}>
           <h6>Epenses:</h6>
           <h6 className="  ml-1" style={{ fontWeight: 700 }}>
-            {currency(expenses)}
+            {currency.format(expenses)}
           </h6>
         </div>
       </div>
@@ -61,7 +61,7 @@ export default function Header({ remittance }) {
         <div className="d-flex align-items-center">
           <h6>Sales:</h6>
           <h6 className="ml-1" style={{ fontWeight: 700 }}>
-            {currency(sales)}
+            {currency.format(sales)}
           </h6>
         </div>
         <div className="d-flex align-items-center" style={{ width: "25%" }}>

@@ -70,35 +70,42 @@ const Deals = ({ deals: collections, isOpen, _id }) => {
             isOpen={isOpen}
             className="m-0 p-0"
           >
-      <MDBTable small className="m-0" style={{ marginBottom: "transparent" }}>
-      <MDBTableHead>
-        <tr>
-        <th>Customer</th>
-        <th>Services</th>
-        <th>Price</th>
-        </tr>
-      </MDBTableHead>
+            <MDBTable
+              small
+              className="m-0"
+              style={{ marginBottom: "transparent" }}
+            >
+              <MDBTableHead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Services</th>
+                  <th>Price</th>
+                </tr>
+              </MDBTableHead>
 
-      <MDBTableBody>
-        {cluster.map((c, index) => {
-        const { createdAt, deals } = c;
-        return (
-      <React.Fragment key={index}>
-       {/* Date label, already shifted */}
-        <tr>
-        <td colSpan={3} className="font-weight-bold text-primary" style={{ paddingLeft: "2rem" }}>
-        {dateFormat(createdAt)}
+              <MDBTableBody>
+                {cluster.map((c, index) => {
+                  const { createdAt, deals } = c;
+                  return (
+                    <React.Fragment key={index}>
+                      {/* Date label, already shifted */}
+                      <tr>
+                        <td
+                          colSpan={3}
+                          className="font-weight-bold text-primary"
+                          style={{ paddingLeft: "2rem" }}
+                        >
+                          {dateFormat(createdAt)}
+                        </td>
+                      </tr>
+                      <Children deals={deals} />
+                    </React.Fragment>
+                  );
+                })}
+              </MDBTableBody>
+            </MDBTable>
+          </MDBCollapse>
         </td>
-        </tr>
-        <Children deals={deals} />
-          </React.Fragment>
-        );
-        })}
-      </MDBTableBody>
-      </MDBTable>
-
-      </MDBCollapse>
-      </td>
       </tr>
     </>
   );
@@ -124,7 +131,9 @@ const Children = ({ deals }) => {
           <tr key={`deals-${deal._id}-${index}`}>
             <td style={{ ...sharedStyle, fontWeight: "400", width: "40%" }}>
               <div>
-              <span className="font-weight-bold mr-2">{toRoman(index + 1)}.</span>
+                <span className="font-weight-bold mr-2">
+                  {toRoman(index + 1)}.
+                </span>
 
                 {fullName(customerId?.fullName)}
               </div>
@@ -140,7 +149,7 @@ const Children = ({ deals }) => {
             </td>
 
             <td style={{ ...sharedStyle, fontWeight: "400", width: "10%" }}>
-              {currency(amount)}
+              {currency.format(amount)}
             </td>
           </tr>
         );

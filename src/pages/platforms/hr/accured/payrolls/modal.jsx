@@ -124,7 +124,9 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           <tbody>
             <tr>
               <td>Rate</td>
-              <td>{currency(handleCalc(selected?.rate?.monthly / 2))}</td>
+              <td>
+                {currency.format(handleCalc(selected?.rate?.monthly / 2))}
+              </td>
               <td>Cash Advance</td>
               <td>
                 <input
@@ -137,7 +139,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             </tr>
             <tr>
               <td>Cola</td>
-              <td>{currency(handleCalc(selected?.rate?.cola / 2))}</td>
+              <td>{currency.format(handleCalc(selected?.rate?.cola / 2))}</td>
               <td>Absent (day)</td>
               <td>
                 <input
@@ -175,7 +177,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
                 />
               </td>
               <td>Phil. Health</td>
-              <td>{currency(selected?.contribution?.ph)}</td>
+              <td>{currency.format(selected?.contribution?.ph)}</td>
             </tr>
             <tr>
               <td>Bonus</td>
@@ -187,24 +189,24 @@ export default function Modal({ show, toggle, selected, willCreate }) {
                 />
               </td>
               <td>SSS</td>
-              <td>{currency(selected?.contribution?.sss)}</td>
+              <td>{currency.format(selected?.contribution?.sss)}</td>
             </tr>
             <tr>
               <td></td>
               <td></td>
               <td>Pag-ibig</td>
-              <td> {currency(selected?.contribution?.pi)} </td>
+              <td> {currency.format(selected?.contribution?.pi)} </td>
             </tr>
             <tr>
               <td>Gross </td>
-              <td>{currency(totEarn)}</td>
+              <td>{currency.format(totEarn)}</td>
               <td></td>
-              <td>{currency(totDeduc)}</td>
+              <td>{currency.format(totDeduc)}</td>
             </tr>
             <tr>
               <td></td>
               <td>Net</td>
-              <td> {currency(totEarn - totDeduc)} </td>
+              <td> {currency.format(totEarn - totDeduc)} </td>
               <td> </td>
             </tr>
           </tbody>

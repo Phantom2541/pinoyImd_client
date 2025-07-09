@@ -133,7 +133,7 @@ export default function ClaimStub() {
                   style={{ fontSize: "17.5px" }}
                   className="text-right py-0 px-0 fw-bold"
                 >
-                  {currency(srp)}
+                  {currency.format(srp)}
                 </td>
               </tr>
             );
@@ -141,18 +141,20 @@ export default function ClaimStub() {
         </tbody>
       </MDBTable>
       <Hr />
-      <Text title="SUBTOTAL" value={currency(amount + discount)} />
-      <Text title="DISCOUNT :" value={currency(discount)} />
+      <Text title="SUBTOTAL" value={currency.format(amount + discount)} />
+      <Text title="DISCOUNT :" value={currency.format(discount)} />
       <Hr />
-      <Text title="Total :" value={currency(amount)} />
+      <Text title="Total :" value={currency.format(amount)} />
       <Text
         title="TENDERED AMOUNT :"
-        value={payment === "cash" ? currency(cash) : currency(amount)}
+        value={
+          payment === "cash" ? currency.format(cash) : currency.format(amount)
+        }
       />
       <Text title="PAYMENT METHOD :" value={capitalize(payment)} />
       <Hr />
       {payment === "cash" && (
-        <Text title="CHANGE" value={currency(cash - amount)} />
+        <Text title="CHANGE" value={currency.format(cash - amount)} />
       )}
       <br />
       <Text
