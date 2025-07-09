@@ -24,7 +24,7 @@ export default function Collapsable({ deals }) {
               <td className="fw-bold mb-1">{outsource?.displayname}</td>
               <td className="mb-1">{fullName(customerId?.fullName)}</td>
               <td>{source?.displayname}</td>
-              <td className="mb-1">{currency(sendouts?.up)}</td>
+              <td className="mb-1">{currency.format(sendouts?.up)}</td>
               <td className="mb-1">
                 {sendouts?.servicesId
                   ?.map((id) => Services.getAbbr(id))

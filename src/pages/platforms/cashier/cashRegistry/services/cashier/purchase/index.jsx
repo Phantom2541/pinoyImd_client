@@ -87,9 +87,9 @@ export default function Menus({ patronPresent }) {
                       ))}
                   </small>
                 </td>
-                <td title="Suggested Retail Price">{currency(gross)}</td>
+                <td title="Suggested Retail Price">{currency.format(gross)}</td>
                 <td title={title}>
-                  <span className={`text-${color}`}>{currency(up)}</span>
+                  <span className={`text-${color}`}>{currency.format(up)}</span>
                   <button
                     onClick={() => handleRemovedToCart(_id)}
                     className="menus-button-delete"

@@ -139,7 +139,7 @@ export default function Collapsable({
                     }
                     className="w-100"
                   >
-                    {currency(sendouts?.up)}
+                    {currency.format(sendouts?.up)}
                   </div>
                 ) : (
                   <Input

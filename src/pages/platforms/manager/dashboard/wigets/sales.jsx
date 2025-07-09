@@ -20,7 +20,7 @@ const Sales = ({ currentMonthSales, lastMonthSales }) => {
           </MDBCol>
           <MDBCol md="7" col="7" className="text-right pr-5">
             <h5 className="ml-4 mt-4 mb-2 font-weight-bold">
-              {currency(Number(currentMonthSales))}
+              {currency.format(Number(currentMonthSales))}
             </h5>
             <p className="font-small grey-text">Current Sales</p>
           </MDBCol>
@@ -33,7 +33,7 @@ const Sales = ({ currentMonthSales, lastMonthSales }) => {
           </MDBCol>
           <MDBCol md="5" col="5" className="text-right pr-5">
             <p className="font-small grey-text">
-              {currency(Number(lastMonthSales))}
+              {currency.format(Number(lastMonthSales))}
             </p>
           </MDBCol>
         </MDBRow>

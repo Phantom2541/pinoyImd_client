@@ -114,7 +114,7 @@ export default function Modal({ show, selected, toggle }) {
               className={`mb-0 text-right`}
               style={{ whiteSpace: "nowrap", fontWeight: 400 }}
             >
-              {currency(sales)}
+              {currency.format(sales)}
             </h5>
           </div>
         )}
@@ -168,7 +168,7 @@ export default function Modal({ show, selected, toggle }) {
                     fontSize: "1rem",
                   }}
                 >
-                  {currency(value)}
+                  {currency.format(value)}
                 </h5>
               </div>
             ))}
@@ -210,7 +210,7 @@ export default function Modal({ show, selected, toggle }) {
                 className={`mb-0 text-right ${cn}`}
                 style={{ whiteSpace: "nowrap", fontWeight: 400 }}
               >
-                {currency(value)}
+                {currency.format(value)}
               </h5>
             </div>
           ))}
@@ -236,7 +236,7 @@ export default function Modal({ show, selected, toggle }) {
             className={`mb-0 text-right fw-bold`}
             style={{ whiteSpace: "nowrap", color: "green" }}
           >
-            {currency(coh)}
+            {currency.format(coh)}
           </h5>
         </div>
         <div className="d-flex justify-content-center">

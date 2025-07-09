@@ -131,7 +131,7 @@ export default function Sales() {
         <MDBCardHeader className="d-flex justify-content-between">
           <h5>{`${
             view === "all" ? `Sales Summaries` : capitalize(view)
-          } :  ${currency(total)} @ ${sales.length} Patient/s`}</h5>
+          } :  ${currency.format(total)} @ ${sales.length} Patient/s`}</h5>
         </MDBCardHeader>
         <MDBCardBody>
           <MDBTable>
@@ -172,7 +172,7 @@ export default function Sales() {
                       <p>{sale.source?.displayname}</p>
                     </td>
                     <td>
-                      <h6>{currency(sale.amount)}</h6>
+                      <h6>{currency.format(sale.amount)}</h6>
 
                       <p>
                         {sale.payment}

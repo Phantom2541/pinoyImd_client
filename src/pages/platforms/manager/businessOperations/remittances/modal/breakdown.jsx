@@ -9,8 +9,8 @@ const Breakdown = () => {
 
   return (
     <MDBCol md="2">
-      <h5 className="text-center fw-bold">Break Down</h5>
-      <div>Floating Cash: {currency(opening?.sum || 0)}</div>
+      <h5 className="text-center fw-bold">Sales Break Down</h5>
+      <div>Floating Cash: {currency.format(opening?.sum || 0)}</div>
       <div className="mt-5">
         {breakdown &&
           Object.entries(breakdown || {}).map(([key, value]) => {
@@ -42,15 +42,17 @@ const Breakdown = () => {
             );
           })}
         <hr />
-        <div>Total : {currency(opening?.sum + sales)}</div>
+        <div>Total : {currency.format(opening?.sum + sales)}</div>
         <div className="d-flex justify-content-between align-items-center">
-          <h5 style={{ color: "red" }}>Expenses: {currency(expenses || 0)}</h5>
+          <h5 style={{ color: "red" }}>
+            Expenses: {currency.format(expenses || 0)}
+          </h5>
         </div>
         <hr />
         <div className="d-flex justify-content-between align-items-center">
           <h5>COH:</h5>
           <h5>
-            <strong style={{ color: "green" }}>{currency(coh)}</strong>
+            <strong style={{ color: "green" }}>{currency.format(coh)}</strong>
           </h5>
         </div>
       </div>

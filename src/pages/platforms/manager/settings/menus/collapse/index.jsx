@@ -47,7 +47,7 @@ export default function MenuCollapse({
                 <strong>{index + 1}.</strong>{" "}
                 {description && `${capitalize(description)} | `}
                 {abbreviation?.toUpperCase()} -{" "}
-                <span className="text-primary">{currency(opd)}</span>
+                <span className="text-primary">{currency.format(opd)}</span>
               </div>
               <div className="d-flex align-items-center gap-2">
                 <MDBIcon

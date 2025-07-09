@@ -51,21 +51,21 @@ const handlePrices = (form, menu) => {
         margin: [0, 0, 0, i + 1 === priceCategories.length ? 0 : 5],
         text: [
           { text: `${cat.text}: `, color: "#666" },
-          { text: currency(menu[cat.value]) },
+          { text: currency.format(menu[cat.value]) },
         ],
       }));
 
     case "ctr":
       return [
         {
-          text: currency(menu[insource?.contract]),
+          text: currency.format(menu[insource?.contract]),
         },
       ];
 
     case "hmo":
       return [
         {
-          text: currency(HMO.getSrp(hmo, menu.hmo)),
+          text: currency.format(HMO.getSrp(hmo, menu.hmo)),
         },
       ];
 
@@ -170,9 +170,9 @@ export const MenuToPdf = async ({ menus, form, createdBy }) => {
       },
       ...(isMembership
         ? [
-            { text: `${currency(menu?.opd)}` },
+            { text: `${currency.format(menu?.opd)}` },
             {
-              text: `${currency(
+              text: `${currency.format(
                 Memberships.getDiscountedSRP(form?.insource?.membership, menu)
               )}`,
             },

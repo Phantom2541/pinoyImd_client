@@ -105,13 +105,13 @@ export default function PaymentModal() {
               <div className="d-flex align-items-center">
                 <h6 className="grey-text mr-2">Amount:</h6>
                 <h5 style={{ fontWeight: 400 }}>
-                  {currency(selected?.amount)}
+                  {currency.format(selected?.amount)}
                 </h5>
               </div>
               <div className="d-flex align-items-center">
                 <h6 className="grey-text mr-2">Remaining:</h6>
                 <h5 style={{ fontWeight: 400 }} className="text-danger">
-                  {currency(selected?.amount - totalPaidAmount)}
+                  {currency.format(selected?.amount - totalPaidAmount)}
                 </h5>
               </div>
 

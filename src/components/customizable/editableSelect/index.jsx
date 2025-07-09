@@ -245,7 +245,7 @@ export default function EditableSelect({
           }}
         >
           {isMoney
-            ? currency(utils.getValue(keyForText, fieldData))
+            ? currency.format(utils.getValue(keyForText, fieldData))
             : capitalize(utils.getValue(keyForText, fieldData)) || "N/A"}
         </span>
       )}

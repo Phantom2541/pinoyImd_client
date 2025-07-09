@@ -41,14 +41,14 @@ export default function Vouchers() {
           <hr />
           <div className="d-flex justify-content-between border-bottom pb-2">
             <span>Total Received:</span>
-            <strong className="text-success">{currency(total)}</strong>
+            <strong className="text-success">{currency.format(total)}</strong>
           </div>
         </MDBCardBody>
       </MDBCollapse>
       {/* <MDBCardFooter className="bg-light border-top pt-3">
         <div className="d-flex justify-content-between">
           <span>Total:</span>
-          <strong className="text-primary">{currency(total)}</strong>
+          <strong className="text-primary">{currency.format(total)}</strong>
         </div>
       </MDBCardFooter> */}
     </MDBCard>

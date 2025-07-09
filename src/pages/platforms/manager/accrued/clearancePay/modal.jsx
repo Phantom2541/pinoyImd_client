@@ -141,7 +141,7 @@ export default function Modal() {
             }
           />
 
-          <span>Total Net: {currency(backPay - deduction)}</span>
+          <span>Total Net: {currency.format(backPay - deduction)}</span>
         </MDBModalBody>
         <MDBModalFooter>
           <button

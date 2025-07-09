@@ -83,7 +83,7 @@ export default function Body() {
                       {date}
                     </div>
                     <span className="text-primary ml-2 d-block">
-                      ({currency(total)})
+                      ({currency.format(total)})
                     </span>
                   </div>
                 </td>
@@ -158,8 +158,8 @@ export default function Body() {
                         </MDBBadge>
                       ))}
                     </td>
-                    <td>{currency(amount)}</td>
-                    <td>{currency(discount)}</td>
+                    <td>{currency.format(amount)}</td>
+                    <td>{currency.format(discount)}</td>
                     <td>{Privileges[privilege]}</td>
                   </tr>
                 );

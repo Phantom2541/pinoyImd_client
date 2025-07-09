@@ -56,7 +56,7 @@ const Card = ({ txt, num, index, items = [] }) => {
     if (!breakdown) return fullName;
 
     const details = Object.entries(breakdown)
-      .map(([key, value]) => `${capitalize(key)}: ${currency(value)}`)
+      .map(([key, value]) => `${capitalize(key)}: ${currency.format(value)}`)
       .join(", ");
 
     return `${fullName(cashier.fullName)}\n${details}`;
@@ -89,7 +89,7 @@ const Card = ({ txt, num, index, items = [] }) => {
                   >
                     {cashier?.alias || cashier?.fullName?.fname}
                     <span style={{ color: collector ? "" : "green" }}>
-                      {currency(gross)}
+                      {currency.format(gross)}
                     </span>
                   </div>
                 )
@@ -100,7 +100,7 @@ const Card = ({ txt, num, index, items = [] }) => {
           {totalGross > 0 && (
             <div className="manager-remmitance-total d-flex align-items-center text-end mt-2">
               <h6 className="title"> Gross:</h6>
-              <strong> {currency(totalGross)}</strong>
+              <strong> {currency.format(totalGross)}</strong>
             </div>
           )}
         </div>

@@ -155,17 +155,17 @@ const Body = () => {
                 </td>
                 <td>
                   <p className="fw-bold mb-1 text-capitalize">
-                    monthly:{currency(rate?.monthly)}
+                    monthly:{currency.format(rate?.monthly)}
                   </p>
                   {Number(contract?.pc) === 1 && (
                     <p className="text-muted mb-0">
-                      Daily: {currency(rate?.daily)}
+                      Daily: {currency.format(rate?.daily)}
                     </p>
                   )}
                 </td>
                 <td>
                   <p className="fw-bold mb-1 text-capitalize">
-                    {currency(rate?.cola)}
+                    {currency.format(rate?.cola)}
                   </p>
                 </td>
                 {Number(contract?.pc) === 1 && (
