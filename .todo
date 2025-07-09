@@ -1,17 +1,22 @@
     homepage
 
 kevin
-1.buttons on the list of staff (DOH) 2. on the physician on hompage change to companies-kevin 3. chage to "who were we accredteded with"(afflited with)
+1.buttons on the list of staff (DOH)
+2. on the physician on hompage change to companies-kevin 
+3. chage to "who were we accredteded with"(afflited with)
 4.testimontials of hospitals
 5.pioners change position of the last pic to the side
-6.change the pic of dev building the main pic to be moving and make the pic smaller below 7. change the icon of media
+6.change the pic of dev building the main pic to be moving and make the pic smaller below 
+7. change the icon of media
 
 darrel
 8.the sign up button boarder is the current window
 9.add in the sign up if the user is a previews patient
-if verified no password, take email, name, and brithday, and address 10. for verificaton need of birthday, OTP  
-(no duplicate) 10. add stepper  
-11.make the companies to be carried over thoughtout the session and can be change only in the profile
+if verified no password, take email, name, and brithday, and address 
+10. for verificaton need of birthday, OTP  (no duplicate) 
+11. add stepper  
+
+12.make the companies to be carried over thoughtout the session and can be change only in the profile
 
 if paid make the pics of hmo when click you will be directed to their website
 check code name of hmo in the fakedb (inlife in care)-kevin
@@ -30,31 +35,36 @@ and add boarder of the qrcode in the recit
 
 16. account payables - add the header payables and add due date and give etra charge fee - nick
 17. payments - have the latest date appear first in sorting and the arrow for colapse animation
-    18.account receivable - double check!!!!
-    19.vouchers - default zero and convert to table lang
-    20.outsources - add branches in the modal- nick
-    fakedb address adjust and change
-    21.outsources all - if no value pls show "this function is not yet appicable to your branch, if you want to active pls register client"
+18.account receivable - double check!!!!
+19.vouchers - default zero and convert to table lang
+20.outsources - add branches in the modal- nick
+fakedb address adjust and change
+21.outsources all - if no value pls show "this function is not yet appicable to your branch, if you want to active pls register client"
 18. hmo- make it to card and add the pic - kevin
 19. uttilites- if no value pls show "specify the providers" add warning notes "importance of the page"
 20. hotlines- add the contacts and names "pls provide specific contacts for safety of employees"
-    25.services preparation- to fix - uncle tom
-    26.remittance -census downpayment remove
-    print out two copies- darrel
+25.services preparation- to fix - uncle tom
+26.remittance -census downpayment remove
+print out two copies- darrel
 
 manager
-operational 27. remittance - sales break down (one line) - kevin
+operational 
+27. remittance - sales break down (one line) - kevin
+
 submit button change to "acknowledge or approve"
 
 28. mobile clinic- modal status add in select "draft-default and pending" fix saving
-    add time after the date
+add time after the date
 
-human resouces 29. staff- header hover issue (showing empty white box) 30. physician- wala lahat
+human resouces 
+29. staff- header hover issue (showing empty white box) 
+30. physician- wala lahat
 
 finance & receivable
-31.accounts receivable and soa records to be checked 32. rebate should not be seen in the cashier payables 33. payroll- add sss and philhealth
-
-headquarter 34. logo add detail requiments of pic size and other - kevin
+31.accounts receivable and soa records to be checked 32. rebate should not be seen in the cashier payables 
+33. payroll- add sss and philhealth
+headquarter 
+34. logo add detail requiments of pic size and other - kevin
 
 35. banner- remove the text below the banner,
 
