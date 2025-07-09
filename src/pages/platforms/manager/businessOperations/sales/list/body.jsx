@@ -165,18 +165,18 @@ export const Tables = () => {
         <table style="width: 100%; border-collapse: collapse;">
           <tr>
             <td><strong>Old Amount:</strong></td>
-            <td style="text-align: right;">${currency(amount)}</td>
+            <td style="text-align: right;">${currency.format(amount)}</td>
           </tr>
           <tr>
             <td><strong>Discount:</strong></td>
-            <td style="text-align: right; color: red;">-${currency(
+            <td style="text-align: right; color: red;">-${currency.format(
               discount
             )}</td>
           </tr>
           <tr><td colspan="2"><hr /></td></tr>
           <tr>
             <td><strong>New Amount:</strong></td>
-            <td style="text-align: right; color: green;"><strong>₱${currency(
+            <td style="text-align: right; color: green;"><strong>₱${currency.format(
               newAmount
             )}</strong></td>
           </tr>
@@ -209,11 +209,11 @@ export const Tables = () => {
             title: "Discount Applied!",
             html: `
           <p style="font-size: 1.1rem;">
-            A discount of <strong style="color: red;">${currency(
+            A discount of <strong style="color: red;">${currency.format(
               discount
             )}</strong> has been successfully applied.
           </p>
-          <p style="font-size: 1rem;">New total: <strong style="color: green;">${currency(
+          <p style="font-size: 1rem;">New total: <strong style="color: green;">${currency.format(
             newAmount
           )}</strong></p>
         `,
@@ -224,8 +224,6 @@ export const Tables = () => {
       }
     });
   };
-
-  console.log("filtered", deals);
 
   return (
     <MDBCardBody>
@@ -238,7 +236,7 @@ export const Tables = () => {
         }}
       >
         <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
-          {currency(total)}
+          {currency.format(total)}
         </p>
         <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
         <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
@@ -568,14 +566,14 @@ export const Tables = () => {
                         }}
                       />
                     </div>
-                    {/* <p style={{ fontWeight: 500 }}>{currency(deal.amount)}</p> */}
+                    {/* <p style={{ fontWeight: 500 }}>{currency.format(deal.amount)}</p> */}
                     {isDiscounted && (
                       <p
                         style={{ color: "red", marginTop: "-0.2rem" }}
                         title="Discount"
                         className="d-flex align-items-center"
                       >
-                        {currency(deal.discount)}
+                        {currency.format(deal.discount)}
                         <img
                           alt="Discount"
                           className="ml-3"
@@ -591,7 +589,7 @@ export const Tables = () => {
                         title="Tendered"
                         className="d-flex align-items-center"
                       >
-                        {currency(deal.cash)}
+                        {currency.format(deal.cash)}
                         <img
                           alt="tendered"
                           className="ml-2"
@@ -607,7 +605,7 @@ export const Tables = () => {
                       <MDBBadge
                         key={menu.referenceId}
                         className="mx-1"
-                        title={menu?.packages}
+                        title={menu?.packagesDisplay}
                       >
                         {menu?.abbreviation}
                       </MDBBadge>

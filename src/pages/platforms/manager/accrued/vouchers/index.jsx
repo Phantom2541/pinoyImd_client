@@ -8,9 +8,12 @@ import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
 import { useDispatch, useSelector } from "react-redux";
 import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/deals";
+import { currency } from "../../../../../services/utilities";
 
 const Vouchers = () => {
-  const { isLoading, isSuccess, message } = useSelector(({ deals }) => deals),
+  const { isLoading, isSuccess, message, collections, cluster } = useSelector(
+      ({ deals }) => deals
+    ),
     dispatch = useDispatch(),
     { addToast } = useToasts();
 
@@ -25,7 +28,7 @@ const Vouchers = () => {
 
   return (
     <MDBAnimation type="bounceInDown">
-      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+      <MDBCard narrow style={{ minHeight: "600px" }}>
         <Header />
         <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
         <Footer />

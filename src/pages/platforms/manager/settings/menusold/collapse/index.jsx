@@ -34,7 +34,7 @@ export default function MenuCollapse({
             <MDBCollapseHeader>
               {index + 1}. {description && `${capitalize(description)} | `}
               {abbreviation && `${abbreviation.toUpperCase()}`} - &nbsp;
-              <span className="text-primary">{currency(opd)}</span>
+              <span className="text-primary">{currency.format(opd)}</span>
               <i
                 style={{ rotate: `${activeId === index ? 0 : 90}deg` }}
                 className="fa fa-angle-down transition-all"

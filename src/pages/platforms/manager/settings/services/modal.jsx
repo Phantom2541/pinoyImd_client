@@ -164,7 +164,6 @@ export default function Modal({
 
   const { lo, hi, warn, alert, critical, snug } = form;
   console.log("preference", preference);
-  console.log("form", form);
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop>

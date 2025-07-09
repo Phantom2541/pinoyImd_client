@@ -120,18 +120,19 @@ const Header = () => {
       <div className="d-flex align-items-center">
         <span
           className="mx-3 text-nowrap mt-0"
-          title={`predictable expenses: ${currency(preExpenses)}`}
+          title={`predictable expenses: ${currency.format(preExpenses)}`}
         >
-          Collections: <strong className="text-white">{currency(sum)}</strong>
+          Collections:{" "}
+          <strong className="text-white">{currency.format(sum)}</strong>
         </span>
-        |<span> Expenses : {currency(expenses)}</span>|
+        |<span> Expenses : {currency.format(expenses)}</span>|
         <span title="Gcash, Voucher, Cheque, Credit">
-          Non-Cash: {currency(nonCash)}
+          Non-Cash: {currency.format(nonCash)}
         </span>
         <span className="mx-3 text-nowrap mt-0">
           + Remitted:{" "}
-          <strong className={remittedClass}>{currency(remitted)}</strong> (
-          {balanceMessage})
+          <strong className={remittedClass}>{currency.format(remitted)}</strong>{" "}
+          ({balanceMessage})
         </span>
       </div>
     </MDBView>

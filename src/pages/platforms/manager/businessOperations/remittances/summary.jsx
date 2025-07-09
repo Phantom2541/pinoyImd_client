@@ -174,7 +174,7 @@ export default function Summary() {
                     >
                       {`${name} ${
                         selectedCashier !== id && !isOnlyOneCashier
-                          ? `- ${currency(gross)}`
+                          ? `- ${currency.format(gross)}`
                           : ""
                       }`}
                     </option>
@@ -186,7 +186,7 @@ export default function Summary() {
                 <p className="font-bold flex-1 text-left">
                   {cluster.length} Patient/s
                 </p>
-                <p className="font-bold flex-1 text-right">{`Total: ${currency(
+                <p className="font-bold flex-1 text-right">{`Total: ${currency.format(
                   total
                 )}`}</p>
               </div>
@@ -223,7 +223,8 @@ export default function Summary() {
                             {new Date(createdAt).toLocaleTimeString()}
                           </div>
                           <div className="text-blue-600">
-                            {currency(amount)} {deletedAt ? "(Deleted)" : ""}{" "}
+                            {currency.format(amount)}{" "}
+                            {deletedAt ? "(Deleted)" : ""}{" "}
                             {handlePaymentIcon(payment)}
                           </div>
                           <div className="text-blue-600">

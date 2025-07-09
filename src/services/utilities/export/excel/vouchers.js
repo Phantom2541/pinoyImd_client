@@ -78,7 +78,7 @@ const set = {
       },
       {
         mergeCell: "A4:N4",
-        value: currency(gross),
+        value: currency.format(gross),
         label: "Total Amount",
         position: "center",
       },
@@ -96,7 +96,7 @@ const set = {
       const { deals, date } = vouchers[i];
       const dateCell = worksheet.getCell(`A${startPos}`);
       const amount = deals.reduce((acc, item) => acc + item.amount, 0);
-      dateCell.value = `${date} ${currency(amount)}`;
+      dateCell.value = `${date} ${currency.format(amount)}`;
       dateCell.font = { color: { argb: "FFFFFFFF" }, size: 13 };
       dateCell.fill = {
         type: "pattern",
@@ -167,8 +167,8 @@ const set = {
           `${i + 1}.  ${genderIcon} ${customer}`,
           category,
           services,
-          currency(amount),
-          currency(discount),
+          currency.format(amount),
+          currency.format(discount),
           Privileges[privilege],
         ];
 

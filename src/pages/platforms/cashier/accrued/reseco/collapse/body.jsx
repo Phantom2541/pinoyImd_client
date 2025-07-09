@@ -70,10 +70,10 @@ export default function Collapsable({ deals }) {
                 ))}
               </td>
               <td>
-                <h6>{currency(amount)}</h6>
+                <h6>{currency.format(amount)}</h6>
                 {!!discount && (
                   <MDBBadge className="mr-1 danger" title="Discount" tag="span">
-                    {currency(discount)}
+                    {currency.format(discount)}
                   </MDBBadge>
                 )}
               </td>

@@ -52,6 +52,7 @@ import removeUndefinedValues from "./dataCleaner";
 import collapse from "./collapse";
 import Male from "../../assets/male.jpg";
 import Female from "../../assets/female.jpg";
+import Logo from "../../assets/iMD.png";
 import PresetIMD from "../../assets/iMD.png";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
@@ -67,7 +68,6 @@ import MenusToPDF from "./export/pdf/menus";
 //status
 import employment from "../fakeDb/employment";
 
-import Logo from "../../assets/iMD.png";
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 

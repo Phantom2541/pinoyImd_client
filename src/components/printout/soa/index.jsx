@@ -4,7 +4,7 @@ import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import GeneratedBy from "./generatedBy";
-import { isEmpty } from "lodash";
+import { get, isEmpty } from "lodash";
 import "./style.css";
 const SOA = () => {
   const [vouchers, setVouchers] = useState([]),
@@ -15,10 +15,10 @@ const SOA = () => {
 
   useEffect(() => {
     const cluster = JSON.parse(localStorage.getItem("cluster")) || {};
-    const _vendor = JSON.parse(localStorage.getItem("vendor")) || {};
+    const filterEntity = JSON.parse(localStorage.getItem("filterEntity")) || {};
     const { menus, gross, options } =
       JSON.parse(localStorage.getItem("soa")) || {};
-    const voucherList = cluster[_vendor._id] || [];
+    const voucherList = get(cluster, filterEntity) || [];
     setTotal(gross);
     setVouchers(voucherList);
     setMenus(menus);

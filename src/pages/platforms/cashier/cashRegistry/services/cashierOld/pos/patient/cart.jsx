@@ -19,16 +19,18 @@ const Computations = ({ gross, discount }) => {
       <tbody>
         <tr>
           <td className="fw-bold text-left py-1">Gross Amount</td>
-          <td className="fw-bold text-right py-1">{currency(gross)}</td>
+          <td className="fw-bold text-right py-1">{currency.format(gross)}</td>
         </tr>
         <tr>
           <td className="fw-bold text-left py-1">Discount</td>
-          <td className="fw-bold text-right py-1">{currency(discount)}</td>
+          <td className="fw-bold text-right py-1">
+            {currency.format(discount)}
+          </td>
         </tr>
         <tr>
           <td className="fw-bold text-left py-1">Net Amount</td>
           <td className="fw-bold text-right py-1">
-            {currency(gross - discount)}
+            {currency.format(gross - discount)}
           </td>
         </tr>
       </tbody>
@@ -76,11 +78,11 @@ export default function PatientCart({
                     {String(description || abbreviation).toUpperCase()}
                   </td>
                   <td className="py-1" title="Suggested Retail Price">
-                    {currency(gross)}
+                    {currency.format(gross)}
                   </td>
                   <td className="py-1">
                     <span title={title} className={`text-${color}`}>
-                      {currency(up)}
+                      {currency.format(up)}
                     </span>
                   </td>
                   <td className="py-1">

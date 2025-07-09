@@ -62,7 +62,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                     className={`mb-0 text-right`}
                     style={{ whiteSpace: "nowrap", fontWeight: 400 }}
                   >
-                    {currency(gross)}
+                    {currency.format(gross)}
                   </h6>
                 </div>
               )}
@@ -117,7 +117,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                           fontSize: "0.8rem",
                         }}
                       >
-                        {currency(value)}
+                        {currency.format(value)}
                       </h6>
                     </div>
                   ))}
@@ -127,6 +127,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                 {
                   label: "Cash Payment",
                   value: breakdown?.cash !== gross ? breakdown?.cash : 0,
+                  // value: breakdown?.cash ? breakdown?.cash : 0,
                 },
                 {
                   label: " Add: FC",
@@ -169,7 +170,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                       className={`mb-0 text-right ${cn}`}
                       style={{ whiteSpace: "nowrap", fontWeight: 400 }}
                     >
-                      {currency(value)}
+                      {currency.format(value)}
                     </h6>
                   </div>
                 ))}
@@ -179,7 +180,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                 <div style={{ marginBottom: "1.8rem" }}>
                   <div className="cashier-remittance-breakdown">
                     <hr className="my-1" />
-
+                    {/* 
                     {breakdown &&
                       Object.entries(breakdown).map(([key, value]) => {
                         const paymentData = paymentMethod.getImage(key); // Get payment method data
@@ -208,7 +209,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                             </span>
                           </div>
                         );
-                      })}
+                      })} */}
                   </div>
                   <div
                     className="cashier-remittance-total d-flex align-items-center justify-content-between"
@@ -230,7 +231,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                       {isRemitted ? "Remitted" : "COH"}:
                     </h6>
                     <h6 className="mt-1" style={{ fontWeight: 400 }}>
-                      {currency(net)}
+                      {currency.format(net)}
                     </h6>
                   </div>
                 </div>

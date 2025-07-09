@@ -24,8 +24,6 @@ const Header = () => {
       );
   }, [dispatch, activePlatform?.branch?.companyId?._id, token]);
 
-  console.log("patientCategoires", activePlatform?.branch?.pc);
-
   return (
     <MDBView
       cascade

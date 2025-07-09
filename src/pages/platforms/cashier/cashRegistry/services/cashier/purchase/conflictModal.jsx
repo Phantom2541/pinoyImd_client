@@ -24,7 +24,7 @@ const Card = ({
             </>
           )}
         </div>
-        <p>{currency(gross)}</p>
+        <p>{currency.format(gross)}</p>
       </div>
       <div className="conflict-card-body">
         <div className="package-wrapper">

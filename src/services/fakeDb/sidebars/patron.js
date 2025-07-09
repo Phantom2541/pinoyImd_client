@@ -1,6 +1,7 @@
 import { Apply, Documents } from "../../../pages/platforms/patron/application";
 import Dashboard from "../../../pages/platforms/patron/dashboard";
 import { Diagnostics } from "../../../pages/platforms/patron/emr";
+import cardHolder from "../../../pages/platforms/patron/emr/cardHolder";
 // import RequestQuery from "../../../pages/platforms/patron/diagnostics/RequestQuery";
 // import CheckupRecord from "../../../pages/platforms/patron/emr/CheckupRecord";
 // import Appointments from "../../../pages/platforms/patron/appointments/Appointments";
@@ -18,10 +19,10 @@ const patron = [
     icon: "microscope",
     children: [
       {
-        name: "Request Query",
-        path: "/request-query",
+        name: "Kiosk",
+        path: "/Kiosk",
         icon: "file-medical",
-        // component: RequestQuery,
+        component: cardHolder,
       },
       {
         name: "Results",
@@ -32,10 +33,28 @@ const patron = [
     ],
   },
   {
-    name: "Appointments",
-    path: "/appointments",
+    name: "Clinics",
+    path: "/clinics",
     icon: "calendar-check",
-    // component: Appointments,
+    children: [
+      {
+        name: "Kiosk",
+        path: "/appointments",
+        icon: "calendar-check",
+        // component: Appointments,
+      },
+      {
+        name: "Checkup Record",
+        path: "/checkup",
+        icon: "stethoscope",
+        // component: CheckupRecord,
+      },
+      {
+        name: "Medical Certificates",
+        path: "/certificates",
+        icon: "file-medical-alt",
+      },
+    ],
   },
   {
     name: "Electronic Medical Records",
@@ -51,17 +70,6 @@ const patron = [
         name: "Medical Records",
         path: "/laboratory",
         icon: "vials",
-      },
-      {
-        name: "Medical Certificates",
-        path: "/certificates",
-        icon: "file-medical-alt",
-      },
-      {
-        name: "Checkup Record",
-        path: "/checkup",
-        icon: "stethoscope",
-        // component: CheckupRecord,
       },
     ],
   },

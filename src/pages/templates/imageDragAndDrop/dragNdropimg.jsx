@@ -3,11 +3,18 @@ import { MDBIcon } from "mdbreact";
 import Cropper from "react-easy-crop";
 import logo from "./../../../assets/iMD.png";
 import "./style.css";
+import { useDispatch } from "react-redux";
+import { UPLOAD } from "../../../services/redux/slices/assets/persons/auth";
+import { useToasts } from "react-toast-notifications";
 
 const ImageDragAndDrop = ({
   img = "",
   savedImg,
   downloadName = "downloaded-image.png",
+  setImgName = "file-name",
+  setImgEmail = "file-email",
+  token,
+  allowedType = null,
 }) => {
   const fileInputRef = useRef(null);
   const [preview, setPreview] = useState(img);
@@ -21,6 +28,9 @@ const ImageDragAndDrop = ({
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const { addToast } = useToasts();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let blobUrl;
@@ -56,9 +66,39 @@ const ImageDragAndDrop = ({
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      readImageFile(file);
+    if (!file || !file.type.startsWith("image/")) {
+      addToast("Please upload a valid image file.", { appearance: "error" });
+      return;
     }
+
+    const extension = file.type.split("/")[1]; // "png", "jpeg", etc.
+
+    // ✅ Check if the file type matches the allowedType (if provided)
+    if (allowedType && extension !== allowedType.toLowerCase()) {
+      addToast(`Only .${allowedType} files are allowed!`, {
+        appearance: "error",
+      });
+      return;
+    }
+
+    const fileName = `${setImgName}.${extension}`;
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      dispatch(
+        UPLOAD({
+          data: {
+            path: `users/${setImgEmail}`, // assumed to be a value, not a state setter
+            base64: event.target.result.split(",")[1],
+            name: fileName,
+          },
+          token,
+        })
+      );
+      addToast("Profile image updated!", { appearance: "success" });
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const readImageFile = (file) => {

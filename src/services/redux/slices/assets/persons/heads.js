@@ -243,24 +243,31 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
-        const { success } = action.payload;
+        const { success, payload } = action.payload;
+        console.log(action.payload);
+
         const index = state.collections.findIndex(
-          (item) => item?._id === action.payload
+          (item) => item?._id === payload
+        );
+        const findex = state.filtered.findIndex(
+          (item) => item?._id === payload
         );
         state.collections.splice(index, 1);
+        state.filtered.splice(findex, 1);
+
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       });
   },
 });

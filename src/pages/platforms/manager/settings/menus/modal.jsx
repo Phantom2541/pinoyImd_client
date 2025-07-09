@@ -189,7 +189,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           </MDBRow>
           <h5 className="mb-2 text-center">
             <span className="grey-text">SRP:</span>
-            <span className="ml-2">{currency(Number(form?.opd))}</span>
+            <span className="ml-2">{currency.format(Number(form?.opd))}</span>
           </h5>
           <MDBNav classicTabs color="info" tabs className="nav-justified">
             {tabs.map((title, index) => (

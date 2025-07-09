@@ -5,7 +5,6 @@ export { default as Statements } from "./statements";
 export { default as Payments } from "./payments";
 export { default as Philippines } from "./philippines";
 export { default as Privileges } from "./privileges";
-export { default as Denominations } from "./denominations";
 export { default as Suffixes } from "./suffixes";
 export { default as Categories } from "./categories";
 export { default as Memberships } from "./memberships";

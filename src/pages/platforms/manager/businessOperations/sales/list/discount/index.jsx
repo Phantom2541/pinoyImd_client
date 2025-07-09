@@ -98,7 +98,7 @@ export default function Discount() {
               className="mr-1"
             ></div>
             <p style={{ fontSize: "1.5rem", margin: "0 0px" }}>
-              {currency(originalAmount)}
+              {currency.format(originalAmount)}
             </p>
           </div>
           {discount ? (
@@ -124,7 +124,7 @@ export default function Discount() {
                   className="mr-1"
                 ></div>
                 <p style={{ fontSize: "1.5rem", margin: "0 0px" }}>
-                  {currency(discount)}
+                  {currency.format(discount)}
                 </p>
               </div>
               <div
@@ -148,7 +148,7 @@ export default function Discount() {
                   className="mr-1"
                 ></div>
                 <p style={{ fontSize: "1.5rem", margin: "0 0px" }}>
-                  {currency(originalAmount - discount)}
+                  {currency.format(originalAmount - discount)}
                 </p>
               </div>
             </>
@@ -171,7 +171,7 @@ export default function Discount() {
           />
           {newDiscount !== originalAmount && (
             <p style={{ fontWeight: 500, marginTop: "-1rem" }}>
-              Total Discount Amount is: {currency(newDiscount)}
+              Total Discount Amount is: {currency.format(newDiscount)}
             </p>
           )}
           <MDBBtn

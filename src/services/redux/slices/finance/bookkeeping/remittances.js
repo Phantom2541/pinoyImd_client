@@ -253,8 +253,8 @@ export const reduxSlice = createSlice({
           ({ _id }) => _id === payload._id
         );
         state.collections[index] = {
-          ...payload,
           ...state.collections[index],
+          ...payload,
         };
         state.selected = payload;
         state.message = success;

@@ -157,7 +157,7 @@ const set = {
         const servicesInclusion = cart.flatMap((service, _) => {
           return [
             {
-              text: service.packages + ",    ",
+              text: service.packagesDisplay + ",    ",
               font: { size: 11 },
             },
           ];

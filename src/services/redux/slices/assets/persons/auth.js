@@ -150,22 +150,27 @@ export const UPDATE_INFO = createAsyncThunk(
   }
 );
 
-export const UPLOAD = createAsyncThunk(`${url}/upload`, (form, thunkAPI) => {
-  try {
-    return axioKit.upload(form.data, form.token, (progress) => {
-      thunkAPI.dispatch(
-        UPLOADBAR(Math.round((progress.loaded * 100) / progress.total))
-      );
-    });
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const UPLOAD = createAsyncThunk(
+  `${url}/upload`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.upload(data, token, (progress) => {
+        thunkAPI.dispatch(
+          UPLOADBAR(Math.round((progress.loaded * 100) / progress.total))
+        );
+      });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const reduxSlice = createSlice({
   name: url,

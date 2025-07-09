@@ -60,7 +60,7 @@ export default function TopHeader() {
         />
       </div>
       <span className="white-text mx-3 text-nowrap mt-0">
-        Payments ({currency(total)}){" "}
+        Payments ({currency.format(total)}){" "}
       </span>
       <div>
         <div className="text-right d-flex align-items-center">

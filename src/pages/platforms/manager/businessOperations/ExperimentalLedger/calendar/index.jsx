@@ -292,11 +292,15 @@ export default function Calendar({
               <small className="fw-bolder">TRANSACTIONS</small>
             </div>
             <div className="bg-default rounded text-white d-flex flex-column py-1 px-3 text-center">
-              <span className="fw-bold h4">{currency(totalGrossSales)}</span>
+              <span className="fw-bold h4">
+                {currency.format(totalGrossSales)}
+              </span>
               <small className="fw-bolder">GROSS SALES</small>
             </div>
             <div className="bg-default rounded text-white d-flex flex-column py-1 px-3 text-center">
-              <span className="fw-bold h4">{currency(totalMenuExpenses)}</span>
+              <span className="fw-bold h4">
+                {currency.format(totalMenuExpenses)}
+              </span>
               <small className="fw-bolder">EXPENSES</small>
             </div>
           </>
@@ -402,7 +406,7 @@ export default function Calendar({
                                   color="primary"
                                   className="my-0 py-0 px-1 d-flex justify-content-between"
                                 >
-                                  <span>{key}:</span> {currency(value)}
+                                  <span>{key}:</span> {currency.format(value)}
                                 </MDBAlert>
                               ))}
                               <hr />
@@ -419,13 +423,15 @@ export default function Calendar({
                             color="success"
                             className="my-0 py-0 px-1 d-flex justify-content-between"
                           >
-                            <span>Sale:</span> {currency(_totalGrossSales)}
+                            <span>Sale:</span>{" "}
+                            {currency.format(_totalGrossSales)}
                           </MDBAlert>
                           <MDBAlert
                             color="danger"
                             className="my-0 py-0 px-1 d-flex justify-content-between"
                           >
-                            <span>Expenses:</span> {currency(_totalExpenses)}
+                            <span>Expenses:</span>{" "}
+                            {currency.format(_totalExpenses)}
                           </MDBAlert>
                         </>
                       )}
