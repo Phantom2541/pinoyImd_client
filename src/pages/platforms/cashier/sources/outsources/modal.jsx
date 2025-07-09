@@ -33,6 +33,7 @@ export default function Modal() {
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+  console.log("branches", companies);
 
   //Listener
   useEffect(() => {
@@ -110,6 +111,7 @@ export default function Modal() {
     setForm({ ...form, companyId: company });
     setBranches(_branches);
   };
+  console.log("collections", collections);
 
   return (
     <MDBModal

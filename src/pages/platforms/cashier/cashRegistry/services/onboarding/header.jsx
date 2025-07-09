@@ -2,10 +2,8 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 // import { Select } from "../../../../../../components/customizable";
-import {
-  INSOURCES,
-  BROWSE,
-} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { INSOURCES } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { BROWSE } from "../../../../../../services/redux/slices/assets/persons/cardHolder";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
