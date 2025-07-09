@@ -8,12 +8,9 @@ import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
 import { useDispatch, useSelector } from "react-redux";
 import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/deals";
-import { currency } from "../../../../../services/utilities";
 
 const Vouchers = () => {
-  const { isLoading, isSuccess, message, collections, cluster } = useSelector(
-      ({ deals }) => deals
-    ),
+  const { isLoading, isSuccess, message } = useSelector(({ deals }) => deals),
     dispatch = useDispatch(),
     { addToast } = useToasts();
 
