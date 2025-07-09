@@ -25,9 +25,15 @@ const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { collections, month, year, vendor, cluster, filterBy } = useSelector(
-      ({ deals }) => deals
-    ),
+  const {
+      collections,
+      month,
+      year,
+      vendor,
+      cluster,
+      filterBy,
+      hmo: baseHMO,
+    } = useSelector(({ deals }) => deals),
     { collections: providers } = useSelector(({ providers }) => providers),
     [filterOption, setFilterOption] = useState(""),
     [sources, setSources] = useState([]),
@@ -110,10 +116,14 @@ const Header = () => {
       setFilterOption("all");
     }
   }, [collections, providers, getProvider]);
-
-  const haveSource = vendor?._id && vendor?._id !== "noSource" ? true : false;
   const filterBySource = filterBy === "source";
+  const haveSelect =
+    (filterBySource
+      ? vendor?._id && vendor?._id !== "noSource"
+      : baseHMO !== "all") && cluster?.length > 0;
+
   const baseChoices = filterBySource ? sources : hmo;
+
   useEffect(() => {
     setFilterOption(
       JSON.parse(localStorage.getItem("cluster"))?.lastViewed || "all"
@@ -170,24 +180,31 @@ const Header = () => {
             total + voucher.deals.reduce((sum, deal) => sum + deal.amount, 0),
           0
         );
+        const customerCount = cluster.reduce(
+          (total, voucher) => total + voucher.deals.length,
+          0
+        );
+        const isSource = filterBy === "source";
 
         const data = {
           dealIds,
-          clientId: vendor._id,
+          ...(isSource ? { clientId: vendor?._id } : { hmo: baseHMO }),
           vendorId: activePlatform.branchId,
           userId: auth._id,
           amount: gross,
         };
-        const dateRange = get.dateRange(vendor, cluster);
-
+        const dateRange = get.dateRange({ vendor, cluster, isSource });
         const options = {
-          fileName: get.fileName(vendor, cluster),
+          isSource,
+          customerCount,
+          fileName: get.fileName({ vendor, cluster, isSource, hmo: baseHMO }),
           dateRange,
-          name: get.name(vendor),
+          name: isSource ? get.name(vendor) : HMO.getName(baseHMO),
           due: get.due(vendor),
           gross,
           createdBy: fullName(auth.fullName),
           address: billingAddress(vendor.address),
+          ...(!isSource && { cp: HMO.getCP(baseHMO) }),
         };
 
         dispatch(GENERATE_SOA({ data, token }));
@@ -196,7 +213,7 @@ const Header = () => {
           "filterEntity",
           JSON.stringify(`${filterBy}.${filterOption}`)
         );
-        localStorage.setItem("soa", JSON.stringify({ menus, gross, options }));
+        localStorage.setItem("soa", JSON.stringify({ gross, options }));
         window.open(
           "/printout/soa",
           "OutsourceRequestForm", // Unique window name 2
@@ -221,7 +238,7 @@ const Header = () => {
         <MDBBtn
           size="sm"
           color="warning"
-          disabled={!haveSource}
+          disabled={!haveSelect}
           onClick={handleGenerateSOA}
           title="Generate SOA"
         >

@@ -162,10 +162,9 @@ const Header = () => {
                 </option>
                 <option value="NoSource">
                   No Source (
-                  {
-                    (currency,
-                    format(summarizedSourcesMap["NoSource"]?.total || 0))
-                  }
+                  {currency.format(
+                    summarizedSourcesMap["NoSource"]?.total || 0
+                  )}
                   )
                 </option>
                 {summarizedSources

@@ -10,20 +10,120 @@ const accreditation = [
     path: "/accreditation/bulletin",
   },
   {
-    name: "Laboratory Assessment Tools r2021",
+    name: "Laboratory Assessment Tools (A.O. 2021-0037)",
     path: "/laboratory/assessment",
+    title: "DOH Order No. 2021-0037",
     icon: "cogs",
     children: [
       {
-        name: "1. ORGANIZATION and MANAGEMENT",
+        name: "I. ORGANIZATION and MANAGEMENT",
         path: "/laboratory/organization",
+        title:
+          " The organizations management team provides leadership acts according to the organization’s policies and has overall reaponsibility in ensuring effective and efficient operation of the organization (clinical laboratory).",
         icon: "cogs",
+        children: [
+          {
+            name: "1.Organizational Structure",
+            path: "/organizational",
+            title:
+              "Updated organizational  is posted/displayed in conspincoius area with the names, latest pictures (atleast passport size) and designation",
+            icon: "cogs",
+          },
+          {
+            name: "2. Organization's Mission, Vision and Objectives",
+            path: "/mission",
+            title:
+              "Wriyyen Vision, Mission and Objectives posted in conspicious area visible to clients",
+            icon: "cogs",
+          },
+          {
+            name: "3. valid DOH-LTO",
+            path: "/mission",
+            title:
+              "valid DOH-LTO, Valid DOH-LTO posted in conspicious area visible to clients",
+            icon: "cogs",
+          },
+          {
+            name: "4. Policy and Procedure ",
+            path: "/policy",
+            title:
+              "i. Written policy on management review\n ii. Compilation of documented minutes of meeting reflecting the date, time, attendance, agenda, and action taken signed and approved by the head of the laboratory\n iii. Supporting documents of evaluation and monitoring for activities such as records, logbook, checklist of supplies, inspection report, purchasing or procurement, and acceptance of supplies, etc.",
+            icon: "cogs",
+          },
+          {
+            name: "5. procedure for handling complaint",
+            path: "/procedure",
+            title:
+              "Written policy and proceduresfor handling complaints/clients feedback\n Suggestion box visible to clients\n Forms for complaints/clients feedback\n Records of complaints/client feedbackand action takens",
+            icon: "cogs",
+          },
+        ],
       },
       {
-        name: "2. HUMAN RESOURCES MANAGEMANT",
+        name: "II. HUMAN RESOURCES MANAGEMANT",
         path: "/laboratory/manpower",
-        component: Staffs,
         icon: "cogs",
+        children: [
+          {
+            name: "A. Staff Recruitement, selection, Appointment and Responsibilities",
+            path: "/human-resources",
+            title:
+              "Updated organizational  is posted/displayed in conspincoius area with the names, latest pictures (atleast passport size) and designation",
+            icon: "cogs",
+            children: [
+              {
+                name: "6. Policy on Hiring, Orientation ,  Training and Promotions",
+                path: "/policy",
+                title:
+                  "Written policy and procedures on hiring, orientation and promotion of personnel at all levels",
+                icon: "cogs",
+                component: Staffs,
+              },
+              {
+                name: "7. policy and procedure on continuing program for staff development and training",
+                path: "/laboratory/attendance",
+                icon: "cogs",
+                title:
+                  "Written policies and prcedures for staff development and training\n Proof of training",
+              },
+              {
+                name: "8. policy and procedure for discipline suspension, demotion and termination",
+                path: "/laboratory/disciplinary",
+                icon: "cogs",
+                title:
+                  "Written policies and procedures for disciplinary , suspension, demotion and termination of personnel at all  levels",
+              },
+            ],
+          },
+          {
+            name: "B. Personnel",
+            path: "/faculties",
+            icon: "users-round",
+            title: "Human resource and employee management",
+            children: [
+              {
+                name: "9. Duties and Responsibilities shall be clearly stated",
+                path: "/duties",
+                title:
+                  "Written job description or duties and responsibilities of all laboratory personnel",
+              },
+              {
+                name: "10. Adequate number of qualified personnel",
+                path: "/laboratory/attendance",
+                icon: "cogs",
+                title:
+                  "List of Personnel with designation \n Area of assignments indicated in the posted work schedule",
+              },
+              {
+                name: "Staff",
+                path: "/staff",
+                icon: "user",
+                title: "Current employees across branches",
+                component: Staffs,
+              },
+            ],
+          },
+        ],
       },
       {
         name: "3. PHYSICAL PLANT and ENVIRONMENT MANAGEMENT",

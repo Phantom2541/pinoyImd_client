@@ -15,11 +15,7 @@ import TableLoading from "../../../../../../../components/tableLoading";
 
 export default function Index() {
   const { filtered, isLoading } = useSelector(({ payments }) => payments);
-
-  /**
-   * Active states for collapsible items
-   */
-  const [activeId, setActiveId] = useState(-1);
+  const [activeId, setActiveId] = useState(0);
   const [didHoverId, setDidHoverId] = useState(-1);
 
   return (

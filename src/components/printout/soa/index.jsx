@@ -2,26 +2,22 @@ import { useEffect, useState } from "react";
 import { Banner } from "../../../services/utilities";
 import Header from "./header";
 import Body from "./body";
-import Footer from "./footer";
 import GeneratedBy from "./generatedBy";
-import { get, isEmpty } from "lodash";
+import { get } from "lodash";
 import "./style.css";
 const SOA = () => {
   const [vouchers, setVouchers] = useState([]),
     [options, setOptions] = useState({}),
-    [menus, setMenus] = useState([]),
     [total, setTotal] = useState(0),
     [range, setRange] = useState("");
 
   useEffect(() => {
     const cluster = JSON.parse(localStorage.getItem("cluster")) || {};
     const filterEntity = JSON.parse(localStorage.getItem("filterEntity")) || {};
-    const { menus, gross, options } =
-      JSON.parse(localStorage.getItem("soa")) || {};
+    const { gross, options } = JSON.parse(localStorage.getItem("soa")) || {};
     const voucherList = get(cluster, filterEntity) || [];
     setTotal(gross);
     setVouchers(voucherList);
-    setMenus(menus);
     setRange(options.dateRange);
     setOptions(options);
   }, []);
@@ -30,7 +26,7 @@ const SOA = () => {
     <div
       className="ml-1 soa-container"
       style={{
-        width: "794px",
+        width: "1000px",
         fontFamily: "Helvetica, sans-serif",
         letterSpacing: "-0.5px",
       }}
@@ -67,7 +63,6 @@ const SOA = () => {
         </div>
       </div>
       <GeneratedBy />
-      {!isEmpty(menus) && <Footer menus={menus} />}
     </div>
   );
 };

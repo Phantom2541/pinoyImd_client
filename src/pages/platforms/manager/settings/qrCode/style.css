@@ -1,0 +1,102 @@
+.QrCode-container {
+  position: relative;
+  max-width: 350px;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 5px;
+  padding: 15px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+.QrCode-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.QrCode-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.QrCode-logo img {
+  width: 100px;
+  aspect-ratio: 1 / 1;
+  object-position: center;
+}
+
+.QrCode-logo-text {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.QrCode-name {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  line-height: 35px;
+}
+
+.QrCode-subname,
+.QrCode-branch {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: white;
+}
+
+.QrCode-tagline {
+  text-align: center;
+  word-break: break-word;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: white;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+.QrCode-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+
+.QrCode-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: white;
+  margin-top: 10px;
+}
+
+.QrCode-img-container {
+  width: 250px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
+  border-radius: 12px;
+  background-color: white;
+  -webkit-user-drag: none;
+}
+
+.QrCode-img {
+  width: 250px;
+  height: auto;
+}
+
+.QrCode-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+
+.QrCode-footer span {
+  color: white;
+  font-size: 0.75rem;
+}
