@@ -33,7 +33,9 @@ const Header = () => {
       className="gradient-card-header custom-header blue-gradient narrower py-3 mx-4 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">Services</span>
+        <span className="white-text mx-3 text-nowrap mt-0">
+          Sendout Services Status
+        </span>
       </div>
     </MDBView>
   );
