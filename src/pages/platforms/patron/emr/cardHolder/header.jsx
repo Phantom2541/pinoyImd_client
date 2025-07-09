@@ -7,17 +7,27 @@ import {
   SetCREATE,
   BROWSE,
 } from "../../../../../services/redux/slices/assets/persons/cardHolder";
+import { BROWSE as COMPANYBROWSE } from "../../../../../services/redux/slices/assets/companies";
+import { BROWSE as BRANCHBROWSE } from "../../../../../services/redux/slices/assets/branches";
+import { useState } from "react";
 
 const Header = () => {
   const dispatch = useDispatch();
   const { activePlatform, token } = useSelector(({ auth }) => auth);
-  const { filtered, collections } = useSelector(({ cardHolder }) => cardHolder);
+  const { collections: companies } = useSelector(({ companies }) => companies);
+  const [branches, setBranches] = useState([]);
 
   useEffect(() => {
-    if (token)
-      dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
+    if (token) {
+      dispatch(COMPANYBROWSE({ token }));
+    }
   }, [dispatch, activePlatform, token]);
-  console.log("branchId", activePlatform);
+
+  const handleBranch = (branches) => {
+    console.log("branches", JSON.parse(branches));
+
+    setBranches(JSON.parse(branches));
+  };
 
   return (
     <>
@@ -28,22 +38,56 @@ const Header = () => {
         {/* TABS + LABEL */}
         <div className="d-flex align-items-center gap-4">
           {/* Label */}
-          <div className="text-white ml-4">
-            {filtered.length} Request Card Holder
-          </div>
+          <div className="text-white ml-4">Request Holder</div>
         </div>
-
         <div>
-          {/* Search */}
-          <Search
-            collections={collections}
-            setFiltered={(items) => dispatch(SetFILTERED(items))}
-            placeholder="Search..."
-            haveAction={true}
-            reset={() => dispatch(SetFILTERED(collections))}
-            hideButton={true}
-            handleAdd={(item) => dispatch(SetCREATE(item))}
-          />
+          <div className="d-flex align-items-center gap-2">
+            <label htmlFor="company" className="text-white mb-0 mr-2">
+              Company:
+            </label>
+            <select
+              name="company"
+              id="company"
+              className="form-control form-control-sm"
+              style={{ width: "200px" }}
+              onChange={(e) => {
+                handleBranch(e.target.value);
+              }}
+            >
+              <option />
+              {companies.map((company, index) => (
+                <option
+                  key={`${index}-company`}
+                  value={JSON.stringify(company.branches)}
+                >
+                  {company.name} {company.subName}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="d-flex align-items-center gap-2">
+            <label htmlFor="company" className="text-white mb-0 mr-2">
+              Branch: &nbsp;&nbsp;&nbsp;&nbsp;
+            </label>
+            <select
+              name="branch"
+              id="branch"
+              className="form-control form-control-sm"
+              style={{ width: "200px" }}
+              onChange={(e) => {
+                // console.log(e.target.value);
+                dispatch(BROWSE({ token, key: { branchId: e.target.value } }));
+                // handleOnboardings(e.target.value);
+              }}
+            >
+              <option />
+              {branches?.map((branch, index) => (
+                <option key={`${index}-branch`} value={branch._id}>
+                  {branch.name} {branch.subName}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </MDBView>
     </>
