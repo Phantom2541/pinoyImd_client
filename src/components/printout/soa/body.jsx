@@ -24,12 +24,9 @@ const Body = ({ vouchers }) => {
             <span className="ml-1">{voucher.date}</span>
             <span className="ml-2">
               (
-              {
-                (currency,
-                format(
-                  voucher?.deals.reduce((sum, deal) => sum + deal.amount, 0)
-                ))
-              }
+              {currency.format(
+                voucher?.deals.reduce((sum, deal) => sum + deal.amount, 0)
+              )}
               )
             </span>
           </div>
