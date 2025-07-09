@@ -10,9 +10,7 @@ import {
 import { HMO, Privileges } from "../../../../../../services/fakeDb";
 import Header from "./header";
 export default function Body() {
-  const { filtered, vendor, cluster, hmo, filterBy } = useSelector(
-      ({ deals }) => deals
-    ),
+  const { filtered, vendor, cluster, hmo } = useSelector(({ deals }) => deals),
     [vouchers, setVouchers] = useState([]),
     dispatch = useDispatch();
 
@@ -32,9 +30,10 @@ export default function Body() {
   };
 
   const isNoVendor = vendor?._id === "noSource" || !vendor?._id;
+  const showCard = hmo === "all";
   return (
     <>
-      <Header isNoVendor={isNoVendor} />
+      <Header />
       <MDBTable bordered small>
         <thead className="sticky">
           <tr>
@@ -45,7 +44,7 @@ export default function Body() {
             <th>Amount</th>
             <th>Discount</th>
             <th>Privilege</th>
-            <th>Card</th>
+            {showCard && <th>Card</th>}
           </tr>
         </thead>
         <MDBTableBody>
@@ -82,7 +81,7 @@ export default function Body() {
                         {date}
                       </div>
                       <span className="text-primary ml-2 d-block">
-                        ({currency(total)})
+                        ({currency.format(total)})
                       </span>
                     </div>
                   </td>
@@ -107,7 +106,7 @@ export default function Body() {
                               className="border mr-1 "
                               style={{ width: "27px" }}
                             ></div>
-                            {hmo !== "all" && (
+                            {!showCard && (
                               <>
                                 <input
                                   className="form-check-input m-0 p-0"
@@ -184,10 +183,10 @@ export default function Body() {
                           </MDBBadge>
                         ))}
                       </td>
-                      <td>{currency(amount)}</td>
-                      <td>{currency(discount)}</td>
+                      <td>{currency.format(amount)}</td>
+                      <td>{currency.format(discount)}</td>
                       <td>{Privileges[privilege]}</td>
-                      <td>{HMO.getName(hmo)}</td>
+                      {showCard && <td>{HMO.getName(hmo)}</td>}
                     </tr>
                   );
                 })}

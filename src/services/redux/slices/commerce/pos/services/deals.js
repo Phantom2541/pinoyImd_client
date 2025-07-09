@@ -562,6 +562,7 @@ export const reduxSlice = createSlice({
       let filtered = state.collections;
       if (payload === "all" || payload.length > 10) {
         filtered = state.collections;
+        state.hmo = "all";
       } else {
         state.hmo = payload;
         filtered = state.collections.filter(({ hmo = "" }) => hmo === payload);

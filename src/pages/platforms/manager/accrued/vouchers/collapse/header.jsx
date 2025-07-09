@@ -2,10 +2,13 @@ import { MDBTypography } from "mdbreact";
 import { currency } from "../../../../../../services/utilities";
 import { useSelector } from "react-redux";
 
-const Header = ({ isNoVendor = false }) => {
-  const { cluster = [], filterBy = "source" } = useSelector(
-    ({ deals }) => deals
-  );
+const Header = () => {
+  const {
+    cluster = [],
+    filterBy = "source",
+    vendor,
+    hmo,
+  } = useSelector(({ deals }) => deals);
   const totalCustomers = cluster?.reduce(
     (acc, curr) => acc + curr.deals?.length,
     0
@@ -19,9 +22,14 @@ const Header = ({ isNoVendor = false }) => {
   }, 0);
 
   const isFilterBySource = filterBy === "source";
+
+  const haveSelect = isFilterBySource
+    ? vendor?._id && vendor._id !== "noSource"
+    : hmo !== "all";
+
   return (
     <div className="mt-n2">
-      {isNoVendor ? (
+      {!haveSelect ? (
         <div>
           <MDBTypography noteTitle="Note: " note noteColor="warning">
             Please select a {isFilterBySource ? "source" : "card type"} before
@@ -38,7 +46,7 @@ const Header = ({ isNoVendor = false }) => {
           }}
         >
           <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
-            {currency(totalAmount)}
+            {currency.format(totalAmount)}
           </p>
           <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
           <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>

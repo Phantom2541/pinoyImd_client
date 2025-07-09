@@ -6,6 +6,15 @@ const HMO = {
   collections,
 
   findById: (pk) => collections.find(({ id }) => id === Number(pk)),
+  getCP: (pk) => {
+    // get contact person from local storage
+    const activePlatform = JSON.parse(localStorage.getItem("activePlatform"));
+    console.log("activePlatform", pk);
+    const { branch = {} } = activePlatform;
+    const { companyId = {} } = branch;
+    const { hmo = [] } = companyId;
+    return hmo?.find(({ code }) => code === pk)?.cp || {};
+  },
 
   getName: (_code) =>
     collections.find(({ code }) => code === _code)?.name || "-",
