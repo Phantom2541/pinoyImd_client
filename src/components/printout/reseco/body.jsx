@@ -57,14 +57,11 @@ const Body = () => {
           <td colSpan={3}>Total</td>
           <td colSpan={2}>
             <h4>
-              {
-                (currency,
-                format(
-                  resecos
-                    ?.flatMap(({ deals }) => deals.map((item) => item.amount))
-                    .reduce((acc, item) => acc + item, 0)
-                ))
-              }
+              {currency.format(
+                resecos
+                  ?.flatMap(({ deals }) => deals.map((item) => item.amount))
+                  .reduce((acc, item) => acc + item, 0)
+              )}
             </h4>
           </td>
         </tr>
