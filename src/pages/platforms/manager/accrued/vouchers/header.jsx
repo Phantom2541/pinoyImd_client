@@ -5,6 +5,8 @@ import {
   SetFilterBySOURCE,
   RESET,
   GENERATE_SOA,
+  SetFILTERBY,
+  SetFilterByCARD,
 } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { MDBBtn, MDBIcon, MDBView } from "mdbreact";
 import {
@@ -18,17 +20,20 @@ import {
   VouchersToExcel,
 } from "../../../../../services/utilities";
 import get from "./utils";
+import { HMO } from "../../../../../services/fakeDb";
 const Header = () => {
   const { maxPage, token, activePlatform, auth } = useSelector(
     ({ auth }) => auth
   );
-  const { collections, month, year, vendor, cluster } = useSelector(
+  const { collections, month, year, vendor, cluster, filterBy } = useSelector(
       ({ deals }) => deals
     ),
     { collections: providers } = useSelector(({ providers }) => providers),
-    [source, setSource] = useState(""),
+    [filterOption, setFilterOption] = useState(""),
     [sources, setSources] = useState([]),
+    [hmo, setHmo] = useState([]),
     dispatch = useDispatch();
+
   // Fetch vouchers
   useEffect(() => {
     if (activePlatform?.branchId) {
@@ -97,22 +102,44 @@ const Header = () => {
           })
         ).values(),
       ];
+      const uniqueHMO = [
+        ...new Set(collections.map(({ hmo }) => hmo).filter((a) => a)),
+      ];
+      setHmo(uniqueHMO);
       setSources(uniqueSource);
-      setSource("all");
+      setFilterOption("all");
     }
   }, [collections, providers, getProvider]);
 
+  const haveSource = vendor?._id && vendor?._id !== "noSource" ? true : false;
+  const filterBySource = filterBy === "source";
+  const baseChoices = filterBySource ? sources : hmo;
   useEffect(() => {
-    if (source && collections.length > 0) {
-      console.log("source", getProvider(source));
+    setFilterOption(
+      JSON.parse(localStorage.getItem("cluster"))?.lastViewed || "all"
+    );
+  }, [filterBy]);
+
+  useEffect(() => {
+    if (filterOption && collections.length > 0) {
       dispatch(
-        SetFilterBySOURCE({
-          value: source,
-          vendor: getProvider(source),
+        filterBySource
+          ? SetFilterBySOURCE({
+              value: filterOption,
+              vendor: getProvider(filterOption),
+            })
+          : SetFilterByCARD(filterOption)
+      );
+
+      localStorage.setItem(
+        "cluster",
+        JSON.stringify({
+          ...JSON.parse(localStorage.getItem("cluster") || "{}"),
+          lastViewed: filterOption,
         })
       );
     }
-  }, [source, getProvider, dispatch, collections]);
+  }, [filterOption, getProvider, dispatch, collections, filterBySource]);
 
   const handleGenerateSOA = () => {
     if (cluster.length === 0)
@@ -165,7 +192,10 @@ const Header = () => {
 
         dispatch(GENERATE_SOA({ data, token }));
 
-        localStorage.setItem("vendor", JSON.stringify(vendor));
+        localStorage.setItem(
+          "filterEntity",
+          JSON.stringify(`${filterBy}.${filterOption}`)
+        );
         localStorage.setItem("soa", JSON.stringify({ menus, gross, options }));
         window.open(
           "/printout/soa",
@@ -179,17 +209,15 @@ const Header = () => {
     });
   };
 
-  const haveSource = vendor?._id && vendor?._id !== "noSource" ? true : false;
-
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-2 d-flex justify-content-between align-items-center"
+      className="gradient-card-header blue-gradient narrower py-2 mx-4  d-flex justify-content-between align-items-center"
     >
       <div>
         <i>Voucher List</i>
       </div>
-      <div className="m-0 mt-n1 mr-n5">
+      <div className="m-0  mr-n5">
         <MDBBtn
           size="sm"
           color="warning"
@@ -199,29 +227,30 @@ const Header = () => {
         >
           <MDBIcon icon="file-invoice" className="mr-2" /> Generate SOA
         </MDBBtn>
-        <span className="d-block mt-n1 mb-n1" style={{ fontSize: "0.9rem" }}>
-          <i>
-            Note:
-            {haveSource
-              ? " You can now generate the SOA."
-              : " Select a source to activate Generate SOA."}
-          </i>
-        </span>
       </div>
       <div className="text-right d-flex align-items-center ">
-        <span className="mr-2">Source:</span>
+        <select
+          className="form-control"
+          style={{ width: "6rem" }}
+          value={filterBy}
+          onChange={({ target }) => {
+            setFilterOption("all");
+            dispatch(SetFILTERBY(target.value));
+          }}
+        >
+          <option value="source">Source</option>
+          <option value="card">Card</option>
+        </select>
+        :
         <select
           style={{ width: "15rem" }}
-          className="custom-select mr-2"
-          value={source}
-          onChange={(e) => setSource(e.target.value)}
+          className="form-control mr-2"
+          value={filterOption}
+          onChange={(e) => setFilterOption(e.target.value)}
         >
-          <option value="" disabled>
-            Select a Source
-          </option>
           <option value="all">Select all</option>
-          {sources?.map((source, index) => {
-            const { cutoff = 0, _id = "", displayname = "" } = source;
+          {baseChoices?.map((choice, index) => {
+            const { cutoff = 0, _id = "", displayname = "" } = choice || {};
             var className = "";
             var title = "";
 
@@ -233,15 +262,17 @@ const Header = () => {
               className = "bg-danger text-white";
               title = "No source available";
             }
+            const value = filterBySource ? _id : choice;
+            const text = filterBySource ? displayname : HMO.getName(choice);
 
             return (
               <option
                 key={`source-${index}`}
-                className={className}
-                value={_id}
+                className={filterBySource ? className : ""}
+                value={value}
                 title={title}
               >
-                {displayname}
+                {text}
               </option>
             );
           })}
