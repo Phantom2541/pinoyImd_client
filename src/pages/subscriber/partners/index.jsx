@@ -82,7 +82,7 @@ export default function Partners() {
               style={{ height: "80px", objectFit: "contain" }}
               className="subscriber-partners-image"
             />
-            <span>{hmo.abbr}</span>
+            {/* <span>{hmo.abbr}</span> */}
           </div>
         ))}
       </div>

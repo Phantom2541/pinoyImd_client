@@ -223,5 +223,13 @@
     "tl": "Humanizing Life, Health and Non‑Life Insurance for the Filipino",
     "code": "elg",
     "icon": "/assets/logo/eqtiwa.jpg"
+  },
+  {
+    "id": 29,
+    "name": "Philippine Health Insurance Corporation",
+    "abbr": "PhilHealth",
+    "tl": "Bawat Filipino, Miyembro. Bawat Miyembro, Protektado. Kalusugan Natin, Segurado",
+    "code": "phi",
+    "icon": "/assets/logo/philhealth.png"
   }
 ]
