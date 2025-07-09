@@ -83,9 +83,9 @@ const Body = () => {
                       {capitalize(fullName(particular?.fullName))}
                     </p>
                   </td>
-                  <td>{currency(deduction)}</td>
-                  <td>{currency(backPay)}</td>
-                  <td>{currency(net)}</td>
+                  <td>{currency.format(deduction)}</td>
+                  <td>{currency.format(backPay)}</td>
+                  <td>{currency.format(net)}</td>
                 </tr>
               );
             })

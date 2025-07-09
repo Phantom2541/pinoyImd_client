@@ -56,37 +56,39 @@ export default function Payments() {
                 <div className="d-flex justify-content-between border-bottom py-2">
                   <span>Cash :</span>
                   <strong className="text-primary">
-                    {currency(paymentTotals.cash)}
+                    {currency.format(paymentTotals.cash)}
                   </strong>
                 </div>
                 <div className="d-flex justify-content-between border-bottom py-2">
                   <span>Gcash :</span>
                   <strong className="text-primary">
-                    {currency(paymentTotals.gcash)}
+                    {currency.format(paymentTotals.gcash)}
                   </strong>
                 </div>
                 <div className="d-flex justify-content-between border-bottom py-2">
                   <span>Vouchers :</span>
                   <strong className="text-primary">
-                    {currency(paymentTotals.vouchers)}
+                    {currency.format(paymentTotals.vouchers)}
                   </strong>
                 </div>
                 <div className="d-flex justify-content-between border-bottom py-2">
                   <span>Downpayment:</span>
                   <strong className="text-danger">
-                    {currency(paymentTotals.pending)}
+                    {currency.format(paymentTotals.pending)}
                   </strong>
                 </div>
                 <div className="d-flex justify-content-between border-bottom py-2">
                   <span>Discount:</span>
                   <strong className="text-danger">
-                    {currency(totalDiscount)}
+                    {currency.format(totalDiscount)}
                   </strong>
                 </div>
                 <hr />
                 <div className="d-flex justify-content-between border-bottom pb-2">
                   <span>Gross Sales :</span>
-                  <strong className="text-info">{currency(grossSales)}</strong>
+                  <strong className="text-info">
+                    {currency.format(grossSales)}
+                  </strong>
                 </div>
               </>
             ) : (
@@ -100,7 +102,7 @@ export default function Payments() {
           <MDBCardBody className="pt-2">
             <div className="d-flex justify-content-between border-bottom py-2">
               <span>Deleted Transactions:</span>
-              <strong>{currency(deletedTotal)}</strong>
+              <strong>{currency.format(deletedTotal)}</strong>
             </div>
           </MDBCardBody>
         </MDBCard>

@@ -25,7 +25,7 @@ export default function Collapsable({ procurement }) {
           </td>
           <td>{dateFormat(createdAt)}</td>
           <td>{accuqired}</td>
-          <td>{currency(price)} </td>
+          <td>{currency.format(price)} </td>
           <td>
             <small>{status}</small>
           </td>

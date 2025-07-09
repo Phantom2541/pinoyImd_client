@@ -62,7 +62,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                     className={`mb-0 text-right`}
                     style={{ whiteSpace: "nowrap", fontWeight: 400 }}
                   >
-                    {currency(gross)}
+                    {currency.format(gross)}
                   </h6>
                 </div>
               )}
@@ -117,7 +117,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                           fontSize: "0.8rem",
                         }}
                       >
-                        {currency(value)}
+                        {currency.format(value)}
                       </h6>
                     </div>
                   ))}
@@ -170,7 +170,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                       className={`mb-0 text-right ${cn}`}
                       style={{ whiteSpace: "nowrap", fontWeight: 400 }}
                     >
-                      {currency(value)}
+                      {currency.format(value)}
                     </h6>
                   </div>
                 ))}
@@ -231,7 +231,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                       {isRemitted ? "Remitted" : "COH"}:
                     </h6>
                     <h6 className="mt-1" style={{ fontWeight: 400 }}>
-                      {currency(net)}
+                      {currency.format(net)}
                     </h6>
                   </div>
                 </div>

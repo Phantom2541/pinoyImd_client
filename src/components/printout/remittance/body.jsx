@@ -22,9 +22,9 @@ const Body = ({ remittance = {} }) => {
           return (
             <tr key={`coin-${denomination}`}>
               <td>{tableRaw + 1}</td>
-              <td className="text-center">{currency(denomination)}</td>
+              <td className="text-center">{currency.format(denomination)}</td>
               <td className="text-center">{quantity}</td>
-              <td className="text-center">{currency(amount)}</td>
+              <td className="text-center">{currency.format(amount)}</td>
             </tr>
           );
         })}
@@ -33,9 +33,9 @@ const Body = ({ remittance = {} }) => {
           return (
             <tr key={`bill-${denomination}`}>
               <td>{index + 2 + tableRaw}.</td>
-              <td className="text-center">{currency(denomination)}</td>
+              <td className="text-center">{currency.format(denomination)}</td>
               <td className="text-center">{quantity}</td>
-              <td className="text-center">{currency(amount)}</td>
+              <td className="text-center">{currency.format(amount)}</td>
             </tr>
           );
         })}
@@ -50,7 +50,7 @@ const Body = ({ remittance = {} }) => {
             className="text-center"
             style={{ verticalAlign: "middle", fontWeight: 700 }}
           >
-            <h4>{currency(sum)}</h4>
+            <h4>{currency.format(sum)}</h4>
           </td>
         </tr>
       </tbody>

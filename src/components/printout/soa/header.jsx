@@ -36,7 +36,7 @@ const Header = ({ options, total }) => {
       >
         <div className="d-flex align-items-center mt-2">
           <h6 className="fw-bold">Total Amount: </h6>
-          <h5 className="ml-1">{currency(total)}</h5>
+          <h5 className="ml-1">{currency.format(total)}</h5>
         </div>
       </div>
     </div>

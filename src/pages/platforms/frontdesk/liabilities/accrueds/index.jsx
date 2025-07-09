@@ -154,7 +154,7 @@ export default function Accrued() {
                     )}
                     <td>{statement ? statement.title : "N/A"}</td>
                     <td>{formatDate(liability?.due)}</td>
-                    <td>{currency(liability?.amount)}</td>
+                    <td>{currency.format(liability?.amount)}</td>
                     <td>
                       <MDBBtnGroup className="shadow-0">
                         <MDBBtn

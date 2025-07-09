@@ -111,7 +111,7 @@ export default function CashierMenu({ handlePicker }) {
               _key: abbr,
               _format: (data) => {
                 return data
-                  ? currency(data)
+                  ? currency.format(data)
                   : `This item has no price for ${name}.`;
               },
             },

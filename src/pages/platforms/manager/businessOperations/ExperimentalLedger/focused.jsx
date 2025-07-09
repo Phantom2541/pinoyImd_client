@@ -352,16 +352,16 @@ export default function FocusedSale({ ledger, focusedDay, month, year }) {
                         )
                       )}
                     </td>
-                    <td>{currency(amount, true)}</td>
-                    <td>{currency(discount, true)}</td>
+                    <td>{currency.format(amount, true)}</td>
+                    <td>{currency.format(discount, true)}</td>
                     <td>
                       <MDBBadge color={paymentBadgeColor}>
                         {String(payment).toUpperCase()}
                       </MDBBadge>
                       &nbsp;
-                      {currency(cash, true)}
+                      {currency.format(cash, true)}
                     </td>
-                    <td>{currency(amount - discount, true)}</td>
+                    <td>{currency.format(amount - discount, true)}</td>
                     <td>
                       <MDBDropdown>
                         <MDBDropdownToggle

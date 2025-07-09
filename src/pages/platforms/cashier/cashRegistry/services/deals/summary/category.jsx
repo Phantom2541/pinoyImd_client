@@ -73,62 +73,62 @@ export default function Payments() {
               <div className="d-flex justify-content-between">
                 <span>Floating Cash:</span>
                 <strong className="text-warning">
-                  {selected ? currency(sum) : "-"}
+                  {selected ? currency.format(sum) : "-"}
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Cash :</span>
                 <strong className="text-primary">
-                  {currency(paymentTotals.cash)}
+                  {currency.format(paymentTotals.cash)}
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Gcash :</span>
                 <strong className="text-primary">
-                  {currency(paymentTotals.gcash)}
+                  {currency.format(paymentTotals.gcash)}
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Vouchers :</span>
                 <strong className="text-primary">
-                  {currency(paymentTotals.voucher)}
+                  {currency.format(paymentTotals.voucher)}
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2 ml-3">
                 <span title="Wellness">HMO :</span>
                 <strong className="text-primary">
-                  {currency(paymentTotals.voucher)}
+                  {currency.format(paymentTotals.voucher)}
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2 ml-3">
                 <span title="Insource : Membership">Membership :</span>
                 <strong className="text-primary">
-                  {currency(paymentTotals.voucher)}
+                  {currency.format(paymentTotals.voucher)}
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2 ml-3">
                 <span title="Insource : Contracts">Contracts :</span>
                 <strong className="text-primary">
-                  {currency(paymentTotals.voucher)}
+                  {currency.format(paymentTotals.voucher)}
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Downpayment:</span>
                 <strong className="text-danger">
-                  {currency(paymentTotals.pending)}
+                  {currency.format(paymentTotals.pending)}
                 </strong>
               </div>
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Balance:</span>
                 <strong className="text-danger">
-                  {currency(paymentTotals.pending)}
+                  {currency.format(paymentTotals.pending)}
                 </strong>
               </div>
               <hr />
               <div className="d-flex justify-content-between border-bottom pb-2">
                 <span>Total :</span>
                 <strong className="text-success">
-                  {currency(total + sum)}
+                  {currency.format(total + sum)}
                 </strong>
               </div>
             </>

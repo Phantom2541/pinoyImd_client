@@ -83,8 +83,8 @@ export default function Collapsable({ deals, date, isChecked }) {
                   </MDBBadge>
                 ))}
               </td>
-              <td>{currency(amount)}</td>
-              <td>{currency(discount)}</td>
+              <td>{currency.format(amount)}</td>
+              <td>{currency.format(discount)}</td>
               <td>{Privileges[privilege]}</td>
             </tr>
           );

@@ -33,7 +33,7 @@ const FormattedTotal = ({
         className="mb-0 text-right text-nowrap"
         style={{ fontWeight: 400, ...style }}
       >
-        {currency(value)}
+        {currency.format(value)}
       </h5>
     </div>
   );

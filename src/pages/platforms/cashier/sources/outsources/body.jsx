@@ -96,7 +96,7 @@ const Body = () => {
               <td>
                 {contract === "sbc" ? "Sub Contract" : "Special Sub Contract"}
               </td>
-              <td>{currency(credit)}</td>
+              <td>{currency.format(credit)}</td>
               <td>{cutoff || "-"}</td>
               <td>{due}</td>
               <td>{capitalize(status)}</td>

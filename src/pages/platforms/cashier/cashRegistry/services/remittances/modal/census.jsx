@@ -158,19 +158,19 @@ export default function Census() {
             {
               icon: "hand-holding-usd",
               text: "Floating Cash",
-              value: currency(selected?.opening?.sum),
+              value: currency.format(selected?.opening?.sum),
               color: "text-success",
             },
             {
               icon: "chart-line",
               text: "Gross Sales",
-              value: currency(gross),
+              value: currency.format(gross),
               color: "text-success",
             },
             {
               icon: "money-bill-wave",
               text: "Expenses",
-              value: currency(paymentsSum),
+              value: currency.format(paymentsSum),
               color: "text-danger",
             },
             {
@@ -197,19 +197,19 @@ export default function Census() {
             {
               icon: "money-bill",
               text: "Cash",
-              value: currency(breakdown?.cash),
+              value: currency.format(breakdown?.cash),
               color: "text-primary",
             },
             {
               icon: "money-bill",
               text: "Gcash",
-              value: currency(breakdown?.gcash),
+              value: currency.format(breakdown?.gcash),
               color: "text-primary",
             },
             {
               icon: "money-bill",
               text: "Downpayment",
-              value: currency(breakdown?.downpayment),
+              value: currency.format(breakdown?.downpayment),
               color: "text-primary",
             },
           ].map(({ icon, text, value, color }, index) => (

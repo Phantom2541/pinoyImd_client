@@ -140,7 +140,7 @@ const Tables = () => {
                         </span>
                       )}
                     </td>
-                    <th>{currency(amount)}</th>
+                    <th>{currency.format(amount)}</th>
 
                     <td style={{ textAlign: "center" }}>
                       <div className="d-flex align-items-center justify-content-between">

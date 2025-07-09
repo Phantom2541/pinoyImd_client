@@ -32,8 +32,6 @@ export default function Body() {
   };
 
   const isNoVendor = vendor?._id === "noSource" || !vendor?._id;
-  // const isCard = filterBy === "hmo";
-
   return (
     <>
       <Header isNoVendor={isNoVendor} />
