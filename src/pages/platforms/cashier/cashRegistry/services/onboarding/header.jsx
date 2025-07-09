@@ -2,12 +2,19 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 // import { Select } from "../../../../../../components/customizable";
-import { INSOURCES } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import {
+  INSOURCES,
+  BROWSE,
+} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { filtered } = useSelector(({ deals }) => deals),
     dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
+  }, [dispatch, token, activePlatform]);
 
   //initial values
   useEffect(() => {
@@ -23,7 +30,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered.length} Onboarding
+          {filtered.length} Onboarding KIOSK Request
         </span>
       </div>
       <div>

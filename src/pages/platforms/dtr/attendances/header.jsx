@@ -1,16 +1,23 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
-import { BROWSE, SetMONTH, ResetDATE } from "../../../../services/redux/slices/market/attendances";
+import {
+  BROWSE,
+  SetMONTH,
+  ResetDATE,
+} from "../../../../services/redux/slices/market/attendances";
 import CalendarPicker from "../../../../components/header/calendars";
+
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections, month, year } = useSelector(({ attendances }) => attendances);
+  const { collections, month, year } = useSelector(
+    ({ attendances }) => attendances
+  );
   const dispatch = useDispatch();
 
   const handlePrintOut = () => {
     console.log("collections: ", collections);
-    
+
     localStorage.setItem("attendances", JSON.stringify(collections));
     window.open(
       "/printout/attendances",
@@ -31,6 +38,20 @@ const Header = () => {
       })
     );
   }, [token, dispatch, activePlatform, month, year]);
+
+  // ✅ Check for July and June records
+  const hasJulyRecord = collections.some((item) => {
+    const date = new Date(item.createdAt);
+    return date.getMonth() === 6; // July (0-based index)
+  });
+
+  const hasJuneRecord = collections.some((item) => {
+    const date = new Date(item.createdAt);
+    return date.getMonth() === 5; // June
+  });
+
+  // ✅ Show button logic
+  const showPrintButton = hasJulyRecord || (month === 6 && hasJuneRecord);
 
   return (
     <div style={{ position: "relative" }}>
@@ -61,15 +82,17 @@ const Header = () => {
         </div>
 
         {/* Right: Print Button */}
-        <MDBBtn
-          size="sm"
-          rounded
-          color="info"
-          onClick={handlePrintOut}
-          className="no-print"
-        >
-          <MDBIcon icon="print" />
-        </MDBBtn>
+        {showPrintButton && (
+          <MDBBtn
+            size="sm"
+            rounded
+            color="info"
+            onClick={handlePrintOut}
+            className="no-print"
+          >
+            <MDBIcon icon="print" />
+          </MDBBtn>
+        )}
       </MDBView>
     </div>
   );

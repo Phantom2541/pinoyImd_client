@@ -34,7 +34,7 @@ const Body = () => {
       <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
-          <th>Outsource</th>
+          <th>Source</th>
           <th>Customer</th>
           <th>Services</th>
           <th>Time</th>
