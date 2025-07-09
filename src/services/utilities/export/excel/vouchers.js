@@ -95,12 +95,12 @@ const set = {
     title.font = { bold: true, size: 22 };
     title.border = border;
     title.alignment = { horizontal: "center" };
+    console.log("options", options);
 
     const generateCell = (mergeCell, label, value, position = "left") => {
       worksheet.mergeCells(mergeCell);
       const startCell = mergeCell.split(":")[0];
       const data = worksheet.getCell(startCell);
-
       // Set rich text value
       data.value = {
         richText: [
@@ -123,7 +123,7 @@ const set = {
 
       {
         mergeCell: "A6:I6",
-        value: isSource ? address : cp?.agent,
+        value: isSource ? address : cp?.agent || "",
         label: isSource ? "Address" : "Contact Person",
       },
       {

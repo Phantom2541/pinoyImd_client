@@ -117,9 +117,10 @@ const Header = () => {
     }
   }, [collections, providers, getProvider]);
   const filterBySource = filterBy === "source";
-  const haveSelect = filterBySource
-    ? vendor?._id && vendor?._id !== "noSource"
-    : baseHMO !== "all";
+  const haveSelect =
+    (filterBySource
+      ? vendor?._id && vendor?._id !== "noSource"
+      : baseHMO !== "all") && cluster?.length > 0;
 
   const baseChoices = filterBySource ? sources : hmo;
 
@@ -183,15 +184,15 @@ const Header = () => {
           (total, voucher) => total + voucher.deals.length,
           0
         );
+        const isSource = filterBy === "source";
 
         const data = {
           dealIds,
-          clientId: vendor._id,
+          ...(isSource ? { clientId: vendor?._id } : { hmo: baseHMO }),
           vendorId: activePlatform.branchId,
           userId: auth._id,
           amount: gross,
         };
-        const isSource = filterBy === "source";
         const dateRange = get.dateRange({ vendor, cluster, isSource });
         const options = {
           isSource,

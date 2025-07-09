@@ -10,6 +10,7 @@ import {
 import { SetPAYMENT } from "../../../../../../services/redux/slices/finance/journals/soa";
 import { capitalize } from "lodash";
 import PaymentDetails from "./paymentDetails";
+import { HMO } from "../../../../../../services/fakeDb";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(({ soa }) => soa),
@@ -62,7 +63,8 @@ const Body = () => {
       <tbody>
         {paginatedData?.map((soa, index) => {
           const {
-            clientId,
+            clientId = {},
+            hmo = "",
             status,
             amount,
             deals = [],
@@ -78,14 +80,15 @@ const Body = () => {
             month: "long",
             year: "numeric",
           })} - SOA`;
-
+          const source = clientId?.name || clientId?.displayname;
+          const client = hmo ? HMO.getName(hmo) : source;
           return (
             <React.Fragment key={`body-${index}`}>
               <tr className={isOpen ? "border border-black" : ""}>
                 <td style={{ fontWeight: 400 }}>
                   <div>
                     <span className="font-weight-bold ">{index + 1}.</span>
-                    <span className="ml-2">{clientId?.name}</span>
+                    <span className="ml-2">{client}</span>
                     <MDBBadge
                       className="ml-2"
                       color={
