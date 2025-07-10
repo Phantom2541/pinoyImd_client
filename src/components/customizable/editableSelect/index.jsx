@@ -147,7 +147,7 @@ export default function EditableSelect({
     <div className="d-flex align-items-center w-100">
       {showSelect ? (
         <div
-          className="d-flex align-items-center"
+          className="d-flex align-items-center w-100"
           style={{
             ...selectStyle,
           }}

@@ -35,7 +35,6 @@ const Subscriber = ({ match }) => {
     companyId = match?.params?.companyId;
 
   useEffect(() => {
-    localStorage.setItem("companyId", companyId);
     dispatch(GET_DETAILS({ key: { companyId } }));
   }, [companyId, dispatch]);
 
