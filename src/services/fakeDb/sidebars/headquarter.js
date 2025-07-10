@@ -26,8 +26,7 @@ import ProcurmentEquipments from "../../../pages/platforms/headquarter/procureme
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
 import Applicants from "../../../pages/platforms/headquarter/settings/personnels/applicants";
 import PatientCategories from "../../../pages/platforms/headquarter/patientCategories";
-// import Dashboard from "../../../pages/platforms/headquarter/dashboard";
-// import Dashboard from "../../../pages/platforms/headquarter/dashboard";
+import Dashboard from "../../../pages/platforms/headquarter/dashboard";
 
 const headquarter = [
   {
@@ -35,7 +34,7 @@ const headquarter = [
     path: "/dashboard",
     icon: "layout-dashboard",
     title: "Overview of key metrics and activities",
-    // component: Dashboard,
+    component: Dashboard,
   },
   {
     name: "Personnel",

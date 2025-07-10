@@ -30,6 +30,7 @@ export default function AddressSelect({
         _address[key] = value;
         break;
     }
+    console.log("_address", _address);
 
     handleChange("address", _address);
   };
