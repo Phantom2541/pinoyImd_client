@@ -20,7 +20,7 @@ import ECGWave from "./cardioGraph";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
-    { hmo } = details,
+    { hmo, hasPhilHealth } = details,
     [show, setShow] = useState(false),
     [scrolled, setScrolled] = useState(false),
     [flipped, setFlipped] = useState(false),
@@ -257,9 +257,12 @@ const Subscriber = ({ match }) => {
                 <Partners />
               </div>
             )}
-            <div id="testimonials">
-              <Philhealth />
-            </div>
+            {hasPhilHealth && (
+              <div id="testimonials">
+                <Philhealth />
+              </div>
+            )}
+
             <ECGWave color="#1266f1" waves={19} className="my-4" />
             <div id="testimonials">
               <Testimonials />
