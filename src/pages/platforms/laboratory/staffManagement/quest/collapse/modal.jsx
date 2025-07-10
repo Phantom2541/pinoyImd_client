@@ -15,35 +15,51 @@ import {
   UPDATE,
   TOGGLETeam,
 } from "../../../../../../services/redux/slices/diagnostics/clinician/quest";
-// import { SearchUser } from "../../../../../../components/searchables";
 import { COMPANY } from "../../../../../../services/redux/slices/assets/persons/personnels";
-import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
+import { isEqual } from "lodash";
 import { properFullname } from "../../../../../../services/utilities";
 
 export default function Modal() {
-  const { showModalTeam, selected, team, willCreateTeam, isLoading } =
-      useSelector(({ quest }) => quest),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected),
-    { addToast } = useToasts(),
-    dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { addToast } = useToasts();
 
-  // Load company data
+  const { showModalTeam, selected, team, willCreateTeam, isLoading } =
+    useSelector(({ quest }) => quest);
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
+
+  const [form, setForm] = useState(selected);
+
+  // ✅ Sync Redux selected to local form state
   useEffect(() => {
-    if (token) {
+    setForm(selected);
+  }, [selected]);
+
+  // ✅ Load company data (once)
+  useEffect(() => {
+    if (token && activePlatform?.branch?.companyId?._id) {
       dispatch(
         COMPANY({
           token,
-          params: { companyId: activePlatform?.branch?.companyId?._id },
+          params: { companyId: activePlatform.branch.companyId._id },
         })
       );
     }
   }, [dispatch, token, activePlatform]);
 
-  // Handle update function
+  // ✅ Handle form input changes
+  const handleChange = (key, value) => {
+    setForm((prev) => ({
+      ...prev,
+      [key]: value,
+      userId: auth._id,
+      branchId: activePlatform.branchId,
+    }));
+  };
+
+  // ✅ Handle update
   const handleUpdate = () => {
-    TOGGLETeam();
+    dispatch(TOGGLETeam());
 
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
@@ -59,52 +75,27 @@ export default function Modal() {
     );
   };
 
-  // Handle add function
+  // ✅ Handle add member (FIXED)
   const handleAdd = () => {
-    const newTeam = [...team, form];
+    const safeTeam = Array.isArray(team) ? team : [];
+    const newTeam = [...safeTeam, form];
+
     dispatch(
       UPDATE({
         data: { _id: selected._id, team: newTeam },
         token,
       })
-    ).then(() => TOGGLETeam());
+    ).then(() => dispatch(TOGGLETeam()));
   };
 
-  // Handle form submit
+  // ✅ Handle form submission (uses above)
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (willCreateTeam) {
-      return handleAdd();
-    }
-
-    handleUpdate();
+    willCreateTeam ? handleAdd() : handleUpdate();
   };
 
-  // Handle change of inputs
-  const handleChange = (key, value) => {
-    setForm({
-      ...form,
-      [key]: value,
-      userId: auth._id,
-      branchId: activePlatform.branchId,
-    });
-  };
-
-  // Return correct form value
-  const handleValue = (key) => form?.[key] ?? "";
-
-  // Handle modal close
+  // ✅ Close modal
   const handleClose = () => dispatch(TOGGLETeam());
-
-  // Handle selected member from search
-  // const handleMember = (patient) => {
-  //   setForm({
-  //     ...form,
-  //     userId: patient._id,
-  //     user: patient,
-  //   });
-  // };
 
   return (
     <MDBModal isOpen={showModalTeam} toggle={handleClose} backdrop size="sm">
@@ -115,74 +106,74 @@ export default function Modal() {
         <MDBIcon icon="user" className="mr-2" />
         {willCreateTeam ? "Add" : "Update"} Member
       </MDBModalHeader>
-      <MDBModalBody className="mb-0">
+
+      <MDBModalBody>
         <form onSubmit={handleSubmit}>
-          <MDBTypography
-            tag="h4"
-            variant="h4-responsive"
-            className="text-center"
-          />
+          <MDBTypography tag="h5" className="text-center mb-4">
+            {form?.user ? properFullname(form.user.fullName) : "Member Details"}
+          </MDBTypography>
 
           <MDBRow className="mb-3">
             <MDBCol>
               <MDBInput
-                gap
-                onClick={() => handleChange("type", "inhouse")}
-                checked={form?.type === "inhouse"}
                 label="Inhouse"
                 type="radio"
                 id="inhouse"
+                checked={form?.type === "inhouse"}
+                onClick={() => handleChange("type", "inhouse")}
               />
               <MDBInput
-                gap
-                onClick={() => handleChange("type", "collaboration")}
-                checked={form?.type === "collaboration"}
                 label="Collaboration"
                 type="radio"
                 id="collaboration"
+                checked={form?.type === "collaboration"}
+                onClick={() => handleChange("type", "collaboration")}
               />
               <MDBInput
-                gap
-                onClick={() => handleChange("type", "import")}
-                checked={form?.type === "import"}
                 label="Import"
                 type="radio"
                 id="import"
+                checked={form?.type === "import"}
+                onClick={() => handleChange("type", "import")}
               />
             </MDBCol>
           </MDBRow>
 
-          {/* Uncomment if you want to search users */}
-          {/* <SearchUser setPatient={handleMember} /> */}
-
           {form?.user && (
-            <label title={properFullname(form.user.fullName)}>
-              Alias: {form.user.alias}
-            </label>
+            <div className="mb-2">
+              <label>Alias: {form.user.alias}</label>
+            </div>
           )}
 
           <MDBInput
+            label="Name"
+            type="text"
+            value={form?.fullName || ""}
+            required
+            onChange={(e) => handleChange("fullName", e.target.value)}
+          />
+          <MDBInput
             label="Role"
             type="text"
-            value={handleValue("role")}
+            value={form?.role || ""}
             required
             onChange={(e) => handleChange("role", e.target.value)}
           />
           <MDBInput
             label="Phone Number"
             type="text"
-            value={handleValue("phoneNumber")}
+            value={form?.phoneNumber || ""}
             required
             onChange={(e) => handleChange("phoneNumber", e.target.value)}
           />
 
           <label>Inform</label>
           <select
-            className="form-control"
+            className="form-control mb-3"
             value={
-              handleValue("hasInformed") === true
+              form?.hasInformed === true
                 ? "true"
-                : handleValue("hasInformed") === false
+                : form?.hasInformed === false
                 ? "false"
                 : ""
             }
@@ -197,14 +188,8 @@ export default function Modal() {
             <option value="false">Not Informed</option>
           </select>
 
-          <div className="text-center mb-1-half">
-            <MDBBtn
-              type="submit"
-              disabled={isLoading}
-              color="info"
-              className="mb-2"
-              rounded
-            >
+          <div className="text-center">
+            <MDBBtn type="submit" disabled={isLoading} color="info" rounded>
               {willCreateTeam ? "Add" : "Update"}
             </MDBBtn>
           </div>

@@ -14,7 +14,8 @@ const initialState = {
   willCreate: false,
   showModal: false,
   willAdd: false,
-  showMemberModal: false,
+  showModalTeam: false,
+  wiilCreateTeam: false,
 
   /**
    * pagination
@@ -103,20 +104,20 @@ export const reduxSlice = createSlice({
     SetCREATE: (state, { payload }) => {
       console.log("SetCREATE payload", payload);
       state.selected = {
-        fullName: "",
-        role: "",
-        phone: "",
-        status: "",
+        company: "",
+        location: "",
+        scheadule: "",
+
       };
       state.willCreate = true;
       state.showModal = true;
     },
-    SetTeam: (state, { payload }) => {
-      console.log("SetCREATE payload", payload);
+    SetTeam: (state, { payload }) =>
+    {
       state.team = payload;
-      state.willAdd = true;
-      state.showMemberModal = true;
-    },
+    state.willCreateTeam = true;
+    state.showModalTeam = true;
+  },
     SetFILTER: (state, { payload }) => {
       const { page, maxPage } = state;
       if (payload.length > 0) {
@@ -191,8 +192,7 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(SAVE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
+      .addCase(SAVE.fulfilled, (state, { payload }) => {
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.showModal = false;
@@ -211,6 +211,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
+        console.log("UPDATE.fulfilled", action.payload);
+
         const { success, payload } = action.payload;
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
