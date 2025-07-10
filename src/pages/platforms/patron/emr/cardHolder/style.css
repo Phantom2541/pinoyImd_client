@@ -46,7 +46,7 @@
   z-index: 1;
   position: relative;
   overflow: hidden;
-  margin-left: -1.5rem;
+  margin-left: -2rem;
   margin-right: -1rem;
   margin-top: -1rem;
 }
@@ -70,7 +70,7 @@
 .stepper-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 600px; /* adjust based on your layout */
+  min-height: 500px; /* adjust based on your layout */
 }
 
 .step-content {

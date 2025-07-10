@@ -1,10 +1,13 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { MDBCard, MDBCardBody, MDBBtn, MDBIcon } from "mdbreact";
 
-const LabRequest = () => {
+const LabRequest = ({
+  isValid = true,
+  form,
+  setForm = () => {},
+  setIsValid = () => {},
+}) => {
   const fileInputRef = useRef(null);
-  const [image, setImage] = useState(null);
-
   const handleUploadClick = () => {
     fileInputRef.current.click();
   };
@@ -14,7 +17,8 @@ const LabRequest = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result);
+        setForm({ ...form, form: reader.result.split(",")[1] });
+        setIsValid(true);
       };
       reader.readAsDataURL(file);
     }
@@ -25,7 +29,7 @@ const LabRequest = () => {
       <MDBCard
         style={{
           width: "794px",
-          height: "400px",
+          height: "300px",
           borderRadius: "8px",
           position: "relative",
           backgroundColor: "#f9f9f9",
@@ -36,7 +40,24 @@ const LabRequest = () => {
           className="p-0"
           style={{ height: "100%", position: "relative" }}
         >
-          {image ? (
+          {!isValid && (
+            <div
+              className="alert alert-danger mb-0 d-flex align-items-center justify-content-center mb-n5"
+              style={{
+                borderRadius: "0",
+                fontWeight: "500",
+                textAlign: "center",
+                padding: "12px 16px",
+                backgroundColor: "#f8d7da",
+                color: "#721c24",
+              }}
+            >
+              Lab request form is required. Please upload it before proceeding
+              to the next step.
+            </div>
+          )}
+
+          {form.form ? (
             <>
               <div
                 style={{
@@ -46,7 +67,7 @@ const LabRequest = () => {
                 }}
               >
                 <img
-                  src={image}
+                  src={`data:image/png;base64,${form.form}`}
                   alt="Uploaded Lab Request"
                   style={{
                     width: "100%",
@@ -60,9 +81,8 @@ const LabRequest = () => {
               <div
                 style={{
                   position: "absolute",
-                  bottom: "-5px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
+                  bottom: "-2px",
+                  right: "0",
                 }}
               >
                 <MDBBtn size="sm" color="warning" onClick={handleUploadClick}>

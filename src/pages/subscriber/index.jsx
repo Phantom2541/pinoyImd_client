@@ -36,6 +36,7 @@ const Subscriber = ({ match }) => {
 
   useEffect(() => {
     dispatch(GET_DETAILS({ key: { companyId } }));
+    localStorage.setItem("companyId", companyId);
   }, [companyId, dispatch]);
 
   useEffect(() => {

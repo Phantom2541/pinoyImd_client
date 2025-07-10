@@ -123,6 +123,7 @@ const store = configureStore({
     dragDrop,
     table,
   },
+  devTools: true,
 });
 
 export default store;

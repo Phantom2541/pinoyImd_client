@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Philippine Passport",
+    "code": "pps",
+    "description": "Issued by the DFA for international travel and identity verification."
+  },
+  {
+    "name": "Philippine National ID (PhilSys)",
+    "code": "nid",
+    "description": "The unified national identification card for all Filipinos."
+  },
+  {
+    "name": "Driver’s License (LTO)",
+    "code": "dvl",
+    "description": "Issued by the LTO as a license to drive and valid government ID."
+  },
+  {
+    "name": "SSS UMID Card",
+    "code": "sss",
+    "description": "Multi-purpose ID issued by the Social Security System (SSS)."
+  },
+  {
+    "name": "GSIS eCard",
+    "code": "gss",
+    "description": "Government-issued ID for GSIS members, used for loans and benefits."
+  },
+  {
+    "name": "PRC ID",
+    "code": "prc",
+    "description": "ID for licensed professionals, issued by the Professional Regulation Commission."
+  },
+  {
+    "name": "Postal ID",
+    "code": "pst",
+    "description": "General-purpose ID issued by the Philippine Postal Corporation."
+  },
+  {
+    "name": "Voter’s ID / COMELEC Certificate",
+    "code": "vtr",
+    "description": "Issued by COMELEC to registered voters as proof of registration."
+  },
+  {
+    "name": "PhilHealth ID",
+    "code": "phi",
+    "description": "Used for availing PhilHealth benefits in healthcare facilities."
+  },
+  {
+    "name": "TIN ID (with photo)",
+    "code": "tin",
+    "description": "Issued by BIR for taxpayers. Must include a photo to be valid."
+  },
+  {
+    "name": "OWWA ID / OFW e-Card",
+    "code": "oww",
+    "description": "Issued to OFWs as proof of OWWA membership and identity."
+  },
+  {
+    "name": "PWD ID",
+    "code": "pwd",
+    "description": "Issued to Persons With Disabilities for access to benefits and discounts."
+  },
+  {
+    "name": "Senior Citizen ID",
+    "code": "sen",
+    "description": "Issued to citizens aged 60 and above to access senior discounts and benefits."
+  },
+  {
+    "name": "Company ID",
+    "code": "cmp",
+    "description": "Issued by the employer as proof of employment (valid if government-recognized)."
+  },
+
+  {
+    "name": "Police Clearance",
+    "code": "plc",
+    "description": "Certifies that the individual has no criminal record, issued by PNP."
+  },
+  {
+    "name": "NBI Clearance",
+    "code": "nbi",
+    "description": "Issued by the National Bureau of Investigation, often used for job applications."
+  },
+  {
+    "name": "Firearms License",
+    "code": "frl",
+    "description": "Issued by PNP to licensed firearm holders, also serves as a government ID."
+  },
+  {
+    "name": "Indigenous People’s ID",
+    "code": "ipd",
+    "description": "Issued to members of indigenous groups by the NCIP."
+  },
+  {
+    "name": "Marina ID",
+    "code": "mrn",
+    "description": "Issued by MARINA to seafarers and maritime professionals."
+  }
+]

@@ -15,7 +15,7 @@ const login = async (email, password) =>
        * Clear the local storage first
        */
       const companyId = localStorage.getItem("companyId");
-      localStorage.clear();
+      // localStorage.clear();
       const { token, auth } = data.payload;
       localStorage.setItem("token", token);
       localStorage.setItem("email", auth.email);
@@ -24,6 +24,7 @@ const login = async (email, password) =>
         "activePlatform",
         auth?.activePlatform?.platform || "patron"
       );
+      console.log("companyId", companyId);
       localStorage.setItem("companyId", JSON.stringify(companyId));
 
       return data;
