@@ -18,6 +18,7 @@ const Body = () => {
     ),
     { platform } = activePlatform,
     dispatch = useDispatch();
+  console.log("filtered", filtered);
 
   useEffect(() => {
     if (!formSubmitted && isSuccess) dispatch(RESET());
@@ -81,7 +82,11 @@ const Body = () => {
               <td className={isGhost && "text-primary"}>
                 {isGhost && "👻"} {displayname || name}
               </td>
-              <td>{billingAddress(address)}</td>
+              <td>
+                {address && typeof address === "object"
+                  ? billingAddress(address)
+                  : "-"}
+              </td>
               <td>
                 {contract === "sbc" ? "Sub Contract" : "Special Sub Contract"}
               </td>
