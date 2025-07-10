@@ -1,86 +1,93 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { SetActiveTAB } from "../../../../../services/redux/slices/assets/persons/cardHolder";
+import React, { useState } from "react";
+import { MDBBtn, MDBCol, MDBRow, MDBIcon } from "mdbreact";
+import LabRequest from "./labRequest";
+import CardRequest from "./cardRequest";
 import "./style.css";
 
-const Body = () => {
-  const dispatch = useDispatch();
-  const { activeTab } = useSelector(({ cardHolder }) => cardHolder);
-  const handleAccept = () => {
-    const isAccredited = false; // Replace with your real logic
+const steps = [
+  {
+    id: 1,
+    label: "Request Form",
+    content: <LabRequest />,
+  },
+  {
+    id: 2,
+    label: "Card",
+    content: <CardRequest />,
+  },
+  {
+    id: 3,
+    label: "Schedule",
+    content: (
+      <div className="text-center">
+        <h5>You're all set!</h5>
+        <p>Review and submit your diagnostic appointment request.</p>
+        <MDBBtn color="success">Submit Booking</MDBBtn>
+      </div>
+    ),
+  },
+];
 
-    if (!isAccredited) {
-      alert("This company is not accredited for this HMO.");
-    } else {
-      alert("Card accepted successfully!");
-      // You can also dispatch an action or update state here
-    }
+const CustomStepper = () => {
+  const [activeStep, setActiveStep] = useState(1);
+
+  const nextStep = () => {
+    if (activeStep < steps.length) setActiveStep(activeStep + 1);
+  };
+
+  const prevStep = () => {
+    if (activeStep > 1) setActiveStep(activeStep - 1);
   };
 
   return (
-    <div className="tab-wrapper">
-      {/* Tab Panel */}
-      <div className="tab-panel-horizontal">
-        <button
-          className={`tab-button-horizontal ${
-            activeTab === "labRequest" ? "active-tab" : ""
-          }`}
-          onClick={() => dispatch(SetActiveTAB("labRequest"))}
-        >
-          Lab Request Card
-        </button>
-        <button
-          className={`tab-button-horizontal ${
-            activeTab === "other" ? "active-tab" : ""
-          }`}
-          onClick={() => dispatch(SetActiveTAB("other"))}
-        >
-          Health Support Card
-        </button>
+    <div className="stepper-wrapper ">
+      <div className="stepper-container mb-2">
+        {steps.map((step, index) => (
+          <React.Fragment key={step.id}>
+            <div
+              className={`step ${activeStep >= step.id ? "active" : ""}`}
+              onClick={() => setActiveStep(step.id)}
+            >
+              <div className="step-circle">
+                {step.id === 3 ? (
+                  <MDBIcon icon="exclamation-triangle" />
+                ) : (
+                  step.id
+                )}
+              </div>
+              <div className="step-label">{step.label}</div>
+            </div>
+            {index !== steps.length - 1 && (
+              <div
+                className={`step-line ${activeStep > step.id ? "filled" : ""}`}
+              ></div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
 
-      {/* Tab Content */}
-      <div className="tab-body-content">
-        {activeTab === "labRequest" && (
-          <div className="template1-card mx-auto">
-            <img
-              className="template1-card-image"
-              src="https://via.placeholder.com/300x160"
-              alt="Lab Request"
-            />
-            <div className="template1-card-body">
-              <div className="template1-card-title">Lab Request Card</div>
-              <div className="template1-card-subtitle">Laboratory</div>
-              <div className="template1-card-description">
-                This is the content for the lab request card.
-              </div>
-              {/* Accept Button */}
-              <button className="btn btn-success mt-3" onClick={handleAccept}>
-                Accept Card
-              </button>
-            </div>
-          </div>
-        )}
+      <div className="step-content">
+        {steps.find((s) => s.id === activeStep)?.content}
+      </div>
 
-        {activeTab === "other" && (
-          <div className="template1-card mx-auto">
-            <img
-              className="template1-card-image"
-              src="https://via.placeholder.com/300x160"
-              alt="Health Support"
-            />
-            <div className="template1-card-body">
-              <div className="template1-card-title">Health Support Card</div>
-              <div className="template1-card-subtitle">Other Department</div>
-              <div className="template1-card-description">
-                This is the content for the Health Support card.
-              </div>
-            </div>
-          </div>
-        )}
+      <div className="stepper-buttons">
+        <MDBRow className="mt-3">
+          <MDBCol md="12" className="text-right">
+            {activeStep > 1 && (
+              <MDBBtn onClick={prevStep} rounded color="white" flat>
+                Back
+              </MDBBtn>
+            )}
+            {activeStep < steps.length && (
+              <MDBBtn color="primary" onClick={nextStep} rounded>
+                Next
+              </MDBBtn>
+            )}
+          </MDBCol>
+        </MDBRow>
       </div>
     </div>
   );
 };
 
-export default Body;
+export default CustomStepper;
