@@ -19,7 +19,6 @@ export default function Branches() {
       auth,
     } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
-  console.log("branches:", branches);
 
   const handleActivePlatform = (branchId) => {
     const _access =
