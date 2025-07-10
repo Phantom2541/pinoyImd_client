@@ -146,7 +146,7 @@ export default function MenuCollapse({ staffs }) {
                       {user && `${fullName(user?.fullName)} | `}
                       {contract?.designation && `${department}`}
                     </span>
-                    {viewHistory && (
+                    {viewHistory && remarks?.length > 0 && (
                       <div
                         className="shadow-sm border border-gray"
                         style={{

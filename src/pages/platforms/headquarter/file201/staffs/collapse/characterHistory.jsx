@@ -1,5 +1,5 @@
 import { capitalize, orderBy } from "lodash";
-import { dateFormat, employment } from "../../../../../../services/utilities";
+import { dateFormat } from "../../../../../../services/utilities";
 
 const CharacterHistory = ({ remarks }) => {
   console.log("remarks", remarks);
