@@ -15,19 +15,18 @@ import {
   Suppliers,
 } from "../../../pages/platforms/cashier";
 
+import { Tieups } from "../../../pages/platforms/manager/settings";
 import {
   Logo,
   Tagline,
   Description,
-  Tieups,
-} from "../../../pages/platforms/manager/settings";
+} from "../../../pages/platforms/headquarter/settings";
 
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
 import Applicants from "../../../pages/platforms/headquarter/settings/personnels/applicants";
 import PatientCategories from "../../../pages/platforms/headquarter/patientCategories";
-// import Dashboard from "../../../pages/platforms/headquarter/dashboard";
-// import Dashboard from "../../../pages/platforms/headquarter/dashboard";
+import Dashboard from "../../../pages/platforms/headquarter/dashboard";
 
 const headquarter = [
   {
@@ -35,7 +34,7 @@ const headquarter = [
     path: "/dashboard",
     icon: "layout-dashboard",
     title: "Overview of key metrics and activities",
-    // component: Dashboard,
+    component: Dashboard,
   },
   {
     name: "Personnel",

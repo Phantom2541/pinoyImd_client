@@ -19,6 +19,12 @@ const clinical = [
     icon: "cogs",
     children: [
       {
+        name: "Dashboard",
+        title: "Overview of platform activity.",
+        path: "/dashboard",
+        icon: "concierge-bell",
+      },
+      {
         name: "Appointments",
         path: "/appointments",
         icon: "cogs",

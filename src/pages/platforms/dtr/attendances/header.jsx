@@ -16,8 +16,6 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const handlePrintOut = () => {
-    console.log("collections: ", collections);
-
     localStorage.setItem("attendances", JSON.stringify(collections));
     window.open(
       "/printout/attendances",

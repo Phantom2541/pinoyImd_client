@@ -43,35 +43,41 @@ export default function DTR() {
     if (dateOut) localStorage.setItem("endTime", dateOut.toISOString());
     if (ipIn) localStorage.setItem("publicIP", ipIn);
     if (ipOut) localStorage.setItem("endIP", ipOut);
-    dispatch(
-      UPDATE({
-        data: {
-          clockedIn,
-          startTime: dateIn?.toISOString(),
-          endTime: dateOut?.toISOString(),
-          publicIP: ipIn,
-          endIP: ipOut,
-        },
-        token: activePlatform.token,
-      })
-    );
   }, [clockedIn, dateIn, dateOut, ipIn, ipOut, dispatch, activePlatform]);
 
   const handleClock = async () => {
     const currentDate = new Date();
+    const hour = currentDate.getHours();
+    const timeString = currentDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
 
     try {
-      // Use no credentials to avoid CORS issue
       const res = await axios.get("https://api.ipify.org?format=json", {
         withCredentials: false,
       });
       const currentIP = res.data.ip;
+
+      const attendanceData = {
+        branchId: activePlatform?.branchId,
+        userId: activePlatform?.userId,
+        publicIP: currentIP,
+      };
 
       if (clockedIn) {
         console.log("🛑 Clocking out...");
         setDateOut(currentDate);
         setIPOut(currentIP);
         setClockedIn(false);
+
+        // ➕ Save time-out to am or pm
+        if (hour < 12) {
+          attendanceData.am = { out: timeString };
+        } else {
+          attendanceData.pm = { out: timeString };
+        }
       } else {
         console.log("✅ Clocking in...");
         setDateIn(currentDate);
@@ -79,18 +85,48 @@ export default function DTR() {
         setDateOut(null);
         setIPOut("");
         setClockedIn(true);
+
+        // ➕ Save time-in to am or pm
+        if (hour < 12) {
+          attendanceData.am = { in: timeString };
+        } else {
+          attendanceData.pm = { in: timeString };
+        }
       }
+
+      console.log("attendanceData", attendanceData);
+
+      dispatch(
+        UPDATE({
+          data: attendanceData,
+          token: activePlatform.token,
+        })
+      );
     } catch (err) {
       console.error("❌ Failed to fetch IP address:", err);
+
+      const fallbackData = {
+        branchId: activePlatform?.branchId,
+        userId: activePlatform?.userId,
+        publicIP: "Unavailable",
+      };
+
       if (clockedIn) {
-        setIPOut("Unavailable");
+        fallbackData.pm = { out: timeString };
         setDateOut(currentDate);
         setClockedIn(false);
       } else {
-        setIPIn("Unavailable");
+        fallbackData.am = { in: timeString };
         setDateIn(currentDate);
         setClockedIn(true);
       }
+
+      dispatch(
+        UPDATE({
+          data: fallbackData,
+          token: activePlatform.token,
+        })
+      );
     }
   };
 

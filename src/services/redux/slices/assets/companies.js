@@ -303,6 +303,7 @@ export const reduxSlice = createSlice({
       .addCase(GET_DETAILS.fulfilled, (state, action) => {
         state.details = action.payload;
         state.isLoading = false;
+        localStorage.setItem("patronCompany", JSON.stringify(action.payload));
       })
       .addCase(GET_DETAILS.rejected, (state, action) => {
         const { error } = action;

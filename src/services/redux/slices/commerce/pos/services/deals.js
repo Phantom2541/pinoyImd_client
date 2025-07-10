@@ -540,16 +540,17 @@ export const reduxSlice = createSlice({
     SetFilterBySOURCE: (state, { payload }) => {
       const { value, vendor } = payload;
       state.hmo = "all";
-      let filtered = [];
+      let filtered = state.collections.filter(
+        ({ category }) => category !== "wls"
+      );
       // Filter logic based on source
       if (value === "all" || value.length < 10) {
-        filtered = state.collections;
         state.vendor = {};
       } else if (value === "NoSource") {
-        filtered = state.collections.filter(({ source }) => !source?._id);
+        filtered = filtered.filter(({ source }) => !source?._id);
         state.vendor = "noSource";
       } else {
-        filtered = state.collections.filter(
+        filtered = filtered.filter(
           ({ source }) => source?._id === value.toString()
         );
         state.vendor = vendor;
@@ -557,14 +558,15 @@ export const reduxSlice = createSlice({
       arrangeDealsByDate(state, filtered);
     },
     SetFilterByCARD: (state, { payload }) => {
-      // Filter logic based on source
       state.vendor = {};
-      let filtered = state.collections;
-      if (payload === "all" || payload.length > 10) {
-        filtered = state.collections;
+      let filtered = state.collections.filter(
+        ({ category }) => category === "wls"
+      );
+      if (payload === "all" || payload.length > 10 || payload === "NoSource") {
+        state.hmo = "all";
       } else {
         state.hmo = payload;
-        filtered = state.collections.filter(({ hmo = "" }) => hmo === payload);
+        filtered = filtered.filter(({ hmo = "" }) => hmo && hmo === payload);
       }
 
       arrangeDealsByDate(state, filtered);

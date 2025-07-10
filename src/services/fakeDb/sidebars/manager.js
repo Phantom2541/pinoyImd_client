@@ -9,7 +9,7 @@ import {
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Payrolls from "../../../pages/platforms/finance/payroll";
-import Banners from "../../../pages/platforms/manager/settings/profile/banner";
+import Banners from "../../../pages/platforms/manager/settings/banner";
 import TatServices from "../../../pages/platforms/manager/commerce/tatServices";
 
 import {
@@ -53,6 +53,7 @@ import {
 } from "../../../pages/platforms/cashier";
 import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
 import LIS from "../../../pages/platforms/manager/settings/lis";
+import QrCodePage from "../../../pages/platforms/manager/settings/qrCode";
 
 const ManagerSidebar = [
   {
@@ -163,6 +164,22 @@ const ManagerSidebar = [
     icon: "wallet",
     path: "/finance",
     children: [
+      // mga pa-utang
+      {
+        name: "SOA Generator (vouchers)",
+        title:
+          "Generate Statements of Account for HMO, Contract, and Membership Clients",
+        path: "/vouchers",
+        icon: "file-invoice",
+        component: Vouchers,
+      },
+      {
+        name: "SOA Records",
+        title: "View and track all generated Statements of Account",
+        path: "/soa",
+        icon: "folder-open",
+        component: SOA,
+      },
       {
         name: "Accounts Receivable",
         title: "Track receivables from clients or HMOs.",
@@ -170,6 +187,7 @@ const ManagerSidebar = [
         icon: "money-check",
         component: Receivables,
       },
+      // mga utang
       {
         name: "Accounts Payable",
         title: "List of pending payables to suppliers.",
@@ -184,21 +202,7 @@ const ManagerSidebar = [
         icon: "dollar-sign",
         component: Payments,
       },
-      {
-        name: "SOA Generator",
-        title:
-          "Generate Statements of Account for HMO, Contract, and Membership Clients",
-        path: "/vouchers",
-        icon: "file-invoice",
-        component: Vouchers,
-      },
-      {
-        name: "SOA Records",
-        title: "View and track all generated Statements of Account",
-        path: "/soa",
-        icon: "folder-open",
-        component: SOA,
-      },
+      // tips
       {
         name: "Referral Rebates",
         title:
@@ -224,7 +228,6 @@ const ManagerSidebar = [
       },
     ],
   },
-
   {
     name: "Procurement",
     title: "Track purchasing and supplier interactions.",
@@ -265,7 +268,6 @@ const ManagerSidebar = [
       },
     ],
   },
-
   {
     name: "Assets & Maintenance",
     title: "Asset inventory and maintenance schedules.",
@@ -293,7 +295,6 @@ const ManagerSidebar = [
       },
     ],
   },
-
   {
     name: "Marketplace",
     title: "Machines, medicines, and product listings.",
@@ -322,14 +323,12 @@ const ManagerSidebar = [
       },
     ],
   },
-
   {
     name: "Clinic",
-    title: "General clinic functions and access.",
+    title: "Listings and status of clinic services.",
     icon: "clinic-medical",
     path: "/clinic",
   },
-
   {
     name: "System Configuration",
     title: "Configuration of system profiles and resources.",
@@ -375,6 +374,13 @@ const ManagerSidebar = [
             path: "/signatories",
             icon: "pen",
             component: Heads,
+          },
+          {
+            name: "Q R Code",
+            title: "Qr Code for Homepage.",
+            path: "/qrCode",
+            icon: "pen",
+            component: QrCodePage,
           },
         ],
       },

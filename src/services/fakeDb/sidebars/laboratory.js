@@ -321,7 +321,7 @@ const laboratory = [
     name: "Sources",
     path: "/sources",
     icon: "building",
-    title: "Outsources & Insources",
+    title: "Outsources & Insources (Loyalty Programs)",
     children: [
       {
         name: "Outsources",

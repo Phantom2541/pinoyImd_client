@@ -44,7 +44,6 @@ export default function Cards() {
             </p>
           </div>
         </div>
-
         {/* end copy here */}
       </div>
       <div className="d-flex flex-column">

@@ -1,14 +1,27 @@
 import React, { useState } from "react";
 import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
   Tooltip,
   Legend,
-} from "recharts";
-import { format } from "d3-format";
+  Filler,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(
+  LineController,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const allMonths = [
   "January",
@@ -48,12 +61,7 @@ export default function Body({ selectedBranches, fullData }) {
 
       monthData.forEach((item) => {
         const day = item.day;
-        let idx = 0;
-        if (day <= 7) idx = 0;
-        else if (day <= 14) idx = 1;
-        else if (day <= 21) idx = 2;
-        else if (day <= 28) idx = 3;
-        else idx = 4;
+        let idx = Math.min(Math.floor((day - 1) / 7), 4);
         weeks[idx].push(item.price);
       });
 
@@ -74,10 +82,48 @@ export default function Body({ selectedBranches, fullData }) {
     }
   });
 
-  const combinedData = Object.values(timeMap);
+  const combinedData = Object.values(timeMap).sort((a, b) =>
+    a.time.localeCompare(b.time, undefined, { numeric: true })
+  );
+  const labels = combinedData.map((item) => item.time);
   const branchesWithData = selectedBranches.filter((branch) =>
     combinedData.some((d) => d[branch] !== undefined)
   );
+
+  const chartData = {
+    labels,
+    datasets: branchesWithData.map((branch) => ({
+      label: branch,
+      data: combinedData.map((item) => item[branch] || null),
+      borderColor: fullData[branch]?.color || "#ccc",
+      backgroundColor: (fullData[branch]?.color || "#ccc") + "33",
+      fill: true,
+      tension: 0.4,
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      pointHoverBackgroundColor: "#fff",
+      borderWidth: 2,
+    })),
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: "top" },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `₱${ctx.parsed.y.toLocaleString()}`,
+        },
+      },
+    },
+    scales: {
+      y: {
+        ticks: {
+          callback: (val) => `₱${val.toLocaleString()}`,
+        },
+      },
+    },
+  };
 
   return (
     <div className="headquarter-dashboard-container">
@@ -135,38 +181,8 @@ export default function Body({ selectedBranches, fullData }) {
         </div>
 
         {/* Chart */}
-        <div style={{ width: "100%", height: 400 }}>
-          <ResponsiveContainer>
-            <AreaChart data={combinedData}>
-              <XAxis dataKey="time" />
-              <YAxis
-                domain={["auto", "auto"]}
-                tickFormatter={(value) => `₱${format(",")(value)}`}
-              />
-              <Tooltip formatter={(value) => `₱${format(",")(value)}`} />
-              <Legend />
-              {branchesWithData.map((branch) => {
-                const color = fullData[branch]?.color || "#ccc";
-                return (
-                  <Area
-                    key={branch}
-                    type="spike"
-                    dataKey={branch}
-                    stroke={color}
-                    fill="none"
-                    strokeWidth={3}
-                    dot={false}
-                    activeDot={{
-                      r: 4,
-                      fill: color,
-                      stroke: "white",
-                      strokeWidth: 2,
-                    }}
-                  />
-                );
-              })}
-            </AreaChart>
-          </ResponsiveContainer>
+        <div style={{ width: "100%", height: "auto" }}>
+          <Line data={chartData} options={chartOptions} />
         </div>
       </div>
     </div>

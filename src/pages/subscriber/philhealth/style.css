@@ -28,9 +28,11 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  transform: translate(7%, -30%);
+  transform: translate(7%, 0);
   text-align: center;
-  font-size: 1.4rem;
-  font-weight: 500;
+  font-size: 2rem;
+  font-weight: 600;
   font-style: italic;
+  text-transform: capitalize;
+  color: #1266f1;
 }

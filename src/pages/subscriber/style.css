@@ -219,8 +219,22 @@
   background-color: transparent;
   border: none;
   font-size: 1.3rem;
+  padding: 3px 8px;
   color: var(--text-white);
   transition: all 0.3s ease;
+}
+
+.subscriber-btn-signup:hover {
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+}
+
+.subscriber-btn-signup.active {
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  padding: 3px 8px;
 }
 
 .subscriber-btn-signup:hover {

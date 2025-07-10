@@ -63,6 +63,7 @@ export default function TopHeader() {
           reset={() => dispatch(ResetDATE())}
         />
       </div>
+      <span className="white-text mx-5 text-nowrap mt-0">PAYABLES</span>
       <div>
         <div className="text-right d-flex items-center">
           <Search

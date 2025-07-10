@@ -287,10 +287,9 @@ export default function Modal() {
                     className="form-control"
                   />
                   <h6>
-                    {
-                      (currency,
-                      format(handleValue("absent") * selected?.rate?.daily))
-                    }
+                    {currency.format(
+                      handleValue("absent") * selected?.rate?.daily
+                    )}
                   </h6>
                 </div>
               </td>
@@ -473,10 +472,9 @@ export default function Modal() {
                     className="form-control"
                   />
                   <h6>
-                    {
-                      (currency,
-                      format(handleValue("overtime") * hourlyRate * 1.25))
-                    }
+                    {currency.format(
+                      handleValue("overtime") * hourlyRate * 1.25
+                    )}
                   </h6>
                 </div>
               </td>
@@ -517,10 +515,9 @@ export default function Modal() {
                     className="form-control"
                   />
                   <h6>
-                    {
-                      (currency,
-                      format(handleValue("nightShift") * dailyRate * 0.1))
-                    }
+                    {currency.format(
+                      handleValue("nightShift") * dailyRate * 0.1
+                    )}
                   </h6>
                 </div>
               </td>
