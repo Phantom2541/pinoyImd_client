@@ -76,7 +76,7 @@ export default function Body() {
               isOpen={actualIndex === activeId}
             >
               <MDBCardBody className="pt-2">
-                <CollapsableBody team={item.team} _id={item._id} />
+                <CollapsableBody team={item?.team} _id={item?._id} />
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>
