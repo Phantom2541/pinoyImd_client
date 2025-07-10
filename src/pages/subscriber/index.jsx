@@ -16,6 +16,7 @@ import Doctors from "./doctor";
 import Employees from "./employee";
 import Partners from "./partners";
 import Philhealth from "./philhealth";
+import ECGWave from "./cardioGraph";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
@@ -155,7 +156,7 @@ const Subscriber = ({ match }) => {
                 <button
                   className={`subscriber-btn-signup ${
                     scrolled ? "scrolled" : ""
-                  }`}
+                  } ${flipped ? "active" : ""}`}
                   onClick={() => {
                     setIsSignUp(true);
                     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -245,30 +246,29 @@ const Subscriber = ({ match }) => {
             <div id="features">
               <Machines />
             </div>
-            <hr className="mb-5" />
+            <ECGWave color="#1266f1" waves={20} className="my-4" />
 
             <div id="doctors">
               <Doctors />
             </div>
-            <hr className="mb-5" />
+            <ECGWave color="#1266f1" waves={16} className="my-4" />
             {hmo?.length > 0 && (
               <div id="partners">
                 <Partners />
               </div>
             )}
-            <hr className="mb-5" />
             <div id="testimonials">
               <Philhealth />
             </div>
-            <hr className="mb-5 mt-5" />
+            <ECGWave color="#1266f1" waves={19} className="my-4" />
             <div id="testimonials">
               <Testimonials />
             </div>
-            <hr className="mb-5" />
+            <ECGWave color="#1266f1" waves={25} className="my-4" />
             <div id="employees">
               <Employees match={match} />
             </div>
-            <div id="contact" className="mt-5">
+            <div id="contact">
               <ContactUs />
               <Copyrights />
             </div>

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  MDBCol,
-  MDBIcon,
-  MDBInput,
-  MDBRow,
-  MDBBtn,
-  MDBCard,
-  MDBCardBody,
-} from "mdbreact";
+import { MDBIcon, MDBInput, MDBBtn } from "mdbreact";
 import "./style.css";
 import { useToasts } from "react-toast-notifications";
 // import GoogleMapReact from "google-map-react";
