@@ -27,8 +27,11 @@ export default function Modal() {
   const { showModalTeam, selected, team, willCreateTeam, isLoading } =
     useSelector(({ quest }) => quest);
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
+  const { company } = useSelector(({ personnels }) => personnels);
 
   const [form, setForm] = useState(selected);
+  const [member, setMember] = useState();
+  const [branch, setBranch] = useState();
 
   // ✅ Sync Redux selected to local form state
   useEffect(() => {
@@ -55,6 +58,22 @@ export default function Modal() {
       userId: auth._id,
       branchId: activePlatform.branchId,
     }));
+  };
+  const handleMember = (member) => {
+    console.log("member", member);
+    if (member === "inhouse") {
+      const _company = company.filter(
+        ({ _id }) => _id === activePlatform?.branchId
+      );
+      console.log("_company", _company);
+
+      setMember(_company?.personnels);
+    } else if (member === "collaboration") {
+      setBranch();
+    } else {
+    }
+
+    // setMember();
   };
 
   // ✅ Handle update
@@ -96,6 +115,7 @@ export default function Modal() {
 
   // ✅ Close modal
   const handleClose = () => dispatch(TOGGLETeam());
+  console.log("member", member);
 
   return (
     <MDBModal isOpen={showModalTeam} toggle={handleClose} backdrop size="sm">
@@ -120,26 +140,38 @@ export default function Modal() {
                 type="radio"
                 id="inhouse"
                 checked={form?.type === "inhouse"}
-                onClick={() => handleChange("type", "inhouse")}
+                onClick={() => {
+                  handleChange("type", "inhouse");
+                  handleMember("inhouse");
+                }}
               />
               <MDBInput
                 label="Collaboration"
                 type="radio"
                 id="collaboration"
                 checked={form?.type === "collaboration"}
-                onClick={() => handleChange("type", "collaboration")}
+                onClick={() => {
+                  handleChange("type", "collaboration");
+                  handleMember("collaboration");
+                }}
               />
               <MDBInput
                 label="Import"
                 type="radio"
                 id="import"
                 checked={form?.type === "import"}
-                onClick={() => handleChange("type", "import")}
+                onClick={() => {
+                  handleChange("type", "import");
+                  handleMember("import");
+                }}
               />
             </MDBCol>
           </MDBRow>
 
-          {form?.user && (
+          <select name="" id="">
+            {member?.map((m, index) => console.log("m", m))}
+          </select>
+          {/* {form?.user && (
             <div className="mb-2">
               <label>Alias: {form.user.alias}</label>
             </div>
@@ -151,7 +183,8 @@ export default function Modal() {
             value={form?.fullName || ""}
             required
             onChange={(e) => handleChange("fullName", e.target.value)}
-          />
+          /> */}
+
           <MDBInput
             label="Role"
             type="text"
