@@ -18,7 +18,7 @@ import {
   TOGGLE,
 } from "../../../../../services/redux/slices/assets/providers";
 
-import { isEqual } from "lodash";
+import { identity, isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
 
@@ -29,11 +29,11 @@ export default function Modal() {
     ),
     { collections } = useSelector(({ branches }) => branches),
     { collections: companies } = useSelector(({ companies }) => companies),
+    [company, setCompany] = useState([]),
     [branches, setBranches] = useState([]),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  console.log("branches", companies);
 
   //Listener
   useEffect(() => {
@@ -98,20 +98,36 @@ export default function Modal() {
   };
 
   // Handle change sa inputs
-  const handleChange = (key, value) =>
+  const handleChange = (branchId) => {
+    const selectedBranch = branches.find((b) => b._id === branchId);
+    if (!selectedBranch) return;
+
     setForm({
       ...form,
-      [key]: value,
+      branchId: branchId,
+      vendors: selectedBranch, // 💡 Store full branch details here
     });
-
-  const handleChangeCompany = (company) => {
-    const _branches = [...collections].filter(
-      ({ companyId }) => companyId === company
-    );
-    setForm({ ...form, companyId: company });
-    setBranches(_branches);
   };
-  console.log("collections", collections);
+
+  const handleChangeCompany = (id) => {
+    setCompany(id);
+
+    const selectedCompany = companies.find(
+      ({ _id }) => String(_id) === String(id)
+    );
+
+    const _branches = selectedCompany?.branches || [];
+
+    setBranches(_branches);
+
+    // 🔧 Reset selected branch in the form
+    setForm({
+      ...form,
+      companyId: id,
+      branchId: "", // reset branch
+      vendors: {}, // reset vendors
+    });
+  };
 
   return (
     <MDBModal
@@ -189,9 +205,9 @@ export default function Modal() {
                   ))}
               </select>
               <select
-                value={form?.vendors || ""}
+                value={form?.branchId || ""}
                 required
-                onChange={(e) => handleChange("vendors", e.target.value)}
+                onChange={(e) => handleChange(e.target.value)}
                 className="form-control"
               >
                 <option value="" disabled>
@@ -200,7 +216,8 @@ export default function Modal() {
                 {Array.isArray(branches) &&
                   branches.map((branch, index) => (
                     <option key={index} value={branch._id}>
-                      {branch.displayname || (branch.name && branch.name)}
+                      {branch.displayname || branch.name}
+                      {branch.isMain ? " (main branch)" : ""}
                     </option>
                   ))}
               </select>
