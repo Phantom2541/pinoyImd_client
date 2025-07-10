@@ -53,9 +53,8 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
             fontWeight: 400,
             boxShadow: "0px 0px 0px 0px",
           }}
-          pill
         >
-          {access.length > 0
+          {access?.length > 0
             ? `${capitalize(department)} :)`
             : `Welcome to Pinoy iMD :) `}
           {capitalize(aka)}
@@ -66,7 +65,7 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
         right
         style={{ flexDirection: "row", gap: "5px" }}
       >
-        {access.length > 0 && <DTR />}
+        {access?.length > 0 && <DTR />}
         <Branches />
         <Platforms />
         <Profile />

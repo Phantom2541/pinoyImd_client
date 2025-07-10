@@ -181,7 +181,7 @@ export default function Body({ selectedBranches, fullData }) {
         </div>
 
         {/* Chart */}
-        <div style={{ width: "100%", height: 400 }}>
+        <div style={{ width: "100%", height: "auto" }}>
           <Line data={chartData} options={chartOptions} />
         </div>
       </div>

@@ -110,6 +110,7 @@ export default function ContactUs() {
       addToast("Error detecting location.", { appearance: "error" });
     }
   };
+  console.log("address", address);
 
   return (
     <section className="subscriber-contactUs-section">

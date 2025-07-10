@@ -55,7 +55,7 @@ export default function Platforms() {
   };
   return (
     <MDBDropdown>
-      {access.length > 1 && (
+      {access?.length > 1 && (
         <MDBDropdownToggle nav caret>
           <MDBIcon icon="network-wired" />
           &nbsp;
