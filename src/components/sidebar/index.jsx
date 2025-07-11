@@ -33,17 +33,30 @@ export default function SideNavigation({
 
   // Load company logo if available
   useEffect(() => {
-    if (company?.name && activePlatform?.platform && !isLoading) {
+    if (activePlatform?.platform === "patron" && !isLoading) {
+      const patronCompany = JSON.parse(localStorage.getItem("patronCompany"));
+
+      if (patronCompany?.name) {
+        const url = `${ENDPOINT}/public/companies/${
+          patronCompany.name
+        }/logo.png?${new Date().getTime()}`;
+        isImageValid(url, (valid) => {
+          if (valid) setLogo(url);
+        });
+      }
+
+      setHref("/patron/bulletin");
+    } else if (company?.name && activePlatform?.platform && !isLoading) {
       const url = `${ENDPOINT}/public/companies/${
-        company?.name
+        company.name
       }/logo.png?${new Date().getTime()}`;
       isImageValid(url, (valid) => {
         if (valid) setLogo(url);
       });
 
-      const _href = `/${activePlatform?.platform?.toLowerCase() || "patron"}/${
+      const _href = `/${activePlatform.platform.toLowerCase()}/${
         ["manager", "headquarter"].includes(
-          activePlatform?.platform?.toLowerCase()
+          activePlatform.platform.toLowerCase()
         )
           ? "dashboard"
           : "bulletin"
