@@ -18,16 +18,18 @@ import {
 import { COMPANY } from "../../../../../../services/redux/slices/assets/persons/personnels";
 import { useToasts } from "react-toast-notifications";
 import { isEqual } from "lodash";
-import { properFullname } from "../../../../../../services/utilities";
+import { fullName, properFullname } from "../../../../../../services/utilities";
 
 export default function Modal() {
   const dispatch = useDispatch();
   const { addToast } = useToasts();
 
-  const { showModalTeam, selected, team, willCreateTeam, isLoading } =
-    useSelector(({ quest }) => quest);
+  const { showModalTeam, willCreateTeam, isLoading } = useSelector(
+    ({ quest }) => quest
+  );
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
   const { company } = useSelector(({ personnels }) => personnels);
+  const { team: selected } = useSelector(({ quest }) => quest);
 
   const [form, setForm] = useState(selected);
   const [member, setMember] = useState();
@@ -60,27 +62,23 @@ export default function Modal() {
     }));
   };
   const handleMember = (member) => {
-    console.log("member", member);
     if (member === "inhouse") {
       const _company = company.filter(
         ({ _id }) => _id === activePlatform?.branchId
       );
-      console.log("_company", _company);
+      const selected = _company[0]; // Get the first match
 
-      setMember(_company?.personnels);
+      setMember(selected?.personnels || []); // fallback to empty array
     } else if (member === "collaboration") {
       setBranch();
-    } else {
     }
-
-    // setMember();
   };
 
   // ✅ Handle update
   const handleUpdate = () => {
     dispatch(TOGGLETeam());
 
-    if (isEqual(form, selected)) {
+    if (isEqual(form, selected?.team)) {
       return addToast("No changes found, skipping update.", {
         appearance: "info",
       });
@@ -88,16 +86,18 @@ export default function Modal() {
 
     dispatch(
       UPDATE({
-        data: { ...form, _id: selected._id },
+        data: { ...form, _id: selected?._id },
         token,
       })
     );
   };
+  console.log("selected", selected);
 
   // ✅ Handle add member (FIXED)
   const handleAdd = () => {
-    const safeTeam = Array.isArray(team) ? team : [];
+    const safeTeam = Array.isArray(selected?.team) ? selected?.team : [];
     const newTeam = [...safeTeam, form];
+    console.log("selected", selected);
 
     dispatch(
       UPDATE({
@@ -115,7 +115,6 @@ export default function Modal() {
 
   // ✅ Close modal
   const handleClose = () => dispatch(TOGGLETeam());
-  console.log("member", member);
 
   return (
     <MDBModal isOpen={showModalTeam} toggle={handleClose} backdrop size="sm">
@@ -167,10 +166,22 @@ export default function Modal() {
               />
             </MDBCol>
           </MDBRow>
-
-          <select name="" id="">
-            {member?.map((m, index) => console.log("m", m))}
-          </select>
+          {form.type === "inhouse" && (
+            <select
+              name="member"
+              // value={selected}
+              onChange={() => handleChange()}
+              id=""
+              className="form-control"
+            >
+              <option />
+              {member?.map((m, index) => (
+                <option key={`${index}-personnel`} value={m?.user?._id}>
+                  {fullName(m?.user?.fullName)}
+                </option>
+              ))}
+            </select>
+          )}
           {/* {form?.user && (
             <div className="mb-2">
               <label>Alias: {form.user.alias}</label>

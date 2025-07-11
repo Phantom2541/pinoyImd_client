@@ -4,16 +4,11 @@ import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./body";
-// import Footer from "./footer";
+import Footer from "./footer";
 // import Modal from "./modal";
 
 const Index = () => {
-  // const services = useSelector((state) => state.services);
-  // const isLoading = services.isLoading;
-  // const isSuccess = services.isSuccess;
-  // const isError = services.isError;
-
-  const { isLoading } = useSelector(({ services }) => services);
+  const { isLoading } = useSelector(({ onBoardings }) => onBoardings);
 
   return (
     <>
@@ -21,7 +16,7 @@ const Index = () => {
         <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
           <Header />
           <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
-          {/* <Footer /> */}
+          <Footer />
         </MDBCard>
       </MDBAnimation>
       {/* <Modal /> */}

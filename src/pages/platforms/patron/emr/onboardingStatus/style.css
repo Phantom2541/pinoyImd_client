@@ -1,0 +1,19 @@
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.status-petition {
+  background-color: #f1c40f;
+}
+
+.status-approved {
+  background-color: #2ecc71;
+}
+
+.status-rejected {
+  background-color: #e74c3c;
+}

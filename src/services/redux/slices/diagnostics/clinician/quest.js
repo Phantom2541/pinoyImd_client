@@ -107,17 +107,15 @@ export const reduxSlice = createSlice({
         company: "",
         location: "",
         scheadule: "",
-
       };
       state.willCreate = true;
       state.showModal = true;
     },
-    SetTeam: (state, { payload }) =>
-    {
+    SetTeam: (state, { payload }) => {
       state.team = payload;
-    state.willCreateTeam = true;
-    state.showModalTeam = true;
-  },
+      state.willCreateTeam = true;
+      state.showModalTeam = true;
+    },
     SetFILTER: (state, { payload }) => {
       const { page, maxPage } = state;
       if (payload.length > 0) {
@@ -213,19 +211,18 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, action) => {
         console.log("UPDATE.fulfilled", action.payload);
 
-        const { success, payload } = action.payload;
         const index = state.collections.findIndex(
-          (item) => item._id === payload._id
+          (item) => item._id === action.payload._id
         );
         const findex = state.filtered.findIndex(
-          (item) => item._id === payload._id
+          (item) => item._id === action.payload._id
         );
 
-        state.collections[index] = payload;
+        state.collections[index] = action.payload;
 
-        state.filtered[findex] = payload;
+        state.filtered[findex] = action.payload;
         state.showModal = false;
-        state.message = success;
+        // state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
       })
