@@ -71,18 +71,66 @@ const HMOCapture = () => {
   };
 
   const capture = () => {
-    if (!webcamRef.current) {
+    if (!webcamRef.current || !cameraWrapperRef.current) {
       setError("Camera not ready. Please allow camera access.");
       return;
     }
+
     const screenshot = webcamRef.current.getScreenshot();
+
     if (!screenshot) {
       setError("Failed to capture image. Please ensure camera is active.");
       return;
     }
-    setError("");
-    setImageSrc(screenshot);
-    processOCR(screenshot);
+
+    // Create image element
+    const img = new Image();
+    img.src = screenshot;
+    img.onload = () => {
+      const container = cameraWrapperRef.current;
+      const overlay = container.querySelector(".hmocapture-overlay-frame");
+
+      if (!overlay) {
+        setError("Overlay not found.");
+        return;
+      }
+
+      // Get DOM coordinates
+      const overlayRect = overlay.getBoundingClientRect();
+      const videoRect = webcamRef.current.video.getBoundingClientRect();
+
+      // Calculate relative position inside video
+      const scaleX = img.width / videoRect.width;
+      const scaleY = img.height / videoRect.height;
+
+      const cropX = (overlayRect.left - videoRect.left) * scaleX;
+      const cropY = (overlayRect.top - videoRect.top) * scaleY;
+      const cropWidth = overlayRect.width * scaleX;
+      const cropHeight = overlayRect.height * scaleY;
+
+      // Crop with canvas
+      const canvas = document.createElement("canvas");
+      canvas.width = cropWidth;
+      canvas.height = cropHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(
+        img,
+        cropX,
+        cropY,
+        cropWidth,
+        cropHeight,
+        0,
+        0,
+        cropWidth,
+        cropHeight
+      );
+
+      const croppedDataUrl = canvas.toDataURL("image/jpeg");
+
+      setError("");
+      setImageSrc(croppedDataUrl);
+      processOCR(croppedDataUrl);
+    };
   };
 
   const processOCR = async (img) => {
@@ -137,7 +185,7 @@ const HMOCapture = () => {
                 <strong>Card Number:</strong>{" "}
                 {ocrResult.cardNumber || "Not found"}
               </p>
-              <pre className="hmocapture-pre">{ocrResult.raw}</pre>
+              {/* <pre className="hmocapture-pre">{ocrResult.raw}</pre> */}
             </>
           ) : null}
           <button onClick={retake} style={{ marginTop: 10 }}>
@@ -145,7 +193,9 @@ const HMOCapture = () => {
           </button>
         </>
       ) : !showCamera ? (
-        <button onClick={openCamera}>📷 Take Photo of HMO Card</button>
+        <button className="hmocapture-photo bg-primary" onClick={openCamera}>
+          📷 Take Photo of HMO Card
+        </button>
       ) : (
         <>
           <div
@@ -171,7 +221,10 @@ const HMOCapture = () => {
               }}
               className={`hmocapture-webcam ${fullScreen ? "fullscreen" : ""}`}
             />
-            <div className="hmocapture-overlay-frame" />
+            <div className="hmocapture-overlay-frame">
+              <span className="hmocapture-corner hmocapture-top-right"></span>
+              <span className="hmocapture-corner hmocapture-bottom-left"></span>
+            </div>
             <div className="hmocapture-instruction">
               Align your HMO card within the frame
             </div>
