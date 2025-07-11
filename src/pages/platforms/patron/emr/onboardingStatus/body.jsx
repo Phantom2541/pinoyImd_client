@@ -39,9 +39,8 @@ const Body = () => {
       <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
-          <th>Name</th>
           <th>Company</th>
-          <th>Cards</th>
+          <th>Services</th>
           <th>Schedule</th>
           <th>Status</th>
         </tr>
@@ -49,6 +48,7 @@ const Body = () => {
       <tbody>
         {paginatedData?.map((item, index) => {
           const { _id, requirements, schedule, status } = item;
+          console.log("item", paginatedData);
 
           return (
             <tr key={index}>
