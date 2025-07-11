@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { MDBIcon, MDBView } from "mdbreact";
-import { BROWSE } from "../../../../../services/redux/slices/assets/persons/cardHolder";
+import { BROWSE } from "../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 
 import { useState } from "react";
 

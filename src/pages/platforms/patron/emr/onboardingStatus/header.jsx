@@ -4,7 +4,9 @@ import { MDBView } from "mdbreact";
 import { BROWSE } from "../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth); //
-  const { filtered } = useSelector(({ onBoardings }) => onBoardings), //
+  const { filtered, collections } = useSelector(
+      ({ onBoardings }) => onBoardings
+    ), //
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,19 +25,8 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {filtered.length} onBoarding status
+          {filtered?.length} onBoarding status
         </span>
-      </div>
-      <div>
-        <div>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search"
-            aria-label="Search"
-            aria-describedby="search-addon"
-          />
-        </div>
       </div>
     </MDBView>
   );
