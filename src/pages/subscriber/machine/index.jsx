@@ -65,7 +65,7 @@ const collections = [
 export default function Machines() {
   return (
     <section className="subscriber-aboutUs-section">
-      <h1 className="text-center">Features</h1>
+      <h1 className="subscriber-aboutUs-title">Features</h1>
       <div className="subscriber-aboutUs-container">
         {collections.map((item, index) => (
           <MDBAnimation

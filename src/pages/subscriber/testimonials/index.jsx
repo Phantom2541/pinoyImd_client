@@ -154,7 +154,7 @@ export default function Testimonials() {
   const displayValue = hover || rating;
   return (
     <>
-      <h1 className="subscriber-testimonials-title mb-5">Testimonials</h1>
+      <h1 className="subscriber-testimonials-title mb-3">Testimonials</h1>
       <div className="subscriber-testimonials-section">
         <div className="subscriber-testimonials-container">
           <MDBAnimation
