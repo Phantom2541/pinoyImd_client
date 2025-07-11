@@ -9,3 +9,4 @@ export { default as ImageDragAndDrop } from "./imageDragAndDrop";
 export { default as Loader } from "./loader";
 export { default as InputSearch } from "./inputSearch";
 export { default as ImageMagnifier } from "./imageMagnifier";
+export { default as HMOCapture } from "./camera";
