@@ -96,7 +96,7 @@ const CardRequest = ({
           <MDBBtn
             color="light"
             onClick={() => {
-              setForm({ ...form, haveCard: true });
+              setForm({ ...form, haveCard: null });
               setActiveStep(4);
             }}
             size="sm"
