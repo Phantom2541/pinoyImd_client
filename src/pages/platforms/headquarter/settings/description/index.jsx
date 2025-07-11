@@ -39,6 +39,8 @@ export default function Description() {
     ),
     [isLoading, setIsLoading] = useState(false),
     dispatch = useDispatch();
+  console.log("company", company);
+  console.log("address", address);
 
   useEffect(() => {
     if (message) {
@@ -49,7 +51,11 @@ export default function Description() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
+  const handleChange = (key, value) => {
+    console.log("hey", key, value);
 
+    setAddress(value);
+  };
   const handleUpdate = (e) => {
     e.preventDefault();
     // const isSameDescription =
@@ -136,7 +142,8 @@ export default function Description() {
                 className="patient-personal-info address-grid mt-4"
                 data-title="Address Information"
               >
-                <AddressSelect address={address} handleChange={setAddress} />
+                <AddressSelect address={address} handleChange={handleChange} />
+
                 <div className="patient-form full-width">
                   <span>Street (Optional)</span>
                   <input

@@ -20,7 +20,7 @@ import ECGWave from "./cardioGraph";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
-    { hmo } = details,
+    { hmo, hasPhilHealth } = details,
     [show, setShow] = useState(false),
     [scrolled, setScrolled] = useState(false),
     [flipped, setFlipped] = useState(false),
@@ -35,8 +35,8 @@ const Subscriber = ({ match }) => {
     companyId = match?.params?.companyId;
 
   useEffect(() => {
-    localStorage.setItem("companyId", companyId);
     dispatch(GET_DETAILS({ key: { companyId } }));
+    localStorage.setItem("companyId", companyId);
   }, [companyId, dispatch]);
 
   useEffect(() => {
@@ -227,7 +227,7 @@ const Subscriber = ({ match }) => {
 
           <section id="home">
             <Login show={show} toggle={() => setShow(!show)} />
-            <MDBView>
+            <MDBView className={`${!flipped || "flipped"}`}>
               <MDBMask
                 className="d-flex justify-content-center align-items-center"
                 overlay="gradient"
@@ -257,9 +257,12 @@ const Subscriber = ({ match }) => {
                 <Partners />
               </div>
             )}
-            <div id="testimonials">
-              <Philhealth />
-            </div>
+            {hasPhilHealth && (
+              <div id="testimonials">
+                <Philhealth />
+              </div>
+            )}
+
             <ECGWave color="#1266f1" waves={19} className="my-4" />
             <div id="testimonials">
               <Testimonials />

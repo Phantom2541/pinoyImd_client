@@ -151,7 +151,7 @@ export default function CardioGraph({
         viewBox="0 0 3000 100"
         preserveAspectRatio="xMinYMid meet"
       >
-        <circle r="6" fill={color} filter="url(#dot-glow)" opacity="0.3">
+        <circle r="8" fill={color} filter="url(#dot-glow)" opacity="0.3">
           <animateMotion dur="20s" repeatCount="indefinite">
             <mpath href={`#${pathId}`} />
           </animateMotion>

@@ -55,13 +55,15 @@ export default function Platforms() {
   };
   return (
     <MDBDropdown>
-      <MDBDropdownToggle nav caret>
-        <MDBIcon icon="network-wired" />
-        &nbsp;
-        <div className="d-none d-md-inline">
-          {capitalize(activePlatform?.platform || "patron")}
-        </div>
-      </MDBDropdownToggle>
+      {access?.length > 1 && (
+        <MDBDropdownToggle nav caret>
+          <MDBIcon icon="network-wired" />
+          &nbsp;
+          <div className="d-none d-md-inline">
+            {capitalize(activePlatform?.platform || "patron")}
+          </div>
+        </MDBDropdownToggle>
+      )}
       <MDBDropdownMenu right>
         {access?.map((platform, index) => (
           <MDBDropdownItem

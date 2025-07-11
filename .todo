@@ -16,7 +16,11 @@ if verified no password, take email, name, and brithday, and address
 10. for verificaton need of birthday, OTP  (no duplicate) 
 11. add stepper  
 
+
+
 12.make the companies to be carried over thoughtout the session and can be change only in the profile
+
+
 
 if paid make the pics of hmo when click you will be directed to their website 
 check code name of hmo in the fakedb (inlife in care)-kevin
@@ -25,18 +29,17 @@ check code name of hmo in the fakedb (inlife in care)-kevin
 
 13. employees filtered out the one that are fired and fix the height and make it by 6 
 
-14. footer (check and adjust the details beside the map ) thom done
+-14. footer (check and adjust the details beside the map ) thom @done
 
 login
-cashier 15. POS -change the transition to next page of class tab window when click of patient (in the future)
-and source (search-select) add a button for unregistered source if nothing was found- darrel
+cashier 
+15. POS -change the transition to next page of class tab window when click of patient (in the future)
+and source (search-select) add a button for unregistered source if nothing was found- darrel 
 fix the 0 in the summary when putting the price
 and add boarder of the qrcode in the recit
 
-16. account payables - add the header(done). payables and add due date and give etra charge fee - nick 
-
-17. payments - have the latest date appear first in sorting and the arrow for colapse animation
-
+16. account payables - add the header payables and add due date and give etra charge fee - nick
+-17. payments - have the latest date appear first in sorting and the arrow for colapse animation @done
 18.account receivable - double check!!!!
 
 19.vouchers - default zero and convert to table lang
@@ -53,8 +56,7 @@ fakedb address adjust and change
 20. hotlines- add the contacts and names "pls provide specific contacts for safety of employees"
 
 25.services preparation- to fix - uncle tom
-
-26.remittance -census downpayment remove
+-26.remittance census downpayment remove @done
 print out two copies- darrel
 
 manager operational
@@ -65,7 +67,9 @@ submit button change to "acknowledge or approve"
 28. mobile clinic- modal status add in select "draft-default and pending" fix saving
     add time after the date human resouces
 
-29. staff- header hover issue (showing empty white box) 30. physician- wala lahat    
+29. staff- header hover issue (showing empty white box)
+
+30. physician- wala lahat
 
 
 finance & receivable

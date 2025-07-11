@@ -23,6 +23,14 @@ const patron = [
         name: "Kiosk",
         path: "/Kiosk",
         icon: "file-medical",
+        title: "Book Diagnostic Services",
+        component: cardHolder,
+      },
+      {
+        name: "Booking",
+        path: "/booking",
+        title: "Booking history",
+        icon: "file-medical",
         component: cardHolder,
       },
       {
@@ -45,8 +53,8 @@ const patron = [
     icon: "calendar-check",
     children: [
       {
-        name: "Kiosk",
-        path: "/appointments",
+        name: "Consultations",
+        path: "/consultations",
         icon: "calendar-check",
         // component: Appointments,
       },

@@ -218,3 +218,13 @@
     padding: 0 0;
   }
 }
+
+@media (max-width: 576px) {
+  .subscriber-testimonials-title {
+    font-size: 1.8rem;
+  }
+  .subscriber-partners-image {
+    width: 150px;
+    height: 80px;
+  }
+}

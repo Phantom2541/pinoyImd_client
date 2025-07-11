@@ -179,14 +179,19 @@ export default function Modal() {
       outsource.length > 0 && (outSourceId || department === "RAD")
         ? true
         : false;
+    console.log("_outsource", _outsource);
 
     if (haveOutSource) {
       if (department !== "RAD") {
         await saveRequest(
-          `/commerce/pos/services/dealOutSources`,
+          `/commerce/pos/services/onboardings`,
           {
             _id: deal._id,
-            servicesId: _outsource,
+            vendor: outSourceId,
+            particular: customerId?._id,
+            cashierId: auth?._id,
+            branchId: activePlatform.branchId,
+            menu: _outsource,
           },
           true
         );

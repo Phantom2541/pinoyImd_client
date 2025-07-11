@@ -35,7 +35,7 @@ import Policy from "./policy";
 import Roles from "./roles";
 import HMO from "./hmo";
 import Quotes from "./quotes";
-
+import ValidID from "./validID";
 export {
   Suffixes,
   Calendar,
@@ -70,4 +70,5 @@ export {
   Policy,
   HMO,
   Quotes,
+  ValidID,
 };

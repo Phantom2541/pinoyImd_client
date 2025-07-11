@@ -1,86 +1,166 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { SetActiveTAB } from "../../../../../services/redux/slices/assets/persons/cardHolder";
+import React, { useEffect, useState } from "react";
+import { MDBBtn, MDBCol, MDBRow, MDBIcon } from "mdbreact";
+import LabRequest from "./labRequest";
+import CardRequest from "./cardRequest";
 import "./style.css";
+import Schedule from "./schedule";
+import Proof from "./validID";
+import ValidID from "./validID";
 
-const Body = () => {
-  const dispatch = useDispatch();
-  const { activeTab } = useSelector(({ cardHolder }) => cardHolder);
-  const handleAccept = () => {
-    const isAccredited = false; // Replace with your real logic
+const steps = [
+  {
+    id: 1,
+    label: "Request Form",
+    component: LabRequest,
+  },
+  {
+    id: 2,
+    label: "Card",
+    component: CardRequest,
+  },
+  {
+    id: 3,
+    label: "Valid ID",
+    component: ValidID,
+  },
 
-    if (!isAccredited) {
-      alert("This company is not accredited for this HMO.");
-    } else {
-      alert("Card accepted successfully!");
-      // You can also dispatch an action or update state here
-    }
+  {
+    id: 4,
+    label: "Schedule",
+    component: Schedule,
+  },
+];
+
+const CustomStepper = () => {
+  const [form, setForm] = useState({
+      form: "",
+      branch: "",
+      haveCard: null,
+      card: {
+        img: "",
+        type: "",
+        primary: true,
+        proof: "",
+      },
+      schedule: {
+        branch: "",
+        date: "",
+      },
+    }),
+    [activeStep, setActiveStep] = useState(1),
+    [valid, setValid] = useState({ 1: true, 2: true, 3: true }); //form,card,schedule
+
+  const prevStep = () => {
+    const _activeStep = activeStep > 1 ? activeStep - 1 : 1;
+    setActiveStep(_activeStep);
   };
 
+  const isLastStep = activeStep === steps.length;
+
+  const CurrentComponent = steps.find((s) => s.id === activeStep)?.component;
+
+  const handleNext = (e) => {
+    e.preventDefault();
+
+    const isStep1 = activeStep === 1;
+    const isStep2 = activeStep === 2;
+    const isStep3 = activeStep === 3;
+    const isStep4 = activeStep === 4;
+
+    if (isStep1) {
+      const isValid = !!form.form;
+      setValid((v) => ({ ...v, 1: isValid }));
+      if (isValid) setActiveStep(2);
+    }
+
+    if (isStep2) {
+      if (!form.haveCard) {
+        return setActiveStep(4);
+      }
+      const isValid = !!form.card.img;
+      setValid((v) => ({ ...v, 2: isValid }));
+      if (isValid) setActiveStep(3);
+    }
+
+    if (isStep3) {
+      const isValid = !!form.card.proof;
+      setValid((v) => ({ ...v, 3: isValid }));
+      if (isValid) setActiveStep(4);
+    }
+
+    if (isStep4) {
+      const isValid = form.schedule.branch && form.schedule.date;
+      setValid((v) => ({ ...v, 3: !!isValid }));
+      // You can trigger submit here if needed
+    }
+  };
+  const fakeDB = localStorage.getItem("patronCompany");
+  const { hmo = [], branches = [] } = fakeDB ? JSON.parse(fakeDB) : {};
+
+  const { card } = form;
   return (
-    <div className="tab-wrapper">
-      {/* Tab Panel */}
-      <div className="tab-panel-horizontal">
-        <button
-          className={`tab-button-horizontal ${
-            activeTab === "labRequest" ? "active-tab" : ""
-          }`}
-          onClick={() => dispatch(SetActiveTAB("labRequest"))}
-        >
-          Lab Request Card
-        </button>
-        <button
-          className={`tab-button-horizontal ${
-            activeTab === "other" ? "active-tab" : ""
-          }`}
-          onClick={() => dispatch(SetActiveTAB("other"))}
-        >
-          Health Support Card
-        </button>
-      </div>
-
-      {/* Tab Content */}
-      <div className="tab-body-content">
-        {activeTab === "labRequest" && (
-          <div className="template1-card mx-auto">
-            <img
-              className="template1-card-image"
-              src="https://via.placeholder.com/300x160"
-              alt="Lab Request"
-            />
-            <div className="template1-card-body">
-              <div className="template1-card-title">Lab Request Card</div>
-              <div className="template1-card-subtitle">Laboratory</div>
-              <div className="template1-card-description">
-                This is the content for the lab request card.
+    <form onSubmit={handleNext}>
+      <div className="stepper-wrapper ">
+        <div className="stepper-container mb-2">
+          {steps.map((step, index) => (
+            <React.Fragment key={step.id}>
+              <div
+                className={`step ${activeStep >= step.id ? "active" : ""}`}
+                onClick={() => setActiveStep(step.id)}
+              >
+                <div className="step-circle">
+                  {step.id === 4 ? (
+                    <MDBIcon far icon="calendar-check" />
+                  ) : (
+                    step.id
+                  )}
+                </div>
+                <div className="step-label">{step.label}</div>
               </div>
-              {/* Accept Button */}
-              <button className="btn btn-success mt-3" onClick={handleAccept}>
-                Accept Card
-              </button>
-            </div>
-          </div>
-        )}
+              {index !== steps.length - 1 && (
+                <div
+                  className={`step-line ${
+                    activeStep > step.id ? "filled" : ""
+                  }`}
+                ></div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
 
-        {activeTab === "other" && (
-          <div className="template1-card mx-auto">
-            <img
-              className="template1-card-image"
-              src="https://via.placeholder.com/300x160"
-              alt="Health Support"
+        <div className="step-content">
+          {CurrentComponent && (
+            <CurrentComponent
+              branches={branches}
+              hmo={hmo}
+              isValid={valid[activeStep]}
+              setForm={setForm}
+              form={form}
+              setIsValid={(isValid) =>
+                setValid((v) => ({ ...v, [activeStep]: isValid }))
+              }
+              setActiveStep={setActiveStep}
             />
-            <div className="template1-card-body">
-              <div className="template1-card-title">Health Support Card</div>
-              <div className="template1-card-subtitle">Other Department</div>
-              <div className="template1-card-description">
-                This is the content for the Health Support card.
-              </div>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
+
+        <div className="stepper-buttons">
+          <MDBRow className="mt-3">
+            <MDBCol md="12" className="text-right">
+              {activeStep > 1 && (
+                <MDBBtn onClick={prevStep} rounded color="white" flat>
+                  Back
+                </MDBBtn>
+              )}
+              <MDBBtn color="primary" rounded type="submit">
+                {isLastStep ? "Submit" : "Next"}
+              </MDBBtn>
+            </MDBCol>
+          </MDBRow>
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
 
-export default Body;
+export default CustomStepper;

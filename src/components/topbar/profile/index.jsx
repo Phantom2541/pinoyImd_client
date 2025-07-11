@@ -26,7 +26,6 @@ export default function Profile() {
     var companyId = company?._id;
     const fakeDB = localStorage.getItem("companyId");
     if (fakeDB && !company?._id) {
-      console.log("running");
       companyId = JSON.parse(fakeDB);
     }
     // localStorage.clear();

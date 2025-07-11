@@ -22,8 +22,6 @@ export default function Collapsable({ deals = [] }) {
           const { payableId, amount, fsId, remarks, createdAt, category } =
             deal;
 
-          console.log("deal", deal);
-
           return (
             <tr key={index}>
               <td>
