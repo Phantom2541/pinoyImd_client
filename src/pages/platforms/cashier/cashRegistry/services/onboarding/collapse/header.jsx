@@ -9,7 +9,7 @@ import {
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
   const { customerId, branchId } = item;
-  const { collections } = useSelector(({ cardHolder }) => cardHolder);
+  const { collections } = useSelector(({ onBoardings }) => onBoardings);
   console.log("collections", collections);
 
   return (
