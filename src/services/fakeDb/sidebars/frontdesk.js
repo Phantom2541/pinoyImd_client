@@ -47,6 +47,7 @@ import {
   InputSearch,
   ImageMagnifier,
   QrCodePage,
+  HMOCapture,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 import ImgText from "../../../pages/templates/imgText";
@@ -422,6 +423,12 @@ const frontdesk = [
         path: "/templates/imageMagnifier",
         icon: "calendar-alt",
         component: ImageMagnifier,
+      },
+      {
+        name: "HMO Capture",
+        path: "/templates/camera",
+        icon: "calendar-alt",
+        component: HMOCapture,
       },
     ],
   },

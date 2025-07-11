@@ -11,7 +11,7 @@ const patron = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/bulletin",
     component: Dashboard,
   },
   {

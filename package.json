@@ -43,6 +43,7 @@
     "react-router": "^5.1.2",
     "react-scripts": "^5.0.1",
     "react-toast-notifications": "^2.5.1",
+    "react-webcam": "^7.2.0",
     "socket.io-client": "^4.6.1",
     "sweetalert2": "^11.21.0",
     "swiper": "^11.2.8",
