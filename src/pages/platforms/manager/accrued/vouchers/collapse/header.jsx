@@ -26,14 +26,20 @@ const Header = () => {
   const haveSelect = isFilterBySource
     ? vendor?._id && vendor._id !== "noSource"
     : hmo !== "all";
+  const noCluster = cluster.length === 0;
 
   return (
     <div className="mt-n2">
-      {!haveSelect ? (
+      {!haveSelect || noCluster ? (
         <div>
           <MDBTypography noteTitle="Note: " note noteColor="warning">
-            Please select a {isFilterBySource ? "source" : "card type"} before
-            generating the SOA.
+            Please select a
+            {!haveSelect
+              ? isFilterBySource
+                ? " source "
+                : " card type "
+              : " customer "}
+            before generating the SOA.
           </MDBTypography>
         </div>
       ) : (

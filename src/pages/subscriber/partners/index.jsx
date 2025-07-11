@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
-import HMO from "../../../services/fakeDb/hmo";
+import { HMO } from "../../../services/fakeDb";
 
 export default function Partners() {
   const [showAll, setShowAll] = useState(false);
@@ -34,41 +34,41 @@ export default function Partners() {
         Accredited HMO Partners
       </h1>
 
-      <Swiper
-        className={`subscriber-partners-wrapper ${
-          showAll ? "hideHMO" : "showHMO"
-        }`}
-        modules={[Autoplay]}
-        loop={true}
-        speed={4000}
-        autoplay={{
-          delay: 0,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
-        allowTouchMove={true}
-        spaceBetween={0}
-        slidesPerView={7}
-        breakpoints={{
-          576: { slidesPerView: 2, spaceBetween: 15 },
-          768: { slidesPerView: 3, spaceBetween: 20 },
-          1200: { slidesPerView: 4, spaceBetween: 25 },
-          1600: { slidesPerView: 6, spaceBetween: 30 },
-        }}
-      >
-        {partners.slice(1).map((hmo, index) => (
-          <SwiperSlide key={index}>
-            <div className="subscriber-partners-container">
-              <img
-                src={hmo.icon}
-                alt={hmo.abbr || `Partner ${index}`}
-                style={{ height: "80px", objectFit: "contain" }}
-                className="subscriber-partners-image"
-              />
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {!showAll && (
+        <Swiper
+          className="subscriber-partners-wrapper"
+          modules={[Autoplay]}
+          loop={true}
+          speed={4000}
+          autoplay={{
+            delay: 0,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          allowTouchMove={true}
+          spaceBetween={0}
+          slidesPerView={7}
+          breakpoints={{
+            576: { slidesPerView: 2, spaceBetween: 15 },
+            768: { slidesPerView: 3, spaceBetween: 20 },
+            1200: { slidesPerView: 4, spaceBetween: 25 },
+            1600: { slidesPerView: 6, spaceBetween: 30 },
+          }}
+        >
+          {partners.slice(1).map((hmo, index) => (
+            <SwiperSlide key={index}>
+              <div className="subscriber-partners-container">
+                <img
+                  src={hmo.icon}
+                  alt={hmo.abbr || `Partner ${index}`}
+                  style={{ height: "80px", objectFit: "contain" }}
+                  className="subscriber-partners-image"
+                />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
       <div
         ref={containerRef}
         className="subscriber-partners-imageAll-container"
@@ -82,7 +82,7 @@ export default function Partners() {
               style={{ height: "80px", objectFit: "contain" }}
               className="subscriber-partners-image"
             />
-            <span>{hmo.abbr}</span>
+            {/* <span>{hmo.abbr}</span> */}
           </div>
         ))}
       </div>

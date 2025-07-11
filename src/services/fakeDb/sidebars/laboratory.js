@@ -78,6 +78,13 @@ const laboratory = [
         title: "Sendout Patients to Partner Clinics",
         component: Sendouts,
       },
+      {
+        name: "medical mission",
+        path: "/quest",
+        icon: "ambulance",
+        title: "medical team operations for outreach clinics.",
+        component: Quest,
+      },
     ],
   },
   {
@@ -314,7 +321,7 @@ const laboratory = [
     name: "Sources",
     path: "/sources",
     icon: "building",
-    title: "Outsources & Insources",
+    title: "Outsources & Insources (Loyalty Programs)",
     children: [
       {
         name: "Outsources",

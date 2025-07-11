@@ -9,7 +9,6 @@ const HMO = {
   getCP: (pk) => {
     // get contact person from local storage
     const activePlatform = JSON.parse(localStorage.getItem("activePlatform"));
-    console.log("activePlatform", pk);
     const { branch = {} } = activePlatform;
     const { companyId = {} } = branch;
     const { hmo = [] } = companyId;
@@ -17,7 +16,7 @@ const HMO = {
   },
 
   getName: (_code) =>
-    collections.find(({ code }) => code === _code)?.name || "-",
+    collections.find(({ code }) => code === _code)?.name || "",
 
   getAbbr: (_code) =>
     collections.find(({ code }) => code === _code)?.abbr || "-",

@@ -23,10 +23,12 @@
   flex-direction: column;
   grid-area: leftSide;
   gap: 15px;
+  min-width: 250px;
 }
 
 .subscriber-contactUs-middleSide {
   grid-area: middleSide;
+  min-width: 250px;
 }
 
 .subscriber-contactUs-rightSide {
@@ -45,7 +47,6 @@
   width: fit-content;
   text-align: center;
 }
-
 .subscriber-contactUs-logo span {
   font-size: 1.2rem;
   font-weight: 500;
@@ -120,6 +121,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+
   padding: 5px 10px;
   background-color: #0f58d1;
   max-height: 0;

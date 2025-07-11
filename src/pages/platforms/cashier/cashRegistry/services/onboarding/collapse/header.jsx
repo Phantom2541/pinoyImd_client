@@ -1,5 +1,6 @@
 import React from "react";
 import { MDBBtn } from "mdbreact";
+import { useSelector } from "react-redux";
 import {
   fullName,
   getAge,
@@ -8,6 +9,9 @@ import {
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
   const { customerId, branchId } = item;
+  const { collections } = useSelector(({ cardHolder }) => cardHolder);
+  console.log("collections", collections);
+
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div>
