@@ -49,6 +49,10 @@
   width: 200%;
 }
 
+.subscriber-testimonials-sliderContainer {
+  display: flex;
+}
+
 .subscriber-testimonials-sliderCard {
   display: flex;
   align-items: center;
@@ -174,5 +178,14 @@
   .subscriber-testimonials-review-text,
   .subscriber-testimonials-review-name {
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .subscriber-testimonials-text h1 {
+    font-size: 1.8rem;
+  }
+  .subscriber-testimonials-text p {
+    font-size: 0.8rem;
   }
 }

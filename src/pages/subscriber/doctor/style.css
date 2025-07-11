@@ -175,3 +175,9 @@
     font-size: 1rem;
   }
 }
+
+@media (max-width: 576px) {
+  .subscriber-doctors-title {
+    font-size: 1.8rem;
+  }
+}

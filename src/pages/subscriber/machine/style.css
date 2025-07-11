@@ -15,8 +15,9 @@
   align-items: center;
 }
 
-.subscriber-aboutUs-section h1 {
+.subscriber-aboutUs-title {
   font-weight: bold;
+  text-align: center;
 }
 
 .subscriber-aboutUs-container {
@@ -94,5 +95,32 @@
 @media (max-width: 1024px) {
   .subscriber-aboutUs-container {
     width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .subscriber-aboutUs-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 10px;
+    padding: 0 0;
+    justify-content: center;
+    align-items: stretch;
+  }
+
+  .subscriber-aboutUs-title {
+    font-size: 1.8rem;
+  }
+  .subscriber-AboutUs-card {
+    width: 230px;
+  }
+  .subscriber-AboutUs-card-title {
+    font-size: 0.95rem;
+  }
+  .subscriber-AboutUs-card-description {
+    font-size: 0.75rem;
   }
 }

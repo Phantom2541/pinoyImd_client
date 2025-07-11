@@ -105,7 +105,7 @@ export default function Register({ handleFlip, flipped }) {
           <div className="subscriber-flip-card">
             <div className="subscriber-flip-card-front">
               <Carousel
-                // autoPlay
+                autoPlay
                 infiniteLoop
                 showThumbs={false}
                 showStatus={false}
@@ -134,7 +134,10 @@ export default function Register({ handleFlip, flipped }) {
               </button>
               <div className="d-flex align-items-center">
                 <div>
-                  <h2 style={{ fontWeight: "400" }}>
+                  <h2
+                    className="subscriber-back-title"
+                    style={{ fontWeight: "400" }}
+                  >
                     Patient Registration Form
                   </h2>
                   <form
@@ -149,6 +152,8 @@ export default function Register({ handleFlip, flipped }) {
                           icon="user"
                           type="text"
                           name="fname"
+                          size="sm"
+                          iconSize="sm"
                           required
                         />
                         <MDBInput
@@ -156,6 +161,8 @@ export default function Register({ handleFlip, flipped }) {
                           icon="user"
                           type="text"
                           name="mname"
+                          size="sm"
+                          iconSize="sm"
                         />
                         <MDBRow
                           className="d-flex align-items-center"
@@ -167,6 +174,8 @@ export default function Register({ handleFlip, flipped }) {
                               icon="user"
                               type="text"
                               name="lname"
+                              size="sm"
+                              iconSize="sm"
                               required
                             />
                           </MDBCol>
@@ -193,6 +202,7 @@ export default function Register({ handleFlip, flipped }) {
                             label="Male"
                             type="checkbox"
                             id="male"
+                            size="sm"
                             checked={isMale}
                             onChange={handleMaleChange}
                           />
@@ -200,6 +210,7 @@ export default function Register({ handleFlip, flipped }) {
                             label="Female"
                             type="checkbox"
                             id="female"
+                            size="sm"
                             checked={!isMale}
                             onChange={() => setIsMale(false)}
                           />
@@ -212,10 +223,14 @@ export default function Register({ handleFlip, flipped }) {
                           icon="envelope"
                           type="email"
                           name="email"
+                          size="sm"
+                          iconSize="sm"
                           required
                         />
                         <MDBInput
                           label="Password"
+                          size="sm"
+                          iconSize="sm"
                           minLength={8}
                           icon={isLocked.password ? "lock" : "unlock"}
                           onIconMouseEnter={() =>
@@ -230,6 +245,8 @@ export default function Register({ handleFlip, flipped }) {
                         />
                         <MDBInput
                           label="Confirm your password"
+                          size="sm"
+                          iconSize="sm"
                           minLength={8}
                           icon={isLocked.confirmPassword ? "lock" : "unlock"}
                           onIconMouseEnter={() =>

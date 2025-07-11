@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import { axioKit } from "../../../../../utilities";
 
 const url = "/commerce/pos/services/onboardings";
 
@@ -282,6 +282,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload;
+        console.log("payload", payload);
 
         let totalPAges = Math.floor(payload.length / state.maxPage);
         if (payload.length % state.maxPage > 0) totalPAges += 1;

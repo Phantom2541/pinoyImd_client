@@ -227,7 +227,7 @@ const Subscriber = ({ match }) => {
 
           <section id="home">
             <Login show={show} toggle={() => setShow(!show)} />
-            <MDBView>
+            <MDBView className={`${!flipped || "flipped"}`}>
               <MDBMask
                 className="d-flex justify-content-center align-items-center"
                 overlay="gradient"

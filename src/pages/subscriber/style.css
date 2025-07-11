@@ -10,6 +10,8 @@
 
 #subscriber-landing {
   background-color: #fff;
+  margin: 0;
+  overflow-x: hidden;
 }
 
 #subscriber-landing .navbar.scrolling-navbar.top-nav-collapse {
@@ -51,10 +53,15 @@
   height: auto;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .subscriber-topbar {
   position: fixed;
   width: 100%;
-  min-width: 460px;
   height: 85px;
   display: flex;
   justify-content: space-between;
@@ -383,7 +390,7 @@
   .subscriber-container {
     width: 100%;
     height: auto;
-    padding: 0 20px;
+    padding: 0 0;
   }
   .subscriber-logo img {
     width: 45px;
@@ -423,6 +430,7 @@
     padding: 20px;
     z-index: 10;
     opacity: 0;
+    display: none;
     gap: 10px;
     transform: translateY(-20px);
     pointer-events: none;
@@ -433,6 +441,7 @@
     display: flex;
     opacity: 1;
     transform: translateY(0);
+    pointer-events: auto;
   }
 
   .subscriber-desktop-buttons {
@@ -472,6 +481,15 @@
 
 @media (max-width: 760px) {
   #subscriber-landing #home .view {
-    height: 65vh;
+    height: 85vh;
+  }
+  #subscriber-landing #home .view.flipped {
+    height: 100vh;
+  }
+  .subscriber-topbar {
+    padding: 10px 15px;
+  }
+  .subscriber-logo {
+    margin-right: 20px;
   }
 }
