@@ -126,38 +126,32 @@ const accreditation = [
                 path: "/petitioners",
                 icon: "user-plus",
                 title: "Updated 201 files of all laboratory personnel",
-                component: Applicants,
                 children: [
                   {
                     name: "12.A. The head of the laboratory shall have the overall supervision on technical procedures",
                     path: "/petitioners",
                     icon: "user-plus",
                     title: "Updated 201 files of all laboratory personnel",
-                    component: Applicants,
                   },
                   {
                     name: "12.B. Registered Medical Technologist (RMT)",
                     path: "/petitioners",
                     icon: "user-plus",
                     title: "Proof of Qualification as RMT",
-                    component: Applicants,
                   },
                   {
                     name: "12.C. Biosafety and biosecurity officer",
                     path: "/petitioners",
                     icon: "user-plus",
                     title: "PRC certificate and valid PRC ID (RMT)",
-                    component: Applicants,
                   },
-            
-                ]
-              },|
+                ],
+              },
               {
                 name: "13. There is policy on the emplementation of National Database of human resource",
                 path: "/signatories",
                 icon: "pen",
                 title: "Proof of submission data to NDHRHIS ",
-                component: Heads,
               },
             ],
           },
