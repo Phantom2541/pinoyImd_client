@@ -44,6 +44,23 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+export const PATIENT = createAsyncThunk(
+  `${url}/patient`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/patient`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const SEARCH = createAsyncThunk(
   `${url}/search`,
   ({ token, key }, thunkAPI) => {
@@ -292,6 +309,27 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(PATIENT.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(PATIENT.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+        console.log("payload", payload);
+
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(PATIENT.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
