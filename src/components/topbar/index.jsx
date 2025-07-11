@@ -30,46 +30,51 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
       expand="md"
       scrolling
       fixed="top"
-      style={{ zIndex: 3, minWidth: 500 }}
+      style={{ zIndex: 3 }}
     >
-      <div
-        onClick={onSideNavToggleClick}
-        style={{
-          lineHeight: "32px",
-          marginLeft: "1em",
-          verticalAlign: "middle",
-          cursor: "pointer",
-        }}
-      >
-        <MDBIcon icon="bars" color="white" size="lg" />
-      </div>
-
-      <MDBNavbarBrand href="#" style={navStyle}>
-        <MDBBadge
-          className="py-2 px-3"
-          color="warning-color-dark"
+      <div className="d-flex justify-content-between align-items-center w-100">
+        <div
+          onClick={onSideNavToggleClick}
           style={{
-            fontSize: "1rem",
-            fontWeight: 400,
-            boxShadow: "0px 0px 0px 0px",
+            lineHeight: "32px",
+            marginLeft: "1em",
+            verticalAlign: "middle",
+            cursor: "pointer",
           }}
         >
-          {access?.length > 0
-            ? `${capitalize(department)} :)`
-            : `Welcome to Pinoy iMD :) `}
-          {capitalize(aka)}
-        </MDBBadge>
-      </MDBNavbarBrand>
-      <MDBNavbarNav
-        expand="sm"
-        right
-        style={{ flexDirection: "row", gap: "5px" }}
-      >
-        {access?.length > 0 && <DTR />}
-        <Branches />
-        <Platforms />
-        <Profile />
-      </MDBNavbarNav>
+          <MDBIcon icon="bars" color="white" size="lg" />
+        </div>
+
+        <MDBNavbarBrand href="#" style={navStyle}>
+          <MDBBadge
+            className="py-2 px-3"
+            color="warning-color-dark"
+            style={{
+              fontSize: "1rem",
+              fontWeight: 400,
+              boxShadow: "0px 0px 0px 0px",
+            }}
+          >
+            {access?.length > 0
+              ? `${capitalize(department)} :)`
+              : `Welcome to Pinoy iMD :) `}
+            {capitalize(aka)}
+          </MDBBadge>
+        </MDBNavbarBrand>
+        <MDBNavbarNav
+          expand="sm"
+          right
+          style={{
+            flexDirection: "row",
+            gap: "5px",
+          }}
+        >
+          {access?.length > 0 && <DTR />}
+          <Branches />
+          <Platforms />
+          <Profile />
+        </MDBNavbarNav>
+      </div>
     </MDBNavbar>
   );
 }

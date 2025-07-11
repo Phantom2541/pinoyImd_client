@@ -43,9 +43,8 @@ export default function Collapsable({ team = [], _id }) {
             <div className="mt-2">
               <button
                 className="btn btn-sm btn-primary rounded-pill d-flex align-items-center justify-content-center mx-auto"
-                onClick={() => { console.log("team",team);
-                
-                  dispatch(SetTeam(team))
+                onClick={() => {
+                  dispatch(SetTeam({ _id, team }));
                 }}
               >
                 <i className="fa fa-plus mr-1" />
@@ -56,7 +55,7 @@ export default function Collapsable({ team = [], _id }) {
         </tr>
       </MDBTableHead>
       <MDBTableBody>
-        {team.map((member, i) => (
+        {team?.map((member, i) => (
           <tr key={i}>
             <td className="text-center">{i + 1}</td>
             <td title={fullName(member.userId.fullName)}>
