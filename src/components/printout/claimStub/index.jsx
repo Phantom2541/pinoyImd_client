@@ -171,7 +171,16 @@ const Stub = ({ sale, companyId }) => {
         DAYS
       </div>
       <Hr />
-      <div className="mt-2">
+      <div
+        className="my-2"
+        style={{
+          width: "fit-content",
+          height: "185px",
+          border: "2px solid black",
+          padding: "5px",
+          margin: "auto",
+        }}
+      >
         <QRCodeCanvas
           value={`${ENDPOINT}/emr/portal/${companyId}/${_id}`}
           size={170}

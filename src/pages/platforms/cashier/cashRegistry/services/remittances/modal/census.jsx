@@ -17,6 +17,7 @@ import {
 } from "./../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import { currency } from "./../../../../../../../services/utilities";
 import { Services } from "../../../../../../../services/fakeDb";
+import Swal from "sweetalert2";
 
 export default function Census() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -34,7 +35,7 @@ export default function Census() {
 
   useEffect(() => {
     let isMounted = true;
-    if (selected?.census && selected?.census?.menus.length > 0) {
+    if (selected?.census && selected?.census?.menus?.length > 0) {
       setCensus(selected.census);
       setPatients(selected.patients);
       setGross(selected.gross);
@@ -115,17 +116,41 @@ export default function Census() {
     .reduce((sum, { amount }) => sum + Number(amount), 0);
   const handleSubmit = () => {
     const { opening } = selected;
-    const data = {
-      _id: selected._id,
-      census,
-      breakdown,
-      patients,
-      sales: gross,
-      coh: breakdown.cash + opening.sum - paymentsSum,
-      expenses: paymentsSum,
-    };
+    const breakdownTotal = Object.values(breakdown).reduce(
+      (acc, val) => acc + val,
+      0
+    );
+    if (breakdownTotal !== gross) {
+      return Swal.fire({
+        icon: "warning",
+        title: "Inconsistent Sales Detected",
+        html: `
+            <p style="margin-top: 8px;">
+              There seems to be a mismatch in your sales summary.
+            </p>
+            <p style="margin: 4px 0;">
+              Please try logging out and logging back in to refresh your data.
+            </p>
+            <p style="margin: 4px 0;">
+              If the issue persists, kindly inform your system administrator.
+            </p>
+          `,
+        confirmButtonText: "Okay, got it!",
+        confirmButtonColor: "#f39c12",
+      });
+    } else {
+      const data = {
+        _id: selected._id,
+        census,
+        breakdown,
+        patients,
+        sales: gross,
+        coh: breakdown.cash + opening.sum - paymentsSum,
+        expenses: paymentsSum,
+      };
+      dispatch(CENSUS({ token, data }));
+    }
 
-    dispatch(CENSUS({ token, data }));
     // dispatch(TOGGLE({ key: "census" }));
   };
 
