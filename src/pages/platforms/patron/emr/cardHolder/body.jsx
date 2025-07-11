@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { MDBBtn, MDBCol, MDBRow, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
+import {
+  UPDATE_INFO,
+  UPLOAD,
+} from "../../../../../services/redux/slices/assets/persons/auth";
 import LabRequest from "./labRequest";
 import CardRequest from "./card";
 import "./style.css";
 import Schedule from "./schedule";
 import ValidID from "./validID";
+import { SAVE } from "../../../../../services/redux/slices/commerce/pos/services/onBoardings";
+import Spinner from "../../../../../components/spinner";
+import Swal from "sweetalert2";
 
 const steps = [
   {
@@ -53,10 +59,7 @@ const _form = {
     type: "",
     id: "",
   },
-  schedule: {
-    branch: "",
-    date: "",
-  },
+  schedule: new Date().toISOString().split("T")[0],
 };
 
 const CustomStepper = () => {
@@ -117,10 +120,9 @@ const CustomStepper = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const portfolioPath = `users/${auth.email}/portfolio`;
-
     setIsLoading(true);
 
+    const portfolioPath = `users/${auth.email}/portfolio`;
     const { card, vi, haveCard = false, form: formImage, schedule } = form;
 
     const data = {
@@ -136,11 +138,32 @@ const CustomStepper = () => {
         },
       }),
     };
+    const healthCard = {
+      ...card,
+      name: card.type,
+      isPrimary: card.primary,
+    };
+    const validID = {
+      ...vi,
+      name: vi.type,
+    };
 
     const upload = async (path, base64, name) =>
       await dispatch(UPLOAD({ data: { path, base64, name }, token }));
 
     try {
+      await dispatch(SAVE({ token, data }));
+      await dispatch(
+        UPDATE_INFO({
+          token,
+          data: {
+            _id: auth._id,
+            healthCard,
+            validID,
+          },
+        })
+      );
+
       const uploadTasks = [
         upload(
           `users/${auth.email}/booking`,
@@ -159,11 +182,35 @@ const CustomStepper = () => {
 
       await Promise.all(uploadTasks);
     } catch (error) {
-      console.error("Upload failed:", error);
-      // Optionally: show toast or error message
+      console.error("❌ Upload failed:", error);
+      // Optional: show toast
     } finally {
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          ...JSON.parse(localStorage.getItem("auth")),
+          healthCard,
+          validID,
+        })
+      );
       setIsLoading(false);
+      setActiveStep(1);
+      Swal.fire({
+        icon: "success",
+        title: "Schedule Submitted Successfully!",
+        html: `
+    <p style="margin-top: 8px;">
+      Your schedule has been submitted for approval.
+    </p>
+    <p style="margin: 4px 0;">
+      Please wait for confirmation via text message. You may also regularly log in to your account to track the status of your schedule.
+    </p>
+  `,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Got it!",
+      });
     }
+    setForm(_form);
   };
 
   const fakeDB = localStorage.getItem("patronCompany");
@@ -172,7 +219,7 @@ const CustomStepper = () => {
   return (
     <form onSubmit={isLastStep ? handleSubmit : handleNext}>
       <div className="stepper-wrapper ">
-        <div className="stepper-container mb-2">
+        {/* <div className="stepper-container mb-2">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
               <div className={`step ${activeStep >= step.id ? "active" : ""}`}>
@@ -194,6 +241,50 @@ const CustomStepper = () => {
               )}
             </React.Fragment>
           ))}
+        </div> */}
+        <div className="d-flex justify-content-center mb-5">
+          <div
+            className="position-relative d-flex justify-content-between"
+            style={{ width: "95%" }}
+          >
+            <div className="stepper-line">
+              <div
+                className="stepper-line-fill bg-primary"
+                style={{
+                  width: `${activeStep === 1 ? 0 : (activeStep - 1) * 33}%`,
+                }}
+              ></div>
+            </div>
+
+            {steps.map((step) => (
+              <div key={step.id}>
+                <div
+                  className={`step ${
+                    activeStep >= step.id ? "active" : ""
+                  } position-relative`}
+                >
+                  <div className="step-circle">
+                    {step.id === 4 ? (
+                      <MDBIcon far icon="calendar-check" />
+                    ) : (
+                      step.id
+                    )}
+                  </div>
+                  <div
+                    className="step-label position-absolute"
+                    style={{
+                      bottom: "-15px",
+                      width: "100px",
+                      left: step.id === 1 ? "52%" : "50%",
+                      transform: `translateX(-${step.id === 1 ? "48" : "50"}%)`,
+                    }}
+                  >
+                    {step.label}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="step-content">
@@ -220,8 +311,14 @@ const CustomStepper = () => {
                   Back
                 </MDBBtn>
               )}
-              <MDBBtn color="primary" rounded type="submit">
-                {isLastStep ? "Submit" : "Next"}
+              <MDBBtn
+                color="primary"
+                rounded
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLastStep ? "Submit" : "Next"}{" "}
+                <Spinner formSubmitted={isLoading} />
               </MDBBtn>
             </MDBCol>
           </MDBRow>

@@ -1,7 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import { HMO } from "../../../../../../services/fakeDb";
 import Card from "./card";
+import { useSelector } from "react-redux";
+import { ENDPOINT } from "../../../../../../services/utilities";
+import utils from "../utils";
 
 const CardRequest = ({
   hmo = [],
@@ -11,8 +14,42 @@ const CardRequest = ({
   setActiveStep,
   isValid,
 }) => {
+  const { token } = useSelector(({ auth }) => auth);
   const [isFront, setIsFront] = useState(true);
   const fileInputRef = useRef(null);
+
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  const { healthCard = {} } = auth || {};
+
+  useEffect(() => {
+    const fetchBothImages = async () => {
+      const frontUrl = `${ENDPOINT}/public/users/${auth?.email}/portfolio/${healthCard.name}-front.png`;
+      const backUrl = `${ENDPOINT}/public/users/${auth?.email}/portfolio/${healthCard.name}-back.png`;
+
+      const [front, back] = await Promise.all([
+        utils.fetchImageAsBase64(frontUrl, token),
+        utils.fetchImageAsBase64(backUrl, token),
+      ]);
+      if (healthCard?.name) {
+        setForm({
+          ...form,
+          card: {
+            ...form.card,
+            primary: healthCard?.isPrimary,
+            type: healthCard.name,
+            img: {
+              ...form.card?.img,
+              front,
+              back,
+            },
+          },
+        });
+      }
+    };
+
+    fetchBothImages();
+  }, []);
+
   const handleUploadClick = (_isFront) => {
     setIsFront(_isFront);
     fileInputRef.current.click();
@@ -39,8 +76,6 @@ const CardRequest = ({
   };
   const { card } = form;
   const { img } = card;
-
-  console.log("isFront", img);
 
   return (
     <div className="d-flex align-items-center justify-content-center flex-column">
@@ -74,8 +109,11 @@ const CardRequest = ({
 
       {form.haveCard === true && (
         <div className="w-100">
-          <div className="d-flex justify-content-center ">
-            <div className="d-flex w-100 justify-content-center flex-wrap align-items-center ">
+          <div className="d-flex justify-content-center mb-4 ">
+            <div
+              className="d-flex w-100  flex-wrap align-items-center"
+              style={{ maxWidth: "400px" }}
+            >
               <select
                 className="form-control mb-3 "
                 defaultValue=""
@@ -103,7 +141,7 @@ const CardRequest = ({
                   ))}
               </select>
 
-              <div className="form-check  d-flex align-items-center justify-content-center">
+              <div className="  d-flex align-items-center justify-content-center">
                 <span className="mr-2">Is this a primary card holder?</span>
                 <div className="mr-3">
                   <input
@@ -141,7 +179,7 @@ const CardRequest = ({
             </div>
           </div>
           <div
-            className="d-flex flex-wrap align-items-center w-100  justify-content-center mt-2"
+            className="d-flex flex-wrap align-items-center w-100 justify-content-center mt-2"
             style={{ gap: "15px" }}
           >
             <Card
@@ -158,46 +196,46 @@ const CardRequest = ({
               handleUploadClick={handleUploadClick}
             />
           </div>
+
           <div className="d-flex justify-content-center">
             <div
-              className="d-flex flex-wrap  mt-3 justify-content-center mx-3"
-              style={{ gap: "15px" }}
+              className="d-flex justify-content-center mt-3  w-100"
+              style={{ maxWidth: "800px", gap: "15px" }}
             >
-              <div>
+              <div className="w-50">
                 <span>ID number:</span>
                 <input
                   className="form-control"
                   required
-                  value={form.card?.id}
+                  value={form.card?.id || healthCard?.id}
                   onChange={({ target }) =>
                     setForm({
                       ...form,
                       card: { ...form.card, id: target.value },
                     })
                   }
-                  style={{ width: "400px" }}
                   placeholder="ID number"
                 />
               </div>
-              <span>
-                Expiry Date:
-                <input
-                  value={form.card?.expiry}
-                  onChange={({ target }) =>
-                    setForm({
-                      ...form,
-                      card: { ...form.card, expiry: target.value },
-                    })
-                  }
-                  className="form-control  "
-                  style={{ width: "400px" }}
-                  placeholder="Date of expiry"
-                  type="date"
-                />
-              </span>
+              <div className="w-50">
+                <span>
+                  Expiry Date:
+                  <input
+                    value={form.card?.expiry || healthCard?.expiry}
+                    onChange={({ target }) =>
+                      setForm({
+                        ...form,
+                        card: { ...form.card, expiry: target.value },
+                      })
+                    }
+                    className="form-control   "
+                    placeholder="Date of expiry"
+                    type="date"
+                  />
+                </span>
+              </div>
             </div>
           </div>
-
           <input
             type="file"
             accept="image/*"

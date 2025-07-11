@@ -1,9 +1,25 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon } from "mdbreact";
 import { ValidID } from "../../../../../services/fakeDb";
+import { ENDPOINT } from "../../../../../services/utilities";
+import utils from "./utils";
+import { useSelector } from "react-redux";
 
 const CardRequest = ({ form, setForm, isValid, setIsValid }) => {
+  const { token } = useSelector(({ auth }) => auth);
   const fileInputRef = useRef(null);
+
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  const { validID = {} } = auth || {};
+
+  useEffect(() => {
+    const getImage = async () => {
+      const url = `${ENDPOINT}/public/users/${auth?.email}/portfolio/${validID.name}.png`;
+      const image = await utils.fetchImageAsBase64(url, token);
+      setForm({ ...form, vi: { ...form.vi, img: image } });
+    };
+    getImage();
+  }, []);
   const handleUploadClick = () => {
     fileInputRef.current.click();
   };
@@ -28,7 +44,7 @@ const CardRequest = ({ form, setForm, isValid, setIsValid }) => {
           className="form-control mb-3"
           defaultValue=""
           required
-          value={form?.vi?.type}
+          value={form?.vi?.type || validID?.name}
           onChange={({ target }) =>
             setForm({ ...form, vi: { ...form.vi, type: target.value } })
           }
@@ -44,6 +60,7 @@ const CardRequest = ({ form, setForm, isValid, setIsValid }) => {
         </select>
 
         <MDBCard
+          className={!form.vi?.img ? "p-2" : ""}
           style={{
             width: "100%",
             height: "214px",
@@ -51,10 +68,15 @@ const CardRequest = ({ form, setForm, isValid, setIsValid }) => {
             position: "relative",
             overflow: "hidden",
             backgroundColor: "#f9f9f9",
-            border: !form.vi?.img && "1.7px dashed black",
           }}
         >
-          <MDBCardBody className="p-0">
+          <MDBCardBody
+            className="p-0"
+            style={{
+              borderRadius: "8px",
+              border: !form.vi?.img && "1.7px dashed #bfbfbf",
+            }}
+          >
             {!isValid && (
               <div
                 className="alert alert-danger mb-0 d-flex align-items-center justify-content-center mb-n5"
@@ -111,7 +133,7 @@ const CardRequest = ({ form, setForm, isValid, setIsValid }) => {
           <input
             className="form-control"
             placeholder="ID number"
-            value={form?.vi?.id}
+            value={form?.vi?.id || validID?.id}
             onChange={({ target }) =>
               setForm({ ...form, vi: { ...form.vi, id: target.value } })
             }
@@ -122,7 +144,7 @@ const CardRequest = ({ form, setForm, isValid, setIsValid }) => {
           <input
             className="form-control"
             type="date"
-            value={form?.vi?.expiry}
+            value={form?.vi?.expiry || validID?.expiry}
             onChange={({ target }) =>
               setForm({ ...form, vi: { ...form.vi, expiry: target.value } })
             }

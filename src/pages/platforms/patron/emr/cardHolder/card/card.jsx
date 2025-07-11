@@ -2,21 +2,27 @@ import { MDBCard, MDBCardBody, MDBBtn, MDBIcon } from "mdbreact";
 
 const Card = ({ isValid, handleUploadClick, isFront = false, src }) => {
   return (
-    <div>
-      <span style={{ fontWeight: 500 }}>{isFront ? "Front" : "Back"}</span>
+    <div style={{ maxWidth: "400px" }} className="w-100">
+      <span style={{ fontWeight: 500 }}>{isFront ? "Front" : "Back"}:</span>
 
       <MDBCard
+        className={!src ? "p-2" : ""}
         style={{
-          width: "400px",
+          width: "100%",
           height: "230px",
           borderRadius: "8px",
           position: "relative",
           overflow: "hidden",
           backgroundColor: "#f9f9f9",
-          border: !src && "1.7px dashed black",
         }}
       >
-        <MDBCardBody className="p-0 d-flex flex-wrap">
+        <MDBCardBody
+          className="p-0 d-flex flex-wrap "
+          style={{
+            borderRadius: "8px",
+            border: !src && "1.7px dashed #bfbfbf",
+          }}
+        >
           {!isValid && (
             <div
               className="alert alert-danger mb-0 d-flex align-items-center justify-content-center mb-n5"
