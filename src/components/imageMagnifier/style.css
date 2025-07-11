@@ -1,0 +1,27 @@
+.template-x-ray-section {
+  width: 1000px;
+  height: auto;
+  padding: 20px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.zoom-img-container {
+  width: 100%;
+  height: auto;
+  border: 2px solid black;
+  overflow: hidden;
+  position: relative;
+}
+
+.zoom-img-container img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}

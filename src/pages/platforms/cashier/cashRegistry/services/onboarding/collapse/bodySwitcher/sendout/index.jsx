@@ -1,4 +1,3 @@
-import React from "react";
 import {
   MDBTable,
   MDBTableHead,
@@ -6,15 +5,15 @@ import {
   MDBBtn,
   MDBBtnGroup,
 } from "mdbreact";
-import { Services } from "../../../../../../../services/fakeDb";
+import { Services } from "../../../../../../../../../services/fakeDb";
 import Swal from "sweetalert2";
-import { fullName } from "../../../../../../../services/utilities";
+import { fullName } from "../../../../../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DENY_ONBOARDING,
   SetSELECTED,
-} from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
-export default function Collapsable({ item }) {
+} from "../../../../../../../../../services/redux/slices/commerce/pos/services/deals";
+export default function Sendout({ item }) {
   const { token, auth } = useSelector(({ auth }) => auth),
     // { collections } = useSelector(({ menus }) => menus),
     { vendor, createdAt, services } = item,
@@ -45,7 +44,7 @@ export default function Collapsable({ item }) {
   };
 
   const handleDeny = async (deal) => {
-    const customer = fullName(item?.customerId?.fullName);
+    const customer = fullName(item?.pid?.fullName);
     const { value: reason } = await Swal.fire({
       title: `${customer}`,
       input: "textarea",
