@@ -59,6 +59,12 @@ export default function Summary() {
   useEffect(() => {
     setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
   }, [abbr]);
+  console.log("payment", payment);
+  console.log("abbr", abbr);
+  console.log(
+    "iscash",
+    ["cash", "downpayment"].includes(payment) && abbr !== "wls"
+  );
 
   const checkout = async () => {
     let selected = {
@@ -134,7 +140,6 @@ export default function Summary() {
       addToast("Transaction failed", { appearance: "error" });
     } finally {
       setCash(0);
-      setPayment(0);
       dispatch(RESET());
       dispatch(RESET_INSOURCE());
     }
@@ -200,11 +205,11 @@ export default function Summary() {
           </tr>
           <tr>
             <td colSpan="2">
-              {["cash", "downpayment"].includes(payment) && abbr !== "hmo" ? (
+              {["cash", "downpayment"].includes(payment) && abbr !== "wls" ? (
                 <input
                   type="number"
                   min={amount}
-                  value={cash}
+                  value={String(cash)}
                   onChange={({ target }) => setCash(Number(target.value))}
                   placeholder="Amount in Peso"
                   required
