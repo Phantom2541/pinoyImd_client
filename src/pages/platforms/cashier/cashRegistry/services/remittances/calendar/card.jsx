@@ -1,9 +1,6 @@
 import Indicator from "./indicator";
 import Footer from "./footer";
-import {
-  currency,
-  paymentMethod,
-} from "../../../../../../../services/utilities";
+import { currency } from "../../../../../../../services/utilities";
 import { MDBAnimation, MDBProgress } from "mdbreact";
 // import { useSelector } from "react-redux";
 const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
@@ -126,8 +123,8 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
               {[
                 {
                   label: "Cash Payment",
-                  value: breakdown?.cash !== gross ? breakdown?.cash : 0,
-                  // value: breakdown?.cash ? breakdown?.cash : 0,
+                  // value: breakdown?.cash !== gross ? breakdown?.cash : 0,
+                  value: breakdown?.cash ? breakdown?.cash : 0,
                 },
                 {
                   label: " Add: FC",
