@@ -6,7 +6,7 @@ import {
   SetFILTERED,
   SetCREATE,
   BROWSE,
-} from "../../../../../services/redux/slices/assets/persons/cardHolder";
+} from "../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import { BROWSE as COMPANYBROWSE } from "../../../../../services/redux/slices/assets/companies";
 import { BROWSE as BRANCHBROWSE } from "../../../../../services/redux/slices/assets/branches";
 import { useState } from "react";

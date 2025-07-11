@@ -86,13 +86,6 @@ const cashier = [
         title: "List of Payments Made by cashier",
         component: Payments,
       },
-      // {
-      //   name: "SOA Verifications",
-      //   path: "/soa",
-      //   icon: "file-contract",
-      //   title: "SOA Verifications",
-      //   component: SOA,
-      // },
       {
         name: "Accounts Receivable (A/R)",
         path: "/receivables",
