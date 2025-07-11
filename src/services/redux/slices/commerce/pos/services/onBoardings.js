@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import { axioKit } from "../../../../../utilities";
 
 const url = "/commerce/pos/services/onboardings";
 
@@ -281,13 +281,13 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        state.collections = state.filtered = payload;
+        state.collections = state.filtered = payload || [];
+        console.log("payload", payload);
 
-        let totalPAges = Math.floor(payload.length / state.maxPage);
-        if (payload.length % state.maxPage > 0) totalPAges += 1;
-        state.totalPages = totalPAges;
-        if (state.activePage > totalPAges) {
-          state.activePage = totalPAges;
+        let totalPages = Math.ceil(state.filtered.length / state.maxPage);
+        state.totalPages = totalPages;
+        if (state.activePage > totalPages) {
+          state.activePage = totalPages;
         }
         state.isLoading = false;
       })

@@ -1,3 +1,21 @@
+.stepper-line {
+  width: 100%;
+  height: 1px;
+  background: #ccc;
+  top: 50%;
+  left: 0;
+  position: absolute;
+}
+
+.stepper-line-fill {
+  position: absolute;
+  height: 1px;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  transition: width 0.7s ease;
+}
+
 .stepper-wrapper {
   width: 100%;
 }

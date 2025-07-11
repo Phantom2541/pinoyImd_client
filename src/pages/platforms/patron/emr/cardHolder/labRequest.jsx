@@ -27,6 +27,7 @@ const LabRequest = ({
   return (
     <div className="d-flex align-items-center justify-content-center">
       <MDBCard
+        className={!form.form ? "p-2" : ""}
         style={{
           width: "794px",
           height: "300px",
@@ -38,7 +39,12 @@ const LabRequest = ({
       >
         <MDBCardBody
           className="p-0"
-          style={{ height: "100%", position: "relative" }}
+          style={{
+            height: "100%",
+            position: "relative",
+            borderRadius: "8px",
+            border: !form.form && "1.7px dashed #bfbfbf",
+          }}
         >
           {!isValid && (
             <div

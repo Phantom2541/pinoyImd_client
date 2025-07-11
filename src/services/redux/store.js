@@ -11,7 +11,6 @@ import {
   branches,
   providers,
   tieups,
-  cardHolder,
 } from "./slices/assets";
 import { dragDrop, table } from "./slices/reusable";
 import {
@@ -23,6 +22,7 @@ import {
   deals,
   billings,
   dispenser,
+  onBoardings,
 } from "./slices/commerce";
 
 import {
@@ -82,7 +82,7 @@ const store = configureStore({
     physicians,
     menus,
     services,
-    cardHolder,
+    onBoardings,
     sales,
     taskGenerator,
     deals,
