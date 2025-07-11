@@ -10,7 +10,7 @@ export default function ParentComponent() {
   };
 
   return (
-    <div style={{ maxWidth: "500px", margin: "auto" }}>
+    <div style={{ width: "400px", height: "230px" }}>
       <ImageDragAndDrop defaultImage={logo} savedImg={handleImageChange} />
     </div>
   );
