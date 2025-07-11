@@ -37,7 +37,6 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
           onClick={onSideNavToggleClick}
           style={{
             lineHeight: "32px",
-            marginLeft: "1em",
             verticalAlign: "middle",
             cursor: "pointer",
           }}
