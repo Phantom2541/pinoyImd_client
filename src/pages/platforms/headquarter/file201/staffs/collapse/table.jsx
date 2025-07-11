@@ -367,7 +367,7 @@ export default function CollapseTable({
         <MDBCol md={!isHonorarium ? 3 : 4}>
           <div className="d-flex  align-items-center">
             <h5 className="mb-0">Access</h5>
-            {access.length > 0 && (
+            {access?.length > 0 && (
               <MDBIcon
                 icon="pencil-alt"
                 className="cursor-pointer ml-2"
@@ -377,7 +377,7 @@ export default function CollapseTable({
             )}
           </div>
           <hr />
-          {access.length > 0 ? (
+          {access?.length > 0 ? (
             access.map((acc, index) => (
               <MDBBadge
                 key={index}

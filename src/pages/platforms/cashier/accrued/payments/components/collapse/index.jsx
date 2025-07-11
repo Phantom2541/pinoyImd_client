@@ -27,62 +27,66 @@ export default function Index() {
           }}
           fluid
         >
-          {filtered.map((payment, index) => {
-            const { deals, date, sum } = payment;
-            const actualIndex = index; // Directly use the index in the paginated data
-            const { color } = collapse.getStyle(
-              actualIndex,
-              activeId,
-              didHoverId
-            );
+          {filtered
+            .slice()
+            .sort((a, b) => new Date(b.date) - new Date(a.date)) // DESC order
+            .map((payment, index) => {
+              const { deals, date, sum } = payment;
+              const actualIndex = index;
+              const { color } = collapse.getStyle(
+                actualIndex,
+                activeId,
+                didHoverId
+              );
 
-            return (
-              <MDBCard
-                key={`staffs-${index}`}
-                style={{
-                  boxShadow: "0px 0px 0px 0px",
-                  backgroundColor: "white",
-                }}
-              >
-                <MDBCollapseHeader
-                  className={`${
-                    index === activeId
-                      ? "bg-info text-white transition"
-                      : "bg-white"
-                  } ${activeId === index ? "custom-header" : ""}`}
-                  style={{ borderRadius: "50%" }}
-                  onClick={() =>
-                    setActiveId((prev) => (prev === index ? -1 : index))
-                  }
-                  onMouseLeave={() => setDidHoverId(-1)}
-                  onMouseEnter={() => setDidHoverId(actualIndex)}
-                >
-                  <Header
-                    key={date}
-                    title={date}
-                    count={deals?.length}
-                    sum={sum}
-                    textColor={color}
-                    index={index}
-                  />
-                </MDBCollapseHeader>
-                <MDBCollapse
-                  id={`collapse-${index}`}
-                  className="mb-2"
-                  isOpen={index === activeId}
+              return (
+                <MDBCard
+                  key={`staffs-${index}`}
                   style={{
-                    borderBottom: "1px solid black",
-                    borderRight: "1px solid black",
-                    borderLeft: "1px solid black",
+                    boxShadow: "0px 0px 0px 0px",
+                    backgroundColor: "white",
                   }}
                 >
-                  <MDBCardBody className="pt-2">
-                    <Body deals={deals} />
-                  </MDBCardBody>
-                </MDBCollapse>
-              </MDBCard>
-            );
-          })}
+                  <MDBCollapseHeader
+                    className={`${
+                      index === activeId
+                        ? "bg-info text-white transition"
+                        : "bg-white"
+                    } ${activeId === index ? "custom-header" : ""}`}
+                    style={{ borderRadius: "50%" }}
+                    onClick={() =>
+                      setActiveId((prev) => (prev === index ? -1 : index))
+                    }
+                    onMouseLeave={() => setDidHoverId(-1)}
+                    onMouseEnter={() => setDidHoverId(actualIndex)}
+                  >
+                    <Header
+                      key={date}
+                      title={date}
+                      count={deals?.length}
+                      sum={sum}
+                      textColor={color}
+                      activeId={activeId}
+                      index={index}
+                    />
+                  </MDBCollapseHeader>
+                  <MDBCollapse
+                    id={`collapse-${index}`}
+                    className="mb-2"
+                    isOpen={index === activeId}
+                    style={{
+                      borderBottom: "1px solid black",
+                      borderRight: "1px solid black",
+                      borderLeft: "1px solid black",
+                    }}
+                  >
+                    <MDBCardBody className="pt-2">
+                      <Body deals={deals} />
+                    </MDBCardBody>
+                  </MDBCollapse>
+                </MDBCard>
+              );
+            })}
         </MDBContainer>
       ) : (
         <TableLoading />

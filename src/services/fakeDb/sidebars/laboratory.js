@@ -78,6 +78,13 @@ const laboratory = [
         title: "Sendout Patients to Partner Clinics",
         component: Sendouts,
       },
+      {
+        name: "medical mission",
+        path: "/quest",
+        icon: "ambulance",
+        title: "medical team operations for outreach clinics.",
+        component: Quest,
+      },
     ],
   },
   {

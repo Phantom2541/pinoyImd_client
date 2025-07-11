@@ -53,7 +53,6 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
             fontWeight: 400,
             boxShadow: "0px 0px 0px 0px",
           }}
-          pill
         >
           {access?.length > 0
             ? `${capitalize(department)} :)`
