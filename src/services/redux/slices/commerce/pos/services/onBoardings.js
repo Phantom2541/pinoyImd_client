@@ -18,6 +18,7 @@ const initialState = {
   willCreate: false,
   message: "",
   showModal: false,
+  showProcess: false,
   activeTab: "labRequest",
   /**
    * Footer
@@ -222,11 +223,15 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetSELECTED: (state, { payload }) => {
+      console.log("payload", payload);
       state.selected = payload;
       state.showModal = true;
-      state.willCreate = false;
     },
 
+    SetPROCESS: (state, { payload }) => {
+      state.selected = payload;
+      state.showProcess = true;
+    },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
@@ -244,8 +249,13 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
-    TOGGLE: (state) => {
-      state.showModal = !state.showModal;
+    TOGGLE: (state, { payload }) => {
+      console.log("payload", payload);
+      if (payload) {
+        state.showProcess = !state.showProcess;
+      } else {
+        state.showModal = !state.showModal;
+      }
       state.selected = {};
     },
     SetCOLLECTIONS: (state, { payload }) => {
@@ -281,8 +291,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        state.collections = state.filtered = payload || [];
         console.log("payload", payload);
+        state.collections = state.filtered = payload.payload || [];
 
         let totalPages = Math.ceil(state.filtered.length / state.maxPage);
         state.totalPages = totalPages;
@@ -366,7 +376,11 @@ export const reduxSlice = createSlice({
               (item) => item._id === payload._id
             );
             const oldData = { ...collections[index] };
-            collections[index] = { ...oldData, ...payload };
+            if (payload.status === "denied") {
+              collections.splice(index, 1);
+            } else {
+              collections[index] = { ...oldData, ...payload };
+            }
           };
 
           updateCollections(state.collections);
@@ -546,6 +560,7 @@ export const reduxSlice = createSlice({
 export const {
   SetFILTERED,
   SetSELECTED,
+  SetPROCESS,
   SetCOLLECTIONS,
   SetActiveTAB,
   TOGGLE,

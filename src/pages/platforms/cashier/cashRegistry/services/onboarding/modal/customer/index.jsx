@@ -6,8 +6,15 @@ const Contracts = {
   ssc: "Special Subcontract",
 };
 const Customer = ({ deal }) => {
-  const { customerId, branchId, ssx, privilege, sendouts } = deal;
-  const { mobile: _mobile } = customerId;
+  const {
+    pid: customerId,
+    branchId,
+    ssx,
+    privilege,
+    sendouts,
+    services,
+  } = deal;
+  const { mobile: _mobile = "" } = customerId || {};
   const { contract } = sendouts || {};
 
   return (
@@ -34,7 +41,7 @@ const Customer = ({ deal }) => {
               title: "Request Services",
               value: (
                 <>
-                  {sendouts?.servicesId?.map((id, key) => (
+                  {services?.map((id, key) => (
                     <MDBBadge key={key} className="mr-1">
                       {Services.getAbbr(id)}
                     </MDBBadge>

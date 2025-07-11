@@ -8,15 +8,15 @@ import {
 } from "../../../../../../../services/utilities";
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
-  const { customerId, branchId } = item;
+  const { pid, branchId, vendor } = item;
   const { collections } = useSelector(({ onBoardings }) => onBoardings);
   console.log("collections", collections);
 
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div>
-        {index + 1}. {getGenderIcon(customerId?.isMale)}{" "}
-        {fullName(customerId?.fullName)} |{getAge(customerId?.dob)}
+        {index + 1}. {getGenderIcon(pid?.isMale)} {fullName(pid?.fullName)} |
+        {getAge(pid?.dob)} {vendor?._id && "| Sendout"}
       </div>
       <div className="d-flex">
         <small className="mr-2 mt-1">{branchId?.displayname}</small>
