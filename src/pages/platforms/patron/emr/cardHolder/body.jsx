@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MDBBtn, MDBCol, MDBRow, MDBIcon } from "mdbreact";
+import { useDispatch, useSelector } from "react-redux";
+import { UPLOAD } from "../../../../../services/redux/slices/assets/persons/auth";
 import LabRequest from "./labRequest";
-import CardRequest from "./cardRequest";
+import CardRequest from "./card";
 import "./style.css";
 import Schedule from "./schedule";
-import Proof from "./validID";
 import ValidID from "./validID";
 
 const steps = [
@@ -31,26 +32,42 @@ const steps = [
   },
 ];
 
+const _form = {
+  form: "",
+  branch: "",
+  haveCard: null,
+  card: {
+    id: "",
+    expiry: "",
+    img: {
+      back: "",
+      front: "",
+    },
+    type: "",
+    primary: true,
+    proof: "",
+  },
+  vi: {
+    img: "",
+    expiry: "",
+    type: "",
+    id: "",
+  },
+  schedule: {
+    branch: "",
+    date: "",
+  },
+};
+
 const CustomStepper = () => {
-  const [form, setForm] = useState({
-      form: "",
-      branch: "",
-      haveCard: null,
-      card: {
-        img: "",
-        type: "",
-        primary: true,
-        proof: "",
-      },
-      schedule: {
-        branch: "",
-        date: "",
-      },
-    }),
+  const { auth, token } = useSelector(({ auth }) => auth),
+    [form, setForm] = useState(_form),
     [activeStep, setActiveStep] = useState(1),
-    [valid, setValid] = useState({ 1: true, 2: true, 3: true }); //form,card,schedule
+    [valid, setValid] = useState({ 1: true, 2: true, 3: true }), //form,card,schedule
+    dispatch = useDispatch();
 
   const prevStep = () => {
+    if (activeStep === 4 && !form.haveCard) return setActiveStep(2);
     const _activeStep = activeStep > 1 ? activeStep - 1 : 1;
     setActiveStep(_activeStep);
   };
@@ -74,16 +91,18 @@ const CustomStepper = () => {
     }
 
     if (isStep2) {
+      const { card } = form;
+      const { img } = card;
       if (!form.haveCard) {
         return setActiveStep(4);
       }
-      const isValid = !!form.card.img;
+      const isValid = !!img.front && !!img.back;
       setValid((v) => ({ ...v, 2: isValid }));
       if (isValid) setActiveStep(3);
     }
 
     if (isStep3) {
-      const isValid = !!form.card.proof;
+      const isValid = !!form.vi.img;
       setValid((v) => ({ ...v, 3: isValid }));
       if (isValid) setActiveStep(4);
     }
@@ -94,20 +113,69 @@ const CustomStepper = () => {
       // You can trigger submit here if needed
     }
   };
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const portfolioPath = `users/${auth.email}/portfolio`;
+
+    setIsLoading(true);
+
+    const { card, vi, haveCard = false, form: formImage, schedule } = form;
+
+    const data = {
+      branchId: form.branch,
+      particular: auth._id,
+      haveCard,
+      schedule,
+      ...(haveCard && {
+        requirements: {
+          hmo: card.type,
+          vi: `${portfolioPath}/${vi.type}.png`,
+          rf: `users/${auth.email}/booking/form-${schedule}.png`,
+        },
+      }),
+    };
+
+    const upload = async (path, base64, name) =>
+      await dispatch(UPLOAD({ data: { path, base64, name }, token }));
+
+    try {
+      const uploadTasks = [
+        upload(
+          `users/${auth.email}/booking`,
+          formImage,
+          `form-${schedule}.png`
+        ),
+      ];
+
+      if (haveCard) {
+        uploadTasks.push(
+          upload(portfolioPath, card.img.front, `${card.type}-front.png`),
+          upload(portfolioPath, card.img.back, `${card.type}-back.png`),
+          upload(portfolioPath, vi.img, `${vi.type}.png`)
+        );
+      }
+
+      await Promise.all(uploadTasks);
+    } catch (error) {
+      console.error("Upload failed:", error);
+      // Optionally: show toast or error message
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const fakeDB = localStorage.getItem("patronCompany");
   const { hmo = [], branches = [] } = fakeDB ? JSON.parse(fakeDB) : {};
 
-  const { card } = form;
   return (
-    <form onSubmit={handleNext}>
+    <form onSubmit={isLastStep ? handleSubmit : handleNext}>
       <div className="stepper-wrapper ">
         <div className="stepper-container mb-2">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
-              <div
-                className={`step ${activeStep >= step.id ? "active" : ""}`}
-                onClick={() => setActiveStep(step.id)}
-              >
+              <div className={`step ${activeStep >= step.id ? "active" : ""}`}>
                 <div className="step-circle">
                   {step.id === 4 ? (
                     <MDBIcon far icon="calendar-check" />

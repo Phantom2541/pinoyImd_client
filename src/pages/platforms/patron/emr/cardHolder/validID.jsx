@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { MDBBtn, MDBCard, MDBCardBody, MDBIcon } from "mdbreact";
-import { HMO, ValidID } from "../../../../../services/fakeDb";
+import { ValidID } from "../../../../../services/fakeDb";
 
-const CardRequest = ({ form, setForm, isValid, setIsValid, setActiveStep }) => {
+const CardRequest = ({ form, setForm, isValid, setIsValid }) => {
   const fileInputRef = useRef(null);
   const handleUploadClick = () => {
     fileInputRef.current.click();
@@ -14,7 +14,7 @@ const CardRequest = ({ form, setForm, isValid, setIsValid, setActiveStep }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result;
-        setForm({ ...form, vi: { ...form.card, img: base64.split(",")[1] } });
+        setForm({ ...form, vi: { ...form.vi, img: base64.split(",")[1] } });
         setIsValid(true);
       };
       reader.readAsDataURL(file);
@@ -24,30 +24,13 @@ const CardRequest = ({ form, setForm, isValid, setIsValid, setActiveStep }) => {
   return (
     <div className="d-flex align-items-center justify-content-center flex-column">
       <div className="text-center w-100" style={{ maxWidth: "400px" }}>
-        <MDBBtn
-          size="sm"
-          color="info"
-          className="mb-3"
-          onClick={() => {
-            setForm({
-              ...form,
-              vi: { img: "", type: "", id: "", expired: "" },
-              haveCard: null,
-            });
-            setActiveStep(4);
-          }}
-        >
-          <MDBIcon icon="arrow-right" className="mr-2" />
-          Skip
-        </MDBBtn>
-
         <select
           className="form-control mb-3"
           defaultValue=""
           required
-          value={form?.card?.type}
+          value={form?.vi?.type}
           onChange={({ target }) =>
-            setForm({ ...form, card: { ...form.card, type: target.value } })
+            setForm({ ...form, vi: { ...form.vi, type: target.value } })
           }
         >
           <option value="" disabled>
@@ -68,6 +51,7 @@ const CardRequest = ({ form, setForm, isValid, setIsValid, setActiveStep }) => {
             position: "relative",
             overflow: "hidden",
             backgroundColor: "#f9f9f9",
+            border: !form.vi?.img && "1.7px dashed black",
           }}
         >
           <MDBCardBody className="p-0">
@@ -87,10 +71,10 @@ const CardRequest = ({ form, setForm, isValid, setIsValid, setActiveStep }) => {
                 next step.
               </div>
             )}
-            {form.card.img ? (
+            {form.vi.img ? (
               <>
                 <img
-                  src={`data:image/png;base64,${form.card.img}`}
+                  src={`data:image/png;base64,${form.vi.img}`}
                   alt="Uploaded Card"
                   style={{
                     width: "100%",
@@ -122,6 +106,28 @@ const CardRequest = ({ form, setForm, isValid, setIsValid, setActiveStep }) => {
             )}
           </MDBCardBody>
         </MDBCard>
+        <div className="my-2">
+          <span className="text-left d-block">ID number:</span>
+          <input
+            className="form-control"
+            placeholder="ID number"
+            value={form?.vi?.id}
+            onChange={({ target }) =>
+              setForm({ ...form, vi: { ...form.vi, id: target.value } })
+            }
+          />
+        </div>
+        <div>
+          <span className="text-left d-block">Expiry Date:</span>
+          <input
+            className="form-control"
+            type="date"
+            value={form?.vi?.expiry}
+            onChange={({ target }) =>
+              setForm({ ...form, vi: { ...form.vi, expiry: target.value } })
+            }
+          />
+        </div>
 
         <input
           type="file"

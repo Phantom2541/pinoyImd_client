@@ -34,6 +34,7 @@ const LabRequest = ({
           position: "relative",
           backgroundColor: "#f9f9f9",
           overflow: "hidden",
+          border: !form.form && "1.7px dashed black",
         }}
       >
         <MDBCardBody

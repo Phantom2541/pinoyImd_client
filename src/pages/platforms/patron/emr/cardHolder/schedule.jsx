@@ -2,10 +2,11 @@ import { MDBCol, MDBContainer, MDBRow } from "mdbreact";
 
 const Schedule = ({ branches, setForm, form }) => {
   return (
-    <MDBContainer>
+    <MDBContainer className="mt-2">
       <MDBRow>
         <MDBCol size="sm">
-          <div className="d-flex align-items-center">
+          <div>
+            <span>Branch:</span>
             <select
               name="branch"
               id="branch"
@@ -27,7 +28,13 @@ const Schedule = ({ branches, setForm, form }) => {
       </MDBRow>
       <MDBRow className="mt-3">
         <MDBCol>
-          <input type="date" className="form-control" />
+          <span>Schedule:</span>
+          <input
+            type="date"
+            className="form-control"
+            value={form.schedule}
+            onChange={(e) => setForm({ ...form, schedule: e.target.value })}
+          />
         </MDBCol>
       </MDBRow>
     </MDBContainer>

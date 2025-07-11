@@ -1,17 +1,20 @@
 import { useRef, useState } from "react";
-import { MDBBtn, MDBCard, MDBCardBody, MDBIcon } from "mdbreact";
-import { HMO } from "../../../../../services/fakeDb";
+import { MDBBtn, MDBIcon } from "mdbreact";
+import { HMO } from "../../../../../../services/fakeDb";
+import Card from "./card";
 
 const CardRequest = ({
   hmo = [],
   form,
   setForm,
-  isValid,
   setIsValid,
   setActiveStep,
+  isValid,
 }) => {
+  const [isFront, setIsFront] = useState(true);
   const fileInputRef = useRef(null);
-  const handleUploadClick = () => {
+  const handleUploadClick = (_isFront) => {
+    setIsFront(_isFront);
     fileInputRef.current.click();
   };
 
@@ -21,12 +24,23 @@ const CardRequest = ({
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result;
-        setForm({ ...form, card: { ...form.card, img: base64.split(",")[1] } });
+        const baseKey = isFront ? "front" : "back";
+        setForm({
+          ...form,
+          card: {
+            ...form.card,
+            img: { ...form.card?.img, [baseKey]: base64.split(",")[1] },
+          },
+        });
         setIsValid(true);
       };
       reader.readAsDataURL(file);
     }
   };
+  const { card } = form;
+  const { img } = card;
+
+  console.log("isFront", img);
 
   return (
     <div className="d-flex align-items-center justify-content-center flex-column">
@@ -48,7 +62,7 @@ const CardRequest = ({
             color="light"
             onClick={() => {
               setForm({ ...form, haveCard: true });
-              setActiveStep(3);
+              setActiveStep(4);
             }}
             size="sm"
           >
@@ -127,85 +141,60 @@ const CardRequest = ({
             </div>
           </div>
           <div
-            className="d-flex flex-wrap align-items-center w-100  justify-content-center"
+            className="d-flex flex-wrap align-items-center w-100  justify-content-center mt-2"
             style={{ gap: "15px" }}
           >
-            <MDBCard
-              style={{
-                width: "400px",
-                height: "auto",
-                borderRadius: "8px",
-                position: "relative",
-                overflow: "hidden",
-                backgroundColor: "#f9f9f9",
-              }}
-            >
-              <MDBCardBody className="p-0 d-flex flex-wrap">
-                {!isValid && (
-                  <div
-                    className="alert alert-danger mb-0 d-flex align-items-center justify-content-center mb-n5"
-                    style={{
-                      borderRadius: "0",
-                      fontWeight: "500",
-                      textAlign: "center",
-                      padding: "12px 16px",
-                      backgroundColor: "#f8d7da",
-                      color: "#721c24",
-                    }}
-                  >
-                    Card ID is required. Please upload it before proceeding to
-                    the next step.
-                  </div>
-                )}
-                {form.card.img ? (
-                  <>
-                    <img
-                      src={`data:image/png;base64,${form.card.img}`}
-                      alt="Uploaded Card"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "-5px",
-                        right: "0",
-                      }}
-                    >
-                      <MDBBtn
-                        size="sm"
-                        color="warning"
-                        onClick={handleUploadClick}
-                      >
-                        <MDBIcon icon="redo" className="mr-2" />
-                        Change Image
-                      </MDBBtn>
-                    </div>
-                  </>
-                ) : (
-                  <div className="d-flex h-100 w-100 align-items-center justify-content-center">
-                    <MDBBtn
-                      size="md"
-                      color="warning"
-                      onClick={handleUploadClick}
-                    >
-                      <MDBIcon icon="upload" className="mr-2" />
-                      Upload Card
-                    </MDBBtn>
-                  </div>
-                )}
-              </MDBCardBody>
-            </MDBCard>
+            <Card
+              form={form}
+              src={img.front}
+              isFront
+              isValid={!isValid ? (img.front ? true : false) : true}
+              handleUploadClick={handleUploadClick}
+            />
+            <Card
+              form={form}
+              isValid={!isValid ? (img.back ? true : false) : true}
+              src={img.back}
+              handleUploadClick={handleUploadClick}
+            />
+          </div>
+          <div className="d-flex justify-content-center">
             <div
-              className="d-flex flex-wrap flex-column"
-              style={{ gap: "5px" }}
+              className="d-flex flex-wrap  mt-3 justify-content-center mx-3"
+              style={{ gap: "15px" }}
             >
-              <input className="form-control" />
-              <input className="form-control  " />
+              <div>
+                <span>ID number:</span>
+                <input
+                  className="form-control"
+                  required
+                  value={form.card?.id}
+                  onChange={({ target }) =>
+                    setForm({
+                      ...form,
+                      card: { ...form.card, id: target.value },
+                    })
+                  }
+                  style={{ width: "400px" }}
+                  placeholder="ID number"
+                />
+              </div>
+              <span>
+                Expiry Date:
+                <input
+                  value={form.card?.expiry}
+                  onChange={({ target }) =>
+                    setForm({
+                      ...form,
+                      card: { ...form.card, expiry: target.value },
+                    })
+                  }
+                  className="form-control  "
+                  style={{ width: "400px" }}
+                  placeholder="Date of expiry"
+                  type="date"
+                />
+              </span>
             </div>
           </div>
 
