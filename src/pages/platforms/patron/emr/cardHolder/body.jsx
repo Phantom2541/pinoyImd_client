@@ -195,15 +195,16 @@ const CustomStepper = () => {
       );
       setIsLoading(false);
       setActiveStep(1);
+
       Swal.fire({
         icon: "success",
-        title: "Schedule Submitted Successfully!",
+        title: "Schedule Submitted!",
         html: `
     <p style="margin-top: 8px;">
       Your schedule has been submitted for approval.
     </p>
     <p style="margin: 4px 0;">
-      Please wait for confirmation via text message. You may also regularly log in to your account to track the status of your schedule.
+      You’ll receive a text once it's confirmed, or you can check the system for updates.
     </p>
   `,
         confirmButtonColor: "#3085d6",
@@ -242,7 +243,7 @@ const CustomStepper = () => {
             </React.Fragment>
           ))}
         </div> */}
-        <div className="d-flex justify-content-center mb-5">
+        <div className="d-flex justify-content-center mb-4">
           <div
             className="position-relative d-flex justify-content-between"
             style={{ width: "95%" }}
