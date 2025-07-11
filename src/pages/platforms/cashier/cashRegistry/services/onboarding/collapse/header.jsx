@@ -10,7 +10,6 @@ import {
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
   const { pid, branchId, vendor } = item;
   const { collections } = useSelector(({ onBoardings }) => onBoardings);
-  console.log("collections", collections);
 
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
