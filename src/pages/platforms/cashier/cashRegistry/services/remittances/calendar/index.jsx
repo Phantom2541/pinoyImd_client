@@ -6,7 +6,9 @@ import Card from "./card";
 import "./style.css";
 
 export default function Calendar() {
-  const { collections: deals } = useSelector(({ deals }) => deals),
+  const { collections: deals, isLoading: validation } = useSelector(
+      ({ deals }) => deals
+    ),
     { collections, month, year, isLoading } = useSelector(
       ({ remittances }) => remittances
     );
@@ -41,7 +43,7 @@ export default function Calendar() {
               txt={txt}
               item={item}
               deals={_deals}
-              isLoading={isLoading}
+              isLoading={isLoading || validation}
             />
           );
         })}

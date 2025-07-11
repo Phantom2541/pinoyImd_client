@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { BROWSE } from "../../../../../services/redux/slices/commerce/pos/services/onBoardings";
+import {
+  BROWSE,
+  PATIENT,
+} from "../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 const Header = () => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth); //
+  const { token, auth } = useSelector(({ auth }) => auth); //
   const { filtered, collections } = useSelector(
       ({ onBoardings }) => onBoardings
     ), //
     dispatch = useDispatch();
 
   useEffect(() => {
-    const branchId = activePlatform?.branchId;
-    if (token && branchId) {
-      dispatch(BROWSE({ token, key: { branchId } }));
+    if (token && auth._id) {
+      dispatch(PATIENT({ token, key: { pid: auth._id } }));
     }
-  }, [token, activePlatform?.branchId, dispatch]);
+  }, [token, auth, dispatch]);
 
   //initial values
 
