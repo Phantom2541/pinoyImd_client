@@ -123,7 +123,7 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreateTeam ? "Add" : "Update"} Member
+        {willCreateTeam ? "Tag" : "Update"} Member
       </MDBModalHeader>
 
       <MDBModalBody>

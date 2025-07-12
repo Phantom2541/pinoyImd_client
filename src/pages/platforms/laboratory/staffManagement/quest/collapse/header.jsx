@@ -35,7 +35,6 @@ const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
         <div className="d-flex align-items-center">
           <small className="mr-2">{item?.status}</small>
 
-          {/* Oval Rounded Pencil Icon Button */}
           <MDBDropdown>
             <MDBDropdownToggle
               size="sm"
@@ -50,14 +49,25 @@ const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
                 <MDBIcon icon="pencil-alt" className="mr-2" />
                 Edit
               </MDBDropdownItem>
-              <MDBDropdownItem onClick={handleDelete}>
+              {/* ✅ Delete Button with Red Hover Effect */}
+              <MDBDropdownItem
+                onClick={handleDelete}
+                style={{
+                  transition: "background-color 0.2s ease",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#ef5350")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "")
+                }
+              >
                 <MDBIcon icon="trash-alt" className="mr-2" />
                 Delete
               </MDBDropdownItem>
             </MDBDropdownMenu>
           </MDBDropdown>
 
-          {/* Collapse Toggle Button */}
           <MDBBtn
             size="sm"
             color="white"
