@@ -39,9 +39,8 @@ const Body = () => {
       <thead style={{ backgroundColor: "#", color: "black" }}>
         <tr>
           <th>#</th>
-          <th>Name</th>
           <th>Company</th>
-          <th>Cards</th>
+          <th>Services</th>
           <th>Schedule</th>
           <th>Status</th>
         </tr>
@@ -49,36 +48,11 @@ const Body = () => {
       <tbody>
         {paginatedData?.map((item, index) => {
           const { _id, requirements, schedule, status } = item;
-          const rfString = requirements?.rf || "";
-          const match = rfString.match(/users\/(.+?)\/booking/);
-          const emailLike = match ? match[1] : ""; // "PAJARILLAGA.KEIZY.2006-05-01@smartcare.com.ph"
-
-          const [beforeAt, afterAt] = emailLike.split("@");
-
-          // Extract and format the name (e.g., "Pajarillaga, Keizy")
-          const parts = beforeAt?.split(".") || [];
-          const name =
-            parts.length >= 2
-              ? `${
-                  parts[0].charAt(0).toUpperCase() +
-                  parts[0].slice(1).toLowerCase()
-                }, ${
-                  parts[1].charAt(0).toUpperCase() +
-                  parts[1].slice(1).toLowerCase()
-                }`
-              : "";
-
-          // Extract and capitalize the domain (e.g., "Smartcare")
-          const domainRaw = afterAt?.split(".")[0] || "";
-          const domain =
-            domainRaw.charAt(0).toUpperCase() +
-            domainRaw.slice(1).toLowerCase();
+          console.log("item", paginatedData);
 
           return (
             <tr key={index}>
               <td key={index}>{index + startIndex + 1}</td>
-              <td>{name || "N/A"}</td>
-              <td>{domain || "N/A"}</td>
               <td>{HMO.getName(requirements?.hmo)}</td>
               <td>{schedule}</td>
               <td

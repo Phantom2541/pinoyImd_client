@@ -18,6 +18,7 @@ const initialState = {
   willCreate: false,
   message: "",
   showModal: false,
+  showProcess: false,
   activeTab: "labRequest",
   /**
    * Footer
@@ -32,6 +33,23 @@ export const BROWSE = createAsyncThunk(
   ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const PATIENT = createAsyncThunk(
+  `${url}/patient`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/patient`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -222,11 +240,15 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetSELECTED: (state, { payload }) => {
+      console.log("payload", payload);
       state.selected = payload;
       state.showModal = true;
-      state.willCreate = false;
     },
 
+    SetPROCESS: (state, { payload }) => {
+      state.selected = payload;
+      state.showProcess = true;
+    },
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
@@ -244,8 +266,13 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
-    TOGGLE: (state) => {
-      state.showModal = !state.showModal;
+    TOGGLE: (state, { payload }) => {
+      console.log("payload", payload);
+      if (payload) {
+        state.showProcess = !state.showProcess;
+      } else {
+        state.showModal = !state.showModal;
+      }
       state.selected = {};
     },
     SetCOLLECTIONS: (state, { payload }) => {
@@ -281,8 +308,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        state.collections = state.filtered = payload || [];
         console.log("payload", payload);
+        state.collections = state.filtered = payload.payload || [];
 
         let totalPages = Math.ceil(state.filtered.length / state.maxPage);
         state.totalPages = totalPages;
@@ -292,6 +319,27 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(PATIENT.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(PATIENT.fulfilled, (state, action) => {
+        const { payload, success } = action.payload;
+        state.collections = state.filtered = payload;
+        console.log("payload", payload);
+
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(PATIENT.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -366,7 +414,11 @@ export const reduxSlice = createSlice({
               (item) => item._id === payload._id
             );
             const oldData = { ...collections[index] };
-            collections[index] = { ...oldData, ...payload };
+            if (payload.status === "denied") {
+              collections.splice(index, 1);
+            } else {
+              collections[index] = { ...oldData, ...payload };
+            }
           };
 
           updateCollections(state.collections);
@@ -546,6 +598,7 @@ export const reduxSlice = createSlice({
 export const {
   SetFILTERED,
   SetSELECTED,
+  SetPROCESS,
   SetCOLLECTIONS,
   SetActiveTAB,
   TOGGLE,

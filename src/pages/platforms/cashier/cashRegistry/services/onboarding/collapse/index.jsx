@@ -5,9 +5,12 @@ import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse } from "../../../../../../../services/utilities";
+import BodySwitcher from "./bodySwitcher";
 
 export default function Body({ toggle, setSelected }) {
-  const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals);
+  const { filtered, activePage, maxPage } = useSelector(
+    ({ onBoardings }) => onBoardings
+  );
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -55,9 +58,8 @@ export default function Body({ toggle, setSelected }) {
             className="mb-2 border border-black"
             isOpen={actualIndex === activeId}
           >
-            <MDBCardBody className="pt-2">
-              <CollapsableBody item={item} />
-            </MDBCardBody>
+            <BodySwitcher item={item} />
+            {/* <CollapsableBody item={item} /> */}
           </MDBCollapse>
         </MDBCard>
       );

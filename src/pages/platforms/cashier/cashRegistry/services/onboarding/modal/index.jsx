@@ -16,9 +16,9 @@ import {
 import { Categories, Services } from "../../../../../../../services/fakeDb";
 import { findIndex, isEmpty } from "lodash";
 import {
-  PROCESS_ONBOARDING,
-  SetMODAL,
-} from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
+  // PROCESS_ONBOARDING,
+  TOGGLE,
+} from "../../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import Swal from "sweetalert2";
 import Customer from "./customer";
 import Menus from "./menus";
@@ -29,32 +29,33 @@ export default function Modal() {
     {
       formSubmitted,
       isSuccess,
-      showModal: show,
+      showProcess: show,
       selected,
-    } = useSelector(({ deals }) => deals),
+    } = useSelector(({ onBoardings }) => onBoardings),
     { collections: menus } = useSelector(({ menus }) => menus),
     [cart, setCart] = useState([]),
     [matchMenus, setMatchMenus] = useState([]),
     dispatch = useDispatch();
 
-  const toggle = useCallback(() => dispatch(SetMODAL(false)), [dispatch]);
+  const toggle = useCallback(() => dispatch(TOGGLE(true)), [dispatch]);
 
   const {
-    customerId = {},
+    pid: customerId = {},
     sendouts = {},
     branchId = {},
     privilege = 0,
+    membership = "",
+    services: servicesId = [],
+    contract,
   } = selected || {};
 
-  const { membership = "", servicesId = [], contract } = sendouts;
+  // const { membership = "", servicesId = [], contract } = sendouts;
 
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
       toggle();
     }
-  }, [formSubmitted, isSuccess, show, toggle]);
-
-  console.log("services id", servicesId);
+  }, [formSubmitted, isSuccess, show, toggle, dispatch]);
 
   useEffect(() => {
     if (show && servicesId?.length > 0) {
@@ -135,101 +136,101 @@ export default function Modal() {
   const categoryIndex = getCategoryIndex("ctr");
   const { discount, amount, gross } = getTotal(categoryIndex, true);
 
-  const handleSubmit = () => {
-    const remainingPackages = [...servicesId].filter(
-      (serviceID) => !cart.some((item) => item.packages.includes(serviceID))
-    );
+  // const handleSubmit = () => {
+  //   const remainingPackages = [...servicesId].filter(
+  //     (serviceID) => !cart.some((item) => item.packages.includes(serviceID))
+  //   );
 
-    const updateDeal = {
-      _id: selected?._id,
-      acknowledge: {
-        by: auth._id,
-        at: new Date(),
-        status: true,
-      },
-    };
+  //   const updateDeal = {
+  //     _id: selected?._id,
+  //     acknowledge: {
+  //       by: auth._id,
+  //       at: new Date(),
+  //       status: true,
+  //     },
+  //   };
 
-    const dealMenus = [...cart].map(({ _id, opd }) => ({
-      menuId: _id,
-      up: opd,
-      discount: discount ? discount : 0,
-    }));
+  //   const dealMenus = [...cart].map(({ _id, opd }) => ({
+  //     menuId: _id,
+  //     up: opd,
+  //     discount: discount ? discount : 0,
+  //   }));
 
-    const deal = {
-      source: branchId?._id,
-      branchId: activePlatform.branchId,
-      customerId: customerId._id,
-      cash: 0,
-      category: "opd",
-      cashierId: auth._id,
-      payment: "voucher",
-      department: ["LAB"],
-      discount,
-      amount: gross,
-    };
+  //   const deal = {
+  //     source: branchId?._id,
+  //     branchId: activePlatform.branchId,
+  //     customerId: customerId._id,
+  //     cash: 0,
+  //     category: "opd",
+  //     cashierId: auth._id,
+  //     payment: "voucher",
+  //     department: ["LAB"],
+  //     discount,
+  //     amount: gross,
+  //   };
 
-    const data = {
-      deal,
-      dealMenus,
-      updateDeal,
-    };
+  //   const data = {
+  //     deal,
+  //     dealMenus,
+  //     updateDeal,
+  //   };
 
-    if (!isEmpty(remainingPackages)) {
-      return Swal.fire({
-        icon: "warning",
-        title: "Partial Acknowledgement",
-        html: `
-      <div style="text-align: left; font-size: 15px;">
-        <p>The request from <b>${branchId.displayname}</b> has been 
-          <span style="color: #e67e22;"><b>partially acknowledged</b></span>.
-        </p>
-        <p>The following services could not be accommodated:</p>
-        <ul style="padding-left: 20px; margin-top: 0; margin-bottom: 1em;">
-          ${remainingPackages
-            .map((id) => `<li>${Services.getAbbr(id)}</li>`)
-            .join("")}
-        </ul>
-        <p style="margin-top: 1em;"><i>Please provide your reason for the incomplete processing:</i></p>
-      </div>`,
-        input: "textarea",
-        inputPlaceholder: "Enter your remarks here...",
-        inputAttributes: {
-          "aria-label": "Remarks",
-        },
-        showCancelButton: true,
-        reverseButtons: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Submit",
-        cancelButtonText: "Cancel",
-        preConfirm: (remarks) => {
-          if (!remarks) {
-            Swal.showValidationMessage("Please provide a remark.");
-          }
-          return remarks;
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const remarks = result.value;
-          dispatch(
-            PROCESS_ONBOARDING({
-              data: {
-                ...data,
-                updateDeal: {
-                  ...updateDeal,
-                  remarks,
-                  status: false,
-                },
-              },
-              token,
-            })
-          );
-        }
-      });
-    } else {
-      dispatch(PROCESS_ONBOARDING({ data, token }));
-    }
-  };
+  //   if (!isEmpty(remainingPackages)) {
+  //     return Swal.fire({
+  //       icon: "warning",
+  //       title: "Partial Acknowledgement",
+  //       html: `
+  //     <div style="text-align: left; font-size: 15px;">
+  //       <p>The request from <b>${branchId.displayname}</b> has been
+  //         <span style="color: #e67e22;"><b>partially acknowledged</b></span>.
+  //       </p>
+  //       <p>The following services could not be accommodated:</p>
+  //       <ul style="padding-left: 20px; margin-top: 0; margin-bottom: 1em;">
+  //         ${remainingPackages
+  //           .map((id) => `<li>${Services.getAbbr(id)}</li>`)
+  //           .join("")}
+  //       </ul>
+  //       <p style="margin-top: 1em;"><i>Please provide your reason for the incomplete processing:</i></p>
+  //     </div>`,
+  //       input: "textarea",
+  //       inputPlaceholder: "Enter your remarks here...",
+  //       inputAttributes: {
+  //         "aria-label": "Remarks",
+  //       },
+  //       showCancelButton: true,
+  //       reverseButtons: true,
+  //       confirmButtonColor: "#3085d6",
+  //       cancelButtonColor: "#d33",
+  //       confirmButtonText: "Submit",
+  //       cancelButtonText: "Cancel",
+  //       preConfirm: (remarks) => {
+  //         if (!remarks) {
+  //           Swal.showValidationMessage("Please provide a remark.");
+  //         }
+  //         return remarks;
+  //       },
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         const remarks = result.value;
+  //         dispatch(
+  //           PROCESS_ONBOARDING({
+  //             data: {
+  //               ...data,
+  //               updateDeal: {
+  //                 ...updateDeal,
+  //                 remarks,
+  //                 status: false,
+  //               },
+  //             },
+  //             token,
+  //           })
+  //         );
+  //       }
+  //     });
+  //   } else {
+  //     dispatch(PROCESS_ONBOARDING({ data, token }));
+  //   }
+  // };
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop size="fluid">
@@ -271,7 +272,7 @@ export default function Modal() {
             gross={gross}
             discount={discount}
             amount={amount}
-            handleSubmit={handleSubmit}
+            // handleSubmit={handleSubmit}
             formSubmitted={formSubmitted}
             selected={selected}
           />
