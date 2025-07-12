@@ -310,7 +310,7 @@ export default function Modal() {
               onClick={handleSubmit}
               disabled={isLoading}
             >
-              <MDBIcon icon="check" className="mr-2" /> Submit
+              <MDBIcon icon="check" className="mr-2" /> Submit xxx
               {isLoading && <MDBIcon icon="spinner" pulse className="ml-2" />}
             </MDBBtn>
           </div>
