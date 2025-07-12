@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Indicator from "./indicator";
 import { currency, fullName } from "../../../../../../../services/utilities";
@@ -13,6 +13,7 @@ const Card = ({ txt, num, index, items = [], summaryRef }) => {
   const { isLoading, day } = useSelector(({ remittances }) => remittances);
   const [activeCell, setActiveCell] = useState(false);
   const dispatch = useDispatch();
+  const hasAnimatedRef = useRef(false);
 
   const today = new Date();
   const dateCell = new Date(txt);
@@ -67,6 +68,9 @@ const Card = ({ txt, num, index, items = [], summaryRef }) => {
   };
 
   const flyToSummary = (e) => {
+    if (hasAnimatedRef.current) return;
+    hasAnimatedRef.current = true;
+
     const source = e.currentTarget;
     const target = summaryRef?.current;
     console.log("TARGET:", summaryRef?.current);
