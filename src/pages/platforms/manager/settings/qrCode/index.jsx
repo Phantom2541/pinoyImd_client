@@ -7,7 +7,6 @@ import QrCodeGenerator from "../../../../../components/qrCode";
 export default function QrCodePage() {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { company, branch } = activePlatform;
-  console.log("activePlatform", activePlatform);
 
   return (
     <div className="QrCode-container" style={{ backgroundColor: "#007dfe" }}>
