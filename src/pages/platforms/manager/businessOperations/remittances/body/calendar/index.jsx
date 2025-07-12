@@ -5,7 +5,7 @@ import WeekHeader from "./weekHeader";
 import Card from "./card";
 import "./style.css";
 
-export default function Calendar() {
+export default function Calendar({ summaryRef }) {
   const {
     collections,
     month = new Date().getMonth(),
@@ -29,7 +29,13 @@ export default function Calendar() {
       <WeekHeader />
       <div className="calendar-bodys w-100">
         {generateCalendar(month, year).map(({ num, txt = "" }, index) => (
-          <Card key={index} num={num} txt={txt} items={items.get(num) || []} />
+          <Card
+            key={index}
+            num={num}
+            txt={txt}
+            items={items.get(num) || []}
+            summaryRef={summaryRef}
+          />
         ))}
       </div>
     </div>

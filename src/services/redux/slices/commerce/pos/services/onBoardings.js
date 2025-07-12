@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../../utilities";
 
 const url = "/commerce/pos/services/onboardings";
+const today = new Date();
 
 const initialState = {
   collections: [],
@@ -20,6 +21,8 @@ const initialState = {
   showModal: false,
   showProcess: false,
   activeTab: "labRequest",
+  month: new Date().getMonth() + 1, // 0-based index (Jan = 0)
+  year: new Date().getFullYear(),
   /**
    * Footer
    */
@@ -266,6 +269,32 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
+    SetMONTH: (state, { payload }) => {
+      console.log("month", state.month);
+
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
+    },
+    setYear: (state, action) => {
+      state.year = Number(action.payload);
+    },
     TOGGLE: (state, { payload }) => {
       console.log("payload", payload);
       if (payload) {
@@ -329,12 +358,10 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(PATIENT.fulfilled, (state, action) => {
-        const { payload, success } = action.payload;
-        state.collections = state.filtered = payload;
-        console.log("payload", payload);
+        const { data, success } = action.payload;
+        state.collections = state.filtered = data;
 
-        state.totalPages =
-          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.totalPages = Math.ceil((data?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
         state.isLoading = false;
@@ -607,6 +634,9 @@ export const {
   RESET,
   SetMaxPage,
   SetActivePAGE,
+  SetMONTH,
+  setYear,
+  ResetDATE,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

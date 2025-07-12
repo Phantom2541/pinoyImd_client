@@ -9,7 +9,7 @@ import {
 import Month from "../../../../../services/fakeDb/calendar/months";
 import SummaryLoading from "../../../cashier/cashRegistry/services/deals/summary/loading";
 import "./style.css";
-export default function Summary() {
+export default function Summary({ summaryRef }) {
   const {
     month,
     year,
@@ -121,7 +121,10 @@ export default function Summary() {
         cascade
         className="gradient-card-header custom-header bg-success narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
       >
-        <div className="d-flex justify-content-between items-center font-bold text-lg w-100">
+        <div
+          ref={summaryRef}
+          className="d-flex justify-content-between items-center font-bold text-lg w-100"
+        >
           <span
             className={
               isSunday ? "text-red-600 text-sm" : "text-gray-600 text-sm"

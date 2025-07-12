@@ -48,7 +48,7 @@ export default function Collapsable({ team = [], _id }) {
                 }}
               >
                 <i className="fa fa-plus mr-1" />
-                Add Member
+                Tag Member
               </button>
             </div>
           </th>
