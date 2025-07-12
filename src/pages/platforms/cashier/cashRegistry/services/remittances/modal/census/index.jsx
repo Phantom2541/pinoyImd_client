@@ -190,12 +190,12 @@ export default function Census() {
                   value: currency.format(selected?.opening?.sum),
                   color: "text-success",
                 },
-                {
-                  icon: "chart-line",
-                  text: "Gross Sales",
-                  value: currency.format(gross),
-                  color: "text-success",
-                },
+                // {
+                //   icon: "chart-line",
+                //   text: "Gross Sales",
+                //   value: currency.format(gross),
+                //   color: "text-success",
+                // },
                 {
                   icon: "money-bill-wave",
                   text: "Expenses",
