@@ -54,10 +54,11 @@ export default function Modal() {
 
   // ✅ Handle form input changes
   const handleChange = (key, value) => {
+    console.log(key, value);
+
     setForm((prev) => ({
       ...prev,
       [key]: value,
-      userId: auth._id,
       branchId: activePlatform.branchId,
     }));
   };
@@ -98,6 +99,8 @@ export default function Modal() {
     const safeTeam = Array.isArray(selected?.team) ? selected?.team : [];
     const newTeam = [...safeTeam, form];
     console.log("selected", selected);
+    console.log("safeTeam", safeTeam);
+    console.log("newTeam", newTeam);
 
     dispatch(
       UPDATE({
@@ -168,7 +171,7 @@ export default function Modal() {
           </MDBRow>
           {form.type === "inhouse" && (
             <select
-              name="member"
+              name="userId"
               // value={selected}
               onChange={() => handleChange()}
               id=""

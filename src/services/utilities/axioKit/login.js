@@ -24,7 +24,6 @@ const login = async (email, password) =>
         "activePlatform",
         auth?.activePlatform?.platform || "patron"
       );
-      console.log("companyId", companyId);
       localStorage.setItem("companyId", JSON.stringify(companyId));
 
       return data;
