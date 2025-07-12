@@ -10,3 +10,19 @@
 .summary-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* .summaryAnimation {
+  animation: expandHeight 0.4s ease-out forwards;
+  overflow: hidden;
+}
+
+@keyframes expandHeight {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: 100%;
+    opacity: 1;
+  }
+} */
