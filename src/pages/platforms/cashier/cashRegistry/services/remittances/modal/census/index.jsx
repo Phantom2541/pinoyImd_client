@@ -174,7 +174,7 @@ export default function Index() {
         </MDBCol>
         <MDBCol md="3">
           <Breakdown
-            selected={selected}
+            fc={selected?.opening?.sum || 0}
             breakdown={breakdown}
             gross={gross}
             paymentsSum={paymentsSum}

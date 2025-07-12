@@ -2,30 +2,20 @@ import { currency } from "../../../../../../../../services/utilities";
 import { MDBIcon, MDBContainer } from "mdbreact";
 
 export default function Cash({
-  selected,
+  fc = 0,
   breakdown,
   gross,
   paymentsSum,
   patients,
 }) {
+  const cashOnHand = fc + gross - paymentsSum;
+
   const topData = [
     {
       icon: "user-injured",
       text: "Patients",
       value: patients,
       color: "text-primary",
-    },
-    {
-      icon: "hand-holding-usd",
-      text: "Floating Cash",
-      value: currency.format(selected?.opening?.sum),
-      color: "text-success",
-    },
-    {
-      icon: "money-bill-wave",
-      text: "Expenses",
-      value: currency.format(paymentsSum),
-      color: "text-danger",
     },
   ];
 
@@ -50,9 +40,6 @@ export default function Cash({
   return (
     <MDBContainer fluid className="p-3">
       <div>
-        <strong>Payment Categories</strong>
-        <hr />
-
         {topData.map(({ icon, text, value, color }, index) => (
           <div
             key={index}
@@ -66,11 +53,46 @@ export default function Cash({
           </div>
         ))}
 
+        {/* Cash On Hand section with styling */}
+        <div
+          className="mt-4 p-3 rounded"
+          style={{
+            backgroundColor: "#f9f9f9",
+            border: "1px solid #e0e0e0",
+          }}
+        >
+          <strong>Cash Summary</strong>
+          <hr />
+          <div className="d-flex justify-content-between mb-1">
+            <span>Floating Cash</span>
+            <b>{currency.format(fc)}</b>
+          </div>
+          <div className="d-flex justify-content-between mb-1">
+            <span>+ Gross Sales</span>
+            <b>{currency.format(gross)}</b>
+          </div>
+          <div className="d-flex justify-content-between mb-1">
+            <span>- Expenses</span>
+            <b className="text-danger">({currency.format(paymentsSum)})</b>
+          </div>
+          <hr />
+          <div className="d-flex justify-content-between">
+            <span>
+              <strong>Cash On Hand (COH)</strong>
+            </span>
+            <strong className="text-success" style={{ fontSize: "1.2rem" }}>
+              {currency.format(cashOnHand)}
+            </strong>
+          </div>
+        </div>
         <hr />
       </div>
-
+      <strong>Payment Categories</strong>
+      <hr />
       {breakdown?.downpayment && (
         <div>
+          <strong>Breakdown</strong>
+          <hr />
           {breakdownData.map(({ icon, text, value }, index) => (
             <div
               key={index}
@@ -87,7 +109,6 @@ export default function Cash({
         </div>
       )}
 
-      {/* Display full breakdown items */}
       <div>
         {Object.entries(breakdown).map(([key, value], idx) => (
           <div
@@ -101,7 +122,6 @@ export default function Cash({
       </div>
 
       <hr />
-      <strong>Total Gross: {currency.format(gross)}</strong>
     </MDBContainer>
   );
 }
