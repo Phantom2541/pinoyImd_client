@@ -2,12 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBModal,
-  MDBModalBody,
   MDBIcon,
   MDBModalHeader,
-  MDBTable,
-  MDBTableHead,
-  MDBTableBody,
   MDBBtn,
   MDBCardBody,
   MDBRow,
@@ -17,23 +13,20 @@ import {
   TOGGLE,
   CENSUS,
 } from "../../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
-import { currency } from "../../../../../../../../services/utilities";
-import { Services } from "../../../../../../../../services/fakeDb";
 import Swal from "sweetalert2";
-import Cash from "./cash";
+import Breakdown from "./cash";
+import Census from "./census";
 
-export default function Census() {
+export default function Index() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     { showCensus, selected, deals, formSubmitted, isSuccess } = useSelector(
       ({ remittances }) => remittances
     ),
     { collections: payments } = useSelector(({ payments }) => payments),
-    { collections } = useSelector(({ menus }) => menus),
     [census, setCensus] = useState({ menus: [], services: [] }),
     [patients, setPatients] = useState(0),
     [gross, setGross] = useState(0),
     [breakdown, setBreakdown] = useState({}),
-    [activeTab, setActiveTab] = useState("menus"),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -153,12 +146,8 @@ export default function Census() {
       };
       dispatch(CENSUS({ token, data }));
     }
-
-    // dispatch(TOGGLE({ key: "census" }));
   };
 
-  const tabStyle = (tab) =>
-    `w-50 ${activeTab === tab ? "btn-primary" : "btn-outline-primary"}`;
   return (
     <MDBModal
       isOpen={showCensus}
@@ -171,7 +160,7 @@ export default function Census() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="calendar-alt" className="mr-2" />
-        Census : {censusDate}
+        Remittance Census : {censusDate}
       </MDBModalHeader>
 
       {!selected && (
@@ -180,151 +169,17 @@ export default function Census() {
         </p>
       )}
       <MDBRow>
-        <MDBCol md="10" className="mb-3">
-          <MDBModalBody className="mb-0">
-            <div className=" d-flex justify-content-between align-items-center mb-3">
-              {[
-                {
-                  icon: "hand-holding-usd",
-                  text: "Floating Cash",
-                  value: currency.format(selected?.opening?.sum),
-                  color: "text-success",
-                },
-                // {
-                //   icon: "chart-line",
-                //   text: "Gross Sales",
-                //   value: currency.format(gross),
-                //   color: "text-success",
-                // },
-                {
-                  icon: "money-bill-wave",
-                  text: "Expenses",
-                  value: currency.format(paymentsSum),
-                  color: "text-danger",
-                },
-                {
-                  icon: "user-injured",
-                  text: "Patients",
-                  value: patients,
-                  color: "text-primary",
-                },
-              ].map(({ icon, text, value, color }, index) => (
-                <div
-                  key={index}
-                  size="3"
-                  className={index === 2 ? "text-right" : ""}
-                >
-                  <h6 className="mb-0">
-                    <MDBIcon icon={icon} className={`${color} mr-2`} />
-                    {text}: <strong>{value}</strong>
-                  </h6>
-                </div>
-              ))}
-            </div>
-            {breakdown?.downpayment && (
-              <div className=" d-flex justify-content-between align-items-center mb-3">
-                {[
-                  {
-                    icon: "money-bill",
-                    text: "Cash",
-                    value: currency.format(breakdown?.cash),
-                    color: "text-primary",
-                  },
-                  {
-                    icon: "money-bill",
-                    text: "Gcash",
-                    value: currency.format(breakdown?.gcash),
-                    color: "text-primary",
-                  },
-                  {
-                    icon: "money-bill",
-                    text: "Downpayment",
-                    value: currency.format(breakdown?.downpayment),
-                    color: "text-primary",
-                  },
-                ].map(({ icon, text, value, color }, index) => (
-                  <div
-                    key={index}
-                    size="3"
-                    className={index === 2 ? "text-right" : ""}
-                  >
-                    <h6 className="mb-0">
-                      <MDBIcon icon={icon} className={`${color} mr-2`} />
-                      {text}: <strong>{value}</strong>
-                    </h6>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="mb-3 d-flex">
-              <MDBBtn
-                className={tabStyle("menus")}
-                onClick={() => setActiveTab("menus")}
-              >
-                Menus
-              </MDBBtn>
-              <MDBBtn
-                className={tabStyle("services")}
-                onClick={() => setActiveTab("services")}
-              >
-                Services
-              </MDBBtn>
-            </div>
-            {/* Menus Table */}
-            {activeTab === "menus" && (
-              <MDBTable bordered small>
-                <MDBTableHead>
-                  <tr>
-                    <th>#</th>
-                    <th>Test</th>
-                    <th>Count</th>
-                  </tr>
-                </MDBTableHead>
-                <MDBTableBody>
-                  {Object.entries(census.menus).map(([id, count], idx) => {
-                    const abbreviation =
-                      collections.find(({ _id }) => _id === id)?.abbreviation ||
-                      id;
-                    return (
-                      <tr key={id}>
-                        <td>{idx + 1}</td>
-                        <td>{abbreviation}</td>
-                        <td>{count}</td>
-                      </tr>
-                    );
-                  })}
-                </MDBTableBody>
-              </MDBTable>
-            )}
-
-            {/* Services Table */}
-            {activeTab === "services" && (
-              <MDBTable bordered small>
-                <MDBTableHead>
-                  <tr>
-                    <th>#</th>
-                    <th>Service</th>
-                    <th>Count</th>
-                  </tr>
-                </MDBTableHead>
-                <MDBTableBody>
-                  {Object.entries(census.services).map(([id, count], idx) => {
-                    const name = Services.getName(id);
-                    return (
-                      <tr key={id}>
-                        <td>{idx + 1}</td>
-                        <td>{name}</td>
-                        <td>{count}</td>
-                      </tr>
-                    );
-                  })}
-                </MDBTableBody>
-              </MDBTable>
-            )}
-          </MDBModalBody>
+        <MDBCol md="9" className="mb-3">
+          <Census census={census} />
         </MDBCol>
-        <MDBCol md="2">
-          <Cash breakdown={breakdown} gross={gross} />
+        <MDBCol md="3">
+          <Breakdown
+            selected={selected}
+            breakdown={breakdown}
+            gross={gross}
+            paymentsSum={paymentsSum}
+            patients={patients}
+          />
         </MDBCol>
       </MDBRow>
 
