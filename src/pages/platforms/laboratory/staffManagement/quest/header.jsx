@@ -7,29 +7,48 @@ import {
   SetCREATE,
 } from "../../../../../services/redux/slices/diagnostics/clinician/quest";
 import { Search } from "../../../../../components/searchables";
-import Modal from "./modal"; // ✅ Tamang import na ito
+import Modal from "./modal";
+import { DateTime } from "luxon";
 
 const Header = () => {
+  const dispatch = useDispatch();
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(({ quest }) => quest),
-    dispatch = useDispatch();
+  const { collections, month, year } = useSelector(({ quest }) => quest);
 
-  // Initial values
+  // ✅ Get current month/year using Luxon
+
+  // ✅ Load data on mount
   useEffect(() => {
-    if (token) {
+    if (token && activePlatform?.branchId) {
       dispatch(
-        BROWSE({ token, params: { branchId: activePlatform?.branchId } })
+        BROWSE({
+          token,
+          params: {
+            branchId: activePlatform.branchId,
+            month,
+            year,
+          },
+        })
       );
     }
-  }, [dispatch, token]);
+  }, [dispatch, token, activePlatform, month, year]);
 
   const handleAdd = () => {
     dispatch(SetCREATE());
   };
 
-  // Refresh data function (para sa Modal)
+  // ✅ Refresh data with same month/year
   const refreshData = () => {
-    dispatch(BROWSE({ token, params: { branchId: activePlatform?.branchId } }));
+    dispatch(
+      BROWSE({
+        token,
+        params: {
+          branchId: activePlatform?.branchId,
+          month,
+          year,
+        },
+      })
+    );
   };
 
   return (
@@ -53,7 +72,7 @@ const Header = () => {
           }}
         >
           <span className="white-text font-weight-bold h5 mb-0">
-            Medical Mission
+            Mobile Clinic
           </span>
         </div>
 
@@ -65,12 +84,15 @@ const Header = () => {
               setFiltered={(items) => dispatch(SetFILTER(items))}
               placeholder="Search quest"
               haveAction={true}
-              handleAdd={(item) => handleAdd(item)}
+              handleAdd={handleAdd}
               reset={() => dispatch(SetFILTER(collections))}
             />
           </div>
         </div>
       </MDBView>
+
+      {/* Optional: Modal with refresh */}
+      <Modal refresh={refreshData} />
     </>
   );
 };

@@ -1,0 +1,72 @@
+.manager-quest-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+  overflow: hidden;
+  gap: 20px;
+}
+
+.manager-quest-card.notified-yes {
+  border: solid 2px rgb(25, 135, 84);
+}
+
+.manager-quest-card.notified-no {
+  border: solid 2px rgb(255, 193, 7);
+}
+
+.manager-quest-card-image {
+  width: 80px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+
+.manager-quest-card-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.manager-quest-card-name {
+  font-size: 1rem;
+  font-weight: 600;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.manager-quest-card-position {
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.manager-quest-card-number {
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.manager-quest-card-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: white;
+  border: none;
+  border-bottom-left-radius: 100%;
+  padding-top: 5px;
+  padding-right: 7px;
+  padding-left: 12px;
+  padding-bottom: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.manager-quest-card:hover .manager-quest-card-button {
+  opacity: 1;
+}
