@@ -35,6 +35,7 @@ import {
   Reseco,
 } from "../../../pages/platforms/manager/accrued";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
+// import ClinicalMicroscopy from "../../../pages/platforms/laboratory/workingArea/clinicalMicroscopy";
 
 const laboratory = [
   {
@@ -440,13 +441,14 @@ const laboratory = [
     path: "/lab/working-area",
     icon: "microscope",
     title: "Access different lab working sections",
-    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"], // optional if role-filtered
+    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS", "Frontdesk"], // optional if role-filtered
     children: [
       {
         name: "Clinical Microscopy",
         path: "/lab/working-area/clinical-microscopy",
         icon: "vial",
         title: "Routine urinalysis, stool exam, etc.",
+        // component: ClinicalMicroscopy,
       },
       {
         name: "Hematology",

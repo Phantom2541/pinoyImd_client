@@ -2,6 +2,7 @@ import Staffs from "../../../pages/platforms/accredetations/staff";
 import Temperature from "../../../pages/platforms/accredetations/temperatures";
 import qualityControls from "../../../pages/platforms/accredetations/qualityControl";
 import Machines from "../../../pages/platforms/accredetations/machines";
+import missionVision from "../../../pages/platforms/accredetations/assessmentTools/organizationManagement/missionVision";
 
 const accreditation = [
   {
@@ -35,10 +36,11 @@ const accreditation = [
             title:
               "Wriyyen Vision, Mission and Objectives posted in conspicious area visible to clients",
             icon: "cogs",
+            component: missionVision,
           },
           {
-            name: "3. valid DOH-LTO",
-            path: "/mission",
+            name: "3. valid D O H - L T O",
+            path: "/doh-lto",
             title:
               "valid DOH-LTO, Valid DOH-LTO posted in conspicious area visible to clients",
             icon: "cogs",
