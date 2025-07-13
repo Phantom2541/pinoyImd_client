@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { generateCalendar } from "../../../../../../../services/utilities";
 import WeekHeader from "./weekHeader";
@@ -12,7 +12,8 @@ export default function Calendar({ summaryRef }) {
     year = new Date().getFullYear(),
   } = useSelector(({ remittances }) => remittances);
 
-  // Group collections by date
+  const [lastAnimatedCard, setLastAnimatedCard] = useState(null); // ✅ shared state
+
   const items = collections.reduce((acc, { createdAt, ...rest }) => {
     if (createdAt) {
       const date = new Date(createdAt).getUTCDate();
@@ -35,6 +36,8 @@ export default function Calendar({ summaryRef }) {
             txt={txt}
             items={items.get(num) || []}
             summaryRef={summaryRef}
+            lastAnimatedCard={lastAnimatedCard}
+            setLastAnimatedCard={setLastAnimatedCard}
           />
         ))}
       </div>
