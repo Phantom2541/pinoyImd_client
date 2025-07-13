@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
   MDBCard,
@@ -13,37 +13,37 @@ import CollapsableHeader from "./header";
 import { collapse } from "../../../../../../services/utilities";
 
 export default function Body() {
-  const { filtered, activePage, maxPage } = useSelector(
-    ({ quest }) => quest
-  );
+  const { filtered, activePage, maxPage } = useSelector(({ quest }) => quest);
 
-  // console.log("filtered", filtered);
-  
+  // ✅ Sort by schedule date first, then by title alphabetically
+  const sortedFiltered = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      const dateA = new Date(a.schedule || a.date || a.createdAt);
+      const dateB = new Date(b.schedule || b.date || b.createdAt);
 
-  /**
-   * Pagination: Calculate the start and end index for the current page
-   */
-  const itemsPerPage = maxPage; // Number of items per page
+      if (dateA.getTime() !== dateB.getTime()) {
+        return dateA - dateB; // earlier date first
+      }
+
+      const titleA = (a.company + " " + a.location).toLowerCase();
+      const titleB = (b.company + " " + b.location).toLowerCase();
+      return titleA.localeCompare(titleB); // alphabetical if same date
+    });
+  }, [filtered]);
+
+  // ✅ Pagination
+  const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = sortedFiltered.slice(startIndex, endIndex);
 
-  /**
-   * Active states
-   */
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
 
   return (
-    <MDBContainer
-      style={{
-        minHeight: "300px",
-      }}
-      fluid
-    >
-      {paginatedData&&
-      paginatedData?.map((item, index) => {
-        const actualIndex = startIndex + index; // Get the real index in filtered array
+    <MDBContainer style={{ minHeight: "300px" }} fluid>
+      {paginatedData.map((item, index) => {
+        const actualIndex = startIndex + index;
         const { color, border } = collapse.getStyle(
           actualIndex,
           activeId,
@@ -53,7 +53,10 @@ export default function Body() {
         return (
           <MDBCard
             key={`item-${actualIndex}`}
-            style={{ boxShadow: "0px 0px 0px 0px", backgroundColor: "white" }}
+            style={{
+              boxShadow: "0px 0px 0px 0px",
+              backgroundColor: "white",
+            }}
           >
             <MDBCollapseHeader
               className={border}
