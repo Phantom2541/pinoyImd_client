@@ -12,11 +12,6 @@ import {
   Applicants,
 } from "../../../pages/platforms/manager/settings";
 import {
-  Assurance,
-  Controls,
-  Temperature,
-} from "../../../pages/platforms/diagnostics/management";
-import {
   Contract,
   Membership,
   Outsources,
@@ -29,11 +24,10 @@ import {
   Onboarding,
 } from "../../../pages/platforms/cashier";
 import {
-  Vouchers,
-  Payables,
-  Receivables,
-  Reseco,
-} from "../../../pages/platforms/manager/accrued";
+  Assurance,
+  Controls,
+  Temperature,
+} from "../../../pages/platforms/diagnostics/management";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
 
 const laboratory = [
@@ -95,39 +89,29 @@ const laboratory = [
     ],
   },
   {
-    name: "Accrued",
-    path: "/accrued",
-    icon: "file-invoice",
-    title: "Liabilities and Obligations",
-    allowedFor: ["Chief MLS"],
+    name: "Quality Management",
+    icon: "tv",
+    path: "/diagnostics/quality",
     children: [
       {
-        name: "Accounts Payable (A/P)",
-        path: "/payables",
-        icon: "file-invoice-dollar",
-        title: "Outstanding Payments to Suppliers & Utilities",
-        component: Payables,
+        name: "Quality Assurance (QA)",
+        path: "/diagnostics/quality/external",
+        icon: "check-circle",
+        title: "Quality Control External",
+        component: Assurance,
       },
       {
-        name: "Accounts Receivable (A/R)",
-        path: "/receivables",
-        icon: "wallet",
-        title: "Billing for Corporate & HMO Invoices",
-        component: Receivables,
+        name: "Quality Control (QC)",
+        path: "/diagnostics/quality/internal",
+        icon: "balance-scale",
+        title: "Quality Control Internal",
+        component: Controls,
       },
       {
-        name: "Vouchers",
-        path: "/vouchers",
-        icon: "receipt",
-        title: "Monthly Vouchers for Referrals (Cashier only)",
-        component: Vouchers,
-      },
-      {
-        name: "Rebates",
-        path: "/reseco",
-        icon: "calendar-check",
-        title: "Monthly Referral Rebates",
-        component: Reseco,
+        name: "Temperature",
+        path: "/diagnostics/quality/temperature",
+        icon: "thermometer-half",
+        component: Temperature,
       },
     ],
   },
@@ -248,36 +232,6 @@ const laboratory = [
     ],
   },
   {
-    name: "Quality Management",
-    icon: "tv",
-    path: "/diagnostics/quality",
-    title: "QA/QC program monitoring",
-    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
-    children: [
-      {
-        name: "Quality Assurance ( Q A )",
-        path: "/diagnostics/quality/external",
-        icon: "check-circle",
-        title: "External Quality Assurance",
-        component: Assurance,
-      },
-      {
-        name: "Quality Control ( Q C )",
-        path: "/diagnostics/quality/internal",
-        icon: "balance-scale",
-        title: "Internal Quality Control",
-        component: Controls,
-      },
-      {
-        name: "Temperature",
-        path: "/diagnostics/quality/temperature",
-        icon: "thermometer-half",
-        title: "Monitoring of lab temperature",
-        component: Temperature,
-      },
-    ],
-  },
-  {
     name: "Catalogs",
     path: "/offers",
     icon: "list",
@@ -315,14 +269,12 @@ const laboratory = [
             path: "/offers/consumables/preanalytical",
             icon: "check-circle",
             title: "Items before analysis",
-            component: Assurance,
           },
           {
             name: "Analytical",
             path: "/offers/consumables/analytical",
             icon: "balance-scale",
             title: "Items during analysis",
-            component: Controls,
           },
           {
             name: "Postanalytical",
