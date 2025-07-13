@@ -9,11 +9,18 @@ import {
 import { capitalize } from "lodash";
 import Swal from "sweetalert2";
 
-const Card = ({ txt, num, index, items = [], summaryRef }) => {
+const Card = ({
+  txt,
+  num,
+  items = [],
+  summaryRef,
+  lastAnimatedCard,
+  setLastAnimatedCard,
+}) => {
   const { isLoading, day } = useSelector(({ remittances }) => remittances);
   const [activeCell, setActiveCell] = useState(false);
   const dispatch = useDispatch();
-  const hasAnimatedRef = useRef(false);
+  // const [lastAnimatedCard, setLastAnimatedCard] = useState(null);
 
   const today = new Date();
   const dateCell = new Date(txt);
@@ -67,13 +74,16 @@ const Card = ({ txt, num, index, items = [], summaryRef }) => {
     return `${fullName(cashier.fullName)}\n${details}`;
   };
 
-  const flyToSummary = (e) => {
-    if (hasAnimatedRef.current) return;
-    hasAnimatedRef.current = true;
+  const flyToSummary = (e, currentCardNum) => {
+    const current = Number(currentCardNum);
+
+    // ✅ Skip animation only if SAME card was the last clicked
+    if (lastAnimatedCard === current) return;
+
+    setLastAnimatedCard(current); // ✅ update last animated card
 
     const source = e.currentTarget;
     const target = summaryRef?.current;
-    console.log("TARGET:", summaryRef?.current);
 
     if (!source || !target) {
       console.warn("Missing source or target");
@@ -96,8 +106,6 @@ const Card = ({ txt, num, index, items = [], summaryRef }) => {
     clone.style.background = "white";
     clone.style.borderRadius = "10px";
     clone.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
-
-    // ✅ Add this line here
     clone.classList.add("fly-animation-clone");
 
     document.body.appendChild(clone);
@@ -119,11 +127,13 @@ const Card = ({ txt, num, index, items = [], summaryRef }) => {
     <div
       className={`calendar-card ${isToday && "today"}  ${
         num ? "cursor-pointer" : "opacity-0 pointer-events-none"
-      } ${activeCell && "active"}`}
+      } ${activeCell && "active"} `}
       style={!num ? { opacity: 0, pointerEvents: "none" } : {}}
       onClick={(e) => {
-        if (items.length > 0) flyToSummary(e);
-        handleDate(); // still update the selected date
+        if (items.length > 0) {
+          flyToSummary(e, Number(num)); // ✅ always a number
+        }
+        handleDate();
       }}
     >
       <Indicator
@@ -143,14 +153,21 @@ const Card = ({ txt, num, index, items = [], summaryRef }) => {
                   <div
                     key={i}
                     data-id={_id}
-                    className="manager-remmitance-info mb-1 d-flex justify-content-between"
+                    className={`manager-remmitance-info mb-1 d-flex justify-content-between ${
+                      !collector ? "clickable" : ""
+                    }`}
                     onClick={() => collector || handleRemittance(_id)}
                     title={handleTitle(cashier, breakdown)}
                     style={{ position: "relative", zIndex: 999 }}
                   >
                     {cashier?.alias || cashier?.fullName?.fname}
-                    <span style={{ color: collector ? "" : "green" }}>
+                    <span
+                      className={`${
+                        collector ? "" : "manager-remmitance-price"
+                      }`}
+                    >
                       {currency.format(gross)}
+                      {!collector && <i className="fas fa-angle-right ml-2" />}
                     </span>
                   </div>
                 )
