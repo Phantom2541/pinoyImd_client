@@ -53,7 +53,7 @@ const Header = () => {
           }}
         >
           <span className="white-text font-weight-bold h5 mb-0">
-            Medical Mission
+            Mobile Clinic
           </span>
         </div>
 
