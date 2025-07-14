@@ -8,7 +8,7 @@ import TableLoading from "../../../../../components/tableLoading/index.jsx";
 export default function Payables() {
   const { isLoading } = useSelector(({ payments }) => payments);
   return (
-    <MDBAnimation type="bounceInDown">
+    <MDBAnimation className="pt-2" type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <TopHeader />
         <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>

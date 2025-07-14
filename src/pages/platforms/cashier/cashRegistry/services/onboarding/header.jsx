@@ -24,7 +24,7 @@ const Header = () => {
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header blue-gradient narrower py-3 mx-4 mb-3 d-flex justify-content-between align-items-center"
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">

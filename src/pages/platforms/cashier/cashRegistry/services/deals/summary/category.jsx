@@ -53,7 +53,7 @@ export default function Payments() {
   }, [activePlatform, auth, token, dispatch]);
 
   return (
-    <MDBCard className="shadow-sm mb-2 ">
+    <MDBCard className="shadow-sm my-2 ">
       <MDBCollapseHeader style={{ borderRadius: "50%" }} className="bg-light">
         <div className="d-flex justify-content-between align-items-center">
           <small className="text-uppercase font-weight-bold text-center text-primary">

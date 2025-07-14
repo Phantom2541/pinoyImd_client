@@ -24,7 +24,7 @@ const Index = () => {
   }, [token, dispatch]);
   return (
     <>
-      <MDBAnimation type="bounceInDown">
+      <MDBAnimation className="pt-2" type="bounceInDown">
         <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
           <Header />
           <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>

@@ -64,7 +64,7 @@ export default function SideNavigation({
     } else if (company?.name && platformKey && !isLoading) {
       const url = `${ENDPOINT}/public/companies/${
         company.name
-      }/logo.png?${new Date().getTime()}`;
+      }/profile/logo.png?${new Date().getTime()}`;
       isImageValid(url, (valid) => {
         if (valid && url !== logo) setLogo(url);
       });
@@ -173,7 +173,7 @@ export default function SideNavigation({
           <img
             src={logo}
             alt="Company Logo"
-            style={{ width: "150px", height: "65px" }}
+            style={{ width: "65px", aspectRatio: "1/1" }}
           />
           <div className="mt-2 text-dark" style={{ fontWeight: 500 }}>
             {activePlatform?.branch?.company || company?.name}

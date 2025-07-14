@@ -60,7 +60,7 @@ const Collapsable = () => {
 
   return (
     <>
-      <MDBAnimation type="bounceInDown">
+      <MDBAnimation className="p-2" type="bounceInDown">
         <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
           <Header />
           <MDBCardBody>

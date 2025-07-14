@@ -43,7 +43,7 @@ export default function Index() {
                 <MDBCard
                   key={`staffs-${index}`}
                   style={{
-                    boxShadow: "0px 0px 0px 0px",
+                    boxShadow: "none",
                     backgroundColor: "white",
                   }}
                 >
@@ -53,7 +53,10 @@ export default function Index() {
                         ? "bg-info text-white transition"
                         : "bg-white"
                     } ${activeId === index ? "custom-header" : ""}`}
-                    style={{ borderRadius: "50%" }}
+                    style={{
+                      borderRadius: "50%",
+                      cursor: "pointer",
+                    }}
                     onClick={() =>
                       setActiveId((prev) => (prev === index ? -1 : index))
                     }
@@ -75,9 +78,9 @@ export default function Index() {
                     className="mb-2"
                     isOpen={index === activeId}
                     style={{
-                      borderBottom: "1px solid black",
-                      borderRight: "1px solid black",
-                      borderLeft: "1px solid black",
+                      borderBottom: "1px solid rgba(0,0,0,.125)",
+                      borderRight: "1px solid rgba(0,0,0,.125)",
+                      borderLeft: "1px solid rgba(0,0,0,.125)",
                     }}
                   >
                     <MDBCardBody className="pt-2">
