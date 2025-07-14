@@ -24,9 +24,8 @@ const RequestOutSource = () => {
     sentOut = {},
     isRad = false,
   } = request || {};
-  const { customerId = {}, ssx, patientNo = 1 } = deal;
-  // Patient No. = index of deal
-  // Case No. = deal _id
+  const { pid: customerId = {}, ssx, patientNo = 1 } = deal;
+
   return (
     <div
       className="mx-1"

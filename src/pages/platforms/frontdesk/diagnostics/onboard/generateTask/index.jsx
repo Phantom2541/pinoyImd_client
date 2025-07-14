@@ -28,7 +28,7 @@ export default function Modal() {
       show,
       selected: deal,
       inhouse,
-      outsource,
+      cluster,
     } = useSelector(({ taskGenerator }) => taskGenerator),
     // { collections } = useSelector(({ providers }) => providers),
     [outSourceId, setOutSourceId] = useState(""),
@@ -61,7 +61,6 @@ export default function Modal() {
   };
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
-    const _outsource = getIDS(outsource);
     const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);
     const _forms = Services.getTemplates(inhouseIDS, department);
     const { _id, customerId, ssx, forms: oldForms, pn } = deal;
@@ -175,36 +174,32 @@ export default function Modal() {
       );
     }
 
-    const haveOutSource =
-      outsource.length > 0 && (outSourceId || department === "RAD")
-        ? true
-        : false;
+    const haveOutSource = Object.keys(cluster).length > 0;
 
     if (haveOutSource) {
-      if (department !== "RAD") {
-        await saveRequest(
-          `/commerce/pos/services/onboardings`,
-          {
-            _id: deal._id,
-            vendor: outSourceId,
-            pid: customerId?._id,
-            client: activePlatform.branchId,
-            services: _outsource,
-          },
-          true
-        );
-      } else {
-        const officialReadingXray = _outsource;
-        officialReadingXray.map(
-          async (test) =>
+      for (const [key, value] of Object.entries(cluster)) {
+        if (department !== "RAD") {
+          await saveRequest(
+            `/commerce/pos/services/onboardings`,
+            {
+              vendor: key,
+              pid: customerId?._id,
+              client: activePlatform.branchId,
+              services: getIDS(value),
+            },
+            true
+          );
+        } else {
+          for (const test of getIDS(value)) {
             await saveRequest("x-ray", {
               dealId: _id,
               packages: test,
               hasRead: true,
               customerId: customerId?._id,
               branchId: activePlatform.branchId,
-            })
-        );
+            });
+          }
+        }
       }
     }
 
@@ -220,7 +215,6 @@ export default function Modal() {
         },
       ],
       forms,
-      ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
     };
 
     dispatch(
@@ -259,7 +253,6 @@ export default function Modal() {
             Drag and drop tasks between 'Inhouse' and 'Outsource' for easy
             management.
           </MDBTypography>
-
           <CaseBox outSource={outSourceId} setOutSource={setOutSourceId} />
           <MDBBtn
             className="float-right mt-3 mb-3"

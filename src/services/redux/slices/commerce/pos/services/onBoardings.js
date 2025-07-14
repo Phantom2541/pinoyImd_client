@@ -10,6 +10,7 @@ const initialState = {
   formSubmitted: false,
   didSearch: false,
   selected: {},
+  vendorId: "",
   page: 0,
   isSuccess: false,
   // main loading
@@ -36,6 +37,23 @@ export const BROWSE = createAsyncThunk(
   ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const SEND_OUTS = createAsyncThunk(
+  `${url}/sendOuts`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/sendOuts`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -277,6 +295,18 @@ export const reduxSlice = createSlice({
         );
       }
     },
+    SetVENDOR: (state, { payload }) => {
+      console.log("payload", payload);
+      if (payload === "all") {
+        state.filtered = state.collections;
+        state.vendorId = "";
+      } else {
+        state.filtered = state.collections.filter(
+          ({ vendor }) => vendor._id === payload
+        );
+        state.vendorId = payload;
+      }
+    },
     SetCREATE: (state) => {
       state.selected = {
         department: state.department,
@@ -319,9 +349,8 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
-    SetMONTH: (state, { payload }) => {
-      console.log("month", state.month);
 
+    SetMONTH: (state, { payload }) => {
       if (payload === "next") {
         if (state.month === 12) {
           state.month = 1;
@@ -387,9 +416,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        console.log("payload", payload);
         state.collections = state.filtered = payload.payload || [];
-
         let totalPages = Math.ceil(state.filtered.length / state.maxPage);
         state.totalPages = totalPages;
         if (state.activePage > totalPages) {
@@ -398,6 +425,25 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(SEND_OUTS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SEND_OUTS.fulfilled, (state, { payload }) => {
+        state.collections = state.filtered = payload.payload || [];
+        let totalPages = Math.ceil(state.filtered.length / state.maxPage);
+        state.totalPages = totalPages;
+        if (state.activePage > totalPages) {
+          state.activePage = totalPages;
+        }
+        state.isLoading = false;
+      })
+      .addCase(SEND_OUTS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -702,6 +748,7 @@ export const {
   SetSELECTED,
   SetPROCESS,
   SetSTATUS,
+  SetVENDOR,
   SetCOLLECTIONS,
   SetActiveTAB,
   TOGGLE,
