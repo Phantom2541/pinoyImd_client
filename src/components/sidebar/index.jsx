@@ -45,39 +45,39 @@ export default function SideNavigation({
   }, []);
 
   // ✅ Guarded company logo and href loader
-  useEffect(() => {
-    const platformKey = activePlatform?.platform?.toLowerCase();
+  // useEffect(() => {
+  //   const platformKey = activePlatform?.platform?.toLowerCase();
 
-    // let newLogo = FailedLogo;
-    let newHref = "/patron/bulletin";
+  //   // let newLogo = FailedLogo;
+  //   let newHref = "/patron/bulletin";
 
-    if (platformKey === "patron" && !isLoading) {
-      const patronCompany = JSON.parse(localStorage.getItem("patronCompany"));
-      if (patronCompany?.name) {
-        const url = `${ENDPOINT}/public/companies/${
-          patronCompany.name
-        }/logo.png?${new Date().getTime()}`;
-        isImageValid(url, (valid) => {
-          if (valid && url !== logo) setLogo(url);
-        });
-      }
-    } else if (company?.name && platformKey && !isLoading) {
-      const url = `${ENDPOINT}/public/companies/${
-        company.name
-      }/profile/logo.png?${new Date().getTime()}`;
-      isImageValid(url, (valid) => {
-        if (valid && url !== logo) setLogo(url);
-      });
+  //   if (platformKey === "patron" && !isLoading) {
+  //     const patronCompany = JSON.parse(localStorage.getItem("patronCompany"));
+  //     if (patronCompany?.name) {
+  //       const url = `${ENDPOINT}/public/companies/${
+  //         patronCompany.name
+  //       }/logo.png?${new Date().getTime()}`;
+  //       isImageValid(url, (valid) => {
+  //         if (valid && url !== logo) setLogo(url);
+  //       });
+  //     }
+  //   } else if (company?.name && platformKey && !isLoading) {
+  //     const url = `${ENDPOINT}/public/companies/${
+  //       company.name
+  //     }/profile/logo.png?${new Date().getTime()}`;
+  //     isImageValid(url, (valid) => {
+  //       if (valid && url !== logo) setLogo(url);
+  //     });
 
-      newHref = `/${platformKey}/${
-        ["manager", "headquarter"].includes(platformKey)
-          ? "dashboard"
-          : "bulletin"
-      }`;
-    }
+  //     newHref = `/${platformKey}/${
+  //       ["manager", "headquarter"].includes(platformKey)
+  //         ? "dashboard"
+  //         : "bulletin"
+  //     }`;
+  //   }
 
-    if (newHref !== href) setHref(newHref);
-  }, [company, activePlatform, isLoading, href, logo]);
+  //   if (newHref !== href) setHref(newHref);
+  // }, [company, activePlatform, isLoading, href, logo]);
 
   // ✅ Guarded sidebar loader with platform/role filtering
   useEffect(() => {

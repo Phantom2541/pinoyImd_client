@@ -59,12 +59,6 @@ export default function Summary() {
   useEffect(() => {
     setPayment(["mbs", "wls", "ctr"].includes(abbr) ? "voucher" : "cash");
   }, [abbr]);
-  console.log("payment", payment);
-  console.log("abbr", abbr);
-  console.log(
-    "iscash",
-    ["cash", "downpayment"].includes(payment) && abbr !== "wls"
-  );
 
   const checkout = async () => {
     let selected = {

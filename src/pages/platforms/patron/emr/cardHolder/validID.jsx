@@ -14,7 +14,7 @@ const CardRequest = ({ form, setForm, isValid, setIsValid }) => {
 
   useEffect(() => {
     const getImage = async () => {
-      const url = `${ENDPOINT}/public/users/${auth?.email}/portfolio/${validID.name}.png`;
+      const url = `${ENDPOINT}/public/users/${auth?.email}/portfolio/${validID.name}-front.png`;
       const image = await utils.fetchImageAsBase64(url, token);
       setForm({ ...form, vi: { ...form.vi, img: image } });
     };

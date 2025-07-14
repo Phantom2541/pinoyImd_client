@@ -179,7 +179,6 @@ export default function Modal() {
       outsource.length > 0 && (outSourceId || department === "RAD")
         ? true
         : false;
-    console.log("_outsource", _outsource);
 
     if (haveOutSource) {
       if (department !== "RAD") {
@@ -188,10 +187,9 @@ export default function Modal() {
           {
             _id: deal._id,
             vendor: outSourceId,
-            particular: customerId?._id,
-            cashierId: auth?._id,
-            branchId: activePlatform.branchId,
-            menu: _outsource,
+            pid: customerId?._id,
+            client: activePlatform.branchId,
+            services: _outsource,
           },
           true
         );

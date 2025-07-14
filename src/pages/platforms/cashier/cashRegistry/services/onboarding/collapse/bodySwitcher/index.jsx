@@ -7,7 +7,7 @@ const BodySwitcher = ({ item }) => {
     sendout: Sendout,
   };
 
-  const baseKey = item?.vendor?._id ? "sendout" : "validation";
+  const baseKey = item?.client?._id ? "sendout" : "validation";
   const Component = components[baseKey];
   if (Component) return <Component item={item} />;
 };

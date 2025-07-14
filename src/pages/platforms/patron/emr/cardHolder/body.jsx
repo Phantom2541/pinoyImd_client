@@ -126,7 +126,7 @@ const CustomStepper = () => {
     const { card, vi, haveCard = false, form: formImage, schedule } = form;
 
     const data = {
-      branchId: form.branch,
+      vendor: form.branch,
       pid: auth._id,
       haveCard,
       schedule,
@@ -176,7 +176,7 @@ const CustomStepper = () => {
         uploadTasks.push(
           upload(portfolioPath, card.img.front, `${card.type}-front.png`),
           upload(portfolioPath, card.img.back, `${card.type}-back.png`),
-          upload(portfolioPath, vi.img, `${vi.type}.png`)
+          upload(portfolioPath, vi.img, `${vi.type}-front.png`)
         );
       }
 

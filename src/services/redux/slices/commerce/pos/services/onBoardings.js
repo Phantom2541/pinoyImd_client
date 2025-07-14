@@ -223,10 +223,60 @@ export const TagPHYSICIAN = createAsyncThunk(
     }
   }
 );
+
+export const PROCESS_ONBOARDING = createAsyncThunk(
+  `${url}/PROCESS_ONBOARDING`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "process_onboarding");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetVALIDATE_ID: (state, { payload }) => {
+      const updateCollections = (collections) => {
+        const onboardingUsers = collections.filter(
+          ({ pid }) => pid._id === payload._id
+        );
+
+        onboardingUsers.forEach((element) => {
+          const index = collections.findIndex(({ _id }) => _id === element._id);
+          console.log("index", index);
+          collections[index] = {
+            ...collections[index],
+            pid: payload,
+          };
+        });
+      };
+      updateCollections(state.filtered);
+      updateCollections(state.collections);
+    },
+    SetSTATUS: (state, { payload }) => {
+      if (payload === "all") {
+        state.filtered = state.collections;
+      } else if (payload === "done") {
+        state.filtered = state.collections.filter(
+          ({ status }) => status === "done"
+        );
+      } else {
+        state.filtered = state.collections.filter(
+          ({ status }) => status !== "done"
+        );
+      }
+    },
     SetCREATE: (state) => {
       state.selected = {
         department: state.department,
@@ -398,6 +448,30 @@ export const reduxSlice = createSlice({
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(PROCESS_ONBOARDING.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(PROCESS_ONBOARDING.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(({ _id }) => _id === payload._id);
+          collections[index] = payload;
+        };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(PROCESS_ONBOARDING.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
         state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
@@ -624,8 +698,10 @@ export const reduxSlice = createSlice({
 
 export const {
   SetFILTERED,
+  SetVALIDATE_ID,
   SetSELECTED,
   SetPROCESS,
+  SetSTATUS,
   SetCOLLECTIONS,
   SetActiveTAB,
   TOGGLE,

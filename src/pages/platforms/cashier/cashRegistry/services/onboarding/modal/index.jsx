@@ -8,6 +8,7 @@ import {
   MDBRow,
 } from "mdbreact";
 import {
+  allServicesHavePrices,
   computeGD,
   fullAddress,
   fullName,
@@ -16,7 +17,7 @@ import {
 import { Categories, Services } from "../../../../../../../services/fakeDb";
 import { findIndex, isEmpty } from "lodash";
 import {
-  // PROCESS_ONBOARDING,
+  PROCESS_ONBOARDING,
   TOGGLE,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import Swal from "sweetalert2";
@@ -35,15 +36,18 @@ export default function Modal() {
     { collections: menus } = useSelector(({ menus }) => menus),
     [cart, setCart] = useState([]),
     [matchMenus, setMatchMenus] = useState([]),
+    [cash, setCash] = useState(0),
+    [payment, setPayment] = useState("cash"),
     dispatch = useDispatch();
 
   const toggle = useCallback(() => dispatch(TOGGLE(true)), [dispatch]);
 
   const {
     pid: customerId = {},
-    sendouts = {},
+    client = {},
     branchId = {},
     privilege = 0,
+    haveCard = false,
     membership = "",
     services: servicesId = [],
     contract,
@@ -58,12 +62,15 @@ export default function Modal() {
   }, [formSubmitted, isSuccess, show, toggle, dispatch]);
 
   useEffect(() => {
+    setCash(0);
+    setPayment("cash");
+
     if (show && servicesId?.length > 0) {
       const defaultMenus = [];
       for (const menu of menus) {
         const { packages, isProfile = false } = menu;
         const isSubset =
-          packages.length > 0 &&
+          packages.length === 1 &&
           packages.every((id) => servicesId.includes(id));
         if (isSubset && !isProfile) {
           defaultMenus.push(menu);
@@ -74,7 +81,7 @@ export default function Modal() {
       const _matchMenus = [...menus].filter(
         ({ packages, isProfile = false }) => {
           const isSubset =
-            packages.length > 0 &&
+            packages.length === 1 &&
             packages.every((id) => servicesId.includes(id));
           return isSubset && !isProfile;
         }
@@ -120,117 +127,154 @@ export default function Modal() {
     return Categories.findIndex((item) => item.abbr === c);
   };
 
+  const getCategory = () => {
+    if (client?._id) return "ctr";
+    return haveCard ? "wls" : "opd";
+  };
+
   const getTotal = (cIndex, getObj = false) => {
     const { gross = 0, discount = 0 } = computeGD(
       cart,
       cIndex,
       privilege,
       membership,
-      "",
+      customerId?.healthCard?.name || "",
       contract
     );
     const amount = gross - discount;
     return !getObj ? amount : { gross, discount, amount };
   };
 
-  const categoryIndex = getCategoryIndex("ctr");
+  const categoryIndex = getCategoryIndex(getCategory());
   const { discount, amount, gross } = getTotal(categoryIndex, true);
 
-  // const handleSubmit = () => {
-  //   const remainingPackages = [...servicesId].filter(
-  //     (serviceID) => !cart.some((item) => item.packages.includes(serviceID))
-  //   );
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const remainingPackages = [...servicesId].filter(
+      (serviceID) => !cart.some((item) => item.packages.includes(serviceID))
+    );
 
-  //   const updateDeal = {
-  //     _id: selected?._id,
-  //     acknowledge: {
-  //       by: auth._id,
-  //       at: new Date(),
-  //       status: true,
-  //     },
-  //   };
+    const filteredCart = cart.filter(
+      (item) => !item.packages.some((pkg) => remainingPackages.includes(pkg))
+    );
 
-  //   const dealMenus = [...cart].map(({ _id, opd }) => ({
-  //     menuId: _id,
-  //     up: opd,
-  //     discount: discount ? discount : 0,
-  //   }));
+    const dealMenus = filteredCart.map((cart) => {
+      return {
+        ...computeGD(
+          cart,
+          categoryIndex,
+          -1,
+          "",
+          customerId?.healthCard?.name,
+          contract
+        ),
+        menuId: cart._id,
+      };
+    });
 
-  //   const deal = {
-  //     source: branchId?._id,
-  //     branchId: activePlatform.branchId,
-  //     customerId: customerId._id,
-  //     cash: 0,
-  //     category: "opd",
-  //     cashierId: auth._id,
-  //     payment: "voucher",
-  //     department: ["LAB"],
-  //     discount,
-  //     amount: gross,
-  //   };
+    const deal = {
+      source: branchId?._id,
+      branchId: activePlatform.branchId,
+      customerId: customerId._id,
+      cash,
+      category: getCategory(),
+      cashierId: auth._id,
+      payment: getCategory() === "opd" ? payment : "voucher",
+      department: Services.getDepartment(
+        filteredCart.flatMap(({ packages }) => packages)
+      ),
+      discount,
+      amount: gross,
+    };
 
-  //   const data = {
-  //     deal,
-  //     dealMenus,
-  //     updateDeal,
-  //   };
+    const data = {
+      deal,
+      dealMenus,
+      onboardingID: selected?._id,
+      empId: auth._id,
+      status: "done",
+    };
 
-  //   if (!isEmpty(remainingPackages)) {
-  //     return Swal.fire({
-  //       icon: "warning",
-  //       title: "Partial Acknowledgement",
-  //       html: `
-  //     <div style="text-align: left; font-size: 15px;">
-  //       <p>The request from <b>${branchId.displayname}</b> has been
-  //         <span style="color: #e67e22;"><b>partially acknowledged</b></span>.
-  //       </p>
-  //       <p>The following services could not be accommodated:</p>
-  //       <ul style="padding-left: 20px; margin-top: 0; margin-bottom: 1em;">
-  //         ${remainingPackages
-  //           .map((id) => `<li>${Services.getAbbr(id)}</li>`)
-  //           .join("")}
-  //       </ul>
-  //       <p style="margin-top: 1em;"><i>Please provide your reason for the incomplete processing:</i></p>
-  //     </div>`,
-  //       input: "textarea",
-  //       inputPlaceholder: "Enter your remarks here...",
-  //       inputAttributes: {
-  //         "aria-label": "Remarks",
-  //       },
-  //       showCancelButton: true,
-  //       reverseButtons: true,
-  //       confirmButtonColor: "#3085d6",
-  //       cancelButtonColor: "#d33",
-  //       confirmButtonText: "Submit",
-  //       cancelButtonText: "Cancel",
-  //       preConfirm: (remarks) => {
-  //         if (!remarks) {
-  //           Swal.showValidationMessage("Please provide a remark.");
-  //         }
-  //         return remarks;
-  //       },
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         const remarks = result.value;
-  //         dispatch(
-  //           PROCESS_ONBOARDING({
-  //             data: {
-  //               ...data,
-  //               updateDeal: {
-  //                 ...updateDeal,
-  //                 remarks,
-  //                 status: false,
-  //               },
-  //             },
-  //             token,
-  //           })
-  //         );
-  //       }
-  //     });
-  //   } else {
-  //     dispatch(PROCESS_ONBOARDING({ data, token }));
-  //   }
-  // };
+    if (!isEmpty(remainingPackages)) {
+      return Swal.fire({
+        icon: "warning",
+        title: "Partial Acknowledgement",
+        html: `
+      <div style="text-align: left; font-size: 15px;">
+        <p>The request from <b>${
+          getCategory() === "ctr"
+            ? client.displayname
+            : fullName(customerId?.fullName)
+        }</b> has been
+          <span style="color: #e67e22;"><b>partially acknowledged</b></span>.
+        </p>
+        <p>The following services could not be accommodated:</p>
+        <ul style="padding-left: 20px; margin-top: 0; margin-bottom: 1em;">
+          ${remainingPackages
+            .map((id) => `<li>${Services.getAbbr(id)}</li>`)
+            .join("")}
+        </ul>
+        <p style="margin-top: 1em;"><i>Please provide your reason for the incomplete processing:</i></p>
+      </div>`,
+        input: "textarea",
+        inputPlaceholder: "Enter your remarks here...",
+        inputAttributes: {
+          "aria-label": "Remarks",
+        },
+        showCancelButton: true,
+        reverseButtons: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Submit",
+        cancelButtonText: "Cancel",
+        preConfirm: (remarks) => {
+          if (!remarks) {
+            Swal.showValidationMessage("Please provide a remarks.");
+          }
+          return remarks;
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const remarks = result.value;
+          dispatch(
+            PROCESS_ONBOARDING({
+              data: {
+                ...data,
+                remarks,
+                cancelled: remainingPackages,
+              },
+              token,
+            })
+          );
+        }
+      });
+    }
+
+    if (
+      !allServicesHavePrices(
+        cart,
+        categoryIndex,
+        customerId?.healthCard?.name,
+        contract
+      )
+    ) {
+      Swal.fire({
+        title: "Service Validator?",
+        text: "Some services do not have a set price. Please double-check. If you're confident everything is correct, you may proceed. Note that the admin will be notified regarding this issue.",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, proceed",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(PROCESS_ONBOARDING({ data, token }));
+        }
+      });
+    } else {
+      return dispatch(PROCESS_ONBOARDING({ data, token }));
+    }
+  };
 
   return (
     <MDBModal isOpen={show} toggle={toggle} backdrop size="fluid">
@@ -256,7 +300,7 @@ export default function Modal() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <MDBRow>
-          <Customer deal={selected} />
+          <Customer deal={selected} categoryIndex={categoryIndex} />
           <Menus
             cart={cart}
             selected={selected}
@@ -272,9 +316,14 @@ export default function Modal() {
             gross={gross}
             discount={discount}
             amount={amount}
-            // handleSubmit={handleSubmit}
+            handleSubmit={handleSubmit}
             formSubmitted={formSubmitted}
             selected={selected}
+            cash={cash}
+            setCash={setCash}
+            payment={payment}
+            setPayment={setPayment}
+            category={getCategory()}
           />
         </MDBRow>
       </MDBModalBody>

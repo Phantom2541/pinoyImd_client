@@ -14,7 +14,7 @@ const Menus = ({
   handleAddToCart,
   handleRemovedToCart,
 }) => {
-  const { sendouts = {}, privilege } = selected || {};
+  const { sendouts = {}, privilege, pid = {} } = selected || {};
   const { membership = "" } = sendouts;
   return (
     <MDBCol md="4">
@@ -45,7 +45,14 @@ const Menus = ({
               up = 0,
               title = "",
               color = "",
-            } = computeGD(item, category, privilege, membership, "", contract);
+            } = computeGD(
+              item,
+              category,
+              privilege,
+              membership,
+              pid?.healthCard?.name || "",
+              contract
+            );
             return (
               <tr key={_id}>
                 <td className="text-left" title={title}>
