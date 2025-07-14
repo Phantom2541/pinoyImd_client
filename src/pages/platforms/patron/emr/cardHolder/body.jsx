@@ -127,7 +127,7 @@ const CustomStepper = () => {
 
     const data = {
       branchId: form.branch,
-      particular: auth._id,
+      pid: auth._id,
       haveCard,
       schedule,
       ...(haveCard && {
