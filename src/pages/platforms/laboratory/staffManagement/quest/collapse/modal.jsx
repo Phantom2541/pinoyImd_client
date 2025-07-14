@@ -7,7 +7,6 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
-  MDBTypography,
   MDBRow,
   MDBCol,
 } from "mdbreact";
@@ -18,7 +17,7 @@ import {
 import { COMPANY } from "../../../../../../services/redux/slices/assets/persons/personnels";
 import { useToasts } from "react-toast-notifications";
 import { isEqual } from "lodash";
-import { fullName, properFullname } from "../../../../../../services/utilities";
+import { fullName } from "../../../../../../services/utilities";
 
 export default function Modal() {
   const dispatch = useDispatch();
@@ -27,20 +26,26 @@ export default function Modal() {
   const { showModalTeam, willCreateTeam, isLoading } = useSelector(
     ({ quest }) => quest
   );
-  const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { company } = useSelector(({ personnels }) => personnels);
   const { team: selected } = useSelector(({ quest }) => quest);
 
-  const [form, setForm] = useState(selected);
+  const [form, setForm] = useState();
   const [member, setMember] = useState();
   const [branch, setBranch] = useState();
 
-  // ✅ Sync Redux selected to local form state
   useEffect(() => {
-    setForm(selected);
-  }, [selected]);
+    setForm({
+      type: "inhouse",
+    });
+    const _company = company.filter(
+      ({ _id }) => _id === activePlatform?.branchId
+    );
+    const _selected = _company[0];
 
-  // ✅ Load company data (once)
+    setMember(_selected?.personnels || []);
+  }, [activePlatform, company, selected]);
+
   useEffect(() => {
     if (token && activePlatform?.branch?.companyId?._id) {
       dispatch(
@@ -52,29 +57,32 @@ export default function Modal() {
     }
   }, [dispatch, token, activePlatform]);
 
-  // ✅ Handle form input changes
   const handleChange = (key, value) => {
+    if (key === "userId") {
+      const _val = JSON.parse(value);
+      setForm((prev) => ({
+        ...prev,
+        userId: _val?._id,
+      }));
+    }
     setForm((prev) => ({
       ...prev,
       [key]: value,
-      userId: auth._id,
-      branchId: activePlatform.branchId,
     }));
   };
+
   const handleMember = (member) => {
     if (member === "inhouse") {
       const _company = company.filter(
         ({ _id }) => _id === activePlatform?.branchId
       );
-      const selected = _company[0]; // Get the first match
-
-      setMember(selected?.personnels || []); // fallback to empty array
+      const selected = _company[0];
+      setMember(selected?.personnels || []);
     } else if (member === "collaboration") {
       setBranch();
     }
   };
 
-  // ✅ Handle update
   const handleUpdate = () => {
     dispatch(TOGGLETeam());
 
@@ -91,29 +99,25 @@ export default function Modal() {
       })
     );
   };
-  console.log("selected", selected);
 
-  // ✅ Handle add member (FIXED)
   const handleAdd = () => {
-    const safeTeam = Array.isArray(selected?.team) ? selected?.team : [];
+    const safeTeam = Array.isArray(selected?.team) ? selected.team : [];
     const newTeam = [...safeTeam, form];
-    console.log("selected", selected);
+    console.log("form", form);
 
-    dispatch(
-      UPDATE({
-        data: { _id: selected._id, team: newTeam },
-        token,
-      })
-    ).then(() => dispatch(TOGGLETeam()));
+    // dispatch(
+    //   UPDATE({
+    //     data: { _id: selected._id, team: newTeam },
+    //     token,
+    //   })
+    // ).then(() => dispatch(TOGGLETeam()));
   };
 
-  // ✅ Handle form submission (uses above)
   const handleSubmit = (e) => {
     e.preventDefault();
     willCreateTeam ? handleAdd() : handleUpdate();
   };
 
-  // ✅ Close modal
   const handleClose = () => dispatch(TOGGLETeam());
 
   return (
@@ -128,10 +132,6 @@ export default function Modal() {
 
       <MDBModalBody>
         <form onSubmit={handleSubmit}>
-          <MDBTypography tag="h5" className="text-center mb-4">
-            {form?.user ? properFullname(form.user.fullName) : "Member Details"}
-          </MDBTypography>
-
           <MDBRow className="mb-3">
             <MDBCol>
               <MDBInput
@@ -166,35 +166,24 @@ export default function Modal() {
               />
             </MDBCol>
           </MDBRow>
-          {form.type === "inhouse" && (
+
+          {form?.type === "inhouse" && (
             <select
-              name="member"
-              // value={selected}
-              onChange={() => handleChange()}
-              id=""
+              name="userId"
+              onChange={(e) => handleChange("userId", e.target.value)}
               className="form-control"
             >
               <option />
               {member?.map((m, index) => (
-                <option key={`${index}-personnel`} value={m?.user?._id}>
+                <option
+                  key={`${index}-personnel`}
+                  value={JSON.stringify(m?.user)}
+                >
                   {fullName(m?.user?.fullName)}
                 </option>
               ))}
             </select>
           )}
-          {/* {form?.user && (
-            <div className="mb-2">
-              <label>Alias: {form.user.alias}</label>
-            </div>
-          )}
-
-          <MDBInput
-            label="Name"
-            type="text"
-            value={form?.fullName || ""}
-            required
-            onChange={(e) => handleChange("fullName", e.target.value)}
-          /> */}
 
           <MDBInput
             label="Role"
@@ -203,34 +192,6 @@ export default function Modal() {
             required
             onChange={(e) => handleChange("role", e.target.value)}
           />
-          <MDBInput
-            label="Phone Number"
-            type="text"
-            value={form?.phoneNumber || ""}
-            required
-            onChange={(e) => handleChange("phoneNumber", e.target.value)}
-          />
-
-          <label>Inform</label>
-          <select
-            className="form-control mb-3"
-            value={
-              form?.hasInformed === true
-                ? "true"
-                : form?.hasInformed === false
-                ? "false"
-                : ""
-            }
-            onChange={(e) =>
-              handleChange("hasInformed", e.target.value === "true")
-            }
-          >
-            <option disabled value="">
-              Options
-            </option>
-            <option value="true">Informed</option>
-            <option value="false">Not Informed</option>
-          </select>
 
           <div className="text-center">
             <MDBBtn type="submit" disabled={isLoading} color="info" rounded>

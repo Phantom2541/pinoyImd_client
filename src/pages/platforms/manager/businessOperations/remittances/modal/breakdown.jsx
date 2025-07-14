@@ -8,7 +8,7 @@ const Breakdown = () => {
   const { expenses, opening, breakdown, coh, sales } = selected;
 
   return (
-    <MDBCol md="2">
+    <MDBCol style={{ minHeight: "350px" }} md="2">
       <h5 className="text-center fw-bold">Sales Break Down</h5>
       <div>Floating Cash: {currency.format(opening?.sum || 0)}</div>
       <div className="mt-5">

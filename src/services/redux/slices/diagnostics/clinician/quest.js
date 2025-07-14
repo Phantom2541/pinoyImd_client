@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
 const url = "/diagnostics/clinician/quest";
+const today = new Date();
 
 const initialState = {
   filter: [],
@@ -16,7 +17,8 @@ const initialState = {
   willAdd: false,
   showModalTeam: false,
   wiilCreateTeam: false,
-
+  month: new Date().getMonth() + 1, // 0-based index (Jan = 0)
+  year: new Date().getFullYear(),
   /**
    * pagination
    */
@@ -139,6 +141,30 @@ export const reduxSlice = createSlice({
         (page - 1) * max,
         max + (page - 1) * max
       );
+    },
+    SetMONTH: (state, { payload }) => {
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
+    },
+    setYear: (state, action) => {
+      state.year = Number(action.payload);
     },
     SetPAGE: (state, { payload }) => {
       state.page = payload;

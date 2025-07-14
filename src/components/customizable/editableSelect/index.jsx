@@ -55,6 +55,7 @@ export default function EditableSelect({
   getObject = false,
   allowObjectValue = false, // if true its mean the value is  a object because we have a emoji so hinid na niya ichecheck kung object ba yung value irerender parin niya
   label,
+  title = "",
   keyForValue,
   keyForText,
   className = "",
@@ -156,7 +157,7 @@ export default function EditableSelect({
             label={!hideLabel && label}
             getValue={handleSelection}
             key={JSON.stringify(isEmpty(preValues) ? preValue : preValues)}
-            className={`${className} w-100`}
+            className={`${className} w-100 p-0 m-0`}
             multiple={multiple}
             color="primary"
           >
@@ -233,6 +234,7 @@ export default function EditableSelect({
         </div>
       ) : (
         <span
+          title={title}
           className={`cursor-pointer ${classNameTxt}`}
           onClick={() => {
             // 📣 Close all others before setting self to edit mode

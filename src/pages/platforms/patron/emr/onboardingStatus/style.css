@@ -1,19 +1,23 @@
-.status-dot {
+.status-badge {
+  padding: 0.4em 0.6em;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  font-size: 0.75rem;
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 5px;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
 }
 
 .status-petition {
-  background-color: #f1c40f;
+  background-color: #f1c40f !important;
+  color: black !important;
 }
 
 .status-approved {
-  background-color: #2ecc71;
+  background-color: #2ecc71 !important;
 }
 
 .status-denied {
-  background-color: #e74c3c;
+  background-color: #e74c3c !important;
 }

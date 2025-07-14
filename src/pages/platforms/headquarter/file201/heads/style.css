@@ -61,10 +61,6 @@
   transition: scale 0.3s ease;
 }
 
-.signatories-card:hover {
-  /* scale: 1.02; */
-}
-
 .signatories-card.requiredPRC {
   grid-template-areas:
     "header body"
@@ -82,13 +78,10 @@
   grid-area: body;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  margin: 10px;
 }
 .signatories-card-footer {
   grid-area: footer;
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100%;
   padding-right: 10px;
 }
@@ -162,7 +155,7 @@
 }
 .signatories-card-signature {
   width: 110px;
-  height: auto;
+  height: 90px;
   -webkit-user-drag: none;
 }
 .signatories-card-signature-upload-btn {

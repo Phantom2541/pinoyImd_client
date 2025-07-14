@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Summary from "./summary";
-import Calendar from "./calendars";
+import Calendar from "./body";
 import Denomination from "./modal/denominations";
-
 import {
   BROWSE,
   RESET,
 } from "./../../../../../services/redux/slices/commerce/pos/services/deals";
 
 export default function Remittances() {
+  const summaryRef = useRef();
+  const [isSummaryReady, setIsSummaryReady] = useState(false);
+
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { month, year } = useSelector(({ remittances }) => remittances),
     dispatch = useDispatch();
@@ -35,12 +37,24 @@ export default function Remittances() {
     return () => dispatch(RESET());
   }, [token, dispatch, activePlatform, month, year]);
 
+  // ✅ Ensure Summary has mounted
+  useEffect(() => {
+    const checkIfReady = setInterval(() => {
+      if (summaryRef.current) {
+        setIsSummaryReady(true);
+        clearInterval(checkIfReady);
+      }
+    }, 50);
+
+    return () => clearInterval(checkIfReady);
+  }, []);
+
   return (
-    <div className="d-flex ">
+    <div className="d-flex">
       <div style={{ width: "300px" }}>
-        <Summary />
+        <Summary summaryRef={summaryRef} />
       </div>
-      <Calendar />
+      {isSummaryReady && <Calendar summaryRef={summaryRef} />}
       <Denomination />
     </div>
   );

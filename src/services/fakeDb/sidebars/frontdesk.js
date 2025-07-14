@@ -18,13 +18,6 @@ import {
 } from "../../../pages/platforms/frontdesk/diagnostics";
 
 import { Menus, Services } from "../../../pages/platforms/cashier";
-
-import {
-  Assurance,
-  Controls,
-  Temperature,
-} from "../../../pages/platforms/diagnostics/management";
-
 import Products from "../../../pages/platforms/frontdesk/market/products";
 import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
 import machines from "../../../pages/platforms/frontdesk/market/machines";
@@ -46,7 +39,7 @@ import {
   Loader,
   InputSearch,
   ImageMagnifier,
-  QrCodePage,
+  // QrCodePage,
   HMOCapture,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
@@ -87,33 +80,6 @@ const frontdesk = [
         path: "/diagnostics/sendouts",
         icon: "arrow-left",
         component: Sendouts,
-      },
-    ],
-  },
-  {
-    name: "Quality Management",
-    icon: "tv",
-    path: "/diagnostics/quality",
-    children: [
-      {
-        name: "Quality Assurance (QA)",
-        path: "/diagnostics/quality/external",
-        icon: "check-circle",
-        title: "Quality Control External",
-        component: Assurance,
-      },
-      {
-        name: "Quality Control (QC)",
-        path: "/diagnostics/quality/internal",
-        icon: "balance-scale",
-        title: "Quality Control Internal",
-        component: Controls,
-      },
-      {
-        name: "Temperature",
-        path: "/diagnostics/quality/temperature",
-        icon: "thermometer-half",
-        component: Temperature,
       },
     ],
   },
@@ -329,13 +295,11 @@ const frontdesk = [
             name: "Preanalytical",
             path: "/offers/consumables/preanalytical",
             icon: "check-circle",
-            component: Assurance,
           },
           {
             name: "Analytical",
             path: "/offers/consumables/analytical",
             icon: "balance-scale",
-            component: Controls,
           },
           {
             name: "Postanalytical",

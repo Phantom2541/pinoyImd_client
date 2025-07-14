@@ -8,7 +8,7 @@ import {
   ResetDATE,
   RESET,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
-import { Calendars } from "./../../../../../../components/header";
+import { Calendars } from "../../../../../../components/header";
 import { currency } from "../../../../../../services/utilities";
 
 const Header = () => {

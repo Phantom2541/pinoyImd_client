@@ -196,6 +196,7 @@ export default function Body() {
                 <div className="signatories-card-section-department">
                   <span>
                     <EditableSelect
+                      title="Click to edit"
                       classNameTxt="signatories-card-section"
                       isEditable
                       preValue={section}
@@ -217,6 +218,7 @@ export default function Body() {
                   &nbsp;-&nbsp;
                   <span>
                     <EditableSelect
+                      title="Click to edit"
                       classNameTxt="signatories-card-department"
                       isEditable
                       preValue={department}
@@ -270,6 +272,7 @@ export default function Body() {
                   hidden
                 />
                 <EditableSelect
+                  title="Click to edit"
                   classNameTxt="signatories-card-name"
                   isEditable
                   preValue={user._id}
@@ -302,6 +305,7 @@ export default function Body() {
                     <span className="signatories-card-prc-label">
                       <strong>PRC ID:&nbsp;</strong>
                       <EditableField
+                        title="Click to edit"
                         className="form-control form-control-sm"
                         classNameTxt="signatories-card-prc"
                         width="8rem"
@@ -327,6 +331,7 @@ export default function Body() {
                     <span className="signatories-card-expiration-label">
                       <strong>Expiration:&nbsp;</strong>
                       <EditableField
+                        title="Click to edit"
                         className="form-control form-control-sm"
                         classNameTxt="signatories-card-expiration"
                         type="date"

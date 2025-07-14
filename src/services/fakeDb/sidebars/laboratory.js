@@ -12,11 +12,6 @@ import {
   Applicants,
 } from "../../../pages/platforms/manager/settings";
 import {
-  Assurance,
-  Controls,
-  Temperature,
-} from "../../../pages/platforms/diagnostics/management";
-import {
   Contract,
   Membership,
   Outsources,
@@ -29,12 +24,12 @@ import {
   Onboarding,
 } from "../../../pages/platforms/cashier";
 import {
-  Vouchers,
-  Payables,
-  Receivables,
-  Reseco,
-} from "../../../pages/platforms/manager/accrued";
+  Assurance,
+  Controls,
+  Temperature,
+} from "../../../pages/platforms/diagnostics/management";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
+// import ClinicalMicroscopy from "../../../pages/platforms/laboratory/workingArea/clinicalMicroscopy";
 
 const laboratory = [
   {
@@ -43,12 +38,14 @@ const laboratory = [
     path: "/bulettin",
     title: "News and Updates",
     component: Bulletin,
+    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
   },
   {
     name: "Sales & Remittance",
     path: "/lab/sales",
     icon: "chart-line",
     title: "Daily income and collection tracking",
+    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
     children: [
       {
         name: "Sales Report",
@@ -56,6 +53,7 @@ const laboratory = [
         path: "/lab/sales/report",
         title: "Overview of laboratory sales",
         component: Sales,
+        allowedFor: ["Chief MLS"],
       },
       {
         name: "Remittance",
@@ -63,6 +61,7 @@ const laboratory = [
         path: "/lab/sales/remittance",
         title: "Cashier's daily remittance",
         component: Remittances,
+        allowedFor: ["Chief MLS"],
       },
       {
         name: "Onboarding",
@@ -70,6 +69,7 @@ const laboratory = [
         icon: "sign-in-alt",
         title: "Pre-Registered Patients & HMO Approvals",
         component: Onboarding,
+        allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
       },
       {
         name: "Sendout",
@@ -77,6 +77,7 @@ const laboratory = [
         icon: "truck-loading",
         title: "Sendout Patients to Partner Clinics",
         component: Sendouts,
+        allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
       },
       {
         name: "medical mission",
@@ -84,42 +85,34 @@ const laboratory = [
         icon: "ambulance",
         title: "medical team operations for outreach clinics.",
         component: Quest,
+        allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
       },
     ],
   },
   {
-    name: "Accrued",
-    path: "/accrued",
-    icon: "file-invoice",
-    title: "Liabilities and Obligations",
+    name: "Quality Management",
+    icon: "tv",
+    path: "/diagnostics/quality",
     children: [
       {
-        name: "Accounts Payable (A/P)",
-        path: "/payables",
-        icon: "file-invoice-dollar",
-        title: "Outstanding Payments to Suppliers & Utilities",
-        component: Payables,
+        name: "Quality Assurance (QA)",
+        path: "/diagnostics/quality/external",
+        icon: "check-circle",
+        title: "Quality Control External",
+        component: Assurance,
       },
       {
-        name: "Accounts Receivable (A/R)",
-        path: "/receivables",
-        icon: "wallet",
-        title: "Billing for Corporate & HMO Invoices",
-        component: Receivables,
+        name: "Quality Control (QC)",
+        path: "/diagnostics/quality/internal",
+        icon: "balance-scale",
+        title: "Quality Control Internal",
+        component: Controls,
       },
       {
-        name: "Vouchers",
-        path: "/vouchers",
-        icon: "receipt",
-        title: "Monthly Vouchers for Referrals (Cashier only)",
-        component: Vouchers,
-      },
-      {
-        name: "Rebates",
-        path: "/reseco",
-        icon: "calendar-check",
-        title: "Monthly Referral Rebates",
-        component: Reseco,
+        name: "Temperature",
+        path: "/diagnostics/quality/temperature",
+        icon: "thermometer-half",
+        component: Temperature,
       },
     ],
   },
@@ -128,6 +121,7 @@ const laboratory = [
     path: "/lab/inventory",
     icon: "boxes",
     title: "Manage lab supplies and reagents",
+    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
     children: [
       {
         name: "Reagents",
@@ -148,6 +142,7 @@ const laboratory = [
     path: "/lab/requests-management",
     icon: "file-signature",
     title: "Manage supply and maintenance requests",
+    allowedFor: ["Senior MedTech", "Chief MLS"],
     children: [
       {
         name: "Product Request",
@@ -168,6 +163,7 @@ const laboratory = [
     path: "/lab/schedule",
     icon: "calendar-alt",
     title: "Staff scheduling and attendance",
+    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
     children: [
       {
         name: "Attendance",
@@ -182,6 +178,7 @@ const laboratory = [
         path: "/scheduler",
         icon: "calendar-check",
         component: Scheduler,
+        allowedFor: ["Senior MedTech", "Chief MLS"],
       },
       {
         name: "Signatories",
@@ -189,6 +186,7 @@ const laboratory = [
         path: "/signatories",
         icon: "pen",
         component: Heads,
+        allowedFor: ["Chief MLS"],
       },
       {
         name: "Mobile Clinic (Quest)",
@@ -209,6 +207,7 @@ const laboratory = [
         path: "/petitioners",
         icon: "user-plus",
         component: Applicants,
+        allowedFor: ["Chief MLS"],
       },
     ],
   },
@@ -217,6 +216,7 @@ const laboratory = [
     path: "/lab/services",
     icon: "file-medical-alt",
     title: "Service pricing and reference values",
+    allowedFor: ["Senior MedTech", "Chief MLS"],
     children: [
       {
         name: "Service Prices",
@@ -233,39 +233,11 @@ const laboratory = [
     ],
   },
   {
-    name: "Quality Management",
-    icon: "tv",
-    path: "/diagnostics/quality",
-    title: "QA/QC program monitoring",
-    children: [
-      {
-        name: "Quality Assurance ( Q A )",
-        path: "/diagnostics/quality/external",
-        icon: "check-circle",
-        title: "External Quality Assurance",
-        component: Assurance,
-      },
-      {
-        name: "Quality Control ( Q C )",
-        path: "/diagnostics/quality/internal",
-        icon: "balance-scale",
-        title: "Internal Quality Control",
-        component: Controls,
-      },
-      {
-        name: "Temperature",
-        path: "/diagnostics/quality/temperature",
-        icon: "thermometer-half",
-        title: "Monitoring of lab temperature",
-        component: Temperature,
-      },
-    ],
-  },
-  {
     name: "Catalogs",
     path: "/offers",
     icon: "list",
     title: "Masterlists for services, products, and consumables",
+    allowedFor: ["Senior MedTech", "Chief MLS"],
     children: [
       {
         name: "Menus",
@@ -298,14 +270,12 @@ const laboratory = [
             path: "/offers/consumables/preanalytical",
             icon: "check-circle",
             title: "Items before analysis",
-            component: Assurance,
           },
           {
             name: "Analytical",
             path: "/offers/consumables/analytical",
             icon: "balance-scale",
             title: "Items during analysis",
-            component: Controls,
           },
           {
             name: "Postanalytical",
@@ -322,6 +292,7 @@ const laboratory = [
     path: "/sources",
     icon: "building",
     title: "Outsources & Insources (Loyalty Programs)",
+    allowedFor: ["Chief MLS"],
     children: [
       {
         name: "Outsources",
@@ -401,6 +372,7 @@ const laboratory = [
     path: "/lab/reports",
     icon: "file-medical",
     title: "Summary and detailed reports",
+    allowedFor: ["Senior MedTech", "Chief MLS"],
     children: [
       {
         name: "Daily Summary",
@@ -413,6 +385,67 @@ const laboratory = [
         icon: "calendar",
         path: "/lab/reports/monthly",
         title: "Monthly logs and summaries",
+      },
+    ],
+  },
+  {
+    name: "Working Area",
+    path: "/lab/working-area",
+    icon: "microscope",
+    title: "Access different lab working sections",
+    allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS", "Frontdesk"], // optional if role-filtered
+    children: [
+      {
+        name: "Clinical Microscopy",
+        path: "/lab/working-area/clinical-microscopy",
+        icon: "vial",
+        title: "Routine urinalysis, stool exam, etc.",
+        // component: ClinicalMicroscopy,
+      },
+      {
+        name: "Hematology",
+        path: "/lab/working-area/hematology",
+        icon: "tint",
+        title: "CBC, blood smears, ESR, etc.",
+      },
+      {
+        name: "Clinical Chemistry",
+        path: "/lab/working-area/clinical-chemistry",
+        icon: "flask",
+        title: "Glucose, enzymes, electrolytes, etc.",
+      },
+      {
+        name: "Immunology & Serology",
+        path: "/lab/working-area/immuno-sero",
+        icon: "syringe",
+        title: "Antibody-antigen testing",
+      },
+      {
+        name: "Microbiology",
+        path: "/lab/working-area/microbiology",
+        icon: "bug",
+        title: "Culture and sensitivity, gram stain",
+      },
+      {
+        name: "Blood Banking",
+        path: "/lab/working-area/blood-bank",
+        icon: "hand-holding-medical",
+        title: "Crossmatching and blood typing",
+      },
+    ],
+  },
+  {
+    name: "Settings",
+    path: "/settings",
+    icon: "sliders-h",
+    title: "System settings and configuration",
+    allowedFor: ["Chief MLS"],
+    children: [
+      {
+        name: "System",
+        path: "/settings/system",
+        icon: "cogs",
+        title: "System settings and configuration",
       },
     ],
   },
