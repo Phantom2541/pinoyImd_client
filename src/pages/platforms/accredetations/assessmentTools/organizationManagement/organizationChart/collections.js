@@ -38,8 +38,25 @@ const sampleOrgData = {
       title: "Frontdesk",
       name: "Nerissa Tan",
       children: [
-        { title: "Frontdesk", name: "Leo Gutierrez" },
-        { title: "Frontdesk", name: "Pauline Ortega" },
+        {
+          title: "Frontdesk",
+          name: "Leo Gutierrez",
+          children: [
+            {
+              title: "Accreditation",
+              name: "Dino Evangelista",
+              children: [{ title: "Laboratory", name: "Mia Villanueva" }],
+            },
+          ],
+        },
+        {
+          title: "Frontdesk",
+          name: "Pauline Ortega",
+          children: [
+            { title: "manager", name: "kevin magtalas" },
+            { title: "patron", name: "carl magtalas" },
+          ],
+        },
       ],
     },
     {
