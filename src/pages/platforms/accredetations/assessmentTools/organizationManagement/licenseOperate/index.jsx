@@ -34,7 +34,10 @@ export default function LicenseOperate() {
           height: "100%",
         }}
       >
-        <div className="card-img-top w-100 h-100" style={{ padding: "10px" }}>
+        <div className="card-header bg-blue text-dark font-weight-bold">
+          DOH-LTO
+        </div>
+        <div className="card-img-top w-100 card-preview-container">
           <ImageDragAndDrop img={LTO} savedImg={handleImageChange} />
         </div>
       </div>

@@ -76,3 +76,9 @@
 .template1-secondary:hover {
   background-color: #dcdcdc;
 }
+.card-preview-container {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

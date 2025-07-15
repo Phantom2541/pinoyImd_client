@@ -3,6 +3,7 @@ import {
   MissionVision,
   PlantEnvironment,
   LicenseOperate,
+  policyManagement,
 } from "./assessmentTools";
 
 import { default as Staffs } from "./staff";
@@ -17,6 +18,7 @@ export {
   LicenseOperate,
   Staffs,
   Temperatures,
+  policyManagement,
   qualityControls,
   Machines,
 };
