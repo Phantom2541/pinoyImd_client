@@ -11,7 +11,7 @@ import { fullName, ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
-import ImageDragAndDrop from "../../../../templates/imageDragAndDrop/dragNdropimg";
+import ImageDragAndDrop from "../../../../templates/imageDragAndDrop/dragNdroping";
 import EditableField from "../../../../../components/customizable/editableField";
 import {
   UPDATE_INFO,

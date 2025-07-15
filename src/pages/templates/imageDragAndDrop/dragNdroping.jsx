@@ -39,6 +39,8 @@ const ImageDragAndDrop = ({
       fetch(img)
         .then((res) => res.blob())
         .then((blob) => {
+          console.log("img", img);
+
           blobUrl = URL.createObjectURL(blob);
           setPreview(blobUrl);
         })

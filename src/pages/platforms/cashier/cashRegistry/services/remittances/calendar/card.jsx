@@ -40,7 +40,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
           <>
             <div className="sales-card-info mt-3">
               {gross > 0 && (
-                <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center justify-content-between mb-1">
                   <h6
                     className={`mb-0 text-right `}
                     style={{ whiteSpace: "nowrap", fontWeight: 400 }}
@@ -140,7 +140,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                 .filter(({ value }) => value > 0)
                 .map(({ label, value, cn }, idx) => (
                   <div
-                    className="d-flex align-items-center justify-content-between "
+                    className="d-flex align-items-center justify-content-between mb-1"
                     key={idx}
                     style={
                       label === " Add: FC"

@@ -90,7 +90,7 @@ export default function Platforms() {
           className="white-skin"
         />
         <main
-          style={{ paddingLeft: dynamicLeftPadding, margin: "5rem 1% 6rem" }}
+          style={{ paddingLeft: dynamicLeftPadding, margin: "7rem 1% 6rem" }}
         >
           <Login show={show} />
           <Routes />

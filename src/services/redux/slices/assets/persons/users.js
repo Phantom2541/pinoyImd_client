@@ -85,6 +85,23 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
+export const VALIDATE_ID = createAsyncThunk(
+  `${url}/validate_ID`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "validate_ID");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const reduxSlice = createSlice({
   name: url,
@@ -169,6 +186,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(VALIDATE_ID.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(VALIDATE_ID.fulfilled, (state, action) => {
+        const { success } = action.payload;
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(VALIDATE_ID.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

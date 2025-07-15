@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
@@ -7,7 +6,7 @@ import TableLoading from "../../../../../components/tableLoading";
 // import Footer from "./footer";
 
 const Sendouts = () => {
-  const { isLoading } = useSelector(({ deals }) => deals);
+  const { isLoading } = useSelector(({ onBoardings }) => onBoardings);
 
   return (
     <>

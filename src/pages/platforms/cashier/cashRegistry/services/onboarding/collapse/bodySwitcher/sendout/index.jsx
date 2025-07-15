@@ -4,49 +4,28 @@ import {
   MDBTableBody,
   MDBBtn,
   MDBBtnGroup,
+  MDBBadge,
 } from "mdbreact";
 import { Services } from "../../../../../../../../../services/fakeDb";
 import Swal from "sweetalert2";
-import { fullName } from "../../../../../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  DENY_ONBOARDING,
-  SetSELECTED,
-} from "../../../../../../../../../services/redux/slices/commerce/pos/services/deals";
+  SetPROCESS,
+  UPDATE,
+} from "../../../../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 export default function Sendout({ item }) {
-  const { token, auth } = useSelector(({ auth }) => auth),
-    // { collections } = useSelector(({ menus }) => menus),
-    { vendor, createdAt, services } = item,
+  const { token } = useSelector(({ auth }) => auth),
+    { client, createdAt, services, cancelled = [], status } = item,
     dispatch = useDispatch();
 
   const handleProcess = (deal) => {
-    // const { servicesId } = deal.sendouts;
-    // const matchesPackages = [...collections].filter(
-    //   ({ packages, isProfile }) =>
-    //     servicesId.every((id) => packages.includes(id)) && !isProfile
-    // );
-
-    // if (isEmpty(sendouts.foundMenus)) {
-    //   return Swal.fire({
-    //     icon: "warning",
-    //     title: "No Matching Menu Found",
-    //     html: `This request cannot be processed because there is no menu that offers the <b>${servicesId
-    //       .map((id) => Services.getAbbr(id))
-    //       .join(
-    //         ", "
-    //       )}</b> services. Please contact the administrator for assistance.`,
-    //     confirmButtonColor: "#3085d6",
-    //     confirmButtonText: "OK",
-    //   });
-    // }
-
-    dispatch(SetSELECTED(deal));
+    dispatch(SetPROCESS(deal));
   };
 
-  const handleDeny = async (deal) => {
-    const customer = fullName(item?.pid?.fullName);
+  const handleDeny = async () => {
+    const source = client?.name || client?.displayname;
     const { value: reason } = await Swal.fire({
-      title: `${customer}`,
+      title: `${source}`,
       input: "textarea",
       inputLabel: "Reason for denial",
       inputPlaceholder: "Enter your reason here...",
@@ -66,22 +45,15 @@ export default function Sendout({ item }) {
 
     if (reason) {
       dispatch(
-        DENY_ONBOARDING({
-          data: {
-            _id: deal._id,
-            isDenied: {
-              at: new Date(),
-              by: auth._id,
-              reason,
-            },
-          },
+        UPDATE({
           token,
+          data: { ...item, reason, status: "denied" },
         })
       );
       Swal.fire({
         icon: "success",
         title: "Request Denied",
-        html: `The action for <b>${customer}</b> has been saved successfully.`,
+        html: `The action for <b>${source}</b> has been saved successfully.`,
       });
     }
   };
@@ -99,11 +71,40 @@ export default function Sendout({ item }) {
         </MDBTableHead>
         <MDBTableBody>
           <tr>
-            <td className="fw-bold">{vendor?.name || vendor?.displayname}</td>
+            <td className="fw-bold">{client?.name || client?.displayname}</td>
             <td>
-              <small>
-                {services?.map((id) => Services.getAbbr(id)).join(", ")}
-              </small>
+              {services?.map((id) => {
+                const notProcess = cancelled.includes(id);
+                return (
+                  <MDBBadge
+                    color={
+                      !notProcess && status === "done" ? "light" : "primary"
+                    }
+                    className="mr-2"
+                    key={id}
+                  >
+                    <span
+                      title={
+                        status === "done" &&
+                        `${
+                          notProcess ? "Not Available" : "Completed"
+                        } \n ${Services.getName(id)}`
+                      }
+                      style={{
+                        fontSize: "0.8rem",
+                        ...(!notProcess &&
+                          status === "done" && {
+                            textDecoration: "line-through",
+                            textDecorationThickness: "3px", // thicker line
+                            textDecorationColor: "gray",
+                          }),
+                      }}
+                    >
+                      {Services.getAbbr(id)}
+                    </span>
+                  </MDBBadge>
+                );
+              })}
             </td>
             <td>
               {`${new Intl.DateTimeFormat("default", {
@@ -115,22 +116,26 @@ export default function Sendout({ item }) {
               }).format(new Date(createdAt || Date.now()))}`}
             </td>
             <td>
-              <MDBBtnGroup>
-                <MDBBtn
-                  size="sm"
-                  color="primary"
-                  onClick={() => handleProcess(item)}
-                >
-                  Process
-                </MDBBtn>
-                <MDBBtn
-                  size="sm"
-                  color="danger"
-                  onClick={() => handleDeny(item)}
-                >
-                  Deny
-                </MDBBtn>
-              </MDBBtnGroup>
+              {status !== "done" ? (
+                <MDBBtnGroup>
+                  <MDBBtn
+                    size="sm"
+                    color="primary"
+                    onClick={() => handleProcess(item)}
+                  >
+                    Process
+                  </MDBBtn>
+                  <MDBBtn
+                    size="sm"
+                    color="danger"
+                    onClick={() => handleDeny(item)}
+                  >
+                    Deny
+                  </MDBBtn>
+                </MDBBtnGroup>
+              ) : (
+                <span className="text-success fw-bold">Done</span>
+              )}
             </td>
           </tr>
         </MDBTableBody>

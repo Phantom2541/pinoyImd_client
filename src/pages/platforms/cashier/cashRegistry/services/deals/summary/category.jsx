@@ -1,39 +1,56 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useState, useMemo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
 import { AUTOSELECT } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 import SummaryLoading from "./loading";
 
 export default function Payments() {
-  const { total, collections, isLoading } = useSelector(({ deals }) => deals),
-    { auth, activePlatform, token } = useSelector(({ auth }) => auth),
-    { selected } = useSelector(({ remittances }) => remittances),
-    [isOpen, setIsOpen] = useState(true),
-    [sum, setSum] = useState(0),
-    dispatch = useDispatch();
+  const { total, collections, isLoading } = useSelector(({ deals }) => deals);
+  const { auth, activePlatform, token } = useSelector(({ auth }) => auth);
+  const { selected } = useSelector(({ remittances }) => remittances);
 
-  // Optimize calculations using useMemo
-  const paymentTotals = useMemo(() => {
-    return collections?.reduce(
-      (acc, payment) => {
-        acc[payment.payment] = (acc[payment.payment] || 0) + payment.amount;
-        return acc;
-      },
-      { cash: 0, gcash: 0, voucher: 0, pending: 0 }
-    );
+  const [isOpen, setIsOpen] = useState(true);
+  const [sum, setSum] = useState(0);
+  const dispatch = useDispatch();
+
+  // Reset voucherSummary and calculate based on collections
+  const { paymentTotals, voucherSummary } = useMemo(() => {
+    const totals = {
+      cash: 0,
+      gcash: 0,
+      voucher: 0,
+      pending: 0,
+    };
+
+    const summary = {
+      wls: 0,
+      mbs: 0,
+      ctr: 0,
+    };
+
+    collections?.forEach((item) => {
+      const { payment, amount, category } = item;
+      totals[payment] = (totals[payment] || 0) + amount;
+
+      if (
+        payment === "voucher" &&
+        category &&
+        summary.hasOwnProperty(category)
+      ) {
+        summary[category] += amount;
+      }
+    });
+
+    return { paymentTotals: totals, voucherSummary: summary };
   }, [collections]);
 
   useEffect(() => {
-    setSum(selected?.opening?.sum);
+    setSum(selected?.opening?.sum || 0);
   }, [selected]);
 
   useEffect(() => {
-    /**
-     * get local time of users
-     * Format: YYYY-MM-DD
-     */
+    // Get today's date in local format: YYYY-MM-DD
     const date = new Date().toLocaleDateString(undefined, {
       year: "numeric",
       month: "2-digit",
@@ -53,7 +70,7 @@ export default function Payments() {
   }, [activePlatform, auth, token, dispatch]);
 
   return (
-    <MDBCard className="shadow-sm mb-2 ">
+    <MDBCard className="shadow-sm my-2">
       <MDBCollapseHeader style={{ borderRadius: "50%" }} className="bg-light">
         <div className="d-flex justify-content-between align-items-center">
           <small className="text-uppercase font-weight-bold text-center text-primary">
@@ -62,10 +79,11 @@ export default function Payments() {
           <i
             onClick={() => setIsOpen(!isOpen)}
             style={{ rotate: `${isOpen ? 0 : 90}deg` }}
-            className="fa fa-angle-down transition-all "
+            className="fa fa-angle-down transition-all"
           />
         </div>
       </MDBCollapseHeader>
+
       <MDBCollapse isOpen={isOpen}>
         <MDBCardBody className="pt-2">
           {!isLoading ? (
@@ -76,54 +94,63 @@ export default function Payments() {
                   {selected ? currency.format(sum) : "-"}
                 </strong>
               </div>
+
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Cash :</span>
                 <strong className="text-primary">
                   {currency.format(paymentTotals.cash)}
                 </strong>
               </div>
+
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Gcash :</span>
                 <strong className="text-primary">
                   {currency.format(paymentTotals.gcash)}
                 </strong>
               </div>
+
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Vouchers :</span>
                 <strong className="text-primary">
                   {currency.format(paymentTotals.voucher)}
                 </strong>
               </div>
+
               <div className="d-flex justify-content-between border-bottom py-2 ml-3">
                 <span title="Wellness">HMO :</span>
                 <strong className="text-primary">
-                  {currency.format(paymentTotals.voucher)}
+                  {currency.format(voucherSummary.wls)}
                 </strong>
               </div>
+
               <div className="d-flex justify-content-between border-bottom py-2 ml-3">
                 <span title="Insource : Membership">Membership :</span>
                 <strong className="text-primary">
-                  {currency.format(paymentTotals.voucher)}
+                  {currency.format(voucherSummary.mbs)}
                 </strong>
               </div>
+
               <div className="d-flex justify-content-between border-bottom py-2 ml-3">
                 <span title="Insource : Contracts">Contracts :</span>
                 <strong className="text-primary">
-                  {currency.format(paymentTotals.voucher)}
+                  {currency.format(voucherSummary.ctr)}
                 </strong>
               </div>
+
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Downpayment:</span>
                 <strong className="text-danger">
                   {currency.format(paymentTotals.pending)}
                 </strong>
               </div>
+
               <div className="d-flex justify-content-between border-bottom py-2">
                 <span>Balance:</span>
                 <strong className="text-danger">
                   {currency.format(paymentTotals.pending)}
                 </strong>
               </div>
+
               <hr />
               <div className="d-flex justify-content-between border-bottom pb-2">
                 <span>Total :</span>

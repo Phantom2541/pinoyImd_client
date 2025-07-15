@@ -46,6 +46,7 @@ export default function Search({
         className="search-container"
         style={{ marginRight: haveAction && !showBtn && "-35px" }}
       >
+        <MDBIcon className="search-icon" fas icon="search" />
         <input
           placeholder="Search..."
           onChange={({ target }) => handleChange(target.value)}
@@ -57,19 +58,18 @@ export default function Search({
         />
       </div>
       {(haveAction || showBtn) && (
-        <MDBBtn
+        <button
           onClick={() => handleAdd(searchValue)}
           size="sm"
           style={{
             opacity: showBtn ? 1 : 0,
             marginRight: "-5px",
           }}
-          color="white"
-          rounded
-          className="px-2 ml-3"
+          // color="white"
+          className="search-add-btn ml-2"
         >
           <MDBIcon icon="plus" />
-        </MDBBtn>
+        </button>
       )}
     </div>
   );

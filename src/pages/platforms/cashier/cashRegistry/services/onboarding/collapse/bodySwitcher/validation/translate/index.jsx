@@ -59,9 +59,28 @@ export default function Translate() {
 
   useEffect(() => {
     if (show) {
+      setCart([]);
+      const { services: servicesId = [] } = selected;
       const _matchMenus = [...menus].filter(
-        ({ isProfile = false }) => !isProfile
+        ({ isProfile = false, packages = [] }) =>
+          !isProfile && packages.length === 1
       );
+
+      if (servicesId.length > 0) {
+        const defaultMenus = [];
+        for (const menu of _matchMenus) {
+          const { packages, isProfile = false } = menu;
+          const isSubset =
+            packages.length === 1 &&
+            packages.every((id) => servicesId.includes(id));
+          if (isSubset && !isProfile) {
+            defaultMenus.push(menu);
+            if (defaultMenus.length === servicesId.length) break;
+          }
+        }
+
+        setCart(defaultMenus);
+      }
 
       setMatchMenus(_matchMenus);
     }
@@ -73,7 +92,6 @@ export default function Translate() {
     _cart.splice(index, 1);
     setCart(_cart);
   };
-  console.log("cart", matchMenus);
 
   const handleAddToCart = (menu) => {
     const { packages } = menu;
@@ -103,7 +121,7 @@ export default function Translate() {
     dispatch(
       UPDATE({
         token,
-        data: { ...selected, services, status: "translated", pid: pid?._id },
+        data: { ...selected, services, pid: pid?._id },
       })
     );
   };
@@ -149,7 +167,7 @@ export default function Translate() {
             rounded
             color="info"
             onClick={handleSubmit}
-            disabled={formSubmitted}
+            disabled={formSubmitted || cart.length === 0}
           >
             Submit <Spinner formSubmitted={formSubmitted} />
           </MDBBtn>

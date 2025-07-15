@@ -39,7 +39,7 @@ export default function Card({ item, index }) {
   };
 
   return (
-    <MDBCol md="4" key={index}>
+    <MDBCol className="p-2" md="3" key={index}>
       <div className="sales-card" key={index}>
         {handlePin()}
         <p className="line-clamp">

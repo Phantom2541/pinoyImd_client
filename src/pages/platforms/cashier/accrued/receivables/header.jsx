@@ -35,7 +35,7 @@ const Header = () => {
           token,
           keys: {
             branchId: activePlatform?.branchId,
-            cashierId:auth._id,
+            cashierId: auth._id,
             createdAt: startDate,
             endDate,
           },
@@ -62,9 +62,6 @@ const Header = () => {
 
       <div className="white-text mx-3 text-nowrap mt-0 d-flex flex-column">
         <span className="h5 m-0">Account Receivable List</span>
-        <small className="text-light">
-          Cashier: {properFullname(auth?.fullName)}
-        </small>
       </div>
 
       <div className="d-flex align-items-center">
@@ -94,7 +91,7 @@ const Header = () => {
                   token,
                   keys: {
                     branchId: activePlatform?.branchId,
-                    cashierId:auth._id,
+                    cashierId: auth._id,
                     createdAt: new Date(year, month - 1, 1),
                     endDate: new Date(year, month, 0, 23, 59, 59, 999),
                   },
@@ -109,4 +106,3 @@ const Header = () => {
 };
 
 export default Header;
-

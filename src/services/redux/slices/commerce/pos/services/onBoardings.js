@@ -10,6 +10,7 @@ const initialState = {
   formSubmitted: false,
   didSearch: false,
   selected: {},
+  vendorId: "",
   page: 0,
   isSuccess: false,
   // main loading
@@ -36,6 +37,23 @@ export const BROWSE = createAsyncThunk(
   ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const SEND_OUTS = createAsyncThunk(
+  `${url}/sendOuts`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/sendOuts`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -223,10 +241,72 @@ export const TagPHYSICIAN = createAsyncThunk(
     }
   }
 );
+
+export const PROCESS_ONBOARDING = createAsyncThunk(
+  `${url}/PROCESS_ONBOARDING`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "process_onboarding");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetVALIDATE_ID: (state, { payload }) => {
+      const updateCollections = (collections) => {
+        const onboardingUsers = collections.filter(
+          ({ pid }) => pid._id === payload._id
+        );
+
+        onboardingUsers.forEach((element) => {
+          const index = collections.findIndex(({ _id }) => _id === element._id);
+          console.log("index", index);
+          collections[index] = {
+            ...collections[index],
+            pid: payload,
+          };
+        });
+      };
+      updateCollections(state.filtered);
+      updateCollections(state.collections);
+    },
+    SetSTATUS: (state, { payload }) => {
+      if (payload === "all") {
+        state.filtered = state.collections;
+      } else if (payload === "done") {
+        state.filtered = state.collections.filter(
+          ({ status }) => status === "done"
+        );
+      } else {
+        state.filtered = state.collections.filter(
+          ({ status }) => status !== "done"
+        );
+      }
+    },
+    SetVENDOR: (state, { payload }) => {
+      console.log("payload", payload);
+      if (payload === "all") {
+        state.filtered = state.collections;
+        state.vendorId = "";
+      } else {
+        state.filtered = state.collections.filter(
+          ({ vendor }) => vendor._id === payload
+        );
+        state.vendorId = payload;
+      }
+    },
     SetCREATE: (state) => {
       state.selected = {
         department: state.department,
@@ -269,9 +349,8 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
-    SetMONTH: (state, { payload }) => {
-      console.log("month", state.month);
 
+    SetMONTH: (state, { payload }) => {
       if (payload === "next") {
         if (state.month === 12) {
           state.month = 1;
@@ -337,9 +416,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        console.log("payload", payload);
         state.collections = state.filtered = payload.payload || [];
-
         let totalPages = Math.ceil(state.filtered.length / state.maxPage);
         state.totalPages = totalPages;
         if (state.activePage > totalPages) {
@@ -348,6 +425,25 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(SEND_OUTS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SEND_OUTS.fulfilled, (state, { payload }) => {
+        state.collections = state.filtered = payload.payload || [];
+        let totalPages = Math.ceil(state.filtered.length / state.maxPage);
+        state.totalPages = totalPages;
+        if (state.activePage > totalPages) {
+          state.activePage = totalPages;
+        }
+        state.isLoading = false;
+      })
+      .addCase(SEND_OUTS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -398,6 +494,30 @@ export const reduxSlice = createSlice({
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(PROCESS_ONBOARDING.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(PROCESS_ONBOARDING.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(({ _id }) => _id === payload._id);
+          collections[index] = payload;
+        };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(PROCESS_ONBOARDING.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
         state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
@@ -624,8 +744,11 @@ export const reduxSlice = createSlice({
 
 export const {
   SetFILTERED,
+  SetVALIDATE_ID,
   SetSELECTED,
   SetPROCESS,
+  SetSTATUS,
+  SetVENDOR,
   SetCOLLECTIONS,
   SetActiveTAB,
   TOGGLE,

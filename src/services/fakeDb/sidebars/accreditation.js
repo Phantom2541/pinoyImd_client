@@ -1,8 +1,13 @@
-import Staffs from "../../../pages/platforms/accredetations/staff";
-import Temperature from "../../../pages/platforms/accredetations/temperatures";
-import qualityControls from "../../../pages/platforms/accredetations/qualityControl";
-import Machines from "../../../pages/platforms/accredetations/machines";
-import missionVision from "../../../pages/platforms/accredetations/assessmentTools/organizationManagement/missionVision";
+import {
+  Staffs,
+  qualityControls,
+  Temperatures,
+  Machines,
+  HandlingComplaint,
+  MissionVision,
+  PlantEnvironment,
+  LicenseOperate,
+} from "../../../pages/platforms/accredetations/index";
 
 const accreditation = [
   {
@@ -36,7 +41,7 @@ const accreditation = [
             title:
               "Wriyyen Vision, Mission and Objectives posted in conspicious area visible to clients",
             icon: "cogs",
-            component: missionVision,
+            component: MissionVision,
           },
           {
             name: "3. valid D O H - L T O",
@@ -44,6 +49,7 @@ const accreditation = [
             title:
               "valid DOH-LTO, Valid DOH-LTO posted in conspicious area visible to clients",
             icon: "cogs",
+            component: LicenseOperate,
           },
           {
             name: "4. Policy and Procedure ",
@@ -58,6 +64,7 @@ const accreditation = [
             title:
               "Written policy and proceduresfor handling complaints/clients feedback\n Suggestion box visible to clients\n Forms for complaints/clients feedback\n Records of complaints/client feedbackand action takens",
             icon: "cogs",
+            component: HandlingComplaint,
           },
         ],
       },
@@ -168,6 +175,7 @@ const accreditation = [
         name: "3. PHYSICAL PLANT and ENVIRONMENT MANAGEMENT",
         path: "/laboratory/environment",
         icon: "cogs",
+        component: PlantEnvironment,
       },
       {
         name: "4. EQUIPMENT, INSTRUMENTS, GLASWARES, REAGENTS and SUPPLIES",
@@ -250,7 +258,7 @@ const accreditation = [
       {
         name: "Temperature",
         path: "/temperature",
-        component: Temperature,
+        component: Temperatures,
         icon: "cogs",
       },
       {

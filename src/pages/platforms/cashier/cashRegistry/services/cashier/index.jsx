@@ -70,7 +70,7 @@ export default function Cashier() {
         <QRCodeCanvas value="https://youtube.com" size={200} />
       </div> */}
       <MDBRow
-        className="res-container"
+        className="res-container "
         style={{ marginLeft: "4rem", marginRight: "1rem" }}
       >
         <MDBCol size="5" className="pr-1">

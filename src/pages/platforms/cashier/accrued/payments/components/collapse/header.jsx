@@ -3,8 +3,6 @@ import { currency } from "../../../../../../../services/utilities";
 // import { MDBIcon, MDBView, MDBBtn } from "mdbreact";
 
 const Header = ({ title, index, activeId, sum }) => {
-  console.log("activeId", activeId);
-  console.log("index", index);
   return (
     <label className="d-flex justify-content-between">
       {index + 1}. {title}

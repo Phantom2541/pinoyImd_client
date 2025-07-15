@@ -2,7 +2,7 @@ import { capitalize } from "lodash";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import { useState } from "react";
 
-const Options = () => {
+const Options = ({ handleValidateID }) => {
   const [showValidationOptions, setShowValidationOptions] = useState(false);
 
   return (
@@ -19,15 +19,13 @@ const Options = () => {
         gap: "0px",
       }}
     >
-      {["question", "original", "falsified", "fake"].map((type, index) => {
+      {["question", "valid", "invalid"].map((type, index) => {
         const isQuestion = type === "question";
         const icon =
-          type === "original"
+          type === "valid"
             ? "check"
-            : type === "falsified"
+            : type === "invalid"
             ? "exclamation-triangle"
-            : type === "fake"
-            ? "times"
             : null;
 
         return (
@@ -65,7 +63,7 @@ const Options = () => {
                 size="sm"
                 color="light"
                 title={capitalize(type)}
-                onClick={() => console.log(type)}
+                onClick={() => handleValidateID(type === "valid")}
                 style={{
                   borderRadius: "50%",
                   width: "32px",
@@ -83,18 +81,18 @@ const Options = () => {
                   fas
                   icon={icon}
                   className={
-                    type === "original"
+                    type === "valid"
                       ? "text-success"
-                      : type === "falsified"
+                      : type === "invalid"
                       ? "text-warning"
-                      : "text-danger"
+                      : ""
                   }
                 />
               </MDBBtn>
             )}
 
             {/* Dots below each button except last */}
-            {index < 3 && (
+            {index < 2 && (
               <div
                 style={{
                   height: "12px",

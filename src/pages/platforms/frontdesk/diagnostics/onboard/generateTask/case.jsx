@@ -16,7 +16,7 @@ import {
 import dragAndDrop from "../../../../../../assets/drag-and-drop.png";
 const Body = ({ setOutSource, outSource }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
-    { inhouse, outsource } = useSelector(({ taskGenerator }) => taskGenerator),
+    { inhouse, cluster } = useSelector(({ taskGenerator }) => taskGenerator),
     { collections } = useSelector(({ providers }) => providers),
     [outSources, setOutSources] = useState([]),
     dispatch = useDispatch();
@@ -78,16 +78,15 @@ const Body = ({ setOutSource, outSource }) => {
     const { item, fromList } = JSON.parse(data);
     if (fromList === toList) return;
     if (toList === "outsource" || toList === "official reading") {
-      dispatch(SetOUTSOURCE(item));
+      dispatch(SetOUTSOURCE({ data: item, id: outSource }));
     } else {
-      dispatch(SetINHOUSE(item));
+      dispatch(SetINHOUSE({ data: item, id: outSource }));
     }
 
     // Dispatch actions to update Redux state
-    dispatch({ type: "REMOVE_FROM_LIST", payload: { item, fromList } });
-    dispatch({ type: "ADD_TO_LIST", payload: { item, toList } });
+    // dispatch({ type: "REMOVE_FROM_LIST", payload: { item, fromList } });
+    // dispatch({ type: "ADD_TO_LIST", payload: { item, toList } });
   };
-
   const handleDragOver = (e) => e.preventDefault();
   const Bucket = ({ collections, title }) => {
     const isOutsource = title === "Outsource";
@@ -102,11 +101,15 @@ const Body = ({ setOutSource, outSource }) => {
         <option value="" disabled={!!outSource}>
           Select outsource
         </option>
-        {outSources.map(({ text, value, category }, index) => (
-          <option key={index} value={value}>
-            {category === "ghost" && "👻"} {text}
-          </option>
-        ))}
+        {outSources.map(({ text, value, category }, index) => {
+          const selectCount = cluster[value]?.length;
+          return (
+            <option key={index} value={value}>
+              {category === "ghost" && "👻"} {text}{" "}
+              {selectCount ? `(${selectCount})` : ""}
+            </option>
+          );
+        })}
       </select>
     );
 
@@ -189,7 +192,7 @@ const Body = ({ setOutSource, outSource }) => {
       <MDBRow>
         <Bucket collections={inhouse} title="Inhouse" />
         <Bucket
-          collections={outsource}
+          collections={cluster[outSource] || []}
           title={isRadiology ? "Official Reading" : "Outsource"}
         />
       </MDBRow>

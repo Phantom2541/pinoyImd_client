@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BROWSE } from "../../../../../../services/redux/slices/assets/companies";
 
-export default function Cards() {
+export default function MissionVision() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { filtered } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();

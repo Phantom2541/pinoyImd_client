@@ -1,21 +1,27 @@
 import { MDBCol, MDBCardBody, MDBCard, MDBBadge } from "mdbreact";
-import { Privileges, Services } from "../../../../../../../../services/fakeDb";
+import {
+  Categories,
+  HMO,
+  Privileges,
+  Services,
+} from "../../../../../../../../services/fakeDb";
 import { mobile } from "../../../../../../../../services/utilities";
 const Contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
 };
-const Customer = ({ deal }) => {
+const Customer = ({ deal, categoryIndex }) => {
   const {
     pid: customerId,
     branchId,
+    client,
     ssx,
     privilege,
-    sendouts,
     services,
+    isValidation = false,
+    contract,
   } = deal;
-  const { mobile: _mobile = "" } = customerId || {};
-  const { contract } = sendouts || {};
+  const { mobile: _mobile = "", healthCard = {} } = customerId || {};
 
   return (
     <MDBCol md="4">
@@ -23,7 +29,7 @@ const Customer = ({ deal }) => {
         <MDBCardBody>
           {[
             { title: "SSX", value: ssx || "None" },
-            { title: "Category", value: "OPD" },
+            { title: "Category", value: Categories[categoryIndex]?.name },
             {
               title: "Privilege",
               value: Privileges[privilege],
@@ -31,11 +37,13 @@ const Customer = ({ deal }) => {
             { title: "Mobile", value: mobile(_mobile) },
             {
               title: "Source",
-              value: branchId?.displayname,
+              value: client?.displayname || client?.name,
             },
             {
-              title: "Contract",
-              value: Contracts[contract],
+              title: isValidation ? "HMO" : "Contract",
+              value: isValidation
+                ? HMO.getName(healthCard.name)
+                : Contracts[contract],
             },
             {
               title: "Request Services",
