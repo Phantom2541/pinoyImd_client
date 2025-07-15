@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ImageDragAndDrop from "./dragNdropimg";
+import ImageDragAndDrop from "./dragNdroping";
 import logo from "../../../assets/iMD.png"; // make sure the path is correct
 
 export default function ParentComponent() {
