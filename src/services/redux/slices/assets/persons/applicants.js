@@ -20,6 +20,8 @@ const initialState = {
 export const BROWSE = createAsyncThunk(
   `${url}`,
   ({ token, data }, thunkAPI) => {
+    console.log("data", data);
+
     try {
       return axioKit.universal(`${url}/browse`, token, data);
     } catch (error) {

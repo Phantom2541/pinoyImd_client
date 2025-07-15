@@ -15,7 +15,6 @@ import DTR from "./dtr";
 
 export default function TopNavigation({ toggle, onSideNavToggleClick }) {
   const { activePlatform, auth } = useSelector((state) => state.auth);
-  const { access, department } = activePlatform;
   const aka = auth?.alias || auth?.fullName?.fname;
 
   const navStyle = {
@@ -54,8 +53,8 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
               boxShadow: "0px 0px 0px 0px",
             }}
           >
-            {access?.length > 0
-              ? `${capitalize(department)} :)`
+            {activePlatform?.access?.length > 0
+              ? `${capitalize(activePlatform?.department)} :)`
               : `Welcome to Pinoy iMD :) `}
             {capitalize(aka)}
           </MDBBadge>
@@ -68,7 +67,7 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
             gap: "5px",
           }}
         >
-          {access?.length > 0 && <DTR />}
+          {activePlatform?.access?.length > 0 && <DTR />}
           <Branches />
           <Platforms />
           <Profile />

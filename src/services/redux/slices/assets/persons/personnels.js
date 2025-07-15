@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-
 const url = "assets/persons/personnels";
 const today = new Date();
 
@@ -325,13 +324,14 @@ export const reduxSlice = createSlice({
       state.activePage = payload;
     },
     SetMONTH: (state, { payload }) => {
-      if (payload === "next") {if (state.month === 12) {
-        state.month = 1;
-        state.year += 1;
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
       } else {
-        state.month += 1;
-      }}
-      else {
         if (state.month === 1) {
           state.month = 12;
           state.year -= 1;
@@ -340,14 +340,14 @@ export const reduxSlice = createSlice({
         }
       }
     },
-    
+
     ResetDATE: (state) => {
       state.month = today.getMonth() + 1;
       state.year = today.getFullYear();
     },
     setYear: (state, action) => {
-    state.year = Number(action.payload);
-  },
+      state.year = Number(action.payload);
+    },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
@@ -373,7 +373,7 @@ export const reduxSlice = createSlice({
         );
 
         const staff = state.collections[index];
-        var StaffAccess = [...staff.access];
+        var StaffAccess = [...staff?.access];
 
         if (deleted.length > 0) {
           deleted.forEach((element) => {

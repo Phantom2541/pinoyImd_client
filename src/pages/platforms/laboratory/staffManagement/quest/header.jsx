@@ -18,20 +18,20 @@ const Header = () => {
   // ✅ Get current month/year using Luxon
 
   // ✅ Load data on mount
-  useEffect(() => {
-    if (token && activePlatform?.branchId) {
-      dispatch(
-        BROWSE({
-          token,
-          params: {
-            branchId: activePlatform.branchId,
-            month,
-            year,
-          },
-        })
-      );
-    }
-  }, [dispatch, token, activePlatform, month, year]);
+  // useEffect(() => {
+  //   if (token && activePlatform?.branchId) {
+  //     dispatch(
+  //       BROWSE({
+  //         token,
+  //         params: {
+  //           branchId: activePlatform.branchId,
+  //           month,
+  //           year,
+  //         },
+  //       })
+  //     );
+  //   }
+  // }, [dispatch, token, activePlatform, month, year]);
 
   const handleAdd = () => {
     dispatch(SetCREATE());

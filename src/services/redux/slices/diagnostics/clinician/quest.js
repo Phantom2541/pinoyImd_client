@@ -291,6 +291,8 @@ export const {
   SetEDIT,
   SetFILTER,
   SetPAGE,
+  SetMONTH,
+  ResetDATE,
   /**
    * for pagination
    */
