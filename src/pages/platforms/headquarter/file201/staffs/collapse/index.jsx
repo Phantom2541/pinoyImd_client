@@ -166,7 +166,7 @@ export default function MenuCollapse({ staffs }) {
                     )}
                   </div>
 
-                  <div className="d-flex">
+                  <div className="d-flex align-items-center">
                     <span
                       className="rounded-circle shadow-sm mr-2"
                       style={{

@@ -159,6 +159,7 @@ export default function MenuCollapse({ staffs }) {
                           backgroundColor: "#fff",
                           borderRadius: "0.5rem",
                           padding: "1rem",
+                          display: remarks.length > 0 ? "block" : "none",
                         }}
                       >
                         <CharacterHistory remarks={remarks} />
@@ -166,7 +167,7 @@ export default function MenuCollapse({ staffs }) {
                     )}
                   </div>
 
-                  <div className="d-flex">
+                  <div className="d-flex align-items-center">
                     <span
                       className="rounded-circle shadow-sm mr-2"
                       style={{

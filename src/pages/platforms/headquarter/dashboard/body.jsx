@@ -108,6 +108,11 @@ export default function Body({ selectedBranches, fullData }) {
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 600,
+      easing: "easeOutQuart",
+    },
     plugins: {
       legend: { position: "top" },
       tooltip: {
@@ -181,7 +186,7 @@ export default function Body({ selectedBranches, fullData }) {
         </div>
 
         {/* Chart */}
-        <div style={{ width: "100%", height: "auto" }}>
+        <div style={{ width: "100%", height: "400px" }}>
           <Line data={chartData} options={chartOptions} />
         </div>
       </div>

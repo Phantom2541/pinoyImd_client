@@ -16,8 +16,27 @@ export default function CompanyCard({ company }) {
   const [visibility, setVisibility] = useState(false);
   return (
     <MDBCol md="3">
-      <MDBCard narrow style={{ marginTop: "44px" }}>
-        <MDBView waves cascade hover rounded className="custom-mdbview mx-auto">
+      <MDBCard
+        narrow
+        style={{
+          marginTop: "44px",
+          filter: `grayscale(${
+            company?.branches?.some(({ isHiring }) => isHiring) ? "0" : "100%"
+          })`,
+        }}
+      >
+        <MDBView
+          waves
+          cascade
+          hover
+          rounded
+          className="custom-mdbview mx-auto"
+          onClick={() => {
+            if (company?.branches?.some(({ isHiring }) => isHiring)) {
+              setVisibility(true);
+            }
+          }}
+        >
           <img
             src={`${ENDPOINT}/public/companies/${company?.name}/logo.png`}
             alt={company?.name}
