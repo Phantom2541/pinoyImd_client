@@ -1,8 +1,8 @@
 .hmocapture-container {
-  width: 100%;
+  width: fit-content;
   margin: auto;
   position: relative;
-  z-index: 99;
+  z-index: 5;
   background: #fff;
   text-align: center;
   overflow: hidden;
