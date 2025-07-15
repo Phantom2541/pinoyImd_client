@@ -8,7 +8,7 @@ const initialState = {
   collections: [],
   filtered: [],
   inhouse: [],
-  outsource: [],
+  cluster: {},
   _id: "default",
   activeStatus: "all",
   source: "",
@@ -87,7 +87,7 @@ export const REFORM = createAsyncThunk(
           error.response.data &&
           error.response.data.message) ||
         error.message ||
-        error.toString(); 
+        error.toString();
 
       return thunkAPI.rejectWithValue(message);
     }
@@ -161,23 +161,34 @@ export const reduxSlice = createSlice({
       const list = payload.cart?.flatMap((item) => item.packages || []);
       const _inhouse = Services.whereIn(list);
       state.inhouse = _inhouse;
-      state.outsource = [];
+      state.cluster = {};
       state.selected = payload;
       state.show = true;
     },
     SetINHOUSE: (state, { payload }) => {
-      const index = state.outsource.findIndex((item) => item.id === payload.id);
+      const { data, id } = payload;
+      const index = state.cluster[id].findIndex((item) => item.id === data.id);
       if (index > -1) {
-        state.outsource.splice(index, 1);
+        const selectedSource = state.cluster[id];
+        selectedSource.splice(index, 1);
+        if (selectedSource.length === 0) {
+          delete state.cluster[id];
+        } else {
+          state.cluster[id] = selectedSource;
+        }
       }
-      state.inhouse.push(payload);
+      state.inhouse.push(data);
     },
     SetOUTSOURCE: (state, { payload }) => {
-      const index = state.inhouse.findIndex((item) => item.id === payload.id);
+      const { data, id } = payload;
+      const index = state.inhouse.findIndex((item) => item.id === data.id);
       if (index > -1) {
         state.inhouse.splice(index, 1);
       }
-      state.outsource.push(payload);
+      if (!state.cluster[id]) {
+        state.cluster[id] = [];
+      }
+      state.cluster[id].push(data);
     },
 
     SETSOURCE: (state, { payload }) => {
@@ -230,7 +241,7 @@ export const reduxSlice = createSlice({
           cart: item?.cart?.filter(({ packages }) =>
             Services.filterByDepartment(
               packages,
-              department === "Laboratory" ? "LAB" : "RAD"
+              department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
             )
           ),
         }));

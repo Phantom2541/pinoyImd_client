@@ -19,6 +19,7 @@ const CalendarPicker = ({ month, year, moved, reset }) => {
           size="sm"
           className="p-2 m-0 z-depth-0"
           color="white"
+          style={{ borderRight: "1px solid grey" }}
         >
           TODAY
         </MDBBtn>
@@ -30,14 +31,20 @@ const CalendarPicker = ({ month, year, moved, reset }) => {
         >
           <MDBIcon icon="angle-left" style={{ fontSize: "1rem" }} />
         </MDBBtn>
-        <MDBBtn
-          color="white"
-          style={{ fontSize: "0.9rem" }}
-          className="m-0 d-flex align-items-center"
+        <span
+          style={{
+            fontSize: "0.9rem",
+            backgroundColor: "white",
+            color: "black",
+            padding: "0 20px",
+            textAlign: "center",
+            boxShadow: "inset 0 0 7px 1px rgba(0,0,0,0.2)",
+          }}
+          className="d-flex align-items-center"
         >
           {calendar.Months[month - 1]}&nbsp;
           {year}
-        </MDBBtn>
+        </span>
         <MDBBtn
           onClick={() => moved("next")}
           disabled={isActiveMonth}

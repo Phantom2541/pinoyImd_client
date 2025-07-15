@@ -76,10 +76,10 @@ const Header = () => {
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex ">
           <span className="white-text mx-3 text-nowrap mt-0">
-            Remittances :{" "}
+            Remittances :&nbsp;&nbsp;
             {coh > 0 && (
               <span
-                style={{ color: "green" }}
+                style={{ color: "white" }}
                 title="Unremitted sales (COH - FC)"
               >
                 Collections:({currency.format(coh)})

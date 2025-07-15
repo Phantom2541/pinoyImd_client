@@ -52,7 +52,7 @@ export default function Remmitances() {
   }, [month, year, token, activePlatform?.branchId, auth._id, dispatch]);
 
   return (
-    <MDBContainer className="d-grid" fluid>
+    <MDBContainer className="pt-2" fluid>
       <MDBCard className="pb-3" narrow>
         <Header />
         <Calendar />

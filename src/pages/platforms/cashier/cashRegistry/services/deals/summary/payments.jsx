@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapseHeader, MDBCollapse } from "mdbreact";
 import { currency } from "../../../../../../../services/utilities";
 import { Statements } from "../../../../../../../services/fakeDb";
 import SummaryLoading from "./loading";
+const voucherSummary = {
+  wls: 0,
+  mbs: 0,
+  ctr: 0,
+};
 
 export default function Vouchers() {
   const { filtered = [], isLoading } = useSelector(({ payments }) => payments),
@@ -12,6 +17,9 @@ export default function Vouchers() {
 
   useEffect(() => {
     if (filtered.length > 0) {
+      filtered.forEach((element) => {
+        voucherSummary[element.category] += element.amount;
+      });
       const amount =
         filtered?.reduce((sum, voucher) => sum + voucher.amount, 0) || 0;
       setTotal(amount);
