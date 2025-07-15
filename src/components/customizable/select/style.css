@@ -21,14 +21,18 @@ select.custom-select-disabled {
   color: black !important;
 } */
 
+/* .customizable-select-design {
+  background-color: white !important;
+} */
+
 .customizable-select-design .caret {
   color: white !important;
 }
 
 .customizable-select-design label {
-  color: white !important;
   text-align: left;
   transform: translateY(10%);
+  color: white !important;
 }
 
 .customizable-selectSearch-design label {

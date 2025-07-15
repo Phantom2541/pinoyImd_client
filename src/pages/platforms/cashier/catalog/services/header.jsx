@@ -42,7 +42,7 @@ const Header = () => {
           <Select
             // CSS
             className="m-0 p-0 ml-4 text-white w-100 mdb-custom-select"
-            inputClassName="text-white m-0 p-0"
+            inputClassName="text-white m-0"
             // Data
             collections={cluster}
             keys="id"
