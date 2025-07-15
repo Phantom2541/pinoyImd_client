@@ -5,7 +5,7 @@ import Header from "./header";
 import Body from "./body";
 import TableLoading from "../../../../components/tableLoading";
 
-const Index = () => {
+const Temperatures = () => {
   const { isLoading } = useSelector(({ temperatures }) => temperatures);
 
   return (
@@ -18,4 +18,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Temperatures;

@@ -6,6 +6,8 @@ import {
   MDBIcon,
   MDBInput,
   MDBView,
+  MDBRow,
+  MDBCol,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import { ENDPOINT } from "../../../../../services/utilities";
@@ -25,6 +27,8 @@ export default function Description() {
       ({ auth }) => auth
     ),
     [description, setDescription] = useState(""),
+    [mission, setMission] = useState(""),
+    [vision, setVision] = useState(""),
     [contacts, setContacts] = useState(
       company?.contacts || { email: "", mobile: "" }
     ),
@@ -79,12 +83,28 @@ export default function Description() {
     setIsLoading(true);
     dispatch(
       UPDATE({
-        data: { _id: company?._id, description, contacts, address },
+        data: {
+          _id: company?._id,
+          description,
+          mission,
+          vision,
+          contacts,
+          address,
+        },
         token,
       })
     ).then(() => {
       setIsLoading(false);
-      dispatch(SetCOMPANY({ ...company, description, contacts, address }));
+      dispatch(
+        SetCOMPANY({
+          ...company,
+          description,
+          mission,
+          vision,
+          contacts,
+          address,
+        })
+      );
       Swal.fire({
         title: "Success!",
         text: "Description Successfully Updated.",
@@ -97,7 +117,7 @@ export default function Description() {
 
   return (
     <>
-      <div style={{ width: "400px" }} className="mx-auto">
+      <div style={{ width: "900px" }} className="mx-auto">
         <MDBCard>
           <MDBCardBody>
             <MDBView>
@@ -120,23 +140,45 @@ export default function Description() {
                 required
               />
               <MDBInput
-                type="text"
-                label="email"
-                value={contacts.email}
-                onChange={({ target }) =>
-                  setContacts({ ...contacts, email: target.value })
-                }
+                type="textarea"
+                label="Enter mission here...."
+                value={description || company?.ms}
+                onChange={({ target }) => setMission(target.value)}
+                style={{ minHeight: "100px" }}
                 required
               />
               <MDBInput
-                type="text"
-                label="Phone Number"
-                value={contacts.mobile}
-                onChange={({ target }) =>
-                  setContacts({ ...contacts, mobile: target.value })
-                }
+                type="textarea"
+                label="Enter vision here...."
+                value={description || company?.vs}
+                onChange={({ target }) => setVision(target.value)}
+                style={{ minHeight: "100px" }}
                 required
               />
+              <MDBRow>
+                <MDBCol md="6">
+                  <MDBInput
+                    type="text"
+                    label="Email"
+                    value={contacts.email}
+                    onChange={({ target }) =>
+                      setContacts({ ...contacts, email: target.value })
+                    }
+                    required
+                  />
+                </MDBCol>
+                <MDBCol md="6">
+                  <MDBInput
+                    type="text"
+                    label="Phone Number"
+                    value={contacts.mobile}
+                    onChange={({ target }) =>
+                      setContacts({ ...contacts, mobile: target.value })
+                    }
+                    required
+                  />
+                </MDBCol>
+              </MDBRow>
 
               <div
                 className="patient-personal-info address-grid mt-4"

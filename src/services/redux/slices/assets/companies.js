@@ -210,6 +210,8 @@ export const reduxSlice = createSlice({
         agent: "",
         email: "",
         phone: "",
+        ms: "",
+        vs: "",
       };
       state.willCreate = true;
       state.showModal = true;

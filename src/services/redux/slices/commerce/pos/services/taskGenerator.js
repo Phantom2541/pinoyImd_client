@@ -241,7 +241,7 @@ export const reduxSlice = createSlice({
           cart: item?.cart?.filter(({ packages }) =>
             Services.filterByDepartment(
               packages,
-              department === "Laboratory" ? "LAB" : "RAD"
+              department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
             )
           ),
         }));
