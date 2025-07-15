@@ -114,12 +114,12 @@ export default function ApplicationModal({
       (branch) => branch._id === application?.branchId
     );
     const id = `${_company?.displayname
-      .split(" ")
-      .map((word) => word[0])
-      .join("")}-${_company?.name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")}-${Math.floor(Math.random() * 100)}`;
+      ?.split(" ")
+      ?.map((word) => word[0])
+      ?.join("")}-${_company?.name
+      ?.split(" ")
+      ?.map((word) => word[0])
+      ?.join("")}-${Math.floor(Math.random() * 100)}`;
 
     const { file201 = {} } = application;
     const { DataSheet = "", Resume = "", AppLetter = "" } = file201;

@@ -20,10 +20,11 @@ const Applicants = () => {
     [baseApplicants, setBaseApplicants] = useState([]),
     [applicants, setApplicants] = useState([]),
     dispatch = useDispatch();
+  console.log("activePlatform", activePlatform);
 
   useEffect(() => {
-    if (activePlatform.branchId) {
-      dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
+    if (activePlatform) {
+      dispatch(BROWSE({ token, data: { branchId: activePlatform.branchId } }));
     }
   }, [token, dispatch, activePlatform]);
 
@@ -108,7 +109,7 @@ const Applicants = () => {
     <>
       <MDBCard narrow>
         <TopHeader
-          title="Applicant List"
+          title="Applicant Lists"
           handleSearch={handleSearch}
           categories={["Petition", "Denied"]}
           setCategory={setCategory}

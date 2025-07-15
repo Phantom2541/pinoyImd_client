@@ -3,14 +3,15 @@ import { Categories } from "../../../../../../services/fakeDb";
 
 export default function SRP({ handleChange, handleValue }) {
   const fakeDB = localStorage.getItem("activePlatform");
-  var categories = [];
+
+  let categories = [];
   if (fakeDB) {
-    categories = JSON.parse(fakeDB)?.branch?.companyId?.pc;
+    categories = JSON.parse(fakeDB)?.branch?.companyId?.pc || [];
   }
-  const srpIndexs = [2, 3, 4, 5]; //Emergency Room,Charity Ward,Private Ward,Suite Room
-  const foundIndexs = [...categories]
-    .filter((pk) => srpIndexs.includes(pk))
-    .sort((a, b) => a - b);
+
+  const srpIndexs = [2, 3, 4, 5]; // Emergency Room, Charity Ward, Private Ward, Suite Room
+  const foundIndexs = categories.filter((pk) => srpIndexs.includes(pk));
+
   return (
     <>
       <MDBRow>
@@ -22,28 +23,24 @@ export default function SRP({ handleChange, handleValue }) {
             onChange={(e) => handleChange("opd", e.target.value)}
           />
         </MDBCol>
-        {foundIndexs.map((pk) => {
-          const { name, abbr } = Categories[pk];
+
+        {categories.map((pk) => {
+          const category = Categories[pk];
+          if (!category) return null;
+
+          const { name, abbr } = category;
+
           return (
             <MDBCol md="4" key={pk}>
               <MDBInput
                 type="number"
-                label={name}
+                label={`${name}${foundIndexs.includes(pk) ? " (SRP)" : ""}`}
                 value={handleValue(abbr)}
                 onChange={(e) => handleChange(abbr, e.target.value)}
               />
             </MDBCol>
           );
         })}
-
-        {/* <MDBCol md="6">
-          <MDBInput
-            type="number"
-            label="Promo"
-            value={handleValue("promo")}
-            onChange={(e) => handleChange("promo", e.target.value)}
-          />
-        </MDBCol> */}
       </MDBRow>
     </>
   );
