@@ -48,7 +48,7 @@ const Headers = ({ searchKey }) => {
           {searchKey ? `Matches with ${searchKey}` : "Onboarding Tasks"}
         </span>
 
-        <div className="d-flex align-items-end gap-3">
+        <div className="d-flex align-items-center" style={{ gap: 10 }}>
           <div>
             <select
               className="form-control"

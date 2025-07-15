@@ -66,7 +66,6 @@ export default function Search({
             marginRight: "-5px",
           }}
           // color="white"
-          // rounded
           className="search-add-btn ml-2"
         >
           <MDBIcon icon="plus" />
