@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable, MDBIcon, MDBBadge, MDBBtnGroup, MDBBtn } from "mdbreact";
 import {
+  capitalize,
   currency,
   Deals,
   fullName,
@@ -17,6 +18,7 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 import { Input, Select } from "../../../../../../../components/customizable";
+import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
 const Tables = () => {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
@@ -121,6 +123,20 @@ const Tables = () => {
     });
   };
 
+  const showingPhysician = (deal) => {
+    const { physicianId = "" } = deal;
+    const physician = () => {
+      if (typeof physicianId === "string") return capitalize(physicianId);
+      return physicianId?.fullName?.lname;
+    };
+
+    return physicianId ? (
+      <h6>Dr. {physician()}</h6>
+    ) : (
+      <h6 className="cursor-pointer">N/A</h6>
+    );
+  };
+
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -144,7 +160,7 @@ const Tables = () => {
           @ {collections.length} Patient/s
         </p>
       </div>
-      <MDBTable hover>
+      <MDBTable small>
         <thead>
           <tr>
             <th>Patient Name</th>
@@ -305,9 +321,25 @@ const Tables = () => {
                     selected.updatedKey === "physician" ? (
                       <div
                         className="d-flex align-items-center"
-                        style={{ marginBottom: "-0.5rem", width: "19rem" }}
+                        style={{ width: "19rem" }}
                       >
-                        <Select
+                        <PickPhysician
+                          defaultValue={
+                            typeof deal?.physicianId === "string"
+                              ? deal?.physicianId
+                              : fullName(deal.physicianId?.fullName)
+                          }
+                          className="form-control form-control-sm w-75 mb-2"
+                          isEditable
+                          onChange={(value) =>
+                            setSelected({ ...selected, newPhysician: value })
+                          }
+                          handleCheck={() =>
+                            handleUpdate("physicianId._id", "newPhysician")
+                          }
+                          handleClose={() => setSelected({})}
+                        />
+                        {/* <Select
                           label={"Physician"}
                           allowObjectValue
                           onChange={(value) =>
@@ -329,7 +361,7 @@ const Tables = () => {
                           formSubmitted={formSubmitted}
                           keys={"value"}
                           values={"text"}
-                        />
+                        /> */}
                       </div>
                     ) : (
                       <div
@@ -346,11 +378,7 @@ const Tables = () => {
                         }}
                       >
                         <small className="mr-1 grey-text">Physician:</small>
-                        {deal?.physicianId?.fullName?.lname ? (
-                          <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
-                        ) : (
-                          <h6 className="cursor-pointer">N/A</h6>
-                        )}
+                        {showingPhysician(deal)}
                       </div>
                     )}
                   </td>
@@ -369,27 +397,57 @@ const Tables = () => {
                   <td>
                     <>
                       {didHoverID === index && (
-                        <div className="d-flex justify-content-center">
-                          <MDBBtnGroup>
-                            <MDBBtn
-                              size="sm"
-                              color="success"
-                              title="Add new service"
-                              rounded
-                              onClick={() => handleCashRegister(deal)}
-                            >
-                              <MDBIcon icon="plus" />
-                            </MDBBtn>
-                            <MDBBtn
-                              size="sm"
-                              color="info"
-                              rounded
-                              title="Print receipt."
-                              onClick={() => handlePrintout(deal)}
-                            >
-                              <MDBIcon icon="print" />
-                            </MDBBtn>
-                          </MDBBtnGroup>
+                        <div className="d-flex align-items-center justify-content-center mb-n2">
+                          <button
+                            onClick={() => handleCashRegister(deal)}
+                            title="Add new service"
+                            className="mr-1"
+                            style={{
+                              background: "none",
+                              border: "1px solid #28a745",
+                              color: "#28a745",
+                              borderRadius: "4px",
+                              padding: "5px 8px",
+                              cursor: "pointer",
+                              transition: "all 0.2s",
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = "#28a745";
+                              e.currentTarget.style.color = "white";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor =
+                                "transparent";
+                              e.currentTarget.style.color = "#28a745";
+                            }}
+                          >
+                            <MDBIcon icon="plus" />
+                          </button>
+
+                          <button
+                            onClick={() => handlePrintout(deal)}
+                            title="Print receipt."
+                            style={{
+                              background: "none",
+                              border: "1px solid #007bff",
+                              color: "#007bff",
+                              borderRadius: "4px",
+                              padding: "5px 8px",
+                              cursor: "pointer",
+                              transition: "all 0.2s",
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = "#007bff";
+                              e.currentTarget.style.color = "white";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor =
+                                "transparent";
+                              e.currentTarget.style.color = "#007bff";
+                            }}
+                          >
+                            <MDBIcon icon="print" />
+                          </button>
                         </div>
                       )}
 

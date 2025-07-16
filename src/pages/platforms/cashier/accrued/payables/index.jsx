@@ -36,7 +36,7 @@ export default function Payables() {
 
   return (
     <>
-      <MDBAnimation className="pt-2" type="bounceInDown">
+      <MDBAnimation type="bounceInDown">
         <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
           <Header />
           <MDBCardBody>

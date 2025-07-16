@@ -19,6 +19,7 @@ import { findIndex, isEmpty } from "lodash";
 import {
   PROCESS_ONBOARDING,
   TOGGLE,
+  RESET,
 } from "../../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import Swal from "sweetalert2";
 import Customer from "./customer";
@@ -58,6 +59,7 @@ export default function Modal() {
   useEffect(() => {
     if (show && !formSubmitted && isSuccess) {
       toggle();
+      dispatch(RESET());
     }
   }, [formSubmitted, isSuccess, show, toggle, dispatch]);
 

@@ -11,12 +11,6 @@
   outline: none;
   transition: 0.3s;
 }
-.inputSelect-search-input:disabled {
-  background-color: transparent !important; /* o white kung gusto mo */
-  color: #000; /* optional: kung gusto mong i-control din yung text color */
-  opacity: 1; /* optional: para hindi faded */
-  cursor: not-allowed; /* optional: para makitang disabled pa rin */
-}
 
 .inputSelect-search-input:focus {
   border-color: #007bff;
@@ -25,7 +19,6 @@
 .inputSelect-results-list {
   position: absolute;
   z-index: 9999;
-  bottom: 0;
   width: 100%;
   list-style: none;
   padding: 0;
