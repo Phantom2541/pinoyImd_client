@@ -1,5 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import { fullName, formatNameToObj } from "../../../services/utilities";
+import {
+  fullName,
+  formatNameToObj,
+  getGenderIcon,
+} from "../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import { SEARCH } from "../../../services/redux/slices/assets/persons/physicians";
 import { debounce } from "lodash";
@@ -8,7 +12,8 @@ import "./style.css";
 
 const PickPhysician = ({
   defaultValue = "",
-  className = "form-control form-control-sm",
+  classNameInput = "form-control form-control-sm",
+  classNameContainer = "",
   disabled,
   formSubmitted,
   isSuccess,
@@ -28,7 +33,7 @@ const PickPhysician = ({
   useEffect(() => {
     if (isSuccess && !formSubmitted) {
       setQuery("");
-      setDidSearch(false);
+      setDidSearch(true);
     }
   }, [formSubmitted, isSuccess]);
 
@@ -57,20 +62,16 @@ const PickPhysician = ({
     if (isEditable) {
       setQuery(defaultValue);
     }
-  }, [isEditable]);
+  }, [isEditable, defaultValue]);
   const handleInputChange = (e) => {
     const value = e.target.value;
+
     setQuery(value);
-
-    const searchKey = value.split(",");
     const sanitizedValue = value.trim();
-    const isTypingNew =
-      sanitizedValue.length > 0 &&
-      sanitizedValue !== query.trim() &&
-      searchKey.length > 1 &&
-      searchKey[1].trim();
+    // const isTypingNew =
+    //   sanitizedValue.length > 0 && sanitizedValue !== query.trim();
 
-    if (isTypingNew) {
+    if (sanitizedValue) {
       setIsSearching(true);
       debouncedSearch(value);
       setDidSearch(true);
@@ -90,54 +91,57 @@ const PickPhysician = ({
   };
 
   return (
-    <div className="inputSelect-search-container d-flex align-items-center">
-      <input
-        type="text"
-        disabled={disabled}
-        placeholder="Search physician (Last name, First name)"
-        className={`inputSelect-search-input ${className}`}
-        value={query}
-        onChange={handleInputChange}
-      />
+    <div className={`d-flex align-items-center ${classNameContainer} `}>
+      <div className="physicians-search-container">
+        <input
+          type="text"
+          disabled={disabled}
+          placeholder="Search physician (Last name, First name)"
+          className={`physicians-search-input ${classNameInput}`}
+          value={query}
+          onChange={handleInputChange}
+        />
 
-      {!isSearching ? (
-        <>
-          {query && results.length > 0 && (
-            <ul className="inputSelect-results-list">
-              {results.map((item, index) => (
-                <li
-                  key={index}
-                  className="inputSelect-result-item"
-                  onClick={() => handlePick(item)}
-                >
-                  <div className="inputSelect-result-content">
-                    {fullName(item.user.fullName)}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
-      ) : (
-        <div className="inputSelect-results-list">
-          {new Array(5).fill("").map((_, index) => (
-            <MDBAnimation
-              key={index}
-              className="p-1 ml-2 mr-2 mt-1"
-              type="flash"
-              infinite
-              delay={`${index + 1}00ms`}
-              duration="3000ms"
-            >
-              <MDBProgress
-                color="light"
-                value={3000}
-                id="progress-table"
-              ></MDBProgress>
-            </MDBAnimation>
-          ))}
-        </div>
-      )}
+        {!isSearching ? (
+          <>
+            {query && results.length > 0 && (
+              <ul className="physicians-results-list">
+                {results.map((item, index) => (
+                  <li
+                    key={index}
+                    className="physicians-result-item"
+                    onClick={() => handlePick(item)}
+                  >
+                    <div className="physicians-result-content">
+                      {getGenderIcon(item.user.isMale)}
+                      {fullName(item.user.fullName)}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        ) : (
+          <div className="physicians-results-list">
+            {new Array(5).fill("").map((_, index) => (
+              <MDBAnimation
+                key={index}
+                className="p-1 ml-2 mr-2 mt-1"
+                type="flash"
+                infinite
+                delay={`${index + 1}00ms`}
+                duration="3000ms"
+              >
+                <MDBProgress
+                  color="light"
+                  value={3000}
+                  id="progress-table"
+                ></MDBProgress>
+              </MDBAnimation>
+            ))}
+          </div>
+        )}
+      </div>
       {isEditable && (
         <div className="d-flex align-items-center ml-2">
           {!formSubmitted ? (

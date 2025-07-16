@@ -1,0 +1,46 @@
+@keyframes zoomIn {
+  0% {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.deals-zoom-in {
+  position: absolute;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  padding: 0 10px;
+  background: white;
+  border-radius: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: zoomIn 0.3s ease-out;
+  display: inline-block;
+  transform-origin: left;
+}
+
+.deals-zoom-in-input-physician {
+  border: none !important;
+  border-bottom: 1px solid black !important;
+  outline: none !important;
+}
+.deals-zoom-in-input-physician:focus {
+  border: none !important;
+}
+
+.deals-zoom-in-input-ssx {
+  border: none;
+  border-bottom: 1px solid black !important;
+  border-image: linear-gradient(to right, black 78%, white 22%);
+  border-image-slice: 1;
+  outline: none;
+}
+.deals-zoom-in-input-ssx:focus {
+  border-bottom: 1px solid blue !important;
+  /* border-image: linear-gradient(to right, transparent 78%, transparent 22%); */
+  outline: none !important;
+  box-shadow: none !important;
+}

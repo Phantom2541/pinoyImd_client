@@ -75,7 +75,7 @@ export default function Deals() {
   }, [token, dispatch, activePlatform.branchId, auth._id]);
 
   return (
-    <MDBContainer className="d-flex" fluid>
+    <div className="d-flex" fluid>
       <div className="rounded flex-1 ml-2 px-2">
         <MDBCard narrow>
           <Header />
@@ -90,6 +90,6 @@ export default function Deals() {
         <Closing />
       </div>
       <Denomination />
-    </MDBContainer>
+    </div>
   );
 }
