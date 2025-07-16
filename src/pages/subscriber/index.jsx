@@ -17,6 +17,7 @@ import Employees from "./employee";
 import Partners from "./partners";
 import Philhealth from "./philhealth";
 import ECGWave from "./cardioGraph";
+import MissionVision from "./missionVision";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
@@ -251,7 +252,11 @@ const Subscriber = ({ match }) => {
             <div id="doctors">
               <Doctors />
             </div>
-            <ECGWave color="#1266f1" waves={16} className="my-4" />
+
+            <div id="doctors" className="my-5">
+              <MissionVision />
+            </div>
+
             {hmo?.length > 0 && (
               <div id="partners">
                 <Partners />
