@@ -25,6 +25,7 @@
 .inputSelect-results-list {
   position: absolute;
   z-index: 9999;
+  bottom: 0;
   width: 100%;
   list-style: none;
   padding: 0;

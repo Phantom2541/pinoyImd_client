@@ -10,6 +10,7 @@ export default function DealCollapse() {
     { filteredStatus, activePage, activeCOLAPSE } = useSelector(
       ({ validator }) => validator
     );
+
   return (
     <MDBCardBody className="pb-0">
       <MDBContainer

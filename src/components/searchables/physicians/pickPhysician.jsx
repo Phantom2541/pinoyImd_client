@@ -3,14 +3,19 @@ import { fullName, formatNameToObj } from "../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import { SEARCH } from "../../../services/redux/slices/assets/persons/physicians";
 import { debounce } from "lodash";
-import { MDBAnimation, MDBProgress } from "mdbreact";
+import { MDBAnimation, MDBProgress, MDBIcon } from "mdbreact";
 import "./style.css";
 
 const PickPhysician = ({
+  defaultValue = "",
+  className = "form-control form-control-sm",
   disabled,
   formSubmitted,
   isSuccess,
+  isEditable = false,
   onChange = () => {},
+  handleCheck = () => {},
+  handleClose = () => {},
 }) => {
   const dispatch = useDispatch();
   const { token } = useSelector(({ auth }) => auth);
@@ -47,6 +52,12 @@ const PickPhysician = ({
       onChange(selectedId);
     }
   }, [didSearch, query, selectedId]);
+
+  useEffect(() => {
+    if (isEditable) {
+      setQuery(defaultValue);
+    }
+  }, [isEditable]);
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
@@ -79,12 +90,12 @@ const PickPhysician = ({
   };
 
   return (
-    <div className="inputSelect-search-container">
+    <div className="inputSelect-search-container d-flex align-items-center">
       <input
         type="text"
         disabled={disabled}
         placeholder="Search physician (Last name, First name)"
-        className="inputSelect-search-input form-control form-control-sm"
+        className={`inputSelect-search-input ${className}`}
         value={query}
         onChange={handleInputChange}
       />
@@ -125,6 +136,40 @@ const PickPhysician = ({
               ></MDBProgress>
             </MDBAnimation>
           ))}
+        </div>
+      )}
+      {isEditable && (
+        <div className="d-flex align-items-center ml-2">
+          {!formSubmitted ? (
+            <MDBIcon
+              icon="check"
+              onClick={() => handleCheck()}
+              style={{
+                color: "blue",
+                fontSize: "1rem",
+                marginRight: "10px",
+                marginLeft: "7px",
+              }}
+              className="cursor-pointer"
+            />
+          ) : (
+            <MDBIcon
+              icon="spinner"
+              pulse
+              style={{
+                color: "black",
+                fontSize: "1rem",
+                marginRight: "10px",
+                marginLeft: "10px",
+              }}
+            />
+          )}
+          <MDBIcon
+            icon="times"
+            onClick={() => handleClose()}
+            className="cursor-pointer"
+            style={{ color: "red", fontSize: "1rem" }}
+          />
         </div>
       )}
     </div>
