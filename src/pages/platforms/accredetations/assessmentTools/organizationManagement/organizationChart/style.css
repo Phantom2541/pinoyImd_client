@@ -189,3 +189,20 @@
   overflow: hidden;
   transition: all 0.3s ease;
 }
+
+.drop-zone.left,
+.drop-zone.right {
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  z-index: 10;
+}
+
+.drop-zone.left {
+  left: -10px;
+}
+
+.drop-zone.right {
+  right: -10px;
+}

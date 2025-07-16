@@ -1,21 +1,24 @@
 const sampleOrgData = {
   title: "Superadmin",
   name: "jhon carl Kevin Magtalas",
+  id: "01",
   children: [
     {
       title: "Manager",
       name: "Jason Reyes",
+      id: "02-01",
       children: [
         {
           title: "Laboratory",
           name: "Alyssa Cruz",
+          id: "02-01-01",
           children: [
-            { title: "Laboratory", name: "Karl Santos" },
-            { title: "Laboratory", name: "Mia Villanueva" },
+            { title: "Laboratory", name: "Karl Santos", id: "02-01-01-01" },
+            { title: "Laboratory", name: "Mia Villanueva", id: "02-01-01-02" },
           ],
         },
-        { title: "Clinical", name: "Jared Lim" },
-        { title: "Clinical", name: "Nica Dominguez" },
+        { title: "Clinical", name: "Jared Lim", id: "02-01-02" },
+        { title: "Clinical", name: "Nica Dominguez", id: "02-01-03" },
       ],
     },
     {
@@ -30,13 +33,23 @@ const sampleOrgData = {
             { title: "Accreditation", name: "Dino Evangelista" },
           ],
         },
-        { title: "Cashier", name: "Ricky Tolentino" },
-        { title: "Cashier", name: "Grace Bautista" },
+        { title: "Clinical", name: "Nica Dominguez" },
+        {
+          title: "Cashier",
+          name: "Ricky Tolentino",
+          children: [{ title: "Clinical", name: "Nica Dominguez" }],
+        },
+        {
+          title: "Cashier",
+          name: "Grace Bautista",
+          children: [{ title: "Accreditation", name: "Dino Evangelista" }],
+        },
       ],
     },
     {
       title: "Frontdesk",
       name: "Nerissa Tan",
+      id: "02-02",
       children: [
         {
           title: "Frontdesk",
@@ -57,25 +70,6 @@ const sampleOrgData = {
             { title: "patron", name: "carl magtalas" },
           ],
         },
-      ],
-    },
-    {
-      title: "Physician",
-      name: "Miguel Soriano",
-      children: [
-        {
-          title: "Physician",
-          name: "Ella Fernandez",
-          children: [
-            {
-              title: "Physician",
-              name: "Benjie Ramos",
-              children: [{ title: "Frontdesk", name: "Pauline Ortega" }],
-            },
-            { title: "Physician", name: "Trina Sevilla" },
-          ],
-        },
-        { title: "Patron", name: "Carmela Mendoza" },
       ],
     },
   ],
