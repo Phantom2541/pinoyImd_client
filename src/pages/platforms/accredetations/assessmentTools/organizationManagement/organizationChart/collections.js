@@ -1,6 +1,6 @@
 const sampleOrgData = {
   title: "Superadmin",
-  name: "Kevin Magtalas",
+  name: "jhon carl Kevin Magtalas",
   children: [
     {
       title: "Manager",

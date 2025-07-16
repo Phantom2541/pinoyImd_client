@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { MDBIcon } from "mdbreact";
+import React, { useRef, useState } from "react";
 import sampleOrgData from "./collections";
+import { MDBIcon } from "mdbreact";
 import "./style.css";
 import PROFILE from "./../../../../../../assets/female.jpg";
 
@@ -63,8 +63,43 @@ const OrgNode = ({ node }) => {
 };
 
 export default function OrganizationChart() {
+  const containerRef = useRef(null);
+  const [dragging, setDragging] = useState(false);
+  const [start, setStart] = useState({ x: 0, y: 0 });
+  const [scroll, setScroll] = useState({ left: 0, top: 0 });
+
+  const handleMouseDown = (e) => {
+    const target = e.target;
+    // Prevent dragging if click is inside a node box
+    if (target.closest(".orgChart-box")) return;
+
+    const container = containerRef.current;
+    setDragging(true);
+    setStart({ x: e.clientX, y: e.clientY });
+    setScroll({ left: container.scrollLeft, top: container.scrollTop });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+    const container = containerRef.current;
+    container.scrollLeft = scroll.left - dx;
+    container.scrollTop = scroll.top - dy;
+  };
+
+  const handleMouseUp = () => setDragging(false);
+
   return (
-    <div className="orgChart-container">
+    <div
+      ref={containerRef}
+      className="orgChart-container"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+      style={{ cursor: dragging ? "grabbing" : "grab" }}
+    >
       <div className="orgChart-chart">
         <OrgNode node={sampleOrgData} />
       </div>
