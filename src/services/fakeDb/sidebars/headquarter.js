@@ -27,6 +27,7 @@ import { Branches } from "../../../pages/platforms/headquarter/humanResources";
 import Applicants from "../../../pages/platforms/headquarter/settings/personnels/applicants";
 import PatientCategories from "../../../pages/platforms/headquarter/patientCategories";
 import Dashboard from "../../../pages/platforms/headquarter/dashboard";
+import hpWalkthrough from "../../../pages/platforms/headquarter/hpWalkthrough";
 
 const headquarter = [
   {
@@ -347,6 +348,13 @@ const headquarter = [
     path: "/finance",
     icon: "credit-card",
     title: "Financial monitoring and transactions (view only)",
+  },
+  {
+    name: "Walkthrough",
+    path: "/hpWalkthrough",
+    icon: "credit-card",
+    title: "Homepage walkthroughs(view only)",
+    component: hpWalkthrough,
   },
 ];
 

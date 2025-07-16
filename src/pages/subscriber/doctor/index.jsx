@@ -81,7 +81,7 @@ export default function Doctors() {
                   <div className="subscriber-doctors-homeimageContainerStyle">
                     <img
                       src={`${ENDPOINT}/public/companies/${details?.name}/physicians/${user?.email}/corporate.png`}
-                      alt={physician.name}
+                      alt={physician?.name}
                       className="subscriber-doctors-homeimageStyle"
                       onError={(e) => {
                         e.target.src = DEFAULT;
