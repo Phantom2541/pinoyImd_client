@@ -1,17 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
-import { fullName, formatNameToObj } from "../../../services/utilities";
+import "./style.css";
+import { fullName, formatNameToObj } from "../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
-import { SEARCH } from "../../../services/redux/slices/assets/persons/physicians";
+import { SEARCH } from "../../services/redux/slices/assets/persons/physicians";
 import { debounce } from "lodash";
 import { MDBAnimation, MDBProgress } from "mdbreact";
-import "./style.css";
 
-const PickPhysician = ({
-  disabled,
-  formSubmitted,
-  isSuccess,
-  onChange = () => {},
-}) => {
+const InputSelect = ({ onChange = () => {}, formSubmitted, isSuccess }) => {
   const dispatch = useDispatch();
   const { token } = useSelector(({ auth }) => auth);
   const [query, setQuery] = useState("");
@@ -82,7 +77,6 @@ const PickPhysician = ({
     <div className="inputSelect-search-container">
       <input
         type="text"
-        disabled={disabled}
         placeholder="Search physician (Last name, First name)"
         className="inputSelect-search-input form-control form-control-sm"
         value={query}
@@ -131,4 +125,4 @@ const PickPhysician = ({
   );
 };
 
-export default PickPhysician;
+export default InputSelect;
