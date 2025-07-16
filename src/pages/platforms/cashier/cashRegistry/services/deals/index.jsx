@@ -76,7 +76,7 @@ export default function Deals() {
 
   return (
     <MDBContainer className="d-flex" fluid>
-      <div className="  rounded flex-1 ml-2 px-2">
+      <div className="rounded flex-1 ml-2 px-2">
         <MDBCard narrow>
           <Header />
           <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
