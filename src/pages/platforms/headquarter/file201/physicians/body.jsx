@@ -79,8 +79,6 @@ export default function Body() {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = tieups.slice(startIndex, endIndex);
-  console.log("pagtieups", tieups);
-  console.log("paginatedData", paginatedData);
 
   return (
     <MDBTable responsive hover>
