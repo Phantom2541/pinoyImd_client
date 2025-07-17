@@ -13,6 +13,7 @@ import {
   UPDATE,
   TOGGLE,
   SETPHYSICIAN,
+  TIEUPS,
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
@@ -26,7 +27,6 @@ export default function Modal() {
     [showInputFields, setShowInputFields] = useState(false),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-  console.log("displayName", displayName);
 
   useEffect(() => {
     if (selected && Object.keys(selected).length > 0) {
@@ -44,7 +44,6 @@ export default function Modal() {
       setShowInputFields(false);
     }
   }, [selected]);
-  console.log("form", form);
 
   const splitFullName = (fullName) => {
     if (!fullName.includes(",")) {
@@ -162,6 +161,7 @@ export default function Modal() {
 
     // Update existing record
     handleUpdate();
+    handleCreate();
   };
 
   const handleChange = (key, value) => {

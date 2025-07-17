@@ -7,6 +7,7 @@ const initialState = {
   collections: [],
   filtered: [],
   isSuccess: false,
+  isLoading: false,
   formSubmitted: false,
   message: "",
   showModal: false,
@@ -14,6 +15,11 @@ const initialState = {
   details: {}, //this is for subscriber home page
   selected: {},
   displayName: "",
+  paginated: [],
+  page: 0,
+  maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -149,6 +155,15 @@ export const reduxSlice = createSlice({
       console.log("physician", state.displayName);
     },
     SetFILTERED: (state, { payload }) => {
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (page > totalPAges) {
+          state.page = totalPAges;
+        }
+      }
       state.filtered = payload;
     },
     TOGGLE: (state) => {
@@ -164,6 +179,15 @@ export const reduxSlice = createSlice({
       state.willCreate = true;
 
       state.showModal = true;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+      console.log("maxPage", state.maxPage);
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+      console.log("activePage", state.activePage);
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -227,6 +251,9 @@ export const reduxSlice = createSlice({
       .addCase(TIEUPS.fulfilled, (state, action) => {
         const { payload } = action;
         state.collections = payload;
+        state.filtered = payload;
+        console.log("payload", payload);
+
         state.isLoading = false;
       })
       .addCase(TIEUPS.rejected, (state, action) => {
@@ -316,6 +343,8 @@ export const {
   RESET,
   SetFILTERED,
   SetCREATE,
+  SetActivePAGE,
+  SetMaxPage,
   TOGGLE,
 } = reduxSlice.actions;
 
