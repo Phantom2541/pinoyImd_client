@@ -89,17 +89,20 @@ export default function OrganizationChart() {
     if (!dragHid) {
       const fromStorage = d.find((i) => !i.hId && i.name === name);
       if (!fromStorage) return;
+
       const sibs = d.filter(
         (i) =>
           i.hId?.startsWith(tgtHid + "-") &&
           i.hId.split("-").length === tgtHid.split("-").length + 1
       );
+
+      const prefix = tgtHid ? tgtHid : "";
+      const newHid = prefix
+        ? `${prefix}-${getNextSuffix(sibs)}`
+        : getNextSuffix(sibs);
+
       return setData(
-        d.map((i) =>
-          i === fromStorage
-            ? { ...i, hId: `${tgtHid}-${getNextSuffix(sibs)}` }
-            : i
-        )
+        d.map((i) => (i === fromStorage ? { ...i, hId: newHid } : i))
       );
     }
 

@@ -31,6 +31,7 @@ const OrgNode = ({ node, onDrop, onDragStart }) => {
         </div>
         <div className="orgChart-details">
           <div className="orgChart-name">{node.name}</div>
+          <div className="orgChart-name">{node.hId}</div>
           {hasChildren && (
             <div className="orgChart-toggle">
               <MDBIcon fas icon={collapsed ? "chevron-down" : "chevron-up"} />
