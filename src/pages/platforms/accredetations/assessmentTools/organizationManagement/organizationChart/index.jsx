@@ -149,11 +149,15 @@ export default function OrganizationChart() {
       <OrgStorage
         storageItems={storageItems}
         onDropToStorage={(draggedName) => {
-          setData((prevData) =>
-            prevData.map((item) =>
-              item.name === draggedName ? { ...item, hId: null } : item
-            )
-          );
+          setData((prevData) => {
+            const draggedNode = prevData.find((i) => i.name === draggedName);
+            if (!draggedNode?.hId) return prevData;
+
+            const targetPrefix = draggedNode.hId;
+            return prevData.map((item) =>
+              item.hId?.startsWith(targetPrefix) ? { ...item, hId: null } : item
+            );
+          });
         }}
       />
 
