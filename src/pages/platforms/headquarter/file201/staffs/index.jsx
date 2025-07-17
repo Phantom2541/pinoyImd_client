@@ -39,9 +39,12 @@ export default function Staffs() {
   }, [token, dispatch, activePlatform]);
 
   const arrangeStaffs = useCallback(() => {
-    return [...collections].filter(({ status: stats }) =>
-      employment.isEmployed(stats)
-    );
+    return [...collections].filter(({ status: stats }) => {
+      console.log("stats", stats);
+      console.log("employmeny", employment.isEmployed(stats));
+
+      return employment.isEmployed(stats);
+    });
   }, [collections]);
 
   useEffect(() => {

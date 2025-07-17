@@ -68,8 +68,11 @@ export default function Patient({ setActiveIndex }) {
             data: _form,
             token,
           })
-        ).then(({ payload }) => {
-          dispatch(SETPATIENT(payload.payload));
+        ).then((action) => {
+          if (action.type === "assets/users/UPDATE/fulfilled") {
+            dispatch(SETPATIENT(action.payload.payload));
+          } else if (action.type === "assets/users/UPDATE/rejected") {
+          }
         });
     } else {
       // create
@@ -87,8 +90,10 @@ export default function Patient({ setActiveIndex }) {
           },
           token,
         })
-      ).then(({ payload }) => {
-        dispatch(SETPATIENT(payload.payload));
+      ).then((action) => {
+        if (action.type === "assets/users/UPDATE/fulfilled") {
+          dispatch(SETPATIENT(action.payload.payload));
+        }
       });
     }
     setActiveIndex(0);
