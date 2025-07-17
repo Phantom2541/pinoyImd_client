@@ -26,13 +26,13 @@ export default function OrgStorage({ storageItems, onDropToStorage }) {
           draggable={true}
           onDragStart={(e) => handleDragStart(e, item)}
         >
-          <div className="orgChart-position bg-secondary">
+          <div className="orgChart-position bg-secondary text-center">
             <span>{item.title}</span>
           </div>
           <div className="orgChart-image">
             <img src={PROFILE} alt={item.name} />
           </div>
-          <div className="orgChart-name">{item.name}</div>
+          <div className="orgChart-name text-center">{item.name}</div>
         </div>
       ))}
     </div>
