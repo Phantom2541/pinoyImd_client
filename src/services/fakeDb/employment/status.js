@@ -15,6 +15,13 @@ const status = {
       isEmployed: true,
     },
     {
+      name: "Regular",
+      abbr: "active",
+      group: "Currently Employed",
+      description: "Fully employed after passing probationary period.",
+      isEmployed: true,
+    },
+    {
       name: "Part-time",
       abbr: "pt",
       group: "Currently Employed",

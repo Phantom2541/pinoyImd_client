@@ -1,119 +1,32 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import flatOrgData from "./flatCollections";
-import { MDBIcon } from "mdbreact";
 import "./style.css";
+import OrgNode from "./orgNode";
+import OrgStorage from "./orgStorage";
 import PROFILE from "./../../../../../../assets/female.jpg";
 
-// Build tree from hId
+// ✅ Build tree with only one root node
 function buildTree(flatData) {
   const idMap = {};
-  const tree = [];
+  let root = null;
 
   flatData.forEach((item) => {
-    idMap[item.hId] = { ...item, children: [] };
-  });
-
-  flatData.forEach((item) => {
-    const parentHid = item.hId.includes("-")
-      ? item.hId.split("-").slice(0, -1).join("-")
-      : null;
-
-    if (parentHid && idMap[parentHid]) {
-      idMap[parentHid].children.push(idMap[item.hId]);
-    } else {
-      tree.push(idMap[item.hId]);
+    if (item.hId !== null) {
+      idMap[item.hId] = { ...item, children: [] };
     }
   });
 
-  return tree;
+  Object.values(idMap).forEach((item) => {
+    const parentHid = item.hId.split("-").slice(0, -1).join("-");
+    if (parentHid && idMap[parentHid]) {
+      idMap[parentHid].children.push(item);
+    } else {
+      root = item;
+    }
+  });
+
+  return root;
 }
-
-const OrgNode = ({ node, onDrop }) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const hasChildren = node.children && node.children.length > 0;
-
-  const handleDragStart = (e) => {
-    e.dataTransfer.setData("hId", node.hId);
-  };
-
-  const handleDrop = (e, position) => {
-    e.preventDefault();
-    const draggedHid = e.dataTransfer.getData("hId");
-    onDrop(draggedHid, node.hId, position);
-  };
-
-  return (
-    <div className="orgChart-node">
-      <div
-        className="orgChart-box"
-        draggable
-        onDragStart={handleDragStart}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => handleDrop(e, "center")}
-        onClick={() => setCollapsed(!collapsed)}
-      >
-        <div className="orgChart-position bg-primary">
-          <span>{node.title}</span>
-        </div>
-        <div className="orgChart-image">
-          <img alt="profile" src={PROFILE} />
-        </div>
-        <div className="orgChart-details">
-          <div className="orgChart-name">{node.name}</div>
-          {hasChildren && (
-            <div className="orgChart-toggle">
-              {collapsed ? (
-                <MDBIcon fas icon="chevron-down" />
-              ) : (
-                <MDBIcon fas icon="chevron-up" />
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Drop left / right area for reordering */}
-      <div
-        className="drop-zone left"
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => handleDrop(e, "left")}
-      />
-      <div
-        className="drop-zone right"
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => handleDrop(e, "right")}
-      />
-
-      {hasChildren && (
-        <>
-          <div
-            className={`orgChart-line-down ${
-              collapsed ? "fade-up-exit" : "fade-up-enter"
-            }`}
-          />
-          <div
-            className={`orgChart-children-wrapper ${
-              collapsed ? "fade-up-exit" : "fade-up-enter"
-            }`}
-          >
-            <div
-              className={`orgChart-children ${
-                node.children.length === 1 ? "single-child" : ""
-              }`}
-            >
-              {node.children.map((child) => (
-                <div key={child.hId} className="orgChart-child">
-                  <div className="orgChart-line-up"></div>
-                  <OrgNode node={child} onDrop={onDrop} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
 
 export default function OrganizationChart() {
   const containerRef = useRef(null);
@@ -123,112 +36,168 @@ export default function OrganizationChart() {
   const [data, setData] = useState(flatOrgData);
 
   const handleMouseDown = (e) => {
-    if (e.target.closest(".orgChart-box")) return;
+    const box = e.target.closest(".orgChart-box");
+    const container = containerRef.current;
+
+    // If the click is inside a draggable node, don't initiate dragging
+    if (box && container.contains(box)) return;
+
     setDragging(true);
     setStart({ x: e.clientX, y: e.clientY });
     setScroll({
-      left: containerRef.current.scrollLeft,
-      top: containerRef.current.scrollTop,
+      left: container.scrollLeft,
+      top: container.scrollTop,
     });
   };
 
   const handleMouseMove = (e) => {
     if (!dragging) return;
-    const dx = e.clientX - start.x;
-    const dy = e.clientY - start.y;
-    const container = containerRef.current;
-    container.scrollLeft = scroll.left - dx;
-    container.scrollTop = scroll.top - dy;
+    const c = containerRef.current;
+    c.scrollLeft = scroll.left - (e.clientX - start.x);
+    c.scrollTop = scroll.top - (e.clientY - start.y);
   };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      // Auto center horizontally
+      container.scrollLeft =
+        (container.scrollWidth - container.clientWidth) / 2;
+      container.scrollTop = 0;
+    }
+  }, []);
 
   const handleMouseUp = () => setDragging(false);
 
-  const onDrop = (draggedHid, targetHid, position) => {
-    if (!draggedHid || draggedHid === targetHid) return;
-
-    const dragged = data.find((d) => d.hId === draggedHid);
-    const target = data.find((d) => d.hId === targetHid);
-    if (!dragged || !target) return;
-
-    const draggedParent = dragged.hId.split("-").slice(0, -1).join("-");
-    const targetParent = target.hId.split("-").slice(0, -1).join("-");
-
-    if (position === "left" || position === "right") {
-      // ✅ Reorder siblings
-      if (draggedParent === targetParent) {
-        const siblings = data.filter(
-          (d) => d.hId.split("-").slice(0, -1).join("-") === draggedParent
-        );
-
-        // Remove dragged from siblings
-        const ordered = siblings
-          .filter((d) => d.hId !== dragged.hId)
-          .sort((a, b) => a.hId.localeCompare(b.hId));
-
-        // Find insertion index
-        const targetIndex = ordered.findIndex((d) => d.hId === targetHid);
-        const insertAt = position === "left" ? targetIndex : targetIndex + 1;
-
-        ordered.splice(insertAt, 0, dragged);
-
-        // Renumber
-        const updated = data.map((item) => {
-          const isSibling = ordered.find((s) => s.hId === item.hId);
-          if (isSibling) {
-            const index = ordered.indexOf(isSibling) + 1;
-            const newSuffix = String(index).padStart(2, "0");
-            const newHid = draggedParent
-              ? `${draggedParent}-${newSuffix}`
-              : newSuffix;
-            return { ...item, hId: newHid };
-          }
-          return item;
-        });
-
-        setData(updated);
-        return;
-      }
-    }
-
-    // ✅ Reparenting (as child)
-    const children = data.filter(
-      (d) =>
-        d.hId.startsWith(targetHid + "-") &&
-        d.hId.split("-").length === targetHid.split("-").length + 1
-    );
-
-    const max = children.reduce((acc, curr) => {
-      const n = parseInt(curr.hId.split("-").at(-1), 10);
-      return n > acc ? n : acc;
-    }, 0);
-
-    const nextSuffix = String(max + 1).padStart(2, "0");
-    const newHid = `${targetHid}-${nextSuffix}`;
-
-    const updated = data.map((item) =>
-      item.hId === draggedHid ? { ...item, hId: newHid } : item
-    );
-
-    setData(updated);
+  const handleDragStart = (e, hId) => {
+    const d = data.find((i) => i.hId === hId);
+    e.dataTransfer.setData("hId", hId ?? "");
+    e.dataTransfer.setData("id", d?.name ?? "");
   };
 
-  const treeData = buildTree(data);
+  const getNextSuffix = (siblings) =>
+    String(
+      Math.max(0, ...siblings.map((d) => +d.hId.split("-").at(-1))) + 1
+    ).padStart(2, "0");
+
+  const onDrop = (dragHid, tgtHid, pos, name) => {
+    if (dragHid === tgtHid) return;
+    const d = data,
+      drag = d.find((i) => i.hId === dragHid),
+      tgt = d.find((i) => i.hId === tgtHid);
+
+    if (!dragHid) {
+      const fromStorage = d.find((i) => !i.hId && i.name === name);
+      if (!fromStorage) return;
+      const sibs = d.filter(
+        (i) =>
+          i.hId?.startsWith(tgtHid + "-") &&
+          i.hId.split("-").length === tgtHid.split("-").length + 1
+      );
+      return setData(
+        d.map((i) =>
+          i === fromStorage
+            ? { ...i, hId: `${tgtHid}-${getNextSuffix(sibs)}` }
+            : i
+        )
+      );
+    }
+
+    if (tgtHid === null) {
+      if (d.some((i) => i.hId?.split("-").length === 1))
+        return alert("Only one root node is allowed.");
+      return setData(d.map((i) => (i.name === name ? { ...i, hId: "01" } : i)));
+    }
+
+    if (!drag || !tgt) return;
+
+    const dp = drag.hId.split("-").slice(0, -1).join("-");
+    const tp = tgt.hId.split("-").slice(0, -1).join("-");
+
+    if ((pos === "left" || pos === "right") && dp === tp) {
+      const sibs = d
+        .filter(
+          (i) => i.hId?.startsWith(dp + (dp ? "-" : "")) && i.hId !== drag.hId
+        )
+        .sort((a, b) => a.hId.localeCompare(b.hId));
+      const idx = sibs.findIndex((i) => i.hId === tgtHid);
+      sibs.splice(pos === "left" ? idx : idx + 1, 0, drag);
+      return setData(
+        d.map((i) => {
+          const found = sibs.indexOf(i);
+          if (found === -1) return i;
+          const sfx = String(found + 1).padStart(2, "0");
+          return { ...i, hId: dp ? `${dp}-${sfx}` : sfx };
+        })
+      );
+    }
+
+    const kids = d.filter(
+      (i) =>
+        i.hId?.startsWith(tgtHid + "-") &&
+        i.hId.split("-").length === tgtHid.split("-").length + 1
+    );
+    const newHid = `${tgtHid}-${getNextSuffix(kids)}`;
+    setData(d.map((i) => (i.hId === dragHid ? { ...i, hId: newHid } : i)));
+  };
+
+  const rootNode = buildTree(data.filter((i) => i.hId !== null));
+  const storageItems = data.filter((i) => i.hId === null);
 
   return (
-    <div
-      ref={containerRef}
-      className="orgChart-container"
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      style={{ cursor: dragging ? "grabbing" : "grab" }}
-    >
-      <div className="orgChart-chart">
-        {treeData.map((node) => (
-          <OrgNode key={node.hId} node={node} onDrop={onDrop} />
-        ))}
+    <>
+      <OrgStorage
+        storageItems={storageItems}
+        onDropToStorage={(draggedName) => {
+          setData((prevData) => {
+            const draggedNode = prevData.find((i) => i.name === draggedName);
+            if (!draggedNode?.hId) return prevData;
+
+            const targetPrefix = draggedNode.hId;
+            return prevData.map((item) =>
+              item.hId?.startsWith(targetPrefix) ? { ...item, hId: null } : item
+            );
+          });
+        }}
+      />
+
+      <div className="orgChart-wrapper">
+        <div
+          ref={containerRef}
+          className="orgChart-container"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          style={{ cursor: dragging ? "grabbing" : "grab" }}
+        >
+          <div
+            className="orgChart-chart"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              const draggedHid = e.dataTransfer.getData("hId");
+              const draggedName = e.dataTransfer.getData("id");
+              if (!rootNode) {
+                onDrop(draggedHid, null, "root", draggedName);
+              }
+            }}
+          >
+            {!rootNode && (
+              <div className="empty-chart-dropzone">
+                Drop here to start your Org Chart
+              </div>
+            )}
+            {rootNode && (
+              <OrgNode
+                key={rootNode.hId}
+                node={rootNode}
+                onDrop={onDrop}
+                onDragStart={handleDragStart}
+              />
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

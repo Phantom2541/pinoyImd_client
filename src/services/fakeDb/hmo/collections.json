@@ -231,5 +231,133 @@
     "tl": "Bawat Filipino, Miyembro. Bawat Miyembro, Protektado. Kalusugan Natin, Segurado",
     "code": "phi",
     "icon": "/assets/logo/philhealth.png"
+  },
+  {
+    "id": 30,
+    "name": "Aresun Health Systems, Inc.",
+    "abbr": "Aresun",
+    "tl": "Empowering Health, Enhancing Lives",
+    "code": "ahs",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 31,
+    "name": "Auxilium Care Asia, Inc.",
+    "abbr": "Auxilium",
+    "tl": "Supporting Lives, Fostering Excellence",
+    "code": "aca",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 32,
+    "name": "BenLife Philippines, Inc.",
+    "abbr": "BenLife",
+    "tl": "Alagang Tunay, Alagang BenLife",
+    "code": "bpi",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 33,
+    "name": "CareHealth Systems, Inc.",
+    "abbr": "CareHealth",
+    "tl": "Connecting Dreams to Health",
+    "code": "csi",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 34,
+    "name": "COOP Health Solutions, Inc.",
+    "abbr": "COOP",
+    "tl": "Community Care, Trusted Wellness",
+    "code": "cph",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 35,
+    "name": "Flexicare Philippines, Inc.",
+    "abbr": "Flexicare",
+    "tl": "Tailored Health Solutions for Workforce Wellness",
+    "code": "fpi",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 36,
+    "name": "Generali Philippines, Inc.",
+    "abbr": "Generali",
+    "tl": "Protecting What You Care For",
+    "code": "gpi",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 37,
+    "name": "Government Service Insurance System (PhilGov HMO)",
+    "abbr": "Gov",
+    "tl": "Serving Public Servants with Care",
+    "code": "gsi",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 38,
+    "name": "Health Maintenance, Inc.",
+    "abbr": "HMI",
+    "tl": "Promoting Health, Preserving Futures",
+    "code": "hmi",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 39,
+    "name": "IMS HealthPlan, Inc.",
+    "abbr": "IMS",
+    "tl": "Sustainable Healthcare Accessibility for the Masses",
+    "code": "ihp",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 40,
+    "name": "InLife Philippines (Insular Life)",
+    "abbr": "InLife",
+    "tl": "Say YES to Better Health",
+    "code": "ilp",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 41,
+    "name": "Medilink Philippines, Inc.",
+    "abbr": "Medilink",
+    "tl": "Bridging Members to Care",
+    "code": "mpi",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 42,
+    "name": "Medocare Health Systems, Inc.",
+    "abbr": "Medocare",
+    "tl": "Comprehensive Care, Complete Confidence",
+    "code": "mhs",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 43,
+    "name": "PhilBritish Assurance Company",
+    "abbr": "PhilBritish",
+    "tl": "Assuring Health Across Borders",
+    "code": "pac",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 44,
+    "name": "Sun Life of Canada (Philippines), Inc.",
+    "abbr": "SunLife",
+    "tl": "Life Well Lived, Future Well Secured",
+    "code": "slc",
+    "icon": "/assets/logo/default.png"
+  },
+  {
+    "id": 45,
+    "name": "Advanced Medical Access Philippines, Inc.",
+    "abbr": "AMAPHIL",
+    "tl": "Better Healthcare, Better Innovation.",
+    "code": "ama",
+    "icon": "/assets/logo/amaphils.png"
   }
 ]

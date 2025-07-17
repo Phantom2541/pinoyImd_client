@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup } from "mdbreact";
 import {
   RESET,
   DESTROY,
@@ -14,7 +15,7 @@ import Swal from "sweetalert2";
 // mobile;
 export default function Body() {
   const { token } = useSelector(({ auth }) => auth),
-    { collections, message, isSuccess } = useSelector(
+    { filtered, message, isSuccess, maxPage, activePage } = useSelector(
       ({ physicians }) => physicians
     ),
     [tieups, setTieups] = useState([]),
@@ -23,8 +24,8 @@ export default function Body() {
 
   //Set fetched data for mapping
   useEffect(() => {
-    setTieups(collections);
-  }, [collections]);
+    setTieups(filtered);
+  }, [filtered]);
 
   //Trigger for update
   const handleDelete = (selected) => {
@@ -42,6 +43,8 @@ export default function Body() {
       }
     });
   };
+  console.log("filtered", filtered);
+  console.log("tieups", tieups);
 
   //Trigger for create
   // const handleCreate = async () => {
@@ -71,19 +74,28 @@ export default function Body() {
 
   //   setTieups(collections);
   // };
+
+  const itemsPerPage = maxPage; // Number of items per page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = tieups.slice(startIndex, endIndex);
+
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Specialization</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tieups.map((item, index) => (
+    <MDBTable responsive hover>
+      <thead style={{ backgroundColor: "#", color: "black" }}>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Specialization</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {paginatedData?.map((item, index) => {
+          return (
             <tr key={index}>
+              <td key={index}>{index + startIndex + 1}</td>
+
               <td>
                 <strong>
                   {getGenderIcon(item?.user?.isMale)}
@@ -97,9 +109,38 @@ export default function Body() {
                 <button onClick={() => handleDelete(item)}>Untag</button>
               </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          );
+        })}
+      </tbody>
+    </MDBTable>
+    // <div>
+    //   <table>
+    //     <thead>
+    //       <tr>
+    //         <th>Name</th>
+    //         <th>Specialization</th>
+    //         <th>Action</th>
+    //       </tr>
+    //     </thead>
+    //     <tbody>
+    //       {tieups.map((item, index) => (
+    //         <tr key={index}>
+    //           <td>
+    //   <strong>
+    //     {getGenderIcon(item?.user?.isMale)}
+    //     {String(
+    //       properFullname(item?.user?.fullName, true)
+    //     ).toUpperCase()}
+    //   </strong>
+    // </td>
+    // <td>{item?.specialization || "—"}</td>
+    // <td>
+    // <button onClick={() => handleDelete(item)}>Untag</button>
+    //           </td>
+    //         </tr>
+    //       ))}
+    //     </tbody>
+    //   </table>
+    // </div>
   );
 }

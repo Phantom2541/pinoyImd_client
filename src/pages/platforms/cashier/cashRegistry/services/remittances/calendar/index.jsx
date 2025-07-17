@@ -27,6 +27,9 @@ export default function Calendar() {
           const item =
             collections.find(({ createdAt }) => {
               const dt = new Date(createdAt);
+              console.log("dt", dt);
+              console.log("lol", dt >= localDate && dt < nextDate);
+
               return dt >= localDate && dt < nextDate;
             }) || {};
 
@@ -35,6 +38,9 @@ export default function Calendar() {
             const dt = new Date(createdAt);
             return dt >= localDate && dt < nextDate;
           });
+          console.log("index-item", item);
+          console.log("_deals", _deals);
+
           return (
             <Card
               key={num}

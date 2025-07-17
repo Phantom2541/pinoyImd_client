@@ -188,6 +188,7 @@
 .subscriber-pioneers-card-body span {
   font-size: 1.2rem;
   font-weight: 600;
+  text-transform: capitalize;
 }
 .subscriber-pioneers-card-body p {
   font-weight: 400;

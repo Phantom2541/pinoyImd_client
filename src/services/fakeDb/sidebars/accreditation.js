@@ -9,6 +9,7 @@ import {
   PlantEnvironment,
   LicenseOperate,
   policyManagement,
+  EquipmentSupplies,
 } from "../../../pages/platforms/accredetations/index";
 
 const accreditation = [
@@ -182,9 +183,11 @@ const accreditation = [
         component: PlantEnvironment,
       },
       {
-        name: "4. EQUIPMENT, INSTRUMENTS, GLASWARES, REAGENTS and SUPPLIES",
+        name: "4. Lab Equipment & Supplies ",
         path: "/laboratory/supplies",
         icon: "cogs",
+        title: "Keeping Track of Lab Tools, Reagents, and Supplies",
+        component: EquipmentSupplies,
       },
       {
         name: "5. INFORMATION MANAGEMENTS",

@@ -4,6 +4,7 @@ import {
   PlantEnvironment,
   LicenseOperate,
   policyManagement,
+  EquipmentSupplies,
 } from "./assessmentTools";
 
 import { default as Staffs } from "./staff";
@@ -19,6 +20,7 @@ export {
   Staffs,
   Temperatures,
   policyManagement,
+  EquipmentSupplies,
   qualityControls,
   Machines,
 };

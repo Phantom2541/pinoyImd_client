@@ -179,6 +179,7 @@
   font-weight: 500;
   margin-bottom: 5px;
   margin: auto;
+  text-transform: capitalize;
 }
 .signatories-card-actionBtn {
   position: absolute;

@@ -4,6 +4,8 @@ import { currency } from "../../../../../../../services/utilities";
 import { MDBAnimation, MDBProgress } from "mdbreact";
 // import { useSelector } from "react-redux";
 const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
+  console.log("card-item", item);
+
   // const { collections } = useSelector(({ payments }) => payments);
   const today = new Date();
   const dateCell = new Date(txt);
