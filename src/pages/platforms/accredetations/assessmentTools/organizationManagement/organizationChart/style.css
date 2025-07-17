@@ -1,14 +1,23 @@
-.orgChart-container {
-  /* width: 100vw; */
+.orgChart-wrapper {
+  width: 100%;
   height: 85vh;
-  overflow-x: auto;
-  overflow-y: auto;
+  overflow: hidden;
+  position: relative;
+  background-color: #f8f9fa; /* light background for contrast */
+}
+
+.orgChart-container {
+  height: 85vh;
+  overflow: auto;
   padding: 20px;
   box-sizing: border-box;
   position: relative;
   background-color: white;
   cursor: grab;
   user-select: none;
+  display: flex; /* ✅ Center child */
+  justify-content: center; /* ✅ Horizontal center */
+  align-items: flex-start; /* Optional: top align */
 }
 
 .orgChart-container::-webkit-scrollbar {
@@ -20,11 +29,14 @@
 }
 
 .orgChart-chart {
-  display: inline-flex; /* Not block-level to honor horizontal content width */
-  flex-direction: column;
-  align-items: center;
-  min-width: max-content; /* Prevent shrinkage */
-  margin: 0 auto; /* Still centers the chart inside scroll */
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  min-width: max-content;
+  min-height: 100%;
+  gap: 40px;
+  padding: 40px;
   box-sizing: border-box;
   position: relative;
 }
@@ -205,4 +217,38 @@
 
 .drop-zone.right {
   right: -10px;
+}
+
+.orgChart-storage {
+  padding: 10px;
+  background: #f7f7f7;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  min-height: 120px;
+}
+
+.storage-item {
+  margin: 0.5rem 0;
+  cursor: grab;
+}
+
+.orgChart-empty {
+  border: 2px dashed #aaa;
+  padding: 40px;
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  border-radius: 8px;
+}
+
+.empty-chart-dropzone {
+  border: 2px dashed #aaa;
+  padding: 60px 80px;
+  font-size: 0.9rem;
+  color: #777;
+  text-align: center;
+  border-radius: 8px;
 }
