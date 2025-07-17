@@ -59,15 +59,15 @@ export default function HandlingComplaint() {
 
   const feedback = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/feedbackForm.png`;
+  )}/Documents/handlingComplaint/feedbackForm.png`;
 
   const suggestionBoxSetup = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/suggestionBoxSetup.png`;
+  )}/Documents/handlingComplaint/suggestionBoxSetup.png`;
 
   const protocol = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/protocol.pdf`;
+  )}/Documents/handlingComplaint/protocol.pdf`;
 
   const [savedImage, setSavedImage] = useState(null);
 

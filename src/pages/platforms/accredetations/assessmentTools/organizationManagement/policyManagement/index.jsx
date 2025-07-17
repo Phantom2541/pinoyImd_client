@@ -59,19 +59,19 @@ export default function HandlingComplaint() {
 
   const checkList = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/checkList.png`;
+  )}/Documents/policyManagement/checkList.png`;
 
   const meetingMinute = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/meetingMinute.png`;
+  )}/Documents/policyManagement/meetingMinute.png`;
 
   const purchaseOrder = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/purchaseOrder.png`;
+  )}/Documents/policyManagement/purchaseOrder.png`;
 
   const policyReview = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/policyReview.pdf`;
+  )}/Documents/policyManagement/policyReview.pdf`;
 
   const [savedImage, setSavedImage] = useState(null);
 

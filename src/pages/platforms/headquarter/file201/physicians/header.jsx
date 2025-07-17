@@ -1,11 +1,18 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { TIEUPS } from "../../../../../services/redux/slices/assets/persons/physicians";
+import {
+  TIEUPS,
+  SetFILTERED,
+  SetCREATE,
+} from "../../../../../services/redux/slices/assets/persons/physicians";
+import { Search } from "../../../../../components/searchables";
+
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ physicians }) => physicians),
     dispatch = useDispatch(); //
+  const handleAdd = (item) => dispatch(SetCREATE(item));
 
   //Initial Browse
   useEffect(() => {
@@ -14,6 +21,7 @@ const Header = () => {
 
     // return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
+  console.log("header", collections);
 
   return (
     <MDBView
@@ -27,15 +35,15 @@ const Header = () => {
       </div>
       <div>
         <div>
-          {/* <Select
-            className="m-1 mt-2 mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
-            inputClassName="m-0"
-            preValue={component}
-            collections={Templates.getComponents("LAB")}
-            label="Select Component"
-          /> */}
+          <Search
+            collections={collections}
+            setFiltered={(items) => dispatch(SetFILTERED(items))}
+            placeholder="Search physicains"
+            haveAction={true}
+            reset={() => dispatch(SetFILTERED(collections))}
+            hideButton={true}
+            handleAdd={(item) => handleAdd(item)}
+          />
         </div>
       </div>
     </MDBView>
