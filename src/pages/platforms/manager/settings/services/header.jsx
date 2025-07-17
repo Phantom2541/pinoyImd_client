@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Select } from "../../../../../components/customizable";
-import { SearchTemplates as Templates } from "../../../../../components/searchables";
+import {
+  Search,
+  SearchTemplates as Templates,
+} from "../../../../../components/searchables";
 import {
   BROWSE,
   RESET,

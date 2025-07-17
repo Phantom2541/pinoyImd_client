@@ -175,7 +175,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload } = action?.payload;
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
@@ -186,8 +186,10 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
+        console.log("action", action);
+
         const { error } = action;
-        state.message = error.message;
+        state.message = error;
         state.isLoading = false;
       })
 

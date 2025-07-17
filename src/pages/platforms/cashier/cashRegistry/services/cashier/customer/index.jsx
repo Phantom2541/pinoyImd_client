@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import Patient from "./form/patient";
@@ -10,18 +10,27 @@ import {
 } from "../../../../../../../services/redux/slices/commerce/pos/services/pos";
 import { fullName, getAge } from "../../../../../../../services/utilities";
 import { SearchUser as Search } from "../../../../../../../components/searchables";
+import Swal from "sweetalert2";
 
 export default function POS() {
-  const { isLoading } = useSelector(({ users }) => users),
+  const { isLoading, message } = useSelector(({ users }) => users),
     { customer } = useSelector(({ pos }) => pos),
     [activeIndex, setActiveIndex] = useState(0),
     dispatch = useDispatch();
 
   // if a newPatient id is present and active index is 1
   // it means a new patient has been injected, you should go back to POS
-  // useEffect(() => {
-  //   if (customer?._id && activeIndex === 1) setActiveIndex(0);
-  // }, [customer, activeIndex]);
+  useEffect(() => {
+    if (message.name === "Error") {
+      console.log("message", message);
+
+      Swal.fire({
+        title: "Duplicate Entry",
+        text: message.message,
+        icon: "warning",
+      });
+    }
+  }, [message]);
 
   const handleCustomer = (customer) => dispatch(SETPATIENT(customer));
 
