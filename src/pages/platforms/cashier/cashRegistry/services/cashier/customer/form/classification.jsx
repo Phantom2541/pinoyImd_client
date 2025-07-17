@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBadge, MDBTypography } from "mdbreact";
 
-import { properFullname } from "../../../../../../../../services/utilities";
 import {
   Categories,
   HMO,
@@ -22,15 +21,16 @@ import {
   SETSOURCES,
   RESET as SOURCERESET,
 } from "../../../../../../../../services/redux/slices/assets/providers";
-import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
 import { capitalize } from "lodash";
+import PickPhysician from "../../../../../../../../components/searchables/physicians/pickPhysician";
 const contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
 };
 
 export default function PosCard() {
-  const { category, privilege, customer, ssx } = useSelector(({ pos }) => pos),
+  const { category, privilege, customer, ssx, formSubmitted, isSuccess } =
+      useSelector(({ pos }) => pos),
     { collections } = useSelector(({ providers }) => providers),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [physicians, setPhysicians] = useState([]),
@@ -256,10 +256,17 @@ export default function PosCard() {
           )}
         </div>
 
-        {source ? (
-          <div className="patient-form mt-2">
-            <span>Physician</span>
-            <select
+        {/* {source ? ( */}
+        <div className="patient-form mt-2">
+          <span>Physician</span>
+          <PickPhysician
+            disabled={!didSelect}
+            suggested={physicians}
+            onChange={(value) => handlePhysician(value)}
+            formSubmitted={formSubmitted}
+            isSuccess={isSuccess}
+          />
+          {/* <select
               // disabled={!didSelect}
               onChange={({ target }) => handlePhysician(target.value)}
             >
@@ -274,9 +281,9 @@ export default function PosCard() {
                   {properFullname(user?.fullName)}
                 </option>
               ))}
-            </select>
-          </div>
-        ) : (
+            </select> */}
+        </div>
+        {/* ) : (
           <PickPhysician
             label="Search Physician (lname,mname,fname)"
             selectedClassName="mt-2"
@@ -284,7 +291,7 @@ export default function PosCard() {
             globalSearch
             onClick={({ user }) => handlePhysician(user?._id)}
           />
-        )}
+        )} */}
       </div>
       {!_id && (
         <MDBTypography note noteColor="info" className="mt-3 mb-0">

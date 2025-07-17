@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBContainer } from "mdbreact";
 import "./style.css";
@@ -52,7 +52,7 @@ export default function Remmitances() {
   }, [month, year, token, activePlatform?.branchId, auth._id, dispatch]);
 
   return (
-    <MDBContainer className="pt-2" fluid>
+    <MDBContainer fluid>
       <MDBCard className="pb-3" narrow>
         <Header />
         <Calendar />

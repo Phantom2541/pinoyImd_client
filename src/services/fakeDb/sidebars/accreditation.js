@@ -1,3 +1,4 @@
+import OrganizationChart from "../../../pages/platforms/accredetations/assessmentTools/organizationManagement/organizationChart";
 import {
   Staffs,
   qualityControls,
@@ -36,6 +37,7 @@ const accreditation = [
             title:
               "Updated organizational  is posted/displayed in conspincoius area with the names, latest pictures (atleast passport size) and designation",
             icon: "cogs",
+            component: OrganizationChart,
           },
           {
             name: "2. Organization's Mission, Vision and Objectives",

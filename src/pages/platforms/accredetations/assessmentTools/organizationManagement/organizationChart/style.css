@@ -1,0 +1,208 @@
+.orgChart-container {
+  /* width: 100vw; */
+  height: 85vh;
+  overflow-x: auto;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  background-color: white;
+  cursor: grab;
+  user-select: none;
+}
+
+.orgChart-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+.orgChart-container:active {
+  cursor: grabbing;
+}
+
+.orgChart-chart {
+  display: inline-flex; /* Not block-level to honor horizontal content width */
+  flex-direction: column;
+  align-items: center;
+  min-width: max-content; /* Prevent shrinkage */
+  margin: 0 auto; /* Still centers the chart inside scroll */
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* NODE */
+.orgChart-node {
+  position: relative;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* BOX */
+.orgChart-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 8px;
+  min-width: 120px;
+  max-width: 120px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  position: relative;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.orgChart-box:hover {
+  background: #f0f8ff;
+}
+
+.orgChart-position {
+  width: 100%;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: white;
+  padding: 3px 0;
+  text-transform: uppercase;
+}
+
+.orgChart-image {
+  width: 60px;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orgChart-image img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: contain;
+  border-radius: 50%;
+  -webkit-user-drag: none;
+}
+
+.orgChart-details {
+  width: 100%;
+}
+
+.orgChart-name {
+  width: 100%;
+  padding: 0 5px;
+  padding-bottom: 5px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  text-transform: capitalize;
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden; /* Hide overflowed text */
+  text-overflow: ellipsis; /* Add ... */
+}
+
+.orgChart-toggle {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: gray;
+}
+
+/* VERTICAL LINE DOWN */
+.orgChart-line-down {
+  width: 1px;
+  height: 20px;
+  background-color: #bbb;
+  margin: 0;
+  padding: 0;
+}
+
+/* CHILDREN WRAPPER */
+.orgChart-children-wrapper {
+  position: relative;
+}
+
+/* CHILDREN CONTAINER */
+.orgChart-children {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* Remove horizontal connector if only one child */
+.orgChart-children.single-child .orgChart-child::before {
+  display: none;
+}
+
+/* EACH CHILD */
+.orgChart-child {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* CONNECTING HORIZONTAL LINES */
+.orgChart-child::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 1px;
+  background: #bbb;
+  width: 100%;
+}
+
+.orgChart-child:first-child::before {
+  left: 50%;
+  width: 50%;
+  transform: translateX(0);
+}
+
+.orgChart-child:last-child::before {
+  left: 0;
+  width: 50%;
+}
+
+.orgChart-child:not(:first-child):not(:last-child)::before {
+  left: 0;
+  width: 100%;
+}
+
+/* VERTICAL LINE UP TO BOX */
+.orgChart-line-up {
+  width: 1px;
+  height: 20px;
+  background: #bbb;
+}
+
+/* Fade Up Animation Classes */
+.fade-up-enter {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 1000px;
+  transition: all 0.3s ease;
+}
+
+.fade-up-exit {
+  opacity: 0;
+  transform: translateY(-20px);
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.drop-zone.left,
+.drop-zone.right {
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  z-index: 10;
+}
+
+.drop-zone.left {
+  left: -10px;
+}
+
+.drop-zone.right {
+  right: -10px;
+}

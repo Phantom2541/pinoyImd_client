@@ -1,9 +1,10 @@
-.physicians-search-container {
+.inputSelect-search-container {
   width: 100%;
+  margin: 0 auto;
   position: relative;
 }
 
-.physicians-search-input {
+.inputSelect-search-input {
   width: 100%;
   font-size: 16px;
   border: 2px solid #ccc;
@@ -11,17 +12,13 @@
   transition: 0.3s;
 }
 
-.physicians-search-input:focus {
+.inputSelect-search-input:focus {
   border-color: #007bff;
 }
-.physicians-search-input:disabled {
-  background-color: transparent !important;
-  color: #000 !important; /* optional: para di maging gray text */
-  cursor: not-allowed; /* optional: para mukhang disabled pa rin */
-}
 
-.physicians-results-list {
+.inputSelect-results-list {
   position: absolute;
+  z-index: 9999;
   width: 100%;
   list-style: none;
   padding: 0;
@@ -32,30 +29,30 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.physicians-result-item {
+.inputSelect-result-item {
   border-bottom: 1px solid #eee;
   cursor: pointer;
   background-color: #fff;
   transition: background-color 0.2s ease;
 }
 
-.physicians-result-item:last-child {
+.inputSelect-result-item:last-child {
   border-bottom: none;
 }
 
-.physicians-result-item:hover .physicians-result-content {
+.inputSelect-result-item:hover .inputSelect-result-content {
   background-color: #f0f0f0;
 }
 
-.physicians-result-content {
+.inputSelect-result-content {
   padding: 10px 12px;
 }
 
-.physicians-no-result {
+.inputSelect-no-result {
   background-color: #fff;
 }
 
-.physicians-no-result .physicians-result-content {
+.inputSelect-no-result .inputSelect-result-content {
   color: #999;
   padding: 10px 12px;
 }
