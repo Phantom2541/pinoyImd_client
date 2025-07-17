@@ -5,6 +5,7 @@ import {
   TIEUPS,
   SetFILTERED,
   SetCREATE,
+  RESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import { Search } from "../../../../../components/searchables";
 
@@ -19,9 +20,8 @@ const Header = () => {
     if (token && activePlatform?.branchId)
       dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
 
-    // return () => dispatch(RESET());
+    return () => dispatch(RESET());
   }, [token, activePlatform, dispatch]);
-  console.log("header", collections);
 
   return (
     <MDBView
