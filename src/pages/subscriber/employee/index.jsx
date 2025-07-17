@@ -134,6 +134,7 @@ export default function Employees({ match }) {
             const { user } = person || {};
             const { fullName, email } = user || {};
             const { fname, lname, mname, postnominal } = fullName || {};
+            const _fullName = `${fname} ${mname} ${lname}`.toLowerCase();
 
             return (
               <div className="subscriber-pioneers-card" key={index}>
@@ -148,7 +149,7 @@ export default function Employees({ match }) {
                   />
                 </div>
                 <div className="subscriber-pioneers-card-body">
-                  <span>{`${fname ?? ""} ${mname ?? ""} ${lname ?? ""}`}</span>
+                  <span>{_fullName}</span>
                   <p>{postnominal ?? ""}</p>
                 </div>
                 <div className="subscriber-pioneers-footer">
