@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBTable, MDBIcon, MDBBadge, MDBBtnGroup, MDBBtn } from "mdbreact";
+import { MDBTable, MDBIcon, MDBBadge } from "mdbreact";
 import {
   capitalize,
   currency,
@@ -24,6 +24,7 @@ const Tables = () => {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
       collections,
+      filtered,
       formSubmitted,
       isSuccess,
       activePage,
@@ -46,10 +47,9 @@ const Tables = () => {
   }, [dispatch, formSubmitted, isSuccess]);
 
   useEffect(() => {
-    if (collections.length > 0) {
-      setData(collections);
-    }
-  }, [collections]);
+    setData(filtered);
+  }, [filtered]);
+
   useEffect(() => {
     if (providers.length > 0) {
       let _providerOptions = providers.map(({ clients }) => ({
@@ -135,6 +135,13 @@ const Tables = () => {
       <h6>Dr. {physician()}</h6>
     ) : (
       <h6 className="cursor-pointer">N/A</h6>
+    );
+  };
+
+  const getPhysicians = (fk) => {
+    return (
+      [...providers].find(({ clients }) => clients._id === fk)?.clients
+        ?.affiliated || []
     );
   };
 
@@ -339,23 +346,26 @@ const Tables = () => {
                         isPhysicianEdit && "deals-zoom-in"
                       }`}
                     >
-                      <PickPhysician
-                        defaultValue={
-                          !deal?.physicianId?._id
-                            ? deal?.physicianSTR
-                            : fullName(deal?.physicianId?.fullName)
-                        }
-                        classNameInput="deals-zoom-in-input-physician "
-                        formSubmitted={formSubmitted}
-                        isEditable
-                        onChange={(value) =>
-                          setSelected({ ...selected, newPhysician: value })
-                        }
-                        handleCheck={() =>
-                          handleUpdate("physicianId._id", "newPhysician")
-                        }
-                        handleClose={() => setSelected({})}
-                      />
+                      {isPhysicianEdit && (
+                        <PickPhysician
+                          defaultValue={
+                            !deal?.physicianId?._id
+                              ? deal?.physicianSTR
+                              : fullName(deal?.physicianId?.fullName)
+                          }
+                          classNameInput="deals-zoom-in-input-physician "
+                          formSubmitted={formSubmitted}
+                          isEditable
+                          suggested={getPhysicians(deal.source._id)}
+                          onChange={(value) =>
+                            setSelected({ ...selected, newPhysician: value })
+                          }
+                          handleCheck={() =>
+                            handleUpdate("physicianId._id", "newPhysician")
+                          }
+                          handleClose={() => setSelected({})}
+                        />
+                      )}
                       {/* <Select
                           label={"Physician"}
                           allowObjectValue

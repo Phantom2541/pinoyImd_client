@@ -13,6 +13,10 @@ import {
 // import { QRCodeCanvas } from "qrcode.react";
 
 import Denominations from "../remittances/modal/denominations";
+import {
+  BROWSE,
+  SetPHYSICIANS,
+} from "../../../../../../services/redux/slices/assets/persons/physicians";
 
 export default function Cashier() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth);
@@ -63,6 +67,17 @@ export default function Cashier() {
       );
     }
   }, [transaction, isSuccess]);
+
+  useEffect(() => {
+    const physiciansLocal = localStorage.getItem("physicians");
+    if (physiciansLocal) {
+      dispatch(SetPHYSICIANS(JSON.parse(physiciansLocal)));
+    } else {
+      dispatch(BROWSE({ token })).then(({ payload: data }) => {
+        localStorage.setItem("physicians", JSON.stringify(data.payload));
+      });
+    }
+  }, [token]);
 
   return (
     <>

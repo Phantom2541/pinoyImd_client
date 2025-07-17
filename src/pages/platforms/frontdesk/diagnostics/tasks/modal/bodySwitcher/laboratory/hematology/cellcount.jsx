@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SetPARAMS,
@@ -8,18 +8,30 @@ import { MDBTable } from "mdbreact";
 import { Cellcount as CellCount } from "./../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
 
-export default function Cellcount() {
-  const { task, selected } = useSelector(({ validator }) => validator),
+export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
+  const { task, selected, showModal } = useSelector(
+      ({ validator }) => validator
+    ),
     dispatch = useDispatch();
+
   const { cc = [] } = task,
     { Preferences, Abbreviation, Title } = CellCount;
 
+  // 1. Create array of refs for inputs
+  const inputRefs = useRef([]);
+
+  // 2. Focus on first input when mounted
+  useEffect(() => {
+    if (showModal && activeTab === "CELL COUNT") {
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 400);
+    }
+  }, [showModal, activeTab]);
   const handleChange = (e) => {
     const { name, value } = e.target,
       _name = Number(name),
-      // _value = parseFloat(value),
       _cells = [...cc];
-    // cell count float
     _cells[_name] = value;
     if (!_name) {
       _cells[1] = parseFloat((Number(value) * 340).toFixed(0));
@@ -30,6 +42,19 @@ export default function Cellcount() {
     }
     dispatch(SetTASK({ form: task?.form, task: { ...task, cc: _cells } }));
     dispatch(SetPARAMS({ key: "cc", value: _cells }));
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Enter") {
+      console.log("index", index);
+      e.preventDefault();
+      const nextInput = inputRefs.current[index + 1];
+      if (nextInput) {
+        nextInput.focus();
+      } else {
+        setActiveTab("DIFF COUNT");
+      }
+    }
   };
 
   return (
@@ -54,12 +79,20 @@ export default function Cellcount() {
               <td className="py-1">
                 <input
                   type="number"
+                  ref={(el) => (inputRefs.current[index] = el)}
                   style={{
-                    color: cell ? (cell < lo ? "red" : cell > hi && "red") : "",
+                    color: cell
+                      ? cell < lo
+                        ? "red"
+                        : cell > hi
+                        ? "red"
+                        : ""
+                      : "",
                   }}
                   name={index}
                   value={String(cell)}
                   onChange={handleChange}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
                   className="w-100 text-center fw-bold"
                 />
               </td>

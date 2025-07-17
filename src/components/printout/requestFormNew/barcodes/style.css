@@ -1,0 +1,22 @@
+@media print {
+  .thermal-print {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: green;
+  }
+
+  .barcode-container {
+    background: red;
+
+    width: 100%; /* Label height (rotated) */
+    height: 50mm; /* Label width (rotated) */
+  }
+
+  .result-barcode {
+    background: red;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}

@@ -1,14 +1,14 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import {
   fullName,
-  formatNameToObj,
-  getGenderIcon,
+  getPhysicianGenderIcon,
+  globalSearch,
 } from "../../../services/utilities";
-import { useDispatch, useSelector } from "react-redux";
-import { SEARCH } from "../../../services/redux/slices/assets/persons/physicians";
+import { useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { MDBAnimation, MDBProgress, MDBIcon } from "mdbreact";
 import "./style.css";
+import Notification from "./notification";
 
 const PickPhysician = ({
   defaultValue = "",
@@ -18,17 +18,33 @@ const PickPhysician = ({
   formSubmitted,
   isSuccess,
   isEditable = false,
+  suggested = [],
   onChange = () => {},
   handleCheck = () => {},
   handleClose = () => {},
 }) => {
-  const dispatch = useDispatch();
-  const { token } = useSelector(({ auth }) => auth);
+  const { collections } = useSelector(({ physicians }) => physicians);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [selectedId, setSelectedId] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [didSearch, setDidSearch] = useState(false);
-  const [selectedId, setSelectedId] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [physicians, setPhysicians] = useState([]);
+  const [results, setResults] = useState([]);
+
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    const base = [...collections].filter(({ user }) => user?._id);
+    const merged = [...base];
+    if (suggested.length > 0) {
+      suggested.forEach((s) => {
+        const exists = base.some((b) => b.user._id === s.user._id);
+        if (!exists) merged.push(s);
+      });
+    }
+    setPhysicians(merged);
+  }, [collections, suggested]);
 
   useEffect(() => {
     if (isSuccess && !formSubmitted) {
@@ -37,24 +53,15 @@ const PickPhysician = ({
     }
   }, [formSubmitted, isSuccess]);
 
-  // 🔁 Debounced search
-  const debouncedSearch = useCallback(
-    debounce((value) => {
-      const key = formatNameToObj(value);
-      dispatch(SEARCH({ token, key })).then((action) => {
-        const { payload = {} } = action || {};
-        setResults(payload?.payload || []);
-        setIsSearching(false);
-      });
-    }, 500),
-    [dispatch, token]
-  );
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   useEffect(() => {
     if (didSearch) {
-      onChange(query);
+      onChangeRef.current(query);
     } else {
-      onChange(selectedId);
+      onChangeRef.current(selectedId);
     }
   }, [didSearch, query, selectedId]);
 
@@ -63,21 +70,34 @@ const PickPhysician = ({
       setQuery(defaultValue);
     }
   }, [isEditable, defaultValue]);
+
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((value) => {
+        const _results = globalSearch(physicians, value);
+        setResults(_results);
+        setIsSearching(false);
+        setDidSearch(true);
+      }, 1000),
+    [physicians]
+  );
   const handleInputChange = (e) => {
     const value = e.target.value;
-
     setQuery(value);
-    const sanitizedValue = value.trim();
-    // const isTypingNew =
-    //   sanitizedValue.length > 0 && sanitizedValue !== query.trim();
 
-    if (sanitizedValue) {
+    const startsOrEndsWithSpace = /^\s|\s$/.test(value);
+
+    if (physicians.length === 0) {
+      setResults([]);
+      setDidSearch(true);
+    } else if (!startsOrEndsWithSpace && value.trim()) {
       setIsSearching(true);
       debouncedSearch(value);
       setDidSearch(true);
       onChange(value);
     } else {
       setIsSearching(false);
+      setResults([]);
     }
   };
 
@@ -91,37 +111,24 @@ const PickPhysician = ({
   };
 
   return (
-    <div className={`d-flex align-items-center ${classNameContainer} `}>
+    <div className={`d-flex align-items-center ${classNameContainer}`}>
       <div className="physicians-search-container">
-        <input
-          type="text"
-          disabled={disabled}
-          placeholder="Search physician (Last name, First name)"
-          className={`physicians-search-input ${classNameInput}`}
-          value={query}
-          onChange={handleInputChange}
-        />
+        <div className="d-flex align-items-center">
+          <Notification iconSize="md" />
 
-        {!isSearching ? (
-          <>
-            {query && results.length > 0 && (
-              <ul className="physicians-results-list">
-                {results.map((item, index) => (
-                  <li
-                    key={index}
-                    className="physicians-result-item"
-                    onClick={() => handlePick(item)}
-                  >
-                    <div className="physicians-result-content">
-                      {getGenderIcon(item.user.isMale)}
-                      {fullName(item.user.fullName)}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </>
-        ) : (
+          <input
+            type="text"
+            placeholder="Search..."
+            className={`physicians-search-input ${classNameInput}`}
+            value={query}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+            onChange={handleInputChange}
+            disabled={disabled}
+          />
+        </div>
+
+        {isSearching ? (
           <div className="physicians-results-list">
             {new Array(5).fill("").map((_, index) => (
               <MDBAnimation
@@ -132,15 +139,41 @@ const PickPhysician = ({
                 delay={`${index + 1}00ms`}
                 duration="3000ms"
               >
-                <MDBProgress
-                  color="light"
-                  value={3000}
-                  id="progress-table"
-                ></MDBProgress>
+                <MDBProgress color="light" value={3000} id="progress-table" />
               </MDBAnimation>
             ))}
           </div>
-        )}
+        ) : isFocused && query.trim() === "" && suggested.length > 0 ? (
+          <ul className="physicians-results-list">
+            {suggested.map((item, index) => (
+              <li
+                key={index}
+                className="physicians-result-item"
+                onClick={() => handlePick(item)}
+              >
+                <div className="physicians-result-content">
+                  {getPhysicianGenderIcon(item?.user?.isMale)}
+                  {fullName(item?.user?.fullName)}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : results.length > 0 ? (
+          <ul className="physicians-results-list">
+            {results.map((item, index) => (
+              <li
+                key={index}
+                className="physicians-result-item"
+                onClick={() => handlePick(item)}
+              >
+                <div className="physicians-result-content">
+                  {getPhysicianGenderIcon(item?.user?.isMale)}
+                  {fullName(item.user.fullName)}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
       {isEditable && (
         <div className="d-flex align-items-center ml-2">

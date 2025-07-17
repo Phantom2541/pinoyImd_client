@@ -54,7 +54,6 @@ const Footer = () => {
 
   const handleSave = (hasDone) => {
     const { form } = task;
-    console.log("task", task);
 
     // if laboratory =pathogist
     // if radiologist  and xray = radiologist
@@ -137,6 +136,7 @@ const Footer = () => {
           <MDBBtnGroup>
             <MDBBtn
               disabled={isLoading}
+              id="task-post-btn"
               onClick={() => {
                 if (task?.form === "Hematology") return computeHemaDiff(true);
                 handleSave(true);

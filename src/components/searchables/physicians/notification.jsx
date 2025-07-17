@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBIcon } from "mdbreact";
 
-const Notification = ({ didSearch }) => {
+const Notification = ({ didSearch, iconSize = "lg" }) => {
   const message = "Last name, First name y Middle name",
     description = "Please maintain this order when searching.";
 
@@ -9,7 +9,7 @@ const Notification = ({ didSearch }) => {
     <div className={`cashier-instruction ${didSearch && "hide"}`}>
       <MDBIcon
         icon="info-circle"
-        size="lg"
+        size={iconSize}
         className="text-info cursor-pointer"
       />
       <div>

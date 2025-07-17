@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import JsBarcode from "jsbarcode";
 import { Templates } from "../../../../services/fakeDb";
 import { capitalize } from "lodash";
+import "./style.css";
 
 const BarcodePrintout = ({ forms = {}, sale }) => {
   const { customerId, pn } = sale;
@@ -23,31 +24,35 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
   useEffect(() => {
     if (!forms) return;
     Object.keys(forms).forEach((section) => {
-      if (refs.current[section]) {
+      const svg = refs.current[section];
+      if (svg) {
         JsBarcode(
-          refs.current[section],
+          svg,
           `${Templates.getAbbr(section)}-${sanitize(customerName)}-${String(
             pn
           ).padStart(2, "0")}`,
           {
             format: "CODE128",
             lineColor: "#000",
-            width: 0.9,
-            height: 40,
+            width: 2.5, // control line thickness
+            height: 100, // close to 30mm
             displayValue: true,
-            fontSize: 16,
-            fit: true,
+            fontSize: 14,
+            margin: 0,
           }
         );
       }
     });
-  }, [forms, sale, refs, customerName, pn]);
+  }, [forms, sale, customerName, pn]);
 
   return (
-    <div>
+    <div className="thermal-print">
       {Object.keys(forms || {}).map((key) => (
-        <div key={key} style={{ marginBottom: "1rem" }}>
-          <svg ref={(el) => (refs.current[key] = el)}></svg>
+        <div key={key} className="barcode-container">
+          <svg
+            ref={(el) => (refs.current[key] = el)}
+            className="result-barcode"
+          ></svg>
         </div>
       ))}
     </div>
