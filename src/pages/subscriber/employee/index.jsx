@@ -149,7 +149,6 @@ export default function Employees({ match }) {
                   />
                 </div>
                 <div className="subscriber-pioneers-card-body">
-                  {/* <span>{properFullname(fullName)}</span> */}
                   <span>{_fullName}</span>
                   <p>{postnominal ?? ""}</p>
                 </div>

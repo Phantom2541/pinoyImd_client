@@ -1,4 +1,4 @@
-@keyframes zoomIn {
+@keyframes zoomInDeals {
   0% {
     transform: translateX(-50%) scale(0);
     opacity: 0;
@@ -17,7 +17,7 @@
   border-radius: 5px;
   left: 50%;
   transform: translateX(-50%);
-  animation: zoomIn 0.3s ease-out;
+  animation: zoomInDeals 0.3s ease-out;
   display: inline-block;
   transform-origin: left;
 }
