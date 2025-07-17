@@ -34,7 +34,7 @@ const Input = ({
         type={type}
         onChange={({ target }) => onChange(_key, target.value)}
       />
-      <div className="customizable-input-icons mt-2">
+      <div className="customizable-input-icons ">
         {!formSubmitted ? (
           <MDBIcon
             icon="check"

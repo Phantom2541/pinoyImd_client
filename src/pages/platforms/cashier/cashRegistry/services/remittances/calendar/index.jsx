@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { generateCalendar } from "../../../../../../../services/utilities";
 import WeekHeader from "./weekHeader";

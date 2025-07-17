@@ -1,5 +1,3 @@
-import React from "react";
-
 const WeekHeader = () => {
   return (
     <div className="cashier-remittance-calendar-weeks">

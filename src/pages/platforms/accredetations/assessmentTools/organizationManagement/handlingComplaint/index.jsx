@@ -59,15 +59,15 @@ export default function HandlingComplaint() {
 
   const feedback = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/feedbackForm.png`;
+  )}/Documents/handlingComplaint/feedbackForm.png`;
 
   const suggestionBoxSetup = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/suggestionBoxSetup.png`;
+  )}/Documents/handlingComplaint/suggestionBoxSetup.png`;
 
   const protocol = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/protocol.pdf`;
+  )}/Documents/handlingComplaint/protocol.pdf`;
 
   const [savedImage, setSavedImage] = useState(null);
 
@@ -78,14 +78,17 @@ export default function HandlingComplaint() {
   return (
     <div
       className="template-cards-container d-flex justify-content-center align-items-center flex-wrap gap-3"
-      style={{ height: "100vh", width: "80vw", padding: 0, margin: 0 }}
+      style={{ height: "110vh", width: "80vw", padding: 0, margin: 0 }}
     >
       {/* PDF Preview */}
       <div
         className="card shadow rounded"
         style={{ width: "65%", height: "80%" }}
       >
-        <div className="card-img-top w-100 h-100" style={{ padding: "10px" }}>
+        <div className="card-header bg-blue text-dark font-weight-bold">
+          Policy on Handling Complaints
+        </div>
+        <div className="card-img-top w-100 card-preview-container">
           <PDFPreview url={protocol} />
         </div>
       </div>
@@ -95,7 +98,10 @@ export default function HandlingComplaint() {
         className="card shadow rounded"
         style={{ width: "65%", height: "120%" }}
       >
-        <div className="card-img-top w-100 h-100" style={{ padding: "10px" }}>
+        <div className="card-header bg-blue text-dark font-weight-bold">
+          Feedback Form
+        </div>
+        <div className="card-img-top w-100 card-preview-container">
           <ImageDragAndDrop img={feedback} savedImg={handleImageChange} />
         </div>
       </div>
@@ -105,7 +111,10 @@ export default function HandlingComplaint() {
         className="card shadow rounded"
         style={{ width: "65%", height: "80%" }}
       >
-        <div className="card-img-top w-100 h-100" style={{ padding: "10px" }}>
+        <div className="card-header bg-blue text-dark font-weight-bold">
+          Suggestion Box Setup
+        </div>
+        <div className="card-img-top w-100 card-preview-container">
           <ImageDragAndDrop
             img={suggestionBoxSetup}
             savedImg={handleImageChange}

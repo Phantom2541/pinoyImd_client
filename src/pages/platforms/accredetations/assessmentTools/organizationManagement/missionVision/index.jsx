@@ -53,6 +53,30 @@ export default function MissionVision() {
                 )}
               </p>
             </div>
+            {/* Values Section */}
+            <div className="section-box">
+              <h5 className="template4-subtitle">
+                <b>Values</b>
+              </h5>
+              <div className="template4-card-text">
+                {Array.isArray(companyId?.vl) && companyId.vl.length > 0 ? (
+                  <ul>
+                    {companyId.vl.map((value, index) => {
+                      // Use the en-dash character (–), not hyphen-minus (-)
+                      const [title, desc] = value.split(" – ");
+                      return (
+                        <li key={index}>
+                          <b>{title.trim()}</b>
+                          {desc ? ` – ${desc.trim()}` : ""}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <i className="text-muted">No Value statement provided.</i>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

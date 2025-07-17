@@ -233,7 +233,7 @@ export default function EditableSelect({
           />
         </div>
       ) : (
-        <span
+        <small
           title={title}
           className={`cursor-pointer ${classNameTxt}`}
           onClick={() => {
@@ -249,7 +249,7 @@ export default function EditableSelect({
           {isMoney
             ? currency.format(utils.getValue(keyForText, fieldData))
             : capitalize(utils.getValue(keyForText, fieldData)) || "N/A"}
-        </span>
+        </small>
       )}
     </div>
   );

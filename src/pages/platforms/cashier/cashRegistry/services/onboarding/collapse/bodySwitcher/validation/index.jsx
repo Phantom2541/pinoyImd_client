@@ -11,6 +11,7 @@ import {
   SetSELECTED,
   SetVALIDATE_ID,
   UPDATE,
+  RESET,
 } from "../../../../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import Swal from "sweetalert2";
 import Badge from "./badge";
@@ -90,7 +91,7 @@ const Validation = ({ item }) => {
               },
             },
           })
-        );
+        ).then(() => dispatch(RESET()));
         Swal.fire({
           title: "Approved!",
           html: `The patient <strong>${customer}</strong> has been approved successfully.`,

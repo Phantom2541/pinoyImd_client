@@ -5,9 +5,15 @@ const url = "assets/persons/physicians";
 
 const initialState = {
   collections: [],
+  filtered: [],
   isSuccess: false,
   formSubmitted: false,
   message: "",
+  showModal: false,
+  willCreate: false,
+  details: {}, //this is for subscriber home page
+  selected: {},
+  displayName: "",
 };
 
 export const BROWSE = createAsyncThunk(
@@ -129,6 +135,36 @@ export const reduxSlice = createSlice({
     SetPHYSICIANS: (state, { payload }) => {
       state.collections = payload;
     },
+    SETPHYSICIAN: (state, { payload }) => {
+      state.selected = payload;
+      console.log("payphysician", payload);
+
+      state.selectedId = payload?._id;
+
+      const full = payload?.fullName || {};
+      state.displayName = `${full.lname || ""}, ${full.fname || ""}${
+        full.mname ? " " + full.mname : ""
+      }`;
+
+      console.log("physician", state.displayName);
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+      state.selected = {};
+    },
+    SetCREATE: (state) => {
+      state.selected = {
+        name: "",
+        email: "",
+        phone: "",
+      };
+      state.willCreate = true;
+
+      state.showModal = true;
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.formSubmitted = false;
@@ -206,12 +242,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+
         state.message = success;
-        payload?.length > 0 &&
-          payload.map((data) =>
-            //kasi pwede siyang mag add ng madaming physicians kaya minap ko kasi array yung return niya
-            state.collections.tieups.unshift(data)
-          );
+        state.collections.unshift(payload);
+        state.filtered.unshift(payload);
+        // payload?.length > 0 &&
+        //   payload.map((data) =>
+
+        //     //kasi pwede siyang mag add ng madaming physicians kaya minap ko kasi array yung return niya
+        //     state.collections.tieups.unshift(data)
+        //   );
 
         state.isSuccess = true;
         state.isLoading = false;
@@ -270,6 +310,13 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetPHYSICIANS, RESET } = reduxSlice.actions;
+export const {
+  SetPHYSICIANS,
+  SETPHYSICIAN,
+  RESET,
+  SetFILTERED,
+  SetCREATE,
+  TOGGLE,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

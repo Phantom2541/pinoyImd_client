@@ -29,7 +29,10 @@ export default function PlantEnvironment() {
       style={{ height: "80vh", width: "80vw", padding: 0, margin: 0 }}
     >
       <div className="card shadow rounded w-100 h-100">
-        <div className="card-img-top w-100 h-100" style={{ padding: "10px" }}>
+        <div className="card-header bg-blue text-dark font-weight-bold">
+          Floor Plan
+        </div>
+        <div className="card-img-top w-100 card-preview-container">
           <ImageDragAndDrop img={floor} savedImg={handleImageChange} />
         </div>
       </div>

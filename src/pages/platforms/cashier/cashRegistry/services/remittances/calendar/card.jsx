@@ -21,7 +21,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
     breakdown = {},
     expenses = 0,
   } = item;
-
+  console.log("item", item);
   const isRemitted = !!collector;
 
   const { cash, ...rest } = breakdown;
