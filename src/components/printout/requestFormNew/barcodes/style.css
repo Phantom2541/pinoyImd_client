@@ -1,22 +1,31 @@
 @media print {
-  .thermal-print {
-    display: block;
+  @page {
+    size: 58mm 30mm; /* or 50mm 20mm based on printer roll */
+    margin: 0;
+  }
+
+  body {
     margin: 0;
     padding: 0;
-    background: green;
+  }
+
+  .thermal-print {
+    width: 100%;
+    padding: 0;
+    margin: 0;
   }
 
   .barcode-container {
-    background: red;
-
-    width: 100%; /* Label height (rotated) */
-    height: 50mm; /* Label width (rotated) */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5mm;
   }
 
   .result-barcode {
-    background: red;
     width: 100%;
-    height: 100%;
+    height: auto;
     display: block;
   }
 }

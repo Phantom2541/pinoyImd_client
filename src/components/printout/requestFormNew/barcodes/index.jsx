@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import JsBarcode from "jsbarcode";
+import bwipjs from "bwip-js";
 import { Templates } from "../../../../services/fakeDb";
 import { capitalize } from "lodash";
 import "./style.css";
@@ -24,23 +24,23 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
   useEffect(() => {
     if (!forms) return;
     Object.keys(forms).forEach((section) => {
-      const svg = refs.current[section];
-      if (svg) {
-        JsBarcode(
-          svg,
-          `${Templates.getAbbr(section)}-${sanitize(customerName)}-${String(
-            pn
-          ).padStart(2, "0")}`,
-          {
-            format: "CODE128",
-            lineColor: "#000",
-            width: 2.5, // control line thickness
-            height: 100, // close to 30mm
-            displayValue: true,
-            fontSize: 14,
-            margin: 0,
-          }
-        );
+      const canvas = refs.current[section];
+      if (canvas) {
+        try {
+          bwipjs.toCanvas(canvas, {
+            bcid: "code128", // barcode type
+            text: `${Templates.getAbbr(section)}-${sanitize(
+              customerName
+            )}-${String(pn).padStart(2, "0")}`,
+            scale: 2, // scale factor (affects both width & height)
+            height: 10, // height in mm (actual printed bar height)
+            includetext: true,
+            textxalign: "center",
+            textsize: 12, // readable font size
+          });
+        } catch (e) {
+          console.error("Barcode render error:", e);
+        }
       }
     });
   }, [forms, sale, customerName, pn]);
@@ -49,10 +49,10 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
     <div className="thermal-print">
       {Object.keys(forms || {}).map((key) => (
         <div key={key} className="barcode-container">
-          <svg
+          <canvas
             ref={(el) => (refs.current[key] = el)}
             className="result-barcode"
-          ></svg>
+          />
         </div>
       ))}
     </div>
