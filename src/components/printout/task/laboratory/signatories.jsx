@@ -1,16 +1,19 @@
 import React from "react";
 import { ENDPOINT, properFullname } from "../../../../services/utilities";
+import "./style.css";
 
 const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
   return (
     <div style={style} className="text-center position-relative">
+      {/* Signature behind the name */}
       {withSignature && (
         <img
           style={{
-            position: "absolute",
-            height: 100,
-            left: "50%",
-            transform: "translate(-50%, -50%)",
+            height: 80,
+            opacity: 0.6,
+            marginBottom: "-1.5rem",
+            zIndex: 0,
+            position: "relative",
           }}
           src={`${ENDPOINT}/public/users/${person?.email}/signature.png`}
           alt={person?.email || "signature"}
@@ -19,14 +22,23 @@ const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
 
       <h5
         className="fw-bold mb-0 text-uppercase"
-        style={{ fontSize: "1.1rem" }}
+        style={{
+          fontSize: "1.1rem",
+          position: "relative",
+          zIndex: 1, // Bring text in front
+        }}
       >
         <u>{properFullname(person?.fullName)}</u>
       </h5>
-      {label}
-      <h6 style={{ fontSize: "0.8rem" }}>
-        {label !== "Receptionist" && person?.prc && ` PRC#: ${person?.prc.id}`}
-      </h6>
+
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {label}
+        <h6 style={{ fontSize: "0.8rem" }}>
+          {label !== "Receptionist" &&
+            person?.prc &&
+            ` PRC#: ${person?.prc.id}`}
+        </h6>
+      </div>
     </div>
   );
 };
