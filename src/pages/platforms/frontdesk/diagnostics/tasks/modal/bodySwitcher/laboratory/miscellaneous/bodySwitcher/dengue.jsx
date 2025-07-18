@@ -4,22 +4,20 @@ import { MDBRow, MDBCol } from "mdbreact";
 const choices = [
   {
     str: "Negative",
-    index: 0,
   },
   {
     str: "Positive",
-    index: 1,
   },
 ];
 
 export default function Dengue({ task, setTask }) {
   const { results = { igg: 0, igm: 0, ns1: 0 }, packages = [] } = task;
 
-  const handleSelectChange = (name, value) =>
+  const handleSelectChange = (name, value) => {
+    console.log([name], value);
+
     setTask({ ...task, results: { ...results, [name]: value } });
-  console.log("task", task);
-  console.log("results", results);
-  console.log("task", choices);
+  };
 
   return (
     <MDBRow className="text-left">
@@ -41,8 +39,8 @@ export default function Dengue({ task, setTask }) {
             className="form-control"
           >
             <option> NS1 Antigen </option>
-            {choices.map((data) => (
-              <option value={data.index}></option>
+            {choices.map((data, index) => (
+              <option value={index}> {data.str}</option>
             ))}
           </select>
         </MDBCol>
@@ -59,13 +57,13 @@ export default function Dengue({ task, setTask }) {
         /> */}
         <select
           name="igg"
-          onChange={(e) => handleSelectChange("ns1", Number(e))}
-          value={String(results.ns1)}
+          onChange={(e) => handleSelectChange("igg", Number(e))}
+          value={String(results.igg)}
           className="form-control"
         >
           <option> Antibody IgG </option>
-          {choices.map((data) => (
-            <option value={data.index}></option>
+          {choices.map((data, index) => (
+            <option value={index}>{data.str}</option>
           ))}
         </select>
       </MDBCol>
@@ -81,13 +79,13 @@ export default function Dengue({ task, setTask }) {
         /> */}
         <select
           name="igm"
-          onChange={(e) => handleSelectChange("ns1", Number(e))}
-          value={String(results.ns1)}
+          onChange={(e) => handleSelectChange("igm", Number(e))}
+          value={String(results.igm)}
           className="form-control"
         >
           <option> Antibody IgM </option>
-          {choices.map((data) => (
-            <option value={data.index}></option>
+          {choices.map((data, index) => (
+            <option value={index}>{data.str}</option>
           ))}
         </select>
       </MDBCol>
