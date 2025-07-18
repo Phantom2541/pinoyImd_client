@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   CHECK_SOA,
   UPDATE,
-} from "../../../../../../services/redux/slices/commerce/pos/services/billing";
+} from "../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import { Input } from "../../../../../../components/customizable";
 import Swal from "sweetalert2";
 export default function Collapsable({
@@ -17,7 +17,7 @@ export default function Collapsable({
 }) {
   const { token } = useSelector(({ auth }) => auth),
     { vendor, isSuccess, formSubmitted } = useSelector(
-      ({ billings }) => billings
+      ({ onBoardings }) => onBoardings
     ),
     dispatch = useDispatch();
 
@@ -27,8 +27,8 @@ export default function Collapsable({
   };
 
   const handleCheck = (deal) => {
-    const { sendouts } = deal;
-    if (!sendouts?.up) {
+    const { up } = deal;
+    if (!up) {
       Swal.fire({
         icon: "warning",
         title: "Enter Deal Price",
@@ -54,17 +54,17 @@ export default function Collapsable({
           return Number(value); // Return numeric value
         },
       }).then((result) => {
-        const _sendouts = { ...sendouts, up: result.value };
+        const _sendouts = { ...deal, up: result.value };
         if (result.isConfirmed) {
           dispatch(
             UPDATE({
-              data: { ..._sendouts, up: result.value, dealId: deal?._id },
+              data: _sendouts,
               token,
             })
           ).then(() => {
             dispatch(
               CHECK_SOA({
-                deal: { ...deal, sendouts: _sendouts },
+                deal: _sendouts,
                 totalDeals: deals.length,
                 date,
               })
@@ -90,21 +90,21 @@ export default function Collapsable({
         <tr>
           {!vendor?._id && <th>Outsource</th>}
           <th>Customer</th>
-          <th>Source</th>
+          {/* <th>Source</th> */}
           <th>Price</th>
           <th>Services</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
         {deals?.map((deal, index) => {
-          const { customerId, outsource, sendouts, source } = deal;
-          const isToUpdate = deal._id === selected.dealId && vendor.soa?._id;
+          const { pid: customerId, vendor: v, up, services } = deal;
+          const isToUpdate = deal._id === selected._id && vendor.soa?._id;
           return (
             <tr key={index}>
               {!vendor._id && (
                 <td>
                   <span className="fw-bold mr-1"> {++index}.</span>
-                  {outsource?.displayname}
+                  {v?.displayname || v?.name}
                 </td>
               )}
               <td>
@@ -130,16 +130,11 @@ export default function Collapsable({
                   fullName(customerId?.fullName)
                 )}
               </td>
-              <td>{source?.displayname}</td>
+              {/* <td>{source?.displayname}</td> */}
               <td className=" cursor-pointer" style={{ width: "10rem" }}>
                 {!isToUpdate ? (
-                  <div
-                    onClick={() =>
-                      setSelected({ ...deal.sendouts, dealId: deal._id })
-                    }
-                    className="w-100"
-                  >
-                    {currency.format(sendouts?.up)}
+                  <div onClick={() => setSelected(deal)} className="w-100">
+                    {currency.format(up)}
                   </div>
                 ) : (
                   <Input
@@ -158,7 +153,7 @@ export default function Collapsable({
                 )}
               </td>
               <td className="mb-1">
-                {sendouts?.servicesId?.map((id) => (
+                {services?.map((id) => (
                   <MDBBadge key={id} className="ml-2">
                     {Services.getAbbr(id)}
                   </MDBBadge>

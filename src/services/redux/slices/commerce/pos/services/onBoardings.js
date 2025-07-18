@@ -7,9 +7,12 @@ const today = new Date();
 const initialState = {
   collections: [],
   filtered: [],
+  cluster: [],
   formSubmitted: false,
   didSearch: false,
   selected: {},
+  supplier: "all", //this is value for soa records header select
+  vendor: { _id: "" },
   vendorId: "",
   page: 0,
   isSuccess: false,
@@ -49,6 +52,7 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+
 export const SEND_OUTS = createAsyncThunk(
   `${url}/sendOuts`,
   ({ token, params }, thunkAPI) => {
@@ -155,80 +159,11 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
-export const ASSIGN_AO = createAsyncThunk(
-  `${url}/ASSIGN_AO`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(url, data, token, "assign_ao");
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const UNTAG_PERSONNEL = createAsyncThunk(
-  `${url}/untag_personnel`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(url, data, token, "untag_personnel");
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
 export const DESTROY = createAsyncThunk(
   `${url}/destroy`,
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.destroy(url, data, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-export const UntagPHYSICIAN = createAsyncThunk(
-  `${url}/untagPhysician`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(`${url}/untagPhysician`, data, token);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-export const TagPHYSICIAN = createAsyncThunk(
-  `${url}/tagPhysician`,
-  ({ data, token }, thunkAPI) => {
-    try {
-      return axioKit.update(`${url}/tagPhysician`, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -247,6 +182,42 @@ export const PROCESS_ONBOARDING = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.update(url, data, token, "process_onboarding");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const SOA_RECORDS = createAsyncThunk(
+  `${url}/soa_records`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/soa_records`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const GENERATE_SOA = createAsyncThunk(
+  `${url}/genearte_soa`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "generate_bill_soa");
     } catch (error) {
       const message =
         (error.response &&
@@ -296,7 +267,6 @@ export const reduxSlice = createSlice({
       }
     },
     SetVENDOR: (state, { payload }) => {
-      console.log("payload", payload);
       if (payload === "all") {
         state.filtered = state.collections;
         state.vendorId = "";
@@ -306,6 +276,107 @@ export const reduxSlice = createSlice({
         );
         state.vendorId = payload;
       }
+    },
+    FilterByVendor: (state, { payload }) => {
+      const { value, vendor } = payload;
+      if (value === "all") {
+        state.filtered = state.collections;
+        state.source = "";
+        state.vendor = {};
+        state.supplier = "all";
+      } else {
+        state.filtered = state.collections.filter(
+          ({ vendor: v }) => v?._id === value
+        );
+        state.supplier = value;
+        state.vendor = vendor;
+      }
+    },
+
+    SetSoaCluster: (state, { payload }) => {
+      const { soa = [], _id } = state.vendor;
+      const fakeDB = localStorage.getItem("billing");
+      let parseVoucher = fakeDB ? JSON.parse(fakeDB) : {};
+      if (!_id && !soa) return;
+      if (parseVoucher[_id]?.length > 0) {
+        state.cluster = parseVoucher[_id];
+      } else {
+        state.cluster = [];
+      }
+    },
+    CHECK_BULK_SOA: (state, { payload }) => {
+      const { deals, date } = payload;
+      const cluster = [...state.cluster];
+      const index = cluster.findIndex((item) => item.date === date);
+      const foundCluster = cluster[index];
+      const { hasSelected = false } = foundCluster || {};
+      if (hasSelected) {
+        cluster.splice(index, 1);
+      } else {
+        if (index > -1) cluster.splice(index, 1);
+        cluster.push({ date, deals, hasSelected: true });
+      }
+
+      state.cluster = cluster;
+
+      console.log(
+        "vendor in check bulk",
+        JSON.parse(JSON.stringify(state.vendor))
+      );
+
+      localStorage.setItem(
+        "billing",
+        JSON.stringify({
+          ...JSON.parse(localStorage.getItem("billing" || "{}")),
+          [state.vendor?._id]: cluster,
+        })
+      );
+    },
+
+    CHECK_SOA: (state, { payload }) => {
+      if (!state.vendor._id)
+        return "please select source first to proceed in picking voucher";
+
+      const { date, deal, totalDeals } = payload; //ex. totalDeals=5
+      /* 
+          The purpose of 'totalDeals' is to determine how many deals exist on a specific date. 
+          If 'totalDeals' is equal to the number of deals in the local storage store for that date,
+          it means that all deals for that date have already been checked.
+      */
+      const _cluster = [...state.cluster];
+      const _clusterIndex = _cluster.findIndex((item) => item?.date === date);
+      if (_clusterIndex > -1) {
+        //if cluster is already exist
+        const { deals = [] } = _cluster[_clusterIndex];
+        const _deals = [...deals];
+
+        const dealIndex = _deals.findIndex((item) => item?._id === deal?._id);
+        // if deal is already exist remove it
+        // if deal is not exist push it to deals
+        dealIndex > -1 ? _deals.splice(dealIndex, 1) : _deals.push(deal);
+        // update cluster deals
+        const _oldCluster = _cluster[_clusterIndex];
+
+        if (_deals.length === 0) {
+          _cluster.splice(_clusterIndex, 1);
+        } else {
+          _cluster[_clusterIndex] = {
+            ..._oldCluster,
+            deals: _deals,
+            hasSelected: totalDeals === _deals.length,
+          };
+        }
+      } else {
+        _cluster.push({ date, deals: [deal], hasSelected: totalDeals === 1 });
+      }
+      state.cluster = _cluster;
+      localStorage.setItem(
+        "billing",
+        JSON.stringify({
+          ...JSON.parse(localStorage.getItem("billing" || "{}")),
+          [state.vendor?._id]: _cluster,
+        })
+      );
     },
     SetCREATE: (state) => {
       state.selected = {
@@ -429,6 +500,69 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(SOA_RECORDS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SOA_RECORDS.fulfilled, (state, { payload }) => {
+        state.collections = state.filtered = payload.payload || [];
+        let totalPages = Math.ceil(state.filtered.length / state.maxPage);
+        state.totalPages = totalPages;
+        if (state.activePage > totalPages) {
+          state.activePage = totalPages;
+        }
+        state.isLoading = false;
+      })
+      .addCase(SOA_RECORDS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(GENERATE_SOA.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GENERATE_SOA.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const { onboardingIDS } = payload;
+        state.vendor.soa = null;
+        const updateCollections = (collections) => {
+          return collections.filter(
+            (item) => !onboardingIDS.includes(item._id)
+          );
+        };
+        state.collections = updateCollections(state.collections);
+        state.filtered = updateCollections(state.filtered);
+
+        //update localstorage
+        const cluster = state.cluster
+          .map((clusterItem) => ({
+            ...clusterItem,
+            deals: clusterItem.deals.filter(
+              (deal) => !onboardingIDS.includes(deal._id)
+            ),
+          }))
+          .filter((clusterItem) => clusterItem.deals.length > 0);
+
+        localStorage.setItem(
+          "billing",
+          JSON.stringify({
+            ...JSON.parse(localStorage.getItem("billing" || "{}")),
+            [state.vendor?._id]: cluster,
+          })
+        );
+        state.supplier = "all";
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(GENERATE_SOA.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
       .addCase(SEND_OUTS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -533,11 +667,6 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE_TAT.fulfilled, (state, action) => {
         const { success } = action.payload;
 
-        // state.collections = payload;
-        // state.filtered = payload.filter(
-        //   ({ department }) => department === state.department
-        // );
-
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -581,98 +710,6 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
 
-      .addCase(ASSIGN_AO.pending, (state) => {
-        state.formSubmitted = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-
-      .addCase(ASSIGN_AO.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        if (state.collections.length > 0) {
-          const { newPersonnel = false, createdPersonnel } = payload;
-          const getIndex = (collections) =>
-            collections.findIndex(({ _id }) => _id === payload._id);
-          const collectionIndex = getIndex(state.collections);
-          const filteredIndex = getIndex(state.filtered);
-
-          const filteredOldInfo = { ...state.filtered[filteredIndex] };
-          const collectionOldInfo = { ...state.collections[collectionIndex] };
-          if (newPersonnel) {
-            filteredOldInfo.personnels.unshift(createdPersonnel);
-            collectionOldInfo.personnels.unshift(createdPersonnel);
-          }
-
-          state.collections[collectionIndex] = {
-            ...collectionOldInfo,
-            ...payload,
-          };
-
-          state.filtered[filteredIndex] = {
-            ...filteredOldInfo,
-            ...payload,
-          };
-        }
-        state.message = success;
-        state.isSuccess = true;
-        state.formSubmitted = false;
-      })
-      .addCase(ASSIGN_AO.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.formSubmitted = false;
-      })
-
-      .addCase(UNTAG_PERSONNEL.pending, (state) => {
-        state.formSubmitted = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-
-      .addCase(UNTAG_PERSONNEL.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        if (state.collections.length > 0) {
-          // const { newPersonnel = false, createdPersonnel } = payload;
-          const getIndex = (collections) =>
-            collections.findIndex(({ _id }) => _id === payload._id);
-          const collectionIndex = getIndex(state.collections);
-          const filteredIndex = getIndex(state.filtered);
-
-          const filteredOldInfo = { ...state.filtered[filteredIndex] };
-          const collectionOldInfo = { ...state.collections[collectionIndex] };
-
-          const getPersonnelIndex = (personnels) =>
-            personnels.findIndex(({ _id }) => _id === payload?.personnelID);
-
-          const personnelsCollection = [...collectionOldInfo.personnels];
-
-          personnelsCollection.splice(
-            getPersonnelIndex(personnelsCollection),
-            1
-          );
-
-          const personnelsFiltered = [...filteredOldInfo.personnels];
-          personnelsFiltered.splice(getPersonnelIndex(personnelsFiltered), 1);
-
-          state.collections[collectionIndex] = {
-            ...collectionOldInfo,
-            personnels: personnelsCollection,
-          };
-
-          state.filtered[filteredIndex] = {
-            ...filteredOldInfo,
-            personnels: personnelsFiltered,
-          };
-        }
-        state.message = success;
-        state.isSuccess = true;
-        state.formSubmitted = false;
-      })
-      .addCase(UNTAG_PERSONNEL.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.formSubmitted = false;
-      })
       .addCase(DESTROY.pending, (state) => {
         state.isSuccess = false;
         state.message = "";
@@ -694,55 +731,15 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
-      })
-      .addCase(TagPHYSICIAN.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(TagPHYSICIAN.fulfilled, (state, action) => {
-        const { success } = action.payload;
-        // const { affiliated, providerId } = payload;
-        // const index = state.collections.findIndex(
-        //   (item) => item._id === providerId
-        // );
-        // const provider = state.collections[index];
-        // provider.affiliated.unshift(affiliated);
-        // state.collections[index] = provider;
-        state.message = success;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(TagPHYSICIAN.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
-      })
-      .addCase(UntagPHYSICIAN.pending, (state) => {
-        state.isLoading = true;
-        state.isSuccess = false;
-        state.message = "";
-      })
-      .addCase(UntagPHYSICIAN.fulfilled, (state, action) => {
-        const { success, payload } = action;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload
-        );
-
-        state.collections.splice(index, 1);
-        state.message = success;
-        state.isSuccess = true;
-        state.isLoading = false;
-      })
-      .addCase(UntagPHYSICIAN.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
       });
   },
 });
 
 export const {
+  FilterByVendor, //for soa records
+  SetSoaCluster,
+  CHECK_BULK_SOA,
+  CHECK_SOA,
   SetFILTERED,
   SetVALIDATE_ID,
   SetSELECTED,

@@ -23,11 +23,12 @@ const Body = ({ setOutSource, outSource }) => {
 
   const { department } = activePlatform;
   const isRadiology = department === "radiology";
+  console.log("collections", collections);
   useEffect(() => {
     const _outSources = collections
       .filter(({ vendors }) => vendors)
-      .map(({ vendors, category }) => ({
-        category,
+      .map(({ vendors }) => ({
+        isGhost: vendors?.companyId?.isGhost,
         text: vendors?.displayname || vendors?.name || "a",
         value: vendors?._id || "a",
       }));
@@ -101,12 +102,11 @@ const Body = ({ setOutSource, outSource }) => {
         <option value="" disabled={!!outSource}>
           Select outsource
         </option>
-        {outSources.map(({ text, value, category }, index) => {
+        {outSources.map(({ text, value, isGhost = false }, index) => {
           const selectCount = cluster[value]?.length;
           return (
             <option key={index} value={value}>
-              {category === "ghost" && "👻"} {text}{" "}
-              {selectCount ? `(${selectCount})` : ""}
+              {isGhost && "👻"} {text} {selectCount ? `(${selectCount})` : ""}
             </option>
           );
         })}

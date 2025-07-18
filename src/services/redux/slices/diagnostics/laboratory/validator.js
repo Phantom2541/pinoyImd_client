@@ -24,6 +24,7 @@ const initialState = {
   preferences: [],
   patient: {},
   privilege: -1,
+  sections: [],
   /**
    *  Active forms
    */
@@ -215,6 +216,9 @@ export const reduxSlice = createSlice({
       state.byStatus = filter;
       state.activePage = 1;
     },
+    SetFILTERED_STATUS: (state, { payload }) => {
+      state.filteredStatus = payload;
+    },
     SetSELECTED: (state, { payload }) => {
       const { activeCOLAPSE, deal } = payload;
       state.selected = { ...deal };
@@ -285,6 +289,12 @@ export const reduxSlice = createSlice({
         state.collections = payload;
         state.filtered = payload;
         state.filteredStatus = payload;
+        state.sections = [
+          ...new Set(
+            payload.flatMap(({ diagnostic }) => Object.keys(diagnostic))
+          ),
+        ].sort();
+
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -350,6 +360,7 @@ export const {
   SetPrint,
   SetPackages,
   SetFILTERED,
+  SetFILTERED_STATUS,
   SetByGroup,
   SetByStatus,
   SetMODAL,
