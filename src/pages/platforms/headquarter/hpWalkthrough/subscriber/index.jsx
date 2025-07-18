@@ -21,6 +21,7 @@ import MissionVision from "./missionVision";
 
 const Subscriber = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
+    { activePlatform } = useSelector(({ auth }) => auth),
     { hmo, hasPhilHealth } = details,
     [show, setShow] = useState(false),
     [scrolled, setScrolled] = useState(false),
@@ -32,8 +33,10 @@ const Subscriber = ({ match }) => {
     [indicatorStyle, setIndicatorStyle] = useState({}),
     dispatch = useDispatch(),
     linkRefs = useRef({}),
-    menuRef = useRef(null),
-    companyId = match?.params?.companyId;
+    menuRef = useRef(null);
+  const { branch = {} } = activePlatform;
+  const { companyId: company = {} } = branch || {};
+  const { _id: companyId } = company;
 
   useEffect(() => {
     dispatch(GET_DETAILS({ key: { companyId } }));

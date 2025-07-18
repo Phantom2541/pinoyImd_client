@@ -1,11 +1,11 @@
-import React from "react";
-import { useSelector } from "react-redux";
-// , useDispatch
-import { MDBTable, MDBCardBody } from "mdbreact";
-// MDBBtnGroup, MDBBtn, MDBIcon,
+import { useSelector, useDispatch } from "react-redux";
+import { MDBTable, MDBCardBody, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { fullName } from "../../../../../services/utilities";
 import { Services } from "../../../../../services/fakeDb";
-// import { SetTASK } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  SetTASK,
+  SetSELECTED,
+} from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 export default function BodyTemplate() {
   const {
@@ -14,8 +14,9 @@ export default function BodyTemplate() {
     activePage,
     maxPage,
   } = useSelector(({ validator }) => validator);
-  // const { activePlatform } = useSelector(({ validator }) => validator);
-  // const dispatch = useDispatch();
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ preferences }) => preferences),
+    dispatch = useDispatch();
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -24,31 +25,49 @@ export default function BodyTemplate() {
     startIndex + itemsPerPage
   );
 
-  // const handleLabPrint = (task) => {
-  //   const services = Services.find(task.services);
-  //   localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
-  //   window.open(
-  //     "/printout/laboratory/task",
-  //     "Laboratory Task Printout",
-  //     "top=100px,left=100px,width=794px,height=1123px"
-  //   );
-  // };
+  const handleLabPrint = (task) => {
+    console.log("task", task);
+    const services = collections.filter(({ id }) => task.services.includes(id));
+    const taskData = { ...task, services };
 
-  // const handleRadPrint = (task) => {
-  //   const services = Services.find(task.services);
-  //   localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
-  //   window.open(
-  //     "/printout/radiology/task",
-  //     "Radiology Task Printout",
-  //     "top=100px,left=100px,width=794px,height=1123px"
-  //   );
-  // };
+    // Store data in localStorage
+    localStorage.setItem("taskPrintout", JSON.stringify(taskData));
 
-  // const handleEntry = (task) => {
-  //   console.log("table task", task);
+    // Construct the URL
+    const URL = `${window.location.origin}/printout/laboratory/task`;
+    const title = `Laboratory Task Printout`;
+    const features = "top=100px,left=100px,width=794px,height=1123px";
 
-  //   dispatch(SetTASK({ task }));
-  // };
+    setTimeout(() => {
+      const printWindow = window.open(URL, title, features);
+
+      if (printWindow) {
+        console.log("Print window opened successfully.");
+        console.log("Print window location:", printWindow.location.href);
+        printWindow.focus();
+      } else {
+        console.warn("Popup blocked or failed to open.");
+      }
+    }, 100);
+  };
+
+  const handleRadPrint = (task) => {
+    const services = Services.find(task.services);
+    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+    window.open(
+      "/printout/radiology/task",
+      "Radiology Task Printout",
+      "top=100px,left=100px,width=794px,height=1123px"
+    );
+  };
+
+  console.log("activePlatform", activePlatform);
+
+  const handleEntry = (task, deal) => {
+    dispatch(SetSELECTED({ deal }));
+    dispatch(SetTASK({ task }));
+  };
+
   return (
     <MDBCardBody>
       <MDBTable responsive hover small>
@@ -63,8 +82,27 @@ export default function BodyTemplate() {
         <tbody>
           {paginatedData.map((deal, index) => {
             const { _id, customerId, diagnostic } = deal;
-            // const { signatories, hasDone, packages } =
-            //   deal?.diagnostic[selectedKey];
+            const { signatories, hasDone, packages, remarks } =
+              deal?.diagnostic[selectedKey];
+
+            console.log("form", diagnostic[selectedKey]);
+
+            const _task = {
+              ...diagnostic[selectedKey],
+              key: `${index}-${selectedKey}`,
+              form: selectedKey,
+              patient: customerId,
+              generateHealthyClient: [
+                "Urinalysis",
+                "Parasitology",
+                "Xray",
+                "Ultrasound",
+              ].includes(selectedKey)
+                ? true
+                : false,
+              hasDone,
+              remarks,
+            };
 
             // Collect all actual service names (e.g., fbs, crea, uric)
             const serviceList = (() => {
@@ -111,9 +149,9 @@ export default function BodyTemplate() {
                 <td>{fullName(customerId?.fullName) || "Unnamed Patient"}</td>
                 <td>{serviceList}</td>
                 <td>
-                  {/* <MDBBtnGroup>
+                  <MDBBtnGroup>
                     <MDBBtn
-                      onClick={() => handleEntry(deal)}
+                      onClick={() => handleEntry(_task, deal)}
                       color={hasDone ? "info" : "primary"}
                       size="sm"
                       className="py-1 px-2 m-0"
@@ -127,13 +165,13 @@ export default function BodyTemplate() {
                         <MDBBtn
                           onClick={() => {
                             const selected = {
-                              ...deal,
+                              ..._task,
                               branchId: activePlatform?.branch,
                               services: packages,
                               signatories,
                               isPrint: true,
                             };
-                            activePlatform.department === "Laboratory"
+                            activePlatform?.department === "Laboratory"
                               ? handleLabPrint(selected)
                               : handleRadPrint(selected);
                           }}
@@ -144,7 +182,7 @@ export default function BodyTemplate() {
                           <MDBIcon icon="print" />
                         </MDBBtn>
                       )}
-                  </MDBBtnGroup> */}
+                  </MDBBtnGroup>
                 </td>
               </tr>
             );
