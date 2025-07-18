@@ -12,7 +12,6 @@ import {
   TOGGLE,
   UPDATE,
 } from "../../../../../services/redux/slices/assets/companies";
-// import { useToasts } from "react-toast-notifications";
 import { HMO } from "../../../../../services/fakeDb";
 import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 
@@ -21,30 +20,31 @@ export default function Modal() {
       ({ companies }) => companies
     ),
     { token, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected),
-    // { addToast } = useToasts(),
+    [form, setForm] = useState(selected || {}),
     [collections, setCollections] = useState([]),
     dispatch = useDispatch();
 
+  // 👇 Update filtered HMO options when modal opens or hmo list updates
   useEffect(() => {
-    if (hmo) {
+    if (hmo && showModal) {
       const codeList = hmo.map((item) => item.code);
       const filtered = HMO.collections.filter(
         (item) => !codeList.includes(item.code)
       );
       setCollections(filtered);
     }
-  }, [hmo, dispatch]);
+  }, [hmo, showModal]);
 
+  // 👇 Reset form when modal opens
   useEffect(() => {
     if (showModal) {
       setForm({});
     }
   }, [showModal]);
 
-  // Handle create function
+  // 👇 Create new HMO entry
   const handleAdd = () => {
-    let newHmo = [...hmo, form];
+    const newHmo = [...hmo, form];
     dispatch(
       UPDATE({
         data: { _id: activePlatform.branch.companyId._id, hmo: newHmo },
@@ -53,21 +53,14 @@ export default function Modal() {
     ).then(() => {
       dispatch(SetActivePlatform({ data: newHmo, isHMO: true }));
     });
-    // Close modal after successful save
-    dispatch(TOGGLE());
+    dispatch(TOGGLE()); // Close modal
   };
 
-  // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
     handleAdd();
   };
 
-  // Handle change sa inputs
-
-  // Fix: Return correct form value
-
-  // Handle modal close
   const handleClose = () => dispatch(TOGGLE());
 
   const { cp = {}, code } = form;
@@ -83,13 +76,26 @@ export default function Modal() {
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
-          {/* Input fields */}
+          {/* 👇 HMO Select */}
           <label>HMO</label>
           <select
-            className="form-control form-control"
+            className="form-control"
             value={code || ""}
             required
-            onChange={(e) => setForm({ ...form, code: e.target.value })}
+            onChange={(e) => {
+              const selectedCode = e.target.value;
+              const selectedItem = HMO.collections.find(
+                (item) => item.code === selectedCode
+              );
+              if (selectedItem) {
+                setForm({
+                  ...form,
+                  code: selectedItem.code,
+                  name: selectedItem.name,
+                  cp: { phone: "", email: "", agent: "" }, // reset contact person info
+                });
+              }
+            }}
           >
             <option value="">Select</option>
             {collections.map((item) => (
@@ -99,35 +105,37 @@ export default function Modal() {
             ))}
           </select>
 
+          {/* 👇 Contact Info Inputs */}
           <MDBInput
             label="Phone"
             type="number"
             maxLength="11"
-            value={cp.phone}
+            value={cp.phone || ""}
             required
             onChange={(e) =>
-              setForm({ ...form, cp: { ...form.cp, phone: e.target.value } })
+              setForm({ ...form, cp: { ...cp, phone: e.target.value } })
             }
           />
           <MDBInput
             label="Email"
             type="text"
-            value={cp.email}
+            value={cp.email || ""}
             required
             onChange={(e) =>
-              setForm({ ...form, cp: { ...form.cp, email: e.target.value } })
+              setForm({ ...form, cp: { ...cp, email: e.target.value } })
             }
           />
           <MDBInput
             label="Contact Person"
             type="text"
-            value={cp.agent}
+            value={cp.agent || ""}
             required
             onChange={(e) =>
-              setForm({ ...form, cp: { ...form.cp, agent: e.target.value } })
+              setForm({ ...form, cp: { ...cp, agent: e.target.value } })
             }
           />
-          {/* Submit button */}
+
+          {/* 👇 Submit Button */}
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"

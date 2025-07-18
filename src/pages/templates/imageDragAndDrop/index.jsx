@@ -11,7 +11,7 @@ export default function ParentComponent() {
 
   return (
     <div style={{ width: "400px", height: "230px" }}>
-      <ImageDragAndDrop defaultImage={logo} savedImg={handleImageChange} />
+      <ImageDragAndDrop img={logo} savedImg={handleImageChange} />
     </div>
   );
 }

@@ -35,6 +35,8 @@ const Body = () => {
         });
     });
   };
+  console.log("fil", filtered);
+
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage + 1;

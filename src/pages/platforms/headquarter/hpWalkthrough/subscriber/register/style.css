@@ -26,18 +26,19 @@
   text-align: "left";
 }
 
-.subscriber-text-container-style h1 {
+.subscriber-text-container-style .subscriber-editable-title {
   text-align: left;
   font-weight: 500;
+  font-size: 2rem;
 }
 
-.subscriber-text-container-style h5 {
+.subscriber-text-container-style .subscriber-editable-subtitle {
   text-align: left;
   font-weight: 400;
   font-style: italic;
 }
 
-.subscriber-text-container-style p {
+.subscriber-text-container-style .subscriber-editable-description {
   text-align: left;
   margin-top: 40px;
   font-size: 1.1rem;

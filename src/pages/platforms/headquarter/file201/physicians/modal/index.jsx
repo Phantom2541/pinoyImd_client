@@ -68,7 +68,7 @@ export default function Modal() {
         postnominal: form.postnominal,
         suffix: form.suffix,
         branch: activePlatform.branchId,
-        user: form.userId,
+        user: form._Id,
       };
     } else {
       // Ghost physician

@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBAnimation } from "mdbreact";
+import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
 import ECG from "./../../../../../../assets/subscriber/Electrocardiogram.jpg";
 import MRI from "./../../../../../../assets/subscriber/MRI.jpg";
@@ -9,6 +9,8 @@ import XRAY from "./../../../../../../assets/subscriber/XRAY.JPG";
 import DEFIBRILLATOR from "./../../../../../../assets/subscriber/Defibrillator.jpg";
 import VENTILATOR from "./../../../../../../assets/subscriber/Ventilator.jpg";
 import IP from "./../../../../../../assets/subscriber/IP.jpeg";
+import ImageDragAndDrop from "../../../../../templates/imageDragAndDrop/dragNdroping";
+import EditableField from "../../../../../../components/customizable/editableField";
 
 const collections = [
   {
@@ -75,14 +77,29 @@ export default function Machines() {
             className="subscriber-AboutUs-card"
           >
             <div className="subscriber-AboutUs-card-image">
-              <img src={item.image} alt={item.title} />
+              <ImageDragAndDrop img={item.image} />
             </div>
             <div className="subscriber-AboutUs-card-body">
-              <div className="subscriber-AboutUs-card-title">{item.title}</div>
-              <div className="subscriber-AboutUs-card-description">
-                {item.description}
-              </div>
+              <EditableField
+                classNameTxt="subscriber-AboutUs-card-title"
+                fieldData={{
+                  _id: "title",
+                  title: item.title,
+                }}
+                keyForValue="title"
+              />
+              <EditableField
+                classNameTxt="subscriber-AboutUs-card-description"
+                fieldData={{
+                  _id: "description",
+                  description: item.description,
+                }}
+                keyForValue="description"
+              />
             </div>
+            <button className="subscriber-AboutUs-card-deleteBtn bg-danger">
+              <MDBIcon icon="trash" />
+            </button>
           </MDBAnimation>
         ))}
       </div>

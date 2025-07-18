@@ -313,7 +313,7 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
+        // state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -326,12 +326,12 @@ export const reduxSlice = createSlice({
         state.collections.splice(index, 1);
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        // state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        // state.isLoading = false;
       });
   },
 });
