@@ -1,7 +1,7 @@
 import React from "react";
 import Subscriber from "./subscriber";
 
-export default function hpWalkthrough() {
+export default function HpWalkthrough() {
   return (
     <div>
       <Subscriber />

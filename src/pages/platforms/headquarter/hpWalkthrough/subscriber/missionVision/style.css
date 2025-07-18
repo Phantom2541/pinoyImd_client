@@ -87,7 +87,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.subscriber-mission-vision-top div:nth-child(2) h1,
+.subscriber-mission-vision-top div:nth-child(2) .missionTitle,
 .subscriber-mission-vision-middle div:first-child h1,
 .subscriber-mission-vision-bottom div:nth-child(3) h1 {
   font-size: 2.5rem;
@@ -95,7 +95,7 @@
   text-transform: uppercase;
 }
 
-.subscriber-mission-vision-top div:nth-child(2) span,
+.subscriber-mission-vision-top div:nth-child(2) .missionText,
 .subscriber-mission-vision-middle div:first-child span,
 .subscriber-mission-vision-bottom div:nth-child(3) span {
   font-size: 1rem;
