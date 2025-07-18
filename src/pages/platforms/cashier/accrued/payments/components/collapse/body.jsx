@@ -1,10 +1,13 @@
 import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { Statements } from "../../../../../../../services/fakeDb";
-import { dateFormat, fullName } from "../../../../../../../services/utilities";
+import {
+  currency,
+  dateFormat,
+  fullName,
+} from "../../../../../../../services/utilities";
 
 export default function Collapsable({ deals = [] }) {
-  console.log("deals", deals);
   return (
     <MDBTable bordered className="m-0 p-0">
       <MDBTableHead>
@@ -18,8 +21,6 @@ export default function Collapsable({ deals = [] }) {
         {deals?.map((deal, index) => {
           const { payableId, amount, fsId, remarks, createdAt, category } =
             deal;
-
-          console.log("deal", deal);
 
           return (
             <tr key={index}>
@@ -37,7 +38,7 @@ export default function Collapsable({ deals = [] }) {
                 <small>Category :{category}</small>
               </td>
               <td>
-                <h6>{amount}</h6>
+                <h6>{currency.format(amount)}</h6>
                 <small>Remarks : {remarks}</small>
               </td>
             </tr>

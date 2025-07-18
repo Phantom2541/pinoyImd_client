@@ -3,15 +3,27 @@ import { axioKit } from "../../../utilities";
 
 const url = "assets/providers";
 const categories = [
-  { text: "supplier", value: "supplier" },
-  { text: "laboratory", value: "laboratory" },
-  { text: "radiology", value: "radiology" },
-  { text: "diagnostic", value: "diagnostic" },
-  { text: "pharmacy", value: "pharmacy" },
-  { text: "infirmary", value: "infirmary" },
-  { text: "rehabilitation", value: "rehabilitation" },
-  { text: "support", value: "support" },
-  { text: "ghost", value: "ghost" },
+  { text: "Supplier", value: "supplier", title: "Supplier of Materials " },
+  {
+    text: "Laboratory",
+    value: "laboratory",
+    title: "Laboratory services only. ",
+  },
+  { text: "Radiology", value: "radiology", title: "Radiology services only." },
+  {
+    text: "Diagnostic",
+    value: "diagnostic",
+    title: "Laboratory and Radiology services.",
+  },
+  { text: "Pharmacy", value: "pharmacy", title: "Pharmacy only" },
+  { text: "Infirmary", value: "infirmary", title: "Complete medical services" },
+  {
+    text: "Rehabilitation",
+    value: "rehabilitation",
+    title: "Rehabilitation services only (PT).",
+  },
+  { text: "Support", value: "support", title: "Support company" },
+  { text: "Ghost", value: "ghost", title: "Unregistered Company" },
 ];
 const contractCategories = [
   { text: "Subcontract", value: "sbc" },
@@ -414,6 +426,15 @@ export const reduxSlice = createSlice({
       })
       .addCase(INSOURCE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload.payload;
+        const { page, maxPage } = state;
+        if (payload.length > 0) {
+          let totalPAges = Math.floor(payload.length / state.maxPage);
+          if (payload.length % maxPage > 0) totalPAges += 1;
+          state.totalPages = totalPAges;
+          if (page > totalPAges) {
+            state.page = totalPAges;
+          }
+        }
         state.totalPages =
           Math.ceil((payload.payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -490,12 +511,17 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, { payload }) => {
         const { payload: data } = payload;
 
-        const _collections = state.collections;
+        var _collections = state.collections;
         const index = _collections.findIndex((item) => item._id === data._id);
-        state.collections[index] = data;
-        state.filtered = _collections.filter(
-          ({ contract, status }) => (contract || status) === state.category
-        );
+        _collections[index] = data;
+        state.filtered = _collections.filter(({ contract, status }) => {
+          if (state.category) {
+            return (contract || status) === state.category;
+          } else {
+            return true;
+          }
+        });
+        state.collections = _collections;
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -512,7 +538,6 @@ export const reduxSlice = createSlice({
         const { updatedKey, _id } = data;
         const updateCollections = (collections) => {
           const index = collections.findIndex((item) => item._id === _id);
-          console.log("specific update index", index);
           collections[index] = {
             ...collections[index],
             [updatedKey]: data[updatedKey],

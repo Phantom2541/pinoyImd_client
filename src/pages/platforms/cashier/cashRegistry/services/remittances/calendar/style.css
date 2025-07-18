@@ -184,7 +184,7 @@
   font-weight: 550;
 }
 .cashier-calendar-remittance-body .cashier-rermmitance-calendar-card {
-  height: 25vh;
+  height: 27vh;
 }
 
 .cashier-rermmitance-calendar-card .cashier-remittance-breakdown {
@@ -197,17 +197,21 @@
   margin-bottom: 2rem;
 }
 
+.cashier-rermmitance-calendar-card.sale {
+  transition: all 0.3s ease;
+}
+
 .cashier-calendar-remittance-body
   .cashier-rermmitance-calendar-card.sale:hover {
+  transform: scale(1.05);
   /* min-height: 35vh; */
-  min-height: 28vh;
-
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  /* min-height: 28vh; */
+  /* position: absolute; */
+  /* left: 50%; */
+  /* transform: translateX(-50%); */
   z-index: 2;
   /* width: 15rem; */
-  width: 15rem;
+  /* width: 15rem; */
 
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2), 0px 6px 20px rgba(0, 0, 0, 0.1);
 }

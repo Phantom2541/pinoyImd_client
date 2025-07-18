@@ -36,15 +36,20 @@ export default function Signatories({ signatories = [] }) {
     dr = signatories[1],
     frontdesk = signatories[2];
   return (
-    <div className="pt-4 print-footer">
+    <div className="pt-4 px-3 laboratory-signatories">
       <div className="d-flex justify-content-between">
-        <Signature person={head} label="Medical Laboratory Scientist" isHalf />
+        <Signature
+          person={head}
+          label="Medical Laboratory Scientist"
+          style={{ marginTop: "-0.5rem" }}
+          withSignature={head?.withSignature}
+        />
         <Signature person={frontdesk} label="Receptionist" isHalf />
       </div>
       <Signature
         person={dr}
         label="Pathologist"
-        style={{ marginTop: "20px" }}
+        style={{ marginTop: "-0.5rem" }}
         withSignature
       />
     </div>

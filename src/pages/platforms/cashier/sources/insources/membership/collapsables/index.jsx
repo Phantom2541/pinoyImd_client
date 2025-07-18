@@ -20,6 +20,25 @@ import Swal from "sweetalert2";
 import CollapseTable from "./table";
 import Header from "./header";
 
+function NoInsourceMessage() {
+  return (
+    <MDBCard className="text-center my-4">
+      <MDBCardBody>
+        <h5 className="font-weight-bold mb-3">No Membership Source Found</h5>
+        <p className="mb-2">
+          You currently don't have any registered membership source or client
+          companies.
+        </p>
+        <p className="text-muted">
+          To get started, please declare at least one membership source — like a
+          loyalty member or affiliated company. This ensures physicians are
+          properly assigned and members receive the correct discounts and
+          benefits.
+        </p>
+      </MDBCardBody>
+    </MDBCard>
+  );
+}
 export default function MenuCollapse() {
   const { token, maxPage } = useSelector(({ auth }) => auth),
     {
@@ -267,9 +286,8 @@ export default function MenuCollapse() {
           );
         })
       ) : (
-        <p className="text-center">No record.</p>
+        <NoInsourceMessage />
       )}
-      {/* <Modal toggle={toggle} show={show} selected={ghostCompany} /> */}
     </MDBContainer>
   );
 }

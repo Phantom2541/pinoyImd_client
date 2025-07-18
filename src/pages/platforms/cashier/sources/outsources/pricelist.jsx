@@ -1,16 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  MDBBtn,
-  MDBModal,
-  MDBModalBody,
-  MDBIcon,
-  MDBModalHeader,
-  MDBTypography,
-  MDBInput,
-  MDBRow,
-  MDBCol,
-} from "mdbreact";
+import { MDBModal, MDBModalBody, MDBIcon, MDBModalHeader } from "mdbreact";
 import { TogglePrice } from "../../../../../services/redux/slices/assets/providers";
 
 import { BROWSE } from "../../../../../services/redux/slices/commerce/catalog/menus";
@@ -18,7 +8,6 @@ import { BROWSE } from "../../../../../services/redux/slices/commerce/catalog/me
 export default function Modal() {
   const { token } = useSelector(({ auth }) => auth),
     { showPriceModal, selected } = useSelector(({ providers }) => providers),
-    { collections } = useSelector(({ menus }) => menus),
     dispatch = useDispatch();
 
   //Listener

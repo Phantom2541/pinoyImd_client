@@ -18,6 +18,7 @@ const initialState = {
   willCreate: false,
   message: "",
   showModal: false,
+  department: "LAB",
   /**
    * Footer
    */
@@ -30,8 +31,6 @@ export const BROWSE = createAsyncThunk(
   `${url}/browse`,
   ({ token, key }, thunkAPI) => {
     try {
-      console.log("key", key);
-
       return axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       const message =
@@ -68,6 +67,24 @@ export const SAVE = createAsyncThunk(
   ({ data, token }, thunkAPI) => {
     try {
       return axioKit.save(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const UPDATE_TAT = createAsyncThunk(
+  `${url}/update_tat`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "update_tat");
     } catch (error) {
       const message =
         (error.response &&
@@ -189,11 +206,27 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetCREATE: (state) => {
+      state.selected = {
+        department: state.department,
+        mode: "",
+        section: "",
+        expectedAt: "",
+      };
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
     SetSELECTED: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;
       state.willCreate = false;
     },
+
     SetMODAL: (state) => {
       state.showModal = !state.showModal;
     },
@@ -205,6 +238,7 @@ export const reduxSlice = createSlice({
     },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
+
       state.activePage = 1;
     },
     SetActivePAGE: (state, { payload }) => {
@@ -213,6 +247,27 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
       state.selected = {};
+    },
+    SetCOLLECTIONS: (state, { payload }) => {
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (page > totalPAges) {
+          state.page = totalPAges;
+        }
+      }
+      state.collections = payload;
+      state.filtered = payload.filter(
+        ({ department }) => department === state.department
+      );
+    },
+    SetDepartment: (state, { payload }) => {
+      state.department = payload;
+      state.filtered = state.collections.filter(
+        ({ department }) => department === state.department
+      );
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -230,6 +285,13 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload;
+
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % state.maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (state.activePage > totalPAges) {
+          state.activePage = totalPAges;
+        }
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -271,6 +333,28 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.formSubmitted = false;
       })
+      .addCase(UPDATE_TAT.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE_TAT.fulfilled, (state, action) => {
+        const { success } = action.payload;
+
+        // state.collections = payload;
+        // state.filtered = payload.filter(
+        //   ({ department }) => department === state.department
+        // );
+
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE_TAT.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
 
       .addCase(UPDATE.pending, (state) => {
         state.formSubmitted = true;
@@ -284,7 +368,8 @@ export const reduxSlice = createSlice({
             const index = collections.findIndex(
               (item) => item._id === payload._id
             );
-            collections[index] = payload;
+            const oldData = { ...collections[index] };
+            collections[index] = { ...oldData, ...payload };
           };
 
           updateCollections(state.collections);
@@ -393,7 +478,6 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -402,11 +486,13 @@ export const reduxSlice = createSlice({
         const index = state.collections.findIndex(
           (item) => item._id === payload
         );
+        const findex = state.filtered.findIndex((item) => item._id === payload);
 
         state.collections.splice(index, 1);
+        state.filtered.splice(findex, 1);
+
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
@@ -463,7 +549,11 @@ export const reduxSlice = createSlice({
 export const {
   SetFILTERED,
   SetSELECTED,
+  SetCOLLECTIONS,
+  SetDepartment,
   TOGGLE,
+  SetCREATE,
+  SetEDIT,
   RESET,
   SetMaxPage,
   SetActivePAGE,

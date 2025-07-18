@@ -9,8 +9,7 @@ const url = "auth",
   activePlatform =
     localStorage.getItem("activePlatform") !== "undefined" &&
     localStorage.getItem("activePlatform"),
-  fileUrl = `/public/users/companies/${email}`,
-  profileUrl = `/public/users/${email}`;
+  fileUrl = `/public/users/companies/${email}`;
 
 const initialState = {
   auth: {}, // user details
@@ -38,7 +37,9 @@ const initialState = {
   maxPage,
   loginSuccess: false,
   isSuccess: false,
+  isRejected: false,
   isLoading: false,
+  formSubmitted: false,
   message: "",
 };
 
@@ -131,22 +132,45 @@ export const UPDATE = createAsyncThunk(
   }
 );
 
-export const UPLOAD = createAsyncThunk(`${url}/upload`, (form, thunkAPI) => {
-  try {
-    return axioKit.upload(form.data, form.token, (progress) => {
-      thunkAPI.dispatch(
-        UPLOADBAR(Math.round((progress.loaded * 100) / progress.total))
-      );
-    });
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const UPDATE_INFO = createAsyncThunk(
+  `${url}/update_info`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update("assets/persons/users", data, token, "update_info");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
+
+export const UPLOAD = createAsyncThunk(
+  `${url}/upload`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.upload(data, token, (progress) => {
+        thunkAPI.dispatch(
+          UPLOADBAR(Math.round((progress.loaded * 100) / progress.total))
+        );
+      });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const reduxSlice = createSlice({
   name: url,
@@ -155,6 +179,39 @@ export const reduxSlice = createSlice({
     UPLOADBAR: (state, data) => {
       state.progressBar = data.payload;
     },
+    SetActivePlatform: (state, action) => {
+      //this function is for setHMO and setTAT
+      const { isHMO = false, data } = action.payload;
+      const { branch } = state.activePlatform;
+      const { companyId } = branch;
+
+      const _activePlatform = {
+        ...state.activePlatform,
+        branch: {
+          ...branch,
+          tat: data,
+          companyId: { ...companyId, ...(isHMO && { hmo: data }) },
+        },
+      };
+      localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
+      state.activePlatform = _activePlatform;
+    },
+
+    SetPatientCategories: (state, { payload }) => {
+      const _activePlatform = {
+        ...state.activePlatform,
+        branch: {
+          ...state.activePlatform.branch,
+          companyId: {
+            ...state.activePlatform.branch.companyId,
+            pc: payload,
+          },
+        },
+      };
+      state.activePlatform = _activePlatform;
+      localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
+    },
+
     IMAGE: (state, { payload }) => {
       state.image = payload;
       state.progressBar = -1;
@@ -167,6 +224,8 @@ export const reduxSlice = createSlice({
     },
     RESET: (state) => {
       state.isSuccess = false;
+      state.formSubmitted = false;
+      state.isRejected = false;
       state.loginSuccess = false;
       state.message = "";
     },
@@ -183,6 +242,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(SETACTIVEPLATFORM.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+
         const branch = state.branches.find(
           (branch) => branch._id === payload.activePlatform.branchId
         );
@@ -214,15 +274,16 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(CHANGEPASSWORD.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(CHANGEPASSWORD.fulfilled, (state, action) => {
         const { success } = action.payload;
         state.isSuccess = true;
+        state.isRejected = false;
         state.message = success;
-        state.isLoading = false;
+        state.formSubmitted = false;
 
         setTimeout(() => {
           localStorage.clear();
@@ -232,7 +293,8 @@ export const reduxSlice = createSlice({
       .addCase(CHANGEPASSWORD.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
+        state.isRejected = true;
       })
 
       .addCase(LOGIN.pending, (state) => {
@@ -251,11 +313,12 @@ export const reduxSlice = createSlice({
 
           const branch = branches.find((branch) => branch._id === branchId);
           const { contract = { designation: -1 } } = branch || {};
-          const department = Policy.getDepartment(contract.designation) || {};
+          const department = Policy.getDepartment(contract.designation) || "";
           const role = Policy.getPosition(contract.designation) || {};
           const activePlatform = {
             ...auth.activePlatform,
             branch,
+            company: branch?.companyId || {},
             access: [..._access, "patron"],
             department,
             role,
@@ -278,7 +341,7 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
-        state.image = `${ENDPOINT}${profileUrl}/profile.jpg`;
+        state.image = `${ENDPOINT}/public/users/${auth.email}/profile.jpg`;
         state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
         state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
         state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
@@ -299,7 +362,7 @@ export const reduxSlice = createSlice({
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         const branch = state.branches.find(
-          ({ _id }) => _id === payload.activePlatform.branchId
+          ({ _id }) => _id === payload?.activePlatform.branchId
         );
 
         const { contract = { designation: -1 } } = branch || {};
@@ -318,6 +381,22 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+
+      .addCase(UPDATE_INFO.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE_INFO.fulfilled, (state, action) => {
+        // const { success, payload } = action.payload;
+        state.formSubmitted = false;
+        state.isSuccess = true;
+      })
+      .addCase(UPDATE_INFO.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
       })
 
       .addCase(VALIDATEREFRESH.pending, (state) => {
@@ -344,18 +423,19 @@ export const reduxSlice = createSlice({
             .map((a) => a.platform);
 
           const { contract = { designation: -1 } } = branch || {};
-          const department = Policy.getDepartment(contract.designation) || {};
+          const department = Policy.getDepartment(contract.designation) || "";
           const role = Policy.getPosition(contract.designation) || {};
           state.activePlatform = {
             ...activePlatform,
             branch,
+            company: branch?.companyId || {},
             access: [..._access],
             department,
             role,
             position: contract.designation,
           };
           state.company = branch?.companyId;
-          state.image = `${ENDPOINT}${profileUrl}/profile.jpg`;
+          state.image = `${ENDPOINT}/public/users/${auth.email}/profile.jpg`;
           state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
           state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
           state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
@@ -399,7 +479,15 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, SetCOMPANY, MAXPAGE, UPLOADBAR, IMAGE, NETWORK } =
-  reduxSlice.actions;
+export const {
+  RESET,
+  SetCOMPANY,
+  MAXPAGE,
+  UPLOADBAR,
+  IMAGE,
+  NETWORK,
+  SetActivePlatform,
+  SetPatientCategories,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

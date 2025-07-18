@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   MDBSideNavLink,
   MDBSideNavCat,
@@ -24,46 +24,91 @@ export default function SideNavigation({
   onLinkClick,
 }) {
   const [links, setLinks] = useState([]);
+  const [logo, setLogo] = useState(FailedLogo);
+  const [href, setHref] = useState("");
+  const [activeCategory, setActiveCategory] = useState("");
+
   const { activePlatform, company, isLoading } = useSelector(
-      ({ auth }) => auth
-    ),
-    [logo, setLogo] = useState(FailedLogo),
-    [href, setHref] = useState(""),
-    [activeCategory, setActiveCategory] = useState("");
+    ({ auth }) => auth
+  );
 
-  // Load company logo if available
+  // 🔧 Utility: Filter sidebar by role (recursive)
+  const filterSidebarByRole = useCallback((items, role) => {
+    return items
+      .filter((item) => !item.allowedFor || item.allowedFor.includes(role))
+      .map((item) => ({
+        ...item,
+        children: item.children
+          ? filterSidebarByRole(item.children, role)
+          : undefined,
+      }));
+  }, []);
+
+  // ✅ Guarded company logo and href loader
+  // useEffect(() => {
+  //   const platformKey = activePlatform?.platform?.toLowerCase();
+
+  //   // let newLogo = FailedLogo;
+  //   let newHref = "/patron/bulletin";
+
+  //   if (platformKey === "patron" && !isLoading) {
+  //     const patronCompany = JSON.parse(localStorage.getItem("patronCompany"));
+  //     if (patronCompany?.name) {
+  //       const url = `${ENDPOINT}/public/companies/${
+  //         patronCompany.name
+  //       }/logo.png?${new Date().getTime()}`;
+  //       isImageValid(url, (valid) => {
+  //         if (valid && url !== logo) setLogo(url);
+  //       });
+  //     }
+  //   } else if (company?.name && platformKey && !isLoading) {
+  //     const url = `${ENDPOINT}/public/companies/${
+  //       company.name
+  //     }/profile/logo.png?${new Date().getTime()}`;
+  //     isImageValid(url, (valid) => {
+  //       if (valid && url !== logo) setLogo(url);
+  //     });
+
+  //     newHref = `/${platformKey}/${
+  //       ["manager", "headquarter"].includes(platformKey)
+  //         ? "dashboard"
+  //         : "bulletin"
+  //     }`;
+  //   }
+
+  //   if (newHref !== href) setHref(newHref);
+  // }, [company, activePlatform, isLoading, href, logo]);
+
+  // ✅ Guarded sidebar loader with platform/role filtering
   useEffect(() => {
-    if (company?.name && activePlatform?.platform && !isLoading) {
-      const url = `${ENDPOINT}/public/companies/${
-        company?.name
-      }/logo.png?${new Date().getTime()}`;
-      isImageValid(url, (valid) => {
-        if (valid) setLogo(url);
-      });
+    const platformKey = activePlatform?.platform
+      ?.toLowerCase()
+      .replace(/\s/g, "");
 
-      const _href = `/${activePlatform?.platform?.toLowerCase() || "patron"}/${
-        ["manager", "headquarter"].includes(
-          activePlatform?.platform?.toLowerCase()
-        )
-          ? "dashboard"
-          : "bulletin"
-      }`;
-      setHref(_href);
+    if (!platformKey || platformKey === "patron") {
+      const newLinks = Sidebars["patron"] || [];
+      if (JSON.stringify(links) !== JSON.stringify(newLinks)) {
+        setLinks(newLinks);
+      }
+      return;
     }
-  }, [company, activePlatform, isLoading]);
 
-  // Load sidebar links
-  useEffect(() => {
-    if (activePlatform?.platform) {
-      const platformKey = activePlatform?.platform
-        ?.toLowerCase()
-        .replace(/\s/g, "");
-      setLinks(Sidebars[platformKey] || []);
+    const fullSidebar = Sidebars[platformKey] || [];
+
+    if (platformKey === "laboratory") {
+      const role = activePlatform?.role || "Junior MedTech";
+      const filtered = filterSidebarByRole(fullSidebar, role);
+      if (JSON.stringify(links) !== JSON.stringify(filtered)) {
+        setLinks(filtered);
+      }
     } else {
-      setLinks(Sidebars["patron"] || []);
+      if (JSON.stringify(links) !== JSON.stringify(fullSidebar)) {
+        setLinks(fullSidebar);
+      }
     }
-  }, [activePlatform]);
+  }, [activePlatform, company, links, filterSidebarByRole]);
 
+  // 🔁 Recursive nav render
   const renderNavItems = (
     _links,
     keyPrefix = "",
@@ -101,7 +146,7 @@ export default function SideNavigation({
           topLevel
           onClick={onLinkClick}
           style={indentStyle}
-          title={item.title} // ← DITO LANG NILAGAY ANG TOOLTIP
+          title={item.title}
         >
           <MDBIcon icon={item.icon} className="mr-2" />
           {capitalize(item.name)}
@@ -113,7 +158,6 @@ export default function SideNavigation({
   return (
     <div className="white-skin no-print">
       <MDBSideNav
-        // logo={logo}
         tag="div"
         bg="https://mdbootstrap.com/img/Photos/Others/sidenav2.jpg"
         alt="Company Logo"
@@ -124,18 +168,19 @@ export default function SideNavigation({
         triggerOpening={triggerOpening}
         style={{ transition: "padding-left .3s" }}
       >
-        {/* ✅ Custom Header with Logo + Dynamic Title */}
+        {/* Header */}
         <div className="text-center mt-2 " style={{ marginBottom: "-10px" }}>
           <img
             src={logo}
             alt="Company Logo"
-            style={{ width: "150px", height: "65px" }}
+            style={{ width: "65px", aspectRatio: "1/1" }}
           />
           <div className="mt-2 text-dark" style={{ fontWeight: 500 }}>
             {activePlatform?.branch?.company || company?.name}
           </div>
         </div>
         <hr />
+        {/* Nav */}
         <MDBSideNavNav>
           {!isLoading
             ? renderNavItems(
@@ -171,7 +216,6 @@ export default function SideNavigation({
               ))}
         </MDBSideNavNav>
       </MDBSideNav>
-      <button>tes</button>
     </div>
   );
 }

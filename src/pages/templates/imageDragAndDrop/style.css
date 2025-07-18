@@ -1,0 +1,153 @@
+.template-dragNdrop-dropImgArea {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.template-dragNdrop-dropImgArea.show-border {
+  border: 2px dashed #aaa !important;
+}
+
+.template-dragNdrop-dropImgArea img {
+  width: 100%;
+  height: 100%;
+  -webkit-user-drag: none;
+  object-fit: contain;
+  transition: 0.3s all ease-in-out;
+}
+
+.normal-preview {
+  filter: none;
+  opacity: 1;
+}
+
+.dragging-preview {
+  filter: grayscale(100%);
+  opacity: 0.1;
+}
+
+.drop-text {
+  position: absolute;
+  font-size: 1.4rem;
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: bold;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* .template-dragNdrop-dropImgArea.accepted:hover img,
+.template-dragNdrop-dropImgArea.default:hover img {
+  filter: blur(1.5px);
+} */
+
+.template-dragNdrop-dropImgArea:hover {
+  background-color: #f9f9f9;
+  border-color: #666;
+}
+
+.icon-actions {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.icon-remove {
+  color: #dc3545;
+  cursor: pointer;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+}
+
+.icon-remove:hover {
+  color: #e4606a;
+}
+
+.icon-accept {
+  color: #28a745;
+  cursor: pointer;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+}
+
+.icon-accept:hover {
+  color: #4fbd6a;
+}
+
+.hover-buttons {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  /* height: 100%; */
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.template-dragNdrop-dropImgArea:hover .hover-buttons {
+  opacity: 1;
+}
+
+.download-button,
+.upload-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  color: white;
+  padding: 10px 14px;
+  border: none;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+}
+
+.download-button {
+  background-color: #1266f1;
+}
+.download-button:hover {
+  color: white;
+  background-color: #3c80f4;
+}
+
+.upload-button {
+  background-color: #fbc02d;
+}
+
+.upload-button:hover {
+  color: white;
+  background-color: #fccc4d;
+}
+
+/* 
+.upload-button:hover {
+  background-color: #007bff;
+}
+
+.download-button:hover {
+  background-color: #007bff;
+  color: white;
+} */
+
+.accept-btn,
+.reject-btn {
+  background-color: transparent;
+  border: none;
+}

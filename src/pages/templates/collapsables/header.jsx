@@ -44,6 +44,7 @@ const Header = () => {
             inputClassName="m-0 p-0 text-white"
             preValue={component}
             collections={Templates.getComponents("LAB")}
+            label="Select Component"
           />
           {/* <Services template={template} setService={setService} /> */}
         </div>

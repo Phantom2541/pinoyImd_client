@@ -1,17 +1,16 @@
 import Sidebars from "./sidebars";
+import Developer from "./developer";
 import {
   Statements,
   Menus,
   Payments,
   Philippines,
   Privileges,
-  Denominations,
   Services,
   Suffixes,
   Categories,
   Memberships,
 } from "./finance";
-import Developer from "./developer";
 import {
   MicroscopicInRange,
   MicroscopicResultInWord,
@@ -35,9 +34,10 @@ import Calendar from "./calendar";
 import Policy from "./policy";
 import Roles from "./roles";
 import HMO from "./hmo";
+import Quotes from "./quotes";
+import ValidID from "./validID";
 
 export {
-  Denominations,
   Suffixes,
   Calendar,
   Rci,
@@ -70,4 +70,6 @@ export {
   Access,
   Policy,
   HMO,
+  Quotes,
+  ValidID,
 };

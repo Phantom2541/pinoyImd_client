@@ -3,6 +3,7 @@ import transfer from "../../../assets/paymentMethods/transfer.png";
 import gcash from "../../../assets/paymentMethods/gcash-edited.png";
 import cheque from "../../../assets/paymentMethods/cheque.png";
 import voucher from "../../../assets/paymentMethods/voucher.png";
+import downpayment from "../../../assets/paymentMethods/downpayment.png";
 const paymentMethods = [
   {
     text: "Cash",
@@ -25,12 +26,19 @@ const paymentMethods = [
     img: voucher,
     style: { height: "1rem", marginTop: "0.2rem", marginBottom: "0.2rem" },
   },
+  {
+    text: "Downpayment",
+    img: downpayment,
+    style: { height: "1.5rem", marginTop: "0.2rem", marginBottom: "0.2rem" },
+  },
 ];
 
 const paymentMethod = {
   getImage: (method) => {
-    return paymentMethods.find(
-      ({ text }) => text.toLowerCase() === method.toLowerCase()
+    return (
+      paymentMethods.find(
+        ({ text }) => text?.toLowerCase() === method?.toLowerCase()
+      ) || { img: "", text: "", style: {} }
     );
   },
 };

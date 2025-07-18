@@ -1,11 +1,15 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { MDBBadge, MDBCard, MDBCardBody, MDBView } from "mdbreact";
-import { currency, fullName } from "../../../../../services/utilities";
+import {
+  currency,
+  fullName,
+  paymentMethod,
+} from "../../../../../services/utilities";
 import Month from "../../../../../services/fakeDb/calendar/months";
 import SummaryLoading from "../../../cashier/cashRegistry/services/deals/summary/loading";
 import "./style.css";
-export default function Summary() {
+export default function Summary({ summaryRef }) {
   const {
     month,
     year,
@@ -95,8 +99,6 @@ export default function Summary() {
         return matchesDate && matchesCashier;
       }) || [];
 
-    console.log("filtered", filtered);
-
     const totalAmount = filtered.reduce((sum, { amount, deletedAt }) => {
       if (deletedAt) return sum;
       return sum + amount;
@@ -105,13 +107,60 @@ export default function Summary() {
     return { cluster: filtered, total: totalAmount };
   }, [day, month, year, collections, selectedCashier]);
 
+  const handlePaymentIcon = (method) => {
+    const { img, style, text } = paymentMethod.getImage(method);
+    return <img src={img} style={style} title={text} alt={method} />;
+  };
+
+  const contentRef = useRef(null);
+
+  // Function to expand div to scrollHeight
+  const expandSection = (element, hasContent, delay = 500) => {
+    if (!element) return;
+
+    element.style.transition = "none";
+    element.style.overflow = "hidden";
+    element.style.height = "0px";
+
+    // Force reflow
+    void element.offsetHeight;
+
+    if (hasContent) {
+      setTimeout(() => {
+        element.style.transition = "height 0.7s ease-in";
+        element.style.height = element.scrollHeight + "px";
+
+        // After animation, allow resizing
+        setTimeout(() => {
+          element.style.height = "auto";
+          element.style.overflow = "visible";
+        }, 700);
+      }, delay);
+    } else {
+      setTimeout(() => {
+        element.style.transition = "height 0.2s ease-out";
+        element.style.height = "fit-content";
+        element.style.overflow = "visible";
+      }, delay);
+    }
+  };
+
+  useEffect(() => {
+    if (contentRef.current) {
+      expandSection(contentRef.current, cluster.length > 0);
+    }
+  }, [cluster]);
+
   return (
     <MDBCard narrow>
       <MDBView
         cascade
         className="gradient-card-header custom-header bg-success narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
       >
-        <div className="d-flex justify-content-between items-center font-bold text-lg w-100">
+        <div
+          ref={summaryRef}
+          className="d-flex justify-content-between items-center font-bold text-lg w-100"
+        >
           <span
             className={
               isSunday ? "text-red-600 text-sm" : "text-gray-600 text-sm"
@@ -128,7 +177,8 @@ export default function Summary() {
       <MDBCardBody className="m-0 p-1">
         <div
           className="flex justify-between items-center"
-          style={{ width: "18rem" }}
+          ref={contentRef}
+          style={{ width: "18rem", height: 0, overflow: "hidden" }}
         >
           {/* Only show cashier selection if there's more than one */}
           {!isLoading ? (
@@ -164,7 +214,7 @@ export default function Summary() {
                     >
                       {`${name} ${
                         selectedCashier !== id && !isOnlyOneCashier
-                          ? `- ${currency(gross)}`
+                          ? `- ${currency.format(gross)}`
                           : ""
                       }`}
                     </option>
@@ -176,7 +226,7 @@ export default function Summary() {
                 <p className="font-bold flex-1 text-left">
                   {cluster.length} Patient/s
                 </p>
-                <p className="font-bold flex-1 text-right">{`Total: ${currency(
+                <p className="font-bold flex-1 text-right">{`Total: ${currency.format(
                   total
                 )}`}</p>
               </div>
@@ -188,7 +238,14 @@ export default function Summary() {
                   <ol className="mt-2 list-decimal list-inside">
                     {cluster.map(
                       (
-                        { customerId, amount, createdAt, cart, deletedAt },
+                        {
+                          customerId,
+                          amount,
+                          createdAt,
+                          cart,
+                          deletedAt,
+                          payment,
+                        },
                         index
                       ) => (
                         <li key={index} className="p-2 border-b">
@@ -206,7 +263,9 @@ export default function Summary() {
                             {new Date(createdAt).toLocaleTimeString()}
                           </div>
                           <div className="text-blue-600">
-                            {currency(amount)} {deletedAt ? "(Deleted)" : ""}
+                            {currency.format(amount)}{" "}
+                            {deletedAt ? "(Deleted)" : ""}{" "}
+                            {handlePaymentIcon(payment)}
                           </div>
                           <div className="text-blue-600">
                             {cart.map((i, index) => (

@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { MDBTable } from "mdbreact";
 import { toWords } from "number-to-words";
 import Header from "./header";
 import { currency } from "../../../../services/utilities";
@@ -43,22 +42,25 @@ export default function Table() {
           <tr>
             <td className="py-0   px-1  ">Monthly</td>
             <td className="py-0 text-right   px-1 ">
-              {currency(rate.monthly)}
+              {currency.format(rate.monthly)}
             </td>
             <td className="py-0   px-1 ">Cash Advance</td>
-            <td className="py-0   px-1  "> {currency(deduction?.ca)} </td>
+            <td className="py-0   px-1  ">
+              {" "}
+              {currency.format(deduction?.ca)}{" "}
+            </td>
           </tr>
           <tr>
             <td className="py-0   px-1 ">Daily</td>
             <td className="py-0 text-right   px-1 ">
-              {currency(rate?.daily)}{" "}
+              {currency.format(rate?.daily)}{" "}
             </td>
             <td className="py-0   px-1 ">Absent </td>
             <td className="py-0   px-1 ">
               {deduction.absent ? (
                 <div className="d-flex align-items-center justify-content-between">
                   <span>{deduction.absent} days</span>
-                  <span>{currency(deduction.absent * rate?.daily)}</span>
+                  <span>{currency.format(deduction.absent * rate?.daily)}</span>
                 </div>
               ) : (
                 "-"
@@ -67,10 +69,12 @@ export default function Table() {
           </tr>
           <tr>
             <td className="py-0 px-1  ">COLA</td>
-            <td className="py-0 px-1  text-right">{currency(rate?.cola)} </td>
+            <td className="py-0 px-1  text-right">
+              {currency.format(rate?.cola)}{" "}
+            </td>
             <td className="py-0 px-1  ">Loan</td>
             <td className="py-0 px-1  text-right">
-              {currency(deduction?.loan)}{" "}
+              {currency.format(deduction?.loan)}{" "}
             </td>
           </tr>
           <tr>
@@ -82,7 +86,7 @@ export default function Table() {
                 {present ? (
                   <>
                     <span>{present}days P</span>
-                    <span>{currency(present * rate?.daily * 2)}</span>
+                    <span>{currency.format(present * rate?.daily * 2)}</span>
                   </>
                 ) : (
                   "P -"
@@ -92,7 +96,7 @@ export default function Table() {
                 {absent ? (
                   <>
                     <span>{absent}days A</span>
-                    <span>{currency(absent * rate?.daily)}</span>
+                    <span>{currency.format(absent * rate?.daily)}</span>
                   </>
                 ) : (
                   "A -"
@@ -106,7 +110,7 @@ export default function Table() {
               className="py-0   px-1  text-right"
               style={{ verticalAlign: "middle" }}
             >
-              {currency(deduction?.ph)}
+              {currency.format(deduction?.ph)}
             </td>
           </tr>
           <tr>
@@ -115,7 +119,7 @@ export default function Table() {
               {special ? (
                 <div className="d-flex align-items-center justify-content-between">
                   <span>{special}days</span>
-                  <span>{currency(special * rate?.daily * 1.3)}</span>
+                  <span>{currency.format(special * rate?.daily * 1.3)}</span>
                 </div>
               ) : (
                 "-"
@@ -123,7 +127,7 @@ export default function Table() {
             </td>
             <td className="py-0   px-1 ">SSS</td>
             <td className="py-0 text-right   px-1 ">
-              {currency(deduction?.sss)}{" "}
+              {currency.format(deduction?.sss)}{" "}
             </td>
           </tr>
           <tr>
@@ -132,7 +136,7 @@ export default function Table() {
               {nightShift ? (
                 <div className="d-flex align-items-center justify-content-between">
                   <span>{nightShift}hrs</span>
-                  <span>{currency(nightShift * hourlyRate * 0.1)}</span>
+                  <span>{currency.format(nightShift * hourlyRate * 0.1)}</span>
                 </div>
               ) : (
                 "-"
@@ -141,7 +145,7 @@ export default function Table() {
             <td className="py-0   px-1 ">Pag-ibig</td>
             <td className="py-0 text-right   px-1 ">
               {" "}
-              {currency(deduction?.pi)}{" "}
+              {currency.format(deduction?.pi)}{" "}
             </td>
           </tr>
           <tr>
@@ -150,7 +154,7 @@ export default function Table() {
               {earn?.overtime ? (
                 <div className="d-flex align-items-center justify-content-between">
                   <span>{earn?.overtime}hrs</span>
-                  <span>{currency(overtime * hourlyRate * 1.25)}</span>
+                  <span>{currency.format(overtime * hourlyRate * 1.25)}</span>
                 </div>
               ) : (
                 "-"
@@ -163,7 +167,7 @@ export default function Table() {
             <td className="py-0   px-1 ">Bonus</td>
             <td className="py-0   px-1  text-right">
               {" "}
-              {currency(earn?.bonus)}{" "}
+              {currency.format(earn?.bonus)}{" "}
             </td>
             <td className="py-0   px-1 "></td>
             <td className="py-0   px-1 "> </td>
@@ -171,11 +175,11 @@ export default function Table() {
           <tr>
             <td className="py-0   px-1 ">Gross Earnings :</td>
             <td className="py-0 font-weight-bold text-right   px-1 ">
-              {currency(earn?.total)}{" "}
+              {currency.format(earn?.total)}{" "}
             </td>
             <td className="py-0   px-1 ">Total Deductions </td>
             <td className="py-0   px-1  font-weight-bold text-right">
-              {currency(deduction?.total)}{" "}
+              {currency.format(deduction?.total)}{" "}
             </td>
           </tr>
           <tr>
@@ -216,7 +220,7 @@ export default function Table() {
               colSpan={2}
               style={{ fontSize: "1.2rem" }}
             >
-              {currency(breakdown?.net)}
+              {currency.format(breakdown?.net)}
             </td>
           </tr>
           <tr>

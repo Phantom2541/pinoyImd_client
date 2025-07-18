@@ -24,14 +24,27 @@ const _form = {
 export default function ExportToExcel({ show, toggle }) {
   const { auth } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ menus }) => menus),
+    [categories, setCategories] = useState([]),
     [form, setForm] = useState(_form);
 
   useEffect(() => {
     if (show) {
+      //access the activePlatform in localstorage instead to auth, to get the updated patient categories
+      const fakeDB = localStorage.getItem("activePlatform");
+      if (fakeDB) {
+        setCategories(JSON.parse(fakeDB)?.branch?.companyId?.pc);
+      }
       //RESET FORM EVERY EXPORT
       setForm(_form);
     }
   }, [show]);
+
+  const _tabs = [
+    { text: "In-House", value: "inhouse" },
+    categories?.includes(7) && { text: "Membership", value: "mbs" },
+    categories?.includes(8) && { text: "Contract", value: "ctr" },
+    categories?.includes(6) && { text: "HMO", value: "hmo" },
+  ];
 
   const getMenusHavePrice = (menus) => {
     if (form.menuType === "ctr") {
@@ -164,34 +177,31 @@ export default function ExportToExcel({ show, toggle }) {
           <MDBTypography noteTitle="Export Options: " note noteColor="success">
             Which menu price list would you like to export:
           </MDBTypography>
-          {[
-            { text: "In-House", value: "inhouse" },
-            { text: "Membership", value: "mbs" },
-            { text: "Contract", value: "ctr" },
-            { text: "HMO", value: "hmo" },
-          ].map((menuType, index) => {
-            return (
-              <div key={index} className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="menuType"
-                  checked={form.menuType === menuType.value}
-                  onChange={() =>
-                    setForm({ ...form, menuType: menuType.value })
-                  }
-                  id={`menuType${index}`}
-                  value={menuType.value}
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor={`menuType${index}`}
-                >
-                  {menuType.text}
-                </label>
-              </div>
-            );
-          })}
+          {_tabs
+            .filter((menu) => menu)
+            .map((menuType, index) => {
+              return (
+                <div key={index} className="form-check form-check-inline">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="menuType"
+                    checked={form.menuType === menuType?.value}
+                    onChange={() =>
+                      setForm({ ...form, menuType: menuType?.value })
+                    }
+                    id={`menuType${index}`}
+                    value={menuType?.value}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor={`menuType${index}`}
+                  >
+                    {menuType.text}
+                  </label>
+                </div>
+              );
+            })}
 
           {form.menuType && <BodySwitcher form={form} setForm={setForm} />}
           <div className="text-center mb-1-half mt-4">

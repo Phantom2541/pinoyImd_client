@@ -10,13 +10,28 @@ export default function CollapseTable({ menu }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     [showModal, setShowModal] = useState(false),
-    dispatch = useDispatch();
+    dispatch = useDispatch(),
+    department = menu?.department[0];
 
   const toggleModal = () => setShowModal(!showModal);
 
   const handleLabPrint = (task) => {
+    const _task = {
+      ...task,
+      signatories: Array.isArray(task?.signatories)
+        ? task.signatories.map((s, i) => ({
+            ...s,
+            withSignature: (i === 0 || i === 1) && true,
+          }))
+        : undefined,
+    };
+    console.log("_task", _task);
+
     const services = collections.filter(({ id }) => task.services.includes(id));
-    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+    localStorage.setItem(
+      "taskPrintout",
+      JSON.stringify({ ..._task, services })
+    );
 
     const URL = `${window.location.origin}/printout/laboratory/task`;
     const title = `Laboratory Task Printout`;
@@ -33,8 +48,20 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleRadPrint = (task) => {
+    const _task = {
+      ...task,
+      signatories: Array.isArray(task?.signatories)
+        ? task.signatories.map((s, i) => ({
+            ...s,
+            withSignature: (i === 0 || i === 1) && true,
+          }))
+        : undefined,
+    };
     const services = Services.find(task.services);
-    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
+    localStorage.setItem(
+      "taskPrintout",
+      JSON.stringify({ ..._task, services })
+    );
     window.open(
       "/printout/radiology/task",
       "Radiology Task Printout",
@@ -43,14 +70,11 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
-    console.log("obj", obj);
-
     const { department } = Templates.findByComponentName(form);
 
     const _packages = Array.isArray(obj?.packages)
       ? obj.packages
       : Object.keys(obj?.packages || {}).map(Number);
-    console.log("_packages", _packages);
 
     const task = {
       ...obj,
@@ -66,6 +90,11 @@ export default function CollapseTable({ menu }) {
       department,
       miscIndex,
       packages: obj?.packages,
+    };
+
+    const handleModal = () => {
+      dispatch(SetTASK({ task }));
+      toggleModal();
     };
 
     return (
@@ -92,21 +121,22 @@ export default function CollapseTable({ menu }) {
         </td>
         <td>
           <MDBBtnGroup>
-            <MDBBtn
-              title="Modal"
-              rounded
-              onClick={() => {
-                console.log("onClick-menu", menu);
-                console.log("onClick-task", task);
+            {menu?.branchId?._id === activePlatform.branchId && (
+              <MDBBtn
+                title="Modal"
+                rounded
+                onClick={() => {
+                  console.log("task", task);
 
-                dispatch(SetTASK({ task }));
-              }}
-              color={obj?.hasDone ? "info" : "primary"}
-              size="sm"
-              className="py-1 px-3 m-0"
-            >
-              <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
-            </MDBBtn>
+                  handleModal(task);
+                }}
+                color={obj?.hasDone ? "info" : "primary"}
+                size="sm"
+                className="py-1 px-3 m-0"
+              >
+                <MDBIcon icon={obj?.hasDone ? "pencil-alt" : "list-alt"} />
+              </MDBBtn>
+            )}
             {Array.isArray(obj?.signatories) &&
               obj.signatories.length >= 2 &&
               obj?.signatories[0] &&
@@ -141,39 +171,44 @@ export default function CollapseTable({ menu }) {
   };
 
   const { customerId, physicianId, source, category, _id, diagnostic } = menu;
-  console.log("diagnostic", diagnostic);
-
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">
         <thead>
           <tr>
             <th>Department</th>
-            <th>Template</th>
+            <th>Section</th>
             <th>Services</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {diagnostic &&
+          {diagnostic ? (
             Object.keys(diagnostic)?.map((key, index) => {
               const rawEntry = diagnostic[key];
-              const entry = { ...rawEntry, key }; // ✅ avoid modifying frozen object
-              console.log("rawEntry", rawEntry);
-              console.log("entry", entry);
-
-              if (Array.isArray(entry.packages)) {
-                return entry.packages.map((obj, i) =>
-                  handleIndividual(key, entry, index + i, i)
+              const entry = { ...rawEntry, key };
+              if (Array.isArray(rawEntry))
+                return rawEntry.map((result, i) =>
+                  handleIndividual(
+                    key.toLowerCase(),
+                    result,
+                    index,
+                    i,
+                    rawEntry.length > 1
+                  )
                 );
-              }
-
               return handleIndividual(key.toLowerCase(), entry, index);
-            })}
+            })
+          ) : (
+            <tr>
+              <td colSpan={4} className="font-weight-bold text-center">
+                Go to the {department === "LAB" ? "laboratory" : "radiology"}
+              </td>
+            </tr>
+          )}
         </tbody>
       </MDBTable>
-
-      <Modal show={showModal} toggle={toggleModal} task={menu} />
+      <Modal />
     </>
   );
 }

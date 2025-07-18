@@ -11,7 +11,7 @@ import {
   fullName,
 } from "../../../../../../services/utilities";
 import { Services } from "../../../../../../services/fakeDb";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Deals = ({ deals: collections, isOpen, _id }) => {
   const [cluster, setCluster] = useState([]);
@@ -50,7 +50,9 @@ const Deals = ({ deals: collections, isOpen, _id }) => {
             >
               <MDBTableHead>
                 <tr>
-                  <td>Customer</td>
+                  <td>
+                    <span className="ml-4">Customer</span>
+                  </td>
                   <td>Services</td>
                   <td>Price</td>
                 </tr>
@@ -59,18 +61,18 @@ const Deals = ({ deals: collections, isOpen, _id }) => {
                 {cluster.map((c, index) => {
                   const { createdAt, deals } = c;
                   return (
-                    <>
+                    <React.Fragment key={index}>
                       <tr>
                         <td
                           colSpan={3}
                           className="font-weight-bold"
                           style={{ color: "blue" }}
                         >
-                          {dateFormat(createdAt)}
+                          <span className="ml-4"> {dateFormat(createdAt)}</span>
                         </td>
                       </tr>
                       <Children deals={deals} />
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </MDBTableBody>
@@ -98,11 +100,14 @@ const Children = ({ deals }) => {
         return (
           <tr key={`deals-${deal._id}-${index}`}>
             <td style={{ fontWeight: "400", width: "40%" }}>
-              <div>
+              <div className="ml-4">
                 <span className="font-weight-bold mr-2">{index + 1}.</span>
                 {fullName(customerId?.fullName)}
               </div>
-              <span style={{ marginLeft: "1.2rem" }} className="text-primary">
+              <span
+                style={{ marginLeft: "1.2rem" }}
+                className="text-primary ml-4"
+              >
                 {time}
               </span>
             </td>
@@ -114,7 +119,7 @@ const Children = ({ deals }) => {
               ))}
             </td>
             <td style={{ fontWeight: "400", width: "10%" }}>
-              {currency(amount)}
+              {currency.format(amount)}
             </td>
           </tr>
         );

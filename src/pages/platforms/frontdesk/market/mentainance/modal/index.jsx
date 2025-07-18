@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -7,21 +7,20 @@ import {
   MDBIcon,
   MDBModalHeader,
   MDBInput,
-  
 } from "mdbreact";
-import { TOGGLE, SAVE, UPDATE } from "../../../../../../services/redux/slices/market/mentainance";
-import { BROWSE, 
-} from "../../../../../../services/redux/slices/market/machines";
+import {
+  TOGGLE,
+  SAVE,
+  UPDATE,
+} from "../../../../../../services/redux/slices/market/mentainance";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import { use } from "react";
 
 export default function Modal() {
   const { showModal, selected, willCreate, isLoading } = useSelector(
       ({ mentainance }) => mentainance
     ),
-    { token,auth, activePlatform } = useSelector(({ auth }) => auth),
-    
+    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ machines }) => machines),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
@@ -29,14 +28,16 @@ export default function Modal() {
   useEffect(() => {
     if (selected) {
       setForm(selected);
+    } else if (willCreate) {
+      setForm({
+        machineId: "",
+        engineer: "",
+        purpose: "Routine maintenance",
+        recommendations: "No issues found",
+      });
     }
-  }, [selected]);
-  useEffect(() => {
-    if (token)
-  dispatch(BROWSE({ token, params: { branchId: activePlatform?.branchId } }));
-  }, [dispatch, token]);
+  }, [selected, willCreate]);
 
-  // Handle update function
   const handleUpdate = () => {
     TOGGLE();
 
@@ -71,8 +72,6 @@ export default function Modal() {
 
     if (willCreate) return handleCreate();
     handleUpdate();
-
-    console.log("form", form);
 
     if (willCreate) {
       return handleCreate();
@@ -109,19 +108,22 @@ export default function Modal() {
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <small>Machine</small>
-          <select name="machineId" className="form-control" id="" value={handleValue("machineId")}
+          <select
+            name="machineId"
+            className="form-control"
+            id=""
+            value={handleValue("machineId")}
             onChange={(e) => handleChange("machineId", e.target.value)}
-            >
-              <option value=""></option>
-              {collections.map((collection) => (
-                <option key={collection._id} value={collection._id}>
-                  {collection.brand}
-                  {collection.model}
-                </option>
-              ))}
-            </select>
-        
-      
+          >
+            <option value=""></option>
+            {collections.map((collection) => (
+              <option key={collection._id} value={collection._id}>
+                {collection.brand}
+                {collection.model}
+              </option>
+            ))}
+          </select>
+
           <MDBInput
             label="Engineer"
             type="text"
@@ -135,12 +137,13 @@ export default function Modal() {
             onChange={(e) => handleChange("purpose", e.target.value)}
           />
           <MDBInput
-            label="Recommendation"
+            label="Recommendations / Next Steps"
             type="text"
             value={handleValue("recommendations")}
             required
             onChange={(e) => handleChange("recommendations", e.target.value)}
           />
+
           {/* Submit button */}
           <div className="text-center mb-1-half">
             <MDBBtn

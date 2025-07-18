@@ -54,6 +54,19 @@ export const SAVE = createAsyncThunk(`${url}/save`, async (form, thunkAPI) => {
   }
 });
 
+export const CLEARANCE_PAY = createAsyncThunk(
+  `${url}/clearance_pay`,
+  async (form, thunkAPI) => {
+    try {
+      return await axioKit.save(url, form.data, form.token, "clearance_pay");
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error.toString()
+      );
+    }
+  }
+);
+
 export const UPDATE = createAsyncThunk(
   `${url}/update`,
   async (form, thunkAPI) => {
@@ -109,20 +122,41 @@ export const DESTROY = createAsyncThunk(
   }
 );
 
+const arrangePaymentsByDate = (state, collections) => {
+  //this function is arrange collections  by date and set it into filtered
+  const groupByDate = collections.reduce((groups, item) => {
+    const date = dateFormat(item.createdAt);
+    const index = groups.findIndex((group) => group.date === date);
+
+    if (index > -1) {
+      groups[index].deals.push({ ...item, isSelected: false });
+      groups[index].sum += item.amount;
+    } else {
+      groups.push({
+        date,
+        sum: item.amount,
+        deals: [{ ...item, isSelected: false }],
+        isSelected: false,
+      });
+    }
+    return groups;
+  }, []);
+
+  state.totalPages = Math.ceil((groupByDate?.length || 0) / state.maxPage) || 1;
+  state.activePage = Math.min(state.activePage, state.totalPages);
+  state.filtered = groupByDate;
+};
+
 export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
     SetFILTERByCategories: (state, { payload }) => {
       const categoryId = Statements.getAllIdByCategory(payload);
-      // console.log("categoryId:", categoryId);
-
-      const collections = JSON.stringify(state.collections, null, 2);
-      const filtered = JSON.parse(collections).filter(({ fsId }) =>
+      const filtered = state.collections.filter(({ fsId }) =>
         categoryId.includes(fsId)
       );
-      // console.log("filtered:", filtered);
-      state.filtered = filtered;
+      arrangePaymentsByDate(state, !payload ? state.collections : filtered);
     },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
@@ -190,29 +224,7 @@ export const reduxSlice = createSlice({
             ).values(),
           ];
         state.sources = uniqueSource;
-
-        const groupByDate = payload.reduce((groups, item) => {
-          const date = dateFormat(item.createdAt);
-          const index = groups.findIndex((group) => group.date === date);
-
-          if (index > -1) {
-            groups[index].deals.push({ ...item, isSelected: false });
-            groups[index].sum += item.amount;
-          } else {
-            groups.push({
-              date,
-              sum: item.amount,
-              deals: [{ ...item, isSelected: false }],
-              isSelected: false,
-            });
-          }
-          return groups;
-        }, []);
-
-        state.totalPages =
-          Math.ceil((groupByDate?.length || 0) / state.maxPage) || 1;
-        state.activePage = Math.min(state.activePage, state.totalPages);
-        state.filtered = groupByDate;
+        arrangePaymentsByDate(state, payload);
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, { payload }) => {
@@ -238,11 +250,22 @@ export const reduxSlice = createSlice({
         state.isSuccess = true;
         state.formSubmitted = false;
       })
-      .addCase(SAVE.rejected, (state, { payload }) => {
-        state.message = payload;
+      .addCase(SAVE.rejected, (state, action) => {
+        state.message = action.payload;
         state.formSubmitted = false;
       })
 
+      .addCase(CLEARANCE_PAY.pending, (state) => {
+        state.formSubmitted = true;
+      })
+      .addCase(CLEARANCE_PAY.fulfilled, (state, _) => {
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(CLEARANCE_PAY.rejected, (state, { payload }) => {
+        state.message = payload;
+        state.formSubmitted = false;
+      })
       .addCase(UPDATE.pending, (state) => {
         state.formSubmitted = true;
       })

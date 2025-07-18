@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBBtn,
@@ -8,6 +8,8 @@ import {
   MDBModalHeader,
   MDBInput,
   MDBTypography,
+  MDBRow,
+  MDBCol,
 } from "mdbreact";
 import {
   SAVE,
@@ -17,15 +19,27 @@ import {
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
+import Spinner from "../../../../../components/spinner";
+import Swal from "sweetalert2";
 
 export default function Modal() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { showModal, selected, willCreate, isLoading } = useSelector(
+    { showModal, selected, willCreate, isSuccess, formSubmitted } = useSelector(
       ({ providers }) => providers
     ),
     [form, setForm] = useState(selected),
     { addToast } = useToasts(),
     dispatch = useDispatch();
+
+  const toggle = useCallback(() => {
+    dispatch(TOGGLE());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!formSubmitted && isSuccess && showModal) {
+      toggle();
+    }
+  }, [formSubmitted, isSuccess, showModal, toggle]);
 
   useEffect(() => {
     if (showModal) {
@@ -41,8 +55,6 @@ export default function Modal() {
 
   // Handle update function
   const handleUpdate = () => {
-    TOGGLE();
-
     // Check if object has changed
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
@@ -65,12 +77,22 @@ export default function Modal() {
         data: form,
         token,
       })
-    ).then(() => TOGGLE()); // Close modal after successful save
+    );
   };
 
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { number } = form;
+    if (number.length < 11) {
+      return Swal.fire({
+        title: "Invalid Phone Number",
+        text: "Please check and correct the phone number format. It seems to be incorrect.",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
+      });
+    }
     willCreate ? handleCreate() : handleUpdate();
   };
 
@@ -93,13 +115,13 @@ export default function Modal() {
   };
 
   return (
-    <MDBModal isOpen={showModal} TOGGLE={TOGGLE} backdrop={false} size="sm">
+    <MDBModal isOpen={showModal} toggle={toggle} backdrop={true} size="sm">
       <MDBModalHeader
-        toggle={() => dispatch(TOGGLE())}
+        toggle={() => toggle()}
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="user" className="mr-2" />
-        {willCreate ? "Create" : "Update"} Controls
+        {willCreate ? "Create" : "Update"} Utilities
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
@@ -109,34 +131,51 @@ export default function Modal() {
             className="text-center"
           ></MDBTypography>
 
-          {/* Input fields */}
           <MDBInput
             label="Name"
-            type="string"
             value={form?.displayname}
             required
             onChange={(e) => handleChange("displayname", e.target.value)}
           />
 
           <MDBInput
-            label="Monthly Cut Off"
-            type="number" // Use 'number' input type for better validation
-            value={form?.cutoff}
-            onChange={({ target }) => handleChange("cutoff", target.value)}
-            min="1" // Min value is 1
-            max="31" // Max value is 31
+            label="Abbreviation"
+            value={form?.abbr}
             required
+            onChange={(e) => handleChange("abbr", e.target.value)}
           />
 
+          <MDBRow>
+            <MDBCol>
+              <MDBInput
+                label="Billing Day"
+                type="number"
+                value={form?.cutoff}
+                onChange={({ target }) => handleChange("cutoff", target.value)}
+                min="1" // Min value is 1
+                max="31" // Max value is 31
+                required
+              />
+            </MDBCol>
+            <MDBCol>
+              <MDBInput
+                label="Due Date"
+                type="number"
+                value={form?.due}
+                onChange={({ target }) => handleChange("due", target.value)}
+                min="1" // Min value is 1
+                max="31" // Max value is 31
+                required
+              />
+            </MDBCol>
+          </MDBRow>
           <MDBInput
             label="Phone Number"
-            type="string"
             value={form?.number}
             onChange={(e) => handleChange("number", e.target.value)}
           />
           <MDBInput
             label="Address"
-            type="string"
             value={form?.address}
             onChange={(e) => handleChange("address", e.target.value)}
           />
@@ -145,12 +184,13 @@ export default function Modal() {
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"
-              disabled={isLoading}
+              disabled={formSubmitted}
               color="info"
               className="mb-2"
               rounded
             >
-              {willCreate ? "Submit" : "Update"}
+              {willCreate ? "Submit" : "Update"}{" "}
+              <Spinner formSubmitted={formSubmitted} />
             </MDBBtn>
           </div>
         </form>

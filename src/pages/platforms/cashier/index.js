@@ -1,6 +1,7 @@
 import { Cashier, Deals, Sales, Remittances, Onboarding } from "./cashRegistry";
 import { Menus, Services } from "./catalog";
 import {
+  Philhealth,
   Outsources,
   Utilities,
   Hotlines,
@@ -20,6 +21,7 @@ import {
   SOA,
   Reseco,
 } from "./accrued";
+
 export {
   Cashier,
   Deals,
@@ -33,6 +35,7 @@ export {
   Wellness,
   HMO,
   Referrals,
+  Philhealth,
   Outsources,
   Utilities,
   Hotlines,

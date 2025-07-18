@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-const Index = ({ handleSearch, isLocal = false, isImportant = false }) => {
+const Index = ({ handleSearch, isLocal = false }) => {
   const [clue, setClue] = useState("");
-
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("running index");
 
     handleSearch(true, clue);
   };

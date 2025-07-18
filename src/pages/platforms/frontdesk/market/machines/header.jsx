@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
@@ -12,7 +12,6 @@ const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ machines }) => machines),
     dispatch = useDispatch();
-  console.log("collections");
 
   useEffect(() => {
     if (token) {

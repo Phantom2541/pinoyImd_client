@@ -50,7 +50,7 @@ const Header = ({
             <label htmlFor={index} className="form-check-label label-table" />
           </>
         )}
-        {index + 1}. {title}| {currency(sum)}
+        {index + 1}. {title}| {currency.format(sum)}
       </div>
       <div className="d-flex">
         <small className="mr-2 mt-1">{count} sendout/s</small>

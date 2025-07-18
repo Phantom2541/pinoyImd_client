@@ -13,7 +13,7 @@ const Header = ({
 }) => {
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
-      {index + 1}. {title}| {currency(sum)}
+      {index + 1}. {title}| {currency.format(sum)}
       <div className="d-flex">
         <small className="mr-2 mt-1">{count} sendout/s</small>
         <MDBBtn

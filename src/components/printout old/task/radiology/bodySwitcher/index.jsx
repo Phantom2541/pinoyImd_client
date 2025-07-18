@@ -3,7 +3,7 @@ import Xray from "./xray";
 import Ecg from "./ecg";
 import Ultrasound from "./ultrasound";
 
-const Blank = ({ task }) => <div>{task.form} is not working</div>;
+const Blank = ({ task }) => <div>{task?.form} is not working</div>;
 
 const componentMap = {
   xray: Xray,
@@ -48,7 +48,7 @@ export default function BodySwitcher({ task }) {
     };
   }, [task]);
 
-  const Component = componentMap[task.form?.toLowerCase()] || Blank;
+  const Component = componentMap[task?.form?.toLowerCase()] || Blank;
   return (
     <div style={{ maxHeight: "500px", minHeight: "400px", overflow: "hidden" }}>
       <div ref={contentRef}>

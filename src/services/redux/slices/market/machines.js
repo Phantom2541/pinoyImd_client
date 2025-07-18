@@ -44,6 +44,24 @@ export const BROWSE = createAsyncThunk(
   }
 );
 
+export const DOWNLOAD_MIDDLEWARE = createAsyncThunk(
+  `${url}/download_middleware`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/download_middleware`, token, params);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   try {
     return axioKit.save(url, form.data, form.token);
@@ -116,8 +134,6 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetFILTER: (state, { payload }) => {
-      console.log("payload", payload);
-
       const { page, maxPage } = state;
       if (payload.length > 0) {
         let totalPages = Math.floor(payload.length / maxPage);
@@ -179,6 +195,23 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(DOWNLOAD_MIDDLEWARE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(DOWNLOAD_MIDDLEWARE.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(DOWNLOAD_MIDDLEWARE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

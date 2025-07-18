@@ -1,21 +1,27 @@
 import React from "react";
-import { MDBBtn } from "mdbreact";
+import { MDBBadge, MDBBtn, MDBIcon } from "mdbreact";
+import { useSelector } from "react-redux";
 import {
+  dateFormat,
   fullName,
   getAge,
   getGenderIcon,
 } from "../../../../../../../services/utilities";
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
-  const { customerId, branchId } = item;
+  const { pid, client, schedule, status } = item;
+
   return (
     <div className={`d-flex justify-content-between ${textColor} `}>
       <div>
-        {index + 1}. {getGenderIcon(customerId?.isMale)}{" "}
-        {fullName(customerId?.fullName)} |{getAge(customerId?.dob)}
+        {index + 1}. {getGenderIcon(pid?.isMale)} {fullName(pid?.fullName)} |
+        {getAge(pid?.dob)}{" "}
+        {client?._id ? "| Sendout" : `| ${dateFormat(schedule)}`}
+        {status === "done" && (
+          <MDBIcon icon="check" className="ml-2 text-success" />
+        )}
       </div>
       <div className="d-flex">
-        <small className="mr-2 mt-1">{branchId?.displayname}</small>
         <MDBBtn
           size="sm"
           color="white"

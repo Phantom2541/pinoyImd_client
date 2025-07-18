@@ -4,6 +4,7 @@ import { MDBView, MDBBtnGroup, MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import Months from "../../../../../services/fakeDb/calendar/months";
 import Years from "../../../../../services/fakeDb/calendar/years";
+import CalendarPicker from "../../../../../components/header/calendars";
 
 const today = new Date();
 
@@ -114,40 +115,47 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
       <div className="d-flex align-items-center justify-content-center">
         <MDBBtnGroup>
           <MDBBtn
+            size="sm"
+            className="p-2 m-0 z-depth-0"
+            color="white"
+            style={{ borderRight: "1px solid grey" }}
+            disabled={isTodaySelected}
+            onClick={selectToday}
+          >
+            Today
+          </MDBBtn>
+          <MDBBtn
             onClick={prev}
             disabled={disablePrevOnLastChoice()}
             size="sm"
-            className="p-2 m-0"
-            rounded
-            color="light"
+            className="p-2 m-0 z-depth-0"
+            color="white"
           >
             <MDBIcon icon="angle-left" style={{ fontSize: "1rem" }} />
           </MDBBtn>
-          <MDBBtn color="light" style={{ fontSize: "1rem" }} className="m-0">
+          <span
+            style={{
+              fontSize: "0.9rem",
+              backgroundColor: "white",
+              color: "black",
+              padding: "0 20px",
+              textAlign: "center",
+              boxShadow: "inset 0 0 7px 1px rgba(0,0,0,0.2)",
+            }}
+            className="d-flex align-items-center"
+          >
             {Months[month - 1]} {year}
-          </MDBBtn>
+          </span>
           <MDBBtn
             onClick={next}
             disabled={disableNextOnLastChoice()}
             size="sm"
-            className="p-2 m-0"
-            rounded
-            color="light"
+            className="p-2 m-0 z-depth-0"
+            color="white"
           >
             <MDBIcon icon="angle-right" style={{ fontSize: "1rem" }} />
           </MDBBtn>
         </MDBBtnGroup>
-        <MDBBtn
-          size="sm"
-          rounded
-          className="ml-3 p-2 z-depth-0"
-          onClick={selectToday}
-          color="warning"
-          style={{ marginTop: "-14px" }}
-          disabled={isTodaySelected}
-        >
-          Today
-        </MDBBtn>
       </div>
       <MDBBtn color="primary" size="sm" onClick={handlePrint}>
         <MDBIcon icon="print" /> Print

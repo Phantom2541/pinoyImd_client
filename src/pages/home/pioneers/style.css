@@ -1,0 +1,87 @@
+.homePage-pioneers-container {
+  display: grid;
+  grid-template-columns: repeat(3, 310px);
+  gap: 20px;
+  justify-content: center;
+}
+
+.homePage-pioneers-card {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 1s ease;
+}
+
+.homePage-pioneers-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, #00796b -15%, #ffffff 65%);
+  opacity: 0;
+  transition: opacity 1s ease;
+  z-index: -1;
+}
+
+.homePage-pioneers-card:hover::before {
+  opacity: 1;
+}
+
+.homePage-pioneers-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 8px rgba(0, 121, 107, 0.2);
+}
+
+.homePage-pioneers-card img {
+  width: 130px;
+  border-radius: 50%;
+  margin-top: 17px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.homePage-pioneers-card span {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.homePage-pioneers-card p {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.pioneerAvatarLink {
+  color: black;
+  transition: all 0.5 ease;
+}
+
+.pioneerAvatarLink:hover {
+  color: #1266f1;
+}
+
+/* responsive design */
+@media (max-width: 1280px) {
+  .homePage-pioneers-container {
+    grid-template-columns: repeat(2, 320px);
+  }
+  .homePage-pioneers-card span {
+    font-size: 1.3rem;
+  }
+  .homePage-pioneers-card p {
+    font-size: 1rem;
+  }
+  .homePage-pioneers-card img {
+    width: 120px;
+    margin-top: 10px;
+  }
+}

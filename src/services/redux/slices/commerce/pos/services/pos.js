@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, getAge } from "../../../../../utilities";
+import { axioKit, getAge, socket } from "../../../../../utilities";
 import { Services } from "../../../../../fakeDb";
 // import _ from "lodash";
 const url = "commerce/pos/services/deals";
@@ -67,6 +67,7 @@ const defaultState = {
   isPrint: true,
   isSuccess: false,
   isLoading: false,
+  formSubmitted: false,
   message: undefined,
   department: [],
 };
@@ -209,10 +210,9 @@ export const reduxSlice = createSlice({
       state.physicianId = payload;
     },
     SETSOURCE: (state, { payload }) => {
-      const { _id, membership, hmo, contract } = payload;
+      const { _id, membership, contract } = payload;
       state.sourceId = _id;
       state.membership = membership;
-      state.hmo = hmo;
       state.contract = contract;
     },
     ADDTOCART: (state, { payload }) => {
@@ -276,22 +276,29 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(SAVE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload, dealForOnboard } = action.payload;
+        const fakeDB = localStorage.getItem("activePlatform");
+        if (fakeDB) {
+          //this is realtime send it to the onboarding
+          const { department } = JSON.parse(fakeDB);
+          socket.emit("send_onboard", { ...dealForOnboard, department });
+        }
+
         state.message = success;
         state.transaction = payload;
         state.ssx = "";
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       });
   },
 });

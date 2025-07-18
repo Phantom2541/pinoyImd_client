@@ -2,9 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
 const url = "assets/persons/personnels";
+const today = new Date();
 
 const initialState = {
   collections: [],
+  employees: [], // this is regular employees for creating a clearance pay
   personnel: {},
   /**
    * Responsible for access control
@@ -16,6 +18,7 @@ const initialState = {
   granted: [], // Permissions that have been acquired or activated or stock
   queued: [], // permissions are lined up for activation.
   revoked: [], // Permissions that have been removed or denied
+  company: [],
   updateTracker: {
     isLoading: false,
     fieldName: "",
@@ -27,6 +30,8 @@ const initialState = {
   showModal: false,
   selected: {},
   willCreate: false,
+  month: new Date().getMonth() + 1,
+  year: new Date().getFullYear(),
   /**
    * Footer
    */
@@ -53,12 +58,65 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+export const BOARD_MEMBERS = createAsyncThunk(
+  `${url}/board_members`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/board_members`, token, params);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const COMPANY = createAsyncThunk(
+  `${url}/company`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/company`, token, params);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const PAYROLL = createAsyncThunk(
   `${url}/payroll`,
-  ({ token, branchId }, thunkAPI) => {
+  ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/payroll`, token, { branchId });
+      return axioKit.universal(`${url}/payroll`, token, params);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const TERMINATED = createAsyncThunk(
+  `${url}/terminated`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/terminated`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -92,9 +150,9 @@ export const USER = createAsyncThunk(
 
 export const EMPLOYEES = createAsyncThunk(
   `${url}/employees`,
-  ({ token, branch }, thunkAPI) => {
+  ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/employees`, token, { branch });
+      return axioKit.universal(`${url}/employees`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -205,12 +263,19 @@ export const reduxSlice = createSlice({
     SetUPDATE_TRACKER: (state, data) => {
       state.updateTracker.fieldName = data.payload;
     },
+    SetTERMINATED: (state, { payload }) => {
+      const { personnelId, payment } = payload;
+      const employees = [...state.employees];
+      const index = employees.findIndex((item) => item?._id === personnelId);
+      employees.splice(index, 1);
+      state.employees = employees;
+      state.collections.unshift(payment);
+      state.filtered.unshift(payment);
+    },
     SetPAYROLL: (state, { payload }) => {
       const index = state?.collections?.findIndex(
         ({ user }) => user?._id === payload?.particular
       );
-      console.log("payroll user", payload);
-      console.log("index", index);
       state.collections[index]?.payroll.push(payload);
     },
     SETOnHotSEAT: (state, { payload }) => {
@@ -244,17 +309,47 @@ export const reduxSlice = createSlice({
       state.access.available = state.access.available.unshift({ _id, access });
     },
     SetSELECTED: (state, { payload }) => {
-      console.log("payload", payload);
-
       state.selected = payload;
       state.willCreate = false;
       state.showModal = true;
     },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
+    SetMONTH: (state, { payload }) => {
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
+    },
+    setYear: (state, action) => {
+      state.year = Number(action.payload);
+    },
     TOGGLE: (state) => {
-      state.showModal = false;
+      state.showModal = !state.showModal;
     },
     RESET: (state, data) => {
       state.isSuccess = false;
@@ -278,7 +373,7 @@ export const reduxSlice = createSlice({
         );
 
         const staff = state.collections[index];
-        var StaffAccess = [...staff.access];
+        var StaffAccess = [...staff?.access];
 
         if (deleted.length > 0) {
           deleted.forEach((element) => {
@@ -314,7 +409,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload.sort((a, b) => {
+        state.collections = state.filtered = payload.sort((a, b) => {
           const aDesignation = String(a?.contract?.designation || "");
           const bDesignation = String(b?.contract?.designation || "");
           return aDesignation.localeCompare(bDesignation);
@@ -325,6 +420,45 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(BOARD_MEMBERS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(BOARD_MEMBERS.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = state.filtered = payload.sort((a, b) => {
+          const aDesignation = String(a?.contract?.designation || "");
+          const bDesignation = String(b?.contract?.designation || "");
+          return aDesignation.localeCompare(bDesignation);
+        });
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isLoading = false;
+      })
+
+      .addCase(BOARD_MEMBERS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(COMPANY.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(COMPANY.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        state.company = payload; // Fix typo
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(COMPANY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -365,6 +499,27 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
 
+      .addCase(TERMINATED.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(TERMINATED.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        const { terminated, regular } = payload;
+        state.employees = regular;
+        state.collections = state.filtered = terminated;
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isLoading = false;
+      })
+      .addCase(TERMINATED.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
       .addCase(USER.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -387,11 +542,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(EMPLOYEES.fulfilled, (state, { payload }) => {
+        console.log("payload", payload);
+
         state.collections = payload.sort((a, b) => {
           const aDesignation = String(a?.contract?.designation || "");
           const bDesignation = String(b?.contract?.designation || "");
           return aDesignation.localeCompare(bDesignation);
         });
+        state.isLoading = false;
       })
       .addCase(EMPLOYEES.rejected, (state, action) => {
         const { error } = action;
@@ -419,6 +577,7 @@ export const reduxSlice = createSlice({
 
       .addCase(UPDATE.pending, (state) => {
         state.updateTracker.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -432,6 +591,7 @@ export const reduxSlice = createSlice({
         state.collections[index] = { ...oldPersonnel, ...payload };
         state.message = success;
         state.isSuccess = true;
+        state.formSubmitted = false;
         state.updateTracker = {
           fieldName: "",
           isLoading: false,
@@ -439,6 +599,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
+        state.formSubmitted = true;
         state.message = error.message;
         state.isUpdating = false;
       });
@@ -447,15 +608,20 @@ export const reduxSlice = createSlice({
 
 export const {
   SETOnHotSEAT,
+  SetFILTERED,
   SETQUEUED,
   SETREVOKED,
   SetPAYROLL,
   UPDATEACCESS,
   SetSELECTED,
   SetActivePAGE,
+  SetMaxPage,
   TOGGLE,
   RESET,
+  ResetDATE,
+  SetMONTH,
   SetUPDATE_TRACKER,
+  SetTERMINATED,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

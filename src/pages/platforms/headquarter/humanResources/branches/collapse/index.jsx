@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MDBCard,
-  MDBCardBody,
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
+  MDBSwitch,
 } from "mdbreact";
 
 import CollapsableBody from "./body";
@@ -17,7 +17,10 @@ import { Policy } from "../../../../../../services/fakeDb";
 import {
   ASSIGN_AO,
   RESET,
+  UPDATE,
 } from "../../../../../../services/redux/slices/assets/branches";
+import { orderBy } from "lodash";
+import "./style.css";
 
 export default function Body() {
   const { auth, token } = useSelector(({ auth }) => auth),
@@ -29,7 +32,12 @@ export default function Body() {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+
+  const paginatedData = orderBy(
+    filtered,
+    [(o) => o.name.toLowerCase().trim()], // field or accessor function
+    ["asc"] // sort order
+  ).slice(startIndex, endIndex);
 
   /**
    * Active states
@@ -143,7 +151,6 @@ export default function Body() {
             ? `${name} has been reassigned to your branch and designated as the Administrative Officer.`
             : `${name} has been registered as personnel and assigned as the Administrative Officer.`,
         });
-
         // 🔥 Your logic here:
         // registerAndAssignAO(selected._id, value.department, value.designation);
       });
@@ -166,9 +173,10 @@ export default function Body() {
               activeId,
               didHoverId
             );
+            const { isHiring = false } = branch;
             return (
               <MDBCard
-                key={`branch-${actualIndex}`}
+                key={`branch-${actualIndex}-${branch._id}`}
                 style={{
                   boxShadow: "0px 0px 0px 0px",
                   backgroundColor: "white",
@@ -184,13 +192,13 @@ export default function Body() {
                     branch={branch}
                     isOpen={activeId === actualIndex}
                     textColor={color}
-                    setActiveId={setActiveId}
+                    setActiveId={(id) => setActiveId(id)}
                     index={actualIndex}
                   />
                 </MDBCollapseHeader>
 
                 <MDBCollapse
-                  id={`collapse-${actualIndex}`}
+                  id={`collapse-${actualIndex}-${branch._id}`}
                   className="  m-0 p-0 border border-black"
                   isOpen={actualIndex === activeId}
                 >
@@ -198,20 +206,33 @@ export default function Body() {
                     className="mx-1 d-flex align-items-center justify-content-between mt-2"
                     style={{ marginBottom: "-0.2rem" }}
                   >
-                    <span className="fw-bold">Personnel List</span>
-                    {activeId === actualIndex && (
-                      <Search
-                        excludes={branch.personnels}
-                        excludeKey="user._id"
-                        setPatient={(user) =>
-                          RegisterNewPersonnel(user, branch)
-                        }
-                      />
-                    )}
+                    <h6 style={{ fontWeight: 500 }}>Personnel List</h6>
+                    <MDBSwitch
+                      checked={isHiring}
+                      labelLeft="Stop"
+                      labelRight="Open Hiring"
+                      label="Toggle Hiring Status"
+                      className="custom-toggle"
+                      onChange={() =>
+                        dispatch(
+                          UPDATE({
+                            token,
+                            data: { _id: branch._id, isHiring: !isHiring },
+                          })
+                        )
+                      }
+                    />
+                    <Search
+                      excludes={branch.personnels}
+                      excludeKey="user._id"
+                      setPatient={(user) => RegisterNewPersonnel(user, branch)}
+                    />
                   </div>
-                  <MDBCardBody className="m-0 p-0 ">
-                    <CollapsableBody branch={branch || {}} />
-                  </MDBCardBody>
+
+                  <CollapsableBody
+                    branch={branch || {}}
+                    key={`${branch._id}-collapse-body`}
+                  />
                 </MDBCollapse>
               </MDBCard>
             );

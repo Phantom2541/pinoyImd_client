@@ -5,6 +5,8 @@ import {
   fullName,
   getAge,
 } from "../../../../../utilities";
+import { HMO, Services } from "../../../../../fakeDb";
+import { orderBy } from "lodash";
 
 const url = "commerce/pos/services/deals";
 const today = new Date();
@@ -16,13 +18,16 @@ const initialState = {
   transaction: { _id: "default" },
   totalPatient: 0,
   formSubmitted: false,
-  filtered: [],
+  filtered: [], //arranged by date
+  refined: [], // filtered by collections use by cashier onboarding
   filterByCashier: "all",
   cashiers: [],
   patient: {},
   cluster: [],
   sources: [],
   source: "all",
+  hmo: "all",
+  filterBy: "source",
   physicians: [],
   filteredPhysicians: [],
   physician: "all",
@@ -495,22 +500,75 @@ export const reduxSlice = createSlice({
       state.filterByCashier = payload;
     },
 
+    SetSORTING: (state, { payload: sortBy }) => {
+      const formattedDeals = [...state.collections].map((deal) => {
+        const { source, customerId, physicianId } = deal;
+        const sourceName = source?.displayname || source?.name;
+        const physician = physicianId?.fullName?.lname;
+        return {
+          ...deal,
+          sourceName,
+          customer: fullName(customerId?.fullName),
+          card: HMO.getName(deal.hmo),
+          physician,
+        };
+      });
+
+      const updateCollections = (collections) => {
+        state.collections = collections;
+        state.refined = collections;
+      };
+      switch (sortBy) {
+        case "patient":
+          updateCollections(orderBy(formattedDeals, "customer", "asc"));
+          break;
+        case "time":
+          updateCollections(orderBy(formattedDeals, "createdAt", "desc"));
+          break;
+        case "source":
+          updateCollections(orderBy(formattedDeals, "sourceName", "asc"));
+          break;
+        case "refined":
+          updateCollections(orderBy(formattedDeals, "card", "asc"));
+          break;
+        default:
+          updateCollections(orderBy(formattedDeals, "physician", "asc"));
+          break;
+      }
+    },
+
     SetFilterBySOURCE: (state, { payload }) => {
       const { value, vendor } = payload;
-      let filtered = [];
+      state.hmo = "all";
+      let filtered = state.collections.filter(
+        ({ category }) => category !== "wls"
+      );
       // Filter logic based on source
-      if (value === "all") {
-        filtered = state.collections;
+      if (value === "all" || value.length < 10) {
         state.vendor = {};
       } else if (value === "NoSource") {
-        filtered = state.collections.filter(({ source }) => !source);
+        filtered = filtered.filter(({ source }) => !source?._id);
         state.vendor = "noSource";
       } else {
-        filtered = state.collections.filter(
+        filtered = filtered.filter(
           ({ source }) => source?._id === value.toString()
         );
         state.vendor = vendor;
       }
+      arrangeDealsByDate(state, filtered);
+    },
+    SetFilterByCARD: (state, { payload }) => {
+      state.vendor = {};
+      let filtered = state.collections.filter(
+        ({ category }) => category === "wls"
+      );
+      if (payload === "all" || payload.length > 10 || payload === "NoSource") {
+        state.hmo = "all";
+      } else {
+        state.hmo = payload;
+        filtered = filtered.filter(({ hmo = "" }) => hmo && hmo === payload);
+      }
+
       arrangeDealsByDate(state, filtered);
     },
 
@@ -598,13 +656,29 @@ export const reduxSlice = createSlice({
     // SetCluster: (state, { payload }) => {
     //   state.cluster = payload;
     // },
-    SetCluster: (state, { payload }) => {
-      const { cutoff, _id } = state.vendor;
-      if (_id) {
+    SetCluster: (state, { payload = [] }) => {
+      const { cutoff = 0, _id = "" } = state.vendor || {};
+      const isFilterBySource = state.filterBy === "source";
+      if (_id || state.hmo !== "all") {
         const fakeDB = localStorage.getItem("cluster");
         let parseVoucher = fakeDB ? JSON.parse(fakeDB) : {};
-        if (parseVoucher[_id]?.length > 0) {
-          state.cluster = parseVoucher[_id];
+        /* 
+             {
+             source:{
+               123123123:[],
+               2312312412:[],
+             },
+             hmo:{
+              itc:[],
+              clh:[], 
+             }  
+          
+          } */
+        const storage = parseVoucher[state.filterBy];
+        const baseKey = isFilterBySource ? _id : state.hmo;
+
+        if (storage?.[baseKey]?.length > 0) {
+          state.cluster = storage[baseKey];
         } else {
           const now = new Date();
           const cutoffDate = new Date(
@@ -614,7 +688,7 @@ export const reduxSlice = createSlice({
           );
 
           const filteredPayload = payload
-            .filter((item) => {
+            ?.filter((item) => {
               const itemDate = new Date(item.date); // assuming item.date is like "March 24, 2025"
               return itemDate <= cutoffDate;
             })
@@ -626,7 +700,10 @@ export const reduxSlice = createSlice({
             "cluster",
             JSON.stringify({
               ...parseVoucher,
-              [_id]: filteredPayload,
+              [state.filterBy]: {
+                ...parseVoucher[state.filterBy],
+                [baseKey]: filteredPayload,
+              },
             })
           );
         }
@@ -679,6 +756,7 @@ export const reduxSlice = createSlice({
 
     CHECK_BULK: (state, { payload }) => {
       const { deals, date } = payload;
+      const parseVoucher = JSON.parse(localStorage.getItem("cluster" || "{}"));
       const cluster = [...state.cluster];
       const index = cluster.findIndex((item) => item.date === date);
       const foundCluster = cluster[index];
@@ -692,19 +770,24 @@ export const reduxSlice = createSlice({
       }
 
       state.cluster = cluster;
+      const baseKey =
+        state.filterBy === "source" ? state.vendor._id : state.hmo;
 
       localStorage.setItem(
         "cluster",
         JSON.stringify({
-          ...JSON.parse(localStorage.getItem("cluster" || "{}")),
-          [state.vendor?._id]: cluster,
+          ...parseVoucher,
+          [state.filterBy]: {
+            ...parseVoucher[state.filterBy],
+            [baseKey]: cluster,
+          },
         })
       );
     },
 
     CHECK_DEAL: (state, { payload }) => {
-      if (!state.vendor._id)
-        return "please select source first to proceed in picking voucher";
+      if (!state.vendor?._id && state.hmo === "all")
+        return "Kindly select a filter type (source,card) and corresponding client to proceed with SOA generation .";
 
       const { date, deal, totalDeals } = payload; //ex. totalDeals=5
       /* 
@@ -740,11 +823,18 @@ export const reduxSlice = createSlice({
         _cluster.push({ date, deals: [deal], hasSelected: totalDeals === 1 });
       }
       state.cluster = _cluster;
+
+      const parseVoucher = JSON.parse(localStorage.getItem("cluster" || "{}"));
+      const baseKey =
+        state.filterBy === "source" ? state.vendor._id : state.hmo;
       localStorage.setItem(
         "cluster",
         JSON.stringify({
-          ...JSON.parse(localStorage.getItem("cluster" || "{}")),
-          [state.vendor?._id]: _cluster,
+          ...parseVoucher,
+          [state.filterBy]: {
+            ...parseVoucher[state.filterBy],
+            [baseKey]: _cluster,
+          },
         })
       );
     },
@@ -753,6 +843,9 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.showModal = true;
       state.willCreate = false;
+    },
+    SetREFINED: (state, { payload }) => {
+      state.refined = payload;
     },
     SetPatient: (state, { payload }) => {
       state.patient = payload;
@@ -790,6 +883,9 @@ export const reduxSlice = createSlice({
         }
       }
     },
+    SetFILTERBY: (state, { payload }) => {
+      state.filterBy = payload;
+    },
 
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
@@ -817,7 +913,23 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
-        state.collections = payload;
+        state.collections = state.refined = payload.map(({ cart, ...rest }) => {
+          const _cart = cart.map(({ menuId, ...etc }) => {
+            const packagesDisplay = Services.whereIn(menuId.packages)
+              .map(({ abbreviation }) => abbreviation)
+              .join(", ");
+            return {
+              ...etc,
+              packagesDisplay,
+              menuId,
+            };
+          });
+
+          return {
+            ...rest,
+            cart: _cart, // ← remains as array of cart items
+          };
+        });
         let uniqueSource = [];
         if (payload.length > 0)
           uniqueSource = [
@@ -828,6 +940,7 @@ export const reduxSlice = createSlice({
                   _id: source?._id || "NoSource",
                   displayname: source?.displayname || "No Source",
                   affiliated: source?.affiliated || [],
+                  isMembership: source?.category === "mbs",
                 },
               ])
             ).values(),
@@ -922,6 +1035,8 @@ export const reduxSlice = createSlice({
       .addCase(INSOURCES.fulfilled, (state, action) => {
         const { payload, success } = action.payload;
         state.collections = state.filtered = payload;
+        console.log("payload", payload);
+
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
@@ -1204,6 +1319,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+        console.log("payload", payload);
+
         state.message = success;
         state.showModal = false;
         if (Array.isArray(state.collections) && state.collections.length > 0) {
@@ -1294,9 +1411,13 @@ export const reduxSlice = createSlice({
 export const {
   SetTOTAL,
   SetToggleModal,
+  SetFILTERBY,
   SetFILTERED,
+  SetREFINED,
+  SetSORTING,
   SetFilterByCASHIER,
   SetFilterBySOURCE,
+  SetFilterByCARD,
   SetFilterByPhysician,
   SetFilterBySourceAndPhysician,
   SetFilterByOUTSOURCE,

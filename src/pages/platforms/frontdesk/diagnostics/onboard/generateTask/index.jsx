@@ -12,9 +12,10 @@ import {
   REFORM,
   TOGGLE,
 } from "../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
-import { axioKit } from "../../../../../../services/utilities";
+import { axioKit, fullName } from "../../../../../../services/utilities";
 import CaseBox from "./case";
 import { Services } from "../../../../../../services/fakeDb";
+// import MachineSender from "./machines";
 
 /**
  * Common for Buntis and Blood Donors
@@ -27,14 +28,13 @@ export default function Modal() {
       show,
       selected: deal,
       inhouse,
-      outsource,
+      cluster,
     } = useSelector(({ taskGenerator }) => taskGenerator),
-    { collections } = useSelector(({ providers }) => providers),
+    // { collections } = useSelector(({ providers }) => providers),
     [outSourceId, setOutSourceId] = useState(""),
     dispatch = useDispatch();
 
   const toggle = () => {
-    console.log("toggle clickeddd");
     dispatch(TOGGLE());
   };
 
@@ -61,28 +61,28 @@ export default function Modal() {
   };
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
-    const _outsource = getIDS(outsource);
     const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);
     const _forms = Services.getTemplates(inhouseIDS, department);
-    const { _id, customerId, ssx, forms: oldForms } = deal;
-    const sentOut = [...collections].find(
-      ({ vendors }) => vendors?._id === outSourceId
-    );
+    const { _id, customerId, ssx, forms: oldForms, pn } = deal;
+
+    // const sentOut = [...collections].find(
+    //   ({ vendors }) => vendors?._id === outSourceId
+    // );
 
     localStorage.setItem(
       "inhouse",
-      JSON.stringify({ deal, forms: { ..._forms } })
+      JSON.stringify({ deal, forms: { ..._forms }, isResult: false })
     );
-    localStorage.setItem(
-      "outsource_request",
-      JSON.stringify({
-        deal: { ...deal, ssx },
-        sentOut,
-        isRad: department === "RAD",
-        outsources: outsource,
-      })
-    );
-    localStorage.setItem("ssx", JSON.stringify(ssx));
+    // localStorage.setItem(
+    //   "outsource_request",
+    //   JSON.stringify({
+    //     deal: { ...deal, ssx },
+    //     sentOut,
+    //     isRad: department === "RAD",
+    //     outsources: outsource,
+    //   })
+    // );
+    // localStorage.setItem("ssx", JSON.stringify(ssx));
 
     const deptIndexMap = {
       LAB: 0,
@@ -107,6 +107,7 @@ export default function Modal() {
       const lowercaseKey = key.toLowerCase();
       let bucket = _forms[key];
       let requestData = {
+        pn,
         _id,
         packages: bucket,
         customerId: customerId?._id,
@@ -120,6 +121,7 @@ export default function Modal() {
             bucket = bucket.filter((item) => !panel.includes(item));
             await saveRequest(lowercaseKey, {
               dealId: _id,
+              pn,
               packages: panelAvail,
               customerId: customerId?._id,
               branchId: activePlatform.branchId,
@@ -131,6 +133,7 @@ export default function Modal() {
               async (test) =>
                 await saveRequest(lowercaseKey, {
                   dealId: _id,
+                  pn,
                   packages: [test],
                   customerId: customerId?._id,
                   branchId: activePlatform.branchId,
@@ -141,15 +144,17 @@ export default function Modal() {
           break;
         case "Ultrasound":
         case "Xray":
-          bucket.map(
-            async (test) =>
-              await saveRequest(lowercaseKey, {
+          await Promise.all(
+            bucket.map((test) =>
+              saveRequest(lowercaseKey, {
+                pn,
                 dealId: _id,
                 packages: test,
                 hasRead: false,
                 customerId: customerId?._id,
                 branchId: activePlatform.branchId,
               })
+            )
           );
           break;
         case "ECG":
@@ -169,37 +174,32 @@ export default function Modal() {
       );
     }
 
-    const haveOutSource =
-      outsource.length > 0 && (outSourceId || department === "RAD");
+    const haveOutSource = Object.keys(cluster).length > 0;
 
     if (haveOutSource) {
-      window.open(
-        "/printout/request/outsource",
-        "OutsourceRequestForm",
-        "top=100px,left=0px,width=1050px,height=750px"
-      );
-
-      if (department !== "RAD") {
-        await saveRequest(
-          `/commerce/pos/services/dealOutSources`,
-          {
-            _id: deal._id,
-            servicesId: _outsource,
-          },
-          true
-        );
-      } else {
-        const officialReadingXray = _outsource;
-        officialReadingXray.map(
-          async (test) =>
+      for (const [key, value] of Object.entries(cluster)) {
+        if (department !== "RAD") {
+          await saveRequest(
+            `/commerce/pos/services/onboardings`,
+            {
+              vendor: key,
+              pid: customerId?._id,
+              client: activePlatform.branchId,
+              services: getIDS(value),
+            },
+            true
+          );
+        } else {
+          for (const test of getIDS(value)) {
             await saveRequest("x-ray", {
               dealId: _id,
               packages: test,
               hasRead: true,
               customerId: customerId?._id,
               branchId: activePlatform.branchId,
-            })
-        );
+            });
+          }
+        }
       }
     }
 
@@ -215,7 +215,6 @@ export default function Modal() {
         },
       ],
       forms,
-      ...(haveOutSource && department !== "RAD" && { outsource: outSourceId }),
     };
 
     dispatch(
@@ -225,6 +224,8 @@ export default function Modal() {
       })
     );
     dispatch(TOGGLE());
+
+    // MachineSender(_forms,deal)
   };
 
   return (
@@ -234,7 +235,17 @@ export default function Modal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon className="mr-2" icon="tasks" />
-        Task Generator
+        {fullName(deal?.customerId?.fullName)} <br />
+        <h6
+          style={{
+            fontWeight: 400,
+            marginTop: "-0px",
+            marginBottom: "-0.5rem",
+            marginLeft: "2.1rem",
+          }}
+        >
+          Task Generator
+        </h6>
       </MDBModalHeader>
       <form>
         <MDBModalBody className="mb-0">
@@ -242,7 +253,6 @@ export default function Modal() {
             Drag and drop tasks between 'Inhouse' and 'Outsource' for easy
             management.
           </MDBTypography>
-
           <CaseBox outSource={outSourceId} setOutSource={setOutSourceId} />
           <MDBBtn
             className="float-right mt-3 mb-3"

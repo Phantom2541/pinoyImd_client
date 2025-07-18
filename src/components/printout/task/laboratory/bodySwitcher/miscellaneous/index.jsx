@@ -6,7 +6,7 @@ import Category from "./category";
 export default function Miscellaneous({ task, fontSize }) {
   const { specimen, packages } = task;
   const style = { fontSize: `${fontSize}rem` };
-  //console.log(fontSize);
+  console.log("packages", packages);
   return (
     <div
       style={{
@@ -15,7 +15,7 @@ export default function Miscellaneous({ task, fontSize }) {
         minHeight: "300px",
       }}
     >
-      {!packages.includes(146, 11) && (
+      {!packages.includes(146) && !packages.includes(11) && (
         <label className="mt-2 ml-5" style={style}>
           <h6>
             Specimen :

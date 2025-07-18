@@ -17,7 +17,7 @@ import {
 export default function Collapsable({ item }) {
   const { token, auth } = useSelector(({ auth }) => auth),
     // { collections } = useSelector(({ menus }) => menus),
-    { sendouts, source, createdAt } = item,
+    { vendor, createdAt, services } = item,
     dispatch = useDispatch();
 
   const handleProcess = (deal) => {
@@ -100,12 +100,10 @@ export default function Collapsable({ item }) {
         </MDBTableHead>
         <MDBTableBody>
           <tr>
-            <td className="fw-bold">{source?.displayname}</td>
+            <td className="fw-bold">{vendor?.name || vendor?.displayname}</td>
             <td>
               <small>
-                {sendouts?.servicesId
-                  ?.map((id) => Services.getAbbr(id))
-                  .join(", ")}
+                {services?.map((id) => Services.getAbbr(id)).join(", ")}
               </small>
             </td>
             <td>

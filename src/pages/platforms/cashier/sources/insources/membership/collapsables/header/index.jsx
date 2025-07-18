@@ -98,8 +98,10 @@ const Header = ({
           {[
             {
               label: "Membership",
-              keys: "membership",
+              keyForValue: "membership",
+              keyForText: "text",
               values: "text",
+              isMembership: true,
               collections: Memberships.collections.map(({ value, text }) => ({
                 membership: value,
                 text,
@@ -108,21 +110,21 @@ const Header = ({
             },
             {
               label: "Monthly Cutoff",
-              keys: "cutoff",
+              keyForValue: "cutoff",
               collections: new Array(27).fill(0).map((_, i) => i + 1),
-              width: "2rem",
+              width: "7rem",
             },
             {
               label: "Monthly Due Date",
               collections: new Array(cutoff > 0 ? Number(27 - cutoff) + 1 : 27)
                 .fill(0)
                 .map((_, i) => i + cutoff),
-              keys: "due",
-              width: "2rem",
+              keyForValue: "due",
+              width: "7rem",
             },
             {
               label: "Credit",
-              keys: "credit",
+              keyForValue: "credit",
               isMoney: true,
               isSelect: false,
             },
@@ -130,13 +132,14 @@ const Header = ({
             (
               {
                 label,
-                keys,
+                keyForValue,
+                keyForText = "",
                 collections,
-                values = "",
                 width = "2rem",
                 tag = "h6",
                 isSelect = true,
                 isMoney = false,
+                isMembership = false,
               },
               index
             ) => (
@@ -152,9 +155,20 @@ const Header = ({
                     collections={collections}
                     className="m-0 p-0"
                     isEditable={true}
-                    fieldData={{ [keys]: insource[keys], _id }}
-                    keys={keys}
-                    values={values}
+                    fieldData={{
+                      [keyForValue]: insource[keyForValue],
+                      _id,
+                      [keyForText || keyForValue]: isMembership
+                        ? `${Memberships.getMembership(insource?.membership)}`
+                        : insource[keyForText || keyForValue],
+                    }}
+                    keyForValue={keyForValue}
+                    keyForText={keyForText || keyForValue}
+                    preValue={
+                      isMembership
+                        ? insource?.membership
+                        : insource[keyForText || keyForValue]
+                    }
                     formSubmitted={formSubmitted}
                     onSave={(editedData) => handleUpdate(editedData)}
                     selectStyle={{ width }}
@@ -164,11 +178,11 @@ const Header = ({
                   <EditableField
                     tag={tag}
                     width="8rem"
-                    className="mt-2 form-control form-control-sm"
+                    className="form-control form-control-sm"
                     formSubmitted={formSubmitted}
                     isMoney={isMoney}
                     keyForValue="credit"
-                    fieldData={{ [keys]: insource[keys], _id }}
+                    fieldData={{ [keyForValue]: insource[keyForValue], _id }}
                     onSave={(editedData) => handleUpdate(editedData)}
                   />
                 )}

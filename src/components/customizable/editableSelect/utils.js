@@ -1,3 +1,5 @@
+import { get } from "lodash";
+
 const utils = {
   config: {
     whitelisted: (preValue, preValues, _value) => {
@@ -22,7 +24,7 @@ const utils = {
       }
     },
   },
-  isChecked: (value, multiple, preValues, preValue) => {
+  isChecked: (value, multiple = false, preValues, preValue) => {
     return multiple
       ? preValues?.includes(value)
       : String(preValue) === String(value);
@@ -96,6 +98,9 @@ const utils = {
     }
 
     return isDisable ? "custom-select-disabled" : "";
+  },
+  getValue: (key, fieldData) => {
+    return get(fieldData, key);
   },
 };
 

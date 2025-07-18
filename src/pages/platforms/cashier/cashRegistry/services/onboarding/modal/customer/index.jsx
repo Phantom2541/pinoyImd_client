@@ -1,14 +1,27 @@
 import { MDBCol, MDBCardBody, MDBCard, MDBBadge } from "mdbreact";
-import { Privileges, Services } from "../../../../../../../../services/fakeDb";
+import {
+  Categories,
+  HMO,
+  Privileges,
+  Services,
+} from "../../../../../../../../services/fakeDb";
 import { mobile } from "../../../../../../../../services/utilities";
-const Categories = {
+const Contracts = {
   sbc: "Subcontract",
   ssc: "Special Subcontract",
 };
-const Customer = ({ deal }) => {
-  const { customerId, branchId, ssx, privilege, sendouts } = deal;
-  const { mobile: _mobile } = customerId;
-  const { category } = sendouts || {};
+const Customer = ({ deal, categoryIndex }) => {
+  const {
+    pid: customerId,
+    branchId,
+    client,
+    ssx,
+    privilege,
+    services,
+    isValidation = false,
+    contract,
+  } = deal;
+  const { mobile: _mobile = "", healthCard = {} } = customerId || {};
 
   return (
     <MDBCol md="4">
@@ -16,7 +29,7 @@ const Customer = ({ deal }) => {
         <MDBCardBody>
           {[
             { title: "SSX", value: ssx || "None" },
-            { title: "Category", value: "OPD" },
+            { title: "Category", value: Categories[categoryIndex]?.name },
             {
               title: "Privilege",
               value: Privileges[privilege],
@@ -24,17 +37,19 @@ const Customer = ({ deal }) => {
             { title: "Mobile", value: mobile(_mobile) },
             {
               title: "Source",
-              value: branchId?.displayname,
+              value: client?.displayname || client?.name,
             },
             {
-              title: "Contract",
-              value: Categories[category],
+              title: isValidation ? "HMO" : "Contract",
+              value: isValidation
+                ? HMO.getName(healthCard.name)
+                : Contracts[contract],
             },
             {
               title: "Request Services",
               value: (
                 <>
-                  {sendouts?.servicesId?.map((id, key) => (
+                  {services?.map((id, key) => (
                     <MDBBadge key={key} className="mr-1">
                       {Services.getAbbr(id)}
                     </MDBBadge>

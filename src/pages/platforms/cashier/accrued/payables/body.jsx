@@ -118,7 +118,7 @@ const Tables = () => {
                         {util.getVendorOrParticular(particular, supplier)}
                       </h6>
                       <small style={{ color: "blue" }}>
-                        {currency(amount)}
+                        {currency.format(amount)}
                       </small>
                     </td>
                     <td>

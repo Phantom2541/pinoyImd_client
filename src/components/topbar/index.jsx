@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -6,61 +6,36 @@ import {
   MDBIcon,
   MDBBadge,
 } from "mdbreact";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import Platforms from "./platforms";
 import Profile from "./profile";
 import Branches from "./branches";
 import { capitalize } from "../../services/utilities";
 import DTR from "./dtr";
 
-class TopNavigation extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapse: false,
-    };
-    this.onClick = this.onClick.bind(this);
-    this.toggle = this.toggle.bind(this);
-    this.handleToggleClickA = this.handleToggleClickA.bind(this);
-  }
+export default function TopNavigation({ toggle, onSideNavToggleClick }) {
+  const { activePlatform, auth } = useSelector((state) => state.auth);
+  const aka = auth?.alias || auth?.fullName?.fname;
 
-  onClick() {
-    this.setState({
-      collapse: !this.state.collapse,
-    });
-  }
+  const navStyle = {
+    paddingLeft: toggle ? "16px" : "240px",
+    transition: "padding-left .3s",
+  };
 
-  toggle() {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen,
-    });
-  }
-
-  handleToggleClickA() {
-    this.props.onSideNavToggleClick();
-  }
-
-  render() {
-    const navStyle = {
-      paddingLeft: this.props.toggle ? "16px" : "240px",
-      transition: "padding-left .3s",
-    };
-    const { isPatient, department, aka } = this.props;
-    return (
-      <MDBNavbar
-        className="flexible-MDBNavbar"
-        light
-        expand="md"
-        scrolling
-        fixed="top"
-        style={{ zIndex: 3, minWidth: 500 }}
-      >
+  return (
+    <MDBNavbar
+      className="flexible-MDBNavbar"
+      light
+      expand="md"
+      scrolling
+      fixed="top"
+      style={{ zIndex: 3 }}
+    >
+      <div className="d-flex justify-content-between align-items-center w-100">
         <div
-          onClick={this.handleToggleClickA}
-          key="sideNavToggleA"
+          onClick={onSideNavToggleClick}
           style={{
             lineHeight: "32px",
-            marginleft: "1em",
             verticalAlign: "middle",
             cursor: "pointer",
           }}
@@ -77,38 +52,27 @@ class TopNavigation extends Component {
               fontWeight: 400,
               boxShadow: "0px 0px 0px 0px",
             }}
-            pill
           >
-            {isPatient
-              ? "Welcome to Pinoy iMD"
-              : `${capitalize(department)} :) ${capitalize(aka)}`}
+            {activePlatform?.access?.length > 0
+              ? `${capitalize(activePlatform?.department)} :)`
+              : `Welcome to Pinoy iMD :) `}
+            {capitalize(aka)}
           </MDBBadge>
         </MDBNavbarBrand>
         <MDBNavbarNav
           expand="sm"
           right
-          style={{ flexDirection: "row", gap: "5px" }}
+          style={{
+            flexDirection: "row",
+            gap: "5px",
+          }}
         >
-          {!isPatient && (
-            <>
-              <DTR />
-              <Branches />
-            </>
-          )}
+          {activePlatform?.access?.length > 0 && <DTR />}
+          <Branches />
           <Platforms />
           <Profile />
         </MDBNavbarNav>
-      </MDBNavbar>
-    );
-  }
+      </div>
+    </MDBNavbar>
+  );
 }
-
-const mapStateToProps = ({ auth }) => {
-  return {
-    isPatient: auth.auth.isPatient,
-    aka: auth.auth.alias || auth.auth.fullName?.fname,
-    department: auth.activePlatform?.department,
-  };
-};
-
-export default connect(mapStateToProps)(TopNavigation);

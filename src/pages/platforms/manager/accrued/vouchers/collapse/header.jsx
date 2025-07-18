@@ -1,62 +1,65 @@
-import React from "react";
-import { MDBBtn } from "mdbreact";
+import { MDBTypography } from "mdbreact";
 import { currency } from "../../../../../../services/utilities";
-import { useDispatch, useSelector } from "react-redux";
-import { CHECK_BULK } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { useSelector } from "react-redux";
 
-const Header = ({
-  sum,
-  count,
-  title,
-  isOpen,
-  isChecked = false,
-  textColor,
-  index,
-  setActiveId,
-  deals,
-}) => {
-  const { vendor } = useSelector(({ deals }) => deals),
-    dispatch = useDispatch();
+const Header = () => {
+  const {
+    cluster = [],
+    filterBy = "source",
+    vendor,
+    hmo,
+  } = useSelector(({ deals }) => deals);
+  const totalCustomers = cluster?.reduce(
+    (acc, curr) => acc + curr.deals?.length,
+    0
+  );
+  const totalAmount = cluster?.reduce((acc, curr) => {
+    const totalDealsAmount = curr.deals?.reduce(
+      (sum, item) => sum + (Number(item.amount) || 0),
+      0
+    );
+    return acc + totalDealsAmount;
+  }, 0);
+
+  const isFilterBySource = filterBy === "source";
+
+  const haveSelect = isFilterBySource
+    ? vendor?._id && vendor._id !== "noSource"
+    : hmo !== "all";
+  const noCluster = cluster.length === 0;
 
   return (
-    <div className={`d-flex justify-content-between ${textColor} `}>
-      <div className="d-flex align-items-center">
-        {vendor?._id && vendor?._id !== "noSource" && (
-          <>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id={index}
-              checked={isChecked}
-              onChange={() =>
-                // dispatch(CHECK_BULK({ date: title, hasSelected: !isChecked }))
-                dispatch(CHECK_BULK({ date: title, deals }))
-              }
-            />
-            <label htmlFor={index} className="form-check-label label-table" />
-          </>
-        )}
-        {index + 1}. {title} |{" "}
-        <span className={`${!isOpen && "text-primary"} ml-1 mt-1`}>
-          {currency(sum)}
-        </span>
-      </div>
-      <div className="d-flex">
-        <small className="mr-2 mt-1">{count} deal/s</small>
-        <MDBBtn
-          size="sm"
-          color="white"
-          rounded
-          onClick={() => setActiveId((prev) => (index === prev ? -1 : index))}
-          className="m-0 p-0 transition-all "
-          style={{ width: isOpen ? "1.5rem" : "2rem" }}
+    <div className="mt-n2">
+      {!haveSelect || noCluster ? (
+        <div>
+          <MDBTypography noteTitle="Note: " note noteColor="warning">
+            Please select a
+            {!haveSelect
+              ? isFilterBySource
+                ? " source "
+                : " card type "
+              : " customer "}
+            before generating the SOA.
+          </MDBTypography>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            marginBottom: "0.5rem",
+          }}
         >
-          <i
-            style={{ rotate: `${isOpen ? 0 : 90}deg` }}
-            className="fa fa-angle-down transition-all "
-          />
-        </MDBBtn>
-      </div>
+          <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+            {currency.format(totalAmount)}
+          </p>
+          <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
+          <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+            @ {totalCustomers} Customer/s
+          </p>
+        </div>
+      )}
     </div>
   );
 };

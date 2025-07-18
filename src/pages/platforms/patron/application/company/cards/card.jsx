@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   MDBCard,
   MDBCardBody,
@@ -10,22 +10,33 @@ import {
   MDBBtn,
 } from "mdbreact";
 import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
-// import joinNow from "../../../../../../assets/joinNow.png";
 import ApplicationModal from "./modal";
 
 export default function CompanyCard({ company }) {
   const [visibility, setVisibility] = useState(false);
-  // [didHover, setDidHover] = useState(false);
-
   return (
     <MDBCol md="3">
       <MDBCard
         narrow
-        style={{ marginTop: "44px" }}
-        // onMouseOver={() => setDidHover(true)}
-        // onMouseOut={() => setDidHover(false)}
+        style={{
+          marginTop: "44px",
+          filter: `grayscale(${
+            company?.branches?.some(({ isHiring }) => isHiring) ? "0" : "100%"
+          })`,
+        }}
       >
-        <MDBView waves cascade hover rounded className="custom-mdbview mx-auto">
+        <MDBView
+          waves
+          cascade
+          hover
+          rounded
+          className="custom-mdbview mx-auto"
+          onClick={() => {
+            if (company?.branches?.some(({ isHiring }) => isHiring)) {
+              setVisibility(true);
+            }
+          }}
+        >
           <img
             src={`${ENDPOINT}/public/companies/${company?.name}/logo.png`}
             alt={company?.name}
@@ -35,7 +46,7 @@ export default function CompanyCard({ company }) {
           />
           <MDBMask overlay="white-slight" tag="a" />
         </MDBView>
-        {company.isHiring && (
+        {company?.branches?.some(({ isHiring }) => isHiring) && (
           <MDBBtn
             floating
             tag="a"
@@ -89,23 +100,6 @@ export default function CompanyCard({ company }) {
           </MDBCardText>
         </MDBCardBody>
       </MDBCard>
-      {/* <MDBCard
-        onMouseOver={() => setDidHover(true)}
-        onMouseOut={() => setDidHover(false)}
-        onClick={() => setVisibility(true)}
-        className={`h-100 cursor-pointershadow-${didHover ? 5 : 1}`}
-      >
-        <MDBCardBody className="text-center">
-          <MDBCardImage
-            src={`${ENDPOINT}/public/credentials/${company?.name}/logo.jpg`}
-            className="mb-3 img-thumbnail bg-transparent"
-            style={{ height: 200, width: "auto" }}
-            onError={(e) => (e.target.src = PresetUser)}
-          />
-          <MDBCardTitle>{company?.name}</MDBCardTitle>
-          <label>{company.subName}</label>
-        </MDBCardBody>
-      </MDBCard> */}
       <ApplicationModal
         company={company}
         visibility={visibility}

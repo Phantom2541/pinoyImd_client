@@ -1,19 +1,29 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { MDBCard, MDBCardBody, MDBCollapse, MDBCollapseHeader } from "mdbreact";
+import { MDBCard, MDBCollapse, MDBCollapseHeader } from "mdbreact";
 
-import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse } from "../../../../../../../services/utilities";
+import BodySwitcher from "./bodySwitcher";
 
-export default function Body({ toggle, setSelected }) {
-  const { filtered, activePage, maxPage } = useSelector(({ deals }) => deals);
+export default function Body() {
+  const { filtered, activePage, maxPage } = useSelector(
+    ({ onBoardings }) => onBoardings
+  );
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex);
 
+  // First: Slice the filtered data
+  const slicedData = filtered.slice(startIndex, endIndex);
+
+  // Then: Sort so that "done" statuses are pushed to the bottom
+  const paginatedData = slicedData.sort((a, b) => {
+    if (a.status === "done" && b.status !== "done") return 1;
+    if (a.status !== "done" && b.status === "done") return -1;
+    return 0; // keep original order otherwise
+  });
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
 
@@ -55,9 +65,7 @@ export default function Body({ toggle, setSelected }) {
             className="mb-2 border border-black"
             isOpen={actualIndex === activeId}
           >
-            <MDBCardBody className="pt-2">
-              <CollapsableBody item={item} />
-            </MDBCardBody>
+            <BodySwitcher item={item} />
           </MDBCollapse>
         </MDBCard>
       );

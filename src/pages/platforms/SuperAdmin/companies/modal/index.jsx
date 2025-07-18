@@ -203,9 +203,10 @@ export default function Modal() {
                 <input
                   className="form-check-input"
                   type="checkbox"
-                  onChange={() =>
-                    setForm({ ...form, isHiring: !form.isHiring })
-                  }
+                  onChange={() => {
+                    setForm({ ...form, isHiring: !form.isHiring });
+                    setBranch({ ...branch, isHiring: !branch.isHiring });
+                  }}
                   checked={!form.isHiring}
                   id={"hiring-no"}
                 />

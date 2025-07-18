@@ -64,7 +64,7 @@ const Deals = {
     const oldValue = get(selected, updatedKey);
     const newValue = selected[newKey] || "";
 
-    if (oldValue?.toLowerCase() === newValue?.toLowerCase()) {
+    if (String(oldValue)?.toLowerCase() === String(newValue)?.toLowerCase()) {
       setSelected({});
       return addToast("No changes found, skipping update.", {
         appearance: "info",

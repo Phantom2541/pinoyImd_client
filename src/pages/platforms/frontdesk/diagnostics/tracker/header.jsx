@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import {
   TRACKER,
   SetPatient,
-} from "../../../../../services/redux/slices/commerce/pos/services/deals";
+} from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { fullName, getAge } from "../../../../../services/utilities";
 import { SearchUser } from "../../../../../components/searchables";
 import { MDBView } from "mdbreact";
@@ -14,7 +14,7 @@ export default function Header() {
       _id,
       dob,
       fullName: fullname,
-    } = useSelector(({ deals }) => deals.patient),
+    } = useSelector(({ validator }) => validator.patient),
     dispatch = useDispatch(),
     location = useLocation();
   const params = new URLSearchParams(location.search);

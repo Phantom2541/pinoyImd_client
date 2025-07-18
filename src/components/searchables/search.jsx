@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { debounce, isArrayLikeObject } from "lodash";
+import { useEffect, useMemo, useState } from "react";
+import { debounce } from "lodash";
 import "./search.css";
 import { globalSearch } from "../../services/utilities";
-import { MDBBtn, MDBIcon } from "mdbreact";
+import { MDBIcon } from "mdbreact";
 
 export default function Search({
   collections = [],
-  hideButton = true,
+  hideButton = false,
   haveAction = true,
   setFiltered = () => {},
   reset = () => {},
@@ -14,28 +14,21 @@ export default function Search({
 }) {
   const [showBtn, setShowBtn] = useState(false),
     [searchValue, setSearchValue] = useState("");
-  console.log("collections", collections);
 
   useEffect(() => {
-    if (!hideButton) setShowBtn(true);
-  }, [hideButton]);
+    if (!hideButton && haveAction) setShowBtn(true);
+  }, [hideButton, haveAction]);
+
   const debouncedSearch = useMemo(() => {
     return debounce((key) => {
-      console.log("key", key);
-      // console.log("collections", collections);
-
       const items = globalSearch(collections, key);
-      // if (hideButton && items.length === 0) setShowBtn(true);
-      // if (hideButton && items.length > 0) setShowBtn(false);
-      console.log("items", items);
-
+      if (hideButton && items.length === 0) setShowBtn(true);
+      if (hideButton && items.length > 0) setShowBtn(false);
       setFiltered(items);
     }, 300);
   }, [collections, setFiltered, hideButton]);
 
   const handleChange = (value) => {
-    console.log("value", value);
-
     if (!value) {
       debouncedSearch.cancel();
       if (hideButton) setShowBtn(false);
@@ -52,6 +45,7 @@ export default function Search({
         className="search-container"
         style={{ marginRight: haveAction && !showBtn && "-35px" }}
       >
+        <MDBIcon className="search-icon" fas icon="search" />
         <input
           placeholder="Search..."
           onChange={({ target }) => handleChange(target.value)}
@@ -62,20 +56,19 @@ export default function Search({
           spellCheck={false}
         />
       </div>
-      {haveAction && (
-        <MDBBtn
+      {(haveAction || showBtn) && (
+        <button
           onClick={() => handleAdd(searchValue)}
           size="sm"
           style={{
             opacity: showBtn ? 1 : 0,
             marginRight: "-5px",
           }}
-          color="white"
-          rounded
-          className="px-2 ml-3"
+          // color="white"
+          className="search-add-btn ml-2"
         >
           <MDBIcon icon="plus" />
-        </MDBBtn>
+        </button>
       )}
     </div>
   );

@@ -23,6 +23,7 @@ import gcash from "../../../../../../assets/paymentMethods/gcash.png";
 import cheque from "../../../../../../assets/paymentMethods/cheque.png";
 import Spinner from "../../../../../../components/spinner";
 import "./style.css";
+import { HMO } from "../../../../../../services/fakeDb";
 
 const paymentMethods = [
   { text: "Cash", img: cash },
@@ -86,13 +87,20 @@ export default function PaymentModal() {
     );
   };
 
+  const { clientId = {} } = selected;
+  const { name = "", displayname = "" } = clientId;
+  const source = name || displayname;
+  const client = selected?.hmo ? HMO.getName(selected.hmo) : source;
+
+  const remaining = selected?.amount - totalPaidAmount;
+
   return (
     <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="md">
       <MDBModalHeader
         toggle={handleClose}
         className="light-blue darken-3 white-text text-center w-100"
       >
-        <MDBIcon icon="money-bill-wave-alt" className="mr-2" /> Payment
+        <MDBIcon icon="money-bill-wave-alt" className="mr-2" /> Received Payment
       </MDBModalHeader>
       <MDBModalBody>
         <MDBCard>
@@ -100,22 +108,24 @@ export default function PaymentModal() {
             <form onSubmit={handleSubmit}>
               <div className="d-flex align-items-center">
                 <h6 className="grey-text mr-2">Client:</h6>
-                <h5 style={{ fontWeight: 400 }}>{selected?.clientId?.name}</h5>
+                <h5 style={{ fontWeight: 400 }}>{client}</h5>
               </div>
               <div className="d-flex align-items-center">
                 <h6 className="grey-text mr-2">Amount:</h6>
                 <h5 style={{ fontWeight: 400 }}>
-                  {currency(selected?.amount)}
+                  {currency.format(selected?.amount)}
                 </h5>
               </div>
-              <div className="d-flex align-items-center">
-                <h6 className="grey-text mr-2">Remaining:</h6>
-                <h5 style={{ fontWeight: 400 }} className="text-danger">
-                  {currency(selected?.amount - totalPaidAmount)}
-                </h5>
-              </div>
+              {remaining !== selected?.amount && (
+                <div className="d-flex align-items-center">
+                  <h6 className="grey-text mr-2">Remaining:</h6>
+                  <h5 style={{ fontWeight: 400 }} className="text-danger">
+                    {currency.format(remaining)}
+                  </h5>
+                </div>
+              )}
 
-              <h6 className="mt-2 grey-text">Payment Methods:</h6>
+              <h6 className="mt-2 grey-text">Methods:</h6>
               <div className="d-flex align-items-center justify-content-center ">
                 {paymentMethods.map(({ img, text }, index) => (
                   <MDBCard

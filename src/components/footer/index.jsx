@@ -1,13 +1,50 @@
-import React from "react";
-import { MDBFooter } from "mdbreact";
+import { MDBIcon } from "mdbreact";
+import "./style.css";
 
 export default function Copyrights() {
   return (
-    <MDBFooter style={{ zIndex: 2 }}>
-      <p className="footer-copyright mb-0 py-3 text-center">
-        &copy; 2025 Copyright:&nbsp;
-        <a href="https://www.technowiz.com"> TechnoWiz.com </a>
-      </p>
-    </MDBFooter>
+    <div className="footer-copyright">
+      <span>
+        © 2025 <strong>Pinoy iMD</strong> — Empowering Filipino Healthcare
+        through Innovation. All rights reserved.
+      </span>
+      <div className="footer-socialAccounts">
+        <a
+          href="https://www.facebook.com/pinoyimd"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <MDBIcon fab icon="facebook-square" />
+        </a>
+        <a
+          href="https://www.facebook.com/pinoyimd"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <MDBIcon fab icon="linkedin" />
+        </a>
+        <a
+          href="https://www.facebook.com/pinoyimd"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <MDBIcon fab icon="google-plus-square" />
+        </a>
+        <a
+          href="https://www.facebook.com/pinoyimd"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <MDBIcon fab icon="instagram" />
+        </a>
+        <a
+          href="https://www.facebook.com/pinoyimd"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <MDBIcon fab icon="twitter-square" />
+        </a>
+      </div>
+    </div>
   );
 }

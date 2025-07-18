@@ -17,7 +17,7 @@ const Header = ({
         <label htmlFor={index} className="form-check-label label-table" />
         {index + 1}. {title} |{" "}
         <span className={`${!isOpen && "text-primary"} ml-1 mt-1`}>
-          {currency(sum)}
+          {currency.format(sum)}
         </span>
       </div>
       <div className="d-flex">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup } from "mdbreact";
 import { billingAddress, currency } from "../../../../../services/utilities";
@@ -12,24 +12,18 @@ import {
 import { capitalize } from "lodash";
 
 const Body = () => {
-  const { token } = useSelector(({ auth }) => auth),
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
     { filtered, activePage, maxPage, isSuccess, formSubmitted } = useSelector(
       ({ providers }) => providers
     ),
-    [selected, setSelected] = useState(-1),
+    { platform } = activePlatform,
     dispatch = useDispatch();
+  console.log("filtered", filtered);
 
   useEffect(() => {
     if (!formSubmitted && isSuccess) dispatch(RESET());
   }, [formSubmitted, isSuccess, dispatch]);
-
-  const handleEdit = (provider) => {
-    console.log(selected);
-
-    dispatch(SetSELECTED(provider));
-    setSelected(provider);
-  };
-
+  const handleEdit = (provider) => dispatch(SetSELECTED(provider));
   const handleDelete = (_id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -45,11 +39,7 @@ const Body = () => {
       }
     });
   };
-  const handlePriceList = (data) => {
-    console.log("data", data);
-
-    dispatch(SetPricelist(data));
-  };
+  const handlePriceList = (data) => dispatch(SetPricelist(data));
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -69,7 +59,7 @@ const Body = () => {
           <th>Cutoff</th>
           <th>Due Date</th>
           <th>Status</th>
-          <th className="text-center">Action</th>
+          {platform !== "cashier" && <th className="text-center">Action</th>}
         </tr>
       </thead>
       <tbody>
@@ -92,45 +82,51 @@ const Body = () => {
               <td className={isGhost && "text-primary"}>
                 {isGhost && "👻"} {displayname || name}
               </td>
-              <td>{billingAddress(address)}</td>
+              <td>
+                {address && typeof address === "object"
+                  ? billingAddress(address)
+                  : "-"}
+              </td>
               <td>
                 {contract === "sbc" ? "Sub Contract" : "Special Sub Contract"}
               </td>
-              <td>{currency(credit)}</td>
+              <td>{currency.format(credit)}</td>
               <td>{cutoff || "-"}</td>
               <td>{due}</td>
               <td>{capitalize(status)}</td>
-              <td className="text-center" style={{ width: "200px" }}>
-                <MDBBtnGroup>
-                  {status === "pending" && (
+              {platform !== "cashier" && (
+                <td className="text-center" style={{ width: "200px" }}>
+                  <MDBBtnGroup>
+                    {status === "pending" && (
+                      <MDBBtn
+                        size="sm"
+                        rounded
+                        color="primary"
+                        onClick={() => handleEdit(provider)}
+                      >
+                        <MDBIcon icon="pencil-alt" />
+                      </MDBBtn>
+                    )}
                     <MDBBtn
+                      onClick={() => handlePriceList(provider)}
                       size="sm"
                       rounded
-                      color="primary"
-                      onClick={() => handleEdit(provider)}
+                      color="success"
+                      title="Price list"
                     >
-                      <MDBIcon icon="pencil-alt" />
+                      <MDBIcon icon="file-invoice-dollar" />
                     </MDBBtn>
-                  )}
-                  <MDBBtn
-                    onClick={() => handlePriceList(provider)}
-                    size="sm"
-                    rounded
-                    color="success"
-                    title="Price list"
-                  >
-                    <MDBIcon icon="file-invoice-dollar" />
-                  </MDBBtn>
-                  <MDBBtn
-                    onClick={() => handleDelete(provider._id)}
-                    size="sm"
-                    rounded
-                    color="danger"
-                  >
-                    <MDBIcon icon="trash" />
-                  </MDBBtn>
-                </MDBBtnGroup>
-              </td>
+                    <MDBBtn
+                      onClick={() => handleDelete(provider._id)}
+                      size="sm"
+                      rounded
+                      color="danger"
+                    >
+                      <MDBIcon icon="trash" />
+                    </MDBBtn>
+                  </MDBBtnGroup>
+                </td>
+              )}
             </tr>
           );
         })}

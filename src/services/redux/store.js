@@ -22,6 +22,7 @@ import {
   deals,
   billings,
   dispenser,
+  onBoardings,
 } from "./slices/commerce";
 
 import {
@@ -50,7 +51,8 @@ import {
   ledger,
   soa,
 } from "./slices/finance";
-
+// appointments;
+import { quest } from "./slices/diagnostics";
 import {
   products,
   productsGenerics,
@@ -58,9 +60,9 @@ import {
   medicines,
   generics,
   mentainance,
+  attendances,
 } from "./slices/market";
-import { appointments } from "./slices/clinical";
-import results from "./slices/portal/results";
+import portal from "./slices/emr/portal";
 
 const store = configureStore({
   reducer: {
@@ -80,6 +82,7 @@ const store = configureStore({
     physicians,
     menus,
     services,
+    onBoardings,
     sales,
     taskGenerator,
     deals,
@@ -108,17 +111,19 @@ const store = configureStore({
     ecg,
     productsGenerics,
     machines,
+    attendances,
+    // temperaturez,
     medicines,
     generics,
     mentainance,
-    appointments,
+    quest,
     //this is results for viewing the results online
-    results,
+    portal,
     //for templates only
     dragDrop,
     table,
-    procurements,
   },
+  devTools: true,
 });
 
 export default store;

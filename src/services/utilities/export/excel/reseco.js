@@ -115,12 +115,12 @@ const set = {
 
       {
         mergeCell: "A6:H6",
-        value: currency(gross),
+        value: currency.format(gross),
         label: "Gross",
       },
       {
         mergeCell: "I6:P6",
-        value: currency(rebate),
+        value: currency.format(rebate),
         label: "Rebate",
       },
     ];
@@ -128,7 +128,7 @@ const set = {
       generateCell(mergeCell, label, value, position);
     }
   },
-  main: ({ worksheet, reseco }) => {
+  main: ({ worksheet, reseco, isMembership }) => {
     worksheet.addRow([]);
     worksheet.addRow([]);
 
@@ -137,7 +137,7 @@ const set = {
       const { deals, date, time } = reseco[i];
       const dateCell = worksheet.getCell(`A${startPos}`);
       const amount = deals.reduce((acc, item) => acc + item.amount, 0);
-      dateCell.value = `${date} ${time} | ${currency(amount)}`;
+      dateCell.value = `${date} ${time} | ${currency.format(amount)}`;
       dateCell.font = { color: { argb: "FFFFFFFF" }, size: 13 };
       dateCell.fill = {
         type: "pattern",
@@ -212,7 +212,7 @@ const set = {
           amount,
           discount,
           Privileges[privilege],
-          amount * 0.1,
+          !isMembership ? amount * 0.1 : 0,
         ];
 
         let _prevCol = 0;
@@ -430,7 +430,7 @@ const excel = async ({ array = [], options }) => {
 
   await set.banner({ worksheet, workbook });
   set.header({ worksheet, options });
-  set.main({ worksheet, reseco: array, options });
+  set.main({ worksheet, reseco: array, isMembership: options?.isMembership });
   // const datesLength = array.length * 2;
   // const dealsLength = array.reduce(
   //   (acc, curr) => (acc += curr.deals?.length),

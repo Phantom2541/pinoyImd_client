@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBModal,
   MDBModalBody,
@@ -9,7 +9,11 @@ import {
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { CHANGEPASSWORD } from "../../services/redux/slices/assets/persons/auth";
+import {
+  CHANGEPASSWORD,
+  RESET,
+} from "../../services/redux/slices/assets/persons/auth";
+import Spinner from "../spinner";
 
 const _form = {
   oldPass: "",
@@ -27,6 +31,7 @@ const PasswordInput = ({ label, value, onChange }) => {
       onIconMouseLeave={() => setView(false)}
       type={view ? "text" : "password"}
       label={label}
+      required
       value={value}
       onChange={onChange}
     />
@@ -34,27 +39,29 @@ const PasswordInput = ({ label, value, onChange }) => {
 };
 
 export default function ChangePassword({ show, toggle }) {
-  const { auth, token } = useSelector(({ auth }) => auth),
+  const { auth, token, formSubmitted, isSuccess, isRejected, message } =
+      useSelector(({ auth }) => auth),
     [form, setForm] = useState(_form),
     dispatch = useDispatch();
 
-  const handleSubmit = () => {
-    const { oldPass, newPass, confirmNewPass } = form;
-
-    if (!oldPass || !newPass || !confirmNewPass)
-      return Swal.fire({
-        icon: "error",
-        title: "Invalid Form",
-        text: "All field are required.",
-      });
-
-    if (newPass !== confirmNewPass)
-      return Swal.fire({
-        icon: "error",
-        title: "Invalid New Password",
-        text: "New Passwords does not match!",
-      });
-
+  useEffect(() => {
+    if (!formSubmitted) {
+      if (isSuccess) {
+        toggle();
+      }
+      if (isRejected) {
+        Swal.fire({
+          icon: "warning",
+          title: "Opss..",
+          text: message,
+        });
+      }
+      dispatch(RESET());
+    }
+  }, [formSubmitted, isSuccess, isRejected, toggle, dispatch, message]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { oldPass, newPass } = form;
     if (newPass.length < 8)
       return Swal.fire({
         icon: "error",
@@ -67,16 +74,15 @@ export default function ChangePassword({ show, toggle }) {
         token,
         data: {
           _id: auth._id,
-          oldPass,
           newPass,
+          oldPass,
         },
       })
     );
 
     setForm(_form);
-    toggle();
+    // toggle();
   };
-
   return (
     <MDBModal isOpen={show} toggle={() => {}} backdrop>
       <MDBModalHeader
@@ -87,27 +93,30 @@ export default function ChangePassword({ show, toggle }) {
         Change Password
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
-        <PasswordInput
-          label="Current Password"
-          value={form.oldPass}
-          onChange={(e) => setForm({ ...form, oldPass: e.target.value })}
-        />
-        <PasswordInput
-          label="New Password"
-          value={form.newPass}
-          onChange={(e) => setForm({ ...form, newPass: e.target.value })}
-        />
-        <PasswordInput
-          label="Confirm New Password"
-          value={form.confirmNewPass}
-          onChange={(e) => setForm({ ...form, confirmNewPass: e.target.value })}
-        />
+        <form onSubmit={handleSubmit}>
+          <PasswordInput
+            label="Current Password"
+            value={form.oldPass}
+            onChange={(e) => setForm({ ...form, oldPass: e.target.value })}
+          />
+          <PasswordInput
+            label="New Password"
+            value={form.newPass}
+            onChange={(e) => setForm({ ...form, newPass: e.target.value })}
+          />
 
-        <div className="text-center">
-          <MDBBtn onClick={handleSubmit} rounded color="primary">
-            submit
-          </MDBBtn>
-        </div>
+          <div className="text-center">
+            <MDBBtn
+              onClick={handleSubmit}
+              rounded
+              color="primary"
+              type="submit"
+              disabled={formSubmitted}
+            >
+              Submit <Spinner formSubmitted={formSubmitted} />
+            </MDBBtn>
+          </div>
+        </form>
       </MDBModalBody>
     </MDBModal>
   );

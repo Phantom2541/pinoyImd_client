@@ -55,18 +55,23 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
   }
 });
 
-export const REGISTER = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
-  try {
-    return axioKit.save(url, form);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+export const REGISTER = createAsyncThunk(
+  `${url}/register`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.save(url, form);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
@@ -80,6 +85,23 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
+export const VALIDATE_ID = createAsyncThunk(
+  `${url}/validate_ID`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "validate_ID");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const reduxSlice = createSlice({
   name: url,
@@ -153,7 +175,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload } = action?.payload;
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
@@ -164,28 +186,47 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
+        console.log("action", action);
+
+        const { error } = action;
+        state.message = error;
+        state.isLoading = false;
+      })
+
+      .addCase(VALIDATE_ID.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(VALIDATE_ID.fulfilled, (state, action) => {
+        const { success } = action.payload;
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(VALIDATE_ID.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(REGISTER.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(REGISTER.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+
+        state.message = success;
+        state.collections.unshift(payload);
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(REGISTER.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
       });
-    // .addCase(REGISTER.pending, state => {
-    //   state.isLoading = true;
-    //   state.isSuccess = false;
-    //   state.message = "";
-    // })
-    // .addCase(REGISTER.fulfilled, (state, action) => {
-    //   const { success, payload } = action.payload;
-
-    //   state.message = success;
-    //   state.collections.unshift(payload);
-    //   state.isSuccess = true;
-    //   state.isLoading = false;
-    // })
-    // .addCase(REGISTER.rejected, (state, action) => {
-    //   const { error } = action;
-    //   state.message = error.message;
-    //   state.isLoading = false;
-    // });
   },
 });
 

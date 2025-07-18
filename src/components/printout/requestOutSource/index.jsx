@@ -1,12 +1,18 @@
 import { MDBCol, MDBRow } from "mdbreact";
 import React, { useEffect, useState } from "react";
-import { fullName, getAge, getBday } from "../../../services/utilities";
+import {
+  Banner,
+  dateFormat,
+  fullName,
+  getAge,
+} from "../../../services/utilities";
 import { useSelector } from "react-redux";
 
 const RequestOutSource = () => {
-  const { auth } = useSelector(({ auth }) => auth),
-    [request, setRequest] = useState({});
-
+  const { auth, activePlatform } = useSelector(({ auth }) => auth),
+    [request, setRequest] = useState({}),
+    { branch = {} } = activePlatform,
+    { name, companyId } = branch;
   useEffect(() => {
     const _request = JSON.parse(localStorage.getItem("outsource_request"));
     setRequest(_request);
@@ -18,14 +24,13 @@ const RequestOutSource = () => {
     sentOut = {},
     isRad = false,
   } = request || {};
-  const { customerId = {}, ssx, patientNo = 1 } = deal;
-  // Patient No. = index of deal
-  // Case No. = deal _id
+  const { pid: customerId = {}, ssx, patientNo = 1 } = deal;
+
   return (
     <div
       className="mx-1"
       style={{
-        width: "5.5in",
+        width: "5.8in",
         cursor: "default",
         fontFamily: "Helvetica, sans-serif",
         letterSpacing: "-0.5px",
@@ -34,10 +39,8 @@ const RequestOutSource = () => {
     >
       <MDBRow>
         <MDBCol>
-          <div
-            style={{ border: "2px solid black", minHeight: "20rem" }}
-            className="mt-2"
-          >
+          <Banner company={companyId?.name} branch={name} />
+          <div style={{ border: "2px solid black", minHeight: "20rem" }}>
             <div
               style={{
                 background: "black",
@@ -75,7 +78,7 @@ const RequestOutSource = () => {
               <div>
                 <div className="d-flex align-items-center mt-1 mr-3">
                   <h6 className="font-weight-bold mr-1">Birthday:</h6>
-                  <h6>{getBday(customerId?.dob)}</h6>
+                  <h6>{dateFormat(customerId?.dob)}</h6>
                 </div>
               </div>
               <div>
@@ -109,7 +112,7 @@ const RequestOutSource = () => {
               {!isRad && (
                 <div className="d-flex align-items-center mt-1">
                   <h6 className="font-weight-bold mr-1">Sent out lab:</h6>
-                  <h6>{sentOut?.vendors?.displayname}</h6>
+                  <h6>{sentOut?.displayname || sentOut?.name}</h6>
                 </div>
               )}
             </div>

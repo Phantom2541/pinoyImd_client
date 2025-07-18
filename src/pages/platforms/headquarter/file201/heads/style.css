@@ -1,0 +1,243 @@
+.signatories-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signatories-card-container {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: fit-content;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+.signatories-card {
+  position: relative;
+  display: grid;
+  grid-template-areas:
+    "header body"
+    "header footer";
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: auto 1fr auto;
+  width: 530px;
+  max-width: 530px;
+  height: fit-content;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  overflow: visible;
+  transition: scale 0.3s ease;
+}
+
+.signatories-card.requiredPRC {
+  grid-template-areas:
+    "header body"
+    "footer footer";
+  height: auto;
+}
+
+.signatories-card-header {
+  grid-area: header;
+  margin-right: 10px;
+  width: 100%;
+  height: 100%;
+}
+.signatories-card-body {
+  grid-area: body;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+.signatories-card-footer {
+  grid-area: footer;
+  width: 100%;
+  padding-right: 10px;
+}
+
+.signatories-card-footer.requiredPRC {
+  position: relative;
+  text-align: center;
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+
+.signatories-card-footer.requiredPRC span {
+  display: block;
+  font-size: 0.85rem;
+  color: #c62828;
+}
+
+.signatories-card-expiration-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.signatories-card-expiration-label,
+.signatories-card-prc-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.signatories-card-expiration,
+.signatories-card-prc {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.signatories-card-expiration-label {
+  color: #f44336;
+}
+
+.signatories-profile-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  -webkit-user-drag: none;
+}
+
+.signatories-card-section-department {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.signatories-card-section {
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.signatories-card-department {
+  font-size: 0.95rem;
+  text-transform: capitalize;
+}
+
+.signatories-card-signature-container {
+  display: flex;
+  justify-content: center;
+  padding: 5px 0;
+}
+.signatories-card-signature {
+  width: 110px;
+  height: 90px;
+  -webkit-user-drag: none;
+}
+.signatories-card-signature-upload-btn {
+  background-color: #fbc02d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 400;
+  color: white;
+  width: 110px;
+  height: 90px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  border: none;
+}
+
+.signatories-card-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 5px;
+  margin: auto;
+  text-transform: capitalize;
+}
+.signatories-card-actionBtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  transition: transform 0.3s ease;
+}
+
+.signatories-card-btn-delete {
+  color: white;
+  font-size: 1.1rem;
+  border: none;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+  border-bottom-left-radius: 100%;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.signatories-card:hover .signatories-card-btn-delete {
+  opacity: 1;
+}
+
+.signatories-pagination-btnLeft,
+.signatories-pagination-btnRight {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  border: none;
+  font-size: 2rem;
+  background-color: transparent;
+}
+.signatories-pagination-btnLeft {
+  left: -5%;
+}
+.signatories-pagination-btnRight {
+  right: -5%;
+}
+
+/* .signatories-card-btn-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  padding: 5px 10px;
+  padding-left: 19px;
+  padding-bottom: 10px;
+  border-bottom-left-radius: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+
+.signatories-card:hover .signatories-card-btn-delete {
+  opacity: 1;
+} */

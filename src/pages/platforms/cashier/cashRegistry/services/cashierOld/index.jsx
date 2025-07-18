@@ -57,11 +57,15 @@ export default function Cashier() {
   useEffect(() => {
     if (transaction._id !== "default" && saleSuccess) {
       localStorage.setItem("claimStub", JSON.stringify(transaction));
-      window.open(
-        "/printout/claimstub",
-        "Claim Stub",
-        "top=100px,left=100px,width=550px,height=750px"
-      );
+
+      // Delay ensures storage is flushed before new window loads
+      setTimeout(() => {
+        window.open(
+          "/printout/claimstub",
+          "Claim Stub",
+          "top=100px,left=100px,width=550px,height=750px"
+        );
+      }, 500); // try 200ms delay
     }
   }, [transaction, saleSuccess]);
 

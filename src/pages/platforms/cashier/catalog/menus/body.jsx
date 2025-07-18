@@ -46,7 +46,7 @@ const Tables = () => {
                 ))}
               </td>
               <td>
-                <h5>{currency(opd)}</h5>
+                <h5>{currency.format(opd)}</h5>
                 <small>{hasDiscount ? "Discountable" : "fixed price"}</small>
               </td>
             </tr>

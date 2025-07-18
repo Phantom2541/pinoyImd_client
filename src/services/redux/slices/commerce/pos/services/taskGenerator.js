@@ -6,9 +6,11 @@ const url = "commerce/pos/services/deals";
 
 const initialState = {
   collections: [],
+  filtered: [],
   inhouse: [],
-  outsource: [],
+  cluster: {},
   _id: "default",
+  activeStatus: "all",
   source: "",
   physician: "",
   transaction: { _id: "default" },
@@ -21,6 +23,10 @@ const initialState = {
   selected: {
     _id: "default",
   },
+  //pagination
+  maxPage: 6, // for max page
+  totalPages: 0, // for pages
+  activePage: 1, // for active page
 };
 
 export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
@@ -113,27 +119,76 @@ export const reduxSlice = createSlice({
       state.show = !state.show;
     },
 
+    SetSTATUS: (state, { payload }) => {
+      const { status: stats, department } = payload;
+      const status = stats.toLowerCase();
+      var filtered = [];
+      if (status === "all") {
+        filtered = [...state.collections];
+      } else if (status === "generated") {
+        filtered = [...state.collections].filter(({ rendered }) =>
+          rendered.some(
+            ({ dept }) => dept === (department === "Laboratory" ? "LAB" : "RAD")
+          )
+        );
+      } else {
+        filtered = [...state.collections].filter(
+          ({ rendered }) =>
+            !rendered.some(
+              ({ dept }) =>
+                dept === (department === "Laboratory" ? "LAB" : "RAD")
+            )
+        );
+      }
+      state.activeStatus = status;
+      state.filtered = filtered;
+      state.totalPages =
+        Math.ceil((filtered?.length || 0) / state.maxPage) || 1;
+      state.activePage = Math.min(state.activePage, state.totalPages);
+    },
+
+    InsertRealtimeOnboard: (state, { payload }) => {
+      //this reducer is for received realtime onboard and set into the filtered and collections
+      state.collections.unshift(payload);
+      state.filtered.unshift(payload);
+    },
+
+    SetACTIVE_STATUS: (state, { payload }) => {
+      state.activeStatus = payload;
+    },
+
     SetSELECTED: (state, { payload }) => {
       const list = payload.cart?.flatMap((item) => item.packages || []);
       const _inhouse = Services.whereIn(list);
       state.inhouse = _inhouse;
-      state.outsource = [];
+      state.cluster = {};
       state.selected = payload;
       state.show = true;
     },
     SetINHOUSE: (state, { payload }) => {
-      const index = state.outsource.findIndex((item) => item.id === payload.id);
+      const { data, id } = payload;
+      const index = state.cluster[id].findIndex((item) => item.id === data.id);
       if (index > -1) {
-        state.outsource.splice(index, 1);
+        const selectedSource = state.cluster[id];
+        selectedSource.splice(index, 1);
+        if (selectedSource.length === 0) {
+          delete state.cluster[id];
+        } else {
+          state.cluster[id] = selectedSource;
+        }
       }
-      state.inhouse.push(payload);
+      state.inhouse.push(data);
     },
     SetOUTSOURCE: (state, { payload }) => {
-      const index = state.inhouse.findIndex((item) => item.id === payload.id);
+      const { data, id } = payload;
+      const index = state.inhouse.findIndex((item) => item.id === data.id);
       if (index > -1) {
         state.inhouse.splice(index, 1);
       }
-      state.outsource.push(payload);
+      if (!state.cluster[id]) {
+        state.cluster[id] = [];
+      }
+      state.cluster[id].push(data);
     },
 
     SETSOURCE: (state, { payload }) => {
@@ -156,6 +211,19 @@ export const reduxSlice = createSlice({
       state.selected = selected;
       state.form = form;
     },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+
+      state.totalPages =
+        Math.ceil((state.filtered?.length || 0) / payload) || 1;
+      state.activePage = 1;
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -167,17 +235,22 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, department } = action.payload;
         // filter by department
-        const _collections = payload.map((item) => ({
+        const _collections = payload.map((item, index) => ({
           ...item,
+          pn: payload.length - index,
           cart: item?.cart?.filter(({ packages }) =>
             Services.filterByDepartment(
               packages,
-              department === "Laboratory" ? "LAB" : "RAD"
+              department?.toLowerCase() === "laboratory" ? "LAB" : "RAD"
             )
           ),
         }));
 
-        state.collections = _collections;
+        state.collections = state.filtered = _collections;
+
+        state.totalPages =
+          Math.ceil((payload?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
 
         state.isLoading = false;
       })
@@ -243,13 +316,20 @@ export const reduxSlice = createSlice({
       })
       .addCase(REFORM.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
 
-        const oldCollections = state.collections[index];
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload._id
+          );
 
-        state.collections[index] = { ...oldCollections, ...payload };
+          const oldCollections = collections[index];
+
+          collections[index] = { ...oldCollections, ...payload };
+        };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+
         state.message = success;
         state.isSuccess = true;
         state.isLoading = false;
@@ -265,12 +345,19 @@ export const reduxSlice = createSlice({
 export const {
   RESET,
   SETSOURCE,
+  SetSTATUS,
   SETPHYSICIAN,
   SetSELECTED,
   TOGGLE,
   SetOUTSOURCE,
   SetINHOUSE,
   SetPrinting,
+  SetActivePAGE,
+  SetMaxPage,
+  SetACTIVE_STATUS,
+  SetFILTERED,
+  //socket
+  InsertRealtimeOnboard,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

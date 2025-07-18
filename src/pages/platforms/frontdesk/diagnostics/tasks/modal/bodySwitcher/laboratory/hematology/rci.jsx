@@ -1,18 +1,23 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS,SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  SetPARAMS,
+  SetTASK,
+} from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import {
   Cellcount,
   Rci as RCI,
 } from "./../../../../../../../../../services/fakeDb";
 import { Markup } from "interweave";
+import { useEffect, useRef } from "react";
 
-export default function Rci() {
-   const {task} = useSelector(({validator}) => validator),
+export default function Rci({ activeTab, setActiveTab = () => {} }) {
+  const { task } = useSelector(({ validator }) => validator),
     dispatch = useDispatch(),
     { Preferences } = Cellcount,
     { Category } = RCI;
+
+  const inputRefs = useRef([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target,
@@ -25,10 +30,33 @@ export default function Rci() {
     while (_rci.length < 4) {
       _rci.push(0);
     }
-        dispatch(SetTASK({form: task?.form, task:{ ...task, rci: _rci }}));
-    
-dispatch(SetPARAMS({ key: "rci", value: _rci }));
+
+    dispatch(SetTASK({ form: task?.form, task: { ...task, rci: _rci } }));
+    dispatch(SetPARAMS({ key: "rci", value: _rci }));
   };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      const nextInput = inputRefs.current[index + 1];
+      if (nextInput) {
+        nextInput.focus();
+      } else {
+        setActiveTab("PLATELET");
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "RCI") inputRefs.current[0]?.focus();
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (inputRefs.current[0]) {
+      inputRefs.current[0].focus();
+    }
+  }, []);
 
   return (
     <MDBTable hover responsive className="mb-0">
@@ -49,17 +77,21 @@ dispatch(SetPARAMS({ key: "rci", value: _rci }));
               <td className="py-1">{category}</td>
               <td className="py-1">
                 <input
+                  ref={(el) => (inputRefs.current[index] = el)}
                   type="number"
                   style={{
                     color: value
                       ? value < lo
                         ? "red"
-                        : value > hi && "red"
+                        : value > hi
+                        ? "red"
+                        : ""
                       : "",
                   }}
                   name={index}
                   value={String(value)}
                   onChange={handleChange}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
                   className="w-100 text-center fw-bold"
                 />
               </td>

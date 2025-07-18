@@ -18,9 +18,9 @@ const get = {
       return (
         <h5>
           You need to create transactions worth
-          <span className="text-success"> {currency(maximum)} </span>
+          <span className="text-success"> {currency.format(maximum)} </span>
           to generate the SOA. Current total:
-          <span className="text-primary">{currency(current)}</span>.
+          <span className="text-primary">{currency.format(current)}</span>.
         </h5>
       );
     }
@@ -28,16 +28,17 @@ const get = {
     if (current > maximum) {
       return (
         <h5>
-          Exceeded <span className="text-success">{currency(maximum)} </span>{" "}
+          Exceeded{" "}
+          <span className="text-success">{currency.format(maximum)} </span>{" "}
           maximum total. Please adjust your transactions. Current total:
-          <span className="text-danger">{currency(current)}</span>.
+          <span className="text-danger">{currency.format(current)}</span>.
         </h5>
       );
     }
     return (
       <h5>
         Ready to generate SOA! Current total:{" "}
-        <span className="text-success">{currency(current)}</span>.
+        <span className="text-success">{currency.format(current)}</span>.
       </h5>
     );
   },

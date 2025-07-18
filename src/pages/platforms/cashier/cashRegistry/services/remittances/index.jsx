@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBCard, MDBContainer } from "mdbreact";
 import "./style.css";
@@ -8,7 +8,6 @@ import { Denomination, Census } from "./modal";
 import { BROWSE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
 import { BROWSE as DEALS } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { Monthly } from "../../../../../../services/redux/slices/finance/journals/payments";
-import Printout from "./modal/printout";
 
 export default function Remmitances() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
@@ -16,18 +15,21 @@ export default function Remmitances() {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (activePlatform?.branchId) {
-      dispatch(BROWSE({ token, key: { branchId: activePlatform?.branchId } }));
+    if (activePlatform?.branchId && token && year && month && auth?._id) {
       const createdAt = new Date(year, month - 1, 1);
       const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+      dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));
+
       dispatch(
         DEALS({
           token,
           key: {
-            branchId: activePlatform?.branchId,
+            branchId: activePlatform.branchId,
             cashierId: auth._id,
-            createdAt,
-            endDate,
+            startDate: createdAt.toISOString(), // ✅ FIXED: renamed + string
+            endDate: endDate.toISOString(), // ✅ FIXED: string format
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // optional
           },
         })
       );
@@ -50,14 +52,13 @@ export default function Remmitances() {
   }, [month, year, token, activePlatform?.branchId, auth._id, dispatch]);
 
   return (
-    <MDBContainer className="d-grid" fluid>
+    <MDBContainer fluid>
       <MDBCard className="pb-3" narrow>
         <Header />
         <Calendar />
       </MDBCard>
       <Denomination />
       <Census />
-      <Printout />
     </MDBContainer>
   );
 }

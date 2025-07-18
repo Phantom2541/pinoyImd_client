@@ -1,14 +1,15 @@
 import io from "socket.io-client";
 import axioKit from "./axioKit";
+import axiosMiddleware from "./axioKit/sender";
 import Banner from "./banner";
 import handlePagination from "./pagination";
 import fullName from "./fullName";
 import calculateDiff from "./calculateDiff";
 import FailedBanner from "../../assets/failedBanner.jpg";
-import FailedLogo from "../../assets/failedLogo.png";
+import FailedLogo from "../../assets/iMD.png";
 import PresetUser from "../../assets/default.jpg";
 import isJpegOrJpgFile from "./isJpegOrJpgFile";
-import { fullAddress, billingAddress } from "./fullAddress";
+import { fullAddress, billingAddress, LatitudeAddress } from "./fullAddress";
 import bulkPayload from "./bulkPayload";
 import globalSearch from "./globalSearch";
 import taskBadge from "./taskBadge";
@@ -19,7 +20,7 @@ import getAge from "./getAge";
 import getDate from "./getDate";
 import currency from "./currency";
 import removeRedundantPackages from "./removeRedundantPackages";
-import computeGD from "./computeGD";
+import { computeGD, allServicesHavePrices } from "./computeGD";
 import validateContact from "./validateContact";
 import generateEmail from "./generateEmail";
 import { getGenderIcon, getPhysicianGenderIcon } from "./getGenderIcon";
@@ -38,8 +39,9 @@ import generateCode from "./generateCode";
 import Search from "./search";
 import generateCalendar from "./generateCalendar";
 import fullNameSearch from "./fullNameSearch";
-import dateFormat from "./dateFormat";
+import { dateFormat, timeFormat } from "./dateFormat";
 import getTime from "./getTime";
+import getDay from "./getDay";
 import getBday from "./getBday";
 import getWeekend from "./getWeekend";
 import isClosingTime from "./isClosingTime";
@@ -50,15 +52,22 @@ import removeUndefinedValues from "./dataCleaner";
 import collapse from "./collapse";
 import Male from "../../assets/male.jpg";
 import Female from "../../assets/female.jpg";
-import PresetIMD from "../../assets/iMD.jpg";
+import Logo from "../../assets/iMD.png";
+import PresetIMD from "../../assets/iMD.png";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
+// Clear's Cache
+import clearSiteData from "./clearSiteData";
 //EXCEL
 import VouchersToExcel from "./export/excel/vouchers";
 import MenusToExcel from "./export/excel/menus";
 import ResecoToExcel from "./export/excel/reseco";
+import DealsToExcel from "./export/excel/deals";
 //PDF
 import MenusToPDF from "./export/pdf/menus";
+//status
+import employment from "../fakeDb/employment";
+
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
 
@@ -84,6 +93,7 @@ export {
   PresetImage,
   ENDPOINT,
   axioKit,
+  axiosMiddleware,
   socket,
   paymentMethod,
   Deals,
@@ -92,8 +102,6 @@ export {
   fullName,
   calculateDiff,
   isJpegOrJpgFile,
-  fullAddress,
-  billingAddress,
   bulkPayload,
   globalSearch,
   taskBadge,
@@ -102,12 +110,15 @@ export {
   getAge,
   getDate,
   getTime,
+  getDay,
   contacts,
   dateFormat,
+  timeFormat,
   getWeekend,
   currency,
   removeRedundantPackages,
   computeGD,
+  allServicesHavePrices,
   validateContact,
   generateEmail,
   getGenderIcon,
@@ -126,10 +137,21 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  //status of employment
+  employment,
+  //address formatter,
+  fullAddress,
+  billingAddress,
+  LatitudeAddress,
+  // Cache's Clear
+  clearSiteData,
   //export to excel
+  DealsToExcel,
   VouchersToExcel,
   MenusToExcel,
   ResecoToExcel,
   //export to pdf
   MenusToPDF,
+  //Logo
+  Logo,
 };

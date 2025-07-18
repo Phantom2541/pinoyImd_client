@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { MDBBadge, MDBCol } from "mdbreact";
 import { SecondaryFooter, PrimaryFooter } from "./footer";
@@ -34,14 +34,12 @@ export default function Card({ item, index }) {
 
   const handlePin = () => {
     return (
-      <span className={`sales-card-num ${dept && "rendered"}`}>
-        {deal.page} {index + 1}
-      </span>
+      <span className={`sales-card-num ${dept && "rendered"}`}>{deal?.pn}</span>
     );
   };
 
   return (
-    <MDBCol md="4" key={index}>
+    <MDBCol className="p-2" md="3" key={index}>
       <div className="sales-card" key={index}>
         {handlePin()}
         <p className="line-clamp">

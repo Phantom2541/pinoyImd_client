@@ -1,22 +1,18 @@
-.custom-select-disabled.active {
-  pointer-events: none; /* Prevent interactions */
-  opacity: 0.2 !important; /* Ensure visibility */
-  box-shadow: none !important;
-  background: transparent !important;
-}
-
-.mdb-custom-select label {
+.customizable-select-design .caret {
   color: white !important;
-  text-align: left !important;
-  margin-top: 3px;
-}
-select.custom-select-disabled {
-  background-color: red !important;
-}
-.custom-select-disabled input[type="checkbox"]:checked + label::before {
-  opacity: 1 !important;
 }
 
-.selectSearchInput {
-  color: black !important;
+.customizable-select-design label {
+  text-align: left;
+  transform: translateY(10%);
+  color: white !important;
+}
+
+.customizable-selectSearch-design label {
+  color: grey !important;
+  transform: translateY(60%);
+}
+
+.customizable-selectInput-design {
+  color: white !important;
 }

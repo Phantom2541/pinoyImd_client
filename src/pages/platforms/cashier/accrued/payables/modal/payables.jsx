@@ -102,7 +102,7 @@ export default function ModalCreate() {
     <MDBModal
       isOpen={showPayablesModal}
       toggle={handleClose}
-      backdrop={false}
+      backdrop={true}
       size="m"
     >
       <MDBModalHeader
@@ -236,7 +236,6 @@ export default function ModalCreate() {
         />
         <MDBInput
           label="Remarks"
-          type="string"
           value={form?.remarks}
           onChange={({ target }) => setForm({ ...form, remarks: target.value })}
         />

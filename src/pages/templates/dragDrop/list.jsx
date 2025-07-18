@@ -31,12 +31,12 @@ const List = ({
   return (
     <MDBCol>
       <MDBCard
-        className="dragDrop bg-danger"
+        className="dragDrop"
         style={{ height: "20rem" }}
         onDrop={(event) => handleDrop(event, tableName)}
         onDragOver={handleDragOver}
       >
-        <MDBCardHeader className="bg-light dragDrop d-flex justify-content-between align-items-center transition-all">
+        <MDBCardHeader className="text-white dragDrop d-flex justify-content-between align-items-center transition-all">
           <span style={{ fontWeight: 500 }}> {title}</span>
           {collections.length > 4 && <SearchUser />}
         </MDBCardHeader>
@@ -68,7 +68,7 @@ const List = ({
                       handleDragStart(event, role, index, tableName);
                     }}
                     hover
-                    className={hasDrag ? "curor-grab" : "cursor-pointer"}
+                    className={hasDrag ? "cursor-grab" : "cursor-pointer"}
                   >
                     {role.name}
                   </MDBListGroupItem>

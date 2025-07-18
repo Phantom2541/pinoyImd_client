@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SetPARAMS, SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  SetPARAMS,
+  SetTASK,
+} from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 import {
   Diffcount as DiffCount,
@@ -16,13 +19,20 @@ const _dc = {
   f: 0,
 };
 
-export default function Diffcount() {
-  const {task} = useSelector(({validator}) => validator),
+export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
+  const { task } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
-    
+
   const { dc = _dc } = task,
     { Preferences } = Cellcount,
     { Category } = DiffCount;
+
+  const inputRefs = useRef([]);
+
+  // Focus on first input when component mounts
+  useEffect(() => {
+    if (activeTab === "DIFF COUNT") inputRefs.current[0]?.focus();
+  }, [activeTab]);
 
   const handleChange = (e) => {
     const { name, value } = e.target,
@@ -30,8 +40,20 @@ export default function Diffcount() {
       diff = { ...dc };
 
     diff[name] = _value;
-    dispatch(SetTASK({form: task?.form, task:{ ...task, dc: diff }}));
-dispatch(SetPARAMS({ key: "dc", value: diff }));
+    dispatch(SetTASK({ form: task?.form, task: { ...task, dc: diff } }));
+    dispatch(SetPARAMS({ key: "dc", value: diff }));
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const nextInput = inputRefs.current[index + 1];
+      if (nextInput) {
+        nextInput.focus();
+      } else {
+        setActiveTab("RCI");
+      }
+    }
   };
 
   return (
@@ -54,17 +76,21 @@ dispatch(SetPARAMS({ key: "dc", value: diff }));
               <td className="py-1">
                 <input
                   type="number"
+                  name={key}
+                  value={String(value)}
+                  onChange={handleChange}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  className="w-100 text-center fw-bold"
                   style={{
                     color: value
                       ? value < lo
                         ? "red"
-                        : value > hi && "red"
+                        : value > hi
+                        ? "red"
+                        : ""
                       : "",
                   }}
-                  name={key}
-                  value={String(value)}
-                  onChange={handleChange}
-                  className="w-100 text-center fw-bold"
                 />
               </td>
               <td className="py-1">

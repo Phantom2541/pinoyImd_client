@@ -1,5 +1,5 @@
 import {
-  Onboard,
+  // Onboard,
   Tasks,
   Reports,
 } from "../../../pages/platforms/frontdesk/diagnostics";
@@ -18,6 +18,12 @@ const clinical = [
     path: "/Schedules",
     icon: "cogs",
     children: [
+      {
+        name: "Dashboard",
+        title: "Overview of platform activity.",
+        path: "/dashboard",
+        icon: "concierge-bell",
+      },
       {
         name: "Appointments",
         path: "/appointments",

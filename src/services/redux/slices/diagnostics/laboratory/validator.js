@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit } from "../../../../utilities";
+import { axioKit, getAge } from "../../../../utilities";
+import { capitalize } from "lodash";
 
 const url = "commerce/pos/services/deals";
 const healthyClient = {
@@ -21,6 +22,8 @@ const initialState = {
    */
   heads: [],
   preferences: [],
+  patient: {},
+  privilege: -1,
   /**
    *  Active forms
    */
@@ -31,6 +34,9 @@ const initialState = {
   //   attributes,
   collections: [],
   filtered: [],
+  filteredStatus: [],
+  byGroup: "all",
+  byStatus: "all",
   showModal: false,
   totalPages: 0,
   page: 1,
@@ -102,14 +108,31 @@ export const HEADS = createAsyncThunk(
   }
 );
 
+export const TRACKER = createAsyncThunk(
+  `${url}/tracker`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/tracker`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const reduxSlice = createSlice({
   name: "validator",
   initialState,
   reducers: {
     SetVALIDATOR: (state, { payload }) => {
-      const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(
-        payload?.form
-      )
+      const form = capitalize(payload.form);
+      const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(form)
         ? "dealId"
         : "_id";
 
@@ -119,15 +142,16 @@ export const reduxSlice = createSlice({
         forms.findIndex((item) => item?._id === payload?._id);
 
       const updateCollection = (collections, index) => {
+        console.log("index", index);
         if (index > -1) {
           if (identifier === "_id") {
-            collections[index].diagnostic[payload.form] = payload;
+            collections[index].diagnostic[form] = payload;
           } else {
             const formIndex = findFormIndex(
-              collections[index].diagnostic[payload.form]
+              collections[index].diagnostic[form]
             );
             if (formIndex > -1) {
-              collections[index].diagnostic[payload.form][formIndex] = payload;
+              collections[index].diagnostic[form][formIndex] = payload;
             }
           }
         }
@@ -135,6 +159,7 @@ export const reduxSlice = createSlice({
 
       updateCollection(state.collections, findIndex(state.collections));
       updateCollection(state.filtered, findIndex(state.filtered));
+      updateCollection(state.filteredStatus, findIndex(state.filteredStatus));
     },
     SetFILTERED: (state, { payload }) => {
       if (payload.length > 0) {
@@ -145,16 +170,67 @@ export const reduxSlice = createSlice({
       }
       state.filtered = payload;
     },
+    SetByGroup: (state, action) => {
+      const selectedKey = action.payload; // e.g., "Chemistry"
+      if (selectedKey === "all") {
+        state.filteredStatus = state.filtered;
+      } else {
+        state.filteredStatus = state.filtered.filter((task) => {
+          return task.diagnostic && task.diagnostic[selectedKey];
+        });
+      }
+      state.byGroup = action.payload;
+      state.byStatus = "all";
+      state.activePage = 1;
+    },
+    SetByStatus: (state, action) => {
+      const groupBy = state.byGroup;
+      const filter = action.payload;
+      const diagnosticGroup =
+        groupBy === "all"
+          ? state.filtered
+          : state.filtered.filter((task) => {
+              return task.diagnostic && task.diagnostic[groupBy];
+            });
+
+      if (filter === "all") {
+        state.filteredStatus = diagnosticGroup;
+      } else {
+        const isDone = filter === "true";
+
+        state.filteredStatus = diagnosticGroup.filter((task) => {
+          if (!task.diagnostic) return false;
+          const diagnostics =
+            groupBy === "all"
+              ? Object.values(task.diagnostic)
+              : [task?.diagnostic[groupBy]];
+
+          return diagnostics
+            .flat(Infinity)
+            [isDone ? "every" : "some"](
+              ({ hasDone = false }) => hasDone === isDone
+            );
+        });
+      }
+      state.byStatus = filter;
+      state.activePage = 1;
+    },
     SetSELECTED: (state, { payload }) => {
       const { activeCOLAPSE, deal } = payload;
       state.selected = { ...deal };
       state.activeCOLAPSE = activeCOLAPSE;
+    },
+    SetPatient: (state, { payload }) => {
+      state.patient = payload;
+      const isSenior = getAge(payload.dob, true) > 59; // Use payload instead of customer
+      state.privilege = payload.privilege || (isSenior ? 2 : 0);
     },
     SetTASK: (state, { payload }) => {
       const { task } = payload;
       state.task = task;
       state.showModal = true;
     },
+
     /**
      * for U/A, CBC, Feca
      */
@@ -208,12 +284,29 @@ export const reduxSlice = createSlice({
 
         state.collections = payload;
         state.filtered = payload;
+        state.filteredStatus = payload;
         state.totalPages =
           Math.ceil((payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isLoading = false;
       })
       .addCase(TASKS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(TRACKER.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(TRACKER.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = state.filtered = payload;
+        state.isLoading = false;
+      })
+      .addCase(TRACKER.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -251,11 +344,14 @@ export const reduxSlice = createSlice({
 
 export const {
   SetSELECTED,
+  SetPatient,
   SetTASK,
   SetPARAMS,
   SetPrint,
   SetPackages,
   SetFILTERED,
+  SetByGroup,
+  SetByStatus,
   SetMODAL,
   SetPREFERENCES,
   SetHEADS,

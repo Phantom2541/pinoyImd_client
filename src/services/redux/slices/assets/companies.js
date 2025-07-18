@@ -5,22 +5,31 @@ const url = "assets/companies";
 
 const initialState = {
   collections: [],
+  hmo: [],
   filtered: [],
   isSuccess: false,
   formSubmitted: false,
   isLoading: false,
   message: "",
   showModal: false,
+  closeModal: false,
   willCreate: false,
+  willUPDATE: false,
+  details: {}, //this is for subscriber home page
   selected: {},
   /**
    * for pagination
    */
+  // collections: [],
+  // filtered: [],
   paginated: [],
   page: 0,
   maxPage: 5,
   activePage: 1,
   totalPages: 0,
+  // isSuccess: false,
+  isloading: false,
+  // message: "",
 };
 
 export const BROWSE = createAsyncThunk(
@@ -28,6 +37,23 @@ export const BROWSE = createAsyncThunk(
   ({ token, key }, thunkAPI) => {
     try {
       return axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const GET_DETAILS = createAsyncThunk(
+  `${url}/get_details`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/get_details`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -169,6 +195,64 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetUPDATE: (state, { payload }) => {
+      state.selected = payload;
+      state.willUPDATE = true;
+      state.showModal = true;
+    },
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetCREATE: (state) => {
+      state.selected = {
+        name: "",
+        agent: "",
+        email: "",
+        phone: "",
+        ms: "",
+        vs: "",
+      };
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetFILTER: (state, { payload }) => {
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (page > totalPAges) {
+          state.page = totalPAges;
+        }
+      }
+      state.filtered = payload;
+    },
+    SetHMO: (state, { payload }) => {
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (page > totalPAges) {
+          state.page = totalPAges;
+        }
+      }
+      state.hmo = state.filtered = payload;
+    },
+    SetPagination: (state) => {
+      // {
+      //   payload;
+      // }getPage
+      const { page, max } = state;
+      // if (getPage) return array;
+
+      state.paginated = state.filtered.slice(
+        (page - 1) * max,
+        max + (page - 1) * max
+      );
+    },
     SetCOLLECTIONS: (state, { payload }) => {
       state.collections = payload;
     },
@@ -182,6 +266,7 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
       state.selected = {};
+      state.closeModal = !state.closeModal;
     },
     /**
      * for pagination
@@ -210,6 +295,21 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(GET_DETAILS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GET_DETAILS.fulfilled, (state, action) => {
+        state.details = action.payload;
+        state.isLoading = false;
+        localStorage.setItem("patronCompany", JSON.stringify(action.payload));
+      })
+      .addCase(GET_DETAILS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
@@ -294,25 +394,45 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(UPDATE.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state?.collections?.findIndex(
-          (item) => item._id === payload._id
+        const { isCategories = false } = payload;
+
+        // ✅ Retrieve current localStorage object
+        const activePlatform = JSON.parse(
+          localStorage.getItem("activePlatform")
         );
 
-        state.collections[index] = payload;
+        const baseKey = isCategories ? "pc" : "hmo";
+
+        if (activePlatform?.branch) {
+          const branch = activePlatform?.branch;
+          const { companyId } = branch;
+          localStorage.setItem(
+            "activePlatform",
+            JSON.stringify({
+              ...activePlatform,
+              branch: {
+                ...branch,
+                companyId: { ...companyId, [baseKey]: payload[baseKey] },
+              },
+            })
+          );
+        }
+
+        state.filtered = payload?.hmo;
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
         state.isLoading = true;
@@ -340,12 +460,17 @@ export const reduxSlice = createSlice({
 
 export const {
   RESET,
+  SetUPDATE,
   SetCOLLECTIONS,
   SetFILTERED,
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
   SetSELECTED,
+  SetEDIT,
+  SetHMO,
+  SetCREATE,
+  SetFILTER,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

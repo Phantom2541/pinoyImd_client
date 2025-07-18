@@ -31,6 +31,10 @@ const Services = {
   },
 
   whereIn: (cluster) => collections?.filter(({ id }) => cluster?.includes(id)),
+  whereInAbbr: (cluster) =>
+    collections
+      ?.filter(({ id }) => cluster?.includes(id))
+      .map(({ abbreviation }) => abbreviation),
 
   whereNotIn: (cluster) =>
     collections.filter(({ id }) => !cluster.includes(id)),

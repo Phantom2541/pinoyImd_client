@@ -1,0 +1,765 @@
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { axioKit } from "../../../../../utilities";
+
+const url = "/commerce/pos/services/onboardings";
+const today = new Date();
+
+const initialState = {
+  collections: [],
+  filtered: [],
+  formSubmitted: false,
+  didSearch: false,
+  selected: {},
+  vendorId: "",
+  page: 0,
+  isSuccess: false,
+  // main loading
+  isLoading: false,
+  // form loading
+  isLoadingForm: false,
+  willCreate: false,
+  message: "",
+  showModal: false,
+  showProcess: false,
+  activeTab: "labRequest",
+  month: new Date().getMonth() + 1, // 0-based index (Jan = 0)
+  year: new Date().getFullYear(),
+  /**
+   * Footer
+   */
+  maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
+};
+
+export const BROWSE = createAsyncThunk(
+  `${url}/browse`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/browse`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const SEND_OUTS = createAsyncThunk(
+  `${url}/sendOuts`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/sendOuts`, token, params);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const PATIENT = createAsyncThunk(
+  `${url}/patient`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/patient`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const SEARCH = createAsyncThunk(
+  `${url}/search`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/search`, token, { searchKey: key });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const SAVE = createAsyncThunk(
+  `${url}/save`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const UPDATE_TAT = createAsyncThunk(
+  `${url}/update_tat`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "update_tat");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const UPDATE = createAsyncThunk(
+  `${url}/update`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const ASSIGN_AO = createAsyncThunk(
+  `${url}/ASSIGN_AO`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "assign_ao");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const UNTAG_PERSONNEL = createAsyncThunk(
+  `${url}/untag_personnel`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "untag_personnel");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const DESTROY = createAsyncThunk(
+  `${url}/destroy`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.destroy(url, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const UntagPHYSICIAN = createAsyncThunk(
+  `${url}/untagPhysician`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(`${url}/untagPhysician`, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const TagPHYSICIAN = createAsyncThunk(
+  `${url}/tagPhysician`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(`${url}/tagPhysician`, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const PROCESS_ONBOARDING = createAsyncThunk(
+  `${url}/PROCESS_ONBOARDING`,
+  ({ data, token }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "process_onboarding");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const reduxSlice = createSlice({
+  name: url,
+  initialState,
+  reducers: {
+    SetVALIDATE_ID: (state, { payload }) => {
+      const updateCollections = (collections) => {
+        const onboardingUsers = collections.filter(
+          ({ pid }) => pid._id === payload._id
+        );
+
+        onboardingUsers.forEach((element) => {
+          const index = collections.findIndex(({ _id }) => _id === element._id);
+          console.log("index", index);
+          collections[index] = {
+            ...collections[index],
+            pid: payload,
+          };
+        });
+      };
+      updateCollections(state.filtered);
+      updateCollections(state.collections);
+    },
+    SetSTATUS: (state, { payload }) => {
+      if (payload === "all") {
+        state.filtered = state.collections;
+      } else if (payload === "done") {
+        state.filtered = state.collections.filter(
+          ({ status }) => status === "done"
+        );
+      } else {
+        state.filtered = state.collections.filter(
+          ({ status }) => status !== "done"
+        );
+      }
+    },
+    SetVENDOR: (state, { payload }) => {
+      console.log("payload", payload);
+      if (payload === "all") {
+        state.filtered = state.collections;
+        state.vendorId = "";
+      } else {
+        state.filtered = state.collections.filter(
+          ({ vendor }) => vendor._id === payload
+        );
+        state.vendorId = payload;
+      }
+    },
+    SetCREATE: (state) => {
+      state.selected = {
+        department: state.department,
+        mode: "",
+        section: "",
+        expectedAt: "",
+      };
+      state.willCreate = true;
+      state.showModal = true;
+    },
+    SetEDIT: (state, { payload }) => {
+      state.selected = payload;
+      state.willCreate = false;
+      state.showModal = true;
+    },
+    SetSELECTED: (state, { payload }) => {
+      console.log("payload", payload);
+      state.selected = payload;
+      state.showModal = true;
+    },
+
+    SetPROCESS: (state, { payload }) => {
+      state.selected = payload;
+      state.showProcess = true;
+    },
+    SetMODAL: (state) => {
+      state.showModal = !state.showModal;
+    },
+    /**
+     *  Footer
+     */
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+
+      state.activePage = 1;
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+    },
+
+    SetMONTH: (state, { payload }) => {
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
+    },
+    setYear: (state, action) => {
+      state.year = Number(action.payload);
+    },
+    TOGGLE: (state, { payload }) => {
+      console.log("payload", payload);
+      if (payload) {
+        state.showProcess = !state.showProcess;
+      } else {
+        state.showModal = !state.showModal;
+      }
+      state.selected = {};
+    },
+    SetCOLLECTIONS: (state, { payload }) => {
+      const { page, maxPage } = state;
+      if (payload.length > 0) {
+        let totalPAges = Math.floor(payload.length / state.maxPage);
+        if (payload.length % maxPage > 0) totalPAges += 1;
+        state.totalPages = totalPAges;
+        if (page > totalPAges) {
+          state.page = totalPAges;
+        }
+      }
+      state.collections = payload;
+      state.filtered = payload.filter(
+        ({ department }) => department === state.department
+      );
+    },
+    SetActiveTAB: (state, { payload }) => {
+      state.activeTab = payload;
+    },
+    RESET: (state) => {
+      state.isSuccess = false;
+      state.isLoading = false;
+      state.formSubmitted = false;
+      state.message = "";
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(BROWSE.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(BROWSE.fulfilled, (state, { payload }) => {
+        state.collections = state.filtered = payload.payload || [];
+        let totalPages = Math.ceil(state.filtered.length / state.maxPage);
+        state.totalPages = totalPages;
+        if (state.activePage > totalPages) {
+          state.activePage = totalPages;
+        }
+        state.isLoading = false;
+      })
+      .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(SEND_OUTS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SEND_OUTS.fulfilled, (state, { payload }) => {
+        state.collections = state.filtered = payload.payload || [];
+        let totalPages = Math.ceil(state.filtered.length / state.maxPage);
+        state.totalPages = totalPages;
+        if (state.activePage > totalPages) {
+          state.activePage = totalPages;
+        }
+        state.isLoading = false;
+      })
+      .addCase(SEND_OUTS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(PATIENT.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(PATIENT.fulfilled, (state, action) => {
+        const { data, success } = action.payload;
+        state.collections = state.filtered = data;
+
+        state.totalPages = Math.ceil((data?.length || 0) / state.maxPage) || 1;
+        state.activePage = Math.min(state.activePage, state.totalPages);
+        state.isSuccess = success;
+        state.isLoading = false;
+      })
+      .addCase(PATIENT.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(SEARCH.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SEARCH.fulfilled, (state, action) => {
+        state.collections = action.payload;
+        state.isLoading = false;
+        state.isSuccess = true;
+      })
+      .addCase(SEARCH.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(SAVE.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SAVE.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        state.message = success;
+        state.collections.unshift(payload);
+        state.filtered.unshift(payload);
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(PROCESS_ONBOARDING.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(PROCESS_ONBOARDING.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(({ _id }) => _id === payload._id);
+          collections[index] = payload;
+        };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(PROCESS_ONBOARDING.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+      .addCase(SAVE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE_TAT.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE_TAT.fulfilled, (state, action) => {
+        const { success } = action.payload;
+
+        // state.collections = payload;
+        // state.filtered = payload.filter(
+        //   ({ department }) => department === state.department
+        // );
+
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE_TAT.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+
+      .addCase(UPDATE.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        if (state.collections.length > 0) {
+          const updateCollections = (collections) => {
+            const index = collections.findIndex(
+              (item) => item._id === payload._id
+            );
+            const oldData = { ...collections[index] };
+            if (payload.status === "denied") {
+              collections.splice(index, 1);
+            } else {
+              collections[index] = { ...oldData, ...payload };
+            }
+          };
+
+          updateCollections(state.collections);
+          updateCollections(state.filtered);
+        }
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UPDATE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+
+      .addCase(ASSIGN_AO.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+
+      .addCase(ASSIGN_AO.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        if (state.collections.length > 0) {
+          const { newPersonnel = false, createdPersonnel } = payload;
+          const getIndex = (collections) =>
+            collections.findIndex(({ _id }) => _id === payload._id);
+          const collectionIndex = getIndex(state.collections);
+          const filteredIndex = getIndex(state.filtered);
+
+          const filteredOldInfo = { ...state.filtered[filteredIndex] };
+          const collectionOldInfo = { ...state.collections[collectionIndex] };
+          if (newPersonnel) {
+            filteredOldInfo.personnels.unshift(createdPersonnel);
+            collectionOldInfo.personnels.unshift(createdPersonnel);
+          }
+
+          state.collections[collectionIndex] = {
+            ...collectionOldInfo,
+            ...payload,
+          };
+
+          state.filtered[filteredIndex] = {
+            ...filteredOldInfo,
+            ...payload,
+          };
+        }
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(ASSIGN_AO.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+
+      .addCase(UNTAG_PERSONNEL.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+
+      .addCase(UNTAG_PERSONNEL.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        if (state.collections.length > 0) {
+          // const { newPersonnel = false, createdPersonnel } = payload;
+          const getIndex = (collections) =>
+            collections.findIndex(({ _id }) => _id === payload._id);
+          const collectionIndex = getIndex(state.collections);
+          const filteredIndex = getIndex(state.filtered);
+
+          const filteredOldInfo = { ...state.filtered[filteredIndex] };
+          const collectionOldInfo = { ...state.collections[collectionIndex] };
+
+          const getPersonnelIndex = (personnels) =>
+            personnels.findIndex(({ _id }) => _id === payload?.personnelID);
+
+          const personnelsCollection = [...collectionOldInfo.personnels];
+
+          personnelsCollection.splice(
+            getPersonnelIndex(personnelsCollection),
+            1
+          );
+
+          const personnelsFiltered = [...filteredOldInfo.personnels];
+          personnelsFiltered.splice(getPersonnelIndex(personnelsFiltered), 1);
+
+          state.collections[collectionIndex] = {
+            ...collectionOldInfo,
+            personnels: personnelsCollection,
+          };
+
+          state.filtered[filteredIndex] = {
+            ...filteredOldInfo,
+            personnels: personnelsFiltered,
+          };
+        }
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+      })
+      .addCase(UNTAG_PERSONNEL.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
+      })
+      .addCase(DESTROY.pending, (state) => {
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(DESTROY.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+        const index = state.collections.findIndex(
+          (item) => item._id === payload
+        );
+        const findex = state.filtered.findIndex((item) => item._id === payload);
+
+        state.collections.splice(index, 1);
+        state.filtered.splice(findex, 1);
+
+        state.message = success;
+        state.isSuccess = true;
+      })
+      .addCase(DESTROY.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(TagPHYSICIAN.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(TagPHYSICIAN.fulfilled, (state, action) => {
+        const { success } = action.payload;
+        // const { affiliated, providerId } = payload;
+        // const index = state.collections.findIndex(
+        //   (item) => item._id === providerId
+        // );
+        // const provider = state.collections[index];
+        // provider.affiliated.unshift(affiliated);
+        // state.collections[index] = provider;
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(TagPHYSICIAN.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(UntagPHYSICIAN.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UntagPHYSICIAN.fulfilled, (state, action) => {
+        const { success, payload } = action;
+        const index = state.collections.findIndex(
+          (item) => item._id === payload
+        );
+
+        state.collections.splice(index, 1);
+        state.message = success;
+        state.isSuccess = true;
+        state.isLoading = false;
+      })
+      .addCase(UntagPHYSICIAN.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      });
+  },
+});
+
+export const {
+  SetFILTERED,
+  SetVALIDATE_ID,
+  SetSELECTED,
+  SetPROCESS,
+  SetSTATUS,
+  SetVENDOR,
+  SetCOLLECTIONS,
+  SetActiveTAB,
+  TOGGLE,
+  SetCREATE,
+  SetEDIT,
+  RESET,
+  SetMaxPage,
+  SetActivePAGE,
+  SetMONTH,
+  setYear,
+  ResetDATE,
+} = reduxSlice.actions;
+
+export default reduxSlice.reducer;

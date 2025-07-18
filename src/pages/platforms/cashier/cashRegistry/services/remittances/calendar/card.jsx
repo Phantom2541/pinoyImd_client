@@ -1,13 +1,11 @@
-import React from "react";
 import Indicator from "./indicator";
 import Footer from "./footer";
-import {
-  currency,
-  paymentMethod,
-} from "../../../../../../../services/utilities";
+import { currency } from "../../../../../../../services/utilities";
 import { MDBAnimation, MDBProgress } from "mdbreact";
 // import { useSelector } from "react-redux";
 const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
+  console.log("card-item", item);
+
   // const { collections } = useSelector(({ payments }) => payments);
   const today = new Date();
   const dateCell = new Date(txt);
@@ -21,14 +19,15 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
     collector,
     closing,
     breakdown = {},
-    expenses,
+    expenses = 0,
   } = item;
-
+  console.log("item", item);
   const isRemitted = !!collector;
 
   const { cash, ...rest } = breakdown;
   const nonCash = Object.entries(rest);
   const net = (opening.sum || 0) + cash - expenses;
+
   return (
     <div className="position-relative">
       <div
@@ -43,14 +42,13 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
           <>
             <div className="sales-card-info mt-3">
               {gross > 0 && (
-                <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center justify-content-between mb-1">
                   <h6
                     className={`mb-0 text-right `}
                     style={{ whiteSpace: "nowrap", fontWeight: 400 }}
                   >
                     Sales:
                   </h6>
-
                   <div
                     style={{
                       flexGrow: 1,
@@ -63,7 +61,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                     className={`mb-0 text-right`}
                     style={{ whiteSpace: "nowrap", fontWeight: 400 }}
                   >
-                    {currency(gross)}
+                    {currency.format(gross)}
                   </h6>
                 </div>
               )}
@@ -118,17 +116,17 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                           fontSize: "0.8rem",
                         }}
                       >
-                        {currency(value)}
+                        {currency.format(value)}
                       </h6>
                     </div>
                   ))}
                 </>
               )}
-
               {[
                 {
-                  label: "Cash Sales:",
-                  value: breakdown?.cash !== gross ? breakdown?.cash : 0,
+                  label: "Cash Payment",
+                  // value: breakdown?.cash !== gross ? breakdown?.cash : 0,
+                  value: breakdown?.cash ? breakdown?.cash : 0,
                 },
                 {
                   label: " Add: FC",
@@ -144,7 +142,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                 .filter(({ value }) => value > 0)
                 .map(({ label, value, cn }, idx) => (
                   <div
-                    className="d-flex align-items-center justify-content-between "
+                    className="d-flex align-items-center justify-content-between mb-1"
                     key={idx}
                     style={
                       label === " Add: FC"
@@ -171,7 +169,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                       className={`mb-0 text-right ${cn}`}
                       style={{ whiteSpace: "nowrap", fontWeight: 400 }}
                     >
-                      {currency(value)}
+                      {currency.format(value)}
                     </h6>
                   </div>
                 ))}
@@ -181,7 +179,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                 <div style={{ marginBottom: "1.8rem" }}>
                   <div className="cashier-remittance-breakdown">
                     <hr className="my-1" />
-
+                    {/* 
                     {breakdown &&
                       Object.entries(breakdown).map(([key, value]) => {
                         const paymentData = paymentMethod.getImage(key); // Get payment method data
@@ -210,7 +208,7 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                             </span>
                           </div>
                         );
-                      })}
+                      })} */}
                   </div>
                   <div
                     className="cashier-remittance-total d-flex align-items-center justify-content-between"
@@ -232,12 +230,13 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
                       {isRemitted ? "Remitted" : "COH"}:
                     </h6>
                     <h6 className="mt-1" style={{ fontWeight: 400 }}>
-                      {currency(net)}
+                      {currency.format(net)}
                     </h6>
                   </div>
                 </div>
               )}
             </div>
+
             {!isFuture && !isRemitted && deals.length > 0 && (
               <Footer num={num} item={item} deals={deals} />
             )}

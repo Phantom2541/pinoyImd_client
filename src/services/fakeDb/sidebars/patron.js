@@ -1,62 +1,102 @@
 import { Apply, Documents } from "../../../pages/platforms/patron/application";
 import Dashboard from "../../../pages/platforms/patron/dashboard";
-import { Diagnostics } from "../../../pages/platforms/patron/echart";
+import { Diagnostics } from "../../../pages/platforms/patron/emr";
+import cardHolder from "../../../pages/platforms/patron/emr/cardHolder";
+import onboardingStatus from "../../../pages/platforms/patron/emr/onboardingStatus";
+// import RequestQuery from "../../../pages/platforms/patron/diagnostics/RequestQuery";
+// import CheckupRecord from "../../../pages/platforms/patron/emr/CheckupRecord";
+// import Appointments from "../../../pages/platforms/patron/appointments/Appointments";
 
 const patron = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/bulletin",
     component: Dashboard,
   },
   {
-    name: "e-chart",
-    path: "/echart",
-    icon: "user-tag",
+    name: "Diagnostics",
+    path: "/diagnostics",
+    icon: "microscope",
     children: [
       {
-        name: "Admission",
-        path: "/admission",
-        icon: "user-tag",
+        name: "Kiosk",
+        path: "/Kiosk",
+        icon: "file-medical",
+        title: "Book Diagnostic Services",
+        component: cardHolder,
       },
       {
-        name: "Diagnostics",
-        path: "/diagnostics",
-        icon: "user-tag",
+        name: "Booking",
+        path: "/booking",
+        title: "Booking history",
+        icon: "file-medical",
+        component: onboardingStatus,
+      },
+      {
+        name: "Results",
+        path: "/results",
+        icon: "flask",
         component: Diagnostics,
-      },
-      {
-        name: "Medical Records",
-        path: "/laboratory",
-        icon: "user-tag",
-      },
-      {
-        name: "Medical Certificates",
-        path: "/certificates",
-        icon: "user-tag",
       },
     ],
   },
   {
-    name: "History",
-    path: "/history",
-    icon: "user-tie",
-  },
-  {
-    name: "Application",
-    path: "/application",
-    icon: "user-tag",
+    name: "Clinics",
+    path: "/clinics",
+    icon: "calendar-check",
     children: [
       {
-        name: "Resume",
-        path: "/resume",
-        icon: "user-tag",
+        name: "Consultations",
+        path: "/consultations",
+        icon: "calendar-check",
+        // component: Appointments,
+      },
+      {
+        name: "Checkup Record",
+        path: "/checkup",
+        icon: "stethoscope",
+        // component: CheckupRecord,
+      },
+      {
+        name: "Medical Certificates",
+        path: "/certificates",
+        icon: "file-medical-alt",
+      },
+    ],
+  },
+  {
+    name: "Electronic Medical Records",
+    path: "/emr",
+    icon: "file-medical",
+    children: [
+      {
+        name: "Admission",
+        path: "/admission",
+        icon: "notes-medical",
+      },
+      {
+        name: "Medical Records",
+        path: "/laboratory",
+        icon: "vials",
+      },
+    ],
+  },
+  {
+    name: "Job Application",
+    path: "/application",
+    icon: "briefcase",
+    children: [
+      {
+        name: "Companies",
+        path: "/companies",
+        icon: "building",
         component: Apply,
       },
       {
-        name: "Documents",
-        path: "/documents",
-        icon: "user-tag",
+        name: "Applied",
+        path: "/applied",
+        icon: "file-alt",
         component: Documents,
       },
     ],

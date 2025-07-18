@@ -1,5 +1,5 @@
 import { MDBBtn, MDBInput } from "mdbreact";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Privileges, Suffixes } from "../../../../../../../../services/fakeDb";
 import {
   generateEmail,
@@ -29,9 +29,8 @@ export default function Patient({ setActiveIndex }) {
   // inject searched name if no match
   useEffect(() => {
     if (customer) {
-      const { address } = JSON.parse(
-        localStorage.getItem("activePlatform")
-      )?.branch;
+      const { address = {} } =
+        JSON.parse(localStorage.getItem("activePlatform"))?.branch || {};
 
       const _address = customer?.address?.province
         ? customer.address
@@ -56,28 +55,32 @@ export default function Patient({ setActiveIndex }) {
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
 
+  const { fullName, _id, dob, privilege, mobile, isMale, address, email } =
+    form;
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    const _form = { ...form, password: form?.dob.replaceAll("-", "") };
     if (_id) {
       // update
-      if (!isEqual(form, customer))
+      if (!isEqual(_form, customer))
         dispatch(
           UPDATE({
-            data: form,
+            data: _form,
             token,
           })
-        ).then(({ payload }) => {
-          dispatch(SETPATIENT(payload.payload));
+        ).then((action) => {
+          if (action.type === "assets/users/UPDATE/fulfilled") {
+            dispatch(SETPATIENT(action.payload.payload));
+          } else if (action.type === "assets/users/UPDATE/rejected") {
+          }
         });
     } else {
       // create
       dispatch(
         SAVE({
           data: {
-            ...form,
-            password: "password",
-            email: email || generateEmail(form),
+            ..._form,
+            email: email || generateEmail(_form),
             activePlatform: {
               isPatient: true,
               isCeo: false,
@@ -87,15 +90,14 @@ export default function Patient({ setActiveIndex }) {
           },
           token,
         })
-      ).then(({ payload }) => {
-        dispatch(SETPATIENT(payload.payload));
+      ).then((action) => {
+        if (action.type === "assets/users/UPDATE/fulfilled") {
+          dispatch(SETPATIENT(action.payload.payload));
+        }
       });
     }
     setActiveIndex(0);
   };
-
-  const { fullName, _id, dob, privilege, mobile, isMale, address, email } =
-    form;
 
   return (
     <form onSubmit={handleSubmit}>

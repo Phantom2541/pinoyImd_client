@@ -7,14 +7,18 @@
     "@react-pdf-viewer/default-layout": "^3.12.0",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.9.0",
+    "bwip-js": "^4.7.0",
     "chart.js": "^4.4.9",
+    "core-js": "^2.6.12",
     "draft-js": "^0.11.7",
     "draft-js-export-html": "^1.4.1",
     "draftjs-to-html": "^0.9.1",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
-    "google-map-react": "^1.1.0",
+    "google-map-react": "^1.1.7",
     "interweave": "^13.1.0",
+    "jsbarcode": "^3.12.1",
+    "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "mdbreact": "./mdbreact-4.25.0.tgz",
     "mdbreact-admin-pro": "file:",
@@ -23,21 +27,28 @@
     "numbers-to-word": "^1.0.1",
     "pdfmake": "^0.2.20",
     "pica": "^9.0.1",
+    "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
     "react": "^16.12.0",
+    "react-barcode": "^1.6.1",
     "react-big-calendar": "^1.18.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^16.12.0",
     "react-draft-wysiwyg": "^1.13.2",
-    "react-easy-crop": "^5.0.5",
+    "react-easy-crop": "^5.4.2",
     "react-hook-form": "^7.56.3",
     "react-jvectormap": "^0.0.4",
+    "react-leaflet": "^2.8.0",
     "react-redux": "^8.0.7",
+    "react-responsive-carousel": "^3.2.23",
     "react-router": "^5.1.2",
     "react-scripts": "^5.0.1",
     "react-toast-notifications": "^2.5.1",
+    "react-webcam": "^7.2.0",
     "socket.io-client": "^4.6.1",
-    "sweetalert2": "^11.21.0"
+    "sweetalert2": "^11.21.0",
+    "swiper": "^11.2.8",
+    "tesseract.js": "^6.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -58,5 +69,8 @@
   "devDependencies": {
     "@types/file-saver": "^2.0.7",
     "eslint-plugin-import": "^2.31.0"
+  },
+  "resolutions": {
+    "swiper/source-map-loader": "0.0.0"
   }
 }

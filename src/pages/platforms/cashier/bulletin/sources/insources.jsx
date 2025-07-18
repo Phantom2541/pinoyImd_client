@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { MDBTable, MDBCard, MDBCardBody, MDBCol, MDBBtn } from "mdbreact";
 import { useSelector } from "react-redux";
-import { currency, axioKit } from "../../../../../services/utilities";
+import { axioKit } from "../../../../../services/utilities";
 
 const Insources = () => {
   const [data, setData] = useState([]);

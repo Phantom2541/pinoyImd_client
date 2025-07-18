@@ -5,9 +5,21 @@ const url = "assets/persons/physicians";
 
 const initialState = {
   collections: [],
+  filtered: [],
   isSuccess: false,
+  isLoading: false,
   formSubmitted: false,
   message: "",
+  showModal: false,
+  willCreate: false,
+  details: {}, //this is for subscriber home page
+  selected: {},
+  displayName: "",
+  paginated: [],
+  page: 0,
+  maxPage: 5,
+  activePage: 1,
+  totalPages: 0,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -129,6 +141,45 @@ export const reduxSlice = createSlice({
     SetPHYSICIANS: (state, { payload }) => {
       state.collections = payload;
     },
+    SETPHYSICIAN: (state, { payload }) => {
+      state.selected = payload;
+      console.log("payphysician", payload);
+
+      state.selectedId = payload?._id;
+
+      const full = payload?.fullName || {};
+      state.displayName = `${full.lname || ""}, ${full.fname || ""}${
+        full.mname ? " " + full.mname : ""
+      }`;
+
+      console.log("physician", state.displayName);
+    },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+      state.selected = {};
+    },
+    SetCREATE: (state) => {
+      state.selected = {
+        name: "",
+        email: "",
+        phone: "",
+      };
+      state.willCreate = true;
+
+      state.showModal = true;
+    },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+      console.log("maxPage", state.maxPage);
+    },
+    SetActivePAGE: (state, { payload }) => {
+      state.activePage = payload;
+      console.log("activePage", state.activePage);
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.formSubmitted = false;
@@ -190,7 +241,18 @@ export const reduxSlice = createSlice({
       })
       .addCase(TIEUPS.fulfilled, (state, action) => {
         const { payload } = action;
+        const { page, maxPage } = state;
+        if (payload.length > 0) {
+          let totalPAges = Math.floor(payload.length / state.maxPage);
+          if (payload.length % maxPage > 0) totalPAges += 1;
+          state.totalPages = totalPAges;
+          if (page > totalPAges) {
+            state.page = totalPAges;
+          }
+        }
         state.collections = payload;
+        state.filtered = payload;
+
         state.isLoading = false;
       })
       .addCase(TIEUPS.rejected, (state, action) => {
@@ -206,12 +268,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
+
         state.message = success;
-        payload?.length > 0 &&
-          payload.map((data) =>
-            //kasi pwede siyang mag add ng madaming physicians kaya minap ko kasi array yung return niya
-            state.collections.tieups.unshift(data)
-          );
+        state.collections.unshift(payload);
+        state.filtered.unshift(payload);
+        // payload?.length > 0 &&
+        //   payload.map((data) =>
+
+        //     //kasi pwede siyang mag add ng madaming physicians kaya minap ko kasi array yung return niya
+        //     state.collections.tieups.unshift(data)
+        //   );
 
         state.isSuccess = true;
         state.isLoading = false;
@@ -247,7 +313,7 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
+        // state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -260,16 +326,25 @@ export const reduxSlice = createSlice({
         state.collections.splice(index, 1);
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        // state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        // state.isLoading = false;
       });
   },
 });
 
-export const { SetPHYSICIANS, RESET } = reduxSlice.actions;
+export const {
+  SetPHYSICIANS,
+  SETPHYSICIAN,
+  RESET,
+  SetFILTERED,
+  SetCREATE,
+  SetActivePAGE,
+  SetMaxPage,
+  TOGGLE,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

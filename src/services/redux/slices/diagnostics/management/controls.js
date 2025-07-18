@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
 const url = "liability/controls";
+const today = new Date();
 
 const initialState = {
   collections: [], // incase one query only
@@ -91,6 +92,7 @@ export const reduxSlice = createSlice({
     },
     SetCREATE: (state, { payload }) => {
       state.selected = {
+        createdAt: new Date().toISOString().substring(0, 10),
         lo: "",
         norm: "",
         hi: "",
@@ -128,7 +130,6 @@ export const reduxSlice = createSlice({
     },
 
     SetMONTH: (state, { payload }) => {
-      console.log("SetMONTH payload :", payload);
       if (payload === "next") {
         if (state.month === 12) {
           state.month = 1;
@@ -145,12 +146,17 @@ export const reduxSlice = createSlice({
         }
       }
     },
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
+    },
+    setYear: (state, action) => {
+      state.year = Number(action.payload);
+    },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
     RESET: (state) => {
-      state.month = new Date().getMonth() + 1;
-      state.year = new Date().getFullYear();
       state.isSuccess = false;
       state.message = "";
     },
@@ -240,6 +246,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   SetMONTH,
+  ResetDATE,
   TOGGLE,
   RESET,
 } = reduxSlice.actions;

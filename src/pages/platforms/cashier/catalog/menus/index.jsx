@@ -11,7 +11,7 @@ export default function Menus() {
   const { isLoading } = useSelector(({ services }) => services);
 
   return (
-    <MDBAnimation type="slideInLeft">
+    <MDBAnimation type="bounceInDown">
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         <Header />
         <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>

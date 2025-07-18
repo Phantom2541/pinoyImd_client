@@ -22,7 +22,7 @@ import {
   SAVE,
 } from "../../../../../services/redux/slices/commerce/catalog/menus";
 import {
-  SRP,
+  InPatient,
   Contracts,
   Memberships,
   Expenses,
@@ -33,34 +33,64 @@ import { currency } from "../../../../../services/utilities";
 
 // declare your expected items
 const _form = {
-    description: "",
-    abbreviation: "",
-    capital: 0,
-    expenses: 0,
-    refund: 0,
-    opd: 0,
-    cw: 0,
-    er: 0,
-    promo: 0,
-    pw: 0,
-    hmo: [],
-    sc: 0,
-    ssc: 0,
-    vp: 0,
-    hasDiscount: true,
-    isProfile: false,
-    onPromo: false,
-    hasReseco: false,
-  },
-  tabs = ["SRP", "HMO", "Contracts", "Memberships", "Expenses", "Others"];
+  description: "",
+  abbreviation: "",
+  capital: 0,
+  expenses: 0,
+  refund: 0,
+  opd: 0,
+  cw: 0,
+  er: 0,
+  promo: 0,
+  pw: 0,
+  hmo: [],
+  sc: 0,
+  ssc: 0,
+  vp: 0,
+  hasDiscount: true,
+  isProfile: false,
+  onPromo: false,
+  hasReseco: false,
+};
+
+const COMPONENTS = {
+  InPatient,
+  HMO,
+  Contracts,
+  Memberships,
+  Expenses,
+  Others,
+};
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { formSubmitted = false, isSuccess } = useSelector(({ menus }) => menus),
     [form, setForm] = useState(_form),
-    [activeTab, setActiveTab] = useState("menu-0"),
+    [categories, setCategories] = useState([]),
+    [activeTab, setActiveTab] = useState(0),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
+  useEffect(() => {
+    if (show) {
+      //access the activePlatform in localstorage instead to auth, to get the updated patient categories
+      const fakeDB = localStorage.getItem("activePlatform");
+      if (fakeDB) {
+        setCategories(JSON.parse(fakeDB)?.branch?.companyId?.pc);
+      }
+    }
+  }, [show]);
+
+  const _tabs = [
+    "InPatient",
+    categories?.includes(6) && "HMO",
+    categories?.includes(7) && "Memberships",
+    categories?.includes(8) && "Contracts",
+    "Expenses",
+    "Others",
+  ];
+
+  const tabs = _tabs.filter((tab) => tab);
+  const components = tabs.map((tab) => COMPONENTS[tab]);
   useEffect(() => {
     const { hmo = [] } = selected || {};
     if (selected?._id)
@@ -116,7 +146,6 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     willCreate ? form[key] : form[key] || selected?.[key] || "";
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
-
   return (
     <MDBModal
       size="lg"
@@ -138,7 +167,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             <MDBCol md="8">
               <MDBInput
                 type="text"
-                label="Description"
+                label="Menu Description"
                 value={handleValue("description") || ""}
                 onChange={(e) =>
                   handleChange("description", e.target.value.toUpperCase())
@@ -160,49 +189,36 @@ export default function Modal({ show, toggle, selected, willCreate }) {
           </MDBRow>
           <h5 className="mb-2 text-center">
             <span className="grey-text">SRP:</span>
-            <span className="ml-2">{currency(Number(form?.opd))}</span>
+            <span className="ml-2">{currency.format(Number(form?.opd))}</span>
           </h5>
           <MDBNav classicTabs color="info" tabs className="nav-justified">
             {tabs.map((title, index) => (
               <MDBNavItem key={`tab-${index}`}>
                 <MDBNavLink
                   link
-                  active={`menu-${index}` === activeTab}
+                  active={index === activeTab}
                   to="#!"
-                  onClick={() => setActiveTab(`menu-${index}`)}
+                  onClick={() => setActiveTab(index)}
                 >
-                  {title}
+                  {title === "Expenses" ? "Operating Cost" : title}
                 </MDBNavLink>
               </MDBNavItem>
             ))}
           </MDBNav>
 
           <MDBTabContent activeItem={activeTab} className="card mb-4">
-            <MDBTabPane tabId={"menu-0"}>
-              <SRP handleValue={handleValue} handleChange={handleChange} />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-1"}>
-              <HMO form={form} setForm={setForm} />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-2"}>
-              <Contracts
-                handleValue={handleValue}
-                handleChange={handleChange}
-              />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-3"} className="m-0 p-0">
-              <Memberships
-                form={form}
-                handleValue={handleValue}
-                handleChange={handleChange}
-              />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-4"}>
-              <Expenses handleValue={handleValue} handleChange={handleChange} />
-            </MDBTabPane>
-            <MDBTabPane tabId={"menu-5"}>
-              <Others handleValue={handleValue} handleChange={handleChange} />
-            </MDBTabPane>
+            {components.map((Component, index) => {
+              return (
+                <MDBTabPane key={`component-${index}`} tabId={index}>
+                  <Component
+                    form={form}
+                    setForm={setForm}
+                    handleValue={handleValue}
+                    handleChange={handleChange}
+                  />
+                </MDBTabPane>
+              );
+            })}
           </MDBTabContent>
 
           <div className="text-center mb-1-half">

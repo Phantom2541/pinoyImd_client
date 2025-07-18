@@ -9,13 +9,13 @@ const Menus = ({
   selected,
   cart,
   category, //category index
+  contract,
   matchMenus,
   handleAddToCart,
   handleRemovedToCart,
 }) => {
-  const { sendouts = {}, privilege } = selected || {};
+  const { sendouts = {}, privilege, pid = {} } = selected || {};
   const { membership = "" } = sendouts;
-  console.log("cart", cart);
   return (
     <MDBCol md="4">
       <table className="menus-table">
@@ -45,7 +45,14 @@ const Menus = ({
               up = 0,
               title = "",
               color = "",
-            } = computeGD(item, category, privilege, membership);
+            } = computeGD(
+              item,
+              category,
+              privilege,
+              membership,
+              pid?.healthCard?.name || "",
+              contract
+            );
             return (
               <tr key={_id}>
                 <td className="text-left" title={title}>
@@ -74,10 +81,10 @@ const Menus = ({
                   title="Suggested Retail Price"
                   // className={discountable && "text-primary"}
                 >
-                  {currency(gross)}
+                  {currency.format(gross)}
                 </td>
                 <td title="Suggested Retail Price">
-                  <span className={`text-${color}`}>{currency(up)}</span>
+                  <span className={`text-${color}`}>{currency.format(up)}</span>
                   <button
                     onClick={() => handleRemovedToCart(_id)}
                     className="menus-button-delete"

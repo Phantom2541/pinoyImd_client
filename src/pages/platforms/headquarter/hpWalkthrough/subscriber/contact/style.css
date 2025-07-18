@@ -1,0 +1,255 @@
+.subscriber-contactUs-section {
+  background: linear-gradient(to top, #1266f1 30%, white);
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.subscriber-contactUs-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  height: 450px;
+  gap: 20px;
+  padding: 50px 60px;
+}
+
+.subscriber-contactUs-leftSide {
+  /* flex: 1; */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  grid-area: leftSide;
+  gap: 15px;
+  min-width: 250px;
+}
+
+.subscriber-contactUs-middleSide {
+  grid-area: middleSide;
+  min-width: 250px;
+}
+
+.subscriber-contactUs-rightSide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: rightSide;
+  width: 100%;
+  height: 100%;
+}
+
+.subscriber-contactUs-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  text-align: center;
+}
+.subscriber-contactUs-logo span {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-top: -5px;
+  color: #093c91;
+}
+
+.subscriber-contactUs-address,
+.subscriber-contactUs-email,
+.subscriber-contactUs-phone {
+  display: flex;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 400;
+  gap: 10px;
+}
+
+.subscriber-contactUs-address {
+  transition: color 0.3s ease;
+}
+
+.subscriber-contactUs-address span {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.subscriber-contactUs-address:hover {
+  color: #0f58d1;
+}
+
+.subscriber-contactUs-emailUs {
+  font-size: 2rem;
+  font-weight: 500;
+  color: white;
+}
+
+.subscriber-contactUs-quote {
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.subscriber-contactUs-branches-container {
+  display: flex;
+  flex-direction: column;
+  /* overflow: hidden; */
+}
+
+.subscriber-contactUs-branches {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+}
+
+.subscriber-contactUs-branches-container p {
+  color: #093c91;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.subscriber-contactUs-branch-name {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 400;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.subscriber-contactUs-branchInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  padding: 5px 10px;
+  background-color: #0f58d1;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.6s ease;
+}
+
+.subscriber-contactUs-branch-wrapper:hover .subscriber-contactUs-branchInfo {
+  max-height: 200px;
+  opacity: 1;
+}
+
+/* Blur all others unless their wrapper is hovered */
+.subscriber-contactUs-branches:hover
+  .subscriber-contactUs-branch-wrapper:not(:hover)
+  .subscriber-contactUs-branch-name {
+  filter: blur(2px);
+  opacity: 0.5;
+  transform: scale(0.98);
+}
+
+.subscriber-contactUs-branchInfo span {
+  color: white;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.subscriber-contactUs-branch-line {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Animate the arrow by default */
+.subscriber-contactUs-main {
+  animation: arrow-slide-right 1.2s ease-in-out infinite;
+  animation-delay: 0s;
+  opacity: 1;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Keyframe for the arrow animation */
+@keyframes arrow-slide-right {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  30% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateX(8px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+/* EXCLUDE the hovered branch from animation — keep animating others */
+.subscriber-contactUs-branches:hover
+  .subscriber-contactUs-branch-wrapper:not(:hover)
+  .subscriber-contactUs-main {
+  animation: arrow-slide-right 1.2s ease-in-out infinite;
+  opacity: 1;
+}
+
+/* ON HOVER: stop the animation and rotate only the hovered wrapper */
+.subscriber-contactUs-branch-wrapper:hover .subscriber-contactUs-main {
+  animation: none !important;
+  transform: rotate(90deg);
+  opacity: 0.5;
+}
+
+/* ✅ Responsive design: ≤ 1600px */
+@media (max-width: 1600px) {
+  .subscriber-contactUs-container {
+    width: 80%;
+  }
+  .subscriber-contactUs-section {
+    height: auto;
+  }
+
+  .subscriber-contactUs-logo img {
+    width: 70px;
+    height: 70px;
+  }
+  .contactUs-quote {
+    font-size: 1rem;
+  }
+  .subscriber-contactUs-logo span {
+    font-size: 1.3rem;
+  }
+  .subscriber-contactUs-address,
+  .subscriber-contactUs-email,
+  .subscriber-contactUs-phone,
+  .subscriber-contactUs-branch-name {
+    font-size: 1rem;
+  }
+  .subscriber-contactUs-branches-container p {
+    font-size: 1.3rem;
+  }
+
+  .subscriber-contactUs-branches {
+    gap: 0;
+  }
+}
+
+@media (max-width: 1400px) {
+  .subscriber-contactUs-container {
+    width: 85%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .subscriber-contactUs-container {
+    display: grid;
+    grid-template-areas:
+      "leftSide middleSide"
+      "rightSide rightSide";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    width: 100%;
+    height: auto;
+  }
+  .subscriber-contactUs-rightSide {
+    height: 350px;
+  }
+}

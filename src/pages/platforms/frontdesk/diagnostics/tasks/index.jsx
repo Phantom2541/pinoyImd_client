@@ -13,6 +13,8 @@ import TableLoading from "../../../../../components/tableLoading";
 import {
   HEADS,
   SetHEADS,
+  SetByGroup,
+  SetByStatus,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import {
   BROWSE,
@@ -24,12 +26,12 @@ import {
   RESET as PHYRESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
-import Printout from "./modal/printout";
+import Table from "./table";
 
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { message, isSuccess } = useSelector(({ deals }) => deals),
-    { isLoading } = useSelector(({ validator }) => validator),
+    { isLoading, byGroup } = useSelector(({ validator }) => validator),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -81,6 +83,11 @@ export default function Tasks() {
     }
   }, [token, dispatch, activePlatform]);
 
+  useEffect(() => {
+    dispatch(SetByGroup("all"));
+    dispatch(SetByStatus("all"));
+  }, [dispatch]);
+
   //Toast for errors or success
   useEffect(() => {
     if (message) {
@@ -91,18 +98,19 @@ export default function Tasks() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
-  // if (activePlatform.department === "Laboratory" && print) {
-  //   return <LabTaskPrintout />;
-  // } else if (activePlatform.department === "Radiology" && print) {
-  //   return <RadTaskPrintout />;
-  // }
+
   return (
     <MDBCard narrow>
       <Header />
-      {isLoading ? <TableLoading /> : <DealCollapse />}
+      {isLoading ? (
+        <TableLoading />
+      ) : byGroup === "all" ? (
+        <DealCollapse />
+      ) : (
+        <Table />
+      )}
       <Footer />
       <ResultEntry />
-      <Printout />
     </MDBCard>
   );
 }

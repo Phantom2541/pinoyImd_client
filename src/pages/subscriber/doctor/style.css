@@ -1,0 +1,183 @@
+:root {
+  --primary-color: #1266f1;
+  --seconday-color: #5c8dfb;
+  --accent-color: #f1c40f; /* Main accent */
+  --accent-alt: #2ecc71; /* Suggested: Emerald Green */
+  --background-color: #f9fafb;
+  --text-black: #212529;
+  --text-white: #f9fafb;
+}
+
+.subscriber-doctors-section {
+  position: relative;
+  width: 100%;
+  height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.subscriber-doctors-title {
+  color: var(--text-black);
+  text-align: center;
+  font-weight: bold;
+  z-index: 100;
+}
+
+.subscriber-doctors-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(./../../../assets/subscriber/hospitalImage.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.subscriber-doctors-img-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-color);
+  opacity: 0.7;
+}
+
+.subscriber-doctors-carousel-container {
+  width: 70%;
+}
+
+.subscriber-doctors-homeSlideStyle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  padding: 0 10px;
+  gap: 30px;
+}
+
+.subscriber-doctors-hometextContainerStyle {
+  flex: 1;
+  padding: "20px";
+  text-align: "left";
+}
+
+.subscriber-doctors-hometextContainerStyle h1 {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-white);
+  font-size: 2.5rem;
+}
+
+.subscriber-doctors-hometextContainerStyle h5 {
+  text-align: left;
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: var(--text-white);
+}
+
+.subscriber-doctors-hometextContainerStyle p {
+  text-align: left;
+  margin-top: 40px;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-white);
+}
+
+.subscriber-doctors-hometextContainerStyle h6 {
+  color: var(--text-white);
+  font-size: 1.15rem;
+  font-weight: 400;
+  text-align: end;
+}
+
+.subscriber-doctors-homeimageStyle {
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  object-fit: fill;
+}
+
+.subscriber-doctors-homeimageContainerStyle {
+  flex: 1;
+  width: 400px;
+  height: 400px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.subscriber-doctors-homeimageStyle.default {
+  object-fit: contain !important;
+}
+
+@media (max-width: 1660px) {
+  .subscriber-doctors-section {
+    height: 600px;
+  }
+  .subscriber-doctors-hometextContainerStyle h1 {
+    font-size: 2.3rem;
+  }
+}
+
+@media (max-width: 1400px) {
+  .subscriber-doctors-section {
+    height: 550px;
+  }
+  .subscriber-doctors-carousel-container {
+    width: 75%;
+  }
+  .subscriber-doctors-hometextContainerStyle h1 {
+    font-size: 2.1rem;
+  }
+  .subscriber-doctors-hometextContainerStyle h5 {
+    font-weight: 400;
+    font-size: 1.3rem;
+  }
+  .subscriber-doctors-hometextContainerStyle h6 {
+    font-size: 1.05rem;
+  }
+  .subscriber-doctors-homeimageContainerStyle {
+    width: 350px;
+    height: 350px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .subscriber-doctors-section {
+    height: 500px;
+  }
+  .subscriber-doctors-carousel-container {
+    width: 80%;
+  }
+  .subscriber-doctors-homeimageContainerStyle {
+    min-width: 300px;
+    height: 300px;
+  }
+  .subscriber-doctors-hometextContainerStyle h1 {
+    font-size: 1.9rem;
+  }
+  .subscriber-doctors-hometextContainerStyle h5 {
+    font-weight: 400;
+    font-size: 1.1rem;
+  }
+  .subscriber-doctors-hometextContainerStyle h6 {
+    font-size: 0.95rem;
+  }
+  .subscriber-doctors-hometextContainerStyle p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .subscriber-doctors-title {
+    font-size: 1.8rem;
+  }
+}

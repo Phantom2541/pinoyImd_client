@@ -5,9 +5,7 @@ import {
   RESET,
   BROWSE,
   SetMONTH,
-  SetFILTERByCategories,
 } from "../../../../../services/redux/slices/finance/journals/payments";
-import { Statements } from "./components";
 import CalendarPicker from "../../../../../components/header/calendars";
 import { currency } from "../../../../../services/utilities";
 
@@ -35,17 +33,13 @@ export default function TopHeader() {
   useEffect(() => {
     if (collections.length > 0) {
       const total = collections.reduce((acc, payment) => {
-        return acc + payment.amount;
+        return acc + payment?.amount || 0;
       }, 0);
       setTotal(total);
     } else {
       setTotal(0);
     }
   }, [collections]);
-  const handleCategories = (categories) => {
-    dispatch(SetFILTERByCategories(categories));
-    // console.log(categories);
-  };
 
   return (
     <MDBView
@@ -61,13 +55,8 @@ export default function TopHeader() {
         />
       </div>
       <span className="white-text mx-3 text-nowrap mt-0">
-        Payments ({currency(total)}){" "}
+        PAYMENTS ({currency.format(total)}){" "}
       </span>
-      <div>
-        <div className="text-right d-flex items-center">
-          <Statements setCategories={handleCategories} />
-        </div>
-      </div>
     </MDBView>
   );
 }

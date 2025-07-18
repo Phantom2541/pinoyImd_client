@@ -84,7 +84,7 @@ export default function Modal() {
   const handleChange = (key, value) =>
     setForm({
       ...form,
-      [key]: Number(value),
+      [key]: key === "createdAt" ? value : Number(value),
     });
 
   return (
@@ -105,6 +105,14 @@ export default function Modal() {
           >
             {Services.getName(selected?.serviceId)}
           </MDBTypography>
+
+          <MDBInput
+            label="Date"
+            type="date"
+            value={form.createAt}
+            required
+            onChange={(e) => handleChange("createdAt", e.target.value)}
+          />
 
           {/* Input fields */}
           <MDBInput

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -15,14 +15,14 @@ const Header = () => {
 
   //initial values
   useEffect(() => {
-    if (token && activePlatform?.branchId)
+    if (token)
       dispatch(
         BROWSE({
           token,
-          key: { companyId: activePlatform?.branch.companyId._id },
+          key: { companyId: activePlatform?.branch?.companyId._id },
         })
       );
-  }, [dispatch, activePlatform, token]);
+  }, [dispatch, activePlatform?.branch?.companyId?._id, token]);
 
   return (
     <MDBView
@@ -37,7 +37,7 @@ const Header = () => {
       <div>
         <Search
           handleAdd={(value) => dispatch(SetSELECTED({ name: value }))}
-          hideButton
+          haveAction
           collections={collections}
           setFiltered={(results) =>
             dispatch(SetFILTERED(results.length > 0 ? results : collections))

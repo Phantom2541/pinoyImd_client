@@ -5,10 +5,13 @@ const url = "assets/persons/applicants";
 
 const initialState = {
   collections: [],
+  branches: [],
+  activeBranch: "",
   personnel: {},
   selected: {},
   formSubmitted: false,
   showAccessModal: false,
+  showViewCredential: false,
   isSuccess: false,
   isLoading: false,
   message: "",
@@ -17,6 +20,8 @@ const initialState = {
 export const BROWSE = createAsyncThunk(
   `${url}`,
   ({ token, data }, thunkAPI) => {
+    console.log("data", data);
+
     try {
       return axioKit.universal(`${url}/browse`, token, data);
     } catch (error) {
@@ -124,7 +129,20 @@ export const reduxSlice = createSlice({
     ToggleAccessModal: (state, _) => {
       state.showAccessModal = !state.showAccessModal;
     },
+    ToggleViewCredential: (state, _) => {
+      state.showViewCredential = !state.showViewCredential;
+    },
     SetSELECTED: (state, { payload }) => {
+      state.selected = payload;
+      state.showAccessModal = true;
+    },
+
+    SetCREDENTIAL: (state, { payload }) => {
+      console.log("clicked set credential");
+      state.selected = payload;
+      state.showViewCredential = true;
+    },
+    SetREQUIREMENTS: (state, { payload }) => {
       state.selected = payload;
       state.showAccessModal = true;
     },
@@ -169,8 +187,14 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload } = action.payload;
-        state.collections = payload;
+        const { payload, query } = action.payload;
+        const { branchId } = query; // if we have a companyId it means browse by headquarter
+        if (branchId) {
+          state.collections = payload;
+        } else {
+          state.branches = payload.map(({ applicant, ...rest }) => rest);
+          state.collections = payload.flatMap(({ applicants }) => applicants);
+        }
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -236,14 +260,16 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload._id
-        );
 
-        const oldInfo = state.collections[index];
-        const newInfo = { ...oldInfo, ...payload };
-
-        state.collections[index] = newInfo;
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item._id === payload?._id
+          );
+          const oldInfo = state.collections[index];
+          const newInfo = { ...oldInfo, ...payload };
+          collections[index] = newInfo;
+        };
+        updateCollections(state.collections);
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -277,7 +303,14 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { RESET, UPDATEACCESS, ToggleAccessModal, SetSELECTED } =
-  reduxSlice.actions;
+export const {
+  RESET,
+  UPDATEACCESS,
+  SetSELECTED,
+  SetCREDENTIAL,
+  SetREQUIREMENTS,
+  ToggleAccessModal,
+  ToggleViewCredential,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;

@@ -14,7 +14,7 @@ const Templates = {
    */
   getComponents: (key) => {
     const department = collections.find(
-      ({ department }) => department.toLowerCase() === key.toLowerCase()
+      ({ department }) => department?.toLowerCase() === key?.toLowerCase()
     );
     return department
       ? [...department.components].sort((a, b) => a.localeCompare(b))
@@ -130,6 +130,11 @@ const Templates = {
     }
 
     return departments;
+  },
+
+  getAbbr: (section) => {
+    const match = collections.find((c) => c.components.includes(section));
+    return match ? match.codes[match.components.indexOf(section)] : null;
   },
 };
 

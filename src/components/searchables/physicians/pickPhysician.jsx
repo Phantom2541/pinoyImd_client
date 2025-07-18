@@ -1,189 +1,216 @@
-import React, { useEffect, useState } from "react";
-import { debounce } from "lodash";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState, useMemo, useRef } from "react";
 import {
-  SEARCH,
-  RESET,
-} from "../../../services/redux/slices/assets/persons/physicians";
-import { MDBIcon, MDBInput, MDBAnimation, MDBProgress } from "mdbreact";
-import {
-  formatNameToObj,
   fullName,
-  getAge,
-  getGenderIcon,
+  getPhysicianGenderIcon,
+  globalSearch,
 } from "../../../services/utilities";
+import { useSelector } from "react-redux";
+import { debounce } from "lodash";
+import { MDBAnimation, MDBProgress, MDBIcon } from "mdbreact";
 import "./style.css";
+import Notification from "./notification";
 
-/**
- * A Search component that allows the user to search for a patient by last name, first name, and middle name.
- * The component will make an API call to search for patients and render a list of results below the search input.
- * The user can select a patient from the list and the setPatient callback will be called with the selected patient.
- * The component also renders a button to register a new patient if no patient record is found with the search key.
- * The setSearchKey callback will be called with the search key when the button is clicked.
- *
- * @param {function} setPatient - A callback function that will be called when a patient is selected from the list.
- * @param {function} setRegister - A callback function that will be called when the button to register a new patient is clicked.
- *
- * @returns {JSX.Element} users
- */
-export default function PickPhysician({
-  onClick = () => {},
-  disabled = false,
-  selectedClassName = "", // this classname if apply in showing of selected physician
-  globalSearch = false, // if true search all physician in database
-  label = "Please set a label",
-}) {
-  const { collections, isLoading } = useSelector(
-      ({ physicians }) => physicians
-    ),
-    { token, activePlatform } = useSelector((state) => state.auth),
-    [users, setUsers] = useState([]),
-    [didSearch, setDidSearch] = useState(false),
-    [selected, setSelected] = useState({}),
-    [searchKey, setSearchKey] = useState(""),
-    dispatch = useDispatch();
+const PickPhysician = ({
+  defaultValue = "",
+  classNameInput = "form-control form-control-sm",
+  classNameContainer = "",
+  disabled,
+  formSubmitted,
+  isSuccess,
+  isEditable = false,
+  suggested = [],
+  onChange = () => {},
+  handleCheck = () => {},
+  handleClose = () => {},
+}) => {
+  const { collections } = useSelector(({ physicians }) => physicians);
+  const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [didSearch, setDidSearch] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [physicians, setPhysicians] = useState([]);
+  const [results, setResults] = useState([]);
 
-  // This function is debounced which means it will only be executed after 1000 milliseconds (1 second)
-  // of not being called again. This is useful for when the user is typing in the search
-  // input quickly and we don't want to make multiple API calls to search for the patient
-  // for each keystroke.
-  //
-  // The function takes a search key as an argument which is the value of the search
-  // input. The key is then formatted into an object with last name, first name, and
-  // middle name as separate properties. This is because the API endpoint for searching
-  // for patients expects the search key to be an object with these properties.
-  //
-  // The function then dispatches the GETPATIENTS action with the token and the formatted
-  // search key as arguments. The GETPATIENTS action will make the API call to search
-  // for patients and update the state with the result.
+  const onChangeRef = useRef(onChange);
+
   useEffect(() => {
-    setUsers(collections);
-  }, [collections]);
+    const base = [...collections].filter(({ user }) => user?._id);
+    const merged = [...base];
+    if (suggested.length > 0) {
+      suggested.forEach((s) => {
+        const exists = base.some((b) => b.user._id === s.user._id);
+        if (!exists) merged.push(s);
+      });
+    }
+    setPhysicians(merged);
+  }, [collections, suggested]);
 
-  const debouncedSearch = debounce((searchKey) => {
-    const key = formatNameToObj(searchKey);
-    dispatch(
-      SEARCH({
-        token,
-        key: {
-          ...key,
-          ...(!globalSearch && { branchID: activePlatform?.branchId }),
-        },
-      })
-    );
-  }, 1000);
-
-  const handleChange = (e) => {
-    const _searchKey = e.target.value;
-    if (!_searchKey) setDidSearch(false);
-    setSearchKey(_searchKey);
-    const searchKey = _searchKey.split(",");
-    if (searchKey.length > 1 && searchKey[1].trim()) {
+  useEffect(() => {
+    if (isSuccess && !formSubmitted) {
+      setQuery("");
       setDidSearch(true);
-      return debouncedSearch(_searchKey);
+    }
+  }, [formSubmitted, isSuccess]);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
+  useEffect(() => {
+    if (didSearch) {
+      onChangeRef.current(query);
+    } else {
+      onChangeRef.current(selectedId);
+    }
+  }, [didSearch, query, selectedId]);
+
+  useEffect(() => {
+    if (isEditable) {
+      setQuery(defaultValue);
+    }
+  }, [isEditable, defaultValue]);
+
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((value) => {
+        const _results = globalSearch(physicians, value);
+        setResults(_results);
+        setIsSearching(false);
+        setDidSearch(true);
+      }, 1000),
+    [physicians]
+  );
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+
+    const startsOrEndsWithSpace = /^\s|\s$/.test(value);
+
+    if (physicians.length === 0) {
+      setResults([]);
+      setDidSearch(true);
+    } else if (!startsOrEndsWithSpace && value.trim()) {
+      setIsSearching(true);
+      debouncedSearch(value);
+      setDidSearch(true);
+      onChange(value);
+    } else {
+      setIsSearching(false);
+      setResults([]);
     }
   };
 
-  const handleSelect = (user) => {
-    onClick(user);
-    setSelected(user);
-    setSearchKey("");
-    dispatch(RESET());
+  const handlePick = (item) => {
+    const name = fullName(item.user.fullName);
+    setQuery(name);
+    setSelectedId(item.user._id);
+    setResults([]);
     setDidSearch(false);
+    onChange(name);
   };
 
   return (
-    <>
-      <div className="position-relative">
-        {selected._id ? (
-          <div className={`d-flex align-items-center ${selectedClassName}`}>
-            <div>
-              <small className="grey-text">
-                {label}:
-                <MDBIcon
-                  icon="times"
-                  onClick={() => {
-                    setSelected({});
-                    onClick({});
-                  }}
-                  title="Remove selected physician"
-                  style={{
-                    color: "red",
-                    cursor: "pointer",
-                    marginTop: "-2rem",
-                    fontSize: "0.8rem",
-                    marginLeft: "5px",
-                  }}
-                />
-              </small>
+    <div className={`d-flex align-items-center ${classNameContainer}`}>
+      <div className="physicians-search-container">
+        <div className="d-flex align-items-center">
+          <Notification iconSize="md" />
 
-              <h6 className="d-flex align-items-center">
-                <strong>{fullName(selected?.user?.fullName)}</strong>
-              </h6>
-            </div>
+          <input
+            type="text"
+            placeholder="Search..."
+            className={`physicians-search-input ${classNameInput}`}
+            value={query}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+            onChange={handleInputChange}
+            disabled={disabled}
+          />
+        </div>
+
+        {isSearching ? (
+          <div className="physicians-results-list">
+            {new Array(5).fill("").map((_, index) => (
+              <MDBAnimation
+                key={index}
+                className="p-1 ml-2 mr-2 mt-1"
+                type="flash"
+                infinite
+                delay={`${index + 1}00ms`}
+                duration="3000ms"
+              >
+                <MDBProgress color="light" value={3000} id="progress-table" />
+              </MDBAnimation>
+            ))}
           </div>
-        ) : (
-          <>
-            <MDBInput
-              disabled={isLoading || disabled}
-              label={label}
-              style={{ width: "100%" }}
-              type="search"
-              value={searchKey}
-              onChange={handleChange}
-              placeholder="Search..."
-              autoCorrect="off"
-              spellCheck={false}
-            />
-            {didSearch && (
-              <div className="physician-search-results">
-                {isLoading ? (
-                  new Array(5).fill("").map((_, index) => (
-                    <MDBAnimation
-                      key={index}
-                      className="p-1 ml-2 mr-2 mt-1"
-                      type="flash"
-                      infinite
-                      delay={`${index + 1}00ms`}
-                      duration="3000ms"
-                    >
-                      <MDBProgress
-                        color="light"
-                        value={3000}
-                        id="progress-table"
-                      ></MDBProgress>
-                    </MDBAnimation>
-                  ))
-                ) : (
-                  <>
-                    {users.length === 0 && (
-                      <h6 className="text-center mt-2">
-                        No physicians Found. Try another keywords
-                      </h6>
-                    )}
-                    <ul>
-                      {users?.map((physician) => {
-                        const { user } = physician;
-                        const { _id, fullName: fullname } = user;
-                        return (
-                          <li
-                            onClick={() => handleSelect(physician)}
-                            key={_id}
-                            className="text-dark text-nowrap"
-                          >
-                            {getGenderIcon(user.gender)} {fullName(fullname)} |{" "}
-                            {getAge(user.dob)}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </>
-                )}
-              </div>
-            )}
-          </>
-        )}
+        ) : isFocused && query.trim() === "" && suggested.length > 0 ? (
+          <ul className="physicians-results-list">
+            {suggested.map((item, index) => (
+              <li
+                key={index}
+                className="physicians-result-item"
+                onClick={() => handlePick(item)}
+              >
+                <div className="physicians-result-content">
+                  {getPhysicianGenderIcon(item?.user?.isMale)}
+                  {fullName(item?.user?.fullName)}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : results.length > 0 ? (
+          <ul className="physicians-results-list">
+            {results.map((item, index) => (
+              <li
+                key={index}
+                className="physicians-result-item"
+                onClick={() => handlePick(item)}
+              >
+                <div className="physicians-result-content">
+                  {getPhysicianGenderIcon(item?.user?.isMale)}
+                  {fullName(item.user.fullName)}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
-    </>
+      {isEditable && (
+        <div className="d-flex align-items-center ml-2">
+          {!formSubmitted ? (
+            <MDBIcon
+              icon="check"
+              onClick={() => handleCheck()}
+              style={{
+                color: "blue",
+                fontSize: "1rem",
+                marginRight: "10px",
+                marginLeft: "7px",
+              }}
+              className="cursor-pointer"
+            />
+          ) : (
+            <MDBIcon
+              icon="spinner"
+              pulse
+              style={{
+                color: "black",
+                fontSize: "1rem",
+                marginRight: "10px",
+                marginLeft: "10px",
+              }}
+            />
+          )}
+          <MDBIcon
+            icon="times"
+            onClick={() => handleClose()}
+            className="cursor-pointer"
+            style={{ color: "red", fontSize: "1rem" }}
+          />
+        </div>
+      )}
+    </div>
   );
-}
+};
+
+export default PickPhysician;

@@ -1,6 +1,7 @@
 [
   {
     "department": "LAB",
+    "label": "Laboratory",
     "components": [
       "Urinalysis",
       "Hematology",
@@ -13,17 +14,37 @@
       "Bacteriology",
       "Biopsy",
       "Compatibility",
-      "PAPs",
+      "PAP Smear",
+      "Pheripheral Blood Smear",
+      "Drug test"
+    ],
+    "codes": [
+      "UA",
+      "HE",
+      "CH",
+      "PA",
+      "MSC",
+      "CO",
+      "SI",
+      "AN",
+      "BA",
+      "BX",
+      "CP",
+      "PAP",
       "PBS",
-      "Drugtest"
+      "DT"
     ]
   },
   {
     "department": "RAD",
-    "components": ["ECG", "Ultrasound", "Xray", "2DEcho"]
+    "label": "Radiology",
+    "components": ["ECG", "Ultrasound", "Xray", "2DEcho"],
+    "codes": ["ECG", "US", "XR", "2D"]
   },
   {
     "department": "CLINIC",
-    "components": ["Certicifate", "Examination"]
+    "label": "Clinical",
+    "components": ["Certicifate", "Examination"],
+    "codes": ["CERT", "EXAM"]
   }
 ]

@@ -13,8 +13,7 @@ import {
   LOGIN,
   RESET,
 } from "../../../services/redux/slices/assets/persons/auth";
-import { PresetImage } from "../../../services/utilities";
-
+import { Logo } from "../../../services/utilities";
 export default function Login({ show, toggle = null }) {
   const {
       activePlatform,
@@ -109,16 +108,23 @@ export default function Login({ show, toggle = null }) {
       className={`${email && "modal-avatar"}`}
     >
       <MDBModalHeader
+        // style={{ width: "100px", height: "100px" }}
         toggle={email ? null : toggle}
         className={`${email ? "mx-auto" : "light-blue darken-3 white-text"}`}
       >
         {auth ? (
           <img
             loading="eager"
+            className="rounded-circle"
             src={image}
-            onError={(e) => (e.target.src = PresetImage(auth.isMale))}
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "contain",
+              borderRadius: image === Logo ? "50%" : "0px",
+            }}
+            onError={(e) => (e.target.src = Logo)}
             alt={`avatar-${auth._id}`}
-            className="rounded-circle img-responsive"
           />
         ) : (
           "Login"

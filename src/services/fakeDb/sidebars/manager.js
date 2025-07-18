@@ -9,6 +9,8 @@ import {
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Payrolls from "../../../pages/platforms/finance/payroll";
+import Banners from "../../../pages/platforms/manager/settings/banner";
+import TatServices from "../../../pages/platforms/manager/commerce/tatServices";
 
 import {
   Employees,
@@ -18,13 +20,14 @@ import {
   Procurments,
   Heads,
 } from "../../../pages/platforms/headquarter/file201";
+import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
 
 import {
   Remittances,
   Sales,
   ExperimentalLedger,
-  Quest,
 } from "../../../pages/platforms/manager/businessOperations";
+import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
 
 import {
   ProductGenerics,
@@ -39,337 +42,279 @@ import {
   SOA,
   Reseco,
 } from "../../../pages/platforms/manager/accrued";
+import { Schedule } from "../../../pages/platforms/dtr";
 
 import {
+  Philhealth,
   Outsources,
-  // Insources,
   Utilities,
   Hotlines,
   Suppliers,
 } from "../../../pages/platforms/cashier";
+import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
+import LIS from "../../../pages/platforms/manager/settings/lis";
+import QrCodePage from "../../../pages/platforms/manager/settings/qrCode";
 
-const manager = [
+const ManagerSidebar = [
   {
     name: "Dashboard",
+    title: "Overview of platform activity.",
     icon: "tachometer-alt",
     path: "/dashboard",
     component: Dashboard,
   },
   {
-    name: "Business Operations",
-    path: "/operations",
+    name: "Operations",
+    title: "Daily business and clinic operations.",
     icon: "cogs",
+    path: "/operations",
     children: [
       {
         name: "Sales",
+        title: "View and manage daily clinic sales data.",
         path: "/sales",
         icon: "money-bill",
-        title: "Daily Sales",
         component: Sales,
       },
       {
         name: "Remittances",
+        title: "Track remittances from various departments.",
         path: "/remittances",
         icon: "pencil-alt",
         component: Remittances,
       },
       {
         name: "Ledger",
+        title: "Review financial ledger transactions.",
         path: "/ledger",
         icon: "file-invoice-dollar",
         component: ExperimentalLedger,
       },
       {
-        name: "Mobile Clinic",
+        name: "Mobile Clinic (Quest)",
+        title: "Mobile team operations for outreach clinics.",
         path: "/mobile",
         icon: "mobile-alt",
-        title: "Quest System for Mobile Clinic Lab Team",
         component: Quest,
       },
     ],
   },
   {
-    name: "Accrued", // liabilities
-    path: "/accrued",
-    icon: "tv",
-    title: "liabilities and obligations",
+    name: "Human Resources",
+    title: "Employee records, attendance, and roles.",
+    icon: "users",
+    path: "/hr",
     children: [
-      /**
-       * obligation for services or goods received but not yet paid for by the accounting period's en
-       *  unpaid bills (Water, Electricity, SOA  & etc.)
-       * Electric bill
-       * Water bill
-       * WIFI bill
-       * Rental
-       */
       {
-        name: "Accounts Payable (A/P)",
+        name: "Attendance",
+        title: "Employee daily attendance tracker.",
+        path: "/attendances",
+        icon: "clock",
+        // component: Calender,
+      },
+      {
+        name: "Schedule",
+        title: "Employee daily attendance tracker.",
+        path: "/schedule",
+        icon: "clock",
+        component: Schedule,
+      },
+      {
+        name: "Staff",
+        title: "Active staff directory.",
+        path: "/staff",
+        icon: "user",
+        component: Staffs,
+      },
+      {
+        name: "File 201",
+        title: "Comprehensive employee records.",
+        path: "/file201",
+        icon: "folder",
+        component: Employees,
+      },
+      {
+        name: "Physicians",
+        title: "In-house medical doctors.",
+        path: "/physicians",
+        icon: "stethoscope",
+        component: Physicians,
+      },
+      {
+        name: "Applicants",
+        title: "Job applicants and interview status.",
+        path: "/petitioners",
+        icon: "user-plus",
+        component: Applicants,
+      },
+      {
+        name: "Stockholders",
+        title: "Company stakeholders and investors.",
+        path: "/stockHolder",
+        icon: "user-tie",
+        component: stockHolder,
+      },
+    ],
+  },
+  {
+    name: "Finance & Accounting",
+    title: "Manage financial transactions and ledgers.",
+    icon: "wallet",
+    path: "/finance",
+    children: [
+      // mga pa-utang
+      {
+        name: "S O A Generator (vouchers)",
+        title:
+          "Generate Statements of Account for HMO, Contract, and Membership Clients",
+        path: "/vouchers",
+        icon: "file-invoice",
+        component: Vouchers,
+      },
+      {
+        name: "S O A Records",
+        title: "View and track all generated Statements of Account",
+        path: "/soa",
+        icon: "folder-open",
+        component: SOA,
+      },
+      {
+        name: "Accounts Receivable",
+        title: "Track receivables from clients or HMOs.",
+        path: "/receivables",
+        icon: "money-check",
+        component: Receivables,
+      },
+      // mga utang
+      {
+        name: "Accounts Payable",
+        title: "List of pending payables to suppliers.",
         path: "/payables",
         icon: "file-invoice-dollar",
-        title: "Outstanding payments for suppliers and utilities.",
         component: Payables,
       },
       {
         name: "Payments",
+        title: "View completed payments.",
         path: "/payments",
         icon: "dollar-sign",
-        title: "List of payments made.",
         component: Payments,
       },
-      /**
-       * SOA from A/P
-       * confirming the SOA listed in A/P
-       */
+      // tips
       {
-        name: "Statement of Account",
-        path: "/soa",
-        icon: "balance-scale",
-        title: "Outsourced services from monthly sales",
-        component: SOA,
-      },
-      /**
-       * Generated monthly Collections from vouchers  (SOA)
-       */
-      {
-        name: "Accounts Receivable (A/R)",
-        path: "/receivables",
-        icon: "money-bill",
-        title: "Unpaid invoices from corporate accounts or HMOs",
-        component: Receivables,
-      },
-      /**
-       * Unproessed Vouchers
-       * from daily sales
-       */
-      {
-        name: "Vouchers",
-        path: "/vouchers",
-        icon: "receipt",
-        title: "Vouchers from daily sales",
-        component: Vouchers,
-      },
-      {
-        name: "Reseco",
+        name: "Referral Rebates",
+        title:
+          "Generate and track monthly rebates for referring doctors and companies",
         path: "/reseco",
-        icon: "handshake",
-        title: "Monthly Reseco Deals",
+        icon: "hand-holding-usd",
         component: Reseco,
       },
       {
         name: "Payroll",
+        title: "Employee payroll records.",
         path: "/payroll",
         icon: "money-bill",
         component: Payrolls,
+      },
+      {
+        name: "Final Pay",
+        title:
+          "Compute and process final pay for resigned or separated employees",
+        path: "/clearance-pay",
+        icon: "file-export",
+        component: ClearancePay,
       },
     ],
   },
   {
     name: "Procurement",
-    icon: "book-open",
-    path: "/po",
+    title: "Track purchasing and supplier interactions.",
+    icon: "truck-loading",
+    path: "/procurement",
     children: [
       {
-        name: "Requisition", // 1. Pending, 2. submit
+        name: "Requisition",
+        title: "Submit and track purchase requisitions.",
         path: "/request",
         icon: "file-invoice",
         component: PurRequest,
       },
       {
-        name: "Approval ", // 1. Pending, 2. Approved 3. Denied
+        name: "Approval",
+        title: "Approve or reject procurement requests.",
         path: "/process",
-        icon: "file-invoice",
+        icon: "check-circle",
       },
       {
-        name: "Tracking", // 1. confirmation, 2. preparation, 3. shipped, 4. delivered
+        name: "Tracking",
+        title: "Monitor delivery status of procurements.",
         path: "/tracking",
-        icon: "file-invoice",
+        icon: "map-marker-alt",
       },
       {
-        name: "Records", // monthly view
+        name: "Records",
+        title: "View historical procurement records.",
         path: "/records",
-        icon: "file-invoice",
+        icon: "clipboard-list",
+      },
+      {
+        name: "Procurement Records",
+        title: "Procurement log for physical assets.",
+        path: "/procurement",
+        icon: "file-alt",
+        component: Procurments,
       },
     ],
   },
   {
-    name: "Responsibilities",
-    icon: "wrench",
-    path: "/liability",
+    name: "Assets & Maintenance",
+    title: "Asset inventory and maintenance schedules.",
+    icon: "tools",
+    path: "/assets",
     children: [
       {
+        name: "Equipments",
+        title: "Clinic equipment listing and status.",
+        path: "/equipments",
+        icon: "cogs",
+        component: Equipments,
+      },
+      {
         name: "Supplies",
+        title: "Inventory of consumable supplies.",
         path: "/reagents",
         icon: "box",
       },
       {
-        name: "P M S",
-        path: "/preventive/maintenenace/schedule",
-        icon: "tools",
+        name: "Preventive Maintenance",
+        title: "Preventive Maintenance Schedule logs.",
+        path: "/preventive/maintenance/schedule",
+        icon: "calendar-check",
       },
     ],
   },
   {
-    name: "Commerce",
-    path: "/commerce",
-    icon: "shopping-basket",
-    children: [
-      {
-        name: "Menus",
-        path: "/menus",
-        icon: "menu",
-        component: Menus,
-      },
-      {
-        name: "Services",
-        path: "/services",
-        icon: "concierge-bell",
-        component: Services,
-      },
-      {
-        name: "Duty Schedule",
-        path: "/duty",
-        icon: "calendar-days",
-      },
-      {
-        name: "ProductGenerics",
-        path: "/products/generics",
-        icon: "calendar-days",
-        component: ProductGenerics,
-      },
-      {
-        name: "Products",
-        path: "/products",
-        icon: "calendar-days",
-        component: Products,
-      },
-    ],
-  },
-  {
-    name: "Settings",
-    path: "/settings",
-    icon: "cogs",
-    children: [
-      {
-        name: "Sources",
-        path: "/sources",
-        icon: "cogs",
-        children: [
-          {
-            name: "Outsourcing",
-            path: "/outsourcing",
-            icon: "external-link",
-            component: Outsources,
-          },
-          {
-            name: "Insourcing",
-            path: "/insourcing",
-            icon: "download",
-            // component: Insources,
-          },
-          {
-            name: "Suppliers",
-            path: "/suppliers",
-            icon: "briefcase",
-            component: Suppliers,
-          },
-          {
-            name: "Utilities",
-            path: "/utilities",
-            icon: "tools",
-            title: "List of Company that provides Utilities or supports",
-            component: Utilities,
-          },
-          {
-            name: "Hotlines",
-            path: "/hotlines",
-            icon: "phone",
-            title: "List of Hotlines",
-            component: Hotlines,
-          },
-          {
-            name: "Tie Ups",
-            path: "/tieup",
-            icon: "handshake",
-            component: Tieups,
-          },
-        ],
-      },
-      {
-        name: "Personnel",
-        icon: "users-round",
-        path: "/faculties",
-        children: [
-          {
-            name: "Staff",
-            path: "/staff",
-            icon: "user",
-            component: Staffs,
-          },
-          {
-            name: "File 201",
-            path: "/file201",
-            icon: "user",
-            component: Employees,
-          },
-          {
-            name: "Heads",
-            path: "/heads",
-            icon: "user-check",
-            component: Heads,
-          },
-          {
-            name: "Physicians",
-            path: "/physicians",
-            icon: "stethoscope",
-            component: Physicians,
-          },
-          {
-            name: "Job Applicants",
-            path: "/petitioners",
-            icon: "user-plus",
-            component: Applicants,
-          },
-        ],
-      },
-      {
-        name: "Assets",
-        icon: "database",
-        path: "/assets",
-        children: [
-          {
-            name: "Equipment",
-            path: "/equipments",
-            icon: "cpu",
-            component: Equipments,
-          },
-          {
-            name: "Procurement",
-            path: "/procurement",
-            icon: "clipboard-list",
-            component: Procurments,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Markey Place",
+    name: "Marketplace",
+    title: "Machines, medicines, and product listings.",
     icon: "shopping-cart",
     path: "/marketplace",
     children: [
       {
-        name: "Machine",
+        name: "Machines",
+        title: "Machine listings and models.",
         path: "/machines",
         icon: "laptop-code",
       },
       {
         name: "Products",
+        title: "All available retail products.",
         path: "/products",
         icon: "cogs",
         component: Products,
       },
       {
         name: "Medicines",
+        title: "Medicine inventory and sales.",
         path: "/medicines",
         icon: "pills",
         component: Products,
@@ -377,17 +322,160 @@ const manager = [
     ],
   },
   {
+    name: "Clinic",
+    title: "Listings and status of clinic services.",
+    icon: "clinic-medical",
+    path: "/clinic",
+  },
+  {
+    name: "System Configuration",
+    title: "Configuration of system profiles and resources.",
+    icon: "sliders-h",
+    path: "/config",
+    children: [
+      {
+        name: "Profile Settings",
+        path: "/profile",
+        icon: "user-cog",
+        children: [
+          {
+            name: "Banner",
+            title: "Branch branding banners.",
+            path: "/banner",
+            icon: "image",
+            component: Banners,
+          },
+          {
+            name: "Details",
+            title: "Branch profile details.",
+            path: "/details",
+            icon: "address-card",
+            // component: Details,
+          },
+          {
+            name: "PhilHealth",
+            title: "PhilHealth accounts and contributions.",
+            path: "/Philhealth",
+            icon: "file-invoice",
+            component: Philhealth,
+          },
+          {
+            name: "Turn Around Times",
+            title: "Turn around Time for services.",
+            path: "/tat/Services",
+            icon: "clock",
+            component: TatServices,
+          },
+          {
+            name: "Signatories",
+            title: "List of section signatories.",
+            path: "/signatories",
+            icon: "pen",
+            component: Heads,
+          },
+          {
+            name: "Q R Code",
+            title: "Qr Code for Homepage.",
+            path: "/qrCode",
+            icon: "pen",
+            component: QrCodePage,
+          },
+        ],
+      },
+      {
+        name: "Sources & Utilities",
+        path: "/sources",
+        icon: "cogs",
+        children: [
+          {
+            name: "Outsourcing",
+            title: "External service providers.",
+            path: "/outsourcing",
+            icon: "external-link",
+            component: Outsources,
+          },
+          {
+            name: "Suppliers",
+            title: "Vendor contact and supply chain.",
+            path: "/suppliers",
+            icon: "briefcase",
+            component: Suppliers,
+          },
+          {
+            name: "Utilities",
+            title: "Utilities used by the organization.",
+            path: "/utilities",
+            icon: "tools",
+            component: Utilities,
+          },
+          {
+            name: "Hotlines",
+            title: "Emergency or support hotlines.",
+            path: "/hotlines",
+            icon: "phone",
+            component: Hotlines,
+          },
+          {
+            name: "Tie Ups",
+            title: "Affiliate or corporate tie-ups.",
+            path: "/tieup",
+            icon: "handshake",
+            component: Tieups,
+          },
+        ],
+      },
+      {
+        name: "Product & Services Setup",
+        path: "/product-config",
+        icon: "shopping-cart",
+        children: [
+          {
+            name: "Menus",
+            title: "Service menus and offerings.",
+            path: "/menus",
+            icon: "bars",
+            component: Menus,
+          },
+          {
+            name: "Services",
+            title: "List of medical and lab services.",
+            path: "/services",
+            icon: "concierge-bell",
+            component: Services,
+          },
+          {
+            name: "Product Generics",
+            title: "Generic product listings for resale.",
+            path: "/products/generics",
+            icon: "cubes",
+            component: ProductGenerics,
+          },
+          {
+            name: "Products",
+            title: "All available retail products.",
+            path: "/products",
+            icon: "box",
+            component: Products,
+          },
+        ],
+      },
+      {
+        name: "LIS",
+        title: "Laboratory information system.",
+        path: "/lis",
+        icon: "tram",
+        component: LIS,
+      },
+    ],
+  },
+
+  {
     name: "User Manual",
-    icon: "book-open",
+    title: "Documentation and user guidance.",
+    icon: "book",
     path: "/user/manual",
     component: UserManual,
   },
-  {
-    name: "Clinic",
-    icon: "book-open",
-    path: "/clinic",
-    // component: Clinic,
-  },
 ];
 
-export default manager;
+export default ManagerSidebar;

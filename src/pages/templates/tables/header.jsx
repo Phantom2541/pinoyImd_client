@@ -8,10 +8,10 @@ import {
   SetByTEMPLATES,
 } from "../../../services/redux/slices/commerce/catalog/services";
 const Header = () => {
-  const { maxPage } = useSelector(({ auth }) => auth);
-  const { filtered } = useSelector(({ services }) => services);
+  const { maxPage } = useSelector(({ auth }) => auth); //get the max page
+  const { filtered } = useSelector(({ services }) => services); //
   const [component, setComponent] = useState("");
-  const [services, setServices] = useState([]),
+  const [services, setServices] = useState([]), //make a state component
     dispatch = useDispatch();
 
   //initial values
@@ -42,14 +42,15 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <div className="text-right d-flex items-center">
+        <div>
           <Select
-            className="m-0 p-0 calendar mr-4"
+            className="m-1 mt-2 mr-4"
             value={component}
             onChange={(value) => handleComponent(value)}
-            inputClassName="m-0 p-0"
+            inputClassName="m-0"
             preValue={component}
             collections={Templates.getComponents("LAB")}
+            label="Select Component"
           />
         </div>
       </div>

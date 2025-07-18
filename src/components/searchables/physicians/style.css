@@ -1,31 +1,63 @@
-.physician-search-results {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  max-height: 300px;
-  overflow: auto;
+.physicians-search-container {
   width: 100%;
-  background: white;
-  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  z-index: 999;
+  position: relative;
 }
 
-.physician-search-results ul li:hover {
-  background-color: hsl(207, 90%, 56%);
-  cursor: pointer;
-  box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.3);
-  color: white !important;
+.physicians-search-input {
+  width: 100%;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  outline: none;
+  transition: 0.3s;
 }
 
-.physician-search-results ul {
+.physicians-search-input:focus {
+  border-color: #007bff;
+}
+.physicians-search-input:disabled {
+  background-color: transparent !important;
+  color: #000 !important; /* optional: para di maging gray text */
+  cursor: not-allowed; /* optional: para mukhang disabled pa rin */
+}
+
+.physicians-results-list {
+  max-height: 400px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
   list-style: none;
-  margin: 0;
-  padding: 5px 0;
+  padding: 0;
+  margin-top: 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.search-results li {
-  padding: 5px;
+.physicians-result-item {
+  border-bottom: 1px solid #eee;
   cursor: pointer;
-  transition: background 0.2s;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.physicians-result-item:last-child {
+  border-bottom: none;
+}
+
+.physicians-result-item:hover .physicians-result-content {
+  background-color: #f0f0f0;
+}
+
+.physicians-result-content {
+  padding: 10px 12px;
+}
+
+.physicians-no-result {
+  background-color: #fff;
+}
+
+.physicians-no-result .physicians-result-content {
+  color: #999;
+  padding: 10px 12px;
 }

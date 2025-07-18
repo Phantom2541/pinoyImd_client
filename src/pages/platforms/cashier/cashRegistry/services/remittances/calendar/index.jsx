@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { generateCalendar } from "../../../../../../../services/utilities";
 import WeekHeader from "./weekHeader";
@@ -6,12 +5,12 @@ import Card from "./card";
 import "./style.css";
 
 export default function Calendar() {
-  const { collections: deals } = useSelector(({ deals }) => deals),
+  const { collections: deals, isLoading: validation } = useSelector(
+      ({ deals }) => deals
+    ),
     { collections, month, year, isLoading } = useSelector(
       ({ remittances }) => remittances
     );
-  console.log("deals", deals);
-  console.log("collections", collections);
 
   return (
     <div className="cashier-remittance-calendar p-3">
@@ -28,6 +27,9 @@ export default function Calendar() {
           const item =
             collections.find(({ createdAt }) => {
               const dt = new Date(createdAt);
+              console.log("dt", dt);
+              console.log("lol", dt >= localDate && dt < nextDate);
+
               return dt >= localDate && dt < nextDate;
             }) || {};
 
@@ -36,6 +38,8 @@ export default function Calendar() {
             const dt = new Date(createdAt);
             return dt >= localDate && dt < nextDate;
           });
+          console.log("index-item", item);
+          console.log("_deals", _deals);
 
           return (
             <Card
@@ -44,7 +48,7 @@ export default function Calendar() {
               txt={txt}
               item={item}
               deals={_deals}
-              isLoading={isLoading}
+              isLoading={isLoading || validation}
             />
           );
         })}

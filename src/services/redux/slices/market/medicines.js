@@ -9,6 +9,7 @@ const initialState = {
 
   // Bread attributes
   selected: {}, // assurance
+  Genselected: {},
   page: 0,
   willCreate: false,
   showModal: false,
@@ -93,16 +94,17 @@ export const reduxSlice = createSlice({
   initialState,
   reducers: {
     SetEDIT: (state, { payload }) => {
-      state.selected = payload;
+      state.selected = payload.brand;
+      state.Genselected = payload.generics;
       state.willCreate = false;
       state.showModal = true;
     },
     SetCREATE: (state, { payload }) => {
       state.selected = {
-        lo: "",
-        norm: "",
-        hi: "",
-        serviceId: payload.serviceId,
+        subname: "",
+        pack: "",
+        purpose: "",
+        status: "",
       };
       state.willCreate = true;
       state.showModal = true;
@@ -176,10 +178,9 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
-        state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { payload } = action.payload;
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
         state.showModal = false;
@@ -225,12 +226,12 @@ export const reduxSlice = createSlice({
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success } = action;
         const index = state.collections.findIndex(
-          (item) => item?._id === action.payload.payload
+          (item) => item?.brands === action.payload.payload
         );
         state.collections.splice(index, 1);
 
         const findex = state.filtered.findIndex(
-          (item) => item._id === action.payload.payload
+          (item) => item.brands === action.payload.payload
         );
         state.filtered.splice(findex, 1);
         state.message = success;
