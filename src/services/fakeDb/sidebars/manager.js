@@ -99,7 +99,6 @@ const ManagerSidebar = [
       },
     ],
   },
-
   {
     name: "Human Resources",
     title: "Employee records, attendance, and roles.",
@@ -157,7 +156,6 @@ const ManagerSidebar = [
       },
     ],
   },
-
   {
     name: "Finance & Accounting",
     title: "Manage financial transactions and ledgers.",
