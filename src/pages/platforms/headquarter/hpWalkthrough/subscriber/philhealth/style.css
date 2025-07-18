@@ -1,0 +1,38 @@
+.subscriber-philhealth-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.subscriber-philhealth-title {
+  font-weight: 500;
+  text-align: center;
+}
+
+.subscriber-philhealth-container {
+  position: relative;
+}
+
+.subscriber-philhealth-container img {
+  width: 600px;
+  height: auto;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.subscriber-philhealth-container span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transform: translate(7%, 0);
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  font-style: italic;
+  text-transform: capitalize;
+  color: #1266f1;
+}
