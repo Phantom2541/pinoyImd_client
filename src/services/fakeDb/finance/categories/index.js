@@ -1,18 +1,28 @@
 const Categories = [
-  { abbr: "wi", name: "Walkin", color: "green" },
-  { abbr: "opd", name: "Out Patient Department", color: "blue" },
-  { abbr: "er", name: "Emergency Room", color: "blue" },
-  { abbr: "cw", name: "Charity Ward", color: "blue" },
-  { abbr: "pw", name: "Private Ward", color: "blue" },
-  { abbr: "sr", name: "Suite Room", color: "blue" },
-  { abbr: "wls", name: "Wellness", color: "orange" },
-  { abbr: "mbs", name: "Membership", color: "orange" },
-  { abbr: "ctr", name: "Contract", color: "orange" },
-  { abbr: "bp", name: "Business Permit", color: "red" },
-  { abbr: "mc", name: "Medical Clearance", color: "red" }, // Medical or Employment Clearance
-  { abbr: "sc", name: "Surgical Clearance", color: "red" },
-  { abbr: "rfr", name: "Referrals", color: "red" },
-  { abbr: "prm", name: "Promotion" },
+  { abbr: "wi", name: "Walkin", color: "green", type: "walkin" },
+  // in patient
+  { abbr: "er", name: "Emergency Room", color: "blue", type: "inpatient" },
+  { abbr: "cw", name: "Charity Ward", color: "blue", type: "inpatient" },
+  { abbr: "pw", name: "Private Ward", color: "blue", type: "inpatient" },
+  { abbr: "sr", name: "Suite Room", color: "blue", type: "inpatient" },
+  // out patient
+  {
+    abbr: "opd",
+    name: "Out Patient Department",
+    color: "black",
+    type: "outpatient",
+  },
+  // Corporate/Wellness
+  { abbr: "wls", name: "Wellness", color: "orange", type: "corporate" },
+  { abbr: "mbs", name: "Membership", color: "orange", type: "corporate" },
+  { abbr: "ctr", name: "Contract", color: "orange", type: "corporate" },
+  // Permits/Clearance
+  { abbr: "bp", name: "Business Permit", color: "red", type: "clearance" },
+  { abbr: "mc", name: "Medical Clearance", color: "red", type: "clearance" },
+  { abbr: "sc", name: "Surgical Clearance", color: "red", type: "clearance" },
+  { abbr: "rfr", name: "Referrals", color: "red", type: "clearance" },
+  // Promo
+  { abbr: "prm", name: "Promotion", color: "purple", type: "promo" },
 ];
 
 export default Categories;

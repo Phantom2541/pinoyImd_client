@@ -1,31 +1,29 @@
 @media print {
   @page {
-    size: 58mm 30mm; /* or 50mm 20mm based on printer roll */
+    size: 58mm 30mm landscape !important; /* 👈 try explicitly adding 'landscape' */
     margin: 0;
   }
 
   body {
     margin: 0;
     padding: 0;
+    writing-mode: horizontal-tb !important; /* 👈 force horizontal text block */
   }
 
   .thermal-print {
+    display: block;
     width: 100%;
-    padding: 0;
-    margin: 0;
+    transform: rotate(0deg); /* Just in case */
   }
 
   .barcode-container {
-    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 5mm;
   }
 
-  .result-barcode {
+  canvas.result-barcode {
     width: 100%;
     height: auto;
-    display: block;
   }
 }

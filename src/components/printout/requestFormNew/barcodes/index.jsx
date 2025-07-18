@@ -32,8 +32,8 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
             text: `${Templates.getAbbr(section)}-${sanitize(
               customerName
             )}-${String(pn).padStart(2, "0")}`,
-            scale: 2, // scale factor (affects both width & height)
-            height: 10, // height in mm (actual printed bar height)
+            scale: 3, // scale factor (affects both width & height)
+            height: 20, // height in mm (actual printed bar height)
             includetext: true,
             textxalign: "center",
             textsize: 12, // readable font size
