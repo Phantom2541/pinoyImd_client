@@ -186,7 +186,7 @@ const laboratory = [
         path: "/signatories",
         icon: "pen",
         component: Heads,
-        allowedFor: ["Chief MLS"],
+        allowedFor: ["Senior MedTech", "Chief MLS"],
       },
       {
         name: "Mobile Clinic (Quest)",
