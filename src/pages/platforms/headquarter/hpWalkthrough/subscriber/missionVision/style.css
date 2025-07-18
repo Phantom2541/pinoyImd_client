@@ -1,0 +1,158 @@
+.subscriber-mission-vision-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.subscriber-mission-vision-container {
+  width: fit-content;
+  height: fit-content;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.subscriber-mission-vision-top,
+.subscriber-mission-vision-middle,
+.subscriber-mission-vision-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.subscriber-mission-vision-top div,
+.subscriber-mission-vision-middle div,
+.subscriber-mission-vision-bottom div {
+  width: 450px;
+  height: 250px;
+  overflow: hidden;
+}
+
+.subscriber-mission-vision-top div:first-child img,
+.subscriber-mission-vision-top div:nth-child(3) img,
+.subscriber-mission-vision-bottom div:nth-child(2) img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: all 0.3s ease;
+}
+
+.subscriber-mission-vision-bottom div:nth-child(2):hover img,
+.subscriber-mission-vision-top div:nth-child(3):hover img,
+.subscriber-mission-vision-top div:first-child:hover img {
+  transform: scale(1.1);
+}
+
+.subscriber-mission-vision-top div:first-child,
+.subscriber-mission-vision-top div:nth-child(3),
+.subscriber-mission-vision-bottom div:nth-child(2) {
+  position: relative;
+}
+
+.subscriber-mission-vision-top div:first-child::before,
+.subscriber-mission-vision-top div:nth-child(3)::before,
+.subscriber-mission-vision-bottom div:nth-child(2)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.subscriber-mission-vision-top div:first-child:hover::before,
+.subscriber-mission-vision-top div:nth-child(3):hover::before,
+.subscriber-mission-vision-bottom div:nth-child(2):hover::before {
+  opacity: 1;
+}
+
+.subscriber-mission-vision-bottom div:first-child,
+.subscriber-mission-vision-bottom div:nth-child(3) {
+  background-color: rgba(18, 102, 241, 1);
+  color: white;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.subscriber-mission-vision-middle div:first-child,
+.subscriber-mission-vision-top div:nth-child(2) {
+  background-color: white;
+  color: black;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.subscriber-mission-vision-top div:nth-child(2) h1,
+.subscriber-mission-vision-middle div:first-child h1,
+.subscriber-mission-vision-bottom div:nth-child(3) h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.subscriber-mission-vision-top div:nth-child(2) span,
+.subscriber-mission-vision-middle div:first-child span,
+.subscriber-mission-vision-bottom div:nth-child(3) span {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.subscriber-mission-vision-middle div:nth-child(2) {
+  background-color: rgba(18, 102, 241, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subscriber-mission-vision-middle div:nth-child(2) img {
+  width: 250px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.subscriber-mission-vision-middle div:nth-child(2) span {
+  font-size: 1.8rem;
+  text-transform: capitalize;
+  font-weight: 500;
+  color: white;
+}
+
+.subscriber-mission-vision-middle div:nth-child(3) {
+  background-color: white;
+  color: black;
+  padding: 40px;
+}
+
+.subscriber-mission-vision-middle div:nth-child(3) h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.subscriber-mission-vision-bottom div:first-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.subscriber-mission-vision-top > div,
+.subscriber-mission-vision-middle > div,
+.subscriber-mission-vision-bottom > div {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.36);
+}
+
+.subscriber-mission-vision-top > div:hover,
+.subscriber-mission-vision-middle > div:hover,
+.subscriber-mission-vision-bottom > div:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.4);
+}
