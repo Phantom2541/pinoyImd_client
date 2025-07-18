@@ -171,10 +171,7 @@ export const reduxSlice = createSlice({
       state.filtered = payload;
     },
     SetByGroup: (state, action) => {
-      state.byGroup = action.payload;
-      console.log("SetByGroup action.payload :", action.payload);
       const selectedKey = action.payload; // e.g., "Chemistry"
-
       if (selectedKey === "all") {
         state.filteredStatus = state.filtered;
       } else {
@@ -182,29 +179,41 @@ export const reduxSlice = createSlice({
           return task.diagnostic && task.diagnostic[selectedKey];
         });
       }
+      state.byGroup = action.payload;
+      state.byStatus = "all";
+      state.activePage = 1;
     },
     SetByStatus: (state, action) => {
+      const groupBy = state.byGroup;
       const filter = action.payload;
+      const diagnosticGroup =
+        groupBy === "all"
+          ? state.filtered
+          : state.filtered.filter((task) => {
+              return task.diagnostic && task.diagnostic[groupBy];
+            });
 
       if (filter === "all") {
-        state.filteredStatus = state.filtered;
+        state.filteredStatus = diagnosticGroup;
       } else {
         const isDone = filter === "true";
 
-        state.filteredStatus = state.filtered.filter((task) => {
+        state.filteredStatus = diagnosticGroup.filter((task) => {
           if (!task.diagnostic) return false;
+          const diagnostics =
+            groupBy === "all"
+              ? Object.values(task.diagnostic)
+              : [task?.diagnostic[groupBy]];
 
-          const diagnostics = Object.values(task.diagnostic);
-
-          if (isDone) {
-            // Keep if any diagnostic hasDone === true
-            return diagnostics.some((d) => d.hasDone === true);
-          } else {
-            // Keep if all diagnostics are missing hasDone or have hasDone !== true
-            return diagnostics.every((d) => d.hasDone !== true);
-          }
+          return diagnostics
+            .flat(Infinity)
+            [isDone ? "every" : "some"](
+              ({ hasDone = false }) => hasDone === isDone
+            );
         });
       }
+      state.byStatus = filter;
+      state.activePage = 1;
     },
     SetSELECTED: (state, { payload }) => {
       const { activeCOLAPSE, deal } = payload;

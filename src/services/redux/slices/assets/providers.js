@@ -426,6 +426,15 @@ export const reduxSlice = createSlice({
       })
       .addCase(INSOURCE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload.payload;
+        const { page, maxPage } = state;
+        if (payload.length > 0) {
+          let totalPAges = Math.floor(payload.length / state.maxPage);
+          if (payload.length % maxPage > 0) totalPAges += 1;
+          state.totalPages = totalPAges;
+          if (page > totalPAges) {
+            state.page = totalPAges;
+          }
+        }
         state.totalPages =
           Math.ceil((payload.payload?.length || 0) / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);

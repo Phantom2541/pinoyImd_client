@@ -1,4 +1,3 @@
-import "./style.css";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BROWSE } from "../../../../../../services/redux/slices/assets/companies";
@@ -17,10 +16,10 @@ export default function MissionVision() {
   console.log("company", activePlatform);
 
   return (
-    <div className="template-cards-container">
+    <div className="template-cards-container ">
       <div className="d-flex flex-column">
         {/* Company Card including Mission and Vision inside */}
-        <div className="template4-card">
+        <div className="template4-card" style={{ width: "700px" }}>
           <div className="template4-card-header">
             <h3 className="template4-card-title">{companyId?.name}</h3>
             <small>{companyId.subName}</small>

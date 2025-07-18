@@ -12,6 +12,7 @@ const initialState = {
   isLoading: false,
   message: "",
   showModal: false,
+  closeModal: false,
   willCreate: false,
   willUPDATE: false,
   details: {}, //this is for subscriber home page
@@ -265,6 +266,7 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
       state.selected = {};
+      state.closeModal = !state.closeModal;
     },
     /**
      * for pagination
