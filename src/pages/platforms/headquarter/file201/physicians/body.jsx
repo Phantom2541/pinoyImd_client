@@ -25,12 +25,14 @@ export default function Body() {
   //Set fetched data for mapping
   useEffect(() => {
     setTieups(filtered);
-  }, [filtered]);
+  }, [filtered, isSuccess]);
 
   //Trigger for update
-  const handleDelete = (selected) => {
+  const handleDelete = (item) => {
     Swal.fire({
-      title: "Are you sure?",
+      title: `Are you sure to remove ${String(
+        properFullname(item?.user?.fullName, true)
+      ).toUpperCase()}?`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -39,7 +41,7 @@ export default function Body() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { id: selected._id } }));
+        dispatch(DESTROY({ token, data: { id: item._id } }));
       }
     });
   };
