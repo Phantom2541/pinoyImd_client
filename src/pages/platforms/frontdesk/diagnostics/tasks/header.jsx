@@ -15,7 +15,7 @@ import { capitalize } from "../../../../../services/utilities";
 const Headers = ({ searchKey }) => {
   const dispatch = useDispatch();
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { filtered } = useSelector(({ validator }) => validator);
+  const { filtered, byStatus } = useSelector(({ validator }) => validator);
   const departmentCode =
     activePlatform?.department?.toLowerCase() === "laboratory"
       ? "LAB"
@@ -72,6 +72,7 @@ const Headers = ({ searchKey }) => {
             <select
               className="form-control"
               style={{ width: 150 }}
+              value={byStatus}
               onChange={(e) => {
                 dispatch(SetByStatus(e.target.value));
               }}
@@ -80,8 +81,8 @@ const Headers = ({ searchKey }) => {
                 Status ...
               </option>
               <option value="all">All</option>
-              <option value={false}>Pending</option>
-              <option value={true}>Done</option>
+              <option value={"false"}>Pending</option>
+              <option value={"true"}>Done</option>
             </select>
           </div>
           <div>

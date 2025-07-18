@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { MDBCard, MDBCollapse, MDBContainer, MDBCardBody } from "mdbreact";
 import { handlePagination } from "../../../../../../services/utilities";
