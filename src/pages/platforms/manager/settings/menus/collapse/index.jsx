@@ -48,8 +48,6 @@ export default function MenuCollapse({
                 {description && `${capitalize(description)} | `}
                 {abbreviation?.toUpperCase()} -{" "}
                 <span className="text-primary">{currency.format(opd)}</span>
-              </div>
-              <div className="d-flex align-items-center gap-2">
                 <MDBIcon
                   icon="pencil-alt"
                   title="Edit Menus"
@@ -60,6 +58,8 @@ export default function MenuCollapse({
                     handleUpdate(menu);
                   }}
                 />
+              </div>
+              <div className="d-flex align-items-center gap-2">
                 <MDBIcon
                   icon="angle-down"
                   className={`transition-all`}
