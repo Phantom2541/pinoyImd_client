@@ -155,15 +155,6 @@ export const reduxSlice = createSlice({
       console.log("physician", state.displayName);
     },
     SetFILTERED: (state, { payload }) => {
-      const { page, maxPage } = state;
-      if (payload.length > 0) {
-        let totalPAges = Math.floor(payload.length / state.maxPage);
-        if (payload.length % maxPage > 0) totalPAges += 1;
-        state.totalPages = totalPAges;
-        if (page > totalPAges) {
-          state.page = totalPAges;
-        }
-      }
       state.filtered = payload;
     },
     TOGGLE: (state) => {
@@ -250,9 +241,17 @@ export const reduxSlice = createSlice({
       })
       .addCase(TIEUPS.fulfilled, (state, action) => {
         const { payload } = action;
+        const { page, maxPage } = state;
+        if (payload.length > 0) {
+          let totalPAges = Math.floor(payload.length / state.maxPage);
+          if (payload.length % maxPage > 0) totalPAges += 1;
+          state.totalPages = totalPAges;
+          if (page > totalPAges) {
+            state.page = totalPAges;
+          }
+        }
         state.collections = payload;
         state.filtered = payload;
-        console.log("payload", payload);
 
         state.isLoading = false;
       })
@@ -314,7 +313,7 @@ export const reduxSlice = createSlice({
         state.formSubmitted = false;
       })
       .addCase(DESTROY.pending, (state) => {
-        state.isLoading = true;
+        // state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -327,12 +326,12 @@ export const reduxSlice = createSlice({
         state.collections.splice(index, 1);
         state.message = success;
         state.isSuccess = true;
-        state.isLoading = false;
+        // state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        // state.isLoading = false;
       });
   },
 });

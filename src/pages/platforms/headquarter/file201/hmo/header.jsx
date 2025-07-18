@@ -14,7 +14,7 @@ import { Search } from "../../../../../components/searchables";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { hmo } = useSelector(({ companies }) => companies),
+    { hmo, closeModal } = useSelector(({ companies }) => companies),
     { branch = {} } = activePlatform,
     { companyId = {} } = branch,
     dispatch = useDispatch();
@@ -25,7 +25,7 @@ const Header = () => {
     if (companyId) {
       dispatch(SetHMO(companyId.hmo));
     }
-  }, [companyId, dispatch]);
+  }, [companyId, dispatch, closeModal]);
 
   // initial values
   useEffect(() => {
@@ -50,7 +50,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          Accredited Health Management Organization
+          {hmo.length} Accredited Health Management Organization
         </span>
       </div>
       <div>

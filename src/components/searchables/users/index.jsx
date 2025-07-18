@@ -109,8 +109,6 @@ export default function Search({
     setDidSearch(false);
   };
 
-  console.log("isFetching", isFetching);
-
   return (
     <div
       className="d-flex align-items-center  "

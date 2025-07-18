@@ -22,7 +22,7 @@ import {
   SAVE,
 } from "../../../../../services/redux/slices/commerce/catalog/menus";
 import {
-  SRP,
+  InPatient,
   Contracts,
   Memberships,
   Expenses,
@@ -54,12 +54,12 @@ const _form = {
 };
 
 const COMPONENTS = {
-  SRP: SRP,
-  HMO: HMO,
-  Contracts: Contracts,
-  Memberships: Memberships,
-  Expenses: Expenses,
-  Others: Others,
+  InPatient,
+  HMO,
+  Contracts,
+  Memberships,
+  Expenses,
+  Others,
 };
 export default function Modal({ show, toggle, selected, willCreate }) {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -81,10 +81,10 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   }, [show]);
 
   const _tabs = [
-    "SRP",
+    "InPatient",
     categories?.includes(6) && "HMO",
-    categories?.includes(8) && "Contracts",
     categories?.includes(7) && "Memberships",
+    categories?.includes(8) && "Contracts",
     "Expenses",
     "Others",
   ];
@@ -167,7 +167,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
             <MDBCol md="8">
               <MDBInput
                 type="text"
-                label="Description"
+                label="Menu Description"
                 value={handleValue("description") || ""}
                 onChange={(e) =>
                   handleChange("description", e.target.value.toUpperCase())
@@ -200,7 +200,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
                   to="#!"
                   onClick={() => setActiveTab(index)}
                 >
-                  {title}
+                  {title === "Expenses" ? "Operating Cost" : title}
                 </MDBNavLink>
               </MDBNavItem>
             ))}

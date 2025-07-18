@@ -13,10 +13,29 @@ export default function PlantEnvironment() {
     { branch = {} } = activePlatform,
     { companyId = {} } = branch;
 
+  const inventoryList = `${ENDPOINT}/public/companies/${encodeURIComponent(
+    companyId.name
+  )}/Documents/labEquipments/inventoryList.png`;
+
+  const preventiveMaintenance = `${ENDPOINT}/public/companies/${encodeURIComponent(
+    companyId.name
+  )}/Documents/labEquipments/preventiveMaintenance.png`;
+
   const calibrationCertificate = `${ENDPOINT}/public/companies/${encodeURIComponent(
     companyId.name
-  )}/Documents/labEquipment/calibrationCertificate.png`;
-  console.log("floor", calibrationCertificate);
+  )}/Documents/labEquipments/calibrationCertificate.png`;
+
+  const reagentTracking = `${ENDPOINT}/public/companies/${encodeURIComponent(
+    companyId.name
+  )}/Documents/labEquipments/reagentTracking.png`;
+
+  const inspectionReport = `${ENDPOINT}/public/companies/${encodeURIComponent(
+    companyId.name
+  )}/Documents/labEquipments/inspectionReport.png`;
+
+  const maintenanceDuty = `${ENDPOINT}/public/companies/${encodeURIComponent(
+    companyId.name
+  )}/Documents/labEquipments/maintenanceDuty.png`;
 
   const [savedImage, setSavedImage] = useState(null);
 
@@ -34,10 +53,7 @@ export default function PlantEnvironment() {
           Inventory List
         </div>
         <div className="card-img-top w-100 card-preview-container">
-          <ImageDragAndDrop
-            img={calibrationCertificate}
-            savedImg={handleImageChange}
-          />
+          <ImageDragAndDrop img={inventoryList} savedImg={handleImageChange} />
         </div>
       </div>
       <div className="card shadow rounded w-100 h-100">
@@ -46,7 +62,7 @@ export default function PlantEnvironment() {
         </div>
         <div className="card-img-top w-100 card-preview-container">
           <ImageDragAndDrop
-            img={calibrationCertificate}
+            img={preventiveMaintenance}
             savedImg={handleImageChange}
           />
         </div>
@@ -68,7 +84,7 @@ export default function PlantEnvironment() {
         </div>
         <div className="card-img-top w-100 card-preview-container">
           <ImageDragAndDrop
-            img={calibrationCertificate}
+            img={reagentTracking}
             savedImg={handleImageChange}
           />
         </div>
@@ -79,7 +95,7 @@ export default function PlantEnvironment() {
         </div>
         <div className="card-img-top w-100 card-preview-container">
           <ImageDragAndDrop
-            img={calibrationCertificate}
+            img={inspectionReport}
             savedImg={handleImageChange}
           />
         </div>
@@ -90,7 +106,7 @@ export default function PlantEnvironment() {
         </div>
         <div className="card-img-top w-100 card-preview-container">
           <ImageDragAndDrop
-            img={calibrationCertificate}
+            img={maintenanceDuty}
             savedImg={handleImageChange}
           />
         </div>

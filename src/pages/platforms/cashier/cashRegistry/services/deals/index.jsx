@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CashRegister from "../cashierOld/pos";
-import { MDBCard, MDBCardBody, MDBContainer } from "mdbreact";
+import { MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
@@ -14,6 +14,10 @@ import {
   SetSOURCE,
 } from "../../../../../../services/redux/slices/assets/providers.js";
 import { Denomination } from "../remittances/modal/index.js";
+import {
+  SetPHYSICIANS,
+  BROWSE,
+} from "../../../../../../services/redux/slices/assets/persons/physicians.js";
 
 export default function Deals() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
@@ -73,6 +77,17 @@ export default function Deals() {
       };
     }
   }, [token, dispatch, activePlatform.branchId, auth._id]);
+
+  useEffect(() => {
+    const physiciansLocal = localStorage.getItem("physicians");
+    if (physiciansLocal) {
+      dispatch(SetPHYSICIANS(JSON.parse(physiciansLocal)));
+    } else {
+      dispatch(BROWSE({ token })).then(({ payload: data }) => {
+        localStorage.setItem("physicians", JSON.stringify(data.payload));
+      });
+    }
+  }, [token]);
 
   return (
     <div className="d-flex" fluid>

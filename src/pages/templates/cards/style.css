@@ -145,7 +145,7 @@
 
 /* card 4 */
 .template4-card {
-  max-width: 340px;
+  width: 340px;
   border: 1px solid #ddd;
   border-left: 6px solid #007bff;
   border-radius: 8px;

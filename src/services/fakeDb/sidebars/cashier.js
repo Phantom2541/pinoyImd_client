@@ -37,7 +37,7 @@ const cashier = [
     title: "Cash Register Functions",
     children: [
       {
-        name: "POS",
+        name: "P O S",
         path: "/pos",
         icon: "shopping-cart",
         title: "Point of Sales",
@@ -122,7 +122,7 @@ const cashier = [
         title: "Patient Sources with Discounts or Privileges",
         children: [
           {
-            name: "HMO Wellness",
+            name: "H M O Wellness",
             path: "/wellness",
             icon: "briefcase-medical",
             title: "Partner Companies with HMO Coverage",
@@ -152,7 +152,7 @@ const cashier = [
         ],
       },
       {
-        name: "HMO",
+        name: "H M O",
         path: "/hmo",
         icon: "user-md",
         title: "Accredited Health Maintenance Organizations",

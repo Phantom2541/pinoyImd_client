@@ -21,6 +21,8 @@
 }
 
 .physicians-results-list {
+  max-height: 400px;
+  overflow-y: auto;
   position: absolute;
   width: 100%;
   list-style: none;

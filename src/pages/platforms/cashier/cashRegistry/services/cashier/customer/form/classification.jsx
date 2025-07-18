@@ -258,7 +258,7 @@ export default function PosCard() {
 
         {/* {source ? ( */}
         <div className="patient-form mt-2">
-          <span>Physician</span>
+          <span className="d-block  ">Physician</span>
           <PickPhysician
             disabled={!didSelect}
             suggested={physicians}

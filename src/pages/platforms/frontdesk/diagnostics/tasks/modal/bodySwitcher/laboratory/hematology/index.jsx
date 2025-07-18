@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   MDBTabContent,
@@ -46,7 +46,6 @@ export default function Hematology() {
 
   const { packages = [] } = task;
 
-
   return (
     <MDBContainer>
       <MDBNav color="primary" tabs className="nav-justified">
@@ -75,7 +74,10 @@ export default function Hematology() {
 
               return components.map((Component, index) => (
                 <MDBTabPane key={`component-${index}`} tabId={names[index]}>
-                  <Component  />
+                  <Component
+                    setActiveTab={setActiveTab}
+                    activeTab={activeTab}
+                  />
                 </MDBTabPane>
               ));
             })}

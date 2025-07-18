@@ -13,6 +13,8 @@ import TableLoading from "../../../../../components/tableLoading";
 import {
   HEADS,
   SetHEADS,
+  SetByGroup,
+  SetByStatus,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import {
   BROWSE,
@@ -80,6 +82,11 @@ export default function Tasks() {
       };
     }
   }, [token, dispatch, activePlatform]);
+
+  useEffect(() => {
+    dispatch(SetByGroup("all"));
+    dispatch(SetByStatus("all"));
+  }, [dispatch]);
 
   //Toast for errors or success
   useEffect(() => {

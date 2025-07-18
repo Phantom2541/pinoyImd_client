@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
-import JsBarcode from "jsbarcode";
+import bwipjs from "bwip-js";
 import { Templates } from "../../../../services/fakeDb";
 import { capitalize } from "lodash";
+import "./style.css";
 
 const BarcodePrintout = ({ forms = {}, sale }) => {
   const { customerId, pn } = sale;
@@ -23,31 +24,35 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
   useEffect(() => {
     if (!forms) return;
     Object.keys(forms).forEach((section) => {
-      if (refs.current[section]) {
-        JsBarcode(
-          refs.current[section],
-          `${Templates.getAbbr(section)}-${sanitize(customerName)}-${String(
-            pn
-          ).padStart(2, "0")}`,
-          {
-            format: "CODE128",
-            lineColor: "#000",
-            width: 0.9,
-            height: 40,
-            displayValue: true,
-            fontSize: 16,
-            fit: true,
-          }
-        );
+      const canvas = refs.current[section];
+      if (canvas) {
+        try {
+          bwipjs.toCanvas(canvas, {
+            bcid: "code128", // barcode type
+            text: `${Templates.getAbbr(section)}-${sanitize(
+              customerName
+            )}-${String(pn).padStart(2, "0")}`,
+            scale: 3, // scale factor (affects both width & height)
+            height: 20, // height in mm (actual printed bar height)
+            includetext: true,
+            textxalign: "center",
+            textsize: 12, // readable font size
+          });
+        } catch (e) {
+          console.error("Barcode render error:", e);
+        }
       }
     });
-  }, [forms, sale, refs, customerName, pn]);
+  }, [forms, sale, customerName, pn]);
 
   return (
-    <div>
+    <div className="thermal-print">
       {Object.keys(forms || {}).map((key) => (
-        <div key={key} style={{ marginBottom: "1rem" }}>
-          <svg ref={(el) => (refs.current[key] = el)}></svg>
+        <div key={key} className="barcode-container">
+          <canvas
+            ref={(el) => (refs.current[key] = el)}
+            className="result-barcode"
+          />
         </div>
       ))}
     </div>

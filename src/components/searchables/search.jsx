@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import "./search.css";
 import { globalSearch } from "../../services/utilities";
-import { MDBBtn, MDBIcon } from "mdbreact";
+import { MDBIcon } from "mdbreact";
 
 export default function Search({
   collections = [],
@@ -17,12 +17,11 @@ export default function Search({
 
   useEffect(() => {
     if (!hideButton && haveAction) setShowBtn(true);
-  }, [hideButton]);
+  }, [hideButton, haveAction]);
 
   const debouncedSearch = useMemo(() => {
     return debounce((key) => {
       const items = globalSearch(collections, key);
-      console.log("items", items);
       if (hideButton && items.length === 0) setShowBtn(true);
       if (hideButton && items.length > 0) setShowBtn(false);
       setFiltered(items);
