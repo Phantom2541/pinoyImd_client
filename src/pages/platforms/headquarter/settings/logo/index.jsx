@@ -19,7 +19,7 @@ import {
   RESET,
 } from "./../../../../../services/redux/slices/assets/persons/auth";
 import { FailedLogo } from "./../../../../../services/utilities";
-import ImageCropper from "./../../../../../components/imageCropper";
+import ImageCropper from "../../../../../components/images/imageCropper";
 
 const array = new Array(5).fill().map((_, index) => index);
 

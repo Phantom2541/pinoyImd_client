@@ -27,7 +27,7 @@ import {
   RESET,
 } from "../../../../../../services/redux/slices/assets/persons/auth";
 import { FailedBanner } from "../../../../../../services/utilities";
-import ImageCropper from "../../../../../../components/imageCropper";
+import ImageCropper from "../../../../../../components/images/imageCropper";
 import { BROWSE } from "../../../../../../services/redux/slices/assets/branches";
 
 const array = new Array(5).fill().map((_, index) => index);
