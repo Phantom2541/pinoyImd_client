@@ -79,7 +79,7 @@ const Tables = () => {
                 supplier,
                 hasPaid,
                 payor,
-                deals,
+                onboardings,
                 range,
                 status,
               } = payable;
@@ -90,7 +90,7 @@ const Tables = () => {
               const isPastDue = dueDate && dueDate < today;
               const isOpen = activeId === _id;
               const hasDeals =
-                status !== "accepted" && fsId === 31 && !isEmpty(deals);
+                status !== "accepted" && fsId === 31 && !isEmpty(onboardings);
 
               return (
                 <>
@@ -104,7 +104,9 @@ const Tables = () => {
                     }
                   >
                     <td>{index + 1}</td>
-                    <td>{util.getVendorOrParticular(particular, supplier)}</td>
+                    <td style={{ fontWeight: 400 }}>
+                      {util.getVendorOrParticular(particular, supplier)}
+                    </td>
                     <td>
                       <h6>{Statements?.getName(fsId)}</h6>
                       {status}
@@ -177,25 +179,38 @@ const Tables = () => {
                           <span>Payor : {fullName(payor?.fullName)}</span>
                         )}
                         {hasDeals ? (
-                          <MDBBtn
-                            size="sm"
-                            color="white"
-                            rounded
-                            title="View Deals"
-                            onClick={() =>
-                              setActiveId((prev) => (prev === _id ? -1 : _id))
-                            }
-                            className="m-0 p-0 transition-all float-right "
-                            style={{
-                              width: isOpen ? "1.5rem" : "2rem",
-                              height: isOpen ? "1.5rem" : "1.3rem",
-                            }}
-                          >
-                            <i
-                              style={{ rotate: `${isOpen ? 0 : 90}deg` }}
-                              className="fa fa-angle-down transition-all "
-                            />
-                          </MDBBtn>
+                          <div className="m-0 p-0 d-flex align-items-center">
+                            <MDBBtn
+                              size="sm"
+                              color="white"
+                              rounded
+                              title="View Sendouts"
+                              onClick={() =>
+                                setActiveId((prev) => (prev === _id ? -1 : _id))
+                              }
+                              className="m-0 p-0 transition-all float-right "
+                              style={{
+                                width: isOpen ? "1.5rem" : "2.5rem",
+                                height: isOpen ? "2rem" : "1.5rem",
+                              }}
+                            >
+                              <i
+                                style={{ rotate: `${isOpen ? 0 : 90}deg` }}
+                                className="fa fa-angle-down transition-all "
+                              />
+                            </MDBBtn>
+                            {!isOpen && hasDeals && (
+                              <span
+                                className="counter"
+                                style={{
+                                  marginBottom: "-10px",
+                                  marginRight: "-10px !important",
+                                }}
+                              >
+                                {onboardings?.length}
+                              </span>
+                            )}
+                          </div>
                         ) : (
                           <div></div>
                         )}
@@ -203,7 +218,7 @@ const Tables = () => {
                     </td>
                   </tr>
                   {hasDeals && (
-                    <Deals deals={deals} isOpen={isOpen} _id={_id} />
+                    <Deals deals={onboardings} isOpen={isOpen} _id={_id} />
                   )}
                 </>
               );

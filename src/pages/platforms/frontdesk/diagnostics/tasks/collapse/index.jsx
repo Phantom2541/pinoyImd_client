@@ -17,35 +17,39 @@ export default function DealCollapse() {
         fluid
         className="md-accordion"
       >
-        {handlePagination(filteredStatus, activePage, maxPage).map(
-          (deal, index) => {
-            const {
-              _id,
-              customerId,
-              diagnostic,
-              category,
-              source,
-              physicianId,
-            } = deal;
-            return (
-              <MDBCard key={`deal-${index}`}>
-                <Header deal={deal} index={index} />
-                <MDBCollapse
-                  id={`collapse-${index}`}
-                  isOpen={index === activeCOLAPSE}
-                >
-                  <Body
-                    _id={_id}
-                    customer={customerId}
-                    tasks={diagnostic}
-                    category={category}
-                    source={source}
-                    referral={physicianId}
-                  />
-                </MDBCollapse>
-              </MDBCard>
-            );
-          }
+        {filteredStatus.length > 0 ? (
+          handlePagination(filteredStatus, activePage, maxPage).map(
+            (deal, index) => {
+              const {
+                _id,
+                customerId,
+                diagnostic,
+                category,
+                source,
+                physicianId,
+              } = deal;
+              return (
+                <MDBCard key={`deal-${index}`}>
+                  <Header deal={deal} index={index} />
+                  <MDBCollapse
+                    id={`collapse-${index}`}
+                    isOpen={index === activeCOLAPSE}
+                  >
+                    <Body
+                      _id={_id}
+                      customer={customerId}
+                      tasks={diagnostic}
+                      category={category}
+                      source={source}
+                      referral={physicianId}
+                    />
+                  </MDBCollapse>
+                </MDBCard>
+              );
+            }
+          )
+        ) : (
+          <span className="text-center d-block">No onboarding task found.</span>
         )}
       </MDBContainer>
     </MDBCardBody>
