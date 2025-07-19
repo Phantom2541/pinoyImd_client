@@ -5,9 +5,7 @@ import { currency } from "./../../../../../../services/utilities";
 import SummaryLoading from "../../../../cashier/cashRegistry/services/deals/summary/loading";
 
 export default function Payments() {
-  const { filtered: collections, isLoading } = useSelector(
-    ({ deals }) => deals
-  );
+  const { refined: collections, isLoading } = useSelector(({ deals }) => deals);
   const [isOpen, setIsOpen] = useState(true);
 
   // Optimize calculations using useMemo

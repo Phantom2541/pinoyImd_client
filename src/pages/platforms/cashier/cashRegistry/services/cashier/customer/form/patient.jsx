@@ -42,21 +42,29 @@ export default function Patient({ setActiveIndex }) {
             street: "",
           };
 
-      const form = {
+      const _form = {
         ...customer,
         address: _address,
       };
 
-      setForm(form);
+      setForm(_form);
     }
-  }, [customer, setForm]);
-
+  }, [customer]);
   // update form for selected user
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
 
-  const { fullName, _id, dob, privilege, mobile, isMale, address, email } =
-    form;
+  const {
+    fullName = {},
+    _id,
+    dob,
+    privilege,
+    mobile,
+    isMale,
+    address,
+    email,
+  } = form;
+  console.log(fullName);
   const handleSubmit = (e) => {
     e.preventDefault();
     const _form = { ...form, password: form?.dob.replaceAll("-", "") };
@@ -69,9 +77,8 @@ export default function Patient({ setActiveIndex }) {
             token,
           })
         ).then((action) => {
-          if (action.type === "assets/users/UPDATE/fulfilled") {
+          if (action.type === "assets/persons/users/update/fulfilled") {
             dispatch(SETPATIENT(action.payload.payload));
-          } else if (action.type === "assets/users/UPDATE/rejected") {
           }
         });
     } else {
@@ -91,14 +98,13 @@ export default function Patient({ setActiveIndex }) {
           token,
         })
       ).then((action) => {
-        if (action.type === "assets/users/UPDATE/fulfilled") {
+        if (action.type === "assets/persons/users/save/fulfilled") {
           dispatch(SETPATIENT(action.payload.payload));
         }
       });
     }
     setActiveIndex(0);
   };
-
   return (
     <form onSubmit={handleSubmit}>
       <div className="patient-personal-container">
@@ -107,7 +113,7 @@ export default function Patient({ setActiveIndex }) {
             <span>Last Name</span>
             <input
               type="text"
-              value={fullName?.lname}
+              value={fullName?.lname || ""}
               onChange={({ target }) =>
                 handleChange("fullName", {
                   ...fullName,
@@ -121,7 +127,7 @@ export default function Patient({ setActiveIndex }) {
             <span>First Name</span>
             <input
               type="text"
-              value={fullName?.fname}
+              value={fullName?.fname || ""}
               onChange={({ target }) =>
                 handleChange("fullName", {
                   ...fullName,
@@ -135,7 +141,7 @@ export default function Patient({ setActiveIndex }) {
             <span>Middle Name (Optional)</span>
             <input
               type="text"
-              value={fullName?.mname}
+              value={fullName?.mname || ""}
               onChange={({ target }) =>
                 handleChange("fullName", {
                   ...fullName,
@@ -147,7 +153,7 @@ export default function Patient({ setActiveIndex }) {
           <div className="patient-form">
             <span>Suffix</span>
             <select
-              value={fullName?.suffix}
+              value={fullName?.suffix || ""}
               onChange={({ target }) =>
                 handleChange("fullName", {
                   ...fullName,
@@ -168,7 +174,7 @@ export default function Patient({ setActiveIndex }) {
             <span>Birthday ({getAge(dob)})</span>
             <input
               type="date"
-              value={dob}
+              value={dob || ""}
               onChange={({ target }) => {
                 // if age is greater than 59, automatically set privilege
                 const data = {
@@ -215,7 +221,7 @@ export default function Patient({ setActiveIndex }) {
               type="text"
               maxLength={10}
               onKeyDown={validateContact}
-              value={mobile}
+              value={mobile || ""}
               onChange={({ target }) => handleChange("mobile", target.value)}
             />
           </div>

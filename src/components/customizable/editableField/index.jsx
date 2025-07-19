@@ -10,6 +10,7 @@ const tagMap = {
   h6: "h6",
   p: "p",
   span: "span",
+  small: "small",
 };
 
 /**
@@ -36,7 +37,7 @@ const tagMap = {
  */
 const EditableField = ({
   displayTag = "h6", //h6,badge this is available tag for this component
-  className = "form-control",
+  className = "form-control form-control-sm",
   classNameTxt = "",
   placeholder = "",
   keyForValue = "", //this key is for value
@@ -47,6 +48,8 @@ const EditableField = ({
   displayStyle = {},
   inputStyle = {},
   onSave = () => {},
+  animationStyle = {},
+  animation = false,
   isMoney = false,
   enableEditMode = true,
   formSubmitted = false,
@@ -110,9 +113,19 @@ const EditableField = ({
   );
 
   return (
-    <div style={{ width: isEditable && width }}>
+    <div
+      style={{
+        width: isEditable && width,
+        ...(animation &&
+          isEditable && { position: "absolute", ...animationStyle }),
+      }}
+    >
       {isEditable ? (
-        <div className="d-flex align-items-center customizable-input-container">
+        <div
+          className={`d-flex align-items-center customizable-input-container ${
+            isEditable && animation && "editableField-zoom-in"
+          }`}
+        >
           <input
             placeholder={placeholder}
             style={inputStyle}
