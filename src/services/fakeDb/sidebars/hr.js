@@ -21,7 +21,7 @@ const hr = [
     component: Dashboard,
   },
   {
-    name: "File 201",
+    name: "Employees",
     path: "/file",
     icon: "tv",
     children: [
