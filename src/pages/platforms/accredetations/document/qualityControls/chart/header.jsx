@@ -4,15 +4,15 @@ import { MDBView } from "mdbreact";
 import {
   SearchServices as Services,
   SearchTemplates as Templates,
-} from "../../../../../components/searchables";
+} from "../../../../../../components/searchables";
 import {
   RESET,
   BROWSE,
   SetSERVICES,
   SetMONTH,
   ResetDATE,
-} from "../../../../../services/redux/slices/diagnostics/management/controls";
-import CalendarPicker from "../../../../../components/header/calendars";
+} from "../../../../../../services/redux/slices/diagnostics/management/controls";
+import CalendarPicker from "../../../../../../components/header/calendars";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);

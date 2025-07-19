@@ -69,9 +69,8 @@ export default function Patient({ setActiveIndex }) {
             token,
           })
         ).then((action) => {
-          if (action.type === "assets/users/UPDATE/fulfilled") {
+          if (action.type === "assets/persons/users/update/fulfilled") {
             dispatch(SETPATIENT(action.payload.payload));
-          } else if (action.type === "assets/users/UPDATE/rejected") {
           }
         });
     } else {
@@ -91,7 +90,7 @@ export default function Patient({ setActiveIndex }) {
           token,
         })
       ).then((action) => {
-        if (action.type === "assets/users/UPDATE/fulfilled") {
+        if (action.type === "assets/persons/users/save/fulfilled") {
           dispatch(SETPATIENT(action.payload.payload));
         }
       });

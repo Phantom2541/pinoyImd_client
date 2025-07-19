@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { BROWSE } from "../../../../services/redux/slices/diagnostics/management/temperatures";
+import { BROWSE } from "../../../../../services/redux/slices/diagnostics/management/temperatures";
 import {
   SetMONTH,
   ResetDATE,
-} from "../../../../services/redux/slices/diagnostics/management/temperatures";
-import CalendarPicker from "../../../../components/header/calendars";
+} from "../../../../../services/redux/slices/diagnostics/management/temperatures";
+import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
   const dispatch = useDispatch();
