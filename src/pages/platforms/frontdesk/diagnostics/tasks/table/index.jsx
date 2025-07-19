@@ -28,57 +28,65 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          {paginatedData.map((deal, index) => {
-            const {
-              _id,
-              customerId,
-              diagnostic,
-              category,
-              source,
-              physicianId: referral,
-            } = deal;
+          {paginatedData.length > 0 ? (
+            paginatedData.map((deal, index) => {
+              const {
+                _id,
+                customerId,
+                diagnostic,
+                category,
+                source,
+                physicianId: referral,
+              } = deal;
 
-            const task = {
-              ...diagnostic[selectedKey],
-              category,
-              source,
-              referral,
-              _id,
-            };
+              const task = {
+                ...diagnostic[selectedKey],
+                category,
+                source,
+                referral,
+                _id,
+              };
 
-            if (
-              ["miscellaneous", "xray", "ultrasound"].includes(
-                selectedKey.toLowerCase()
-              )
-            ) {
-              return diagnostic?.[selectedKey]?.map((t, i) => {
-                const _t = { ...t, category, source, referral, dealId: _id };
+              if (
+                ["miscellaneous", "xray", "ultrasound"].includes(
+                  selectedKey.toLowerCase()
+                )
+              ) {
+                return diagnostic?.[selectedKey]?.map((t, i) => {
+                  const _t = { ...t, category, source, referral, dealId: _id };
 
-                return (
-                  <Patient
-                    _key={`subform-${i}-${_id}`}
-                    index={`${index + 1}${
-                      diagnostic[selectedKey].length > 1 ? `-${i + 1}` : ""
-                    }`}
-                    form={selectedKey}
-                    obj={_t || {}}
-                    customer={customerId}
-                    deal={deal}
-                  />
-                );
-              });
-            }
-            return (
-              <Patient
-                _key={`form-${index}-${_id}`}
-                index={startIndex + index + 1}
-                form={selectedKey}
-                obj={task}
-                customer={customerId}
-                deal={deal}
-              />
-            );
-          })}
+                  return (
+                    <Patient
+                      _key={`subform-${i}-${_id}`}
+                      index={`${index + 1}${
+                        diagnostic[selectedKey].length > 1 ? `-${i + 1}` : ""
+                      }`}
+                      form={selectedKey}
+                      obj={_t || {}}
+                      customer={customerId}
+                      deal={deal}
+                    />
+                  );
+                });
+              }
+              return (
+                <Patient
+                  _key={`form-${index}-${_id}`}
+                  index={startIndex + index + 1}
+                  form={selectedKey}
+                  obj={task}
+                  customer={customerId}
+                  deal={deal}
+                />
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan={4} className="text-center ">
+                No onboarding task found.
+              </td>
+            </tr>
+          )}
         </tbody>
       </MDBTable>
     </MDBCardBody>

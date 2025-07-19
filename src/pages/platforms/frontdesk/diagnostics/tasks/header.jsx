@@ -4,18 +4,19 @@ import { MDBView } from "mdbreact";
 import {
   TASKS,
   RESET,
-  SetFILTERED,
   SetByGroup,
   SetByStatus,
+  SetFILTERED_STATUS,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { Search as SEARCH } from "../../../../../components/searchables";
-import { Templates } from "../../../../../services/fakeDb";
 import { capitalize } from "../../../../../services/utilities";
 
 const Headers = ({ searchKey }) => {
   const dispatch = useDispatch();
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { filtered, byStatus } = useSelector(({ validator }) => validator);
+  const { filtered, byStatus, sections, filteredStatus, byGroup } = useSelector(
+    ({ validator }) => validator
+  );
   const departmentCode =
     activePlatform?.department?.toLowerCase() === "laboratory"
       ? "LAB"
@@ -59,13 +60,11 @@ const Headers = ({ searchKey }) => {
                 Group by ...
               </option>
               <option value="all">Patient</option>
-              {[...Templates.getComponents(departmentCode)]
-                .sort((a, b) => a.localeCompare(b))
-                .map((component) => (
-                  <option key={component} value={component}>
-                    {capitalize(component)}
-                  </option>
-                ))}
+              {sections.map((component) => (
+                <option key={component} value={component}>
+                  {capitalize(component)}
+                </option>
+              ))}
             </select>
           </div>
           <div>
@@ -87,9 +86,12 @@ const Headers = ({ searchKey }) => {
           </div>
           <div>
             <SEARCH
-              collection={filtered}
-              setFiltered={(items) => dispatch(SetFILTERED(items))}
-              reset={() => dispatch(SetFILTERED(filtered))}
+              collections={filteredStatus}
+              setFiltered={(items) => dispatch(SetFILTERED_STATUS(items))}
+              reset={() => {
+                dispatch(SetByGroup(byGroup));
+                dispatch(SetByStatus(byStatus));
+              }}
               haveAction={false}
             />
           </div>

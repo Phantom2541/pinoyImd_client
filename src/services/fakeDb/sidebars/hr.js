@@ -1,9 +1,18 @@
-import Services from "../../../pages/platforms/manager/settings/services";
-import Menus from "../../../pages/platforms/manager/settings/menus";
 import Dashboard from "../../../pages/platforms/hr/dashboard";
 // import Payrolls from "../../../pages/platforms/hr/accured/payrolls";
 import Payrolls from "../../../pages/platforms/finance/payroll";
-
+import {
+  Employees,
+  Staffs,
+  Physicians,
+} from "../../../pages/platforms/headquarter/file201";
+import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
+import { Schedule } from "../../../pages/platforms/dtr";
+import {
+  Services,
+  Menus,
+  Applicants,
+} from "../../../pages/platforms/manager/settings";
 const hr = [
   {
     name: "Dashboard",
@@ -17,16 +26,53 @@ const hr = [
     icon: "tv",
     children: [
       {
-        name: "Employee's",
-        title: "stocks",
-        icon: "boxes",
-        path: "/file/employees",
+        name: "Attendance",
+        title: "Employee daily attendance tracker.",
+        path: "/attendances",
+        icon: "clock",
+        // component: Calender,
       },
       {
-        name: "Applicant",
-        title: "stocks",
-        icon: "boxes",
-        path: "/file/apllicants",
+        name: "Schedule",
+        title: "Employee daily attendance tracker.",
+        path: "/schedule",
+        icon: "clock",
+        component: Schedule,
+      },
+      {
+        name: "Staff",
+        title: "Active staff directory.",
+        path: "/staff",
+        icon: "user",
+        component: Staffs,
+      },
+      {
+        name: "File 201",
+        title: "Comprehensive employee records.",
+        path: "/file201",
+        icon: "folder",
+        component: Employees,
+      },
+      {
+        name: "Physicians",
+        title: "In-house medical doctors.",
+        path: "/physicians",
+        icon: "stethoscope",
+        component: Physicians,
+      },
+      {
+        name: "Applicants",
+        title: "Job applicants and interview status.",
+        path: "/petitioners",
+        icon: "user-plus",
+        component: Applicants,
+      },
+      {
+        name: "Stockholders",
+        title: "Company stakeholders and investors.",
+        path: "/stockHolder",
+        icon: "user-tie",
+        component: stockHolder,
       },
     ],
   },

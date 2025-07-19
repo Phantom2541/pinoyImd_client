@@ -141,6 +141,7 @@ export const reduxSlice = createSlice({
       const { deals, date } = payload;
       const cluster = [...state.cluster];
       const index = cluster.findIndex((item) => item.date === date);
+
       const foundCluster = cluster[index];
       const { hasSelected = false } = foundCluster || {};
       if (hasSelected) {
@@ -151,7 +152,7 @@ export const reduxSlice = createSlice({
       }
 
       state.cluster = cluster;
-
+      console.log(JSON.parse(JSON.stringify(state.vendor)));
       localStorage.setItem(
         "billing",
         JSON.stringify({

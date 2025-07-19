@@ -20,23 +20,29 @@ const Deals = ({ deals, isOpen, _id }) => {
           >
             <MDBTableHead>
               <tr>
-                <td>Customer</td>
+                <td>
+                  <span className="ml-5">Customer</span>
+                </td>
                 <td>Price</td>
                 <td>Services</td>
               </tr>
             </MDBTableHead>
             <MDBTableBody>
-              {deals.map((deal) => {
-                const { customerId, sendouts } = deal;
-                const { up, servicesId } = sendouts;
+              {deals.map((deal, index) => {
+                const { pid: customerId, services, up } = deal;
                 return (
                   <tr key={deal._id}>
-                    <td style={{ fontWeight: "400" }}>
-                      {fullName(customerId?.fullName)}
+                    <td>
+                      <span className="ml-5">
+                        {index + 1}.{" "}
+                        <span style={{ fontWeight: "400" }}>
+                          {fullName(customerId?.fullName)}
+                        </span>
+                      </span>
                     </td>
                     <td style={{ fontWeight: "400" }}>{currency.format(up)}</td>
                     <td>
-                      {servicesId?.map((id) => (
+                      {services?.map((id) => (
                         <MDBBadge key={id} className="ml-2">
                           {Services.getAbbr(id)}
                         </MDBBadge>

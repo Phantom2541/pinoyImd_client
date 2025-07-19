@@ -4,7 +4,7 @@ import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
-const Tasks = ({ _id, form, obj, index, customer }) => {
+const Tasks = ({ key, form, obj, index, customer }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
@@ -51,9 +51,6 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     signatories = [],
   } = obj;
 
-  // object : chem
-  // array : urinalysis, hema
-  // string : xray
   const _packages =
     packages && typeof packages === "object"
       ? Array.isArray(packages)
@@ -65,7 +62,7 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
 
   const task = {
     ...obj,
-    key: `${form}-${index}`,
+    key: `${form}-${index} -${key}`,
     form,
     patient: customer,
     generateHealthyClient: [
@@ -80,16 +77,18 @@ const Tasks = ({ _id, form, obj, index, customer }) => {
     remarks,
   };
 
-  const handleEntry = () => {
-    dispatch(SetTASK({ task }));
-  };
+  const handleEntry = () => dispatch(SetTASK({ task }));
 
   const isEmptyEntry = _packages.length === 0;
 
   return (
     <tr key={task.key} className={hasDone ? "table-active" : ""}>
+      <td>{index}</td>
       <td>
-        {index}.{signatories[0]?.fullName && fullName(signatories[0]?.fullName)}
+        {signatories[0]?.fullName ? fullName(signatories[0].fullName) : "-"}
+      </td>
+      <td>
+        {signatories[1]?.fullName ? fullName(signatories[1].fullName) : "-"}
       </td>
       <td>{form}</td>
       <td>
