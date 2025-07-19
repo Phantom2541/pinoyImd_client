@@ -39,6 +39,8 @@ export default function Body() {
   const [imageErrors, setImageErrors] = useState({});
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
 
+  console.log("savedImage", savedImage);
+
   useEffect(() => {
     if (message) {
       addToast(message, {
