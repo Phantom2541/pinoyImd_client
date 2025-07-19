@@ -14,7 +14,7 @@ import TableRowCount from "../../../../../components/pagination/rows";
 import Search from "../../../../../components/searchables/search";
 import { employment } from "../../../../../services/utilities";
 
-export default function Staffs() {
+export default function Records() {
   const [staffs, setStaffs] = useState([]),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     {

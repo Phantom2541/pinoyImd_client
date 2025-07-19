@@ -241,6 +241,7 @@ export const reduxSlice = createSlice({
       state.cart = state.cart.filter((item) => item._id !== payload);
       //console.log("state.cart :", state.cart);
     },
+
     RESET: (state, { payload = {} }) => {
       state.isSuccess = false;
       state.message = "";

@@ -11,14 +11,15 @@ import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Payrolls from "../../../pages/platforms/finance/payroll";
 import Banners from "../../../pages/platforms/manager/settings/banner";
 import TatServices from "../../../pages/platforms/manager/commerce/tatServices";
-
+import {
+  Physicians,
+  Staffs,
+  Heads,
+} from "../../../pages/platforms/headquarter";
 import {
   Employees,
   Equipments,
-  Staffs,
-  Physicians,
   Procurments,
-  Heads,
 } from "../../../pages/platforms/headquarter/file201";
 import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
 

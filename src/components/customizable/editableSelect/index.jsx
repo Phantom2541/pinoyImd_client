@@ -5,12 +5,12 @@ import {
   MDBSelectOption,
 } from "mdbreact";
 import "./style.css";
-import { capitalize, get, isEmpty } from "lodash";
+import { get, isEmpty } from "lodash";
 import utils from "./utils";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
 import ConfirmButtons from "./confirmButtons";
-import { currency } from "../../../services/utilities";
+import { capitalize, currency } from "../../../services/utilities";
 
 /**
  * EditableSelect is a dynamic select component with support for:
@@ -71,6 +71,9 @@ export default function EditableSelect({
   disableSearch = false,
   isMoney = false,
   formSubmitted = false,
+  animationStyle = {},
+  animation = false,
+  displayTag = "small", //this is for editable display value tag
   onChange = () => {},
   onSave = () => {}, //this function is use to editable mode to get the edited data
 }) {
@@ -145,10 +148,18 @@ export default function EditableSelect({
 
   const showSelect = !isEditable ? true : editMode;
   return (
-    <div className="d-flex align-items-center w-100">
+    <div
+      className="d-flex align-items-center "
+      style={{
+        ...(animation &&
+          showSelect && { position: "absolute", ...animationStyle }),
+      }}
+    >
       {showSelect ? (
         <div
-          className="d-flex align-items-center w-100"
+          className={`d-flex align-items-center w-100 ${
+            animation && showSelect && "editableSelect-zoom-in"
+          } `}
           style={{
             ...selectStyle,
           }}
@@ -233,23 +244,24 @@ export default function EditableSelect({
           />
         </div>
       ) : (
-        <small
-          title={title}
-          className={`cursor-pointer ${classNameTxt}`}
-          onClick={() => {
-            // 📣 Close all others before setting self to edit mode
-            window.dispatchEvent(
-              new CustomEvent("close-all-editable", {
-                detail: { excludeId: instanceId },
-              })
-            );
-            setEditedData({ ...fieldData, editingKey: keyForValue });
-          }}
-        >
-          {isMoney
+        React.createElement(
+          displayTag,
+          {
+            title,
+            className: `cursor-pointer ${classNameTxt}`,
+            onClick: () => {
+              window.dispatchEvent(
+                new CustomEvent("close-all-editable", {
+                  detail: { excludeId: instanceId },
+                })
+              );
+              setEditedData({ ...fieldData, editingKey: keyForValue });
+            },
+          },
+          isMoney
             ? currency.format(utils.getValue(keyForText, fieldData))
-            : capitalize(utils.getValue(keyForText, fieldData)) || "N/A"}
-        </small>
+            : capitalize(utils.getValue(keyForText, fieldData)) || "N/A"
+        )
       )}
     </div>
   );

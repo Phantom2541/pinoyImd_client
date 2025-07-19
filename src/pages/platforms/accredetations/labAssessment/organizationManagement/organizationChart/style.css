@@ -34,32 +34,51 @@
 }
 
 .orgChart-innerCard {
-  position: relative;
   display: flex;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   padding: 10px;
-  background: white;
   border-radius: 10px;
-  min-width: 180px;
+  min-width: 250px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  gap: 10px;
+  gap: 5px;
 }
 
 .orgChart-innerCard-image {
-  width: 50px;
+  width: 100px;
   aspect-ratio: 1/1;
-  border-radius: 50%;
+  border-radius: 5px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.4);
 }
 .orgChart-innerCard-info {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
+  min-width: 200px;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  padding: 3px 10px;
+  border-radius: 5px;
 }
 
 .orgChart-innerCard-name {
   font-size: 1.1rem;
   font-weight: 500;
+  text-transform: capitalize;
+}
+
+.orgChart-innerCard-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.orgChart-innerCard-title {
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 0.9rem;
 }
 
 .orgChart-innerCard-position-container {
@@ -70,14 +89,15 @@
 
 .orgChart-innerCard-position {
   font-size: 0.8rem;
-  color: #bbb;
+  color: #8b8989;
+  text-transform: capitalize;
 }
 
 .orgChart-innerCard-cloneBtn {
   position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translate(0, -50%);
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   border: none;
   color: white;
   border-radius: 5px;
@@ -88,8 +108,7 @@
 }
 
 .orgChart-innerCard:hover .orgChart-innerCard-cloneBtn {
-  right: -3%;
-  transform: translate(100%, -50%);
+  bottom: -75%;
 }
 
 .custom-handle {

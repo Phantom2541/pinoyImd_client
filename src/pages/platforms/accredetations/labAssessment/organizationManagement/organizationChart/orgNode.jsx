@@ -85,7 +85,7 @@ function CustomNode({ data, id }) {
         type="target"
         position={Position.Top}
         style={{
-          top: -6,
+          top: 3,
           left: "50%",
           transform: "translateX(-50%)",
           background: "#007bff",
@@ -98,8 +98,18 @@ function CustomNode({ data, id }) {
       />
 
       <img className="orgChart-innerCard-image" src={PROFILE} alt="profile" />
+
       <div className="orgChart-innerCard-info">
         <span className="orgChart-innerCard-name">{data.name}</span>
+        <div className="orgChart-innerCard-title-container">
+          {Array.isArray(data.title) &&
+            data.title.map((title, idx) => (
+              <span className="orgChart-innerCard-title" key={idx}>
+                {title}
+                {idx < data.title.length - 1 && ", "}
+              </span>
+            ))}
+        </div>
         <div className="orgChart-innerCard-position-container">
           {positions.map((pos, idx) => (
             <span className="orgChart-innerCard-position" key={idx}>
@@ -108,21 +118,21 @@ function CustomNode({ data, id }) {
             </span>
           ))}
         </div>
+        {positions.length > 1 && (
+          <button
+            className="orgChart-innerCard-cloneBtn bg-primary"
+            onClick={handleClone}
+          >
+            Clone
+          </button>
+        )}
       </div>
-
-      {positions.length > 1 && (
-        <button
-          className="orgChart-innerCard-cloneBtn bg-primary"
-          onClick={handleClone}
-        >
-          Clone
-        </button>
-      )}
 
       <Handle
         type="source"
         position={Position.Bottom}
         style={{
+          bottom: 3,
           left: "50%",
           transform: "translateX(-50%)",
           background: "#007bff",
@@ -150,18 +160,48 @@ function OrgChartInner() {
   const [availableNodes, setAvailableNodes] = React.useState(draggableNodes);
 
   const onConnect = useCallback(
-    (params) =>
-      setEdges((eds) =>
-        addEdge(
+    (params) => {
+      setEdges((eds) => {
+        const newEdges = addEdge(
           {
             ...params,
             type: "smoothstep",
             markerEnd: { type: MarkerType.ArrowClosed },
           },
           eds
-        )
-      ),
-    [setEdges]
+        );
+
+        setNodes((prevNodes) => {
+          const parentNode = prevNodes.find((n) => n.id === params.source);
+          if (!parentNode) return prevNodes;
+
+          const childrenIds = newEdges
+            .filter((edge) => edge.source === parentNode.id)
+            .map((edge) => edge.target);
+
+          const spacingX = 300; // horizontal spacing between siblings
+          const spacingY = 300; // vertical spacing from parent to child
+          const totalWidth = (childrenIds.length - 1) * spacingX;
+          const startX = parentNode.position.x - totalWidth / 2;
+
+          return prevNodes.map((node) => {
+            const childIndex = childrenIds.indexOf(node.id);
+            if (childIndex === -1) return node;
+
+            return {
+              ...node,
+              position: {
+                x: startX + childIndex * spacingX,
+                y: parentNode.position.y + spacingY,
+              },
+            };
+          });
+        });
+
+        return newEdges;
+      });
+    },
+    [setEdges, setNodes]
   );
 
   const handleDrop = (event) => {
