@@ -2,7 +2,7 @@ import React from "react";
 import { MDBContainer } from "mdbreact";
 import Chart from "./chart";
 
-const Controls = () => {
+const qualityControls = () => {
   return (
     <MDBContainer className="d-flex" fluid>
       <div className=" py-1 rounded flex-1 ml-2 px-2">
@@ -12,4 +12,4 @@ const Controls = () => {
   );
 };
 
-export default Controls;
+export default qualityControls;

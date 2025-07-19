@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
-import { BROWSE } from "../../../../services/redux/slices/market/machines";
-
+import { BROWSE } from "../../../../../services/redux/slices/market/machines";
 
 const Header = () => {
-    const { token, activePlatform } = useSelector(({ auth }) => auth);
-    const { collections } = useSelector(({ machines }) => machines), 
-        dispatch = useDispatch();
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { collections } = useSelector(({ machines }) => machines),
+    dispatch = useDispatch();
 
   const handlePrint = () => {
     window.open(
@@ -15,16 +14,14 @@ const Header = () => {
       "RequestForm",
       "top=100px,left=100px,width=1050px,height=750px"
     );
-  }  
+  };
 
-  
-    console.log("SHOWING COLLECTIONS: ", collections);
+  console.log("SHOWING COLLECTIONS: ", collections);
 
-    useEffect(() => {
-        dispatch(BROWSE({ token, params: { branchId: activePlatform?.branchId } }));
-        
-    }, [dispatch, token, activePlatform]);
-    
+  useEffect(() => {
+    dispatch(BROWSE({ token, params: { branchId: activePlatform?.branchId } }));
+  }, [dispatch, token, activePlatform]);
+
   return (
     <MDBView
       cascade
@@ -32,14 +29,20 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Machines 
+          {collections.length} Machines
         </span>
       </div>
       <div>
         <div className="text-right d-flex items-center">
-          <MDBBtn color="success" size="sm" onClick={handlePrint} style={{ borderRadius: "20px" }}>
-          <MDBIcon icon="print" className="mr-1" />
-            PRINT</MDBBtn>
+          <MDBBtn
+            color="success"
+            size="sm"
+            onClick={handlePrint}
+            style={{ borderRadius: "20px" }}
+          >
+            <MDBIcon icon="print" className="mr-1" />
+            PRINT
+          </MDBBtn>
         </div>
       </div>
     </MDBView>

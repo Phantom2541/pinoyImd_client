@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
 import Body from "./body";
-import TableLoading from "../../../../components/tableLoading";
+import TableLoading from "../../../../../components/tableLoading";
 
 const Temperatures = () => {
   const { isLoading } = useSelector(({ temperatures }) => temperatures);

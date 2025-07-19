@@ -101,9 +101,18 @@ export default function Body() {
               <td>
                 <strong>
                   {getGenderIcon(item?.user?.isMale)}
-                  {String(
-                    properFullname(item?.user?.fullName, true)
-                  ).toUpperCase()}
+                  {item?.user?.fullName ? (
+                    String(
+                      properFullname(item.user.fullName, true)
+                    ).toUpperCase()
+                  ) : (
+                    <>
+                      👻{" "}
+                      {String(
+                        properFullname(item.ghostName, true)
+                      ).toUpperCase()}
+                    </>
+                  )}
                 </strong>
               </td>
               <td>{item?.specialization || "—"}</td>
