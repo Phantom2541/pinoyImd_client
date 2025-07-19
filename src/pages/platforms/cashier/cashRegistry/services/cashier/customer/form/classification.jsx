@@ -29,15 +29,22 @@ const contracts = {
 };
 
 export default function PosCard() {
-  const { category, privilege, customer, ssx, formSubmitted, isSuccess } =
-      useSelector(({ pos }) => pos),
+  const {
+      category,
+      privilege,
+      customer,
+      ssx,
+      sourceId,
+      formSubmitted,
+      isSuccess,
+    } = useSelector(({ pos }) => pos),
     { collections } = useSelector(({ providers }) => providers),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [physicians, setPhysicians] = useState([]),
     [categorySelected, setCategorySelected] = useState(),
     [categories, setCategories] = useState([]),
     [sources, setSources] = useState([]),
-    [source, setSource] = useState(),
+    [source, setSource] = useState({}),
     dispatch = useDispatch();
 
   const { branch = {} } = activePlatform;
@@ -146,7 +153,7 @@ export default function PosCard() {
     dispatch(SETSOURCE({ _id: clients?._id, membership, contract }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
-
+  console.log("source", source);
   return (
     <>
       <div>
@@ -206,12 +213,12 @@ export default function PosCard() {
           <span>Source</span>
           <select
             disabled={!didSelect}
+            value={sourceId}
             onChange={({ target }) => handleSource(target.value)}
           >
             <option value="">None</option>
             {sources?.map(({ _id, clients }) => (
               <option key={_id} value={_id}>
-                {/* {Memberships.find(({ value }) => value)?.emoji} */}
                 {clients?.displayname}
               </option>
             ))}
@@ -230,7 +237,7 @@ export default function PosCard() {
               </select>
             </>
           )}
-          {category === 7 && (
+          {category === 7 && sourceId && (
             <span>
               Membership :
               <MDBBadge
@@ -261,8 +268,14 @@ export default function PosCard() {
           <span className="d-block  ">Physician</span>
           <PickPhysician
             disabled={!didSelect}
+            source={{ _id: source?._id }}
             suggested={physicians}
-            onChange={(value) => handlePhysician(value)}
+            onChange={(value) =>
+              handlePhysician({
+                ...value,
+                source: { _id: source?._id, branch: source?.clients?._id },
+              })
+            }
             formSubmitted={formSubmitted}
             isSuccess={isSuccess}
           />
