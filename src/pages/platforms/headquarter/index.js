@@ -1,3 +1,3 @@
-import { Applicants, heads, Physicians, Records, staff } from "./personnel";
+import { Applicants, Heads, Physicians, Records, Staffs } from "./personnel";
 
-export { Applicants, heads, Physicians, Records, staff };
+export { Applicants, Heads, Physicians, Records, Staffs };

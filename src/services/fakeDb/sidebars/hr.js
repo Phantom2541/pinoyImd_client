@@ -1,11 +1,8 @@
 import Dashboard from "../../../pages/platforms/hr/dashboard";
 // import Payrolls from "../../../pages/platforms/hr/accured/payrolls";
 import Payrolls from "../../../pages/platforms/finance/payroll";
-import {
-  Employees,
-  Staffs,
-  Physicians,
-} from "../../../pages/platforms/headquarter/file201";
+import { Employees } from "../../../pages/platforms/headquarter/file201";
+import { Staffs, Physicians } from "../../../pages/platforms/headquarter";
 import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
 import { Schedule } from "../../../pages/platforms/dtr";
 import {

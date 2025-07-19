@@ -1,6 +1,5 @@
 import Bulletin from "../../../pages/platforms/cashier/bulletin";
 import { Calender, Scheduler } from "../../../pages/platforms/dtr";
-import { Heads } from "../../../pages/platforms/headquarter/file201";
 import {
   Remittances,
   Sales,
@@ -11,6 +10,7 @@ import {
   Menus,
   Applicants,
 } from "../../../pages/platforms/manager/settings";
+import { Heads } from "../../../pages/platforms/headquarter";
 import {
   Contract,
   Membership,

@@ -1,9 +1,5 @@
 export { default as Applicants } from "./applicants";
 export { default as Equipments } from "./equipments";
-export { default as Heads } from "../personnel/heads";
-export { default as Physicians } from "./physicians";
 export { default as Procurments } from "./procurments";
-export { default as Staffs } from "../personnel/staffs";
 export { default as Employees } from "./employees";
 export { default as Hmo } from "./hmo";
-export { default as Records } from "./records";
