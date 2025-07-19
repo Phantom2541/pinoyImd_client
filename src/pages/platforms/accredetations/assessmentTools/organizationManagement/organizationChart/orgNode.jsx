@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 import ReactFlow, {
   addEdge,
   useReactFlow,
@@ -15,7 +15,6 @@ import PROFILE from "./../../../../../../assets/female.jpg";
 import { draggableNodes } from "./flatCollections";
 import Swal from "sweetalert2";
 import "./style.css";
-
 // Utility to ensure array format
 const normalizePosition = (pos) =>
   Array.isArray(pos)
