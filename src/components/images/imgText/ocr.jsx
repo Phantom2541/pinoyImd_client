@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // import Tesseract from "tesseract.js";
-import HMONAME from "./../../../services/fakeDb/hmo/collections.json";
+import HMONAME from "../../../services/fakeDb/hmo/collections.json";
 
 const OCRReader = () => {
   const [image, setImage] = useState(null);
