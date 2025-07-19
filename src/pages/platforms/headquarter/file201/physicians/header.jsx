@@ -11,7 +11,7 @@ import { Search } from "../../../../../components/searchables";
 
 const Header = () => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ physicians }) => physicians),
+    { collections, isSucscess } = useSelector(({ physicians }) => physicians),
     dispatch = useDispatch(); //
   const handleAdd = (item) => dispatch(SetCREATE(item));
 
@@ -21,7 +21,8 @@ const Header = () => {
       dispatch(TIEUPS({ key: { branch: activePlatform?.branchId }, token }));
 
     return () => dispatch(RESET());
-  }, [token, activePlatform, dispatch]);
+  }, [token, activePlatform, isSucscess, dispatch]);
+  console.log("colhead", collections);
 
   return (
     <MDBView

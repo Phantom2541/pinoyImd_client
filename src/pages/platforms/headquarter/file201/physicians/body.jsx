@@ -15,9 +15,8 @@ import Swal from "sweetalert2";
 // mobile;
 export default function Body() {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess, maxPage, activePage } = useSelector(
-      ({ physicians }) => physicians
-    ),
+    { filtered, message, isSuccess, maxPage, activePage, closeModal } =
+      useSelector(({ physicians }) => physicians),
     [tieups, setTieups] = useState([]),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -25,12 +24,12 @@ export default function Body() {
   //Set fetched data for mapping
   useEffect(() => {
     setTieups(filtered);
-  }, [filtered, isSuccess]);
+  }, [filtered]);
 
   //Trigger for update
   const handleDelete = (item) => {
     Swal.fire({
-      title: `Are you sure to remove ${String(
+      title: `Are you sure to remove  ${String(
         properFullname(item?.user?.fullName, true)
       ).toUpperCase()}?`,
       text: "You won't be able to revert this!",
@@ -46,7 +45,6 @@ export default function Body() {
     });
   };
   console.log("filtered", filtered);
-  console.log("tieups", tieups);
 
   //Trigger for create
   // const handleCreate = async () => {

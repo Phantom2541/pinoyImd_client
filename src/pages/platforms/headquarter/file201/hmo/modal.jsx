@@ -98,11 +98,14 @@ export default function Modal() {
             }}
           >
             <option value="">Select</option>
-            {collections.map((item) => (
-              <option key={item.code} value={item.code}>
-                {item.name}
-              </option>
-            ))}
+            {collections
+              .slice() // make a shallow copy so the original isn't mutated
+              .sort((a, b) => a.name.localeCompare(b.name)) // sort alphabetically
+              .map((item) => (
+                <option key={item.code} value={item.code}>
+                  {item.name}
+                </option>
+              ))}
           </select>
 
           {/* 👇 Contact Info Inputs */}

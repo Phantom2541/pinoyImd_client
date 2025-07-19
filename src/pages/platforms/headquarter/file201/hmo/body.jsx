@@ -39,7 +39,7 @@ const Body = () => {
 
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage + 1;
+  const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex);
 
   return (
