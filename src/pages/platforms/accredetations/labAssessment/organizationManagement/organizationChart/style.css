@@ -1,0 +1,135 @@
+.org-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  overflow-x: auto;
+}
+
+.draggable-node {
+  background: #ffffff;
+  border: 1px solid #ccc;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: grab;
+  min-width: 140px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.draggable-node .small {
+  font-size: 12px;
+  color: #555;
+}
+
+.flow-area {
+  flex: 1;
+  height: 100%;
+}
+
+.orgChart-innerCard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+  min-width: 250px;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.orgChart-innerCard-image {
+  width: 100px;
+  aspect-ratio: 1/1;
+  border-radius: 5px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.4);
+}
+.orgChart-innerCard-info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 200px;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  padding: 3px 10px;
+  border-radius: 5px;
+}
+
+.orgChart-innerCard-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.orgChart-innerCard-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.orgChart-innerCard-title {
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.orgChart-innerCard-position-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.orgChart-innerCard-position {
+  font-size: 0.8rem;
+  color: #8b8989;
+  text-transform: capitalize;
+}
+
+.orgChart-innerCard-cloneBtn {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border: none;
+  color: white;
+  border-radius: 5px;
+  padding: 3px 7px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
+.orgChart-innerCard:hover .orgChart-innerCard-cloneBtn {
+  bottom: -75%;
+}
+
+.custom-handle {
+  width: 16px !important;
+  height: 16px !important;
+  background: #007bff !important;
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: crosshair;
+  z-index: 10;
+}
+
+/* Hide all handles by default */
+.orgChart-innerCard .react-flow__handle {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+/* Show handles only on hover */
+.orgChart-innerCard:hover .react-flow__handle {
+  opacity: 1;
+  pointer-events: all;
+}

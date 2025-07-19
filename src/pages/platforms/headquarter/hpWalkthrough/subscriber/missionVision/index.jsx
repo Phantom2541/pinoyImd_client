@@ -4,7 +4,7 @@ import LOGO from "./../../../../../../assets/aplhamed.png";
 import MISSION from "./../../../../../../assets/mission.jpg";
 import VISION from "./../../../../../../assets/vision.jpg";
 import VALUE from "./../../../../../../assets/value.jpg";
-import ImageDragAndDrop from "../../../../../templates/imageDragAndDrop/dragNdroping";
+import ImageDragAndDrop from "../../../../../../components/images/imageDragAndDrop/dragNdroping";
 import EditableField from "../../../../../../components/customizable/editableField";
 
 const companyData = {

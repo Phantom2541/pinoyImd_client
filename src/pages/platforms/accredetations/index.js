@@ -5,12 +5,11 @@ import {
   LicenseOperate,
   policyManagement,
   EquipmentSupplies,
-} from "./assessmentTools";
+} from "./labAssessment";
+
+import { Machines, Temperatures, qualityControls } from "./document";
 
 import { default as Staffs } from "./staff";
-import { default as Temperatures } from "./temperatures";
-import { default as qualityControls } from "./qualityControl";
-import { default as Machines } from "./machines";
 
 export {
   HandlingComplaint,

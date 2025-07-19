@@ -1,4 +1,4 @@
-import OrganizationChart from "../../../pages/platforms/accredetations/assessmentTools/organizationManagement/organizationChart";
+import OrganizationChart from "../../../pages/platforms/accredetations/labAssessment/organizationManagement/organizationChart";
 import {
   Staffs,
   qualityControls,

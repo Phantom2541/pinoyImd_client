@@ -35,15 +35,17 @@ import {
   Search,
   Cards,
   Schedule,
-  ImageDragAndDrop,
   Loader,
   InputSearch,
-  ImageMagnifier,
   // QrCodePage,
   HMOCapture,
 } from "../../../pages/templates";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
-import ImgText from "../../../pages/templates/imgText";
+import {
+  ImageMagnifier,
+  ImageDragAndDrop,
+  ImageText,
+} from "../../../components/images";
 
 const frontdesk = [
   {
@@ -380,7 +382,7 @@ const frontdesk = [
         name: "OCR",
         path: "/templates/imgText",
         icon: "calendar-alt",
-        component: ImgText,
+        component: ImageText,
       },
       {
         name: "Image Magnifier",

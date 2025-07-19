@@ -9,7 +9,7 @@ import XRAY from "./../../../../../../assets/subscriber/XRAY.JPG";
 import DEFIBRILLATOR from "./../../../../../../assets/subscriber/Defibrillator.jpg";
 import VENTILATOR from "./../../../../../../assets/subscriber/Ventilator.jpg";
 import IP from "./../../../../../../assets/subscriber/IP.jpeg";
-import ImageDragAndDrop from "../../../../../templates/imageDragAndDrop/dragNdroping";
+import ImageDragAndDrop from "../../../../../../components/images/imageDragAndDrop/dragNdroping";
 import EditableField from "../../../../../../components/customizable/editableField";
 
 const collections = [

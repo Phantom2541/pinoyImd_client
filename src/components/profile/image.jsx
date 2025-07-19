@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PresetImage, isJpegOrJpgFile } from "../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { IMAGE, UPLOAD } from "../../services/redux/slices/assets/persons/auth";
-import ImageCropper from "../imageCropper";
+import { ImageCropper } from "../../../src/components/images";
 
 export default function ProfileImage() {
   const [file, setFile] = useState(null),

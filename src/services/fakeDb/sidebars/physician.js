@@ -1,5 +1,8 @@
-// import Dashboard from "../../../pages/platforms/physician/dashboard";
-// import Appointments from "../../../pages/platforms/physician/appointments";
+import {
+  Dashboard,
+  Appointment,
+  Imaging,
+} from "../../../pages/platforms/physician";
 // import PatientRecords from "../../../pages/platforms/physician/patientRecords";
 // import MedicalHistory from "../../../pages/platforms/physician/medicalHistory";
 // import Prescription from "../../../pages/platforms/physician/prescription";
@@ -12,74 +15,77 @@ const physician = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/physician/dashboard",
+    path: "/dashboard",
     title: "Main physician dashboard overview",
+    component: Dashboard,
   },
   {
     name: "Calendar of Activities",
     icon: "calendar-alt",
-    path: "/physician/calendar",
+    path: "/calendar",
     title: "View upcoming checkups, diagnostics, and responsibilities",
   },
   {
     name: "Diagnostics",
     icon: "flask",
-    path: "/physician/diagnostics",
+    path: "/diagnostics",
     title: "Review diagnostics appointments and interpret results",
     children: [
       {
         name: "My Appointments",
         icon: "stethoscope",
-        path: "/physician/appointments",
+        path: "/appointments",
         title: "List of diagnostics appointments assigned to you",
+        component: Appointment,
       },
       {
         name: "Teleconsult",
         icon: "video",
-        path: "/physician/teleconsult",
+        path: "/teleconsult",
         title: "Conduct virtual consultations with patients",
       },
       {
         name: "Lab Results",
-        path: "/physician/diagnostics/lab",
+        path: "/diagnostics/lab",
         icon: "vial",
         title: "Access and validate laboratory test results",
       },
       {
         name: "Imaging Results",
-        path: "/physician/diagnostics/imaging",
+        path: "/diagnostics/imaging",
         icon: "x-ray",
         title: "View and interpret imaging such as X-ray, ECG, UTZ",
+        component: Imaging,
       },
     ],
   },
   {
     name: "Consultation Tools",
     icon: "briefcase-medical",
-    path: "/physician/consultation",
+    path: "/consultation",
     title: "Tools for clinical consultation and documentation",
     children: [
       {
         name: "Progress Notes",
-        path: "/physician/notes",
+        path: "/notes",
         icon: "notes-medical",
         title: "SOAP notes (Subjective, Objective, Assessment, Plan)",
       },
       {
         name: "Prescriptions",
-        path: "/physician/prescriptions",
+        path: "/prescriptions",
         icon: "prescription-bottle-alt",
         title: "Create and manage prescriptions for patients",
       },
       {
         name: "Medical Certificates",
-        path: "/physician/certificates",
+        path: "/certificates",
         icon: "file-medical-alt",
         title: "Issue official medical certificates to patients",
       },
       {
         name: "Surgical Clearance",
-        path: "/physician/surgical/clearance",
+        path: "/surgical/clearance",
         icon: "file-signature",
         title: "Evaluate and clear patients for surgery",
       },
@@ -88,18 +94,18 @@ const physician = [
   {
     name: "Patients",
     icon: "user-injured",
-    path: "/physician/patients",
+    path: "/patients",
     title: "Access patient medical records and clinical data",
     children: [
       {
         name: "Medical Records",
-        path: "/physician/patients/records",
+        path: "/records",
         icon: "file-medical",
         title: "View detailed patient medical records",
       },
       {
         name: "Medical History",
-        path: "/physician/patients/history",
+        path: "/history",
         icon: "history",
         title: "Check patient’s previous consultations and diagnostics",
       },
@@ -108,33 +114,55 @@ const physician = [
   {
     name: "Referrals",
     icon: "share-square",
-    path: "/physician/referrals",
+    path: "/referrals",
     title: "Refer patients to another specialist or department",
+  },
+  {
+    name: "Employees",
+    icon: "share-square",
+    path: "/Employees",
+    title: "Refer patients to another specialist or department",
+    children: [
+      {
+        name: "Staff",
+        title: "Active staff directory.",
+        path: "/staff",
+        icon: "user",
+        // component: Staffs,
+      },
+      {
+        name: "Applicants",
+        title: "Job applicants and interview status.",
+        path: "/petitioners",
+        icon: "user-plus",
+        // component: Applicants,
+      },
+    ],
   },
   {
     name: "Tasks & To-Do",
     icon: "tasks",
-    path: "/physician/tasks",
+    path: "/tasks",
     title: "Checklist of rounds, follow-ups, and pending actions",
   },
   {
     name: "Analytics & KPIs",
     icon: "chart-line",
-    path: "/physician/analytics",
+    path: "/analytics",
     title:
       "Insights into your consultations, workload, and performance (Key Performance Indicators)",
   },
   {
-    name: "EHR Timeline",
+    name: "E H R Timeline",
     icon: "stream",
-    path: "/physician/ehr-timeline",
+    path: "/ehr-timeline",
     title:
       "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
   },
   {
     name: "Notifications",
     icon: "bell",
-    path: "/physician/notifications",
+    path: "/notifications",
     title: "Receive reminders and system alerts",
   },
 ];
