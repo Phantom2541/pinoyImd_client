@@ -1,7 +1,7 @@
 import { MDBBtn } from "mdbreact";
 import { currency } from "../../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
-import { CHECK_BULK_SOA } from "../../../../../../services/redux/slices/commerce/pos/services/billing";
+import { CHECK_BULK_SOA } from "../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import Swal from "sweetalert2";
 
 const Header = ({
@@ -15,12 +15,12 @@ const Header = ({
   isChecked = false,
   setActiveId = () => {},
 }) => {
-  const { vendor } = useSelector(({ billings }) => billings),
+  const { vendor } = useSelector(({ onBoardings }) => onBoardings),
     dispatch = useDispatch();
 
   const handleCheckAll = () => {
     if (!isChecked) setActiveId(index);
-    const havePrice = [...deals].every(({ sendouts }) => sendouts.up);
+    const havePrice = [...deals].every(({ up }) => up);
     if (!havePrice)
       return Swal.fire({
         icon: "warning",

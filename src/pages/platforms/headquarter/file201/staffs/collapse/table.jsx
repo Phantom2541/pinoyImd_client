@@ -5,7 +5,11 @@ import { useForm } from "react-hook-form";
 import "./styles.css";
 import { Policy } from "../../../../../../services/fakeDb";
 import AccessModal from "./accessModal";
-import { SETOnHotSEAT } from "../../../../../../services/redux/slices/assets/persons/personnels";
+import {
+  SETOnHotSEAT,
+  DESTROY,
+} from "../../../../../../services/redux/slices/assets/persons/personnels";
+import Swal from "sweetalert2";
 
 function EditableField({
   label,
@@ -118,6 +122,27 @@ export default function CollapseTable({
     dispatch(SETOnHotSEAT(staff));
     setSelected(staff);
     toggle();
+  };
+
+  const handleRemove = (e) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(DESTROY);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
+      }
+    });
   };
 
   const handleDepartmentChange = (e) => {
@@ -400,6 +425,16 @@ export default function CollapseTable({
                   Click here
                 </span>{" "}
                 to grant access
+              </p>
+              <p>
+                <span
+                  className="text-primary font-weight-bold"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleRemove}
+                >
+                  Click here
+                </span>{" "}
+                to remove the personnel
               </p>
             </div>
           )}

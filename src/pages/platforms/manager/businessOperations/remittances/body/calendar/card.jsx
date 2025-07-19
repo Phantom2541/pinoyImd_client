@@ -123,6 +123,8 @@ const Card = ({
     }, 1000);
   };
 
+  console.log("items", items);
+
   return (
     <div
       className={`calendar-card ${isToday && "today"}  ${

@@ -66,12 +66,10 @@ const Services = {
     const result = {}; // This will hold the final object to return
 
     uniqueTemplates.forEach((templateId) => {
-      console.log("templateId", templateId);
-
       // Get the readable component name for the template ID and department
       const key = Templates.getComponentName(templateId, department);
       // const key = Templates.getComponentIndex(templateId, department);
-
+      console.log("key", key);
       // Fallback in case key is undefined
       const resolvedKey = key || "Unknown";
 
@@ -115,8 +113,6 @@ const Services = {
     const result = {};
 
     uniqueTemplates.forEach((templateId) => {
-      console.log("templateId", templateId);
-
       let values = cluster
         .filter(({ template }) => template === templateId)
         .map(({ id }) => Number(id))

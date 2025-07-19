@@ -6,6 +6,7 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
 import { HMO } from "../../../../../../services/fakeDb";
+import { MDBIcon } from "mdbreact";
 
 export default function Partners() {
   const [showAll, setShowAll] = useState(false);
@@ -65,6 +66,9 @@ export default function Partners() {
                   style={{ height: "80px", objectFit: "contain" }}
                   className="subscriber-partners-image"
                 />
+                <button className="subscriber-partners-deleteBtn bg-danger">
+                  <MDBIcon icon="trash" />
+                </button>
               </div>
             </SwiperSlide>
           ))}
@@ -83,7 +87,9 @@ export default function Partners() {
               style={{ height: "80px", objectFit: "contain" }}
               className="subscriber-partners-image"
             />
-            {/* <span>{hmo.abbr}</span> */}
+            <button className="subscriber-partners-deleteBtn bg-danger">
+              <MDBIcon icon="trash" />
+            </button>
           </div>
         ))}
       </div>

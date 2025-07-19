@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable, MDBIcon, MDBBadge } from "mdbreact";
 import {
@@ -21,7 +21,7 @@ import { Input, Select } from "../../../../../../../components/customizable";
 import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
 import "./style.css";
 const Tables = () => {
-  const { token, maxPage } = useSelector(({ auth }) => auth),
+  const { token, maxPage, activePlatform } = useSelector(({ auth }) => auth),
     {
       collections,
       filtered,
@@ -29,6 +29,7 @@ const Tables = () => {
       isSuccess,
       activePage,
       total,
+      isLoading,
       view = "all",
     } = useSelector(({ deals }) => deals),
     { collections: providers } = useSelector(({ providers }) => providers),
@@ -65,15 +66,13 @@ const Tables = () => {
 
   //Set fetched data for mapping
   useEffect(() => {
-    if (!!collections.length) {
-      const _deals =
-        view === "all"
-          ? collections
-          : collections.filter(({ perform }) => perform === view);
-      dispatch(SetTOTAL(_deals.reduce((a, c) => a + c.amount, 0)));
-      dispatch(SetFILTERED(_deals));
-    }
-  }, [collections, view, dispatch]);
+    const _deals =
+      view === "all"
+        ? collections
+        : collections?.filter(({ perform }) => perform === view);
+    dispatch(SetTOTAL(_deals.reduce((a, c) => a + c.amount, 0)));
+    dispatch(SetFILTERED(_deals));
+  }, [collections, view, dispatch, isLoading]);
 
   // Sample generateStub function
 
@@ -144,6 +143,14 @@ const Tables = () => {
         ?.affiliated || []
     );
   };
+  const getSourceForPhysician = (sourceId) => {
+    const source = [...providers].find(
+      ({ clients }) => clients._id === sourceId
+    );
+
+    if (!source?._id) return {};
+    return { _id: source?._id, branch: source?.clients?._id };
+  };
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -152,22 +159,24 @@ const Tables = () => {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-          marginTop: "-1.4rem",
-        }}
-      >
-        <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
-          {currency.format(total)}
-        </p>
-        <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
-        <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
-          @ {collections.length} Patient/s
-        </p>
-      </div>
+      {collections.length > 0 && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            marginTop: "-1.4rem",
+          }}
+        >
+          <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+            {currency.format(total)}
+          </p>
+          <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
+          <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+            @ {collections.length} Patient/s
+          </p>
+        </div>
+      )}
 
       <MDBTable small>
         <thead>
@@ -191,8 +200,6 @@ const Tables = () => {
               const isSourceEdit = isMatch("source");
               const isPhysicianEdit = isMatch("physician");
               const isSSXEdit = isMatch("ssx");
-
-              console.log("physician", deal?.physicianId);
 
               return (
                 <tr
@@ -240,9 +247,9 @@ const Tables = () => {
                         title={
                           deal.category === "walkin"
                             ? deal.category
-                            : Categories.find(
-                                ({ abbr }) => abbr === deal.category
-                              ).name
+                            : Categories?.find(
+                                ({ abbr = "" }) => abbr === deal?.category
+                              )?.name
                         }
                       >
                         {deal.category === "walkin"
@@ -357,8 +364,18 @@ const Tables = () => {
                           formSubmitted={formSubmitted}
                           isEditable
                           suggested={getPhysicians(deal.source._id)}
+                          source={getSourceForPhysician(deal?.source?._id)}
                           onChange={(value) =>
-                            setSelected({ ...selected, newPhysician: value })
+                            setSelected({
+                              ...selected,
+                              newPhysician: {
+                                ...value,
+                                branch: activePlatform.branchId,
+                                source: getSourceForPhysician(
+                                  deal?.source?._id
+                                ),
+                              },
+                            })
                           }
                           handleCheck={() =>
                             handleUpdate("physicianId._id", "newPhysician")
@@ -366,29 +383,6 @@ const Tables = () => {
                           handleClose={() => setSelected({})}
                         />
                       )}
-                      {/* <Select
-                          label={"Physician"}
-                          allowObjectValue
-                          onChange={(value) =>
-                            setSelected({ ...selected, newPhysician: value })
-                          }
-                          handleCheck={() =>
-                            handleUpdate("physicianId._id", "newPhysician")
-                          }
-                          handleClose={() => setSelected({})}
-                          whitelisted
-                          soloUpdate
-                          className="m-0 p-0 mt-3"
-                          // collections={getPhysicians(source._id)}
-                          collections={Deals.getPhysicians(
-                            source._id,
-                            providers
-                          )}
-                          preValue={deal?.physicianId?._id}
-                          formSubmitted={formSubmitted}
-                          keys={"value"}
-                          values={"text"}
-                        /> */}
                     </div>
                     <div
                       className="cursor-pointer"
@@ -396,13 +390,6 @@ const Tables = () => {
                         opacity: isPhysicianEdit ? 0 : 1,
                       }}
                       onClick={() => {
-                        // if (!deal?.source)
-                        //   return addToast(
-                        //     "Please add a source before adding a physician.",
-                        //     {
-                        //       appearance: "warning",
-                        //     }
-                        //   );
                         setSelected({ ...deal, updatedKey: "physician" });
                       }}
                     >

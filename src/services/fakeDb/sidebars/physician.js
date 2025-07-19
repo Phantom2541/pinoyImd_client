@@ -1,5 +1,8 @@
-// import Dashboard from "../../../pages/platforms/physician/dashboard";
-// import Appointments from "../../../pages/platforms/physician/appointments";
+import {
+  Dashboard,
+  Appointment,
+  Imaging,
+} from "../../../pages/platforms/physician";
 // import PatientRecords from "../../../pages/platforms/physician/patientRecords";
 // import MedicalHistory from "../../../pages/platforms/physician/medicalHistory";
 // import Prescription from "../../../pages/platforms/physician/prescription";
@@ -13,94 +16,154 @@ const physician = [
     name: "Dashboard",
     icon: "tachometer-alt",
     path: "/physician/dashboard",
-    // component: Dashboard,
+    title: "Main physician dashboard overview",
+    component: Dashboard,
   },
   {
-    name: "My Appointments",
-    icon: "calendar-check",
-    path: "/physician/appointments",
-    // component: Appointments,
+    name: "Calendar of Activities",
+    icon: "calendar-alt",
+    path: "/physician/calendar",
+    title: "View upcoming checkups, diagnostics, and responsibilities",
+  },
+  {
+    name: "Diagnostics",
+    icon: "flask",
+    path: "/physician/diagnostics",
+    title: "Review diagnostics appointments and interpret results",
+    children: [
+      {
+        name: "My Appointments",
+        icon: "stethoscope",
+        path: "/physician/appointments",
+        title: "List of diagnostics appointments assigned to you",
+        component: Appointment,
+      },
+      {
+        name: "Teleconsult",
+        icon: "video",
+        path: "/physician/teleconsult",
+        title: "Conduct virtual consultations with patients",
+      },
+      {
+        name: "Lab Results",
+        path: "/physician/diagnostics/lab",
+        icon: "vial",
+        title: "Access and validate laboratory test results",
+      },
+      {
+        name: "Imaging Results",
+        path: "/physician/diagnostics/imaging",
+        icon: "x-ray",
+        title: "View and interpret imaging such as X-ray, ECG, UTZ",
+        component: Imaging,
+      },
+    ],
+  },
+  {
+    name: "Consultation Tools",
+    icon: "briefcase-medical",
+    path: "/physician/consultation",
+    title: "Tools for clinical consultation and documentation",
+    children: [
+      {
+        name: "Progress Notes",
+        path: "/physician/notes",
+        icon: "notes-medical",
+        title: "SOAP notes (Subjective, Objective, Assessment, Plan)",
+      },
+      {
+        name: "Prescriptions",
+        path: "/physician/prescriptions",
+        icon: "prescription-bottle-alt",
+        title: "Create and manage prescriptions for patients",
+      },
+      {
+        name: "Medical Certificates",
+        path: "/physician/certificates",
+        icon: "file-medical-alt",
+        title: "Issue official medical certificates to patients",
+      },
+      {
+        name: "Surgical Clearance",
+        path: "/physician/surgical/clearance",
+        icon: "file-signature",
+        title: "Evaluate and clear patients for surgery",
+      },
+    ],
   },
   {
     name: "Patients",
     icon: "user-injured",
     path: "/physician/patients",
+    title: "Access patient medical records and clinical data",
     children: [
       {
         name: "Medical Records",
         path: "/physician/patients/records",
         icon: "file-medical",
-        // component: PatientRecords,
+        title: "View detailed patient medical records",
       },
       {
         name: "Medical History",
         path: "/physician/patients/history",
         icon: "history",
-        // component: MedicalHistory,
+        title: "Check patient’s previous consultations and diagnostics",
       },
     ],
-  },
-  //   {
-  //     name: "Diagnostics",
-  //     icon: "flask",
-  //     path: "/physician/diagnostics",
-  //     children: [
-  //       {
-  //         name: "Lab Results",
-  //         path: "/physician/diagnostics/lab",
-  //         icon: "vial",
-  //         component: LabResults,
-  //       },
-  //       {
-  //         name: "Imaging",
-  //         path: "/physician/diagnostics/imaging",
-  //         icon: "x-ray",
-  //         component: ImagingResults,
-  //       },
-  //     ],
-  //   },
-  {
-    name: "Diagnostics Requests",
-    icon: "stethoscope",
-    path: "/physician/diagnostics",
-    // component: Requests,
-  },
-  {
-    name: "Prescriptions",
-    icon: "prescription-bottle-alt",
-    path: "/physician/prescriptions",
-    // component: Prescription,
-  },
-  // using SOAP format (Subjective, Objective, Assessment, Plan).
-  {
-    name: "Progress Notes",
-    icon: "notes-medical",
-    path: "/physician/notes",
-    // component: ProgressNotes,
   },
   {
     name: "Referrals",
     icon: "share-square",
     path: "/physician/referrals",
-    // component: Referrals,
+    title: "Refer patients to another specialist or department",
   },
   {
-    name: "Surgical Clearance",
-    icon: "file-signature",
-    path: "/physician/surgical/clearance",
-    // component: SurgicalClearance,
+    name: "Employees",
+    icon: "share-square",
+    path: "/Employees",
+    title: "Refer patients to another specialist or department",
+    children: [
+      {
+        name: "Staff",
+        title: "Active staff directory.",
+        path: "/staff",
+        icon: "user",
+        // component: Staffs,
+      },
+      {
+        name: "Applicants",
+        title: "Job applicants and interview status.",
+        path: "/petitioners",
+        icon: "user-plus",
+        // component: Applicants,
+      },
+    ],
   },
   {
-    name: "Medical Certificates",
-    icon: "file-medical-alt",
-    path: "/physician/certificates",
-    // component: MedicalCertificates,
+    name: "Tasks & To-Do",
+    icon: "tasks",
+    path: "/physician/tasks",
+    title: "Checklist of rounds, follow-ups, and pending actions",
+  },
+  {
+    name: "Analytics & KPIs",
+    icon: "chart-line",
+    path: "/physician/analytics",
+    title:
+      "Insights into your consultations, workload, and performance (Key Performance Indicators)",
+  },
+  {
+    name: "E H R Timeline",
+    icon: "stream",
+    path: "/physician/ehr-timeline",
+    title:
+      "Visual health journey of the patient across time, (Electronic Health Record Timeline)",
   },
   {
     name: "Notifications",
     icon: "bell",
     path: "/physician/notifications",
-    // component: Notifications,
+    title: "Receive reminders and system alerts",
   },
 ];
 

@@ -3,9 +3,8 @@ import { currency } from "../../../../../services/utilities";
 const get = {
   totalAmount: (cluster) => {
     return cluster.reduce((acc, item) => {
-      const itemTotal = item.deals.reduce((dealAcc, deal) => {
-        const dealTotal = deal.sendouts ? deal.sendouts.up || 0 : 0;
-        return dealAcc + dealTotal;
+      const itemTotal = item.deals.reduce((dealAcc, { up = 0 }) => {
+        return dealAcc + up;
       }, 0);
       return acc + itemTotal;
     }, 0);
@@ -20,7 +19,7 @@ const get = {
           You need to create transactions worth
           <span className="text-success"> {currency.format(maximum)} </span>
           to generate the SOA. Current total:
-          <span className="text-primary">{currency.format(current)}</span>.
+          <span className="text-primary ml-1">{currency.format(current)}</span>.
         </h5>
       );
     }
@@ -31,7 +30,7 @@ const get = {
           Exceeded{" "}
           <span className="text-success">{currency.format(maximum)} </span>{" "}
           maximum total. Please adjust your transactions. Current total:
-          <span className="text-danger">{currency.format(current)}</span>.
+          <span className="text-danger ml-1">{currency.format(current)}</span>.
         </h5>
       );
     }

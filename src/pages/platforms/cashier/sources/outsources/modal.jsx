@@ -62,7 +62,7 @@ export default function Modal() {
       ({ _id }) => _id === form.companyId
     )?.isGhost;
     if (!isGhost && form.isRegister) return {};
-    return { status: "approved", category: "ghost" };
+    return { status: "approved", category: "ctr" };
   };
   // Handle update function
   const handleUpdate = () => {
