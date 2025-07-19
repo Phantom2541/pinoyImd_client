@@ -24,7 +24,7 @@ import {
 
 import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
-import Applicants from "../../../pages/platforms/headquarter/settings/personnels/applicants";
+import Applicants from "../../../pages/platforms/headquarter/personnel/applicants";
 import PatientCategories from "../../../pages/platforms/headquarter/patientCategories";
 import Dashboard from "../../../pages/platforms/headquarter/dashboard";
 import hpWalkthrough from "../../../pages/platforms/headquarter/hpWalkthrough";

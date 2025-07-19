@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
-import TableLoading from "../../../../../components/tableLoading";
+import TableLoading from "../../../../../components/tableLoading/index.jsx";
 import Header from "./header.jsx";
-import Body from "./body";
-import Modal from "./modal";
+import Body from "./body.jsx";
+import Modal from "./modal.jsx";
 import {
   EMPLOYEES,
   RESET,
