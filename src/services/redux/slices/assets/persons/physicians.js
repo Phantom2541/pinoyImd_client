@@ -146,11 +146,17 @@ export const reduxSlice = createSlice({
       state.selected = payload;
 
       state.selectedId = payload?._id;
-
       const full = payload?.fullName || {};
       state.displayName = `${full.lname || ""}, ${full.fname || ""}${
         full.mname ? " " + full.mname : ""
       }`;
+    },
+    ADD_PHYSICIAN: (state, { payload }) => {
+      const physiciansFakeDB = localStorage.getItem("physicians") || "[]";
+      const physicians = JSON.parse(physiciansFakeDB);
+      physicians.unshift(payload);
+      state.collections = physicians;
+      localStorage.setItem("physicians", JSON.stringify(physicians));
     },
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
@@ -338,6 +344,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  ADD_PHYSICIAN,
   SetPHYSICIANS,
   SETPHYSICIAN,
   RESET,

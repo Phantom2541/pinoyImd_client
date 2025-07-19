@@ -1,10 +1,10 @@
 @keyframes zoomInDeals {
   0% {
-    transform: translateX(-50%) scale(0);
+    transform: scale(0);
     opacity: 0;
   }
   100% {
-    transform: translateX(-50%) scale(1);
+    transform: scale(1);
     opacity: 1;
   }
 }
@@ -15,8 +15,6 @@
   padding: 0 10px;
   background: white;
   border-radius: 5px;
-  left: 50%;
-  transform: translateX(-50%);
   animation: zoomInDeals 0.3s ease-out;
   display: inline-block;
   transform-origin: left;

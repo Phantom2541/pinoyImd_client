@@ -64,7 +64,6 @@ export default function Modal() {
     const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);
     const _forms = Services.getTemplates(inhouseIDS, department);
     const { _id, customerId, ssx, forms: oldForms, pn } = deal;
-
     // const sentOut = [...collections].find(
     //   ({ vendors }) => vendors?._id === outSourceId
     // );
@@ -91,14 +90,13 @@ export default function Modal() {
     };
 
     const deptIndex = deptIndexMap[department];
-    const newFormKeys = Object.keys(_inhouse);
+    const newFormKeys = Object.keys(_inhouse).map(Number);
 
     const forms = {
       ...(oldForms || {}),
       [deptIndex]: [
-        ...(oldForms?.[deptIndex] || []),
-        ...newFormKeys.filter(
-          (key) => !(oldForms?.[deptIndex] || []).includes(Number(key))
+        ...new Set(
+          [...(oldForms?.[deptIndex] || []), ...newFormKeys].map(Number)
         ),
       ],
     };

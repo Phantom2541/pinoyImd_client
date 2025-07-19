@@ -64,6 +64,7 @@ export default function Collapsable({ branches, cid }) {
           <th>startDate</th>
           <th>Hiring</th>
           <th>AO</th>
+          <th>Action</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
@@ -259,6 +260,7 @@ export default function Collapsable({ branches, cid }) {
                 )}
               </td>
               <td>{fullName(branch?.ao?.fullName)}</td>
+              <td></td>
             </tr>
           );
         })}

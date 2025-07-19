@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Customer from "./customer";
 import Purchase from "./purchase";
@@ -10,7 +10,6 @@ import {
   SetSELECTED,
   TOGGLE,
 } from "../../../../../../services/redux/slices/finance/bookkeeping/remittances";
-// import { QRCodeCanvas } from "qrcode.react";
 
 import Denominations from "../remittances/modal/denominations";
 import {
@@ -81,9 +80,6 @@ export default function Cashier() {
 
   return (
     <>
-      {/* <div>
-        <QRCodeCanvas value="https://youtube.com" size={200} />
-      </div> */}
       <MDBRow
         className="res-container "
         style={{ marginLeft: "4rem", marginRight: "1rem" }}
