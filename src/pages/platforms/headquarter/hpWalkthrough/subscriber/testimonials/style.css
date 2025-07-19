@@ -32,13 +32,14 @@
   padding: 10px 20px;
 }
 
-.subscriber-testimonials-text h1 {
+.subscriber-testimonials-text .subscriber-testimonials-title {
   font-size: 3rem;
   font-weight: 600;
   color: var(--primary-color);
+  text-align: start;
 }
 
-.subscriber-testimonials-text p {
+.subscriber-testimonials-text .subscriber-testimonials-description {
   font-size: 1.15rem;
   font-weight: 400;
   margin-top: 20px;
@@ -54,12 +55,14 @@
 }
 
 .subscriber-testimonials-sliderCard {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin: 10px;
   padding: 10px 15px;
+  overflow: hidden;
 }
 
 .subscriber-testimonials-sliderCard img {
@@ -81,6 +84,26 @@
 
 .subscriber-testimonials-sliderCard .subscriber-testimonials-review-name {
   text-align: right;
+}
+
+.subscriber-testimonials-review-deleteBtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  color: white;
+  border-bottom-left-radius: 100%;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  padding-right: 7px;
+  padding-left: 17px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.subscriber-testimonials-sliderCard:hover
+  .subscriber-testimonials-review-deleteBtn {
+  opacity: 1;
 }
 
 /* swiper vertical reverse */

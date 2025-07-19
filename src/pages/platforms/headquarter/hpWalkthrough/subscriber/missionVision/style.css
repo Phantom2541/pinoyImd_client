@@ -12,6 +12,7 @@
   overflow: hidden;
 }
 
+/* Common layout for top, middle, bottom sections */
 .subscriber-mission-vision-top,
 .subscriber-mission-vision-middle,
 .subscriber-mission-vision-bottom {
@@ -20,90 +21,109 @@
   align-items: center;
 }
 
-.subscriber-mission-vision-top div,
-.subscriber-mission-vision-middle div,
-.subscriber-mission-vision-bottom div {
+/* Shared div styles inside each section */
+.subscriber-mission-vision-top .subscriber-mission-vision-topBox,
+.subscriber-mission-vision-middle .subscriber-mission-vision-middleBox,
+.subscriber-mission-vision-bottom .subscriber-mission-vision-bottomBox {
   width: 450px;
   height: 250px;
-  overflow: hidden;
+  /* overflow: hidden; */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.36);
+  transition: box-shadow 0.3s ease;
 }
 
-.subscriber-mission-vision-top div:first-child img,
-.subscriber-mission-vision-top div:nth-child(3) img,
-.subscriber-mission-vision-bottom div:nth-child(2) img {
+.subscriber-mission-vision-top > .subscriber-mission-vision-topBox:hover,
+.subscriber-mission-vision-middle > .subscriber-mission-vision-middleBox:hover,
+.subscriber-mission-vision-bottom > .subscriber-mission-vision-bottomBox:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Image styles with hover zoom */
+.subscriber-mission-vision-top
+  .subscriber-mission-vision-topBox:first-child
+  img,
+.subscriber-mission-vision-top
+  .subscriber-mission-vision-topBox:nth-child(3)
+  img,
+.subscriber-mission-vision-bottom
+  .subscriber-mission-vision-bottomBox:nth-child(2)
+  img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-.subscriber-mission-vision-bottom div:nth-child(2):hover img,
-.subscriber-mission-vision-top div:nth-child(3):hover img,
-.subscriber-mission-vision-top div:first-child:hover img {
+.subscriber-mission-vision-top
+  .subscriber-mission-vision-topBox:first-child:hover
+  img,
+.subscriber-mission-vision-top
+  .subscriber-mission-vision-topBox:nth-child(3):hover
+  img,
+.subscriber-mission-vision-bottom
+  .subscriber-mission-vision-bottomBox:nth-child(2):hover
+  img {
   transform: scale(1.1);
+  filter: brightness(60%);
 }
 
-.subscriber-mission-vision-top div:first-child,
-.subscriber-mission-vision-top div:nth-child(3),
-.subscriber-mission-vision-bottom div:nth-child(2) {
-  position: relative;
-}
-
-.subscriber-mission-vision-top div:first-child::before,
-.subscriber-mission-vision-top div:nth-child(3)::before,
-.subscriber-mission-vision-bottom div:nth-child(2)::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  z-index: 1;
-  transition: opacity 0.3s ease;
-}
-
-.subscriber-mission-vision-top div:first-child:hover::before,
-.subscriber-mission-vision-top div:nth-child(3):hover::before,
-.subscriber-mission-vision-bottom div:nth-child(2):hover::before {
-  opacity: 1;
-}
-
-.subscriber-mission-vision-bottom div:first-child,
-.subscriber-mission-vision-bottom div:nth-child(3) {
+/* Blue card */
+.subscriber-mission-vision-bottom
+  .subscriber-mission-vision-bottomBox:first-child,
+.subscriber-mission-vision-bottom
+  .subscriber-mission-vision-bottomBox:nth-child(3),
+.subscriber-mission-vision-middle
+  .subscriber-mission-vision-middleBox:nth-child(2) {
   background-color: rgba(18, 102, 241, 1);
   color: white;
   padding: 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.subscriber-mission-vision-middle div:first-child,
-.subscriber-mission-vision-top div:nth-child(2) {
+/* White card */
+.subscriber-mission-vision-middle
+  .subscriber-mission-vision-middleBox:first-child,
+.subscriber-mission-vision-middle
+  .subscriber-mission-vision-middleBox:nth-child(3),
+.subscriber-mission-vision-top .subscriber-mission-vision-topBox:nth-child(2) {
   background-color: white;
   color: black;
   padding: 40px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.subscriber-mission-vision-top div:nth-child(2) h1,
-.subscriber-mission-vision-middle div:first-child h1,
-.subscriber-mission-vision-bottom div:nth-child(3) h1 {
+/* Typography: Titles */
+.subscriber-mission-vision-missionTitle,
+.subscriber-mission-vision-middle
+  .subscriber-mission-vision-middleBox:first-child
+  h1,
+.subscriber-mission-vision-bottom
+  .subscriber-mission-vision-botomBox:nth-child(3)
+  h1,
+.subscriber-mission-vision-middle
+  .subscriber-mission-vision-middleBox:nth-child(3)
+  h1 {
   font-size: 2.5rem;
   font-weight: bold;
   text-transform: uppercase;
+  background-color: green;
 }
 
-.subscriber-mission-vision-top div:nth-child(2) span,
-.subscriber-mission-vision-middle div:first-child span,
-.subscriber-mission-vision-bottom div:nth-child(3) span {
+/* Typography: Body Text */
+.subscriber-mission-vision-missionText,
+.subscriber-mission-vision-middle
+  .subscriber-mission-vision-middleBox:first-child
+  span,
+.subscriber-mission-vision-bottom
+  .subscriber-mission-vision-bottomBox:nth-child(3)
+  span {
   font-size: 1rem;
   font-weight: 400;
 }
 
-.subscriber-mission-vision-middle div:nth-child(2) {
-  background-color: rgba(18, 102, 241, 1);
+/* Brand section */
+.subscriber-mission-vision-middle
+  .subscriber-mission-vision-middleBox:nth-child(2) {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,48 +131,30 @@
   gap: 10px;
 }
 
-.subscriber-mission-vision-middle div:nth-child(2) img {
+.subscriber-mission-vision-middle
+  .subscriber-mission-vision-middleBox:nth-child(2)
+  img {
   width: 250px;
   object-fit: contain;
   object-position: center;
 }
 
-.subscriber-mission-vision-middle div:nth-child(2) span {
+.subscriber-mission-vision-middle
+  .subscriber-mission-vision-middleBox:nth-child(2)
+  span {
   font-size: 1.8rem;
   text-transform: capitalize;
   font-weight: 500;
   color: white;
 }
 
-.subscriber-mission-vision-middle div:nth-child(3) {
-  background-color: white;
-  color: black;
-  padding: 40px;
-}
-
-.subscriber-mission-vision-middle div:nth-child(3) h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.subscriber-mission-vision-bottom div:first-child {
+/* Quote section */
+.subscriber-mission-vision-bottom
+  .subscriber-mission-vision-bottomBox:first-child {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   font-size: 1.2rem;
   font-weight: 500;
-}
-
-.subscriber-mission-vision-top > div,
-.subscriber-mission-vision-middle > div,
-.subscriber-mission-vision-bottom > div {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.36);
-}
-
-.subscriber-mission-vision-top > div:hover,
-.subscriber-mission-vision-middle > div:hover,
-.subscriber-mission-vision-bottom > div:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.4);
 }

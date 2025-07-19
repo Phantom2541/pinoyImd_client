@@ -16,6 +16,15 @@
   padding: 50px 60px;
 }
 
+.subscriber-contactUs-addBranch {
+  width: 30px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  border: none;
+  color: white;
+  font-size: 1rem;
+}
+
 .subscriber-contactUs-leftSide {
   /* flex: 1; */
   color: white;
@@ -59,9 +68,14 @@
 .subscriber-contactUs-phone {
   display: flex;
   align-items: center;
+  gap: 10px;
+}
+
+.subscriber-contactUs-emailTxt,
+.subscriber-contactUs-mobileTxt {
   font-size: 17px;
   font-weight: 400;
-  gap: 10px;
+  margin: 0;
 }
 
 .subscriber-contactUs-address {
@@ -87,12 +101,14 @@
   font-weight: 400;
   margin-top: -10px;
   margin-bottom: 20px;
+  text-transform: capitalize;
 }
 
 .subscriber-contactUs-branches-container {
   display: flex;
   flex-direction: column;
-  /* overflow: hidden; */
+  overflow: hidden;
+  overflow-x: auto;
 }
 
 .subscriber-contactUs-branches {
@@ -102,7 +118,7 @@
   overflow-y: auto;
 }
 
-.subscriber-contactUs-branches-container p {
+.subscriber-contactUs-branches-container .subscriber-contactUs-branch-title {
   color: #093c91;
   font-size: 1.5rem;
   font-weight: 500;
@@ -110,18 +126,21 @@
 
 .subscriber-contactUs-branch-name {
   color: white;
-  font-size: 1.1rem;
-  font-weight: 400;
+
   pointer-events: auto;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.subscriber-contactUs-branch-nameTxt {
+  font-size: 1.1rem;
+  font-weight: 400;
 }
 
 .subscriber-contactUs-branchInfo {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-
   padding: 5px 10px;
   background-color: #0f58d1;
   max-height: 0;
@@ -144,9 +163,11 @@
   transform: scale(0.98);
 }
 
-.subscriber-contactUs-branchInfo span {
+.subscriber-contactUs-branchInfo .subscriber-contactUs-branchInfo-person,
+.subscriber-contactUs-branchInfo .subscriber-contactUs-branchInfo-mobile,
+.subscriber-contactUs-branchInfo .subscriber-contactUs-branchInfo-email {
   color: white;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
 }
 

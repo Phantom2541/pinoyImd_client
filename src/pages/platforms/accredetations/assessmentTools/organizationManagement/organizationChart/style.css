@@ -1,252 +1,116 @@
-.orgChart-wrapper {
-  width: 100%;
-  height: 85vh;
-  overflow: hidden;
-  position: relative;
-  background-color: #f8f9fa; /* light background for contrast */
-}
-
-.orgChart-container {
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  cursor: grab;
-  user-select: none;
-  position: relative;
-  background-color: white;
-  /* scroll-behavior: smooth; */
-}
-
-.orgChart-container::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
-}
-
-.orgChart-container:active {
-  cursor: grabbing;
-}
-
-.orgChart-chart {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-  min-width: max-content;
-  min-height: 100%;
-  gap: 40px;
-  padding: 40px;
-  box-sizing: border-box;
-  position: relative;
-}
-
-/* NODE */
-.orgChart-node {
-  position: relative;
-  text-align: center;
+.org-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  height: 100vh;
 }
 
-/* BOX */
-.orgChart-box {
+.topbar {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 8px;
-  min-width: 120px;
-  max-width: 120px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  position: relative;
   gap: 10px;
-  overflow: hidden;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  overflow-x: auto;
 }
 
-.orgChart-box:hover {
-  background: #f0f8ff;
+.draggable-node {
+  background: #ffffff;
+  border: 1px solid #ccc;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: grab;
+  min-width: 140px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.orgChart-position {
-  width: 100%;
-  font-weight: 500;
-  font-size: 0.8rem;
-  color: white;
-  padding: 3px 0;
-  text-transform: uppercase;
+.draggable-node .small {
+  font-size: 12px;
+  color: #555;
 }
 
-.orgChart-image {
-  width: 60px;
-  aspect-ratio: 1/1;
+.flow-area {
+  flex: 1;
+  height: 100%;
+}
+
+.orgChart-innerCard {
+  position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding: 10px;
+  background: white;
+  border-radius: 10px;
+  min-width: 180px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  gap: 10px;
 }
 
-.orgChart-image img {
-  width: 100%;
+.orgChart-innerCard-image {
+  width: 50px;
   aspect-ratio: 1/1;
-  object-fit: contain;
   border-radius: 50%;
-  -webkit-user-drag: none;
 }
-
-.orgChart-details {
-  width: 100%;
-}
-
-.orgChart-name {
-  width: 100%;
-  padding: 0 5px;
-  padding-bottom: 5px;
-  font-size: 0.8rem;
-  font-weight: 400;
-  text-transform: capitalize;
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden; /* Hide overflowed text */
-  text-overflow: ellipsis; /* Add ... */
-}
-
-.orgChart-toggle {
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: gray;
-}
-
-/* VERTICAL LINE DOWN */
-.orgChart-line-down {
-  width: 1px;
-  height: 20px;
-  background-color: #bbb;
-  margin: 0;
-  padding: 0;
-}
-
-/* CHILDREN WRAPPER */
-.orgChart-children-wrapper {
-  position: relative;
-}
-
-/* CHILDREN CONTAINER */
-.orgChart-children {
-  display: flex;
-  justify-content: center;
-  position: relative;
-}
-
-/* Remove horizontal connector if only one child */
-.orgChart-children.single-child .orgChart-child::before {
-  display: none;
-}
-
-/* EACH CHILD */
-.orgChart-child {
+.orgChart-innerCard-info {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+}
+
+.orgChart-innerCard-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.orgChart-innerCard-position-container {
+  display: flex;
   align-items: center;
-  padding: 0 20px;
-  position: relative;
-  z-index: 1;
+  flex-wrap: wrap;
 }
 
-/* CONNECTING HORIZONTAL LINES */
-.orgChart-child::before {
-  content: "";
+.orgChart-innerCard-position {
+  font-size: 0.8rem;
+  color: #bbb;
+}
+
+.orgChart-innerCard-cloneBtn {
   position: absolute;
-  top: 0;
-  height: 1px;
-  background: #bbb;
-  width: 100%;
+  top: 50%;
+  right: 10px;
+  transform: translate(0, -50%);
+  border: none;
+  color: white;
+  border-radius: 5px;
+  padding: 3px 7px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s ease;
+  z-index: -1;
 }
 
-.orgChart-child:first-child::before {
-  left: 50%;
-  width: 50%;
-  transform: translateX(0);
+.orgChart-innerCard:hover .orgChart-innerCard-cloneBtn {
+  right: -3%;
+  transform: translate(100%, -50%);
 }
 
-.orgChart-child:last-child::before {
-  left: 0;
-  width: 50%;
-}
-
-.orgChart-child:not(:first-child):not(:last-child)::before {
-  left: 0;
-  width: 100%;
-}
-
-/* VERTICAL LINE UP TO BOX */
-.orgChart-line-up {
-  width: 1px;
-  height: 20px;
-  background: #bbb;
-}
-
-/* Fade Up Animation Classes */
-.fade-up-enter {
-  opacity: 1;
-  transform: translateY(0);
-  max-height: 1000px;
-  transition: all 0.3s ease;
-}
-
-.fade-up-exit {
-  opacity: 0;
-  transform: translateY(-20px);
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.drop-zone.left,
-.drop-zone.right {
-  position: absolute;
-  top: 0;
-  width: 20px;
-  height: 100%;
+.custom-handle {
+  width: 16px !important;
+  height: 16px !important;
+  background: #007bff !important;
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: crosshair;
   z-index: 10;
 }
 
-.drop-zone.left {
-  left: -10px;
+/* Hide all handles by default */
+.orgChart-innerCard .react-flow__handle {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
 }
 
-.drop-zone.right {
-  right: -10px;
-}
-
-.orgChart-storage {
-  padding: 10px;
-  background: white;
-  margin-bottom: 1rem;
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  min-height: 110px;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-}
-
-.storage-item {
-  margin: 0.5rem 0;
-  cursor: grab;
-}
-
-.orgChart-empty {
-  border: 2px dashed #aaa;
-  padding: 40px;
-  text-align: center;
-  color: #888;
-  font-style: italic;
-  border-radius: 8px;
-}
-
-.empty-chart-dropzone {
-  border: 2px dashed #aaa;
-  padding: 60px 80px;
-  font-size: 0.9rem;
-  color: #777;
-  text-align: center;
-  border-radius: 8px;
-  margin: 0 auto;
+/* Show handles only on hover */
+.orgChart-innerCard:hover .react-flow__handle {
+  opacity: 1;
+  pointer-events: all;
 }

@@ -13,11 +13,16 @@ import {
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse, dateFormat } from "../../../../../../services/utilities";
+// import {
+//   SetSoaCluster,
+//   RESET,
+//   GENERATE_SOA,
+// } from "../../../../../../services/redux/slices/commerce/pos/services/billing";
 import {
   SetSoaCluster,
   RESET,
   GENERATE_SOA,
-} from "../../../../../../services/redux/slices/commerce/pos/services/billing";
+} from "../../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import get from "../utils";
 import { RemoveVERIFIED_SOA } from "../../../../../../services/redux/slices/finance/journals/payables";
 
@@ -30,9 +35,8 @@ export default function Body() {
       cluster,
       formSubmitted,
       isSuccess,
-
-      vendor,
-    } = useSelector(({ billings }) => billings),
+      vendor = {},
+    } = useSelector(({ onBoardings }) => onBoardings),
     [soa, setSoa] = useState([]),
     [activeId, setActiveId] = useState(-1),
     [didHoverId, setDidHoverId] = useState(-1),
@@ -82,13 +86,15 @@ export default function Body() {
   const canGenerateSOA = s?.amount === get.totalAmount(cluster);
 
   const handleGenerateSOA = () => {
-    const dealIDS = cluster.flatMap(({ deals }) => deals.map(({ _id }) => _id));
-    dispatch(GENERATE_SOA({ token, data: { dealIDS, bill: s._id } })).then(
-      ({ payload }) => {
-        const { payload: data } = payload;
-        dispatch(RemoveVERIFIED_SOA(data.bill));
-      }
+    const onboardingIDS = cluster.flatMap(({ deals }) =>
+      deals.map(({ _id }) => _id)
     );
+    dispatch(
+      GENERATE_SOA({ token, data: { onboardingIDS, bill: s._id } })
+    ).then(({ payload }) => {
+      const { payload: data } = payload;
+      dispatch(RemoveVERIFIED_SOA(data.bill));
+    });
   };
   return (
     <MDBContainer style={{ minHeight: "300px" }} fluid>

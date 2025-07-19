@@ -25,8 +25,6 @@ export default function Modal({ show, selected, toggle }) {
     if (filtered.length > 0) {
       const amount =
         filtered?.reduce((sum, voucher) => sum + voucher.amount, 0) || 0;
-      console.log("filtered", filtered);
-      console.log("amount", amount);
 
       setExpenses(amount);
     }
@@ -186,7 +184,7 @@ export default function Modal({ show, selected, toggle }) {
           { label: "Expenses", value: expenses, cn: "text-danger" },
         ]
           .filter(({ value }) => value > 0)
-          .map(({ label, value, cn, title = "" }, idx) => (
+          .map(({ label, value, cn }, idx) => (
             <div
               className="d-flex align-items-center justify-content-between "
               key={idx}

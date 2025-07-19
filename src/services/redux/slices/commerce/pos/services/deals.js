@@ -1055,7 +1055,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(CASHIER.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        state.collections = payload;
+        state.collections = state.filtered = payload;
         state.totalPages = payload.length;
         state.isLoading = false;
       })

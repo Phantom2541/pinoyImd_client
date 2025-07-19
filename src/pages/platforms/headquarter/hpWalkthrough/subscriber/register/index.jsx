@@ -24,6 +24,8 @@ import IMG3 from "./../../../../../../assets/homePatient.jpg";
 import REGISTRATIONIMG from "./../../../../../../assets/homePageRegistrationImg.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import EditableField from "../../../../../../components/customizable/editableField";
+import ImageDragAndDrop from "../../../../../templates/imageDragAndDrop/dragNdroping";
 
 const slides = [
   {
@@ -55,6 +57,7 @@ export default function Register({ handleFlip, flipped }) {
     password: true,
     confirmPassword: true,
   });
+  const [savedImage, setSavedImage] = useState(null);
 
   const { message, isLoading, isSuccess } = useSelector(({ users }) => users);
   const [suffix, setSuffix] = useState("NONE");
@@ -94,6 +97,10 @@ export default function Register({ handleFlip, flipped }) {
     }
   }, [isSuccess]);
 
+  const handleImageChange = (file, imageUrl) => {
+    setSavedImage(imageUrl);
+  };
+
   return (
     <MDBAnimation reveal type="fadeIn" duration="1000ms">
       <div className="subscriber-register-section">
@@ -105,7 +112,7 @@ export default function Register({ handleFlip, flipped }) {
           <div className="subscriber-flip-card">
             <div className="subscriber-flip-card-front">
               <Carousel
-                autoPlay
+                // autoPlay
                 infiniteLoop
                 showThumbs={false}
                 showStatus={false}
@@ -115,12 +122,37 @@ export default function Register({ handleFlip, flipped }) {
                   <div className="subscriber-slide-style" key={i}>
                     <div className="subscriber-slide-content">
                       <div className="subscriber-text-container-style">
-                        <h1>{slide.title}</h1>
-                        <h5>{slide.subtitle}</h5>
-                        <p>"{slide.description}"</p>
+                        <EditableField
+                          classNameTxt="subscriber-editable-title"
+                          fieldData={{ _id: "title", title: slide.title }}
+                          keyForValue="title"
+                          // onSave={(value) => console.log("title", value)}
+                        />
+                        <EditableField
+                          classNameTxt="subscriber-editable-subtitle"
+                          fieldData={{
+                            _id: "subtitle",
+                            subtitle: slide.subtitle,
+                          }}
+                          keyForValue="subtitle"
+                          // onSave={(value) => console.log("title", value)}
+                        />
+                        <EditableField
+                          classNameTxt="subscriber-editable-description"
+                          fieldData={{
+                            _id: "description",
+                            description: `"${slide.description}"`,
+                          }}
+                          keyForValue="description"
+                          // onSave={(value) => console.log("title", value)}
+                        />
                       </div>
                       <div className="subscriber-image-container-style">
-                        <img src={slide.image} alt={`Slide ${i + 1}`} />
+                        {/* <img src={slide.image} alt={`Slide ${i + 1}`} /> */}
+                        <ImageDragAndDrop
+                          img={slide.image}
+                          savedImg={handleImageChange}
+                        />
                       </div>
                     </div>
                   </div>

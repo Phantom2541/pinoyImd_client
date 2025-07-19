@@ -30,7 +30,7 @@ const PinoyIMDInfo = () => {
               </p>
               <ul>
                 <li>✅ Online Consultation</li>
-                <li>✅ Electronic Medical Records</li>
+                <li>✅ Electronic Health Records</li>
                 <li>✅ Health Monitoring Tools</li>
                 <li>✅ Secure Patient-Doctor Interaction</li>
               </ul>

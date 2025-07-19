@@ -5,6 +5,7 @@
 }
 
 .subscriber-partners-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -22,10 +23,10 @@
   transition: filter 0.3s ease;
 }
 
-/* Except the image being hovered */
-.subscriber-partners-image:hover {
+/* Unblur ang image kapag naka-hover sa buong container (img + delete button) */
+.subscriber-partners-container:hover .subscriber-partners-image {
   filter: blur(0px) !important;
-  scale: 1.1;
+  transform: scale(1.1);
 }
 
 .subscriber-partners-container span {
@@ -41,6 +42,26 @@
   user-select: none;
   -webkit-user-select: none;
   transition: scale 0.3s ease;
+}
+
+.subscriber-partners-deleteBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  color: white;
+  width: 35px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.subscriber-partners-container:hover .subscriber-partners-deleteBtn {
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.4);
+  opacity: 1;
 }
 
 .subscriber-partners-imageAll-container {

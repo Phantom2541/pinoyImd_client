@@ -25,6 +25,7 @@ export default function Payables() {
           key: {
             clients: activePlatform?.branchId,
             category: ["expenses"], // utilities", "suppliers
+            status: "approved",
           },
         })
       );

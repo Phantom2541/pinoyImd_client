@@ -216,6 +216,26 @@ export const reduxSlice = createSlice({
     ToggleDidSearch: (state, { payload }) => {
       state.didSearch = payload;
     },
+    ADD_AFFILIATED: (state, { payload }) => {
+      // this  function is used  in the cashier pos to add a new physician
+      const register = payload;
+      const fakeDB = localStorage.getItem("activePlatform");
+      if (fakeDB) {
+        const { branchId } = JSON.parse(fakeDB);
+        const sourcesFakeDB = localStorage.getItem(`source_${branchId}`);
+
+        if (sourcesFakeDB && register.isRegister && register?.source?._id) {
+          //to update the source and add a new physician register
+          const sources = JSON.parse(sourcesFakeDB);
+          const index = sources.findIndex(
+            (source) => source._id === register?.source?._id
+          );
+          sources[index]?.clients?.affiliated?.unshift(register?.physician);
+          state.collections = sources;
+          localStorage.setItem(`source_${branchId}`, JSON.stringify(sources));
+        }
+      }
+    },
     SetSOURCE: (state, { payload }) => {
       state.selected = payload;
       state.showModal = true;
@@ -603,6 +623,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  ADD_AFFILIATED,
   SetSELECTED,
   SetCREATE,
   SetFILTER,

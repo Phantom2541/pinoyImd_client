@@ -20,6 +20,8 @@ import { removeUndefinedValues } from "../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { SetPrinting } from "../../../../../../../services/redux/slices/commerce/pos/services/deals";
 import Spinner from "../../../../../../../components/spinner";
+import { ADD_AFFILIATED } from "../../../../../../../services/redux/slices/assets/providers";
+import { ADD_PHYSICIAN } from "../../../../../../../services/redux/slices/assets/persons/physicians";
 
 export default function Summary() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -124,10 +126,19 @@ export default function Summary() {
     selected = removeUndefinedValues(selected);
 
     try {
-      await dispatch(SAVE({ token, data: selected })).then(({ payload }) => {
-        selected._id = payload.payload._id;
-        dispatch(SetPrinting({ status: true, selected }));
-      }); // Ensure save completes before proceeding
+      await dispatch(SAVE({ token, data: selected })).then(
+        ({ payload: data }) => {
+          const { payload, register } = data;
+          selected._id = payload._id;
+
+          dispatch(SetPrinting({ status: true, selected }));
+          if (register.isRegister) {
+            dispatch(ADD_AFFILIATED(register));
+            dispatch(ADD_PHYSICIAN(register.physician));
+          }
+        }
+      );
+
       dispatch(SETCART());
       addToast("Transaction completed successfully", { appearance: "info" });
     } catch (error) {

@@ -6,8 +6,8 @@ const util = {
     return particular?._id
       ? fullName(particular.fullName)
       : vendors?._id
-      ? `${vendors?.name} - ${vendors?.subname}`
-      : `${supplier?.displayname || supplier?.name}`;
+      ? `${vendors?.name || vendors?.displayname}`
+      : `${supplier?.name || supplier?.displayname}`;
   },
 };
 

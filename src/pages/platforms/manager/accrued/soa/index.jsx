@@ -10,7 +10,7 @@ import Body from "./collapse";
 import Footer from "./footer";
 const Statements = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { isLoading, month, year } = useSelector(({ deals }) => deals),
+    { isLoading, month, year } = useSelector(({ onBoardings }) => onBoardings),
     { isSuccess = false, message = "" } = useSelector(
       ({ billings }) => billings
     ),

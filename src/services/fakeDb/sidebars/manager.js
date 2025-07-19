@@ -164,7 +164,7 @@ const ManagerSidebar = [
     children: [
       // mga pa-utang
       {
-        name: "SOA Generator (vouchers)",
+        name: "S O A Generator (vouchers)",
         title:
           "Generate Statements of Account for HMO, Contract, and Membership Clients",
         path: "/vouchers",
@@ -172,7 +172,7 @@ const ManagerSidebar = [
         component: Vouchers,
       },
       {
-        name: "SOA Records",
+        name: "S O A Records",
         title: "View and track all generated Statements of Account",
         path: "/soa",
         icon: "folder-open",
