@@ -11,6 +11,8 @@ import {
 import { Quotes } from "../../../../../../services/fakeDb";
 import DEFAULT from "../../../../../../assets/iMD.png";
 import { MDBAnimation } from "mdbreact";
+import ImageDragAndDrop from "../../../../../templates/imageDragAndDrop/dragNdroping";
+import EditableField from "../../../../../../components/customizable/editableField";
 
 export default function Doctors() {
   const { details } = useSelector(({ companies }) => companies);
@@ -57,7 +59,7 @@ export default function Doctors() {
           className="subscriber-doctors-carousel-container"
         >
           <Carousel
-            autoPlay
+            // autoPlay
             infiniteLoop
             emulateTouch
             showThumbs={false}
@@ -79,7 +81,10 @@ export default function Doctors() {
                   key={`${_id}-${index}`}
                 >
                   <div className="subscriber-doctors-homeimageContainerStyle">
-                    <img
+                    <ImageDragAndDrop
+                      img={`${ENDPOINT}/public/companies/${details?.name}/physicians/${user?.email}/corporate.png`}
+                    />
+                    {/* <img
                       src={`${ENDPOINT}/public/companies/${details?.name}/physicians/${user?.email}/corporate.png`}
                       alt={physician?.name}
                       className="subscriber-doctors-homeimageStyle"
@@ -87,13 +92,47 @@ export default function Doctors() {
                         e.target.src = DEFAULT;
                         e.target.classList.add("default");
                       }}
-                    />
+                    /> */}
                   </div>
                   <div className="subscriber-doctors-hometextContainerStyle">
-                    <h1>Dr. {fullName(user?.fullName)}</h1>
-                    <h5>{specialization || "General Medicine"}</h5>
-                    <p>{Quotes.getQuote(quote)}</p>
-                    <h6>- {billingAddress(branch?.address, false)}</h6>
+                    <EditableField
+                      classNameTxt="subscriber-doctors-fullName"
+                      fieldData={{
+                        _id: "fullName",
+                        fullName: `Dr. ${fullName(user?.fullName)}`,
+                      }}
+                      keyForValue="fullName"
+                    />
+                    <EditableField
+                      classNameTxt="subscriber-doctors-specialization"
+                      fieldData={{
+                        _id: "specialization",
+                        specialization: `${
+                          specialization || "General Medicine"
+                        }`,
+                      }}
+                      keyForValue="specialization"
+                    />
+                    <EditableField
+                      classNameTxt="subscriber-doctors-quote"
+                      fieldData={{
+                        _id: "quote",
+                        quote: Quotes.getQuote(quote),
+                      }}
+                      keyForValue="quote"
+                    />
+                    <EditableField
+                      classNameTxt="subscriber-doctors-address"
+                      fieldData={{
+                        _id: "address",
+                        address: billingAddress(branch?.address, false),
+                      }}
+                      keyForValue="address"
+                    />
+                    {/* <h1>Dr. {fullName(user?.fullName)}</h1> */}
+                    {/* <h5>{specialization || "General Medicine"}</h5> */}
+                    {/* <p>{Quotes.getQuote(quote)}</p> */}
+                    {/* <h6>- {billingAddress(branch?.address, false)}</h6> */}
                   </div>
                 </div>
               );
