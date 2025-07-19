@@ -25,7 +25,7 @@ import {
   fullName,
   getAge,
 } from "../../../../../../../../../../services/utilities";
-import ImgMagnifier from "../../../../../../../../../../components/imageMagnifier";
+import { ImageMagnifier } from "../../../../../../../../../../components/images";
 import Spinner from "../../../../../../../../../../components/spinner";
 import { useToasts } from "react-toast-notifications";
 
@@ -55,7 +55,7 @@ export default function Translate() {
       toggle();
       dispatch(RESET());
     }
-  }, [formSubmitted, isSuccess, show, toggle, dispatch]);
+  }, [formSubmitted, isSuccess, show, toggle, dispatch, addToast]);
 
   useEffect(() => {
     if (show) {
@@ -84,7 +84,7 @@ export default function Translate() {
 
       setMatchMenus(_matchMenus);
     }
-  }, [show, menus]);
+  }, [show, menus, selected]);
 
   const handleRemovedToCart = (_id) => {
     const _cart = [...cart];
@@ -157,7 +157,7 @@ export default function Translate() {
             handleRemovedToCart={handleRemovedToCart}
           />
           <MDBCol>
-            <ImgMagnifier
+            <ImageMagnifier
               src={`${ENDPOINT}/public/users/${pid.email}/booking/form-${schedule}.png`}
             />
           </MDBCol>
