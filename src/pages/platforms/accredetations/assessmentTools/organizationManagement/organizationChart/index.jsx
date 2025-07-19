@@ -4,6 +4,9 @@ import "./style.css";
 import OrgNode from "./orgNode";
 import OrgStorage from "./orgStorage";
 import PROFILE from "./../../../../../../assets/female.jpg";
+import { Policy } from "../../../../../../services/fakeDb";
+import { useDispatch, useSelector } from "react-redux";
+import { BROWSE } from "../../../../../../services/redux/slices/assets/persons/personnels";
 
 // ✅ Build tree with only one root node
 function buildTree(flatData) {
@@ -29,11 +32,38 @@ function buildTree(flatData) {
 }
 
 export default function OrganizationChart() {
+  const { activePlatform, token } = useSelector(({ auth }) => auth);
   const containerRef = useRef(null);
   const [dragging, setDragging] = useState(false);
   const [start, setStart] = useState({ x: 0, y: 0 });
   const [scroll, setScroll] = useState({ left: 0, top: 0 });
   const [data, setData] = useState(flatOrgData);
+  const dispatch = useDispatch();
+
+  console.log("policy", Policy.collections);
+
+  useEffect(() => {
+    dispatch(BROWSE({ token, branchId: activePlatform.branchId })).then(
+      (action) => {
+        if (action.type === "assets/persons/personnels/fulfilled") {
+          const { payload } = action.payload;
+
+          // Get all designation IDs under the Laboratory department
+          const labPositionIds =
+            Policy.getPositionsByDepartmentName("Laboratory")?.map(
+              (pos) => pos.id
+            ) || [];
+
+          // Filter personnel assigned to Laboratory positions
+          const _personnel = payload?.filter(({ contract }) =>
+            labPositionIds.includes(Number(contract?.designation))
+          );
+
+          console.log("_personnel (Laboratory only)", _personnel);
+        }
+      }
+    );
+  }, [token, activePlatform, dispatch]);
 
   const handleMouseDown = (e) => {
     const box = e.target.closest(".orgChart-box");

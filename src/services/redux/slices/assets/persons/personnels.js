@@ -210,6 +210,19 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   }
 });
 
+export const DESTROY = createAsyncThunk(`${url}/destroy`, (form, thunkAPI) => {
+  try {
+    return axioKit.destroy(url, form.data, form.token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const APPLICATION = createAsyncThunk(
   `${url}/application`,
   ({ data, token }, thunkAPI) => {
