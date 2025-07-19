@@ -23,7 +23,7 @@ const collections = [
   },
   {
     image: LIS,
-    title: "Electronic Medical Records (EMR)",
+    title: "Electronic Health Records (eHR)",
     description:
       "EMR allows healthcare providers to securely access, update, and share patient records in real time, ensuring continuity of care, faster decision-making, and data-driven healthcare delivery.",
   },
@@ -50,6 +50,12 @@ const collections = [
     title: "Inventory Management",
     description:
       "Pinoy iMD’s inventory system helps clinics and pharmacies manage medical supplies, track stock levels in real time, reduce wastage, and ensure essential resources are always available when needed.",
+  },
+  {
+    image: LIS,
+    title: "Hospital Information Management System",
+    description:
+      "Pinoy iMD’s HIMS streamlines hospital operations, from patient admission to discharge, ensuring efficient and accurate patient care management.",
   },
 ];
 

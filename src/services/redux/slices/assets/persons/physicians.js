@@ -11,6 +11,7 @@ const initialState = {
   formSubmitted: false,
   message: "",
   showModal: false,
+  closeModal: false,
   willCreate: false,
   details: {}, //this is for subscriber home page
   selected: {},
@@ -143,6 +144,7 @@ export const reduxSlice = createSlice({
     },
     SETPHYSICIAN: (state, { payload }) => {
       state.selected = payload;
+
       state.selectedId = payload?._id;
       const full = payload?.fullName || {};
       state.displayName = `${full.lname || ""}, ${full.fname || ""}${
@@ -162,6 +164,8 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
       state.selected = {};
+      state.closeModal = !state.closeModal;
+      console.log("toggle", state.closeModal);
     },
     SetCREATE: (state) => {
       state.selected = {
@@ -254,6 +258,7 @@ export const reduxSlice = createSlice({
         }
         state.collections = payload;
         state.filtered = payload;
+        console.log("payload", payload);
 
         state.isLoading = false;
       })

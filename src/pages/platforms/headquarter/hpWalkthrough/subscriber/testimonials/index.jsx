@@ -4,7 +4,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import AVATAR from "./../../../../../../assets/male.jpg";
-import { MDBAnimation } from "mdbreact";
+import { MDBAnimation, MDBIcon } from "mdbreact";
+import EditableField from "../../../../../../components/customizable/editableField";
 
 const testimonials = [
   {
@@ -151,6 +152,12 @@ export default function Testimonials() {
     setHover(0);
   };
 
+  const testimonialsTxt = {
+    title: "We believe in the power of community",
+    description:
+      " Our goal is to create a product and service that you're satisfied with and use every day. This is why we're constantly working on our services to make them better and really listen to what our users have to say.",
+  };
+
   const displayValue = hover || rating;
   return (
     <>
@@ -163,13 +170,24 @@ export default function Testimonials() {
             type="slideInLeft"
             className="subscriber-testimonials-text"
           >
-            <h1>We believe in the power of community</h1>
-            <p>
-              Our goal is to create a product and service that you're satisfied
-              with and use every day. This is why we're constantly working on
-              our services to make them better and really listen to what our
-              users have to say.
-            </p>
+            <EditableField
+              classNameTxt="subscriber-testimonials-title"
+              fieldData={{
+                _id: "title",
+                title: testimonialsTxt.title,
+              }}
+              keyForValue="title"
+            />
+            <EditableField
+              classNameTxt="subscriber-testimonials-description"
+              fieldData={{
+                _id: "description",
+                description: testimonialsTxt.description,
+              }}
+              keyForValue="description"
+            />
+            {/* <h1>{testimonialsTxt.title}</h1>
+            <p>{testimonialsTxt.description}</p> */}
           </MDBAnimation>
 
           <div className="subscriber-testimonials-sliderContainer-responsive">
@@ -230,6 +248,9 @@ export default function Testimonials() {
                           - {t.name}
                         </span>
                       </div>
+                      <button className="subscriber-testimonials-review-deleteBtn bg-danger">
+                        <MDBIcon icon="trash" />
+                      </button>
                     </div>
                   </SwiperSlide>
                 ))}
@@ -249,10 +270,10 @@ export default function Testimonials() {
                 speed={5000}
                 autoplay={{
                   delay: 0,
-                  disableOnInteraction: false,
-                  pauseOnMouseEnter: false,
+                  disableOnInteraction: true,
+                  pauseOnMouseEnter: true,
                 }}
-                allowTouchMove={false}
+                allowTouchMove={true}
                 spaceBetween={0}
                 slidesPerView={4}
                 style={{ height: "600px" }}
@@ -294,6 +315,9 @@ export default function Testimonials() {
                           - {t.name}
                         </span>
                       </div>
+                      <button className="subscriber-testimonials-review-deleteBtn bg-danger">
+                        <MDBIcon icon="trash" />
+                      </button>
                     </div>
                   </SwiperSlide>
                 ))}

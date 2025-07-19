@@ -21,6 +21,7 @@ import {
   LatitudeAddress,
   mobile,
 } from "../../../../../../services/utilities";
+import EditableField from "../../../../../../components/customizable/editableField";
 
 // Fix Leaflet default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -132,7 +133,15 @@ export default function ContactUs() {
             />
             <span>{details?.name}</span>
           </div>
-          <span className="contactUs-quote">"{details?.tagline}"</span>
+          <EditableField
+            classNameTxt="subscriber-contactUs-quote"
+            fieldData={{
+              _id: "tagline",
+              tagline: `"${details?.tagline}"`,
+            }}
+            keyForValue="tagline"
+          />
+          {/* <span className="contactUs-quote">"{details?.tagline}"</span> */}
           <div className="subscriber-contactUs-address">
             <MDBIcon fas icon="map-marker-alt" />
             <span onClick={() => handleBranchClick({ address })}>
@@ -141,11 +150,27 @@ export default function ContactUs() {
           </div>
           <div className="subscriber-contactUs-email">
             <MDBIcon fas icon="envelope" />
-            <span> {contacts?.email}</span>
+            <EditableField
+              classNameTxt="subscriber-contactUs-emailTxt"
+              fieldData={{
+                _id: "email",
+                email: contacts?.email,
+              }}
+              keyForValue="email"
+            />
+            {/* <span> {contacts?.email}</span> */}
           </div>
           <div className="subscriber-contactUs-phone">
             <MDBIcon fas icon="phone-alt" />
-            <span> {mobile(contacts?.mobile)}</span>
+            <EditableField
+              classNameTxt="subscriber-contactUs-mobileTxt"
+              fieldData={{
+                _id: "mobile",
+                mobile: mobile(contacts?.mobile),
+              }}
+              keyForValue="mobile"
+            />
+            {/* <span> {mobile(contacts?.mobile)}</span> */}
           </div>
         </MDBAnimation>
         <MDBAnimation
@@ -156,7 +181,21 @@ export default function ContactUs() {
           className="subscriber-contactUs-middleSide"
         >
           <div className="subscriber-contactUs-branches-container">
-            <p>Branches</p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                marginBottom: "20px",
+              }}
+            >
+              <span className="subscriber-contactUs-branch-title">
+                Branches
+              </span>
+              <button className="subscriber-contactUs-addBranch bg-primary">
+                <MDBIcon icon="plus" />
+              </button>
+            </div>
             <div className="subscriber-contactUs-branches">
               {branches.map((branch, index) => {
                 const { name, contacts = {} } = branch;
@@ -171,15 +210,46 @@ export default function ContactUs() {
                         title="Click to view location on the map"
                         onClick={() => handleBranchClick(branch)}
                       >
-                        {name}
+                        <EditableField
+                          classNameTxt="subscriber-contactUs-branch-nameTxt"
+                          fieldData={{
+                            _id: "name",
+                            name: name,
+                          }}
+                          keyForValue="name"
+                        />
                       </span>
 
                       <i className="fas fa-chevron-right subscriber-contactUs-arrow subscriber-contactUs-main"></i>
                     </div>
                     <div className="subscriber-contactUs-branchInfo">
-                      <span>{contacts?.person}</span>
+                      <EditableField
+                        classNameTxt="subscriber-contactUs-branchInfo-person"
+                        fieldData={{
+                          _id: "person",
+                          person: contacts?.person,
+                        }}
+                        keyForValue="person"
+                      />
+                      <EditableField
+                        classNameTxt="subscriber-contactUs-branchInfo-mobile"
+                        fieldData={{
+                          _id: "mobile",
+                          mobile: mobile(contacts?.mobile),
+                        }}
+                        keyForValue="mobile"
+                      />
+                      <EditableField
+                        classNameTxt="subscriber-contactUs-branchInfo-email"
+                        fieldData={{
+                          _id: "email",
+                          email: contacts?.email,
+                        }}
+                        keyForValue="email"
+                      />
+                      {/* <span>{contacts?.person}</span>
                       <span>{mobile(contacts?.mobile)}</span>
-                      <span>{contacts?.email}</span>
+                      <span>{contacts?.email}</span> */}
                     </div>
                   </div>
                 );
