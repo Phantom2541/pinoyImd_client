@@ -1,8 +1,10 @@
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fullName } from "../../../../../../services/utilities/index.js";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import Swal from "sweetalert2";
 
 const Tasks = ({ key, form, obj, index, customer }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
@@ -12,21 +14,16 @@ const Tasks = ({ key, form, obj, index, customer }) => {
   const handleLabPrint = (task) => {
     const services = collections.filter(({ id }) => task.services.includes(id));
     const taskData = { ...task, services };
-
-    // Store data in localStorage
     localStorage.setItem("taskPrintout", JSON.stringify(taskData));
-
-    // Construct the URL
     const URL = `${window.location.origin}/printout/laboratory/task`;
-    const title = `Laboratory Task Printout`;
     const features = "top=100px,left=100px,width=794px,height=1123px";
-
     setTimeout(() => {
-      const printWindow = window.open(URL, title, features);
-
+      const printWindow = window.open(
+        URL,
+        "Laboratory Task Printout",
+        features
+      );
       if (printWindow) {
-        console.log("Print window opened successfully.");
-        console.log("Print window location:", printWindow.location.href);
         printWindow.focus();
       } else {
         console.warn("Popup blocked or failed to open.");
@@ -42,6 +39,56 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       "Radiology Task Printout",
       "top=100px,left=100px,width=794px,height=1123px"
     );
+  };
+
+  const extractDriveFileId = (url) => {
+    try {
+      const regex = /[-\w]{25,}/;
+      const match = url.match(regex);
+      return match ? match[0] : null;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const previewDriveFile = async () => {
+    const { value: link } = await Swal.fire({
+      title: "Paste Google Drive Link",
+      input: "text",
+      inputLabel: "Google Drive File Link",
+      inputPlaceholder:
+        "e.g. https://drive.google.com/file/d/FILE_ID/view?usp=sharing",
+      showCancelButton: true,
+    });
+
+    if (link) {
+      const fileId = extractDriveFileId(link);
+      if (!fileId) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid Link",
+          text: "Could not extract File ID. Please check your link.",
+        });
+        return;
+      }
+
+      const previewLink = `https://drive.google.com/file/d/${fileId}/preview`;
+
+      Swal.fire({
+        title: "Google Drive Preview",
+        html: `
+          <iframe
+            src="${previewLink}"
+            width="100%"
+            height="400"
+            frameborder="0"
+            allow="autoplay"
+          ></iframe>
+        `,
+        width: 600,
+        showCloseButton: true,
+      });
+    }
   };
 
   const {
@@ -70,9 +117,7 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       "Parasitology",
       "Xray",
       "Ultrasound",
-    ].includes(form)
-      ? true
-      : false,
+    ].includes(form),
     hasDone,
     remarks,
   };
@@ -107,6 +152,15 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       <td>
         <MDBBtnGroup>
           <MDBBtn
+            color="dark"
+            size="sm"
+            className="py-1 px-2 m-0"
+            onClick={previewDriveFile}
+          >
+            <MDBIcon icon="eye" />
+          </MDBBtn>
+
+          <MDBBtn
             onClick={handleEntry}
             color={hasDone ? "info" : "primary"}
             size="sm"
@@ -114,6 +168,7 @@ const Tasks = ({ key, form, obj, index, customer }) => {
           >
             <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
           </MDBBtn>
+
           {!!signatories.length &&
             signatories[0] &&
             signatories[1] &&

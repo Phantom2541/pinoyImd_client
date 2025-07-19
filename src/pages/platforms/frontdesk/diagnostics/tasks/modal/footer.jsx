@@ -69,7 +69,6 @@ const Footer = () => {
     } else {
       dr = findPhysicianId(task.signatories[1]?._id);
     }
-    // console.log("dr", dr);
 
     const data = ["xray", "ultrasound", "miscellaneous"].includes(form)
       ? (() => {

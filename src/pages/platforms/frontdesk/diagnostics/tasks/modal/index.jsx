@@ -5,7 +5,6 @@ import Patient from "./patient";
 import { formColor } from "./../../../../../../services/utilities";
 import { TOGGLE } from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import BodySwitcher from "./bodySwitcher";
-
 import Footer from "./footer.jsx";
 export default function Modal() {
   const { selected, task, showModal } = useSelector(

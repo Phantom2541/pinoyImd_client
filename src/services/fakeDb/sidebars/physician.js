@@ -1,5 +1,8 @@
-// import Dashboard from "../../../pages/platforms/physician/dashboard";
-// import Appointments from "../../../pages/platforms/physician/appointments";
+import {
+  Dashboard,
+  Appointment,
+  Imaging,
+} from "../../../pages/platforms/physician";
 // import PatientRecords from "../../../pages/platforms/physician/patientRecords";
 // import MedicalHistory from "../../../pages/platforms/physician/medicalHistory";
 // import Prescription from "../../../pages/platforms/physician/prescription";
@@ -14,6 +17,7 @@ const physician = [
     icon: "tachometer-alt",
     path: "/physician/dashboard",
     title: "Main physician dashboard overview",
+    component: Dashboard,
   },
   {
     name: "Calendar of Activities",
@@ -32,6 +36,7 @@ const physician = [
         icon: "stethoscope",
         path: "/physician/appointments",
         title: "List of diagnostics appointments assigned to you",
+        component: Appointment,
       },
       {
         name: "Teleconsult",
@@ -50,6 +55,7 @@ const physician = [
         path: "/physician/diagnostics/imaging",
         icon: "x-ray",
         title: "View and interpret imaging such as X-ray, ECG, UTZ",
+        component: Imaging,
       },
     ],
   },
@@ -112,6 +118,28 @@ const physician = [
     title: "Refer patients to another specialist or department",
   },
   {
+    name: "Employees",
+    icon: "share-square",
+    path: "/Employees",
+    title: "Refer patients to another specialist or department",
+    children: [
+      {
+        name: "Staff",
+        title: "Active staff directory.",
+        path: "/staff",
+        icon: "user",
+        // component: Staffs,
+      },
+      {
+        name: "Applicants",
+        title: "Job applicants and interview status.",
+        path: "/petitioners",
+        icon: "user-plus",
+        // component: Applicants,
+      },
+    ],
+  },
+  {
     name: "Tasks & To-Do",
     icon: "tasks",
     path: "/physician/tasks",
@@ -125,7 +153,7 @@ const physician = [
       "Insights into your consultations, workload, and performance (Key Performance Indicators)",
   },
   {
-    name: "EHR Timeline",
+    name: "E H R Timeline",
     icon: "stream",
     path: "/physician/ehr-timeline",
     title:

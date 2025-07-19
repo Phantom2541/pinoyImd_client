@@ -4,6 +4,8 @@ import { get } from "lodash";
 import fullName from "../fullName";
 import { UPDATE_INFO } from "../../redux/slices/commerce/pos/services/deals";
 import Swal from "sweetalert2";
+import { ADD_AFFILIATED } from "../../redux/slices/assets/providers";
+import { ADD_PHYSICIAN } from "../../redux/slices/assets/persons/physicians";
 
 const Deals = {
   getPhysicians: (fk, sources) => {
@@ -115,7 +117,14 @@ const Deals = {
         },
         token,
       })
-    );
+    ).then((action) => {
+      const { register = {} } = action.payload;
+      if (register.isRegister) {
+        //this is for new physician
+        dispatch(ADD_AFFILIATED(register));
+        dispatch(ADD_PHYSICIAN(register.physician));
+      }
+    });
   },
 };
 

@@ -284,11 +284,11 @@ export const reduxSlice = createSlice({
         const { success, payload, dealForOnboard } = action.payload;
         const fakeDB = localStorage.getItem("activePlatform");
         if (fakeDB) {
-          //this is realtime send it to the onboarding
           const { department } = JSON.parse(fakeDB);
+          //this is realtime send it to the onboarding
           socket.emit("send_onboard", { ...dealForOnboard, department });
         }
-
+        state.sourceId = "";
         state.message = success;
         state.transaction = payload;
         state.ssx = "";
