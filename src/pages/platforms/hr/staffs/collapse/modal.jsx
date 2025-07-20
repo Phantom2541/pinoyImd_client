@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { MDBModal, MDBModalBody, MDBIcon, MDBModalHeader } from "mdbreact";
-import { Services } from "../../../../../../services/fakeDb";
-import DataTable from "../../../../../../components/dataTable";
-import { capitalize, globalSearch } from "../../../../../../services/utilities";
+import { Services } from "./../../../../../services/fakeDb";
+import DataTable from "./../../../../../components/dataTable";
+import { capitalize, globalSearch } from "./../../../../../services/utilities";
 
 export default function Modal({ show, toggle, handlePick }) {
   const [services, setServices] = useState([]);
