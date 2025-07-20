@@ -5,11 +5,9 @@ import { Employees } from "../../../pages/platforms/headquarter/file201";
 import { Staffs, Physicians } from "../../../pages/platforms/hr";
 import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
 import { Schedule } from "../../../pages/platforms/hr/dtr";
-import {
-  Services,
-  Menus,
-  Applicants,
-} from "../../../pages/platforms/manager/settings";
+import { Applicants } from "../../../pages/platforms/manager/settings";
+import { Services, Menus } from "../../../pages/platforms/accounting";
+
 const hr = [
   {
     name: "Dashboard",

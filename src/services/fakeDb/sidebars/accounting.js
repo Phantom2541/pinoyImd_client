@@ -9,6 +9,8 @@ import {
   Reseco,
   ClearancePay,
   Payrolls,
+  Menus,
+  Services,
 } from "../../../pages/platforms/accounting";
 
 const accounting = [
@@ -86,6 +88,27 @@ const accounting = [
         path: "/clearance-pay",
         icon: "file-export",
         component: ClearancePay,
+      },
+    ],
+  },
+  {
+    name: "Catalogs",
+    path: "/catalogs",
+    icon: "shopping-cart",
+    children: [
+      {
+        name: "Menus",
+        title: "Service menus and offerings.",
+        path: "/menus",
+        icon: "bars",
+        component: Menus,
+      },
+      {
+        name: "Services",
+        title: "List of medical and lab services.",
+        path: "/services",
+        icon: "concierge-bell",
+        component: Services,
       },
     ],
   },
