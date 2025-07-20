@@ -45,7 +45,7 @@ import {
   Payrolls,
 } from "../../../pages/platforms/accounting";
 
-import { Schedule } from "../../../pages/platforms/dtr";
+import { Schedule } from "../../../pages/platforms/hr";
 
 import {
   Philhealth,

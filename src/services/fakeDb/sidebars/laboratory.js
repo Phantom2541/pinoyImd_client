@@ -1,5 +1,5 @@
 import Bulletin from "../../../pages/platforms/cashier/bulletin";
-import { Calender, Scheduler } from "../../../pages/platforms/dtr";
+import { Calender, Scheduler } from "../../../pages/platforms/hr/dtr";
 import {
   Remittances,
   Sales,
