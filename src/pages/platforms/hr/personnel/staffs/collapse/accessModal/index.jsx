@@ -11,9 +11,9 @@ import {
   MDBModalFooter,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import { fullName } from "./../../../../../../services/utilities";
-import { Access } from "./../../../../../../services/fakeDb";
-import { UPDATE_ACCESS } from "./../../../../../../services/redux/slices/assets/persons/personnels";
+import { fullName } from "./../../../../../../../services/utilities";
+import { Access } from "./../../../../../../../services/fakeDb";
+import { UPDATE_ACCESS } from "./../../../../../../../services/redux/slices/assets/persons/personnels";
 import Table from "./table";
 
 /**

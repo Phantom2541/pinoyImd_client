@@ -17,7 +17,7 @@ import {
   Equipments,
   Physicians,
   Heads,
-} from "../../../pages/platforms/hr";
+} from "../../../pages/platforms/hr/index.js";
 import { Procurments } from "../../../pages/platforms/procurement";
 
 import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";

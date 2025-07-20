@@ -3,12 +3,12 @@ import { useDispatch } from "react-redux";
 import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
-import { Policy } from "./../../../../../services/fakeDb";
+import { Policy } from "./../../../../../../services/fakeDb";
 import AccessModal from "./accessModal";
 import {
   SETOnHotSEAT,
   DESTROY,
-} from "./../../../../../services/redux/slices/assets/persons/personnels";
+} from "./../../../../../../services/redux/slices/assets/persons/personnels";
 import Swal from "sweetalert2";
 
 function EditableField({
