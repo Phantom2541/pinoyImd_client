@@ -1,6 +1,6 @@
 import React from "react";
 
-import SIGNATURE from "./../../../../assets/templateSampleSignature.png";
+import SIGNATURE from "./../../../../../assets/templateSampleSignature.png";
 
 export default function Footer() {
   return (

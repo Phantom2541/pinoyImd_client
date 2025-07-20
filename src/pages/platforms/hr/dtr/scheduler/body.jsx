@@ -1,4 +1,3 @@
-import { MDBTable } from "mdbreact";
 import React from "react";
 
 const Body = () => {

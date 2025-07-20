@@ -4,11 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   BROWSE,
   RESET,
-} from "../../../../services/redux/slices/liability/payroll";
+} from "../../../../services/redux/slices/liability/liabilities"; //payroll
 
 import { MDBCard, MDBCardBody } from "mdbreact";
-// import Modal from "./modal";
-import CardTables from "./tables";
 import TopHeader from "../../../../components/header/body";
 import Pagination from "../../../../components/pagination";
 import TableRowCount from "../../../../components/pagination/rows";
@@ -20,13 +18,9 @@ export default function Payroll() {
     { activePlatform } = auth,
     { collections, isLoading } = useSelector(({ payrolls }) => payrolls),
     [page, setPage] = useState(1),
-    [totalPages, setTotalPages] = useState(1),
-    [showModal, setShowModal] = useState(false),
-    [selected, setSelected] = useState({}),
-    [willCreate, setWillCreate] = useState(true),
     dispatch = useDispatch();
 
-  //  console.log(payrolls);
+  console.log(payrolls);
   //Initial Browse
   useEffect(() => {
     if (token) dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
@@ -40,42 +34,18 @@ export default function Payroll() {
     setPayrolls(collections);
   }, [collections]);
 
-  // for modal
-  const toggleModal = () => setShowModal(!showModal);
-
-  // for update
-  const handleUpdate = (selected) => {
-    setSelected(selected);
-    setWillCreate(false);
-    setShowModal(true);
-  };
-
-  // for create
-  const handleCreate = () => {
-    setWillCreate(true);
-    setShowModal(true);
-  };
-
   return (
     <>
       <MDBCard narrow className="pb-3">
         <TopHeader title="Company Source" />
 
         <MDBCardBody>
-          <CardTables
-            payrolls={payrolls}
-            page={page}
-            setSelected={setSelected}
-            setWillCreate={setWillCreate}
-            setShowModal={setShowModal}
-          />
-
           <div className="d-flex justify-content-between align-items-center px-4">
             <TableRowCount />
 
             <Pagination
               isLoading={isLoading}
-              total={totalPages}
+              // total={totalPages}
               page={page}
               setPage={setPage}
             />

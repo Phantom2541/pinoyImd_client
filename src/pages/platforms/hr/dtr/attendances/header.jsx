@@ -5,8 +5,8 @@ import {
   BROWSE,
   SetMONTH,
   ResetDATE,
-} from "../../../../services/redux/slices/market/attendances";
-import CalendarPicker from "../../../../components/header/calendars";
+} from "../../../../../services/redux/slices/market/attendances";
+import CalendarPicker from "../../../../../components/header/calendars";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);

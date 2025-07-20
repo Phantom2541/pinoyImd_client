@@ -13,7 +13,7 @@ import Profile from "../components/profile";
 import Contract from "../components/contract";
 
 import { useSelector } from "react-redux";
-import { Attendances } from "./platforms/dtr";
+import { Attendances } from "./platforms/hr";
 
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);

@@ -1,5 +1,5 @@
-import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
-import TableLoading from "../../../../components/tableLoading";
+import { MDBAnimation, MDBCard } from "mdbreact";
+import TableLoading from "../../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./body";
 import Legend from "./legend";
