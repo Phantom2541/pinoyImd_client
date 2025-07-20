@@ -133,14 +133,15 @@ const Stub = ({ sale, companyId }) => {
         </tbody>
       </MDBTable>
       <Hr />
-      <Text title="Total" value={currency.format(amount)} />
+      <Text title="Total" value={currency.format(amount + discount)} />
+      <Text title="Discount" value={currency.format(discount)} />
+      <Text title="Subtotal" value={currency.format(amount)} />
       <Text
-        title={capitalize(payment)}
+        title={capitalize(payment === "cash" ? "Tendered" : payment)}
         value={
           payment === "cash" ? currency.format(cash) : currency.format(amount)
         }
       />
-      <Text title="Discount" value={currency.format(discount)} />
       {payment === "cash" && (
         <Text title="Change" value={currency.format(cash - amount)} />
       )}

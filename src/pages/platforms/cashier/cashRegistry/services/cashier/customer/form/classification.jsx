@@ -153,7 +153,7 @@ export default function PosCard() {
     dispatch(SETSOURCE({ _id: clients?._id, membership, contract }));
   };
   const handlePhysician = (physician) => dispatch(SETPHYSICIAN({ physician }));
-  console.log("source", source);
+
   return (
     <>
       <div>
@@ -213,7 +213,6 @@ export default function PosCard() {
           <span>Source</span>
           <select
             disabled={!didSelect}
-            value={sourceId}
             onChange={({ target }) => handleSource(target.value)}
           >
             <option value="">None</option>
@@ -249,7 +248,7 @@ export default function PosCard() {
               </MDBBadge>
             </span>
           )}
-          {category === 8 && (
+          {category === 8 && sourceId && (
             <span>
               Contract :
               <MDBBadge

@@ -42,5 +42,5 @@ select.custom-select-disabled {
   animation: zoomInEditableSelect 0.3s ease-out;
   display: inline-block;
   transform-origin: left;
-  z-index: 2;
+  z-index: 5;
 }
