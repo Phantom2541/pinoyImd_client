@@ -1,7 +1,7 @@
 import { MDBModal, MDBModalBody, MDBModalHeader } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { ToggleViewCredential } from "../../../../../../services/redux/slices/assets/persons/applicants";
-import { ENDPOINT, fullName } from "../../../../../../services/utilities";
+import { ToggleViewCredential } from "../../../../../services/redux/slices/assets/persons/applicants";
+import { ENDPOINT, fullName } from "../../../../../services/utilities";
 
 const types = {
   AppLetter: "Application Letter",

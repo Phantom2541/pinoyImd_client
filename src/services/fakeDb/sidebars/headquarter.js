@@ -25,7 +25,7 @@ import {
   Description,
 } from "../../../pages/platforms/headquarter/settings";
 
-import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
+import ProcurmentEquipments from "../../../pages/platforms/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
 import PatientCategories from "../../../pages/platforms/headquarter/patientCategories";
 import Dashboard from "../../../pages/platforms/headquarter/dashboard";

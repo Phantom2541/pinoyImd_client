@@ -3,13 +3,14 @@ import Dashboard from "../../../pages/platforms/hr/dashboard";
 import Payrolls from "../../../pages/platforms/accounting/payroll";
 import { Employees } from "../../../pages/platforms/headquarter/file201";
 import { Staffs, Physicians } from "../../../pages/platforms/hr";
-import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
+import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
 import { Schedule } from "../../../pages/platforms/hr/dtr";
 import {
   Services,
   Menus,
   Applicants,
 } from "../../../pages/platforms/manager/settings";
+import OrgChart from "../../../pages/platforms/hr/organizationChart";
 const hr = [
   {
     name: "Dashboard",
@@ -70,6 +71,13 @@ const hr = [
         path: "/stockHolder",
         icon: "user-tie",
         component: stockHolder,
+      },
+      {
+        name: "Org Chart",
+        title: "Organization Chart",
+        path: "/organizationChart",
+        icon: "user-tie",
+        component: OrgChart,
       },
     ],
   },
