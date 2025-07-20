@@ -7,16 +7,16 @@ import { Schedule } from "../../../pages/platforms/hr/dtr";
 import { Applicants } from "../../../pages/platforms/manager/settings";
 import { Services, Menus } from "../../../pages/platforms/accounting";
 
-const hr = [
+const human_resources = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/hr/bulletin",
+    path: "/bulletin",
     component: Dashboard,
   },
   {
     name: "Employees",
-    path: "/file",
+    path: "/employees",
     icon: "tv",
     children: [
       {
@@ -73,7 +73,7 @@ const hr = [
         title: "Organization Chart",
         path: "/organizationChart",
         icon: "user-tie",
-        component: OrgChart,
+        // component: OrgChart,
       },
     ],
   },
@@ -121,4 +121,4 @@ const hr = [
   },
 ];
 
-export default hr;
+export default human_resources;
