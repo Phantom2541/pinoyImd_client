@@ -1,5 +1,5 @@
 import { Schedule, Attendances, Calender, Scheduler } from "./dtr";
-export { default as Applicants } from "../headquarter/file201/applicants";
+export { default as Applicants } from "./applicants";
 export { default as Equipments } from "../headquarter/file201/equipments";
 export { default as Heads } from "../headquarter/personnel/heads";
 export { default as Physicians } from "../headquarter/personnel/physicians";
