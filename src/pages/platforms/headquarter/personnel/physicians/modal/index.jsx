@@ -13,7 +13,6 @@ import {
   UPDATE,
   TOGGLE,
   SETPHYSICIAN,
-  TIEUPS,
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
@@ -22,7 +21,7 @@ import { SearchUser } from "../../../../../../components/searchables";
 export default function Modal() {
   const { showModal, selected, willCreate, isLoading, displayName } =
       useSelector(({ physicians }) => physicians),
-    { token, auth, activePlatform } = useSelector(({ auth }) => auth),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
     [showInputFields, setShowInputFields] = useState(false),
     { addToast } = useToasts(),
@@ -30,10 +29,6 @@ export default function Modal() {
 
   useEffect(() => {
     if (selected && Object.keys(selected).length > 0) {
-      const full = selected?.fullname || {};
-      const fullName = `${full.lname || ""}, ${full.fname || ""}${
-        full.mname ? " " + full.mname : ""
-      }`;
       setForm({
         ...selected,
         fullName: displayName || "",
@@ -43,7 +38,7 @@ export default function Modal() {
       setForm({});
       setShowInputFields(false);
     }
-  }, [selected]);
+  }, [selected, displayName]);
 
   const splitFullName = (fullName) => {
     if (!fullName.includes(",")) {
