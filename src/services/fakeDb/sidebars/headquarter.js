@@ -1,11 +1,14 @@
 import {
-  Equipments,
   Heads,
+  Applicants,
   Physicians,
-  Procurments as Procurement,
-  Staffs,
-  Hmo,
   Records,
+  Staffs,
+} from "../../../pages/platforms/hr";
+import {
+  Equipments,
+  Procurments as Procurement,
+  Hmo,
 } from "../../../pages/platforms/headquarter/file201";
 import { banner } from "../../../pages/platforms/headquarter/settings/profile";
 import {
@@ -22,9 +25,8 @@ import {
   Description,
 } from "../../../pages/platforms/headquarter/settings";
 
-import ProcurmentEquipments from "../../../pages/platforms/headquarter/procurement/equipments";
+import ProcurmentEquipments from "../../../pages/platforms/procurement/equipments";
 import { Branches } from "../../../pages/platforms/headquarter/humanResources";
-import Applicants from "../../../pages/platforms/headquarter/settings/personnels/applicants";
 import PatientCategories from "../../../pages/platforms/headquarter/patientCategories";
 import Dashboard from "../../../pages/platforms/headquarter/dashboard";
 import hpWalkthrough from "../../../pages/platforms/headquarter/hpWalkthrough";

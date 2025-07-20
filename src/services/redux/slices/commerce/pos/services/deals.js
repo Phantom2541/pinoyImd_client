@@ -491,9 +491,9 @@ export const reduxSlice = createSlice({
     SetFilterByCASHIER: (state, { payload }) => {
       if (payload !== state.filterByCashier)
         if (payload === "all") {
-          state.filtered = state.collections;
+          state.refined = state.collections;
         } else {
-          state.filtered = state.collections.filter(
+          state.refined = state.collections.filter(
             ({ cashierId }) => cashierId._id.toString() === payload.toString()
           );
         }
@@ -501,7 +501,7 @@ export const reduxSlice = createSlice({
     },
 
     SetSORTING: (state, { payload: sortBy }) => {
-      const formattedDeals = [...state.collections].map((deal) => {
+      const formattedDeals = [...state.refined].map((deal) => {
         const { source, customerId, physicianId } = deal;
         const sourceName = source?.displayname || source?.name;
         const physician = physicianId?.fullName?.lname;
@@ -515,7 +515,7 @@ export const reduxSlice = createSlice({
       });
 
       const updateCollections = (collections) => {
-        state.collections = collections;
+        state.filtered = collections;
         state.refined = collections;
       };
       switch (sortBy) {
@@ -1092,15 +1092,19 @@ export const reduxSlice = createSlice({
         const { success, payload } = action.payload,
           { _id, deletedAt, amount, discount, authorizedBy } = payload;
 
-        const index = state.collections.findIndex((c) => c._id === _id);
-        state.collections[index] = {
-          ...state.collections[index],
-          amount,
-          discount, // Ensure discount is also updated
-          deletedAt, // Keep track of deletion status
-          authorizedBy, // Keep track of deletion status
+        const updateCollections = (collections) => {
+          const index = collections.findIndex((c) => c._id === _id);
+          collections[index] = {
+            ...collections[index],
+            amount,
+            discount, // Ensure discount is also updated
+            deletedAt, // Keep track of deletion status
+            authorizedBy, // Keep track of deletion status
+          };
         };
-
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        updateCollections(state.refined);
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -1294,13 +1298,18 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE_INFO.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
-          ({ _id }) => _id === payload._id
-        );
-        state.collections[index] = {
-          ...state.collections[index],
-          ...payload,
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(({ _id }) => _id === payload._id);
+          collections[index] = {
+            ...state.collections[index],
+            ...payload,
+          };
         };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        updateCollections(state.refined);
+
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;

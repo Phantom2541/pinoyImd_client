@@ -15,7 +15,7 @@ const physician = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/dashboard",
+    path: "/bulletin",
     title: "Main physician dashboard overview",
     component: Dashboard,
   },

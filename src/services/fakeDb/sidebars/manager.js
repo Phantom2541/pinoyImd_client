@@ -1,32 +1,22 @@
 import Dashboard from "../../../pages/platforms/manager/dashboard";
 
-import {
-  Services,
-  Menus,
-  Applicants,
-  Tieups,
-} from "../../../pages/platforms/manager/settings";
+import { Applicants, Tieups } from "../../../pages/platforms/manager/settings";
+import { Services, Menus } from "../../../pages/platforms/accounting";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
-import Payrolls from "../../../pages/platforms/finance/payroll";
 import Banners from "../../../pages/platforms/manager/settings/banner";
 import TatServices from "../../../pages/platforms/manager/commerce/tatServices";
 
 import {
   Employees,
-  Equipments,
   Staffs,
+  Equipments,
   Physicians,
-  Procurments,
   Heads,
-} from "../../../pages/platforms/headquarter/file201";
-import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
+} from "../../../pages/platforms/hr";
+import { Procurments } from "../../../pages/platforms/procurement";
 
-import {
-  Remittances,
-  Sales,
-  ExperimentalLedger,
-} from "../../../pages/platforms/manager/businessOperations";
+import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
 import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
 
 import {
@@ -41,8 +31,14 @@ import {
   Payments,
   SOA,
   Reseco,
-} from "../../../pages/platforms/manager/accrued";
-import { Schedule } from "../../../pages/platforms/dtr";
+  Payrolls,
+  ClearancePay,
+  Remittances,
+  Sales,
+  ExperimentalLedger,
+} from "../../../pages/platforms/accounting";
+
+import { Schedule } from "../../../pages/platforms/hr";
 
 import {
   Philhealth,
@@ -51,7 +47,6 @@ import {
   Hotlines,
   Suppliers,
 } from "../../../pages/platforms/cashier";
-import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
 import LIS from "../../../pages/platforms/manager/settings/lis";
 import QrCodePage from "../../../pages/platforms/manager/settings/qrCode";
 

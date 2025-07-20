@@ -1,16 +1,13 @@
 import Bulletin from "../../../pages/platforms/cashier/bulletin";
-import { Calender, Scheduler } from "../../../pages/platforms/dtr";
-import { Heads } from "../../../pages/platforms/headquarter/file201";
+import { Calender, Scheduler } from "../../../pages/platforms/hr/dtr";
 import {
   Remittances,
   Sales,
-} from "../../../pages/platforms/manager/businessOperations";
+} from "../../../pages/platforms/accounting/businessOperations";
 import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
-import {
-  Services,
-  Menus,
-  Applicants,
-} from "../../../pages/platforms/manager/settings";
+import { Applicants } from "../../../pages/platforms/manager/settings";
+import { Services, Menus } from "../../../pages/platforms/accounting";
+import { Heads } from "../../../pages/platforms/headquarter";
 import {
   Contract,
   Membership,
