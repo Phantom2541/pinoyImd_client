@@ -50,6 +50,7 @@
   aspect-ratio: 1/1;
   border-radius: 5px;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.4);
+  background-color: white;
 }
 .orgChart-innerCard-info {
   position: relative;
@@ -58,6 +59,7 @@
   justify-content: center;
   align-items: center;
   min-width: 200px;
+  max-width: 200px;
   background-color: white;
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   padding: 3px 10px;
@@ -68,6 +70,12 @@
   font-size: 1.1rem;
   font-weight: 500;
   text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+  text-align: center;
 }
 
 .orgChart-innerCard-title-container {

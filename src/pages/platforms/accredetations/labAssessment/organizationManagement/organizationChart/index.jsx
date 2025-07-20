@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ReactFlowProvider } from "react-flow-renderer";
 import OrgChart from "./orgNode"; // renamed your main component for clarity
 import { Policy } from "../../../../../../services/fakeDb";
@@ -7,6 +7,7 @@ import { BROWSE } from "../../../../../../services/redux/slices/assets/persons/p
 
 export default function OrgChartWrapper() {
   const { activePlatform, token } = useSelector(({ auth }) => auth);
+  const [personnels, setPersonnels] = useState([]);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,7 +27,7 @@ export default function OrgChartWrapper() {
             labPositionIds.includes(Number(contract?.designation))
           );
 
-          console.log("_personnel (Laboratory only)", _personnel);
+          setPersonnels(_personnel);
         }
       }
     );
@@ -34,7 +35,7 @@ export default function OrgChartWrapper() {
 
   return (
     <ReactFlowProvider>
-      <OrgChart />
+      <OrgChart personnels={personnels} />
     </ReactFlowProvider>
   );
 }
