@@ -8,26 +8,19 @@ import {
 } from "../../../pages/platforms/manager/settings";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
-import Payrolls from "../../../pages/platforms/finance/payroll";
 import Banners from "../../../pages/platforms/manager/settings/banner";
 import TatServices from "../../../pages/platforms/manager/commerce/tatServices";
-import {
-  Physicians,
-  Staffs,
-  Heads,
-} from "../../../pages/platforms/headquarter";
-import {
-  Employees,
-  Equipments,
-  Procurments,
-} from "../../../pages/platforms/headquarter/file201";
-import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
 
 import {
-  Remittances,
-  Sales,
-  ExperimentalLedger,
-} from "../../../pages/platforms/manager/businessOperations";
+  Employees,
+  Staffs,
+  Equipments,
+  Physicians,
+  Procurments,
+  Heads,
+} from "../../../pages/platforms/hr";
+
+import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
 import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
 
 import {
@@ -42,8 +35,14 @@ import {
   Payments,
   SOA,
   Reseco,
-} from "../../../pages/platforms/manager/accrued";
-import { Schedule } from "../../../pages/platforms/dtr";
+  Payrolls,
+  ClearancePay,
+  Remittances,
+  Sales,
+  ExperimentalLedger,
+} from "../../../pages/platforms/accounting";
+
+import { Schedule } from "../../../pages/platforms/hr";
 
 import {
   Philhealth,
@@ -52,7 +51,6 @@ import {
   Hotlines,
   Suppliers,
 } from "../../../pages/platforms/cashier";
-import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
 import LIS from "../../../pages/platforms/manager/settings/lis";
 import QrCodePage from "../../../pages/platforms/manager/settings/qrCode";
 

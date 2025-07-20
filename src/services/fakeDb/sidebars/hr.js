@@ -1,10 +1,10 @@
 import Dashboard from "../../../pages/platforms/hr/dashboard";
 // import Payrolls from "../../../pages/platforms/hr/accured/payrolls";
-import Payrolls from "../../../pages/platforms/finance/payroll";
+import Payrolls from "../../../pages/platforms/accounting/payroll";
 import { Employees } from "../../../pages/platforms/headquarter/file201";
-import { Staffs, Physicians } from "../../../pages/platforms/headquarter";
+import { Staffs, Physicians } from "../../../pages/platforms/hr";
 import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
-import { Schedule } from "../../../pages/platforms/dtr";
+import { Schedule } from "../../../pages/platforms/hr/dtr";
 import {
   Services,
   Menus,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBTable, MDBIcon, MDBBtn, MDBBtnGroup } from "mdbreact";
+import { MDBTable } from "mdbreact";
 import {
   RESET,
   DESTROY,
@@ -15,8 +15,9 @@ import Swal from "sweetalert2";
 // mobile;
 export default function Body() {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess, maxPage, activePage, closeModal } =
-      useSelector(({ physicians }) => physicians),
+    { filtered, message, isSuccess, maxPage, activePage } = useSelector(
+      ({ physicians }) => physicians
+    ),
     [tieups, setTieups] = useState([]),
     { addToast } = useToasts(),
     dispatch = useDispatch();
