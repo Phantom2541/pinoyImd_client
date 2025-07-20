@@ -19,6 +19,7 @@ export default function Ultrasounds() {
   const [description, setDescription] = useState("");
   const [impression, setImpression] = useState("");
   const [activeTab, setActiveTab] = useState("results");
+  const [link, setLink] = useState("");
 
   const descTimeout = useRef(null);
   const impTimeout = useRef(null);
@@ -87,6 +88,21 @@ export default function Ultrasounds() {
         <MDBCardBody>
           <MDBTabContent activeItem={activeTab} className="pt-0">
             <MDBTabPane tabId="results">
+              <label htmlFor="link">Add link here</label>
+              <input
+                type="link"
+                name="link"
+                id="link"
+                value={link}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setLink(val);
+                  // dispatch(SetTASK({ form: task?.form, task: updatedTask }));
+                  delayedSave("link", val, descTimeout);
+                }}
+                // onChange={(e) => handleChange(e.target)}
+                className="w-100 text-center fw-bold"
+              />
               <textarea
                 className="form-control mt-3 border"
                 style={{
