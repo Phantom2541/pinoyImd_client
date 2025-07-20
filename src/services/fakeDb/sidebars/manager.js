@@ -16,11 +16,11 @@ import {
   Staffs,
   Equipments,
   Physicians,
-  Procurments,
   Heads,
 } from "../../../pages/platforms/hr";
+import { Procurments } from "../../../pages/platforms/procurement";
 
-import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
+import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
 import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
 
 import {

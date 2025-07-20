@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBBtn, MDBIcon } from "mdbreact";
-import { Policy } from "../../../../../../services/fakeDb";
-import { BOARD_MEMBERS } from "../../../../../../services/redux/slices/assets/persons/personnels";
+import { Policy } from "../../../../../services/fakeDb";
+import { BOARD_MEMBERS } from "../../../../../services/redux/slices/assets/persons/personnels";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ personnels }) => personnels),

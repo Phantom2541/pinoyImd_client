@@ -4,11 +4,11 @@ import {
   SetCREDENTIAL,
   SetSELECTED,
   UPDATE,
-} from "../../../../../services/redux/slices/assets/persons/applicants";
-import { Policy } from "../../../../../services/fakeDb";
-import EditableSelect from "../../../../../components/customizable/editableSelect";
+} from "../../../../services/redux/slices/assets/persons/applicants";
+import { Policy } from "../../../../services/fakeDb";
+import EditableSelect from "../../../../components/customizable/editableSelect";
 import Swal from "sweetalert2";
-import { fullName } from "../../../../../services/utilities";
+import { fullName } from "../../../../services/utilities";
 
 const Body = ({ applicants }) => {
   const { token } = useSelector(({ auth }) => auth),
