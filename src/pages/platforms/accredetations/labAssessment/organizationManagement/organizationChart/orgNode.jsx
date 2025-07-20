@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   addEdge,
   useReactFlow,
@@ -11,11 +11,13 @@ import ReactFlow, {
   Handle,
   Position,
 } from "react-flow-renderer";
-import PROFILE from "./../../../../../../assets/female.jpg";
-import { draggableNodes } from "./flatCollections";
 import Swal from "sweetalert2";
 import "./style.css";
-// Utility to ensure array format
+import { Policy } from "../../../../../../services/fakeDb";
+import { fullName, ENDPOINT } from "../../../../../../services/utilities";
+import Default from "./../../../../../../assets/iMD.png";
+
+// Normalize position field
 const normalizePosition = (pos) =>
   Array.isArray(pos)
     ? pos
@@ -23,22 +25,17 @@ const normalizePosition = (pos) =>
     ? pos.split(" / ").map((p) => p.trim())
     : [];
 
-// Custom node component
 function CustomNode({ data, id }) {
   const { setNodes } = useReactFlow();
 
   const handleClone = async () => {
     const positions = normalizePosition(data.position);
-
     if (positions.length < 2) return;
 
     const { value: selectedPosition } = await Swal.fire({
       title: "Select a position to clone",
       input: "select",
-      inputOptions: positions.reduce((acc, pos) => {
-        acc[pos] = pos;
-        return acc;
-      }, {}),
+      inputOptions: Object.fromEntries(positions.map((p) => [p, p])),
       inputPlaceholder: "Choose a position",
       showCancelButton: true,
     });
@@ -55,18 +52,17 @@ function CustomNode({ data, id }) {
           ...currentNode.data,
           position: positions.filter((pos) => pos !== selectedPosition),
         },
-        position: { ...currentNode.position }, // ensure position is a new object
       };
 
       const clonedNode = {
+        ...updatedOriginal,
         id: `${id}-${Math.random().toString(36).substring(2, 9)}`,
-        type: currentNode.type,
         position: {
           x: currentNode.position.x + 100,
           y: currentNode.position.y + 100,
         },
         data: {
-          ...JSON.parse(JSON.stringify(currentNode.data)), // deep copy data
+          ...updatedOriginal.data,
           position: [selectedPosition],
         },
       };
@@ -78,6 +74,15 @@ function CustomNode({ data, id }) {
   };
 
   const positions = normalizePosition(data.position);
+  const titles = Array.isArray(data.title)
+    ? [...new Set(data.title)]
+    : [...new Set((data.title || "").split(",").map((s) => s.trim()))];
+
+  const profile = `${ENDPOINT}/public/users/${data?.email}/profile.jpg`;
+
+  useEffect(() => {
+    console.log("Profile image URL:", profile);
+  }, [profile]);
 
   return (
     <div className="orgChart-innerCard" style={{ position: "relative" }}>
@@ -94,35 +99,42 @@ function CustomNode({ data, id }) {
           height: 12,
           zIndex: 11,
         }}
-        isConnectable={true}
+        isConnectable
       />
-
-      <img className="orgChart-innerCard-image" src={PROFILE} alt="profile" />
-
+      <img
+        className="orgChart-innerCard-image"
+        src={profile}
+        alt="profile"
+        onError={(e) => {
+          e.target.onerror = null; // Prevent infinite loop
+          e.target.src = Default;
+        }}
+      />
       <div className="orgChart-innerCard-info">
-        <span className="orgChart-innerCard-name">{data.name}</span>
-        <div className="orgChart-innerCard-title-container">
-          {Array.isArray(data.title) &&
-            data.title.map((title, idx) => (
-              <span className="orgChart-innerCard-title" key={idx}>
-                {title}
-                {idx < data.title.length - 1 && ", "}
+        <span className="orgChart-innerCard-name">
+          {data.name?.toLowerCase() || "No name"}
+        </span>
+
+        {titles.length > 0 && (
+          <div className="orgChart-innerCard-title-container">
+            <span className="orgChart-innerCard-title">
+              {titles.join(", ")}
+            </span>
+          </div>
+        )}
+
+        {positions.length > 0 && (
+          <div className="orgChart-innerCard-position-container">
+            {positions.map((pos, idx) => (
+              <span className="orgChart-innerCard-position" key={idx}>
+                {pos}
+                {idx < positions.length - 1 && " / "}
               </span>
             ))}
-        </div>
-        <div className="orgChart-innerCard-position-container">
-          {positions.map((pos, idx) => (
-            <span className="orgChart-innerCard-position" key={idx}>
-              {pos}
-              {idx < positions.length - 1 && " / "}
-            </span>
-          ))}
-        </div>
+          </div>
+        )}
         {positions.length > 1 && (
-          <button
-            className="orgChart-innerCard-cloneBtn bg-primary"
-            onClick={handleClone}
-          >
+          <button onClick={handleClone} className="orgChart-innerCard-cloneBtn">
             Clone
           </button>
         )}
@@ -141,7 +153,7 @@ function CustomNode({ data, id }) {
           height: 12,
           zIndex: 11,
         }}
-        isConnectable={true}
+        isConnectable
       />
     </div>
   );
@@ -149,15 +161,33 @@ function CustomNode({ data, id }) {
 
 const nodeTypes = { customNode: CustomNode };
 
-function OrgChartInner() {
+function OrgChartInner({ personnels }) {
   const wrapperRef = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { project } = useReactFlow();
+  const [availableNodes, setAvailableNodes] = useState([]);
 
-  console.log("nodes", nodes);
+  useEffect(() => {
+    if (!Array.isArray(personnels)) return;
 
-  const [availableNodes, setAvailableNodes] = React.useState(draggableNodes);
+    const mapped = personnels.map((p, i) => {
+      const { user, contract } = p;
+      const name = fullName(user?.fullName)?.split(" y ")[0]?.toLowerCase();
+      const title = user?.fullName?.postnominal;
+      const position = Policy.getPositions(contract?.designation);
+      const email = user?.email;
+
+      return {
+        id: `personnel-${i}`,
+        type: "customNode",
+        position: { x: 0, y: 0 },
+        data: { id: `personnel-${i}`, name, title, position, email },
+      };
+    });
+
+    setAvailableNodes(mapped);
+  }, [personnels]);
 
   const onConnect = useCallback(
     (params) => {
@@ -171,28 +201,28 @@ function OrgChartInner() {
           eds
         );
 
-        setNodes((prevNodes) => {
-          const parentNode = prevNodes.find((n) => n.id === params.source);
-          if (!parentNode) return prevNodes;
+        setNodes((prev) => {
+          const parent = prev.find((n) => n.id === params.source);
+          if (!parent) return prev;
 
           const childrenIds = newEdges
-            .filter((edge) => edge.source === parentNode.id)
-            .map((edge) => edge.target);
+            .filter((e) => e.source === parent.id)
+            .map((e) => e.target);
 
-          const spacingX = 300; // horizontal spacing between siblings
-          const spacingY = 300; // vertical spacing from parent to child
-          const totalWidth = (childrenIds.length - 1) * spacingX;
-          const startX = parentNode.position.x - totalWidth / 2;
+          const spacingX = 300;
+          const spacingY = 300;
+          const startX =
+            parent.position.x - ((childrenIds.length - 1) * spacingX) / 2;
 
-          return prevNodes.map((node) => {
-            const childIndex = childrenIds.indexOf(node.id);
-            if (childIndex === -1) return node;
+          return prev.map((node) => {
+            const idx = childrenIds.indexOf(node.id);
+            if (idx === -1) return node;
 
             return {
               ...node,
               position: {
-                x: startX + childIndex * spacingX,
-                y: parentNode.position.y + spacingY,
+                x: startX + idx * spacingX,
+                y: parent.position.y + spacingY,
               },
             };
           });
@@ -206,47 +236,43 @@ function OrgChartInner() {
 
   const handleDrop = (event) => {
     event.preventDefault();
-    const reactFlowBounds = wrapperRef.current.getBoundingClientRect();
-    const data = JSON.parse(
+    const bounds = wrapperRef.current.getBoundingClientRect();
+    const parsed = JSON.parse(
       event.dataTransfer.getData("application/reactflow")
     );
-    if (!data) return;
+    if (!parsed?.data) return;
 
     const position = project({
-      x: event.clientX - reactFlowBounds.left,
-      y: event.clientY - reactFlowBounds.top,
+      x: event.clientX - bounds.left,
+      y: event.clientY - bounds.top,
     });
 
     const newNode = {
-      id: `${data.id}-${Math.random().toString(36).substring(2, 6)}`,
-      type: "customNode",
+      id: `${parsed.id}-${Math.random().toString(36).substring(2, 6)}`,
+      type: parsed.type || "customNode",
       position,
       data: {
-        ...data,
-        position: normalizePosition(data.position),
+        ...parsed.data,
+        position: normalizePosition(parsed.data.position),
       },
     };
 
     setNodes((nds) => [...nds, newNode]);
-
-    // ⛔ Remove from storage panel
-    setAvailableNodes((prev) => prev.filter((node) => node.id !== data.id));
-  };
-
-  const handleDragOver = (event) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    setAvailableNodes((prev) => prev.filter((n) => n.id !== parsed.id));
   };
 
   const handleDragStart = (event, item) => {
-    const cleanedItem = {
-      ...item,
-      position: normalizePosition(item.position),
+    const payload = {
+      id: item.id,
+      type: item.type,
+      data: {
+        ...item.data,
+        position: normalizePosition(item.data.position),
+      },
     };
-
     event.dataTransfer.setData(
       "application/reactflow",
-      JSON.stringify(cleanedItem)
+      JSON.stringify(payload)
     );
     event.dataTransfer.effectAllowed = "move";
   };
@@ -254,26 +280,40 @@ function OrgChartInner() {
   return (
     <div className="org-container">
       <div className="topbar">
-        {availableNodes.map((item) => (
-          <div
-            key={item.id}
-            className="draggable-node"
-            draggable
-            onDragStart={(event) => handleDragStart(event, item)}
-          >
-            <strong>{item.name}</strong>
-            <div className="small">
-              {normalizePosition(item.position).join(" / ")}
+        {availableNodes.map((item) => {
+          const { name, title, position } = item.data || {};
+          const titles = Array.isArray(title) ? title : [title].filter(Boolean);
+          const positions = Array.isArray(position)
+            ? position
+            : [position].filter(Boolean);
+
+          return (
+            <div
+              key={item.id}
+              className="draggable-node"
+              draggable
+              onDragStart={(e) => handleDragStart(e, item)}
+            >
+              <strong style={{ textTransform: "capitalize" }}>{name}</strong>
+              {titles.length > 0 && (
+                <div className="small text-muted">{titles.join(", ")}</div>
+              )}
+              {positions.length > 0 && (
+                <div className="small">{positions.join(" / ")}</div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div
         className="flow-area"
         ref={wrapperRef}
         onDrop={handleDrop}
-        onDragOver={handleDragOver}
+        onDragOver={(e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+        }}
       >
         <ReactFlow
           nodes={nodes}
@@ -292,10 +332,10 @@ function OrgChartInner() {
   );
 }
 
-export default function OrgChart() {
+export default function OrgChart({ personnels }) {
   return (
     <ReactFlowProvider>
-      <OrgChartInner />
+      <OrgChartInner personnels={personnels} />
     </ReactFlowProvider>
   );
 }
