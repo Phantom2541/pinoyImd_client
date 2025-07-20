@@ -515,7 +515,7 @@ export const reduxSlice = createSlice({
       });
 
       const updateCollections = (collections) => {
-        state.collections = collections;
+        state.filtered = collections;
         state.refined = collections;
       };
       switch (sortBy) {

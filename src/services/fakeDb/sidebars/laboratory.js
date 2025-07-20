@@ -5,11 +5,8 @@ import {
   Sales,
 } from "../../../pages/platforms/accounting/businessOperations";
 import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
-import {
-  Services,
-  Menus,
-  Applicants,
-} from "../../../pages/platforms/manager/settings";
+import { Applicants } from "../../../pages/platforms/manager/settings";
+import { Services, Menus } from "../../../pages/platforms/accounting";
 import { Heads } from "../../../pages/platforms/headquarter";
 import {
   Contract,

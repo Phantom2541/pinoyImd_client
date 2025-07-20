@@ -1,43 +1,49 @@
 [
   {
     "id": 1,
-    "name": "accreditation",
+    "name": "Accreditation",
     "code": "accre",
     "platform": "Accreditation"
   },
   {
     "id": 2,
-    "name": "administrative",
+    "name": "Administrative",
     "code": "admin",
     "platform": "Administrative"
   },
   {
+    "id": 2,
+    "name": "Accounting",
+    "code": "accouting",
+    "platform": "Accounting"
+  },
+  {
     "id": 3,
-    "name": "auditor",
+    "name": "Auditor",
     "code": "auditor",
     "platform": "Auditor"
   },
   {
     "id": 4,
-    "name": "cashier",
+    "name": "Cashier",
     "code": "cashier",
     "platform": "Cashier"
   },
   {
     "id": 5,
-    "name": "frontdesk",
+    "name": "Frontdesk",
     "code": "frontdesk",
     "platform": "Frontdesk"
   },
   {
     "id": 6,
-    "name": "manager",
+    "name": "Manager",
     "code": "manager",
     "platform": "Manager"
   },
   {
     "id": 7,
-    "name": "patron",
+    "name": "Patron",
     "code": "patron",
     "platform": "Patron"
   },
@@ -49,61 +55,61 @@
   },
   {
     "id": 10,
-    "name": "laboratory",
+    "name": "Laboratory",
     "code": "laboratory",
     "platform": "Laboratory"
   },
   {
     "id": 11,
-    "name": "radiology",
+    "name": "Radiology",
     "code": "radiology",
     "platform": "Radiology"
   },
   {
     "id": 12,
-    "name": "pharmacist",
+    "name": "Pharmacist",
     "code": "pharmacist",
     "platform": "Pharmacist"
   },
   {
     "id": 13,
-    "name": "procurement",
+    "name": "Procurement",
     "code": "procurement",
     "platform": "Procurement"
   },
   {
     "id": 14,
-    "name": "utility",
+    "name": "Utility",
     "code": "utility",
     "platform": "Utility"
   },
   {
     "id": 15,
-    "name": "nutritionist",
+    "name": "Nutritionist",
     "code": "nutritionist",
     "platform": "Nutritionist"
   },
   {
     "id": 16,
-    "name": "driver",
+    "name": "Driver",
     "code": "driver",
     "platform": "Driver"
   },
   {
     "id": 17,
-    "name": "author",
+    "name": "Author",
     "code": "author",
     "platform": "Author"
   },
   {
     "id": 18,
-    "name": "clinical",
+    "name": "Clinical",
     "code": "clinical",
     "platform": "Clinical"
   },
   {
     "id": 19,
-    "name": "physician",
+    "name": "Physician",
     "code": "physician",
     "platform": "physician"
   }

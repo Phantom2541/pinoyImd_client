@@ -8,7 +8,7 @@ import {
   ClearancePay,
 } from "./accrued";
 import { Remittances, Sales, ExperimentalLedger } from "./businessOperations";
-
+import { Menus, Services } from "./catalog";
 import Payrolls from "./payroll";
 import Employment from "./employment";
 
@@ -25,4 +25,6 @@ export {
   Remittances,
   Sales,
   ExperimentalLedger,
+  Menus,
+  Services,
 };

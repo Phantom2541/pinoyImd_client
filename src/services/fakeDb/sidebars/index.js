@@ -4,6 +4,7 @@ import accreditation from "./accreditation";
 import admin from "./admin";
 import auditor from "./auditor";
 import author from "./author";
+import accounting from "./accounting";
 import carpentry from "./carpentry";
 import cashier from "./cashier";
 import clinical from "./clinical";
@@ -34,6 +35,7 @@ const Sidebars = {
   author,
   auditor,
   admin,
+  accounting,
   superadmin,
   accreditation,
   manager,
