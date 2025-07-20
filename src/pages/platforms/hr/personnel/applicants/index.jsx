@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { MDBCard, MDBCardBody, MDBView } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { BROWSE } from "../../../../services/redux/slices/assets/persons/applicants";
-import { BROWSE as BROWSE_BRANCHES } from "../../../../services/redux/slices/assets/branches";
+import { BROWSE } from "../../../../../services/redux/slices/assets/persons/applicants";
+import { BROWSE as BROWSE_BRANCHES } from "../../../../../services/redux/slices/assets/branches";
 import { useToasts } from "react-toast-notifications";
 import Access from "./modal";
-import TableLoading from "../../../../components/tableLoading";
+import TableLoading from "../../../../../components/tableLoading";
 import ViewCredential from "./viewCredential";
 import { capitalize } from "lodash";
 import Body from "./body";

@@ -10,7 +10,7 @@ import {
   MDBCol,
   MDBInput,
 } from "mdbreact";
-import { UPDATE } from "../../../../../services/redux/slices/assets/persons/users";
+import { UPDATE } from "../../../../services/redux/slices/assets/persons/users";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 // declare your expected items
