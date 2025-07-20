@@ -501,7 +501,7 @@ export const reduxSlice = createSlice({
     },
 
     SetSORTING: (state, { payload: sortBy }) => {
-      const formattedDeals = [...state.collections].map((deal) => {
+      const formattedDeals = [...state.refined].map((deal) => {
         const { source, customerId, physicianId } = deal;
         const sourceName = source?.displayname || source?.name;
         const physician = physicianId?.fullName?.lname;
