@@ -21,12 +21,6 @@ import {
 } from "../../../pages/platforms/hr";
 
 import stockHolder from "../../../pages/platforms/manager/settings/personnel/stockHolder";
-
-import {
-  Remittances,
-  Sales,
-  ExperimentalLedger,
-} from "../../../pages/platforms/manager/businessOperations";
 import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
 
 import {
@@ -41,8 +35,11 @@ import {
   Payments,
   SOA,
   Reseco,
-  ClearancePay,
   Payrolls,
+  ClearancePay,
+  Remittances,
+  Sales,
+  ExperimentalLedger,
 } from "../../../pages/platforms/accounting";
 
 import { Schedule } from "../../../pages/platforms/hr";
