@@ -79,9 +79,6 @@ const Header = () => {
           className="form-control mr-3 bg-light"
           onChange={(e) => dispatch(SetFilterByCASHIER(e.target.value))} // setSelectedCashier(e.target.value)}
         >
-          <option value="" disabled>
-            Select Cashier
-          </option>
           <option value={"all"}>All</option>
           {cashiers.map((cashier) => (
             <option key={cashier._id} value={cashier._id}>

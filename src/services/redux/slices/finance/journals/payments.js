@@ -158,6 +158,17 @@ export const reduxSlice = createSlice({
       );
       arrangePaymentsByDate(state, !payload ? state.collections : filtered);
     },
+    SetCASHIER: (state, { payload }) => {
+      //this function is use for manager operations daily sales to filter by cashier
+      const filtered = state.collections.filter(
+        ({ userId }) => userId?._id === payload
+      );
+      if (payload === "all") {
+        state.filtered = state.collections;
+      } else {
+        state.filtered = filtered;
+      }
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -287,7 +298,7 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(Daily.fulfilled, (state, { payload }) => {
-        state.filtered = payload;
+        state.collections = state.filtered = payload;
         state.isLoading = false;
       })
       .addCase(Daily.rejected, (state, { payload }) => {
@@ -331,6 +342,7 @@ export const reduxSlice = createSlice({
 });
 
 export const {
+  SetCASHIER,
   SetEDIT,
   SetCREATE,
   SetFILTER,
