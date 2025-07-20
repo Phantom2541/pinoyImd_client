@@ -4,3 +4,4 @@ export { default as Vouchers } from "./vouchers";
 export { default as SOA } from "./soa";
 export { default as Payments } from "./payments";
 export { default as Reseco } from "./reseco";
+export { default as ClearancePay } from "./clearancePay";

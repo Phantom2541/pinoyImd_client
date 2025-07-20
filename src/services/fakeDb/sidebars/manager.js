@@ -8,7 +8,6 @@ import {
 } from "../../../pages/platforms/manager/settings";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
-import Payrolls from "../../../pages/platforms/finance/payroll";
 import Banners from "../../../pages/platforms/manager/settings/banner";
 import TatServices from "../../../pages/platforms/manager/commerce/tatServices";
 
@@ -42,7 +41,10 @@ import {
   Payments,
   SOA,
   Reseco,
-} from "../../../pages/platforms/manager/accrued";
+  ClearancePay,
+  Payrolls,
+} from "../../../pages/platforms/accounting";
+
 import { Schedule } from "../../../pages/platforms/dtr";
 
 import {
@@ -52,7 +54,6 @@ import {
   Hotlines,
   Suppliers,
 } from "../../../pages/platforms/cashier";
-import ClearancePay from "../../../pages/platforms/manager/accrued/clearancePay";
 import LIS from "../../../pages/platforms/manager/settings/lis";
 import QrCodePage from "../../../pages/platforms/manager/settings/qrCode";
 
