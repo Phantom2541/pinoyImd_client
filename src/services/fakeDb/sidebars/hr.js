@@ -1,6 +1,6 @@
 import Dashboard from "../../../pages/platforms/hr/dashboard";
 import Payrolls from "../../../pages/platforms/accounting/payroll";
-import { Employees } from "../../../pages/platforms/headquarter/file201";
+import { Employees } from "../../../pages/platforms/hr";
 import { Staffs, Physicians } from "../../../pages/platforms/hr/index";
 import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
 import { Schedule } from "../../../pages/platforms/hr/dtr";
@@ -68,13 +68,13 @@ const hr = [
         icon: "user-tie",
         component: stockHolder,
       },
-      {
-        name: "Org Chart",
-        title: "Organization Chart",
-        path: "/organizationChart",
-        icon: "user-tie",
-        component: OrgChart,
-      },
+      // {
+      //   name: "Org Chart",
+      //   title: "Organization Chart",
+      //   path: "/organizationChart",
+      //   icon: "user-tie",
+      //   component:OrgChart,
+      // },
     ],
   },
   {
