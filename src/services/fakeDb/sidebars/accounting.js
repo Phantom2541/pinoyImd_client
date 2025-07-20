@@ -12,6 +12,7 @@ import {
   Menus,
   Services,
 } from "../../../pages/platforms/accounting";
+import OrgChart from "../../../pages/platforms/accounting/organizationChart";
 
 const accounting = [
   {
@@ -111,6 +112,13 @@ const accounting = [
         component: Services,
       },
     ],
+  },
+  {
+    name: "Org Chart",
+    title: "Organizational chart.",
+    icon: "tachometer-alt",
+    path: "/organizationChart",
+    component: OrgChart,
   },
 ];
 

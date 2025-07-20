@@ -10,7 +10,7 @@ import cashier from "./cashier";
 import clinical from "./clinical";
 import frontdesk from "./frontdesk";
 import headquarter from "./headquarter";
-import humanresources from "./hr";
+import human_resources from "./hr";
 import nutritionist from "./nutritionist";
 import pharmacist from "./pharmacist";
 import procurement from "./procurement";
@@ -27,7 +27,7 @@ const Sidebars = {
   pharmacist,
   nutritionist,
   headquarter,
-  humanresources,
+  human_resources,
   frontdesk,
   cashier,
   clinical,

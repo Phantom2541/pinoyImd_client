@@ -7,5 +7,6 @@ export { default as Employees } from "../headquarter/file201/employees";
 export { default as Hmo } from "../headquarter/file201/hmo";
 export { default as Records } from "../headquarter/personnel/records";
 export { default as Staffs } from "./staffs";
+// export { default as OrgChart } from "../accounting/organizationChart";
 
 export { Schedule, Attendances, Calender, Scheduler };
