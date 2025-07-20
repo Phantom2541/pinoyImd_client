@@ -118,7 +118,7 @@ const Deals = {
         token,
       })
     ).then((action) => {
-      const { register = {} } = action.payload;
+      const { register = {} } = action.payload || {};
       if (register.isRegister) {
         //this is for new physician
         dispatch(ADD_AFFILIATED(register));

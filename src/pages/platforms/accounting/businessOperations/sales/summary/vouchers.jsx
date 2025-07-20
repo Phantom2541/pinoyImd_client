@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCollapseHeader, MDBCollapse } from "mdbreact";
-import { currency } from "./../../../../../../services/utilities";
+import { currency } from "../../../../../../services/utilities";
 
 export default function Vouchers() {
   const { total } = useSelector(({ deals }) => deals),

@@ -4,7 +4,7 @@ import {
   Physicians,
   Records,
   Staffs,
-} from "../../../pages/platforms/headquarter";
+} from "../../../pages/platforms/hr";
 import {
   Equipments,
   Procurments as Procurement,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { BROWSE } from "../../../../../services/redux/slices/diagnostics/management/temperatures";
@@ -11,12 +11,7 @@ import CalendarPicker from "../../../../../components/header/calendars";
 const Header = () => {
   const dispatch = useDispatch();
   const { maxPage, token, activePlatform } = useSelector(({ auth }) => auth);
-  const {
-    collections = [],
-    month,
-    year,
-  } = useSelector(({ temperatures }) => temperatures);
-  const [ecg, setEcg] = useState([]);
+  const { month, year } = useSelector(({ temperatures }) => temperatures);
 
   // Fetch data based on month/year
   useEffect(() => {
@@ -33,16 +28,6 @@ const Header = () => {
       );
     }
   }, [dispatch, maxPage, month, year, token, activePlatform]);
-
-  // Set local state
-  useEffect(() => {
-    if (collections) setEcg(collections);
-  }, [collections]);
-
-  // Handle dropdown change
-  const handleMonthChange = (selected) => {
-    dispatch(SetMONTH(selected.value));
-  };
 
   // Get full month name
   const getMonthName = (m) => {

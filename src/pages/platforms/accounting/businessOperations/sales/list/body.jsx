@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  capitalize,
   currency,
   Deals,
   fullName,
@@ -10,10 +11,10 @@ import {
 import { Categories, HMO } from "./../../../../../../services/fakeDb";
 import {
   MANAGERUPDATE,
-  SetDISCOUNT,
   RESET,
   SetREVERT,
   SetSORTING,
+  UPDATE_INFO,
 } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { useToasts } from "react-toast-notifications";
 
@@ -30,11 +31,12 @@ import {
   MDBBtnGroup,
 } from "mdbreact";
 import "./style.css";
-import { Input, Select } from "../../../../../../components/customizable";
 import EditableField from "../../../../../../components/customizable/editableField";
+import EditableSelect from "../../../../../../components/customizable/editableSelect";
+import PickPhysician from "../../../../../../components/searchables/physicians/pickPhysician";
 
 export const Tables = () => {
-  const { token, auth } = useSelector(({ auth }) => auth),
+  const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
     { refined, maxPage, activePage, formSubmitted, isSuccess } = useSelector(
       ({ deals }) => deals
     ),
@@ -104,8 +106,6 @@ export const Tables = () => {
       );
     }
   };
-
-  const handleEdit = async (deal) => dispatch(SetDISCOUNT(deal));
 
   const handleRevert = (deal) => dispatch(SetREVERT(deal));
 
@@ -225,6 +225,43 @@ export const Tables = () => {
     });
   };
 
+  const onSave = (editedData) => {
+    dispatch(
+      UPDATE_INFO({
+        data: { ...editedData, updatedKey: editedData.editingKey },
+        token,
+      })
+    );
+  };
+
+  const getPhysicians = (fk) => {
+    return (
+      [...sources].find(({ clients }) => clients._id === fk)?.clients
+        ?.affiliated || []
+    );
+  };
+
+  const getSourceForPhysician = (sourceId) => {
+    const source = [...sources].find(({ clients }) => clients._id === sourceId);
+
+    if (!source?._id) return {};
+    return { _id: source?._id, branch: source?.clients?._id };
+  };
+
+  const showingPhysician = (deal) => {
+    const { physicianId = {}, physicianSTR = "" } = deal;
+    const physician = () => {
+      if (!physicianId?._id) return capitalize(physicianSTR);
+      return physicianId?.fullName?.lname;
+    };
+
+    return physicianId ? (
+      <h6>Dr. {physician()}</h6>
+    ) : (
+      <h6 className="cursor-pointer">N/A</h6>
+    );
+  };
+
   return (
     <MDBCardBody>
       <div
@@ -321,6 +358,10 @@ export const Tables = () => {
               text = "",
             } = paymentMethod.getImage(deal?.payment);
 
+            const isMatch = (key) =>
+              selected?._id === deal?._id && selected.updatedKey === key;
+            const isPhysicianEdit = isMatch("physician");
+
             return (
               <React.Fragment key={`sales-${index + 1}`}>
                 <tr
@@ -334,227 +375,167 @@ export const Tables = () => {
                       : "",
                   }}
                 >
-                  <td>
+                  <td className="position-relative">
                     <div className="d-flex align-items-center">
                       <h6>{getGenderIcon(deal?.customerId?.isMale)} </h6>
                       <h6>{fullName(deal?.customerId?.fullName)}</h6>
                     </div>
-                    {selected._id === deal._id &&
-                    selected?.updatedKey === "category" ? (
-                      <div
-                        style={{ width: "17rem", marginBottom: "-0.7rem" }}
-                        className="mt-2 d-flex align-items-center"
-                      >
-                        <Select
-                          label={"Category"}
-                          onChange={(value) =>
-                            setSelected({ ...selected, newCategory: value })
-                          }
-                          whitelisted
-                          className="m-0 p-0"
-                          collections={Categories}
-                          preValue={deal.category}
-                          keys={"abbr"}
-                          values={"name"}
-                        />
-                        {!formSubmitted ? (
-                          <MDBIcon
-                            icon="check"
-                            className="mr-2 ml-2 cursor-pointer"
-                            onClick={() =>
-                              handleUpdate("category", "newCategory")
-                            }
-                            style={{ fontSize: "1rem", color: "blue" }}
-                          />
-                        ) : (
-                          <MDBIcon
-                            icon="spinner"
-                            className="ml-2"
-                            pulse
-                            style={{
-                              color: "black",
-                              fontSize: "1rem",
-                              marginRight: "10px",
-                            }}
-                          />
-                        )}
-
-                        <MDBIcon
-                          icon="times"
-                          className="cursor-pointer "
-                          onClick={() => setSelected({})}
-                          style={{ fontSize: "1rem", color: "red" }}
-                        />
-                      </div>
-                    ) : (
-                      <MDBBadge
-                        color="info"
-                        className="mr-2 cursor-pointer"
-                        onClick={() =>
-                          setSelected({ ...deal, updatedKey: "category" })
-                        }
-                      >
-                        {deal.category === "walkin"
-                          ? deal?.category
-                          : Categories?.find(
-                              (c) => c?.abbr === deal?.category
-                            ).abbr?.toUpperCase()}
-                      </MDBBadge>
-                    )}
-                    @ {new Date(deal.createdAt).toLocaleTimeString()}
-                  </td>
-                  <td>
-                    {selected._id === deal._id &&
-                    selected?.updatedKey === "ssx" ? (
-                      <div
-                        style={{ width: "17rem" }}
-                        className="mt-3 d-flex align-items-center"
-                      >
-                        <Input
-                          label={"SSX"}
-                          selected={selected}
-                          onChange={(_key, value) =>
-                            setSelected({ ...selected, [_key]: value })
-                          }
-                          _key="newSSX"
-                          handleCheck={() => handleUpdate("ssx", "newSSX")}
-                          handleClose={() => setSelected({})}
-                          formSubmitted={formSubmitted}
-                          isSuccess={isSuccess}
-                          className="form-control form-control-sm"
-                        />
-                      </div>
-                    ) : (
-                      <span
-                        className="cursor-pointer"
-                        style={{ fontWeight: 400 }}
-                        onClick={() =>
-                          setSelected({
-                            ...deal,
-                            updatedKey: "ssx",
-                            newSSX: deal.ssx,
-                          })
-                        }
-                      >
-                        {deal.ssx || "--"}
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    {selected?._id === deal?._id &&
-                    selected.updatedKey === "source" ? (
-                      <div
-                        style={{
-                          width: "17rem",
-                          marginBottom: "-0.7rem",
+                    <div className="d-flex align-items-center">
+                      <EditableSelect
+                        isEditable={true}
+                        collections={Categories.map(({ name, abbr }) => ({
+                          category: abbr,
+                          name,
+                        }))}
+                        preValue={deal.category}
+                        displayTag="span"
+                        classNameTxt="badge bg-info"
+                        className="m-0 mb-n2 p-0"
+                        keyForValue="category"
+                        keyForText="name"
+                        fieldData={{
+                          _id: deal?._id,
+                          category: deal?.category,
+                          name: deal?.category,
                         }}
-                        className="mt-2 d-flex align-items-center"
-                      >
-                        <Select
-                          label={"Source"}
-                          onChange={(value) =>
-                            setSelected({ ...selected, newSource: value })
+                        onSave={(data) => {
+                          const { name, ...rest } = data;
+                          onSave(rest);
+                        }}
+                        animationStyle={{ width: "17rem" }}
+                        formSubmitted={formSubmitted}
+                        isSuccess={isSuccess}
+                        animation
+                      />
+                      <span className="ml-2">
+                        @ {new Date(deal.createdAt).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="position-relative">
+                    <div style={{ minWidth: "8rem" }}>
+                      <EditableField
+                        fieldData={{ _id: deal?._id, ssx: deal?.ssx }}
+                        keyForValue="ssx"
+                        placeholder="SSX"
+                        displayTag="h6"
+                        onSave={(data) => onSave(data)}
+                        animationStyle={{ width: "17rem" }}
+                        displayStyle={{ fontSize: "14px" }}
+                        animation
+                        formSubmitted={formSubmitted}
+                        isSuccess={isSuccess}
+                      />
+                    </div>
+                  </td>
+                  <td className="position-relative">
+                    <small className="mr-1 grey-text">Source:</small>
+                    <div style={{ minHeight: "27px" }}>
+                      <EditableSelect
+                        isEditable={true}
+                        collections={sources.map(({ clients }) => ({
+                          source: clients._id,
+                          text: `${clients?.displayname?.toUpperCase()}`,
+                        }))}
+                        preValue={deal.source._id}
+                        displayTag="h6"
+                        className="m-0 mb-n2 p-0"
+                        keyForValue="source"
+                        keyForText="text"
+                        fieldData={{
+                          _id: deal?._id,
+                          source: deal?.source?._id,
+                          text: sourceName,
+                        }}
+                        onSave={(data) => {
+                          const { text, ...rest } = data;
+                          onSave(rest);
+                        }}
+                        formSubmitted={formSubmitted}
+                        animationStyle={{ width: "17rem" }}
+                        animation
+                        isSuccess={isSuccess}
+                        selectStyle={{ width: "17rem" }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        width: "19rem",
+                        opacity: isPhysicianEdit ? 1 : 0,
+                        zIndex: isPhysicianEdit ? 2 : -1,
+                      }}
+                      className={`position-absolute mt-3 py-1 ${
+                        isPhysicianEdit && "deals-zoom-in"
+                      }`}
+                    >
+                      {isPhysicianEdit && (
+                        <PickPhysician
+                          defaultValue={
+                            !deal?.physicianId?._id
+                              ? deal?.physicianSTR
+                              : fullName(deal?.physicianId?.fullName)
                           }
-                          whitelisted
-                          className="m-0 p-0 mt-3"
-                          collections={sources.map(({ clients }) => ({
-                            _id: clients._id,
-                            text: `${clients?.displayname?.toUpperCase()}`,
-                          }))}
-                          preValue={deal?.source?._id}
-                          handleCheck={() =>
-                            handleUpdate("source._id", "newSource", deal)
-                          }
-                          handleClose={() => setSelected({})}
-                          soloUpdate
+                          classNameInput="deals-zoom-in-input-physician "
                           formSubmitted={formSubmitted}
-                          keys={"_id"}
-                          values={"text"}
-                        />
-                      </div>
-                    ) : (
-                      <div>
-                        <small className="mr-1 grey-text">Source:</small>
-                        <h6
-                          className="cursor-pointer"
-                          onClick={() =>
-                            setSelected({ ...deal, updatedKey: "source" })
-                          }
-                        >
-                          {sourceName || "N/A"}
-                        </h6>
-                      </div>
-                    )}
-
-                    {selected._id === deal._id &&
-                    selected.updatedKey === "physician" ? (
-                      <div style={{ width: "19rem" }}>
-                        <Select
-                          label={"Physician"}
+                          isEditable
+                          suggested={getPhysicians(deal.source._id)}
+                          source={getSourceForPhysician(deal?.source?._id)}
                           onChange={(value) =>
-                            setSelected({ ...selected, newPhysician: value })
+                            setSelected({
+                              ...selected,
+                              newPhysician: {
+                                ...value,
+                                branch: activePlatform?.branchId,
+                                source: getSourceForPhysician(
+                                  deal?.source?._id
+                                ),
+                              },
+                            })
                           }
-                          whitelisted
-                          className="m-0 p-0 mt-3"
-                          allowObjectValue
-                          // collections={getPhysicians(deal?.source?._id)}
-                          collections={Deals.getPhysicians(
-                            deal?.source._id,
-                            sources
-                          )}
-                          preValue={deal.physicianId?._id}
-                          formSubmitted={formSubmitted}
-                          keys={"value"}
-                          values={"text"}
-                          soloUpdate
-                          handleClose={() => setSelected({})}
                           handleCheck={() =>
                             handleUpdate("physicianId._id", "newPhysician")
                           }
+                          handleClose={() => setSelected({})}
                         />
-                      </div>
-                    ) : (
-                      <div
-                        className="cursor-pointer"
-                        onClick={() => {
-                          if (!deal?.source)
-                            return addToast(
-                              "Please add a source before adding a physician.",
-                              {
-                                appearance: "warning",
-                              }
-                            );
-                          setSelected({ ...deal, updatedKey: "physician" });
-                        }}
-                      >
-                        <small className="mr-1 grey-text">Physician:</small>
-                        {deal?.physicianId?.fullName?.lname ? (
-                          <h6>Dr. {deal?.physicianId?.fullName?.lname}</h6>
-                        ) : (
-                          <h6 className="cursor-pointer">N/A</h6>
-                        )}
-                      </div>
-                    )}
+                      )}
+                    </div>
+                    <div
+                      className="cursor-pointer"
+                      style={{
+                        opacity: isPhysicianEdit ? 0 : 1,
+                      }}
+                      onClick={() => {
+                        setSelected({ ...deal, updatedKey: "physician" });
+                      }}
+                    >
+                      <small className="mr-1 grey-text">Physician:</small>
+                      {showingPhysician(deal)}
+                    </div>
                   </td>
 
-                  <td style={{ fontWeight: 400 }}>
+                  <td style={{ fontWeight: 400 }} className="position-relative">
                     <div className="d-flex align-items-center">
-                      <EditableField
-                        displayStyle={{
-                          marginTop: "0.5rem",
-                          fontWeight: "bold",
-                          marginRight: "0.2rem",
-                        }}
-                        className="form-control form-control-sm mb-1"
-                        keyForValue="newAmount"
-                        fieldData={{ _id: deal._id, newAmount: deal.amount }}
-                        onSave={(data) => {
-                          handleUpdatePrice({ ...data, ...deal });
-                        }}
-                        formSubmitted={formSubmitted}
-                        isSuccess={isSuccess}
-                        isMoney
-                      />
+                      <div style={{ minHeight: "36px", minWidth: "42px" }}>
+                        <EditableField
+                          animationStyle={{ width: "7rem" }}
+                          animation
+                          displayStyle={{
+                            marginTop: "0.5rem",
+                            fontWeight: "bold",
+                            marginRight: "0.2rem",
+                          }}
+                          className="form-control form-control-sm mb-1"
+                          placeholder="Amount"
+                          keyForValue="newAmount"
+                          fieldData={{ _id: deal._id, newAmount: deal.amount }}
+                          onSave={(data) => {
+                            handleUpdatePrice({ ...data, ...deal });
+                          }}
+                          formSubmitted={formSubmitted}
+                          isSuccess={isSuccess}
+                          isMoney
+                        />
+                      </div>
 
                       <img
                         src={img}
@@ -619,15 +600,24 @@ export const Tables = () => {
                         <MDBBtnGroup>
                           {!isDeleted ? (
                             <>
-                              <MDBBtn
-                                size="sm"
-                                color="danger"
-                                rounded
+                              <button
                                 onClick={() => handleDelete(deal)}
                                 title="Delete Sale"
+                                className="mr-1 "
+                                style={{
+                                  background: "red",
+                                  border: "none",
+
+                                  color: "white",
+                                  borderRadius: "4px",
+                                  boxShadow: "0 0px 7px  rgba(0, 0, 0, 0.2)",
+                                  padding: "5px 8px",
+                                  cursor: "pointer",
+                                  transition: "all 0.2s",
+                                }}
                               >
                                 <MDBIcon icon="trash" />
-                              </MDBBtn>
+                              </button>
                             </>
                           ) : (
                             <div style={{ width: "8.4rem" }}>
@@ -649,7 +639,7 @@ export const Tables = () => {
                 </tr>
                 {deal.remarks && (
                   <tr>
-                    <td colSpan={6}>Remarks: asdfasdf</td>
+                    <td colSpan={6}>Remarks: {deal.remarks}</td>
                   </tr>
                 )}
               </React.Fragment>

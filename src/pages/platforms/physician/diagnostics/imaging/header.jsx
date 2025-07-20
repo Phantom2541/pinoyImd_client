@@ -1,35 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { Select } from "../../../../../components/customizable";
-import { Templates, Services } from "../../../../../services/fakeDb";
-import {
-  SetCOLLECTIONS,
-  SetByTEMPLATES,
-} from "../../../../../services/redux/slices/commerce/catalog/services";
+import { Templates } from "../../../../../services/fakeDb";
+
 const Header = () => {
-  const { maxPage } = useSelector(({ auth }) => auth); //get the max page
-  const { filtered } = useSelector(({ services }) => services); //
-  const [component, setComponent] = useState("");
-  const [services, setServices] = useState([]), //make a state component
+  const { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   //initial values
   useEffect(() => {
-    if (maxPage)
-      dispatch(SetCOLLECTIONS({ collections: Services.collections, maxPage }));
+    console.log(maxPage);
   }, [dispatch, maxPage]);
-
-  useEffect(() => {
-    if (filtered) setServices(filtered);
-  }, [filtered]);
-
-  const handleComponent = (value) => {
-    setComponent(value);
-
-    const template = Templates.getComponentIndex(value);
-    dispatch(SetByTEMPLATES(template));
-  };
 
   return (
     <MDBView
@@ -38,17 +20,14 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {services.length} Services
+          {maxPage} Pages
         </span>
       </div>
       <div>
         <div>
           <Select
             className="m-1 mt-2 mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
             inputClassName="m-0"
-            preValue={component}
             collections={Templates.getComponents("LAB")}
             label="Select Component"
           />
