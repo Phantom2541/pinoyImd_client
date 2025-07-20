@@ -6,7 +6,7 @@ import {
   MDBCardHeader,
 } from "mdbreact";
 import "./index.css";
-import dragAndDrop from "../../../../../../assets/drag-and-drop.png";
+import dragAndDrop from "../../../../../assets/drag-and-drop.png";
 import { capitalize } from "lodash";
 const Table = ({
   collections,

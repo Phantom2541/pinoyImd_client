@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactFlowProvider } from "react-flow-renderer";
 import OrgChartInner from "./orgChartInner";
-import { BROWSE } from "../../../../../../services/redux/slices/assets/persons/personnels";
-import { Policy } from "../../../../../../services/fakeDb";
+import { BROWSE } from "../../../../services/redux/slices/assets/persons/personnels";
+import { Policy } from "../../../../services/fakeDb";
 import "./style.css";
 
-export default function OrgChartWrapper() {
+export default function OrgChart() {
   const { activePlatform, token } = useSelector(({ auth }) => auth);
   const [personnels, setPersonnels] = useState([]);
   const dispatch = useDispatch();

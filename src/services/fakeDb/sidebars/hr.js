@@ -69,6 +69,13 @@ const hr = [
         icon: "user-tie",
         component: stockHolder,
       },
+      {
+        name: "Org Chart",
+        title: "Organization Chart",
+        path: "/organizationChart",
+        icon: "user-tie",
+        component: OrgChart,
+      },
     ],
   },
   {
