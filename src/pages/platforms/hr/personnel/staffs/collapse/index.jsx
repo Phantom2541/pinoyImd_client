@@ -12,12 +12,12 @@ import {
   collapse,
   employment,
   fullName,
-} from "./../../../../../services/utilities";
+} from "./../../../../../../services/utilities";
 import CollapseTable from "./table";
-import { Policy } from "./../../../../../services/fakeDb";
-import { UPDATE } from "./../../../../../services/redux/slices/assets/persons/personnels";
+import { Policy } from "./../../../../../../services/fakeDb";
+import { UPDATE } from "./../../../../../../services/redux/slices/assets/persons/personnels";
 import { capitalize } from "lodash";
-import EditableSelect from "./../../../../../components/customizable/editableSelect";
+import EditableSelect from "./../../../../../../components/customizable/editableSelect";
 import Swal from "sweetalert2";
 import CharacterHistory from "./characterHistory";
 export default function MenuCollapse({ staffs }) {

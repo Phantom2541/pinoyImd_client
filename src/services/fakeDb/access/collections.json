@@ -51,7 +51,7 @@
     "id": 8,
     "name": "Human Resources",
     "code": "hr",
-    "platform": "humanresources"
+    "platform": "human_resources"
   },
   {
     "id": 10,

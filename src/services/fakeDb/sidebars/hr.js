@@ -1,10 +1,13 @@
 import Dashboard from "../../../pages/platforms/hr/dashboard";
 import Payrolls from "../../../pages/platforms/accounting/payroll";
-import { Employees } from "../../../pages/platforms/headquarter/file201";
-import { Staffs, Physicians } from "../../../pages/platforms/hr";
 import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
-import { Schedule } from "../../../pages/platforms/hr/dtr";
-import { Applicants } from "../../../pages/platforms/manager/settings";
+import {
+  Schedule,
+  Staffs,
+  Physicians,
+  Employees,
+  Applicants,
+} from "../../../pages/platforms/hr";
 import { Services, Menus } from "../../../pages/platforms/accounting";
 
 const human_resources = [
@@ -100,11 +103,6 @@ const human_resources = [
     path: "/finance",
     icon: "tv",
     children: [
-      {
-        name: "Employment",
-        icon: "list",
-        path: "/finance/employment",
-      },
       {
         name: "Menus",
         path: "/finance/menus",
