@@ -18,28 +18,31 @@ import { Attendances } from "./platforms/hr";
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { platform = "Patron" } = activePlatform || {};
+  const platformPrefix = platform
+    ? `/${platform.toLowerCase().replace(/\s+/g, "_")}`
+    : "";
 
-  const platformPrefix = platform ? `/${platform.toLowerCase()}` : "";
   const renderSidebars = () => {
-    const platforms = Sidebars[platform.toLowerCase()];
+    const sidebar = Sidebars[platform.toLowerCase().replace(/\s+/g, "_")];
+    console.log("sidebar Darrel:", platform, sidebar);
 
-    if (!Array.isArray(platforms)) return "Ooops.. platforms must be array";
+    if (!Array.isArray(sidebar)) return "Ooops.. Sidebars must be array";
 
     const sideBars = [];
 
-    platforms.forEach((element, index) => {
+    sidebar.forEach((element, index) => {
       const { children, component, path = "" } = element;
 
       const fullPath = `${platformPrefix}${path}`;
-
+      console.log("fullPath Darrel:", fullPath);
       const renderChildren = (c, parentPath = "") => {
         if (!c.children) return;
-        c.children.forEach((child, childIndex) => {
+        c.children.forEach((child, i) => {
           const childFullPath = `${parentPath}${child.path}`;
-
+          console.log("childFullPath Darrel :", childFullPath);
           sideBars.push(
             <Route
-              key={`route-${index}-${childFullPath}`}
+              key={`route-${index}-${i}-${childFullPath}`}
               exact
               path={childFullPath}
               component={child.component || NotExisting}

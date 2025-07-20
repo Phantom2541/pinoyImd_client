@@ -10,11 +10,11 @@ import {
 } from "../../../pages/platforms/hr";
 import { Services, Menus } from "../../../pages/platforms/accounting";
 
-const hr = [
+const human_resources = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/hr/bulletin",
+    path: "/bulletin",
     component: Dashboard,
   },
   {
@@ -71,13 +71,13 @@ const hr = [
         icon: "user-tie",
         component: stockHolder,
       },
-      // {
-      //   name: "Org Chart",
-      //   title: "Organization Chart",
-      //   path: "/organizationChart",
-      //   icon: "user-tie",
-      //   component: OrgChart,
-      // },
+      {
+        name: "Org Chart",
+        title: "Organization Chart",
+        path: "/organizationChart",
+        icon: "user-tie",
+        // component: OrgChart,
+      },
     ],
   },
   {
@@ -119,4 +119,4 @@ const hr = [
   },
 ];
 
-export default hr;
+export default human_resources;
