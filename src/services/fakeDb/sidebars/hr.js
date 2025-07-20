@@ -10,6 +10,7 @@ import {
   Menus,
   Applicants,
 } from "../../../pages/platforms/manager/settings";
+import OrgChart from "../../../pages/platforms/hr/organizationChart";
 const hr = [
   {
     name: "Dashboard",
@@ -70,6 +71,13 @@ const hr = [
         path: "/stockHolder",
         icon: "user-tie",
         component: stockHolder,
+      },
+      {
+        name: "Org Chart",
+        title: "Organization Chart",
+        path: "/organizationChart",
+        icon: "user-tie",
+        component: OrgChart,
       },
     ],
   },
