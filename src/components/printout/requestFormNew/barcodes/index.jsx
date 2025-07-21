@@ -33,15 +33,17 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
             `${Templates.getAbbr(section)}-${sanitize(customerName)}-${String(
               pn
             ).padStart(2, "0")}`,
+            // `d2345678910111212 da`,
             {
-              format: "CODE39",
+              format: "CODE128",
               lineColor: "#000",
-              width: 2.5,
-              height: 80,
+              width: 2,
+              height: 130,
               displayValue: true,
               fontSize: 40,
               textAlign: "center",
-              margin: 0,
+              textPosition: "bottom",
+              margin: 12,
             }
           );
         } catch (e) {
@@ -54,15 +56,14 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
   return (
     <div className="thermal-print">
       {Object.keys(forms || {}).map((key) => (
-        <div key={key} className="barcode-container">
+        <div key={key} className="barcode-containe ">
           <svg
             ref={(el) => (refs.current[key] = el)}
             className="result-barcode"
             width="100%" // <--- Force it to stretch
             lineColor="#000"
             color="red"
-            height="auto" // <--- Let it adjust height automatically
-            preserveAspectRatio="none" // <--- Prevents squeezing to left
+            preserveAspectRatio="xMidYMid meet"
           />
         </div>
       ))}

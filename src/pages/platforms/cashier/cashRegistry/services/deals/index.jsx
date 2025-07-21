@@ -21,7 +21,7 @@ import {
 
 export default function Deals() {
   const { token, auth, activePlatform } = useSelector(({ auth }) => auth),
-    { isLoading } = useSelector(({ deals }) => deals),
+    { dealsLoading: isLoading } = useSelector(({ deals }) => deals),
     { filtered } = useSelector(({ payments }) => payments),
     dispatch = useDispatch();
 
@@ -87,7 +87,7 @@ export default function Deals() {
         localStorage.setItem("physicians", JSON.stringify(data.payload));
       });
     }
-  }, [token]);
+  }, [token, dispatch]);
 
   return (
     <div className="d-flex" fluid>

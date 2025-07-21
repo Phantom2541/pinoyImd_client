@@ -41,6 +41,7 @@ const initialState = {
   selected: {},
   isSuccess: false,
   isLoading: false,
+  dealsLoading: false, //this is for cashier deals loading
   censusLoading: false, // dedicated loader for celsus
   message: "",
   vendor: {},
@@ -1049,7 +1050,7 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(CASHIER.pending, (state) => {
-        state.isLoading = true;
+        state.dealsLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -1057,12 +1058,12 @@ export const reduxSlice = createSlice({
         const { payload } = action.payload;
         state.collections = state.filtered = payload;
         state.totalPages = payload.length;
-        state.isLoading = false;
+        state.dealsLoading = false;
       })
       .addCase(CASHIER.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.dealsLoading = false;
       })
       .addCase(UPDATE100DATA.pending, (state) => {
         state.formSubmitted = true;

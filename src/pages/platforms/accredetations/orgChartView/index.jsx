@@ -6,6 +6,7 @@ import ReactFlow, {
   useReactFlow,
 } from "react-flow-renderer";
 import CustomNode from "./../../../platforms/accounting/organizationChart/customNode";
+import CustomEdge from "./../../../platforms/accounting/organizationChart/customEdge";
 import "./style.css";
 
 const nodeTypes = { customNode: CustomNode };
@@ -56,10 +57,15 @@ function ReactFlowInner({ nodes, edges }) {
     }
   }, [nodes, fitView]);
 
+  const edgeTypes = {
+    custom: CustomEdge,
+  };
+
   return (
     <ReactFlow
       nodes={nodes}
       edges={edges}
+      edgeTypes={edgeTypes}
       nodeTypes={nodeTypes}
       fitView
       panOnScroll={false}
