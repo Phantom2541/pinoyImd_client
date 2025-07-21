@@ -106,7 +106,7 @@
   {
     "id": 24,
     "title": "Rental Expense",
-    "abbreviation": "RE",
+    "abbreviation": "RNE",
     "meaning": "Payments for leased office, laboratory, or clinic space.",
     "category": "expenses",
     "profitable": false
@@ -131,7 +131,7 @@
     "id": 27,
     "title": "Representation and Entertainment Expense",
     "abbreviation": "REE",
-    "meaning": "Expenses for business meetings, sponsorships, and client hospitality.",
+    "meaning": "Expenses for meals, meetings, and entertainment during business events, client visits, or sponsorships.",
     "category": "expenses",
     "profitable": false
   },
@@ -202,7 +202,7 @@
   {
     "id": 41,
     "title": "Retained Earnings",
-    "abbreviation": "RE",
+    "abbreviation": "RTE",
     "meaning": "Accumulated profit or loss from previous years.",
     "category": "capital",
     "profitable": true
@@ -228,7 +228,7 @@
     "title": "Partial remittances",
     "abbreviation": "PR",
     "meaning": "Partial remittance of the daily sales.",
-    "category": "expenses",
+    "category": "capital",
     "profitable": false
   },
   {
@@ -236,6 +236,454 @@
     "title": "Clearance Pay",
     "abbreviation": "CP",
     "meaning": "The final compensation given to an employee after completing the clearance process upon resignation, end of contract, or termination. It includes unpaid salary, prorated 13th month pay, convertible leave credits, and other benefits minus any deductions.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 46,
+    "title": "Sales Discount",
+    "abbreviation": "SD",
+    "meaning": "Reductions from gross sales due to agreed discounts with HMOs or institutions.",
+    "category": "income",
+    "profitable": false
+  },
+  {
+    "id": 47,
+    "title": "GCash Discount",
+    "abbreviation": "GD",
+    "meaning": "Transaction fees or deductions applied by GCash per sale.",
+    "category": "expense",
+    "profitable": false
+  },
+  {
+    "id": 48,
+    "title": "Sales from Branch Sendout",
+    "abbreviation": "SBS",
+    "meaning": "Revenues collected from other branches sending laboratory test requests.",
+    "category": "income",
+    "profitable": true
+  },
+  {
+    "id": 49,
+    "title": "Sales - Care Of MD",
+    "abbreviation": "SMD",
+    "meaning": "Payments made by doctors for services rendered to their patients.",
+    "category": "income",
+    "profitable": true
+  },
+  {
+    "id": 50,
+    "title": "Sales - Care Of Entities",
+    "abbreviation": "SCOE",
+    "meaning": "Revenues received from corporate clients such as Coca-Cola or San Miguel.",
+    "category": "income",
+    "profitable": true
+  },
+  {
+    "id": 51,
+    "title": "Miscellaneous Income",
+    "abbreviation": "MI",
+    "meaning": "Extra income from overpayments, unclaimed deposits, or unclassified small revenues.",
+    "category": "income",
+    "profitable": true
+  },
+  {
+    "id": 52,
+    "title": "Bank Interest Income",
+    "abbreviation": "BII",
+    "meaning": "Interest earned from bank deposits or time deposit accounts.",
+    "category": "income",
+    "profitable": true
+  },
+  {
+    "id": 53,
+    "title": "Donation Income",
+    "abbreviation": "DI",
+    "meaning": "Non-obligatory gifts received by the company, typically from suppliers during holidays.",
+    "category": "income",
+    "profitable": true
+  },
+  {
+    "id": 54,
+    "title": "Rental Income",
+    "abbreviation": "RI",
+    "meaning": "Income generated from renting out laboratory or clinic space and assets.",
+    "category": "income",
+    "profitable": true
+  },
+  {
+    "id": 56,
+    "title": "Retainer’s Fee",
+    "abbreviation": "RFN",
+    "meaning": "Fixed periodic professional fee paid to external consultants such as legal, accounting, or medical specialists.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 59,
+    "title": "Rebates to MD",
+    "abbreviation": "RMD",
+    "meaning": "Percentage of service revenue given as rebate or incentive to referring physicians.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 60,
+    "title": "Rebates to Entity",
+    "abbreviation": "REI",
+    "meaning": "Sales rebates given to partner organizations like SMB, Coke, or Cosmos.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 61,
+    "title": "Preventive Maintenance",
+    "abbreviation": "PME",
+    "meaning": "Expenses allocated for preventive upkeep of machines, saving future repair costs.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 62,
+    "title": "Bank Service Charge",
+    "abbreviation": "BSC",
+    "meaning": "Bank fees charged for deposits, fund transfers, or checkbook issuance.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 63,
+    "title": "Printing Fee",
+    "abbreviation": "PF",
+    "meaning": "Expenses for printed materials, patient records, ID cards, or document papers.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 64,
+    "title": "SSS, Pag-IBIG, PhilHealth – Employer Share",
+    "abbreviation": "GOV-ES",
+    "meaning": "Employer's mandatory share in government contributions for Social Security System, Pag-IBIG, and PhilHealth.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 65,
+    "title": "13th Month Pay",
+    "abbreviation": "13MP",
+    "meaning": "Mandatory bonus equivalent to one twelfth (1/12) of an employee's annual basic salary.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 66,
+    "title": "14th Month Pay",
+    "abbreviation": "14MP",
+    "meaning": "Additional company bonus given as part of incentive or performance reward, non-mandatory.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 67,
+    "title": "Meal Allowance",
+    "abbreviation": "MA",
+    "meaning": "Daily allowance granted to employees for meal expenses during duty hours.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 68,
+    "title": "Rice Incentive",
+    "abbreviation": "RI-I",
+    "meaning": "Monthly benefit in the form of rice or equivalent cash incentive for employees.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 69,
+    "title": "Travel Allowance",
+    "abbreviation": "TA",
+    "meaning": "Allowance given to staff for work-related travel or branch visits.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 70,
+    "title": "Motor Allowance",
+    "abbreviation": "MOA",
+    "meaning": "Allowance for employees using motorcycles for official business travel.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 71,
+    "title": "Communication Allowance",
+    "abbreviation": "CA",
+    "meaning": "Monthly stipend given to staff for mobile/data expenses used in official communications.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 72,
+    "title": "Cost of Living Allowance (COLA)",
+    "abbreviation": "COLA",
+    "meaning": "Legally mandated allowance provided to adjust for inflation and cost of living.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 73,
+    "title": "Reliever’s Fee",
+    "abbreviation": "RFEE",
+    "meaning": "Compensation paid to temporary workers or substitutes filling in for regular staff.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 74,
+    "title": "BIR 1601-E",
+    "abbreviation": "BIR1601E",
+    "meaning": "Monthly remittance of withholding tax on income payments subject to expanded withholding tax.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 75,
+    "title": "BIR 1702Q",
+    "abbreviation": "BIR1702Q",
+    "meaning": "Quarterly income tax return for corporations and partnerships.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 76,
+    "title": "BIR 1702 - Income Tax Expense",
+    "abbreviation": "BIR1702",
+    "meaning": "Annual income tax due as computed by third-party accountants.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 77,
+    "title": "Expanded Withholding Tax",
+    "abbreviation": "EWT",
+    "meaning": "Tax withheld from professional services or rentals, typically at 2%.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 78,
+    "title": "Miscellaneous Tax",
+    "abbreviation": "MTX",
+    "meaning": "Other minor taxes such as documentary stamps or special fees not categorized elsewhere.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 79,
+    "title": "Honorarium",
+    "abbreviation": "HON",
+    "meaning": "Non-salary compensation given for voluntary or special professional services.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 80,
+    "title": "Honorarium – Admin",
+    "abbreviation": "HON-A",
+    "meaning": "Honorarium granted to administrative staff or executives for special assignments.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 81,
+    "title": "Bonus",
+    "abbreviation": "BON",
+    "meaning": "Company-wide reward given during holidays or based on overall performance.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 82,
+    "title": "Incentive Fee",
+    "abbreviation": "IF",
+    "meaning": "Performance-based financial reward given to employees, includes home service commissions.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 83,
+    "title": "Incentive Fee – Admin",
+    "abbreviation": "IF-A",
+    "meaning": "Incentive or bonus specifically for administrative personnel.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 85,
+    "title": "Seminar/Training/Convention",
+    "abbreviation": "STC",
+    "meaning": "Registration fees and participation costs for professional seminars, conventions, or industry trainings.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 86,
+    "title": "Seminar Allowance",
+    "abbreviation": "SMA",
+    "meaning": "Allowance or stipend granted to employees attending seminars or trainings.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 87,
+    "title": "Membership/Participation Fee",
+    "abbreviation": "MPF",
+    "meaning": "Annual or event-based fees paid for membership in professional associations (e.g. PAMET, NEQAS).",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 88,
+    "title": "Registration Expense",
+    "abbreviation": "REG-E",
+    "meaning": "Expenses related to business registrations such as Mayor’s Permit or SEC filings.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 89,
+    "title": "Permits and Licenses",
+    "abbreviation": "PERM",
+    "meaning": "Government-imposed fees for regulatory compliance such as DOH, DENR, and HAZWASTE permits.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 90,
+    "title": "Birthday Allowance",
+    "abbreviation": "BDA",
+    "meaning": "Special one-time allowance or gift given to employees on their birthdays.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 91,
+    "title": "Farewell Gift/Token",
+    "abbreviation": "FGT",
+    "meaning": "Parting gifts or farewell tokens given to retiring or resigning staff members.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 92,
+    "title": "Certification Fee",
+    "abbreviation": "CERT",
+    "meaning": "Fees for professional certifications or renewals required by staff (e.g. HIV counselor, PCO officer).",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 93,
+    "title": "License Fee",
+    "abbreviation": "LICF",
+    "meaning": "Annual license renewal fees for medical professionals, such as doctors and radiologic technologists.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 94,
+    "title": "Notarial Fee",
+    "abbreviation": "NOTF",
+    "meaning": "Payments for notarization of contracts, affidavits, and other legal documents.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 95,
+    "title": "Repairs and Maintenance",
+    "abbreviation": "R&M",
+    "meaning": "Expenses for repairing and maintaining equipment, utilities, and facility infrastructure.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 96,
+    "title": "Clothing and Uniform",
+    "abbreviation": "C&U",
+    "meaning": "Cost of uniforms, ID cards, or other apparel required for staff.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 97,
+    "title": "Delivery Expense",
+    "abbreviation": "DEX",
+    "meaning": "Courier or delivery costs for supplies, large equipment, or documents (e.g., via Lalamove, Grab).",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 98,
+    "title": "Gas Expense",
+    "abbreviation": "GAS",
+    "meaning": "Fuel expenses for official business-related transport.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 99,
+    "title": "Marketing Fee",
+    "abbreviation": "MKT",
+    "meaning": "Fixed marketing service cost, such as agency fees or promotional partnerships.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 100,
+    "title": "Advertising Expense",
+    "abbreviation": "ADS",
+    "meaning": "Expenses for paid advertising, such as Facebook ads, tarpaulins, or flyers.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 101,
+    "title": "Appearance Fee",
+    "abbreviation": "APF",
+    "meaning": "Honorarium given to professionals (e.g. legal) for presence in meetings, hearings, or special appearances.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 102,
+    "title": "Pharmacy Expense",
+    "abbreviation": "PHX",
+    "meaning": "Purchases of pharmaceutical products or supplies used internally.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 103,
+    "title": "Commission Expense",
+    "abbreviation": "CME",
+    "meaning": "Compensation based on percentage of sales or service, excluding regular staff bonuses.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 104,
+    "title": "Other Expense",
+    "abbreviation": "OTH",
+    "meaning": "Miscellaneous business-related costs not categorized elsewhere.",
+    "category": "expenses",
+    "profitable": false
+  },
+  {
+    "id": 106,
+    "title": "Service Fee",
+    "abbreviation": "SFE",
+    "meaning": "Charges paid to third-party service providers (e.g., guards, outsourced accountants).",
     "category": "expenses",
     "profitable": false
   }
