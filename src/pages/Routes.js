@@ -18,8 +18,9 @@ export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { platform = "Patron" } = activePlatform || {};
   const platformPrefix = platform
-    ? `/${platform.toLowerCase().replace(/\s+/g, "_")}`
+    ? `/${platform.toLowerCase().replace(/\s+/g, "")}`
     : "";
+  console.log("platfom", platform);
 
   const renderSidebars = () => {
     const sidebar = Sidebars[platform?.toLowerCase()?.replace(/\s+/g, "_")];
@@ -52,6 +53,7 @@ export default function Routes() {
       if (children) {
         renderChildren(element, fullPath);
       }
+      // console.log("fullPath Darrel:", fullPath);
 
       if (!children) {
         sideBars.push(

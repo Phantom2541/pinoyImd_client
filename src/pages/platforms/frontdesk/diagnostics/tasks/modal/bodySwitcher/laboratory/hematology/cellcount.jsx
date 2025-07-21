@@ -43,10 +43,8 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
     dispatch(SetTASK({ form: task?.form, task: { ...task, cc: _cells } }));
     dispatch(SetPARAMS({ key: "cc", value: _cells }));
   };
-  console.log("selected", selected);
   const handleKeyDown = (e, index) => {
     if (e.key === "Enter") {
-      console.log("index", index);
       e.preventDefault();
       const nextInput = inputRefs.current[index + 1];
       if (nextInput) {

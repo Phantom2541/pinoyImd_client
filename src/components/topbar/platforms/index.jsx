@@ -25,6 +25,8 @@ export default function Platforms() {
   }, [activePlatform]);
 
   const handlePlatform = (platform) => {
+    const cleanedPlatform = platform.toLowerCase().replace(/\s+/g, "");
+
     dispatch(
       SETACTIVEPLATFORM({
         data: {
@@ -32,7 +34,7 @@ export default function Platforms() {
           email: auth.email,
           activePlatform: {
             ...activePlatform,
-            platform: platform || "patron",
+            platform: cleanedPlatform || "patron",
           },
         },
         token,
@@ -65,14 +67,19 @@ export default function Platforms() {
         </MDBDropdownToggle>
       )}
       <MDBDropdownMenu right>
-        {access?.map((platform, index) => (
-          <MDBDropdownItem
-            key={`platform-${index}`}
-            onClick={() => handlePlatform(platform)}
-          >
-            {capitalize(platform)}
-          </MDBDropdownItem>
-        ))}
+        {access?.map(
+          (platform, index) => (
+            console.log("platform", platform),
+            (
+              <MDBDropdownItem
+                key={`platform-${index}`}
+                onClick={() => handlePlatform(platform)}
+              >
+                {capitalize(platform)}
+              </MDBDropdownItem>
+            )
+          )
+        )}
       </MDBDropdownMenu>
     </MDBDropdown>
   );
