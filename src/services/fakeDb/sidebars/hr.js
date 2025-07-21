@@ -10,7 +10,7 @@ import {
 } from "../../../pages/platforms/hr";
 import { Services, Menus } from "../../../pages/platforms/accounting";
 
-const human_resources = [
+const humanresources = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
@@ -119,4 +119,4 @@ const human_resources = [
   },
 ];
 
-export default human_resources;
+export default humanresources;
