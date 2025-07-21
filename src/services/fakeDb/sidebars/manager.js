@@ -1,11 +1,7 @@
 import Dashboard from "../../../pages/platforms/manager/dashboard";
 
-import {
-  Services,
-  Menus,
-  Applicants,
-  Tieups,
-} from "../../../pages/platforms/manager/settings";
+import { Applicants, Tieups } from "../../../pages/platforms/manager/settings";
+import { Services, Menus } from "../../../pages/platforms/accounting";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
 import Banners from "../../../pages/platforms/manager/settings/banner";
@@ -17,7 +13,7 @@ import {
   Equipments,
   Physicians,
   Heads,
-} from "../../../pages/platforms/hr";
+} from "../../../pages/platforms/hr/index.js";
 import { Procurments } from "../../../pages/platforms/procurement";
 
 import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";

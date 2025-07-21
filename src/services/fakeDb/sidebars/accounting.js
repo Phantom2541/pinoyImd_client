@@ -9,7 +9,10 @@ import {
   Reseco,
   ClearancePay,
   Payrolls,
+  Menus,
+  Services,
 } from "../../../pages/platforms/accounting";
+import OrgChart from "../../../pages/platforms/accounting/organizationChart";
 
 const accounting = [
   {
@@ -88,6 +91,34 @@ const accounting = [
         component: ClearancePay,
       },
     ],
+  },
+  {
+    name: "Catalogs",
+    path: "/catalogs",
+    icon: "shopping-cart",
+    children: [
+      {
+        name: "Menus",
+        title: "Service menus and offerings.",
+        path: "/menus",
+        icon: "bars",
+        component: Menus,
+      },
+      {
+        name: "Services",
+        title: "List of medical and lab services.",
+        path: "/services",
+        icon: "concierge-bell",
+        component: Services,
+      },
+    ],
+  },
+  {
+    name: "Org Chart",
+    title: "Organizational chart.",
+    icon: "tachometer-alt",
+    path: "/organizationChart",
+    component: OrgChart,
   },
 ];
 

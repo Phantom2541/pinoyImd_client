@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useReactFlow, Handle, Position } from "react-flow-renderer";
 import Swal from "sweetalert2";
 import Default from "./../../../../assets/iMD.png";
 // import Default from "./../../../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
+import { MDBIcon } from "mdbreact";
 
 const normalizePosition = (pos) =>
   Array.isArray(pos)
@@ -14,6 +15,7 @@ const normalizePosition = (pos) =>
 
 export default function CustomNode({ data, id }) {
   const { setNodes } = useReactFlow();
+  const [isFading, setIsFading] = useState(false);
 
   const handleClone = async () => {
     const positions = normalizePosition(data.position);
@@ -70,8 +72,20 @@ export default function CustomNode({ data, id }) {
     : (data.title || "").split(",").map((s) => s.trim());
   const positions = normalizePosition(data.position);
 
+  const handleReturn = () => {
+    if (typeof data.onReturn === "function") {
+      setIsFading(true); // 🔸 Start fade-out animation
+      setTimeout(() => {
+        data.onReturn(); // ✅ Actually remove after 300ms
+      }, 300); // Match your CSS transition duration
+    }
+  };
+
   return (
-    <div className="orgChart-innerCard" style={{ position: "relative" }}>
+    <div
+      className={`orgChart-innerCard ${isFading ? "node-fade-out" : ""}`}
+      style={{ position: "relative" }}
+    >
       <Handle
         type="target"
         position={Position.Top}
@@ -87,6 +101,12 @@ export default function CustomNode({ data, id }) {
         }}
         isConnectable
       />
+      <button
+        className="orgChart-innerCard-return bg-warning"
+        onClick={handleReturn}
+      >
+        <MDBIcon fas icon="undo" />
+      </button>
       <img
         className="orgChart-innerCard-image"
         src={profile}

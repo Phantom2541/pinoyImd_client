@@ -5,7 +5,7 @@ import {
   SetPRC,
   UPDATE,
   RESET,
-} from "../../../../../services/redux/slices/assets/persons/heads";
+} from "../../../.././../services/redux/slices/assets/persons/heads";
 import { useToasts } from "react-toast-notifications";
 import { fullName, ENDPOINT } from "../../../../../services/utilities";
 import Swal from "sweetalert2";

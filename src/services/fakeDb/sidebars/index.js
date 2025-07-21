@@ -4,12 +4,13 @@ import accreditation from "./accreditation";
 import admin from "./admin";
 import auditor from "./auditor";
 import author from "./author";
+import accounting from "./accounting";
 import carpentry from "./carpentry";
 import cashier from "./cashier";
 import clinical from "./clinical";
 import frontdesk from "./frontdesk";
 import headquarter from "./headquarter";
-import humanresources from "./hr";
+import human_resources from "./hr";
 import nutritionist from "./nutritionist";
 import pharmacist from "./pharmacist";
 import procurement from "./procurement";
@@ -26,7 +27,7 @@ const Sidebars = {
   pharmacist,
   nutritionist,
   headquarter,
-  humanresources,
+  human_resources,
   frontdesk,
   cashier,
   clinical,
@@ -34,6 +35,7 @@ const Sidebars = {
   author,
   auditor,
   admin,
+  accounting,
   superadmin,
   accreditation,
   manager,

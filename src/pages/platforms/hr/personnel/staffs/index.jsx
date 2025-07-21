@@ -5,14 +5,14 @@ import {
   BROWSE,
   SetActivePAGE,
   RESET,
-} from "./../../../../services/redux/slices/assets/persons/personnels";
+} from "./../../../../../services/redux/slices/assets/persons/personnels";
 import { MDBCard, MDBCardBody, MDBView } from "mdbreact";
 import MenuCollapse from "./collapse";
-import TableLoading from "../../../../components/tableLoading";
-import Pagination from "./../../../../components/pagination";
-import TableRowCount from "./../../../../components/pagination/rows";
-import Search from "./../../../../components/searchables/search";
-import { employment } from "./../../../../services/utilities";
+import TableLoading from "../../../../../components/tableLoading";
+import Pagination from "./../../../../../components/pagination";
+import TableRowCount from "./../../../../../components/pagination/rows";
+import Search from "./../../../../../components/searchables/search";
+import { employment } from "./../../../../../services/utilities";
 
 export default function Staffs() {
   const [staffs, setStaffs] = useState([]),

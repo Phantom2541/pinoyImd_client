@@ -1,26 +1,25 @@
 import Dashboard from "../../../pages/platforms/hr/dashboard";
-// import Payrolls from "../../../pages/platforms/hr/accured/payrolls";
 import Payrolls from "../../../pages/platforms/accounting/payroll";
-import { Employees } from "../../../pages/platforms/headquarter/file201";
-import { Staffs, Physicians } from "../../../pages/platforms/hr";
 import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
-import { Schedule } from "../../../pages/platforms/hr/dtr";
 import {
-  Services,
-  Menus,
+  Schedule,
+  Staffs,
+  Physicians,
+  Employees,
   Applicants,
-} from "../../../pages/platforms/manager/settings";
-import OrgChart from "../../../pages/platforms/hr/organizationChart";
-const hr = [
+} from "../../../pages/platforms/hr";
+import { Services, Menus } from "../../../pages/platforms/accounting";
+
+const human_resources = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/hr/bulletin",
+    path: "/bulletin",
     component: Dashboard,
   },
   {
     name: "Employees",
-    path: "/file",
+    path: "/employees",
     icon: "tv",
     children: [
       {
@@ -77,7 +76,7 @@ const hr = [
         title: "Organization Chart",
         path: "/organizationChart",
         icon: "user-tie",
-        component: OrgChart,
+        // component: OrgChart,
       },
     ],
   },
@@ -105,11 +104,6 @@ const hr = [
     icon: "tv",
     children: [
       {
-        name: "Employment",
-        icon: "list",
-        path: "/finance/employment",
-      },
-      {
         name: "Menus",
         path: "/finance/menus",
         icon: "cogs",
@@ -125,4 +119,4 @@ const hr = [
   },
 ];
 
-export default hr;
+export default human_resources;
