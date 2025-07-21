@@ -14,7 +14,9 @@ import { INSOURCE } from "../../../../../../services/redux/slices/assets/provide
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth);
-  const { collections, message, isSuccess } = useSelector(({ deals }) => deals);
+  const { collections, message, isSuccess, refined } = useSelector(
+    ({ deals }) => deals
+  );
   const [cashiers, setCashiers] = useState([]);
   const { addToast } = useToasts();
   const dispatch = useDispatch();
@@ -98,6 +100,7 @@ const Header = () => {
           rounded
           color="white"
           size="sm"
+          disabled={refined?.length === 0}
           outline
           onClick={() => DealsToExcel({ array: collections })}
           className="px-2 ml-2"

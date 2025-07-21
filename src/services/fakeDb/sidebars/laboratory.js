@@ -29,6 +29,7 @@ import {
   Temperature,
 } from "../../../pages/platforms/diagnostics/management";
 import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
+import WorkingArea from "../../../pages/platforms/laboratory/working-area";
 // import ClinicalMicroscopy from "../../../pages/platforms/laboratory/workingArea/clinicalMicroscopy";
 
 const laboratory = [
@@ -394,45 +395,46 @@ const laboratory = [
     icon: "microscope",
     title: "Access different lab working sections",
     allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS", "Frontdesk"], // optional if role-filtered
-    children: [
-      {
-        name: "Clinical Microscopy",
-        path: "/lab/working-area/clinical-microscopy",
-        icon: "vial",
-        title: "Routine urinalysis, stool exam, etc.",
-        // component: ClinicalMicroscopy,
-      },
-      {
-        name: "Hematology",
-        path: "/lab/working-area/hematology",
-        icon: "tint",
-        title: "CBC, blood smears, ESR, etc.",
-      },
-      {
-        name: "Clinical Chemistry",
-        path: "/lab/working-area/clinical-chemistry",
-        icon: "flask",
-        title: "Glucose, enzymes, electrolytes, etc.",
-      },
-      {
-        name: "Immunology & Serology",
-        path: "/lab/working-area/immuno-sero",
-        icon: "syringe",
-        title: "Antibody-antigen testing",
-      },
-      {
-        name: "Microbiology",
-        path: "/lab/working-area/microbiology",
-        icon: "bug",
-        title: "Culture and sensitivity, gram stain",
-      },
-      {
-        name: "Blood Banking",
-        path: "/lab/working-area/blood-bank",
-        icon: "hand-holding-medical",
-        title: "Crossmatching and blood typing",
-      },
-    ],
+    component: WorkingArea,
+    // children: [
+    //   {
+    //     name: "Clinical Microscopy",
+    //     path: "/lab/working-area/clinical-microscopy",
+    //     icon: "vial",
+    //     title: "Routine urinalysis, stool exam, etc.",
+    //     // component: ClinicalMicroscopy,
+    //   },
+    //   {
+    //     name: "Hematology",
+    //     path: "/lab/working-area/hematology",
+    //     icon: "tint",
+    //     title: "CBC, blood smears, ESR, etc.",
+    //   },
+    //   {
+    //     name: "Clinical Chemistry",
+    //     path: "/lab/working-area/clinical-chemistry",
+    //     icon: "flask",
+    //     title: "Glucose, enzymes, electrolytes, etc.",
+    //   },
+    //   {
+    //     name: "Immunology & Serology",
+    //     path: "/lab/working-area/immuno-sero",
+    //     icon: "syringe",
+    //     title: "Antibody-antigen testing",
+    //   },
+    //   {
+    //     name: "Microbiology",
+    //     path: "/lab/working-area/microbiology",
+    //     icon: "bug",
+    //     title: "Culture and sensitivity, gram stain",
+    //   },
+    //   {
+    //     name: "Blood Banking",
+    //     path: "/lab/working-area/blood-bank",
+    //     icon: "hand-holding-medical",
+    //     title: "Crossmatching and blood typing",
+    //   },
+    // ],
   },
   {
     name: "Settings",
