@@ -1,29 +1,26 @@
 @media print {
   @page {
-    size: 58mm 30mm landscape !important; /* 👈 try explicitly adding 'landscape' */
     margin: 0;
   }
 
   body {
-    margin: 0;
-    padding: 0;
-    writing-mode: horizontal-tb !important; /* 👈 force horizontal text block */
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .thermal-print {
-    display: block;
-    width: 100%;
-    transform: rotate(0deg); /* Just in case */
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .barcode-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 0;
   }
-
-  canvas.result-barcode {
-    width: 100%;
-    height: auto;
+  .result-barcode {
+    width: 100% !important;
+    padding: 0;
+    background-color: red;
+    height: 20rem !important;
+    display: block;
   }
 }
