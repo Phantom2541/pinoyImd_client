@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import bwipjs from "bwip-js";
+import JsBarcode from "jsbarcode";
 import { Templates } from "../../../../services/fakeDb";
 import { capitalize } from "lodash";
 import "./style.css";
@@ -19,25 +19,33 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
     str
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^ -~]/g, "");
+      .replace(/[^A-Z0-9 \-.$/+%]/gi, "")
+      .toUpperCase();
 
   useEffect(() => {
     if (!forms) return;
     Object.keys(forms).forEach((section) => {
-      const canvas = refs.current[section];
-      if (canvas) {
+      const svg = refs.current[section];
+      if (svg) {
         try {
-          bwipjs.toCanvas(canvas, {
-            bcid: "code128", // barcode type
-            text: `${Templates.getAbbr(section)}-${sanitize(
-              customerName
-            )}-${String(pn).padStart(2, "0")}`,
-            scale: 3, // scale factor (affects both width & height)
-            height: 20, // height in mm (actual printed bar height)
-            includetext: true,
-            textxalign: "center",
-            textsize: 12, // readable font size
-          });
+          JsBarcode(
+            svg,
+            `${Templates.getAbbr(section)}-${sanitize(customerName)}-${String(
+              pn
+            ).padStart(2, "0")}`,
+            // `d2345678910111212 da`,
+            {
+              format: "CODE128",
+              lineColor: "#000",
+              width: 2,
+              height: 130,
+              displayValue: true,
+              fontSize: 40,
+              textAlign: "center",
+              textPosition: "bottom",
+              margin: 12,
+            }
+          );
         } catch (e) {
           console.error("Barcode render error:", e);
         }
@@ -48,10 +56,14 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
   return (
     <div className="thermal-print">
       {Object.keys(forms || {}).map((key) => (
-        <div key={key} className="barcode-container">
-          <canvas
+        <div key={key} className="barcode-containe ">
+          <svg
             ref={(el) => (refs.current[key] = el)}
             className="result-barcode"
+            width="100%" // <--- Force it to stretch
+            lineColor="#000"
+            color="red"
+            preserveAspectRatio="xMidYMid meet"
           />
         </div>
       ))}

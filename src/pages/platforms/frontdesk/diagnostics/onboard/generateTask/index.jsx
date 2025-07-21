@@ -168,7 +168,7 @@ export default function Modal() {
       window.open(
         "/printout/request/form",
         "RequestForm",
-        "top=100px,left=100px,width=1050px,height=750px"
+        "top=100px,left=100px,width=120px,height=750px"
       );
     }
 

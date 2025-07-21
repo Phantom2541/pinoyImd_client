@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
@@ -13,6 +13,9 @@ export default function Chemistry() {
     dispatch = useDispatch();
 
   const { packages = {}, key: mapKey, patient } = task || {};
+
+  const inputRefs = useRef([]);
+
   const handleChange = (target) => {
     const { name, value } = target,
       _name = Number(name),
@@ -52,6 +55,14 @@ export default function Chemistry() {
     );
   };
 
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const next = inputRefs.current[index + 1];
+      if (next) next.focus();
+    }
+  };
+
   return (
     <MDBTable hover responsive className="mb-0">
       <thead>
@@ -88,12 +99,14 @@ export default function Chemistry() {
               <td className="py-1">
                 <input
                   type="number"
+                  ref={(el) => (inputRefs.current[index] = el)}
                   style={{
                     color: referenceColor(Number(value), critical, alert, warn),
                   }}
                   name={key}
                   value={String(value)}
                   onChange={(e) => handleChange(e.target)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
                   className="w-100 text-center fw-bold"
                 />
               </td>

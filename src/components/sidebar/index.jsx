@@ -80,10 +80,11 @@ export default function SideNavigation({
   // }, [company, activePlatform, isLoading, href, logo]);
 
   // ✅ Guarded sidebar loader with platform/role filtering
+  const normalizePlatform = (platform) =>
+    platform?.toLowerCase().replace(/\s/g, "_");
+
   useEffect(() => {
-    const platformKey = activePlatform?.platform
-      ?.toLowerCase()
-      .replace(/\s/g, "");
+    const platformKey = normalizePlatform(activePlatform?.platform);
 
     if (!platformKey || platformKey === "patron") {
       const newLinks = Sidebars["patron"] || [];
@@ -134,7 +135,12 @@ export default function SideNavigation({
             }
             style={indentStyle}
           >
-            {renderNavItems(item.children, key, fullPath, level + 1)}
+            {renderNavItems(
+              item.children,
+              key,
+              normalizePlatform(fullPath),
+              level + 1
+            )}
           </MDBSideNavCat>
         );
       }
@@ -142,7 +148,7 @@ export default function SideNavigation({
       return (
         <MDBSideNavLink
           key={key}
-          to={fullPath}
+          to={normalizePlatform(fullPath)}
           topLevel
           onClick={onLinkClick}
           style={indentStyle}
@@ -186,7 +192,7 @@ export default function SideNavigation({
             ? renderNavItems(
                 links,
                 "sidebar",
-                `/${activePlatform?.platform?.toLowerCase() || "patron"}`
+                `/${normalizePlatform(activePlatform?.platform || "patron")}`
               )
             : new Array(6).fill().map((_, index) => (
                 <div className="mx-2" key={index}>

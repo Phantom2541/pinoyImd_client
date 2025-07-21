@@ -3,114 +3,114 @@
     "id": 1,
     "name": "Accreditation",
     "code": "accre",
-    "platform": "Accreditation"
+    "platform": "accreditation"
   },
   {
     "id": 2,
     "name": "Administrative",
     "code": "admin",
-    "platform": "Administrative"
+    "platform": "administrative"
   },
   {
     "id": 2,
     "name": "Accounting",
     "code": "accouting",
-    "platform": "Accounting"
+    "platform": "accounting"
   },
   {
     "id": 3,
     "name": "Auditor",
     "code": "auditor",
-    "platform": "Auditor"
+    "platform": "auditor"
   },
   {
     "id": 4,
     "name": "Cashier",
     "code": "cashier",
-    "platform": "Cashier"
+    "platform": "cashier"
   },
   {
     "id": 5,
     "name": "Frontdesk",
     "code": "frontdesk",
-    "platform": "Frontdesk"
+    "platform": "frontdesk"
   },
   {
     "id": 6,
     "name": "Manager",
     "code": "manager",
-    "platform": "Manager"
+    "platform": "manager"
   },
   {
     "id": 7,
     "name": "Patron",
     "code": "patron",
-    "platform": "Patron"
+    "platform": "patron"
   },
   {
     "id": 8,
     "name": "Human Resources",
     "code": "hr",
-    "platform": "Human Resources"
+    "platform": "human_resources"
   },
   {
     "id": 10,
     "name": "Laboratory",
-    "code": "laboratory",
-    "platform": "Laboratory"
+    "code": "lab",
+    "platform": "laboratory"
   },
   {
     "id": 11,
     "name": "Radiology",
-    "code": "radiology",
-    "platform": "Radiology"
+    "code": "rad",
+    "platform": "radiology"
   },
   {
     "id": 12,
     "name": "Pharmacist",
-    "code": "pharmacist",
-    "platform": "Pharmacist"
+    "code": "pharma",
+    "platform": "pharmacist"
   },
   {
     "id": 13,
     "name": "Procurement",
     "code": "procurement",
-    "platform": "Procurement"
+    "platform": "procurement"
   },
   {
     "id": 14,
     "name": "Utility",
     "code": "utility",
-    "platform": "Utility"
+    "platform": "utility"
   },
   {
     "id": 15,
     "name": "Nutritionist",
     "code": "nutritionist",
-    "platform": "Nutritionist"
+    "platform": "nutritionist"
   },
   {
     "id": 16,
     "name": "Driver",
     "code": "driver",
-    "platform": "Driver"
+    "platform": "driver"
   },
   {
     "id": 17,
     "name": "Author",
     "code": "author",
-    "platform": "Author"
+    "platform": "author"
   },
   {
     "id": 18,
     "name": "Clinical",
     "code": "clinical",
-    "platform": "Clinical"
+    "platform": "clinical"
   },
   {
     "id": 19,
     "name": "Physician",
-    "code": "physician",
+    "code": "dr",
     "platform": "physician"
   }
 ]

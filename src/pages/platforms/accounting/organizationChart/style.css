@@ -1,0 +1,326 @@
+.orgChart-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+  height: 100vh;
+  width: 100%;
+  padding: 10px;
+}
+
+.orgChart-topbar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  background-color: white;
+  overflow-y: auto;
+  max-height: 100%;
+  min-height: 100%;
+  width: 15%;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+
+.draggable-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  border: none;
+  box-shadow: none;
+  gap: 5px;
+}
+.orgChart-wrapper {
+  height: 100%;
+  width: 85%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  margin: 10px;
+  border-radius: 5px;
+  transform-origin: top;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.organization-chart-imgContainer {
+  width: 100%;
+  min-width: 100%;
+}
+
+.organization-chart-img {
+  width: 100%;
+  min-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.flow-area {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.flow-area-controls {
+  position: absolute;
+  top: 3%;
+  left: 1%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 100;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.flow-area-controls.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.flow-area-controls-save,
+.flow-area-controls-reset {
+  color: white;
+  border: none;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  font-size: 1rem;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.flow-area-controls-save:active,
+.flow-area-controls-reset:active {
+  transform: scale(0.98);
+}
+
+.orgChart-innerCard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+  min-width: 250px;
+  cursor: grab;
+  gap: 5px;
+  transform: scale(0.8);
+}
+
+.orgChart-innerCard-image-container {
+  position: relative;
+}
+
+.orgChart-innerCard-return,
+.orgChart-innerCard-deleteClone {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+  border: none;
+  color: white;
+  width: 35px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
+.orgChart-innerCard:hover .orgChart-innerCard-return,
+.orgChart-innerCard:hover .orgChart-innerCard-deleteClone {
+  left: -70%;
+}
+
+.orgChart-innerCard-clone {
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+  border: none;
+  color: white;
+  width: 35px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
+.orgChart-innerCard:hover .orgChart-innerCard-clone {
+  right: -70%;
+}
+
+.orgChart-innerCard-image {
+  width: 70px;
+  aspect-ratio: 1/1;
+  border-radius: 5px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.4);
+  background-color: white;
+}
+.orgChart-innerCard-info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 200px;
+  max-width: 200px;
+  background-color: white;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  padding: 3px 10px;
+  border-radius: 5px;
+}
+
+.orgChart-innerCard-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+.orgChart-innerCard-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.orgChart-innerCard-title {
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.orgChart-innerCard-position-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.orgChart-innerCard-position {
+  font-size: 0.7rem;
+  color: #8b8989;
+  text-transform: capitalize;
+}
+
+.custom-handle {
+  width: 16px !important;
+  height: 16px !important;
+  background: #007bff !important;
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: crosshair;
+  z-index: 10;
+}
+
+/* Hide all handles by default */
+.orgChart-innerCard .react-flow__handle {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+/* Show handles only on hover */
+.orgChart-innerCard:hover .react-flow__handle {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Global CSS (e.g. orgChart.css or App.css) */
+.node-fade-out {
+  opacity: 1;
+  transform: scale(1);
+  animation: nodeFadeOut 0.7s ease;
+}
+
+@keyframes nodeFadeOut {
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+.node-fade-in {
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: center;
+  animation: nodeFadeIn 0.7s ease;
+}
+
+@keyframes nodeFadeIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* === Skeleton shimmer effect === */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-image,
+.skeleton-line {
+  position: relative;
+  background-color: #e0e0e0;
+  overflow: hidden;
+}
+
+.skeleton-image::after,
+.skeleton-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 1.2s infinite;
+}
+
+/* Specific sizes */
+.skeleton-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 5px;
+}
+
+.skeleton-line {
+  height: 10px;
+  border-radius: 4px;
+  margin: 5px 0;
+  width: 90%;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.skeleton-line.smaller {
+  width: 40%;
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  100% {
+    transform: translateX(200%);
+  }
+}

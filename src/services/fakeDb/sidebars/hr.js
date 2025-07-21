@@ -1,22 +1,25 @@
 import Dashboard from "../../../pages/platforms/hr/dashboard";
 import Payrolls from "../../../pages/platforms/accounting/payroll";
-import { Employees } from "../../../pages/platforms/headquarter/file201";
-import { Staffs, Physicians } from "../../../pages/platforms/hr";
 import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
-import { Schedule } from "../../../pages/platforms/hr/dtr";
-import { Applicants } from "../../../pages/platforms/manager/settings";
+import {
+  Schedule,
+  Staffs,
+  Physicians,
+  Employees,
+  Applicants,
+} from "../../../pages/platforms/hr";
 import { Services, Menus } from "../../../pages/platforms/accounting";
 
-const hr = [
+const humanresources = [
   {
     name: "Dashboard",
     icon: "tachometer-alt",
-    path: "/hr/bulletin",
+    path: "/bulletin",
     component: Dashboard,
   },
   {
     name: "Employees",
-    path: "/file",
+    path: "/employees",
     icon: "tv",
     children: [
       {
@@ -101,11 +104,6 @@ const hr = [
     icon: "tv",
     children: [
       {
-        name: "Employment",
-        icon: "list",
-        path: "/finance/employment",
-      },
-      {
         name: "Menus",
         path: "/finance/menus",
         icon: "cogs",
@@ -121,4 +119,4 @@ const hr = [
   },
 ];
 
-export default hr;
+export default humanresources;

@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { Sidebars } from "../services/fakeDb";
 
@@ -18,28 +17,29 @@ import { Attendances } from "./platforms/hr";
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { platform = "Patron" } = activePlatform || {};
+  const platformPrefix = platform
+    ? `/${platform.toLowerCase().replace(/\s+/g, "")}`
+    : "";
+  console.log("platfom", platform);
 
-  const platformPrefix = platform ? `/${platform.toLowerCase()}` : "";
   const renderSidebars = () => {
-    const platforms = Sidebars[platform.toLowerCase()];
+    const sidebar = Sidebars[platform?.toLowerCase()?.replace(/\s+/g, "_")];
 
-    if (!Array.isArray(platforms)) return "Ooops.. platforms must be array";
+    if (!Array.isArray(sidebar)) return "Ooops.. Sidebars must be array";
 
     const sideBars = [];
 
-    platforms.forEach((element, index) => {
+    sidebar.forEach((element, index) => {
       const { children, component, path = "" } = element;
 
       const fullPath = `${platformPrefix}${path}`;
-
       const renderChildren = (c, parentPath = "") => {
         if (!c.children) return;
-        c.children.forEach((child, childIndex) => {
+        c.children.forEach((child, i) => {
           const childFullPath = `${parentPath}${child.path}`;
-
           sideBars.push(
             <Route
-              key={`route-${index}-${childFullPath}`}
+              key={`route-${index}-${i}-${childFullPath}`}
               exact
               path={childFullPath}
               component={child.component || NotExisting}
@@ -53,6 +53,7 @@ export default function Routes() {
       if (children) {
         renderChildren(element, fullPath);
       }
+      // console.log("fullPath Darrel:", fullPath);
 
       if (!children) {
         sideBars.push(
