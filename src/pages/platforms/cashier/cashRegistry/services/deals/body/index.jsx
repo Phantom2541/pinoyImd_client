@@ -29,7 +29,7 @@ const Tables = () => {
       isSuccess,
       activePage,
       total,
-      isLoading,
+      dealsLoading: isLoading,
       view = "all",
     } = useSelector(({ deals }) => deals),
     { collections: providers } = useSelector(({ providers }) => providers),
@@ -255,8 +255,8 @@ const Tables = () => {
                         {deal.category === "walkin"
                           ? deal.category
                           : Categories.find(
-                              ({ abbr }) => abbr === deal.category
-                            ).abbr.toUpperCase()}
+                              ({ abbr = "" }) => abbr === deal?.category
+                            )?.abbr?.toUpperCase()}
                       </MDBBadge>
                     )}
                     @ {new Date(deal?.createdAt).toLocaleTimeString()}

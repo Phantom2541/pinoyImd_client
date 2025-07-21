@@ -15,7 +15,11 @@ import Modal from "../modal";
 import { TOGGLE } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
 
 export default function Vouchers() {
-  const { collections, total, isLoading } = useSelector(({ deals }) => deals),
+  const {
+      collections,
+      total,
+      dealsLoading: isLoading,
+    } = useSelector(({ deals }) => deals),
     { selected } = useSelector(({ remittances }) => remittances),
     [menuCensus, setMenuCensus] = useState([]),
     [isDeclareFC, setIsDeclareFC] = useState(true),
@@ -25,6 +29,8 @@ export default function Vouchers() {
     [show, setShow] = useState(false),
     [selectedCensus, setSelectedCensus] = useState({}),
     dispatch = useDispatch();
+
+  const toggle = useCallback(() => setShow(!show), [show]);
 
   const handleSummary = useCallback(() => {
     if (selected?._id) {
@@ -46,14 +52,21 @@ export default function Vouchers() {
       setSelectedCensus(data);
       toggle();
     }
-  }, [selected, collections]);
+  }, [
+    selected,
+    collections,
+    breakdown,
+    serviceCensus,
+    toggle,
+    menuCensus,
+    total,
+  ]);
 
   useEffect(() => {
     if (!isDeclareFC && selected?._id) {
       handleSummary();
     }
   }, [isDeclareFC, handleSummary, selected]);
-
   useEffect(() => {
     if (collections && collections.length > 0 && !isLoading) {
       const menuCountMap = {};
@@ -83,14 +96,11 @@ export default function Vouchers() {
           });
         });
       });
-
       setBreakdown(paymentSummary);
       setMenuCensus(Object.values(menuCountMap));
       setServiceCensus(serviceCountMap);
     }
   }, [collections, isLoading]);
-
-  const toggle = () => setShow(!show);
 
   const handleSubmit = () => {
     if (!selected) {
@@ -196,7 +206,7 @@ export default function Vouchers() {
             size="sm"
             rounded
             onClick={handleSubmit}
-            disabled={menuCensus.length === 0}
+            disabled={menuCensus.length === 0 || isLoading}
           >
             <strong>Submit</strong>
           </MDBBtn>

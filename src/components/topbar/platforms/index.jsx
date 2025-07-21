@@ -43,7 +43,7 @@ export default function Platforms() {
     const isManager = platform.toLowerCase() === "manager";
 
     // Define redirect URL based on platform
-    const redirectURL = `/${platform.toLowerCase()}/${
+    const redirectURL = `/${platform?.toLowerCase().replace(/\s/g, "_")}/${
       isManager ? "dashboard" : "bulletin"
     }`; // Adjust path as needed
 
