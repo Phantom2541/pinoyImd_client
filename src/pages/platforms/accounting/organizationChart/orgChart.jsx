@@ -9,12 +9,18 @@ import ReactFlow, {
   Background,
 } from "react-flow-renderer";
 import CustomNode from "./customNode";
+import CustomEdge from "./customEdge";
 import { fullName } from "../../../../services/utilities";
 import { Policy } from "../../../../services/fakeDb";
 import Default from "./../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
 
 const nodeTypes = { customNode: CustomNode };
+const edgeTypes = {
+  custom: (edgeProps) => (
+    <CustomEdge {...edgeProps} hoveredNodeId={edgeProps.hoveredNodeId} />
+  ),
+};
 
 function normalizePosition(pos) {
   return Array.isArray(pos)
@@ -26,40 +32,36 @@ function normalizePosition(pos) {
 
 export default function OrgChart({ personnels }) {
   const wrapperRef = useRef(null);
+  const dragOriginRef = useRef({});
+  const { fitView, project } = useReactFlow();
+
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { project } = useReactFlow();
   const [availableNodes, setAvailableNodes] = useState([]);
   const [recentlyReturnedId, setRecentlyReturnedId] = useState(null);
-  const dragOriginRef = useRef({});
-  const { activePlatform, company } = useSelector(({ auth }) => auth);
-  const { fitView } = useReactFlow();
+  const [hoveredNodeId, setHoveredNodeId] = useState(null);
 
+  const { activePlatform, company } = useSelector(({ auth }) => auth);
   const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
 
+  // === LOAD PERSONNELS ===
   useEffect(() => {
     const initialNodes = [];
     const topbarNodes = [];
 
     personnels.forEach((p, i) => {
-      const { user, contract } = p;
+      const { user, contract, position } = p;
       const name = fullName(user?.fullName)?.split(" y ")[0]?.toLowerCase();
-      const title = user?.fullName?.postnominal;
-      const positionList = Policy.getPositions(contract?.designation);
-      const email = user?.email;
-
-      const hasCanvasPosition = p.position?.x != null && p.position?.y != null;
-
       const node = {
         id: `personnel-${i}`,
         type: "customNode",
-        position: hasCanvasPosition ? p.position : { x: 0, y: 0 },
+        position: position?.x != null ? position : { x: 0, y: 0 },
         data: {
           id: `personnel-${i}`,
           name,
-          title,
-          position: positionList,
-          email,
+          title: user?.fullName?.postnominal,
+          position: Policy.getPositions(contract?.designation),
+          email: user?.email,
           onReturn: () => {
             setNodes((nds) => nds.filter((n) => n.id !== `personnel-${i}`));
             setAvailableNodes((nds) => [...nds, node]);
@@ -67,42 +69,36 @@ export default function OrgChart({ personnels }) {
         },
       };
 
-      if (hasCanvasPosition) {
-        initialNodes.push(node);
-      } else {
-        topbarNodes.push(node);
-      }
+      if (position?.x != null) initialNodes.push(node);
+      else topbarNodes.push(node);
     });
 
     setNodes(initialNodes);
     setAvailableNodes(topbarNodes);
 
-    // 🔍 Auto-fit view if there are nodes on canvas
-    if (initialNodes.length > 0) {
-      setTimeout(() => {
-        fitView({ padding: 0.2 }); // optional: adjust padding
-      }, 100); // delay to ensure nodes are mounted
+    if (initialNodes.length) {
+      setTimeout(() => fitView({ padding: 0.2 }), 100);
     }
-  }, [personnels, setNodes, setAvailableNodes, fitView]);
+  }, [personnels, fitView]);
 
+  // === CONNECTION LOGIC ===
   const onConnect = useCallback(
     (params) => {
       setEdges((eds) => {
         const newEdges = addEdge(
           {
             ...params,
-            type: "smoothstep",
+            type: "custom",
             markerEnd: { type: MarkerType.ArrowClosed },
-            style: { stroke: "black", strokeWidth: 1.5 },
+            style: { stroke: "black", strokeWidth: 1.5, fixOffsetY: 20 },
           },
           eds
         );
 
         setNodes((nds) => {
           const updatedNodeMap = {};
-          const childSpacingX = 200;
           const childOffsetY = 150;
-          const maxPerRow = 4; // Max children per row under one parent
+          const parentSpacingX = 200;
 
           const targetNode = nds.find((n) => n.id === params.target);
           const parentNodes = newEdges
@@ -110,114 +106,83 @@ export default function OrgChart({ personnels }) {
             .map((e) => nds.find((n) => n.id === e.source))
             .filter(Boolean);
 
-          if (!targetNode || parentNodes.length === 0) return nds;
+          if (!targetNode || !parentNodes.length) return nds;
 
-          // === 1. Align PARENTS in same row ===
-          const alignedParentY = Math.min(
-            ...parentNodes.map((p) => p.position.y)
-          );
-          const parentSpacingX = 200;
-          const parentCenterX =
+          const alignedY = Math.min(...parentNodes.map((p) => p.position.y));
+          const centerX =
             parentNodes.reduce((sum, p) => sum + p.position.x, 0) /
             parentNodes.length;
-          const parentStartX =
-            parentCenterX - (parentSpacingX * (parentNodes.length - 1)) / 2;
+          const startX =
+            centerX - ((parentNodes.length - 1) * parentSpacingX) / 2;
 
-          parentNodes.forEach((parent, index) => {
-            updatedNodeMap[parent.id] = {
-              ...parent,
-              position: {
-                x: parentStartX + index * parentSpacingX,
-                y: alignedParentY,
-              },
+          parentNodes.forEach((p, i) => {
+            updatedNodeMap[p.id] = {
+              ...p,
+              position: { x: startX + i * parentSpacingX, y: alignedY },
             };
           });
 
-          // === 2. Align CHILDREN of each parent by row (same y), and space X evenly ===
           parentNodes.forEach((parent) => {
-            const childNodes = newEdges
+            const children = newEdges
               .filter((e) => e.source === parent.id)
               .map((e) => nds.find((n) => n.id === e.target))
               .filter(Boolean);
 
             const uniqueChildren = [
-              ...new Map(childNodes.map((child) => [child.id, child])).values(),
+              ...new Map(children.map((c) => [c.id, c])).values(),
             ];
 
-            if (uniqueChildren.length === 0) return;
+            if (!uniqueChildren.length) return;
 
             const groupedRows = [];
 
-            // Group children into rows if their Y values are close (within 20px)
             uniqueChildren.forEach((child) => {
               const y = child.position?.y ?? parent.position.y + childOffsetY;
-              const existingRow = groupedRows.find(
-                (row) => Math.abs(row.y - y) < 20
-              );
-
-              if (existingRow) {
-                existingRow.children.push(child);
-              } else {
-                groupedRows.push({ y, children: [child] });
-              }
+              const existing = groupedRows.find((r) => Math.abs(r.y - y) < 20);
+              existing
+                ? existing.children.push(child)
+                : groupedRows.push({ y, children: [child] });
             });
 
-            // Align each row
             groupedRows.forEach((row) => {
               const spacingX = 200;
-              const centerX = parent.position.x;
               const startX =
-                centerX - ((row.children.length - 1) * spacingX) / 2;
+                parent.position.x - ((row.children.length - 1) * spacingX) / 2;
 
               row.children.forEach((child, idx) => {
                 updatedNodeMap[child.id] = {
                   ...child,
-                  position: {
-                    x: startX + idx * spacingX,
-                    y: row.y, // force shared row y
-                  },
+                  position: { x: startX + idx * spacingX, y: row.y },
                 };
+
+                const edgeIdx = newEdges.findIndex(
+                  (e) => e.source === parent.id && e.target === child.id
+                );
+
+                if (edgeIdx !== -1) {
+                  newEdges[edgeIdx] = {
+                    ...newEdges[edgeIdx],
+                    style: {
+                      ...newEdges[edgeIdx].style,
+                      fixedTargetY: row.y,
+                      fixOffsetY: 20,
+                    },
+                  };
+                }
               });
             });
           });
 
-          // === 3. If target node has multiple parents, center horizontally — preserve its Y ===
+          // Align multi-parent target
           if (parentNodes.length > 1) {
-            const original = nds.find((n) => n.id === params.target);
-            const manualY =
-              original?.position?.y ?? alignedParentY + childOffsetY;
-
-            const multiParentCenterX =
-              parentNodes.reduce((sum, p) => sum + p.position.x, 0) /
-              parentNodes.length;
-
-            updatedNodeMap[params.target] = {
+            const y = targetNode.position.y;
+            updatedNodeMap[targetNode.id] = {
               ...targetNode,
-              position: {
-                x: multiParentCenterX,
-                y: manualY, // DO NOT override Y
-              },
+              position: { x: centerX, y },
             };
           }
 
-          // === 3. CENTER target node if it has multiple parents ===
-          if (parentNodes.length > 1) {
-            const multiParentCenterX =
-              parentNodes.reduce((sum, p) => sum + p.position.x, 0) /
-              parentNodes.length;
-
-            const maxY = Math.max(...parentNodes.map((p) => p.position.y));
-            updatedNodeMap[params.target] = {
-              ...targetNode,
-              position: {
-                x: multiParentCenterX,
-                y: maxY + childOffsetY,
-              },
-            };
-          }
-
-          // === 4. Apply all updates ===
-          return nds.map((node) => updatedNodeMap[node.id] || node);
+          return nds.map((n) => updatedNodeMap[n.id] || n);
         });
 
         return newEdges;
@@ -226,6 +191,7 @@ export default function OrgChart({ personnels }) {
     [setEdges, setNodes]
   );
 
+  // === DRAG / DROP ===
   const handleDrop = (e) => {
     e.preventDefault();
     const bounds = wrapperRef.current.getBoundingClientRect();
@@ -237,9 +203,7 @@ export default function OrgChart({ personnels }) {
       y: e.clientY - bounds.top,
     });
 
-    // Create a new unique ID for this instance
-    const newId = `${parsed.id}-${Math.random().toString(36).substring(2, 6)}`;
-
+    const newId = `${parsed.id}-${Math.random().toString(36).slice(2, 6)}`;
     const newNode = {
       id: newId,
       type: parsed.type || "customNode",
@@ -248,115 +212,80 @@ export default function OrgChart({ personnels }) {
         ...parsed.data,
         position: normalizePosition(parsed.data.position),
         onReturn: () => {
-          // 1. Fade out node from canvas (done in CustomNode)
           setNodes((nds) => nds.filter((n) => n.id !== newId));
-
-          // 2. Remove x/y from returned node
-          const { position, ...parsedWithoutXY } = parsed;
-
-          // 3. Mark node as recently returned (to trigger fade-in in topbar)
           setRecentlyReturnedId(parsed.id);
-
-          // 4. Restore to topbar
-          setAvailableNodes((prev) => [parsedWithoutXY, ...prev]);
-
-          // 5. Clear the fade-in flag after 500ms
+          setAvailableNodes((prev) => [parsed, ...prev]);
           setTimeout(() => setRecentlyReturnedId(null), 500);
         },
       },
     };
 
     setNodes((nds) => [...nds, newNode]);
-
-    // Remove from topbar by matching original id
-    setAvailableNodes((prev) =>
-      prev.filter((n) => (n.id === parsed.id ? false : true))
-    );
+    setAvailableNodes((prev) => prev.filter((n) => n.id !== parsed.id));
   };
 
   const handleDragStart = (e, item) => {
-    const payload = {
-      id: item.id,
-      type: item.type,
-      data: {
-        ...item.data,
-        position: normalizePosition(item.data.position),
-      },
-    };
-    e.dataTransfer.setData("application/reactflow", JSON.stringify(payload));
+    e.dataTransfer.setData(
+      "application/reactflow",
+      JSON.stringify({
+        id: item.id,
+        type: item.type,
+        data: {
+          ...item.data,
+          position: normalizePosition(item.data.position),
+        },
+      })
+    );
     e.dataTransfer.effectAllowed = "move";
   };
-  const handleNodeDrag = (event, draggedNode) => {
-    const origin = dragOriginRef.current[draggedNode.id];
+
+  const handleNodeDrag = (_, node) => {
+    const origin = dragOriginRef.current[node.id];
     if (!origin) return;
 
-    const dx = draggedNode.position.x - origin.x;
-    const dy = draggedNode.position.y - origin.y;
+    const dx = node.position.x - origin.x;
+    const dy = node.position.y - origin.y;
 
-    setNodes((nds) => {
-      const childIds = edges
-        .filter((e) => e.source === draggedNode.id)
-        .map((e) => e.target);
+    setNodes((nds) =>
+      nds.map((n) =>
+        edges.some((e) => e.source === node.id && e.target === n.id)
+          ? { ...n, position: { x: n.position.x + dx, y: n.position.y + dy } }
+          : n
+      )
+    );
 
-      return nds.map((node) => {
-        if (childIds.includes(node.id)) {
-          return {
-            ...node,
-            position: {
-              x: node.position.x + dx,
-              y: node.position.y + dy,
-            },
-          };
-        }
-        return node;
-      });
-    });
-
-    dragOriginRef.current[draggedNode.id] = { ...draggedNode.position };
+    dragOriginRef.current[node.id] = { ...node.position };
   };
 
   const handleSave = () => {
-    const cleanNodes = nodes.map(
-      ({ selected, dragging, resizing, ...rest }) => rest
-    );
-    const cleanEdges = edges.map(({ selected, ...rest }) => rest);
-
+    const cleanNodes = nodes.map(({ selected, ...n }) => n);
+    const cleanEdges = edges.map(({ selected, ...e }) => e);
     localStorage.setItem("savedNodes", JSON.stringify(cleanNodes));
     localStorage.setItem("savedEdges", JSON.stringify(cleanEdges));
     alert("Chart saved!");
   };
 
   const onReset = () => {
-    // Remove all canvas nodes
     setNodes([]);
-
-    // Remove all connections
     setEdges([]);
-
-    // Restore all nodes back to the topbar
     setAvailableNodes((prev) => {
-      const nodeMap = new Map(prev.map((n) => [n.id, n]));
-      nodes.forEach((n) => {
-        const { position, ...rest } = n;
-        nodeMap.set(n.data.id || n.id, {
-          ...rest,
-          position: { x: 0, y: 0 }, // Reset position
-        });
+      const map = new Map(prev.map((n) => [n.id, n]));
+      nodes.forEach(({ position, ...rest }) => {
+        map.set(rest.data.id || rest.id, { ...rest, position: { x: 0, y: 0 } });
       });
-      return Array.from(nodeMap.values());
+      return Array.from(map.values());
     });
-
-    // Clear localStorage
     localStorage.removeItem("savedNodes");
     localStorage.removeItem("savedEdges");
   };
 
   return (
     <div className="orgChart-container">
+      {/* === Top Bar === */}
       <div className="orgChart-topbar">
         {personnels.length === 0
-          ? Array.from({ length: 5 }).map((_, idx) => (
-              <div key={idx} className="draggable-node skeleton-card">
+          ? Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="draggable-node skeleton-card">
                 <div className="skeleton-image" />
                 <div className="orgChart-innerCard-info">
                   <div className="skeleton-line short" />
@@ -377,9 +306,9 @@ export default function OrgChart({ personnels }) {
                   onDragStart={(e) => handleDragStart(e, item)}
                 >
                   <img
-                    className="orgChart-innerCard-image"
                     src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
                     alt="profile"
+                    className="orgChart-innerCard-image"
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = Default;
@@ -401,6 +330,7 @@ export default function OrgChart({ personnels }) {
             })}
       </div>
 
+      {/* === Chart Area === */}
       <div className="orgChart-wrapper">
         <div className="organization-chart-imgContainer">
           <img
@@ -435,20 +365,24 @@ export default function OrgChart({ personnels }) {
               Reset
             </button>
           </div>
+
           <ReactFlow
             nodes={nodes}
             edges={edges}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            nodeTypes={nodeTypes}
             onNodeDrag={handleNodeDrag}
-            onNodeDragStart={(e, node) => {
-              dragOriginRef.current[node.id] = { ...node.position };
-            }}
-            style={{ height: "100%", width: "100%" }}
+            onNodeMouseEnter={(_, node) => setHoveredNodeId(node.id)}
+            onNodeMouseLeave={() => setHoveredNodeId(null)}
+            onNodeDragStart={(_, node) =>
+              (dragOriginRef.current[node.id] = { ...node.position })
+            }
             defaultViewport={{ x: 0, y: 0, zoom: 1 }}
             connectionLineStyle={{ stroke: "black", strokeWidth: 1.5 }}
+            style={{ height: "100%", width: "100%" }}
           >
             <Background color="#555" />
           </ReactFlow>
