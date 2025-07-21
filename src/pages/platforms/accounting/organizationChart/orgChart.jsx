@@ -38,27 +38,59 @@ export default function OrgChart({ personnels }) {
   const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
 
   useEffect(() => {
-    console.log("🟢 Nodes with position:", nodes);
-  }, [nodes]);
+    const initialNodes = [];
+    const topbarNodes = [];
+    const tempEdges = [];
 
-  useEffect(() => {
-    const mapped = personnels.map((p, i) => {
+    personnels.forEach((p, i) => {
       const { user, contract } = p;
       const name = fullName(user?.fullName)?.split(" y ")[0]?.toLowerCase();
       const title = user?.fullName?.postnominal;
-      const position = Policy.getPositions(contract?.designation);
+      const positionList = Policy.getPositions(contract?.designation);
       const email = user?.email;
 
-      return {
-        id: `personnel-${i}`,
+      const hasCanvasPosition = p.position?.x != null && p.position?.y != null;
+
+      const nodeId = `personnel-${i}`;
+      const node = {
+        id: nodeId,
         type: "customNode",
-        position: { x: 0, y: 0 },
-        data: { id: `personnel-${i}`, name, title, position, email },
+        position: hasCanvasPosition ? p.position : { x: 0, y: 0 },
+        data: {
+          id: nodeId,
+          name,
+          title,
+          position: positionList,
+          email,
+          onReturn: () => {
+            setNodes((nds) => nds.filter((n) => n.id !== nodeId));
+            setAvailableNodes((nds) => [...nds, node]);
+          },
+        },
       };
+
+      if (hasCanvasPosition) {
+        initialNodes.push(node);
+      } else {
+        topbarNodes.push(node);
+      }
+
+      // ✅ Optional: reconstruct edge if `parentId` exists
+      if (p.parentId) {
+        tempEdges.push({
+          id: `e-${p.parentId}-${nodeId}`,
+          source: p.parentId,
+          target: nodeId,
+          type: "smoothstep",
+          markerEnd: { type: MarkerType.ArrowClosed },
+        });
+      }
     });
 
-    setAvailableNodes(mapped);
-  }, [personnels]);
+    setNodes(initialNodes);
+    setAvailableNodes(topbarNodes);
+    setEdges(tempEdges); // ✅ Add this if you're using edges
+  }, [personnels, setNodes, setAvailableNodes, setEdges]);
 
   const onConnect = useCallback(
     (params) => {
