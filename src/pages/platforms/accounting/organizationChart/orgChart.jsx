@@ -139,7 +139,7 @@ export default function OrgChart({ personnels }) {
 
             uniqueChildren.forEach((child) => {
               const y = child.position?.y ?? parent.position.y + childOffsetY;
-              const existing = groupedRows.find((r) => Math.abs(r.y - y) < 20);
+              const existing = groupedRows.find((r) => Math.abs(r.y - y) < 90);
               existing
                 ? existing.children.push(child)
                 : groupedRows.push({ y, children: [child] });

@@ -11,21 +11,22 @@ const CustomEdge = ({
   hoveredNodeId,
   style = {},
 }) => {
-  const verticalSegmentHeight = 30;
-
   const correctedTargetY = style.fixedTargetY ?? targetY;
   const adjustedTargetY = correctedTargetY + (style.fixOffsetY || 20);
-  const horizontalY = adjustedTargetY - verticalSegmentHeight;
+
+  // Compute dynamic vertical line height (from sourceY to just above adjustedTargetY)
+  const verticalGap = Math.max(0, adjustedTargetY - sourceY - 30);
+  const horizontalY = sourceY + verticalGap;
 
   const isHovered = hoveredNodeId === source || hoveredNodeId === target;
   const strokeColor = isHovered ? "#1266F1" : "black";
 
   const path = `
-  M ${sourceX},${sourceY}
-  L ${sourceX},${horizontalY}
-  L ${targetX},${horizontalY}
-  L ${targetX},${adjustedTargetY}
-`;
+    M ${sourceX},${sourceY}
+    L ${sourceX},${horizontalY}
+    L ${targetX},${horizontalY}
+    L ${targetX},${adjustedTargetY}
+  `;
 
   return (
     <path
