@@ -73,7 +73,7 @@ const hr = [
         title: "Organization Chart",
         path: "/organizationChart",
         icon: "user-tie",
-        component: OrgChart,
+        // component: OrgChart,
       },
     ],
   },
