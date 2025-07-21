@@ -13,7 +13,6 @@ import { fullName } from "../../../../services/utilities";
 import { Policy } from "../../../../services/fakeDb";
 import Default from "./../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
-import { MDBAnimation } from "mdbreact";
 
 const nodeTypes = { customNode: CustomNode };
 
@@ -34,13 +33,13 @@ export default function OrgChart({ personnels }) {
   const [recentlyReturnedId, setRecentlyReturnedId] = useState(null);
   const dragOriginRef = useRef({});
   const { activePlatform, company } = useSelector(({ auth }) => auth);
+  const { fitView } = useReactFlow();
 
   const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
 
   useEffect(() => {
     const initialNodes = [];
     const topbarNodes = [];
-    const tempEdges = [];
 
     personnels.forEach((p, i) => {
       const { user, contract } = p;
@@ -51,19 +50,18 @@ export default function OrgChart({ personnels }) {
 
       const hasCanvasPosition = p.position?.x != null && p.position?.y != null;
 
-      const nodeId = `personnel-${i}`;
       const node = {
-        id: nodeId,
+        id: `personnel-${i}`,
         type: "customNode",
         position: hasCanvasPosition ? p.position : { x: 0, y: 0 },
         data: {
-          id: nodeId,
+          id: `personnel-${i}`,
           name,
           title,
           position: positionList,
           email,
           onReturn: () => {
-            setNodes((nds) => nds.filter((n) => n.id !== nodeId));
+            setNodes((nds) => nds.filter((n) => n.id !== `personnel-${i}`));
             setAvailableNodes((nds) => [...nds, node]);
           },
         },
@@ -74,23 +72,18 @@ export default function OrgChart({ personnels }) {
       } else {
         topbarNodes.push(node);
       }
-
-      // ✅ Optional: reconstruct edge if `parentId` exists
-      if (p.parentId) {
-        tempEdges.push({
-          id: `e-${p.parentId}-${nodeId}`,
-          source: p.parentId,
-          target: nodeId,
-          type: "smoothstep",
-          markerEnd: { type: MarkerType.ArrowClosed },
-        });
-      }
     });
 
     setNodes(initialNodes);
     setAvailableNodes(topbarNodes);
-    setEdges(tempEdges); // ✅ Add this if you're using edges
-  }, [personnels, setNodes, setAvailableNodes, setEdges]);
+
+    // 🔍 Auto-fit view if there are nodes on canvas
+    if (initialNodes.length > 0) {
+      setTimeout(() => {
+        fitView({ padding: 0.2 }); // optional: adjust padding
+      }, 100); // delay to ensure nodes are mounted
+    }
+  }, [personnels, setNodes, setAvailableNodes, fitView]);
 
   const onConnect = useCallback(
     (params) => {
