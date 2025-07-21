@@ -16,11 +16,6 @@ import Default from "./../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
 
 const nodeTypes = { customNode: CustomNode };
-const edgeTypes = {
-  custom: (edgeProps) => (
-    <CustomEdge {...edgeProps} hoveredNodeId={edgeProps.hoveredNodeId} />
-  ),
-};
 
 function normalizePosition(pos) {
   return Array.isArray(pos)
@@ -40,6 +35,12 @@ export default function OrgChart({ personnels }) {
   const [availableNodes, setAvailableNodes] = useState([]);
   const [recentlyReturnedId, setRecentlyReturnedId] = useState(null);
   const [hoveredNodeId, setHoveredNodeId] = useState(null);
+
+  const edgeTypes = {
+    custom: (edgeProps) => (
+      <CustomEdge {...edgeProps} hoveredNodeId={hoveredNodeId} />
+    ),
+  };
 
   const { activePlatform, company } = useSelector(({ auth }) => auth);
   const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
@@ -79,7 +80,7 @@ export default function OrgChart({ personnels }) {
     if (initialNodes.length) {
       setTimeout(() => fitView({ padding: 0.2 }), 100);
     }
-  }, [personnels, fitView]);
+  }, [personnels, fitView, setNodes]);
 
   // === CONNECTION LOGIC ===
   const onConnect = useCallback(
