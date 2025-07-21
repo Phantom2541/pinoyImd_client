@@ -4,7 +4,7 @@ export { default as Equipments } from "../headquarter/file201/equipments";
 export { default as Heads } from "./personnel/heads";
 export { default as Physicians } from "../headquarter/personnel/physicians";
 export { default as Procurments } from "../headquarter/file201/procurments";
-export { default as Employees } from "./employees";
+export { default as Employees } from "../hr/personnel/employees";
 export { default as Hmo } from "../headquarter/file201/hmo";
 export { default as Records } from "../headquarter/personnel/records";
 export { default as Staffs } from "../hr/personnel/staffs";

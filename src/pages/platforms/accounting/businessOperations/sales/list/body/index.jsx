@@ -250,22 +250,24 @@ export const Tables = () => {
 
   return (
     <MDBCardBody>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-          marginTop: "-1.4rem",
-        }}
-      >
-        <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
-          {currency.format(total)}
-        </p>
-        <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
-        <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
-          @ {patient} Patient/s
-        </p>
-      </div>
+      {refined.length !== 0 && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            marginTop: "-1.4rem",
+          }}
+        >
+          <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+            {currency.format(total)}
+          </p>
+          <div style={{ flex: 1, borderBottom: "1px dashed black" }}></div>
+          <p style={{ fontSize: "1.5rem", margin: "0 10px" }}>
+            @ {patient} Patient/s
+          </p>
+        </div>
+      )}
 
       <MDBTable style={{ marginTop: "-5px" }} small hover>
         <thead>

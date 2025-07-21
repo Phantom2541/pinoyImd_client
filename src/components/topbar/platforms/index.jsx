@@ -23,8 +23,11 @@ export default function Platforms() {
     const sortedAccess = Array.from(unique).sort((a, b) => a.localeCompare(b));
     setAccess(sortedAccess);
   }, [activePlatform]);
+  console.log("access", access);
 
   const handlePlatform = (platform) => {
+    const cleanedPlatform = platform.toLowerCase().replace(/\s+/g, "");
+
     dispatch(
       SETACTIVEPLATFORM({
         data: {
@@ -32,7 +35,7 @@ export default function Platforms() {
           email: auth.email,
           activePlatform: {
             ...activePlatform,
-            platform: platform || "patron",
+            platform: cleanedPlatform || "patron",
           },
         },
         token,
@@ -43,7 +46,7 @@ export default function Platforms() {
     const isManager = platform.toLowerCase() === "manager";
 
     // Define redirect URL based on platform
-    const redirectURL = `/${platform.toLowerCase()}/${
+    const redirectURL = `/${cleanedPlatform}/${
       isManager ? "dashboard" : "bulletin"
     }`; // Adjust path as needed
 
@@ -65,14 +68,19 @@ export default function Platforms() {
         </MDBDropdownToggle>
       )}
       <MDBDropdownMenu right>
-        {access?.map((platform, index) => (
-          <MDBDropdownItem
-            key={`platform-${index}`}
-            onClick={() => handlePlatform(platform)}
-          >
-            {capitalize(platform)}
-          </MDBDropdownItem>
-        ))}
+        {access?.map(
+          (platform, index) => (
+            console.log("platform", platform),
+            (
+              <MDBDropdownItem
+                key={`platform-${index}`}
+                onClick={() => handlePlatform(platform)}
+              >
+                {capitalize(platform)}
+              </MDBDropdownItem>
+            )
+          )
+        )}
       </MDBDropdownMenu>
     </MDBDropdown>
   );

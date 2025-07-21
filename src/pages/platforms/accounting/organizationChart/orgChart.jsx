@@ -52,6 +52,10 @@ export default function OrgChart({ personnels }) {
   }, [nodes, edges]);
 
   useEffect(() => {
+    console.log("🟢 Nodes with position:", nodes);
+  }, [nodes]);
+
+  useEffect(() => {
     const mapped = personnels.map((p, i) => {
       const { user, contract } = p;
       const name = fullName(user?.fullName)?.split(" y ")[0]?.toLowerCase();

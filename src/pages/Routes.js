@@ -19,11 +19,12 @@ export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const { platform = "Patron" } = activePlatform || {};
   const platformPrefix = platform
-    ? `/${platform.toLowerCase().replace(/\s+/g, "_")}`
+    ? `/${platform.toLowerCase().replace(/\s+/g, "")}`
     : "";
+  console.log("platfom", platform);
 
   const renderSidebars = () => {
-    const sidebar = Sidebars[platform.toLowerCase().replace(/\s+/g, "_")];
+    const sidebar = Sidebars[platform.toLowerCase().replace(/\s+/g, "")];
     console.log("sidebar Darrel:", platform, sidebar);
 
     if (!Array.isArray(sidebar)) return "Ooops.. Sidebars must be array";
@@ -34,12 +35,12 @@ export default function Routes() {
       const { children, component, path = "" } = element;
 
       const fullPath = `${platformPrefix}${path}`;
-      console.log("fullPath Darrel:", fullPath);
+      // console.log("fullPath Darrel:", fullPath);
       const renderChildren = (c, parentPath = "") => {
         if (!c.children) return;
         c.children.forEach((child, i) => {
           const childFullPath = `${parentPath}${child.path}`;
-          console.log("childFullPath Darrel :", childFullPath);
+          // console.log("childFullPath Darrel :", childFullPath);
           sideBars.push(
             <Route
               key={`route-${index}-${i}-${childFullPath}`}
@@ -56,6 +57,7 @@ export default function Routes() {
       if (children) {
         renderChildren(element, fullPath);
       }
+      // console.log("fullPath Darrel:", fullPath);
 
       if (!children) {
         sideBars.push(
