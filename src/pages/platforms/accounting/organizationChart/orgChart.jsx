@@ -1,17 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import ReactFlow, {
   addEdge,
   useReactFlow,
   useNodesState,
   useEdgesState,
-  Background,
-  Controls,
   MarkerType,
+  Background,
 } from "react-flow-renderer";
 import CustomNode from "./customNode";
 import { fullName } from "../../../../services/utilities";
 import { Policy } from "../../../../services/fakeDb";
-import Header from "./header";
 import Default from "./../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
 
@@ -25,7 +24,7 @@ function normalizePosition(pos) {
     : [];
 }
 
-export default function OrgChartInner({ personnels }) {
+export default function OrgChart({ personnels }) {
   const wrapperRef = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -33,6 +32,28 @@ export default function OrgChartInner({ personnels }) {
   const [availableNodes, setAvailableNodes] = useState([]);
   const [recentlyReturnedId, setRecentlyReturnedId] = useState(null);
   const dragOriginRef = useRef({});
+  const { activePlatform, company } = useSelector(({ auth }) => auth);
+
+  const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
+
+  useEffect(() => {
+    if (nodes.length > 0 || edges.length > 0) {
+      const cleanNodes = nodes.map(
+        ({ selected, dragging, resizing, ...rest }) => rest
+      );
+      const cleanEdges = edges.map(({ selected, ...rest }) => rest);
+
+      console.log("Saving cleaned nodes:", cleanNodes);
+      console.log("Saving cleaned edges:", cleanEdges);
+
+      localStorage.setItem("savedNodes", JSON.stringify(cleanNodes));
+      localStorage.setItem("savedEdges", JSON.stringify(cleanEdges));
+    }
+  }, [nodes, edges]);
+
+  useEffect(() => {
+    console.log("🟢 Nodes with position:", nodes);
+  }, [nodes]);
 
   useEffect(() => {
     const mapped = personnels.map((p, i) => {
@@ -257,50 +278,62 @@ export default function OrgChartInner({ personnels }) {
   return (
     <div className="orgChart-container">
       <div className="orgChart-topbar">
-        {availableNodes.map((item) => {
-          const { name, title, position, email } = item.data;
-          return (
-            <div
-              key={item.id}
-              className={`draggable-node ${
-                recentlyReturnedId === item.id ? "node-fade-in" : ""
-              }`}
-              s
-              draggable
-              onDragStart={(e) => handleDragStart(e, item)}
-            >
-              <img
-                className="orgChart-innerCard-image"
-                src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
-                alt="profile"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = Default;
-                }}
-              />
-              <div className="orgChart-innerCard-info">
-                <span
-                  className="orgChart-innerCard-name"
-                  style={{ textTransform: "capitalize" }}
-                >
-                  {name}
-                </span>
-                {title && (
-                  <span className="orgChart-innerCard-title">{title}</span>
-                )}
-                {position && (
-                  <span className="orgChart-innerCard-position">
-                    {[].concat(position).join(" / ")}
-                  </span>
-                )}
+        {personnels.length === 0
+          ? Array.from({ length: 5 }).map((_, idx) => (
+              <div key={idx} className="draggable-node skeleton-card">
+                <div className="skeleton-image" />
+                <div className="orgChart-innerCard-info">
+                  <div className="skeleton-line short" />
+                  <div className="skeleton-line" />
+                  <div className="skeleton-line smaller" />
+                </div>
               </div>
-            </div>
-          );
-        })}
+            ))
+          : availableNodes.map((item) => {
+              const { name, title, position, email } = item.data;
+              return (
+                <div
+                  key={item.id}
+                  className={`draggable-node ${
+                    recentlyReturnedId === item.id ? "node-fade-in" : ""
+                  }`}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, item)}
+                >
+                  <img
+                    className="orgChart-innerCard-image"
+                    src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
+                    alt="profile"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = Default;
+                    }}
+                  />
+                  <div className="orgChart-innerCard-info">
+                    <span className="orgChart-innerCard-name">{name}</span>
+                    {title && (
+                      <span className="orgChart-innerCard-title">{title}</span>
+                    )}
+                    {position && (
+                      <span className="orgChart-innerCard-position">
+                        {[].concat(position).join(" / ")}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
       </div>
 
       <div className="orgChart-wrapper">
-        <Header />
+        <div className="organization-chart-imgContainer">
+          <img
+            src={BANNER}
+            alt="banner"
+            className="organization-chart-img"
+            draggable={false}
+          />
+        </div>
 
         <div
           className="flow-area"
@@ -320,7 +353,9 @@ export default function OrgChartInner({ personnels }) {
             }}
             style={{ height: "100%", width: "100%" }}
             defaultViewport={{ x: 0, y: 0, zoom: 1 }}
-          />
+          >
+            <Background color="#555" />
+          </ReactFlow>
         </div>
       </div>
     </div>

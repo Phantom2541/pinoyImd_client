@@ -11,6 +11,7 @@ import {
   policyManagement,
   EquipmentSupplies,
 } from "../../../pages/platforms/accredetations/index";
+import OrgChartView from "../../../pages/platforms/accredetations/orgChartView";
 
 const accreditation = [
   {
@@ -301,6 +302,12 @@ const accreditation = [
         icon: "cogs",
       },
     ],
+  },
+  {
+    name: "Org Chart View",
+    path: "/orgChartView",
+    icon: "cogs",
+    component: OrgChartView,
   },
 ];
 

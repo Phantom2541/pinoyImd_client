@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
-import DataTable from "../../../../components/dataTable";
+import DataTable from "../../../../../components/dataTable";
 import {
   capitalize,
   fullName,
   globalSearch,
-} from "../../../../services/utilities";
+} from "../../../../../services/utilities";
 import {
   BROWSE,
   RESET,
-} from "../../../../services/redux/slices/assets/persons/personnels";
+} from "../../../../../services/redux/slices/assets/persons/personnels";
 import Modal from "./modal";
-import { Policy } from "../../../../services/fakeDb";
+import { Policy } from "../../../../../services/fakeDb";
 
 export default function Employees() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
