@@ -13,6 +13,7 @@ import { fullName } from "../../../../services/utilities";
 import { Policy } from "../../../../services/fakeDb";
 import Default from "./../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
+import { MDBAnimation } from "mdbreact";
 
 const nodeTypes = { customNode: CustomNode };
 
@@ -35,21 +36,6 @@ export default function OrgChart({ personnels }) {
   const { activePlatform, company } = useSelector(({ auth }) => auth);
 
   const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
-
-  useEffect(() => {
-    if (nodes.length > 0 || edges.length > 0) {
-      const cleanNodes = nodes.map(
-        ({ selected, dragging, resizing, ...rest }) => rest
-      );
-      const cleanEdges = edges.map(({ selected, ...rest }) => rest);
-
-      console.log("Saving cleaned nodes:", cleanNodes);
-      console.log("Saving cleaned edges:", cleanEdges);
-
-      localStorage.setItem("savedNodes", JSON.stringify(cleanNodes));
-      localStorage.setItem("savedEdges", JSON.stringify(cleanEdges));
-    }
-  }, [nodes, edges]);
 
   useEffect(() => {
     console.log("🟢 Nodes with position:", nodes);
@@ -82,6 +68,7 @@ export default function OrgChart({ personnels }) {
             ...params,
             type: "smoothstep",
             markerEnd: { type: MarkerType.ArrowClosed },
+            style: { stroke: "black", strokeWidth: 1.5 },
           },
           eds
         );
@@ -274,6 +261,70 @@ export default function OrgChart({ personnels }) {
     e.dataTransfer.setData("application/reactflow", JSON.stringify(payload));
     e.dataTransfer.effectAllowed = "move";
   };
+  const handleNodeDrag = (event, draggedNode) => {
+    const origin = dragOriginRef.current[draggedNode.id];
+    if (!origin) return;
+
+    const dx = draggedNode.position.x - origin.x;
+    const dy = draggedNode.position.y - origin.y;
+
+    setNodes((nds) => {
+      const childIds = edges
+        .filter((e) => e.source === draggedNode.id)
+        .map((e) => e.target);
+
+      return nds.map((node) => {
+        if (childIds.includes(node.id)) {
+          return {
+            ...node,
+            position: {
+              x: node.position.x + dx,
+              y: node.position.y + dy,
+            },
+          };
+        }
+        return node;
+      });
+    });
+
+    dragOriginRef.current[draggedNode.id] = { ...draggedNode.position };
+  };
+
+  const handleSave = () => {
+    const cleanNodes = nodes.map(
+      ({ selected, dragging, resizing, ...rest }) => rest
+    );
+    const cleanEdges = edges.map(({ selected, ...rest }) => rest);
+
+    localStorage.setItem("savedNodes", JSON.stringify(cleanNodes));
+    localStorage.setItem("savedEdges", JSON.stringify(cleanEdges));
+    alert("Chart saved!");
+  };
+
+  const onReset = () => {
+    // Remove all canvas nodes
+    setNodes([]);
+
+    // Remove all connections
+    setEdges([]);
+
+    // Restore all nodes back to the topbar
+    setAvailableNodes((prev) => {
+      const nodeMap = new Map(prev.map((n) => [n.id, n]));
+      nodes.forEach((n) => {
+        const { position, ...rest } = n;
+        nodeMap.set(n.data.id || n.id, {
+          ...rest,
+          position: { x: 0, y: 0 }, // Reset position
+        });
+      });
+      return Array.from(nodeMap.values());
+    });
+
+    // Clear localStorage
+    localStorage.removeItem("savedNodes");
+    localStorage.removeItem("savedEdges");
+  };
 
   return (
     <div className="orgChart-container">
@@ -341,6 +392,24 @@ export default function OrgChart({ personnels }) {
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
         >
+          <div
+            className={`flow-area-controls ${
+              nodes.length === 0 ? "hidden" : ""
+            }`}
+          >
+            <button
+              className="flow-area-controls-save bg-success"
+              onClick={handleSave}
+            >
+              Save
+            </button>
+            <button
+              className="flow-area-controls-reset bg-danger"
+              onClick={onReset}
+            >
+              Reset
+            </button>
+          </div>
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -348,11 +417,13 @@ export default function OrgChart({ personnels }) {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
+            onNodeDrag={handleNodeDrag}
             onNodeDragStart={(e, node) => {
               dragOriginRef.current[node.id] = { ...node.position };
             }}
             style={{ height: "100%", width: "100%" }}
             defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+            connectionLineStyle={{ stroke: "black", strokeWidth: 1.5 }}
           >
             <Background color="#555" />
           </ReactFlow>
