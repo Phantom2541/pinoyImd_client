@@ -6,6 +6,7 @@ import {
   Staffs,
   Physicians,
   Employees,
+  Heads,
   Applicants,
 } from "../../../pages/platforms/hr";
 import { Services, Menus } from "../../../pages/platforms/accounting";
@@ -42,6 +43,13 @@ const humanresources = [
         path: "/staff",
         icon: "user",
         component: Staffs,
+      },
+      {
+        name: "Heads",
+        title: "Active staff directory.",
+        path: "/heads",
+        icon: "user",
+        component: Heads,
       },
       {
         name: "File 201",

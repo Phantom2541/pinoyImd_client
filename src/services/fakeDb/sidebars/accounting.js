@@ -116,7 +116,7 @@ const accounting = [
   {
     name: "Org Chart",
     title: "Organizational chart.",
-    icon: "tachometer-alt",
+    icon: "sitemap",
     path: "/organizationChart",
     component: OrgChart,
   },

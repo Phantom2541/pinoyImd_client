@@ -63,6 +63,7 @@
   flex: 1;
   height: 100%;
   width: 100%;
+  z-index: 0;
 }
 
 .flow-area-controls {
@@ -238,7 +239,7 @@
 .node-fade-out {
   opacity: 1;
   transform: scale(1);
-  animation: nodeFadeOut 0.7s ease;
+  animation: nodeFadeOut 0.7s ease forwards; /* ← this keeps final state */
 }
 
 @keyframes nodeFadeOut {

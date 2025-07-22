@@ -202,7 +202,17 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
+        const { page, maxPage } = state;
+        if (payload.length > 0) {
+          let totalPAges = Math.floor(payload.length / state.maxPage);
+          if (payload.length % maxPage > 0) totalPAges += 1;
+          state.totalPages = totalPAges;
+          if (page > totalPAges) {
+            state.page = totalPAges;
+          }
+        }
         state.collections = payload;
+        state.filtered = payload;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
