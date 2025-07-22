@@ -36,14 +36,24 @@ export default function Rci({ activeTab, setActiveTab = () => {} }) {
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" || e.key === "Tab") {
       e.preventDefault();
-
+      const packages = task?.packages || [];
+      const hasCF = packages.includes(60);
+      const hasRetic = packages.includes(62);
+      const hasESR = packages.includes(63);
       const nextInput = inputRefs.current[index + 1];
+
       if (nextInput) {
         nextInput.focus();
       } else {
-        setActiveTab("PLATELET");
+        if (hasCF) {
+          setActiveTab("CLOTTING FACTOR");
+        } else if (hasRetic || hasESR) {
+          setActiveTab("SPECIAL TEST");
+        } else {
+          document.getElementById("task-post-btn")?.click();
+        }
       }
     }
   };

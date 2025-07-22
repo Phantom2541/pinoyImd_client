@@ -1,4 +1,3 @@
-import OrganizationChart from "../../../pages/platforms/accredetations/labAssessment/organizationManagement/organizationChart";
 import {
   Staffs,
   qualityControls,
@@ -11,7 +10,7 @@ import {
   policyManagement,
   EquipmentSupplies,
 } from "../../../pages/platforms/accredetations/index";
-import OrgChartView from "../../../pages/platforms/accredetations/orgChartView";
+import OrgChartView from "../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
 
 const accreditation = [
   {
@@ -33,12 +32,10 @@ const accreditation = [
         icon: "cogs",
         children: [
           {
-            name: "1.Organizational Structure",
-            path: "/organizational",
-            title:
-              "Updated organizational  is posted/displayed in conspincoius area with the names, latest pictures (atleast passport size) and designation",
-            icon: "cogs",
-            component: OrganizationChart,
+            name: "Org Chart View",
+            path: "/orgChartView",
+            icon: "sitemap",
+            component: OrgChartView,
           },
           {
             name: "2. Organization's Mission, Vision and Objectives",
@@ -302,12 +299,6 @@ const accreditation = [
         icon: "cogs",
       },
     ],
-  },
-  {
-    name: "Org Chart View",
-    path: "/orgChartView",
-    icon: "cogs",
-    component: OrgChartView,
   },
 ];
 

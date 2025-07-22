@@ -5,10 +5,13 @@ import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import Swal from "sweetalert2";
+import { LABRESULT } from "../../../../../../services/redux/slices/commerce/pos/services/deals.js";
+import { Input } from "../../../../../../components/customizable";
 
 const Tasks = ({ key, form, obj, index, customer }) => {
-  const { activePlatform } = useSelector(({ auth }) => auth),
+  const { activePlatform, token } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
+    [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
   const handleLabPrint = (task) => {
@@ -17,17 +20,14 @@ const Tasks = ({ key, form, obj, index, customer }) => {
     localStorage.setItem("taskPrintout", JSON.stringify(taskData));
     const URL = `${window.location.origin}/printout/laboratory/task`;
     const features = "top=100px,left=100px,width=794px,height=1123px";
+
     setTimeout(() => {
       const printWindow = window.open(
         URL,
         "Laboratory Task Printout",
         features
       );
-      if (printWindow) {
-        printWindow.focus();
-      } else {
-        console.warn("Popup blocked or failed to open.");
-      }
+      if (printWindow) printWindow.focus();
     }, 100);
   };
 
@@ -46,12 +46,12 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       const regex = /[-\w]{25,}/;
       const match = url.match(regex);
       return match ? match[0] : null;
-    } catch (e) {
+    } catch {
       return null;
     }
   };
 
-  const previewDriveFile = async () => {
+  const previewDriveFile = async (task) => {
     const { value: link } = await Swal.fire({
       title: "Paste Google Drive Link",
       input: "text",
@@ -74,20 +74,33 @@ const Tasks = ({ key, form, obj, index, customer }) => {
 
       const previewLink = `https://drive.google.com/file/d/${fileId}/preview`;
 
-      Swal.fire({
+      const result = await Swal.fire({
         title: "Google Drive Preview",
         html: `
-          <iframe
-            src="${previewLink}"
-            width="100%"
-            height="400"
-            frameborder="0"
-            allow="autoplay"
-          ></iframe>
+          <iframe src="${previewLink}" width="100%" height="400" frameborder="0" allow="autoplay"></iframe>
         `,
         width: 600,
         showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Save Link",
+        cancelButtonText: "Cancel",
       });
+
+      if (result.isConfirmed) {
+        const updatedTask = {
+          ...task,
+          fileId: link,
+          department: "Radiology",
+        };
+
+        dispatch(LABRESULT({ token, data: updatedTask }));
+
+        Swal.fire({
+          icon: "success",
+          title: "Saved!",
+          text: "The link has been saved in fileId with department set.",
+        });
+      }
     }
   };
 
@@ -109,7 +122,8 @@ const Tasks = ({ key, form, obj, index, customer }) => {
 
   const task = {
     ...obj,
-    key: `${form}-${index} -${key}`,
+    _id: obj._id || `${form}-${index}-${key}`,
+    key: `${form}-${index}-${key}`,
     form,
     patient: customer,
     generateHealthyClient: [
@@ -126,15 +140,118 @@ const Tasks = ({ key, form, obj, index, customer }) => {
 
   const isEmptyEntry = _packages.length === 0;
 
+  const handleSelected = (data) => {
+    if (selected?._id === data._id && selected.key === data.key) {
+      setSelected({});
+    } else {
+      setSelected(data);
+    }
+  };
+
+  // const isSelected =
+  //   selected?._id === task._id && selected?.key === "signatory";
+
   return (
     <tr key={task.key} className={hasDone ? "table-active" : ""}>
       <td>{index}</td>
       <td>
-        {signatories[0]?.fullName ? fullName(signatories[0].fullName) : "-"}
+        {selected?._id === task._id && selected.key === "signatory1" ? (
+          <div
+            style={{ width: "13rem" }}
+            className="d-flex gap-2 align-items-center"
+          >
+            <select
+              className="form-control form-control-sm mt-2"
+              value={selected?.signatory1 || ""}
+              onChange={(e) =>
+                setSelected({ ...selected, signatory1: e.target.value })
+              }
+            >
+              <option value="">Select Technician</option>
+              {collections
+                .filter((user) => user.role === "Technician")
+                .map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {fullName(user.fullName)}
+                  </option>
+                ))}
+            </select>
+            <i
+              className="fas fa-check-circle text-success"
+              role="button"
+              style={{ fontSize: "1.2rem", cursor: "pointer" }}
+              title="Save"
+              onClick={() => handleEntry(selected)}
+            ></i>
+            <i
+              className="fas fa-times-circle text-danger"
+              role="button"
+              style={{ fontSize: "1.2rem", cursor: "pointer" }}
+              title="Cancel"
+              onClick={() => setSelected({})}
+            ></i>
+          </div>
+        ) : (
+          <strong
+            onClick={() => handleSelected({ ...task, key: "signatory1" })}
+            style={{ cursor: "pointer" }}
+          >
+            {signatories[0]?.fullName
+              ? fullName(signatories[0].fullName)
+              : "pick a Technician"}
+          </strong>
+        )}
       </td>
+
       <td>
-        {signatories[1]?.fullName ? fullName(signatories[1].fullName) : "-"}
+        {selected?._id === task._id && selected.key === "signatory2" ? (
+          <div
+            style={{ width: "13rem" }}
+            className="d-flex gap-2 align-items-center"
+          >
+            <select
+              className="form-control form-control-sm mt-2"
+              value={selected?.signatory2 || ""}
+              onChange={(e) =>
+                setSelected({ ...selected, signatory2: e.target.value })
+              }
+            >
+              <option value="">Select Radiologist</option>
+              {collections
+                .filter((user) => user.role === "Radiologist")
+                .map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {fullName(user.fullName)}
+                  </option>
+                ))}
+            </select>
+            <i
+              className="fas fa-check-circle text-success"
+              role="button"
+              style={{ fontSize: "1.2rem", cursor: "pointer" }}
+              title="Save"
+              onClick={() => handleEntry(selected)}
+            ></i>
+            <i
+              className="fas fa-times-circle text-danger"
+              role="button"
+              style={{ fontSize: "1.2rem", cursor: "pointer" }}
+              title="Cancel"
+              onClick={() => setSelected({})}
+            ></i>
+          </div>
+        ) : (
+          <strong
+            onClick={() => handleSelected({ ...task, key: "signatory2" })}
+            style={{ cursor: "pointer" }}
+          >
+            {signatories[1]?.fullName
+              ? fullName(signatories[1].fullName)
+              : "pick a Radiologist"}
+          </strong>
+        )}
       </td>
+
       <td>{form}</td>
       <td>
         {isEmptyEntry ? (
@@ -151,23 +268,25 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       </td>
       <td>
         <MDBBtnGroup>
-          <MDBBtn
-            color="dark"
-            size="sm"
-            className="py-1 px-2 m-0"
-            onClick={previewDriveFile}
-          >
-            <MDBIcon icon="eye" />
-          </MDBBtn>
-
-          <MDBBtn
-            onClick={handleEntry}
-            color={hasDone ? "info" : "primary"}
-            size="sm"
-            className="py-1 px-2 m-0"
-          >
-            <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
-          </MDBBtn>
+          {["Xray", "Ultrasound", "ECG"].includes(form) ? (
+            <MDBBtn
+              color="dark"
+              size="sm"
+              className="py-1 px-2 m-0"
+              onClick={() => previewDriveFile(task)}
+            >
+              <MDBIcon icon="eye" />
+            </MDBBtn>
+          ) : (
+            <MDBBtn
+              onClick={handleEntry}
+              color={hasDone ? "info" : "primary"}
+              size="sm"
+              className="py-1 px-2 m-0"
+            >
+              <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
+            </MDBBtn>
+          )}
 
           {!!signatories.length &&
             signatories[0] &&
@@ -175,7 +294,7 @@ const Tasks = ({ key, form, obj, index, customer }) => {
             hasDone && (
               <MDBBtn
                 onClick={() => {
-                  const selected = {
+                  const selectedTask = {
                     ...task,
                     branchId: activePlatform?.branch,
                     services: _packages,
@@ -183,8 +302,8 @@ const Tasks = ({ key, form, obj, index, customer }) => {
                     isPrint: true,
                   };
                   activePlatform.department === "Laboratory"
-                    ? handleLabPrint(selected)
-                    : handleRadPrint(selected);
+                    ? handleLabPrint(selectedTask)
+                    : handleRadPrint(selectedTask);
                 }}
                 color="warning"
                 size="sm"
