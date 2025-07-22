@@ -20,7 +20,7 @@ export default function Routes() {
   const platformPrefix = platform
     ? `/${platform.toLowerCase().replace(/\s+/g, "")}`
     : "";
-  console.log("platfom", platform);
+  // console.log("platfom", platform);
 
   const renderSidebars = () => {
     const sidebar = Sidebars[platform?.toLowerCase()?.replace(/\s+/g, "_")];

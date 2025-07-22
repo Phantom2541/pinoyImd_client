@@ -17,6 +17,7 @@ export default function Ecg() {
   const { task } = useSelector(({ validator }) => validator);
 
   const [findings, setFindings] = useState("");
+  const [link, setLink] = useState("");
   const [activeTab, setActiveTab] = useState("results");
 
   // Load values from task
@@ -24,12 +25,14 @@ export default function Ecg() {
     if (task?.findings) {
       try {
         const parsed = JSON.parse(task.findings);
+        setFindings(task.link);
         setFindings(parsed?.blocks?.map((b) => b.text).join("\n") || "");
       } catch (e) {
         setFindings(task.findings);
+        setFindings(task.link);
       }
     }
-  }, [task?.findings]);
+  }, [task]);
 
   return (
     <div className="mx-auto">
@@ -51,6 +54,25 @@ export default function Ecg() {
         <MDBCardBody>
           <MDBTabContent activeItem={activeTab} className="pt-0">
             <MDBTabPane tabId="results">
+              <label htmlFor="link">Add link here</label>
+              <input
+                type="link"
+                name="link"
+                id="link"
+                value={link}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setLink(val);
+                  const updatedTask = {
+                    ...task,
+                    link: val,
+                  };
+                  dispatch(SetTASK({ form: task?.form, task: updatedTask }));
+                  // delayedSave("findings", val, descTimeout);
+                }}
+                // onChange={(e) => handleChange(e.target)}
+                className="w-100 text-center fw-bold"
+              />
               <textarea
                 className="form-control mt-3 border"
                 style={{
