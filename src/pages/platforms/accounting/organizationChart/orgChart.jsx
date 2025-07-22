@@ -140,16 +140,14 @@ export default function OrgChart({ personnels }) {
 
             // STEP 1: build rows with correct spacing
             uniqueChildren.forEach((child) => {
-              const adjustedY = parent.position.y + minVerticalGap;
+              const y = child.position?.y ?? parent.position.y + childOffsetY;
 
-              const existing = groupedRows.find(
-                (r) => Math.abs(r.y - adjustedY) < minVerticalGap
-              );
+              const existing = groupedRows.find((r) => Math.abs(r.y - y) < 90);
 
               if (existing) {
                 existing.children.push(child);
               } else {
-                groupedRows.push({ y: adjustedY, children: [child] });
+                groupedRows.push({ y, children: [child] });
               }
             });
 
