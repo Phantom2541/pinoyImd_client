@@ -27,7 +27,10 @@ export default function DealCollapse() {
                 category,
                 source,
                 physicianId,
+                physicianSTR,
               } = deal;
+              const referral =
+                physicianId?.fullName?.lname || physicianSTR || "";
               return (
                 <MDBCard key={`deal-${index}`}>
                   <Header deal={deal} index={index} />
@@ -41,7 +44,7 @@ export default function DealCollapse() {
                       tasks={diagnostic}
                       category={category}
                       source={source}
-                      referral={physicianId}
+                      referral={referral}
                     />
                   </MDBCollapse>
                 </MDBCard>
