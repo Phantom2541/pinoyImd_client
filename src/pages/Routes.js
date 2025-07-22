@@ -21,11 +21,11 @@ export default function Routes() {
   const platformPrefix = platform
     ? `/${platform.toLowerCase().replace(/\s+/g, "")}`
     : "";
-  console.log("platfom", platform);
+  // console.log("platfom", platform);
 
   const renderSidebars = () => {
     const sidebar = Sidebars[platform.toLowerCase().replace(/\s+/g, "")];
-    console.log("sidebar Darrel:", platform, sidebar);
+    // console.log("sidebar Darrel:", platform, sidebar);
 
     if (!Array.isArray(sidebar)) return "Ooops.. Sidebars must be array";
 

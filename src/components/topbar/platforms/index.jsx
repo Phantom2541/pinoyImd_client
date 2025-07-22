@@ -23,7 +23,7 @@ export default function Platforms() {
     const sortedAccess = Array.from(unique).sort((a, b) => a.localeCompare(b));
     setAccess(sortedAccess);
   }, [activePlatform]);
-  console.log("access", access);
+  // console.log("access", access);
 
   const handlePlatform = (platform) => {
     const cleanedPlatform = platform.toLowerCase().replace(/\s+/g, "");
