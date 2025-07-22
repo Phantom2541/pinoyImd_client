@@ -45,13 +45,18 @@ export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" || e.key === "Tab") {
       e.preventDefault();
       const nextInput = inputRefs.current[index + 1];
       if (nextInput) {
         nextInput.focus();
       } else {
-        setActiveTab("RCI");
+        // Check if PLATELET tab is available in task.packages
+        if (task?.packages?.includes(59)) {
+          setActiveTab("PLATELET");
+        } else {
+          setActiveTab("RCI");
+        }
       }
     }
   };

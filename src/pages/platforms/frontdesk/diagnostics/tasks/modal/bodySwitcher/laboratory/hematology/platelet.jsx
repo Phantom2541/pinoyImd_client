@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { MDBTable } from "mdbreact";
 
-export default function Platelet({ activeTab }) {
+export default function Platelet({ activeTab = "", setActiveTab = () => {} }) {
   const { task } = useSelector(({ validator }) => validator);
   const dispatch = useDispatch();
   const inputRef = useRef(null); // Reference to the input
@@ -22,9 +22,13 @@ export default function Platelet({ activeTab }) {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" || e.key === "Tab") {
       e.preventDefault();
-      document.getElementById("task-post-btn").click();
+      const packages = task?.packages || [];
+      const hasRCI = packages.includes(58);
+
+      if (hasRCI) setActiveTab("RCI");
+      else document.getElementById("task-post-btn")?.click();
     }
   };
 
