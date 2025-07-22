@@ -136,24 +136,41 @@ export default function OrgChart({ personnels }) {
             if (!uniqueChildren.length) return;
 
             const groupedRows = [];
+            const minVerticalGap = 160;
 
+            // STEP 1: build rows with correct spacing
             uniqueChildren.forEach((child) => {
-              const y = child.position?.y ?? parent.position.y + childOffsetY;
-              const existing = groupedRows.find((r) => Math.abs(r.y - y) < 90);
-              existing
-                ? existing.children.push(child)
-                : groupedRows.push({ y, children: [child] });
+              const adjustedY = parent.position.y + minVerticalGap;
+
+              const existing = groupedRows.find(
+                (r) => Math.abs(r.y - adjustedY) < minVerticalGap
+              );
+
+              if (existing) {
+                existing.children.push(child);
+              } else {
+                groupedRows.push({ y: adjustedY, children: [child] });
+              }
             });
 
+            // STEP 2: apply layout per row
             groupedRows.forEach((row) => {
               const spacingX = 200;
               const startX =
                 parent.position.x - ((row.children.length - 1) * spacingX) / 2;
 
               row.children.forEach((child, idx) => {
+                const safeY = Math.max(
+                  parent.position.y + minVerticalGap,
+                  row.y
+                );
+
                 updatedNodeMap[child.id] = {
                   ...child,
-                  position: { x: startX + idx * spacingX, y: row.y },
+                  position: {
+                    x: startX + idx * spacingX,
+                    y: safeY,
+                  },
                 };
 
                 const edgeIdx = newEdges.findIndex(
@@ -165,7 +182,7 @@ export default function OrgChart({ personnels }) {
                     ...newEdges[edgeIdx],
                     style: {
                       ...newEdges[edgeIdx].style,
-                      fixedTargetY: row.y,
+                      fixedTargetY: safeY,
                       fixOffsetY: 20,
                     },
                   };
@@ -247,12 +264,46 @@ export default function OrgChart({ personnels }) {
     const dx = node.position.x - origin.x;
     const dy = node.position.y - origin.y;
 
+    // Move all direct children if node is a parent
     setNodes((nds) =>
       nds.map((n) =>
         edges.some((e) => e.source === node.id && e.target === n.id)
           ? { ...n, position: { x: n.position.x + dx, y: n.position.y + dy } }
           : n
       )
+    );
+
+    // Update edges where this node is a target (for lines going TO this node)
+    setEdges((eds) =>
+      eds.map((e) => {
+        if (e.target === node.id) {
+          // this node is a child — update its incoming line
+          return {
+            ...e,
+            style: {
+              ...e.style,
+              fixedTargetY: node.position.y,
+              fixOffsetY: 20,
+            },
+          };
+        }
+
+        if (e.source === node.id) {
+          // this node is a parent — update its child lines based on child's new Y
+          const child = nodes.find((n) => n.id === e.target);
+          if (!child) return e;
+          return {
+            ...e,
+            style: {
+              ...e.style,
+              fixedTargetY: child.position.y + dy,
+              fixOffsetY: 20,
+            },
+          };
+        }
+
+        return e;
+      })
     );
 
     dragOriginRef.current[node.id] = { ...node.position };
