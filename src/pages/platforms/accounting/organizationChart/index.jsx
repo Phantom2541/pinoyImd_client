@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactFlowProvider } from "react-flow-renderer";
-import OrgChartInner from "./orgChartInner";
+import OrgChartInner from "./orgChart";
 import { BROWSE } from "../../../../services/redux/slices/assets/persons/personnels";
 import { Policy } from "../../../../services/fakeDb";
 import "./style.css";

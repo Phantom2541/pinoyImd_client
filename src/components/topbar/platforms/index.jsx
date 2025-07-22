@@ -23,7 +23,6 @@ export default function Platforms() {
     const sortedAccess = Array.from(unique).sort((a, b) => a.localeCompare(b));
     setAccess(sortedAccess);
   }, [activePlatform]);
-  // console.log("access", access);
 
   const handlePlatform = (platform) => {
     const cleanedPlatform = platform.toLowerCase().replace(/\s+/g, "");
@@ -46,7 +45,7 @@ export default function Platforms() {
     const isManager = platform.toLowerCase() === "manager";
 
     // Define redirect URL based on platform
-    const redirectURL = `/${cleanedPlatform}/${
+    const redirectURL = `/${platform?.toLowerCase().replace(/\s/g, "_")}/${
       isManager ? "dashboard" : "bulletin"
     }`; // Adjust path as needed
 

@@ -6,7 +6,10 @@ import Header from "./header";
 import Calendar from "./calendar";
 import { Denomination, Census } from "./modal";
 import { BROWSE } from "../../../../../../services/redux/slices/commerce/catalog/menus";
-import { BROWSE as DEALS } from "../../../../../../services/redux/slices/commerce/pos/services/deals";
+import {
+  BROWSE as DEALS,
+  RESET,
+} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
 import { Monthly } from "../../../../../../services/redux/slices/finance/journals/payments";
 
 export default function Remmitances() {
@@ -34,6 +37,7 @@ export default function Remmitances() {
         })
       );
     }
+    return () => dispatch(RESET());
   }, [activePlatform, dispatch, month, token, year, auth]);
 
   useEffect(() => {

@@ -10,11 +10,12 @@ import {
 import { useToasts } from "react-toast-notifications";
 import { currency } from "../../../../../../../services/utilities";
 import { CENSUS } from "../../../../../../../services/redux/slices/finance/bookkeeping/remittances";
+import Spinner from "../../../../../../../components/spinner";
 
 export default function Modal({ show, selected, toggle }) {
   const { token } = useSelector(({ auth }) => auth),
     { total, collections } = useSelector(({ deals }) => deals),
-    { selected: selectedRemittance } = useSelector(
+    { selected: selectedRemittance, formSubmitted = false } = useSelector(
       ({ remittances }) => remittances
     ),
     { filtered = [] } = useSelector(({ payments }) => payments),
@@ -241,10 +242,11 @@ export default function Modal({ show, selected, toggle }) {
           <MDBBtn
             className="mt-4"
             rounded
+            disabled={formSubmitted}
             color="primary"
             onClick={() => handleSubmit()}
           >
-            Submit
+            Submit <Spinner formSubmitted={formSubmitted} />
           </MDBBtn>
         </div>
       </MDBModalBody>

@@ -6,7 +6,11 @@ import { AUTOSELECT } from "../../../../../../../services/redux/slices/finance/b
 import SummaryLoading from "./loading";
 
 export default function Payments() {
-  const { total, collections, isLoading } = useSelector(({ deals }) => deals);
+  const {
+    total,
+    collections,
+    dealsLoading: isLoading,
+  } = useSelector(({ deals }) => deals);
   const { auth, activePlatform, token } = useSelector(({ auth }) => auth);
   const { selected } = useSelector(({ remittances }) => remittances);
 

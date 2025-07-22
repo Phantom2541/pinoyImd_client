@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { Sidebars } from "../services/fakeDb";
 
@@ -24,8 +23,7 @@ export default function Routes() {
   // console.log("platfom", platform);
 
   const renderSidebars = () => {
-    const sidebar = Sidebars[platform.toLowerCase().replace(/\s+/g, "")];
-    // console.log("sidebar Darrel:", platform, sidebar);
+    const sidebar = Sidebars[platform?.toLowerCase()?.replace(/\s+/g, "_")];
 
     if (!Array.isArray(sidebar)) return "Ooops.. Sidebars must be array";
 
@@ -35,12 +33,10 @@ export default function Routes() {
       const { children, component, path = "" } = element;
 
       const fullPath = `${platformPrefix}${path}`;
-      // console.log("fullPath Darrel:", fullPath);
       const renderChildren = (c, parentPath = "") => {
         if (!c.children) return;
         c.children.forEach((child, i) => {
           const childFullPath = `${parentPath}${child.path}`;
-          // console.log("childFullPath Darrel :", childFullPath);
           sideBars.push(
             <Route
               key={`route-${index}-${i}-${childFullPath}`}
