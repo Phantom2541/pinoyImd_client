@@ -44,7 +44,7 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
     dispatch(SetPARAMS({ key: "cc", value: _cells }));
   };
   const handleKeyDown = (e, index) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" || e.key === "Tab") {
       e.preventDefault();
       const nextInput = inputRefs.current[index + 1];
       if (nextInput) {

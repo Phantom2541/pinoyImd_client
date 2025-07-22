@@ -5,9 +5,10 @@ import { Cellcount, Rci as RCI } from "../../../../../../services/fakeDb";
 
 const options = ["00", "15", "30", "45"];
 
-export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
+export default function Rci({ rci = [], style, troupe }) {
   const { Category } = RCI,
     { Preferences } = Cellcount;
+  console.log("troupe", troupe);
 
   return (
     <MDBTable hover bordered responsive className="mb-0">
@@ -60,7 +61,7 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
             <span className="ml-2"> Bleeding Time</span>
           </td>
           <td style={style} className="py-0 fw-bold">
-            {bt[0] && `${bt[0]} ${options[bt[1]]}`}
+            {troupe?.bt[0] && `${troupe?.bt[0]} ${options[troupe?.bt[1]]} sec.`}
           </td>
           <td style={style} className="py-0">
             2-4 mins
@@ -71,7 +72,8 @@ export default function Rci({ rci = [], style, troupe, ct = [], bt = [] }) {
             <span className="ml-2"> Clotting Time</span>
           </td>
           <td style={{ ...style, width: "30%" }} className="py-0 fw-bold">
-            {ct[0] && `${ct[0]} ${options[ct[1]]}`}
+            {troupe?.ct[0] &&
+              `${troupe?.ct[0]} ${options[troupe?.ct[1]]} sec. `}
           </td>
           <td style={style} className="py-0">
             2-4 mins

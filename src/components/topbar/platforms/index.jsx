@@ -67,19 +67,14 @@ export default function Platforms() {
         </MDBDropdownToggle>
       )}
       <MDBDropdownMenu right>
-        {access?.map(
-          (platform, index) => (
-            console.log("platform", platform),
-            (
-              <MDBDropdownItem
-                key={`platform-${index}`}
-                onClick={() => handlePlatform(platform)}
-              >
-                {capitalize(platform)}
-              </MDBDropdownItem>
-            )
-          )
-        )}
+        {access?.map((platform, index) => (
+          <MDBDropdownItem
+            key={`platform-${index}`}
+            onClick={() => handlePlatform(platform)}
+          >
+            {capitalize(platform)}
+          </MDBDropdownItem>
+        ))}
       </MDBDropdownMenu>
     </MDBDropdown>
   );

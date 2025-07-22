@@ -10,35 +10,14 @@ import {
   MDBCard,
   MDBCardBody,
 } from "mdbreact";
+
+// Component imports
 import Cellcount from "./cellcount";
 import Diffcount from "./diffcount";
 import Rci from "./rci";
 import Platelet from "./platelet";
 import ClottingFactor from "./clottingFactor";
-import SpecialTest from "./speciaTest";
-
-const tabs = {
-  58: {
-    names: ["CELL COUNT", "DIFF COUNT", "RCI"],
-    components: [Cellcount, Diffcount, Rci],
-  },
-  59: {
-    names: ["PLATELET"],
-    components: [Platelet],
-  },
-  60: {
-    names: ["CLOTTING FACTOR"],
-    components: [ClottingFactor],
-  },
-  62: {
-    names: ["SPECIAL TEST"],
-    components: [SpecialTest],
-  },
-  63: {
-    names: ["SPECIAL TEST"],
-    components: [SpecialTest],
-  },
-};
+import SpecialTest from "./speciaTest"; // Check spelling: should this be "specialTest"?
 
 export default function Hematology() {
   const { task } = useSelector(({ validator }) => validator),
@@ -46,41 +25,47 @@ export default function Hematology() {
 
   const { packages = [] } = task;
 
+  // Define tab structure in the order you want them to appear
+  const orderedTabs = [
+    { name: "CELL COUNT", component: Cellcount, key: 58 },
+    { name: "DIFF COUNT", component: Diffcount, key: 58 },
+    { name: "PLATELET", component: Platelet, key: 59 },
+    { name: "RCI", component: Rci, key: 58 },
+    { name: "CLOTTING FACTOR", component: ClottingFactor, key: 60 },
+    { name: "SPECIAL TEST", component: SpecialTest, key: 62 },
+    { name: "SPECIAL TEST", component: SpecialTest, key: 63 },
+  ];
+
+  // Filter only tabs relevant to current packages
+  const availableTabs = orderedTabs.filter((tab) => packages.includes(tab.key));
+
   return (
     <MDBContainer>
       <MDBNav color="primary" tabs className="nav-justified">
-        {Object.entries(tabs).map(([key, { names }]) => {
-          if (!packages.includes(Number(key))) return null;
-
-          return names.map((name, index) => (
-            <MDBNavItem key={`tab-${index}`}>
-              <MDBNavLink
-                link
-                active={name === activeTab}
-                to="#!"
-                onClick={() => setActiveTab(name)}
-              >
-                {name}
-              </MDBNavLink>
-            </MDBNavItem>
-          ));
-        })}
+        {availableTabs.map((tab, index) => (
+          <MDBNavItem key={`nav-${index}`}>
+            <MDBNavLink
+              link
+              active={tab.name === activeTab}
+              to="#!"
+              onClick={() => setActiveTab(tab.name)}
+            >
+              {tab.name}
+            </MDBNavLink>
+          </MDBNavItem>
+        ))}
       </MDBNav>
       <MDBCard>
         <MDBCardBody>
           <MDBTabContent activeItem={activeTab}>
-            {Object.entries(tabs).map(([key, { components, names }]) => {
-              if (!packages.includes(Number(key))) return null;
-
-              return components.map((Component, index) => (
-                <MDBTabPane key={`component-${index}`} tabId={names[index]}>
-                  <Component
-                    setActiveTab={setActiveTab}
-                    activeTab={activeTab}
-                  />
-                </MDBTabPane>
-              ));
-            })}
+            {availableTabs.map((tab, index) => (
+              <MDBTabPane key={`pane-${index}`} tabId={tab.name}>
+                <tab.component
+                  setActiveTab={setActiveTab}
+                  activeTab={activeTab}
+                />
+              </MDBTabPane>
+            ))}
           </MDBTabContent>
         </MDBCardBody>
       </MDBCard>

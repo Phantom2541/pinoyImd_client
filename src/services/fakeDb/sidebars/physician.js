@@ -2,6 +2,7 @@ import {
   Dashboard,
   Appointment,
   Imaging,
+  Staffs,
 } from "../../../pages/platforms/physician";
 // import PatientRecords from "../../../pages/platforms/physician/patientRecords";
 // import MedicalHistory from "../../../pages/platforms/physician/medicalHistory";
@@ -128,7 +129,7 @@ const physician = [
         title: "Active staff directory.",
         path: "/staff",
         icon: "user",
-        // component: Staffs,
+        component: Staffs,
       },
       {
         name: "Applicants",
