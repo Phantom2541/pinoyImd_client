@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBInput, MDBRow, MDBCol } from "mdbreact";
-
+import { currency } from "./../../../../../../services/utilities";
 const expenseCodes = [
   {
     code: "Tf",
@@ -22,7 +22,7 @@ const expenseCodes = [
 
 export default function CostBreakdown({ form, setForm }) {
   const capital = form.capital || {};
-  const expenses = Array.isArray(form.expenses) ? form.expenses : [];
+  const expenses = form.expenses || {};
 
   // 🔵 Capital Handling
   const handleCapitalChange = (field, value) => {
@@ -39,28 +39,18 @@ export default function CostBreakdown({ form, setForm }) {
   const getCapitalValue = (field) => capital?.[field] ?? 0;
 
   // 🔴 Expense Handling
-  const getExpenseValue = (code) => {
-    const found = expenses.find((e) => Object.keys(e)[0] === code);
-    return found ? found[code] : 0;
-  };
-
   const handleExpenseChange = (code, value) => {
     const numVal = Number(value);
-    let _expenses = [...expenses];
-    const index = _expenses.findIndex((e) => Object.keys(e)[0] === code);
-
+    const newExpenses = { ...expenses };
     if (numVal === 0 || isNaN(numVal)) {
-      if (index > -1) _expenses.splice(index, 1);
+      delete newExpenses[code];
     } else {
-      if (index > -1) {
-        _expenses[index] = { [code]: numVal };
-      } else {
-        _expenses.push({ [code]: numVal });
-      }
+      newExpenses[code] = numVal;
     }
-
-    setForm({ ...form, expenses: _expenses });
+    setForm({ ...form, expenses: newExpenses });
   };
+
+  const getExpenseValue = (code) => expenses?.[code] ?? 0;
 
   // 💰 Totals
   const capitalTotal = ["Pre", "Ana", "Pos"].reduce(
@@ -91,7 +81,7 @@ export default function CostBreakdown({ form, setForm }) {
           <MDBInput
             type="number"
             label="Analytical"
-            title="Gastos habang ginagawa ang test — reagents, machine use, tech time"
+            title="Gastos habang ginagawa ang test — kabilang ang reagents, mga gamit at machine depreciation kada test"
             value={getCapitalValue("Ana")}
             onChange={(e) => handleCapitalChange("Ana", e.target.value)}
           />
@@ -109,7 +99,7 @@ export default function CostBreakdown({ form, setForm }) {
 
       <MDBRow className="mt-2">
         <MDBCol md="4">
-          <strong>Total Capital:</strong> ₱{capitalTotal.toFixed(2)}
+          <strong>Total Capital:</strong> {currency.format(capitalTotal)}
         </MDBCol>
       </MDBRow>
 
@@ -131,7 +121,7 @@ export default function CostBreakdown({ form, setForm }) {
 
       <MDBRow className="mt-2">
         <MDBCol md="4">
-          <strong>Total Expenses:</strong> ₱{expensesTotal.toFixed(2)}
+          <strong>Total Expenses:</strong> {currency.format(expensesTotal)}
         </MDBCol>
       </MDBRow>
 
@@ -140,7 +130,7 @@ export default function CostBreakdown({ form, setForm }) {
         <MDBCol md="6">
           <h5 className="font-weight-bold">
             💸 Grand Total Cost:{" "}
-            <span className="text-success">₱{grandTotal.toFixed(2)}</span>
+            <span className="text-success">{currency.format(grandTotal)}</span>
           </h5>
         </MDBCol>
       </MDBRow>
