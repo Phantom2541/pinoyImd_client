@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
-  SEND_OUTS,
   BROWSE,
   SetFILTERED,
 } from "../../../../../services/redux/slices/commerce/pos/services/onBoardings";
 import { Search } from "../../../../../components/searchables";
 
-import { use } from "react";
-
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth); //get the max page
-  const { collections, isSucscess } = useSelector(
-      ({ onBoardings }) => onBoardings
-    ), //
+  const { collections } = useSelector(({ onBoardings }) => onBoardings), //
     dispatch = useDispatch();
 
   //initial values
