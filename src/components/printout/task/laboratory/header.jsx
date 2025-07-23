@@ -1,5 +1,5 @@
-import React from "react";
 import {
+  capitalize,
   getAge,
   fullName as nameFormatter,
 } from "../../../../services/utilities";
@@ -11,7 +11,6 @@ export default function Header({ task }) {
   const { category, patient, source, referral, form, updatedAt } = task;
   const { fullName: pFull, isMale = false, dob = "", _id } = patient;
   const categoryWidth = source && referral ? "30%" : "64.2%";
-
   return (
     <div className="px-1">
       <div className="d-flex align-items-center justify-content-between">
@@ -65,7 +64,7 @@ export default function Header({ task }) {
 
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center">
-          <span>Physician: Dr. {referral?.fullName?.lname}</span>
+          <span>Physician: Dr. {capitalize(referral)}</span>
         </div>
         <div>
           <span>Source: {source?.displayname}</span>

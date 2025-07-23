@@ -56,6 +56,7 @@ import Logo from "../../assets/iMD.png";
 import PresetIMD from "../../assets/iMD.png";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
+import Barcode from "./barcode";
 // Clear's Cache
 import clearSiteData from "./clearSiteData";
 //EXCEL
@@ -137,6 +138,7 @@ export {
   formatNameToObj,
   removeUndefinedValues,
   PresetIMD,
+  Barcode,
   //status of employment
   employment,
   //address formatter,

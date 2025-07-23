@@ -91,112 +91,186 @@ export default function OrgChart({ personnels }) {
             ...params,
             type: "custom",
             markerEnd: { type: MarkerType.ArrowClosed },
-            style: { stroke: "black", strokeWidth: 1.5, fixOffsetY: 20 },
+            style: { stroke: "black", strokeWidth: 1.5 },
           },
           eds
         );
 
         setNodes((nds) => {
-          const updatedNodeMap = {};
-          const childOffsetY = 150;
-          const parentSpacingX = 200;
+          const targetId = params.target;
+          const spacingX = 200;
+          const verticalGap = 100;
+          const nodeHeight = 100;
 
-          const targetNode = nds.find((n) => n.id === params.target);
           const parentNodes = newEdges
-            .filter((e) => e.target === params.target)
+            .filter((e) => e.target === targetId)
             .map((e) => nds.find((n) => n.id === e.source))
             .filter(Boolean);
 
-          if (!targetNode || !parentNodes.length) return nds;
+          if (!parentNodes.length) return nds;
+          const targetNode = nds.find((n) => n.id === targetId);
+          if (!targetNode) return nds;
 
-          const alignedY = Math.min(...parentNodes.map((p) => p.position.y));
-          const centerX =
-            parentNodes.reduce((sum, p) => sum + p.position.x, 0) /
-            parentNodes.length;
-          const startX =
-            centerX - ((parentNodes.length - 1) * parentSpacingX) / 2;
+          const updatedNodeMap = {};
 
-          parentNodes.forEach((p, i) => {
-            updatedNodeMap[p.id] = {
-              ...p,
-              position: { x: startX + i * parentSpacingX, y: alignedY },
+          // === MULTI-PARENT LAYOUT ===
+          if (parentNodes.length > 1) {
+            const spacing = spacingX;
+            const alignY =
+              parentNodes.reduce((sum, p) => sum + p.position.y, 0) /
+              parentNodes.length;
+
+            const centerX =
+              parentNodes.reduce((sum, p) => sum + p.position.x, 0) /
+              parentNodes.length;
+
+            const startX = centerX - ((parentNodes.length - 1) * spacing) / 2;
+
+            // Step 1: align parents horizontally
+            parentNodes.forEach((parent, i) => {
+              updatedNodeMap[parent.id] = {
+                ...parent,
+                position: {
+                  x: startX + i * spacing,
+                  y: alignY,
+                },
+              };
+            });
+
+            // Step 2: get actual updated parent Xs
+            const parentXs = parentNodes.map(
+              (p) => updatedNodeMap[p.id]?.position.x ?? p.position.x
+            );
+
+            const avgFinalX =
+              parentXs.reduce((sum, x) => sum + x, 0) / parentXs.length;
+
+            // Step 3: place child at center
+            updatedNodeMap[targetNode.id] = {
+              ...targetNode,
+              position: {
+                x: avgFinalX,
+                y: alignY + nodeHeight + verticalGap,
+              },
             };
-          });
+          }
 
-          parentNodes.forEach((parent) => {
+          // === SINGLE PARENT LAYOUT ===
+          if (parentNodes.length === 1) {
+            const parent = parentNodes[0];
+
             const children = newEdges
               .filter((e) => e.source === parent.id)
               .map((e) => nds.find((n) => n.id === e.target))
               .filter(Boolean);
 
-            const uniqueChildren = [
-              ...new Map(children.map((c) => [c.id, c])).values(),
-            ];
+            if (children.length > 0) {
+              const groupedRows = [];
+              const rowThreshold = 100;
+              const minVerticalGap = 160;
 
-            if (!uniqueChildren.length) return;
+              children.forEach((child) => {
+                const y =
+                  child.position?.y ??
+                  parent.position.y + nodeHeight + verticalGap;
 
-            const groupedRows = [];
-            const minVerticalGap = 160;
-
-            // STEP 1: build rows with correct spacing
-            uniqueChildren.forEach((child) => {
-              const y = child.position?.y ?? parent.position.y + childOffsetY;
-
-              const existing = groupedRows.find((r) => Math.abs(r.y - y) < 90);
-
-              if (existing) {
-                existing.children.push(child);
-              } else {
-                groupedRows.push({ y, children: [child] });
-              }
-            });
-
-            // STEP 2: apply layout per row
-            groupedRows.forEach((row) => {
-              const spacingX = 200;
-              const startX =
-                parent.position.x - ((row.children.length - 1) * spacingX) / 2;
-
-              row.children.forEach((child, idx) => {
-                const safeY = Math.max(
-                  parent.position.y + minVerticalGap,
-                  row.y
+                const existingRow = groupedRows.find(
+                  (row) => Math.abs(row.y - y) < rowThreshold
                 );
 
-                updatedNodeMap[child.id] = {
-                  ...child,
-                  position: {
-                    x: startX + idx * spacingX,
-                    y: safeY,
-                  },
-                };
-
-                const edgeIdx = newEdges.findIndex(
-                  (e) => e.source === parent.id && e.target === child.id
-                );
-
-                if (edgeIdx !== -1) {
-                  newEdges[edgeIdx] = {
-                    ...newEdges[edgeIdx],
-                    style: {
-                      ...newEdges[edgeIdx].style,
-                      fixedTargetY: safeY,
-                      fixOffsetY: 20,
-                    },
-                  };
+                if (existingRow) {
+                  existingRow.children.push(child);
+                } else {
+                  groupedRows.push({ y, children: [child] });
                 }
               });
+
+              groupedRows.forEach((row, rowIndex) => {
+                const spacing = spacingX;
+                const startX =
+                  parent.position.x - ((row.children.length - 1) * spacing) / 2;
+                const rowY =
+                  parent.position.y +
+                  nodeHeight +
+                  verticalGap +
+                  rowIndex * minVerticalGap;
+
+                row.children.forEach((child, i) => {
+                  updatedNodeMap[child.id] = {
+                    ...child,
+                    position: {
+                      x: startX + i * spacing,
+                      y: rowY,
+                    },
+                  };
+                });
+              });
+            }
+          }
+
+          // === RECURSIVE CHILD LAYOUT ===
+          function applyRecursiveLayout(nodeId, parentX, parentY) {
+            const children = newEdges
+              .filter((e) => e.source === nodeId)
+              .map((e) => nds.find((n) => n.id === e.target))
+              .filter(Boolean);
+
+            if (!children.length) return;
+
+            const spacing = spacingX;
+            const startX = parentX - ((children.length - 1) * spacing) / 2;
+            const childY = parentY + nodeHeight + verticalGap;
+
+            children.forEach((child, i) => {
+              // ⛔ Skip layout if this child has multiple parents
+              const parentCount = newEdges.filter(
+                (e) => e.target === child.id
+              ).length;
+              if (parentCount > 1) return;
+
+              updatedNodeMap[child.id] = {
+                ...child,
+                position: {
+                  x: startX + i * spacing,
+                  y: childY,
+                },
+              };
+
+              applyRecursiveLayout(child.id, startX + i * spacing, childY);
             });
+          }
+
+          // Lay out all children recursively for ALL updated nodes
+          Object.values(updatedNodeMap).forEach((updatedNode) => {
+            applyRecursiveLayout(
+              updatedNode.id,
+              updatedNode.position.x,
+              updatedNode.position.y
+            );
           });
 
-          // Align multi-parent target
-          if (parentNodes.length > 1) {
-            const y = targetNode.position.y;
-            updatedNodeMap[targetNode.id] = {
-              ...targetNode,
-              position: { x: centerX, y },
+          // === UPDATE EDGE STYLES ===
+          const updatedEdges = newEdges.map((edge) => {
+            const sourceNode =
+              updatedNodeMap[edge.source] ||
+              nds.find((n) => n.id === edge.source);
+            const targetNode =
+              updatedNodeMap[edge.target] ||
+              nds.find((n) => n.id === edge.target);
+
+            if (!sourceNode || !targetNode) return edge;
+
+            return {
+              ...edge,
+              style: {
+                ...edge.style,
+                fixOffsetY: 20,
+                fixedTargetY: targetNode.position.y,
+              },
             };
-          }
+          });
+
+          setEdges(updatedEdges);
 
           return nds.map((n) => updatedNodeMap[n.id] || n);
         });
@@ -262,20 +336,41 @@ export default function OrgChart({ personnels }) {
     const dx = node.position.x - origin.x;
     const dy = node.position.y - origin.y;
 
-    // Move all direct children if node is a parent
+    // 🔁 Recursive function to collect all descendants
+    const getAllDescendants = (parentId, allEdges, visited = new Set()) => {
+      const directChildren = allEdges
+        .filter((e) => e.source === parentId)
+        .map((e) => e.target)
+        .filter((id) => !visited.has(id));
+
+      directChildren.forEach((childId) => {
+        visited.add(childId);
+        getAllDescendants(childId, allEdges, visited);
+      });
+
+      return visited;
+    };
+
+    const descendantIds = getAllDescendants(node.id, edges);
+
     setNodes((nds) =>
-      nds.map((n) =>
-        edges.some((e) => e.source === node.id && e.target === n.id)
-          ? { ...n, position: { x: n.position.x + dx, y: n.position.y + dy } }
-          : n
-      )
+      nds.map((n) => {
+        if (descendantIds.has(n.id)) {
+          return {
+            ...n,
+            position: {
+              x: n.position.x + dx,
+              y: n.position.y + dy,
+            },
+          };
+        }
+        return n;
+      })
     );
 
-    // Update edges where this node is a target (for lines going TO this node)
     setEdges((eds) =>
       eds.map((e) => {
         if (e.target === node.id) {
-          // this node is a child — update its incoming line
           return {
             ...e,
             style: {
@@ -286,15 +381,14 @@ export default function OrgChart({ personnels }) {
           };
         }
 
-        if (e.source === node.id) {
-          // this node is a parent — update its child lines based on child's new Y
-          const child = nodes.find((n) => n.id === e.target);
-          if (!child) return e;
+        if (e.source === node.id || descendantIds.has(e.source)) {
+          const targetNode = nodes.find((n) => n.id === e.target);
+          if (!targetNode) return e;
           return {
             ...e,
             style: {
               ...e.style,
-              fixedTargetY: child.position.y + dy,
+              fixedTargetY: targetNode.position.y + dy,
               fixOffsetY: 20,
             },
           };
