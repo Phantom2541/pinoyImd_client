@@ -52,55 +52,73 @@ const frontdesk = [
     name: "Bulletin Board",
     icon: "tachometer-alt",
     path: "/bulletin",
+    title:
+      "Displays announcements and system-wide updates for the frontdesk team.",
     component: Dashboard,
   },
   {
     name: "Diagnostics",
     path: "/diagnostics",
     icon: "cogs",
+    title:
+      "Manage patient diagnostics – onboarding, task queue, tracking, and sendouts.",
     children: [
       {
         name: "Onboarding",
-        path: "/diagnostics/onboarding",
+        path: "/onboarding",
         icon: "tv",
+        title: "Register and onboard patients for diagnostic procedures.",
         component: Onboard,
       },
       {
         name: "Tasks",
-        path: "/diagnostics/tasks",
+        path: "/tasks",
         icon: "clipboard-list",
+        title: "View and manage pending diagnostic tasks for patients.",
         component: Tasks,
       },
       {
         name: "Tracker",
-        path: "/diagnostics/reports",
+        path: "/reports",
         icon: "file-alt",
+        title: "Monitor the progress and reports of diagnostics performed.",
         component: Reports,
       },
       {
         name: "Sendouts",
-        path: "/diagnostics/sendouts",
+        path: "/sendouts",
         icon: "arrow-left",
+        title: "Manage sendouts to external laboratories for outsourced tests.",
         component: Sendouts,
       },
     ],
   },
   {
-    name: "Sendouts (SOA)",
+    name: "Outsource",
     icon: "tv",
     path: "/outsource",
+    title:
+      "Monitor, record, and bill sendouts to outsourced diagnostic partners.",
     children: [
       {
-        name: "Billing",
-        path: "/outsource/billing",
+        name: "Status",
+        path: "/status",
         icon: "file-invoice",
-        component: Billings,
+        title: "Track acceptance or rejection of outsourced tests.",
       },
       {
         name: "Logbook",
-        path: "/outsource/logbook",
+        path: "/logbook",
         icon: "balance-scale",
+        title: "View monthly records of sendouts and charging status.",
         component: SOA,
+      },
+      {
+        name: "Billing (SOA)",
+        path: "/billing",
+        icon: "file-invoice",
+        title: "Generate and view billing statements for outsourced services.",
+        component: Billings,
       },
     ],
   },
@@ -133,41 +151,42 @@ const frontdesk = [
     name: "Merchandise",
     path: "/merchandise",
     icon: "boxes",
+    title:
+      "Manage inventory and product listings like machines, medicines, and consumables.",
     children: [
       {
         name: "productsGenerics",
         path: "/productsGenerics",
         icon: "cogs",
+        title: "List of generic categories for medical products.",
         component: productsGenerics,
       },
       {
         name: "products",
         path: "/products",
         icon: "cogs",
+        title: "Inventory of available products for use or sale.",
         component: Products,
       },
       {
         name: "Machines",
         path: "/merchandise/machines",
         icon: "laptop-code",
+        title: "List and manage medical machines and diagnostic equipment.",
         component: machines, // add your component here
       },
       {
         name: "Medicines",
         path: "/medicines",
         icon: "laptop-code",
+        title: "Manage pharmaceutical stocks and generic drugs.",
         component: generics, // add your component here
       },
-      // {
-      //   name: "Medicines",
-      //   path: "/medicines",
-      //   icon: "laptop-code",
-      //   component: medicines, // add your component here
-      // },
       {
         name: "Mentainance",
         path: "/merchandise/mentainance",
         icon: "laptop-code",
+        title: "Track machine maintenance and calibration schedules.",
         component: mentainance,
       },
       {

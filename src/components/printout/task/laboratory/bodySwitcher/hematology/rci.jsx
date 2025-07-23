@@ -61,7 +61,8 @@ export default function Rci({ rci = [], style, troupe }) {
             <span className="ml-2"> Bleeding Time</span>
           </td>
           <td style={style} className="py-0 fw-bold">
-            {troupe?.bt[0] && `${troupe?.bt[0]} ${options[troupe?.bt[1]]} sec.`}
+            {troupe?.bt[0] &&
+              `${troupe?.bt[0]}min :${options[troupe?.bt[1]]} sec.`}
           </td>
           <td style={style} className="py-0">
             2-4 mins
@@ -73,7 +74,7 @@ export default function Rci({ rci = [], style, troupe }) {
           </td>
           <td style={{ ...style, width: "30%" }} className="py-0 fw-bold">
             {troupe?.ct[0] &&
-              `${troupe?.ct[0]} ${options[troupe?.ct[1]]} sec. `}
+              `${troupe?.ct[0]}min :${options[troupe?.ct[1]]} sec. `}
           </td>
           <td style={style} className="py-0">
             2-4 mins

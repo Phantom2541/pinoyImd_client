@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
@@ -6,15 +6,23 @@ import {
   findReference,
 } from "./../../../../../../../../../services/utilities";
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
-
 export default function Chemistry() {
   const { task } = useSelector(({ validator }) => validator),
     { collections: services } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
-
   const { packages = {}, key: mapKey, patient } = task || {};
-
   const inputRefs = useRef([]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const first = inputRefs.current[0];
+      if (first && first.offsetParent !== null) {
+        console.log("Focusing delayed input");
+        first.focus();
+      }
+    }, 1000); // try 1s delay temporarily
+
+    return () => clearTimeout(timer);
+  }, [mapKey]);
 
   const handleChange = (target) => {
     const { name, value } = target,
