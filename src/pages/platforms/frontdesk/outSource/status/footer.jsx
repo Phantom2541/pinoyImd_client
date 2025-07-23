@@ -24,9 +24,6 @@ const Footer = () => {
       dispatch(SetActivePAGE(newPage));
     }
   };
-  console.log("totalpages", totalPages);
-  console.log("activepage", activePage);
-  console.log("maxpage", maxPage);
 
   return (
     <div className="mb-auto d-flex justify-content-between align-items-center px-4">
