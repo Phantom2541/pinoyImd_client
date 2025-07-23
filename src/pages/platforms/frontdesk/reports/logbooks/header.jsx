@@ -21,12 +21,15 @@ const Header = ({ BROWSE, RESET, title, printPath = "chem" }) => {
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
       dispatch(
         BROWSE({
           data: {
             branch: activePlatform?.branchId,
             month: Number(month) || today.getMonth() + 1,
             year: Number(year) || today.getFullYear(),
+            timezone,
           },
           token,
         })

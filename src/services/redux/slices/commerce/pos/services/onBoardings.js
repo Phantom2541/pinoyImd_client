@@ -243,7 +243,6 @@ export const reduxSlice = createSlice({
 
         onboardingUsers.forEach((element) => {
           const index = collections.findIndex(({ _id }) => _id === element._id);
-          console.log("index", index);
           collections[index] = {
             ...collections[index],
             pid: payload,
@@ -412,9 +411,9 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
-
       state.activePage = 1;
     },
     SetActivePAGE: (state, { payload }) => {
@@ -446,7 +445,6 @@ export const reduxSlice = createSlice({
       state.year = Number(action.payload);
     },
     TOGGLE: (state, { payload }) => {
-      console.log("payload", payload);
       if (payload) {
         state.showProcess = !state.showProcess;
       } else {
@@ -486,9 +484,13 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        state.collections = state.filtered = payload.payload || [];
-        let totalPages = Math.ceil(state.filtered.length / state.maxPage);
+      .addCase(BROWSE.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.collections = state.filtered = payload || [];
+
+        let totalPages = Math.floor(payload.length / state.maxPage);
+
+        if (payload.length % state.maxPage > 0) totalPages += 1;
         state.totalPages = totalPages;
         if (state.activePage > totalPages) {
           state.activePage = totalPages;

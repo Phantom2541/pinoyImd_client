@@ -49,6 +49,7 @@ const initialState = {
   isSuccess: false,
   print: false,
   isLoading: false,
+  formSubmitted: false,
   message: "",
 };
 
@@ -98,6 +99,24 @@ export const HEADS = createAsyncThunk(
       return axioKit.universal(`assets/persons/heads/browse`, token, {
         branchId,
       });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const WORK_AREA = createAsyncThunk(
+  `${url}/work_area`,
+  ({ data, token, baseURL }, thunkAPI) => {
+    try {
+      return axioKit.update(baseURL, data, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -280,6 +299,7 @@ export const reduxSlice = createSlice({
     },
     RESET: (state) => {
       state.isSuccess = false;
+      state.formSubmitted = false;
       state.message = "";
     },
   },
@@ -311,6 +331,34 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;
+      })
+      .addCase(WORK_AREA.pending, (state) => {
+        state.formSubmitted = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(WORK_AREA.fulfilled, (state, action) => {
+        const { payload, section } = action.payload;
+        const updateCollections = (collections) => {
+          const index = collections.findIndex(
+            (item) => item?._id === payload?._id
+          );
+          const deal = collections[index];
+          collections[index] = {
+            ...deal,
+            diagnostic: { ...deal.diagnostic, [section]: payload },
+          };
+        };
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        updateCollections(state.filteredStatus);
+
+        state.formSubmitted = false;
+      })
+      .addCase(WORK_AREA.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.formSubmitted = false;
       })
 
       .addCase(TRACKER.pending, (state) => {

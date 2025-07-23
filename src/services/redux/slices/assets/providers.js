@@ -350,6 +350,9 @@ export const reduxSlice = createSlice({
       }
       state.filtered = payload;
     },
+    SetFILTERED: (state, { payload }) => {
+      state.filtered = payload;
+    },
     SetINSOURCE: (state, { payload }) => {
       state.collections = payload;
     },
@@ -645,5 +648,6 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   RESET,
+  SetFILTERED,
 } = reduxSlice.actions;
 export default reduxSlice.reducer;

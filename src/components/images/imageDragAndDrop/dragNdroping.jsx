@@ -10,7 +10,7 @@ import { useToasts } from "react-toast-notifications";
 const ImageDragAndDrop = ({
   img = "",
   savedImg,
-  downloadName = "downloaded-image.png",
+  downloadName = "downloaded-image.jpg",
   setImgName = "file-name",
   setImgEmail = "file-email",
   token,
@@ -29,7 +29,6 @@ const ImageDragAndDrop = ({
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const { addToast } = useToasts();
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,14 +38,12 @@ const ImageDragAndDrop = ({
       fetch(img)
         .then((res) => res.blob())
         .then((blob) => {
-          console.log("img", img);
-
           blobUrl = URL.createObjectURL(blob);
           setPreview(blobUrl);
         })
         .catch((err) => {
           console.error("Failed to fetch image", err);
-          setPreview(img); // fallback if fetch fails
+          setPreview(img);
         });
     }
 
@@ -73,26 +70,7 @@ const ImageDragAndDrop = ({
       return;
     }
 
-    const extension = file.type.split("/")[1]; // "png", "jpeg", etc.
-
-    const fileName = `${setImgName}.${extension}`;
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      dispatch(
-        UPLOAD({
-          data: {
-            path: `users/${setImgEmail}`, // assumed to be a value, not a state setter
-            base64: event.target.result.split(",")[1],
-            name: fileName,
-          },
-          token,
-        })
-      );
-      addToast("Profile image updated!", { appearance: "success" });
-    };
-
-    reader.readAsDataURL(file);
+    setFileName(`${setImgName}.jpg`); // force jpg filename
     readImageFile(file);
   };
 
@@ -100,7 +78,6 @@ const ImageDragAndDrop = ({
     const reader = new FileReader();
     reader.onloadend = () => {
       setRawImage(reader.result);
-      setFileName(file.name);
       setShowCropper(true);
       setIsAccepted(false);
       setIsDefault(false);
@@ -113,10 +90,33 @@ const ImageDragAndDrop = ({
   };
 
   const handleCropDone = async () => {
-    const cropped = await getCroppedImg(rawImage, croppedAreaPixels);
-    setPreview(cropped);
+    const blob = await getCroppedImg(rawImage, croppedAreaPixels);
+    const previewUrl = URL.createObjectURL(blob);
+    setPreview(previewUrl);
     setShowCropper(false);
-    savedImg?.(null, cropped);
+    savedImg?.(null, previewUrl);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result.split(",")[1];
+      const fileName = `${setImgName}.jpg`;
+
+      dispatch(
+        UPLOAD({
+          data: {
+            path: `users/${setImgEmail}`,
+            base64,
+            name: fileName,
+          },
+          token,
+        })
+      );
+      addToast("Cropped profile image uploaded!", {
+        appearance: "success",
+      });
+    };
+
+    reader.readAsDataURL(blob);
   };
 
   const handleRemove = () => {
@@ -127,7 +127,6 @@ const ImageDragAndDrop = ({
     setShowCropper(false);
   };
 
-  // ✅ Combined helper logic
   const createImage = (url) =>
     new Promise((resolve, reject) => {
       const img = new Image();
@@ -145,11 +144,9 @@ const ImageDragAndDrop = ({
     canvas.width = crop.width;
     canvas.height = crop.height;
 
-    // 🔥 Set white background
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 🖼️ Draw the image over the white background
     ctx.drawImage(
       image,
       crop.x,
@@ -164,8 +161,8 @@ const ImageDragAndDrop = ({
 
     return new Promise((resolve) => {
       canvas.toBlob((blob) => {
-        resolve(URL.createObjectURL(blob));
-      }, "image/jpeg"); // you can keep using jpeg now
+        resolve(blob); // return blob instead of object URL
+      }, "image/jpeg"); // force JPEG MIME
     });
   };
 

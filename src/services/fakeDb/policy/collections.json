@@ -501,5 +501,101 @@
         "description": "Owns shares but does not take part in decisions."
       }
     ]
+  },
+  {
+    "department": "Clinic",
+    "code": "BOARD",
+    "positions": [
+      {
+        "id": 122,
+        "name": "Physician",
+        "display_name": "Doctor",
+        "description": "Diagnoses and treats patients."
+      },
+      {
+        "id": 123,
+        "name": "Surgeon",
+        "display_name": "Surgeon",
+        "description": "Performs surgical operations."
+      },
+      {
+        "id": 124,
+        "name": "Resident Doctor",
+        "display_name": "Resident",
+        "description": "Undergoing specialty training in the clinic."
+      },
+      {
+        "id": 125,
+        "name": "Medical Officer",
+        "display_name": "Medical Officer",
+        "description": "Handles general medical duties."
+      },
+      {
+        "id": 126,
+        "name": "Head Nurse",
+        "display_name": "Nursing Supervisor",
+        "description": "Leads and supervises nursing staff."
+      },
+      {
+        "id": 127,
+        "name": "Registered Nurse",
+        "display_name": "RN",
+        "description": "Licensed to provide direct patient care."
+      },
+      {
+        "id": 128,
+        "name": "Licensed Practical Nurse",
+        "display_name": "LPN",
+        "description": "Assists RNs in basic medical care."
+      },
+      {
+        "id": 129,
+        "name": "Nurse Aide",
+        "display_name": "Nursing Assistant",
+        "description": "Provides support to nursing staff and patients."
+      },
+      {
+        "id": 130,
+        "name": "Triage Nurse",
+        "display_name": "Triage Nurse",
+        "description": "Assesses patient conditions on arrival."
+      },
+      {
+        "id": 131,
+        "name": "Medical Technologist",
+        "display_name": "Med Tech",
+        "description": "Performs lab tests to aid diagnosis."
+      },
+      {
+        "id": 132,
+        "name": "Radiologic Technologist",
+        "display_name": "Radiology Tech",
+        "description": "Operates imaging equipment for diagnostics."
+      },
+      {
+        "id": 133,
+        "name": "Pharmacist",
+        "display_name": "Pharmacist",
+        "description": "Dispenses medications and advises patients."
+      },
+      {
+        "id": 134,
+        "name": "Physical Therapist",
+        "display_name": "PT",
+        "description": "Helps patients improve movement and manage pain."
+      },
+      {
+        "id": 135,
+        "name": "Occupational Therapist",
+        "display_name": "OT",
+        "description": "Assists patients in performing daily activities."
+      },
+      {
+        "id": 136,
+        "name": "Respiratory Therapist",
+        "display_name": "RT",
+        "description": "Cares for patients with breathing issues."
+      }
+    ]
   }
 ]

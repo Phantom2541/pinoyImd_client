@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "/diagnostics/clinic/appointments";
+const url = "/diagnostics/clinician/appointments";
 
 const initialState = {
   filter: [],
@@ -182,9 +182,9 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success, payload = [] } = action.payload;
         const arrangePayload = (collections) => {
-          return collections.flatMap(({ user, appointments }) => {
+          return collections?.flatMap(({ user, appointments }) => {
             return appointments.map((appt) => ({
               ...appt,
               doctor: user,
@@ -193,7 +193,7 @@ export const reduxSlice = createSlice({
         };
         state.collections = payload;
         state.filtered = arrangePayload(payload);
-        state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
+        state.totalPages = Math.ceil(payload?.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
         state.isLoading = false;

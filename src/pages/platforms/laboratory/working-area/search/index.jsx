@@ -60,7 +60,7 @@ export default function Search() {
           .flat(Infinity)
           .find(({ pn: p }) => Number(p) === Number(pn));
 
-        dispatch(SetWorkArea({ ...result, task, section }));
+        dispatch(SetWorkArea({ ...result, task, section, pi: _search })); //pi = patient identifier
       }
 
       if (inputRef.current) inputRef.current.value = "";
