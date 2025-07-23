@@ -20,11 +20,8 @@ const Header = () => {
   //Initial CASHIER
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
-      const date = new Date().toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
+      const date = new Date().toISOString().split("T")[0];
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       dispatch(
         CASHIER({
@@ -33,6 +30,7 @@ const Header = () => {
             branchId: activePlatform?.branchId,
             cashierId: auth._id,
             date,
+            timezone,
           },
         })
       );

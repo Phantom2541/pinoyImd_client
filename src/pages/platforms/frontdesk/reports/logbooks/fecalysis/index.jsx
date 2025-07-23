@@ -52,7 +52,7 @@ export default function Chems() {
             </td>
           </tr>
           {groupedFecal[day].map((fecal, index) => {
-            const { pe, me, createdAt, customerId } = fecal;
+            const { pe, me, createdAt, customerId, remarks } = fecal;
 
             const fecalDate = new Date(createdAt);
             const h = fecalDate.getHours();
@@ -73,7 +73,7 @@ export default function Chems() {
                 <td>{Consistency[pe[1]]}</td>
                 <td>{MicroscopicInRange[me[0]]}</td>
                 <td>{MicroscopicInRange[me[1]]}</td>
-                <td></td>
+                <td>{remarks}</td>
               </tr>
             );
           })}
