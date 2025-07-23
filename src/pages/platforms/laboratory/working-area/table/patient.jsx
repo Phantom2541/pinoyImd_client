@@ -6,6 +6,7 @@ import {
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { fullName } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
+import LIS_STATUS from "../lis-status";
 
 const Patient = ({ obj, customer, form, _key: key, index, deal }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
@@ -82,7 +83,10 @@ const Patient = ({ obj, customer, form, _key: key, index, deal }) => {
   return (
     <tr key={key}>
       <td>{index}</td>
-      <td>{fullName(customer?.fullName) || "Unnamed Patient"}</td>
+      <td>
+        {fullName(customer?.fullName) || "Unnamed Patient"}
+        <LIS_STATUS workarea={obj.workarea} />
+      </td>
       <td>
         {_packages.length === 0 ? (
           <MDBBadge color="danger" pill>
