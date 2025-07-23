@@ -747,7 +747,7 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 998;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
 
 .cashier-pos-search-container {
@@ -756,8 +756,11 @@
   padding: 10px;
   border-radius: 8px;
   width: 608px;
-  animation: fadeInSearchContainer 0.8s ease;
   animation-delay: 0.3s;
+}
+
+.cashier-pos-search-container.fadeInSearchContainer {
+  animation: fadeInSearchContainer 0.8s ease;
 }
 
 @keyframes fadeInSearchContainer {

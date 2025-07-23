@@ -69,6 +69,9 @@ export default function POS() {
       searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
 
       // Step 5: Wait + fade out both elements after 1 second
+
+      const fadeDuration = asOverlay ? 900 : 300;
+
       setTimeout(() => {
         // Apply fade to both
         targetEl.style.transition = "opacity 0.4s ease";
@@ -83,7 +86,7 @@ export default function POS() {
           dispatch(SETPATIENT(customer));
           setShowPatientInfo(true); // show patient info
         }, 400);
-      }, 1000); // 600ms move + 1s delay
+      }, fadeDuration); // 600ms move + 1s delay
     } else {
       dispatch(SETPATIENT(customer));
       setShowPatientInfo(true);
@@ -94,6 +97,53 @@ export default function POS() {
     if (isLoading) return;
     if (!activeIndex) setActiveIndex(1);
     dispatch(SETSEARCHKEY(customer));
+
+    const searchEl = searchContainerRef.current;
+    const targetEl = origPositionRef.current;
+
+    if (searchEl && targetEl) {
+      // Step 1: Fade out overlay
+      const overlay = document.querySelector(".cashier-pos-search-overlay");
+      if (overlay) {
+        overlay.style.transition = "opacity 0.3s ease";
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 300);
+      }
+
+      // Step 2: Show target container height
+      setActivateOrigHeight(true);
+
+      // Step 3: Calculate movement
+      const fromRect = searchEl.getBoundingClientRect();
+      const toRect = targetEl.getBoundingClientRect();
+
+      const deltaX = toRect.left - fromRect.left;
+      const deltaY = toRect.top - fromRect.top;
+
+      // Step 4: Move the search container
+      searchEl.style.transition = "transform 0.6s ease-in-out";
+      searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
+      // Step 5: Fade out
+      const fadeDuration = asOverlay ? 900 : 300;
+
+      setTimeout(() => {
+        targetEl.style.transition = "opacity 0.4s ease";
+        searchEl.style.transition = "opacity 0.4s ease";
+
+        targetEl.style.opacity = "0";
+        searchEl.style.opacity = "0";
+
+        setTimeout(() => {
+          setSearchDone(true);
+          setShowPatientInfo(true);
+        }, 400);
+      }, fadeDuration);
+    } else {
+      setShowPatientInfo(true);
+    }
   };
 
   useEffect(() => {
@@ -200,7 +250,11 @@ export default function POS() {
               style={{ overflow: asOverlay ? "hidden" : "visible" }}
             >
               {!searchDone && asOverlay && (
-                <div className="cashier-pos-search-overlay" />
+                <div
+                  className={`cashier-pos-search-overlay ${
+                    asOverlay && "fadeInSearchContainer"
+                  }`}
+                />
               )}
               <div
                 className="cashier-pos-search-container"
