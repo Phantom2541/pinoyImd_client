@@ -35,6 +35,7 @@ export default function OrgChart({ personnels }) {
   const [availableNodes, setAvailableNodes] = useState([]);
   const [recentlyReturnedId, setRecentlyReturnedId] = useState(null);
   const [hoveredNodeId, setHoveredNodeId] = useState(null);
+  const [layoutMode, setLayoutMode] = useState("tree");
 
   const edgeTypes = {
     custom: (edgeProps) => (
@@ -96,189 +97,265 @@ export default function OrgChart({ personnels }) {
           eds
         );
 
+        if (layoutMode === "manual") {
+          return newEdges;
+        }
+
         setNodes((nds) => {
-          const targetId = params.target;
-          const spacingX = 200;
-          const verticalGap = 100;
-          const nodeHeight = 100;
+          if (layoutMode === "tree") {
+            const spacingX = 200;
+            const spacingY = 60;
+            const nodeHeight = 100;
 
-          const parentNodes = newEdges
-            .filter((e) => e.target === targetId)
-            .map((e) => nds.find((n) => n.id === e.source))
-            .filter(Boolean);
-
-          if (!parentNodes.length) return nds;
-          const targetNode = nds.find((n) => n.id === targetId);
-          if (!targetNode) return nds;
-
-          const updatedNodeMap = {};
-
-          // === MULTI-PARENT LAYOUT ===
-          if (parentNodes.length > 1) {
-            const spacing = spacingX;
-            const alignY =
-              parentNodes.reduce((sum, p) => sum + p.position.y, 0) /
-              parentNodes.length;
-
-            const centerX =
-              parentNodes.reduce((sum, p) => sum + p.position.x, 0) /
-              parentNodes.length;
-
-            const startX = centerX - ((parentNodes.length - 1) * spacing) / 2;
-
-            // Step 1: align parents horizontally
-            parentNodes.forEach((parent, i) => {
-              updatedNodeMap[parent.id] = {
-                ...parent,
-                position: {
-                  x: startX + i * spacing,
-                  y: alignY,
-                },
-              };
-            });
-
-            // Step 2: get actual updated parent Xs
-            const parentXs = parentNodes.map(
-              (p) => updatedNodeMap[p.id]?.position.x ?? p.position.x
+            const updatedNodeMap = Object.fromEntries(
+              nds.map((n) => [n.id, { ...n }])
             );
 
-            const avgFinalX =
-              parentXs.reduce((sum, x) => sum + x, 0) / parentXs.length;
+            const getChildren = (parentId) =>
+              newEdges
+                .filter((e) => e.source === parentId)
+                .map((e) => updatedNodeMap[e.target])
+                .filter(Boolean);
 
-            // Step 3: place child at center
-            updatedNodeMap[targetNode.id] = {
-              ...targetNode,
-              position: {
-                x: avgFinalX,
-                y: alignY + nodeHeight + verticalGap,
-              },
-            };
-          }
+            const layoutSubtree = (nodeId, centerX, currentY) => {
+              const node = updatedNodeMap[nodeId];
+              const children = getChildren(nodeId);
 
-          // === SINGLE PARENT LAYOUT ===
-          if (parentNodes.length === 1) {
-            const parent = parentNodes[0];
+              if (children.length === 0) {
+                node.position = { x: centerX, y: currentY };
+                return { minX: centerX, maxX: centerX };
+              }
 
-            const children = newEdges
-              .filter((e) => e.source === parent.id)
-              .map((e) => nds.find((n) => n.id === e.target))
-              .filter(Boolean);
-
-            if (children.length > 0) {
-              const groupedRows = [];
-              const rowThreshold = 100;
-              const minVerticalGap = 160;
+              const childY = currentY + nodeHeight + spacingY;
+              let subtreeWidths = [];
+              let currentX = centerX;
 
               children.forEach((child) => {
-                const y =
-                  child.position?.y ??
-                  parent.position.y + nodeHeight + verticalGap;
-
-                const existingRow = groupedRows.find(
-                  (row) => Math.abs(row.y - y) < rowThreshold
-                );
-
-                if (existingRow) {
-                  existingRow.children.push(child);
-                } else {
-                  groupedRows.push({ y, children: [child] });
-                }
+                const layout = layoutSubtree(child.id, currentX, childY);
+                subtreeWidths.push(layout);
+                currentX = layout.maxX + spacingX;
               });
 
-              groupedRows.forEach((row, rowIndex) => {
-                const spacing = spacingX;
-                const startX =
-                  parent.position.x - ((row.children.length - 1) * spacing) / 2;
-                const rowY =
-                  parent.position.y +
-                  nodeHeight +
-                  verticalGap +
-                  rowIndex * minVerticalGap;
+              const minX = subtreeWidths[0].minX;
+              const maxX = subtreeWidths[subtreeWidths.length - 1].maxX;
+              const midX = (minX + maxX) / 2;
 
-                row.children.forEach((child, i) => {
-                  updatedNodeMap[child.id] = {
-                    ...child,
-                    position: {
-                      x: startX + i * spacing,
-                      y: rowY,
-                    },
-                  };
-                });
-              });
-            }
-          }
+              node.position = { x: midX, y: currentY };
 
-          // === RECURSIVE CHILD LAYOUT ===
-          function applyRecursiveLayout(nodeId, parentX, parentY) {
-            const children = newEdges
-              .filter((e) => e.source === nodeId)
-              .map((e) => nds.find((n) => n.id === e.target))
-              .filter(Boolean);
+              return { minX, maxX };
+            };
 
-            if (!children.length) return;
+            const targetIds = newEdges.map((e) => e.target);
+            const rootNodes = nds.filter((n) => !targetIds.includes(n.id));
 
-            const spacing = spacingX;
-            const startX = parentX - ((children.length - 1) * spacing) / 2;
-            const childY = parentY + nodeHeight + verticalGap;
+            if (rootNodes.length === 0) return nds;
 
-            children.forEach((child, i) => {
-              // ⛔ Skip layout if this child has multiple parents
-              const parentCount = newEdges.filter(
-                (e) => e.target === child.id
-              ).length;
-              if (parentCount > 1) return;
+            rootNodes.forEach((root) => {
+              const originalRootPos = root.position;
 
-              updatedNodeMap[child.id] = {
-                ...child,
-                position: {
-                  x: startX + i * spacing,
-                  y: childY,
-                },
+              layoutSubtree(root.id, 0, 0);
+
+              const newRoot = updatedNodeMap[root.id];
+              const offsetX = originalRootPos.x - newRoot.position.x;
+              const offsetY = originalRootPos.y - newRoot.position.y;
+
+              const visited = new Set();
+
+              const applyOffset = (nodeId) => {
+                if (visited.has(nodeId)) return;
+                visited.add(nodeId);
+
+                const node = updatedNodeMap[nodeId];
+                node.position = {
+                  x: node.position.x + offsetX,
+                  y: node.position.y + offsetY,
+                };
+
+                getChildren(nodeId).forEach((child) => applyOffset(child.id));
               };
 
-              applyRecursiveLayout(child.id, startX + i * spacing, childY);
+              applyOffset(root.id);
             });
+
+            return nds.map((n) => updatedNodeMap[n.id]);
           }
 
-          // Lay out all children recursively for ALL updated nodes
-          Object.values(updatedNodeMap).forEach((updatedNode) => {
-            applyRecursiveLayout(
-              updatedNode.id,
-              updatedNode.position.x,
-              updatedNode.position.y
-            );
-          });
+          if (layoutMode === "dag") {
+            // DAG LOGIC
+            const targetId = params.target;
+            const spacingX = 200;
+            const verticalGap = 100;
+            const nodeHeight = 100;
 
-          // === UPDATE EDGE STYLES ===
-          const updatedEdges = newEdges.map((edge) => {
-            const sourceNode =
-              updatedNodeMap[edge.source] ||
-              nds.find((n) => n.id === edge.source);
-            const targetNode =
-              updatedNodeMap[edge.target] ||
-              nds.find((n) => n.id === edge.target);
+            const parentNodes = newEdges
+              .filter((e) => e.target === targetId)
+              .map((e) => nds.find((n) => n.id === e.source))
+              .filter(Boolean);
 
-            if (!sourceNode || !targetNode) return edge;
+            if (!parentNodes.length) return nds;
+            const targetNode = nds.find((n) => n.id === targetId);
+            if (!targetNode) return nds;
 
-            return {
-              ...edge,
-              style: {
-                ...edge.style,
-                fixOffsetY: 20,
-                fixedTargetY: targetNode.position.y,
-              },
-            };
-          });
+            const updatedNodeMap = {};
 
-          setEdges(updatedEdges);
+            if (parentNodes.length > 1) {
+              const spacing = spacingX;
+              const alignY =
+                parentNodes.reduce((sum, p) => sum + p.position.y, 0) /
+                parentNodes.length;
 
-          return nds.map((n) => updatedNodeMap[n.id] || n);
+              const centerX =
+                parentNodes.reduce((sum, p) => sum + p.position.x, 0) /
+                parentNodes.length;
+
+              const startX = centerX - ((parentNodes.length - 1) * spacing) / 2;
+
+              parentNodes.forEach((parent, i) => {
+                updatedNodeMap[parent.id] = {
+                  ...parent,
+                  position: {
+                    x: startX + i * spacing,
+                    y: alignY,
+                  },
+                };
+              });
+
+              const parentXs = parentNodes.map(
+                (p) => updatedNodeMap[p.id]?.position.x ?? p.position.x
+              );
+              const avgFinalX =
+                parentXs.reduce((sum, x) => sum + x, 0) / parentXs.length;
+
+              updatedNodeMap[targetNode.id] = {
+                ...targetNode,
+                position: {
+                  x: avgFinalX,
+                  y: alignY + nodeHeight + verticalGap,
+                },
+              };
+            }
+
+            if (parentNodes.length === 1) {
+              const parent = parentNodes[0];
+
+              const children = newEdges
+                .filter((e) => e.source === parent.id)
+                .map((e) => nds.find((n) => n.id === e.target))
+                .filter(Boolean);
+
+              if (children.length > 0) {
+                const groupedRows = [];
+                const rowThreshold = 100;
+                const minVerticalGap = 160;
+
+                children.forEach((child) => {
+                  const y =
+                    child.position?.y ??
+                    parent.position.y + nodeHeight + verticalGap;
+                  const existingRow = groupedRows.find(
+                    (row) => Math.abs(row.y - y) < rowThreshold
+                  );
+                  if (existingRow) {
+                    existingRow.children.push(child);
+                  } else {
+                    groupedRows.push({ y, children: [child] });
+                  }
+                });
+
+                groupedRows.forEach((row, rowIndex) => {
+                  const spacing = spacingX;
+                  const startX =
+                    parent.position.x -
+                    ((row.children.length - 1) * spacing) / 2;
+                  const rowY =
+                    parent.position.y +
+                    nodeHeight +
+                    verticalGap +
+                    rowIndex * minVerticalGap;
+
+                  row.children.forEach((child, i) => {
+                    updatedNodeMap[child.id] = {
+                      ...child,
+                      position: {
+                        x: startX + i * spacing,
+                        y: rowY,
+                      },
+                    };
+                  });
+                });
+              }
+            }
+
+            function applyRecursiveLayout(nodeId, parentX, parentY) {
+              const children = newEdges
+                .filter((e) => e.source === nodeId)
+                .map((e) => nds.find((n) => n.id === e.target))
+                .filter(Boolean);
+
+              if (!children.length) return;
+
+              const spacing = spacingX;
+              const startX = parentX - ((children.length - 1) * spacing) / 2;
+              const childY = parentY + nodeHeight + verticalGap;
+
+              children.forEach((child, i) => {
+                const parentCount = newEdges.filter(
+                  (e) => e.target === child.id
+                ).length;
+                if (parentCount > 1) return;
+
+                updatedNodeMap[child.id] = {
+                  ...child,
+                  position: {
+                    x: startX + i * spacing,
+                    y: childY,
+                  },
+                };
+
+                applyRecursiveLayout(child.id, startX + i * spacing, childY);
+              });
+            }
+
+            Object.values(updatedNodeMap).forEach((updatedNode) => {
+              applyRecursiveLayout(
+                updatedNode.id,
+                updatedNode.position.x,
+                updatedNode.position.y
+              );
+            });
+
+            const updatedEdges = newEdges.map((edge) => {
+              const sourceNode =
+                updatedNodeMap[edge.source] ||
+                nds.find((n) => n.id === edge.source);
+              const targetNode =
+                updatedNodeMap[edge.target] ||
+                nds.find((n) => n.id === edge.target);
+
+              if (!sourceNode || !targetNode) return edge;
+
+              return {
+                ...edge,
+                style: {
+                  ...edge.style,
+                  fixOffsetY: 20,
+                  fixedTargetY: targetNode.position.y,
+                },
+              };
+            });
+
+            setEdges(updatedEdges);
+
+            return nds.map((n) => updatedNodeMap[n.id] || n);
+          }
+
+          return nds;
         });
 
         return newEdges;
       });
     },
-    [setEdges, setNodes]
+    [setEdges, setNodes, layoutMode]
   );
 
   // === DRAG / DROP ===
@@ -423,6 +500,23 @@ export default function OrgChart({ personnels }) {
     localStorage.removeItem("savedEdges");
   };
 
+  const handleChangeLayout = (mode) => {
+    setLayoutMode(mode);
+    setNodes([]); // clear chart area
+    setEdges([]); // clear edges
+
+    setAvailableNodes((prev) => {
+      const map = new Map(prev.map((n) => [n.id, n]));
+      nodes.forEach(({ position, ...rest }) => {
+        map.set(rest.data.id || rest.id, { ...rest, position: { x: 0, y: 0 } });
+      });
+      return Array.from(map.values());
+    });
+
+    localStorage.removeItem("savedNodes");
+    localStorage.removeItem("savedEdges");
+  };
+
   return (
     <div className="orgChart-container">
       {/* === Top Bar === */}
@@ -491,23 +585,54 @@ export default function OrgChart({ personnels }) {
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
         >
-          <div
-            className={`flow-area-controls ${
-              nodes.length === 0 ? "hidden" : ""
-            }`}
-          >
-            <button
-              className="flow-area-controls-save bg-success"
-              onClick={handleSave}
-            >
-              Save
-            </button>
-            <button
-              className="flow-area-controls-reset bg-danger"
-              onClick={onReset}
-            >
-              Reset
-            </button>
+          <div className="flow-area-controls">
+            <div className="flow-area-controls-saveDelete">
+              <button
+                className={`flow-area-controls-save bg-success ${
+                  nodes.length === 0 ? "hidden" : ""
+                }`}
+                onClick={handleSave}
+              >
+                Save
+              </button>
+              <button
+                className={`flow-area-controls-reset bg-danger ${
+                  nodes.length === 0 ? "hidden" : ""
+                }`}
+                onClick={onReset}
+              >
+                Reset
+              </button>
+            </div>
+            <div className="flow-area-controls-types">
+              <button
+                className={`flow-area-controls-types-tree ${
+                  layoutMode === "tree" ? "disabled" : ""
+                }`}
+                onClick={() => handleChangeLayout("tree")}
+                disabled={layoutMode === "tree"}
+              >
+                Tree
+              </button>
+              <button
+                className={`flow-area-controls-types-dag ${
+                  layoutMode === "dag" ? "disabled" : ""
+                }`}
+                onClick={() => handleChangeLayout("dag")}
+                disabled={layoutMode === "dag"}
+              >
+                DAG
+              </button>
+              <button
+                className={`flow-area-controls-types-manual ${
+                  layoutMode === "manual" ? "disabled" : ""
+                }`}
+                onClick={() => handleChangeLayout("manual")}
+                disabled={layoutMode === "manual"}
+              >
+                Manual
+              </button>
+            </div>
           </div>
 
           <ReactFlow

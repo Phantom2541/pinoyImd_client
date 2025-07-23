@@ -5,6 +5,7 @@ import ReactFlow, { ReactFlowProvider } from "react-flow-renderer";
 import CustomNode from "../../../../accounting/organizationChart/customNode";
 import CustomEdge from "../../../../accounting/organizationChart/customEdge";
 import "./style.css";
+import { Zoom } from "swiper/modules";
 
 const nodeTypes = { customNode: CustomNode };
 
@@ -13,7 +14,7 @@ function ReactFlowInner({ nodes, edges }) {
 
   const handleInit = (instance) => {
     if (nodes.length > 0) {
-      instance.fitView({ padding: 0.5 });
+      instance.fitView({ padding: 0.07 });
     }
   };
 
@@ -45,7 +46,7 @@ function ReactFlowInner({ nodes, edges }) {
       edges={edges}
       edgeTypes={edgeTypes}
       nodeTypes={nodeTypes}
-      fitView
+      fitView={false}
       onInit={handleInit} // ✅ correct for v10
       panOnScroll={false}
       zoomOnScroll={false}
