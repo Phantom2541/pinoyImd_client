@@ -24,3 +24,28 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* start design */
+.star-rating {
+  position: relative;
+  display: inline-block;
+  font-size: 2rem;
+  font-family: Arial, sans-serif;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.star-back {
+  color: #ccc; /* unfilled stars */
+}
+
+.star-front {
+  color: gold;
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+}
