@@ -22,9 +22,11 @@ const Header = () => {
           token,
           data: {
             branch: activePlatform.branchId,
-            month: new Date().getMonth() + 1,
+            // month: new Date().getMonth() + 1,
+            month: 6,
             year: new Date().getFullYear(),
-            day: new Date().getDate(),
+            // day: new Date().getDate(),
+            day: 3,
           },
         })
       );
@@ -54,7 +56,7 @@ const Header = () => {
           >
             <option value="all">All</option>
             {appointments.map(({ user }) => (
-              <option key={user._id} value={user._id}>
+              <option key={user?._id} value={user?._id}>
                 Dr. {properFullname(user?.fullName)}
               </option>
             ))}
