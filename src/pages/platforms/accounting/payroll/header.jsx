@@ -3,12 +3,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
   PAYROLL,
+  SetMONTH,
   RESET,
+  ResetDATE,
 } from "../../../../services/redux/slices/assets/persons/personnels";
 import { employment } from "../../../../services/utilities";
 // import { Select } from "../../../../components/customizable";
+import CalendarPicker from "../../../../components/header/calendars";
+
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { month, year } = useSelector(({ personnels }) => personnels),
     dispatch = useDispatch();
   console.log("employment", employment);
   //Initial Browse
@@ -16,12 +21,21 @@ const Header = () => {
     if (token && activePlatform?.branchId) {
       const abbr = [...employment.employed].map(({ abbr }) => abbr);
       dispatch(
-        PAYROLL({ token, params: { branchId: activePlatform?.branchId, abbr } })
+        PAYROLL({
+          token,
+          params: {
+            branchId: activePlatform?.branchId,
+            abbr,
+            timezone: "Asia/Manila",
+            month,
+            year,
+          },
+        })
       );
     }
 
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform]);
+  }, [token, dispatch, activePlatform, month, year]);
 
   return (
     <MDBView
@@ -36,6 +50,12 @@ const Header = () => {
       </div>
       <div>
         <div className="text-right d-flex items-center">
+          <CalendarPicker
+            month={month}
+            year={year}
+            moved={(next) => dispatch(SetMONTH(next))}
+            reset={() => dispatch(ResetDATE())}
+          />
           {/* <Select
             className="m-0 p-0 calendar mr-4"
             value={component}
