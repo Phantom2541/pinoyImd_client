@@ -26,6 +26,7 @@ import generics from "../../../pages/platforms/frontdesk/market/generics";
 import mentainance from "../../../pages/platforms/frontdesk/market/mentainance";
 import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../pages/platforms/cashier";
+import { Status } from "../../../pages/platforms/frontdesk";
 
 import {
   Tablestemplate,
@@ -105,6 +106,7 @@ const frontdesk = [
         path: "/status",
         icon: "file-invoice",
         title: "Track acceptance or rejection of outsourced tests.",
+        component: Status,
       },
       {
         name: "Logbook",

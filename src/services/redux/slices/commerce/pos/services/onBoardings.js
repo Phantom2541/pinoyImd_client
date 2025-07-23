@@ -412,13 +412,14 @@ export const reduxSlice = createSlice({
     SetFILTERED: (state, { payload }) => {
       state.filtered = payload;
     },
+
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
-
       state.activePage = 1;
     },
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
+      console.log("activePage", state.activePage);
     },
 
     SetMONTH: (state, { payload }) => {
@@ -488,7 +489,9 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, { payload }) => {
         state.collections = state.filtered = payload.payload || [];
-        let totalPages = Math.ceil(state.filtered.length / state.maxPage);
+
+        let totalPages = Math.floor(payload.payload.length / state.maxPage);
+        if (payload.payload.length % state.maxPage > 0) totalPages += 1;
         state.totalPages = totalPages;
         if (state.activePage > totalPages) {
           state.activePage = totalPages;
