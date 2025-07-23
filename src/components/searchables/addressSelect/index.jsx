@@ -51,7 +51,7 @@ export default function AddressSelect({
           ))}
         </select>
       </div>
-      <div className="patient-form mt-3">
+      <div className="patient-form ">
         <span>Province</span>
         <select
           value={address.province}
