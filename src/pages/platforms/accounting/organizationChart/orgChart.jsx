@@ -606,6 +606,7 @@ export default function OrgChart({ personnels }) {
             </div>
             <div className="flow-area-controls-types">
               <button
+                title="Organize as a Tree Structure"
                 className={`flow-area-controls-types-tree ${
                   layoutMode === "tree" ? "disabled" : ""
                 }`}
@@ -615,6 +616,7 @@ export default function OrgChart({ personnels }) {
                 Tree
               </button>
               <button
+                title="Organize as a Directed Acyclic Graph"
                 className={`flow-area-controls-types-dag ${
                   layoutMode === "dag" ? "disabled" : ""
                 }`}
@@ -624,6 +626,7 @@ export default function OrgChart({ personnels }) {
                 DAG
               </button>
               <button
+                title="Manually Adjust Node Positions"
                 className={`flow-area-controls-types-manual ${
                   layoutMode === "manual" ? "disabled" : ""
                 }`}
