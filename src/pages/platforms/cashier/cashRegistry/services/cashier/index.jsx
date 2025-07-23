@@ -46,7 +46,7 @@ export default function Cashier() {
         })
       ).then(({ payload }) => {
         const { data } = payload;
-        if (data !== null) {
+        if (data) {
           localStorage.setItem("floatingcash", JSON.stringify(data));
           dispatch(SetSELECTED({ value: data }));
         } else {

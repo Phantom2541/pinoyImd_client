@@ -51,7 +51,9 @@ export default function Modal({ show, selected, toggle }) {
   const { patient = 0 } = selected;
 
   const handleSubmit = () => {
-    dispatch(CENSUS({ token, data: { ...selected, coh, sales } })).then(() => {
+    dispatch(
+      CENSUS({ token, data: { ...selected, coh, sales, expenses } })
+    ).then(() => {
       toggle();
       addToast("End-of-Shift Summary saved successfully.", {
         appearance: "success",

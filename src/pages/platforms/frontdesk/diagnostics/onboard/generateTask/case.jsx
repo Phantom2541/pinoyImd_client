@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MDBCol,
   MDBCard,
@@ -23,7 +23,7 @@ const Body = ({ setOutSource, outSource }) => {
 
   const { department } = activePlatform;
   const isRadiology = department === "radiology";
-  console.log("collections", collections);
+
   useEffect(() => {
     const _outSources = collections
       .filter(({ vendors }) => vendors)
@@ -83,10 +83,6 @@ const Body = ({ setOutSource, outSource }) => {
     } else {
       dispatch(SetINHOUSE({ data: item, id: outSource }));
     }
-
-    // Dispatch actions to update Redux state
-    // dispatch({ type: "REMOVE_FROM_LIST", payload: { item, fromList } });
-    // dispatch({ type: "ADD_TO_LIST", payload: { item, toList } });
   };
   const handleDragOver = (e) => e.preventDefault();
   const Bucket = ({ collections, title }) => {
