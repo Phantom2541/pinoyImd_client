@@ -75,14 +75,6 @@ const ImageDragAndDrop = ({
 
     const extension = file.type.split("/")[1]; // "png", "jpeg", etc.
 
-    // ✅ Check if the file type matches the allowedType (if provided)
-    if (allowedType && extension !== allowedType.toLowerCase()) {
-      addToast(`Only .${allowedType} files are allowed!`, {
-        appearance: "error",
-      });
-      return;
-    }
-
     const fileName = `${setImgName}.${extension}`;
     const reader = new FileReader();
 
@@ -101,6 +93,7 @@ const ImageDragAndDrop = ({
     };
 
     reader.readAsDataURL(file);
+    readImageFile(file);
   };
 
   const readImageFile = (file) => {
@@ -195,7 +188,7 @@ const ImageDragAndDrop = ({
     >
       {showCropper && rawImage ? (
         <>
-          <div style={{ position: "relative", width: "100%", height: "400px" }}>
+          <div style={{ position: "relative", width: "100%", height: "100%" }}>
             <Cropper
               image={rawImage}
               crop={crop}
@@ -205,6 +198,7 @@ const ImageDragAndDrop = ({
               onCropChange={setCrop}
               onZoomChange={setZoom}
               onCropComplete={onCropComplete}
+              cropShape="rect"
             />
           </div>
           <div
