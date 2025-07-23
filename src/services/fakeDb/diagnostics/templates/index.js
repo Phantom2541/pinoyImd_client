@@ -132,6 +132,13 @@ const Templates = {
     return departments;
   },
 
+  getComponentByAbbr: (abbr) => {
+    const match = collections.find((c) => c.codes.includes(abbr));
+    if (!match) return null;
+    const index = match.codes.indexOf(abbr);
+    return match.components[index] || null;
+  },
+
   getAbbr: (section) => {
     const match = collections.find((c) => c.components.includes(section));
     return match ? match.codes[match.components.indexOf(section)] : null;

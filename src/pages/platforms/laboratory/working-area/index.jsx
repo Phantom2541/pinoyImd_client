@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { RESET } from "../../../../services/redux/slices/commerce/pos/services/deals";
@@ -27,6 +27,7 @@ import {
 } from "../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
 import Table from "./table";
+import LIS_SENDER from "./lis-sender";
 
 export default function WorkingArea() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -111,6 +112,7 @@ export default function WorkingArea() {
       )}
       <Footer />
       <ResultEntry />
+      <LIS_SENDER />
     </MDBCard>
   );
 }

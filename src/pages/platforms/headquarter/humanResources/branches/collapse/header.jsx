@@ -27,8 +27,11 @@ const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
   };
 
   const handleTitle = (type) => {
-    if (type === "demo") return "6 months trial";
-    return `Enjoy your ${type} subscription.`;
+    if (type === "draft")
+      return "This subscription is inactive. To activate a demo, please contact support.";
+    if (type === "demo")
+      return "You are currently on a 6-month demo subscription.";
+    return `You are currently subscribed to the ${type} plan.`;
   };
 
   return (

@@ -1,0 +1,43 @@
+.status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+/* Specific status colors */
+.status-draft {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.status-submitted {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.status-validation {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-approval {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-done {
+  background-color: #c3e6cb;
+  color: #1e4620;
+}
+
+.status-denied {
+  background-color: #f8d7da;
+  color: #721c24;
+}

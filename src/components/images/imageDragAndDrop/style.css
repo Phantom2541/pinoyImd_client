@@ -10,6 +10,7 @@
   cursor: pointer;
   flex-direction: column;
   overflow: hidden;
+  will-change: transform;
   transition: background-color 0.3s, border-color 0.3s;
 }
 
@@ -136,18 +137,14 @@
   background-color: #fccc4d;
 }
 
-/* 
-.upload-button:hover {
-  background-color: #007bff;
-}
-
-.download-button:hover {
-  background-color: #007bff;
-  color: white;
-} */
-
 .accept-btn,
 .reject-btn {
   background-color: transparent;
   border: none;
 }
+
+/* .reactEasyCrop_CropArea {
+  transform: translate3d(0, 0, 0) !important;
+  will-change: transform !important;
+  transition: none !important;
+} */
