@@ -1,26 +1,10 @@
 import { useEffect, useRef } from "react";
+import { Barcode } from "../../../../services/utilities";
 import JsBarcode from "jsbarcode";
-import { Templates } from "../../../../services/fakeDb";
-import { capitalize } from "lodash";
-import "./style.css";
 
 const BarcodePrintout = ({ forms = {}, sale }) => {
   const { customerId, pn } = sale;
   const refs = useRef({});
-
-  const { fullName = {} } = customerId || {};
-  const { fname, lname, mname } = fullName;
-
-  const customerName = `${capitalize(lname)},${capitalize(fname)}${
-    mname ? " " + capitalize(mname[0]) + "." : ""
-  }`;
-
-  const sanitize = (str) =>
-    str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^A-Z0-9 \-.$/+%]/gi, "")
-      .toUpperCase();
 
   useEffect(() => {
     if (!forms) return;
@@ -30,17 +14,15 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
         try {
           JsBarcode(
             svg,
-            `${Templates.getAbbr(section)}-${sanitize(customerName)}-${String(
-              pn
-            ).padStart(2, "0")}`,
-            // `d2345678910111212 da`,
+            Barcode.getValue(section, customerId, pn),
+
             {
               format: "CODE128",
               lineColor: "#000",
-              width: 2,
-              height: 130,
-              displayValue: true,
-              fontSize: 40,
+              width: 1.5, //1.5 original
+              height: 76,
+              displayValue: false,
+              fontSize: 20,
               textAlign: "center",
               textPosition: "bottom",
               margin: 12,
@@ -51,20 +33,75 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
         }
       }
     });
-  }, [forms, sale, customerName, pn]);
+  }, [forms, sale, customerId, pn]);
+
+  useEffect(() => {
+    // Inject @page print CSS
+    const styleTag = document.createElement("style");
+    styleTag.innerHTML = `
+    @media print {
+      @page {
+        margin: 0px !important;
+        width: 60mm;
+        height: 20mm;
+        padding: 0px !important;
+      }
+
+      html,
+      body,
+      .laboratory-barcode-container {
+        margin: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      .laboratory-barcode-container {
+        page-break-after: always;
+      }
+
+      .laboratory-barcode-container:last-child {
+        page-break-after: avoid;
+      }
+
+      .laboratory-result-barcode {
+        margin-left: -12px;
+      }
+    }
+  `;
+    document.head.appendChild(styleTag);
+
+    // Cleanup on unmount
+    return () => {
+      document.head.removeChild(styleTag);
+    };
+  }, []);
 
   return (
-    <div className="thermal-print">
+    <div className="laboratory-thermal-print">
       {Object.keys(forms || {}).map((key) => (
-        <div key={key} className="barcode-containe ">
-          <svg
-            ref={(el) => (refs.current[key] = el)}
-            className="result-barcode"
-            width="100%" // <--- Force it to stretch
-            lineColor="#000"
-            color="red"
-            preserveAspectRatio="xMidYMid meet"
-          />
+        <div key={key} className="laboratory-barcode-container">
+          <div style={{ display: "inline-block" }}>
+            <svg
+              ref={(el) => (refs.current[key] = el)}
+              className="laboratory-result-barcode"
+              width="100%"
+              preserveAspectRatio="xMidYMid meet"
+            />
+            <small
+              style={{
+                textAlign: "center",
+                fontWeight: 500,
+                fontSize: "16px",
+                marginTop: "-10px",
+                zIndex: 2,
+              }}
+              className="d-block position-relative"
+            >
+              {Barcode.getLabel(key, customerId, pn)}
+            </small>
+          </div>
         </div>
       ))}
     </div>

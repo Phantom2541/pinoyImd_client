@@ -1,4 +1,5 @@
 import {
+  capitalize,
   getAge,
   fullName as nameFormatter,
 } from "../../../../services/utilities";
@@ -64,7 +65,7 @@ export default function Header({ task }) {
 
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center">
-          <span>Physician: Dr. {referral?.fullName?.lname}</span>
+          <span>Physician: Dr. {capitalize(referral)}</span>
         </div>
         <div>
           <span>Source: {source?.displayname}</span>

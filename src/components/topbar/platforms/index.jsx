@@ -25,6 +25,8 @@ export default function Platforms() {
   }, [activePlatform]);
 
   const handlePlatform = (platform) => {
+    console.log("cleaned", platform);
+
     const cleanedPlatform = platform.toLowerCase().replace(/\s+/g, "");
 
     dispatch(

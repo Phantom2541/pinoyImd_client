@@ -8,14 +8,26 @@ export default function Collapsable({ item }) {
     <MDBTable bordered className="m-0 p-0">
       <MDBTableHead>
         <tr>
-          <th>Frequency</th>
-          <th>Description</th>
+          <th>License #</th>
+          <th>Full schedule</th>
+          <th>Contact info</th>
+          <th>Documents</th>
+          <th>notes</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
         <tr>
           <td>
             <h5>{frequency}</h5>
+          </td>
+          <td>
+            <small>{decSS}</small>
+          </td>
+          <td>
+            <small>{decSS}</small>
+          </td>
+          <td>
+            <small>{decSS}</small>
           </td>
           <td>
             <small>{decSS}</small>

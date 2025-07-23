@@ -36,8 +36,11 @@ export default function Table() {
                 diagnostic,
                 category,
                 source,
-                physicianId: referral,
+                physicianId,
+                physicianSTR,
               } = deal;
+              const referral =
+                physicianId?.fullName?.lname || physicianSTR || "";
 
               const task = {
                 ...diagnostic[selectedKey],
