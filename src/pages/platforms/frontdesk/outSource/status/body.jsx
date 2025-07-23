@@ -14,11 +14,10 @@ const Body = () => {
    * Pagination: Calculate the start and end index for the current spage
    */
   const itemsPerPage = maxPage; // Number of items per page
+
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
-  console.log("activepage", activePage);
-  console.log("max", maxPage);
 
   return (
     <MDBTable responsive hover>

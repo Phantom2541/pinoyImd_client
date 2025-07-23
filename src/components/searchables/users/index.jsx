@@ -179,6 +179,9 @@ export default function Search({
         />
         <button
           type="submit"
+          style={{
+            color: "white",
+          }}
           disabled={isFetching}
           className={didSearch && !isFetching ? "bg-danger" : ""}
           onClick={

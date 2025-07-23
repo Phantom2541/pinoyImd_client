@@ -117,7 +117,7 @@ export default function Search({
   };
 
   return (
-    <div className=" d-flex align-items-center " style={{ width: "85%" }}>
+    <div className=" d-flex align-items-center " style={{ width: "100%" }}>
       <Notification didSearch={match.length > 0} />
       <div className={`searchable-search  ${searchKey && "active"}`}>
         <div className="searchable-search-suggestions">
