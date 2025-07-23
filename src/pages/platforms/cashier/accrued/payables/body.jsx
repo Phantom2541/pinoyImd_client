@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBBtnGroup, MDBBtn, MDBBadge } from "mdbreact";
 import {
+  DESTROY,
   SetPAYMENTS,
   SetUpdate,
 } from "../../../../../services/redux/slices/finance/journals/payables";
@@ -22,6 +23,7 @@ const Tables = () => {
   const { filtered, activePage, maxPage, isLoading } = useSelector(
       ({ payables }) => payables
     ),
+    { token, activePlatform } = useSelector(({ auth }) => auth),
     [activeId, setActiveId] = useState(-1),
     dispatch = useDispatch();
 
@@ -42,6 +44,33 @@ const Tables = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(SetUpdate(payable));
+      }
+    });
+  };
+  const handleDelete = (payable) => {
+    console.log("payable", payable);
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(
+          DESTROY({
+            token,
+            data: { _id: payable._id, branch: activePlatform?.branchId },
+          })
+        );
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
       }
     });
   };
@@ -184,6 +213,16 @@ const Tables = () => {
                                   onClick={() => handleUpdate(payable)}
                                 >
                                   Update
+                                </MDBBtn>
+                              )}
+                              {!isPastDue && status === "accepted" && (
+                                <MDBBtn
+                                  size="sm"
+                                  rounded
+                                  color="danger"
+                                  onClick={() => handleDelete(payable)}
+                                >
+                                  Delete
                                 </MDBBtn>
                               )}
                             </MDBBtnGroup>
