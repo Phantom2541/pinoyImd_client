@@ -11,6 +11,7 @@ import {
 } from "mdbreact";
 import { PresetUser, ENDPOINT } from "../../../../../../services/utilities";
 import ApplicationModal from "./modal";
+import StarRating from "../star";
 
 export default function CompanyCard({ company }) {
   const [visibility, setVisibility] = useState(false);
@@ -98,6 +99,7 @@ export default function CompanyCard({ company }) {
             {company.description ||
               "is a modern, patient-centered diagnostic facility dedicated to providing accurate, timely, and affordable laboratory services. Established with the vision of advancing healthcare diagnostics in the community, Smartcare Laboratory combines expert medical technologists with state-of-the-art equipment to deliver reliable results that healthcare providers and patients can trust. From routine tests to specialized diagnostics, our commitment is to uphold the highest standards in quality, safety, and efficiency. At Smartcare, we believe that better diagnostics lead to better decisions—and ultimately, better care."}
           </MDBCardText>
+          <StarRating rating={3.5} />
         </MDBCardBody>
       </MDBCard>
       <ApplicationModal

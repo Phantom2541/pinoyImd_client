@@ -69,16 +69,26 @@
 .flow-area-controls {
   position: absolute;
   top: 3%;
-  left: 1%;
+  left: 0;
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 20px;
   z-index: 100;
+  padding: 0 60px;
   opacity: 1;
   transition: opacity 0.3s ease;
 }
 
-.flow-area-controls.hidden {
+.flow-area-controls-saveDelete {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.flow-area-controls-save.hidden,
+.flow-area-controls-reset.hidden {
   opacity: 0;
   pointer-events: none;
 }
@@ -97,6 +107,62 @@
 .flow-area-controls-save:active,
 .flow-area-controls-reset:active {
   transform: scale(0.98);
+}
+
+.flow-area-controls-types {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.flow-area-controls-types-tree,
+.flow-area-controls-types-dag,
+.flow-area-controls-types-manual {
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  font-size: 1rem;
+  color: white;
+}
+
+.flow-area-controls-types-tree:active,
+.flow-area-controls-types-dag:active,
+.flow-area-controls-types-manual:active {
+  transform: scale(0.98);
+}
+
+.flow-area-controls-types-tree.disabled,
+.flow-area-controls-types-dag.disabled,
+.flow-area-controls-types-manual.disabled {
+  filter: grayscale(70%);
+  pointer-events: none;
+  transform: scale(0.9);
+}
+
+.flow-area-controls-types-tree {
+  background-color: #10b981;
+}
+
+.flow-area-controls-types-tree:hover {
+  background-color: #059669;
+}
+
+.flow-area-controls-types-dag {
+  background-color: #06b6d4;
+}
+
+.flow-area-controls-types-dag {
+  background-color: #0891b2;
+}
+
+.flow-area-controls-types-manual {
+  background-color: #f59e0b;
+}
+
+.flow-area-controls-types-manual {
+  background-color: #d97706;
 }
 
 .orgChart-innerCard {
