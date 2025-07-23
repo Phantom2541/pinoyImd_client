@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -6,15 +6,14 @@ import {
   RESET,
   SetByGroup,
   SetByStatus,
-  SetFILTERED_STATUS,
 } from "../../../../services/redux/slices/diagnostics/laboratory/validator";
-import { Search as SEARCH } from "../../../../components/searchables";
+import SEARCH from "./search";
 import { capitalize } from "../../../../services/utilities";
 
 const Headers = ({ searchKey }) => {
   const dispatch = useDispatch();
   const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { filtered, byStatus, sections, filteredStatus, byGroup } = useSelector(
+  const { filtered, byStatus, sections } = useSelector(
     ({ validator }) => validator
   );
   const departmentCode =
@@ -85,15 +84,7 @@ const Headers = ({ searchKey }) => {
             </select>
           </div>
           <div>
-            <SEARCH
-              collections={filteredStatus}
-              setFiltered={(items) => dispatch(SetFILTERED_STATUS(items))}
-              reset={() => {
-                dispatch(SetByGroup(byGroup));
-                dispatch(SetByStatus(byStatus));
-              }}
-              haveAction={false}
-            />
+            <SEARCH />
           </div>
         </div>
       </div>
