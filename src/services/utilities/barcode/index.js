@@ -23,7 +23,7 @@ const formattedValue = (
   fname = capitalize(sanitize(fname));
   lname = capitalize(sanitize(lname));
 
-  let full = `${abbr}-${lname}${isLabel && ", "}${fname}-${pn}`;
+  let full = `${abbr}-${lname}${isLabel ? ", " : ""}${fname}-${pn}`;
 
   if (full.length > MAX_LENGTH) {
     const excess = full.length - MAX_LENGTH;
@@ -33,14 +33,14 @@ const formattedValue = (
     lname = lname.slice(0, lname.length - lnameCut);
 
     // Rebuild
-    full = `${abbr}-${lname}${isLabel && ", "}${fname}-${pn}`;
+    full = `${abbr}-${lname}${isLabel ? ", " : ""}${fname}-${pn}`;
 
     // Cut from fname if needed
     const newExcess = full.length - MAX_LENGTH;
     if (newExcess > 0) {
       const fnameCut = Math.min(newExcess, fname.length);
       fname = fname.slice(0, fname.length - fnameCut);
-      full = `${abbr}-${lname}${isLabel && ", "}${fname}-${pn}`;
+      full = `${abbr}-${lname}${isLabel ? ", " : ""}${fname}-${pn}`;
     }
   }
   return full.toUpperCase();

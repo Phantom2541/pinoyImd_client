@@ -31,6 +31,7 @@ const initialState = {
   selected: {}, // Deal
   task: {}, // per form
   params: {},
+  work: {}, //this is for working area
 
   //   attributes,
   collections: [],
@@ -38,6 +39,7 @@ const initialState = {
   filteredStatus: [],
   byGroup: "all",
   byStatus: "all",
+  showWorkArea: false, //this is for working area
   showModal: false,
   totalPages: 0,
   page: 1,
@@ -143,7 +145,6 @@ export const reduxSlice = createSlice({
         forms.findIndex((item) => item?._id === payload?._id);
 
       const updateCollection = (collections, index) => {
-        console.log("index", index);
         if (index > -1) {
           if (identifier === "_id") {
             collections[index].diagnostic[form] = payload;
@@ -234,6 +235,10 @@ export const reduxSlice = createSlice({
       state.task = task;
       state.showModal = true;
     },
+    SetWorkArea: (state, { payload }) => {
+      state.work = payload;
+      state.showWorkArea = true;
+    },
 
     /**
      * for U/A, CBC, Feca
@@ -268,8 +273,10 @@ export const reduxSlice = createSlice({
       state.activePage = payload;
     },
     TOGGLE: (state, { payload }) => {
-      console.log("payload", payload);
       state.showModal = !state.showModal;
+    },
+    TOGGLE_WORK_AREA: (state, _) => {
+      state.showWorkArea = !state.showWorkArea;
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -356,6 +363,7 @@ export const {
   SetSELECTED,
   SetPatient,
   SetTASK,
+  SetWorkArea,
   SetPARAMS,
   SetPrint,
   SetPackages,
@@ -371,6 +379,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
+  TOGGLE_WORK_AREA,
   RESET,
 } = reduxSlice.actions;
 
