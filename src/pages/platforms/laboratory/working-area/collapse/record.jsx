@@ -4,6 +4,7 @@ import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import Swal from "sweetalert2";
+import LIS_STATUS from "../lis-status.jsx";
 
 const Tasks = ({ key, form, obj, index, customer }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
@@ -134,7 +135,10 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       <td>
         {signatories[1]?.fullName ? fullName(signatories[1].fullName) : "-"}
       </td>
-      <td>{form}</td>
+      <td>
+        {form}
+        <LIS_STATUS workarea={obj.workarea} />
+      </td>
       <td>
         {isEmptyEntry ? (
           <MDBBadge color="danger" pill>
