@@ -160,7 +160,7 @@ const Tasks = ({ key, form, obj, index, customer }) => {
             className="py-1 px-2 m-0"
             onClick={previewDriveFile}
           >
-            <MDBIcon icon="eye" />
+            <MDBIcon icon="tools" />
           </MDBBtn>
 
           <MDBBtn

@@ -10,6 +10,8 @@ import {
 import { Search } from "../../../../../components/searchables";
 import { useEffect, useState } from "react";
 import dragAndDrop from "../../../../../assets/drag-and-drop.png";
+import { useSelector } from "react-redux";
+import EditableField from "../../../../../components/customizable/editableField";
 
 const Bucket = ({
   title,
@@ -18,7 +20,9 @@ const Bucket = ({
   cluster = [],
   handleDrop = () => {},
   handleDragStart = () => {},
+  handleUpdate = () => {},
 }) => {
+  const { selected } = useSelector(({ machines }) => machines);
   const [services, setServices] = useState([]);
   const [didSearch, setDidSearch] = useState(false);
 
@@ -31,7 +35,10 @@ const Bucket = ({
   }, [collections]);
 
   const filteredData = !hasSelected
-    ? services.filter((item) => !cluster.some(({ id }) => id === item.id))
+    ? services.filter(
+        (item) =>
+          ![...cluster, ...selected?.services].some(({ id }) => id === item.id)
+      )
     : services;
 
   const handleDragOver = (e) => e.preventDefault();
@@ -87,9 +94,19 @@ const Bucket = ({
                     >
                       <td>{item.name}</td>
                       <td>
-                        <span>
-                          {item[hasSelected ? "code" : "abbreviation"]}
-                        </span>
+                        {hasSelected ? (
+                          <EditableField
+                            displayTag="span"
+                            fieldData={{ ...item }}
+                            keyForValue="code"
+                            isCapitalize={false}
+                            localUpdate={true}
+                            width={"15rem"}
+                            onSave={(data) => handleUpdate(data, index)}
+                          />
+                        ) : (
+                          item.abbreviation
+                        )}
                       </td>
                     </tr>
                   ))

@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MDBModal,
   MDBModalBody,
   MDBIcon,
   MDBModalHeader,
   MDBRow,
+  MDBBtn,
 } from "mdbreact";
 import { Services } from "../../../../../services/fakeDb";
 import { useDispatch, useSelector } from "react-redux";
-import { TOGGLE_SERVICES } from "../../../../../services/redux/slices/market/machines";
-import { SAVE } from "../../../../../services/indexDB/commerce/market/machines";
+import {
+  TOGGLE_SERVICES,
+  SetSERVICES,
+} from "../../../../../services/redux/slices/market/machines";
 import Bucket from "./bucket";
 import Swal from "sweetalert2";
 import { capitalize } from "../../../../../services/utilities";
+import { SAVE } from "../../../../../services/indexDB/commerce/market/machines";
 export default function ServicesModal() {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { showServices: show, selected } = useSelector(({ machines }) => machines),
@@ -21,35 +25,11 @@ export default function ServicesModal() {
 
   const toggle = () => dispatch(TOGGLE_SERVICES());
 
-  const handlePick = async (service) => {
-    const { value: code } = await Swal.fire({
-      title: `Set a code for "${service.name}"`,
-      input: "text",
-      inputLabel: "Service Code",
-      inputPlaceholder: "Enter a code for this service",
-      showCancelButton: true,
-      confirmButtonText: "Save",
-      cancelButtonText: "Cancel",
-      inputValidator: (value) => {
-        if (!value) {
-          return "Please enter a code!";
-        }
-        return null;
-      },
-    });
-
-    if (code) {
-      const _cluster = [...cluster];
-      const index = _cluster.findIndex((s) => s.id === service.id);
-
-      if (index > -1) {
-        _cluster.splice(index, 1);
-      } else {
-        _cluster.unshift({ ...service, code }); // attach the code
-      }
-      setCluster(_cluster);
+  useEffect(() => {
+    if (show) {
+      setCluster([]);
     }
-  };
+  }, [show]);
 
   const handleDragStart = (e, item, hasSelected) => {
     // Create custom drag image
@@ -103,7 +83,7 @@ export default function ServicesModal() {
       <div style="font-size: 22px; font-weight: bold; margin-bottom: 15px;">
         ${capitalize(item.name)}
       </div>
-      <input id="service-code" class="form-control" placeholder="Enter a code" />
+      <input id="service-code" class="form-control"  placeholder="Enter a code" />
     </div>
   `,
           showCancelButton: true,
@@ -128,6 +108,19 @@ export default function ServicesModal() {
     setCluster(_cluster);
     document.getElementById("item-search").value = "testing lang";
   };
+
+  const handleSubmit = () => {
+    SAVE(selected._id, cluster);
+    dispatch(SetSERVICES({ machineID: selected._id, services: cluster }));
+    toggle();
+  };
+
+  const handleUpdate = (data, index) => {
+    const _cluster = [...cluster];
+    _cluster[index] = data;
+    setCluster(_cluster);
+  };
+
   return (
     <MDBModal size="xl" isOpen={show} toggle={toggle} backdrop>
       <MDBModalHeader
@@ -135,7 +128,7 @@ export default function ServicesModal() {
         className="light-blue darken-3 white-text"
       >
         <MDBIcon icon="flask" className="mr-2" />
-        Add a Service
+        Add services to {selected?.section}
       </MDBModalHeader>
       <MDBModalBody className="mb-0">
         <MDBRow>
@@ -153,11 +146,21 @@ export default function ServicesModal() {
             title={"Selected Services"}
             collections={cluster}
             hasSelected
-            handlePick={handlePick}
             handleDragStart={handleDragStart}
             handleDrop={handleDrop}
+            handleUpdate={handleUpdate}
           />
         </MDBRow>
+        <div className="text-center">
+          <MDBBtn
+            rounded
+            color="primary"
+            className="mt-3"
+            onClick={handleSubmit}
+          >
+            Submit
+          </MDBBtn>
+        </div>
       </MDBModalBody>
     </MDBModal>
   );

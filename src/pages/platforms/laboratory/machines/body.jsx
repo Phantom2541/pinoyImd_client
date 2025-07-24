@@ -5,17 +5,36 @@ import {
   DESTROY,
 } from "../../../../services/redux/slices/market/machines";
 import Swal from "sweetalert2";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Services from "./services";
+import { BROWSE } from "../../../../services/indexDB/commerce/market/machines";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(
       ({ machines }) => machines
     ),
+    [machines, setMachines] = useState([]),
     dispatch = useDispatch();
   const [activeId, setActiveId] = useState("");
 
   const { token } = useSelector(({ auth }) => auth);
+
+  useEffect(() => {
+    async function fetchAllServices() {
+      const results = await Promise.all(
+        [...filtered].map(async (item) => {
+          const services = await BROWSE(item._id);
+          return {
+            ...item,
+            services,
+          };
+        })
+      );
+      setMachines(results);
+    }
+
+    fetchAllServices();
+  }, [filtered]);
 
   const handleDelete = (item) => {
     Swal.fire({
@@ -36,7 +55,7 @@ const Body = () => {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = machines.slice(startIndex, endIndex); // Get only items for the active page
 
   return (
     <MDBTable responsive bordered>
@@ -64,6 +83,7 @@ const Body = () => {
             price,
             lisCapable = false,
             section = "",
+            services = [],
           } = item;
 
           const isOpen = activeId === index;
@@ -91,27 +111,39 @@ const Body = () => {
                         <MDBIcon icon="check" className="mr-2 text-success" />
                         {section}
                       </div>
-                      <MDBBtn
-                        size="sm"
-                        color="white"
-                        title="View Services"
-                        rounded
-                        onClick={() =>
-                          setActiveId((prev) => (prev === index ? -1 : index))
-                        }
-                        className="m-0 p-0 transition-all "
-                        style={{
-                          height: "1.3rem",
-                          width: activeId === index ? "1.5rem" : "2rem",
-                        }}
-                      >
-                        <i
+                      <div className="d-flex align-items-center">
+                        <MDBBtn
+                          size="sm"
+                          color="white"
+                          title="View Services"
+                          rounded
+                          onClick={() =>
+                            setActiveId((prev) => (prev === index ? -1 : index))
+                          }
+                          className="m-0 p-0 transition-all "
                           style={{
-                            rotate: `${activeId === index ? 0 : 90}deg`,
+                            height: "1.3rem",
+                            width: activeId === index ? "1.5rem" : "2rem",
                           }}
-                          className="fa fa-angle-down transition-all "
-                        />
-                      </MDBBtn>
+                        >
+                          <i
+                            style={{
+                              rotate: `${activeId === index ? 0 : 90}deg`,
+                            }}
+                            className="fa fa-angle-down transition-all "
+                          />
+                        </MDBBtn>
+                        {!isOpen && services.length > 0 && (
+                          <span
+                            className="counter"
+                            style={{
+                              marginBottom: "-15px",
+                            }}
+                          >
+                            {services.length}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   ) : (
                     <MDBIcon icon="times" className="text-danger" />

@@ -121,6 +121,18 @@ export const reduxSlice = createSlice({
       state.willCreate = false;
       state.showModal = true;
     },
+    SetSERVICES: (state, { payload }) => {
+      const { machineID, services } = payload;
+      const updateCollections = (collections) => {
+        const index = collections.findIndex(({ _id }) => _id === machineID);
+        collections[index] = {
+          ...collections[index],
+          services: services,
+        };
+      };
+      updateCollections(state.collections);
+      updateCollections(state.filtered);
+    },
     SetCREATE: (state) => {
       state.selected = {
         brand: "",
@@ -299,6 +311,7 @@ export const reduxSlice = createSlice({
 export const {
   SetCREATE,
   SetADD_SERVICES,
+  SetSERVICES,
   SetEDIT,
   SetFILTER,
   SetPAGE,
