@@ -759,6 +759,10 @@
   animation-delay: 0.3s;
 }
 
+.cashier-pos-search-container.already-moved {
+  transform: none !important; /* optional if JS handles this strictly */
+}
+
 .cashier-pos-search-container.fadeInSearchContainer {
   animation: fadeInSearchContainer 0.8s ease;
 }

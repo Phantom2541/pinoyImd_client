@@ -102,7 +102,6 @@ export default function POS() {
     const targetEl = origPositionRef.current;
 
     if (searchEl && targetEl) {
-      // Step 1: Fade out overlay
       const overlay = document.querySelector(".cashier-pos-search-overlay");
       if (overlay) {
         overlay.style.transition = "opacity 0.3s ease";
@@ -112,34 +111,27 @@ export default function POS() {
         }, 300);
       }
 
-      // Step 2: Show target container height
       setActivateOrigHeight(true);
 
-      // Step 3: Calculate movement
-      const fromRect = searchEl.getBoundingClientRect();
-      const toRect = targetEl.getBoundingClientRect();
+      if (asOverlay) {
+        const fromRect = searchEl.getBoundingClientRect();
+        const toRect = targetEl.getBoundingClientRect();
 
-      const deltaX = toRect.left - fromRect.left;
-      const deltaY = toRect.top - fromRect.top;
+        const deltaX = toRect.left - fromRect.left;
+        const deltaY = toRect.top - fromRect.top;
 
-      // Step 4: Move the search container
-      searchEl.style.transition = "transform 0.6s ease-in-out";
-      searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        searchEl.style.transition = "transform 0.6s ease-in-out";
+        searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+      } else {
+        // Reset transform to keep in-place layout stable
+        searchEl.style.transition = "none";
+        searchEl.style.transform = "none";
+      }
 
-      // Step 5: Fade out
       const fadeDuration = asOverlay ? 900 : 300;
 
       setTimeout(() => {
-        targetEl.style.transition = "opacity 0.4s ease";
-        searchEl.style.transition = "opacity 0.4s ease";
-
-        targetEl.style.opacity = "0";
-        searchEl.style.opacity = "0";
-
-        setTimeout(() => {
-          setSearchDone(true);
-          setShowPatientInfo(true);
-        }, 400);
+        setShowPatientInfo(true); // show patient
       }, fadeDuration);
     } else {
       setShowPatientInfo(true);
