@@ -170,10 +170,15 @@ export default function POS() {
                   </h5>
                 </div>
                 <MDBBtn
-                  rounded
                   color="danger"
                   title="Clear"
-                  size="sm"
+                  className="d-flex justify-content-center align-items-center p-0"
+                  style={{
+                    width: "35px",
+                    aspectRatio: "1/1",
+                    borderRadius: "50%",
+                    fontSize: ".9rem",
+                  }}
                   onClick={() => {
                     dispatch(SETPATIENT({}));
                     dispatch(RESET_INSOURCE());
@@ -201,7 +206,6 @@ export default function POS() {
                     setShowPatientInfo(false);
                     setActivateOrigHeight(false);
                   }}
-                  className="px-2"
                 >
                   <MDBIcon icon="times" />
                 </MDBBtn>
