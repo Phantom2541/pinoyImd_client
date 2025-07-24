@@ -755,12 +755,12 @@
   background: white;
   padding: 10px;
   border-radius: 8px;
-  width: 608px;
+  width: 100%;
   animation-delay: 0.3s;
 }
 
-.cashier-pos-search-container.already-moved {
-  transform: none !important; /* optional if JS handles this strictly */
+.cashier-pos-search-container.fixedWidth {
+  max-width: 608px;
 }
 
 .cashier-pos-search-container.fadeInSearchContainer {
