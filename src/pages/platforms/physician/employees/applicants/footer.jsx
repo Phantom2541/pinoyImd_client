@@ -5,12 +5,12 @@ import Pagination from "../../../../../components/pagination";
 import {
   SetMaxPage,
   SetActivePAGE,
-} from "../../../../../services/redux/slices/commerce/pos/services/onBoardings";
+} from "../../../../../services/redux/slices/assets/persons/physicians";
 const Footer = () => {
-  const { isLoading, totalPages, activePage } = useSelector(
-      ({ onBoardings }) => onBoardings
+  const { maxPage } = useSelector(({ auth }) => auth),
+    { isLoading, totalPages, activePage } = useSelector(
+      ({ physicians }) => physicians
     ),
-    { maxPage } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
   useEffect(() => {

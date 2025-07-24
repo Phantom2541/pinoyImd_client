@@ -40,7 +40,7 @@ const Header = ({ deal, index }) => {
           localStorage.setItem(`customerId`, JSON.stringify(customerId));
 
           history.push(
-            `/frontdesk/diagnostics/diagnostics/reports?patient=${customerId?._id}`
+            `/frontdesk/diagnostics/reports?patient=${customerId?._id}`
           );
         }}
         color="info"

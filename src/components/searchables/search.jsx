@@ -45,7 +45,11 @@ export default function Search({
         className="search-container"
         style={{ marginRight: haveAction && !showBtn && "-35px" }}
       >
-        <MDBIcon className="search-icon" fas icon="search" />
+        <MDBIcon
+          style={{ color: "#888", fontSize: "1rem" }}
+          fas
+          icon="search"
+        />
         <input
           placeholder="Search..."
           onChange={({ target }) => handleChange(target.value)}

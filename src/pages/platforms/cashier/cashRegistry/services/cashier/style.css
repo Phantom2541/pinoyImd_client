@@ -8,11 +8,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
   width: 100%;
+
   height: fit-content;
-  background-color: #fff;
-  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
 }
 
@@ -22,6 +22,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 10px 20px;
 }
 
 .pos-container-header.pickedSearch {
@@ -99,6 +100,9 @@
 .pos-card {
   width: 100%;
   white-space: pre-wrap;
+  overflow: hidden;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .pos-card-body {
@@ -108,28 +112,48 @@
 }
 
 .pos-card-body section {
-  display: none;
   flex: none;
   width: 100%;
   height: fit-content;
   padding: 10px;
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
-.pos-card-body section.active {
-  display: block;
-  animation: scaleIn 1s ease;
+.flip-card-container {
+  perspective: 1000px; /* needed for 3D effect */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: height 0.5s ease;
 }
 
-@keyframes scaleIn {
-  0% {
-    transform: translateX(-2rem);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  top: 0;
+  left: 0;
+}
+
+.flip-card-front {
+  position: relative; /* so it determines natural height */
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
 }
 
 .pos-select-wrapper {
@@ -160,13 +184,23 @@
 }
 
 /*Menus table Design */
+.menus-table-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: white;
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  min-height: 370px;
+}
+
 .menus-table {
   width: 100%;
   border-radius: 10px;
   border-collapse: collapse;
   background-color: #fff;
   height: fit-content;
-  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
 }
 
 .menus-table th,
@@ -184,6 +218,7 @@
 .menus-table td {
   font-weight: 450;
   font-size: 0.9rem;
+  transition: all 0.3s ease;
 }
 
 .menus-table tr:hover td {
@@ -202,30 +237,24 @@
   position: relative;
 }
 
+.menus-table:hover .menus-up {
+  color: green;
+  display: none;
+}
+
 .menus-table .menus-button-delete {
-  position: absolute;
-  top: 0;
-  left: 0;
-  inset: 0;
+  display: none;
+  margin: auto;
+  background-color: transparent;
   border: none;
-  background-color: rgba(255, 53, 71, 1);
   color: white;
-  opacity: 0;
-  visibility: hidden;
+  font-size: 1.1rem;
+  width: 100%;
+  height: 100%;
 }
 
-.menus-table tr td .menus-button-delete:active {
-  background-color: hsl(353, 100%, 75%);
-}
-
-.menus-table tr:hover td .menus-button-delete {
-  opacity: 1;
-  visibility: visible;
-}
-
-.menus-table tr:hover .menus-button-delete {
-  opacity: 1;
-  visibility: visible;
+.menus-table:hover .menus-button-delete {
+  display: block;
 }
 
 .menus-table tr .menus-empty {
@@ -659,5 +688,99 @@
 @media (max-width: 1350px) {
   .res-container {
     margin-left: 20px;
+  }
+}
+
+.cashier-pos-search-origPosition {
+  width: 100%;
+  height: auto;
+  /* overflow: hidden; */
+  transition: height 0.3s ease, opacity 0.4s ease;
+}
+
+.cashier-pos-search-origPosition.active-height {
+  height: 60px; /* 👈 show height only when ready */
+}
+
+.cashier-pos-search-origPosition:not(.hide) {
+  animation: origPositionfadeIn 0.3s ease;
+}
+
+@keyframes origPositionfadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.cashier-pos-search-wrapper.as-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cashier-pos-search-wrapper.in-place {
+  position: static;
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.cashier-pos-search-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  transition: opacity 0.5s ease;
+}
+
+.cashier-pos-search-container {
+  z-index: 999;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  animation-delay: 0.3s;
+  box-sizing: border-box;
+  transition: transform 0.6s ease, opacity 0.4s ease;
+}
+
+.cashier-pos-search-container.fixedWidth {
+  max-width: 608px;
+}
+
+.cashier-pos-search-container.fadeInSearchContainer {
+  animation: fadeInSearchContainer 0.8s ease;
+}
+
+@keyframes fadeInSearchContainer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.cashier-pos-fade-in {
+  opacity: 0;
+  animation: fadeInAnim 0.5s forwards;
+}
+
+@keyframes fadeInAnim {
+  to {
+    opacity: 1;
   }
 }

@@ -30,7 +30,7 @@ export default function Search() {
     }
 
     timeoutRef.current = setTimeout(() => {
-      const [abbrSec, _, pn] = _search.split("-");
+      const [abbrSec, pn] = _search.split("-");
       const result = filteredStatus.find((task) => {
         const { diagnostic = {}, customerId } = task;
         const diagnostics = Object.entries(diagnostic);

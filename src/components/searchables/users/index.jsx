@@ -121,7 +121,8 @@ export default function Search({
             <>
               {!patients.length ? (
                 <small
-                  className={didHover ? "text-success" : ""}
+                  className={didHover ? "text-primary" : ""}
+                  style={{ cursor: "pointer" }}
                   onClick={handleRegister}
                   onMouseEnter={() => setDidHover(true)}
                   onMouseLeave={() => setDidHover(false)}
@@ -179,6 +180,9 @@ export default function Search({
         />
         <button
           type="submit"
+          style={{
+            color: "white",
+          }}
           disabled={isFetching}
           className={didSearch && !isFetching ? "bg-danger" : ""}
           onClick={

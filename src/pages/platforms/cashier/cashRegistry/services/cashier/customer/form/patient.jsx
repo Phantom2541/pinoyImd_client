@@ -277,6 +277,7 @@ export default function Patient({ setActiveIndex }) {
       <MDBInput
         label="Email (Optional)"
         type="email"
+        className="pb-0"
         onChange={({ target }) => handleChange("email", target.value)}
         value={email || generateEmail(form)}
       />
@@ -284,7 +285,7 @@ export default function Patient({ setActiveIndex }) {
       <MDBBtn
         type="submit"
         color={_id ? "info" : "primary"}
-        className="float-right mt-2"
+        className="float-right mt-n2"
       >
         {_id ? "Update" : "Register"}
       </MDBBtn>

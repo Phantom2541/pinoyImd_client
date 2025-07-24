@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { Services as service } from "../../../../../services/fakeDb";
 import { properFullname } from "../../../../../services/utilities";
@@ -8,19 +7,17 @@ import "./style.css";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(
-      ({ onBoardings }) => onBoardings
-    ),
-    dispatch = useDispatch();
+    ({ onBoardings }) => onBoardings
+  );
 
   /**
    * Pagination: Calculate the start and end index for the current spage
    */
   const itemsPerPage = maxPage; // Number of items per page
+
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
-  console.log("activepage", activePage);
-  console.log("max", maxPage);
 
   return (
     <MDBTable responsive hover>
@@ -36,7 +33,7 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { id, status, services, pid, client } = item;
+          const { status, services, pid } = item;
           const safeServices = Array.isArray(services) ? services : [];
 
           return (
