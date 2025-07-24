@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import { Services as service } from "../../../../../services/fakeDb";
 import { properFullname } from "../../../../../services/utilities";
@@ -34,7 +33,7 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((item, index) => {
-          const { id, status, services, pid, client } = item;
+          const { status, services, pid } = item;
           const safeServices = Array.isArray(services) ? services : [];
 
           return (

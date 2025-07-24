@@ -4,7 +4,8 @@ import { useSelector } from "react-redux";
 import CollapsableHeader from "./header";
 import CollapsableBody from "./body";
 import { MDBCollapse, MDBCardBody } from "mdbreact";
-import { collapse } from "../../../../../../services/utilities";
+import { collapse, properFullname } from "../../../../../../services/utilities";
+import { Policy } from "../../../../../../services/fakeDb";
 
 export default function CollapsableIndex() {
   const { filtered, activePage, maxPage } = useSelector(
@@ -46,6 +47,7 @@ export default function CollapsableIndex() {
             <th>Specialization</th>
             <th>Department</th>
             <th>Status</th>
+            <th>Clinic</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -61,9 +63,21 @@ export default function CollapsableIndex() {
             return (
               <React.Fragment key={`item-${actualIndex}`}>
                 <tr className={color}>
-                  <td>{item.name}</td>
+                  <td>
+                    {item.user
+                      ? properFullname(item.user.fullName)
+                      : properFullname(item.ghostName)}
+                  </td>
                   <td>{item.specialization}</td>
-                  <td>{item.department}</td>
+                  <td>
+                    {item?.position?.employment &&
+                      Policy.getDepartment(
+                        item?.position?.employment?.designation
+                      )}
+                  </td>
+                  <td>
+                    {renderStatusBadge(item?.clinic && item?.clinic?.status)}
+                  </td>
                   <td>{renderStatusBadge(item.status)}</td>
                   <td>
                     <button

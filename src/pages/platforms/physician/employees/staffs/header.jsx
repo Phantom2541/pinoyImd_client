@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
-  TIEUPS,
+  // TIEUPS,
   BROWSE,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
-import Search from "../../../../../components/searchables/users";
+// import Search from "../../../../../components/searchables/users";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -15,7 +15,7 @@ const Header = () => {
 
   useEffect(() => {
     if (token && activePlatform?.branchId)
-      dispatch(BROWSE({ key: { branch: activePlatform?.branchId }, token }));
+      dispatch(BROWSE({ key: { branchId: activePlatform?.branchId }, token }));
 
     return () => dispatch(RESET());
   }, [token, activePlatform, isSucscess, dispatch]);
@@ -29,7 +29,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Staffs
+          {collections?.length} Affiliated Physicians
         </span>
       </div>
       <div>

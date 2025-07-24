@@ -5,7 +5,7 @@ import ReactFlow, { ReactFlowProvider } from "react-flow-renderer";
 import CustomNode from "../../../../accounting/organizationChart/customNode";
 import CustomEdge from "../../../../accounting/organizationChart/customEdge";
 import "./style.css";
-import { Zoom } from "swiper/modules";
+// import { Zoom } from "swiper/modules";
 
 const nodeTypes = { customNode: CustomNode };
 

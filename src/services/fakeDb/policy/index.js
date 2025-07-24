@@ -11,6 +11,7 @@ const Policy = {
       collections.find(({ positions = [] }) =>
         positions.some(({ id }) => id === Number(pk))
       ) || {};
+
     return department || "";
   },
   getDepname: (pk) => {

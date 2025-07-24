@@ -4,7 +4,6 @@ import { MDBView, MDBBtnGroup, MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import Months from "../../../../../services/fakeDb/calendar/months";
 import Years from "../../../../../services/fakeDb/calendar/years";
-import CalendarPicker from "../../../../../components/header/calendars";
 
 const today = new Date();
 
