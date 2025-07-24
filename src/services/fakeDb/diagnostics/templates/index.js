@@ -12,6 +12,7 @@ const Templates = {
    * @param {String} key Department name
    * @returns {Array} Array of component names
    */
+
   getComponents: (key) => {
     const department = collections.find(
       ({ department }) => department?.toLowerCase() === key?.toLowerCase()

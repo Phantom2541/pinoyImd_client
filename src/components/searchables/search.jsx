@@ -27,7 +27,6 @@ export default function Search({
       setFiltered(items);
     }, 300);
   }, [collections, setFiltered, hideButton]);
-
   const handleChange = (value) => {
     if (!value) {
       debouncedSearch.cancel();

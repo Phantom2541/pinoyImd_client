@@ -12,6 +12,7 @@ const initialState = {
   page: 0,
   willCreate: false,
   showModal: false,
+  showServices: false,
 
   /**
    * pagination
@@ -111,6 +112,10 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetADD_SERVICES: (state, { payload }) => {
+      state.selected = payload;
+      state.showServices = true;
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -177,6 +182,9 @@ export const reduxSlice = createSlice({
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
     },
+    TOGGLE_SERVICES: (state) => {
+      state.showServices = !state.showServices;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -241,9 +249,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        console.log("action", action);
         const { success, payload } = action.payload;
-        console.log("payload", payload);
         const index = state.collections.findIndex(
           (item) => item._id === payload._id
         );
@@ -292,6 +298,7 @@ export const reduxSlice = createSlice({
 
 export const {
   SetCREATE,
+  SetADD_SERVICES,
   SetEDIT,
   SetFILTER,
   SetPAGE,
@@ -301,6 +308,7 @@ export const {
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
+  TOGGLE_SERVICES,
   RESET,
 } = reduxSlice.actions;
 
