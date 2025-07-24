@@ -40,6 +40,7 @@ import {
   xray,
   ultrasound,
   ecg,
+  miscellaneous,
 } from "./slices/diagnostics";
 
 import { access, liabilities } from "./slices/liability";
@@ -122,6 +123,7 @@ const store = configureStore({
     //for templates only
     dragDrop,
     table,
+    miscellaneous,
   },
   devTools: true,
 });
