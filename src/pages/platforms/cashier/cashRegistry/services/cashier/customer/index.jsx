@@ -44,7 +44,6 @@ export default function POS() {
     const targetEl = origPositionRef.current;
 
     if (searchEl && targetEl) {
-      // Step 1: Fade out overlay
       const overlay = document.querySelector(".cashier-pos-search-overlay");
       if (overlay) {
         overlay.style.transition = "opacity 0.3s ease";
@@ -54,39 +53,34 @@ export default function POS() {
         }, 300);
       }
 
-      // Step 2: Show target container height
       setActivateOrigHeight(true);
 
-      // Step 3: Calculate movement
       const fromRect = searchEl.getBoundingClientRect();
       const toRect = targetEl.getBoundingClientRect();
-
-      const deltaX = toRect.left - fromRect.left;
+      const deltaX =
+        toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
       const deltaY = toRect.top - fromRect.top;
+      const targetWidth = toRect.width;
 
-      // Step 4: Move the search container
-      searchEl.style.transition = "transform 0.6s ease-in-out";
+      searchEl.style.transition =
+        "transform 0.6s ease-in-out, width 0.6s ease-in-out";
       searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-
-      // Step 5: Wait + fade out both elements after 1 second
+      searchEl.style.width = `${targetWidth}px`;
 
       const fadeDuration = asOverlay ? 900 : 300;
 
       setTimeout(() => {
-        // Apply fade to both
         targetEl.style.transition = "opacity 0.4s ease";
         searchEl.style.transition = "opacity 0.4s ease";
-
         targetEl.style.opacity = "0";
         searchEl.style.opacity = "0";
 
-        // Final cleanup after fade
         setTimeout(() => {
-          setSearchDone(true); // hide both
+          setSearchDone(true);
           dispatch(SETPATIENT(customer));
-          setShowPatientInfo(true); // show patient info
+          setShowPatientInfo(true);
         }, 400);
-      }, fadeDuration); // 600ms move + 1s delay
+      }, fadeDuration);
     } else {
       dispatch(SETPATIENT(customer));
       setShowPatientInfo(true);
@@ -101,7 +95,8 @@ export default function POS() {
     const searchEl = searchContainerRef.current;
     const targetEl = origPositionRef.current;
 
-    if (searchEl && targetEl) {
+    if (searchEl && targetEl && asOverlay) {
+      // Hide overlay
       const overlay = document.querySelector(".cashier-pos-search-overlay");
       if (overlay) {
         overlay.style.transition = "opacity 0.3s ease";
@@ -113,28 +108,25 @@ export default function POS() {
 
       setActivateOrigHeight(true);
 
-      if (asOverlay) {
-        const fromRect = searchEl.getBoundingClientRect();
-        const toRect = targetEl.getBoundingClientRect();
+      const fromRect = searchEl.getBoundingClientRect();
+      const toRect = targetEl.getBoundingClientRect();
+      const deltaX =
+        toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
+      const deltaY = toRect.top - fromRect.top;
+      const targetWidth = toRect.width;
 
-        const deltaX = toRect.left - fromRect.left;
-        const deltaY = toRect.top - fromRect.top;
-
-        searchEl.style.transition = "transform 0.6s ease-in-out";
-        searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-      } else {
-        // Reset transform to keep in-place layout stable
-        searchEl.style.transition = "none";
-        searchEl.style.transform = "none";
-      }
-
-      const fadeDuration = asOverlay ? 900 : 300;
+      searchEl.style.transition =
+        "transform 0.6s ease-in-out, width 0.6s ease-in-out";
+      searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+      searchEl.style.width = `${targetWidth}px`;
 
       setTimeout(() => {
-        setShowPatientInfo(true); // show patient
-      }, fadeDuration);
-    } else {
-      setShowPatientInfo(true);
+        // Reset transform and cleanup
+        searchEl.style.transition = "none";
+        searchEl.style.transform = "none";
+        searchEl.style.width = "100%"; // maintain full width from now on
+        setAsOverlay(false); // lock to original position
+      }, 700);
     }
   };
 
@@ -178,10 +170,15 @@ export default function POS() {
                   </h5>
                 </div>
                 <MDBBtn
-                  rounded
                   color="danger"
                   title="Clear"
-                  size="sm"
+                  className="d-flex justify-content-center align-items-center p-0"
+                  style={{
+                    width: "35px",
+                    aspectRatio: "1/1",
+                    borderRadius: "50%",
+                    fontSize: ".9rem",
+                  }}
                   onClick={() => {
                     dispatch(SETPATIENT({}));
                     dispatch(RESET_INSOURCE());
@@ -209,7 +206,6 @@ export default function POS() {
                     setShowPatientInfo(false);
                     setActivateOrigHeight(false);
                   }}
-                  className="px-2"
                 >
                   <MDBIcon icon="times" />
                 </MDBBtn>
@@ -249,7 +245,9 @@ export default function POS() {
                 />
               )}
               <div
-                className="cashier-pos-search-container"
+                className={`cashier-pos-search-container ${
+                  asOverlay && "fixedWidth"
+                }`}
                 ref={searchContainerRef}
               >
                 <Search
