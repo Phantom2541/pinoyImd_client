@@ -69,6 +69,9 @@ export default function POS() {
       searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
 
       // Step 5: Wait + fade out both elements after 1 second
+
+      const fadeDuration = asOverlay ? 900 : 300;
+
       setTimeout(() => {
         // Apply fade to both
         targetEl.style.transition = "opacity 0.4s ease";
@@ -83,7 +86,7 @@ export default function POS() {
           dispatch(SETPATIENT(customer));
           setShowPatientInfo(true); // show patient info
         }, 400);
-      }, 1000); // 600ms move + 1s delay
+      }, fadeDuration); // 600ms move + 1s delay
     } else {
       dispatch(SETPATIENT(customer));
       setShowPatientInfo(true);
@@ -94,6 +97,45 @@ export default function POS() {
     if (isLoading) return;
     if (!activeIndex) setActiveIndex(1);
     dispatch(SETSEARCHKEY(customer));
+
+    const searchEl = searchContainerRef.current;
+    const targetEl = origPositionRef.current;
+
+    if (searchEl && targetEl) {
+      const overlay = document.querySelector(".cashier-pos-search-overlay");
+      if (overlay) {
+        overlay.style.transition = "opacity 0.3s ease";
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 300);
+      }
+
+      setActivateOrigHeight(true);
+
+      if (asOverlay) {
+        const fromRect = searchEl.getBoundingClientRect();
+        const toRect = targetEl.getBoundingClientRect();
+
+        const deltaX = toRect.left - fromRect.left;
+        const deltaY = toRect.top - fromRect.top;
+
+        searchEl.style.transition = "transform 0.6s ease-in-out";
+        searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+      } else {
+        // Reset transform to keep in-place layout stable
+        searchEl.style.transition = "none";
+        searchEl.style.transform = "none";
+      }
+
+      const fadeDuration = asOverlay ? 900 : 300;
+
+      setTimeout(() => {
+        setShowPatientInfo(true); // show patient
+      }, fadeDuration);
+    } else {
+      setShowPatientInfo(true);
+    }
   };
 
   useEffect(() => {
@@ -200,7 +242,11 @@ export default function POS() {
               style={{ overflow: asOverlay ? "hidden" : "visible" }}
             >
               {!searchDone && asOverlay && (
-                <div className="cashier-pos-search-overlay" />
+                <div
+                  className={`cashier-pos-search-overlay ${
+                    asOverlay && "fadeInSearchContainer"
+                  }`}
+                />
               )}
               <div
                 className="cashier-pos-search-container"
