@@ -55,8 +55,9 @@ export default function Modal() {
 
   const buildData = () => {
     const { fname, mname, lname } = splitFullName(form.fullName || "");
+    console.log("form", form);
 
-    if (form._Id) {
+    if (form.user) {
       // Registered physician
       return {
         title: form.title,
@@ -69,6 +70,7 @@ export default function Modal() {
       // Ghost physician
       return {
         title: form.title,
+        user: form.user,
         branch: activePlatform.branchId,
         ghostName: {
           fname,
@@ -100,12 +102,14 @@ export default function Modal() {
 
   const handleCreate = () => {
     const fullData = buildData();
-    dispatch(
-      SAVE({
-        data: fullData,
-        token,
-      })
-    ).then(() => dispatch(TOGGLE()));
+    console.log("fullData", fullData);
+
+    // dispatch(
+    //   SAVE({
+    //     data: fullData,
+    //     token,
+    //   })
+    // ).then(() => dispatch(TOGGLE()));
   };
 
   const handleSubmit = (e) => {
@@ -122,10 +126,8 @@ export default function Modal() {
 
     if (willCreate) {
       // Registered physician
-      if (form._id) {
+      if (form.user) {
         console.log("fullData", fullData);
-        console.log("form._id", form._id);
-
         dispatch(
           SAVE({
             data: fullData, // contains `user` field
@@ -138,18 +140,20 @@ export default function Modal() {
           dispatch(TOGGLE());
         });
       } else {
+        console.log("fullData", fullData);
+
         // Ghost physician
-        dispatch(
-          SAVE({
-            data: fullData, // contains `ghostName` field
-            token,
-          })
-        ).then(() => {
-          addToast("Ghost physician saved successfully.", {
-            appearance: "info",
-          });
-          dispatch(TOGGLE());
-        });
+        // dispatch(
+        //   SAVE({
+        //     data: fullData, // contains `ghostName` field
+        //     token,
+        //   })
+        // ).then(() => {
+        //   addToast("Ghost physician saved successfully.", {
+        //     appearance: "info",
+        //   });
+        //   dispatch(TOGGLE());
+        // });
       }
       return;
     }
@@ -167,7 +171,15 @@ export default function Modal() {
   };
 
   const handleValue = (key) => form?.[key] || "";
-  const handlePhysicians = (physician) => dispatch(SETPHYSICIAN(physician));
+  const handlePhysicians = (physician) => {
+    console.log("physician", physician);
+
+    setForm({
+      ...form,
+      user: physician._id,
+    });
+    dispatch(SETPHYSICIAN(physician));
+  };
 
   const handleClose = () => dispatch(TOGGLE());
 
