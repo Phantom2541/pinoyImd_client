@@ -701,9 +701,6 @@
 .cashier-pos-search-origPosition.active-height {
   height: 60px; /* 👈 show height only when ready */
 }
-.cashier-pos-search-container {
-  transition: transform 0.6s ease, opacity 0.4s ease;
-}
 
 .cashier-pos-search-origPosition:not(.hide) {
   animation: origPositionfadeIn 0.3s ease;
@@ -757,6 +754,8 @@
   border-radius: 8px;
   width: 100%;
   animation-delay: 0.3s;
+  box-sizing: border-box;
+  transition: transform 0.6s ease, opacity 0.4s ease;
 }
 
 .cashier-pos-search-container.fixedWidth {

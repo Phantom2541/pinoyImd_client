@@ -57,7 +57,8 @@ export default function POS() {
 
       const fromRect = searchEl.getBoundingClientRect();
       const toRect = targetEl.getBoundingClientRect();
-      const deltaX = toRect.left - fromRect.left;
+      const deltaX =
+        toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
       const deltaY = toRect.top - fromRect.top;
       const targetWidth = toRect.width;
 
@@ -107,14 +108,13 @@ export default function POS() {
 
       setActivateOrigHeight(true);
 
-      // Animate move + shrink
       const fromRect = searchEl.getBoundingClientRect();
       const toRect = targetEl.getBoundingClientRect();
-      const deltaX = toRect.left - fromRect.left;
+      const deltaX =
+        toRect.left + toRect.width / 2 - (fromRect.left + fromRect.width / 2);
       const deltaY = toRect.top - fromRect.top;
       const targetWidth = toRect.width;
 
-      // Animate both transform and width
       searchEl.style.transition =
         "transform 0.6s ease-in-out, width 0.6s ease-in-out";
       searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
