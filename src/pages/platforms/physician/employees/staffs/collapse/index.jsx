@@ -103,7 +103,7 @@ export default function CollapsableIndex() {
                   </td>
                 </tr>
                 <tr>
-                  <td colSpan="5" className="p-0 m-0">
+                  <td colSpan="6" className="p-0 m-0">
                     <MDBCollapse isOpen={activeId === actualIndex}>
                       <MDBCardBody className="m-0 p-3">
                         <CollapsableBody item={item} />
