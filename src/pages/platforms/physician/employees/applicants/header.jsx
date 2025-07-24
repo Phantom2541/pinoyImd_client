@@ -15,7 +15,7 @@ const Header = () => {
 
   useEffect(() => {
     if (token && activePlatform?.branchId)
-      dispatch(BROWSE({ key: { branch: activePlatform?.branchId }, token }));
+      dispatch(BROWSE({ key: { branchId: activePlatform?.branchId }, token }));
 
     return () => dispatch(RESET());
   }, [token, activePlatform, isSucscess, dispatch]);

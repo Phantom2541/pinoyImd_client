@@ -510,7 +510,7 @@
   },
   {
     "department": "Clinic",
-    "code": "BOARD",
+    "code": "Clinic",
     "positions": [
       {
         "id": 122,
@@ -525,5 +525,10 @@
         "description": "Performs Surgical Operations."
       }
     ]
+  },
+  {
+    "department": "Physician",
+    "code": "Physician",
+    "positions": []
   }
 ]

@@ -10,29 +10,40 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
+import { properFullname } from "../../../../../../../services/utilities/index.js";
 import {
   SAVE,
   APPLICATION,
 } from "../../../../../../../services/redux/slices/assets/persons/personnels.js";
+import { BROWSE } from "../../../../../../../services/redux/slices/assets/persons/physicians.js";
 
 import { Policy } from "../../../../../../../services/fakeDb/index.js";
 import { UPLOAD } from "../../../../../../../services/redux/slices/assets/persons/auth.js";
 import Swal from "sweetalert2";
+import { use } from "react";
 
 export default function ApplicationModal({
   visibility,
   setVisibility,
   company,
 }) {
-  const { auth, token } = useSelector(({ auth }) => auth),
+  const { auth, token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, formSubmitted, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
+    { collections: doctor } = useSelector(({ physicians }) => physicians),
     [application, setApplication] = useState({}),
     [file201Preview, setFile201Preview] = useState({}),
     [department, setDepartment] = useState(),
     [positions, setPositions] = useState([]),
+    [assignedDoctor, setAssignedDoctor] = useState(""),
     dispatch = useDispatch();
+  console.log("doctor", doctor);
+
+  const showDoctorSelect =
+    department === "Clinic" &&
+    positions.find((p) => p.id === Number(application.designation))
+      ?.display_name === "Medical Secretary";
 
   useEffect(() => {
     if (isSuccess && !formSubmitted) {
@@ -79,6 +90,12 @@ export default function ApplicationModal({
       ...application,
       [name]: value,
     });
+    if (department === "Clinic") {
+      dispatch(BROWSE({ key: { branchId: activePlatform?.branchId }, token }));
+    }
+  };
+  const handleDoctorChange = (e) => {
+    setAssignedDoctor(e.target.value);
   };
 
   const handleFile = (e, name) => {
@@ -217,7 +234,7 @@ export default function ApplicationModal({
       <form onSubmit={handleSubmit}>
         <MDBModalBody className="text-start">
           <MDBRow>
-            <MDBCol md="4">
+            <MDBCol md={showDoctorSelect ? "3" : "4"}>
               <select
                 required
                 className="form-control mb-3"
@@ -244,9 +261,6 @@ export default function ApplicationModal({
                             ? "grey-text"
                             : ""
                         }
-                        // style={{
-                        //   backgroundColor: disabler ? "purple" : "white",
-                        // }}
                       >
                         {branch?.name}
                         {disabler ? " (Application on process)" : ""}
@@ -256,7 +270,8 @@ export default function ApplicationModal({
                 )}
               </select>
             </MDBCol>
-            <MDBCol md="4">
+
+            <MDBCol md={showDoctorSelect ? "3" : "4"}>
               <select
                 required
                 className="form-control mb-3"
@@ -275,10 +290,10 @@ export default function ApplicationModal({
                     </option>
                   )
                 )}
-                ;
               </select>
             </MDBCol>
-            <MDBCol md="4">
+
+            <MDBCol md={showDoctorSelect ? "3" : "4"}>
               <select
                 required
                 className="form-control mb-3"
@@ -299,6 +314,31 @@ export default function ApplicationModal({
                 )}
               </select>
             </MDBCol>
+
+            {showDoctorSelect && (
+              <MDBCol md="3">
+                <select
+                  required
+                  className="form-control mb-3"
+                  value={assignedDoctor}
+                  name="assignedDoctor"
+                  onChange={handleDoctorChange}
+                >
+                  <option value="">Select a Doctor</option>
+                  {doctor.map((doc, i) => {
+                    const displayName = doc.user
+                      ? properFullname(doc.user.fullName)
+                      : properFullname(doc.ghostName);
+
+                    return (
+                      <option value={displayName} key={i}>
+                        {displayName}
+                      </option>
+                    );
+                  })}
+                </select>
+              </MDBCol>
+            )}
           </MDBRow>
           <MDBRow>
             <MDBCol md="4">
