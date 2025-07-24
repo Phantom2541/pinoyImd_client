@@ -25,9 +25,9 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(
   `${url}/browse`,
-  ({ token, branchId }, thunkAPI) => {
+  ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, { branchId });
+      return axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -203,7 +203,7 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload } = action.payload;
         const { page, maxPage } = state;
-        if (payload.length > 0) {
+        if (payload?.length > 0) {
           let totalPAges = Math.floor(payload.length / state.maxPage);
           if (payload.length % maxPage > 0) totalPAges += 1;
           state.totalPages = totalPAges;
