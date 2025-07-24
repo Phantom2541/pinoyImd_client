@@ -4,7 +4,7 @@ export { default as Urinalysis } from "./urinalysis";
 export { default as Fecalysis } from "./fecalysis";
 export { default as Serology } from "./serology";
 export { default as Electrolyte } from "./electrolyte";
-
+export { default as Miscellaneous } from "./miscellaneous";
 // RADIOLOGY
 export { default as Xray } from "./xray";
 export { default as Ultrasound } from "./ultrasound";

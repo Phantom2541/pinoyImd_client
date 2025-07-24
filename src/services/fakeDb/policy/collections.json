@@ -2,7 +2,13 @@
   {
     "department": "DEFAULT",
     "code": "DEFAULT",
-    "positions": [{ "id": 1, "name": "patron", "display_name": "Patron" }]
+    "positions": [
+      {
+        "id": 1,
+        "name": "Patron",
+        "display_name": "Patron"
+      }
+    ]
   },
   {
     "department": "Office Management",
@@ -10,27 +16,27 @@
     "positions": [
       {
         "id": 7,
-        "name": "liason",
+        "name": "Liason",
         "display_name": "Liason Officer"
       },
       {
         "id": 2,
-        "name": "administrative clerk",
+        "name": "Administrative Clerk",
         "display_name": "Administrative Clerk"
       },
       {
         "id": 3,
-        "name": "ao",
+        "name": "Ao",
         "display_name": "Administrative Officer"
       },
       {
         "id": 4,
-        "name": "CEO",
+        "name": "Ceo",
         "display_name": "Chief Executive Officer"
       },
       {
         "id": 6,
-        "name": "proprietor",
+        "name": "Proprietor",
         "display_name": "Proprietor"
       }
     ]
@@ -41,37 +47,37 @@
     "positions": [
       {
         "id": 9,
-        "name": "cashier",
+        "name": "Cashier",
         "display_name": "Cashier"
       },
       {
         "id": 10,
-        "name": "admission",
+        "name": "Admission",
         "display_name": "Admission"
       },
       {
         "id": 11,
-        "name": "billing",
+        "name": "Billing",
         "display_name": "Billing"
       },
       {
         "id": 12,
-        "name": "hmo clerk",
+        "name": "Hmo Clerk",
         "display_name": "HMO Clerk"
       },
       {
         "id": 13,
-        "name": "assistant accountant",
+        "name": "Assistant Accountant",
         "display_name": "Assistant Accountant"
       },
       {
         "id": 14,
-        "name": "accountant",
+        "name": "Accountant",
         "display_name": "Accountant"
       },
       {
         "id": 15,
-        "name": "chief accountant",
+        "name": "Chief Accountant",
         "display_name": "Chief Accountant"
       }
     ]
@@ -82,7 +88,7 @@
     "positions": [
       {
         "id": 18,
-        "name": "payroll",
+        "name": "Payroll",
         "display_name": "Payroll"
       }
     ]
@@ -93,17 +99,17 @@
     "positions": [
       {
         "id": 25,
-        "name": "procurement clerk",
+        "name": "Procurement Clerk",
         "display_name": "Procurement Clerk"
       },
       {
         "id": 26,
-        "name": "procurement officer",
+        "name": "Procurement Officer",
         "display_name": "Procurement Officer"
       },
       {
         "id": 27,
-        "name": "procurement manager",
+        "name": "Procurement Manager",
         "display_name": "Procurement Manager"
       }
     ]
@@ -114,17 +120,17 @@
     "positions": [
       {
         "id": 30,
-        "name": "hr clerk",
+        "name": "Hr Clerk",
         "display_name": "Human Resource Clerk"
       },
       {
         "id": 31,
-        "name": "hr",
+        "name": "Hr",
         "display_name": "Human Resource"
       },
       {
         "id": 32,
-        "name": "hr manager",
+        "name": "Hr Manager",
         "display_name": "Human Resource Manager"
       }
     ]
@@ -135,47 +141,47 @@
     "positions": [
       {
         "id": 35,
-        "name": "frontdesk",
+        "name": "Frontdesk",
         "display_name": "Frontdesk"
       },
       {
         "id": 36,
-        "name": "phlebotomist",
+        "name": "Phlebotomist",
         "display_name": "Phlebotomist"
       },
       {
         "id": 37,
-        "name": "labtech",
+        "name": "Labtech",
         "display_name": "Laboratory Technician"
       },
       {
         "id": 38,
-        "name": "Jr LMS",
+        "name": "Jr Lms",
         "display_name": "Jr.Medical Laboratory Scientist"
       },
       {
         "id": 39,
-        "name": "LMS",
+        "name": "Lms",
         "display_name": "Medical Laboratory Scientist"
       },
       {
         "id": 40,
-        "name": "Sr LMS",
+        "name": "Sr Lms",
         "display_name": "Sr.Medical Laboratory Scientist"
       },
       {
         "id": 41,
-        "name": "chief MLS",
+        "name": "Chief Mls",
         "display_name": "Chief MLS"
       },
       {
         "id": 42,
-        "name": "patho",
+        "name": "Patho",
         "display_name": "Pathologist"
       },
       {
         "id": 43,
-        "name": "chief patho",
+        "name": "Chief Patho",
         "display_name": "Chief Pathologist"
       }
     ]
@@ -186,141 +192,141 @@
     "positions": [
       {
         "id": 44,
-        "name": "ass tech",
+        "name": "Ass Tech",
         "display_name": "Assistant Technician"
       },
       {
         "id": 45,
-        "name": "sonographer",
+        "name": "Sonographer",
         "display_name": "Sonographer"
       },
       {
         "id": 46,
-        "name": "radtech",
+        "name": "Radtech",
         "display_name": "Radiologic Technician"
       },
       {
         "id": 47,
-        "name": "rxt",
+        "name": "Rxt",
         "display_name": "Registered X-ray Technologist"
       },
       {
         "id": 48,
-        "name": "radiologist",
+        "name": "Radiologist",
         "display_name": "Radiologist"
       },
       {
         "id": 49,
-        "name": "chief radio",
+        "name": "Chief Radio",
         "display_name": "Chief Radiologist"
       }
     ]
   },
   {
-    "department": "nursing",
+    "department": "Nursing",
     "code": "NUR",
     "positions": [
       {
         "id": 50,
-        "name": "midwife",
+        "name": "Midwife",
         "display_name": "Midwife"
       },
       {
         "id": 51,
-        "name": "nurse aide",
+        "name": "Nurse Aide",
         "display_name": "Nursing Aide"
       },
       {
         "id": 52,
-        "name": "nurse",
+        "name": "Nurse",
         "display_name": "Nurse"
       },
       {
         "id": 53,
-        "name": "head nurse",
+        "name": "Head Nurse",
         "display_name": "Head Nurse"
       },
       {
         "id": 54,
-        "name": "nurse supervisor",
+        "name": "Nurse Supervisor",
         "display_name": "Nurse Supervisor"
       },
       {
         "id": 55,
-        "name": "chief nurse",
+        "name": "Chief Nurse",
         "display_name": "Chief Nurse"
       }
     ]
   },
   {
-    "department": "pharmacy",
+    "department": "Pharmacy",
     "code": "PHARM",
     "positions": [
       {
         "id": 60,
-        "name": "pharmacy assistant",
+        "name": "Pharmacy Assistant",
         "display_name": "Pharmacy Assistant"
       },
       {
         "id": 61,
-        "name": "pharmacist",
+        "name": "Pharmacist",
         "display_name": "Pharmacist"
       },
       {
         "id": 62,
-        "name": "head pharmacist",
+        "name": "Head Pharmacist",
         "display_name": "Head Pharmacist"
       }
     ]
   },
   {
-    "department": "rehabilitation",
+    "department": "Rehabilitation",
     "code": "REHAB",
     "positions": [
       {
         "id": 67,
-        "name": "therapist assistant",
+        "name": "Therapist Assistant",
         "display_name": "Therapist Assistant"
       },
       {
         "id": 68,
-        "name": "therapist",
+        "name": "Therapist",
         "display_name": "Therapist"
       },
       {
         "id": 69,
-        "name": "head therapist",
+        "name": "Head Therapist",
         "display_name": "Head Therapist"
       },
       {
         "id": 70,
-        "name": "chief therapist",
+        "name": "Chief Therapist",
         "display_name": "Chief Therapist"
       }
     ]
   },
   {
-    "department": "social services",
+    "department": "Social Services",
     "code": "SOCIAL",
     "positions": [
       {
         "id": 75,
-        "name": "assistant social worker",
+        "name": "Assistant Social Worker",
         "display_name": "Assistant Social Worker"
       },
       {
         "id": 76,
-        "name": "social worker",
+        "name": "Social Worker",
         "display_name": "Social Worker"
       },
       {
         "id": 77,
-        "name": "head social worker",
+        "name": "Head Social Worker",
         "display_name": "Head Social Worker"
       },
       {
         "id": 78,
-        "name": "chief social worker",
+        "name": "Chief Social Worker",
         "display_name": "Chief Social Worker"
       }
     ]
@@ -331,125 +337,125 @@
     "positions": [
       {
         "id": 80,
-        "name": "phic clerk",
-        "display_name": "PHIC Clerk"
+        "name": "Phic Clerk",
+        "display_name": "Phic Clerk"
       },
       {
         "id": 81,
-        "name": "phic officer",
-        "display_name": "PHIC Officer"
+        "name": "Phic Officer",
+        "display_name": "Phic Officer"
       },
       {
         "id": 82,
-        "name": "head phic",
-        "display_name": "Head PHIC"
+        "name": "Head Phic",
+        "display_name": "Head Phic"
       }
     ]
   },
   {
-    "department": "dietary",
+    "department": "Dietary",
     "code": "DIET",
     "positions": [
       {
         "id": 85,
-        "name": "kitchen aide",
+        "name": "Kitchen Aide",
         "display_name": "Kitchen Aide"
       },
       {
         "id": 86,
-        "name": "cook assistant",
+        "name": "Cook Assistant",
         "display_name": "Cook Assistant"
       },
       {
         "id": 87,
-        "name": "cook",
+        "name": "Cook",
         "display_name": "Cook"
       },
       {
         "id": 88,
-        "name": "head cook",
+        "name": "Head Cook",
         "display_name": "Head Cook"
       },
       {
         "id": 89,
-        "name": "dietician",
+        "name": "Dietician",
         "display_name": "Dietician"
       },
       {
         "id": 90,
-        "name": "head dietician",
+        "name": "Head Dietician",
         "display_name": "Head Dietician"
       }
     ]
   },
   {
-    "department": "auxillary services",
+    "department": "Auxillary Services",
     "code": "AUX",
     "positions": [
       {
         "id": 95,
-        "name": "utility",
+        "name": "Utility",
         "display_name": "Utility"
       },
       {
         "id": 96,
-        "name": "utility head",
+        "name": "Utility Head",
         "display_name": "Utility Head"
       },
       {
         "id": 97,
-        "name": "guard",
+        "name": "Guard",
         "display_name": "Guard"
       },
       {
         "id": 98,
-        "name": "driver",
+        "name": "Driver",
         "display_name": "Driver"
       },
       {
         "id": 99,
-        "name": "auxillary supervisor",
+        "name": "Auxillary Supervisor",
         "display_name": "Auxillary Supervisor"
       },
       {
         "id": 100,
-        "name": "chief auxillary",
+        "name": "Chief Auxillary",
         "display_name": "Chief Auxillary"
       }
     ]
   },
   {
-    "department": "security",
+    "department": "Security",
     "code": "SECURITY",
     "positions": [
       {
         "id": 105,
-        "name": "security",
+        "name": "Security",
         "display_name": "Security"
       },
       {
         "id": 106,
-        "name": "security head",
+        "name": "Security Head",
         "display_name": "Security Head"
       },
       {
         "id": 107,
-        "name": "guard",
+        "name": "Guard",
         "display_name": "Guard"
       },
       {
         "id": 108,
-        "name": "driver",
+        "name": "Driver",
         "display_name": "Driver"
       },
       {
         "id": 109,
-        "name": "security supervisor",
+        "name": "Security Supervisor",
         "display_name": "Security Supervisor"
       },
       {
         "id": 110,
-        "name": "chief security",
+        "name": "Chief Security",
         "display_name": "Chief Security"
       }
     ]
@@ -461,141 +467,68 @@
       {
         "id": 115,
         "name": "Chairman",
-        "display_name": "Head of the Board",
-        "description": "Leads the Board of Directors."
+        "display_name": "Head Of The Board",
+        "description": "Leads The Board Of Directors."
       },
       {
         "id": 116,
         "name": "Vice Chairman",
         "display_name": "Vice Chairman",
-        "description": "Second in command on the Board."
+        "description": "Second In Command On The Board."
       },
       {
         "id": 117,
         "name": "Board Member",
         "display_name": "Board Member",
-        "description": "Members of the Board."
+        "description": "Members Of The Board."
       },
       {
         "id": 118,
         "name": "Stock Holder",
         "display_name": "Stock Holder",
-        "description": "Owns shares in the company."
+        "description": "Owns Shares In The Company."
       },
       {
         "id": 119,
         "name": "Individual Holder",
         "display_name": "Individual Investor",
-        "description": "An individual who owns shares."
+        "description": "An Individual Who Owns Shares."
       },
       {
         "id": 120,
         "name": "Institutional Holder",
         "display_name": "Institutional Holder",
-        "description": "An institution that owns shares."
+        "description": "An Institution That Owns Shares."
       },
       {
         "id": 121,
         "name": "Silent Holder",
         "display_name": "Silent Partner",
-        "description": "Owns shares but does not take part in decisions."
+        "description": "Owns Shares But Does Not Take Part In Decisions."
       }
     ]
   },
   {
     "department": "Clinic",
-    "code": "BOARD",
+    "code": "Clinic",
     "positions": [
       {
         "id": 122,
         "name": "Physician",
         "display_name": "Doctor",
-        "description": "Diagnoses and treats patients."
+        "description": "Diagnoses And Treats Patients."
       },
       {
         "id": 123,
-        "name": "Surgeon",
-        "display_name": "Surgeon",
-        "description": "Performs surgical operations."
-      },
-      {
-        "id": 124,
-        "name": "Resident Doctor",
-        "display_name": "Resident",
-        "description": "Undergoing specialty training in the clinic."
-      },
-      {
-        "id": 125,
-        "name": "Medical Officer",
-        "display_name": "Medical Officer",
-        "description": "Handles general medical duties."
-      },
-      {
-        "id": 126,
-        "name": "Head Nurse",
-        "display_name": "Nursing Supervisor",
-        "description": "Leads and supervises nursing staff."
-      },
-      {
-        "id": 127,
-        "name": "Registered Nurse",
-        "display_name": "RN",
-        "description": "Licensed to provide direct patient care."
-      },
-      {
-        "id": 128,
-        "name": "Licensed Practical Nurse",
-        "display_name": "LPN",
-        "description": "Assists RNs in basic medical care."
-      },
-      {
-        "id": 129,
-        "name": "Nurse Aide",
-        "display_name": "Nursing Assistant",
-        "description": "Provides support to nursing staff and patients."
-      },
-      {
-        "id": 130,
-        "name": "Triage Nurse",
-        "display_name": "Triage Nurse",
-        "description": "Assesses patient conditions on arrival."
-      },
-      {
-        "id": 131,
-        "name": "Medical Technologist",
-        "display_name": "Med Tech",
-        "description": "Performs lab tests to aid diagnosis."
-      },
-      {
-        "id": 132,
-        "name": "Radiologic Technologist",
-        "display_name": "Radiology Tech",
-        "description": "Operates imaging equipment for diagnostics."
-      },
-      {
-        "id": 133,
-        "name": "Pharmacist",
-        "display_name": "Pharmacist",
-        "description": "Dispenses medications and advises patients."
-      },
-      {
-        "id": 134,
-        "name": "Physical Therapist",
-        "display_name": "PT",
-        "description": "Helps patients improve movement and manage pain."
-      },
-      {
-        "id": 135,
-        "name": "Occupational Therapist",
-        "display_name": "OT",
-        "description": "Assists patients in performing daily activities."
-      },
-      {
-        "id": 136,
-        "name": "Respiratory Therapist",
-        "display_name": "RT",
-        "description": "Cares for patients with breathing issues."
+        "name": "Medical Secretary",
+        "display_name": "Medical Secretary",
+        "description": "Performs Surgical Operations."
       }
     ]
+  },
+  {
+    "department": "Physician",
+    "code": "Physician",
+    "positions": []
   }
 ]

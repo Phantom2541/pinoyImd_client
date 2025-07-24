@@ -4,8 +4,7 @@ import { useSelector } from "react-redux";
 import CollapsableHeader from "./header";
 import CollapsableBody from "./body";
 import { MDBCollapse, MDBCardBody } from "mdbreact";
-import { collapse, properFullname } from "../../../../../../services/utilities";
-import { Policy } from "../../../../../../services/fakeDb";
+import { collapse } from "../../../../../../services/utilities";
 
 export default function CollapsableIndex() {
   const { filtered, activePage, maxPage } = useSelector(
@@ -44,10 +43,10 @@ export default function CollapsableIndex() {
         <thead className="thead-light">
           <tr>
             <th>Name</th>
-            <th>Specialization</th>
-            <th>Department</th>
+            <th>Applied Position</th>
+            <th>specialization</th>
+            <th>Application Date</th>
             <th>Status</th>
-            <th>Clinic</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -63,21 +62,10 @@ export default function CollapsableIndex() {
             return (
               <React.Fragment key={`item-${actualIndex}`}>
                 <tr className={color}>
-                  <td>
-                    {item.user
-                      ? properFullname(item.user.fullName)
-                      : properFullname(item.ghostName)}
-                  </td>
+                  <td>{item.name}</td>
+                  <td>{item.application}</td>
                   <td>{item.specialization}</td>
-                  <td>
-                    {item?.position?.employment &&
-                      Policy.getDepartment(
-                        item?.position?.employment?.designation
-                      )}
-                  </td>
-                  <td>
-                    {renderStatusBadge(item?.clinic && item?.clinic?.status)}
-                  </td>
+                  <td>{item.department}</td>
                   <td>{renderStatusBadge(item.status)}</td>
                   <td>
                     <button
@@ -105,7 +93,7 @@ export default function CollapsableIndex() {
                 <tr>
                   <td colSpan="6" className="p-0 m-0">
                     <MDBCollapse isOpen={activeId === actualIndex}>
-                      <MDBCardBody className="m-0 p-3">
+                      <MDBCardBody className="m-0 p-4">
                         <CollapsableBody item={item} />
                       </MDBCardBody>
                     </MDBCollapse>
