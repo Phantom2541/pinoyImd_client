@@ -3,6 +3,7 @@ import {
   Appointment,
   Imaging,
   Staffs,
+  Applicants,
 } from "../../../pages/platforms/physician";
 // import PatientRecords from "../../../pages/platforms/physician/patientRecords";
 // import MedicalHistory from "../../../pages/platforms/physician/medicalHistory";
@@ -136,7 +137,7 @@ const physician = [
         title: "Job applicants and interview status.",
         path: "/petitioners",
         icon: "user-plus",
-        // component: Applicants,
+        component: Applicants,
       },
     ],
   },
