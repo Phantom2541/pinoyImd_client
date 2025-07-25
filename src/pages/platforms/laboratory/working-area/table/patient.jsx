@@ -3,6 +3,7 @@ import { Services } from "../../../../../services/fakeDb";
 import {
   SetTASK,
   SetSELECTED,
+  SetWorkArea,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { fullName } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
@@ -79,6 +80,9 @@ const Patient = ({ obj, customer, form, _key: key, index, deal }) => {
     hasDone,
     remarks,
   };
+  const LIS_SENDER = () => {
+    dispatch(SetWorkArea({ ...deal, task: obj, section: form }));
+  };
 
   return (
     <tr key={key}>
@@ -106,6 +110,14 @@ const Patient = ({ obj, customer, form, _key: key, index, deal }) => {
       </td>
       <td>
         <MDBBtnGroup>
+          <MDBBtn
+            color="dark"
+            size="sm"
+            className="py-1 px-2 m-0"
+            onClick={LIS_SENDER}
+          >
+            <MDBIcon icon="tools" />
+          </MDBBtn>
           <MDBBtn
             onClick={() => handleEntry(_task, deal)}
             color={hasDone ? "info" : "primary"}

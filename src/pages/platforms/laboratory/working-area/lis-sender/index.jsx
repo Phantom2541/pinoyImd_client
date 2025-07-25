@@ -13,7 +13,7 @@ import {
   WORK_AREA,
 } from "../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import Patient from "./patient.jsx";
-import { formColor } from "../../../../../services/utilities/index.js";
+import { Barcode, formColor } from "../../../../../services/utilities/index.js";
 import { useEffect, useState } from "react";
 import Case from "./case.jsx";
 import MachineSender from "./machines/index.js";
@@ -34,7 +34,7 @@ export default function LIS_SENDER() {
     [cluster, setCluster] = useState([]),
     dispatch = useDispatch();
 
-  const { section, pi, task } = work || {};
+  const { section, task, customerId } = work || {};
   useEffect(() => {
     if (show) setForm(_form); //Reset the form
   }, [show]);
@@ -45,7 +45,12 @@ export default function LIS_SENDER() {
     e.preventDefault();
 
     try {
-      await MachineSender(section, cluster, pi);
+      await MachineSender(
+        work._id,
+        section,
+        cluster,
+        Barcode.getValue(section, customerId, task.pn)
+      );
       dispatch(
         WORK_AREA({
           baseURL: `/diagnostics/laboratory/result/${section.toLowerCase()}`,
