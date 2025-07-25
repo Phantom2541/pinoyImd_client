@@ -20,6 +20,7 @@ import {
   UrinLog,
   FecaLog,
   SeroLog,
+  MiscLog,
   RequestOutSource,
   SOA,
   Remittance,
@@ -64,7 +65,7 @@ export default function App() {
       <Route path="/printout/urin" exact component={UrinLog} />
       <Route path="/printout/feca" exact component={FecaLog} />
       <Route path="/printout/sero" exact component={SeroLog} />
-
+      <Route path="/printout/misc" exact component={MiscLog} />
       <Route
         path="/printout/census?month=:month&year:year"
         exact
