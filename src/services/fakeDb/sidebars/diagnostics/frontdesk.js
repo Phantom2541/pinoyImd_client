@@ -1,4 +1,4 @@
-import Dashboard from "../../../pages/platforms/frontdesk/dashboard";
+import Dashboard from "../../../../pages/platforms/frontdesk/dashboard";
 
 import {
   Fecalysis,
@@ -9,24 +9,25 @@ import {
   Xray,
   Ultrasound,
   Ecg,
-} from "../../../pages/platforms/frontdesk/reports";
+  Miscellaneous,
+} from "../../../../pages/platforms/frontdesk/reports";
 
 import {
   Onboard,
   Tasks,
   Reports,
-} from "../../../pages/platforms/frontdesk/diagnostics";
+} from "../../../../pages/platforms/frontdesk/diagnostics";
 
-import { Menus, Services } from "../../../pages/platforms/cashier";
-import Products from "../../../pages/platforms/frontdesk/market/products";
-import productsGenerics from "../../../pages/platforms/frontdesk/market/productsGenerics";
-import machines from "../../../pages/platforms/frontdesk/market/machines";
-import generics from "../../../pages/platforms/frontdesk/market/generics";
+import { Menus, Services } from "../../../../pages/platforms/cashier";
+import Products from "../../../../pages/platforms/frontdesk/market/products";
+import productsGenerics from "../../../../pages/platforms/frontdesk/market/productsGenerics";
+import machines from "../../../../pages/platforms/frontdesk/market/machines";
+import generics from "../../../../pages/platforms/frontdesk/market/generics";
 // import medicines from "../../../pages/platforms/frontdesk/market/medicine";
-import mentainance from "../../../pages/platforms/frontdesk/market/mentainance";
-import { Billings } from "../../../pages/platforms/frontdesk/Sendouts";
-import { SOA } from "../../../pages/platforms/cashier";
-import { Status } from "../../../pages/platforms/frontdesk";
+import mentainance from "../../../../pages/platforms/frontdesk/market/mentainance";
+import { Billings } from "../../../../pages/platforms/frontdesk/Sendouts";
+import { SOA } from "../../../../pages/platforms/cashier";
+import { Status } from "../../../../pages/platforms/frontdesk";
 
 import {
   Tablestemplate,
@@ -40,13 +41,13 @@ import {
   InputSearch,
   // QrCodePage,
   HMOCapture,
-} from "../../../pages/templates";
-import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
+} from "../../../../pages/templates";
+import Sendouts from "../../../../pages/platforms/frontdesk/diagnostics/sendouts";
 import {
   ImageMagnifier,
   ImageDragAndDrop,
   ImageText,
-} from "../../../components/images";
+} from "../../../../components/images";
 
 const frontdesk = [
   {
@@ -125,27 +126,62 @@ const frontdesk = [
     ],
   },
   {
-    name: "Purchases",
-    path: "/purchases",
-    icon: "cogs",
+    name: "Supply Hub",
+    path: "/supply-hub",
+    icon: "warehouse",
+    title:
+      "Centralized platform for requesting clinic supplies handled by procurement.",
     children: [
       {
-        name: "Request",
-        path: "/request",
-        icon: "shopping-cart",
-        // component: RequestComponent, // add your component here
+        name: "Browse Supplies",
+        path: "/supply-hub/browse",
+        icon: "boxes",
+        title: "Browse available items for internal request.",
+        // component: BrowseSuppliesComponent, // ← add when available
       },
+      // { put on topbar, save on indexDb
+      //   name: "My Cart",
+      //   path: "/cart",
+      //   icon: "shopping-basket",
+      //   title: "Add items for your request and submit to procurement.",
+      //   component: CartComponent,
+      // },
       {
-        name: "Received",
-        path: "/received",
-        icon: "truck-loading",
-        // component: ReceivedComponent, // add your component here
-      },
-      {
-        name: "Completed",
-        path: "/completed",
-        icon: "check-circle",
-        // component: CompletedComponent, // add your component here
+        name: "My Requests",
+        path: "/supply-hub/requests",
+        icon: "tasks",
+        title: "Track and manage your submitted supply requests.",
+        children: [
+          {
+            name: "Submitted",
+            path: "/supply-hub/requests/submitted",
+            icon: "file-invoice",
+            title: "Requests that are awaiting procurement action.",
+            // component: SubmittedRequestsComponent,
+          },
+          {
+            name: "To Receive",
+            path: "/supply-hub/requests/to-receive",
+            icon: "clipboard-list",
+            title:
+              "Requests that have been approved and are ready for receipt.",
+            // component: ToReceiveRequestsComponent,
+          },
+          {
+            name: "Completed",
+            path: "/supply-hub/requests/completed",
+            icon: "check-circle",
+            title: "Requests that have been successfully received.",
+            // component: CompletedRequestsComponent,
+          },
+          {
+            name: "Cancelled",
+            path: "/supply-hub/requests/cancelled",
+            icon: "ban",
+            title: "Requests that were withdrawn or rejected.",
+            // component: CancelledRequestsComponent,
+          },
+        ],
       },
     ],
   },
@@ -243,7 +279,7 @@ const frontdesk = [
             name: "Miscellaneous",
             path: "/reports/laboratory/miscellaneous",
             icon: "list",
-            // component: MiscellaneousComponent, // add your component here
+            component: Miscellaneous,
           },
         ],
       },

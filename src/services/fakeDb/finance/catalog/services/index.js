@@ -41,6 +41,23 @@ const Services = {
   filterByTemplate: (pk) =>
     collections.filter(({ template }) => template === Number(pk)),
 
+  filterByStrTemplate: (department, template) => {
+    if (!department) return "Department is required!!";
+
+    const foundDepartment = Templates.collections.find(
+      ({ label, department: d }) => label === department || d === department
+    );
+
+    if (!department) return -1;
+    const indexOfTemplate = foundDepartment.components.indexOf(template);
+    return (
+      collections.filter(
+        ({ template: t, department: d }) =>
+          t === Number(indexOfTemplate) && foundDepartment.department === d
+      ) || []
+    );
+  },
+
   /**
    * Given a cluster, return an array of department names that match the cluster
    * @param {array} cluster The cluster to filter the department names by

@@ -19,7 +19,7 @@ export default function Contracts({ form, handleChange }) {
                 color="primary"
                 size="sm"
                 className="mt-2"
-                onClick={handleChange("hasDiscount", true)}
+                onClick={() => handleChange("hasDiscount", true)}
               >
                 Provide Discount
               </MDBBtn>

@@ -1,8 +1,8 @@
-import { useSelector } from "react-redux";
-
 export default function Header({ date, dealId }) {
-  const { company, activePlatform } = useSelector(({ auth }) => auth);
-
+  const activePlatform = JSON.parse(
+    localStorage.getItem("activePlatform") || "{}"
+  );
+  const { company = {} } = activePlatform || {};
   return (
     <>
       <h4

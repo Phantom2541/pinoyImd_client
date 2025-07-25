@@ -1,13 +1,13 @@
-import Bulletin from "../../../pages/platforms/cashier/bulletin";
-import { Calender, Scheduler } from "../../../pages/platforms/hr/dtr";
+import Bulletin from "../../../../pages/platforms/cashier/bulletin";
+import { Calender, Scheduler } from "../../../../pages/platforms/hr/dtr";
 import {
   Remittances,
   Sales,
-} from "../../../pages/platforms/accounting/businessOperations";
-import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
-import { Applicants } from "../../../pages/platforms/manager/settings";
-import { Services, Menus } from "../../../pages/platforms/accounting";
-import { Heads } from "../../../pages/platforms/headquarter";
+} from "../../../../pages/platforms/accounting/businessOperations";
+import { Quest } from "../../../../pages/platforms/laboratory/staffManagement";
+import { Applicants } from "../../../../pages/platforms/manager/settings";
+import { Services, Menus } from "../../../../pages/platforms/accounting";
+import { Heads } from "../../../../pages/platforms/headquarter";
 import {
   Contract,
   Membership,
@@ -19,14 +19,15 @@ import {
   Hotlines,
   Suppliers,
   Onboarding,
-} from "../../../pages/platforms/cashier";
+} from "../../../../pages/platforms/cashier";
 import {
   Assurance,
   Controls,
   Temperature,
-} from "../../../pages/platforms/diagnostics/management";
-import Sendouts from "../../../pages/platforms/frontdesk/diagnostics/sendouts";
-import WorkingArea from "../../../pages/platforms/laboratory/working-area";
+} from "../../../../pages/platforms/diagnostics/management";
+import Sendouts from "../../../../pages/platforms/frontdesk/diagnostics/sendouts";
+import WorkingArea from "../../../../pages/platforms/laboratory/working-area";
+import Machines from "../../../../pages/platforms/laboratory/machines";
 // import ClinicalMicroscopy from "../../../pages/platforms/laboratory/workingArea/clinicalMicroscopy";
 
 const laboratory = [
@@ -432,6 +433,13 @@ const laboratory = [
     //     title: "Crossmatching and blood typing",
     //   },
     // ],
+  },
+  {
+    name: "Machines",
+    path: "/lab/machines",
+    icon: "tools",
+    title: "Access different lab working sections",
+    component: Machines,
   },
   {
     name: "Settings",

@@ -9,8 +9,8 @@ import {
   LicenseOperate,
   policyManagement,
   EquipmentSupplies,
-} from "../../../pages/platforms/accredetations/index";
-import OrgChartView from "../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
+} from "../../../../pages/platforms/accredetations/index";
+import OrgChartView from "../../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
 
 const accreditation = [
   {

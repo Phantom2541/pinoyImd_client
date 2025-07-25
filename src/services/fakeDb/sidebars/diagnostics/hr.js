@@ -1,6 +1,6 @@
-import Dashboard from "../../../pages/platforms/hr/dashboard";
-import Payrolls from "../../../pages/platforms/accounting/payroll";
-import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
+import Dashboard from "../../../../pages/platforms/hr/dashboard";
+import Payrolls from "../../../../pages/platforms/accounting/payroll";
+import stockHolder from "../../../../pages/platforms/hr/personnel/stockHolder";
 import {
   Schedule,
   Staffs,
@@ -8,8 +8,8 @@ import {
   Employees,
   Heads,
   Applicants,
-} from "../../../pages/platforms/hr";
-import { Services, Menus } from "../../../pages/platforms/accounting";
+} from "../../../../pages/platforms/hr";
+import { Services, Menus } from "../../../../pages/platforms/accounting";
 
 const humanresources = [
   {

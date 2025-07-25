@@ -51,8 +51,10 @@ const EditableField = ({
   animationStyle = {},
   animation = false,
   isMoney = false,
+  isCapitalize = true,
   enableEditMode = true,
   formSubmitted = false,
+  localUpdate = false, //this is for local update not for api
 }) => {
   const [editedData, setEditedData] = useState({}),
     { addToast } = useToasts();
@@ -84,6 +86,9 @@ const EditableField = ({
       });
     } else {
       onSave(editedData);
+      if (localUpdate) {
+        setEditedData({});
+      }
     }
   };
 
@@ -93,6 +98,7 @@ const EditableField = ({
     fieldData?._id === editedData?._id;
 
   const Tag = tagMap[displayTag] || "h6";
+  const text = fieldData[keyForText || keyForValue];
   const displayValue = (
     <Tag
       style={displayStyle}
@@ -108,7 +114,9 @@ const EditableField = ({
     >
       {(isMoney
         ? currency.format(fieldData[keyForText || keyForValue])
-        : capitalize(fieldData[keyForText || keyForValue])) || "N/A"}
+        : isCapitalize
+        ? capitalize(text)
+        : text) || "N/A"}
     </Tag>
   );
 

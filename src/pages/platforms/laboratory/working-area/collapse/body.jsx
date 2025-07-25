@@ -9,6 +9,7 @@ export default function Body({
   category,
   source,
   referral,
+  deal,
 }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
   const departmentCode =
@@ -53,6 +54,7 @@ export default function Body({
                     obj={_t || {}}
                     customer={customer}
                     index={`${index + 1}-${i + 1}`}
+                    deal={deal}
                   />
                 );
               });
@@ -64,6 +66,7 @@ export default function Body({
                 obj={_task || {}}
                 customer={customer}
                 index={index + 1}
+                deal={deal}
               />
             );
           })}
