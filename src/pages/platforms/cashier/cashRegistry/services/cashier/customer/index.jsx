@@ -250,6 +250,14 @@ export default function POS() {
                 }`}
                 ref={searchContainerRef}
               >
+                {asOverlay && (
+                  <button
+                    className="cashier-pos-search-close-button"
+                    onClick={() => handleRegister("")}
+                  >
+                    <MDBIcon icon="times" />
+                  </button>
+                )}
                 <Search
                   setPatient={handleCustomer}
                   setRegister={handleRegister}

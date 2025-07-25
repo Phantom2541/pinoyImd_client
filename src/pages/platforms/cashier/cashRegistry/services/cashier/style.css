@@ -761,3 +761,13 @@
     opacity: 1;
   }
 }
+
+.cashier-pos-search-close-button {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 1.4rem;
+}
