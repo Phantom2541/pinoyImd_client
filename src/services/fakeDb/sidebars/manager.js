@@ -1,6 +1,10 @@
 import Dashboard from "../../../pages/platforms/manager/dashboard";
 
-import { Applicants, Tieups } from "../../../pages/platforms/manager/settings";
+import {
+  Applicants,
+  Tieups,
+  Details,
+} from "../../../pages/platforms/manager/settings";
 import { Services, Menus } from "../../../pages/platforms/accounting";
 import UserManual from "../../../pages/platforms/manager/manual/index";
 import PurRequest from "../../../pages/platforms/manager/purchases/request";
@@ -345,7 +349,7 @@ const ManagerSidebar = [
             title: "Branch profile details.",
             path: "/details",
             icon: "address-card",
-            // component: Details,
+            component: Details,
           },
           {
             name: "PhilHealth",
