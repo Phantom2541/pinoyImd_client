@@ -1,10 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import "./style.css";
 import MRI from "./../../../assets/subscriber/MRI.jpg";
+import Tutorial from "../../../components/tutorial";
+
+const instructionSteps = [
+  {
+    title: "Step 1: Tingnan ang Card 1",
+    description: "Ito ang Card 1 na may image at buttons.",
+    target: ".template1-card",
+  },
+  {
+    title: "Step 2: Tingnan ang Card 3",
+    description: "Text-only card para sa announcements or notices.",
+    target: ".template3-card",
+  },
+  {
+    title: "Step 3: Tingnan ang Card 5",
+    description: "Makikita mo rito ang system update message.",
+    target: ".template5-card",
+  },
+  {
+    title: "Step 4: Tingnan ang Card 5",
+    description: "Makikita mo rito ang system update message.",
+    target: ".template4-card",
+  },
+];
 
 export default function Cards() {
+  const [showInstructions, setShowInstructions] = useState(true);
   return (
     <div className="template-cards-container">
+      {showInstructions && (
+        <Tutorial
+          steps={instructionSteps}
+          onFinish={() => setShowInstructions(false)}
+        />
+      )}
       <div className="d-flex flex-column">
         <h5 className="text-center fw-bold">Card 1</h5>
         {/* start copy here  */}

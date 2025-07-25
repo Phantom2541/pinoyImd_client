@@ -117,13 +117,12 @@ export default function Search({
   };
 
   return (
-    <div className=" d-flex align-items-center " style={{ width: "100%" }}>
+    <div className="d-flex align-items-center " style={{ width: "100%" }}>
       <Notification didSearch={match.length > 0} />
       <div className={`searchable-search  ${searchKey && "active"}`}>
         <div className="searchable-search-suggestions">
           {!isLoading ? (
             <>
-              {" "}
               {searchKey && match.length === 0 && (
                 <li onClick={handleRegister} className="text-dark">
                   No services found for "{searchKey}". try another keywords
@@ -138,6 +137,7 @@ export default function Search({
 
                   return (
                     <li
+                      style={{ listStyle: "none" }}
                       key={`menu-suggestion-${index}`}
                       onClick={() => {
                         if (opd) {
@@ -149,11 +149,11 @@ export default function Search({
                         }
                       }}
                     >
-                      <div className="d-flex align-items-left justify-content-between menu-suggestion ">
+                      <div className="d-flex align-items-left justify-content-between menu-suggestion p-2">
                         <span className="text-left  ">
                           {description && (
                             <span className="description text-dark">
-                              {description}
+                              {description.toLowerCase().toUpperCase()}
                             </span>
                           )}
                         </span>
