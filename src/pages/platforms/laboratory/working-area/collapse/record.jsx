@@ -6,7 +6,7 @@ import { SetTASK } from "../../../../../services/redux/slices/diagnostics/labora
 import Swal from "sweetalert2";
 import LIS_STATUS from "../lis-status.jsx";
 
-const Tasks = ({ key, form, obj, index, customer }) => {
+const Tasks = ({ key, form, obj, index, customer, deal }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
@@ -98,6 +98,8 @@ const Tasks = ({ key, form, obj, index, customer }) => {
     signatories = [],
   } = obj;
 
+  console.log("obj", obj);
+
   const _packages =
     packages && typeof packages === "object"
       ? Array.isArray(packages)
@@ -160,7 +162,7 @@ const Tasks = ({ key, form, obj, index, customer }) => {
             className="py-1 px-2 m-0"
             onClick={previewDriveFile}
           >
-            <MDBIcon icon="eye" />
+            <MDBIcon icon="tools" />
           </MDBBtn>
 
           <MDBBtn
