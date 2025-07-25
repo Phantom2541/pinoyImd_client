@@ -38,7 +38,7 @@ export default function Routes() {
     : "";
 
   const renderSidebars = () => {
-    const group = Sidebars[category];
+    const group = Sidebars.diagnostic[category];
     if (!group) return "❌ No such category group";
 
     const sidebar = group[platform?.toLowerCase()?.replace(/\s+/g, "_")];
