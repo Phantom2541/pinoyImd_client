@@ -22,6 +22,7 @@ import { SetPrinting } from "../../../../../../../services/redux/slices/commerce
 import Spinner from "../../../../../../../components/spinner";
 import { ADD_AFFILIATED } from "../../../../../../../services/redux/slices/assets/providers";
 import { ADD_PHYSICIAN } from "../../../../../../../services/redux/slices/assets/persons/physicians";
+import RollingNumber from "../../../../../../../components/rollingNumber";
 
 export default function Summary() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -170,6 +171,7 @@ export default function Summary() {
       await checkout();
     }
   };
+
   return (
     <form onSubmit={handleCheckout}>
       <table className="summary-table">
@@ -183,15 +185,24 @@ export default function Summary() {
         <tbody>
           <tr>
             <td>Gross Amount</td>
-            <td className="table-price">{currency.format(gross)}</td>
+            <td className="table-price">
+              <RollingNumber value={gross} duration={1000} />
+            </td>
+            {/* <td className="table-price">{currency.format(gross)}</td> */}
           </tr>
           <tr>
             <td>Discount</td>
-            <td className="table-price">{currency.format(discount)}</td>
+            <td className="table-price">
+              <RollingNumber value={discount} duration={1000} />
+            </td>
+            {/* <td className="table-price">{currency.format(discount)}</td> */}
           </tr>
           <tr>
             <td>Net Amount</td>
-            <td className="table-price">{currency.format(amount)}</td>
+            <td className="table-price">
+              <RollingNumber value={amount} duration={1000} />
+            </td>
+            {/* <td className="table-price">{currency.format(amount)}</td> */}
           </tr>
           <tr>
             <td>Payment</td>

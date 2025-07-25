@@ -11,7 +11,6 @@ import {
   Ecg,
   Miscellaneous,
 } from "../../../pages/platforms/frontdesk/reports";
-;
 
 import {
   Onboard,
@@ -245,7 +244,7 @@ const frontdesk = [
             name: "Miscellaneous",
             path: "/reports/laboratory/miscellaneous",
             icon: "list",
-          component: Miscellaneous,
+            component: Miscellaneous,
           },
         ],
       },

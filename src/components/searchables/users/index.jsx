@@ -110,10 +110,7 @@ export default function Search({
   };
 
   return (
-    <div
-      className="d-flex align-items-center  "
-      style={{ position: "relative" }}
-    >
+    <div className="d-flex align-items-center" style={{ position: "relative" }}>
       <Notification didSearch={didSearch} />
       <div className={`searchable-search ${didSearch && "active"}`}>
         <div className="searchable-search-suggestions">
