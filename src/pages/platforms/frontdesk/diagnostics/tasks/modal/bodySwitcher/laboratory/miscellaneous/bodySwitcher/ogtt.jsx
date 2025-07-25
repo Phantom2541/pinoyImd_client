@@ -31,6 +31,21 @@ export default function Ogtt({ task, setTask }) {
         onChange={(e) => handleChange("shr", e.target.value)}
         required
       />
+
+      <label htmlFor="ogtt" className="mr-5" style={{ backgroundColor: "red" }}>
+        OGTT
+      </label>
+      <select
+        name="ogtt"
+        id="ogtt"
+        className="mb-0 form-control"
+        onChange={(e) => handleChange("ogtt", e.target.value)}
+      >
+        <option value="0">25mg</option>
+        <option value="1">50mg</option>
+        <option value="2">75mg</option>
+        <option value="3">100mg</option>
+      </select>
     </>
   );
 }

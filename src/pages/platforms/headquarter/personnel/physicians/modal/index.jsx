@@ -10,11 +10,9 @@ import {
 } from "mdbreact";
 import {
   SAVE,
-  UPDATE,
   TOGGLE,
   SETPHYSICIAN,
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
-import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 import { SearchUser } from "../../../../../../components/searchables";
 
@@ -23,6 +21,7 @@ export default function Modal() {
       useSelector(({ physicians }) => physicians),
     { token, activePlatform } = useSelector(({ auth }) => auth),
     [form, setForm] = useState(selected),
+    [user, setUser] = useState({}),
     [showInputFields, setShowInputFields] = useState(false),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -57,14 +56,14 @@ export default function Modal() {
     const { fname, mname, lname } = splitFullName(form.fullName || "");
     console.log("form", form);
 
-    if (form.user) {
+    if (user._id) {
       // Registered physician
       return {
         title: form.title,
         postnominal: form.postnominal,
         suffix: form.suffix,
         branch: activePlatform.branchId,
-        user: form.user,
+        user: user._id,
       };
     } else {
       // Ghost physician
@@ -83,35 +82,6 @@ export default function Modal() {
     }
   };
 
-  const handleUpdate = () => {
-    TOGGLE();
-    const fullData = buildData();
-    if (isEqual(fullData, selected)) {
-      return addToast("No changes found, skipping update.", {
-        appearance: "info",
-      });
-    }
-
-    dispatch(
-      UPDATE({
-        data: { ...fullData, _id: selected._id },
-        token,
-      })
-    );
-  };
-
-  const handleCreate = () => {
-    const fullData = buildData();
-    console.log("fullData", fullData);
-
-    // dispatch(
-    //   SAVE({
-    //     data: fullData,
-    //     token,
-    //   })
-    // ).then(() => dispatch(TOGGLE()));
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -126,8 +96,7 @@ export default function Modal() {
 
     if (willCreate) {
       // Registered physician
-      if (form.user) {
-        console.log("fullData", fullData);
+      if (user._id) {
         dispatch(
           SAVE({
             data: fullData, // contains `user` field
@@ -140,27 +109,21 @@ export default function Modal() {
           dispatch(TOGGLE());
         });
       } else {
-        console.log("fullData", fullData);
-
         // Ghost physician
-        // dispatch(
-        //   SAVE({
-        //     data: fullData, // contains `ghostName` field
-        //     token,
-        //   })
-        // ).then(() => {
-        //   addToast("Ghost physician saved successfully.", {
-        //     appearance: "info",
-        //   });
-        //   dispatch(TOGGLE());
-        // });
+        dispatch(
+          SAVE({
+            data: fullData, // contains `ghostName` field
+            token,
+          })
+        ).then(() => {
+          addToast("Ghost physician saved successfully.", {
+            appearance: "info",
+          });
+          dispatch(TOGGLE());
+        });
       }
       return;
     }
-
-    // Update existing record
-    handleUpdate();
-    handleCreate();
   };
 
   const handleChange = (key, value) => {
@@ -172,14 +135,10 @@ export default function Modal() {
 
   const handleValue = (key) => form?.[key] || "";
   const handlePhysicians = (physician) => {
-    console.log("physician", physician);
-
-    setForm({
-      ...form,
-      user: physician._id,
-    });
+    setUser(physician);
     dispatch(SETPHYSICIAN(physician));
   };
+  console.log("free form", form);
 
   const handleClose = () => dispatch(TOGGLE());
 
