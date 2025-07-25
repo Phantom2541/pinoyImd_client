@@ -15,19 +15,37 @@ import { useSelector } from "react-redux";
 import { Attendances } from "./platforms/hr";
 
 export default function Routes() {
-  const { activePlatform } = useSelector(({ auth }) => auth);
-  const { platform = "Patron" } = activePlatform || {};
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { platform = "Patron" } = activePlatform || {};
+  let category = "diagnostic";
+  const diagnostics = [
+    "diagnostic",
+    "laboratory",
+    "radiology",
+    "pharmacy",
+    "infirmary",
+    "hospital",
+    "rehabilitation",
+  ];
+  if (
+    !diagnostics.includes(activePlatform.branch?.category) &&
+    activePlatform.branch.category
+  ) {
+    category = activePlatform.branch.category.toLowerCase();
+  }
   const platformPrefix = platform
     ? `/${platform.toLowerCase().replace(/\s+/g, "")}`
     : "";
-  // console.log("platfom", platform);
 
   const renderSidebars = () => {
-    const sidebar = Sidebars[platform?.toLowerCase()?.replace(/\s+/g, "_")];
+    const group = Sidebars[category];
+    if (!group) return "❌ No such category group";
 
-    if (!Array.isArray(sidebar)) return "Ooops.. Sidebars must be array";
-
+    const sidebar = group[platform?.toLowerCase()?.replace(/\s+/g, "_")];
+    if (!Array.isArray(sidebar)) return "❌ Sidebar must be array";
     const sideBars = [];
+
+    console.log("Routes sidebar:", sidebar);
 
     sidebar.forEach((element, index) => {
       const { children, component, path = "" } = element;
@@ -53,7 +71,7 @@ export default function Routes() {
       if (children) {
         renderChildren(element, fullPath);
       }
-      // console.log("fullPath Darrel:", fullPath);
+      console.log("fullPath Darrel:", fullPath);
 
       if (!children) {
         sideBars.push(

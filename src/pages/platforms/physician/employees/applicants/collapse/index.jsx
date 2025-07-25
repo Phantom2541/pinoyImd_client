@@ -1,7 +1,6 @@
 // File: staffs/collapse/index.jsx
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import CollapsableHeader from "./header";
 import CollapsableBody from "./body";
 import { MDBCollapse, MDBCardBody } from "mdbreact";
 import { collapse } from "../../../../../../services/utilities";

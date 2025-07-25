@@ -2,10 +2,10 @@ import {
   // Onboard,
   Tasks,
   Reports,
-} from "../../../pages/platforms/frontdesk/diagnostics";
+} from "../../../../pages/platforms/frontdesk/diagnostics";
 
-import { Menus, Services } from "../../../pages/platforms/cashier";
-import Appointments from "../../../pages/platforms/clinical/appointment";
+import { Menus, Services } from "../../../../pages/platforms/cashier";
+import Appointments from "../../../../pages/platforms/clinical/appointment";
 
 const clinical = [
   {

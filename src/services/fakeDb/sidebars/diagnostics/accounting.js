@@ -1,4 +1,4 @@
-import Dashboard from "../../../pages/platforms/accounting/dashboard";
+import Dashboard from "../../../../pages/platforms/accounting/dashboard";
 
 import {
   Vouchers,
@@ -11,8 +11,8 @@ import {
   Payrolls,
   Menus,
   Services,
-} from "../../../pages/platforms/accounting";
-import OrgChart from "../../../pages/platforms/accounting/organizationChart";
+} from "../../../../pages/platforms/accounting";
+import OrgChart from "../../../../pages/platforms/accounting/organizationChart";
 
 const accounting = [
   {
