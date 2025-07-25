@@ -13,20 +13,22 @@ import Contract from "../components/contract";
 
 import { useSelector } from "react-redux";
 import { Attendances } from "./platforms/hr";
-
+const diagnostics = [
+  "diagnostic",
+  "laboratory",
+  "radiology",
+  "pharmacy",
+  "infirmary",
+  "hospital",
+  "rehabilitation",
+];
 export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { platform = "Patron" } = activePlatform || {};
   let category = "diagnostic";
-  const diagnostics = [
-    "diagnostic",
-    "laboratory",
-    "radiology",
-    "pharmacy",
-    "infirmary",
-    "hospital",
-    "rehabilitation",
-  ];
+
+  console.log("Routes activePlatform:", activePlatform);
+
   if (
     !diagnostics.includes(activePlatform.branch?.category) &&
     activePlatform.branch.category
@@ -41,7 +43,7 @@ export default function Routes() {
     const group = Sidebars.diagnostic[category];
     if (!group) return "❌ No such category group";
 
-    const sidebar = group[platform?.toLowerCase()?.replace(/\s+/g, "_")];
+    const sidebar = Sidebars[platform?.toLowerCase()?.replace(/\s+/g, "_")];
     if (!Array.isArray(sidebar)) return "❌ Sidebar must be array";
     const sideBars = [];
 
