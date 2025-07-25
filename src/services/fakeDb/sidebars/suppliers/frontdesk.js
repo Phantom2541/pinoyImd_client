@@ -10,7 +10,7 @@ import {
   Ultrasound,
   Ecg,
   Miscellaneous,
-} from "../../../../pages/platforms/frontdesk/reports";
+} from "../../../pages/platforms/frontdesk/reports";
 
 import {
   Onboard,

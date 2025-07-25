@@ -20,7 +20,6 @@ import { BROWSE } from "../../../../../../../services/redux/slices/assets/person
 import { Policy } from "../../../../../../../services/fakeDb/index.js";
 import { UPLOAD } from "../../../../../../../services/redux/slices/assets/persons/auth.js";
 import Swal from "sweetalert2";
-import { use } from "react";
 
 export default function ApplicationModal({
   visibility,
