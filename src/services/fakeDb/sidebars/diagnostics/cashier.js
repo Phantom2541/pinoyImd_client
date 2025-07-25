@@ -1,4 +1,4 @@
-import Bulletin from "../../../pages/platforms/cashier/bulletin";
+import Bulletin from "../../../../pages/platforms/cashier/bulletin";
 import {
   Cashier,
   Contract,
@@ -20,7 +20,7 @@ import {
   Payments,
   // SOA,
   Onboarding,
-} from "../../../pages/platforms/cashier";
+} from "../../../../pages/platforms/cashier";
 
 const cashier = [
   {
