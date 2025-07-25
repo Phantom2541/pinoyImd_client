@@ -2,11 +2,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { fullName } from "../../../../../services/utilities/index.js";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../services/fakeDb/index.js";
-import { SetTASK } from "../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import {
+  SetTASK,
+  SetWorkArea,
+} from "../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import Swal from "sweetalert2";
 import LIS_STATUS from "../lis-status.jsx";
 
-const Tasks = ({ key, form, obj, index, customer }) => {
+const Tasks = ({ key, form, obj, index, customer, deal }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
@@ -41,54 +44,8 @@ const Tasks = ({ key, form, obj, index, customer }) => {
     );
   };
 
-  const extractDriveFileId = (url) => {
-    try {
-      const regex = /[-\w]{25,}/;
-      const match = url.match(regex);
-      return match ? match[0] : null;
-    } catch (e) {
-      return null;
-    }
-  };
-
-  const previewDriveFile = async () => {
-    const { value: link } = await Swal.fire({
-      title: "Paste Google Drive Link",
-      input: "text",
-      inputLabel: "Google Drive File Link",
-      inputPlaceholder:
-        "e.g. https://drive.google.com/file/d/FILE_ID/view?usp=sharing",
-      showCancelButton: true,
-    });
-
-    if (link) {
-      const fileId = extractDriveFileId(link);
-      if (!fileId) {
-        Swal.fire({
-          icon: "error",
-          title: "Invalid Link",
-          text: "Could not extract File ID. Please check your link.",
-        });
-        return;
-      }
-
-      const previewLink = `https://drive.google.com/file/d/${fileId}/preview`;
-
-      Swal.fire({
-        title: "Google Drive Preview",
-        html: `
-          <iframe
-            src="${previewLink}"
-            width="100%"
-            height="400"
-            frameborder="0"
-            allow="autoplay"
-          ></iframe>
-        `,
-        width: 600,
-        showCloseButton: true,
-      });
-    }
+  const LIS_SENDER = () => {
+    dispatch(SetWorkArea({ ...deal, task: obj, section: form }));
   };
 
   const {
@@ -158,7 +115,7 @@ const Tasks = ({ key, form, obj, index, customer }) => {
             color="dark"
             size="sm"
             className="py-1 px-2 m-0"
-            onClick={previewDriveFile}
+            onClick={LIS_SENDER}
           >
             <MDBIcon icon="tools" />
           </MDBBtn>

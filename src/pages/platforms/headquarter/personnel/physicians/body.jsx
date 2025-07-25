@@ -108,7 +108,7 @@ export default function Body() {
                     <>
                       👻{" "}
                       {String(
-                        properFullname(item.ghostName, true)
+                        properFullname(item?.ghostName, true)
                       ).toUpperCase()}
                     </>
                   )}
@@ -123,34 +123,5 @@ export default function Body() {
         })}
       </tbody>
     </MDBTable>
-    // <div>
-    //   <table>
-    //     <thead>
-    //       <tr>
-    //         <th>Name</th>
-    //         <th>Specialization</th>
-    //         <th>Action</th>
-    //       </tr>
-    //     </thead>
-    //     <tbody>
-    //       {tieups.map((item, index) => (
-    //         <tr key={index}>
-    //           <td>
-    //   <strong>
-    //     {getGenderIcon(item?.user?.isMale)}
-    //     {String(
-    //       properFullname(item?.user?.fullName, true)
-    //     ).toUpperCase()}
-    //   </strong>
-    // </td>
-    // <td>{item?.specialization || "—"}</td>
-    // <td>
-    // <button onClick={() => handleDelete(item)}>Untag</button>
-    //           </td>
-    //         </tr>
-    //       ))}
-    //     </tbody>
-    //   </table>
-    // </div>
   );
 }

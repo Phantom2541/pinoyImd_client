@@ -68,51 +68,53 @@ const Services = ({ isOpen = false, _key, machine }) => {
                 />
               </div>
             </div>
-            <MDBTable bordered small>
-              <thead>
-                <tr>
-                  <th>Services</th>
-                  <th>Code</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {services.length > 0 ? (
-                  services.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.name}</td>
-                      <td>
-                        <EditableField
-                          width="12rem"
-                          isCapitalize={false}
-                          localUpdate
-                          displayTag="span"
-                          fieldData={{ id: item.id, code: item.code }}
-                          onSave={(data) => handleUpdate(data, index)}
-                          keyForValue="code"
-                        />
-                      </td>
-                      <td>
-                        <MDBBtn
-                          size="sm"
-                          color="danger"
-                          rounded
-                          onClick={() => handleDelete(item, index)}
-                        >
-                          <MDBIcon icon="trash" />
-                        </MDBBtn>
+            <div style={{ maxHeight: "20rem", overflowY: "auto" }}>
+              <MDBTable bordered small>
+                <thead>
+                  <tr>
+                    <th>Services</th>
+                    <th>Code</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {services.length > 0 ? (
+                    services.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.name}</td>
+                        <td>
+                          <EditableField
+                            width="12rem"
+                            isCapitalize={false}
+                            localUpdate
+                            displayTag="span"
+                            fieldData={{ id: item.id, code: item.code }}
+                            onSave={(data) => handleUpdate(data, index)}
+                            keyForValue="code"
+                          />
+                        </td>
+                        <td>
+                          <MDBBtn
+                            size="sm"
+                            color="danger"
+                            rounded
+                            onClick={() => handleDelete(item, index)}
+                          >
+                            <MDBIcon icon="trash" />
+                          </MDBBtn>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={3} className="text-center">
+                        No Services Record.
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={3} className="text-center">
-                      No Services Record.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </MDBTable>
+                  )}
+                </tbody>
+              </MDBTable>
+            </div>
           </MDBCollapse>
         </td>
       </tr>

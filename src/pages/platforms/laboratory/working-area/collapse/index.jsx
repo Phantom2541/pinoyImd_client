@@ -37,6 +37,7 @@ export default function DealCollapse() {
                   >
                     <Body
                       _id={_id}
+                      deal={deal}
                       customer={customerId}
                       tasks={diagnostic}
                       category={category}

@@ -15,6 +15,7 @@ import {
   SetHEADS,
   SetByGroup,
   SetByStatus,
+  RECEIVE_A15,
 } from "../../../../services/redux/slices/diagnostics/laboratory/validator";
 import {
   BROWSE,
@@ -28,6 +29,7 @@ import {
 import ResultEntry from "./modal";
 import Table from "./table";
 import LIS_SENDER from "./lis-sender";
+import { socket } from "../../../../services/utilities";
 
 export default function WorkingArea() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -99,6 +101,16 @@ export default function WorkingArea() {
 
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
+
+  useEffect(() => {
+    socket.emit("join_room", "A15");
+    socket.on("A15-RECEIVER", (data) => {
+      dispatch(RECEIVE_A15(data));
+    });
+    return () => {
+      socket.off("A15-RECEIVER");
+    };
+  }, [dispatch]);
 
   return (
     <MDBCard narrow>

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { Sidebars } from "../services/fakeDb";
 
@@ -13,25 +14,42 @@ import Contract from "../components/contract";
 
 import { useSelector } from "react-redux";
 import { Attendances } from "./platforms/hr";
+const diagnostics = [
+  "diagnostic",
+  "laboratory",
+  "radiology",
+  "pharmacy",
+  "infirmary",
+  "hospital",
+  "rehabilitation",
+];
 
+// pag binago ito, dapat pati ang SideNavigation
+// dapat i-update din ang SideNavigation para sa platformPrefix
 export default function Routes() {
-  const { activePlatform } = useSelector(({ auth }) => auth);
-  const { platform = "Patron" } = activePlatform || {};
+  const { activePlatform } = useSelector(({ auth }) => auth),
+    { platform = "Patron" } = activePlatform || {};
+  const [isDiagnostics, setIsDiagnostics] = useState(true);
   const platformPrefix = platform
     ? `/${platform.toLowerCase().replace(/\s+/g, "")}`
     : "";
-  // console.log("platfom", platform);
+  useEffect(() => {
+    if (diagnostics.includes(activePlatform?.branch?.category?.toLowerCase())) {
+      setIsDiagnostics(true);
+    } else {
+      setIsDiagnostics(false);
+    }
+  }, [activePlatform]);
 
   const renderSidebars = () => {
-    const sidebar = Sidebars[platform?.toLowerCase()?.replace(/\s+/g, "_")];
+    const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
+    const sidebar = group[platform?.toLowerCase()?.replace(/\s+/g, "_")];
 
-    if (!Array.isArray(sidebar)) return "Ooops.. Sidebars must be array";
-
+    if (!Array.isArray(sidebar)) return "❌ Sidebar must be array";
     const sideBars = [];
 
     sidebar.forEach((element, index) => {
       const { children, component, path = "" } = element;
-
       const fullPath = `${platformPrefix}${path}`;
       const renderChildren = (c, parentPath = "") => {
         if (!c.children) return;
@@ -53,7 +71,6 @@ export default function Routes() {
       if (children) {
         renderChildren(element, fullPath);
       }
-      // console.log("fullPath Darrel:", fullPath);
 
       if (!children) {
         sideBars.push(
@@ -66,7 +83,6 @@ export default function Routes() {
         );
       }
     });
-
     return sideBars;
   };
 

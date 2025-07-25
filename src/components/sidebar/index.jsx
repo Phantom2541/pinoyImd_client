@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   MDBSideNavLink,
   MDBSideNavCat,
@@ -11,26 +11,43 @@ import {
 import { useSelector } from "react-redux";
 import { Sidebars } from "../../services/fakeDb";
 import {
-  ENDPOINT,
+  // ENDPOINT,
   FailedLogo,
   capitalize,
-  isImageValid,
+  // isImageValid,
 } from "../../services/utilities";
 import "./style.css";
-
+const diagnostics = [
+  "diagnostic",
+  "laboratory",
+  "radiology",
+  "pharmacy",
+  "infirmary",
+  "hospital",
+  "rehabilitation",
+];
 export default function SideNavigation({
   triggerOpening,
   breakWidth,
   onLinkClick,
 }) {
   const [links, setLinks] = useState([]);
-  const [logo, setLogo] = useState(FailedLogo);
-  const [href, setHref] = useState("");
+  // const [logo, setLogo] = useState(FailedLogo);
+  // const [href, setHref] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
+  const [isDiagnostics, setIsDiagnostics] = useState(true);
 
   const { activePlatform, company, isLoading } = useSelector(
     ({ auth }) => auth
   );
+
+  useEffect(() => {
+    if (diagnostics.includes(activePlatform?.branch?.category?.toLowerCase())) {
+      setIsDiagnostics(true);
+    } else {
+      setIsDiagnostics(false);
+    }
+  }, [activePlatform]);
 
   // 🔧 Utility: Filter sidebar by role (recursive)
   const filterSidebarByRole = useCallback((items, role) => {
@@ -93,8 +110,9 @@ export default function SideNavigation({
       }
       return;
     }
+    const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
 
-    const fullSidebar = Sidebars[platformKey] || [];
+    const fullSidebar = group[platformKey] || [];
 
     if (platformKey === "laboratory") {
       const role = activePlatform?.role || "Junior MedTech";
@@ -107,7 +125,7 @@ export default function SideNavigation({
         setLinks(fullSidebar);
       }
     }
-  }, [activePlatform, company, links, filterSidebarByRole]);
+  }, [activePlatform, company, links, filterSidebarByRole, isDiagnostics]);
 
   // 🔁 Recursive nav render
   const renderNavItems = (
@@ -168,7 +186,7 @@ export default function SideNavigation({
         bg="https://mdbootstrap.com/img/Photos/Others/sidenav2.jpg"
         alt="Company Logo"
         mask="strong"
-        href={href}
+        href={"#"}
         fixed
         breakWidth={breakWidth}
         triggerOpening={triggerOpening}
@@ -177,7 +195,7 @@ export default function SideNavigation({
         {/* Header */}
         <div className="text-center mt-2 " style={{ marginBottom: "-10px" }}>
           <img
-            src={logo}
+            src={FailedLogo}
             alt="Company Logo"
             style={{ width: "65px", aspectRatio: "1/1" }}
           />

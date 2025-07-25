@@ -4,7 +4,7 @@ import {
   Imaging,
   Staffs,
   Applicants,
-} from "../../../pages/platforms/physician";
+} from "../../../../pages/platforms/physician";
 // import PatientRecords from "../../../pages/platforms/physician/patientRecords";
 // import MedicalHistory from "../../../pages/platforms/physician/medicalHistory";
 // import Prescription from "../../../pages/platforms/physician/prescription";

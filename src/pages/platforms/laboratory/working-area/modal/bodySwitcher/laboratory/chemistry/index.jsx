@@ -5,13 +5,20 @@ import {
   findReference,
 } from "../../../../../../../../services/utilities";
 import { SetTASK } from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export default function Chemistry() {
   const { task } = useSelector(({ validator }) => validator),
     { collections: services } = useSelector(({ preferences }) => preferences),
+    [packages, setPackages] = useState({}),
     dispatch = useDispatch();
 
-  const { packages = {}, key: mapKey, patient } = task || {};
+  const { key: mapKey, patient } = task || {};
+
+  useEffect(() => {
+    setPackages(task?.packages || []);
+  }, [task.packages]);
   const handleChange = (target) => {
     const { name, value } = target,
       _name = Number(name),

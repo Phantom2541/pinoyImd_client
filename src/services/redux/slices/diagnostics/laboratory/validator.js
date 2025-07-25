@@ -152,6 +152,27 @@ export const reduxSlice = createSlice({
   name: "validator",
   initialState,
   reducers: {
+    RECEIVE_A15: (state, { payload }) => {
+      const index = state.collections.findIndex(
+        (item) => item._id === payload._id
+      );
+      if (index > -1) {
+        const updateCollections = (collections) => {
+          const data = collections[index];
+          collections[index] = {
+            ...data,
+            diagnostic: { ...data.diagnostic, Chemistry: payload },
+          };
+        };
+        if (state.task._id === payload._id && state.task.form === "Chemistry") {
+          state.task = { ...state.task, packages: payload.packages };
+        }
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        updateCollections(state.filteredStatus);
+      }
+    },
     SetVALIDATOR: (state, { payload }) => {
       const form = capitalize(payload.form);
       const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(form)
@@ -429,6 +450,8 @@ export const {
   TOGGLE,
   TOGGLE_WORK_AREA,
   RESET,
+  //this is for LIS  socket to receive realtime result from A15
+  RECEIVE_A15,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

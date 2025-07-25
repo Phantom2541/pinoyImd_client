@@ -4,32 +4,32 @@ import {
   Physicians,
   Records,
   Staffs,
-} from "../../../pages/platforms/hr/index";
+} from "../../../../pages/platforms/hr/index";
 import {
   Equipments,
   Procurments as Procurement,
   Hmo,
-} from "../../../pages/platforms/headquarter/file201";
-import { banner } from "../../../pages/platforms/headquarter/settings/profile";
+} from "../../../../pages/platforms/headquarter/file201";
+import { banner } from "../../../../pages/platforms/headquarter/settings/profile";
 import {
   Outsources,
   Utilities,
   Hotlines,
   Suppliers,
-} from "../../../pages/platforms/cashier";
+} from "../../../../pages/platforms/cashier";
 
-import { Tieups } from "../../../pages/platforms/manager/settings";
+import { Tieups } from "../../../../pages/platforms/manager/settings";
 import {
   Logo,
   Tagline,
   Description,
-} from "../../../pages/platforms/headquarter/settings";
+} from "../../../../pages/platforms/headquarter/settings";
 
-import ProcurmentEquipments from "../../../pages/platforms/procurement/equipments";
-import { Branches } from "../../../pages/platforms/headquarter/humanResources";
-import PatientCategories from "../../../pages/platforms/headquarter/patientCategories";
-import Dashboard from "../../../pages/platforms/headquarter/dashboard";
-import hpWalkthrough from "../../../pages/platforms/headquarter/hpWalkthrough";
+import ProcurmentEquipments from "../../../../pages/platforms/procurement/equipments";
+import { Branches } from "../../../../pages/platforms/headquarter/humanResources";
+import PatientCategories from "../../../../pages/platforms/headquarter/patientCategories";
+import Dashboard from "../../../../pages/platforms/headquarter/dashboard";
+import hpWalkthrough from "../../../../pages/platforms/headquarter/hpWalkthrough";
 
 const headquarter = [
   {

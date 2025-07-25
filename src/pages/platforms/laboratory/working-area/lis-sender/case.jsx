@@ -26,7 +26,9 @@ const Case = ({ cluster, setCluster = () => {} }) => {
       const { packages } = task || {};
       const _services = Array.isArray(packages)
         ? packages
-        : Object.keys(packages);
+        : typeof packages === "object"
+        ? Object.keys(packages)
+        : [packages];
       setCluster(_services);
     }
   }, [show, task, setCluster]);

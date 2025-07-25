@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
-  TIEUPS,
   BROWSE,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
-import Search from "../../../../../components/searchables/users";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),

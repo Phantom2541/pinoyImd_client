@@ -5,7 +5,7 @@ export default function Ogtt({ task, fontSize }) {
   const { results } = task;
   return (
     <div style={{ fontSize: `${fontSize}rem` }}>
-      <h3 className="text-center">ORAL GLOUCOSE TOLERANCE TEST</h3>
+      <h3 className="text-center">ORAL GLUCOSE TOLERANCE TEST</h3>
       <MDBTable
         hover
         striped

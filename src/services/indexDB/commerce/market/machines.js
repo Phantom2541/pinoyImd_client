@@ -1,18 +1,10 @@
-import store from "../../../redux/store";
-
 const DB_NAME = "Services";
 const DB_VERSION = 1;
-
-const state = store.getState();
-const activePlatform = state.auth.activePlatform;
 
 // 🔧 Initialize Database (with dynamic store)
 function openDB(storeName) {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(
-      `${DB_NAME}-${JSON.parse(activePlatform)?.branchId}`,
-      DB_VERSION
-    );
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onupgradeneeded = function (event) {
       const db = event.target.result;
