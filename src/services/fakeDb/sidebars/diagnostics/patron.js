@@ -1,8 +1,11 @@
-import { Apply, Documents } from "../../../pages/platforms/patron/application";
-import Dashboard from "../../../pages/platforms/patron/dashboard";
-import { Diagnostics } from "../../../pages/platforms/patron/emr";
-import cardHolder from "../../../pages/platforms/patron/emr/cardHolder";
-import onboardingStatus from "../../../pages/platforms/patron/emr/onboardingStatus";
+import {
+  Apply,
+  Documents,
+} from "../../../../pages/platforms/patron/application";
+import Dashboard from "../../../../pages/platforms/patron/dashboard";
+import { Diagnostics } from "../../../../pages/platforms/patron/emr";
+import cardHolder from "../../../../pages/platforms/patron/emr/cardHolder";
+import onboardingStatus from "../../../../pages/platforms/patron/emr/onboardingStatus";
 // import RequestQuery from "../../../pages/platforms/patron/diagnostics/RequestQuery";
 // import CheckupRecord from "../../../pages/platforms/patron/emr/CheckupRecord";
 // import Appointments from "../../../pages/platforms/patron/appointments/Appointments";

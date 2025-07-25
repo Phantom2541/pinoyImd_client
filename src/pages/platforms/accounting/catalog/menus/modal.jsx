@@ -47,7 +47,7 @@ const _form = {
   sc: 0,
   ssc: 0,
   vp: 0,
-  hasDiscount: true,
+  hasDiscount: false,
   isProfile: false,
   onPromo: false,
   hasReseco: false,
@@ -146,6 +146,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
     willCreate ? form[key] : form[key] || selected?.[key] || "";
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
+
   return (
     <MDBModal
       size="lg"

@@ -1,12 +1,13 @@
 import { useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
-import TableLoading from "../../../../../components/tableLoading";
+import TableLoading from "../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./body";
 import Footer from "./footer";
 import Modal from "./modal";
+import ServicesModal from "./services/modal";
 
-const Index = () => {
+const Machines = () => {
   const { isLoading } = useSelector(({ machines }) => machines);
 
   return (
@@ -19,8 +20,9 @@ const Index = () => {
         </MDBCard>
       </MDBAnimation>
       <Modal />
+      <ServicesModal />
     </>
   );
 };
 
-export default Index;
+export default Machines;

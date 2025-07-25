@@ -1,15 +1,17 @@
-import Dashboard from "../../../pages/platforms/manager/dashboard";
+import Dashboard from "../../../../pages/platforms/manager/dashboard/index.jsx";
 
 import {
   Applicants,
   Tieups,
-  Details,
-} from "../../../pages/platforms/manager/settings";
-import { Services, Menus } from "../../../pages/platforms/accounting";
-import UserManual from "../../../pages/platforms/manager/manual/index";
-import PurRequest from "../../../pages/platforms/manager/purchases/request";
-import Banners from "../../../pages/platforms/manager/settings/banner";
-import TatServices from "../../../pages/platforms/manager/commerce/tatServices";
+} from "../../../../pages/platforms/manager/settings/index.jsx";
+import {
+  Services,
+  Menus,
+} from "../../../../pages/platforms/accounting/index.js";
+import UserManual from "../../../../pages/platforms/manager/manual/index";
+import PurRequest from "../../../../pages/platforms/manager/purchases/request/index.jsx";
+import Banners from "../../../../pages/platforms/manager/settings/banner/index.jsx";
+import TatServices from "../../../../pages/platforms/manager/commerce/tatServices/index.jsx";
 
 import {
   Employees,
@@ -17,16 +19,16 @@ import {
   Equipments,
   Physicians,
   Heads,
-} from "../../../pages/platforms/hr/index.js";
-import { Procurments } from "../../../pages/platforms/procurement";
+} from "../../../../pages/platforms/hr/index.js";
+import { Procurments } from "../../../../pages/platforms/procurement/index.js";
 
-import stockHolder from "../../../pages/platforms/hr/personnel/stockHolder";
-import { Quest } from "../../../pages/platforms/laboratory/staffManagement";
+import stockHolder from "../../../../pages/platforms/hr/personnel/stockHolder/index.jsx";
+import { Quest } from "../../../../pages/platforms/laboratory/staffManagement/index.js";
 
 import {
   ProductGenerics,
   Products,
-} from "../../../pages/platforms/manager/commerce/merchandise";
+} from "../../../../pages/platforms/manager/commerce/merchandise/index.jsx";
 
 import {
   Vouchers,
@@ -40,9 +42,9 @@ import {
   Remittances,
   Sales,
   ExperimentalLedger,
-} from "../../../pages/platforms/accounting";
+} from "../../../../pages/platforms/accounting/index.js";
 
-import { Schedule } from "../../../pages/platforms/hr";
+import { Schedule } from "../../../../pages/platforms/hr/index.js";
 
 import {
   Philhealth,
@@ -50,9 +52,9 @@ import {
   Utilities,
   Hotlines,
   Suppliers,
-} from "../../../pages/platforms/cashier";
-import LIS from "../../../pages/platforms/manager/settings/lis";
-import QrCodePage from "../../../pages/platforms/manager/settings/qrCode";
+} from "../../../../pages/platforms/cashier/index.js";
+import LIS from "../../../../pages/platforms/manager/settings/lis/index.jsx";
+import QrCodePage from "../../../../pages/platforms/manager/settings/qrCode/index.jsx";
 
 const ManagerSidebar = [
   {
@@ -349,7 +351,7 @@ const ManagerSidebar = [
             title: "Branch profile details.",
             path: "/details",
             icon: "address-card",
-            component: Details,
+            // component: Details,
           },
           {
             name: "PhilHealth",
