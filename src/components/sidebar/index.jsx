@@ -87,14 +87,14 @@ export default function SideNavigation({
     const platformKey = normalizePlatform(activePlatform?.platform);
 
     if (!platformKey || platformKey === "patron") {
-      const newLinks = Sidebars.diagnostic["patron"] || [];
+      const newLinks = Sidebars["patron"] || [];
       if (JSON.stringify(links) !== JSON.stringify(newLinks)) {
         setLinks(newLinks);
       }
       return;
     }
 
-    const fullSidebar = Sidebars.diagnostic[platformKey] || [];
+    const fullSidebar = Sidebars[platformKey] || [];
 
     if (platformKey === "laboratory") {
       const role = activePlatform?.role || "Junior MedTech";
