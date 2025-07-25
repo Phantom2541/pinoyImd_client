@@ -1,10 +1,11 @@
 import Dashboard from "../../../../pages/platforms/manager/dashboard/index.jsx";
 
 import {
+  Details,
   Applicants,
   Tieups,
-  Details,
-} from "../../../pages/platforms/manager/settings";
+  Banner,
+} from "../../../../pages/platforms/manager/index.js";
 // } from "../../../../pages/platforms/manager/settings/index.jsx";
 import {
   Services,
