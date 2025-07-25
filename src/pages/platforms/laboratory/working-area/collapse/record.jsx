@@ -6,7 +6,7 @@ import { SetTASK } from "../../../../../services/redux/slices/diagnostics/labora
 import Swal from "sweetalert2";
 import LIS_STATUS from "../lis-status.jsx";
 
-const Tasks = ({ key, form, obj, index, customer }) => {
+const Tasks = ({ key, form, obj, index, customer, deal }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
     dispatch = useDispatch();
@@ -97,6 +97,8 @@ const Tasks = ({ key, form, obj, index, customer }) => {
     remarks = "",
     signatories = [],
   } = obj;
+
+  console.log("obj", obj);
 
   const _packages =
     packages && typeof packages === "object"
