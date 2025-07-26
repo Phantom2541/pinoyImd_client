@@ -9,7 +9,7 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { useSelector } from "react-redux";
-import { Sidebars } from "../../services/fakeDb";
+import { Policy, Sidebars } from "../../services/fakeDb";
 import {
   // ENDPOINT,
   FailedLogo,
@@ -57,6 +57,19 @@ export default function SideNavigation({
         ...item,
         children: item.children
           ? filterSidebarByRole(item.children, role)
+          : undefined,
+      }));
+  }, []);
+  // 🔧 Utility: Filter sidebar by role (recursive)
+  const filterSidebarByDepartment = useCallback((items, department) => {
+    return items
+      .filter(
+        (item) => !item.allowedFor || item.allowedFor.includes(department)
+      )
+      .map((item) => ({
+        ...item,
+        children: item.children
+          ? filterSidebarByDepartment(item.children, department)
           : undefined,
       }));
   }, []);
@@ -114,12 +127,15 @@ export default function SideNavigation({
 
     const fullSidebar = group[platformKey] || [];
 
-    console.log("fullSidebar", group);
-    console.log("Sidebars", Sidebars);
-
     if (platformKey === "laboratory") {
-      const role = activePlatform?.role || "Junior MedTech";
+      const role = activePlatform?.role;
       const filtered = filterSidebarByRole(fullSidebar, role);
+      if (JSON.stringify(links) !== JSON.stringify(filtered)) {
+        setLinks(filtered);
+      }
+    } else if (platformKey === "frontdesk") {
+      const department = Policy.getDepartment(activePlatform?.position);
+      const filtered = filterSidebarByDepartment(fullSidebar, department);
       if (JSON.stringify(links) !== JSON.stringify(filtered)) {
         setLinks(filtered);
       }
@@ -128,9 +144,14 @@ export default function SideNavigation({
         setLinks(fullSidebar);
       }
     }
-  }, [activePlatform, company, links, filterSidebarByRole, isDiagnostics]);
-
-  console.log("links", links);
+  }, [
+    activePlatform,
+    company,
+    links,
+    filterSidebarByRole,
+    filterSidebarByDepartment,
+    isDiagnostics,
+  ]);
 
   // 🔁 Recursive nav render
   const renderNavItems = (

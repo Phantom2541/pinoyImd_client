@@ -191,6 +191,11 @@
     "code": "RAD",
     "positions": [
       {
+        "id": 33,
+        "name": "Frontdesk",
+        "display_name": "Frontdesk"
+      },
+      {
         "id": 44,
         "name": "Ass Tech",
         "display_name": "Assistant Technician"
