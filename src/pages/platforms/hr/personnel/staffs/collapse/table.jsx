@@ -70,7 +70,6 @@ export default function CollapseTable({
   const [editField, setEditField] = useState(null);
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState({});
-  const [filteredPositions, setFilteredPositions] = useState([]);
   const [dep, setDep] = useState("");
   const { access = [] } = staff || {};
   const toggle = () => setShow(!show);
@@ -84,8 +83,6 @@ export default function CollapseTable({
   } = useForm();
 
   const resetData = useCallback(() => {
-    const deptCode = employment?.department;
-    setFilteredPositions(Policy.getPositions(deptCode));
     setDep(Policy.getDepartment(employment?.designation));
     reset({
       employmentHor: employment?.hos || 0,
@@ -147,17 +144,18 @@ export default function CollapseTable({
   };
 
   const handleDepartmentChange = (e) => {
-    const selectedDeptCode = e.target.value;
     setDep(Policy.getDepname(e.target.value));
-    setFilteredPositions(Policy.getPositionsByDepartmentName(selectedDeptCode));
   };
-  const department = watch("employmentDepartment");
+  const department =
+    watch("employmentDepartment") ||
+    Policy.getDepartment(employment?.designation);
   const isHonorarium = employment?.soe === "Honorarium";
+
   return (
     <>
       <MDBRow>
         {/* Employment */}
-        <MDBCol md={4}>
+        <MDBCol md={"4"}>
           <h5>Employment</h5>
           <hr />
           <EditableField
@@ -223,9 +221,7 @@ export default function CollapseTable({
               className={`form-control form-control-sm ${
                 errors.employmentDepartment ? "is-invalid" : ""
               }`}
-              value={
-                department || Policy.getDepartment(employment?.designation)
-              }
+              value={department}
               onChange={(e) => {
                 register("employmentDepartment").onChange(e);
                 handleDepartmentChange(e);
@@ -260,12 +256,11 @@ export default function CollapseTable({
               }`}
             >
               <option value="">-- Select Designation --</option>
-              {filteredPositions &&
-                filteredPositions?.map((pos) => (
-                  <option key={pos.id} value={pos.id}>
-                    {pos.display_name}
-                  </option>
-                ))}
+              {Policy.getPositionsByDepartmentName(department).map((pos) => (
+                <option key={pos.id} value={pos.id}>
+                  {pos.display_name}
+                </option>
+              ))}
             </select>
           </EditableField>
 
@@ -300,7 +295,7 @@ export default function CollapseTable({
         </MDBCol>
 
         {/* Rate */}
-        <MDBCol md={!isHonorarium ? 3 : 4}>
+        <MDBCol md={!isHonorarium ? "3" : "4"}>
           <h5>Rate</h5>
           <hr />
           {[
@@ -352,7 +347,7 @@ export default function CollapseTable({
 
         {/* Contributions */}
         {!isHonorarium && (
-          <MDBCol md={2}>
+          <MDBCol md={"2"}>
             <h5>Contribution</h5>
             <hr />
             {[
@@ -394,7 +389,7 @@ export default function CollapseTable({
         )}
 
         {/* Access */}
-        <MDBCol md={!isHonorarium ? 3 : 4}>
+        <MDBCol md={!isHonorarium ? "3" : "4"}>
           <div className="d-flex  align-items-center">
             <h5 className="mb-0">Access</h5>
             {access?.length > 0 && (
