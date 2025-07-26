@@ -19,34 +19,34 @@ import { SetActivePlatform } from "../../../../../../services/redux/slices/asset
 
 export default function Modal() {
   const {
-      showModal,
-      selected,
-      willCreate,
-      isLoading,
-      department,
-      collections,
-    } = useSelector(({ branches }) => branches),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
-    [form, setForm] = useState(selected),
-    [existingSection, setExistingSection] = useState([]),
-    { addToast } = useToasts(),
-    dispatch = useDispatch();
+    showModal,
+    selected,
+    willCreate,
+    isLoading,
+    department,
+    collections,
+  } = useSelector(({ branches }) => branches);
+
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+
+  const [form, setForm] = useState(selected);
+  const [existingSection, setExistingSection] = useState([]);
+  const { addToast } = useToasts();
+  const dispatch = useDispatch();
+
+  const { branch } = activePlatform;
 
   useEffect(() => {
-    // Extract only the used sections (by name, case-insensitive)
     const used = collections.map((item) =>
       (item.section || "").toLowerCase().trim()
     );
-    setExistingSection(used); // Now it's an array of strings
+    setExistingSection(used);
   }, [collections, showModal]);
-
-  const { branch } = activePlatform;
 
   useEffect(() => {
     if (selected) setForm(selected);
   }, [selected]);
 
-  // Handle update function
   const handleUpdate = () => {
     if (isEqual(form, selected)) {
       return addToast("No changes found, skipping update.", {
@@ -65,27 +65,29 @@ export default function Modal() {
         token,
       })
     ).then(() => {
-      dispatch(SetActivePlatform({ data: updatedTat })); // ✅ send full tat array
+      dispatch(
+        SetActivePlatform({ data: { tat: updatedTat }, isBranch: true })
+      ); // ✅ Proper update
       dispatch(TOGGLE());
     });
   };
 
-  // Handle create function
   const handleCreate = () => {
     const { tat = [] } = branch;
     const _tat = [...tat];
     _tat.unshift(form);
+
     dispatch(
       UPDATE_TAT({
         data: { _id: branch._id, tat: _tat },
         token,
       })
     ).then(() => {
-      dispatch(SetActivePlatform({ data: _tat }));
+      dispatch(SetActivePlatform({ data: { tat: _tat }, isBranch: true })); // ✅ Proper update
       dispatch(TOGGLE());
-    }); // Close modal after successful save
+    });
   };
-  // Handle form submit
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -98,7 +100,6 @@ export default function Modal() {
     handleUpdate(finalForm);
   };
 
-  // Handle change sa inputs
   const handleChange = (key, value) => {
     setForm({
       ...form,
@@ -106,13 +107,9 @@ export default function Modal() {
     });
   };
 
-  // Fix: Return correct form value
   const handleValue = (key) => form[key] || "";
 
-  // Handle modal close
   const handleClose = () => dispatch(TOGGLE());
-
-  // [...filtered].map(({ section }) => section)
 
   return (
     <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="sm">
@@ -174,7 +171,6 @@ export default function Modal() {
               />
             </div>
           )}
-          {/* Submit button */}
           <div className="text-center mb-1-half">
             <MDBBtn
               type="submit"

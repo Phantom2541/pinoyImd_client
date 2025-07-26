@@ -104,7 +104,7 @@ export default function SideNavigation({
     const platformKey = normalizePlatform(activePlatform?.platform);
 
     if (!platformKey || platformKey === "patron") {
-      const newLinks = Sidebars["patron"] || [];
+      const newLinks = Sidebars.diagnostics["patron"] || [];
       if (JSON.stringify(links) !== JSON.stringify(newLinks)) {
         setLinks(newLinks);
       }

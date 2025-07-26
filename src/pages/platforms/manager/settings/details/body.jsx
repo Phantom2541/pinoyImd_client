@@ -13,9 +13,10 @@ import { useToasts } from "react-toast-notifications";
 import { ENDPOINT, FailedLogo } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import { RESET } from "../../../../../services/redux/slices/assets/persons/auth";
-import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
+import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
 import Swal from "sweetalert2";
+import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
 
 export default function BranchDescription() {
   const { addToast } = useToasts();
@@ -31,7 +32,7 @@ export default function BranchDescription() {
 
   const [branchName, setBranchName] = useState(branch?.name || "");
   const [contacts, setContacts] = useState(
-    branch?.contacts || { email: "", mobile: "" }
+    branch?.contacts || { email: "", mobile: "", person: "" }
   );
   const [address, setAddress] = useState(
     branch?.address || {
@@ -80,6 +81,20 @@ export default function BranchDescription() {
         token,
       })
     ).then(() => {
+      const updatedBranch = {
+        ...branch,
+        name: branchName,
+        contacts,
+        address,
+      };
+
+      dispatch(
+        SetActivePlatform({
+          data: updatedBranch,
+          isBranch: true,
+        })
+      );
+
       setIsLoading(false);
       Swal.fire({
         title: "Success!",
@@ -115,7 +130,7 @@ export default function BranchDescription() {
             />
 
             <MDBRow>
-              <MDBCol md="6">
+              <MDBCol md="4">
                 <MDBInput
                   type="text"
                   label="Email"
@@ -126,7 +141,7 @@ export default function BranchDescription() {
                   required
                 />
               </MDBCol>
-              <MDBCol md="6">
+              <MDBCol md="4">
                 <MDBInput
                   type="text"
                   label="Phone Number"
@@ -135,6 +150,16 @@ export default function BranchDescription() {
                     setContacts({ ...contacts, mobile: target.value })
                   }
                   required
+                />
+              </MDBCol>
+              <MDBCol md="4">
+                <MDBInput
+                  type="text"
+                  label="Contact Person"
+                  value={contacts.person}
+                  onChange={({ target }) =>
+                    setContacts({ ...contacts, person: target.value })
+                  }
                 />
               </MDBCol>
             </MDBRow>
