@@ -31,34 +31,13 @@ const PrimaryFooter = ({ deal }) => {
     window.open(
       "/printout/request/form",
       "RequestForm",
-      "top=100px,left=100px,width=500px,height=750px"
+      "top=100px,left=100px,width=400px,height=750px"
     );
-  };
-
-  const handleReWrite = async () => {
-    const patients = ["003 ARNOLD GANIA	SP CHOLESTEROL	SER "];
-    try {
-      const response = await axiosMiddleware.sendToA15(patients, token);
-      console.log("✅ Response from middleware:", response);
-      // You can use: response.success, response.payload, etc.
-    } catch (err) {
-      console.error("❌ Failed to send to A15:", err.message);
-    }
   };
 
   return (
     <>
       <MDBBtnGroup className="sales-card-footer w-100 d-flex flex-row">
-        <MDBBtn
-          type="button"
-          onClick={handleReWrite}
-          className="m-0 "
-          size="sm"
-          title="Send to middleware"
-          color="primary"
-        >
-          <MDBIcon fas icon="arrow-right" />
-        </MDBBtn>
         <MDBBtn
           type="button"
           onClick={() => preAnalytical(deal)}

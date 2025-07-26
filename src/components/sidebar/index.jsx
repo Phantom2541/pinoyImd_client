@@ -114,6 +114,9 @@ export default function SideNavigation({
 
     const fullSidebar = group[platformKey] || [];
 
+    console.log("fullSidebar", group);
+    console.log("Sidebars", Sidebars);
+
     if (platformKey === "laboratory") {
       const role = activePlatform?.role || "Junior MedTech";
       const filtered = filterSidebarByRole(fullSidebar, role);
@@ -126,6 +129,8 @@ export default function SideNavigation({
       }
     }
   }, [activePlatform, company, links, filterSidebarByRole, isDiagnostics]);
+
+  console.log("links", links);
 
   // 🔁 Recursive nav render
   const renderNavItems = (
