@@ -24,8 +24,8 @@ import {
   Assurance,
   Controls,
   Temperature,
-} from "../../../../pages/platforms/diagnostics/management";
-import Sendouts from "../../../../pages/platforms/frontdesk/diagnostics/sendouts";
+} from "../../../../pages/platforms/laboratory/management";
+import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
 import WorkingArea from "../../../../pages/platforms/laboratory/working-area";
 import Machines from "../../../../pages/platforms/laboratory/machines";
 // import ClinicalMicroscopy from "../../../pages/platforms/laboratory/workingArea/clinicalMicroscopy";

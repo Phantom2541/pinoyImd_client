@@ -4,7 +4,7 @@ import {
   Onboard,
   Tasks,
   Reports,
-} from "../../../../pages/platforms/frontdesk/diagnostics";
+} from "../../../../pages/platforms/laboratory/diagnostics";
 
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 import Products from "../../../../pages/platforms/frontdesk/market/products";
@@ -17,7 +17,7 @@ import { Billings } from "../../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../../pages/platforms/cashier";
 import { Status } from "../../../../pages/platforms/frontdesk";
 
-import Sendouts from "../../../../pages/platforms/frontdesk/diagnostics/sendouts";
+import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
 import {
   ImageMagnifier,
   ImageDragAndDrop,

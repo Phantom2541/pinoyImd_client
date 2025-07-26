@@ -16,7 +16,7 @@ import {
   Onboard,
   Tasks,
   Reports,
-} from "../../../../pages/platforms/frontdesk/diagnostics";
+} from "../../../../pages/platforms/laboratory/diagnostics";
 
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 import Products from "../../../../pages/platforms/frontdesk/market/products";
@@ -42,7 +42,7 @@ import {
   // QrCodePage,
   HMOCapture,
 } from "../../../../pages/templates";
-import Sendouts from "../../../../pages/platforms/frontdesk/diagnostics/sendouts";
+import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
 import {
   ImageMagnifier,
   ImageDragAndDrop,
