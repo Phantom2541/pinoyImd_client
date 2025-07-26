@@ -14,6 +14,7 @@ import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons
 export default function Platforms() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
     [access, setAccess] = useState([]),
+    [isOpen, setIsOpen] = useState(false),
     history = useHistory(),
     dispatch = useDispatch();
   // const navigate = useNavigate();
@@ -58,9 +59,14 @@ export default function Platforms() {
     // window.location.href = redirectURL;
   };
   return (
-    <MDBDropdown>
+    <MDBDropdown toggle={() => console.log("dropdown")} className="sample">
       {access?.length > 1 && (
-        <MDBDropdownToggle nav caret>
+        <MDBDropdownToggle
+          nav
+          caret
+          id="platforms-dropdown"
+          onClick={() => console.log(!isOpen)}
+        >
           <MDBIcon icon="network-wired" />
           &nbsp;
           <div className="d-none d-md-inline">
@@ -68,7 +74,7 @@ export default function Platforms() {
           </div>
         </MDBDropdownToggle>
       )}
-      <MDBDropdownMenu right>
+      <MDBDropdownMenu right id="platforms-dropdown-menu" isOpen={true}>
         {access?.map((platform, index) => (
           <MDBDropdownItem
             key={`platform-${index}`}

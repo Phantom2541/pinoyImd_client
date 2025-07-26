@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBTable } from "mdbreact";
 import { Markup } from "interweave";
 import { Cellcount } from "../../../../../../services/fakeDb";
@@ -65,7 +64,10 @@ export default function CellCount({ cc, isMale, style, apc }) {
           <td style={style} className="py-0">
             <span className="ml-2">APC</span>
           </td>
-          <td style={style} className="py-0 fw-bold text-center">
+          <td
+            style={{ ...style, color: apc < 150 ? "blue" : apc > 450 && "red" }}
+            className="py-0 fw-bold text-center"
+          >
             {apc}
           </td>
           <td style={style} className="py-0">

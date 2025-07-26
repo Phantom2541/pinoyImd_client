@@ -2,29 +2,7 @@ import React, { useState } from "react";
 import "./style.css";
 import MRI from "./../../../assets/subscriber/MRI.jpg";
 import Tutorial from "../../../components/tutorial";
-
-const instructionSteps = [
-  {
-    title: "Step 1: Tingnan ang Card 1",
-    description: "Ito ang Card 1 na may image at buttons.",
-    target: ".template1-card",
-  },
-  {
-    title: "Step 2: Tingnan ang Card 3",
-    description: "Text-only card para sa announcements or notices.",
-    target: ".template3-card",
-  },
-  {
-    title: "Step 3: Tingnan ang Card 5",
-    description: "Makikita mo rito ang system update message.",
-    target: ".template5-card",
-  },
-  {
-    title: "Step 4: Tingnan ang Card 5",
-    description: "Makikita mo rito ang system update message.",
-    target: ".template4-card",
-  },
-];
+import { instructionSteps } from "./instruction";
 
 export default function Cards() {
   const [showInstructions, setShowInstructions] = useState(true);

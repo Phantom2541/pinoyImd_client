@@ -36,7 +36,6 @@ export default function SideNavigation({
   // const [href, setHref] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
   const [isDiagnostics, setIsDiagnostics] = useState(true);
-
   const { activePlatform, company, isLoading } = useSelector(
     ({ auth }) => auth
   );
@@ -194,6 +193,7 @@ export default function SideNavigation({
           topLevel
           onClick={onLinkClick}
           style={indentStyle}
+          id="sidebar-link"
           title={item.title}
         >
           <MDBIcon icon={item.icon} className="mr-2" />
@@ -202,6 +202,10 @@ export default function SideNavigation({
       );
     });
   };
+
+  useEffect(() => {
+    console.log("running");
+  }, []);
 
   return (
     <div className="white-skin no-print">

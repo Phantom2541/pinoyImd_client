@@ -1,8 +1,6 @@
 import status from "./status";
 
 const getValueByKey = (abbr, key) => {
-  console.log("getValueByKey", abbr, key);
-
   if (!abbr) {
     console.error("No abbr provided");
     return "";

@@ -6,7 +6,7 @@ body.instruction-mode {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 1000;
+  z-index: 1000000;
   background-color: #4caf50;
   color: white;
   border: none;
@@ -19,10 +19,9 @@ body.instruction-mode {
 /* ✅ Animated highlight (non-blocking) */
 .highlight-box {
   position: absolute;
-  z-index: 1001;
+  z-index: 1000001;
   pointer-events: none; /* allow underlying clicks */
   border: 3px solid #4caf50;
-  /* border-radius: 8px; */
   box-shadow: 0 0 20px rgba(76, 175, 80, 0.7);
   transition: all 0.3s ease;
   background: transparent;
@@ -37,27 +36,52 @@ body.instruction-mode {
   width: 320px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   pointer-events: auto;
-  z-index: 1002;
+  z-index: 1000002;
   transition: top 0.3s ease, left 0.3s ease;
 }
 
 .instruction-box h3 {
-  margin: 0 0 8px;
   font-size: 18px;
+  font-weight: 600;
 }
 
-.instruction-box p {
-  margin: 0 0 12px;
+.instruction-description {
   font-size: 14px;
+  font-weight: 400;
 }
 
 .instruction-buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.instruction-btnNBF,
+.instruction-btnCloseSkip {
+  display: flex;
   gap: 8px;
 }
 
-.instruction-buttons button {
+.instruction-btnSkip,
+.instruction-btnClose {
+  color: #4caf50;
+  background-color: transparent;
+  border: none;
+  padding: 3px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.5s ease;
+}
+
+.instruction-btnSkip:hover,
+.instruction-btnClose:hover {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.instruction-btnNext,
+.instruction-btnBack,
+.instruction-btnFinish {
   background-color: #4caf50;
   color: white;
   border: none;
@@ -76,7 +100,7 @@ body.instruction-mode {
 .tutorial-overlay .overlay {
   position: fixed;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 1000;
+  z-index: 1000000;
   pointer-events: auto;
 }
 
@@ -114,4 +138,20 @@ body.instruction-mode {
 
 .tutorial-wrapper.hide {
   opacity: 1;
+}
+
+.instructor-video-floating {
+  z-index: 1000002;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+  transition: top 0.3s ease, left 0.3s ease;
+}
+
+.instructor-video-floating.left {
+  transform: translateX(0);
+}
+
+.instructor-video-floating.right {
+  transform: translateX(0);
 }
