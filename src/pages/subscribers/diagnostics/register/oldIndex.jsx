@@ -18,8 +18,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   CUSTOMALERT,
   REGISTER,
-} from "../../../services/redux/slices/assets/persons/users";
-import { Suffixes } from "../../../services/fakeDb";
+} from "../../../../services/redux/slices/assets/persons/users";
+import { Suffixes } from "../../../../services/fakeDb";
 import HOMEIMG from "./../../../assets/homeImg.jpg";
 
 export default function Register() {

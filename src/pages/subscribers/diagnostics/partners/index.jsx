@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
-import { HMO } from "../../../services/fakeDb";
+import { HMO } from "../../../../services/fakeDb";
 
 export default function Partners() {
   const [showAll, setShowAll] = useState(false);

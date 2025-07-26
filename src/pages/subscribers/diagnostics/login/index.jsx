@@ -12,8 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   LOGIN,
   RESET,
-} from "../../../services/redux/slices/assets/persons/auth";
-import { Logo } from "../../../services/utilities";
+} from "../../../../services/redux/slices/assets/persons/auth";
+import { Logo } from "../../../../services/utilities";
 
 export default function Login({ show, toggle = null }) {
   const {

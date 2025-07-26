@@ -1,4 +1,4 @@
-import LOGO from "../../../assets/iMD.png";
+import LOGO from "../../../../assets/iMD.png";
 import "./style.css";
 const Loading = () => {
   return (

@@ -7,9 +7,9 @@ import {
   billingAddress,
   ENDPOINT,
   fullName,
-} from "../../../services/utilities";
-import { Quotes } from "../../../services/fakeDb";
-import DEFAULT from "../../../assets/iMD.png";
+} from "../../../../services/utilities";
+import { Quotes } from "../../../../services/fakeDb";
+import DEFAULT from "../../../../assets/iMD.png";
 import { MDBAnimation } from "mdbreact";
 
 export default function Doctors() {

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
-import { COMPANY } from "../../../services/redux/slices/assets/persons/personnels";
-import { ENDPOINT } from "../../../services/utilities";
+import { COMPANY } from "../../../../services/redux/slices/assets/persons/personnels";
+import { ENDPOINT } from "../../../../services/utilities";
 
 export default function Employees({ match }) {
   const DEFAULT = `${process.env.PUBLIC_URL}/assets/images/landing/pioneers/default.jpg`;
