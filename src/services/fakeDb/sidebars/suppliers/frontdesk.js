@@ -34,11 +34,11 @@ const frontdesk = [
     component: Dashboard,
   },
   {
-    name: "Diagnostics",
-    path: "/diagnostics",
+    name: "Logistics ",
+    path: "/logistics ",
     icon: "cogs",
     title:
-      "Manage patient diagnostics – onboarding, task queue, tracking, and sendouts.",
+      "Manage logistics  – onboarding, task queue, tracking, and sendouts.",
     children: [
       {
         name: "Onboarding",
@@ -48,18 +48,26 @@ const frontdesk = [
         component: Onboard,
       },
       {
-        name: "Tasks",
-        path: "/tasks",
+        name: "Delivery",
+        path: "/delivery",
         icon: "clipboard-list",
         title: "View and manage pending diagnostic tasks for patients.",
         component: Tasks,
       },
       {
-        name: "Tracker",
-        path: "/reports",
+        name: "Distribution",
+        path: "/distribution",
         icon: "file-alt",
         title: "Monitor the progress and reports of diagnostics performed.",
         component: Reports,
+      },
+      {
+        name: "Storage",
+        path: "/storage",
+        icon: "tv",
+        title:
+          "Monitor, record, and bill sendouts to outsourced diagnostic partners.",
+        component: Sendouts,
       },
     ],
   },
