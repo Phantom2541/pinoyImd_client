@@ -15,7 +15,6 @@ import {
   LabTaskPrintout,
   RadTaskPrintout,
   ResecoPrintout,
-  ElecLog,
   HemaLog,
   UrinLog,
   FecaLog,
@@ -30,7 +29,7 @@ import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 import Portal from "./pages/emr/portal";
-import Subscriber from "./pages/subscriber";
+import { Diagnostics, Suppliers } from "./pages/subscribers";
 import Staff from "./components/printout/staff";
 import AttendancePrint from "./components/printout/dtr";
 
@@ -60,7 +59,6 @@ export default function App() {
 
       {/* Logbooks */}
       <Route path="/printout/chem" exact component={ChemLog} />
-      <Route path="/printout/elec" exact component={ElecLog} />
       <Route path="/printout/hema" exact component={HemaLog} />
       <Route path="/printout/urin" exact component={UrinLog} />
       <Route path="/printout/feca" exact component={FecaLog} />
@@ -93,7 +91,9 @@ export default function App() {
       <Route path="/printout/Attendances" exact component={AttendancePrint} />
       {/* Diagnostic Portal */}
       <Route path="/emr/portal/:companyId/:dealId" exact component={Portal} />
-      <Route path="/subscriber/:companyId" exact component={Subscriber} />
+      {/* <Route path="/subscribers/:companyId" exact component={Diagnostics} /> */}
+      <Route path="/subscribers/:companyId" exact component={Suppliers} />
+
       <Platforms />
     </Switch>
   );

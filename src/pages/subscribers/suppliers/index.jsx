@@ -1,27 +1,17 @@
 import { useEffect, useState, useRef } from "react";
-import { MDBContainer, MDBMask, MDBView } from "mdbreact";
-import "./style.css";
-import Copyrights from "../../components/footer";
+import { MDBMask, MDBView } from "mdbreact";
+import "../style.css";
 import Register from "./register";
-import ContactUs from "./contact";
 import Login from "./login";
-import LOGO from "./../../assets/iMD.png";
-import Testimonials from "./testimonials";
-import Machines from "./machine";
-import { useDispatch, useSelector } from "react-redux";
-import { GET_DETAILS } from "../../services/redux/slices/assets/companies";
-import { ENDPOINT } from "../../services/utilities";
-import Loading from "./loading";
-import Doctors from "./doctor";
-import Employees from "./employee";
-import Partners from "./partners";
-import Philhealth from "./philhealth";
-import ECGWave from "./cardioGraph";
-import MissionVision from "./missionVision";
+import LOGO from "./../../../assets/iMD.png";
 
-const Subscriber = ({ match }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { GET_DETAILS } from "../../../services/redux/slices/assets/companies";
+import { ENDPOINT } from "../../../services/utilities";
+import Loading from "./loading";
+
+const Suppliers = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
-    { hmo, hasPhilHealth } = details,
     [show, setShow] = useState(false),
     [scrolled, setScrolled] = useState(false),
     [flipped, setFlipped] = useState(false),
@@ -242,45 +232,6 @@ const Subscriber = ({ match }) => {
               </MDBMask>
             </MDBView>
           </section>
-
-          <MDBContainer fluid className="p-0">
-            <div id="features">
-              <Machines />
-            </div>
-            <ECGWave color="#1266f1" waves={20} className="my-4" />
-
-            <div id="doctors">
-              <Doctors />
-            </div>
-
-            <div id="doctors" className="my-5">
-              <MissionVision />
-            </div>
-
-            {hmo?.length > 0 && (
-              <div id="partners">
-                <Partners />
-              </div>
-            )}
-            {hasPhilHealth && (
-              <div id="testimonials">
-                <Philhealth />
-              </div>
-            )}
-
-            <ECGWave color="#1266f1" waves={19} className="my-4" />
-            <div id="testimonials">
-              <Testimonials />
-            </div>
-            <ECGWave color="#1266f1" waves={25} className="my-4" />
-            <div id="employees">
-              <Employees match={match} />
-            </div>
-            <div id="contact">
-              <ContactUs />
-              <Copyrights />
-            </div>
-          </MDBContainer>
         </div>
       ) : (
         <Loading />
@@ -289,4 +240,4 @@ const Subscriber = ({ match }) => {
   );
 };
 
-export default Subscriber;
+export default Suppliers;

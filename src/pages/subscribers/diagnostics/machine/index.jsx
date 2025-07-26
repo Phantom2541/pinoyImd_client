@@ -2,14 +2,14 @@ import React from "react";
 import { MDBAnimation } from "mdbreact";
 import "./style.css";
 // import LIS from "./../../../assets/LIS.jpg";
-import ECG from "./../../../assets/subscriber/Electrocardiogram.jpg";
-import MRI from "./../../../assets/subscriber/MRI.jpg";
-import CT from "./../../../assets/subscriber/CT.jpg";
-import UM from "./../../../assets/subscriber/UM.jpg";
-import XRAY from "./../../../assets/subscriber/XRAY.JPG";
-import DEFIBRILLATOR from "./../../../assets/subscriber/Defibrillator.jpg";
-import VENTILATOR from "./../../../assets/subscriber/Ventilator.jpg";
-import IP from "./../../../assets/subscriber/IP.jpeg";
+import ECG from "./../../../../assets/subscriber/Electrocardiogram.jpg";
+import MRI from "./../../../../assets/subscriber/MRI.jpg";
+import CT from "./../../../../assets/subscriber/CT.jpg";
+import UM from "./../../../../assets/subscriber/UM.jpg";
+import XRAY from "./../../../../assets/subscriber/XRAY.JPG";
+import DEFIBRILLATOR from "./../../../../assets/subscriber/Defibrillator.jpg";
+import VENTILATOR from "./../../../../assets/subscriber/Ventilator.jpg";
+import IP from "./../../../../assets/subscriber/IP.jpeg";
 
 const collections = [
   {

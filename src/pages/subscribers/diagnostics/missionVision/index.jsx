@@ -1,8 +1,8 @@
 import "./style.css";
-import LOGO from "./../../../assets/aplhamed.png";
-import MISSION from "./../../../assets/mission.jpg";
-import VISION from "./../../../assets/vision.jpg";
-import VALUE from "./../../../assets/value.jpg";
+import LOGO from "./../../../../assets/aplhamed.png";
+import MISSION from "./../../../../assets/mission.jpg";
+import VISION from "./../../../../assets/vision.jpg";
+import VALUE from "./../../../../assets/value.jpg";
 
 export default function MissionVision() {
   return (

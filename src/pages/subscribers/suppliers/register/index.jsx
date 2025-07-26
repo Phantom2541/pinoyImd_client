@@ -16,12 +16,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   CUSTOMALERT,
   REGISTER,
-} from "../../../services/redux/slices/assets/persons/users";
-import { Suffixes } from "../../../services/fakeDb";
-import IMG1 from "./../../../assets/homeImg.jpg";
-import IMG2 from "./../../../assets/homeMachine.jpg";
-import IMG3 from "./../../../assets/homePatient.jpg";
-import REGISTRATIONIMG from "./../../../assets/homePageRegistrationImg.png";
+} from "../../../../services/redux/slices/assets/persons/users";
+import { Suffixes } from "../../../../services/fakeDb";
+import IMG1 from "./../../../../assets/subscriber/supplier/heroImg1.jpg";
+import IMG2 from "./../../../../assets/subscriber/supplier/heroImg2.jpg";
+import IMG3 from "./../../../../assets/subscriber/supplier/heroImg1.jpg";
+import REGISTRATIONIMG from "./../../../../assets/homePageRegistrationImg.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 

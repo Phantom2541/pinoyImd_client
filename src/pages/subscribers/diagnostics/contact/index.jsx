@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
-// import GoogleMapReact from "google-map-react";
-import LOGO from "./../../../assets/iMD.png";
+import LOGO from "./../../../../assets/iMD.png";
 
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -19,7 +18,7 @@ import {
   fullAddress,
   LatitudeAddress,
   mobile,
-} from "../../../services/utilities";
+} from "../../../../services/utilities";
 
 // Fix Leaflet default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
