@@ -102,8 +102,7 @@ export default function SideNavigation({
 
   useEffect(() => {
     const platformKey = normalizePlatform(activePlatform?.platform);
-
-    if (!platformKey || platformKey === "patron") {
+    if (!platformKey) {
       const newLinks = Sidebars["patron"] || [];
       if (JSON.stringify(links) !== JSON.stringify(newLinks)) {
         setLinks(newLinks);
@@ -113,7 +112,7 @@ export default function SideNavigation({
     const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
 
     const fullSidebar = group[platformKey] || [];
-
+    console.log("fullSidebar", fullSidebar, platformKey);
     if (platformKey === "laboratory") {
       const role = activePlatform?.role || "Junior MedTech";
       const filtered = filterSidebarByRole(fullSidebar, role);
@@ -126,6 +125,8 @@ export default function SideNavigation({
       }
     }
   }, [activePlatform, company, links, filterSidebarByRole, isDiagnostics]);
+
+  console.log("links", links);
 
   // 🔁 Recursive nav render
   const renderNavItems = (
