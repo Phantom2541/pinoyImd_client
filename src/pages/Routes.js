@@ -30,7 +30,6 @@ export default function Routes() {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { platform = "" } = activePlatform || {};
   const [isDiagnostics, setIsDiagnostics] = useState(true);
-
   const platformPrefix = platform
     ? `/${platform.toLowerCase().replace(/\s+/g, "")}`
     : "";
@@ -44,13 +43,16 @@ export default function Routes() {
 
   const renderSidebars = () => {
     const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
-    const sidebar = platformPrefix ? group[platformPrefix] : Sidebars.patron;
+    const sidebar = platformPrefix
+      ? group[platform?.toLowerCase()?.replace(/\s+/g, "_")]
+      : Sidebars.patron;
+
     if (!Array.isArray(sidebar)) return "❌ Sidebar must be array";
     const sideBars = [];
 
     sidebar.forEach((element, index) => {
       const { children, component, path = "" } = element;
-      const fullPath = `${platformPrefix ? platformPrefix : "patron"}${path}`;
+      const fullPath = `${platformPrefix ? platformPrefix : "/patron"}${path}`;
       const renderChildren = (c, parentPath = "") => {
         if (!c.children) return;
         c.children.forEach((child, i) => {
