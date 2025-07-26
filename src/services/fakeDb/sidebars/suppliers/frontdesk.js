@@ -11,18 +11,9 @@ import Products from "../../../../pages/platforms/frontdesk/market/products";
 import productsGenerics from "../../../../pages/platforms/frontdesk/market/productsGenerics";
 import machines from "../../../../pages/platforms/frontdesk/market/machines";
 import generics from "../../../../pages/platforms/frontdesk/market/generics";
-// import medicines from "../../../pages/platforms/frontdesk/market/medicine";
 import mentainance from "../../../../pages/platforms/frontdesk/market/mentainance";
-import { Billings } from "../../../../pages/platforms/frontdesk/Sendouts";
-import { SOA } from "../../../../pages/platforms/cashier";
-import { Status } from "../../../../pages/platforms/frontdesk";
 
 import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
-import {
-  ImageMagnifier,
-  ImageDragAndDrop,
-  ImageText,
-} from "../../../../components/images";
 
 const frontdesk = [
   {
@@ -85,13 +76,6 @@ const frontdesk = [
         title: "Browse available items for internal request.",
         // component: BrowseSuppliesComponent, // ← add when available
       },
-      // { put on topbar, save on indexDb
-      //   name: "My Cart",
-      //   path: "/cart",
-      //   icon: "shopping-basket",
-      //   title: "Add items for your request and submit to procurement.",
-      //   component: CartComponent,
-      // },
       {
         name: "My Requests",
         path: "/supply-hub/requests",
