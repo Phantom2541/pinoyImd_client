@@ -9,7 +9,7 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { useSelector } from "react-redux";
-import { Sidebars } from "../../services/fakeDb";
+import { Policy, Sidebars } from "../../services/fakeDb";
 import {
   // ENDPOINT,
   FailedLogo,
@@ -60,6 +60,19 @@ export default function SideNavigation({
           : undefined,
       }));
   }, []);
+  // 🔧 Utility: Filter sidebar by role (recursive)
+  const filterSidebarByDepartment = useCallback((items, department) => {
+    return items
+      .filter(
+        (item) => !item.allowedFor || item.allowedFor.includes(department)
+      )
+      .map((item) => ({
+        ...item,
+        children: item.children
+          ? filterSidebarByDepartment(item.children, department)
+          : undefined,
+      }));
+  }, []);
 
   // ✅ Guarded company logo and href loader
   // useEffect(() => {
@@ -102,8 +115,7 @@ export default function SideNavigation({
 
   useEffect(() => {
     const platformKey = normalizePlatform(activePlatform?.platform);
-
-    if (!platformKey || platformKey === "patron") {
+    if (!platformKey) {
       const newLinks = Sidebars["patron"] || [];
       if (JSON.stringify(links) !== JSON.stringify(newLinks)) {
         setLinks(newLinks);
@@ -113,10 +125,15 @@ export default function SideNavigation({
     const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
 
     const fullSidebar = group[platformKey] || [];
-
     if (platformKey === "laboratory") {
-      const role = activePlatform?.role || "Junior MedTech";
+      const role = activePlatform?.role;
       const filtered = filterSidebarByRole(fullSidebar, role);
+      if (JSON.stringify(links) !== JSON.stringify(filtered)) {
+        setLinks(filtered);
+      }
+    } else if (platformKey === "frontdesk") {
+      const department = Policy.getDepartment(activePlatform?.position);
+      const filtered = filterSidebarByDepartment(fullSidebar, department);
       if (JSON.stringify(links) !== JSON.stringify(filtered)) {
         setLinks(filtered);
       }
@@ -125,7 +142,14 @@ export default function SideNavigation({
         setLinks(fullSidebar);
       }
     }
-  }, [activePlatform, company, links, filterSidebarByRole, isDiagnostics]);
+  }, [
+    activePlatform,
+    company,
+    links,
+    filterSidebarByRole,
+    filterSidebarByDepartment,
+    isDiagnostics,
+  ]);
 
   // 🔁 Recursive nav render
   const renderNavItems = (

@@ -180,21 +180,30 @@ export const reduxSlice = createSlice({
       state.progressBar = data.payload;
     },
     SetActivePlatform: (state, action) => {
-      //this function is for setHMO and setTAT
-      const { isHMO = false, data } = action.payload;
-      const { branch } = state.activePlatform;
-      const { companyId } = branch;
+      const { isHMO = false, isBranch = false, data } = action.payload;
+      const current = state.activePlatform;
 
-      const _activePlatform = {
-        ...state.activePlatform,
+      const updatedBranch = {
+        ...current.branch,
+        ...(isBranch ? data : {}),
+        ...(Array.isArray(data) && !isHMO && !isBranch ? { tat: data } : {}),
+      };
+
+      const updatedCompanyId = {
+        ...current.branch.companyId,
+        ...(isHMO ? { hmo: data } : {}),
+      };
+
+      const updatedPlatform = {
+        ...current,
         branch: {
-          ...branch,
-          tat: data,
-          companyId: { ...companyId, ...(isHMO && { hmo: data }) },
+          ...updatedBranch,
+          companyId: updatedCompanyId,
         },
       };
-      localStorage.setItem("activePlatform", JSON.stringify(_activePlatform));
-      state.activePlatform = _activePlatform;
+
+      state.activePlatform = updatedPlatform;
+      localStorage.setItem("activePlatform", JSON.stringify(updatedPlatform));
     },
 
     SetPatientCategories: (state, { payload }) => {
