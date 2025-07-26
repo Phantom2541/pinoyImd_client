@@ -9,10 +9,10 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-
-  height: fit-content;
+  height: auto;
   background-color: white;
-  border-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
 }
 
@@ -97,63 +97,41 @@
   z-index: -1;
 }
 /* POS card Design */
-.pos-card {
-  width: 100%;
-  white-space: pre-wrap;
-  overflow: hidden;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-
 .pos-card-body {
-  display: flex;
-  gap: 5px;
-  transition: transform 1000ms ease;
+  width: 100%;
+  transition: height 0.3s ease;
+  perspective: 1000px;
 }
 
-.pos-card-body section {
-  flex: none;
+.flip-card {
   width: 100%;
-  height: fit-content;
-  padding: 10px;
-}
-
-.flip-card-container {
-  perspective: 1000px; /* needed for 3D effect */
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  transition: height 0.5s ease;
-}
-
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.6s;
   transform-style: preserve-3d;
+  transition: transform 0.6s;
+  position: relative;
 }
 
-.flip-card-inner.flipped {
+.flip-card.flipped {
   transform: rotateY(180deg);
 }
 
 .flip-card-front,
 .flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
   backface-visibility: hidden;
-  top: 0;
-  left: 0;
+  width: 100%;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
 }
 
 .flip-card-front {
-  position: relative; /* so it determines natural height */
+  transform: rotateY(0deg);
 }
 
 .flip-card-back {
   transform: rotateY(180deg);
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .pos-select-wrapper {
@@ -404,7 +382,6 @@
 
 /* table price design */
 .summary-table .table-price {
-  text-align: end;
   font-weight: 500;
 }
 
@@ -783,4 +760,14 @@
   to {
     opacity: 1;
   }
+}
+
+.cashier-pos-search-close-button {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 1.4rem;
 }

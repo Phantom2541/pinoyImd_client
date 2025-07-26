@@ -23,7 +23,23 @@ export default function POS() {
   const [searchDone, setSearchDone] = useState(false); // trigger animation
   const [activateOrigHeight, setActivateOrigHeight] = useState(false);
   const [asOverlay, setAsOverlay] = useState(true);
-  const flipContainerRef = useRef(null);
+  const frontRef = useRef(null);
+  const backRef = useRef(null);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const front = frontRef.current;
+    const back = backRef.current;
+    const container = containerRef.current;
+
+    if (front && back && container) {
+      const frontHeight = front.offsetHeight;
+      const backHeight = back.offsetHeight;
+      container.style.height = `${
+        activeIndex === 1 ? backHeight : frontHeight
+      }px`;
+    }
+  }, [activeIndex]);
 
   // if a newPatient id is present and active index is 1
   // it means a new patient has been injected, you should go back to POS
@@ -130,18 +146,6 @@ export default function POS() {
     }
   };
 
-  useEffect(() => {
-    const front = document.querySelector(".flip-card-front");
-    const back = document.querySelector(".flip-card-back");
-    const container = flipContainerRef.current;
-
-    if (front && back && container) {
-      const newHeight =
-        activeIndex === 1 ? back.offsetHeight : front.offsetHeight + 20;
-      container.style.height = `${newHeight}px`;
-    }
-  }, [activeIndex]);
-
   return (
     <div className="pos-container">
       <div
@@ -174,7 +178,7 @@ export default function POS() {
                   title="Clear"
                   className="d-flex justify-content-center align-items-center p-0"
                   style={{
-                    width: "35px",
+                    width: "33px",
                     aspectRatio: "1/1",
                     borderRadius: "50%",
                     fontSize: ".9rem",
@@ -238,11 +242,7 @@ export default function POS() {
               style={{ overflow: asOverlay ? "hidden" : "visible" }}
             >
               {!searchDone && asOverlay && (
-                <div
-                  className={`cashier-pos-search-overlay ${
-                    asOverlay && "fadeInSearchContainer"
-                  }`}
-                />
+                <div className={`cashier-pos-search-overlay`} />
               )}
               <div
                 className={`cashier-pos-search-container ${
@@ -250,6 +250,14 @@ export default function POS() {
                 }`}
                 ref={searchContainerRef}
               >
+                {asOverlay && (
+                  <button
+                    className="cashier-pos-search-close-button"
+                    onClick={() => handleRegister("")}
+                  >
+                    <MDBIcon icon="times" />
+                  </button>
+                )}
                 <Search
                   setPatient={handleCustomer}
                   setRegister={handleRegister}
@@ -276,21 +284,13 @@ export default function POS() {
           );
         })}
       </div>
-      <div className="pos-card">
-        <div className="pos-card-body">
-          <div className={`flip-card-container `} ref={flipContainerRef}>
-            <div
-              className={`flip-card-inner ${
-                activeIndex === 1 ? "flipped" : ""
-              }`}
-            >
-              <section className="flip-card-front">
-                <Classification />
-              </section>
-              <section className="flip-card-back">
-                <Patient setActiveIndex={setActiveIndex} />
-              </section>
-            </div>
+      <div className="pos-card-body" ref={containerRef}>
+        <div className={`flip-card ${activeIndex === 1 ? "flipped" : ""}`}>
+          <div className="flip-card-front" ref={frontRef}>
+            <Classification />
+          </div>
+          <div className="flip-card-back" ref={backRef}>
+            <Patient setActiveIndex={setActiveIndex} />
           </div>
         </div>
       </div>

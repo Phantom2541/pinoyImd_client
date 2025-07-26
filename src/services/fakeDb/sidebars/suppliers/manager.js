@@ -1,9 +1,12 @@
 import Dashboard from "../../../../pages/platforms/manager/dashboard/index.jsx";
 
 import {
+  Details,
   Applicants,
   Tieups,
-} from "../../../../pages/platforms/manager/settings/index.jsx";
+  Banner,
+} from "../../../../pages/platforms/manager/index.js";
+// } from "../../../../pages/platforms/manager/settings/index.jsx";
 import {
   Services,
   Menus,
@@ -351,7 +354,7 @@ const ManagerSidebar = [
             title: "Branch profile details.",
             path: "/details",
             icon: "address-card",
-            // component: Details,
+            component: Details,
           },
           {
             name: "PhilHealth",

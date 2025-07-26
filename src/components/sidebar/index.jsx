@@ -112,7 +112,6 @@ export default function SideNavigation({
     const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
 
     const fullSidebar = group[platformKey] || [];
-    console.log("fullSidebar", fullSidebar, platformKey);
     if (platformKey === "laboratory") {
       const role = activePlatform?.role || "Junior MedTech";
       const filtered = filterSidebarByRole(fullSidebar, role);
