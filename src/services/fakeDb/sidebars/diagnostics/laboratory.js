@@ -15,7 +15,6 @@ import {
   Utilities,
   Wellness,
   Referrals,
-  HMO,
   Hotlines,
   Suppliers,
   Onboarding,
@@ -335,13 +334,6 @@ const laboratory = [
             component: Referrals,
           },
         ],
-      },
-      {
-        name: "HMO",
-        path: "/hmo",
-        icon: "user-md",
-        title: "Accredited Health Maintenance Organizations",
-        component: HMO,
       },
       {
         name: "Suppliers",
