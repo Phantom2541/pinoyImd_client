@@ -80,6 +80,7 @@ export default function CollapseTable({
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm();
 
   const resetData = useCallback(() => {
@@ -150,6 +151,7 @@ export default function CollapseTable({
     setDep(Policy.getDepname(e.target.value));
     setFilteredPositions(Policy.getPositionsByDepartmentName(selectedDeptCode));
   };
+  const department = watch("employmentDepartment");
   const isHonorarium = employment?.soe === "Honorarium";
   return (
     <>
@@ -221,6 +223,9 @@ export default function CollapseTable({
               className={`form-control form-control-sm ${
                 errors.employmentDepartment ? "is-invalid" : ""
               }`}
+              value={
+                department || Policy.getDepartment(employment?.designation)
+              }
               onChange={(e) => {
                 register("employmentDepartment").onChange(e);
                 handleDepartmentChange(e);

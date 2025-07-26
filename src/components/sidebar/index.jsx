@@ -36,7 +36,6 @@ export default function SideNavigation({
   // const [href, setHref] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
   const [isDiagnostics, setIsDiagnostics] = useState(true);
-
   const { activePlatform, company, isLoading } = useSelector(
     ({ auth }) => auth
   );
