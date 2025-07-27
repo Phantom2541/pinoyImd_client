@@ -10,7 +10,6 @@ import {
   Membership,
   Wellness,
   Referrals,
-  HMO,
 } from "./sources";
 
 import {
@@ -33,7 +32,6 @@ export {
   Membership,
   Contract,
   Wellness,
-  HMO,
   Referrals,
   Philhealth,
   Outsources,

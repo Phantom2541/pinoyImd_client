@@ -10,7 +10,6 @@ import {
   Utilities,
   Wellness,
   Referrals,
-  HMO,
   Remittances,
   Hotlines,
   Suppliers,
@@ -150,13 +149,6 @@ const cashier = [
             component: Referrals,
           },
         ],
-      },
-      {
-        name: "H M O",
-        path: "/hmo",
-        icon: "user-md",
-        title: "Accredited Health Maintenance Organizations",
-        component: HMO,
       },
       {
         name: "Suppliers",

@@ -11,7 +11,7 @@ const Header = ({ companyId }) => {
           <MDBIcon
             far
             icon="arrow-alt-circle-left"
-            onClick={() => history.push(`/subscriber/${companyId}`)}
+            onClick={() => history.push(`/subscribers/${companyId}`)}
             style={{ fontSize: "1.8rem", color: "white" }}
           />
           <h5 style={{ fontWeight: 500 }} className="mt-1">

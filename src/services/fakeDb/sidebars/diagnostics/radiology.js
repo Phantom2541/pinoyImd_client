@@ -2,7 +2,7 @@ import {
   Onboard,
   Tasks,
   Reports,
-} from "../../../../pages/platforms/frontdesk/diagnostics";
+} from "../../../../pages/platforms/laboratory/diagnostics";
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 
 const radiology = [

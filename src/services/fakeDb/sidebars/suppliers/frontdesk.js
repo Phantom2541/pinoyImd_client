@@ -1,53 +1,19 @@
 import Dashboard from "../../../../pages/platforms/frontdesk/dashboard";
 
 import {
-  Fecalysis,
-  Hematology,
-  Urinalysis,
-  Chemistry,
-  Serology,
-  Xray,
-  Ultrasound,
-  Ecg,
-  Miscellaneous,
-} from "../../../../pages/platforms/frontdesk/reports";
-
-import {
   Onboard,
   Tasks,
   Reports,
-} from "../../../../pages/platforms/frontdesk/diagnostics";
+} from "../../../../pages/platforms/laboratory/diagnostics";
 
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 import Products from "../../../../pages/platforms/frontdesk/market/products";
 import productsGenerics from "../../../../pages/platforms/frontdesk/market/productsGenerics";
 import machines from "../../../../pages/platforms/frontdesk/market/machines";
 import generics from "../../../../pages/platforms/frontdesk/market/generics";
-// import medicines from "../../../pages/platforms/frontdesk/market/medicine";
 import mentainance from "../../../../pages/platforms/frontdesk/market/mentainance";
-import { Billings } from "../../../../pages/platforms/frontdesk/Sendouts";
-import { SOA } from "../../../../pages/platforms/cashier";
-import { Status } from "../../../../pages/platforms/frontdesk";
 
-import {
-  Tablestemplate,
-  Collapsable,
-  Calendar,
-  DragDrop,
-  Search,
-  Cards,
-  Schedule,
-  Loader,
-  InputSearch,
-  // QrCodePage,
-  HMOCapture,
-} from "../../../../pages/templates";
-import Sendouts from "../../../../pages/platforms/frontdesk/diagnostics/sendouts";
-import {
-  ImageMagnifier,
-  ImageDragAndDrop,
-  ImageText,
-} from "../../../../components/images";
+import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
 
 const frontdesk = [
   {
@@ -59,11 +25,11 @@ const frontdesk = [
     component: Dashboard,
   },
   {
-    name: "Diagnostics",
-    path: "/diagnostics",
+    name: "Logistics ",
+    path: "/logistics ",
     icon: "cogs",
     title:
-      "Manage patient diagnostics – onboarding, task queue, tracking, and sendouts.",
+      "Manage logistics  – onboarding, task queue, tracking, and sendouts.",
     children: [
       {
         name: "Onboarding",
@@ -73,55 +39,26 @@ const frontdesk = [
         component: Onboard,
       },
       {
-        name: "Tasks",
-        path: "/tasks",
+        name: "Delivery",
+        path: "/delivery",
         icon: "clipboard-list",
         title: "View and manage pending diagnostic tasks for patients.",
         component: Tasks,
       },
       {
-        name: "Tracker",
-        path: "/reports",
+        name: "Distribution",
+        path: "/distribution",
         icon: "file-alt",
         title: "Monitor the progress and reports of diagnostics performed.",
         component: Reports,
       },
       {
-        name: "Sendouts",
-        path: "/sendouts",
-        icon: "arrow-left",
-        title: "Manage sendouts to external laboratories for outsourced tests.",
+        name: "Storage",
+        path: "/storage",
+        icon: "tv",
+        title:
+          "Monitor, record, and bill sendouts to outsourced diagnostic partners.",
         component: Sendouts,
-      },
-    ],
-  },
-  {
-    name: "Outsource",
-    icon: "tv",
-    path: "/outsource",
-    title:
-      "Monitor, record, and bill sendouts to outsourced diagnostic partners.",
-    children: [
-      {
-        name: "Status",
-        path: "/status",
-        icon: "file-invoice",
-        title: "Track acceptance or rejection of outsourced tests.",
-        component: Status,
-      },
-      {
-        name: "Logbook",
-        path: "/logbook",
-        icon: "balance-scale",
-        title: "View monthly records of sendouts and charging status.",
-        component: SOA,
-      },
-      {
-        name: "Billing (SOA)",
-        path: "/billing",
-        icon: "file-invoice",
-        title: "Generate and view billing statements for outsourced services.",
-        component: Billings,
       },
     ],
   },
@@ -139,13 +76,6 @@ const frontdesk = [
         title: "Browse available items for internal request.",
         // component: BrowseSuppliesComponent, // ← add when available
       },
-      // { put on topbar, save on indexDb
-      //   name: "My Cart",
-      //   path: "/cart",
-      //   icon: "shopping-basket",
-      //   title: "Add items for your request and submit to procurement.",
-      //   component: CartComponent,
-      // },
       {
         name: "My Requests",
         path: "/supply-hub/requests",
@@ -236,93 +166,6 @@ const frontdesk = [
     ],
   },
   {
-    name: "Reports",
-    path: "/reports",
-    icon: "file-alt",
-    children: [
-      {
-        name: "Laboratory",
-        path: "/reports/laboratory",
-        icon: "flask",
-        children: [
-          {
-            name: "Chemistry",
-            path: "/reports/laboratory/chemistry",
-            icon: "flask",
-            component: Chemistry,
-          },
-          {
-            name: "Hematology",
-            path: "/reports/laboratory/hematology",
-            icon: "blood",
-            component: Hematology,
-          },
-          {
-            name: "Urinalysis",
-            path: "/reports/laboratory/urinalysis",
-            icon: "toilet-paper",
-            component: Urinalysis,
-          },
-          {
-            name: "Fecalysis",
-            path: "/reports/laboratory/fecalysis",
-            icon: "smile",
-            component: Fecalysis,
-          },
-          {
-            name: "Serology",
-            path: "/reports/laboratory/serology",
-            icon: "microscope",
-            component: Serology,
-          },
-          {
-            name: "Miscellaneous",
-            path: "/reports/laboratory/miscellaneous",
-            icon: "list",
-            component: Miscellaneous,
-          },
-        ],
-      },
-      {
-        name: "Radiology",
-        path: "/reports/radiology",
-        icon: "x-ray",
-        children: [
-          {
-            name: "ECG",
-            path: "/reports/radiology/ecg",
-            icon: "heartbeat",
-            component: Ecg,
-          },
-          {
-            name: "Ultrasound",
-            path: "/reports/radiology/ultrasound",
-            icon: "user-md",
-            component: Ultrasound,
-          },
-          {
-            name: "Xray",
-            path: "/reports/radiology/xray",
-            icon: "x-ray",
-            component: Xray,
-          },
-          {
-            name: "CT",
-            path: "/reports/radiology/ct",
-            icon: "user-md",
-            // component: CtComponent, // add your component here
-          },
-          {
-            name: "MRI",
-            path: "/reports/radiology/mri",
-            icon: "user-md",
-            // component: MriComponent, // add your component here
-          },
-        ],
-      },
-    ],
-  },
-  {
     name: "Catalogs",
     path: "/offers",
     icon: "list",
@@ -367,91 +210,6 @@ const frontdesk = [
             // component: ,
           },
         ],
-      },
-    ],
-  },
-  {
-    name: "Templates",
-    path: "/templates",
-    icon: "list",
-    children: [
-      {
-        name: "Tables",
-        path: "/templates/tables",
-        icon: "list",
-        component: Tablestemplate,
-      },
-      {
-        name: "Collapsables",
-        path: "/templates/collapsables",
-        icon: "align-justify",
-        component: Collapsable,
-      },
-      {
-        name: "Calendars",
-        path: "/templates/calendars",
-        icon: "calendar-alt",
-        component: Calendar,
-      },
-      {
-        name: "DragDrop",
-        path: "/templates/dragdrop",
-        icon: "drag",
-        component: DragDrop,
-      },
-      {
-        name: "Search",
-        path: "/templates/search",
-        icon: "search",
-        component: Search,
-      },
-      {
-        name: "Image Drag and Drop",
-        path: "/templates/image",
-        icon: "calendar-alt",
-        component: ImageDragAndDrop,
-      },
-      {
-        name: "Cards",
-        path: "/templates/cards",
-        icon: "card",
-        component: Cards,
-      },
-      {
-        name: "Schedule",
-        path: "/templates/schedule",
-        icon: "calendar-alt",
-        component: Schedule,
-      },
-      {
-        name: "Loader",
-        path: "/templates/loader",
-        icon: "calendar-alt",
-        component: Loader,
-      },
-      {
-        name: "InputSearch",
-        path: "/templates/inputSearch",
-        icon: "calendar-alt",
-        component: InputSearch,
-      },
-      {
-        name: "OCR",
-        path: "/templates/imgText",
-        icon: "calendar-alt",
-        component: ImageText,
-      },
-      {
-        name: "Image Magnifier",
-        path: "/templates/imageMagnifier",
-        icon: "calendar-alt",
-        component: ImageMagnifier,
-      },
-      {
-        name: "HMO Capture",
-        path: "/templates/camera",
-        icon: "calendar-alt",
-        component: HMOCapture,
       },
     ],
   },

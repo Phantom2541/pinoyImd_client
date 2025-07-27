@@ -16,7 +16,7 @@ import {
   Onboard,
   Tasks,
   Reports,
-} from "../../../../pages/platforms/frontdesk/diagnostics";
+} from "../../../../pages/platforms/laboratory/diagnostics";
 
 import { Menus, Services } from "../../../../pages/platforms/cashier";
 import Products from "../../../../pages/platforms/frontdesk/market/products";
@@ -42,7 +42,7 @@ import {
   // QrCodePage,
   HMOCapture,
 } from "../../../../pages/templates";
-import Sendouts from "../../../../pages/platforms/frontdesk/diagnostics/sendouts";
+import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
 import {
   ImageMagnifier,
   ImageDragAndDrop,
@@ -92,6 +92,7 @@ const frontdesk = [
         icon: "arrow-left",
         title: "Manage sendouts to external laboratories for outsourced tests.",
         component: Sendouts,
+        allowedFor: ["Laboratory"],
       },
     ],
   },
@@ -101,6 +102,7 @@ const frontdesk = [
     path: "/outsource",
     title:
       "Monitor, record, and bill sendouts to outsourced diagnostic partners.",
+    allowedFor: ["Laboratory"],
     children: [
       {
         name: "Status",
@@ -241,84 +243,81 @@ const frontdesk = [
     icon: "file-alt",
     children: [
       {
-        name: "Laboratory",
-        path: "/reports/laboratory",
+        name: "Chemistry",
+        path: "/laboratory/chemistry",
         icon: "flask",
-        children: [
-          {
-            name: "Chemistry",
-            path: "/reports/laboratory/chemistry",
-            icon: "flask",
-            component: Chemistry,
-          },
-          {
-            name: "Hematology",
-            path: "/reports/laboratory/hematology",
-            icon: "blood",
-            component: Hematology,
-          },
-          {
-            name: "Urinalysis",
-            path: "/reports/laboratory/urinalysis",
-            icon: "toilet-paper",
-            component: Urinalysis,
-          },
-          {
-            name: "Fecalysis",
-            path: "/reports/laboratory/fecalysis",
-            icon: "smile",
-            component: Fecalysis,
-          },
-          {
-            name: "Serology",
-            path: "/reports/laboratory/serology",
-            icon: "microscope",
-            component: Serology,
-          },
-          {
-            name: "Miscellaneous",
-            path: "/reports/laboratory/miscellaneous",
-            icon: "list",
-            component: Miscellaneous,
-          },
-        ],
+        component: Chemistry,
+        allowedFor: ["Laboratory"],
       },
       {
-        name: "Radiology",
-        path: "/reports/radiology",
+        name: "Hematology",
+        path: "/laboratory/hematology",
+        icon: "blood",
+        component: Hematology,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "Urinalysis",
+        path: "/laboratory/urinalysis",
+        icon: "toilet-paper",
+        component: Urinalysis,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "Fecalysis",
+        path: "/laboratory/fecalysis",
+        icon: "smile",
+        component: Fecalysis,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "Serology",
+        path: "/laboratory/serology",
+        icon: "microscope",
+        component: Serology,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "Miscellaneous",
+        path: "/laboratory/miscellaneous",
+        icon: "list",
+        component: Miscellaneous,
+        allowedFor: ["Laboratory"],
+      },
+      {
+        name: "ECG",
+        path: "/radiology/ecg",
+        icon: "heartbeat",
+        component: Ecg,
+        allowedFor: ["Radiology"],
+      },
+      {
+        name: "Ultrasound",
+        path: "/radiology/ultrasound",
+        icon: "user-md",
+        component: Ultrasound,
+        allowedFor: ["Radiology"],
+      },
+      {
+        name: "Xray",
+        path: "/radiology/xray",
         icon: "x-ray",
-        children: [
-          {
-            name: "ECG",
-            path: "/reports/radiology/ecg",
-            icon: "heartbeat",
-            component: Ecg,
-          },
-          {
-            name: "Ultrasound",
-            path: "/reports/radiology/ultrasound",
-            icon: "user-md",
-            component: Ultrasound,
-          },
-          {
-            name: "Xray",
-            path: "/reports/radiology/xray",
-            icon: "x-ray",
-            component: Xray,
-          },
-          {
-            name: "CT",
-            path: "/reports/radiology/ct",
-            icon: "user-md",
-            // component: CtComponent, // add your component here
-          },
-          {
-            name: "MRI",
-            path: "/reports/radiology/mri",
-            icon: "user-md",
-            // component: MriComponent, // add your component here
-          },
-        ],
+        component: Xray,
+        allowedFor: ["Radiology"],
+      },
+      {
+        name: "CT",
+        path: "/radiology/ct",
+        icon: "user-md",
+        // component: CtComponent, // add your component
+        allowedFor: ["Radiology"],
+      },
+      {
+        name: "MRI",
+        path: "/radiology/mri",
+        icon: "user-md",
+        // component: MriComponent, // add your component here
+        allowedFor: ["Radiology"],
       },
     ],
   },

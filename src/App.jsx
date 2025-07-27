@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
 import "./animations.css";
@@ -15,7 +15,6 @@ import {
   LabTaskPrintout,
   RadTaskPrintout,
   ResecoPrintout,
-  ElecLog,
   HemaLog,
   UrinLog,
   FecaLog,
@@ -30,7 +29,7 @@ import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 import Portal from "./pages/emr/portal";
-import Subscriber from "./pages/subscriber";
+import Subscribers from "./pages/subscribers";
 import Staff from "./components/printout/staff";
 import AttendancePrint from "./components/printout/dtr";
 
@@ -60,7 +59,6 @@ export default function App() {
 
       {/* Logbooks */}
       <Route path="/printout/chem" exact component={ChemLog} />
-      <Route path="/printout/elec" exact component={ElecLog} />
       <Route path="/printout/hema" exact component={HemaLog} />
       <Route path="/printout/urin" exact component={UrinLog} />
       <Route path="/printout/feca" exact component={FecaLog} />
@@ -93,7 +91,8 @@ export default function App() {
       <Route path="/printout/Attendances" exact component={AttendancePrint} />
       {/* Diagnostic Portal */}
       <Route path="/emr/portal/:companyId/:dealId" exact component={Portal} />
-      <Route path="/subscriber/:companyId" exact component={Subscriber} />
+      <Route path="/subscribers/:companyId" exact component={Subscribers} />
+
       <Platforms />
     </Switch>
   );
