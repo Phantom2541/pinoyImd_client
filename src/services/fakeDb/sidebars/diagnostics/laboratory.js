@@ -7,7 +7,7 @@ import {
 import { Quest } from "../../../../pages/platforms/laboratory/staffManagement";
 import { Applicants } from "../../../../pages/platforms/manager/settings";
 import { Services, Menus } from "../../../../pages/platforms/accounting";
-import { Heads } from "../../../../pages/platforms/headquarter";
+import { Heads } from "../../../../pages/platforms/hr";
 import {
   Contract,
   Membership,
