@@ -8,8 +8,7 @@ import Login from "./login";
 import LOGO from "./../../../assets/iMD.png";
 import Testimonials from "./testimonials";
 import Machines from "./machine";
-import { useDispatch, useSelector } from "react-redux";
-import { GET_DETAILS } from "../../../services/redux/slices/assets/companies";
+import { useSelector } from "react-redux";
 import { ENDPOINT } from "../../../services/utilities";
 import Loading from "./loading";
 import Doctors from "./doctor";
@@ -30,15 +29,8 @@ const Diagnostics = ({ match }) => {
     [connectOpen, setConnectOpen] = useState(false),
     [activeSection, setActiveSection] = useState("home"),
     [indicatorStyle, setIndicatorStyle] = useState({}),
-    dispatch = useDispatch(),
     linkRefs = useRef({}),
-    menuRef = useRef(null),
-    companyId = match?.params?.companyId;
-
-  useEffect(() => {
-    dispatch(GET_DETAILS({ key: { companyId } }));
-    localStorage.setItem("companyId", companyId);
-  }, [companyId, dispatch]);
+    menuRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {

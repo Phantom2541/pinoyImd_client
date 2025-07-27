@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { Attendances } from "./platforms/hr";
 const diagnostics = [
   "diagnostic",
+  "clinic",
   "laboratory",
   "radiology",
   "pharmacy",

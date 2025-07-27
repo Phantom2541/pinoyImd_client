@@ -19,6 +19,7 @@ import {
 import "./style.css";
 const diagnostics = [
   "diagnostic",
+  "clinic",
   "laboratory",
   "radiology",
   "pharmacy",
