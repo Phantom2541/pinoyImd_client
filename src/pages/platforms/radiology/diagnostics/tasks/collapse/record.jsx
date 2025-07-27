@@ -6,7 +6,6 @@ import { Services } from "../../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import Swal from "sweetalert2";
 import { LABRESULT } from "../../../../../../services/redux/slices/commerce/pos/services/deals.js";
-import { Input } from "../../../../../../components/customizable";
 
 const Tasks = ({ key, form, obj, index, customer }) => {
   const { activePlatform, token } = useSelector(({ auth }) => auth),

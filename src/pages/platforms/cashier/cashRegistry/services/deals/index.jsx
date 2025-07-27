@@ -83,8 +83,14 @@ export default function Deals() {
     if (physiciansLocal) {
       dispatch(SetPHYSICIANS(JSON.parse(physiciansLocal)));
     } else {
-      dispatch(BROWSE({ token })).then(({ payload: data }) => {
-        localStorage.setItem("physicians", JSON.stringify(data.payload));
+      dispatch(BROWSE({ token })).then((action) => {
+        console.log("action", action);
+        if (action) {
+          localStorage.setItem(
+            "physicians",
+            JSON.stringify(action.payload?.payload)
+          );
+        }
       });
     }
   }, [token, dispatch]);

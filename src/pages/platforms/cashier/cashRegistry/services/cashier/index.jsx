@@ -73,7 +73,7 @@ export default function Cashier() {
       dispatch(SetPHYSICIANS(JSON.parse(physiciansLocal)));
     } else {
       dispatch(BROWSE({ token })).then(({ payload: data }) => {
-        localStorage.setItem("physicians", JSON.stringify(data.payload));
+        localStorage.setItem("physicians", JSON.stringify(data?.payload));
       });
     }
   }, [token]);
