@@ -29,7 +29,7 @@ import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
 import FAQ from "./pages/others/faq";
 import Portal from "./pages/emr/portal";
-import { Diagnostics, Suppliers } from "./pages/subscribers";
+import Subscribers from "./pages/subscribers";
 import Staff from "./components/printout/staff";
 import AttendancePrint from "./components/printout/dtr";
 
@@ -91,8 +91,7 @@ export default function App() {
       <Route path="/printout/Attendances" exact component={AttendancePrint} />
       {/* Diagnostic Portal */}
       <Route path="/emr/portal/:companyId/:dealId" exact component={Portal} />
-      {/* <Route path="/subscribers/:companyId" exact component={Diagnostics} /> */}
-      <Route path="/subscribers/:companyId" exact component={Suppliers} />
+      <Route path="/subscribers/:companyId" exact component={Subscribers} />
 
       <Platforms />
     </Switch>
