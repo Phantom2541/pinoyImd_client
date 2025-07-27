@@ -3,6 +3,8 @@ import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { SetSELECTED } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { Services } from "../../../../../../../services/fakeDb";
 import { axiosMiddleware } from "../../../../../../../services/utilities";
+import { LABRESULT } from "../../../../../../../services/redux/slices/commerce/pos/services/deals.js";
+import Swal from "sweetalert2";
 
 const PrimaryFooter = ({ deal }) => {
   const { activePlatform, token } = useSelector(({ auth }) => auth);
@@ -43,6 +45,67 @@ const PrimaryFooter = ({ deal }) => {
       // You can use: response.success, response.payload, etc.
     } catch (err) {
       console.error("❌ Failed to send to A15:", err.message);
+    }
+  };
+  const extractDriveFileId = (url) => {
+    try {
+      const regex = /[-\w]{25,}/;
+      const match = url.match(regex);
+      return match ? match[0] : null;
+    } catch {
+      return null;
+    }
+  };
+  const previewDriveFile = async (task) => {
+    const { value: link } = await Swal.fire({
+      title: "Paste Google Drive Link",
+      input: "text",
+      inputLabel: "Google Drive File Link",
+      inputPlaceholder:
+        "e.g. https://drive.google.com/file/d/FILE_ID/view?usp=sharing",
+      showCancelButton: true,
+    });
+
+    if (link) {
+      const fileId = extractDriveFileId(link);
+      if (!fileId) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid Link",
+          text: "Could not extract File ID. Please check your link.",
+        });
+        return;
+      }
+
+      const previewLink = `https://drive.google.com/file/d/${fileId}/preview`;
+
+      const result = await Swal.fire({
+        title: "Google Drive Preview",
+        html: `
+            <iframe src="${previewLink}" width="100%" height="400" frameborder="0" allow="autoplay"></iframe>
+          `,
+        width: 600,
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Save Link",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        const updatedTask = {
+          ...task,
+          fileId: link,
+          department: "Radiology",
+        };
+
+        dispatch(LABRESULT({ token, data: updatedTask }));
+
+        Swal.fire({
+          icon: "success",
+          title: "Saved!",
+          text: "The link has been saved in fileId with department set.",
+        });
+      }
     }
   };
 
@@ -93,17 +156,31 @@ const PrimaryFooter = ({ deal }) => {
             </MDBBtn>
           </>
         )}
-
-        <MDBBtn
-          type="button"
-          onClick={() => dispatch(SetSELECTED(deal))}
-          className="m-0 "
-          title="Generate Task"
-          size="sm"
-          color="primary"
-        >
-          <MDBIcon icon="cog" spin />
-        </MDBBtn>
+        {activePlatform.department === "Laboratory" ? (
+          <MDBBtn
+            type="button"
+            onClick={() => dispatch(SetSELECTED(deal))}
+            className="m-0 "
+            title="Generate Task"
+            size="sm"
+            color="primary"
+          >
+            <MDBIcon icon="cog" spin />
+          </MDBBtn>
+        ) : (
+          <>
+            <MDBBtn
+              type="button"
+              onClick={() => previewDriveFile(deal)}
+              className="m-0 "
+              title="Generate Task"
+              size="sm"
+              color="primary"
+            >
+              <MDBIcon icon="cog" spin />
+            </MDBBtn>
+          </>
+        )}
       </MDBBtnGroup>
     </>
   );
