@@ -29,7 +29,7 @@ export default function Profile() {
       companyId = JSON.parse(fakeDB);
     }
     // localStorage.clear();
-    history.push(`/subscriber/${companyId}`);
+    history.push(`/subscribers/${companyId}`);
     clearSiteData();
   };
   return (
