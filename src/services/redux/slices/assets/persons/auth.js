@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, ENDPOINT } from "../../../../utilities";
+import { axioKit, employment, ENDPOINT } from "../../../../utilities";
 import { Policy } from "../../../../fakeDb";
 
 const url = "auth",
@@ -321,17 +321,20 @@ export const reduxSlice = createSlice({
             .map((a) => a.platform);
 
           const branch = branches.find((branch) => branch._id === branchId);
-          const { contract = { designation: -1 } } = branch || {};
+          const { contract = { designation: -1 }, status } = branch || {};
+          const isEmployed = employment.isEmployed(status);
+
           const department = Policy.getDepartment(contract.designation) || "";
           const role = Policy.getPosition(contract.designation) || {};
           const activePlatform = {
             ...auth.activePlatform,
             branch,
             company: branch?.companyId || {},
-            access: [..._access, "patron"],
+            access: isEmployed ? [..._access, "patron"] : ["patron"],
             department,
             role,
             position: contract.designation,
+            ...(!isEmployed && { platform: "" }),
           };
           localStorage.setItem(
             "activePlatform",
@@ -374,7 +377,8 @@ export const reduxSlice = createSlice({
           ({ _id }) => _id === payload?.activePlatform.branchId
         );
 
-        const { contract = { designation: -1 } } = branch || {};
+        const { contract = { designation: -1 }, status } = branch || {};
+        const isEmployed = employment.isEmployed(status);
         state.message = success;
         state.auth = payload;
         state.email = payload.email;
@@ -382,6 +386,7 @@ export const reduxSlice = createSlice({
           ...payload.activePlatform,
           branch,
           position: contract.designation,
+          ...(!isEmployed && { platform: "", access: ["patron"] }),
         };
         state.isLoading = false;
         state.isSuccess = true;
@@ -430,17 +435,19 @@ export const reduxSlice = createSlice({
             )
             .map((a) => a.platform);
 
-          const { contract = { designation: -1 } } = branch || {};
+          const { contract = { designation: -1 }, status } = branch || {};
+          const isEmployed = employment.isEmployed(status);
           const department = Policy.getDepartment(contract.designation) || "";
           const role = Policy.getPosition(contract.designation) || {};
           state.activePlatform = {
             ...activePlatform,
             branch,
             company: branch?.companyId || {},
-            access: [..._access],
+            access: isEmployed ? [..._access] : ["patron"],
             department,
             role,
             position: contract.designation,
+            ...(!isEmployed && { platform: "" }),
           };
           state.company = branch?.companyId;
           state.image = `${ENDPOINT}/public/users/${auth.email}/profile.jpg`;

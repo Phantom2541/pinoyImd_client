@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import Platforms from "./platforms";
 import Profile from "./profile";
 import Branches from "./branches";
-import { capitalize } from "../../services/utilities";
+import { capitalize, employment } from "../../services/utilities";
 import DTR from "./dtr";
 
 export default function TopNavigation({ toggle, onSideNavToggleClick }) {
@@ -21,7 +21,7 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
     paddingLeft: toggle ? "16px" : "240px",
     transition: "padding-left .3s",
   };
-
+  const isEmployed = employment.isEmployed(activePlatform?.branch?.status);
   return (
     <MDBNavbar
       className="flexible-MDBNavbar"
@@ -53,7 +53,7 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
               boxShadow: "0px 0px 0px 0px",
             }}
           >
-            {activePlatform?.access?.length > 0
+            {activePlatform?.access?.length > 0 && isEmployed
               ? `${capitalize(activePlatform?.department)} :)`
               : `Welcome to Pinoy iMD :) `}
             {capitalize(aka)}
@@ -67,7 +67,7 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
             gap: "5px",
           }}
         >
-          {activePlatform?.access?.length > 0 && <DTR />}
+          {activePlatform?.access?.length > 0 && isEmployed && <DTR />}
           <Branches />
           <Platforms />
           <Profile />
