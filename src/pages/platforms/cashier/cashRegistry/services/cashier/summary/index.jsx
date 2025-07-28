@@ -148,6 +148,8 @@ export default function Summary() {
       setCash(0);
       dispatch(RESET());
       dispatch(RESET_INSOURCE());
+      // 🔥 Dispatch the event
+      window.dispatchEvent(new Event("reset-ui"));
     }
   };
 

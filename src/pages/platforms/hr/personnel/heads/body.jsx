@@ -299,72 +299,71 @@ export default function Body() {
                 />
               </div>
 
-              <div
-                className={`signatories-card-footer ${prc || "requiredPRC"}`}
-              >
-                {prc ? (
-                  <div className="signatories-card-expiration-container">
-                    <span className="signatories-card-prc-label">
-                      <strong>PRC ID:&nbsp;</strong>
-                      <EditableField
-                        title="Click to edit"
-                        className="form-control form-control-sm"
-                        classNameTxt="signatories-card-prc"
-                        width="8rem"
-                        type="string"
-                        keyForValue="id"
-                        fieldData={{
-                          _id: `${_id}-id-${index}`,
-                          id: prc?.id,
-                          prc,
-                          user: user._id,
-                        }}
-                        onSave={(data) =>
-                          updateAuth({
-                            ...data,
-                            prc: { ...data.prc, id: data.id },
-                          })
-                        }
-                        formSubmitted={fsAuth}
-                        isSuccess={isAuth}
-                      />
-                    </span>
-                    <span>&nbsp;|&nbsp;</span>
-                    <span className="signatories-card-expiration-label">
-                      <strong>Expiration:&nbsp;</strong>
-                      <EditableField
-                        title="Click to edit"
-                        className="form-control form-control-sm"
-                        classNameTxt="signatories-card-expiration"
-                        type="date"
-                        width="11rem"
-                        keyForValue="to"
-                        fieldData={{
-                          _id: `${_id}-to`,
-                          to: prc?.to,
-                          prc,
-                          user: user._id,
-                        }}
-                        onSave={(data) =>
-                          updateAuth({
-                            ...data,
-                            prc: { ...data.prc, to: data.to },
-                          })
-                        }
-                        formSubmitted={fsAuth}
-                        isSuccess={isAuth}
-                      />
-                    </span>
-                  </div>
-                ) : (
-                  <span className="">
-                    <strong>PRC license is required</strong> for this user to be
-                    assigned as a head. This is a&nbsp;
-                    <strong>DOH qualification</strong> for publishing laboratory
-                    results.
+              <div className={`signatories-card-footer`}>
+                <div className="signatories-card-expiration-container">
+                  <span className="signatories-card-prc-label">
+                    <strong>PRC ID:&nbsp;</strong>
+                    <EditableField
+                      title="Click to edit"
+                      className="form-control form-control-sm"
+                      classNameTxt="signatories-card-prc"
+                      width="8rem"
+                      type="string"
+                      keyForValue="id"
+                      fieldData={{
+                        _id: `${_id}-id-${index}`,
+                        id: prc?.id,
+                        prc,
+                        user: user._id,
+                      }}
+                      onSave={(data) =>
+                        updateAuth({
+                          ...data,
+                          prc: { ...data.prc, id: data.id },
+                        })
+                      }
+                      formSubmitted={fsAuth}
+                      isSuccess={isAuth}
+                    />
                   </span>
-                )}
+                  <span>&nbsp;|&nbsp;</span>
+                  <span className="signatories-card-expiration-label">
+                    <strong>Expiration:&nbsp;</strong>
+                    <EditableField
+                      title="Click to edit"
+                      className="form-control form-control-sm"
+                      classNameTxt="signatories-card-expiration"
+                      type="date"
+                      width="11rem"
+                      keyForValue="to"
+                      fieldData={{
+                        _id: `${_id}-to`,
+                        to: prc?.to,
+                        prc,
+                        user: user._id,
+                      }}
+                      onSave={(data) =>
+                        updateAuth({
+                          ...data,
+                          prc: { ...data.prc, to: data.to },
+                        })
+                      }
+                      formSubmitted={fsAuth}
+                      isSuccess={isAuth}
+                    />
+                  </span>
+                </div>
               </div>
+              <span
+                className={`signatories-card-footer-requiredPRC ${
+                  prc ? "requiredPRC" : ""
+                }`}
+              >
+                <strong>PRC license is required</strong> for this user to be
+                assigned as a head. This is a&nbsp;
+                <strong>DOH qualification</strong> for publishing laboratory
+                results.
+              </span>
               <div className="signatories-card-actionBtn">
                 <button
                   className="signatories-card-btn-delete bg-danger"

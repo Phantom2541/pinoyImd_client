@@ -54,8 +54,11 @@ export default function Remittances() {
       <div style={{ width: "300px" }}>
         <Summary summaryRef={summaryRef} />
       </div>
-      {isSummaryReady && <Calendar summaryRef={summaryRef} />}
-      <Denomination />
+
+      <div className="w-100">
+        {isSummaryReady && <Calendar summaryRef={summaryRef} />}
+        <Denomination />
+      </div>
     </div>
   );
 }
