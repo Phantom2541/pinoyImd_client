@@ -50,12 +50,25 @@ export default function Remittances() {
   }, []);
 
   return (
-    <div className="d-flex">
-      <div style={{ width: "300px" }}>
+    <div style={{ position: "relative" }}>
+      <div
+        style={{
+          position: "fixed",
+          width: "300px",
+          zIndex: 10,
+        }}
+      >
         <Summary summaryRef={summaryRef} />
       </div>
-      {isSummaryReady && <Calendar summaryRef={summaryRef} />}
-      <Denomination />
+
+      <div
+        style={{
+          marginLeft: "300px", // same width as Summary
+        }}
+      >
+        {isSummaryReady && <Calendar summaryRef={summaryRef} />}
+        <Denomination />
+      </div>
     </div>
   );
 }
