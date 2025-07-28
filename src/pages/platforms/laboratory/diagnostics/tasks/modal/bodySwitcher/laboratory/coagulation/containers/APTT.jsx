@@ -25,15 +25,7 @@ const Aptt = () => {
     dispatch(SETPARAMS({ ...params, aptt }));
   };
   return (
-    <MDBTable
-      align="middle"
-      hover
-      responsive
-      small
-      color={theme.color}
-      className="mt-2"
-      striped
-    >
+    <MDBTable align="middle" hover responsive small className="mt-2" striped>
       <MDBTableHead>
         <tr className="text-center border">
           <th>Name</th>

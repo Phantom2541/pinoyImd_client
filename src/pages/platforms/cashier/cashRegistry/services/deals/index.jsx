@@ -80,16 +80,14 @@ export default function Deals() {
 
   useEffect(() => {
     const physiciansLocal = localStorage.getItem("physicians");
+
     if (physiciansLocal) {
       dispatch(SetPHYSICIANS(JSON.parse(physiciansLocal)));
     } else {
-      dispatch(BROWSE({ token })).then((action) => {
-        console.log("action", action);
-        if (action) {
-          localStorage.setItem(
-            "physicians",
-            JSON.stringify(action.payload?.payload)
-          );
+      dispatch(BROWSE({ token })).then(({ payload }) => {
+        if (payload) {
+          localStorage.setItem("physicians", JSON.stringify(payload));
+          dispatch(SetPHYSICIANS(payload)); // Optional: set it immediately after fetch
         }
       });
     }
