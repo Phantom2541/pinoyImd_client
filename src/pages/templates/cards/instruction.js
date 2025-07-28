@@ -5,6 +5,14 @@ export const instructionSteps = [
     target: ".template1-card",
   },
   {
+    title: "Step 1.5: View Card 1",
+    description: "Click this button.",
+    target: "#template1-card-btn",
+    required: true, // <--- ito ang bago
+    requiredType: "click", // o "click"
+    requiredMessage: "You need to click the Submit button before continuing.",
+  },
+  {
     title: "Step 2: View Card 3",
     description: "Text-only card for announcements or notices.",
     target: ".template3-card",

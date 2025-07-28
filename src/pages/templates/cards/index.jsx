@@ -31,7 +31,10 @@ export default function Cards() {
               or details about the content of the card.
             </p>
             <div className="template1-card-buttons">
-              <button className="template1-card-btn template1-primary">
+              <button
+                id="template1-card-btn"
+                className="template1-card-btn template1-primary"
+              >
                 Learn More
               </button>
               <button className="template1-card-btn template1-secondary">

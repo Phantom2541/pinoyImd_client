@@ -201,9 +201,13 @@ body.instruction-mode {
   font-size: 14px;
 }
 
-.instruction-buttons button:disabled {
+.instruction-btnBack:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.instruction-buttons button.tutorial-disabled {
+  opacity: 0.5;
 }
 
 /* Overlay hole system */
@@ -264,4 +268,29 @@ body.instruction-mode {
 
 .instructor-video-floating.right {
   transform: translateX(0);
+}
+
+@keyframes tutorialShake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-6px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.shake {
+  animation: tutorialShake 0.4s;
 }

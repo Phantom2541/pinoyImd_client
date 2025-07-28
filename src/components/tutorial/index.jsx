@@ -15,13 +15,14 @@ const TOTAL_NEEDED_SPACE = INSTRUCTION_WIDTH + VIDEO_WIDTH + SPACE_MARGIN * 3;
 export default function Tutorial({ steps }) {
   const [showTutorial, setShowTutorial] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
+  const step = steps[stepIndex];
+
   const [targetRect, setTargetRect] = useState(null);
   const [boxDirection, setBoxDirection] = useState("right");
-
+  const [showRequirementWarning, setShowRequirementWarning] = useState(false);
+  const [displayedText, setDisplayedText] = useState(step.description);
   const instructionRef = useRef(null);
   const videoRef = useRef(null);
-
-  const step = steps[stepIndex];
 
   const playVideo = useCallback(() => {
     videoRef.current?.play().catch(() => {});
@@ -31,10 +32,36 @@ export default function Tutorial({ steps }) {
     setShowTutorial(false);
     setTargetRect(null);
     window.speechSynthesis.cancel();
-  }, []);
+
+    // 🧹 Reset all data-clicked attributes
+    steps.forEach((s) => {
+      const el = document.querySelector(s.target);
+      if (el?.dataset?.clicked) {
+        delete el.dataset.clicked;
+      }
+    });
+  }, [steps]);
 
   const isFirstStep = stepIndex === 0;
   const isLastStep = stepIndex === steps.length - 1;
+
+  const isRequirementMet = useCallback(() => {
+    const step = steps[stepIndex];
+    if (!step?.required || !step.target) return true;
+
+    const el = document.querySelector(step.target);
+    if (!el) return false;
+
+    if (step.requiredType === "click") {
+      return el.dataset.clicked === "true";
+    }
+
+    if (step.requiredType === "input") {
+      return el.value?.trim() !== "";
+    }
+
+    return true;
+  }, [steps, stepIndex]);
 
   useEffect(() => {
     document.body.style.overflow = showTutorial ? "hidden" : "";
@@ -48,10 +75,33 @@ export default function Tutorial({ steps }) {
 
     const handleKeyDown = (e) => {
       if (e.key === "ArrowRight" && !isLastStep) {
-        setStepIndex((i) => i + 1);
-        playVideo();
+        if (isRequirementMet()) {
+          setStepIndex((i) => i + 1);
+          setShowRequirementWarning(false);
+          playVideo();
+        } else {
+          // Show warning message + shake
+          setDisplayedText("");
+          setShowRequirementWarning(false);
+
+          [videoRef.current, instructionRef.current].forEach((el) => {
+            if (el) {
+              el.classList.add("shake");
+              setTimeout(() => el.classList.remove("shake"), 500);
+            }
+          });
+
+          setTimeout(() => {
+            setShowRequirementWarning(true);
+            const fallback =
+              steps[stepIndex].requiredMessage ||
+              "This step is required before continuing.";
+            setDisplayedText(fallback);
+          }, 500);
+        }
       } else if (e.key === "ArrowLeft" && !isFirstStep) {
         setStepIndex((i) => i - 1);
+        setShowRequirementWarning(false);
         playVideo();
       } else if (e.key === "Escape") {
         endTutorial();
@@ -67,6 +117,10 @@ export default function Tutorial({ steps }) {
     isLastStep,
     playVideo,
     endTutorial,
+    steps,
+    isRequirementMet,
+    videoRef,
+    instructionRef,
   ]);
 
   useEffect(() => {
@@ -202,6 +256,29 @@ export default function Tutorial({ steps }) {
     playVideo();
   };
 
+  useEffect(() => {
+    if (!showTutorial || !step?.required || step.requiredType !== "click")
+      return;
+
+    const el = document.querySelector(step.target);
+    if (!el) return;
+
+    const handleClick = () => {
+      el.dataset.clicked = "true";
+    };
+
+    el.addEventListener("click", handleClick);
+
+    return () => {
+      el.removeEventListener("click", handleClick);
+    };
+  }, [step, showTutorial]);
+
+  useEffect(() => {
+    setDisplayedText(steps[stepIndex].description);
+    setShowRequirementWarning(false);
+  }, [stepIndex, steps]);
+
   return (
     <>
       <div className="tutorial-button-wrapper" onClick={startTutorial}>
@@ -265,8 +342,8 @@ export default function Tutorial({ steps }) {
           {showTutorial && targetRect && (
             <TypingText
               className="instruction-description"
-              key={stepIndex}
-              text={step.description}
+              key={stepIndex + (showRequirementWarning ? "-warn" : "-desc")}
+              text={displayedText}
               speed={40}
               startDelay={500}
               onTypingDone={() => videoRef.current?.pause()}
@@ -281,13 +358,14 @@ export default function Tutorial({ steps }) {
               <button
                 className="instruction-btnSkip"
                 onClick={() => {
-                  if (!isLastStep) {
+                  if (stepIndex < steps.length - 1) {
                     setStepIndex((i) => i + 1);
                     playVideo();
                   } else {
                     endTutorial();
                   }
                 }}
+                disabled={false}
               >
                 Skip
               </button>
@@ -306,11 +384,38 @@ export default function Tutorial({ steps }) {
               </button>
               {!isLastStep ? (
                 <button
-                  className="instruction-btnNext"
+                  className={`instruction-btnNext ${
+                    !isRequirementMet() ? "tutorial-disabled " : ""
+                  }`}
                   onClick={() => {
-                    setStepIndex((i) => i + 1);
-                    playVideo();
+                    if (isRequirementMet()) {
+                      setStepIndex((i) => i + 1);
+                    } else {
+                      // Step 1: Clear text
+                      setDisplayedText(""); // ← hide description
+                      setShowRequirementWarning(false);
+
+                      // Step 2: Add shake
+                      [videoRef.current, instructionRef.current].forEach(
+                        (el) => {
+                          if (el) {
+                            el.classList.add("shake");
+                            setTimeout(() => el.classList.remove("shake"), 500);
+                          }
+                        }
+                      );
+
+                      // Step 3: Show required message after delay
+                      setTimeout(() => {
+                        setShowRequirementWarning(true);
+                        const fallback =
+                          steps[stepIndex].requiredMessage ||
+                          "This step is required before continuing.";
+                        setDisplayedText(fallback);
+                      }, 500);
+                    }
                   }}
+                  disabled={false} // ← wag i-disable para pwede i-trigger yung shake
                 >
                   Next
                 </button>
