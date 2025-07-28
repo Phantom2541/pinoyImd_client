@@ -120,6 +120,7 @@ export default function Cards() {
             on Sunday from 1:00 AM to 3:00 AM. Services may be temporarily
             unavailable during this time.
           </p>
+          <input id="template5-card-input" type="text" />
         </div>
         {/* end copy here */}
       </div>

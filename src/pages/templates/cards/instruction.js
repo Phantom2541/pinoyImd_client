@@ -23,6 +23,15 @@ export const instructionSteps = [
     target: ".template5-card",
   },
   {
+    title: "Step 3.5: View Card 5",
+    description: "This shows the system update message.",
+    target: "#template5-card-input",
+    required: true, // <--- ito ang bago
+    requiredType: "input",
+    requiredMessage: "fill up this input before continuing.",
+  },
+
+  {
     title: "Step 4: View Card 4",
     description: "This shows an additional system update card.",
     target: ".template4-card",
