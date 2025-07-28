@@ -64,7 +64,8 @@
 .signatories-card.requiredPRC {
   grid-template-areas:
     "header body"
-    "footer footer";
+    "header footer"
+    "footerRequiredPRC footerRequiredPRC";
   height: auto;
 }
 
@@ -86,17 +87,16 @@
   padding-right: 10px;
 }
 
-.signatories-card-footer.requiredPRC {
-  position: relative;
-  text-align: center;
-  padding-left: 10px;
-  padding-bottom: 5px;
-}
-
-.signatories-card-footer.requiredPRC span {
-  display: block;
+.signatories-card-footer-requiredPRC {
+  grid-area: footerRequiredPRC;
   font-size: 0.85rem;
   color: #c62828;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.signatories-card-footer-requiredPRC.requiredPRC {
+  display: none;
 }
 
 .signatories-card-expiration-container {
