@@ -3,6 +3,8 @@ import { MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { SetSELECTED } from "../../../../../../../services/redux/slices/commerce/pos/services/taskGenerator";
 import { Services } from "../../../../../../../services/fakeDb";
 import { axiosMiddleware } from "../../../../../../../services/utilities";
+import { LABRESULT } from "../../../../../../../services/redux/slices/commerce/pos/services/deals.js";
+import Swal from "sweetalert2";
 
 const PrimaryFooter = ({ deal }) => {
   const { activePlatform, token } = useSelector(({ auth }) => auth);
@@ -72,7 +74,6 @@ const PrimaryFooter = ({ deal }) => {
             </MDBBtn>
           </>
         )}
-
         <MDBBtn
           type="button"
           onClick={() => dispatch(SetSELECTED(deal))}

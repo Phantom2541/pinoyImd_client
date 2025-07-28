@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MDBInput, MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { useSelector, useDispatch } from "react-redux";
-import { SETPARAMS } from "./../../../../../../../../../redux/slices/task/forms";
+import { SetTASK } from "../../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 const Aptt = () => {
   const { theme } = useSelector(({ auth }) => auth),
@@ -22,7 +22,7 @@ const Aptt = () => {
     } else {
       aptt[1] = parseFloat(value);
     }
-    dispatch(SETPARAMS({ ...params, aptt }));
+    dispatch(SetTASK({ ...params, aptt }));
   };
   return (
     <MDBTable
