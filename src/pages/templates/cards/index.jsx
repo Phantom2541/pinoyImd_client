@@ -18,7 +18,11 @@ export default function Cards() {
         <h5 className="text-center fw-bold">Card 1</h5>
         {/* start copy here  */}
         <div className="template1-card">
-          <img src={MRI} alt="Card" className="template1-card-image" />
+          <img
+            src="https://drive.google.com/thumbnail?id=1r9GSLgSh2r92poO5M-31eZRrl9TX6WyV"
+            alt="Card"
+            className="template1-card-image"
+          />
           <div className="template1-card-body">
             <h2 className="template1-card-title">Card Title</h2>
             <h4 className="template1-card-subtitle">Card Subtitle</h4>
