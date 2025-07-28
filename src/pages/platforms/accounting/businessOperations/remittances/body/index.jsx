@@ -10,7 +10,9 @@ export default function Ledger({ summaryRef, summaryBodyRef }) {
       <MDBContainer className="d-grid" fluid>
         <MDBCard className="pb-3 " narrow>
           <Header />
-          <Calendar summaryRef={summaryRef} />
+          <div style={{ maxHeight: "68vh", overflowY: "auto" }}>
+            <Calendar summaryRef={summaryRef} />
+          </div>
         </MDBCard>
       </MDBContainer>
     </MDBAnimation>

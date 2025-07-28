@@ -232,7 +232,7 @@ export default function Summary({ summaryRef }) {
               </div>
               {cluster.length > 0 ? (
                 <div
-                  style={{ maxHeight: "35rem", overflowY: "auto" }}
+                  style={{ maxHeight: "58vh", overflowY: "auto" }}
                   className="summary-scrollbar "
                 >
                   <ol className="mt-2 list-decimal list-inside">
