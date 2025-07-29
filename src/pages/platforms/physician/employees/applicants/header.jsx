@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -9,7 +9,7 @@ import {
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, isSucscess } = useSelector(({ physicians }) => physicians),
+    { collections} = useSelector(({ physicians }) => physicians),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -21,13 +21,6 @@ const Header = () => {
       dispatch(RESET());
     };
   }, [token, activePlatform, dispatch]);
-
-  // Emit search input back to parent
-  useEffect(() => {
-    if (typeof onSearch === "function") {
-      onSearch(searchText);
-    }
-  }, [searchText, onSearch]);
 
   return (
     <MDBView
@@ -45,8 +38,7 @@ const Header = () => {
           type="text"
           className="form-control"
           placeholder="🔍 Search applicant..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+        
         />
       </div>
     </MDBView>
