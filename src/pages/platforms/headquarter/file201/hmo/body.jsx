@@ -35,12 +35,12 @@ const Body = () => {
         });
     });
   };
-  console.log("fil", filtered);
 
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex);
+  const reversedData = [...filtered].reverse();
+  const paginatedData = reversedData.slice(startIndex, endIndex);
 
   return (
     <div

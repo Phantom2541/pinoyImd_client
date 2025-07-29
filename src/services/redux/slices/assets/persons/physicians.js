@@ -165,7 +165,6 @@ export const reduxSlice = createSlice({
       state.showModal = !state.showModal;
       state.selected = {};
       state.closeModal = !state.closeModal;
-      console.log("toggle", state.closeModal);
     },
     SetCREATE: (state) => {
       state.selected = {
@@ -191,6 +190,13 @@ export const reduxSlice = createSlice({
       state.formSubmitted = false;
       state.collections = [];
       state.message = "";
+    },
+    SET_COLLECTIONS: (state, action) => {
+      const newTieups = action.payload.tieups;
+      state.collections = [...newTieups];
+      state.filtered = [...newTieups];
+      console.log("state.collections", state.collections);
+      console.log("state.filtered", state.filtered);
     },
   },
   extraReducers: (builder) => {
@@ -268,8 +274,6 @@ export const reduxSlice = createSlice({
         }
         state.collections = payload;
         state.filtered = payload;
-        console.log("payload", payload);
-
         state.isLoading = false;
       })
       .addCase(TIEUPS.rejected, (state, action) => {
@@ -289,16 +293,10 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.collections.unshift(payload);
         state.filtered.unshift(payload);
-        // payload?.length > 0 &&
-        //   payload.map((data) =>
-
-        //     //kasi pwede siyang mag add ng madaming physicians kaya minap ko kasi array yung return niya
-        //     state.collections.tieups.unshift(data)
-        //   );
-
         state.isSuccess = true;
         state.isLoading = false;
       })
+
       .addCase(SAVE.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
@@ -336,14 +334,17 @@ export const reduxSlice = createSlice({
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex(
-          (item) => item._id === payload
+
+        // ✅ If backend returned deleted item _id
+        state.collections = state.collections.filter(
+          (item) => item._id !== payload
         );
 
-        state.collections.splice(index, 1);
+        // ✅ Also update filtered list
+        state.filtered = state.filtered.filter((item) => item._id !== payload);
+
         state.message = success;
         state.isSuccess = true;
-        // state.isLoading = false;
       })
       .addCase(DESTROY.rejected, (state, action) => {
         const { error } = action;
@@ -359,6 +360,7 @@ export const {
   SETPHYSICIAN,
   RESET,
   SetFILTERED,
+  SET_COLLECTIONS,
   SetCREATE,
   SetActivePAGE,
   SetMaxPage,

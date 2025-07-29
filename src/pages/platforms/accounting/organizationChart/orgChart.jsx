@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ReactFlow, {
   addEdge,
   useReactFlow,
@@ -10,22 +10,21 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import CustomNode from "./customNode";
 import CustomEdge from "./customEdge";
-import { fullName } from "../../../../services/utilities";
+import { properFullname } from "../../../../services/utilities";
 import { Policy } from "../../../../services/fakeDb";
 import Default from "./../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
+import {
+  GET_ORG,
+  UPDATE_ORG,
+} from "../../../../services/redux/slices/assets/companies";
 
 const nodeTypes = { customNode: CustomNode };
 
-function normalizePosition(pos) {
-  return Array.isArray(pos)
-    ? pos
-    : typeof pos === "string"
-    ? pos.split(" / ").map((p) => p.trim())
-    : [];
-}
-
 export default function OrgChart({ personnels }) {
+  const { activePlatform, company, token } = useSelector(({ auth }) => auth);
+  const { org } = useSelector(({ companies }) => companies);
+  const dispatch = useDispatch();
   const wrapperRef = useRef(null);
   const dragOriginRef = useRef({});
   const { fitView, project } = useReactFlow();
@@ -43,7 +42,6 @@ export default function OrgChart({ personnels }) {
     ),
   };
 
-  const { activePlatform, company } = useSelector(({ auth }) => auth);
   const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
 
   // === LOAD PERSONNELS ===
@@ -51,24 +49,13 @@ export default function OrgChart({ personnels }) {
     const initialNodes = [];
     const topbarNodes = [];
 
-    personnels.forEach((p, i) => {
-      const { user, contract, position } = p;
-      const name = fullName(user?.fullName)?.split(" y ")[0]?.toLowerCase();
+    personnels.forEach((p) => {
+      const { position } = p;
       const node = {
-        id: `personnel-${i}`,
+        id: p._id,
         type: "customNode",
         position: position?.x != null ? position : { x: 0, y: 0 },
-        data: {
-          id: `personnel-${i}`,
-          name,
-          title: user?.fullName?.postnominal,
-          position: Policy.getPositions(contract?.designation),
-          email: user?.email,
-          onReturn: () => {
-            setNodes((nds) => nds.filter((n) => n.id !== `personnel-${i}`));
-            setAvailableNodes((nds) => [...nds, node]);
-          },
-        },
+        data: { personnel: p },
       };
 
       if (position?.x != null) initialNodes.push(node);
@@ -82,6 +69,20 @@ export default function OrgChart({ personnels }) {
       setTimeout(() => fitView({ padding: 0.2 }), 100);
     }
   }, [personnels, fitView, setNodes]);
+
+  useEffect(() => {
+    dispatch(GET_ORG({ token, key: { _id: company._id } }));
+  }, [dispatch, company, token]);
+
+  useEffect(() => {
+    const _nodes = org?.nodes || [];
+    const _personnels = [...availableNodes].filter(
+      (n) => !_nodes.some((node) => node.id === n.id)
+    );
+    setAvailableNodes(_personnels);
+    setNodes(_nodes);
+    setEdges(org?.edges || []);
+  }, [org]);
 
   // === CONNECTION LOGIC ===
   const onConnect = useCallback(
@@ -370,16 +371,14 @@ export default function OrgChart({ personnels }) {
       y: e.clientY - bounds.top,
     });
 
-    const newId = `${parsed.id}-${Math.random().toString(36).slice(2, 6)}`;
     const newNode = {
-      id: newId,
+      id: parsed.id,
       type: parsed.type || "customNode",
       position,
       data: {
         ...parsed.data,
-        position: normalizePosition(parsed.data.position),
         onReturn: () => {
-          setNodes((nds) => nds.filter((n) => n.id !== newId));
+          setNodes((nds) => nds.filter((n) => n.id !== parsed.id));
           setRecentlyReturnedId(parsed.id);
           setAvailableNodes((prev) => [parsed, ...prev]);
           setTimeout(() => setRecentlyReturnedId(null), 500);
@@ -395,12 +394,9 @@ export default function OrgChart({ personnels }) {
     e.dataTransfer.setData(
       "application/reactflow",
       JSON.stringify({
+        ...item,
         id: item.id,
         type: item.type,
-        data: {
-          ...item.data,
-          position: normalizePosition(item.data.position),
-        },
       })
     );
     e.dataTransfer.effectAllowed = "move";
@@ -479,11 +475,21 @@ export default function OrgChart({ personnels }) {
   };
 
   const handleSave = () => {
-    const cleanNodes = nodes.map(({ selected, ...n }) => n);
+    const cleanNodes = nodes.map(({ selected, ...n }) => ({
+      ...n,
+      data: { ...n.data, personnel: n.data.personnel._id },
+    }));
     const cleanEdges = edges.map(({ selected, ...e }) => e);
-    localStorage.setItem("savedNodes", JSON.stringify(cleanNodes));
-    localStorage.setItem("savedEdges", JSON.stringify(cleanEdges));
-    alert("Chart saved!");
+
+    dispatch(
+      UPDATE_ORG({
+        token,
+        data: {
+          _id: company._id,
+          org: { nodes: cleanNodes, edges: cleanEdges },
+        },
+      })
+    );
   };
 
   const onReset = () => {
@@ -533,7 +539,9 @@ export default function OrgChart({ personnels }) {
               </div>
             ))
           : availableNodes.map((item) => {
-              const { name, title, position, email } = item.data;
+              const { contract, user } = item?.data?.personnel;
+              const { email, fullName: name } = user;
+              const position = Policy.getPositions(contract.designation);
               return (
                 <div
                   key={item.id}
@@ -553,9 +561,13 @@ export default function OrgChart({ personnels }) {
                     }}
                   />
                   <div className="orgChart-innerCard-info">
-                    <span className="orgChart-innerCard-name">{name}</span>
-                    {title && (
-                      <span className="orgChart-innerCard-title">{title}</span>
+                    <span className="orgChart-innerCard-name">
+                      {properFullname(name)}
+                    </span>
+                    {name.postnominal && (
+                      <span className="orgChart-innerCard-title">
+                        {name.postnominal}
+                      </span>
                     )}
                     {position && (
                       <span className="orgChart-innerCard-position">

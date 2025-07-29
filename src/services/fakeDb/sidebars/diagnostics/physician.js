@@ -5,6 +5,7 @@ import {
   Staffs,
   Applicants,
 } from "../../../../pages/platforms/physician";
+import DailyTasks from "../../../../pages/platforms/physician/diagnostics/tasks";
 // import PatientRecords from "../../../pages/platforms/physician/patientRecords";
 // import MedicalHistory from "../../../pages/platforms/physician/medicalHistory";
 // import Prescription from "../../../pages/platforms/physician/prescription";
@@ -33,6 +34,13 @@ const physician = [
     path: "/diagnostics",
     title: "Review diagnostics appointments and interpret results",
     children: [
+      {
+        name: "Daily Tasks",
+        icon: "weight",
+        path: "/daily-tasks",
+        title: "List of diagnostics appointments assigned to you",
+        component: DailyTasks,
+      },
       {
         name: "My Appointments",
         icon: "stethoscope",

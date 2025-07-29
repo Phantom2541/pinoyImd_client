@@ -27,6 +27,7 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
 import Table from "./table";
+import RadReader from "./radReader";
 
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
@@ -34,7 +35,6 @@ export default function Tasks() {
     { isLoading, byGroup } = useSelector(({ validator }) => validator),
     { addToast } = useToasts(),
     dispatch = useDispatch();
-
   // references
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -111,6 +111,7 @@ export default function Tasks() {
       )}
       <Footer />
       <ResultEntry />
+      <RadReader />
     </MDBCard>
   );
 }

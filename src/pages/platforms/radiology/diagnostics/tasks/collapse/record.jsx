@@ -1,15 +1,26 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fullName } from "../../../../../../services/utilities/index.js";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb/index.js";
-import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
+import {
+  SetRAD_READER,
+  SetTASK,
+  SetVALIDATOR,
+} from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import Swal from "sweetalert2";
-import { LABRESULT } from "../../../../../../services/redux/slices/commerce/pos/services/deals.js";
+import {
+  LABRESULT,
+  RESET,
+} from "../../../../../../services/redux/slices/commerce/pos/services/deals.js";
+import Spinner from "../../../../../../components/spinner/index.jsx";
 
 const Tasks = ({ key, form, obj, index, customer }) => {
-  const { activePlatform, token } = useSelector(({ auth }) => auth),
+  const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
+    { formSubmitted } = useSelector(({ deals }) => deals),
     { collections } = useSelector(({ preferences }) => preferences),
+    { collections: physicians } = useSelector(({ physicians }) => physicians),
+    { heads } = useSelector(({ validator }) => validator),
     [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
@@ -88,11 +99,18 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       if (result.isConfirmed) {
         const updatedTask = {
           ...task,
-          fileId: link,
+          fileId,
           department: "Radiology",
         };
 
-        dispatch(LABRESULT({ token, data: updatedTask }));
+        dispatch(
+          LABRESULT({
+            token,
+            data: updatedTask,
+          })
+        ).then(({ payload }) => {
+          dispatch(SetVALIDATOR(payload?.item || payload?.payload));
+        });
 
         Swal.fire({
           icon: "success",
@@ -147,8 +165,31 @@ const Tasks = ({ key, form, obj, index, customer }) => {
     }
   };
 
-  // const isSelected =
-  //   selected?._id === task._id && selected?.key === "signatory";
+  const [head, dr, encoder = auth?._id] = task?.signatories || [];
+
+  const handlePick = (isTechnician = true) => {
+    if (!selected[isTechnician ? "signatory1" : "signatory2"])
+      return setSelected({});
+    const updatedTask = {
+      ...task,
+      signatories: [
+        isTechnician ? selected?.signatory1 : head?._id,
+        !isTechnician ? selected?.signatory2 : dr?._id,
+        encoder?._id,
+      ],
+      department: "Radiology",
+    };
+    dispatch(
+      LABRESULT({
+        token,
+        data: updatedTask,
+      })
+    ).then(({ payload }) => {
+      dispatch(SetVALIDATOR(payload?.item || payload?.payload));
+      dispatch(RESET());
+      setSelected({});
+    });
+  };
 
   return (
     <tr key={task.key} className={hasDone ? "table-active" : ""}>
@@ -167,21 +208,27 @@ const Tasks = ({ key, form, obj, index, customer }) => {
               }
             >
               <option value="">Select Technician</option>
-              {collections
-                .filter((user) => user.role === "Technician")
-                .map((user) => (
-                  <option key={user.id} value={user.id}>
+              {heads
+                .filter(
+                  ({ section }) => section.toLowerCase() === form.toLowerCase()
+                )
+                .map(({ user }) => (
+                  <option key={user._id} value={user._id}>
                     {fullName(user.fullName)}
                   </option>
                 ))}
             </select>
-            <i
-              className="fas fa-check-circle text-success"
-              role="button"
-              style={{ fontSize: "1.2rem", cursor: "pointer" }}
-              title="Save"
-              onClick={() => handleEntry(selected)}
-            ></i>
+            {formSubmitted ? (
+              <Spinner formSubmitted className="mx-2" />
+            ) : (
+              <i
+                className="fas fa-check-circle text-success mx-1"
+                role="button"
+                style={{ fontSize: "1.2rem", cursor: "pointer" }}
+                title="Save"
+                onClick={() => handlePick(true)}
+              ></i>
+            )}
             <i
               className="fas fa-times-circle text-danger"
               role="button"
@@ -192,7 +239,13 @@ const Tasks = ({ key, form, obj, index, customer }) => {
           </div>
         ) : (
           <strong
-            onClick={() => handleSelected({ ...task, key: "signatory1" })}
+            onClick={() =>
+              handleSelected({
+                ...task,
+                key: "signatory1",
+                signatory1: signatories[0]?._id,
+              })
+            }
             style={{ cursor: "pointer" }}
           >
             {signatories[0]?.fullName
@@ -216,21 +269,27 @@ const Tasks = ({ key, form, obj, index, customer }) => {
               }
             >
               <option value="">Select Radiologist</option>
-              {collections
-                .filter((user) => user.role === "Radiologist")
-                .map((user) => (
-                  <option key={user.id} value={user.id}>
+              {physicians
+                .filter(
+                  ({ specialization }) => specialization === "Radiologist"
+                )
+                .map(({ user }) => (
+                  <option key={user._id} value={user._id}>
                     {fullName(user.fullName)}
                   </option>
                 ))}
             </select>
-            <i
-              className="fas fa-check-circle text-success"
-              role="button"
-              style={{ fontSize: "1.2rem", cursor: "pointer" }}
-              title="Save"
-              onClick={() => handleEntry(selected)}
-            ></i>
+            {formSubmitted ? (
+              <Spinner formSubmitted className="mx-2" />
+            ) : (
+              <i
+                className="fas fa-check-circle text-success mx-1"
+                role="button"
+                style={{ fontSize: "1.2rem", cursor: "pointer" }}
+                title="Save"
+                onClick={() => handlePick(false)}
+              ></i>
+            )}
             <i
               className="fas fa-times-circle text-danger"
               role="button"
@@ -241,7 +300,13 @@ const Tasks = ({ key, form, obj, index, customer }) => {
           </div>
         ) : (
           <strong
-            onClick={() => handleSelected({ ...task, key: "signatory2" })}
+            onClick={() =>
+              handleSelected({
+                ...task,
+                key: "signatory2",
+                signatory2: signatories[1]?._id,
+              })
+            }
             style={{ cursor: "pointer" }}
           >
             {signatories[1]?.fullName
@@ -267,25 +332,26 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       </td>
       <td>
         <MDBBtnGroup>
-          {["Xray", "Ultrasound", "ECG"].includes(form) ? (
-            <MDBBtn
-              color="dark"
-              size="sm"
-              className="py-1 px-2 m-0"
-              onClick={() => previewDriveFile(task)}
-            >
-              <MDBIcon icon="eye" />
-            </MDBBtn>
-          ) : (
-            <MDBBtn
-              onClick={handleEntry}
-              color={hasDone ? "info" : "primary"}
-              size="sm"
-              className="py-1 px-2 m-0"
-            >
-              <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
-            </MDBBtn>
-          )}
+          <MDBBtn
+            color="dark"
+            size="sm"
+            className="py-1 px-2 m-0"
+            onClick={() =>
+              task.fileId
+                ? dispatch(SetRAD_READER(task))
+                : previewDriveFile(task)
+            }
+          >
+            <MDBIcon icon={task.fileId ? "eye" : "upload"} />
+          </MDBBtn>
+          <MDBBtn
+            onClick={handleEntry}
+            color={hasDone ? "info" : "primary"}
+            size="sm"
+            className="py-1 px-2 m-0"
+          >
+            <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
+          </MDBBtn>
 
           {!!signatories.length &&
             signatories[0] &&
