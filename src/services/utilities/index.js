@@ -57,6 +57,8 @@ import PresetIMD from "../../assets/iMD.png";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
 import Barcode from "./barcode";
+//Google Drive
+import gDrive from "./gDrive";
 // Clear's Cache
 import clearSiteData from "./clearSiteData";
 //EXCEL
@@ -139,6 +141,8 @@ export {
   removeUndefinedValues,
   PresetIMD,
   Barcode,
+  //Google Drive
+  gDrive,
   //status of employment
   employment,
   //address formatter,

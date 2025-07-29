@@ -24,7 +24,7 @@ const PickPhysician = ({
   handleCheck = () => {},
   handleClose = () => {},
 }) => {
-  const { collections } = useSelector(({ physicians }) => physicians);
+  const { collections = [] } = useSelector(({ physicians }) => physicians);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -34,7 +34,6 @@ const PickPhysician = ({
   const [hideRegMsg, setHideRegMsg] = useState(true); // hide register message
   const [physicians, setPhysicians] = useState([]);
   const [results, setResults] = useState([]);
-
   const onChangeRef = useRef(onChange);
 
   useEffect(() => {

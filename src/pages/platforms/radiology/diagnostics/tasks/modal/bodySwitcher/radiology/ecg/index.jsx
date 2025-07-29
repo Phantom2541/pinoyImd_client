@@ -11,6 +11,7 @@ import {
 } from "mdbreact";
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import { Services } from "../../../../../../../../../services/fakeDb/index.js";
+import Images from "./images.jsx";
 
 export default function Ecg() {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ export default function Ecg() {
 
   const [findings, setFindings] = useState("");
   const [link, setLink] = useState("");
-  const [activeTab, setActiveTab] = useState("results");
+  const [activeTab, setActiveTab] = useState("images");
 
   // Load values from task
   useEffect(() => {
@@ -32,6 +33,8 @@ export default function Ecg() {
     }
   }, [task]);
 
+  console.log("activeTab", activeTab);
+
   return (
     <div className="mx-auto">
       {Services.getName(task?.packages)}
@@ -39,11 +42,21 @@ export default function Ecg() {
         <MDBNavItem>
           <MDBNavLink
             link
-            active={activeTab === "results"}
             to="#!"
+            active={activeTab === "results"}
             onClick={() => setActiveTab("results")}
           >
             Findings
+          </MDBNavLink>
+        </MDBNavItem>
+        <MDBNavItem>
+          <MDBNavLink
+            link
+            to="#!"
+            active={activeTab === "images"}
+            onClick={() => setActiveTab("images")}
+          >
+            Images
           </MDBNavLink>
         </MDBNavItem>
       </MDBNav>
@@ -52,25 +65,6 @@ export default function Ecg() {
         <MDBCardBody>
           <MDBTabContent activeItem={activeTab} className="pt-0">
             <MDBTabPane tabId="results">
-              <label htmlFor="link">Add link here</label>
-              <input
-                type="link"
-                name="link"
-                id="link"
-                value={link}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setLink(val);
-                  const updatedTask = {
-                    ...task,
-                    link: val,
-                  };
-                  dispatch(SetTASK({ form: task?.form, task: updatedTask }));
-                  // delayedSave("findings", val, descTimeout);
-                }}
-                // onChange={(e) => handleChange(e.target)}
-                className="w-100 text-center fw-bold"
-              />
               <textarea
                 className="form-control mt-3 border"
                 style={{
@@ -90,6 +84,9 @@ export default function Ecg() {
                   // delayedSave("findings", val, descTimeout);
                 }}
               />
+            </MDBTabPane>
+            <MDBTabPane tabId="images">
+              <Images />
             </MDBTabPane>
           </MDBTabContent>
         </MDBCardBody>
