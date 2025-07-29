@@ -1,39 +1,45 @@
-import { useEffect } from "react";
+import { useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
   BROWSE,
   RESET,
-} from "../../../../../services/redux/slices/assets/persons/physicians";
+} from "../../../../../services/redux/slices/assets/persons/applicants";
+
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections, isSucscess } = useSelector(({ physicians }) => physicians),
-    { collections: clinic } = useSelector(({ personnels }) => personnels),
+    { collections} = useSelector(({ physicians }) => physicians),
     dispatch = useDispatch();
-  console.log("clinic", clinic);
 
   useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(BROWSE({ key: { branchId: activePlatform?.branchId }, token }));
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ data: { branchId: activePlatform.branchId }, token }));
+    }
 
-    return () => dispatch(RESET());
-  }, [token, activePlatform, isSucscess, dispatch]);
-
-  //initial values
+    return () => {
+      dispatch(RESET());
+    };
+  }, [token, activePlatform, dispatch]);
 
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header blue-gradient narrower py-2 px-4 mb-3 d-flex justify-content-between align-items-center"
     >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          {collections.length} Staffs
-        </span>
+      {/* Left Info */}
+      <div className="text-white">
+        <div className="font-weight-bold">{collections.length} Clinic Applicants</div>
       </div>
-      <div>
-        <div className="text-right d-flex items-center"></div>
+
+      {/* Right Search Bar */}
+      <div style={{ maxWidth: "280px", width: "100%" }}>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="🔍 Search applicant..."
+        
+        />
       </div>
     </MDBView>
   );
