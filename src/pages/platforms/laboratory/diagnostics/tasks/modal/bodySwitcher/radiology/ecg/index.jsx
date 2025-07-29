@@ -18,34 +18,67 @@ export default function Ecg() {
 
   const [findings, setFindings] = useState("");
   const [link, setLink] = useState("");
-  const [activeTab, setActiveTab] = useState("results");
+  const [activeTab, setActiveTab] = useState("findings");
 
-  // Load values from task
+  // compute preview image URL if fileId exists
+  const imageUrl = task?.fileId
+    ? `https://drive.google.com/uc?export=view&id=${task.fileId}`
+    : link;
+
   useEffect(() => {
     if (task?.findings) {
       try {
         const parsed = JSON.parse(task.findings);
-        setFindings(task.link);
         setFindings(parsed?.blocks?.map((b) => b.text).join("\n") || "");
       } catch (e) {
         setFindings(task.findings);
-        setFindings(task.link);
       }
+    }
+
+    if (task?.link) {
+      setLink(task.link);
     }
   }, [task]);
 
+  const handleFindingsChange = (val) => {
+    setFindings(val);
+    const updatedTask = {
+      ...task,
+      findings: val,
+    };
+    dispatch(SetTASK({ form: task?.form, task: updatedTask }));
+  };
+
+  const handleLinkChange = (val) => {
+    setLink(val);
+    const updatedTask = {
+      ...task,
+      link: val,
+    };
+    dispatch(SetTASK({ form: task?.form, task: updatedTask }));
+  };
+
   return (
     <div className="mx-auto">
-      {Services.getName(task?.packages)}
       <MDBNav color="primary" tabs className="nav-justified">
         <MDBNavItem>
           <MDBNavLink
             link
-            active={activeTab === "results"}
+            active={activeTab === "findings"}
             to="#!"
-            onClick={() => setActiveTab("results")}
+            onClick={() => setActiveTab("findings")}
           >
             Findings
+          </MDBNavLink>
+        </MDBNavItem>
+        <MDBNavItem>
+          <MDBNavLink
+            link
+            active={activeTab === "images"}
+            to="#!"
+            onClick={() => setActiveTab("images")}
+          >
+            Images
           </MDBNavLink>
         </MDBNavItem>
       </MDBNav>
@@ -53,26 +86,7 @@ export default function Ecg() {
       <MDBCard>
         <MDBCardBody>
           <MDBTabContent activeItem={activeTab} className="pt-0">
-            <MDBTabPane tabId="results">
-              <label htmlFor="link">Add link here</label>
-              <input
-                type="link"
-                name="link"
-                id="link"
-                value={link}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setLink(val);
-                  const updatedTask = {
-                    ...task,
-                    link: val,
-                  };
-                  dispatch(SetTASK({ form: task?.form, task: updatedTask }));
-                  // delayedSave("findings", val, descTimeout);
-                }}
-                // onChange={(e) => handleChange(e.target)}
-                className="w-100 text-center fw-bold"
-              />
+            <MDBTabPane tabId="findings">
               <textarea
                 className="form-control mt-3 border"
                 style={{
@@ -81,17 +95,33 @@ export default function Ecg() {
                   maxHeight: "300px",
                 }}
                 value={findings}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setFindings(val);
-                  const updatedTask = {
-                    ...task,
-                    findings: val,
-                  };
-                  dispatch(SetTASK({ form: task?.form, task: updatedTask }));
-                  // delayedSave("findings", val, descTimeout);
-                }}
+                onChange={(e) => handleFindingsChange(e.target.value)}
               />
+            </MDBTabPane>
+
+            <MDBTabPane tabId="images">
+              <label htmlFor="link">Google Drive link</label>
+              <input
+                type="text"
+                name="link"
+                id="link"
+                value={link}
+                onChange={(e) => handleLinkChange(e.target.value)}
+                className="w-100 text-center fw-bold"
+              />
+              {imageUrl && (
+                <div className="text-center mt-3">
+                  <img
+                    src={imageUrl}
+                    alt="Preview"
+                    style={{ maxWidth: "100%", maxHeight: "400px" }}
+                  />
+                  <p className="text-muted small mt-2">
+                    Preview from{" "}
+                    {task?.fileId ? "Google Drive fileId" : "Direct Link"}
+                  </p>
+                </div>
+              )}
             </MDBTabPane>
           </MDBTabContent>
         </MDBCardBody>

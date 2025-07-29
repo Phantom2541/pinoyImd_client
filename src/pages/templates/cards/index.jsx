@@ -18,7 +18,11 @@ export default function Cards() {
         <h5 className="text-center fw-bold">Card 1</h5>
         {/* start copy here  */}
         <div className="template1-card">
-          <img src={MRI} alt="Card" className="template1-card-image" />
+          <img
+            src="https://drive.google.com/thumbnail?id=1r9GSLgSh2r92poO5M-31eZRrl9TX6WyV"
+            alt="Card"
+            className="template1-card-image"
+          />
           <div className="template1-card-body">
             <h2 className="template1-card-title">Card Title</h2>
             <h4 className="template1-card-subtitle">Card Subtitle</h4>
@@ -27,7 +31,10 @@ export default function Cards() {
               or details about the content of the card.
             </p>
             <div className="template1-card-buttons">
-              <button className="template1-card-btn template1-primary">
+              <button
+                id="template1-card-btn"
+                className="template1-card-btn template1-primary"
+              >
                 Learn More
               </button>
               <button className="template1-card-btn template1-secondary">
@@ -113,6 +120,7 @@ export default function Cards() {
             on Sunday from 1:00 AM to 3:00 AM. Services may be temporarily
             unavailable during this time.
           </p>
+          <input id="template5-card-input" type="text" />
         </div>
         {/* end copy here */}
       </div>

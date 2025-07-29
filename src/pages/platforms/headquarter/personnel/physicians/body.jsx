@@ -4,6 +4,7 @@ import { MDBTable } from "mdbreact";
 import {
   RESET,
   DESTROY,
+  SET_COLLECTIONS,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import { useToasts } from "react-toast-notifications";
 import {
@@ -15,9 +16,15 @@ import Swal from "sweetalert2";
 // mobile;
 export default function Body() {
   const { token } = useSelector(({ auth }) => auth),
-    { filtered, message, isSuccess, maxPage, activePage } = useSelector(
-      ({ physicians }) => physicians
-    ),
+    {
+      filtered,
+      collections,
+      message,
+      isSuccess,
+      maxPage,
+      activePage,
+      closeModal,
+    } = useSelector(({ physicians }) => physicians),
     [tieups, setTieups] = useState([]),
     { addToast } = useToasts(),
     dispatch = useDispatch();
@@ -25,7 +32,9 @@ export default function Body() {
   //Set fetched data for mapping
   useEffect(() => {
     setTieups(filtered);
-  }, [filtered]);
+  }, [filtered, isSuccess, closeModal]);
+  console.log("filtered", filtered);
+  console.log("bodycollections", collections);
 
   //Trigger for update
   const handleDelete = (item) => {
@@ -41,11 +50,18 @@ export default function Body() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(DESTROY({ token, data: { id: item._id } }));
+        dispatch(DESTROY({ token, data: { id: item._id } })).then(() => {
+          const updated = tieups.filter((i) => i._id !== item._id);
+
+          // ✅ update local component state
+          // setTieups(updated);
+
+          // ✅ update Redux store using the action creator
+          dispatch(SET_COLLECTIONS({ tieups: updated }));
+        });
       }
     });
   };
-  console.log("filtered", filtered);
 
   //Trigger for create
   // const handleCreate = async () => {

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -14,6 +14,7 @@ const Header = () => {
     { collections, isSucscess } = useSelector(({ physicians }) => physicians),
     dispatch = useDispatch(); //
   const handleAdd = (item) => dispatch(SetCREATE(item));
+  console.log("colhead", collections);
 
   //Initial Browse
   useEffect(() => {
@@ -22,7 +23,6 @@ const Header = () => {
 
     return () => dispatch(RESET());
   }, [token, activePlatform, isSucscess, dispatch]);
-  console.log("colhead", collections);
 
   return (
     <MDBView

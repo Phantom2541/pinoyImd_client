@@ -1,34 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { MDBInput, MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { useSelector, useDispatch } from "react-redux";
-import { SETPARAMS } from "./../../../../../../../../../redux/slices/task/forms";
+import { SetTASK } from "../../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 const Protime = () => {
   const { theme } = useSelector(({ auth }) => auth),
-    { params } = useSelector(({ task }) => task),
+    { task } = useSelector(({ validator }) => validator),
     [inr, setInr] = useState(),
     [percent, setPercent] = useState(),
     [pt, setPt] = useState([0, 0]),
     dispatch = useDispatch();
 
   useEffect(() => {
-    const _pt = !!params.pt ? params.pt : [0, 0];
+    const _pt = !!task.pt ? task.pt : [0, 0];
     setPt(_pt);
-  }, [params]);
+  }, [task]);
 
   useEffect(() => {
-    if (
-      !!params.pt &&
-      params.pt[0] !== null &&
-      !!params.pt &&
-      params.pt[1] !== null
-    ) {
-      const _inr = params.pt[0] / params.pt[1];
+    if (!!task.pt && task.pt[0] !== null && !!task.pt && task.pt[1] !== null) {
+      const _inr = task.pt[0] / task.pt[1];
       setInr(_inr.toFixed(2));
-      const _per = (params.pt[1] / params.pt[0]) * 100;
+      const _per = (task.pt[1] / task.pt[0]) * 100;
       setPercent(_per.toFixed(2));
     }
-  }, [params]);
+  }, [task]);
   const handlePt = (e) => {
     const { name, value } = e.target;
     let _pt = [...pt];
@@ -37,18 +32,12 @@ const Protime = () => {
     } else {
       _pt[1] = parseFloat(value);
     }
-    dispatch(SETPARAMS({ ...params, pt: _pt }));
+    dispatch(
+      SetTASK({ task: { ...task, pt: _pt, form: task?.form }, form: task.form })
+    );
   };
   return (
-    <MDBTable
-      align="middle"
-      hover
-      responsive
-      small
-      color={theme.color}
-      className="mt-2"
-      striped
-    >
+    <MDBTable align="middle" hover responsive small className="mt-2" striped>
       <MDBTableHead>
         <tr className="text-center border">
           <th>Name</th>

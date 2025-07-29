@@ -122,8 +122,8 @@ export default function SideNavigation({
       }
       return;
     }
-    const group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
-
+    let group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
+    group.superadmin = Sidebars.superadmin;
     const fullSidebar = group[platformKey] || [];
     if (platformKey === "laboratory") {
       const role = activePlatform?.role;

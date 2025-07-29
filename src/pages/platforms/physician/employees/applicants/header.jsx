@@ -7,11 +7,10 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/applicants";
 
 
-const Header = ({ onSearch }) => {
-  const dispatch = useDispatch();
-  const { token, activePlatform } = useSelector(({ auth }) => auth);
-  const { collections } = useSelector(({ applicants }) => applicants);
-  const [searchText, setSearchText] = useState("");
+const Header = () => {
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { collections, isSucscess } = useSelector(({ physicians }) => physicians),
+    dispatch = useDispatch();
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {

@@ -41,6 +41,7 @@ const initialState = {
   byStatus: "all",
   showWorkArea: false, //this is for working area
   showModal: false,
+  showRadReader: false, //for viewing of uploaded x-ray
   totalPages: 0,
   page: 1,
   maxPage: 5,
@@ -174,7 +175,9 @@ export const reduxSlice = createSlice({
       }
     },
     SetVALIDATOR: (state, { payload }) => {
-      const form = capitalize(payload.form);
+      console.log("payload", payload);
+
+      const form = capitalize(payload?.form);
       const identifier = ["Miscellaneous", "Xray", "Ultrasound"].includes(form)
         ? "dealId"
         : "_id";
@@ -202,6 +205,10 @@ export const reduxSlice = createSlice({
       updateCollection(state.collections, findIndex(state.collections));
       updateCollection(state.filtered, findIndex(state.filtered));
       updateCollection(state.filteredStatus, findIndex(state.filteredStatus));
+    },
+    SetRAD_READER: (state, { payload }) => {
+      state.showRadReader = true;
+      state.task = payload;
     },
     SetFILTERED: (state, { payload }) => {
       if (payload.length > 0) {
@@ -318,6 +325,10 @@ export const reduxSlice = createSlice({
     TOGGLE_WORK_AREA: (state, _) => {
       state.showWorkArea = !state.showWorkArea;
     },
+    TOGGLE_RAD_READER: (state, _) => {
+      state.showRadReader = !state.showRadReader;
+      state.task = {};
+    },
     RESET: (state) => {
       state.isSuccess = false;
       state.formSubmitted = false;
@@ -432,6 +443,7 @@ export const {
   SetSELECTED,
   SetPatient,
   SetTASK,
+  SetRAD_READER,
   SetWorkArea,
   SetPARAMS,
   SetPrint,
@@ -449,6 +461,7 @@ export const {
   SetActivePAGE,
   TOGGLE,
   TOGGLE_WORK_AREA,
+  TOGGLE_RAD_READER,
   RESET,
   //this is for LIS  socket to receive realtime result from A15
   RECEIVE_A15,

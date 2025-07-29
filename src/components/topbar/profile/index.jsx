@@ -7,7 +7,11 @@ import {
   MDBDropdownItem,
 } from "mdbreact";
 import { useSelector } from "react-redux";
-import { PresetImage, clearSiteData } from "../../../services/utilities";
+import {
+  PresetImage,
+  clearSiteData,
+  employment,
+} from "../../../services/utilities";
 import { useHistory } from "react-router";
 
 export default function Profile() {
@@ -32,6 +36,7 @@ export default function Profile() {
     history.push(`/subscribers/${companyId}`);
     clearSiteData();
   };
+  const isEmployed = employment.isEmployed(activePlatform?.branch?.status);
   return (
     <MDBDropdown>
       <MDBDropdownToggle nav caret>
@@ -55,7 +60,7 @@ export default function Profile() {
             My Account
           </MDBDropdownItem>
         )}
-        {!isPatient && (
+        {!isPatient && isEmployed && (
           <MDBDropdownItem
             disabled={!auth._id}
             href={`/${platform?.toLowerCase()}/contract`}
