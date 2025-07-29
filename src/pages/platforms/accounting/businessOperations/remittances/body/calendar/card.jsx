@@ -127,7 +127,7 @@ const Card = ({
 
   return (
     <div
-      className={`calendar-card ${isToday && "today"}  ${
+      className={`calendar-card  ${isToday && "today"}  ${
         num ? "cursor-pointer" : "opacity-0 pointer-events-none"
       } ${activeCell && "active"} `}
       style={!num ? { opacity: 0, pointerEvents: "none" } : {}}

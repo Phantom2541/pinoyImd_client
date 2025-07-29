@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { MDBInput, MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { useSelector, useDispatch } from "react-redux";
-import { SETPARAMS } from "./../../../../../../../../../redux/slices/task/forms";
+import { SetTASK } from "../../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 const Aptt = () => {
-  const { theme } = useSelector(({ auth }) => auth),
-    { params } = useSelector(({ task }) => task),
+  const { task } = useSelector(({ validator }) => validator),
     [data, setData] = useState([0, 0]),
     dispatch = useDispatch();
+  console.log("task", task);
 
   useEffect(() => {
-    const _aptt = !!params.aptt?.length ? params.aptt : [0, 0];
+    const _aptt = !!task.aptt?.length ? task.aptt : [0, 0];
     setData(_aptt);
-  }, [params]);
+  }, [task]);
 
   const handleAptt = (e) => {
     const { name, value } = e.target;
@@ -22,18 +22,12 @@ const Aptt = () => {
     } else {
       aptt[1] = parseFloat(value);
     }
-    dispatch(SETPARAMS({ ...params, aptt }));
+    dispatch(
+      SetTASK({ form: task?.form, task: { ...task, aptt, form: task?.form } })
+    );
   };
   return (
-    <MDBTable
-      align="middle"
-      hover
-      responsive
-      small
-      color={theme.color}
-      className="mt-2"
-      striped
-    >
+    <MDBTable align="middle" hover responsive small className="mt-2" striped>
       <MDBTableHead>
         <tr className="text-center border">
           <th>Name</th>

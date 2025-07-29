@@ -17,10 +17,11 @@ export default function POS() {
     { customer } = useSelector(({ pos }) => pos),
     [activeIndex, setActiveIndex] = useState(0),
     dispatch = useDispatch();
+
   const searchContainerRef = useRef(null);
   const origPositionRef = useRef(null);
   const [showPatientInfo, setShowPatientInfo] = useState(false);
-  const [searchDone, setSearchDone] = useState(false); // trigger animation
+  const [searchDone, setSearchDone] = useState(false);
   const [activateOrigHeight, setActivateOrigHeight] = useState(false);
   const [asOverlay, setAsOverlay] = useState(true);
   const frontRef = useRef(null);
@@ -31,22 +32,15 @@ export default function POS() {
     const front = frontRef.current;
     const back = backRef.current;
     const container = containerRef.current;
-
     if (front && back && container) {
-      const frontHeight = front.offsetHeight;
-      const backHeight = back.offsetHeight;
       container.style.height = `${
-        activeIndex === 1 ? backHeight : frontHeight
+        activeIndex === 1 ? back.offsetHeight : front.offsetHeight
       }px`;
     }
   }, [activeIndex]);
 
-  // if a newPatient id is present and active index is 1
-  // it means a new patient has been injected, you should go back to POS
   useEffect(() => {
     if (message.name === "Error") {
-      console.log("message", message);
-
       Swal.fire({
         title: "Duplicate Entry",
         text: message.message,
@@ -55,22 +49,22 @@ export default function POS() {
     }
   }, [message]);
 
-  const handleCustomer = (customer) => {
+  const hideOverlay = () => {
+    const overlay = document.querySelector(".cashier-pos-search-overlay");
+    if (overlay) {
+      overlay.style.transition = "opacity 0.3s ease";
+      overlay.style.opacity = "0";
+      setTimeout(() => {
+        overlay.style.display = "none";
+      }, 300);
+    }
+  };
+
+  const animateSearchToTarget = (callback, fadeDelay = 900) => {
     const searchEl = searchContainerRef.current;
     const targetEl = origPositionRef.current;
 
     if (searchEl && targetEl) {
-      const overlay = document.querySelector(".cashier-pos-search-overlay");
-      if (overlay) {
-        overlay.style.transition = "opacity 0.3s ease";
-        overlay.style.opacity = "0";
-        setTimeout(() => {
-          overlay.style.display = "none";
-        }, 300);
-      }
-
-      setActivateOrigHeight(true);
-
       const fromRect = searchEl.getBoundingClientRect();
       const toRect = targetEl.getBoundingClientRect();
       const deltaX =
@@ -83,24 +77,30 @@ export default function POS() {
       searchEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
       searchEl.style.width = `${targetWidth}px`;
 
-      const fadeDuration = asOverlay ? 900 : 300;
-
       setTimeout(() => {
-        targetEl.style.transition = "opacity 0.4s ease";
         searchEl.style.transition = "opacity 0.4s ease";
-        targetEl.style.opacity = "0";
+        targetEl.style.transition = "opacity 0.4s ease";
         searchEl.style.opacity = "0";
-
-        setTimeout(() => {
-          setSearchDone(true);
-          dispatch(SETPATIENT(customer));
-          setShowPatientInfo(true);
-        }, 400);
-      }, fadeDuration);
+        targetEl.style.opacity = "0";
+        setTimeout(callback, 400);
+      }, fadeDelay);
     } else {
-      dispatch(SETPATIENT(customer));
-      setShowPatientInfo(true);
+      callback();
     }
+  };
+
+  const handleCustomer = (customer) => {
+    hideOverlay();
+    setActivateOrigHeight(true);
+
+    animateSearchToTarget(
+      () => {
+        dispatch(SETPATIENT(customer));
+        setShowPatientInfo(true);
+        setSearchDone(true);
+      },
+      asOverlay ? 900 : 300
+    );
   };
 
   const handleRegister = (customer) => {
@@ -112,16 +112,7 @@ export default function POS() {
     const targetEl = origPositionRef.current;
 
     if (searchEl && targetEl && asOverlay) {
-      // Hide overlay
-      const overlay = document.querySelector(".cashier-pos-search-overlay");
-      if (overlay) {
-        overlay.style.transition = "opacity 0.3s ease";
-        overlay.style.opacity = "0";
-        setTimeout(() => {
-          overlay.style.display = "none";
-        }, 300);
-      }
-
+      hideOverlay();
       setActivateOrigHeight(true);
 
       const fromRect = searchEl.getBoundingClientRect();
@@ -137,27 +128,80 @@ export default function POS() {
       searchEl.style.width = `${targetWidth}px`;
 
       setTimeout(() => {
-        // Reset transform and cleanup
         searchEl.style.transition = "none";
         searchEl.style.transform = "none";
-        searchEl.style.width = "100%"; // maintain full width from now on
-        setAsOverlay(false); // lock to original position
+        searchEl.style.width = "100%";
+        setAsOverlay(false);
       }, 700);
     }
   };
 
+  const clearPatient = () => {
+    dispatch(SETPATIENT({}));
+    dispatch(RESET_INSOURCE());
+
+    const searchEl = searchContainerRef.current;
+    const overlay = document.querySelector(".cashier-pos-search-overlay");
+
+    if (searchEl) {
+      searchEl.style.transition = "none";
+      searchEl.style.transform = "none";
+      searchEl.style.opacity = "1";
+    }
+
+    if (overlay) {
+      overlay.style.display = "none";
+      overlay.style.opacity = "0";
+    }
+
+    setAsOverlay(false);
+    setSearchDone(false);
+    setShowPatientInfo(false);
+    setActivateOrigHeight(false);
+  };
+
+  useEffect(() => {
+    const resetUI = () => {
+      const searchEl = searchContainerRef.current;
+      const overlay = document.querySelector(".cashier-pos-search-overlay");
+
+      if (searchEl) {
+        searchEl.style.transition = "none";
+        searchEl.style.transform = "none";
+        searchEl.style.opacity = "1";
+        searchEl.style.width = "100%";
+      }
+
+      if (overlay) {
+        overlay.style.display = "none";
+        overlay.style.opacity = "0";
+      }
+
+      setSearchDone(false);
+      setShowPatientInfo(false);
+      setActivateOrigHeight(false);
+      setAsOverlay(true);
+      setActiveIndex(0);
+    };
+
+    // Add event listener
+    window.addEventListener("reset-ui", resetUI);
+
+    // Clean up on unmount
+    return () => {
+      window.removeEventListener("reset-ui", resetUI);
+    };
+  }, []);
+
   return (
     <div className="pos-container">
       <div
-        className={`pos-container-header  ${customer?._id && "pickedSearch"}`}
+        className={`pos-container-header ${customer?._id && "pickedSearch"}`}
       >
         {customer?._id && showPatientInfo && (
           <div
-            style={{
-              width: "100%",
-              marginBottom: "-0.5rem",
-            }}
             className="d-flex cashier-pos-fade-in"
+            style={{ width: "100%", marginBottom: "-0.5rem" }}
           >
             <h5>
               <MDBIcon icon="mars" className="text-primary mr-2 mt-2" />
@@ -183,45 +227,14 @@ export default function POS() {
                     borderRadius: "50%",
                     fontSize: ".9rem",
                   }}
-                  onClick={() => {
-                    dispatch(SETPATIENT({}));
-                    dispatch(RESET_INSOURCE());
-
-                    const searchEl = searchContainerRef.current;
-                    const overlay = document.querySelector(
-                      ".cashier-pos-search-overlay"
-                    );
-
-                    if (searchEl) {
-                      searchEl.style.transition = "none";
-                      searchEl.style.transform = "none";
-                      searchEl.style.opacity = "1";
-                    }
-
-                    if (overlay) {
-                      overlay.style.display = "none"; // hide na lang
-                      overlay.style.opacity = "0";
-                    }
-
-                    // Important:
-                    setAsOverlay(false); // ⬅️ render search in original position only
-
-                    setSearchDone(false);
-                    setShowPatientInfo(false);
-                    setActivateOrigHeight(false);
-                  }}
+                  onClick={clearPatient}
                 >
                   <MDBIcon icon="times" />
                 </MDBBtn>
               </div>
-              <h6
-                style={{
-                  marginTop: "-0.6rem",
-                  display: "block",
-                }}
-              >
+              <h6 style={{ marginTop: "-0.6rem" }}>
                 <span className="grey-text">Birthday:</span>
-                <span style={{ fontWeight: 400 }} className="ml-1">
+                <span className="ml-1" style={{ fontWeight: 400 }}>
                   {new Date(customer?.dob).toDateString()}
                 </span>
               </h6>
@@ -241,9 +254,7 @@ export default function POS() {
               }`}
               style={{ overflow: asOverlay ? "hidden" : "visible" }}
             >
-              {!searchDone && asOverlay && (
-                <div className={`cashier-pos-search-overlay`} />
-              )}
+              {asOverlay && <div className="cashier-pos-search-overlay" />}
               <div
                 className={`cashier-pos-search-container ${
                   asOverlay && "fixedWidth"
@@ -267,23 +278,23 @@ export default function POS() {
           </div>
         )}
       </div>
+
       <div className="pos-card-button">
-        {["Class", "Patient"]?.map((name, index) => {
-          return (
-            <button
-              key={`button-${index}`}
-              className={`${activeIndex === index && "active"}`}
-              onClick={() => setActiveIndex(index)}
-            >
-              {name}
-              <MDBIcon
-                icon={name === "Class" ? "cogs" : "user-injured"}
-                className="pos-button-icon"
-              />
-            </button>
-          );
-        })}
+        {["Class", "Patient"].map((name, index) => (
+          <button
+            key={`button-${index}`}
+            className={`${activeIndex === index && "active"}`}
+            onClick={() => setActiveIndex(index)}
+          >
+            {name}
+            <MDBIcon
+              icon={name === "Class" ? "cogs" : "user-injured"}
+              className="pos-button-icon"
+            />
+          </button>
+        ))}
       </div>
+
       <div className="pos-card-body" ref={containerRef}>
         <div className={`flip-card ${activeIndex === 1 ? "flipped" : ""}`}>
           <div className="flip-card-front" ref={frontRef}>

@@ -162,7 +162,7 @@ export default function Select({
     );
 
   return (
-    <div className="d-flex align-items-center w-100">
+    <>
       <MDBSelect
         label={!hideLabel && label}
         getValue={handleSelection}
@@ -248,6 +248,6 @@ export default function Select({
           />
         </div>
       )}
-    </div>
+    </>
   );
 }

@@ -12,7 +12,7 @@ import tendered from "../../../../../../../assets/tendered.png";
 import discount from "../../../../../../../assets/discount.png";
 import { Categories, HMO } from "../../../../../../../services/fakeDb";
 import { useSelector } from "react-redux";
-import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
+// import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
 const Patient = ({
   index = -1,
   deal = {},
@@ -148,7 +148,7 @@ const Patient = ({
               isPhysicianEdit && "deals-zoom-in"
             }`}
           >
-            {isPhysicianEdit && (
+            {/* {isPhysicianEdit && (
               <PickPhysician
                 defaultValue={
                   !deal?.physicianId?._id
@@ -175,7 +175,7 @@ const Patient = ({
                 }
                 handleClose={() => setSelected({})}
               />
-            )}
+            )} */}
           </div>
           <div
             className="cursor-pointer"

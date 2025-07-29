@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Diagnostics from "./diagnostics";
 import Suppliers from "./suppliers";
 import { GET_DETAILS } from "../../services/redux/slices/assets/companies";
+import Loading from "./diagnostics/loading";
 
 const diagnosticsCategories = [
   "diagnostic",
@@ -32,7 +33,7 @@ export default function CompanyCategorySwitcher() {
     localStorage.setItem("companyId", companyId);
   }, [companyId, dispatch]);
 
-  if (isLoading || !details) return <div>Loading...</div>;
+  if (isLoading || !details) return <Loading />;
 
   if (category && diagnosticsCategories.includes(category)) {
     return <Diagnostics />;
