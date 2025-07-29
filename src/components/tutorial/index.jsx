@@ -1,54 +1,158 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 import TypingText from "../typingText";
 import tutorialVideo from "./../../assets/iMD_instructor.mp4";
 
+const VIDEO_WIDTH = 90;
+const VIDEO_HEIGHT = 90;
+const VIDEO_MARGIN = 12;
+const INSTRUCTION_WIDTH = 340;
+const ESTIMATED_INSTRUCTION_HEIGHT = 170;
+const SPACE_MARGIN = 12;
+const TOTAL_NEEDED_SPACE = INSTRUCTION_WIDTH + VIDEO_WIDTH + SPACE_MARGIN * 3;
+
 export default function Tutorial({ steps }) {
   const [showTutorial, setShowTutorial] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
+  const step = steps[stepIndex];
+
   const [targetRect, setTargetRect] = useState(null);
   const [boxDirection, setBoxDirection] = useState("right");
+  const [showRequirementWarning, setShowRequirementWarning] = useState(false);
+  const [displayedText, setDisplayedText] = useState(step.description);
   const instructionRef = useRef(null);
   const videoRef = useRef(null);
 
-  const step = steps[stepIndex];
+  const playVideo = useCallback(() => {
+    videoRef.current?.play().catch(() => {});
+  }, []);
+
+  const endTutorial = useCallback(() => {
+    setShowTutorial(false);
+    setTargetRect(null);
+    window.speechSynthesis.cancel();
+
+    // 🧹 Reset all data-clicked attributes
+    steps.forEach((s) => {
+      const el = document.querySelector(s.target);
+      if (el?.dataset?.clicked) {
+        delete el.dataset.clicked;
+      }
+    });
+  }, [steps]);
+
+  const isFirstStep = stepIndex === 0;
+  const isLastStep = stepIndex === steps.length - 1;
+
+  const isRequirementMet = useCallback(() => {
+    const step = steps[stepIndex];
+    if (!step?.required || !step.target) return true;
+
+    const el = document.querySelector(step.target);
+    if (!el) return false;
+
+    if (step.requiredType === "click") {
+      return el.dataset.clicked === "true";
+    }
+
+    if (step.requiredType === "input") {
+      return el.value?.trim() !== "";
+    }
+
+    return true;
+  }, [steps, stepIndex]);
+
+  useEffect(() => {
+    document.body.style.overflow = showTutorial ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showTutorial]);
+
+  useEffect(() => {
+    if (!showTutorial) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight" && !isLastStep) {
+        if (isRequirementMet()) {
+          setStepIndex((i) => i + 1);
+          setShowRequirementWarning(false);
+          playVideo();
+        } else {
+          // Show warning message + shake
+          setDisplayedText("");
+          setShowRequirementWarning(false);
+
+          [videoRef.current, instructionRef.current].forEach((el) => {
+            if (el) {
+              el.classList.add("shake");
+              setTimeout(() => el.classList.remove("shake"), 500);
+            }
+          });
+
+          setTimeout(() => {
+            setShowRequirementWarning(true);
+            const fallback =
+              steps[stepIndex].requiredMessage ||
+              "This step is required before continuing.";
+            setDisplayedText(fallback);
+          }, 500);
+        }
+      } else if (e.key === "ArrowLeft" && !isFirstStep) {
+        setStepIndex((i) => i - 1);
+        setShowRequirementWarning(false);
+        playVideo();
+      } else if (e.key === "Escape") {
+        endTutorial();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    showTutorial,
+    stepIndex,
+    isFirstStep,
+    isLastStep,
+    playVideo,
+    endTutorial,
+    steps,
+    isRequirementMet,
+    videoRef,
+    instructionRef,
+  ]);
 
   useEffect(() => {
     if (!showTutorial) return;
 
     const updateRect = () => {
       const el = document.querySelector(step.target);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        const newRect = {
-          top: rect.top,
-          left: rect.left,
-          width: rect.width,
-          height: rect.height,
-        };
-        setTargetRect(newRect);
+      if (!el) return;
 
-        const estimatedBoxWidth = 340;
-        const estimatedVideoWidth = 90;
-        const margin = 12;
-        const totalNeededSpace =
-          estimatedBoxWidth + estimatedVideoWidth + margin * 3;
+      const rect = el.getBoundingClientRect();
+      const newRect = {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      };
+      setTargetRect(newRect);
 
-        const spaceRight = window.innerWidth - rect.right;
-        const spaceLeft = rect.left;
+      const spaceRight = window.innerWidth - rect.right;
+      const spaceLeft = rect.left;
 
-        setBoxDirection(
-          spaceRight < totalNeededSpace && spaceLeft > totalNeededSpace
-            ? "left"
-            : "right"
-        );
+      setBoxDirection(
+        spaceRight < TOTAL_NEEDED_SPACE && spaceLeft > TOTAL_NEEDED_SPACE
+          ? "left"
+          : "right"
+      );
 
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
     };
 
     updateRect();
+
     const interval = setInterval(updateRect, 100);
     window.addEventListener("resize", updateRect);
     window.addEventListener("scroll", updateRect, true);
@@ -68,11 +172,7 @@ export default function Tutorial({ steps }) {
       utterance.rate = 0.7;
       window.speechSynthesis.speak(utterance);
     }
-  }, [stepIndex, showTutorial]);
-
-  const videoWidth = 90;
-  const videoMargin = 12;
-  const instructionWidth = 340;
+  }, [stepIndex, showTutorial, step]);
 
   const highlightStyle = targetRect
     ? {
@@ -84,75 +184,71 @@ export default function Tutorial({ steps }) {
       }
     : { display: "none" };
 
-  // const videoStyle = targetRect
-  //   ? {
-  //       position: "fixed",
-  //       top: targetRect.top + targetRect.height - 90,
-  //       left:
-  //         boxDirection === "right"
-  //           ? targetRect.left + targetRect.width + videoMargin
-  //           : targetRect.left - videoWidth - videoMargin,
-  //       width: videoWidth,
-  //       height: 90,
-  //       zIndex: 1000000,
-  //     }
-  //   : { display: "none" };
+  const videoStyle = useMemo(() => {
+    if (!targetRect) return { display: "none" };
 
-  const videoHeight = 90;
+    let top = targetRect.top + targetRect.height - VIDEO_HEIGHT;
+    let left =
+      boxDirection === "right"
+        ? targetRect.left + targetRect.width + VIDEO_MARGIN
+        : targetRect.left - VIDEO_WIDTH - VIDEO_MARGIN;
 
-  const videoStyle = targetRect
-    ? (() => {
-        let top = targetRect.top + targetRect.height - videoHeight; // default: bottom of highlight-box
-        let left =
-          boxDirection === "right"
-            ? targetRect.left + targetRect.width + videoMargin
-            : targetRect.left - videoWidth - videoMargin;
+    top = Math.min(Math.max(10, top), window.innerHeight - VIDEO_HEIGHT - 10);
+    left = Math.min(Math.max(10, left), window.innerWidth - VIDEO_WIDTH - 10);
 
-        // Adjust vertically if it overflows below
-        if (top + videoHeight > window.innerHeight - 10) {
-          top = window.innerHeight - videoHeight - 10; // 10px padding from bottom
-        }
+    return {
+      position: "fixed",
+      top,
+      left,
+      width: VIDEO_WIDTH,
+      height: VIDEO_HEIGHT,
+      zIndex: 1000000,
+    };
+  }, [targetRect, boxDirection]);
 
-        // Adjust horizontally if it overflows right
-        if (left + videoWidth > window.innerWidth - 10) {
-          left = window.innerWidth - videoWidth - 10;
-        }
+  const instructionStyle = useMemo(() => {
+    if (!targetRect || !videoStyle.top) return { display: "none" };
 
-        // Adjust if it overflows left
-        if (left < 10) {
-          left = 10;
-        }
+    const hasEnoughSpaceTop =
+      videoStyle.top - ESTIMATED_INSTRUCTION_HEIGHT > 10;
+    const top = hasEnoughSpaceTop
+      ? videoStyle.top - ESTIMATED_INSTRUCTION_HEIGHT
+      : videoStyle.top + VIDEO_HEIGHT + VIDEO_MARGIN;
 
-        // Adjust if it overflows top
-        if (top < 10) {
-          top = 10;
-        }
+    const left =
+      boxDirection === "right"
+        ? videoStyle.left + VIDEO_WIDTH + VIDEO_MARGIN - 15
+        : videoStyle.left - INSTRUCTION_WIDTH - VIDEO_MARGIN + 30;
 
-        return {
-          position: "fixed",
-          top,
-          left,
-          width: videoWidth,
-          height: videoHeight,
-          zIndex: 1000000,
-        };
-      })()
-    : { display: "none" };
+    const adjustedTop = Math.min(
+      Math.max(10, top),
+      window.innerHeight - ESTIMATED_INSTRUCTION_HEIGHT - 10
+    );
+    const adjustedLeft = Math.min(
+      Math.max(10, left),
+      window.innerWidth - INSTRUCTION_WIDTH - 10
+    );
 
-  const instructionStyle = targetRect
-    ? {
-        position: "fixed",
-        top: targetRect.top,
-        left:
-          boxDirection === "right"
-            ? targetRect.left +
-              targetRect.width +
-              videoMargin +
-              videoWidth +
-              videoMargin
-            : targetRect.left - videoWidth - instructionWidth - videoMargin * 2,
-      }
-    : { display: "none" };
+    const videoCenter = videoStyle.left + VIDEO_WIDTH / 2;
+    const p =
+      boxDirection === "right"
+        ? ((videoCenter - adjustedLeft) / INSTRUCTION_WIDTH) * 100 + 25
+        : ((videoCenter - adjustedLeft) / INSTRUCTION_WIDTH) * 100 - 18;
+
+    const arrowPosition = hasEnoughSpaceTop ? "top" : "bottom";
+
+    return {
+      position: "fixed",
+      top: adjustedTop,
+      left: adjustedLeft,
+      width: INSTRUCTION_WIDTH,
+      zIndex: 1000000,
+      "--p": `${Math.min(100, Math.max(0, p))}%`,
+      "--flipX": boxDirection === "left" ? "-1" : "1",
+      "--flipY": arrowPosition === "bottom" ? "-1" : "1",
+      arrowPosition,
+    };
+  }, [targetRect, videoStyle, boxDirection]);
 
   const startTutorial = () => {
     setStepIndex(0);
@@ -160,23 +256,36 @@ export default function Tutorial({ steps }) {
     playVideo();
   };
 
-  const endTutorial = () => {
-    setShowTutorial(false);
-    setTargetRect(null);
-    window.speechSynthesis.cancel();
-  };
+  useEffect(() => {
+    if (!showTutorial || !step?.required || step.requiredType !== "click")
+      return;
 
-  const playVideo = () => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
-  };
+    const el = document.querySelector(step.target);
+    if (!el) return;
+
+    const handleClick = () => {
+      el.dataset.clicked = "true";
+    };
+
+    el.addEventListener("click", handleClick);
+
+    return () => {
+      el.removeEventListener("click", handleClick);
+    };
+  }, [step, showTutorial]);
+
+  useEffect(() => {
+    setDisplayedText(steps[stepIndex].description);
+    setShowRequirementWarning(false);
+  }, [stepIndex, steps]);
 
   return (
     <>
-      <button className="tutorial-button" onClick={startTutorial}>
-        <MDBIcon fas icon="question" />
-      </button>
+      <div className="tutorial-button-wrapper" onClick={startTutorial}>
+        <button className="tutorial-button">
+          <MDBIcon className="tutorial-question-icon" fas icon="question" />
+        </button>
+      </div>
 
       <div className={`tutorial-wrapper ${showTutorial ? "show" : "hide"}`}>
         <div className="tutorial-overlay">
@@ -225,6 +334,7 @@ export default function Tutorial({ steps }) {
 
         <div
           className="instruction-box"
+          data-arrow-position={instructionStyle.arrowPosition}
           style={instructionStyle}
           ref={instructionRef}
         >
@@ -232,22 +342,18 @@ export default function Tutorial({ steps }) {
           {showTutorial && targetRect && (
             <TypingText
               className="instruction-description"
-              key={stepIndex}
-              text={step.description}
+              key={stepIndex + (showRequirementWarning ? "-warn" : "-desc")}
+              text={displayedText}
               speed={40}
               startDelay={500}
-              onTypingDone={() => {
-                if (videoRef.current) {
-                  videoRef.current.pause();
-                }
-              }}
+              onTypingDone={() => videoRef.current?.pause()}
             />
           )}
 
           <div className="instruction-buttons">
             <div className="instruction-btnCloseSkip">
               <button className="instruction-btnClose" onClick={endTutorial}>
-                Close
+                <MDBIcon icon="times" />
               </button>
               <button
                 className="instruction-btnSkip"
@@ -259,6 +365,7 @@ export default function Tutorial({ steps }) {
                     endTutorial();
                   }
                 }}
+                disabled={false}
               >
                 Skip
               </button>
@@ -271,17 +378,44 @@ export default function Tutorial({ steps }) {
                   setStepIndex((i) => i - 1);
                   playVideo();
                 }}
-                disabled={stepIndex === 0}
+                disabled={isFirstStep}
               >
                 Back
               </button>
-              {stepIndex < steps.length - 1 ? (
+              {!isLastStep ? (
                 <button
-                  className="instruction-btnNext"
+                  className={`instruction-btnNext ${
+                    !isRequirementMet() ? "tutorial-disabled " : ""
+                  }`}
                   onClick={() => {
-                    setStepIndex((i) => i + 1);
-                    playVideo();
+                    if (isRequirementMet()) {
+                      setStepIndex((i) => i + 1);
+                    } else {
+                      // Step 1: Clear text
+                      setDisplayedText(""); // ← hide description
+                      setShowRequirementWarning(false);
+
+                      // Step 2: Add shake
+                      [videoRef.current, instructionRef.current].forEach(
+                        (el) => {
+                          if (el) {
+                            el.classList.add("shake");
+                            setTimeout(() => el.classList.remove("shake"), 500);
+                          }
+                        }
+                      );
+
+                      // Step 3: Show required message after delay
+                      setTimeout(() => {
+                        setShowRequirementWarning(true);
+                        const fallback =
+                          steps[stepIndex].requiredMessage ||
+                          "This step is required before continuing.";
+                        setDisplayedText(fallback);
+                      }, 500);
+                    }
                   }}
+                  disabled={false} // ← wag i-disable para pwede i-trigger yung shake
                 >
                   Next
                 </button>

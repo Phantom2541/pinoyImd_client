@@ -62,6 +62,7 @@ const frontdesk = [
     name: "Diagnostics",
     path: "/diagnostics",
     icon: "cogs",
+    id: "frontdesk-diagnostics",
     title:
       "Manage patient diagnostics – onboarding, task queue, tracking, and sendouts.",
     children: [
@@ -373,6 +374,7 @@ const frontdesk = [
     name: "Templates",
     path: "/templates",
     icon: "list",
+    id: "frontdesk-templates",
     children: [
       {
         name: "Tables",
