@@ -111,7 +111,7 @@ export default function Tasks() {
       )}
       <Footer />
       <ResultEntry />
-      <RadReader />
+      {/* <RadReader /> */}
     </MDBCard>
   );
 }

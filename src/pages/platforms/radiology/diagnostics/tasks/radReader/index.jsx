@@ -11,7 +11,7 @@ export default function RadReader() {
     ),
     dispatch = useDispatch();
 
-  const imgSrc = `https://drive.google.com/thumbnail?id=${task.fileId}`;
+  const imgSrc = `https://drive.google.com/thumbnail?id=${task?.fileId}`;
 
   return (
     <MDBModal
