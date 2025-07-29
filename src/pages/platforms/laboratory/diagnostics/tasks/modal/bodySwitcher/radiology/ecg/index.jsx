@@ -10,7 +10,6 @@ import {
   MDBTabPane,
 } from "mdbreact";
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
-import { Services } from "../../../../../../../../../services/fakeDb/index.js";
 
 export default function Ecg() {
   const dispatch = useDispatch();
