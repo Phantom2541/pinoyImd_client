@@ -19,7 +19,6 @@ const Tasks = ({ key, form, obj, index, customer }) => {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
     { formSubmitted } = useSelector(({ deals }) => deals),
     { collections } = useSelector(({ preferences }) => preferences),
-    { collections: physicians } = useSelector(({ physicians }) => physicians),
     { heads } = useSelector(({ validator }) => validator),
     [selected, setSelected] = useState({}),
     dispatch = useDispatch();

@@ -32,10 +32,6 @@ export default function Ecg() {
     }
   }, [task]);
 
-  useEffect(() => {
-    dispatch(SetTASK({ form: task?.form, task: { ...task, findings } }));
-  }, [findings]);
-
   return (
     <div className="mx-auto mt-n2">
       {Services.getName(task?.packages)}
@@ -82,7 +78,6 @@ export default function Ecg() {
                     findings: val,
                   };
                   dispatch(SetTASK({ form: task?.form, task: updatedTask }));
-                  // delayedSave("findings", val, descTimeout);
                 }}
               />
             </MDBTabPane>

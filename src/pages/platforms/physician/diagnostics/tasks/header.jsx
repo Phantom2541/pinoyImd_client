@@ -73,7 +73,12 @@ const Headers = () => {
               style={{ width: 150 }}
               value={byStatus}
               onChange={(e) => {
-                dispatch(SetByStatus(e.target.value));
+                dispatch(
+                  SetByStatus({
+                    status: e.target.value,
+                    statusKey: "hasRead",
+                  })
+                );
               }}
             >
               <option value="" disabled style={{ fontWeight: "bold" }}>
@@ -90,7 +95,9 @@ const Headers = () => {
               setFiltered={(items) => dispatch(SetFILTERED_STATUS(items))}
               reset={() => {
                 dispatch(SetByGroup(byGroup));
-                dispatch(SetByStatus(byStatus));
+                dispatch(
+                  SetByStatus({ status: byStatus, statusKey: "hasRead" })
+                );
               }}
               haveAction={false}
             />

@@ -233,8 +233,9 @@ export const reduxSlice = createSlice({
       state.activePage = 1;
     },
     SetByStatus: (state, action) => {
+      const { status, statusKey = "hasDone" } = action.payload;
+
       const groupBy = state.byGroup;
-      const filter = action.payload;
       const diagnosticGroup =
         groupBy === "all"
           ? state.filtered
@@ -242,10 +243,10 @@ export const reduxSlice = createSlice({
               return task.diagnostic && task.diagnostic[groupBy];
             });
 
-      if (filter === "all") {
+      if (status === "all") {
         state.filteredStatus = diagnosticGroup;
       } else {
-        const isDone = filter === "true";
+        const isDone = status === "true";
 
         state.filteredStatus = diagnosticGroup.filter((task) => {
           if (!task.diagnostic) return false;
@@ -256,12 +257,13 @@ export const reduxSlice = createSlice({
 
           return diagnostics
             .flat(Infinity)
-            [isDone ? "every" : "some"](
-              ({ hasDone = false }) => hasDone === isDone
-            );
+            [isDone ? "every" : "some"]((diag) => {
+              const stat = diag?.[statusKey];
+              return (stat ?? false) === isDone;
+            });
         });
       }
-      state.byStatus = filter;
+      state.byStatus = status;
       state.activePage = 1;
     },
     SetFILTERED_STATUS: (state, { payload }) => {
