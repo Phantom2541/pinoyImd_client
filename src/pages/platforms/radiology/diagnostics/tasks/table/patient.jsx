@@ -3,25 +3,14 @@ import { Services } from "../../../../../../services/fakeDb";
 import {
   SetTASK,
   SetSELECTED,
-  SetVALIDATOR,
 } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 import { fullName } from "../../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import {
-  LABRESULT,
-  RESET,
-} from "../../../../../../services/redux/slices/commerce/pos/services/deals";
-import Spinner from "../../../../../../components/spinner";
 
 const Patient = ({ obj, customer, form, _key: key, index, deal }) => {
-  const { activePlatform, auth, token } = useSelector(({ auth }) => auth),
+  const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    { heads } = useSelector(({ validator }) => validator),
-    { collections: physicians } = useSelector(({ physicians }) => physicians),
-    { formSubmitted } = useSelector(({ deals }) => deals),
     { packages = [], hasDone = false, remarks = "", signatories = [] } = obj,
-    [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
   const handleLabPrint = (task) => {
@@ -90,164 +79,19 @@ const Patient = ({ obj, customer, form, _key: key, index, deal }) => {
     remarks,
   };
 
-  const handleSelected = (data) => {
-    if (selected?._id === data._id && selected.key === data.key) {
-      setSelected({});
-    } else {
-      setSelected(data);
-    }
-  };
-
-  const [head, dr, encoder = auth?._id] = _task?.signatories || [];
-
-  const handlePick = (isTechnician = true) => {
-    if (!selected[isTechnician ? "signatory1" : "signatory2"])
-      return setSelected({});
-    const updatedTask = {
-      ..._task,
-      signatories: [
-        isTechnician ? selected?.signatory1 : head?._id,
-        !isTechnician ? selected?.signatory2 : dr?._id,
-        encoder?._id,
-      ],
-      department: "Radiology",
-    };
-    dispatch(
-      LABRESULT({
-        token,
-        data: updatedTask,
-      })
-    ).then(({ payload }) => {
-      dispatch(SetVALIDATOR(payload?.item || payload?.payload));
-      dispatch(RESET());
-      setSelected({});
-    });
-  };
-  console.log("signatories", signatories);
-
   return (
     <tr key={key}>
       <td>{index}</td>
       <td>
-        {selected?._id === _task._id && selected.key === "signatory1" ? (
-          <div
-            style={{ width: "13rem" }}
-            className="d-flex gap-2 align-items-center"
-          >
-            <select
-              className="form-control form-control-sm mt-2"
-              value={selected?.signatory1 || ""}
-              onChange={(e) =>
-                setSelected({ ...selected, signatory1: e.target.value })
-              }
-            >
-              <option value="">Select Technician</option>
-              {heads
-                .filter(
-                  ({ section }) => section.toLowerCase() === form.toLowerCase()
-                )
-                .map(({ user }) => (
-                  <option key={user._id} value={user._id}>
-                    {fullName(user.fullName)}
-                  </option>
-                ))}
-            </select>
-            {formSubmitted ? (
-              <Spinner formSubmitted className="mx-2" />
-            ) : (
-              <i
-                className="fas fa-check-circle text-success mx-1"
-                role="button"
-                style={{ fontSize: "1.2rem", cursor: "pointer" }}
-                title="Save"
-                onClick={() => handlePick(true)}
-              ></i>
-            )}
-            <i
-              className="fas fa-times-circle text-danger"
-              role="button"
-              style={{ fontSize: "1.2rem", cursor: "pointer" }}
-              title="Cancel"
-              onClick={() => setSelected({})}
-            ></i>
-          </div>
-        ) : (
-          <strong
-            onClick={() =>
-              handleSelected({
-                ..._task,
-                key: "signatory1",
-                signatory1: signatories[0]?._id,
-              })
-            }
-            style={{ cursor: "pointer" }}
-          >
-            {signatories[0]?.fullName
-              ? fullName(signatories[0].fullName)
-              : "pick a Technician"}
-          </strong>
-        )}
+        <strong style={{ cursor: "pointer" }}>
+          {signatories[0]?.fullName ? fullName(signatories[0].fullName) : "-"}
+        </strong>
       </td>
 
       <td>
-        {selected?._id === _task._id && selected.key === "signatory2" ? (
-          <div
-            style={{ width: "13rem" }}
-            className="d-flex gap-2 align-items-center"
-          >
-            <select
-              className="form-control form-control-sm mt-2"
-              value={selected?.signatory2 || ""}
-              onChange={(e) =>
-                setSelected({ ...selected, signatory2: e.target.value })
-              }
-            >
-              <option value="">Select Radiologist</option>
-              {physicians
-                .filter(
-                  ({ specialization }) => specialization === "Radiologist"
-                )
-                .map(({ user }) => (
-                  <option key={user._id} value={user._id}>
-                    {fullName(user.fullName)}
-                  </option>
-                ))}
-            </select>
-            {formSubmitted ? (
-              <Spinner formSubmitted className="mx-2" />
-            ) : (
-              <i
-                className="fas fa-check-circle text-success mx-1"
-                role="button"
-                style={{ fontSize: "1.2rem", cursor: "pointer" }}
-                title="Save"
-                onClick={() => handlePick(false)}
-              ></i>
-            )}
-            <i
-              className="fas fa-times-circle text-danger"
-              role="button"
-              style={{ fontSize: "1.2rem", cursor: "pointer" }}
-              title="Cancel"
-              onClick={() => setSelected({})}
-            ></i>
-          </div>
-        ) : (
-          <strong
-            onClick={() =>
-              handleSelected({
-                ..._task,
-                key: "signatory2",
-                signatory2: signatories[1]?._id,
-              })
-            }
-            style={{ cursor: "pointer" }}
-          >
-            {signatories[1]?.fullName
-              ? fullName(signatories[1].fullName)
-              : "pick a Radiologist"}
-          </strong>
-        )}
+        <strong style={{ cursor: "pointer" }}>
+          {signatories[1]?.fullName ? fullName(signatories[1].fullName) : "-"}
+        </strong>
       </td>
 
       <td>{fullName(customer?.fullName) || "Unnamed Patient"}</td>
