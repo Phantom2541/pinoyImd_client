@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import {
   Hematology,
@@ -15,7 +14,6 @@ import {
   Miscellaneous,
   Pbs,
 } from "./laboratory";
-import { Xray, Ecg, Ultrasound } from "./radiology";
 import { PE, MC } from "./clinic";
 
 const Blank = () => {
@@ -37,10 +35,6 @@ const componentMap = {
   Compatibility,
   Electrolyte,
   Pbs,
-  //Radiology
-  Xray,
-  Ecg,
-  Ultrasound,
   // Clinic
   PE,
   MC,

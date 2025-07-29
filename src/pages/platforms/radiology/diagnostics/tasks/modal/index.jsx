@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBModal, MDBModalBody, MDBModalHeader, MDBAlert } from "mdbreact";
 import Patient from "./patient";
@@ -7,9 +6,7 @@ import { TOGGLE } from "./../../../../../../services/redux/slices/diagnostics/la
 import BodySwitcher from "./bodySwitcher";
 import Footer from "./footer.jsx";
 export default function Modal() {
-  const { selected, task, showModal } = useSelector(
-      ({ validator }) => validator
-    ),
+  const { task, showModal } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
   return (
@@ -23,7 +20,7 @@ export default function Modal() {
         toggle={() => dispatch(TOGGLE("task"))}
         className="light-blue darken-3 white-text"
       >
-        <Patient patient={selected?.customerId} />
+        <Patient />
       </MDBModalHeader>
       <MDBModalBody className="mb-0 text-center">
         <MDBAlert

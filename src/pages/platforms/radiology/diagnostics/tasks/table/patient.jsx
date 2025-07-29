@@ -82,6 +82,18 @@ const Patient = ({ obj, customer, form, _key: key, index, deal }) => {
   return (
     <tr key={key}>
       <td>{index}</td>
+      <td>
+        <strong style={{ cursor: "pointer" }}>
+          {signatories[0]?.fullName ? fullName(signatories[0].fullName) : "-"}
+        </strong>
+      </td>
+
+      <td>
+        <strong style={{ cursor: "pointer" }}>
+          {signatories[1]?.fullName ? fullName(signatories[1].fullName) : "-"}
+        </strong>
+      </td>
+
       <td>{fullName(customer?.fullName) || "Unnamed Patient"}</td>
       <td>
         {_packages.length === 0 ? (

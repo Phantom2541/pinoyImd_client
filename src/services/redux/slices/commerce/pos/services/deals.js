@@ -1322,14 +1322,13 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(LABRESULT.pending, (state) => {
-        // state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
         state.showModal = false;
       })
       .addCase(LABRESULT.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        console.log("payload", payload);
 
         state.message = success;
         state.showModal = false;
@@ -1375,13 +1374,13 @@ export const reduxSlice = createSlice({
         }
 
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
         state.showModal = false;
       })
       .addCase(LABRESULT.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
 
       .addCase(UPDATE.pending, (state) => {

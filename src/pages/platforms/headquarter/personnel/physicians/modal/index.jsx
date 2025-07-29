@@ -12,6 +12,7 @@ import {
   SAVE,
   TOGGLE,
   SETPHYSICIAN,
+  SET_COLLECTIONS,
 } from "../../../../../../services/redux/slices/assets/persons/physicians";
 import { useToasts } from "react-toast-notifications";
 import { SearchUser } from "../../../../../../components/searchables";
