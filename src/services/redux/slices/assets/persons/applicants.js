@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
+import { SetMaxPage } from "../companies";
 
 const url = "assets/persons/applicants";
 
 const initialState = {
   collections: [],
+  filtered: [],
   branches: [],
   activeBranch: "",
   personnel: {},
@@ -15,6 +17,9 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  activePage: 1,
+  maxPage: 5,
+  totalPages: 0,
 };
 
 export const BROWSE = createAsyncThunk(
@@ -136,6 +141,13 @@ export const reduxSlice = createSlice({
       state.selected = payload;
       state.showAccessModal = true;
     },
+    SetMaxPage: (state, { payload }) => {
+      state.maxPage = payload;
+      state.activePage = 1;
+    },
+    setActivePage: (state, { payload }) => {
+      state.activePage = payload;
+    },
 
     SetCREDENTIAL: (state, { payload }) => {
       console.log("clicked set credential");
@@ -190,7 +202,7 @@ export const reduxSlice = createSlice({
         const { payload, query } = action.payload;
         const { branchId } = query; // if we have a companyId it means browse by headquarter
         if (branchId) {
-          state.collections = payload;
+          state.collections = state.filtered = payload;
         } else {
           state.branches = payload.map(({ applicant, ...rest }) => rest);
           state.collections = payload.flatMap(({ applicants }) => applicants);
@@ -311,6 +323,7 @@ export const {
   SetREQUIREMENTS,
   ToggleAccessModal,
   ToggleViewCredential,
+  SearchApplicant,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;
