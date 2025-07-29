@@ -9,7 +9,9 @@ import {
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections, isSucscess } = useSelector(({ physicians }) => physicians),
+    { collections: clinic } = useSelector(({ personnels }) => personnels),
     dispatch = useDispatch();
+  console.log("clinic", clinic);
 
   useEffect(() => {
     if (token && activePlatform?.branchId)

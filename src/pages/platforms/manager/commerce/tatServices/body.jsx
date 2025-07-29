@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
 import {
-  DESTROY,
+  UPDATE_TAT,
   SetEDIT,
 } from "../../../../../services/redux/slices/assets/branches";
 import { SetActivePlatform } from "../../../../../services/redux/slices/assets/persons/auth";
@@ -24,14 +24,11 @@ const Body = () => {
   const handleDelete = (item) => {
     const { department, section, _id } = item;
     const { branch } = activePlatform;
-    const _tat = [...collections];
-    const index = _tat.findIndex((i) => i?._id === _id);
-    _tat.splice(index, 1);
-    // const _tat = collections.filter(
-    //   (item) => item.department !== department && item.section !== section
-    // );
+
+    const updatedTAT = collections.filter((i) => i._id !== _id);
+
     Swal.fire({
-      title: `Delete ${department} ${section} ?`,
+      title: `Delete ${department} ${section}?`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -40,14 +37,17 @@ const Body = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Create a new array excluding the item at index
-        // const updatedTat = _tat.filter((_, i) => i !== indexToDelete);
-
-        dispatch(DESTROY({ token, data: { _id: branch._id, tat: _tat } })).then(
-          () => {
-            dispatch(SetActivePlatform({ data: _tat }));
-          }
-        );
+        dispatch(
+          UPDATE_TAT({
+            token,
+            data: {
+              _id: branch._id,
+              tat: updatedTAT,
+            },
+          })
+        ).then(() => {
+          dispatch(SetActivePlatform({ data: updatedTAT }));
+        });
       }
     });
   };
