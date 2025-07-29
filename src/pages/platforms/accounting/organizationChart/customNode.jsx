@@ -2,8 +2,13 @@ import React, { useState } from "react";
 import { useReactFlow, Handle, Position } from "react-flow-renderer";
 import Swal from "sweetalert2";
 import Default from "./../../../../assets/iMD.png";
-import { ENDPOINT } from "../../../../services/utilities";
+import {
+  ENDPOINT,
+  fullName,
+  properFullname,
+} from "../../../../services/utilities";
 import { MDBIcon } from "mdbreact";
+import { Policy } from "../../../../services/fakeDb";
 
 const normalizePosition = (pos) =>
   Array.isArray(pos)
@@ -13,14 +18,20 @@ const normalizePosition = (pos) =>
     : [];
 
 export default function CustomNode({ data, id }) {
+  const { personnel } = data;
+  const { user, contract } = personnel;
   const { setNodes } = useReactFlow();
   const [isFading, setIsFading] = useState(false);
+  const title = user?.fullName?.postnominal;
 
-  const profile = `${ENDPOINT}/public/users/${data?.email}/profile.jpg`;
-  const titles = Array.isArray(data.title)
-    ? data.title
-    : (data.title || "").split(",").map((s) => s.trim());
-  const positions = normalizePosition(data.position);
+  const profile = `${ENDPOINT}/public/users/${user?.email}/profile.jpg`;
+  const titles = Array.isArray(title)
+    ? title
+    : (title || "").split(",").map((s) => s.trim());
+
+  const positions = normalizePosition(
+    Policy.getPositions(contract?.designation)
+  );
   const isClone = !data.onReturn && positions.length === 1;
 
   const handleClone = async () => {
@@ -65,12 +76,7 @@ export default function CustomNode({ data, id }) {
           x: 200,
           y: 200,
         },
-        data: {
-          name: data.name,
-          title: data.title,
-          email: data.email,
-          position: [selected],
-        },
+        data,
       };
 
       return [...prev, clone];
@@ -151,7 +157,7 @@ export default function CustomNode({ data, id }) {
 
       <div className="orgChart-innerCard-info">
         <span className="orgChart-innerCard-name">
-          {data.name?.toLowerCase() || "No name"}
+          {properFullname(user?.fullName) || "No name"}
         </span>
         {titles.length > 0 && (
           <div className="orgChart-innerCard-title-container">
