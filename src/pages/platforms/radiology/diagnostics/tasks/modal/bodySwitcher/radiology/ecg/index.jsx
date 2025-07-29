@@ -11,14 +11,13 @@ import {
 } from "mdbreact";
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import { Services } from "../../../../../../../../../services/fakeDb/index.js";
-import Images from "./images.jsx";
+import Images from "../images.jsx";
 
 export default function Ecg() {
   const dispatch = useDispatch();
   const { task } = useSelector(({ validator }) => validator);
 
   const [findings, setFindings] = useState("");
-  const [link, setLink] = useState("");
   const [activeTab, setActiveTab] = useState("images");
 
   // Load values from task
@@ -33,10 +32,12 @@ export default function Ecg() {
     }
   }, [task]);
 
-  console.log("activeTab", activeTab);
+  useEffect(() => {
+    dispatch(SetTASK({ form: task?.form, task: { ...task, findings } }));
+  }, [findings]);
 
   return (
-    <div className="mx-auto">
+    <div className="mx-auto mt-n2">
       {Services.getName(task?.packages)}
       <MDBNav color="primary" tabs className="nav-justified">
         <MDBNavItem>
@@ -85,9 +86,7 @@ export default function Ecg() {
                 }}
               />
             </MDBTabPane>
-            <MDBTabPane tabId="images">
-              <Images />
-            </MDBTabPane>
+            <Images />
           </MDBTabContent>
         </MDBCardBody>
       </MDBCard>

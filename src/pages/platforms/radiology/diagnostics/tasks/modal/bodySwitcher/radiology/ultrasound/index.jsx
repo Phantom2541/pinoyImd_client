@@ -11,6 +11,7 @@ import {
 } from "mdbreact";
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import { Services } from "../../../../../../../../../services/fakeDb/index.js";
+import Images from "../images.jsx";
 
 export default function Ultrasounds() {
   const dispatch = useDispatch();
@@ -18,8 +19,7 @@ export default function Ultrasounds() {
 
   const [description, setDescription] = useState("");
   const [impression, setImpression] = useState("");
-  const [activeTab, setActiveTab] = useState("results");
-  const [link, setLink] = useState("");
+  const [activeTab, setActiveTab] = useState("images");
 
   const descTimeout = useRef(null);
   const impTimeout = useRef(null);
@@ -59,7 +59,7 @@ export default function Ultrasounds() {
   );
 
   return (
-    <div className="mx-auto">
+    <div className="mx-auto mt-n2">
       {Services.getName(task?.packages)}
       <MDBNav color="primary" tabs className="nav-justified">
         <MDBNavItem>
@@ -82,27 +82,22 @@ export default function Ultrasounds() {
             Impression
           </MDBNavLink>
         </MDBNavItem>
+        <MDBNavItem>
+          <MDBNavLink
+            link
+            active={activeTab === "images"}
+            to="#!"
+            onClick={() => setActiveTab("images")}
+          >
+            Images
+          </MDBNavLink>
+        </MDBNavItem>
       </MDBNav>
 
       <MDBCard>
         <MDBCardBody>
           <MDBTabContent activeItem={activeTab} className="pt-0">
             <MDBTabPane tabId="results">
-              <label htmlFor="link">Add link here</label>
-              <input
-                type="link"
-                name="link"
-                id="link"
-                value={link}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setLink(val);
-                  // dispatch(SetTASK({ form: task?.form, task: updatedTask }));
-                  delayedSave("link", val, descTimeout);
-                }}
-                // onChange={(e) => handleChange(e.target)}
-                className="w-100 text-center fw-bold"
-              />
               <textarea
                 className="form-control mt-3 border"
                 style={{
@@ -135,6 +130,7 @@ export default function Ultrasounds() {
                 }}
               />
             </MDBTabPane>
+            <Images />
           </MDBTabContent>
         </MDBCardBody>
       </MDBCard>
