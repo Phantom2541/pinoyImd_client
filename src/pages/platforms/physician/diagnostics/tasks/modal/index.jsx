@@ -6,14 +6,13 @@ import { TOGGLE } from "./../../../../../../services/redux/slices/diagnostics/la
 import BodySwitcher from "./bodySwitcher";
 import Footer from "./footer.jsx";
 export default function Modal() {
-  const { selected, task, showModal } = useSelector(
-      ({ validator }) => validator
-    ),
+  const { task, showModal } = useSelector(({ validator }) => validator),
     dispatch = useDispatch();
 
   return (
     <MDBModal
-      size="lg"
+      size="fluid"
+      position="center"
       isOpen={showModal}
       toggle={() => dispatch(TOGGLE("task"))}
       backdrop

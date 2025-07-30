@@ -11,17 +11,13 @@ export default function Body({
   referral,
 }) {
   const { activePlatform } = useSelector(({ auth }) => auth);
-  const departmentCode =
-    activePlatform?.department?.toLowerCase() === "laboratory" ? "LAB" : "RAD";
-
   return (
     <MDBCardBody className="pt-0">
       <MDBTable small hover responsive>
         <thead>
           <tr>
             <th>#</th>
-            <th>{departmentCode === "LAB" ? "Performer" : "Technician"}</th>
-            {departmentCode === "RAD" && <th>Sonologist/Radiologist</th>}
+            <th>Performer</th>
             <th>Template</th>
             <th>Services</th>
             <th>Actions</th>

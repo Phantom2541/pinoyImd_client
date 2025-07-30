@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   MDBCard,
@@ -10,45 +10,29 @@ import {
   MDBNavLink,
   MDBTabContent,
   MDBTabPane,
-  MDBRow,
-  MDBCol,
 } from "mdbreact";
-import { Select } from "./../../../../../../../../../components/customizable";
 import Troupe from "./troupe";
 import Picture from "./picture";
+import Results from "./results";
 import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
-
-const choices = [
-  {
-    str: "Negative",
-    index: 0,
-  },
-  {
-    str: "Positive",
-    index: 1,
-  },
-];
 
 export default function Drugtest() {
   const { task } = useSelector(({ validator }) => validator),
-    [activeTab, setActiveTab] = useState("pic"),
+    [activeTab, setActiveTab] = useState("img"),
     dispatch = useDispatch();
-  // const { met, thc, method, company, purpose } = task;
-  const { met, thc } = task;
 
   const handleSelectChange = (name, value) =>
     dispatch(SetTASK({ form: task?.form, task: { ...task, [name]: value } }));
 
   return (
     <MDBContainer>
-      {/* Default is 1, hide all the tab button */}
       <MDBNav color="primary" tabs className="nav-justified">
         <MDBNavItem>
           <MDBNavLink
             link
-            active={"pic" === activeTab}
+            active={"img" === activeTab}
             to="#!"
-            onClick={() => setActiveTab("pic")}
+            onClick={() => setActiveTab("img")}
           >
             Picture
           </MDBNavLink>
@@ -76,33 +60,9 @@ export default function Drugtest() {
       </MDBNav>
       <MDBCard>
         <MDBCardBody>
-          <MDBCardTitle className="text-left mt-3">Description</MDBCardTitle>
           <MDBTabContent activeItem={activeTab} className="pt-0">
             <MDBTabPane tabId="results">
-              <MDBRow className="text-left">
-                <MDBCol>
-                  <Select
-                    inputClassName={met && "text-danger"}
-                    choices={choices}
-                    label="Methamphetamine"
-                    preValue={String(met)}
-                    texts="str"
-                    values="index"
-                    onChange={(e) => handleSelectChange("met", Number(e))}
-                  />
-                </MDBCol>
-                <MDBCol>
-                  <Select
-                    inputClassName={thc && "text-danger"}
-                    choices={choices}
-                    label="Tetrahydrocannabinol"
-                    preValue={String(thc)}
-                    texts="str"
-                    values="index"
-                    onChange={(e) => handleSelectChange("igm", Number(e))}
-                  />
-                </MDBCol>
-              </MDBRow>
+              <Results />
             </MDBTabPane>
             <MDBTabPane tabId="details">
               <Troupe
@@ -111,7 +71,7 @@ export default function Drugtest() {
                 handleSelectChange={handleSelectChange}
               />
             </MDBTabPane>
-            <MDBTabPane tabId="pic">
+            <MDBTabPane tabId="img">
               <Picture
                 task={task}
                 // setTask={setTask}

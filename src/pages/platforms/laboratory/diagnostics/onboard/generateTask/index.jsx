@@ -53,7 +53,10 @@ export default function Modal() {
         : "clinic"; // default fallback just in case
       const url = isStaticPath
         ? template
-        : `/diagnostics/${_department.toLowerCase()}/result/${template}`;
+        : `/diagnostics/${_department.toLowerCase()}/result/${template.replace(
+            /\s+/g,
+            ""
+          )}`;
       await axioKit.save(url, data, token);
     } catch (error) {
       console.error("Error saving request:", error);
