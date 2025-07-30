@@ -8,17 +8,20 @@ import { removeUndefinedValues } from "../../../services/utilities";
  * @param {string} token - Authorization Token.
  * @returns {{ success: boolean, payload: object }} - The result object containing success and payload.
  */
-const save = async (entity, data, token, endpoint = "save") =>
+const save = async (entity, data, token, endpoint = "save") => {
   await axios
     .post(`${entity}/${endpoint}`, removeUndefinedValues(data), {
       headers: {
         Authorization: `QTracy ${token}`,
       },
     })
-    .then(({ data }) => data)
+    .then(({ data }) => {
+      return data;
+    })
     .catch(({ response }) => {
-      const { error, message } = response.data;
+      const { error, message } = response?.data;
       throw new Error(message ? `${error}: ${message}` : error);
     });
+};
 
 export default save;
