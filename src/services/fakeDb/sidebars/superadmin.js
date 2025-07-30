@@ -1,4 +1,5 @@
 import Companies from "../../../pages/platforms/SuperAdmin/companies";
+import HealthCard from "../../../pages/platforms/SuperAdmin/healthCard";
 
 const admin = [
   {
@@ -7,6 +8,13 @@ const admin = [
     icon: "code-branch",
     component: Companies,
   },
+  {
+    name: "Health Cards",
+    path: "/super/admin/hmos",
+    icon: "code-branch",
+    component: HealthCard,
+  },
+
   {
     name: "Users",
     path: "/users",

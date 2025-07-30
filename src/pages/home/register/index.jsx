@@ -63,7 +63,16 @@ export default function Register({ handleFlip, flipped }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { email, password, confirmPassword, fname, mname, lname } = e.target;
+    const {
+      email,
+      password,
+      confirmPassword,
+      fname,
+      mname,
+      lname,
+      dob,
+      mobile,
+    } = e.target;
     const fullName = {
       fname: fname.value,
       mname: mname.value,
@@ -76,6 +85,9 @@ export default function Register({ handleFlip, flipped }) {
         REGISTER({
           email: email.value,
           password: password.value,
+          dob,
+          mobile,
+          // isMale,
           fullName,
         })
       );
@@ -187,7 +199,14 @@ export default function Register({ handleFlip, flipped }) {
                             </MDBSelect>
                           </MDBCol>
                         </MDBRow>
-
+                        <MDBInput
+                          className="d-flex align-items-center mt-1 mb-4"
+                          label="Phone #"
+                          icon="mobile "
+                          type="text"
+                          name="mobile"
+                          required
+                        />
                         <div className="d-flex align-items-center mt-1 mb-4">
                           <MDBInput
                             label="Male"
@@ -207,6 +226,13 @@ export default function Register({ handleFlip, flipped }) {
                       </MDBCol>
 
                       <MDBCol md="6">
+                        <MDBInput
+                          label="Date Of Birth"
+                          icon="calendar "
+                          type="date"
+                          name="dob"
+                          required
+                        />
                         <MDBInput
                           label="E-mail Address"
                           icon="envelope"

@@ -57,6 +57,15 @@ const Footer = () => {
     });
   };
 
+  const handleDisablePost = () => {
+    if (task.form === "Ecg") return task.findings ? false : true;
+    return ["Xray", "Ultrasound"].includes(task.form)
+      ? task.description && task.impression
+        ? false
+        : true
+      : false;
+  };
+
   return (
     <div className="text-center mb-1-half border-top pt-2">
       <textarea
@@ -75,7 +84,7 @@ const Footer = () => {
 
       <div className="text-right">
         <MDBBtn
-          disabled={isLoading}
+          disabled={isLoading || handleDisablePost()}
           id="task-post-btn"
           onClick={() => handleSave(true)}
           color="success"

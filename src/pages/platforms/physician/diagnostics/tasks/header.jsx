@@ -29,7 +29,8 @@ const Headers = () => {
         TASKS({
           token,
           key: {
-            physicianId: "68009d80a3dfd9b8666da01a",
+            // physicianId: "68009d80a3dfd9b8666da01a",
+            physicianId: auth?._id,
             isDaily: true,
             department: [departmentMap[department.toLowerCase()]],
             branchId: activePlatform?.branchId,
@@ -39,7 +40,7 @@ const Headers = () => {
       );
     }
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform, auth]);
+  }, [token, dispatch, activePlatform, auth, department]);
 
   return (
     <MDBView

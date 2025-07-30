@@ -83,7 +83,6 @@ const Footer = () => {
     if (task.form === "Ecg") return task.findings ? false : true;
     return task.description && task.impression ? false : true;
   };
-  console.log("task", task);
 
   return (
     <div className="text-center mb-1-half border-top pt-2">

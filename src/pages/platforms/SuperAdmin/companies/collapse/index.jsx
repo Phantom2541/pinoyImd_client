@@ -6,8 +6,10 @@ import {
   MDBCollapse,
   MDBCollapseHeader,
   MDBContainer,
+  MDBRow,
+  MDBCol,
 } from "mdbreact";
-
+import { HMO } from "../../../../../services/fakeDb";
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse, fullName } from "../../../../../services/utilities";
@@ -45,8 +47,10 @@ export default function Body() {
           activeId,
           didHoverId
         );
+        console.log("paginatedData", paginatedData);
 
-        const { branches = [], ceo = {} } = company || {};
+        const { branches = [], ceo = {}, hmo = [] } = company || {};
+        console.log("hmo", hmo);
 
         return (
           <MDBCard
@@ -73,11 +77,15 @@ export default function Body() {
               className="mb-2 border border-black m-0 p-0"
               isOpen={actualIndex === activeId}
             >
-              <MDBCardBody className=" m-0 p-0">
+              <MDBCardBody className="m-0 p-0">
                 <CollapsableBody cid={company._id} branches={branches} />
-                <h5 className="ml-2">
-                  <strong>CEO:</strong> {fullName(ceo?.fullName)}
-                </h5>
+                <MDBRow className="mt-2 ml-2">
+                  <MDBCol>
+                    <h5>
+                      <strong>CEO:</strong> {fullName(ceo?.fullName)}
+                    </h5>
+                  </MDBCol>
+                </MDBRow>
               </MDBCardBody>
             </MDBCollapse>
           </MDBCard>

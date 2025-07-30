@@ -448,6 +448,8 @@ export const reduxSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(INSOURCE.fulfilled, (state, { payload }) => {
+        console.log("payload", payload);
+
         state.collections = state.filtered = payload.payload;
         const { page, maxPage } = state;
         if (payload.length > 0) {
