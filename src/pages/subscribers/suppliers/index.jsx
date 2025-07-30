@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { MDBMask, MDBView } from "mdbreact";
 import "../style.css";
-import Register from "./register";
-import Login from "./login";
+import Register from "../../home/register";
+import Login from "../../home/login";
 import LOGO from "./../../../assets/iMD.png";
 
 import { useDispatch, useSelector } from "react-redux";
