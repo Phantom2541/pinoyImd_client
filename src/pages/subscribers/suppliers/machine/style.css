@@ -1,0 +1,127 @@
+:root {
+  --primary-color: #1266f1;
+  --seconday-color: #5c8dfb;
+  --accent-color: #f1c40f; /* Main accent */
+  --accent-alt: #2ecc71; /* Suggested: Emerald Green */
+  --background-color: #f9fafb;
+  --text-black: #212529;
+  --text-white: #f9fafb;
+}
+
+.supplier-aboutUs-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.supplier-aboutUs-title {
+  font-weight: bold;
+  text-align: center;
+}
+
+.supplier-aboutUs-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  width: 70%;
+  gap: 20px;
+  padding: 20px 60px;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.supplier-AboutUs-card {
+  background-color: var(--background-color);
+  border-radius: 10px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+}
+
+.supplier-AboutUs-card:hover {
+  transform: translateY(-5px);
+}
+
+.supplier-AboutUs-card-image img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.supplier-AboutUs-card:hover .supplier-AboutUs-card-image img {
+  filter: brightness(75%);
+}
+
+.supplier-AboutUs-card-body {
+  padding: 15px 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.supplier-AboutUs-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}
+
+.supplier-AboutUs-card-description {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #444;
+}
+
+@media (max-width: 1660px) {
+  .supplier-aboutUs-container {
+    width: 75%;
+  }
+}
+@media (max-width: 1400px) {
+  .supplier-aboutUs-container {
+    width: 80%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .supplier-aboutUs-container {
+    width: 85%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .supplier-aboutUs-container {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .supplier-aboutUs-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 10px;
+    padding: 0 0;
+    justify-content: center;
+    align-items: stretch;
+  }
+
+  .supplier-aboutUs-title {
+    font-size: 1.8rem;
+  }
+  .supplier-AboutUs-card {
+    width: 230px;
+  }
+  .supplier-AboutUs-card-title {
+    font-size: 0.95rem;
+  }
+  .supplier-AboutUs-card-description {
+    font-size: 0.75rem;
+  }
+}
