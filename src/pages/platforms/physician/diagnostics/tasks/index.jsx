@@ -25,7 +25,6 @@ import {
   RESET as PHYRESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
-import RadReader from "./radReader";
 import Body from "./body";
 
 export default function DailyTasks() {
@@ -104,7 +103,6 @@ export default function DailyTasks() {
       {isLoading ? <TableLoading /> : <Body />}
       <Footer />
       <ResultEntry />
-      <RadReader />
     </MDBCard>
   );
 }

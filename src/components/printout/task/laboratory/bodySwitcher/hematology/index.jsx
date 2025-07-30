@@ -1,4 +1,3 @@
-import React from "react";
 import CellCount from "./cellcount";
 import DiffCount from "./diffcount";
 import Rci from "./rci";
