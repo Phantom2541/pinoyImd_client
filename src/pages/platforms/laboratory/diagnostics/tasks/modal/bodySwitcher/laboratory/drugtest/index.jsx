@@ -15,6 +15,7 @@ import Troupe from "./troupe";
 import Picture from "./picture";
 import Results from "./results";
 import { SetTASK } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import FingerPrint from "./print";
 
 export default function Drugtest() {
   const { task } = useSelector(({ validator }) => validator),
@@ -40,6 +41,16 @@ export default function Drugtest() {
         <MDBNavItem>
           <MDBNavLink
             link
+            active={"fingerPrint" === activeTab}
+            to="#!"
+            onClick={() => setActiveTab("fingerPrint")}
+          >
+            Finger Print
+          </MDBNavLink>
+        </MDBNavItem>
+        <MDBNavItem>
+          <MDBNavLink
+            link
             active={"details" === activeTab}
             to="#!"
             onClick={() => setActiveTab("details")}
@@ -60,7 +71,7 @@ export default function Drugtest() {
       </MDBNav>
       <MDBCard>
         <MDBCardBody>
-          <MDBTabContent activeItem={activeTab} className="pt-0">
+          <MDBTabContent activeItem={activeTab} className="">
             <MDBTabPane tabId="results">
               <Results />
             </MDBTabPane>
@@ -73,6 +84,13 @@ export default function Drugtest() {
             </MDBTabPane>
             <MDBTabPane tabId="img">
               <Picture
+                task={task}
+                // setTask={setTask}
+                handleSelectChange={handleSelectChange}
+              />
+            </MDBTabPane>
+            <MDBTabPane tabId="fingerPrint">
+              <FingerPrint
                 task={task}
                 // setTask={setTask}
                 handleSelectChange={handleSelectChange}

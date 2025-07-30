@@ -1,62 +1,79 @@
-import React, { useEffect, useState } from "react";
-import {
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-  MDBAvatar,
-  MDBProgress,
-  MDBBtnGroup,
-} from "mdbreact";
+import React, { useEffect, useState, useRef } from "react";
+import { MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  PresetImage,
-  isJpegOrJpgFile,
-} from "./../../../../../../../../../services/utilities";
 import { useToasts } from "react-toast-notifications";
+import Cropper from "react-easy-crop";
+
+import { isJpegOrJpgFile } from "../../../../../../../../../services/utilities";
 import {
   IMAGE,
   UPLOAD,
-} from "./../../../../../../../../../services/redux/slices/assets/persons/auth";
-import ImageCropper from "../../../../../../../../../components/images/imageCropper";
+} from "../../../../../../../../../services/redux/slices/assets/persons/auth";
 
 export default function ProfileImage({ task, setTask }) {
-  const [file, setFile] = useState(null),
-    { token, progressBar } = useSelector(({ auth }) => auth),
-    dispatch = useDispatch(),
-    { addToast } = useToasts();
+  const dispatch = useDispatch();
+  const { token, progressBar } = useSelector(({ auth }) => auth);
+  const { addToast } = useToasts();
+
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const streamRef = useRef(null);
+
+  const [file, setFile] = useState(null);
+  const [capturedImage, setCapturedImage] = useState(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [finalImage, setFinalImage] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+
+  const aspect = 1;
+  const cropSize = { width: 250, height: 250 };
 
   useEffect(() => {
     if (file && progressBar === 100) {
       dispatch(IMAGE(URL.createObjectURL(file)));
       setFile(null);
-      addToast("Image Updated Successfully.", {
-        appearance: "success",
-      });
+      addToast("Image Updated Successfully.", { appearance: "success" });
     }
   }, [progressBar, file, dispatch, addToast]);
 
-  const handleError = (message) =>
-    addToast(message, {
-      appearance: "warning",
-    });
+  useEffect(() => {
+    if (!capturedImage && !finalImage) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+          streamRef.current = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            videoRef.current.play();
+          }
+        })
+        .catch((err) => console.error("Webcam access error:", err));
+    }
+    return () => {
+      streamRef.current?.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    };
+  }, [capturedImage, finalImage]);
+
+  const handleError = (message) => addToast(message, { appearance: "warning" });
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-
     if (!isJpegOrJpgFile(file))
       return handleError("Please select a JPG image.");
 
     const reader = new FileReader();
-
     reader.onload = (e) => {
       const img = new Image();
       img.src = e.target.result;
-
-      img.onload = function () {
-        if (this.width !== this.height)
+      img.onload = () => {
+        if (img.width !== img.height)
           return handleError("Image must be square.");
+
         setFile(file);
         setTask({ ...task, image: "profile.jpg" });
+
         dispatch(
           UPLOAD({
             data: {
@@ -69,62 +86,152 @@ export default function ProfileImage({ task, setTask }) {
         );
       };
     };
-
     reader.readAsDataURL(file);
   };
-  //console.log("task", task);
+
+  const capturePhoto = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    context.drawImage(videoRef.current, 0, 0, 640, 480);
+    setCapturedImage(canvas.toDataURL("image/png"));
+  };
+
+  const onCropComplete = (_, croppedPixels) => {
+    setCroppedAreaPixels(croppedPixels);
+  };
+
+  const getCroppedImg = async () => {
+    const image = new Image();
+    image.src = capturedImage;
+    await new Promise((res) => (image.onload = res));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 250;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      image,
+      croppedAreaPixels.x,
+      croppedAreaPixels.y,
+      croppedAreaPixels.width,
+      croppedAreaPixels.height,
+      0,
+      0,
+      250,
+      250
+    );
+
+    setFinalImage(canvas.toDataURL("image/png"));
+    setCapturedImage(null);
+  };
+
+  const handleRetake = () => {
+    setFinalImage(null);
+    setCapturedImage(null);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+  };
 
   return (
-    <MDBCol lg="3" className="mb-4">
-      <MDBCard>
-        <MDBCardBody className="text-center">
-          <MDBAvatar
-            style={{
-              height: "200px",
-              width: "200px",
-              objectFit: "cover", // Ensure the image is square and covers the entire area
-            }}
-            tag="img"
-            src={task.image}
-            onError={(e) => (e.target.src = PresetImage(task.patient.isMale))}
-            alt={`preview-${task.patient._id}`}
-            className="z-depth-1 mb-3 mx-auto"
-          />
-
-          <img
-            src={task.image}
-            alt={`preview-${task.patient._id}`}
-            onError={(e) =>
-              e.target.src ? e.target.src : PresetImage(task.patient.isMale)
-            }
-          />
-
-          {progressBar >= 0 && <MDBProgress value={progressBar} animated />}
-          <p className="text-muted">
-            <small>
-              {progressBar > -1
-                ? "Please wait while we update your profile photo"
-                : "Profile photo will be changed automatically"}
-            </small>
-          </p>
-          <MDBBtnGroup>
-            <ImageCropper accept="image/jpeg, image/jpg" />
-            <label
-              htmlFor="changeImage"
-              className="btn btn-info btn-sm btn-rounded"
+    <div className="d-flex justify-content-center">
+      <div>
+        {!capturedImage && !finalImage && (
+          <div style={{ position: "relative", width: "100%", height: "100%" }}>
+            <video
+              ref={videoRef}
+              width="100%"
+              height="350"
+              autoPlay
+              style={{
+                borderRadius: 6,
+                boxShadow: "0 0 7px rgba(0, 0, 0, 0.2)",
+              }}
+            />
+            <canvas
+              ref={canvasRef}
+              width="640"
+              height="480"
+              style={{ display: "none" }}
+            />
+            <MDBBtn
+              size="sm"
+              color="primary"
+              onClick={capturePhoto}
+              style={{
+                position: "absolute",
+                bottom: 10,
+                left: "50%",
+                transform: "translateX(-50%)",
+                padding: "4px 12px",
+                fontSize: "0.75rem",
+              }}
             >
-              Upload
-            </label>
-          </MDBBtnGroup>
-          <input
-            id="changeImage"
-            onChange={handleImageChange}
-            type="file"
-            className="d-none"
-            accept="image/jpeg, image/jpg"
-          />
-        </MDBCardBody>
-      </MDBCard>
-    </MDBCol>
+              Capture
+            </MDBBtn>
+          </div>
+        )}
+
+        {capturedImage && (
+          <div
+            style={{
+              position: "relative",
+              width: 250,
+              height: 250,
+              boxShadow: "0 0 7px rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            <Cropper
+              image={capturedImage}
+              crop={crop}
+              zoom={zoom}
+              aspect={aspect}
+              cropSize={cropSize}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={onCropComplete}
+              objectFit="cover"
+            />
+            <div
+              style={{
+                position: "absolute",
+                bottom: 10,
+                left: 0,
+                right: 0,
+                display: "flex",
+                justifyContent: "center",
+                gap: 10,
+              }}
+            >
+              <MDBBtn size="sm" color="success" onClick={getCroppedImg}>
+                <MDBIcon icon="check" />
+              </MDBBtn>
+              <MDBBtn size="sm" color="danger" onClick={handleRetake}>
+                <MDBIcon icon="times" />
+              </MDBBtn>
+            </div>
+          </div>
+        )}
+
+        {finalImage && (
+          <div className="mt-3 d-flex flex-column align-items-center">
+            <img
+              src={finalImage}
+              alt="Final Cropped"
+              width="250"
+              height="250"
+              style={{ boxShadow: "0 0 7px rgba(0,0,0,0.2)" }}
+            />
+            <MDBBtn
+              size="sm"
+              color="secondary"
+              onClick={handleRetake}
+              className="mt-2"
+            >
+              Retake
+            </MDBBtn>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
