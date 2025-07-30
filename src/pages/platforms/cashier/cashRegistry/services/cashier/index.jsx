@@ -73,7 +73,8 @@ export default function Cashier() {
     if (physiciansLocal) {
       dispatch(SetPHYSICIANS(JSON.parse(physiciansLocal)));
     } else {
-      dispatch(BROWSE({ token })).then(({ payload }) => {
+      dispatch(BROWSE({ token })).then((action) => {
+        const { payload } = action.payload;
         if (payload) {
           localStorage.setItem("physicians", JSON.stringify(payload));
           dispatch(SetPHYSICIANS(payload)); // Optional: set it immediately after fetch

@@ -147,108 +147,25 @@ const Tasks = ({ key, form, obj, index, customer }) => {
     }
   };
 
-  // const isSelected =
-  //   selected?._id === task._id && selected?.key === "signatory";
-
   return (
     <tr key={task.key} className={hasDone ? "table-active" : ""}>
       <td>{index}</td>
       <td>
-        {selected?._id === task._id && selected.key === "signatory1" ? (
-          <div
-            style={{ width: "13rem" }}
-            className="d-flex gap-2 align-items-center"
-          >
-            <select
-              className="form-control form-control-sm mt-2"
-              value={selected?.signatory1 || ""}
-              onChange={(e) =>
-                setSelected({ ...selected, signatory1: e.target.value })
-              }
-            >
-              <option value="">Select Technician</option>
-              {collections
-                .filter((user) => user.role === "Technician")
-                .map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {fullName(user.fullName)}
-                  </option>
-                ))}
-            </select>
-            <i
-              className="fas fa-check-circle text-success"
-              role="button"
-              style={{ fontSize: "1.2rem", cursor: "pointer" }}
-              title="Save"
-              onClick={() => handleEntry(selected)}
-            ></i>
-            <i
-              className="fas fa-times-circle text-danger"
-              role="button"
-              style={{ fontSize: "1.2rem", cursor: "pointer" }}
-              title="Cancel"
-              onClick={() => setSelected({})}
-            ></i>
-          </div>
-        ) : (
-          <strong
-            onClick={() => handleSelected({ ...task, key: "signatory1" })}
-            style={{ cursor: "pointer" }}
-          >
-            {signatories[0]?.fullName
-              ? fullName(signatories[0].fullName)
-              : "pick a Technician"}
-          </strong>
-        )}
+        <strong
+          onClick={() => handleSelected({ ...task, key: "signatory1" })}
+          style={{ cursor: "pointer" }}
+        >
+          {fullName(signatories[0]?.fullName)}
+        </strong>
       </td>
 
       <td>
-        {selected?._id === task._id && selected.key === "signatory2" ? (
-          <div
-            style={{ width: "13rem" }}
-            className="d-flex gap-2 align-items-center"
-          >
-            <select
-              className="form-control form-control-sm mt-2"
-              value={selected?.signatory2 || ""}
-              onChange={(e) =>
-                setSelected({ ...selected, signatory2: e.target.value })
-              }
-            >
-              <option value="">Select Radiologist</option>
-              {collections
-                .filter((user) => user.role === "Radiologist")
-                .map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {fullName(user.fullName)}
-                  </option>
-                ))}
-            </select>
-            <i
-              className="fas fa-check-circle text-success"
-              role="button"
-              style={{ fontSize: "1.2rem", cursor: "pointer" }}
-              title="Save"
-              onClick={() => handleEntry(selected)}
-            ></i>
-            <i
-              className="fas fa-times-circle text-danger"
-              role="button"
-              style={{ fontSize: "1.2rem", cursor: "pointer" }}
-              title="Cancel"
-              onClick={() => setSelected({})}
-            ></i>
-          </div>
-        ) : (
-          <strong
-            onClick={() => handleSelected({ ...task, key: "signatory2" })}
-            style={{ cursor: "pointer" }}
-          >
-            {signatories[1]?.fullName
-              ? fullName(signatories[1].fullName)
-              : "pick a Radiologist"}
-          </strong>
-        )}
+        <strong
+          onClick={() => handleSelected({ ...task, key: "signatory2" })}
+          style={{ cursor: "pointer" }}
+        >
+          {fullName(signatories[1]?.fullName)}
+        </strong>
       </td>
 
       <td>{form}</td>

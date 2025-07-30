@@ -41,6 +41,7 @@ const initialState = {
   byStatus: "all",
   showWorkArea: false, //this is for working area
   showModal: false,
+  showRadReader: false, //for viewing of uploaded x-ray
   totalPages: 0,
   page: 1,
   maxPage: 5,
@@ -205,6 +206,10 @@ export const reduxSlice = createSlice({
       updateCollection(state.filtered, findIndex(state.filtered));
       updateCollection(state.filteredStatus, findIndex(state.filteredStatus));
     },
+    SetRAD_READER: (state, { payload }) => {
+      state.showRadReader = true;
+      state.task = payload;
+    },
     SetFILTERED: (state, { payload }) => {
       if (payload.length > 0) {
         state.totalPages = Math.ceil(payload.length / state.maxPage);
@@ -228,8 +233,9 @@ export const reduxSlice = createSlice({
       state.activePage = 1;
     },
     SetByStatus: (state, action) => {
+      const { status, statusKey = "hasDone" } = action.payload;
+
       const groupBy = state.byGroup;
-      const filter = action.payload;
       const diagnosticGroup =
         groupBy === "all"
           ? state.filtered
@@ -237,10 +243,10 @@ export const reduxSlice = createSlice({
               return task.diagnostic && task.diagnostic[groupBy];
             });
 
-      if (filter === "all") {
+      if (status === "all") {
         state.filteredStatus = diagnosticGroup;
       } else {
-        const isDone = filter === "true";
+        const isDone = status === "true";
 
         state.filteredStatus = diagnosticGroup.filter((task) => {
           if (!task.diagnostic) return false;
@@ -251,12 +257,13 @@ export const reduxSlice = createSlice({
 
           return diagnostics
             .flat(Infinity)
-            [isDone ? "every" : "some"](
-              ({ hasDone = false }) => hasDone === isDone
-            );
+            [isDone ? "every" : "some"]((diag) => {
+              const stat = diag?.[statusKey];
+              return (stat ?? false) === isDone;
+            });
         });
       }
-      state.byStatus = filter;
+      state.byStatus = status;
       state.activePage = 1;
     },
     SetFILTERED_STATUS: (state, { payload }) => {
@@ -319,6 +326,10 @@ export const reduxSlice = createSlice({
     },
     TOGGLE_WORK_AREA: (state, _) => {
       state.showWorkArea = !state.showWorkArea;
+    },
+    TOGGLE_RAD_READER: (state, _) => {
+      state.showRadReader = !state.showRadReader;
+      state.task = {};
     },
     RESET: (state) => {
       state.isSuccess = false;
@@ -434,6 +445,7 @@ export const {
   SetSELECTED,
   SetPatient,
   SetTASK,
+  SetRAD_READER,
   SetWorkArea,
   SetPARAMS,
   SetPrint,
@@ -451,6 +463,7 @@ export const {
   SetActivePAGE,
   TOGGLE,
   TOGGLE_WORK_AREA,
+  TOGGLE_RAD_READER,
   RESET,
   //this is for LIS  socket to receive realtime result from A15
   RECEIVE_A15,

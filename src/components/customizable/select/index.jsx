@@ -35,7 +35,7 @@ import { isEmpty } from "lodash";
  * @param {function} [handleClose=() => {}] - The function to call when the close icon is clicked.
  */
 export default function Select({
-  collections = [],
+  collections = [], //choices
   preValue = "",
   preValues = [],
   getObject = false,

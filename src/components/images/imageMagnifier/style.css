@@ -1,6 +1,6 @@
 .template-x-ray-section {
   width: 1000px;
-  height: auto;
+  height: 100%;
   padding: 20px;
   background-color: white;
   display: flex;
@@ -11,7 +11,7 @@
 
 .zoom-img-container {
   width: 100%;
-  height: auto;
+  height: 100%;
   overflow: hidden;
   position: relative;
 }
@@ -19,7 +19,7 @@
 .zoom-img-container img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   user-select: none;
   pointer-events: none;
   -webkit-user-drag: none;

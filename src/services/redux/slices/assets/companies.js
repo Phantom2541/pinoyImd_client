@@ -6,6 +6,7 @@ const url = "assets/companies";
 const initialState = {
   collections: [],
   hmo: [],
+  org: {},
   filtered: [],
   isSuccess: false,
   formSubmitted: false,
@@ -69,6 +70,41 @@ export const GET_DETAILS = createAsyncThunk(
   }
 );
 
+export const GET_ORG = createAsyncThunk(
+  `${url}/GET_ORG`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/get_org`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const UPDATE_ORG = createAsyncThunk(
+  `${url}/UPDATE_ORG`,
+  ({ token, data }, thunkAPI) => {
+    try {
+      return axioKit.update(url, data, token, "update_org");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const FIND = createAsyncThunk(
   `${url}/find`,
   ({ token, key }, thunkAPI) => {
@@ -307,6 +343,36 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(GET_ORG.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GET_ORG.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.org = payload;
+        state.isLoading = false;
+      })
+      .addCase(GET_ORG.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+      .addCase(UPDATE_ORG.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(UPDATE_ORG.fulfilled, (state, action) => {
+        const { payload } = action.payload;
+        state.org = payload;
+        state.isLoading = false;
+      })
+      .addCase(UPDATE_ORG.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

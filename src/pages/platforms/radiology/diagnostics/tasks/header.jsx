@@ -13,12 +13,13 @@ import { capitalize } from "../../../../../services/utilities";
 
 const Headers = ({ searchKey }) => {
   const dispatch = useDispatch();
-  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { department } = activePlatform;
   const { filtered, byStatus, sections, filteredStatus, byGroup } = useSelector(
     ({ validator }) => validator
   );
   const departmentCode =
-    activePlatform?.department?.toLowerCase() === "laboratory"
+    department?.toLowerCase() === "laboratory"
       ? "LAB"
       : activePlatform?.department?.toUpperCase();
 
@@ -73,7 +74,9 @@ const Headers = ({ searchKey }) => {
               style={{ width: 150 }}
               value={byStatus}
               onChange={(e) => {
-                dispatch(SetByStatus(e.target.value));
+                dispatch(
+                  SetByStatus({ status: e.target.value, statusKey: "hasDone" })
+                );
               }}
             >
               <option value="" disabled style={{ fontWeight: "bold" }}>
@@ -89,7 +92,7 @@ const Headers = ({ searchKey }) => {
               collections={filteredStatus}
               setFiltered={(items) => dispatch(SetFILTERED_STATUS(items))}
               reset={() => {
-                dispatch(SetByGroup(byGroup));
+                dispatch(SetByGroup({ status: byGroup, statusKey: "hasDone" }));
                 dispatch(SetByStatus(byStatus));
               }}
               haveAction={false}

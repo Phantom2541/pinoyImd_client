@@ -124,6 +124,7 @@ export default function SideNavigation({
     }
     let group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
     group.superadmin = Sidebars.superadmin;
+    group.patron = Sidebars.patron;
     const fullSidebar = group[platformKey] || [];
     if (platformKey === "laboratory") {
       const role = activePlatform?.role;

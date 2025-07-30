@@ -9,6 +9,7 @@ import "./style.css";
 
 export default function OrgChart() {
   const { activePlatform, token } = useSelector(({ auth }) => auth);
+  const { org } = useSelector(({ companies }) => companies);
   const [personnels, setPersonnels] = useState([]);
   const dispatch = useDispatch();
 

@@ -4,16 +4,18 @@ import { useSelector } from "react-redux";
 import CollapsableBody from "./body";
 import { MDBCollapse, MDBCardBody } from "mdbreact";
 import { collapse } from "../../../../../../services/utilities";
-
+import { properFullname } from "../../../../../../services/utilities";
 export default function CollapsableIndex() {
   const { filtered, activePage, maxPage } = useSelector(
-    ({ physicians }) => physicians
+    ({ applicants }) => applicants
   );
+console.log("filtered",filtered);
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex);
+console.log("item",paginatedData);
 
   const [activeId, setActiveId] = useState(-1);
   const [didHoverId, setDidHoverId] = useState(-1);
@@ -42,8 +44,6 @@ export default function CollapsableIndex() {
         <thead className="thead-light">
           <tr>
             <th>Name</th>
-            <th>Applied Position</th>
-            <th>specialization</th>
             <th>Application Date</th>
             <th>Status</th>
             <th>Actions</th>
@@ -61,10 +61,8 @@ export default function CollapsableIndex() {
             return (
               <React.Fragment key={`item-${actualIndex}`}>
                 <tr className={color}>
-                  <td>{item.name}</td>
-                  <td>{item.application}</td>
-                  <td>{item.specialization}</td>
-                  <td>{item.department}</td>
+                  <td>{properFullname(item.user.fullName)}</td>
+                  <td>{new Date(item.createdAt).toISOString().slice(0, 10)}</td>
                   <td>{renderStatusBadge(item.status)}</td>
                   <td>
                     <button
