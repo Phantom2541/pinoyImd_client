@@ -4,6 +4,7 @@ import { axioKit } from "../../../../utilities";
 const url = "finance/bookkeeping/orgChart";
 
 const initialState = {
+  org: {},
   collections: [],
   filtered: [],
   formSubmitted: false,
@@ -122,15 +123,8 @@ export const reduxSlice = createSlice({
         state.isSuccess = false;
         state.message = "";
       })
-      .addCase(BROWSE.fulfilled, (state, { payload }) => {
-        state.collections = state.filtered = payload;
-
-        let totalPAges = Math.floor(payload.length / state.maxPage);
-        if (payload.length % state.maxPage > 0) totalPAges += 1;
-        state.totalPages = totalPAges;
-        if (state.activePage > totalPAges) {
-          state.activePage = totalPAges;
-        }
+      .addCase(BROWSE.fulfilled, (state, action) => {
+        state.org = action.payload;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -147,8 +141,7 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        state.collections.unshift(payload);
-        state.filtered.unshift(payload);
+        state.org = payload;
         state.isSuccess = true;
         state.formSubmitted = false;
       })

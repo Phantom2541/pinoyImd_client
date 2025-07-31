@@ -6,8 +6,8 @@ import { ENDPOINT, properFullname } from "../../../../services/utilities";
 import { MDBIcon } from "mdbreact";
 import { v4 as uuidv4 } from "uuid";
 
-export default function CustomNode({ data, id }) {
-  const { setNodes } = useReactFlow();
+export default function CustomNode({ data, id, setAvailableNodes }) {
+  const { setNodes, setEdges } = useReactFlow();
   const [isFading, setIsFading] = useState(false);
   const { eid } = data;
   const profile = `${ENDPOINT}/public/users/${eid?.email}/profile.jpg`;
@@ -46,9 +46,31 @@ export default function CustomNode({ data, id }) {
 
   const handleReturn = () => {
     setIsFading(true);
-    // setTimeout(() => {
-    //   data.onReturn();
-    // }, 300);
+    setTimeout(() => {
+      var _nodes = []; //copy of updated nodes
+      var deletedNode = {};
+      setNodes((prev) => {
+        const _prev = [...prev];
+        const index = _prev.findIndex((n) => n.id === id);
+        deletedNode = _prev[index];
+        _prev.splice(index, 1);
+        _nodes = _prev;
+        return _prev;
+      });
+
+      setEdges((prev) => {
+        const _prev = [...prev].filter((edge) => {
+          const isExist = (key) =>
+            _nodes.some(({ id: nodeID }) => nodeID === edge[key]);
+          const sourceExist = isExist("source");
+          const targetExist = isExist("target");
+          return sourceExist && targetExist;
+        });
+        return _prev;
+      });
+
+      setAvailableNodes((prev) => [deletedNode, ...prev]);
+    }, 300);
   };
 
   const handleDelete = () => {
@@ -79,7 +101,6 @@ export default function CustomNode({ data, id }) {
         }}
         isConnectable
       />
-
       <div className="orgChart-innerCard-image-container">
         {!isClone && (
           <button
@@ -113,7 +134,6 @@ export default function CustomNode({ data, id }) {
           }}
         />
       </div>
-
       <div className="orgChart-innerCard-info">
         <span className="orgChart-innerCard-name">
           {properFullname(eid?.fullName)}
@@ -131,7 +151,6 @@ export default function CustomNode({ data, id }) {
           </span>
         </div>
       </div>
-
       <Handle
         type="source"
         position={Position.Bottom}
