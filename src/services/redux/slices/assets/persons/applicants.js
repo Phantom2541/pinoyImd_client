@@ -25,8 +25,6 @@ const initialState = {
 export const BROWSE = createAsyncThunk(
   `${url}`,
   ({ token, data }, thunkAPI) => {
-    console.log("data", data);
-
     try {
       return axioKit.universal(`${url}/browse`, token, data);
     } catch (error) {
@@ -207,6 +205,7 @@ export const reduxSlice = createSlice({
           state.branches = payload.map(({ applicant, ...rest }) => rest);
           state.collections = payload.flatMap(({ applicants }) => applicants);
         }
+
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {

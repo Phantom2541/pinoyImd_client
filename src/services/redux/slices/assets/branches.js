@@ -6,6 +6,7 @@ const url = "assets/branches";
 const initialState = {
   collections: [],
   filtered: [],
+  physicians: [],
   formSubmitted: false,
   didSearch: false,
   selected: {},
@@ -44,6 +45,24 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+export const GET_PHYSICIANS = createAsyncThunk(
+  `${url}/get_physicians`,
+  ({ token, key }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/get_physicians`, token, key);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const SEARCH = createAsyncThunk(
   `${url}/search`,
   ({ token, key }, thunkAPI) => {
@@ -299,6 +318,23 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(GET_PHYSICIANS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(GET_PHYSICIANS.fulfilled, (state, action) => {
+        state.physicians = action.payload;
+        console.log("state.physicians", action);
+
+        state.isLoading = false;
+        localStorage.setItem("patronCompany", JSON.stringify(action.payload));
+      })
+      .addCase(GET_PHYSICIANS.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
       .addCase(SEARCH.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
@@ -362,6 +398,8 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
+        console.log("action.payload", action.payload);
+
         const { success, payload } = action.payload;
         if (state.collections.length > 0) {
           const updateCollections = (collections) => {

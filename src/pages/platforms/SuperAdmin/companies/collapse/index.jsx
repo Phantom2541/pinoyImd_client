@@ -9,7 +9,6 @@ import {
   MDBRow,
   MDBCol,
 } from "mdbreact";
-import { HMO } from "../../../../../services/fakeDb";
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
 import { collapse, fullName } from "../../../../../services/utilities";
@@ -47,10 +46,8 @@ export default function Body() {
           activeId,
           didHoverId
         );
-        console.log("paginatedData", paginatedData);
 
-        const { branches = [], ceo = {}, hmo = [] } = company || {};
-        console.log("hmo", hmo);
+        const { branches = [], ceo = {} } = company || {};
 
         return (
           <MDBCard

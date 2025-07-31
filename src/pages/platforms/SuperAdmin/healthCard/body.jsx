@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { HMO } from "../../../../services/fakeDb";
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 8;
 
 const Body = ({ filteredHMOs }) => {
   const [currentPage, setCurrentPage] = useState(1);
