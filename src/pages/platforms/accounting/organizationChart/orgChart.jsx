@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactFlow, {
   addEdge,
@@ -8,81 +8,129 @@ import ReactFlow, {
   MarkerType,
   Background,
 } from "react-flow-renderer";
+import { useToasts } from "react-toast-notifications";
+
 import CustomNode from "./customNode";
 import CustomEdge from "./customEdge";
 import { properFullname } from "../../../../services/utilities";
 import { Policy } from "../../../../services/fakeDb";
 import Default from "./../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
+import { v4 as uuidv4 } from "uuid";
 import {
-  GET_ORG,
-  UPDATE_ORG,
-} from "../../../../services/redux/slices/assets/companies";
+  SAVE,
+  RESET,
+} from "../../../../services/redux/slices/finance/bookkeeping/orgChart";
+import { BROWSE } from "../../../../services/redux/slices/finance/bookkeeping/orgChart";
+import Spinner from "../../../../components/spinner";
 
-const nodeTypes = { customNode: CustomNode };
-
-export default function OrgChart({ personnels }) {
-  const { activePlatform, company, token } = useSelector(({ auth }) => auth);
-  const { org } = useSelector(({ companies }) => companies);
-  const dispatch = useDispatch();
-  const wrapperRef = useRef(null);
-  const dragOriginRef = useRef({});
-  const { fitView, project } = useReactFlow();
-
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [availableNodes, setAvailableNodes] = useState([]);
-  const [recentlyReturnedId, setRecentlyReturnedId] = useState(null);
-  const [hoveredNodeId, setHoveredNodeId] = useState(null);
-  const [layoutMode, setLayoutMode] = useState("tree");
-
-  const edgeTypes = {
-    custom: (edgeProps) => (
-      <CustomEdge {...edgeProps} hoveredNodeId={hoveredNodeId} />
+export default function OrgChart() {
+  const { activePlatform, company, token, auth } = useSelector(
+      ({ auth }) => auth
     ),
-  };
+    { org, isLoading, formSubmitted, message, isSuccess } = useSelector(
+      ({ orgChart }) => orgChart
+    ),
+    { isLoading: personnelLoading, collections: personnels } = useSelector(
+      ({ personnels }) => personnels
+    ),
+    { fitView, project } = useReactFlow(),
+    [nodes, setNodes, onNodesChange] = useNodesState([]),
+    [edges, setEdges, onEdgesChange] = useEdgesState([]),
+    [availableNodes, setAvailableNodes] = useState([]),
+    [recentlyReturnedId, setRecentlyReturnedId] = useState(null),
+    [hoveredNodeId, setHoveredNodeId] = useState(null),
+    [layoutMode, setLayoutMode] = useState("tree"),
+    wrapperRef = useRef(null),
+    dragOriginRef = useRef({}),
+    { addToast } = useToasts(),
+    dispatch = useDispatch(),
+    BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
 
-  const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
+  const edgeTypes = useMemo(() => {
+    return {
+      custom: (edgeProps) => (
+        <CustomEdge {...edgeProps} hoveredNodeId={hoveredNodeId} />
+      ),
+    };
+  }, [hoveredNodeId]);
 
-  // === LOAD PERSONNELS ===
+  const nodeTypes = useMemo(
+    () => ({
+      customNode: (props) => (
+        <CustomNode {...props} setAvailableNodes={setAvailableNodes} />
+      ),
+    }),
+    [setAvailableNodes]
+  );
+
   useEffect(() => {
-    const initialNodes = [];
-    const topbarNodes = [];
-
-    personnels.forEach((p) => {
-      const { position } = p;
-      const node = {
-        id: p._id,
-        type: "customNode",
-        position: position?.x != null ? position : { x: 0, y: 0 },
-        data: { personnel: p },
-      };
-
-      if (position?.x != null) initialNodes.push(node);
-      else topbarNodes.push(node);
-    });
-
-    setNodes(initialNodes);
-    setAvailableNodes(topbarNodes);
-
-    if (initialNodes.length) {
-      setTimeout(() => fitView({ padding: 0.2 }), 100);
+    if (message) {
+      addToast(message, {
+        appearance: isSuccess ? "success" : "error",
+      });
+      dispatch(RESET());
     }
-  }, [personnels, fitView, setNodes]);
+  }, [auth, isSuccess, message, dispatch, addToast]);
 
+  //get save orgchart in dbase
   useEffect(() => {
-    dispatch(GET_ORG({ token, key: { _id: company._id } }));
-  }, [dispatch, company, token]);
-
-  useEffect(() => {
-    const _nodes = org?.nodes || [];
-    const _personnels = [...availableNodes].filter(
-      (n) => !_nodes.some((node) => node.id === n.id)
+    dispatch(
+      BROWSE({
+        token,
+        key: { branchId: activePlatform?.branchId, userId: auth._id },
+      })
     );
-    setAvailableNodes(_personnels);
-    setNodes(_nodes);
-    setEdges(org?.edges || []);
-  }, [org]);
+  }, [token, dispatch, activePlatform, auth]);
+
+  useEffect(() => {
+    dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
+  }, [dispatch, activePlatform, token]);
+
+  useEffect(() => {
+    const { breakdown = [], edges = [], mode } = org || {};
+    if (breakdown.length > 0) {
+      const _breakdown = breakdown.map((b) => ({
+        ...b,
+        position: { x: Number(b?.gps?.x), y: Number(b?.gps?.y) },
+      }));
+      setNodes(_breakdown);
+      setEdges(edges);
+      setLayoutMode(mode);
+    }
+  }, [org, setEdges, setNodes]);
+
+  useEffect(() => {
+    if (!isLoading && !personnelLoading) {
+      const { breakdown = [] } = org || {};
+      const initialNodes = [];
+      const topbarNodes = [];
+      const _personnels = [...personnels].filter(
+        ({ user }) => !breakdown.some(({ data }) => data.eid._id === user._id)
+      );
+      _personnels.forEach((p) => {
+        const { user, contract, position } = p;
+        const node = {
+          id: uuidv4(),
+          type: "customNode",
+          position: position?.x != null ? position : { x: 0, y: 0 },
+          data: {
+            eid: user,
+            position: Policy.getPositions(contract?.designation),
+          },
+        };
+
+        if (position?.x != null) initialNodes.push(node);
+        else topbarNodes.push(node);
+      });
+
+      setAvailableNodes(topbarNodes);
+
+      if (initialNodes.length) {
+        setTimeout(() => fitView({ padding: 0.2 }), 100);
+      }
+    }
+  }, [isLoading, personnelLoading, personnels, fitView, org]);
 
   // === CONNECTION LOGIC ===
   const onConnect = useCallback(
@@ -358,7 +406,6 @@ export default function OrgChart({ personnels }) {
     },
     [setEdges, setNodes, layoutMode]
   );
-
   // === DRAG / DROP ===
   const handleDrop = (e) => {
     e.preventDefault();
@@ -372,20 +419,15 @@ export default function OrgChart({ personnels }) {
     });
 
     const newNode = {
-      id: parsed.id,
+      id: uuidv4(),
       type: parsed.type || "customNode",
       position,
       data: {
         ...parsed.data,
-        onReturn: () => {
-          setNodes((nds) => nds.filter((n) => n.id !== parsed.id));
-          setRecentlyReturnedId(parsed.id);
-          setAvailableNodes((prev) => [parsed, ...prev]);
-          setTimeout(() => setRecentlyReturnedId(null), 500);
-        },
       },
     };
-
+    setRecentlyReturnedId(parsed.id);
+    setTimeout(() => setRecentlyReturnedId(null), 500);
     setNodes((nds) => [...nds, newNode]);
     setAvailableNodes((prev) => prev.filter((n) => n.id !== parsed.id));
   };
@@ -394,9 +436,11 @@ export default function OrgChart({ personnels }) {
     e.dataTransfer.setData(
       "application/reactflow",
       JSON.stringify({
-        ...item,
         id: item.id,
         type: item.type,
+        data: {
+          ...item.data,
+        },
       })
     );
     e.dataTransfer.effectAllowed = "move";
@@ -477,16 +521,19 @@ export default function OrgChart({ personnels }) {
   const handleSave = () => {
     const cleanNodes = nodes.map(({ selected, ...n }) => ({
       ...n,
-      data: { ...n.data, personnel: n.data.personnel._id },
+      data: { ...n.data, eid: n.data.eid._id },
+      gps: n.position,
     }));
     const cleanEdges = edges.map(({ selected, ...e }) => e);
-
     dispatch(
-      UPDATE_ORG({
+      SAVE({
         token,
         data: {
-          _id: company._id,
-          org: { nodes: cleanNodes, edges: cleanEdges },
+          layoutMode,
+          breakdown: cleanNodes,
+          edges: cleanEdges,
+          branchId: activePlatform.branchId,
+          userId: auth._id,
         },
       })
     );
@@ -502,15 +549,12 @@ export default function OrgChart({ personnels }) {
       });
       return Array.from(map.values());
     });
-    localStorage.removeItem("savedNodes");
-    localStorage.removeItem("savedEdges");
   };
 
   const handleChangeLayout = (mode) => {
     setLayoutMode(mode);
     setNodes([]); // clear chart area
     setEdges([]); // clear edges
-
     setAvailableNodes((prev) => {
       const map = new Map(prev.map((n) => [n.id, n]));
       nodes.forEach(({ position, ...rest }) => {
@@ -518,16 +562,13 @@ export default function OrgChart({ personnels }) {
       });
       return Array.from(map.values());
     });
-
-    localStorage.removeItem("savedNodes");
-    localStorage.removeItem("savedEdges");
   };
 
   return (
     <div className="orgChart-container">
       {/* === Top Bar === */}
       <div className="orgChart-topbar">
-        {personnels.length === 0
+        {personnelLoading || formSubmitted
           ? Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="draggable-node skeleton-card">
                 <div className="skeleton-image" />
@@ -539,9 +580,8 @@ export default function OrgChart({ personnels }) {
               </div>
             ))
           : availableNodes.map((item) => {
-              const { contract, user } = item?.data?.personnel;
-              const { email, fullName: name } = user;
-              const position = Policy.getPositions(contract.designation);
+              const { position, eid } = item.data;
+              const { email, fullName: name } = eid;
               return (
                 <div
                   key={item.id}
@@ -564,9 +604,9 @@ export default function OrgChart({ personnels }) {
                     <span className="orgChart-innerCard-name">
                       {properFullname(name)}
                     </span>
-                    {name.postnominal && (
+                    {name?.postnominal && (
                       <span className="orgChart-innerCard-title">
-                        {name.postnominal}
+                        {name?.postnominal}
                       </span>
                     )}
                     {position && (
@@ -604,8 +644,9 @@ export default function OrgChart({ personnels }) {
                   nodes.length === 0 ? "hidden" : ""
                 }`}
                 onClick={handleSave}
+                disabled={formSubmitted}
               >
-                Save
+                Save <Spinner formSubmitted={formSubmitted} className="ml-1" />
               </button>
               <button
                 className={`flow-area-controls-reset bg-danger ${

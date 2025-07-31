@@ -2,22 +2,14 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBtn } from "mdbreact";
 
-// Format with time (for interview schedule)
-const formatDateTime = (dateStr) => {
-  if (!dateStr) return "N/A";
-  const date = new Date(dateStr);
-  return date.toLocaleString("en-US", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-};
-
 export default function Collapsable({ item }) {
   const [status, setStatus] = useState(item.status || "");
+  const [interviewDate, setInterviewDate] = useState(() => {
+    const date = new Date(item.createdAt);
+    return date.toISOString().slice(0, 16);
+  });
+  const [editing, setEditing] = useState(false);
+  const [tempDate, setTempDate] = useState(interviewDate);
 
   const handleAccept = () => {
     setStatus("hired");
@@ -28,31 +20,53 @@ export default function Collapsable({ item }) {
       timer: 1500,
       position: "center",
     });
-    // TODO: dispatch to Redux if needed
   };
 
   const handleDeny = () => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You are about to deny this application.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, deny it!",
-      cancelButtonText: "Cancel",
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setStatus("denied");
-        Swal.fire({
-          icon: "info",
-          title: "Application has been denied.",
-          showConfirmButton: false,
-          timer: 1500,
-          position: "center",
+      title: "What do you want to do with this application?",
+      icon: "question",
+      showConfirmButton: false,
+      showCancelButton: false,
+      html: `
+        <button id="denyBtn" class="swal2-confirm swal2-styled" style="background-color: #e74c3c; margin-right: 10px;">Deny</button>
+        <button id="pendingBtn" class="swal2-confirm swal2-styled" style="background-color: #f39c12; margin-right: 10px;">Put to Pending Queue</button>
+        <button id="cancelBtn" class="swal2-cancel swal2-styled">Cancel</button>
+      `,
+      didOpen: () => {
+        const swal = Swal.getPopup();
+
+        swal.querySelector("#denyBtn").addEventListener("click", () => {
+          setStatus("denied");
+          Swal.fire("Denied!", "Application was denied.", "success");
         });
-        // TODO: dispatch to Redux if needed
-      }
+
+        swal.querySelector("#pendingBtn").addEventListener("click", () => {
+          setStatus("pending");
+          Swal.fire("Pending!", "Moved to pending queue.", "info");
+        });
+
+        swal.querySelector("#cancelBtn").addEventListener("click", () => {
+          Swal.close();
+        });
+      },
     });
+  };
+
+  const handleSaveDate = () => {
+    setInterviewDate(tempDate);
+    setEditing(false);
+    Swal.fire({
+      icon: "success",
+      title: "Interview date updated.",
+      timer: 1200,
+      showConfirmButton: false,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setTempDate(interviewDate);
+    setEditing(false);
   };
 
   return (
@@ -61,7 +75,7 @@ export default function Collapsable({ item }) {
         <tr>
           <th>Resume</th>
           <th>Documents</th>
-          <th>Schedule</th>
+          <th>Date of Interview</th>
           <th>Remarks/Notes</th>
           <th style={{ width: "1%", whiteSpace: "nowrap" }}>Actions</th>
         </tr>
@@ -70,7 +84,49 @@ export default function Collapsable({ item }) {
         <tr>
           <td><h5>{item.frequency}</h5></td>
           <td><small>{item.decSS}</small></td>
-          <td><small>{formatDateTime(item.createdAt)}</small></td>
+          <td>
+            {editing ? (
+              <>
+                <input
+                  type="datetime-local"
+                  value={tempDate}
+                  onChange={(e) => setTempDate(e.target.value)}
+                  className="form-control mb-2"
+                  style={{ maxWidth: "220px" }}
+                />
+                <div>
+                  <MDBBtn size="sm" color="primary" onClick={handleSaveDate}>
+                    Save
+                  </MDBBtn>{" "}
+                  <MDBBtn size="sm" color="secondary" onClick={handleCancelEdit}>
+                    Cancel
+                  </MDBBtn>
+                </div>
+              </>
+            ) : (
+              <>
+                <small>
+                  {new Date(interviewDate).toLocaleString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true,
+                  })}
+                </small>
+                <br />
+                <MDBBtn
+                  size="sm"
+                  color="warning"
+                  onClick={() => setEditing(true)}
+                  className="mt-1"
+                >
+                  Edit
+                </MDBBtn>
+              </>
+            )}
+          </td>
           <td><small>{item.decSS}</small></td>
           <td className="text-nowrap">
             <MDBBtn size="sm" color="success" onClick={handleAccept}>

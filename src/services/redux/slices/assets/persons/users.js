@@ -5,6 +5,7 @@ const url = "assets/persons/users";
 
 const initialState = {
   collections: [],
+  formSubmitted: false,
   filtered: [],
   isSuccess: false,
   isLoading: false,
@@ -47,7 +48,9 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
     return axioKit.save(url, form.data, form.token);
   } catch (error) {
     const message =
-      (error.response && error.response.data && error.response.data.message) ||
+      (error?.response &&
+        error.response?.data &&
+        error.response?.data?.message) ||
       error.message ||
       error.toString();
 
@@ -57,15 +60,33 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
 
 export const REGISTER = createAsyncThunk(
   `${url}/register`,
-  (form, thunkAPI) => {
+  ({ data }, thunkAPI) => {
     try {
-      return axioKit.save(url, form);
+      return axioKit.save(url, data);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
+        (error?.response &&
+          error?.response?.data &&
+          error?.response?.data?.message) ||
+        error?.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const DUPLICATE_CHECKER = createAsyncThunk(
+  `${url}/duplicate_checker`,
+  ({ data }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, "", "duplicate_checker");
+    } catch (error) {
+      const message =
+        (error?.response &&
+          error?.response?.data &&
+          error?.response?.data?.message) ||
+        error?.message ||
         error.toString();
 
       return thunkAPI.rejectWithValue(message);
@@ -156,10 +177,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        console.log("action", action);
-
         const { success, payload } = action.payload;
-
         state.message = success;
         state.collections.unshift(payload);
         state.isSuccess = true;
@@ -188,8 +206,6 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
-        console.log("action", action);
-
         const { error } = action;
         state.message = error;
         state.isLoading = false;
@@ -211,23 +227,36 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(DUPLICATE_CHECKER.pending, (state) => {
+        state.formSubmitted = true;
+        state.message = "";
+      })
+      .addCase(DUPLICATE_CHECKER.fulfilled, (state, action) => {
+        const { success } = action;
+        state.message = success;
+        state.formSubmitted = false;
+      })
+      .addCase(DUPLICATE_CHECKER.rejected, (state, action) => {
+        state.message =
+          action.payload || action.error?.message || "Something went wrong";
+        state.formSubmitted = false;
+      })
       .addCase(REGISTER.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(REGISTER.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-
+        const { success, payload } = action;
         state.message = success;
         state.collections.unshift(payload);
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(REGISTER.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
-        state.isLoading = false;
+        state.message =
+          action.payload || action.error?.message || "Something went wrong";
+        state.formSubmitted = false;
       });
   },
 });
