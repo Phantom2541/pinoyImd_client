@@ -9,7 +9,7 @@ import {
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections} = useSelector(({ physicians }) => physicians),
+    { collections} = useSelector(({ applicants }) => applicants),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const Header = () => {
     >
       {/* Left Info */}
       <div className="text-white">
-        <div className="font-weight-bold">{collections.length} Clinic Applicants</div>
+        <div className="font-weight-bold">{collections.length} Receptionist / Secretary Applicant</div>
       </div>
 
       {/* Right Search Bar */}

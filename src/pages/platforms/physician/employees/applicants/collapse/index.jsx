@@ -3,39 +3,45 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import CollapsableBody from "./body";
 import { MDBCollapse, MDBCardBody } from "mdbreact";
-import { collapse } from "../../../../../../services/utilities";
-import { properFullname } from "../../../../../../services/utilities";
+import { collapse, properFullname } from "../../../../../../services/utilities";
+
 export default function CollapsableIndex() {
   const { filtered, activePage, maxPage } = useSelector(
     ({ applicants }) => applicants
   );
-console.log("filtered",filtered);
 
   const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedData = filtered.slice(startIndex, endIndex);
-console.log("item",paginatedData);
 
   const [activeId, setActiveId] = useState(-1);
-  const [didHoverId, setDidHoverId] = useState(-1);
+  const [didHoverId,] = useState(-1);
 
-  const renderStatusBadge = (status) => {
+  const renderStatusBadge = (status, interviewDate) => {
+    let finalStatus = status;
+
+    // If no interview date and not hired or denied → mark as pending
+    if (!interviewDate && status !== "hired" && status !== "denied") {
+      finalStatus = "pending";
+    }
+
     let className = "badge";
-    switch (status?.toLowerCase()) {
-      case "active":
+    switch (finalStatus?.toLowerCase()) {
+      case "hired":
         className += " badge-success";
         break;
-      case "on leave":
-        className += " badge-warning";
+      case "denied":
+        className += " badge-danger";
         break;
-      case "inactive":
-        className += " badge-secondary";
+      case "pending":
+        className += " badge-warning";
         break;
       default:
         className += " badge-light";
     }
-    return <span className={className}>{status}</span>;
+
+    return <span className={className}>{finalStatus}</span>;
   };
 
   return (
@@ -62,8 +68,17 @@ console.log("item",paginatedData);
               <React.Fragment key={`item-${actualIndex}`}>
                 <tr className={color}>
                   <td>{properFullname(item.user.fullName)}</td>
-                  <td>{new Date(item.createdAt).toISOString().slice(0, 10)}</td>
-                  <td>{renderStatusBadge(item.status)}</td>
+                  <td>
+                    {new Date(item.createdAt).toLocaleString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                      hour12: true,
+                    })}
+                  </td>
+                  <td>{renderStatusBadge(item.status, item.interviewDate)}</td>
                   <td>
                     <button
                       onClick={() =>
