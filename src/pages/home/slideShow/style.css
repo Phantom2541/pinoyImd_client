@@ -96,7 +96,7 @@
 
 .subscriber-flip-card-back {
   position: relative;
-  width: 80%;
+  width: 90%;
   height: auto;
   background-color: #f8f8f8;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -126,9 +126,25 @@
   width: 100%;
 }
 
-.subscriber-register-img {
+.subscriber-register-img,
+.subscriber-register-terms {
   display: block !important;
   width: 350px;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.subscriber-register-terms {
+  animation: identifier 1s ease;
+}
+
+@keyframes identifier {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .subscriber-slide-content {
@@ -190,7 +206,8 @@
     padding: 0;
   }
 
-  .subscriber-register-img {
+  .subscriber-register-img,
+  .subscriber-register-terms {
     display: none !important;
   }
   .subscriber-text-container-style {

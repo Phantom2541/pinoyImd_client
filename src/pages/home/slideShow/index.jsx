@@ -7,6 +7,7 @@ import IMG2 from "./../../../assets/homeMachine.jpg";
 import IMG3 from "./../../../assets/homePatient.jpg";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import Register from "../register";
 
 const slides = [
   {
@@ -32,7 +33,7 @@ const slides = [
   },
 ];
 
-export default function Register({ handleFlip, flipped }) {
+export default function SlideShow({ handleFlip, flipped }) {
   return (
     <MDBAnimation reveal type="fadeIn" duration="1000ms">
       <div className="subscriber-register-section">

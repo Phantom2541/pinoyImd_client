@@ -17,6 +17,7 @@ import {
 } from "../../../services/redux/slices/assets/persons/users";
 import { Suffixes } from "../../../services/fakeDb";
 import REGISTRATIONIMG from "./../../../assets/homePageRegistrationImg.png";
+import "./style.css";
 
 const Register = () => {
   const [isMale, setIsMale] = useState(false);
@@ -24,6 +25,14 @@ const Register = () => {
     password: true,
     confirmPassword: true,
   });
+  const [currentStep, setCurrentStep] = useState(1);
+  const [slideDirection, setSlideDirection] = useState("left");
+
+  const steps = [
+    { id: 1, title: "Personal Info" },
+    { id: 2, title: "Medical Details" },
+    { id: 3, title: "Confirmation" },
+  ];
 
   const { message, isLoading, isSuccess } = useSelector(({ users }) => users);
   const [suffix, setSuffix] = useState("NONE");
@@ -75,167 +84,300 @@ const Register = () => {
     setIsMale(e.target.checked);
   };
 
+  const handleNext = () => {
+    if (currentStep < steps.length) {
+      setSlideDirection("left"); // 👈 Add this
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setSlideDirection("right"); // 👈 Add this
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <>
+            <MDBRow>
+              <MDBCol md="6" sm="6" className="pr-0">
+                <MDBInput
+                  label="First Name"
+                  icon="user"
+                  type="text"
+                  name="fname"
+                  size="sm"
+                  required
+                />
+              </MDBCol>
+              <MDBCol md="6" sm="6" className="pr-0">
+                <MDBInput
+                  label="Middle Name"
+                  icon="user"
+                  type="text"
+                  name="mname"
+                  size="sm"
+                />
+              </MDBCol>
+            </MDBRow>
+            <MDBRow>
+              <MDBCol md="6" sm="6" className="pr-0">
+                <MDBInput
+                  label="Last Name"
+                  icon="user"
+                  type="text"
+                  name="lname"
+                  size="sm"
+                  required
+                />
+              </MDBCol>
+              <MDBCol md="3" sm="3" className="pr-0">
+                <MDBSelect
+                  getValue={(value) => setSuffix(value[0])}
+                  label={"Suffix"}
+                  size="sm"
+                  className="colorful-select dropdown-primary hidden-md-down ml-3"
+                >
+                  <MDBSelectInput name="suffix" selected={`NONE`} />
+                  <MDBSelectOptions>
+                    {Suffixes.map((sfx) => (
+                      <MDBSelectOption key={sfx} value={sfx}>
+                        {sfx}
+                      </MDBSelectOption>
+                    ))}
+                  </MDBSelectOptions>
+                </MDBSelect>
+              </MDBCol>
+              <MDBCol md="3" sm="3" className="pr-0">
+                <div className="d-flex flex-column align-items-center mt-1 mb-4">
+                  <MDBInput
+                    label="Male"
+                    type="checkbox"
+                    size="sm"
+                    id="male"
+                    checked={isMale}
+                    onChange={handleMaleChange}
+                  />
+                  <MDBInput
+                    label="Female"
+                    type="checkbox"
+                    id="female"
+                    size="sm"
+                    checked={!isMale}
+                    onChange={() => setIsMale(false)}
+                  />
+                </div>
+              </MDBCol>
+            </MDBRow>
+            <MDBRow>
+              <MDBCol md="6" sm="6" className="pr-0">
+                <MDBInput
+                  label="Date Of Birth"
+                  icon="calendar "
+                  type="date"
+                  name="dob"
+                  size="sm"
+                  required
+                />
+              </MDBCol>
+              <MDBCol md="6" sm="6" className="pr-0">
+                <MDBInput
+                  label="Phone #"
+                  icon="mobile "
+                  type="text"
+                  name="mobile"
+                  size="sm"
+                  required
+                />
+              </MDBCol>
+            </MDBRow>
+          </>
+        );
+      case 2:
+        return (
+          <MDBInput
+            label="E-mail Address"
+            icon="envelope"
+            type="email"
+            name="email"
+            required
+          />
+        );
+      case 3:
+        return (
+          <>
+            <MDBRow>
+              <MDBCol md="6" sm="6">
+                <MDBInput
+                  label="Password"
+                  minLength={8}
+                  icon={isLocked.password ? "lock" : "unlock"}
+                  onIconMouseEnter={() =>
+                    setIsLocked({ ...isLocked, password: false })
+                  }
+                  onIconMouseLeave={() =>
+                    setIsLocked({ ...isLocked, password: true })
+                  }
+                  type={isLocked.password ? "password" : "text"}
+                  name="password"
+                  required
+                />
+              </MDBCol>
+              <MDBCol md="6" sm="6">
+                <MDBInput
+                  label="Confirm your password"
+                  minLength={8}
+                  icon={isLocked.confirmPassword ? "lock" : "unlock"}
+                  onIconMouseEnter={() =>
+                    setIsLocked({ ...isLocked, confirmPassword: false })
+                  }
+                  onIconMouseLeave={() =>
+                    setIsLocked({ ...isLocked, confirmPassword: true })
+                  }
+                  type={isLocked.confirmPassword ? "password" : "text"}
+                  name="confirmPassword"
+                  required
+                />
+              </MDBCol>
+            </MDBRow>
+            <MDBRow>
+              <MDBCol md="12" sm="12" className="mt-4">
+                <MDBInput
+                  label="I read and agree with the Terms and Conditions"
+                  type="checkbox"
+                  id="agreement"
+                  name="agreement"
+                  required
+                />
+              </MDBCol>
+            </MDBRow>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="d-flex align-items-center">
-      <div>
+    <div
+      className="d-flex align-items-center justify-content-between w-100"
+      style={{ gap: "15px" }}
+    >
+      <div style={{ flex: 1 }}>
         <h2 style={{ fontWeight: "400" }}>Patient Registration Form</h2>
+
+        {/* Stepper Header */}
+        <div className="subscriber-register-stepper-wrapper">
+          {steps.map((step, index) => {
+            const isActive = currentStep >= step.id;
+            const isCurrent = currentStep === step.id;
+            const isLineActive = currentStep > step.id;
+
+            return (
+              <div key={step.id} className="subscriber-register-step">
+                {/* Circle */}
+                <div
+                  className={`subscriber-register-step-circle ${
+                    isActive ? "active" : ""
+                  } ${isCurrent ? "current" : ""}`}
+                >
+                  {step.id}
+                </div>
+
+                {/* Title */}
+                <div
+                  className={`subscriber-register-step-title ${
+                    isActive ? "active" : ""
+                  }`}
+                >
+                  {step.title}
+                </div>
+
+                {/* Line */}
+                {index < steps.length - 1 && (
+                  <div
+                    className={`subscriber-register-step-line ${
+                      isLineActive ? "active" : ""
+                    }`}
+                  ></div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Step Container */}
+
         <form
           style={{ width: "100%" }}
           onSubmit={handleSubmit}
           id="registration-form"
         >
-          <MDBRow>
-            <MDBCol md="6">
-              <MDBInput
-                label="First Name"
-                icon="user"
-                type="text"
-                name="fname"
-                required
-              />
-              <MDBInput
-                label="Middle Name"
-                icon="user"
-                type="text"
-                name="mname"
-              />
-              <MDBRow
-                className="d-flex align-items-center"
-                style={{ marginTop: "-25px" }}
+          {/* Slide animation wrapper ONLY for the content */}
+          <div
+            key={currentStep}
+            className={`subscriber-register-step-content subscriber-register-slide-${slideDirection}`}
+          >
+            {renderStepContent()}
+          </div>
+
+          {/* Buttons OUTSIDE the slide animation */}
+          <div
+            className="d-flex justify-content-end"
+            style={{ gap: "10px", marginTop: "16px" }}
+          >
+            <button
+              type="button"
+              onClick={handleBack}
+              disabled={currentStep === 1}
+              className="subscriber-register-btn-outline"
+            >
+              Back
+            </button>
+
+            {currentStep < steps.length && (
+              <button
+                type="button"
+                onClick={handleNext}
+                className="subscriber-register-btn-primary"
               >
-                <MDBCol className="pr-0">
-                  <MDBInput
-                    label="Last Name"
-                    icon="user"
-                    type="text"
-                    name="lname"
-                    required
-                  />
-                </MDBCol>
-                <MDBCol className="pl-0">
-                  <MDBSelect
-                    getValue={(value) => setSuffix(value[0])}
-                    label={"Suffix"}
-                    className="colorful-select dropdown-primary hidden-md-down ml-3"
-                  >
-                    <MDBSelectInput name="suffix" selected={`NONE`} />
-                    <MDBSelectOptions>
-                      {Suffixes.map((sfx) => (
-                        <MDBSelectOption key={sfx} value={sfx}>
-                          {sfx}
-                        </MDBSelectOption>
-                      ))}
-                    </MDBSelectOptions>
-                  </MDBSelect>
-                </MDBCol>
-              </MDBRow>
-              <MDBInput
-                className="d-flex align-items-center mb-4"
-                label="Phone #"
-                style={{ marginTop: "-20px" }}
-                icon="mobile "
-                type="text"
-                name="mobile"
-                required
-              />
-              <div className="d-flex align-items-center mt-1 mb-4">
-                <MDBInput
-                  label="Male"
-                  type="checkbox"
-                  id="male"
-                  checked={isMale}
-                  onChange={handleMaleChange}
-                />
-                <MDBInput
-                  label="Female"
-                  type="checkbox"
-                  id="female"
-                  checked={!isMale}
-                  onChange={() => setIsMale(false)}
-                />
-              </div>
-            </MDBCol>
+                Next
+              </button>
+            )}
 
-            <MDBCol md="6">
-              <MDBInput
-                label="Date Of Birth"
-                icon="calendar "
-                type="date"
-                name="dob"
-                required
-              />
-              <MDBInput
-                label="E-mail Address"
-                icon="envelope"
-                type="email"
-                name="email"
-                required
-              />
-              <MDBInput
-                label="Password"
-                minLength={8}
-                icon={isLocked.password ? "lock" : "unlock"}
-                onIconMouseEnter={() =>
-                  setIsLocked({ ...isLocked, password: false })
-                }
-                onIconMouseLeave={() =>
-                  setIsLocked({ ...isLocked, password: true })
-                }
-                type={isLocked.password ? "password" : "text"}
-                name="password"
-                required
-              />
-              <MDBInput
-                label="Confirm your password"
-                minLength={8}
-                icon={isLocked.confirmPassword ? "lock" : "unlock"}
-                onIconMouseEnter={() =>
-                  setIsLocked({ ...isLocked, confirmPassword: false })
-                }
-                onIconMouseLeave={() =>
-                  setIsLocked({ ...isLocked, confirmPassword: true })
-                }
-                type={isLocked.confirmPassword ? "password" : "text"}
-                name="confirmPassword"
-                required
-              />
-              <MDBInput
-                label="I read and agree with the Terms and Conditions"
-                type="checkbox"
-                id="agreement"
-                name="agreement"
-                required
-              />
-            </MDBCol>
-          </MDBRow>
-
-          {message && (
-            <div
-              className={`alert alert-${
-                isSuccess ? "success" : "warning"
-              } text-center mt-3`}
-            >
-              {message}
-            </div>
-          )}
-
-          <div className="text-center mt-4">
-            <MDBBtn
-              disabled={isLoading}
-              type="submit"
-              color="light-blue"
-              rounded
-            >
-              {isLoading ? <MDBIcon icon="spinner" spin /> : "Sign up"}
-            </MDBBtn>
+            {currentStep === steps.length && (
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="subscriber-register-btn-primary"
+              >
+                {isLoading ? <MDBIcon icon="spinner" spin /> : "Sign up"}
+              </button>
+            )}
           </div>
         </form>
       </div>
-      <img
-        src={REGISTRATIONIMG}
-        className="subscriber-register-img"
-        alt="registrationImg"
-      />
+      {currentStep === 3 ? (
+        <span className="subscriber-register-terms">
+          These Terms and Conditions (“Terms”) govern your access to and use of
+          the Pinoy iMD system (“Platform”), a digital Electronic Health Record
+          (EHR) service developed specifically for medical practitioners and
+          institutions in the Philippines. By accessing or using this Platform,
+          you acknowledge that you have read, understood, and agree to be
+          legally bound by these Terms.
+        </span>
+      ) : (
+        <img
+          src={REGISTRATIONIMG}
+          className="subscriber-register-img"
+          alt="registrationImg"
+          style={{ marginLeft: "40px" }}
+        />
+      )}
     </div>
   );
 };
