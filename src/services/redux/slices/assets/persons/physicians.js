@@ -40,6 +40,23 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+export const SECRETARYAPPLICANTS = createAsyncThunk(
+  `${url}/secretaryApplicants`,
+  ({ token, params }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/secretaryApplicants`, token, params);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const SEARCH = createAsyncThunk(
   `${url}/SEARCH`,
@@ -221,6 +238,24 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        const { error } = action;
+        state.message = error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(SECRETARYAPPLICANTS.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SECRETARYAPPLICANTS.fulfilled, (state, action) => {
+        const { payload, query } = action.payload;
+        console.log("action.payload", action.payload);
+
+        state.collections = state.filtered = payload;
+        state.isLoading = false;
+      })
+      .addCase(SECRETARYAPPLICANTS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
         state.isLoading = false;

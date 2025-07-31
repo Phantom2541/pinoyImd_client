@@ -15,7 +15,9 @@ import {
   BROWSE,
   RESET,
   SetFILTERED,
+  GET_DETAILS,
 } from "../../../../../services/redux/slices/assets/companies";
+import { GET_PHYSICIANS } from "../../../../../services/redux/slices/assets/branches";
 import Search from "../../../../../components/searchables/search";
 import "./style.css";
 
@@ -29,13 +31,21 @@ export default function UnsetApply() {
     [totalPages, setTotalPages] = useState(1),
     dispatch = useDispatch();
 
-  console.log("unused variable total pages", totalPages);
-
   useEffect(() => {
-    if (token) dispatch(BROWSE(token));
+    if (token) {
+      dispatch(BROWSE({ token })); // 👈 Pass token as object if BROWSE expects it
+    }
+    dispatch(GET_PHYSICIANS({ token }));
 
-    return () => dispatch(RESET());
+    return () => {
+      dispatch(RESET());
+    };
   }, [token, dispatch]);
+
+  // useEffect(() => {
+
+  //   return () => dispatch(RESET());
+  // }, [dispatch]);
 
   useEffect(() => {
     setCompanies(filtered);

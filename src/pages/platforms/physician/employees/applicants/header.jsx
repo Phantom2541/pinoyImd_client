@@ -1,26 +1,34 @@
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
-  BROWSE,
+  SECRETARYAPPLICANTS,
   RESET,
-} from "../../../../../services/redux/slices/assets/persons/applicants";
-
+} from "../../../../../services/redux/slices/assets/persons/physicians";
+import Branch from "../../../headquarter/dashboard/branch";
 
 const Header = () => {
-  const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { collections} = useSelector(({ physicians }) => physicians),
+  const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
+    { collections } = useSelector(({ physicians }) => physicians),
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token && activePlatform?.branchId) {
-      dispatch(BROWSE({ data: { branchId: activePlatform.branchId }, token }));
+    if (token) {
+      dispatch(
+        SECRETARYAPPLICANTS({
+          params: {
+            physicianId: auth._id,
+            branchId: activePlatform.branchId,
+          },
+          token,
+        })
+      );
     }
 
     return () => {
       dispatch(RESET());
     };
-  }, [token, activePlatform, dispatch]);
+  }, [token, activePlatform, auth, dispatch]);
 
   return (
     <MDBView
@@ -29,7 +37,9 @@ const Header = () => {
     >
       {/* Left Info */}
       <div className="text-white">
-        <div className="font-weight-bold">{collections.length} Clinic Applicants</div>
+        <div className="font-weight-bold">
+          {collections.length} Receptionist / Secretary Applicant
+        </div>
       </div>
 
       {/* Right Search Bar */}
@@ -38,7 +48,6 @@ const Header = () => {
           type="text"
           className="form-control"
           placeholder="🔍 Search applicant..."
-        
         />
       </div>
     </MDBView>

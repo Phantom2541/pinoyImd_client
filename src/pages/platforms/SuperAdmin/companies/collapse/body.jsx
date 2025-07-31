@@ -6,7 +6,8 @@ import { capitalize } from "lodash";
 import { Input, Select } from "../../../../../components/customizable";
 import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
 import { SetFILTERED } from "../../../../../services/redux/slices/assets/companies";
-
+import EditableSelect from "../../../../../components/customizable/editableSelect";
+// ... your existing imports remain the same
 export default function Collapsable({ branches, cid }) {
   const { token } = useSelector(({ auth }) => auth),
     [selected, setSelected] = useState({}),
@@ -16,7 +17,6 @@ export default function Collapsable({ branches, cid }) {
 
   const handleUpdate = () => {
     const { _id, key, value } = selected;
-    console.log("selected", selected);
     dispatch(UPDATE({ token, data: { _id, [key]: value } })).then(
       ({ payload }) => {
         const _branches = branches.map((branch) =>
@@ -24,13 +24,9 @@ export default function Collapsable({ branches, cid }) {
         );
 
         const _collections = collections.map((company) =>
-          company?._id === cid
-            ? {
-                ...company,
-                branches: _branches,
-              }
-            : company
+          company?._id === cid ? { ...company, branches: _branches } : company
         );
+
         dispatch(SetFILTERED(_collections));
       }
     );
@@ -41,9 +37,7 @@ export default function Collapsable({ branches, cid }) {
     const { _id, ...val } = data;
     const [key] = Object.keys(val);
     const value = val[key];
-
-    // If already selected, toggle off
-    if (selected?._id === _id) {
+    if (selected?._id === _id && selected?.key === key) {
       setSelected({});
     } else {
       setSelected({ _id, key, value, old: val[key] });
@@ -59,8 +53,8 @@ export default function Collapsable({ branches, cid }) {
           <th>Acronym</th>
           <th>Category</th>
           <th>Subscription</th>
-          <th>billing</th>
           <th>status</th>
+          <th>billing</th>
           <th>startDate</th>
           <th>Hiring</th>
           <th>AO</th>
@@ -82,12 +76,16 @@ export default function Collapsable({ branches, cid }) {
           } = branch;
           const { subscription = "demo", billing, status } = settings;
           const isSelected = selected._id === _id;
+
           return (
             <tr key={index}>
               <td>
                 <strong className="mr-1"> {++index}.</strong>
                 {isSelected && selected.key === "name" ? (
-                  <div style={{ width: "13rem" }}>
+                  <div
+                    style={{ width: "13rem" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Input
                       _key={"value"}
                       className="mt-2 form-control form-control-sm"
@@ -104,16 +102,20 @@ export default function Collapsable({ branches, cid }) {
                     {name}
                   </strong>
                 )}
-
                 {isMain && (
                   <MDBBadge color="warning" className="ml-2">
                     Main
                   </MDBBadge>
                 )}
               </td>
+
+              {/* displayname */}
               <td>
                 {isSelected && selected.key === "displayname" ? (
-                  <div style={{ width: "13rem" }}>
+                  <div
+                    style={{ width: "13rem" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Input
                       _key={"value"}
                       className="mt-2 form-control form-control-sm"
@@ -131,9 +133,14 @@ export default function Collapsable({ branches, cid }) {
                   </span>
                 )}
               </td>
+
+              {/* abbr */}
               <td>
                 {isSelected && selected.key === "abbr" ? (
-                  <div style={{ width: "13rem" }}>
+                  <div
+                    style={{ width: "13rem" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Input
                       _key={"value"}
                       className="mt-2 form-control form-control-sm"
@@ -151,20 +158,53 @@ export default function Collapsable({ branches, cid }) {
                   </span>
                 )}
               </td>
+
+              {/* category */}
               <td>
-                {isSelected && selected.key === "category" ? (
-                  <div style={{ width: "13rem" }}>
+                <EditableSelect
+                  title="Click to edit"
+                  // classNameTxt="signatories-card-section"
+                  isEditable
+                  preValue={category}
+                  collections={[
+                    "supplier",
+                    "laboratory",
+                    "radiology",
+                    "diagnostic",
+                    "pharmacy",
+                    "infirmary",
+                    "rehabilitation",
+                    "support",
+                  ]}
+                  selectStyle={{ width: "13rem" }}
+                  keyForText="category"
+                  keyForValue="category"
+                  fieldData={{
+                    _id,
+                    category,
+                  }}
+                  // formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                  onSave={(data) =>
+                    handleUpdate({ id: data._id, category: data.category })
+                  }
+                />
+              </td>
+
+              {/* subscription */}
+              <td>
+                {isSelected && selected.key === "subscription" ? (
+                  <div
+                    style={{ width: "13rem" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Select
-                      keys={"category"}
+                      keys={"subscription"}
                       collections={[
-                        "supplier",
-                        "laboratory",
-                        "radiology",
-                        "diagnostic",
-                        "pharmacy",
-                        "infirmary",
-                        "rehabilitation",
-                        "support",
+                        "demo",
+                        "subscriber",
+                        "loyalty",
+                        "lifetime",
                       ]}
                       className="mt-2 form-control form-control-sm"
                       isSuccess={isSuccess}
@@ -173,30 +213,6 @@ export default function Collapsable({ branches, cid }) {
                         setSelected({ ...selected, value, key })
                       }
                       handleCheck={() => handleUpdate()}
-                      // multiple={true} // not functioning
-                      soloUpdate={true}
-                    />
-                  </div>
-                ) : (
-                  <span onClick={() => handleSelected({ _id, category })}>
-                    {capitalize(category) || "N/A"}
-                  </span>
-                )}
-              </td>
-              <td>
-                {isSelected && selected.key === "subscription" ? (
-                  <div style={{ width: "13rem" }}>
-                    <Select
-                      keys={"subscription"}
-                      collections={["demo", "subscription", "lifetime"]}
-                      className="mt-2 form-control form-control-sm"
-                      isSuccess={isSuccess}
-                      selected={selected}
-                      onChange={(key, value) =>
-                        setSelected({ ...selected, value, key })
-                      }
-                      handleCheck={() => handleUpdate()}
-                      // multiple={true} // not functioning
                       soloUpdate={true}
                     />
                   </div>
@@ -206,16 +222,20 @@ export default function Collapsable({ branches, cid }) {
                   </span>
                 )}
               </td>
-              <td>{capitalize(billing) || "N/A"} </td>
+
+              {/* status */}
               <td>
                 {isSelected && selected.key === "status" ? (
-                  <div style={{ width: "13rem" }}>
+                  <div
+                    style={{ width: "13rem" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Select
                       keys={"status"}
                       collections={[
                         "Active",
                         "Expired",
-                        " Suspended",
+                        "Suspended",
                         "Cancelled",
                       ]}
                       className="mt-2 form-control form-control-sm"
@@ -225,7 +245,6 @@ export default function Collapsable({ branches, cid }) {
                         setSelected({ ...selected, value, key })
                       }
                       handleCheck={() => handleUpdate()}
-                      // multiple={true} // not functioning
                       soloUpdate={true}
                     />
                   </div>
@@ -235,10 +254,24 @@ export default function Collapsable({ branches, cid }) {
                   </span>
                 )}
               </td>
-              <td>{createdAt} </td>
+
+              <td>{capitalize(billing) || "N/A"}</td>
+
+              <td>
+                {new Date(createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </td>
+
+              {/* isHiring */}
               <td>
                 {isSelected && selected.key === "isHiring" ? (
-                  <div style={{ width: "13rem" }}>
+                  <div
+                    style={{ width: "13rem" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <Select
                       keys={"status"}
                       collections={["True", "False"]}
@@ -249,7 +282,6 @@ export default function Collapsable({ branches, cid }) {
                         setSelected({ ...selected, value, key })
                       }
                       handleCheck={() => handleUpdate()}
-                      // multiple={true} // not functioning
                       soloUpdate={true}
                     />
                   </div>
@@ -259,6 +291,7 @@ export default function Collapsable({ branches, cid }) {
                   </span>
                 )}
               </td>
+
               <td>{fullName(branch?.ao?.fullName)}</td>
               <td></td>
             </tr>

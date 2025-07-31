@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactFlow, {
   addEdge,
@@ -8,6 +8,8 @@ import ReactFlow, {
   MarkerType,
   Background,
 } from "react-flow-renderer";
+import { useToasts } from "react-toast-notifications";
+
 import CustomNode from "./customNode";
 import CustomEdge from "./customEdge";
 import { properFullname } from "../../../../services/utilities";
@@ -15,61 +17,120 @@ import { Policy } from "../../../../services/fakeDb";
 import Default from "./../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
 import { v4 as uuidv4 } from "uuid";
-import { SAVE } from "../../../../services/redux/slices/finance/bookkeeping/orgChart";
-const nodeTypes = { customNode: CustomNode };
+import {
+  SAVE,
+  RESET,
+} from "../../../../services/redux/slices/finance/bookkeeping/orgChart";
+import { BROWSE } from "../../../../services/redux/slices/finance/bookkeeping/orgChart";
+import Spinner from "../../../../components/spinner";
 
-export default function OrgChart({ personnels }) {
-  const wrapperRef = useRef(null);
-  const dragOriginRef = useRef({});
-  const { fitView, project } = useReactFlow();
-
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [availableNodes, setAvailableNodes] = useState([]);
-  const [recentlyReturnedId, setRecentlyReturnedId] = useState(null);
-  const [hoveredNodeId, setHoveredNodeId] = useState(null);
-  const [layoutMode, setLayoutMode] = useState("tree");
-  const dispatch = useDispatch();
-
-  const edgeTypes = {
-    custom: (edgeProps) => (
-      <CustomEdge {...edgeProps} hoveredNodeId={hoveredNodeId} />
-    ),
-  };
-
+export default function OrgChart() {
   const { activePlatform, company, token, auth } = useSelector(
-    ({ auth }) => auth
+      ({ auth }) => auth
+    ),
+    { org, isLoading, formSubmitted, message, isSuccess } = useSelector(
+      ({ orgChart }) => orgChart
+    ),
+    { isLoading: personnelLoading, collections: personnels } = useSelector(
+      ({ personnels }) => personnels
+    ),
+    { fitView, project } = useReactFlow(),
+    [nodes, setNodes, onNodesChange] = useNodesState([]),
+    [edges, setEdges, onEdgesChange] = useEdgesState([]),
+    [availableNodes, setAvailableNodes] = useState([]),
+    [recentlyReturnedId, setRecentlyReturnedId] = useState(null),
+    [hoveredNodeId, setHoveredNodeId] = useState(null),
+    [layoutMode, setLayoutMode] = useState("tree"),
+    wrapperRef = useRef(null),
+    dragOriginRef = useRef({}),
+    { addToast } = useToasts(),
+    dispatch = useDispatch(),
+    BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
+
+  const edgeTypes = useMemo(() => {
+    return {
+      custom: (edgeProps) => (
+        <CustomEdge {...edgeProps} hoveredNodeId={hoveredNodeId} />
+      ),
+    };
+  }, [hoveredNodeId]);
+
+  const nodeTypes = useMemo(
+    () => ({
+      customNode: (props) => (
+        <CustomNode {...props} setAvailableNodes={setAvailableNodes} />
+      ),
+    }),
+    [setAvailableNodes]
   );
-  const BANNER = `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`;
 
-  // === LOAD PERSONNELS ===
   useEffect(() => {
-    const initialNodes = [];
-    const topbarNodes = [];
-
-    personnels.forEach((p, i) => {
-      const { user, contract, position } = p;
-      const node = {
-        id: uuidv4(),
-        type: "customNode",
-        position: position?.x != null ? position : { x: 0, y: 0 },
-        data: {
-          eid: user,
-          position: Policy.getPositions(contract?.designation),
-        },
-      };
-
-      if (position?.x != null) initialNodes.push(node);
-      else topbarNodes.push(node);
-    });
-
-    setNodes(initialNodes);
-    setAvailableNodes(topbarNodes);
-
-    if (initialNodes.length) {
-      setTimeout(() => fitView({ padding: 0.2 }), 100);
+    if (message) {
+      addToast(message, {
+        appearance: isSuccess ? "success" : "error",
+      });
+      dispatch(RESET());
     }
-  }, [personnels, fitView, setNodes]);
+  }, [auth, isSuccess, message, dispatch, addToast]);
+
+  //get save orgchart in dbase
+  useEffect(() => {
+    dispatch(
+      BROWSE({
+        token,
+        key: { branchId: activePlatform?.branchId, userId: auth._id },
+      })
+    );
+  }, [token, dispatch, activePlatform, auth]);
+
+  useEffect(() => {
+    dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
+  }, [dispatch, activePlatform, token]);
+
+  useEffect(() => {
+    const { breakdown = [], edges = [], mode } = org || {};
+    if (breakdown.length > 0) {
+      const _breakdown = breakdown.map((b) => ({
+        ...b,
+        position: { x: Number(b?.gps?.x), y: Number(b?.gps?.y) },
+      }));
+      setNodes(_breakdown);
+      setEdges(edges);
+      setLayoutMode(mode);
+    }
+  }, [org, setEdges, setNodes]);
+
+  useEffect(() => {
+    if (!isLoading && !personnelLoading) {
+      const { breakdown = [] } = org || {};
+      const initialNodes = [];
+      const topbarNodes = [];
+      const _personnels = [...personnels].filter(
+        ({ user }) => !breakdown.some(({ data }) => data.eid._id === user._id)
+      );
+      _personnels.forEach((p) => {
+        const { user, contract, position } = p;
+        const node = {
+          id: uuidv4(),
+          type: "customNode",
+          position: position?.x != null ? position : { x: 0, y: 0 },
+          data: {
+            eid: user,
+            position: Policy.getPositions(contract?.designation),
+          },
+        };
+
+        if (position?.x != null) initialNodes.push(node);
+        else topbarNodes.push(node);
+      });
+
+      setAvailableNodes(topbarNodes);
+
+      if (initialNodes.length) {
+        setTimeout(() => fitView({ padding: 0.2 }), 100);
+      }
+    }
+  }, [isLoading, personnelLoading, personnels, fitView, org]);
 
   // === CONNECTION LOGIC ===
   const onConnect = useCallback(
@@ -468,6 +529,7 @@ export default function OrgChart({ personnels }) {
       SAVE({
         token,
         data: {
+          layoutMode,
           breakdown: cleanNodes,
           edges: cleanEdges,
           branchId: activePlatform.branchId,
@@ -487,15 +549,12 @@ export default function OrgChart({ personnels }) {
       });
       return Array.from(map.values());
     });
-    localStorage.removeItem("savedNodes");
-    localStorage.removeItem("savedEdges");
   };
 
   const handleChangeLayout = (mode) => {
     setLayoutMode(mode);
     setNodes([]); // clear chart area
     setEdges([]); // clear edges
-
     setAvailableNodes((prev) => {
       const map = new Map(prev.map((n) => [n.id, n]));
       nodes.forEach(({ position, ...rest }) => {
@@ -503,16 +562,13 @@ export default function OrgChart({ personnels }) {
       });
       return Array.from(map.values());
     });
-
-    localStorage.removeItem("savedNodes");
-    localStorage.removeItem("savedEdges");
   };
 
   return (
     <div className="orgChart-container">
       {/* === Top Bar === */}
       <div className="orgChart-topbar">
-        {personnels.length === 0
+        {personnelLoading || formSubmitted
           ? Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="draggable-node skeleton-card">
                 <div className="skeleton-image" />
@@ -588,8 +644,9 @@ export default function OrgChart({ personnels }) {
                   nodes.length === 0 ? "hidden" : ""
                 }`}
                 onClick={handleSave}
+                disabled={formSubmitted}
               >
-                Save
+                Save <Spinner formSubmitted={formSubmitted} className="ml-1" />
               </button>
               <button
                 className={`flow-area-controls-reset bg-danger ${
