@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
+import historyData from "./collection";
 
 export default function History() {
   const lineRef = useRef(null);
@@ -29,14 +30,9 @@ export default function History() {
         }
       });
 
-      // Remove "active" class from all rows
       rows.forEach((row) => row.classList.remove("active"));
-
-      // Add "active" only to the closest one
       if (closestRow) {
         closestRow.classList.add("active");
-
-        // Update the line to reach that row
         const rect = closestRow.getBoundingClientRect();
         const offsetTop = closestRow.offsetTop + rect.height / 2;
         setLineHeight(offsetTop);
@@ -62,61 +58,13 @@ export default function History() {
         >
           <div className="supplier-history-circle" />
         </div>
-        <div className="supplier-history-row">
-          <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam
-            nobis beatae obcaecati numquam animi ipsa asperiores ipsum
-            perferendis, earum error atque tempora voluptates non ipsam quod
-            reprehenderit minima possimus dolores?
+
+        {historyData.map((text, index) => (
+          <div key={index} className="supplier-history-row">
+            <div>{index % 2 === 0 ? text : null}</div>
+            <div>{index % 2 !== 0 ? text : null}</div>
           </div>
-          <div></div>
-        </div>
-        <div className="supplier-history-row">
-          <div></div>
-          <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam
-            nobis beatae obcaecati numquam animi ipsa asperiores ipsum
-            perferendis, earum error atque tempora voluptates non ipsam quod
-            reprehenderit minima possimus dolores?
-          </div>
-        </div>
-        <div className="supplier-history-row">
-          <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam
-            nobis beatae obcaecati numquam animi ipsa asperiores ipsum
-            perferendis, earum error atque tempora voluptates non ipsam quod
-            reprehenderit minima possimus dolores?
-          </div>
-          <div></div>
-        </div>
-        <div className="supplier-history-row">
-          <div></div>
-          <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam
-            nobis beatae obcaecati numquam animi ipsa asperiores ipsum
-            perferendis, earum error atque tempora voluptates non ipsam quod
-            reprehenderit minima possimus dolores?
-          </div>
-        </div>
-        <div className="supplier-history-row">
-          <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam
-            nobis beatae obcaecati numquam animi ipsa asperiores ipsum
-            perferendis, earum error atque tempora voluptates non ipsam quod
-            reprehenderit minima possimus dolores?
-          </div>
-          <div></div>
-        </div>
-        <div className="supplier-history-row">
-          <div></div>
-          <div>
-            {" "}
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam
-            nobis beatae obcaecati numquam animi ipsa asperiores ipsum
-            perferendis, earum error atque tempora voluptates non ipsam quod
-            reprehenderit minima possimus dolores?
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

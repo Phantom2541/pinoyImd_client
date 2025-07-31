@@ -16,8 +16,27 @@
 }
 
 .supplier-aboutUs-title {
-  font-weight: bold;
-  text-align: center;
+  position: relative;
+}
+
+.supplier-aboutUs-title::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: 2px;
+  background-color: black;
+  z-index: 0;
+}
+
+.supplier-aboutUs-title h1 {
+  position: relative; /* ← this is required for z-index to work */
+  font-family: bold;
+  background-color: white;
+  padding: 0 20px;
+  z-index: 10;
 }
 
 .supplier-aboutUs-container {
