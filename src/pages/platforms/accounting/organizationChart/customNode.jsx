@@ -1,82 +1,43 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useReactFlow, Handle, Position } from "react-flow-renderer";
 import Swal from "sweetalert2";
 import Default from "./../../../../assets/iMD.png";
-import {
-  ENDPOINT,
-  fullName,
-  properFullname,
-} from "../../../../services/utilities";
+import { ENDPOINT, properFullname } from "../../../../services/utilities";
 import { MDBIcon } from "mdbreact";
-import { Policy } from "../../../../services/fakeDb";
-
-const normalizePosition = (pos) =>
-  Array.isArray(pos)
-    ? pos
-    : typeof pos === "string"
-    ? pos.split(" / ").map((p) => p.trim())
-    : [];
+import { v4 as uuidv4 } from "uuid";
 
 export default function CustomNode({ data, id }) {
-  const { personnel } = data;
-  const { user, contract } = personnel;
   const { setNodes } = useReactFlow();
   const [isFading, setIsFading] = useState(false);
-  const title = user?.fullName?.postnominal;
-
-  const profile = `${ENDPOINT}/public/users/${user?.email}/profile.jpg`;
-  const titles = Array.isArray(title)
-    ? title
-    : (title || "").split(",").map((s) => s.trim());
-
-  const positions = normalizePosition(
-    Policy.getPositions(contract?.designation)
-  );
-  const isClone = !data.onReturn && positions.length === 1;
-
+  const { eid } = data;
+  const profile = `${ENDPOINT}/public/users/${eid?.email}/profile.jpg`;
+  const isClone = data.isClone;
   const handleClone = async () => {
-    const positions = normalizePosition(data.position);
-    if (positions.length === 0) return;
-
-    let selected = positions[0];
-
-    if (positions.length > 1) {
-      const result = await Swal.fire({
-        title: "Select position to clone",
-        input: "select",
-        inputOptions: Object.fromEntries(positions.map((p) => [p, p])),
-        showCancelButton: true,
-      });
-
-      if (!result.isConfirmed || !result.value) return;
-      selected = result.value;
-    }
-
     setNodes((prev) => {
-      const alreadyCloned = prev.some(
-        (n) =>
-          n.id !== id &&
-          n.data?.email === data.email &&
-          normalizePosition(n.data?.position).includes(selected)
-      );
+      const isAlreadyClone = prev.some(
+        (n) => n.data.isClone && n.data.eid._id === eid._id
+      ); //to determine if we have a already clone
 
-      if (alreadyCloned) {
+      if (isAlreadyClone) {
         Swal.fire(
           "Duplicate",
-          `"${selected}" has already been cloned.`,
+          `"${properFullname(eid.fullName)}" has already been cloned.`,
           "warning"
         );
         return prev;
       }
 
       const clone = {
-        id: `${id}-${Math.random().toString(36).substring(2, 9)}`,
+        id: uuidv4(),
         type: "customNode",
         position: {
           x: 200,
           y: 200,
         },
-        data,
+        data: {
+          ...data,
+          isClone: true,
+        },
       };
 
       return [...prev, clone];
@@ -84,12 +45,10 @@ export default function CustomNode({ data, id }) {
   };
 
   const handleReturn = () => {
-    if (typeof data.onReturn === "function") {
-      setIsFading(true);
-      setTimeout(() => {
-        data.onReturn();
-      }, 300);
-    }
+    setIsFading(true);
+    // setTimeout(() => {
+    //   data.onReturn();
+    // }, 300);
   };
 
   const handleDelete = () => {
@@ -157,25 +116,20 @@ export default function CustomNode({ data, id }) {
 
       <div className="orgChart-innerCard-info">
         <span className="orgChart-innerCard-name">
-          {properFullname(user?.fullName) || "No name"}
+          {properFullname(eid?.fullName)}
         </span>
-        {titles.length > 0 && (
+        {eid?.fullName?.postnominal && (
           <div className="orgChart-innerCard-title-container">
             <span className="orgChart-innerCard-title">
-              {titles.join(", ")}
+              {eid?.fullName?.postnominal}
             </span>
           </div>
         )}
-        {positions.length > 0 && (
-          <div className="orgChart-innerCard-position-container">
-            {positions.map((pos, i) => (
-              <span className="orgChart-innerCard-position" key={i}>
-                {pos}
-                {i < positions.length - 1 && " / "}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="orgChart-innerCard-position-container">
+          <span className="orgChart-innerCard-position">
+            {data?.position || ""}
+          </span>
+        </div>
       </div>
 
       <Handle

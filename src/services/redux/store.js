@@ -51,6 +51,7 @@ import {
   payrolls,
   ledger,
   soa,
+  orgChart,
 } from "./slices/finance";
 // appointments;
 import { quest } from "./slices/diagnostics";
@@ -124,6 +125,7 @@ const store = configureStore({
     dragDrop,
     table,
     miscellaneous,
+    orgChart,
   },
   devTools: true,
 });
