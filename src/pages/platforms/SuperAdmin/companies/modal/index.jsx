@@ -284,6 +284,18 @@ export default function Modal() {
               />
             </MDBCol>
           </MDBRow>
+          <select
+            className="form-control bg-light"
+            value={branch.category}
+            onChange={({ target }) => {
+              setBranch({ ...branch, category: target.value });
+              setForm({ ...form, category: target.value });
+            }}
+          >
+            <option value="">Category</option>
+            <option value="supplier">Supplier</option>
+            <option value="diagnostic">Diagnostic</option>
+          </select>
           <MDBRow>
             <MDBCol>
               <MDBInput

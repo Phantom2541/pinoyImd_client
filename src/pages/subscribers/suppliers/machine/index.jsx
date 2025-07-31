@@ -33,7 +33,9 @@ const collections = [
 export default function Machines() {
   return (
     <section className="supplier-aboutUs-section">
-      <h1 className="supplier-aboutUs-title">Features</h1>
+      <div className="supplier-aboutUs-title">
+        <h1>Machines</h1>
+      </div>
       <div className="supplier-aboutUs-container">
         {collections.map((item, index) => (
           <MDBAnimation

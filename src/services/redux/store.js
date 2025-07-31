@@ -41,6 +41,7 @@ import {
   ultrasound,
   ecg,
   miscellaneous,
+  appointments,
 } from "./slices/diagnostics";
 
 import { access, liabilities } from "./slices/liability";
@@ -53,7 +54,6 @@ import {
   soa,
   orgChart,
 } from "./slices/finance";
-// appointments;
 import { quest } from "./slices/diagnostics";
 import {
   products,
@@ -68,6 +68,7 @@ import portal from "./slices/emr/portal";
 
 const store = configureStore({
   reducer: {
+    appointments,
     remittances,
     payables,
     payments,

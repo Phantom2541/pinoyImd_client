@@ -5,6 +5,7 @@ const url = "assets/persons/users";
 
 const initialState = {
   collections: [],
+  formSubmitted: false,
   filtered: [],
   isSuccess: false,
   isLoading: false,
@@ -62,6 +63,24 @@ export const REGISTER = createAsyncThunk(
   ({ data }, thunkAPI) => {
     try {
       return axioKit.save(url, data);
+    } catch (error) {
+      const message =
+        (error?.response &&
+          error?.response?.data &&
+          error?.response?.data?.message) ||
+        error?.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const DUPLICATE_CHECKER = createAsyncThunk(
+  `${url}/duplicate_checker`,
+  ({ data }, thunkAPI) => {
+    try {
+      return axioKit.save(url, data, "", "duplicate_checker");
     } catch (error) {
       const message =
         (error?.response &&
@@ -208,8 +227,22 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+      .addCase(DUPLICATE_CHECKER.pending, (state) => {
+        state.formSubmitted = true;
+        state.message = "";
+      })
+      .addCase(DUPLICATE_CHECKER.fulfilled, (state, action) => {
+        const { success } = action;
+        state.message = success;
+        state.formSubmitted = false;
+      })
+      .addCase(DUPLICATE_CHECKER.rejected, (state, action) => {
+        state.message =
+          action.payload || action.error?.message || "Something went wrong";
+        state.formSubmitted = false;
+      })
       .addCase(REGISTER.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
@@ -218,12 +251,12 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.collections.unshift(payload);
         state.isSuccess = true;
-        state.isLoading = false;
+        state.formSubmitted = false;
       })
       .addCase(REGISTER.rejected, (state, action) => {
         state.message =
           action.payload || action.error?.message || "Something went wrong";
-        state.isLoading = false;
+        state.formSubmitted = false;
       });
   },
 });

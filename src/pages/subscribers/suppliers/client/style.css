@@ -1,0 +1,53 @@
+.supplier-client-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.supplier-client-title {
+  position: relative;
+}
+
+.supplier-client-title::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: 2px;
+  background-color: black;
+  z-index: 0;
+}
+
+.supplier-client-title h1 {
+  position: relative; /* ← this is required for z-index to work */
+  font-family: bold;
+  background-color: white;
+  padding: 0 20px;
+  z-index: 10;
+}
+
+/* Swiper container tweaks */
+.supplier-client-section .swiper {
+  width: 80vw;
+  padding: 2rem 0;
+}
+
+.supplier-client-section .swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.supplier-client-image {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.supplier-client-image:hover {
+  filter: grayscale(0%);
+}
