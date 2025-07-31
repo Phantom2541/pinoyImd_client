@@ -127,7 +127,6 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
 
 export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   try {
-    console.log("running again");
     return axioKit.update(url, form.data, form.token);
   } catch (error) {
     const message =

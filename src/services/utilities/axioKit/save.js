@@ -17,7 +17,7 @@ const save = async (entity, data, token, endpoint = "save") =>
     })
     .then(({ data }) => data)
     .catch(({ response }) => {
-      const { error, message } = response.data;
+      const { error, message } = response?.data;
       throw new Error(message ? `${error}: ${message}` : error);
     });
 

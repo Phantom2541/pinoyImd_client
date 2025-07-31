@@ -4,13 +4,10 @@ import { fullName } from "../../../../../../services/utilities/index.js";
 import { MDBBadge, MDBBtn, MDBBtnGroup, MDBIcon } from "mdbreact";
 import { Services } from "../../../../../../services/fakeDb/index.js";
 import { SetTASK } from "../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
-import Swal from "sweetalert2";
-import { LABRESULT } from "../../../../../../services/redux/slices/commerce/pos/services/deals.js";
 
 const Tasks = ({ key, form, obj, index, customer }) => {
-  const { activePlatform, token } = useSelector(({ auth }) => auth),
+  const { activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ preferences }) => preferences),
-    [selected, setSelected] = useState({}),
     dispatch = useDispatch();
 
   const handleLabPrint = (task) => {
@@ -28,79 +25,6 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       );
       if (printWindow) printWindow.focus();
     }, 100);
-  };
-
-  const handleRadPrint = (task) => {
-    const services = Services.find(task.services);
-    localStorage.setItem("taskPrintout", JSON.stringify({ ...task, services }));
-    window.open(
-      "/printout/radiology/task",
-      "Radiology Task Printout",
-      "top=100px,left=100px,width=794px,height=1123px"
-    );
-  };
-
-  const extractDriveFileId = (url) => {
-    try {
-      const regex = /[-\w]{25,}/;
-      const match = url.match(regex);
-      return match ? match[0] : null;
-    } catch {
-      return null;
-    }
-  };
-
-  const previewDriveFile = async (task) => {
-    const { value: link } = await Swal.fire({
-      title: "Paste Google Drive Link",
-      input: "text",
-      inputLabel: "Google Drive File Link",
-      inputPlaceholder:
-        "e.g. https://drive.google.com/file/d/FILE_ID/view?usp=sharing",
-      showCancelButton: true,
-    });
-
-    if (link) {
-      const fileId = extractDriveFileId(link);
-      if (!fileId) {
-        Swal.fire({
-          icon: "error",
-          title: "Invalid Link",
-          text: "Could not extract File ID. Please check your link.",
-        });
-        return;
-      }
-
-      const previewLink = `https://drive.google.com/file/d/${fileId}/preview`;
-
-      const result = await Swal.fire({
-        title: "Google Drive Preview",
-        html: `
-          <iframe src="${previewLink}" width="100%" height="400" frameborder="0" allow="autoplay"></iframe>
-        `,
-        width: 600,
-        showCloseButton: true,
-        showCancelButton: true,
-        confirmButtonText: "Save Link",
-        cancelButtonText: "Cancel",
-      });
-
-      if (result.isConfirmed) {
-        const updatedTask = {
-          ...task,
-          fileId: link,
-          department: "Radiology",
-        };
-
-        dispatch(LABRESULT({ token, data: updatedTask }));
-
-        Swal.fire({
-          icon: "success",
-          title: "Saved!",
-          text: "The link has been saved in fileId with department set.",
-        });
-      }
-    }
   };
 
   const {
@@ -139,32 +63,18 @@ const Tasks = ({ key, form, obj, index, customer }) => {
 
   const isEmptyEntry = _packages.length === 0;
 
-  const handleSelected = (data) => {
-    if (selected?._id === data._id && selected.key === data.key) {
-      setSelected({});
-    } else {
-      setSelected(data);
-    }
-  };
-
   return (
     <tr key={task.key} className={hasDone ? "table-active" : ""}>
       <td>{index}</td>
       <td>
-        <strong
-          onClick={() => handleSelected({ ...task, key: "signatory1" })}
-          style={{ cursor: "pointer" }}
-        >
-          {fullName(signatories[0]?.fullName)}
+        <strong>
+          {signatories[0]?.fullName && fullName(signatories[0].fullName)}
         </strong>
       </td>
 
       <td>
-        <strong
-          onClick={() => handleSelected({ ...task, key: "signatory2" })}
-          style={{ cursor: "pointer" }}
-        >
-          {fullName(signatories[1]?.fullName)}
+        <strong>
+          {signatories[1]?.fullName && fullName(signatories[1].fullName)}
         </strong>
       </td>
 
@@ -184,25 +94,14 @@ const Tasks = ({ key, form, obj, index, customer }) => {
       </td>
       <td>
         <MDBBtnGroup>
-          {["Xray", "Ultrasound", "ECG"].includes(form) ? (
-            <MDBBtn
-              color="dark"
-              size="sm"
-              className="py-1 px-2 m-0"
-              onClick={() => previewDriveFile(task)}
-            >
-              <MDBIcon icon="eye" />
-            </MDBBtn>
-          ) : (
-            <MDBBtn
-              onClick={handleEntry}
-              color={hasDone ? "info" : "primary"}
-              size="sm"
-              className="py-1 px-2 m-0"
-            >
-              <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
-            </MDBBtn>
-          )}
+          <MDBBtn
+            onClick={handleEntry}
+            color={hasDone ? "info" : "primary"}
+            size="sm"
+            className="py-1 px-2 m-0"
+          >
+            <MDBIcon icon={hasDone ? "pencil-alt" : "list-alt"} />
+          </MDBBtn>
 
           {!!signatories.length &&
             signatories[0] &&
@@ -217,9 +116,7 @@ const Tasks = ({ key, form, obj, index, customer }) => {
                     signatories,
                     isPrint: true,
                   };
-                  activePlatform.department === "Laboratory"
-                    ? handleLabPrint(selectedTask)
-                    : handleRadPrint(selectedTask);
+                  handleLabPrint(selectedTask);
                 }}
                 color="warning"
                 size="sm"

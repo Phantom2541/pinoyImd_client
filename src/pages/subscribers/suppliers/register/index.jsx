@@ -18,9 +18,10 @@ import {
   REGISTER,
 } from "../../../../services/redux/slices/assets/persons/users";
 import { Suffixes } from "../../../../services/fakeDb";
-import IMG1 from "./../../../../assets/subscriber/supplier/heroImg1.jpg";
-import IMG2 from "./../../../../assets/subscriber/supplier/heroImg2.jpg";
-import IMG3 from "./../../../../assets/subscriber/supplier/heroImg1.jpg";
+// import IMG1 from "./../../../assets/homeImg.jpg";
+import IMG1 from "./../../../../assets/homeImg.jpg";
+import IMG2 from "./../../../../assets/homeMachine.jpg";
+import IMG3 from "./../../../../assets/homePatient.jpg";
 import REGISTRATIONIMG from "./../../../../assets/homePageRegistrationImg.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
@@ -31,21 +32,21 @@ const slides = [
     subtitle: "Simplified, Integrated, Scalable.",
     description:
       "Empowering medical providers with seamless laboratory management, advanced reporting, and patient-centric care.",
-    image: IMG1,
+    image: "1r9GSLgSh2r92poO5M-31eZRrl9TX6WyV",
   },
   {
     title: "Seamless Device Integration",
     subtitle: "Connect Your Laboratory Analyzers with Ease.",
     description:
       "Full compatibility with hematology, chemistry, and immunology analyzers. HL7-ready for EMR and LIS integration.",
-    image: IMG2,
+    image: "1_iTLa8s73Y-Cv3ExURPOx3pb8Lhvo-BJ",
   },
   {
     title: "Built for Clinics, Hospitals, and Mobile Units",
     subtitle: "From small clinics to nationwide chains — scalable as you grow.",
     description:
       "Manage patient records, results, billing, inventory, and mobile laboratory operations — all in one platform.",
-    image: IMG3,
+    image: "1ChFTwijLSd9NCZI6QEoVP1v1DMFnV7dg",
   },
 ];
 
@@ -63,7 +64,16 @@ export default function Register({ handleFlip, flipped }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { email, password, confirmPassword, fname, mname, lname } = e.target;
+    const {
+      email,
+      password,
+      confirmPassword,
+      fname,
+      mname,
+      lname,
+      dob,
+      mobile,
+    } = e.target;
     const fullName = {
       fname: fname.value,
       mname: mname.value,
@@ -76,6 +86,9 @@ export default function Register({ handleFlip, flipped }) {
         REGISTER({
           email: email.value,
           password: password.value,
+          dob,
+          mobile,
+          // isMale,
           fullName,
         })
       );
@@ -105,7 +118,7 @@ export default function Register({ handleFlip, flipped }) {
           <div className="subscriber-flip-card">
             <div className="subscriber-flip-card-front">
               <Carousel
-                autoPlay
+                // autoPlay
                 infiniteLoop
                 showThumbs={false}
                 showStatus={false}
@@ -120,7 +133,10 @@ export default function Register({ handleFlip, flipped }) {
                         <p>"{slide.description}"</p>
                       </div>
                       <div className="subscriber-image-container-style">
-                        <img src={slide.image} alt={`Slide ${i + 1}`} />
+                        <img
+                          src={`https://drive.google.com/thumbnail?id=${slide.image}`}
+                          alt={`Slide ${i + 1}`}
+                        />
                       </div>
                     </div>
                   </div>
@@ -134,10 +150,7 @@ export default function Register({ handleFlip, flipped }) {
               </button>
               <div className="d-flex align-items-center">
                 <div>
-                  <h2
-                    className="subscriber-back-title"
-                    style={{ fontWeight: "400" }}
-                  >
+                  <h2 style={{ fontWeight: "400" }}>
                     Patient Registration Form
                   </h2>
                   <form
@@ -152,8 +165,6 @@ export default function Register({ handleFlip, flipped }) {
                           icon="user"
                           type="text"
                           name="fname"
-                          size="sm"
-                          iconSize="sm"
                           required
                         />
                         <MDBInput
@@ -161,8 +172,6 @@ export default function Register({ handleFlip, flipped }) {
                           icon="user"
                           type="text"
                           name="mname"
-                          size="sm"
-                          iconSize="sm"
                         />
                         <MDBRow
                           className="d-flex align-items-center"
@@ -174,8 +183,6 @@ export default function Register({ handleFlip, flipped }) {
                               icon="user"
                               type="text"
                               name="lname"
-                              size="sm"
-                              iconSize="sm"
                               required
                             />
                           </MDBCol>
@@ -196,13 +203,19 @@ export default function Register({ handleFlip, flipped }) {
                             </MDBSelect>
                           </MDBCol>
                         </MDBRow>
-
+                        <MDBInput
+                          className="d-flex align-items-center mt-1 mb-4"
+                          label="Phone #"
+                          icon="mobile "
+                          type="text"
+                          name="mobile"
+                          required
+                        />
                         <div className="d-flex align-items-center mt-1 mb-4">
                           <MDBInput
                             label="Male"
                             type="checkbox"
                             id="male"
-                            size="sm"
                             checked={isMale}
                             onChange={handleMaleChange}
                           />
@@ -210,7 +223,6 @@ export default function Register({ handleFlip, flipped }) {
                             label="Female"
                             type="checkbox"
                             id="female"
-                            size="sm"
                             checked={!isMale}
                             onChange={() => setIsMale(false)}
                           />
@@ -219,18 +231,21 @@ export default function Register({ handleFlip, flipped }) {
 
                       <MDBCol md="6">
                         <MDBInput
+                          label="Date Of Birth"
+                          icon="calendar "
+                          type="date"
+                          name="dob"
+                          required
+                        />
+                        <MDBInput
                           label="E-mail Address"
                           icon="envelope"
                           type="email"
                           name="email"
-                          size="sm"
-                          iconSize="sm"
                           required
                         />
                         <MDBInput
                           label="Password"
-                          size="sm"
-                          iconSize="sm"
                           minLength={8}
                           icon={isLocked.password ? "lock" : "unlock"}
                           onIconMouseEnter={() =>
@@ -245,8 +260,6 @@ export default function Register({ handleFlip, flipped }) {
                         />
                         <MDBInput
                           label="Confirm your password"
-                          size="sm"
-                          iconSize="sm"
                           minLength={8}
                           icon={isLocked.confirmPassword ? "lock" : "unlock"}
                           onIconMouseEnter={() =>

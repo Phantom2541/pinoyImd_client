@@ -38,7 +38,7 @@ const Header = () => {
       {/* Left Info */}
       <div className="text-white">
         <div className="font-weight-bold">
-          {collections.length} Clinic Applicants
+          {collections.length} Receptionist / Secretary Applicant
         </div>
       </div>
 

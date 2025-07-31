@@ -27,6 +27,7 @@ import Testimonials from "./testimonials";
 import AboutUs from "./aboutUs";
 import Affliated from "./affliated";
 import Gallery from "./gallery";
+import SlideShow from "./slideShow";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -254,7 +255,7 @@ export default class Home extends React.Component {
               overlay="gradient"
             >
               <div className="homePage-container" id="home">
-                <Register
+                <SlideShow
                   handleFlip={this.handleFlip}
                   flipped={this.state.flipped}
                 />

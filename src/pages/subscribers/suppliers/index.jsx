@@ -1,14 +1,17 @@
 import { useEffect, useState, useRef } from "react";
-import { MDBMask, MDBView } from "mdbreact";
+import { MDBContainer, MDBMask, MDBView } from "mdbreact";
 import "../style.css";
 import Register from "./register";
-import Login from "./login";
+import Login from "../../home/login";
 import LOGO from "./../../../assets/iMD.png";
 
 import { useDispatch, useSelector } from "react-redux";
 import { GET_DETAILS } from "../../../services/redux/slices/assets/companies";
 import { ENDPOINT } from "../../../services/utilities";
 import Loading from "./loading";
+import Machines from "./machine";
+import Employees from "./employee";
+import History from "./history";
 
 const Suppliers = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
@@ -26,7 +29,7 @@ const Suppliers = ({ match }) => {
     companyId = match?.params?.companyId;
 
   useEffect(() => {
-    dispatch(GET_DETAILS({ key: { companyId } }));
+    // dispatch(GET_DETAILS({ key: { companyId } }));
     localStorage.setItem("companyId", companyId);
   }, [companyId, dispatch]);
 
@@ -232,6 +235,17 @@ const Suppliers = ({ match }) => {
               </MDBMask>
             </MDBView>
           </section>
+          <MDBContainer fluid className="p-0">
+            <div id="features">
+              <Machines />
+            </div>
+            <div id="features">
+              <History />
+            </div>
+            <div id="features">
+              <Employees />
+            </div>
+          </MDBContainer>
         </div>
       ) : (
         <Loading />
