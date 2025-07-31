@@ -70,7 +70,7 @@ export default function CollapseTable({ menu }) {
   };
 
   const handleIndividual = (form, obj = {}, index, miscIndex = 0) => {
-    const { department } = Templates.findByComponentName(form);
+    const department = Templates.findByComponentName(form)?.department;
 
     const _packages = Array.isArray(obj?.packages)
       ? obj.packages

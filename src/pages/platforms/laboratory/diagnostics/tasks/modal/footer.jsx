@@ -69,6 +69,7 @@ const Footer = () => {
     } else {
       dr = findPhysicianId(task.signatories[1]?._id);
     }
+    console.log("heads", heads);
 
     const data = ["xray", "ultrasound", "miscellaneous"].includes(form)
       ? (() => {
@@ -93,6 +94,8 @@ const Footer = () => {
         data,
       })
     ).then(({ payload }) => {
+      console.log("payload", payload);
+
       setIsLoading(false);
       dispatch(SetVALIDATOR(payload?.item || payload?.payload));
       dispatch(SetMODAL(false));
