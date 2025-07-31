@@ -52,6 +52,7 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
+
 export const GET_DETAILS = createAsyncThunk(
   `${url}/get_details`,
   ({ token, key }, thunkAPI) => {
@@ -340,6 +341,7 @@ export const reduxSlice = createSlice({
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
         state.collections = state.filtered = action.payload;
+
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
@@ -384,6 +386,8 @@ export const reduxSlice = createSlice({
       })
       .addCase(GET_DETAILS.fulfilled, (state, action) => {
         state.details = action.payload;
+        console.log("state.details", state.details);
+
         state.isLoading = false;
         localStorage.setItem("patronCompany", JSON.stringify(action.payload));
       })
@@ -392,6 +396,7 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+
       .addCase(FIND.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

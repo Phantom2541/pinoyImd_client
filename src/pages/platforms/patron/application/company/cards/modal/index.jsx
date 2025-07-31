@@ -15,7 +15,6 @@ import {
   SAVE,
   APPLICATION,
 } from "../../../../../../../services/redux/slices/assets/persons/personnels.js";
-import { BROWSE } from "../../../../../../../services/redux/slices/assets/persons/physicians.js";
 
 import { Policy } from "../../../../../../../services/fakeDb/index.js";
 import { UPLOAD } from "../../../../../../../services/redux/slices/assets/persons/auth.js";
@@ -30,12 +29,12 @@ export default function ApplicationModal({
     { collections, formSubmitted, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
-    { collections: doctor } = useSelector(({ physicians }) => physicians),
+    { physician: doctor } = useSelector(({ branches }) => branches),
     [application, setApplication] = useState({}),
     [file201Preview, setFile201Preview] = useState({}),
-    [department, setDepartment] = useState(),
+    [department, setDepartment] = useState({}),
     [positions, setPositions] = useState([]),
-    [assignedDoctor, setAssignedDoctor] = useState(""),
+    [assignedDoctor, setAssignedDoctor] = useState({ _id: "", name: "" }),
     dispatch = useDispatch();
   console.log("doctor", doctor);
 
@@ -79,6 +78,7 @@ export default function ApplicationModal({
   const handleToggle = () => setVisibility(!visibility);
 
   const handleDepartment = ({ value }) => {
+    console.log("value", value);
     setDepartment(value);
     setPositions(Policy.getPositionsByDepartmentName(value));
   };
@@ -89,13 +89,25 @@ export default function ApplicationModal({
       ...application,
       [name]: value,
     });
-    if (department === "Clinic") {
-      dispatch(BROWSE({ key: { branchId: activePlatform?.branchId }, token }));
-    }
   };
   const handleDoctorChange = (e) => {
-    setAssignedDoctor(e.target.value);
+    const selectedId = e.target.value;
+
+    // Find the selected doctor from the doctor list
+    const selectedDoc = doctor.find((doc) => doc.user._id === selectedId);
+
+    if (selectedDoc) {
+      const displayName = selectedDoc.user
+        ? properFullname(selectedDoc.user.fullName)
+        : properFullname(selectedDoc.ghostName);
+
+      setAssignedDoctor({
+        _id: selectedId,
+        name: displayName,
+      });
+    }
   };
+  console.log("assignedDoctor", assignedDoctor);
 
   const handleFile = (e, name) => {
     const file = e.target.files[0];
@@ -166,6 +178,7 @@ export default function ApplicationModal({
             hasResume: Resume ? true : false,
             hasLetter: AppLetter ? true : false,
           },
+          physician: [assignedDoctor._id],
           contract: {
             designation: application.designation,
             hos: 8,
@@ -319,7 +332,7 @@ export default function ApplicationModal({
                 <select
                   required
                   className="form-control mb-3"
-                  value={assignedDoctor}
+                  value={assignedDoctor.name}
                   name="assignedDoctor"
                   onChange={handleDoctorChange}
                 >
@@ -330,7 +343,7 @@ export default function ApplicationModal({
                       : properFullname(doc.ghostName);
 
                     return (
-                      <option value={displayName} key={i}>
+                      <option value={doc.user._id} key={i}>
                         {displayName}
                       </option>
                     );

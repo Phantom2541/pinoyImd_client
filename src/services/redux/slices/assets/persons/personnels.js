@@ -482,8 +482,6 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(APPLICATION.fulfilled, (state, { payload }) => {
-        console.log("payload", payload);
-
         state.collections = payload;
         state.isLoading = false;
       })
