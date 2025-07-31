@@ -11,6 +11,7 @@ import { ENDPOINT } from "../../../services/utilities";
 import Loading from "./loading";
 import Machines from "./machine";
 import Employees from "./employee";
+import History from "./history";
 
 const Suppliers = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
@@ -237,6 +238,9 @@ const Suppliers = ({ match }) => {
           <MDBContainer fluid className="p-0">
             <div id="features">
               <Machines />
+            </div>
+            <div id="features">
+              <History />
             </div>
             <div id="features">
               <Employees />
