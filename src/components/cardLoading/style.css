@@ -1,0 +1,18 @@
+.cashier-remit-card-loading-wrapper {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: transparent;
+  border-radius: 8px;
+}
+
+.cashier-remit-card-line {
+  max-width: 100%;
+}
+
+.cashier-remit-progress-bar {
+  height: 18px !important;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+}

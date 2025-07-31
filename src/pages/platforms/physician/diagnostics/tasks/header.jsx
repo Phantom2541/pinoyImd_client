@@ -29,7 +29,8 @@ const Headers = () => {
         TASKS({
           token,
           key: {
-            physicianId: "68009d80a3dfd9b8666da01a",
+            // physicianId: "68009d80a3dfd9b8666da01a",
+            physicianId: auth?._id,
             isDaily: true,
             department: [departmentMap[department.toLowerCase()]],
             branchId: activePlatform?.branchId,
@@ -39,7 +40,7 @@ const Headers = () => {
       );
     }
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform, auth]);
+  }, [token, dispatch, activePlatform, auth, department]);
 
   return (
     <MDBView
@@ -73,7 +74,12 @@ const Headers = () => {
               style={{ width: 150 }}
               value={byStatus}
               onChange={(e) => {
-                dispatch(SetByStatus(e.target.value));
+                dispatch(
+                  SetByStatus({
+                    status: e.target.value,
+                    statusKey: "hasRead",
+                  })
+                );
               }}
             >
               <option value="" disabled style={{ fontWeight: "bold" }}>
@@ -90,7 +96,9 @@ const Headers = () => {
               setFiltered={(items) => dispatch(SetFILTERED_STATUS(items))}
               reset={() => {
                 dispatch(SetByGroup(byGroup));
-                dispatch(SetByStatus(byStatus));
+                dispatch(
+                  SetByStatus({ status: byStatus, statusKey: "hasRead" })
+                );
               }}
               haveAction={false}
             />

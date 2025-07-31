@@ -1,82 +1,43 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useReactFlow, Handle, Position } from "react-flow-renderer";
 import Swal from "sweetalert2";
 import Default from "./../../../../assets/iMD.png";
-import {
-  ENDPOINT,
-  fullName,
-  properFullname,
-} from "../../../../services/utilities";
+import { ENDPOINT, properFullname } from "../../../../services/utilities";
 import { MDBIcon } from "mdbreact";
-import { Policy } from "../../../../services/fakeDb";
+import { v4 as uuidv4 } from "uuid";
 
-const normalizePosition = (pos) =>
-  Array.isArray(pos)
-    ? pos
-    : typeof pos === "string"
-    ? pos.split(" / ").map((p) => p.trim())
-    : [];
-
-export default function CustomNode({ data, id }) {
-  const { personnel } = data;
-  const { user, contract } = personnel;
-  const { setNodes } = useReactFlow();
+export default function CustomNode({ data, id, setAvailableNodes }) {
+  const { setNodes, setEdges } = useReactFlow();
   const [isFading, setIsFading] = useState(false);
-  const title = user?.fullName?.postnominal;
-
-  const profile = `${ENDPOINT}/public/users/${user?.email}/profile.jpg`;
-  const titles = Array.isArray(title)
-    ? title
-    : (title || "").split(",").map((s) => s.trim());
-
-  const positions = normalizePosition(
-    Policy.getPositions(contract?.designation)
-  );
-  const isClone = !data.onReturn && positions.length === 1;
-
+  const { eid } = data;
+  const profile = `${ENDPOINT}/public/users/${eid?.email}/profile.jpg`;
+  const isClone = data.isClone;
   const handleClone = async () => {
-    const positions = normalizePosition(data.position);
-    if (positions.length === 0) return;
-
-    let selected = positions[0];
-
-    if (positions.length > 1) {
-      const result = await Swal.fire({
-        title: "Select position to clone",
-        input: "select",
-        inputOptions: Object.fromEntries(positions.map((p) => [p, p])),
-        showCancelButton: true,
-      });
-
-      if (!result.isConfirmed || !result.value) return;
-      selected = result.value;
-    }
-
     setNodes((prev) => {
-      const alreadyCloned = prev.some(
-        (n) =>
-          n.id !== id &&
-          n.data?.email === data.email &&
-          normalizePosition(n.data?.position).includes(selected)
-      );
+      const isAlreadyClone = prev.some(
+        (n) => n.data.isClone && n.data.eid._id === eid._id
+      ); //to determine if we have a already clone
 
-      if (alreadyCloned) {
+      if (isAlreadyClone) {
         Swal.fire(
           "Duplicate",
-          `"${selected}" has already been cloned.`,
+          `"${properFullname(eid.fullName)}" has already been cloned.`,
           "warning"
         );
         return prev;
       }
 
       const clone = {
-        id: `${id}-${Math.random().toString(36).substring(2, 9)}`,
+        id: uuidv4(),
         type: "customNode",
         position: {
           x: 200,
           y: 200,
         },
-        data,
+        data: {
+          ...data,
+          isClone: true,
+        },
       };
 
       return [...prev, clone];
@@ -84,12 +45,32 @@ export default function CustomNode({ data, id }) {
   };
 
   const handleReturn = () => {
-    if (typeof data.onReturn === "function") {
-      setIsFading(true);
-      setTimeout(() => {
-        data.onReturn();
-      }, 300);
-    }
+    setIsFading(true);
+    setTimeout(() => {
+      var _nodes = []; //copy of updated nodes
+      var deletedNode = {};
+      setNodes((prev) => {
+        const _prev = [...prev];
+        const index = _prev.findIndex((n) => n.id === id);
+        deletedNode = _prev[index];
+        _prev.splice(index, 1);
+        _nodes = _prev;
+        return _prev;
+      });
+
+      setEdges((prev) => {
+        const _prev = [...prev].filter((edge) => {
+          const isExist = (key) =>
+            _nodes.some(({ id: nodeID }) => nodeID === edge[key]);
+          const sourceExist = isExist("source");
+          const targetExist = isExist("target");
+          return sourceExist && targetExist;
+        });
+        return _prev;
+      });
+
+      setAvailableNodes((prev) => [deletedNode, ...prev]);
+    }, 300);
   };
 
   const handleDelete = () => {
@@ -120,7 +101,6 @@ export default function CustomNode({ data, id }) {
         }}
         isConnectable
       />
-
       <div className="orgChart-innerCard-image-container">
         {!isClone && (
           <button
@@ -154,30 +134,23 @@ export default function CustomNode({ data, id }) {
           }}
         />
       </div>
-
       <div className="orgChart-innerCard-info">
         <span className="orgChart-innerCard-name">
-          {properFullname(user?.fullName) || "No name"}
+          {properFullname(eid?.fullName)}
         </span>
-        {titles.length > 0 && (
+        {eid?.fullName?.postnominal && (
           <div className="orgChart-innerCard-title-container">
             <span className="orgChart-innerCard-title">
-              {titles.join(", ")}
+              {eid?.fullName?.postnominal}
             </span>
           </div>
         )}
-        {positions.length > 0 && (
-          <div className="orgChart-innerCard-position-container">
-            {positions.map((pos, i) => (
-              <span className="orgChart-innerCard-position" key={i}>
-                {pos}
-                {i < positions.length - 1 && " / "}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="orgChart-innerCard-position-container">
+          <span className="orgChart-innerCard-position">
+            {data?.position || ""}
+          </span>
+        </div>
       </div>
-
       <Handle
         type="source"
         position={Position.Bottom}

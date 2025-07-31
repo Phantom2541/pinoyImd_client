@@ -13,9 +13,11 @@ const initialState = {
   isLoading: false,
   message: "",
   showModal: false,
+  showModalhmo: false,
   closeModal: false,
   willCreate: false,
   willUPDATE: false,
+  willUPDATEhmo: false,
   details: {}, //this is for subscriber home page
   selected: {},
   /**
@@ -236,6 +238,11 @@ export const reduxSlice = createSlice({
       state.willUPDATE = true;
       state.showModal = true;
     },
+    SetUPDATEhmo: (state, { payload }) => {
+      state.selected = payload;
+      state.willUPDATEhmo = true;
+      state.showModalhmo = true;
+    },
     SetEDIT: (state, { payload }) => {
       state.selected = payload;
       state.willCreate = false;
@@ -307,6 +314,11 @@ export const reduxSlice = createSlice({
     /**
      * for pagination
      */
+    TOGGLEhmo: (state) => {
+      state.showModalhmo = !state.showModalhmo;
+      state.selected = {};
+      state.closeModalhmo = !state.closeModalhmo;
+    },
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
       state.activePage = 1;
@@ -527,11 +539,13 @@ export const reduxSlice = createSlice({
 export const {
   RESET,
   SetUPDATE,
+  SetUPDATEhmo,
   SetCOLLECTIONS,
   SetFILTERED,
   SetMaxPage,
   SetActivePAGE,
   TOGGLE,
+  TOGGLEhmo,
   SetSELECTED,
   SetEDIT,
   SetHMO,

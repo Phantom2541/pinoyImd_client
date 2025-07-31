@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup } from "mdbreact";
 import { LABRESULT } from "./../../../../../../services/redux/slices/commerce/pos/services/deals";
@@ -11,12 +11,9 @@ import {
 } from "./../../../../../../services/redux/slices/diagnostics/laboratory/validator";
 
 const Footer = () => {
-  const { token, auth, activePlatform } = useSelector(({ auth }) => auth);
-  const { success, task, heads } = useSelector(({ validator }) => validator);
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { success, task } = useSelector(({ validator }) => validator);
   const [isLoading, setIsLoading] = useState(false);
-  const { collections: physicians } = useSelector(
-    ({ physicians }) => physicians
-  );
   const dispatch = useDispatch();
   const department = activePlatform?.department;
   useEffect(() => {
@@ -41,17 +38,6 @@ const Footer = () => {
     handleSave(hasDone);
   };
 
-  const findSignatoryId = (identifier) =>
-    heads.find(
-      ({ section }) => section.replace("-", "").toLowerCase() === identifier
-    )?.user?._id;
-
-  const findPhysicianId = (_user) =>
-    console.log(
-      "physicians",
-      physicians.find(({ user }) => user === _user)
-    );
-
   const handleSave = (hasDone) => {
     const { form } = task;
 
@@ -60,16 +46,6 @@ const Footer = () => {
     // if radiologist  and ultrasound = sonographer
     // if radiologist  and ecg   = cardiologist
 
-    const head = findSignatoryId(form.toLowerCase());
-    let dr;
-    if (form !== "Ecg") {
-      dr = findSignatoryId(
-        department === "Laboratory" ? "pathologist" : "radiologist"
-      );
-    } else {
-      dr = findPhysicianId(task.signatories[1]?._id);
-    }
-
     const data = ["xray", "ultrasound", "miscellaneous"].includes(form)
       ? (() => {
           const { _id, ...rest } = task;
@@ -77,14 +53,12 @@ const Footer = () => {
             ...rest,
             hasDone,
             department,
-            signatories: [head, dr, auth._id],
           };
         })()
       : {
           ...task,
           hasDone,
           department,
-          signatories: [head, dr, auth._id],
         };
     setIsLoading(true);
     dispatch(
@@ -103,6 +77,11 @@ const Footer = () => {
     if (task?.form === "Urinalysis") dispatch(SetHEALTHY("urinalysis"));
     else if (task?.form === "Parasitology")
       dispatch(SetHEALTHY("parasitology"));
+  };
+
+  const handleDisablePost = () => {
+    if (task.form === "Ecg") return task.findings ? false : true;
+    return task.description && task.impression ? false : true;
   };
 
   return (
@@ -134,7 +113,7 @@ const Footer = () => {
         <div className="ml-auto">
           <MDBBtnGroup>
             <MDBBtn
-              disabled={isLoading}
+              disabled={isLoading || handleDisablePost()}
               id="task-post-btn"
               onClick={() => {
                 if (task?.form === "Hematology") return computeHemaDiff(true);

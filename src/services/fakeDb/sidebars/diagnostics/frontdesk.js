@@ -48,6 +48,7 @@ import {
   ImageDragAndDrop,
   ImageText,
 } from "../../../../components/images";
+import DrugTest from "../../../../pages/templates/drugTest";
 
 const frontdesk = [
   {
@@ -453,6 +454,12 @@ const frontdesk = [
         path: "/templates/camera",
         icon: "calendar-alt",
         component: HMOCapture,
+      },
+      {
+        name: "Drug Test",
+        path: "/templates/drugTest",
+        icon: "calendar-alt",
+        component: DrugTest,
       },
     ],
   },

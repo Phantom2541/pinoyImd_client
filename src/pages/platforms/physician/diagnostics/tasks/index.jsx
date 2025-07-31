@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { RESET } from "../../../../../services/redux/slices/commerce/pos/services/deals";
 import { MDBCard } from "mdbreact";
-import DealCollapse from "./collapse";
 import Header from "./header";
 import Footer from "./footer";
 import TableLoading from "../../../../../components/tableLoading";
@@ -26,13 +25,12 @@ import {
   RESET as PHYRESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import ResultEntry from "./modal";
-import Table from "./table";
-import RadReader from "./radReader";
+import Body from "./body";
 
 export default function DailyTasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { message, isSuccess } = useSelector(({ deals }) => deals),
-    { isLoading, byGroup } = useSelector(({ validator }) => validator),
+    { isLoading } = useSelector(({ validator }) => validator),
     { addToast } = useToasts(),
     dispatch = useDispatch();
   // references
@@ -102,16 +100,9 @@ export default function DailyTasks() {
   return (
     <MDBCard narrow>
       <Header />
-      {isLoading ? (
-        <TableLoading />
-      ) : byGroup === "all" ? (
-        <DealCollapse />
-      ) : (
-        <Table />
-      )}
+      {isLoading ? <TableLoading /> : <Body />}
       <Footer />
       <ResultEntry />
-      <RadReader />
     </MDBCard>
   );
 }

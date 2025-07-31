@@ -2,6 +2,7 @@ import Indicator from "./indicator";
 import Footer from "./footer";
 import { currency } from "../../../../../../../services/utilities";
 import { MDBAnimation, MDBProgress } from "mdbreact";
+import CardLoading from "../../../../../../../components/cardLoading";
 // import { useSelector } from "react-redux";
 const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
   console.log("card-item", item);
@@ -241,17 +242,18 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
             )}
           </>
         ) : (
-          <div>
-            <MDBAnimation
-              type="fadeIn"
-              infinite
-              delay={`100ms`}
-              duration="3000ms"
-              className="mt-3"
-            >
-              <MDBProgress animated color="light" value={3000}></MDBProgress>
-            </MDBAnimation>
-          </div>
+          // <div>
+          //   <MDBAnimation
+          //     type="fadeIn"
+          //     infinite
+          //     delay={`100ms`}
+          //     duration="3000ms"
+          //     className="mt-3"
+          //   >
+          //     <MDBProgress animated color="light" value={3000}></MDBProgress>
+          //   </MDBAnimation>
+          // </div>
+          <CardLoading />
         )}
       </div>
     </div>

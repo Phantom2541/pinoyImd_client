@@ -3,14 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
+  MDBCol,
   MDBNav,
   MDBNavItem,
   MDBNavLink,
+  MDBRow,
   MDBTabContent,
   MDBTabPane,
 } from "mdbreact";
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 import { Services } from "../../../../../../../../../services/fakeDb/index.js";
+import ImgMagnifier from "../../../../../../../../../components/images/imageMagnifier/imgMagnifier.jsx";
+import { gDrive } from "../../../../../../../../../services/utilities/index.js";
 
 export default function Ultrasounds() {
   const dispatch = useDispatch();
@@ -19,7 +23,6 @@ export default function Ultrasounds() {
   const [description, setDescription] = useState("");
   const [impression, setImpression] = useState("");
   const [activeTab, setActiveTab] = useState("results");
-  const [link, setLink] = useState("");
 
   const descTimeout = useRef(null);
   const impTimeout = useRef(null);
@@ -59,85 +62,79 @@ export default function Ultrasounds() {
   );
 
   return (
-    <div className="mx-auto">
+    <div className="mx-auto mt-n3">
       {Services.getName(task?.packages)}
-      <MDBNav color="primary" tabs className="nav-justified">
-        <MDBNavItem>
-          <MDBNavLink
-            link
-            active={activeTab === "results"}
-            to="#!"
-            onClick={() => setActiveTab("results")}
-          >
-            Description
-          </MDBNavLink>
-        </MDBNavItem>
-        <MDBNavItem>
-          <MDBNavLink
-            link
-            active={activeTab === "kit"}
-            to="#!"
-            onClick={() => setActiveTab("kit")}
-          >
-            Impression
-          </MDBNavLink>
-        </MDBNavItem>
-      </MDBNav>
+      <MDBRow>
+        <MDBCol>
+          <div style={{ height: "25rem" }}>
+            <ImgMagnifier src={gDrive.view(task?.fileId)} />
+          </div>
+        </MDBCol>
+        <MDBCol>
+          <MDBNav color="primary" tabs className="nav-justified">
+            <MDBNavItem>
+              <MDBNavLink
+                link
+                active={activeTab === "results"}
+                to="#!"
+                onClick={() => setActiveTab("results")}
+              >
+                Description
+              </MDBNavLink>
+            </MDBNavItem>
+            <MDBNavItem>
+              <MDBNavLink
+                link
+                active={activeTab === "kit"}
+                to="#!"
+                onClick={() => setActiveTab("kit")}
+              >
+                Impression
+              </MDBNavLink>
+            </MDBNavItem>
+          </MDBNav>
 
-      <MDBCard>
-        <MDBCardBody>
-          <MDBTabContent activeItem={activeTab} className="pt-0">
-            <MDBTabPane tabId="results">
-              <label htmlFor="link">Add link here</label>
-              <input
-                type="link"
-                name="link"
-                id="link"
-                value={link}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setLink(val);
-                  // dispatch(SetTASK({ form: task?.form, task: updatedTask }));
-                  delayedSave("link", val, descTimeout);
-                }}
-                // onChange={(e) => handleChange(e.target)}
-                className="w-100 text-center fw-bold"
-              />
-              <textarea
-                className="form-control mt-3 border"
-                style={{
-                  minHeight: "200px",
-                  overflowY: "auto",
-                  maxHeight: "300px",
-                }}
-                value={description}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setDescription(val);
-                  delayedSave("description", val, descTimeout);
-                }}
-              />
-            </MDBTabPane>
+          <MDBCard>
+            <MDBCardBody>
+              <MDBTabContent activeItem={activeTab} className="pt-0">
+                <MDBTabPane tabId="results">
+                  <textarea
+                    className="form-control mt-3 border"
+                    style={{
+                      minHeight: "285px",
+                      overflowY: "auto",
+                      maxHeight: "285px",
+                    }}
+                    value={description}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setDescription(val);
+                      delayedSave("description", val, descTimeout);
+                    }}
+                  />
+                </MDBTabPane>
 
-            <MDBTabPane tabId="kit">
-              <textarea
-                className="form-control mt-3 border"
-                style={{
-                  minHeight: "200px",
-                  overflowY: "auto",
-                  maxHeight: "300px",
-                }}
-                value={impression}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setImpression(val);
-                  delayedSave("impression", val, impTimeout);
-                }}
-              />
-            </MDBTabPane>
-          </MDBTabContent>
-        </MDBCardBody>
-      </MDBCard>
+                <MDBTabPane tabId="kit">
+                  <textarea
+                    className="form-control mt-3 border"
+                    style={{
+                      minHeight: "285px",
+                      overflowY: "auto",
+                      maxHeight: "285px",
+                    }}
+                    value={impression}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setImpression(val);
+                      delayedSave("impression", val, impTimeout);
+                    }}
+                  />
+                </MDBTabPane>
+              </MDBTabContent>
+            </MDBCardBody>
+          </MDBCard>
+        </MDBCol>
+      </MDBRow>
     </div>
   );
 }
