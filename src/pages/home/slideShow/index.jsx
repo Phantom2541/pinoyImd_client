@@ -1,13 +1,11 @@
 import { MDBAnimation, MDBIcon } from "mdbreact";
-
-import "./style.css";
-
 import IMG1 from "./../../../assets/homeImg.jpg";
 import IMG2 from "./../../../assets/homeMachine.jpg";
 import IMG3 from "./../../../assets/homePatient.jpg";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import Register from "../register";
+import "./style.css";
 
 const slides = [
   {

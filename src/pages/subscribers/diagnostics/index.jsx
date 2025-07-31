@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { MDBContainer, MDBMask, MDBView } from "mdbreact";
 import "../style.css";
 import Copyrights from "../../../components/footer";
-import Register from "../../home/register";
+import Register from "../../home/slideShow";
 import ContactUs from "./contact";
 import Login from "../../home/login";
 import LOGO from "./../../../assets/iMD.png";

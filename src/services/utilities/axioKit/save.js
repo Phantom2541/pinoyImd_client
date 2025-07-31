@@ -15,9 +15,7 @@ const save = async (entity, data, token, endpoint = "save") => {
         Authorization: `QTracy ${token}`,
       },
     })
-    .then(({ data }) => {
-      return data;
-    })
+    .then(({ data }) => data)
     .catch(({ response }) => {
       const { error, message } = response?.data;
       throw new Error(message ? `${error}: ${message}` : error);
