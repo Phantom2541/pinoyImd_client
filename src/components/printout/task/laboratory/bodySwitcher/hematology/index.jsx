@@ -6,11 +6,9 @@ export default function Hematology({ fontSize, task }) {
   // const style = { fontSize: `${fontSize - 0.06}px` },
   const style = { fontSize: `1.1rem`, verticalAlign: "middle" },
     { patient, cc, dc, rci, apc, troupe, ct, bt } = task;
-  console.log("task", task);
 
   return (
     <div>
-      {/* className="d-flex" */}
       <CellCount
         cc={cc}
         isMale={patient.isMale ? "Male" : "Female"}
