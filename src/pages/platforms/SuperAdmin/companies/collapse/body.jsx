@@ -11,25 +11,26 @@ import EditableSelect from "../../../../../components/customizable/editableSelec
 export default function Collapsable({ branches, cid }) {
   const { token } = useSelector(({ auth }) => auth),
     [selected, setSelected] = useState({}),
-    { isSuccess } = useSelector(({ branches }) => branches),
+    { isSuccess, formSubmitted } = useSelector(({ branches }) => branches),
     { collections } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();
 
-  const handleUpdate = () => {
-    const { _id, key, value } = selected;
-    dispatch(UPDATE({ token, data: { _id, [key]: value } })).then(
-      ({ payload }) => {
-        const _branches = branches.map((branch) =>
-          branch._id === _id ? payload : branch
-        );
+  const handleUpdate = (data) => {
+    const { _id, key, value } = data;
 
-        const _collections = collections.map((company) =>
-          company?._id === cid ? { ...company, branches: _branches } : company
-        );
+    dispatch(UPDATE({ token, data })).then(({ payload }) => {
+      const fbranch = payload.payload;
 
-        dispatch(SetFILTERED(_collections));
-      }
-    );
+      const _branches = branches.map((branch) =>
+        branch._id === _id ? fbranch : branch
+      );
+
+      const _collections = collections.map((company) =>
+        company?._id === cid ? { ...company, branches: _branches } : company
+      );
+
+      dispatch(SetFILTERED(_collections));
+    });
     setSelected({});
   };
 
@@ -91,10 +92,16 @@ export default function Collapsable({ branches, cid }) {
                       className="mt-2 form-control form-control-sm"
                       isSuccess={isSuccess}
                       selected={selected}
-                      onChange={(key, val) =>
-                        setSelected({ ...selected, [key]: val })
+                      onChange={
+                        (key, val) => alert("hey you")
+                        // setSelected({ ...selected, [key]: val })
                       }
-                      handleCheck={() => handleUpdate()}
+                      handleCheck={(key, val) => {
+                        alert("lolololol");
+                        console.log("key", key, "val", val);
+
+                        // handleUpdate(_id)
+                      }}
                     />
                   </div>
                 ) : (
@@ -183,10 +190,10 @@ export default function Collapsable({ branches, cid }) {
                     _id,
                     category,
                   }}
-                  // formSubmitted={formSubmitted}
+                  formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
                   onSave={(data) =>
-                    handleUpdate({ id: data._id, category: data.category })
+                    handleUpdate({ _id: data._id, category: data.category })
                   }
                 />
               </td>

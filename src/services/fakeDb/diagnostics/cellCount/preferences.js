@@ -87,8 +87,8 @@ const Preferences = {
     },
     hgb: {
       snug: 60,
-      lo: 130,
-      hi: 170,
+      lo: 121,
+      hi: 151,
       crical: 204,
       alert: 0,
       // crical: 0,

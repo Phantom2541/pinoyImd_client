@@ -90,7 +90,7 @@ export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
                   style={{
                     color: value
                       ? value < lo
-                        ? "red"
+                        ? "blue"
                         : value > hi
                         ? "red"
                         : ""
