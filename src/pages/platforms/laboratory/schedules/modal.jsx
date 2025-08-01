@@ -10,11 +10,31 @@ import {
 } from "mdbreact";
 import { TOGGLE } from "../../../../services/redux/slices/finance/bookkeeping/duties";
 import { fullName } from "../../../../services/utilities";
+import { DutyCodes, Policy } from "../../../../services/fakeDb";
+import { useEffect, useState } from "react";
 export default function Modal() {
   const { showModal } = useSelector(({ duties }) => duties),
     { collections = [] } = useSelector(({ personnels }) => personnels),
+    [personnels, setPersonnels] = useState([]),
+    [codes, setCodes] = useState([]),
     dispatch = useDispatch();
 
+  useEffect(() => {
+    setCodes([]);
+    if (showModal) {
+      setPersonnels(collections);
+    }
+  }, [showModal, collections]);
+
+  const handleChange = (personnelID, code) => {
+    const _personnels = [...personnels];
+    const pIndex = _personnels.findIndex((p) => p._id === personnelID);
+    _personnels[pIndex] = { ..._personnels[pIndex], code };
+
+    setPersonnels(_personnels);
+    setCodes(_personnels.map((p) => p.code).filter(Boolean));
+  };
+  console.log("codes", codes);
   return (
     <MDBModal
       size="lg"
@@ -40,37 +60,23 @@ export default function Modal() {
         </MDBTypography>
         <span className="template-schedule-legend-title">Legend:</span>
         <div className="template-schedule-legend d-flex flex-wrap justify-content-center mt-n1">
-          <span style={{ margin: "0 15px", textAlign: "center" }}>
-            <strong>7</strong> = 7am - 5pm
-            <br />
-            (Opening)
-          </span>
-          <span style={{ margin: "0 15px", textAlign: "center" }}>
-            <strong>CM</strong> = 8am - 3pm
-            <br />
-            Clinical Microscopy
-          </span>
-          <span style={{ margin: "0 15px", textAlign: "center" }}>
-            <strong>HM</strong> = 8am - 3pm
-            <br />
-            Hematology
-          </span>
-          <span style={{ margin: "0 15px", textAlign: "center" }}>
-            <strong>SR</strong> = 8am - 3pm
-            <br />
-            Serology
-          </span>
-          <span style={{ margin: "0 15px", textAlign: "center" }}>
-            <strong>CC</strong> = 8am - 3pm
-            <br />
-            Clinical Chemistry
-          </span>
+          {DutyCodes.collections.map((collec) => (
+            <span
+              key={collec.code}
+              style={{ margin: "0 15px", textAlign: "center" }}
+            >
+              <strong>{collec.code}</strong> = {collec.time}
+              <br />
+              {collec.label}
+            </span>
+          ))}
         </div>
 
         <MDBTable small>
           <thead>
             <tr>
               <th>Employee</th>
+              <th>Designation</th>
               <th>Duty Code</th>
             </tr>
           </thead>
@@ -78,11 +84,30 @@ export default function Modal() {
             {collections.map((item, index) => (
               <tr key={index}>
                 <td>{fullName(item.user.fullName)}</td>
+                <td>{Policy.getPositions(item?.contract?.designation)}</td>
                 <td>
-                  <select className="form-control form-control-sm">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                  <select
+                    className="form-control form-control-sm"
+                    value={item?.code}
+                    onChange={({ target }) =>
+                      handleChange(item._id, target.value)
+                    }
+                  >
+                    <option value="">Choose a duty code</option>
+                    {DutyCodes.collections.map(
+                      ({ code, label, time }, index) => (
+                        <option
+                          value={code}
+                          style={{
+                            display: codes.includes(code) ? "none" : "block",
+                          }}
+                          title={`${code} = ${time} ${label}`}
+                          key={index}
+                        >
+                          {code}
+                        </option>
+                      )
+                    )}
                   </select>
                 </td>
               </tr>

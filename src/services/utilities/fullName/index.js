@@ -1,3 +1,5 @@
+import capitalize from "../capitalize";
+
 const fullName = (fullname, isComplete = false) => {
   if (typeof fullname !== "object" || !fullname.fname || !fullname.lname)
     return "-";
@@ -16,7 +18,7 @@ const fullName = (fullname, isComplete = false) => {
   const suffixPart = suffix && suffix !== "NONE" ? ` ${suffix}` : "";
   const middlePart = mname ? ` y ${middleName}` : "";
 
-  return `${lname}, ${fname}${suffixPart}${middlePart}`.trim();
+  return capitalize(`${lname}, ${fname}${suffixPart}${middlePart}`.trim());
 };
 
 export default fullName;
