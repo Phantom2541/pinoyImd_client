@@ -437,6 +437,7 @@ export const reduxSlice = createSlice({
         state.message = error.message;
         state.isLoading = false;
       })
+
       .addCase(BOARD_MEMBERS.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;

@@ -1,3 +1,5 @@
+import capitalize from "../capitalize";
+
 const properFullname = (fullname) => {
   if (typeof fullname !== "object" || !fullname.fname || !fullname.lname)
     return "-";
@@ -13,9 +15,11 @@ const properFullname = (fullname) => {
       .join("")}.`;
   }
 
-  return `${fname} ${mname && middleName} ${lname}${suffix && ` ${suffix}`}${
-    postnominal && `, ${postnominal}`
-  }`.replace(/^\s+|\s+$/gm, "");
+  return capitalize(
+    `${fname} ${mname && middleName} ${lname}${suffix && ` ${suffix}`}${
+      postnominal && `, ${postnominal}`
+    }`.replace(/^\s+|\s+$/gm, "")
+  );
 };
 
 export default properFullname;

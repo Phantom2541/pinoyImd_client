@@ -83,5 +83,20 @@ const Policy = {
         ?.positions || [];
     return positions.map(({ id }) => id);
   },
+  getDesignationIDS: (department = "") => {
+    const positions =
+      collections.find(
+        ({ department: d, code }) =>
+          code.toLowerCase() === department.toLowerCase() ||
+          d.toLowerCase() === department.toLowerCase()
+      )?.positions || [];
+
+    if (positions.length === 0) return [];
+    //not included 42 Patho 43 Chief Patho 48 Radiologist 49 Chief Radiologist
+    const positionIDS = positions.filter(
+      ({ id }) => ![42, 43, 48, 49].includes(id)
+    );
+    return positionIDS.map(({ id }) => id);
+  },
 };
 export default Policy;

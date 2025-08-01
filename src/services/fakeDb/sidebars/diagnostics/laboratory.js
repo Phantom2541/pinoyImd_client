@@ -27,6 +27,7 @@ import {
 import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
 import WorkingArea from "../../../../pages/platforms/laboratory/working-area";
 import Machines from "../../../../pages/platforms/laboratory/machines";
+import Schedules from "../../../../pages/platforms/laboratory/schedules";
 // import ClinicalMicroscopy from "../../../pages/platforms/laboratory/workingArea/clinicalMicroscopy";
 
 const laboratory = [
@@ -37,6 +38,13 @@ const laboratory = [
     title: "News and Updates",
     component: Bulletin,
     allowedFor: ["Junior MedTech", "Senior MedTech", "Chief MLS"],
+  },
+  {
+    name: "Schedules",
+    icon: "clock",
+    path: "/schedules",
+    title: "Schedules",
+    component: Schedules,
   },
   {
     name: "Sales & Remittance",

@@ -53,6 +53,7 @@ import {
   ledger,
   soa,
   orgChart,
+  duties,
 } from "./slices/finance";
 import { quest } from "./slices/diagnostics";
 import {
@@ -68,6 +69,7 @@ import portal from "./slices/emr/portal";
 
 const store = configureStore({
   reducer: {
+    duties,
     appointments,
     remittances,
     payables,
