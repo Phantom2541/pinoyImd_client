@@ -267,7 +267,7 @@
   margin-top: 15px;
 }
 
-@media print {
+/* @media print {
   body * {
     visibility: hidden;
   }
@@ -286,22 +286,19 @@
     box-shadow: none !important;
   }
 
-  /* Hide buttons when printing */
   button {
     display: none !important;
   }
 
-  /* Avoid page breaks inside important sections */
   .drugTest-result-table,
   .drugTest-footer {
     page-break-inside: avoid;
   }
 
-  /* Always show footer at the bottom of the page */
   .drugTest-footer {
     position: absolute;
     bottom: 20px;
     left: 0;
     width: 100%;
   }
-}
+} */

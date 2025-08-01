@@ -11,13 +11,16 @@ import EditableSelect from "../../../../../components/customizable/editableSelec
 export default function Collapsable({ branches, cid }) {
   const { token } = useSelector(({ auth }) => auth),
     [selected, setSelected] = useState({}),
-    { isSuccess } = useSelector(({ branches }) => branches),
+    { isSuccess, formSubmitted } = useSelector(({ branches }) => branches),
     { collections } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();
 
-  const handleUpdate = () => {
+
+  const handleUpdate = (data) => {
     const { _id, key, value } = selected;
-    dispatch(UPDATE({ token, data: { _id, [key]: value } })).then(
+    console.log("selected", { _id, [key]: value }); 
+    
+    dispatch(UPDATE({ token, data })).then(
       ({ payload }) => {
         const _branches = branches.map((branch) =>
           branch._id === _id ? payload : branch
@@ -28,10 +31,13 @@ export default function Collapsable({ branches, cid }) {
         );
 
         dispatch(SetFILTERED(_collections));
+  console.log("_collections", _collections);
+
       }
     );
     setSelected({});
   };
+  
 
   const handleSelected = (data) => {
     const { _id, ...val } = data;
@@ -92,9 +98,15 @@ export default function Collapsable({ branches, cid }) {
                       isSuccess={isSuccess}
                       selected={selected}
                       onChange={(key, val) =>
-                        setSelected({ ...selected, [key]: val })
+                        alert("hey you")
+                        // setSelected({ ...selected, [key]: val })
                       }
-                      handleCheck={() => handleUpdate()}
+                      handleCheck={(key, val) => {
+                        alert("lolololol");
+                          console.log("key", key, "val", val);
+                          
+                        // handleUpdate(_id)
+                      }}
                     />
                   </div>
                 ) : (
@@ -183,7 +195,7 @@ export default function Collapsable({ branches, cid }) {
                     _id,
                     category,
                   }}
-                  // formSubmitted={formSubmitted}
+                  formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
                   onSave={(data) =>
                     handleUpdate({ id: data._id, category: data.category })

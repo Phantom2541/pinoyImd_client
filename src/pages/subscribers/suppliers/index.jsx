@@ -12,6 +12,10 @@ import Loading from "./loading";
 import Machines from "./machine";
 import Employees from "./employee";
 import History from "./history";
+import Ceo from "./ceo";
+import Client from "./client";
+import ContactUs from "./contact";
+import Copyrights from "../../../components/footer";
 
 const Suppliers = ({ match }) => {
   const { details, isLoading } = useSelector(({ companies }) => companies),
@@ -243,7 +247,17 @@ const Suppliers = ({ match }) => {
               <History />
             </div>
             <div id="features">
+              <Ceo />
+            </div>
+            <div id="features">
               <Employees />
+            </div>
+            <div id="features">
+              <Client />
+            </div>
+            <div id="features">
+              <ContactUs />
+              <Copyrights />
             </div>
           </MDBContainer>
         </div>

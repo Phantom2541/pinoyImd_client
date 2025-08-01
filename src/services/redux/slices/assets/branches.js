@@ -398,7 +398,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload);
+        console.log("action.payloadsss", action);
 
         const { success, payload } = action.payload;
         if (state.collections.length > 0) {
