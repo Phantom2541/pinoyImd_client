@@ -9,6 +9,7 @@ import {
 
 const Physical = ({ physical, style }) => {
   const [color, transparency, sg, pH] = physical;
+
   return (
     <MDBTable bordered>
       <MDBTableHead>
@@ -39,7 +40,7 @@ const Physical = ({ physical, style }) => {
             <span className="ml-2"> Transparency</span>
           </td>
           <td
-            style={{ ...style, color: !!transparency && "red" }}
+            style={{ ...style, color: transparency > 0 && "red" }}
             className="py-0 fw-bold"
           >
             {Transparency[transparency]}
