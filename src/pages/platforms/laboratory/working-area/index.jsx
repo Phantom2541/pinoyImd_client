@@ -120,7 +120,6 @@ export default function WorkingArea() {
     };
 
     socket.off("A15-RECEIVER").on("A15-RECEIVER", handleReceive);
-
     return () => {
       socket.off("A15-RECEIVER", handleReceive);
     };
