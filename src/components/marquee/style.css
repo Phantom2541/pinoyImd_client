@@ -1,0 +1,48 @@
+.demo-notice-container {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 12px 0;
+  overflow: hidden;
+  z-index: 99999;
+}
+
+.demo-notice-marquee {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.demo-notice-marquee-content {
+  display: inline-flex;
+  animation: marqueescroll linear infinite;
+}
+
+.demo-notice-marquee-content span {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: white;
+  letter-spacing: 1px;
+  padding-right: 100px;
+  text-transform: capitalize;
+}
+
+/* Keyframes */
+@keyframes marqueescroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.demo-notice-fade-out {
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}

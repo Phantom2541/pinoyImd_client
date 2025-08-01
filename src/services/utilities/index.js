@@ -73,7 +73,7 @@ import employment from "../fakeDb/employment";
 
 const ENDPOINT = "http://localhost:5000";
 // const ENDPOINT = window.location.origin;
-
+//
 // endpoint ni kuya kevin
 // const ENDPOINT = "https://pinoy-imd-deed6e69cc41.herokuapp.com";
 

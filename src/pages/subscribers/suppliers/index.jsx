@@ -6,7 +6,6 @@ import Login from "../../home/login";
 import LOGO from "./../../../assets/iMD.png";
 
 import { useDispatch, useSelector } from "react-redux";
-import { GET_DETAILS } from "../../../services/redux/slices/assets/companies";
 import { ENDPOINT } from "../../../services/utilities";
 import Loading from "./loading";
 import Machines from "./machine";

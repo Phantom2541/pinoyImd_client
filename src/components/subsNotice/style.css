@@ -1,0 +1,127 @@
+.subsNotice-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  z-index: 9999;
+  user-select: none;
+}
+
+.subsNotice-container.hide {
+  display: none;
+}
+
+.subsNotice-card {
+  min-width: 360px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", sans-serif;
+  text-align: center;
+  color: #222;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+
+.subsNotice-header {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.subsNotice-days-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subsNotice-days-left div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+  letter-spacing: 2px;
+}
+
+.subsNotice-days-number {
+  font-size: 9rem;
+  font-weight: bold;
+  line-height: 9rem;
+}
+
+.subsNotice-days,
+.subsNotice-left {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  line-height: 3.5rem;
+}
+
+.subsNotice-progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.subsNotice-progress-fill {
+  height: 100%;
+  background-color: #111;
+  border-radius: 5px 0 0 5px;
+}
+
+.subsNotice-note {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.subsNotice-renew-button {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #111;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.subsNotice-renew-button:hover {
+  background-color: #000;
+}
+
+.subsNotice-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(40px, -30px);
+  width: 35px;
+  height: 35px;
+  background-color: #faf9f6;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  font-size: 1.4rem;
+  color: #555;
+}

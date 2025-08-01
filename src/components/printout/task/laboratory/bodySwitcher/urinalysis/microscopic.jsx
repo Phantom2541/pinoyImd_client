@@ -71,10 +71,7 @@ const Microscopic = ({ Microscopic, style }) => {
           <td style={style} className="py-0 ">
             <span className="ml-2"> Mucus Threads</span>
           </td>
-          <td
-            style={{ ...style, color: mucus > 1 && "red" }}
-            className="py-0 fw-bold"
-          >
+          <td style={{ ...style }} className="py-0 fw-bold">
             {MicroscopicResultInWord[mucus]}
           </td>
         </tr>
@@ -83,7 +80,7 @@ const Microscopic = ({ Microscopic, style }) => {
             <span className="ml-2">Bacteria</span>
           </td>
           <td
-            style={{ ...style, color: bacteria > 1 && "red" }}
+            style={{ ...style, color: bacteria > 2 && "red" }}
             className="py-0 fw-bold"
           >
             {MicroscopicResultInWord[bacteria]}

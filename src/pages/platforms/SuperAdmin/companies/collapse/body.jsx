@@ -15,29 +15,24 @@ export default function Collapsable({ branches, cid }) {
     { collections } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();
 
-
   const handleUpdate = (data) => {
-    const { _id, key, value } = selected;
-    console.log("selected", { _id, [key]: value }); 
-    
-    dispatch(UPDATE({ token, data })).then(
-      ({ payload }) => {
-        const _branches = branches.map((branch) =>
-          branch._id === _id ? payload : branch
-        );
+    const { _id, key, value } = data;
 
-        const _collections = collections.map((company) =>
-          company?._id === cid ? { ...company, branches: _branches } : company
-        );
+    dispatch(UPDATE({ token, data })).then(({ payload }) => {
+      const fbranch = payload.payload;
 
-        dispatch(SetFILTERED(_collections));
-  console.log("_collections", _collections);
+      const _branches = branches.map((branch) =>
+        branch._id === _id ? fbranch : branch
+      );
 
-      }
-    );
+      const _collections = collections.map((company) =>
+        company?._id === cid ? { ...company, branches: _branches } : company
+      );
+
+      dispatch(SetFILTERED(_collections));
+    });
     setSelected({});
   };
-  
 
   const handleSelected = (data) => {
     const { _id, ...val } = data;
@@ -97,14 +92,14 @@ export default function Collapsable({ branches, cid }) {
                       className="mt-2 form-control form-control-sm"
                       isSuccess={isSuccess}
                       selected={selected}
-                      onChange={(key, val) =>
-                        alert("hey you")
+                      onChange={
+                        (key, val) => alert("hey you")
                         // setSelected({ ...selected, [key]: val })
                       }
                       handleCheck={(key, val) => {
                         alert("lolololol");
-                          console.log("key", key, "val", val);
-                          
+                        console.log("key", key, "val", val);
+
                         // handleUpdate(_id)
                       }}
                     />
@@ -198,7 +193,7 @@ export default function Collapsable({ branches, cid }) {
                   formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
                   onSave={(data) =>
-                    handleUpdate({ id: data._id, category: data.category })
+                    handleUpdate({ _id: data._id, category: data.category })
                   }
                 />
               </td>
