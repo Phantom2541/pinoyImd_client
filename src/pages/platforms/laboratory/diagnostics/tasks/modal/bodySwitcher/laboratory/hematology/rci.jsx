@@ -92,7 +92,7 @@ export default function Rci({ activeTab, setActiveTab = () => {} }) {
                   style={{
                     color: value
                       ? value < lo
-                        ? "red"
+                        ? "blue"
                         : value > hi
                         ? "red"
                         : ""

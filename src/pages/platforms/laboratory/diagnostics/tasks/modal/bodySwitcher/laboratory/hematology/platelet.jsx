@@ -51,7 +51,7 @@ export default function Platelet({ activeTab = "", setActiveTab = () => {} }) {
               ref={inputRef}
               type="number"
               style={{
-                color: apc < 150 || apc > 400 ? "red" : undefined,
+                color: apc < 150 ? "blue" : apc > 400 ? "red" : "black",
               }}
               value={String(apc)}
               autoFocus
