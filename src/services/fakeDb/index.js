@@ -29,6 +29,7 @@ import {
   References,
   Templates,
 } from "./diagnostics";
+import { Duty } from "./legend";
 import Access from "./access";
 import Calendar from "./calendar";
 import Policy from "./policy";
@@ -36,7 +37,6 @@ import Roles from "./roles";
 import HMO from "./hmo";
 import Quotes from "./quotes";
 import ValidID from "./validID";
-import DutyCodes from "./dutyCodes";
 
 export {
   Suffixes,
@@ -73,5 +73,5 @@ export {
   HMO,
   Quotes,
   ValidID,
-  DutyCodes,
+  Duty,
 };

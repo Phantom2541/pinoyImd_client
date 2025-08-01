@@ -2,14 +2,18 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
 const url = "finance/bookkeeping/duties";
+const today = new Date();
 
 const initialState = {
   collections: [],
   filtered: [],
+  isFirstSched: today.getDate() <= 15,
   formSubmitted: false,
   didSearch: false,
   selected: {},
   page: 0,
+  month: new Date().getMonth() + 1, // 0-based index (Jan = 0)
+  year: new Date().getFullYear(),
   isSuccess: false,
   // main loading
   isLoading: false,
@@ -29,9 +33,9 @@ const initialState = {
 
 export const BROWSE = createAsyncThunk(
   `${url}/browse`,
-  ({ token, key }, thunkAPI) => {
+  ({ token, params }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/browse`, token, key);
+      return axioKit.universal(`${url}/browse`, token, params);
     } catch (error) {
       const message =
         (error.response &&
@@ -103,9 +107,41 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetMONTH: (state, { payload }) => {
+      if (payload === "next") {
+        if (state.month === 12) {
+          state.month = 1;
+          state.year += 1;
+        } else {
+          state.month += 1;
+        }
+      } else {
+        if (state.month === 1) {
+          state.month = 12;
+          state.year -= 1;
+        } else {
+          state.month -= 1;
+        }
+      }
+    },
+    SetFIRST_SCHED: (state, { payload }) => {
+      const isFirstSched = payload === null ? state.isFirstSched : payload;
+      const selected =
+        state.collections.find((item) => item.isFirstSched === isFirstSched) ||
+        {};
+
+      state.selected = selected;
+      state.isFirstSched = isFirstSched;
+      if (!selected._id) {
+        state.showModal = true;
+      }
+    },
+    ResetDATE: (state) => {
+      state.month = today.getMonth() + 1;
+      state.year = today.getFullYear();
+    },
     TOGGLE: (state) => {
       state.showModal = !state.showModal;
-      state.selected = {};
     },
 
     RESET: (state) => {
@@ -140,7 +176,8 @@ export const reduxSlice = createSlice({
       .addCase(SAVE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
         state.message = success;
-        state.org = payload;
+        state.collections.unshift(payload);
+        state.selected = payload;
         state.isSuccess = true;
         state.formSubmitted = false;
       })
@@ -157,18 +194,32 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        if (state.collections.length > 0) {
-          const updateCollections = (collections) => {
-            const index = collections.findIndex(
-              (item) => item._id === payload._id
-            );
-            const oldData = { ...collections[index] };
-            collections[index] = { ...oldData, ...payload };
-          };
 
-          updateCollections(state.collections);
-          updateCollections(state.filtered);
+        //       payload: {
+        //   _id,
+        //   sched: updatedBreakdown.sched,
+        //   ro: updatedBreakdown.ro,
+        //   breakdownID,
+        // },
+        const index = state.collections.findIndex(
+          (item) => item._id === payload._id
+        );
+        const { breakdown = [], ...rest } = state.collections[index];
+        const _breakdown = [...breakdown];
+        const bIndex = _breakdown.findIndex(
+          (item) => item._id === payload.breakdownID
+        );
+        _breakdown[bIndex] = {
+          ..._breakdown[bIndex],
+          sched: payload.sched,
+          ro: payload.ro,
+        };
+
+        state.collections[index] = { ...rest, breakdown: _breakdown };
+        if (state.selected._id === payload._id) {
+          state.selected = { ...state.selected, breakdown: _breakdown };
         }
+
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -204,6 +255,7 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { TOGGLE, RESET } = reduxSlice.actions;
+export const { SetFIRST_SCHED, TOGGLE, RESET, SetMONTH, ResetDATE } =
+  reduxSlice.actions;
 
 export default reduxSlice.reducer;

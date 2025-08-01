@@ -41,7 +41,7 @@ const Preferences = {
     hct: {
       snug: 0.18, // need blood transfusion
       lo: 0.4,
-      hi: 0.5,
+      hi: 0.54,
       warn: 0.6, // Panic Value
       alert: 0, //
       crical: 0.7,
@@ -79,7 +79,7 @@ const Preferences = {
     hct: {
       snug: 0.18,
       lo: 0.36,
-      hi: 0.44,
+      hi: 0.48,
       warn: 0,
       alert: 0,
       crical: 0.6,
@@ -87,8 +87,8 @@ const Preferences = {
     },
     hgb: {
       snug: 60,
-      lo: 121,
-      hi: 151,
+      lo: 120,
+      hi: 160,
       crical: 204,
       alert: 0,
       // crical: 0,

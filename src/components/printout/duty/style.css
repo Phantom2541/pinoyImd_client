@@ -1,0 +1,4 @@
+.template-schedule-legend .legend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 2fr));
+}

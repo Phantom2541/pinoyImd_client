@@ -61,6 +61,7 @@ export default function EditableSelect({
   className = "",
   classNameTxt = "",
   inputClassName = "",
+  parentClassName = "d-flex align-items-center",
   disableAll = false,
   hideLabel = false,
   multiple = false,
@@ -73,6 +74,7 @@ export default function EditableSelect({
   formSubmitted = false,
   animationStyle = {},
   animation = false,
+  isCapitalize = true,
   displayTag = "small", //this is for editable display value tag
   onChange = () => {},
   onSave = () => {}, //this function is use to editable mode to get the edited data
@@ -149,7 +151,7 @@ export default function EditableSelect({
   const showSelect = !isEditable ? true : editMode;
   return (
     <div
-      className="d-flex align-items-center "
+      className={parentClassName}
       style={{
         ...(animation &&
           showSelect && { position: "absolute", ...animationStyle }),
@@ -230,7 +232,7 @@ export default function EditableSelect({
                     )}
                     value={String(value) || "--"}
                   >
-                    {capitalize(text) || "--"}
+                    {(isCapitalize ? capitalize(text) : text) || "--"}
                   </MDBSelectOption>
                 );
               })}
@@ -260,7 +262,9 @@ export default function EditableSelect({
           },
           isMoney
             ? currency.format(utils.getValue(keyForText, fieldData))
-            : capitalize(utils.getValue(keyForText, fieldData)) || "N/A"
+            : (isCapitalize
+                ? capitalize(utils.getValue(keyForText, fieldData))
+                : utils.getValue(keyForText, fieldData)) || "N/A"
         )
       )}
     </div>
