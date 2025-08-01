@@ -136,3 +136,10 @@
   color: red;
   font-weight: bold;
 }
+
+.duty-editable-select small {
+  font-size: 0.8rem;
+  text-align: center !important;
+  display: block !important;
+  text-transform: uppercase;
+}

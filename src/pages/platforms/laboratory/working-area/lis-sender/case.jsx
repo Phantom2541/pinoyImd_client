@@ -11,30 +11,61 @@ import {
 import { useSelector } from "react-redux";
 import dragAndDrop from "../../../../../assets/drag-and-drop.png";
 import { Services } from "../../../../../services/fakeDb";
+import { BROWSE } from "../../../../../services/indexDB/commerce/market/machines";
+import Swal from "sweetalert2";
+
 const Case = ({ cluster, setCluster = () => {} }) => {
   const { work, showWorkArea: show } = useSelector(
       ({ validator }) => validator
     ),
-    [services, setServices] = useState([]);
+    [services, setServices] = useState([]),
+    [serviceWithoutCode, setServicesWithoutCode] = useState([]);
 
   const { task = {} } = work || {};
 
   useEffect(() => {
     setCluster([]);
     setServices([]);
-    if (show) {
+    async function fetchIndexDB() {
+      const dbServices = await BROWSE("688192d65e0037604f4fd35e");
       const { packages } = task || {};
       const _services = Array.isArray(packages)
         ? packages
         : typeof packages === "object"
         ? Object.keys(packages)
         : [packages];
-      setCluster(_services);
+
+      const servicesWithCode = _services.filter((id) =>
+        dbServices.some((code) => Number(id) === Number(code.id))
+      );
+
+      const _servicesWithoutCode = _services.filter(
+        (id) => !servicesWithCode.includes(id)
+      );
+
+      setServicesWithoutCode(_servicesWithoutCode);
+      setCluster(servicesWithCode);
+      setServices(_servicesWithoutCode);
+    }
+    if (show) {
+      fetchIndexDB();
     }
   }, [show, task, setCluster]);
 
   const handleDragStart = (e, item, fromList) => {
     const dragPreview = document.createElement("div");
+    if (serviceWithoutCode.includes(item)) {
+      Swal.fire({
+        icon: "warning",
+        title: Services.find(item)?.name,
+        html: `
+      This service cannot be sent to LIS because no code has been assigned to it yet.<br/><br/>
+      Please go to the <strong>Machines</strong> page and set a code for this service before proceeding.
+    `,
+        confirmButtonText: "Got it",
+      });
+      return;
+    }
     dragPreview.textContent = Services.find(item)?.name;
     Object.assign(dragPreview.style, {
       position: "absolute",

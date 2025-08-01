@@ -271,41 +271,44 @@ export default function Modal() {
       >
         <MDBModalHeader
           toggle={() => dispatch(TOGGLE({ key: "closed" }))}
-          className="d-flex align-items-center justify-content-between darken-3 light-blue white-text"
+          className="darken-3 light-blue white-text"
         >
-          <div className="d-flex justify-content-between">
-            <MDBIcon icon="calendar-alt" className="mr-2" />
-            <div className="d-flex align-items-end">
-              <span ref={floatingCashRef}>
-                {title || "Floating Cash  "}
-                {sum > 0 && ` : (${currency.format(sum)})`}
-              </span>
-              <span></span>
+          <div className="d-flex" style={{ gap: "60px" }}>
+            <div className="d-flex justify-content-between align-content-center">
+              <MDBIcon icon="calendar-alt" className="mr-2" />
+              <div className="d-flex align-items-end">
+                <span ref={floatingCashRef}>
+                  {title || "Floating Cash  "}
+                  {sum > 0 && ` : (${currency.format(sum)})`}
+                </span>
+                <span></span>
+              </div>
             </div>
-          </div>
 
-          {title === "Closing Cash Register" && (
-            <span
-              className={
-                sum < coh
-                  ? "text-danger" // 🔴 Shortage
-                  : sum > coh
-                  ? "text-warning" // 🟡 Overage
-                  : "text-success" // ✅ Balanced
-              }
-            >
-              COH: {currency.format(coh)}
-            </span>
-          )}
+            {title === "Closing Cash Register" && (
+              <span
+                className={
+                  sum < coh
+                    ? "text-danger" // 🔴 Shortage
+                    : sum > coh
+                    ? "text-warning" // 🟡 Overage
+                    : "text-success" // ✅ Balanced
+                }
+              >
+                COH: {currency.format(coh)}
+              </span>
+            )}
+          </div>
         </MDBModalHeader>
 
         <MDBModalBody className="mb-0">
-          {selected?._id ? (
-            <MDBTypography note noteTitle="Note: " tag="h6" noteColor="primary">
-              Declare your closing by selecting each denomination. Make sure it
-              matches your Cash On Hand (COH) before submitting.
-            </MDBTypography>
-          ) : (
+          {!selected?._id && (
+            //   ? (
+            //   <MDBTypography note noteTitle="Note: " tag="h6" noteColor="primary">
+            //     Declare your closing by selecting each denomination. Make sure it
+            //     matches your Cash On Hand (COH) before submitting.
+            //   </MDBTypography>
+            // ) : (
             <MDBTypography note noteTitle="Note: " tag="h6" noteColor="primary">
               {description
                 ? description
@@ -329,7 +332,12 @@ export default function Modal() {
             >
               <div className="d-flex flex-column justify-content-center align-items-center">
                 <h5 className="text-center font-weight-bold mb-4">Bills</h5>
-                <div className="d-flex flex-column" style={{ gap: "15px" }}>
+                <div
+                  className="d-flex flex-column"
+                  style={{
+                    gap: "15px",
+                  }}
+                >
                   {/* LEFT COLUMN */}
                   {currency.Denominations.bills
                     .reduce((rows, bill, index) => {

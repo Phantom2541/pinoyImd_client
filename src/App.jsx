@@ -32,6 +32,7 @@ import Portal from "./pages/emr/portal";
 import Subscribers from "./pages/subscribers";
 import Staff from "./components/printout/staff";
 import AttendancePrint from "./components/printout/dtr";
+import DutyPrintout from "./components/printout/duty";
 
 export default function App() {
   const { auth, token, isOnline } = useSelector(({ auth }) => auth),
@@ -81,6 +82,7 @@ export default function App() {
         exact
         component={RadTaskPrintout}
       />
+      <Route path="/printout/duty" exact component={DutyPrintout} />
       <Route path="/printout/payslip" exact component={Payslip} />
       <Route path="/printout/personnel" exact component={PersonnelPrintOut} />
       <Route path="/printout/soa" exact component={SOA} />

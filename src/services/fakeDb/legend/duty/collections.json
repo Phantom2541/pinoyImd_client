@@ -23,5 +23,15 @@
     "code": "CC",
     "time": "8am - 3pm",
     "label": "Clinical Chemistry"
+  },
+  {
+    "code": "O",
+    "time": "",
+    "label": "Off"
+  },
+  {
+    "code": "RO",
+    "time": "",
+    "label": "Request Off"
   }
 ]
