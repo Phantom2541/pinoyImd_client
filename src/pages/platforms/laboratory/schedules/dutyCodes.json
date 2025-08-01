@@ -1,0 +1,22 @@
+[
+  {
+    "code": "7",
+    "description": "7am - 5pm (Opening)"
+  },
+  {
+    "code": "CM",
+    "description": "8am - 3pm Clinical Microscopy"
+  },
+  {
+    "code": "HM",
+    "description": "8am - 3pm Hematology"
+  },
+  {
+    "code": "SR",
+    "description": "8am - 3pm Serology"
+  },
+  {
+    "code": "CC",
+    "description": "8am - 3pm Clinical Chemistry"
+  }
+]
