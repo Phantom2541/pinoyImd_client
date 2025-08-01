@@ -102,15 +102,29 @@ export default function WorkingArea() {
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
 
+  // useEffect(() => {
+  //   socket.emit("join_room", "A15");
+  //   socket.on("A15-RECEIVER", (data) => {
+  //     dispatch(RECEIVE_A15(data));
+  //   });
+  //   return () => {
+  //     socket.off("A15-RECEIVER");
+  //   };
+  // }, [dispatch]);
+
   useEffect(() => {
     socket.emit("join_room", "A15");
-    socket.on("A15-RECEIVER", (data) => {
+
+    const handleReceive = (data) => {
       dispatch(RECEIVE_A15(data));
-    });
-    return () => {
-      socket.off("A15-RECEIVER");
     };
-  }, [dispatch]);
+
+    socket.off("A15-RECEIVER").on("A15-RECEIVER", handleReceive);
+
+    return () => {
+      socket.off("A15-RECEIVER", handleReceive);
+    };
+  }, []);
 
   return (
     <MDBCard narrow>

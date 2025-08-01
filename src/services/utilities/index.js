@@ -77,7 +77,14 @@ const ENDPOINT = "http://localhost:5000";
 // endpoint ni kuya kevin
 // const ENDPOINT = "https://pinoy-imd-deed6e69cc41.herokuapp.com";
 
-const socket = io.connect(ENDPOINT);
+//old socket set up
+// const socket = io.connect(ENDPOINT);
+const socket = io(ENDPOINT, {
+  reconnection: true,
+  reconnectionAttempts: 5,
+  reconnectionDelay: 2000,
+  timeout: 10000,
+});
 const PresetImage = (gender) => (gender ? Male : Female);
 
 export {
