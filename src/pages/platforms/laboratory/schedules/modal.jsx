@@ -39,23 +39,34 @@ export default function Modal() {
           the employees.
         </MDBTypography>
         <span className="template-schedule-legend-title">Legend:</span>
-        <div className="template-schedule-legend d-flex mt-n1">
-          <span>
-            <strong>7</strong> = 7am - 5pm (Opening)
+        <div className="template-schedule-legend d-flex flex-wrap justify-content-center mt-n1">
+          <span style={{ margin: "0 15px", textAlign: "center" }}>
+            <strong>7</strong> = 7am - 5pm
+            <br />
+            (Opening)
           </span>
-          <span>
-            <strong>CM</strong> = 8am - 3pm Clinical Microscopy
+          <span style={{ margin: "0 15px", textAlign: "center" }}>
+            <strong>CM</strong> = 8am - 3pm
+            <br />
+            Clinical Microscopy
           </span>
-          <span>
-            <strong>HM</strong> = 8am - 3pm Hematology
+          <span style={{ margin: "0 15px", textAlign: "center" }}>
+            <strong>HM</strong> = 8am - 3pm
+            <br />
+            Hematology
           </span>
-          <span>
-            <strong>SR</strong> = 8am - 3pm Serology
+          <span style={{ margin: "0 15px", textAlign: "center" }}>
+            <strong>SR</strong> = 8am - 3pm
+            <br />
+            Serology
           </span>
-          <span>
-            <strong>CC</strong> = 8am - 3pm Clinical Chemistry
+          <span style={{ margin: "0 15px", textAlign: "center" }}>
+            <strong>CC</strong> = 8am - 3pm
+            <br />
+            Clinical Chemistry
           </span>
         </div>
+
         <MDBTable small>
           <thead>
             <tr>

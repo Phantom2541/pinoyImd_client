@@ -81,7 +81,7 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
                   style={{
                     color: cell
                       ? cell < lo
-                        ? "red"
+                        ? "blue"
                         : cell > hi
                         ? "red"
                         : ""
