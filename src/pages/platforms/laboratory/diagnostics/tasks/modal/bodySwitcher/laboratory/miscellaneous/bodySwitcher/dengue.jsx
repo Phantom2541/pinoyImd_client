@@ -13,9 +13,11 @@ const choices = [
 export default function Dengue({ task, setTask }) {
   const { results = { igg: 0, igm: 0, ns1: 0 }, packages = [] } = task;
 
-  const handleSelectChange = (name, value) =>
-    setTask({ ...task, results: { ...results, [name]: value } });
+  const handleSelectChange = (name, value) => {
+    console.log([name], value);
 
+    setTask({ ...task, results: { ...results, [name]: value } });
+  };
   return (
     <MDBRow className="text-left">
       {packages.includes(77) && (
@@ -27,8 +29,8 @@ export default function Dengue({ task, setTask }) {
             className="form-control"
           >
             <option> NS1 Antigen </option>
-            {choices.map((data) => (
-              <option value={data.index}>{data.str}</option>
+            {choices.map((data, index) => (
+              <option value={index}>{data.str}</option>
             ))}
           </select>
         </MDBCol>
@@ -41,8 +43,8 @@ export default function Dengue({ task, setTask }) {
           className="form-control"
         >
           <option> Antibody IgG </option>
-          {choices.map((data) => (
-            <option value={data.index}>{data.str}</option>
+          {choices.map((data, index) => (
+            <option value={index}>{data.str}</option>
           ))}
         </select>
       </MDBCol>
@@ -54,8 +56,8 @@ export default function Dengue({ task, setTask }) {
           className="form-control"
         >
           <option> Antibody IgM </option>
-          {choices.map((data) => (
-            <option value={data.index}>{data.str}</option>
+          {choices.map((data, index) => (
+            <option value={index}>{data.str}</option>
           ))}
         </select>
       </MDBCol>
