@@ -28,7 +28,7 @@ export const BROWSE = createAsyncThunk(
       return axioKit.universal(`${url}/browse`, token, data);
     } catch (error) {
       const message =
-        (error.response?.data?.message) || error.message || error.toString();
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -41,7 +41,7 @@ export const USER = createAsyncThunk(
       return axioKit.universal(`${url}/user`, token, { branchId, userId });
     } catch (error) {
       const message =
-        (error.response?.data?.message) || error.message || error.toString();
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -54,7 +54,7 @@ export const EMPLOYEES = createAsyncThunk(
       return axioKit.universal(`${url}/employees`, token, { branch });
     } catch (error) {
       const message =
-        (error.response?.data?.message) || error.message || error.toString();
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -65,7 +65,7 @@ export const SAVE = createAsyncThunk(`${url}/save`, (form, thunkAPI) => {
     return axioKit.save(url, form.data, form.token);
   } catch (error) {
     const message =
-      (error.response?.data?.message) || error.message || error.toString();
+      error.response?.data?.message || error.message || error.toString();
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -77,7 +77,7 @@ export const UPDATE = createAsyncThunk(
       return axioKit.update(url, data, token);
     } catch (error) {
       const message =
-        (error.response?.data?.message) || error.message || error.toString();
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -90,7 +90,7 @@ export const DESTROY = createAsyncThunk(
       return axioKit.destroy(url, data, token);
     } catch (error) {
       const message =
-        (error.response?.data?.message) || error.message || error.toString();
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -152,11 +152,8 @@ export const reduxSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
-
-    // 🔥 Filter by branchId and physicianId
     SetFilteredApplicants: (state, { payload }) => {
       const { branchId, physicianId } = payload;
-
       state.filtered = state.collections.filter(
         (applicant) =>
           applicant.branchId === branchId &&
@@ -242,11 +239,18 @@ export const reduxSlice = createSlice({
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex((item) => item._id === payload?._id);
+        const index = state.collections.findIndex(
+          (item) => item._id === payload?._id
+        );
         if (index !== -1) {
           const oldInfo = state.collections[index];
           state.collections[index] = { ...oldInfo, ...payload };
         }
+        state.filtered = state.collections.filter(
+          (applicant) =>
+            applicant.branchId === payload.branchId &&
+            applicant.physicianId === payload.physicianId
+        );
         state.message = success;
         state.isSuccess = true;
         state.formSubmitted = false;
@@ -263,7 +267,9 @@ export const reduxSlice = createSlice({
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success, payload } = action.payload;
-        const index = state.collections.findIndex((item) => item._id === payload);
+        const index = state.collections.findIndex(
+          (item) => item._id === payload
+        );
         if (index !== -1) {
           state.collections.splice(index, 1);
         }
@@ -286,7 +292,7 @@ export const {
   SetREQUIREMENTS,
   ToggleAccessModal,
   ToggleViewCredential,
-  SetFilteredApplicants, // ← included here
+  SetFilteredApplicants,
   SetMaxPage,
   setActivePage,
 } = reduxSlice.actions;
