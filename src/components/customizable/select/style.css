@@ -7,6 +7,10 @@
   transform: translateY(10%);
 }
 
+.customizable-select-design.selectHeader label {
+  color: white !important;
+}
+
 .customizable-selectSearch-design label {
   color: grey !important;
   transform: translateY(60%);
