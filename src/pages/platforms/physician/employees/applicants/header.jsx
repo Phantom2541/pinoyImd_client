@@ -6,6 +6,7 @@ import {
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import Branch from "../../../headquarter/dashboard/branch";
+import { BROWSE } from "../../../../../services/redux/slices/assets/persons/applicants";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -15,9 +16,9 @@ const Header = () => {
   useEffect(() => {
     if (token) {
       dispatch(
-        SECRETARYAPPLICANTS({
-          params: {
-            physicianId: auth._id,
+        BROWSE({
+          data: {
+            // physicianId: auth._id,
             branchId: activePlatform.branchId,
           },
           token,
