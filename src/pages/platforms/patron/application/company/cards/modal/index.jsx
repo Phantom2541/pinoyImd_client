@@ -58,6 +58,17 @@ export default function ApplicationModal({
       });
     }
   }, [isSuccess, formSubmitted, setVisibility]);
+
+  useEffect(() => {
+    if (doctor && company) {
+      setAssignedDoctor(
+        doctor.find(
+          (d) => d.branchId === company.branchId && d.isHead === true
+        ) || { _id: "", name: "" }
+      );
+    }
+  }, [doctor, company]);
+
   useEffect(() => {
     if (visibility) {
       setApplication({});
