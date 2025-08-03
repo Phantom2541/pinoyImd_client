@@ -49,6 +49,7 @@ import {
   ImageText,
 } from "../../../../components/images";
 import DrugTest from "../../../../pages/templates/drugTest";
+import SubExpired from "../../../../pages/templates/subExpired";
 
 const frontdesk = [
   {
@@ -460,6 +461,12 @@ const frontdesk = [
         path: "/templates/drugTest",
         icon: "calendar-alt",
         component: DrugTest,
+      },
+      {
+        name: "Sub Expired",
+        path: "/templates/subExpired",
+        icon: "calendar-alt",
+        component: SubExpired,
       },
     ],
   },
