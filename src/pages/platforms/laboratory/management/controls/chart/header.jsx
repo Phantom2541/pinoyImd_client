@@ -40,23 +40,24 @@ const Header = () => {
   return (
     <MDBView
       cascade
-      className="gradient-card-header blue-gradient narrower py-2 px-4 mx-4 mb-3 d-flex justify-content-between align-items-center"
+      className="gradient-card-header blue-gradient narrower py-0 px-4 mx-4 mb-3 d-flex justify-content-between align-items-center"
       style={{ flexWrap: "wrap" }}
     >
       {/* Left Section */}
       <div className="d-flex align-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          <CalendarPicker
-            year={year}
-            month={month}
-            moved={(direction) => dispatch(SetMONTH(direction))}
-            reset={() => dispatch(RESET())}
-          />
-        </span>
+        <CalendarPicker
+          year={year}
+          month={month}
+          moved={(direction) => dispatch(SetMONTH(direction))}
+          reset={() => dispatch(RESET())}
+        />
       </div>
 
       {/* Right Section */}
-      <div className="d-flex justify-content-end align-items-center flex-wrap gap-2">
+      <div
+        className="d-flex justify-content-end align-items-center flex-wrap"
+        style={{ gap: "10px" }}
+      >
         <Templates setTemplate={setTemplate} />
         <Services template={template} setService={handleServiceId} />
       </div>

@@ -1,72 +1,54 @@
-import React, { useState } from "react";
-import Swal from "sweetalert2";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBtn } from "mdbreact";
+import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/applicants";
 
 export default function Collapsable({ item }) {
-  const [status, setStatus] = useState(item.status || "");
+  const dispatch = useDispatch();
+  const { token } = useSelector(({ auth }) => auth);
+
+  const [status, setStatus] = useState(item.status || "pending");
+  const [remarks, setRemarks] = useState(item.remarks || "");
   const [interviewDate, setInterviewDate] = useState(() => {
     const date = new Date(item.createdAt);
     return date.toISOString().slice(0, 16);
   });
+
   const [editing, setEditing] = useState(false);
   const [tempDate, setTempDate] = useState(interviewDate);
 
-  const handleAccept = () => {
-    setStatus("hired");
-    Swal.fire({
-      icon: "success",
-      title: "Applicant is successfully hired.",
-      showConfirmButton: false,
-      timer: 1500,
-      position: "center",
-    });
+  const autoSave = (newData = {}) => {
+    dispatch(
+      UPDATE({
+        data: {
+          _id: item._id,
+          status,
+          remarks,
+          interviewDate,
+          ...newData,
+        },
+        token,
+      })
+    );
   };
 
-  const handleDeny = () => {
-    Swal.fire({
-      title: "What do you want to do with this application?",
-      icon: "question",
-      showConfirmButton: false,
-      showCancelButton: false,
-      html: `
-        <button id="denyBtn" class="swal2-confirm swal2-styled" style="background-color: #e74c3c; margin-right: 10px;">Deny</button>
-        <button id="pendingBtn" class="swal2-confirm swal2-styled" style="background-color: #f39c12; margin-right: 10px;">Put to Pending Queue</button>
-        <button id="cancelBtn" class="swal2-cancel swal2-styled">Cancel</button>
-      `,
-      didOpen: () => {
-        const swal = Swal.getPopup();
-
-        swal.querySelector("#denyBtn").addEventListener("click", () => {
-          setStatus("denied");
-          Swal.fire("Denied!", "Application was denied.", "success");
-        });
-
-        swal.querySelector("#pendingBtn").addEventListener("click", () => {
-          setStatus("pending");
-          Swal.fire("Pending!", "Moved to pending queue.", "info");
-        });
-
-        swal.querySelector("#cancelBtn").addEventListener("click", () => {
-          Swal.close();
-        });
-      },
-    });
-  };
+  useEffect(() => {
+    autoSave();
+  }, [status, remarks]);
 
   const handleSaveDate = () => {
     setInterviewDate(tempDate);
     setEditing(false);
-    Swal.fire({
-      icon: "success",
-      title: "Interview date updated.",
-      timer: 1200,
-      showConfirmButton: false,
-    });
+    autoSave({ interviewDate: tempDate });
   };
 
   const handleCancelEdit = () => {
     setTempDate(interviewDate);
     setEditing(false);
+  };
+
+  const handleStatusChange = (e) => {
+    setStatus(e.target.value);
   };
 
   return (
@@ -76,8 +58,7 @@ export default function Collapsable({ item }) {
           <th>Resume</th>
           <th>Documents</th>
           <th>Date of Interview</th>
-          <th>Remarks/Notes</th>
-          <th style={{ width: "1%", whiteSpace: "nowrap" }}>Actions</th>
+          <th>Remarks / Status</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
@@ -127,18 +108,26 @@ export default function Collapsable({ item }) {
               </>
             )}
           </td>
-          <td><small>{item.decSS}</small></td>
-          <td className="text-nowrap">
-            <MDBBtn size="sm" color="success" onClick={handleAccept}>
-              <i className="fas fa-check" />
-            </MDBBtn>{" "}
-            <MDBBtn size="sm" color="danger" onClick={handleDeny}>
-              <i className="fas fa-times" />
-            </MDBBtn>
+          <td>
+            <select
+              className="form-control"
+              value={status}
+              onChange={handleStatusChange}
+            >
+              <option value="pending">Pending</option>
+              <option value="denied">Denied</option>
+            </select>
+            <textarea
+              className="form-control mt-2"
+              rows="2"
+              placeholder="Optional remarks..."
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+            />
           </td>
         </tr>
         <tr>
-          <td colSpan="5" className="text-right pr-3 text-muted">
+          <td colSpan="4" className="text-right pr-3 text-muted">
             <strong>Status:</strong> {status || "pending"}
           </td>
         </tr>
