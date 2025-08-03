@@ -162,7 +162,7 @@ export const reduxSlice = createSlice({
           const data = collections[index];
           collections[index] = {
             ...data,
-            diagnostic: { ...data.diagnostic, Chemistry: payload },
+            diagnostic: { ...data?.diagnostic, Chemistry: payload },
           };
         };
         if (state.task._id === payload._id && state.task.form === "Chemistry") {

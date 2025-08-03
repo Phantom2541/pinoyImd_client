@@ -123,6 +123,8 @@ export default function SideNavigation({
       return;
     }
     let group = isDiagnostics ? Sidebars.diagnostics : Sidebars.suppliers;
+    console.log("platformKey", platformKey, group, isDiagnostics);
+
     group.superadmin = Sidebars.superadmin;
     group.patron = Sidebars.patron;
     const fullSidebar = group[platformKey] || [];
@@ -151,6 +153,7 @@ export default function SideNavigation({
     filterSidebarByDepartment,
     isDiagnostics,
   ]);
+  console.log("links", links);
 
   // 🔁 Recursive nav render
   const renderNavItems = (

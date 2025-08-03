@@ -12,22 +12,17 @@ const BarcodePrintout = ({ forms = {}, sale }) => {
       const svg = refs.current[section];
       if (svg) {
         try {
-          JsBarcode(
-            svg,
-            Barcode.getValue(section, customerId, pn),
-
-            {
-              format: "CODE128",
-              lineColor: "#000",
-              width: 1.5, //1.5 original
-              height: 76,
-              displayValue: false,
-              fontSize: 20,
-              textAlign: "center",
-              textPosition: "bottom",
-              margin: 12,
-            }
-          );
+          JsBarcode(svg, Barcode.getValue(section, customerId, pn), {
+            format: "CODE128",
+            lineColor: "#000",
+            width: 1.5, //1.5 original
+            height: 76,
+            displayValue: false,
+            fontSize: 20,
+            textAlign: "center",
+            textPosition: "bottom",
+            margin: 12,
+          });
         } catch (e) {
           console.error("Barcode render error:", e);
         }

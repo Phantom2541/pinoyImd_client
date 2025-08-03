@@ -9,9 +9,12 @@ import frontdesk from "./frontdesk";
 import humanresources from "./hr";
 import procurement from "./procurement";
 import utility from "./utility";
-
+import headquarter from "./headquarter";
+import serviceengineer from "./serviceengineer";
 const suppliers = {
+  serviceengineer,
   utility,
+  headquarter,
   procurement,
   humanresources,
   frontdesk,

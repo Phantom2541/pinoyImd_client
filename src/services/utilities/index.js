@@ -80,10 +80,11 @@ const ENDPOINT = "http://localhost:5000";
 //old socket set up
 // const socket = io.connect(ENDPOINT);
 const socket = io(ENDPOINT, {
+  transports: ["websocket"],
   reconnection: true,
-  reconnectionAttempts: 5,
-  reconnectionDelay: 2000,
-  timeout: 10000,
+  reconnectionAttempts: Infinity,
+  reconnectionDelay: 1000,
+  timeout: 20000,
 });
 const PresetImage = (gender) => (gender ? Male : Female);
 

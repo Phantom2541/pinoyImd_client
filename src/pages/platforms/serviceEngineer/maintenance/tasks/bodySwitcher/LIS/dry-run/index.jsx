@@ -1,0 +1,145 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useToasts } from "react-toast-notifications";
+import { RESET } from "../../../../../../../../services/redux/slices/commerce/pos/services/deals";
+import { MDBCard } from "mdbreact";
+import DealCollapse from "./collapse";
+import Header from "./header";
+import Footer from "./footer";
+import TableLoading from "../../../../../../../../components/tableLoading";
+/**
+ * For refrences to the following deals
+ */
+import {
+  HEADS,
+  SetHEADS,
+  SetByGroup,
+  SetByStatus,
+  RECEIVE_A15,
+} from "../../../../../../../../services/redux/slices/diagnostics/laboratory/validator";
+import {
+  BROWSE,
+  SetPREFERENCES,
+  RESET as PREFRESET,
+} from "../../../../../../../../services/redux/slices/diagnostics/laboratory/preferences";
+import {
+  BROWSE as PHYSICIANS,
+  RESET as PHYRESET,
+} from "../../../../../../../../services/redux/slices/assets/persons/physicians";
+import ResultEntry from "./modal";
+import Table from "./table";
+import LIS_SENDER from "./lis-sender";
+import { socket } from "../../../../../../../../services/utilities";
+
+export default function DryRun() {
+  const { token, activePlatform } = useSelector(({ auth }) => auth),
+    { message, isSuccess } = useSelector(({ deals }) => deals),
+    { isLoading, byGroup } = useSelector(({ validator }) => validator),
+    { addToast } = useToasts(),
+    dispatch = useDispatch();
+
+  // references
+  useEffect(() => {
+    if (token && activePlatform?.branchId) {
+      const branchId = activePlatform.branchId;
+
+      const prefData = localStorage.getItem(`preferences`);
+      const headsData = localStorage.getItem(`heads-${branchId}`);
+
+      if (prefData) {
+        dispatch(SetPREFERENCES(JSON.parse(prefData)));
+      } else if (token && activePlatform?.branchId) {
+        dispatch(
+          BROWSE({
+            token,
+            branchId: activePlatform.branchId,
+          })
+        );
+      }
+
+      if (headsData) {
+        dispatch(SetHEADS(JSON.parse(headsData)));
+      } else {
+        dispatch(HEADS({ token, branchId })).then((res) => {
+          if (res?.payload) {
+            localStorage.setItem(
+              `heads-${branchId}`,
+              JSON.stringify(res.payload?.payload)
+            );
+          }
+        });
+      }
+
+      dispatch(PHYSICIANS({ token, branchId })).then((res) => {
+        if (res?.payload) {
+          localStorage.setItem(
+            `physicians`,
+            JSON.stringify(res.payload?.payload)
+          );
+        }
+      });
+
+      return () => {
+        dispatch(PREFRESET());
+        dispatch(PHYRESET());
+      };
+    }
+  }, [token, dispatch, activePlatform]);
+
+  useEffect(() => {
+    dispatch(SetByGroup("all"));
+    dispatch(SetByStatus("all"));
+  }, [dispatch]);
+
+  //Toast for errors or success
+  useEffect(() => {
+    if (message) {
+      addToast(message, {
+        appearance: isSuccess ? "success" : "error",
+      });
+    }
+
+    return () => dispatch(RESET());
+  }, [isSuccess, message, addToast, dispatch]);
+
+  // useEffect(() => {
+  //   socket.emit("join_room", "A15");
+  //   socket.on("A15-RECEIVER", (data) => {
+  //     dispatch(RECEIVE_A15(data));
+  //   });
+  //   return () => {
+  //     socket.off("A15-RECEIVER");
+  //   };
+  // }, [dispatch]);
+
+  useEffect(() => {
+    socket.emit("join_room", "A15");
+
+    const handleReceive = (data) => {
+      dispatch(RECEIVE_A15(data));
+    };
+
+    socket.off("A15-RECEIVER").on("A15-RECEIVER", handleReceive);
+    return () => {
+      socket.off("A15-RECEIVER", handleReceive);
+    };
+  }, [dispatch]);
+
+  return (
+    <>
+      <MDBCard narrow style={{ minHeight: "500px" }}>
+        <Header />
+        {isLoading ? (
+          <TableLoading />
+        ) : byGroup === "all" ? (
+          <DealCollapse />
+        ) : (
+          <Table />
+        )}
+        <Footer />
+        <ResultEntry />
+        <LIS_SENDER />
+      </MDBCard>
+    </>
+  );
+}
