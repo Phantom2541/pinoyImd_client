@@ -39,7 +39,7 @@ export default function CompanyCard({ company }) {
           }}
         >
           <img
-            src={`${ENDPOINT}/public/companies/${company?.name}/logo.png`}
+            src={`${ENDPOINT}/public/companies/${company?.name}/profile/logo.png`}
             alt={company?.name}
             className="mx-auto bg-transparent"
             style={{ height: "7rem", width: "90%" }}

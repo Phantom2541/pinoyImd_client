@@ -44,12 +44,12 @@ export default function UnsetApply() {
       dispatch(
         GET_PHYSICIANS({
           token,
-          key: { branchId: activePlatform?.branchId },
+          key: { branchId: collections.branchId },
         })
       );
-
     return () => dispatch(RESET());
   }, [dispatch]);
+
   useEffect(() => {
     setCompanies(filtered);
   }, [filtered]);
