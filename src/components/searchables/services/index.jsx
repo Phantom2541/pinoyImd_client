@@ -17,6 +17,7 @@ const Services = ({ template, service, setService }) => {
         label="Choose a service"
         disableSearch={services.length < 10}
         inputClassName="text-white"
+        className="selectHeader"
       />
     </div>
   );

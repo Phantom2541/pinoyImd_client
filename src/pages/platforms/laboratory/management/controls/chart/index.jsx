@@ -55,33 +55,73 @@ const LeveyJennings = ({ title }) => {
     );
   }, [filtered]);
 
-  const printChart = () => {
-    if (chartRef.current) {
-      const chartCanvas = chartRef.current.canvas;
-      const chartImage = chartCanvas.toDataURL("image/png");
-      const printWindow = window.open("", "_blank");
-      printWindow.document.write(`
-        <html>
+const printChart = () => {
+  if (chartRef.current) {
+    const chartCanvas = chartRef.current.canvas;
+
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = chartCanvas.width * 3;
+    tempCanvas.height = chartCanvas.height * 3;
+    const ctx = tempCanvas.getContext("2d");
+
+    ctx.scale(3, 3);
+    ctx.drawImage(chartCanvas, 0, 0);
+
+    const chartImage = tempCanvas.toDataURL("image/png");
+    const printWindow = window.open("", "_blank");
+
+    printWindow.document.write(`
+      <html>
         <head>
           <title>Print Chart</title>
           <style>
-            @media print {
-              body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-              img { width: 100vw; height: 100vh; object-fit: contain; }
+            @page {
+              size: A4 landscape;
+              margin: 0;
             }
-            body { text-align: center; margin: 0; }
-            img { width: 100%; max-width: 1000px; }
+
+            html, body {
+              margin: 0;
+              height: 100%;
+              overflow: hidden;
+              background: white;
+            }
+
+            .chart-container {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              padding: 50px;
+              box-sizing: border-box;
+            }
+
+            img {
+              max-width: 100%;
+              max-height: 100%;
+              object-fit: contain;
+              page-break-inside: avoid;
+              break-inside: avoid;
+            }
           </style>
         </head>
         <body>
-          <img src="${chartImage}" />
-          <script>window.onload = function() { window.print(); };</script>
+          <div class="chart-container">
+            <img src="${chartImage}" />
+          </div>
+          <script>
+            window.onload = () => {
+              window.print();
+              window.onafterprint = () => window.close();
+            };
+          </script>
         </body>
-        </html>
-      `);
-      printWindow.document.close();
-    }
-  };
+      </html>
+    `);
+
+    printWindow.document.close();
+  }
+};
 
   const lineChartData = {
     labels: days,
@@ -167,7 +207,7 @@ const LeveyJennings = ({ title }) => {
           className="d-flex flex-column justify-content-between"
           style={{ height: "100%" }}
         >
-          <div style={{ width: "100%", height: "300px" }}>
+          <div style={{ width: "100%", height: "600px" }}>
             <Line
               ref={chartRef}
               data={lineChartData}
