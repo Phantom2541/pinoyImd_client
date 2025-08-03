@@ -171,11 +171,6 @@ export default function LabTaskPrintout() {
 
   useEffect(() => {
     setTask(JSON.parse(localStorage.getItem("taskPrintout")));
-
-    // 🔹 Pagka-load ng page, automatic magpi-print
-    setTimeout(() => {
-      window.print();
-    }, 500);
   }, []);
 
   if (task?._id) return <Printout task={task} />;
