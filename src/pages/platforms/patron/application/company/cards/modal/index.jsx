@@ -19,6 +19,8 @@ import {
 import { Policy } from "../../../../../../../services/fakeDb/index.js";
 import { UPLOAD } from "../../../../../../../services/redux/slices/assets/persons/auth.js";
 import Swal from "sweetalert2";
+import { GET_PHYSICIANS } from "../../../../../../../services/redux/slices/assets/branches.js";
+import { Physicians } from "../../../../../hr/index.js";
 
 export default function ApplicationModal({
   visibility,
@@ -29,7 +31,7 @@ export default function ApplicationModal({
     { collections, formSubmitted, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
-    { physician: doctor } = useSelector(({ branches }) => branches),
+    { physicians: doctor } = useSelector(({ branches }) => branches),
     [application, setApplication] = useState({}),
     [file201Preview, setFile201Preview] = useState({}),
     [department, setDepartment] = useState({}),
@@ -37,6 +39,7 @@ export default function ApplicationModal({
     [assignedDoctor, setAssignedDoctor] = useState({ _id: "", name: "" }),
     dispatch = useDispatch();
   console.log("doctor", doctor);
+  console.log("application", collections);
 
   const showDoctorSelect =
     department === "Clinic" &&
@@ -90,11 +93,14 @@ export default function ApplicationModal({
       [name]: value,
     });
   };
+
   const handleDoctorChange = (e) => {
     const selectedId = e.target.value;
 
     // Find the selected doctor from the doctor list
-    const selectedDoc = doctor.find((doc) => doc.user._id === selectedId);
+    const selectedDoc = doctor.affiliated.find(
+      (doc) => doc.user._id === selectedId
+    );
 
     if (selectedDoc) {
       const displayName = selectedDoc.user
@@ -337,7 +343,7 @@ export default function ApplicationModal({
                   onChange={handleDoctorChange}
                 >
                   <option value="">Select a Doctor</option>
-                  {doctor.map((doc, i) => {
+                  {doctor.affiliated?.map((doc, i) => {
                     const displayName = doc.user
                       ? properFullname(doc.user.fullName)
                       : properFullname(doc.ghostName);
