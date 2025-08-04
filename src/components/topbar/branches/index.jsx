@@ -26,6 +26,8 @@ export default function Branches() {
         .filter((branch) => branch.branchId === branchId)
         .flatMap(({ platform }) => platform) || [];
 
+    console.log("activePlatform", activePlatform);
+
     const data = {
       _id: auth._id,
       email: auth.email,
@@ -34,6 +36,7 @@ export default function Branches() {
         branchId,
         position: branchId.posotion,
         access: [..._access],
+        platform: "patron",
       },
     };
 
