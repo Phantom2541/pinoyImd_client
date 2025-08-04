@@ -163,24 +163,24 @@ export const reduxSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
-SetFilteredApplicants: (state, { payload }) => {
-  const { branchId, physicianId } = payload;
+    SetFilteredApplicants: (state, { payload }) => {
+      const { branchId, physicianId } = payload;
 
-  if (!branchId || !physicianId) {
-    state.filtered = [];
-    return;
-  }
+      if (!branchId || !physicianId) {
+        state.filtered = [];
+        return;
+      }
 
-  // Optional debug log (pang-troubleshoot)
-  console.log("Filtering by:", branchId, physicianId);
-  console.log("Total applicants:", state.collections.length);
+      // Optional debug log (pang-troubleshoot)
+      console.log("Filtering by:", branchId, physicianId);
+      console.log("Total applicants:", state.collections.length);
 
-  state.filtered = state.collections.filter(
-    (applicant) =>
-      applicant.branchId === branchId &&
-      applicant.physicianId === physicianId
-  );
-},
+      state.filtered = state.collections.filter(
+        (applicant) =>
+          applicant.branchId === branchId &&
+          applicant.physicianId === physicianId
+      );
+    },
   },
 
   extraReducers: (builder) => {
@@ -197,14 +197,11 @@ SetFilteredApplicants: (state, { payload }) => {
         if (branchId) {
           state.collections = payload.flatMap(({ applicants }) => applicants);
           state.filtered = state.collections;
-
-        
         } else {
           state.branches = payload.map(({ applicant, ...rest }) => rest);
           state.collections = payload.flatMap(({ applicants }) => applicants);
           state.filtered = state.collections;
         }
-
 
         state.isLoading = false;
       })
