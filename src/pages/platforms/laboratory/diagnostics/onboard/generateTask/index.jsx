@@ -62,6 +62,7 @@ export default function Modal() {
       console.error("Error saving request:", error);
     }
   };
+
   const generateTask = async () => {
     const inhouseIDS = getIDS(inhouse);
     const _inhouse = Services.getTemplatesWithIntKey(inhouseIDS, department);

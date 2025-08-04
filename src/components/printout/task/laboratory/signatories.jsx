@@ -1,8 +1,7 @@
-import React from "react";
 import { ENDPOINT, properFullname } from "../../../../services/utilities";
 import "./style.css";
 
-const Signature = ({ person, label, isHalf, style = {}, withSignature }) => {
+const Signature = ({ person, label, style = {}, withSignature }) => {
   return (
     <div style={style} className="text-center position-relative">
       {/* Signature behind the name */}

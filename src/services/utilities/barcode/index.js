@@ -6,6 +6,9 @@ const sanitize = (str) =>
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^A-Z0-9 \-.$/+%]/gi, "")
+    .split(/\s+/) // split by spaces
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // capitalize each word
+    .join("")
     .toUpperCase();
 
 const formattedValue = (
@@ -24,7 +27,6 @@ const formattedValue = (
   lname = capitalize(sanitize(lname));
 
   let full = `${abbr}-${lname}${isLabel ? ", " : ""}${fname}-${pn}`;
-
   if (full.length > MAX_LENGTH) {
     const excess = full.length - MAX_LENGTH;
 
@@ -47,8 +49,9 @@ const formattedValue = (
 };
 
 const barcode = {
-  getValue: (section, customer, patientNo) =>
-    formattedValue(section, customer, patientNo, 16),
+  getValue: (section, customer, patientNo) => {
+    return formattedValue(section, customer, patientNo, 16);
+  },
   getLabel: (section, customer, patientNo) =>
     formattedValue(section, customer, patientNo, 34, true),
 };

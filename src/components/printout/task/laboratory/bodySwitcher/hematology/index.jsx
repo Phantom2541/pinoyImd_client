@@ -2,7 +2,7 @@ import CellCount from "./cellcount";
 import DiffCount from "./diffcount";
 import Rci from "./rci";
 
-export default function Hematology({ fontSize, task }) {
+export default function Hematology({ task }) {
   // const style = { fontSize: `${fontSize - 0.06}px` },
   const style = { fontSize: `1.1rem`, verticalAlign: "middle" },
     { patient, cc, dc, rci, apc, troupe, ct, bt } = task;

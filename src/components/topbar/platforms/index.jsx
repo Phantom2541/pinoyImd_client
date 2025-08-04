@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import {
@@ -10,79 +10,91 @@ import {
 } from "mdbreact";
 import { capitalize } from "../../../services/utilities";
 import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth";
-// import { useNavigate } from "react-router-dom";
+
 export default function Platforms() {
   const { activePlatform, token, auth } = useSelector(({ auth }) => auth),
-    [access, setAccess] = useState([]),
-    [isOpen, setIsOpen] = useState(false),
-    history = useHistory(),
-    dispatch = useDispatch();
-  // const navigate = useNavigate();
+    dispatch = useDispatch(),
+    history = useHistory();
+
+  const [access, setAccess] = useState([]);
+  const isDraft = activePlatform?.branch?.settings?.status === "Draft";
+
   useEffect(() => {
     const platforms = activePlatform?.access || [];
-    const unique = new Set([...platforms, "patron"]);
-    const sortedAccess = Array.from(unique).sort((a, b) => a.localeCompare(b));
-    setAccess(sortedAccess);
+    const uniqueSorted = Array.from(new Set([...platforms, "patron"])).sort(
+      (a, b) => a.localeCompare(b)
+    );
+    setAccess(uniqueSorted);
   }, [activePlatform]);
 
-  const handlePlatform = (platform) => {
-    console.log("cleaned", platform);
+  const handlePlatform = useCallback(
+    (platform) => {
+      const cleanedPlatform = platform.toLowerCase().replace(/\s+/g, "");
 
-    const cleanedPlatform = platform.toLowerCase().replace(/\s+/g, "");
-
-    dispatch(
-      SETACTIVEPLATFORM({
-        data: {
-          _id: auth._id,
-          email: auth.email,
-          activePlatform: {
-            ...activePlatform,
-            platform: cleanedPlatform || "patron",
+      dispatch(
+        SETACTIVEPLATFORM({
+          data: {
+            _id: auth._id,
+            email: auth.email,
+            activePlatform: {
+              ...activePlatform,
+              platform: cleanedPlatform || "patron",
+            },
           },
-        },
-        token,
-      })
-    );
+          token,
+        })
+      );
 
-    // Check if the selected platform is "Manager"
-    const isManager = platform.toLowerCase() === "manager";
+      const isManager = cleanedPlatform === "manager";
+      const redirectURL = `/${cleanedPlatform}/${
+        isManager ? "dashboard" : "bulletin"
+      }`;
+      history.push(redirectURL);
+    },
+    [auth, activePlatform, dispatch, token, history]
+  );
 
-    // Define redirect URL based on platform
-    const redirectURL = `/${platform?.toLowerCase().replace(/\s/g, "_")}/${
-      isManager ? "dashboard" : "bulletin"
-    }`; // Adjust path as needed
+  if (access.length <= 1) return null;
 
-    // Redirect using React Router
-    history.push(redirectURL);
+  const allowedPlatformsInDraft = ["manager", "headquarter", "superadmin"];
 
-    // OR, if not using React Router, use:
-    // window.location.href = redirectURL;
-  };
   return (
-    <MDBDropdown toggle={() => console.log("dropdown")} className="sample">
-      {access?.length > 1 && (
-        <MDBDropdownToggle
-          nav
-          caret
-          id="platforms-dropdown"
-          onClick={() => console.log(!isOpen)}
-        >
-          <MDBIcon icon="network-wired" />
-          &nbsp;
-          <div className="d-none d-md-inline">
-            {capitalize(activePlatform?.platform || "patron")}
-          </div>
-        </MDBDropdownToggle>
-      )}
-      <MDBDropdownMenu right id="platforms-dropdown-menu" isOpen={true}>
-        {access?.map((platform, index) => (
-          <MDBDropdownItem
-            key={`platform-${index}`}
-            onClick={() => handlePlatform(platform)}
-          >
-            {capitalize(platform)}
-          </MDBDropdownItem>
-        ))}
+    <MDBDropdown className="sample">
+      <MDBDropdownToggle nav caret id="platforms-dropdown">
+        <MDBIcon icon="network-wired" />
+        &nbsp;
+        <div className="d-none d-md-inline">
+          {capitalize(activePlatform?.platform || "patron")}
+        </div>
+      </MDBDropdownToggle>
+      <MDBDropdownMenu right id="platforms-dropdown-menu">
+        {access.map((platform, index) => {
+          const cleanedPlatform = platform.toLowerCase();
+          const isDisabled =
+            isDraft &&
+            !allowedPlatformsInDraft.includes(cleanedPlatform.toLowerCase());
+
+          return (
+            <MDBDropdownItem
+              key={index}
+              onClick={(e) => {
+                if (isDisabled) {
+                  e.preventDefault(); // prevent default action
+                  e.stopPropagation(); // stop from closing dropdown
+                  return;
+                }
+                handlePlatform(platform);
+              }}
+              style={{
+                color: isDisabled ? "#aaa" : "#212529",
+                pointerEvents: isDisabled ? "none" : "auto",
+                cursor: isDisabled ? "not-allowed" : "pointer",
+              }}
+            >
+              {capitalize(platform)}
+            </MDBDropdownItem>
+          );
+        })}
       </MDBDropdownMenu>
     </MDBDropdown>
   );

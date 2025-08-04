@@ -100,7 +100,7 @@ export default function Chemistry({ task, fontSize }) {
               </td>
               <td style={style} className="py-0">
                 {SIReference}&nbsp;
-                {formatToSI(nameUppercase)}
+                {formatToSI(nameUppercase) || ""}
               </td>
             </tr>
           );
