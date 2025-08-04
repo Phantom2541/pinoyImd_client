@@ -1,34 +1,53 @@
 @media print {
   .laboratory-container {
     background: white;
-    height: 100vh;
     margin: 0 !important;
     padding: 0 !important;
+    display: block;
+  }
+
+  .laboratory-page {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    page-break-after: always;
   }
+
+  .laboratory-page:last-child {
+    page-break-after: auto;
+  }
+
+  .laboratory-page-content {
+    flex: 1 0 auto;
+  }
+
   .laboratory-banner img {
     height: 100px;
   }
+
   .laboratory-banner {
     padding: 14px;
     border-bottom: 1px solid #ccc;
   }
-  .laboratory-remarks {
-    /* position: fixed;
-    bottom: 21.8rem;
-    left: 0;
-    right: 0; */
-    /* margin: 0 1.5cm; */
-    margin-top: auto;
-    /* height: 1cm; */
-    border-bottom: 1px solid black;
-    z-index: 1000;
-  }
 
   .laboratory-body {
     margin-top: 10px;
-    padding: 15px;
+    padding: 10px;
+    page-break-inside: auto;
+  }
+
+  .laboratory-footer {
+    flex-shrink: 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-top: auto;
+  }
+
+  .laboratory-remarks,
+  .signatories,
+  .laboratory-line {
+    page-break-inside: avoid;
   }
 
   .laboratory-line {
@@ -37,30 +56,17 @@
     background-color: #ccc;
     margin-top: 20px;
   }
-  .laboratory-footer {
-    /* position: fixed;
-    bottom: 6rem;
-    left: 0;
-    right: 0; */
-    margin-top: auto;
-    /* height: 7cm; */
-    /* background-color: white; */
-    /* border-top: 1px solid #ccc; */
-    z-index: 999;
-  }
 
-  @page {
-    size: legal;
-    margin-top: 0;
-    margin-bottom: 0 !important;
-    margin-left: 0;
-    margin-right: 0;
-  }
   img {
     max-width: 100%;
   }
 
   .position-relative {
     page-break-inside: avoid;
+  }
+
+  @page {
+    size: legal;
+    margin: 1cm;
   }
 }
