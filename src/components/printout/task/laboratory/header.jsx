@@ -17,7 +17,9 @@ export default function Header({ task }) {
         <div className="d-flex align-items-center">
           Name:&nbsp;
           <h5 className="mb-0 fw-bold text-nowrap">
-            <u className="text-nowrap">{nameFormatter(pFull, true)}</u>
+            <u className="text-nowrap">
+              {nameFormatter(pFull, true).toUpperCase()}
+            </u>
           </h5>
         </div>
         <div>

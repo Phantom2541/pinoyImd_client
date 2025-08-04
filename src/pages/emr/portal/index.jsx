@@ -9,7 +9,6 @@ import "./style.css";
 const Portal = ({ match }) => {
   const { dealId, companyId } = match.params,
     dispatch = useDispatch();
-  console.log("running");
   useEffect(() => {
     localStorage.setItem("companyId", JSON.stringify(companyId));
     dispatch(BROWSE({ key: { dealId } }));
