@@ -97,9 +97,6 @@ export default function Collapsable({ branches, cid }) {
                         // setSelected({ ...selected, [key]: val })
                       }
                       handleCheck={(key, val) => {
-                        alert("lolololol");
-                        console.log("key", key, "val", val);
-
                         // handleUpdate(_id)
                       }}
                     />

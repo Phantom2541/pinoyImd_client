@@ -5,6 +5,7 @@ import { SecondaryFooter, PrimaryFooter } from "./footer";
 
 import Tagging from "./body/tagging";
 import Show from "./body/show";
+import { capitalize } from "../../../../../../services/utilities";
 
 export default function Card({ item, index }) {
   const { activePlatform } = useSelector(({ auth }) => auth),
@@ -43,10 +44,10 @@ export default function Card({ item, index }) {
       <div className="sales-card" key={index}>
         {handlePin()}
         <p className="line-clamp">
-          {fullname.lname},
+          {capitalize(fullname.lname)},
           <br />
           <small>
-            {fullname.fname} {fullname.mname}
+            {capitalize(fullname.fname)} {capitalize(fullname.mname)}
           </small>
         </p>
         <div className="sales-card-body">

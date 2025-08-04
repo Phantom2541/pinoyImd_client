@@ -137,7 +137,7 @@ export default function Modal() {
               />
             </MDBCol>
             <MDBCol className="d-flex align-items-center w-100">
-              <div className={`w-100 ${form.ceo && "mt-4"}`}>
+              <div className={`w-100 ${form?.ceo?._id && "mt-4"}`}>
                 <Search
                   label="CEO"
                   setUser={(value) => setForm({ ...form, ceo: value || "" })}

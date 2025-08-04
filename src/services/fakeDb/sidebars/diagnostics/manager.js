@@ -4,7 +4,6 @@ import {
   Details,
   Applicants,
   Tieups,
-  Banner,
 } from "../../../../pages/platforms/manager/index.js";
 import {
   Services,

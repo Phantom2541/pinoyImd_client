@@ -535,5 +535,35 @@
     "department": "Physician",
     "code": "Physician",
     "positions": []
+  },
+  {
+    "department": "Technical Support",
+    "code": "Tech",
+    "positions": [
+      {
+        "id": 126,
+        "name": "Service Engineer Jr.",
+        "display_name": "Service Engineer Jr.",
+        "description": "Provides basic technical support and performs routine maintenance for vendor-supplied equipment."
+      },
+      {
+        "id": 127,
+        "name": "Service Engineer Sr.",
+        "display_name": "Service Engineer Sr.",
+        "description": "Provides advanced technical support and performs complex maintenance for vendor-supplied equipment."
+      },
+      {
+        "id": 128,
+        "name": "Service Engineer Head",
+        "display_name": "Chief Service Engineer",
+        "description": "Leads the team responsible for providing technical support and maintenance for vendor-supplied equipment."
+      },
+      {
+        "id": 129,
+        "name": "Field Coordinator",
+        "display_name": "Field Coordinator",
+        "description": "Coordinates on-site service activities and client support for vendor-related operations."
+      }
+    ]
   }
 ]

@@ -46,10 +46,10 @@ export const BROWSE = createAsyncThunk(
   }
 );
 export const GET_PHYSICIANS = createAsyncThunk(
-  `${url}/get_physicians`,
+  `${url}/physicians`,
   ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/get_physicians`, token, key);
+      return axioKit.universal(`${url}/physicians`, token, key);
     } catch (error) {
       const message =
         (error.response &&
@@ -325,7 +325,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(GET_PHYSICIANS.fulfilled, (state, action) => {
         state.physicians = action.payload;
-        console.log("state.physicians", action);
 
         state.isLoading = false;
         localStorage.setItem("patronCompany", JSON.stringify(action.payload));

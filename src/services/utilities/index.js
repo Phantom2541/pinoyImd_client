@@ -62,6 +62,7 @@ import gDrive from "./gDrive";
 // Clear's Cache
 import clearSiteData from "./clearSiteData";
 //EXCEL
+import EMR_RESULT_TO_PDF from "./export/pdf/emr";
 import VouchersToExcel from "./export/excel/vouchers";
 import MenusToExcel from "./export/excel/menus";
 import ResecoToExcel from "./export/excel/reseco";
@@ -81,10 +82,11 @@ const ENDPOINT = "http://localhost:5000";
 //old socket set up
 // const socket = io.connect(ENDPOINT);
 const socket = io(ENDPOINT, {
+  transports: ["websocket"],
   reconnection: true,
-  reconnectionAttempts: 5,
-  reconnectionDelay: 2000,
-  timeout: 10000,
+  reconnectionAttempts: Infinity,
+  reconnectionDelay: 1000,
+  timeout: 20000,
 });
 const PresetImage = (gender) => (gender ? Male : Female);
 
@@ -166,6 +168,7 @@ export {
   ResecoToExcel,
   //export to pdf
   MenusToPDF,
+  EMR_RESULT_TO_PDF,
   //Logo
   Logo,
 };

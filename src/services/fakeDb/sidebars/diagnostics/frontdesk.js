@@ -50,6 +50,7 @@ import {
 } from "../../../../components/images";
 import DrugTest from "../../../../pages/templates/drugTest";
 import SubExpired from "../../../../pages/templates/subExpired";
+import Stocks from "../../../../pages/platforms/frontdesk/market/stocks";
 
 const frontdesk = [
   {
@@ -236,7 +237,7 @@ const frontdesk = [
         name: "Stocks",
         path: "/merchandise/stocks",
         icon: "box",
-        // component: StocksComponent, // add your component here
+        component: Stocks,
       },
     ],
   },

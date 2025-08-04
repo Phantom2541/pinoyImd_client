@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   MDBCard,
   MDBCardBody,
@@ -15,14 +15,13 @@ import {
   BROWSE,
   RESET,
   SetFILTERED,
-  GET_DETAILS,
 } from "../../../../../services/redux/slices/assets/companies";
 import { GET_PHYSICIANS } from "../../../../../services/redux/slices/assets/branches";
 import Search from "../../../../../components/searchables/search";
 import "./style.css";
 
 export default function UnsetApply() {
-  const { token, maxPage } = useSelector(({ auth }) => auth),
+  const { token, maxPage, activePlatform } = useSelector(({ auth }) => auth),
     { collections, isLoading, filtered } = useSelector(
       ({ companies }) => companies
     ),
@@ -30,22 +29,26 @@ export default function UnsetApply() {
     [page, setPage] = useState(1),
     [totalPages, setTotalPages] = useState(1),
     dispatch = useDispatch();
-
   useEffect(() => {
     if (token) {
       dispatch(BROWSE({ token })); // 👈 Pass token as object if BROWSE expects it
     }
-    dispatch(GET_PHYSICIANS({ token }));
 
     return () => {
       dispatch(RESET());
     };
   }, [token, dispatch]);
 
-  // useEffect(() => {
-
-  //   return () => dispatch(RESET());
-  // }, [dispatch]);
+  useEffect(() => {
+    if (token)
+      dispatch(
+        GET_PHYSICIANS({
+          token,
+          key: { branchId: collections.branchId },
+        })
+      );
+    return () => dispatch(RESET());
+  }, [dispatch]);
 
   useEffect(() => {
     setCompanies(filtered);
