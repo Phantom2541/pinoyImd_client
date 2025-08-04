@@ -292,31 +292,43 @@
   transition: all 0.3s ease;
 }
 
+.description-info-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 50px;
+}
+
 .description-back:hover {
   color: #1266f1;
 }
 
+.description-details {
+  width: 100%;
+}
+
 .description-image-wrapper {
-  width: 400px;
-  height: 400px;
+  width: 635px;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  background-color: green;
 }
 
 .description-image {
   object-fit: cover;
   width: 100%;
   height: 300px;
+  box-shadow: 0 0 7px rgb(0, 0, 0, 0.2);
+  margin: 0;
+  padding: 0;
 }
 
 .description-images {
   display: flex;
   flex-direction: row;
   gap: 10px;
-  width: 92.5px;
+  width: 72px;
   aspect-ratio: 1 / 1;
 }
 
@@ -325,8 +337,209 @@
   width: 100%;
   cursor: pointer;
   height: 100%;
+  box-shadow: 0 0 7px rgb(0, 0, 0, 0.2);
+  margin: 0;
+  padding: 0;
 }
 
 .description-images img:hover {
   outline: 2px solid #1266f1;
+}
+
+.description-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.description-ratingAndSold {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.description-rating,
+.description-sold {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+}
+
+.description-sold {
+  border-left: 1px solid #cccccc;
+}
+
+.description-rating span:first-child,
+.description-sold span:first-child {
+  font-size: 1rem;
+  font-weight: 400;
+  color: black;
+  border-bottom: 1px solid black;
+}
+
+.description-rating span:nth-child(2) {
+  font-size: 1rem;
+  color: #ffc107;
+}
+
+.description-sold span:nth-child(2) {
+  font-size: 1rem;
+  color: #cccccc;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+.description-price {
+  background-color: rgba(18, 102, 241, 0.1);
+  color: #1266f1;
+  font-size: 1.7rem;
+  font-weight: 500;
+  width: 100%;
+  padding: 17px 10px;
+  margin-top: 10px;
+}
+
+.description-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 15px;
+}
+
+.description-option-group {
+  display: flex;
+  align-items: first baseline;
+  gap: 16px;
+}
+
+.description-option-label {
+  width: 70px;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.description-option-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.description-option-buttons button {
+  padding: 4px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.description-option-buttons button:hover {
+  border-color: #1266f1;
+  color: #1266f1;
+}
+
+.description-quantity {
+  display: flex;
+  align-items: first baseline;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.description-quantity span:first-child {
+  width: 70px;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.description-quantity-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: Arial, sans-serif;
+}
+
+.description-quantity-box {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.description-quantity-btn {
+  background: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.2s ease;
+  transition: color 0.2s ease;
+}
+
+.description-quantity-btn:hover:not(:disabled) {
+  background: #f5f5f5;
+  color: #1266f1;
+}
+
+.description-quantity-btn:disabled {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.description-quantity-input {
+  width: 40px;
+  text-align: center;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.description-stock-text {
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+}
+
+.description-btnCartBuy {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 35px;
+}
+
+.description-btnAddtoCart {
+  all: unset;
+  cursor: pointer;
+  border: 1px solid #1266f1;
+  background-color: rgba(18, 102, 241, 0.1);
+  border-radius: 3px;
+  color: #1266f1;
+  padding: 14px 25px;
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+.description-btnBuy {
+  all: unset;
+  cursor: pointer;
+  background-color: #1266f1;
+  color: white;
+  padding: 5px 25px;
+  border-radius: 3px;
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: capitalize;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.description-btnBuy span:first-child {
+  font-size: 0.8rem;
+}
+
+.description-btnBuy span:nth-child(2) {
+  font-weight: 500;
 }

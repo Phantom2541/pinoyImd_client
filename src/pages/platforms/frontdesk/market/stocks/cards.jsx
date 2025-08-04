@@ -48,7 +48,7 @@ export default function Cards({ collections }) {
             onClick={() => setSelectedCard(item)} // ✅ dito siya magse-set
             style={{ cursor: "pointer" }}
           >
-            <img src={item.image} alt={item.title} />
+            <img src={item.image[0]} alt={item.title} />
             <div className="stock-cards-body">
               <div className="stock-cards-info">
                 <span className="stock-cards-title">{item.title}</span>
