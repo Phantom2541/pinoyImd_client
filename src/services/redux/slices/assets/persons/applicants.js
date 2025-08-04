@@ -33,7 +33,18 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
-
+export const SECRETARY = createAsyncThunk(
+  `${url}/secretary`,
+  ({ token, data }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/secretary`, token, data);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const USER = createAsyncThunk(
   `${url}/user`,
   ({ token, branchId, userId }, thunkAPI) => {
@@ -183,6 +194,29 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
+        state.message = action.error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(SECRETARY.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SECRETARY.fulfilled, (state, action) => {
+        const { payload, query } = action.payload;
+        const { branchId } = query;
+
+        if (branchId) {
+          state.collections = state.filtered = payload;
+        } else {
+          state.branches = payload.map(({ applicant, ...rest }) => rest);
+          state.collections = payload.flatMap(({ applicants }) => applicants);
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(SECRETARY.rejected, (state, action) => {
         state.message = action.error.message;
         state.isLoading = false;
       })
