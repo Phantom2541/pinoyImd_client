@@ -55,72 +55,79 @@ const LeveyJennings = ({ title }) => {
     );
   }, [filtered]);
 
-const printChart = () => {
-  if (chartRef.current) {
-    const chartCanvas = chartRef.current.canvas;
+  const printChart = () => {
+  window.open(
+      `/printout/chart`,
+      `${title} Logbook`,
+      "top=100px,left=100px,width=1050px,height=750px"
+    );
+  // if (chartRef.current) {
+  //   const chartCanvas = chartRef.current.canvas;
 
-    const tempCanvas = document.createElement("canvas");
-    tempCanvas.width = chartCanvas.width * 3;
-    tempCanvas.height = chartCanvas.height * 3;
-    const ctx = tempCanvas.getContext("2d");
+  //   const tempCanvas = document.createElement("canvas");
+  //   tempCanvas.width = chartCanvas.width * 3;
+  //   tempCanvas.height = chartCanvas.height * 3;
+  //   const ctx = tempCanvas.getContext("2d");
 
-    ctx.scale(3, 3);
-    ctx.drawImage(chartCanvas, 0, 0);
+  //   ctx.scale(3, 3);
+  //   ctx.drawImage(chartCanvas, 0, 0);
 
-    const chartImage = tempCanvas.toDataURL("image/png");
-    const printWindow = window.open("", "_blank");
+  //   const chartImage = tempCanvas.toDataURL("image/png");
+  //   const printWindow = window.open("", "_blank");
 
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print Chart</title>
-          <style>
-            @page {
-              size: A4 landscape;
-              margin: 0;
-            }
+  //   printWindow.document.write(`
+  //     <html>
+  //       <head>
+  //         <title>Print Chart</title>
+  //         <style>
+  //           @page {
+  //             size: A4 landscape;
+  //             margin: 0;
+  //           }
 
-            html, body {
-              margin: 0;
-              height: 100%;
-              overflow: hidden;
-              background: white;
-            }
+  //           html, body {
+  //             margin: 0;
+  //             height: 100%;
+  //             overflow: hidden;
+  //             background: white;
+  //           }
 
-            .chart-container {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-              padding: 50px;
-              box-sizing: border-box;
-            }
+  //           .chart-container {
+  //             display: flex;
+  //             justify-content: center;
+  //             align-items: center;
+  //             height: 100vh;
+  //             padding: 50px;
+  //             box-sizing: border-box;
+  //           }
 
-            img {
-              max-width: 100%;
-              max-height: 100%;
-              object-fit: contain;
-              page-break-inside: avoid;
-              break-inside: avoid;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="chart-container">
-            <img src="${chartImage}" />
-          </div>
-          <script>
-            window.onload = () => {
-              window.print();
-              window.onafterprint = () => window.close();
-            };
-          </script>
-        </body>
-      </html>
-    `);
+  //           img {
+  //             max-width: 100%;
+  //             max-height: 100%;
+  //             object-fit: contain;
+  //             page-break-inside: avoid;
+  //             break-inside: avoid;
+  //           }
+  //         </style>
+  //       </head>
+  //       <body>
+  //         <div class="chart-container">
+  //           <img src="${chartImage}" />
+  //         </div>
+  //         <script>
+  //           window.onload = () => {
+  //             window.print();
+  //             window.onafterprint = () => window.close();
+  //           };
+  //         </script>
+  //       </body>
+  //     </html>
+  //   `);
 
-    printWindow.document.close();
-  }
+
+
+  //   printWindow.document.close();
+  // }
 };
 
   const lineChartData = {

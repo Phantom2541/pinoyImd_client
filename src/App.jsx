@@ -9,6 +9,7 @@ import { VALIDATEREFRESH } from "./services/redux/slices/assets/persons/auth";
 import {
   ClaimStub,
   ChemLog,
+  ChartPrintout,
   RequestForm,
   TempGraph,
   PersonnelPrintOut,
@@ -51,6 +52,7 @@ export default function App() {
       <Route path="/printout/FAQ" exact component={FAQ} />
       <Route path="/printout/claimstub" exact component={ClaimStub} />
       <Route path="/printout/request/form" exact component={RequestForm} />
+      <Route path="/printout/chart" exact component={ChartPrintout} />
       <Route
         path="/printout/request/outsource"
         exact

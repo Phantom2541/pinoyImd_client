@@ -20,8 +20,15 @@ const Header = () => {
   //Initial CASHIER
   useEffect(() => {
     if (token && activePlatform?.branchId && auth._id) {
-      const date = new Date().toISOString().split("T")[0];
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const date = new Intl.DateTimeFormat("en-CA", {
+        timeZone: timezone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .format(new Date())
+      .replace(/\//g, "-");
 
       dispatch(
         CASHIER({
