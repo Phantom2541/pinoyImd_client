@@ -38,7 +38,7 @@ const Header = () => {
       ) : (
         <>
           <h5 className="ellipsis" style={{ fontWeight: 600 }}>
-            {formattedName(fullName, true)}
+            <u> {formattedName(fullName, true).toUpperCase()}</u>
           </h5>
           <h6 style={{ marginTop: "-0.5rem" }}>
             {getGenderIcon(isMale)} {getAge(dob)}

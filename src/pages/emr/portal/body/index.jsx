@@ -11,8 +11,9 @@ import {
   MDBNavLink,
   MDBNav,
   MDBNavItem,
+  MDBBtn,
 } from "mdbreact";
-import { formColor } from "../../../../services/utilities";
+import { EMR_RESULT_TO_PDF, formColor } from "../../../../services/utilities";
 import BodySwitcher from "./bodySwitcher";
 import { useDispatch, useSelector } from "react-redux";
 import CountDown from "./countDown";
@@ -90,10 +91,13 @@ const Body = () => {
 
   const form = diagnostic[activeType]?.form || activeType;
 
+  const handlePDF = () => {
+    EMR_RESULT_TO_PDF({ task, form, department: getDepartment() });
+  };
   return (
     <div className="mx-2">
       <Header />
-      <MDBNav tabs color="indigo" className="nav-justified m-0">
+      <MDBNav tabs color="indigo" className="nav-justified m-0 py-1">
         {tabs.map((tab) => (
           <MDBNavItem key={tab.id}>
             <MDBNavLink
@@ -117,24 +121,40 @@ const Body = () => {
             <div className="mt-3">
               {isResultAvailable && (
                 <>
-                  <div className="d-flex aling-items-center justify-content-between">
-                    <span className="mt-1" style={{ fontWeight: 400 }}>
-                      Sections Type:
-                    </span>
-                    <select
-                      className="form-control text-primary"
-                      style={{ width: "70%", height: "2rem" }}
-                      value={activeType}
-                      onChange={({ target }) =>
-                        dispatch(SetACTIVE_TYPE(target.value))
-                      }
+                  <div className="d-flex align-items-center justify-content-between w-100">
+                    <span
+                      className="text-nowrap mr-2"
+                      style={{ fontWeight: 400 }}
                     >
-                      {Object.keys(diagnostic)?.map((key) => (
-                        <option key={key} value={key}>
-                          {key}
-                        </option>
-                      ))}
-                    </select>
+                      Section Type:
+                    </span>
+                    <div className="w-100 d-flex align-items-center">
+                      <select
+                        className="form-control text-primary"
+                        style={{ height: "2rem" }}
+                        value={activeType}
+                        onChange={({ target }) =>
+                          dispatch(SetACTIVE_TYPE(target.value))
+                        }
+                      >
+                        {Object.keys(diagnostic)?.map((key) => (
+                          <option key={key} value={key}>
+                            {key}
+                          </option>
+                        ))}
+                      </select>
+                      <MDBBtn
+                        size="sm"
+                        color="success"
+                        outline
+                        rounded
+                        className="px-2"
+                        onClick={handlePDF}
+                        title="Download PDF"
+                      >
+                        <MDBIcon icon="file-pdf" />
+                      </MDBBtn>
+                    </div>
                   </div>
                   <div className="my-4">
                     <MDBAlert

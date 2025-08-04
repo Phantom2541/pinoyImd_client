@@ -1,4 +1,3 @@
-import React from "react";
 import Physical from "./physical";
 import Chemical from "./chemical";
 import Microscopic from "./microscopic";

@@ -1,14 +1,6 @@
-import { QRCodeCanvas } from "qrcode.react";
-import {
-  billingAddress,
-  capitalize,
-  currency,
-  ENDPOINT,
-  mobile,
-} from "../../../../../services/utilities";
-import { Privileges, Services } from "../../../../../services/fakeDb";
+import { capitalize, currency } from "../../../../../services/utilities";
+import { Services } from "../../../../../services/fakeDb";
 import { MDBTable } from "mdbreact";
-import Header from "./header";
 import { useSelector } from "react-redux";
 
 const Hr = ({ className = "" }) => (
@@ -57,7 +49,7 @@ const Stub = ({ sale }) => {
         <thead>
           <tr>
             <th colSpan={2} className="py-0" style={{ fontSize: "17.5px" }}>
-              <h5 className="fw-bold"> Services</h5>
+              <h4 className="fw-bold"> Services</h4>
             </th>
           </tr>
         </thead>
