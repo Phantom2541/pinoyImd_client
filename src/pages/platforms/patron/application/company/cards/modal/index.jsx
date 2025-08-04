@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MDBBtn,
   MDBModal,
@@ -19,15 +19,13 @@ import {
 import { Policy } from "../../../../../../../services/fakeDb/index.js";
 import { UPLOAD } from "../../../../../../../services/redux/slices/assets/persons/auth.js";
 import Swal from "sweetalert2";
-import { GET_PHYSICIANS } from "../../../../../../../services/redux/slices/assets/branches.js";
-import { Physicians } from "../../../../../hr/index.js";
 
 export default function ApplicationModal({
   visibility,
   setVisibility,
   company,
 }) {
-  const { auth, token, activePlatform } = useSelector(({ auth }) => auth),
+  const { auth, token } = useSelector(({ auth }) => auth),
     { collections, formSubmitted, isSuccess } = useSelector(
       ({ personnels }) => personnels
     ),
@@ -36,10 +34,7 @@ export default function ApplicationModal({
     [file201Preview, setFile201Preview] = useState({}),
     [department, setDepartment] = useState({}),
     [positions, setPositions] = useState([]),
-    [assignedDoctor, setAssignedDoctor] = useState({ _id: "", name: "" }),
     dispatch = useDispatch();
-  console.log("doctor", doctor);
-  console.log("application", collections);
 
   const showDoctorSelect =
     department === "Clinic" &&
@@ -60,7 +55,6 @@ export default function ApplicationModal({
   }, [isSuccess, formSubmitted, setVisibility]);
 
   const filteredDoctor = doctor.find((d) => d._id === application.branchId);
-  console.log("filteredDoctor", filteredDoctor);
 
   useEffect(() => {
     if (visibility) {
@@ -85,14 +79,13 @@ export default function ApplicationModal({
   const handleToggle = () => setVisibility(!visibility);
 
   const handleDepartment = ({ value }) => {
-    console.log("value", value);
     setDepartment(value);
     setPositions(Policy.getPositionsByDepartmentName(value));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "physicians") {
+    if (name === "physician") {
       setApplication({
         ...application,
         physician: value,
@@ -105,7 +98,6 @@ export default function ApplicationModal({
       });
     }
   };
-  console.log("application", application);
 
   const handleFile = (e, name) => {
     const file = e.target.files[0];
@@ -176,7 +168,7 @@ export default function ApplicationModal({
             hasResume: Resume ? true : false,
             hasLetter: AppLetter ? true : false,
           },
-          physician: [assignedDoctor._id],
+          physicians: application.physicians,
           contract: {
             designation: application.designation,
             hos: 8,
@@ -341,7 +333,7 @@ export default function ApplicationModal({
                       : properFullname(doc.ghostName);
 
                     return (
-                      <option value={doc.user._id} key={i}>
+                      <option value={doc.user?._id} key={i}>
                         {displayName}
                       </option>
                     );
