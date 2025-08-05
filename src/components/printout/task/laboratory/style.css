@@ -42,6 +42,19 @@
     page-break-inside: avoid;
     break-inside: avoid;
     margin-top: auto;
+    /* position: absolute; */
+    bottom: 0;
+    /* left: 0; */
+  }
+
+  table,
+  th,
+  td {
+    font-size: 0.95rem !important;
+  }
+
+  .laboratory-remarks {
+    border-bottom: 1px solid black;
   }
 
   .laboratory-remarks,

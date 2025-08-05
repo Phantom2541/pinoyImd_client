@@ -40,8 +40,23 @@ export default function Diffcount({ activeTab = "", setActiveTab = () => {} }) {
       diff = { ...dc };
 
     diff[name] = _value;
+    // Calculate total
+    const total = Object.values(diff).reduce(
+      (sum, val) => sum + (parseInt(val) || 0),
+      0
+    );
+    // Dispatch state update
     dispatch(SetTASK({ form: task?.form, task: { ...task, dc: diff } }));
     dispatch(SetPARAMS({ key: "dc", value: diff }));
+
+    // Check if total reached 100
+    if (total >= 100) {
+      if (task?.packages?.includes(59)) {
+        setActiveTab("PLATELET");
+      } else {
+        setActiveTab("RCI");
+      }
+    }
   };
 
   const handleKeyDown = (e, index) => {
