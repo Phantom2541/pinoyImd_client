@@ -9,26 +9,27 @@ import {
   MDBBtnGroup,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { PresetImage, isJpegOrJpgFile } from "../../services/utilities";
+import { PresetImage } from "../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { IMAGE, UPLOAD } from "../../services/redux/slices/assets/persons/auth";
 import { ImageCropper } from "../../../src/components/images";
 
 export default function ProfileImage() {
-  const [file, setFile] = useState(null),
-    { auth, token, progressBar, image } = useSelector(({ auth }) => auth),
+  const { auth, token, progressBar, image } = useSelector(({ auth }) => auth),
     dispatch = useDispatch(),
     { addToast } = useToasts();
 
-  useEffect(() => {
-    if (file && progressBar === 100) {
-      dispatch(IMAGE(URL.createObjectURL(file)));
-      setFile(null);
-      addToast("Image Updated Successfully.", {
-        appearance: "success",
-      });
-    }
-  }, [progressBar, file, dispatch, addToast]);
+  console.log(image);
+
+  // useEffect(() => {
+  //   if (file && progressBar === 100) {
+  //     dispatch(IMAGE(URL.createObjectURL(file)));
+  //     setFile(null);
+  //     addToast("Image Updated Successfully.", {
+  //       appearance: "success",
+  //     });
+  //   }
+  // }, [progressBar, file, dispatch, addToast]);
 
   const handleError = (message) =>
     addToast(message, {
@@ -38,8 +39,7 @@ export default function ProfileImage() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
-    if (!isJpegOrJpgFile(file))
-      return handleError("Please select a JPG image.");
+    if (!file) return;
 
     const reader = new FileReader();
 
@@ -51,43 +51,62 @@ export default function ProfileImage() {
         if (this.width !== this.height)
           return handleError("Image must be square.");
 
-        setFile(file);
+        // Convert base64 to blob, then to file
+        const byteString = atob(e.target.result.split(",")[1]);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+        }
 
+        const newBlob = new Blob([ab], { type: "image/jpeg" });
+        const newFile = new File([newBlob], "profile.jpg", {
+          type: "image/jpeg",
+        });
+
+        const formData = new FormData();
+        formData.append("file", newFile);
+        formData.append("folder", `users/${auth.email}`);
+        formData.append("filename", "profile");
+
+        // Upload using the same logic
         dispatch(
           UPLOAD({
-            data: {
-              path: `${auth.email}`,
-              base64: reader.result.split(",")[1],
-              name: "profile.jpg",
-            },
+            data: formData,
             token,
           })
-        );
+        ).then((action) => {
+          const freshUrl = `${action.payload.url}?v=${Date.now()}`;
+          dispatch(IMAGE(freshUrl));
+        });
       };
     };
 
     reader.readAsDataURL(file);
   };
 
-  const handleUpload = (base64) => {
-    const byteString = atob(base64.split(",")[1]);
+  const handleUpload = (img) => {
+    const byteString = atob(img.split(",")[1]);
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
     for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
-    const newBlob = new Blob([ab], { type: "image/jpeg" });
-    setFile(newBlob);
+    const newBlob = new Blob([ab], { type: "image/png" });
+    const file = new File([newBlob], "profile.png", { type: "image/png" });
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", `users/${auth.email}`);
+    formData.append("filename", "profile");
     dispatch(
       UPLOAD({
-        data: {
-          path: `users/${auth.email}`,
-          base64: base64.split(",")[1],
-          name: "profile.jpg",
-        },
+        data: formData,
         token,
       })
-    );
+    ).then((action) => {
+      const freshUrl = `${action.payload.url}?v=${Date.now()}`;
+      dispatch(IMAGE(freshUrl));
+    });
   };
 
   return (
@@ -120,7 +139,7 @@ export default function ProfileImage() {
           </p>
           <MDBBtnGroup>
             <ImageCropper
-              accept="image/jpeg, image/jpg"
+              accept="image/jpg, image/png, image/jpeg"
               handleUpload={handleUpload}
               isUpload={true}
             />
@@ -136,7 +155,7 @@ export default function ProfileImage() {
             onChange={handleImageChange}
             type="file"
             className="d-none"
-            accept="image/jpeg, image/jpg"
+            accept="image/jpg, image/png"
           />
         </MDBCardBody>
       </MDBCard>

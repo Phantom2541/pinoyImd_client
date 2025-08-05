@@ -2,7 +2,11 @@ import { useState } from "react";
 import { useReactFlow, Handle, Position } from "react-flow-renderer";
 import Swal from "sweetalert2";
 import Default from "./../../../../assets/iMD.png";
-import { ENDPOINT, properFullname } from "../../../../services/utilities";
+import {
+  CLOUDINARY_ENDPOINT,
+  ENDPOINT,
+  properFullname,
+} from "../../../../services/utilities";
 import { MDBIcon } from "mdbreact";
 import { v4 as uuidv4 } from "uuid";
 
@@ -126,7 +130,9 @@ export default function CustomNode({ data, id, setAvailableNodes }) {
         </button>
         <img
           className="orgChart-innerCard-image"
-          src={profile}
+          src={`${CLOUDINARY_ENDPOINT}/users/${
+            eid?.email
+          }/profile.png?v=${Date.now()}`}
           alt="profile"
           onError={(e) => {
             e.target.onerror = null;

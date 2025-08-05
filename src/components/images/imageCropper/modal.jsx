@@ -9,6 +9,8 @@ import {
 } from "mdbreact";
 import Cropper from "react-easy-crop";
 import { generateDownload, resizeImageToCropSize } from "./cropImage";
+import Spinner from "../../spinner";
+import { useSelector } from "react-redux";
 
 export default function Modal({
   show,
@@ -21,7 +23,8 @@ export default function Modal({
   handleUpload,
   cropSize = { width: 170, height: 170 },
 }) {
-  const [localImg, setLocalImg] = useState(null),
+  const { formSubmitted, isSuccess } = useSelector(({ auth }) => auth),
+    [localImg, setLocalImg] = useState(null),
     [croppedArea, setCroppedArea] = useState(null),
     [crop, setCrop] = useState({ x: 0, y: 0 }),
     [zoom, setZoom] = useState(1),
@@ -59,12 +62,18 @@ export default function Modal({
     fetchData();
   }, [fitImg, img, cropSize]);
 
+  useEffect(() => {
+    if (show && !formSubmitted && isSuccess) {
+      toggle();
+    }
+  }, [formSubmitted, isSuccess, show, toggle]);
+
   const handleDownload = async () => {
     const result = await generateDownload(localImg, ext, croppedArea, isUpload);
     if (isUpload) {
       handleUpload(result);
     }
-    toggle();
+    // toggle();
   };
 
   const onCropComplete = (_, croppedAreaPixels) => {
@@ -139,8 +148,14 @@ export default function Modal({
           <MDBRangeInput min={1} max={3} value={zoom} getValue={setZoom} />
         )} */}
         <div className="text-center">
-          <MDBBtn onClick={handleDownload} color="primary" rounded>
-            {isUpload ? "Upload" : "Download"}
+          <MDBBtn
+            onClick={handleDownload}
+            color="primary"
+            rounded
+            disabled={formSubmitted}
+          >
+            {isUpload ? "Upload" : "Download"}{" "}
+            <Spinner formSubmitted={formSubmitted} />
           </MDBBtn>
         </div>
       </MDBModalBody>

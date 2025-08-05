@@ -7,7 +7,12 @@ import {
   RESET,
 } from "../../../.././../services/redux/slices/assets/persons/heads";
 import { useToasts } from "react-toast-notifications";
-import { fullName, ENDPOINT } from "../../../../../services/utilities";
+import {
+  fullName,
+  ENDPOINT,
+  CLOUDINARY_ENDPOINT,
+  buildImageForm,
+} from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
@@ -38,8 +43,7 @@ export default function Body() {
   const dispatch = useDispatch();
   const [imageErrors, setImageErrors] = useState({});
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
-
-  console.log("savedImage", savedImage);
+  const [heads, setHeads] = useState([]);
 
   useEffect(() => {
     if (message) {
@@ -49,39 +53,41 @@ export default function Body() {
     }
   }, [isSuccess, message, addToast]);
 
+  useEffect(() => {
+    setHeads(filtered);
+  }, [filtered]);
+
   const handleSignature = (e, email) => {
     const file = e.target.files[0];
-
     if (!file) return;
 
     if (file.type === "image/png") {
       const reader = new FileReader();
 
-      reader.onload = (e) => {
+      reader.onload = () => {
         file.signature = file.name;
+        const formData = buildImageForm(
+          reader.result,
+          `users/${email}`,
+          "signature"
+        );
 
         dispatch(
           UPLOAD({
-            data: {
-              path: `users/${email}`,
-              base64: reader.result.split(",")[1],
-              name: "signature.png",
-            },
+            data: formData,
             token,
           })
-        );
+        ).then(() => {
+          setImageErrors((prev) => ({ ...prev, [email]: false }));
+          setSignatureRefreshKey((prev) => ({
+            ...prev,
+            [email]: Date.now(),
+          }));
+          addToast("Signature updated!", { appearance: "success" });
+        });
       };
 
       reader.readAsDataURL(file);
-
-      setTimeout(() => {
-        setImageErrors((prev) => ({ ...prev, [email]: false }));
-        setSignatureRefreshKey((prev) => ({
-          ...prev,
-          [email]: (prev[email] || 0) + 1,
-        }));
-        addToast("Signature updated!", { appearance: "success" });
-      }, 500);
 
       e.target.value = null; // ✅ Reset only after success
     } else {
@@ -107,11 +113,6 @@ export default function Body() {
       }
     });
   };
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
-  const paginatedHeads = filtered.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   const handlePageChange = (direction) => {
     setAnimateClass("fade-out");
@@ -142,8 +143,11 @@ export default function Body() {
     }
   };
 
-  const handleImageError = (email) =>
+  const handleImageError = (email) => {
+    if (imageErrors.hasOwnProperty(email))
+      return setImageErrors((prev) => ({ ...prev }));
     setImageErrors((prev) => ({ ...prev, [email]: true }));
+  };
 
   const handleImageChange = (file, imageUrl) => {
     setSavedImage(imageUrl);
@@ -173,6 +177,11 @@ export default function Body() {
     return sections;
   };
 
+  const totalPages = Math.ceil(heads.length / itemsPerPage);
+  const paginatedHeads = heads.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   return (
     <div className="signatories-section">
       <div className={`signatories-card-container mt-4 ${animateClass}`}>
@@ -245,12 +254,13 @@ export default function Body() {
                 <div className="signatories-card-signature-container">
                   {!imageErrors[email] ? (
                     <img
-                      onClick={(e) => {
+                      key={Date.now()}
+                      onClick={() => {
                         document.getElementById(`file-upload-${email}`).click();
                       }}
                       alt="Signature"
-                      src={`${ENDPOINT}/public/users/${email}/signature.png?key=${
-                        signatureRefreshKey[email] || 0
+                      src={`${CLOUDINARY_ENDPOINT}/users/${email}/signature.png?v=${
+                        signatureRefreshKey[email] || Date.now()
                       }`}
                       onError={() => handleImageError(email)}
                       className="signatories-card-signature"
@@ -280,8 +290,8 @@ export default function Body() {
                   preValue={user._id}
                   collections={[
                     ...personnels.map(({ user }) => ({
-                      userId: user._id,
-                      text: fullName(user.fullName),
+                      userId: user?._id,
+                      text: fullName(user?.fullName),
                     })),
                   ]}
                   fieldData={{

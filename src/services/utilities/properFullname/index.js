@@ -4,7 +4,13 @@ const properFullname = (fullname) => {
   if (typeof fullname !== "object" || !fullname.fname || !fullname.lname)
     return "-";
 
-  const { postnominal, fname, mname = "", lname, suffix = "" } = fullname;
+  const {
+    postnominal = "",
+    fname = "",
+    mname = "",
+    lname = "",
+    suffix = "",
+  } = fullname;
 
   let middleName = mname;
 
