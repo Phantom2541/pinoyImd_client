@@ -4,7 +4,7 @@ import Troupe from "./troupe";
 import Category from "./category";
 
 export default function Miscellaneous({ task, fontSize }) {
-  const { specimen, packages } = task;
+  const { specimen, packages, data } = task;
   const style = { fontSize: `${fontSize}rem` };
   console.log("packages :", packages);
   return (
@@ -15,7 +15,7 @@ export default function Miscellaneous({ task, fontSize }) {
         minHeight: "300px",
       }}
     >
-      {!packages.includes(146) && !packages.includes(11) && (
+      {!data.includes(146) && !data.includes(11) && (
         <label className="mt-2 ml-5" style={style}>
           <h6>
             Specimen :
@@ -28,15 +28,15 @@ export default function Miscellaneous({ task, fontSize }) {
         </label>
       )}
       <BodySwitcher task={task} fontSize={fontSize} />
-      {packages.includes(146) ? (
+      {data.includes(146) ? (
         <>
           <hr />
           <Category task={task} fontSize={fontSize} />
         </>
       ) : (
-        !packages.includes(66) && (
+        !data.includes(66) && (
           <>
-            {!packages.includes(11) && (
+            {!data.includes(11) && (
               <>
                 <hr />
                 <Troupe task={task} fontSize={fontSize} />
