@@ -33,7 +33,18 @@ export const BROWSE = createAsyncThunk(
     }
   }
 );
-
+export const SECRETARY = createAsyncThunk(
+  `${url}/secretary`,
+  ({ token, data }, thunkAPI) => {
+    try {
+      return axioKit.universal(`${url}/secretary`, token, data);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const USER = createAsyncThunk(
   `${url}/user`,
   ({ token, branchId, userId }, thunkAPI) => {
@@ -154,6 +165,16 @@ export const reduxSlice = createSlice({
     },
     SetFilteredApplicants: (state, { payload }) => {
       const { branchId, physicianId } = payload;
+
+      if (!branchId || !physicianId) {
+        state.filtered = [];
+        return;
+      }
+
+      // Optional debug log (pang-troubleshoot)
+      console.log("Filtering by:", branchId, physicianId);
+      console.log("Total applicants:", state.collections.length);
+
       state.filtered = state.collections.filter(
         (applicant) =>
           applicant.branchId === branchId &&
@@ -174,6 +195,31 @@ export const reduxSlice = createSlice({
         const { branchId } = query;
 
         if (branchId) {
+          state.collections = payload.flatMap(({ applicants }) => applicants);
+          state.filtered = state.collections;
+        } else {
+          state.branches = payload.map(({ applicant, ...rest }) => rest);
+          state.collections = payload.flatMap(({ applicants }) => applicants);
+          state.filtered = state.collections;
+        }
+
+        state.isLoading = false;
+      })
+      .addCase(BROWSE.rejected, (state, action) => {
+        state.message = action.error.message;
+        state.isLoading = false;
+      })
+
+      .addCase(SECRETARY.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(SECRETARY.fulfilled, (state, action) => {
+        const { payload, query } = action.payload;
+        const { branchId } = query;
+
+        if (branchId) {
           state.collections = state.filtered = payload;
         } else {
           state.branches = payload.map(({ applicant, ...rest }) => rest);
@@ -182,7 +228,7 @@ export const reduxSlice = createSlice({
 
         state.isLoading = false;
       })
-      .addCase(BROWSE.rejected, (state, action) => {
+      .addCase(SECRETARY.rejected, (state, action) => {
         state.message = action.error.message;
         state.isLoading = false;
       })
