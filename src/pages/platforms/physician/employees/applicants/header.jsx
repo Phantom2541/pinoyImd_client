@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import {
-  RESET,
-} from "../../../../../services/redux/slices/assets/persons/physicians";
+import { RESET } from "../../../../../services/redux/slices/assets/persons/physicians";
 import Branch from "../../../headquarter/dashboard/branch";
 import { BROWSE } from "../../../../../services/redux/slices/assets/persons/applicants";
 

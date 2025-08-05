@@ -93,36 +93,43 @@ export default function Collapsable({ branches, cid }) {
           return (
             <tr key={index}>
               <td>
-                <strong className="mr-1"> {++index}.</strong>
-                {isSelected && selected.key === "name" ? (
-                  <div
-                    style={{ width: "13rem" }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Input
-                      _key={"value"}
-                      className="mt-2 form-control form-control-sm"
-                      isSuccess={isSuccess}
-                      selected={selected}
-                      onChange={
-                        (key, val) => alert("hey you")
-                        // setSelected({ ...selected, [key]: val })
-                      }
-                      handleCheck={(key, val) => {
-                        // handleUpdate(_id)
-                      }}
-                    />
+                <div className="d-flex flex-column">
+                  <div className="d-flex align-items-baseline">
+                    <strong
+                      className="mr-2 mb-0"
+                      style={{ fontSize: "0.9rem" }}
+                    >
+                      {index + 1}.
+                    </strong>
+                    <div className="flex-grow-1">
+                      <EditableField
+                        title="Click to edit"
+                        width="13rem"
+                        type="string"
+                        keyForValue="name"
+                        fieldData={{
+                          _id,
+                          name,
+                        }}
+                        onSave={(data) =>
+                          handleUpdate({
+                            _id: data._id,
+                            key: "name",
+                            value: data.name,
+                          })
+                        }
+                        formSubmitted={formSubmitted}
+                        isSuccess={isSuccess}
+                      />
+                    </div>
                   </div>
-                ) : (
-                  <strong onClick={() => handleSelected({ _id, name })}>
-                    {name}
-                  </strong>
-                )}
-                {isMain && (
-                  <MDBBadge color="warning" className="ml-2">
-                    Main
-                  </MDBBadge>
-                )}
+
+                  {isMain && (
+                    <MDBBadge color="warning" className="mt-1 ml-4">
+                      Main
+                    </MDBBadge>
+                  )}
+                </div>
               </td>
 
               {/* displayname */}
@@ -148,30 +155,6 @@ export default function Collapsable({ branches, cid }) {
                   isSuccess={isSuccess}
                 />
               </td>
-
-              {/* <td>
-                {isSelected && selected.key === "displayname" ? (
-                  <div
-                    style={{ width: "13rem" }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Input
-                      _key={"value"}
-                      className="mt-2 form-control form-control-sm"
-                      isSuccess={isSuccess}
-                      selected={selected}
-                      onChange={(key, val) =>
-                        setSelected({ ...selected, [key]: val })
-                      }
-                      handleCheck={() => handleUpdate()}
-                    />
-                  </div>
-                ) : (
-                  <span onClick={() => handleSelected({ _id, displayname })}>
-                    {displayname || "N/A"}
-                  </span>
-                )}
-              </td> */}
 
               {/* abbr */}
               <td>
@@ -284,7 +267,31 @@ export default function Collapsable({ branches, cid }) {
                 />
               </td>
 
-              <td>{capitalize(billing) || "N/A"}</td>
+              {/* billing */}
+              <td>
+                <EditableSelect
+                  title="Click to edit"
+                  isEditable
+                  preValue={billing}
+                  collections={["semiannually", "annually"]}
+                  selectStyle={{ width: "13rem" }}
+                  keyForText="billing"
+                  keyForValue="billing"
+                  fieldData={{
+                    _id,
+                    billing,
+                  }}
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                  onSave={(data) =>
+                    handleUpdate({
+                      _id: data._id,
+                      key: "settings.billing",
+                      value: data.billing,
+                    })
+                  }
+                />
+              </td>
 
               <td>
                 {new Date(createdAt).toLocaleDateString("en-US", {
@@ -296,31 +303,31 @@ export default function Collapsable({ branches, cid }) {
 
               {/* isHiring */}
               <td>
-                {isSelected && selected.key === "isHiring" ? (
-                  <div
-                    style={{ width: "13rem" }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Select
-                      keys={"status"}
-                      collections={["True", "False"]}
-                      className="mt-2 form-control form-control-sm"
-                      isSuccess={isSuccess}
-                      selected={selected}
-                      onChange={(key, value) =>
-                        setSelected({ ...selected, value, key })
-                      }
-                      handleCheck={() => handleUpdate()}
-                      soloUpdate={true}
-                    />
-                  </div>
-                ) : (
-                  <span onClick={() => handleSelected({ _id, isHiring })}>
-                    {isHiring ? "Yes" : "No"}
-                  </span>
-                )}
+                <EditableSelect
+                  title="Click to edit"
+                  isEditable
+                  preValue={isHiring ? "Yes" : "No"} // 👈 show "Yes"/"No" in the UI
+                  collections={["Yes", "No"]} // 👈 let user choose
+                  selectStyle={{ width: "13rem" }}
+                  keyForText="isHiring"
+                  keyForValue="isHiring"
+                  fieldData={{
+                    _id,
+                    isHiring: isHiring ? "Yes" : "No", // 👈 pass readable string
+                  }}
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                  onSave={(data) =>
+                    handleUpdate({
+                      _id: data._id,
+                      key: "isHiring",
+                      value: data.isHiring === "Yes", // 👈 convert back to boolean
+                    })
+                  }
+                />
               </td>
 
+              {/* ao */}
               <td>{fullName(branch?.ao?.fullName)}</td>
               <td></td>
             </tr>
