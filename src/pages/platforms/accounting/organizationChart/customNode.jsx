@@ -130,9 +130,7 @@ export default function CustomNode({ data, id, setAvailableNodes }) {
         </button>
         <img
           className="orgChart-innerCard-image"
-          src={`${CLOUDINARY_ENDPOINT}/users/${
-            eid?.email
-          }/profile.png?v=${Date.now()}`}
+          src={`${CLOUDINARY_ENDPOINT}/users/${eid?.email}/profile.png`}
           alt="profile"
           onError={(e) => {
             e.target.onerror = null;
