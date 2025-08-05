@@ -93,7 +93,6 @@ export default function Modal() {
       })
     );
   };
-  console.log("form", form);
 
   return (
     <MDBModal size="lg" isOpen={show} toggle={toggle} backdrop>

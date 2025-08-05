@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
-  SECRETARYAPPLICANTS,
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
 import Branch from "../../../headquarter/dashboard/branch";
@@ -10,7 +9,7 @@ import { BROWSE } from "../../../../../services/redux/slices/assets/persons/appl
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
-    { collections } = useSelector(({ physicians }) => physicians),
+    { collections } = useSelector(({ applicants }) => applicants),
     dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,7 +17,7 @@ const Header = () => {
       dispatch(
         BROWSE({
           data: {
-            // physicianId: auth._id,
+            physicianId: auth._id,
             branchId: activePlatform.branchId,
           },
           token,

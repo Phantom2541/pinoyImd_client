@@ -325,7 +325,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(GET_PHYSICIANS.fulfilled, (state, action) => {
         state.physicians = action.payload;
-        console.log("state.physicians", state.physicians);
 
         state.isLoading = false;
         localStorage.setItem("patronCompany", JSON.stringify(action.payload));

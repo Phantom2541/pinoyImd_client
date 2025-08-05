@@ -62,6 +62,7 @@ import gDrive from "./gDrive";
 // Clear's Cache
 import clearSiteData from "./clearSiteData";
 //EXCEL
+import EMR_RESULT_TO_PDF from "./export/pdf/emr";
 import VouchersToExcel from "./export/excel/vouchers";
 import MenusToExcel from "./export/excel/menus";
 import ResecoToExcel from "./export/excel/reseco";
@@ -167,6 +168,7 @@ export {
   ResecoToExcel,
   //export to pdf
   MenusToPDF,
+  EMR_RESULT_TO_PDF,
   //Logo
   Logo,
 };

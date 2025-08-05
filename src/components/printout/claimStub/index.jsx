@@ -26,8 +26,19 @@ const Hr = ({ className = "" }) => (
 const Text = ({ title = "", value = "", className = "", fontSize = "" }) => {
   return (
     <div className={`d-flex justify-content-between ${className}`}>
-      <span>{title}</span>
-      <span style={{ fontSize }}>{value}</span>
+      <span className="mr-2">{title}:</span>
+      <span
+        style={{
+          fontSize,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          display: "inline-block",
+          maxWidth: "100%", // or any fixed width like '200px'
+        }}
+      >
+        {value}
+      </span>
     </div>
   );
 };
@@ -69,7 +80,11 @@ const Stub = ({ sale, companyId }) => {
       <Text
         className="mt-2"
         title="Name"
-        value={capitalize(`${fullName.fname || ""} ${fullName.lname || ""}`)}
+        value={String(
+          `${fullName.fname || ""} ${
+            String(`${fullName.mname.charAt(0)}. `) || ""
+          }  ${fullName.lname || ""}`
+        ).toUpperCase()}
       />
       {!verified && (
         <Text title="Email" value={email} isAddress fontSize="0.8rem" />

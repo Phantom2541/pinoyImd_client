@@ -17,7 +17,6 @@ import {
 } from "mdbreact";
 import "./style.css";
 import Copyrights from "../../components/footer";
-import Register from "./register";
 import ContactUs from "./contact";
 import Login from "./login";
 import Description from "./description";
@@ -28,7 +27,7 @@ import AboutUs from "./aboutUs";
 import Affliated from "./affliated";
 import Gallery from "./gallery";
 import SlideShow from "./slideShow";
-
+import { Helmet } from "react-helmet";
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -95,6 +94,25 @@ export default class Home extends React.Component {
   render() {
     return (
       <div id="landing">
+        <Helmet>
+          <title>
+            Pinoy iMD - Filipino EHR, HIMS & Medical Diagnostics Software
+          </title>
+          <meta
+            name="description"
+            content="Pinoy iMD is a Filipino-developed EHR, LIS, and clinic management system designed for diagnostic laboratories, mobile clinics, and healthcare providers in the Philippines."
+          />
+          <meta
+            name="keywords"
+            content="EHR Philippines, LIS software, Filipino clinic system, medical diagnostics, hospital information management system, Pinoy iMD, DOH compliant LIS"
+          />
+          <meta name="robots" content="index, follow" />
+          <meta
+            name="google-site-verification"
+            content="google8a375c824ecf58f7"
+          />
+        </Helmet>
+
         <div className="homePage-topbar">
           <div
             className={`homePage-topbar-animation ${
@@ -311,7 +329,7 @@ export default class Home extends React.Component {
                       className="white-text p-2 m-2"
                     />
                   </li>
-                  <li
+                  {/* <li
                     className="list-inline-item cursor-pointer"
                     onClick={() =>
                       window.open(
@@ -326,7 +344,7 @@ export default class Home extends React.Component {
                       size="2x"
                       className="white-text p-2 m-2"
                     />
-                  </li>
+                  </li> */}
                 </ul>
               </MDBCol>
             </MDBRow>
