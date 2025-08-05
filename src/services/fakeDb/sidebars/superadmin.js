@@ -1,3 +1,4 @@
+import Dashboard from "../../../pages/platforms/SuperAdmin/dashboard/index.jsx";
 import Companies from "../../../pages/platforms/SuperAdmin/companies";
 import HealthCard from "../../../pages/platforms/SuperAdmin/healthCard";
 import Products from "../../../pages/platforms/frontdesk/market/products";
@@ -5,6 +6,13 @@ import machines from "../../../pages/platforms/frontdesk/market/machines";
 import generics from "../../../pages/platforms/frontdesk/market/generics";
 
 const admin = [
+  {
+    name: "Dashboard",
+    title: "Overview of platform activity.",
+    icon: "tachometer-alt",
+    path: "/dashboard",
+    component: Dashboard,
+  },
   {
     name: "Companies",
     path: "/super/admin/companies",
