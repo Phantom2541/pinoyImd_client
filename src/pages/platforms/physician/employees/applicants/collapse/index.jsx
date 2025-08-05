@@ -16,32 +16,18 @@ export default function CollapsableIndex() {
   const paginatedData = filtered.slice(startIndex, endIndex);
 
   const [activeId, setActiveId] = useState(-1);
-  const [didHoverId,] = useState(-1);
+  const [didHoverId] = useState(-1);
 
   const renderStatusBadge = (status, interviewDate) => {
-    let finalStatus = status;
-
-    // If no interview date and not hired or denied → mark as pending
-    if (!interviewDate && status !== "hired" && status !== "denied") {
-      finalStatus = "pending";
+    if (status === "denied") {
+      return <span className="badge badge-danger">denied</span>;
     }
 
-    let className = "badge";
-    switch (finalStatus?.toLowerCase()) {
-      case "hired":
-        className += " badge-success";
-        break;
-      case "denied":
-        className += " badge-danger";
-        break;
-      case "pending":
-        className += " badge-warning";
-        break;
-      default:
-        className += " badge-light";
+    if (!interviewDate && status !== "denied") {
+      return <span className="badge badge-warning">pending</span>;
     }
 
-    return <span className={className}>{finalStatus}</span>;
+    return null;
   };
 
   return (
@@ -51,6 +37,7 @@ export default function CollapsableIndex() {
           <tr>
             <th>Name</th>
             <th>Application Date</th>
+            <th>Interview Date</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -77,6 +64,15 @@ export default function CollapsableIndex() {
                       minute: "numeric",
                       hour12: true,
                     })}
+                  </td>
+                  <td>
+                    {item.interviewDate
+                      ? new Date(item.interviewDate).toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : ""}
                   </td>
                   <td>{renderStatusBadge(item.status, item.interviewDate)}</td>
                   <td>

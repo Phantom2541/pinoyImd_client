@@ -220,19 +220,26 @@ export const reduxSlice = createSlice({
       state.message = "";
     })
     .addCase(SECRETARY.fulfilled, (state, action) => {
-  const { payload, query = {} } = action.payload || {};
-  const { branchId } = query;
+      const { payload, query = {} } = action.payload || {};
+      console.log("payload", payload);
+      state.collections = (payload)
+      state.filtered =(payload)
+      console.log("state.collections", state.collections);
+      
+      
+  // const { branchId } = query;
 
-  if (branchId) {
-    state.collections = state.filtered = payload;
-  } else {
-    state.branches = Array.isArray(payload)
-      ? payload.map(({ applicant, ...rest }) => rest)
-      : [];
-    state.collections = Array.isArray(payload)
-      ? payload.flatMap(({ applicants }) => applicants)
-      : [];
-  }
+  // if (branchId) {
+  //   state.collections = state.filtered = payload;
+  // } else {
+  //   state.branches = Array.isArray(payload)
+  //     ? payload.map(({ applicant, ...rest }) => rest)
+  //     : [];
+  //   state.collections = Array.isArray(payload)
+  //     ? payload.flatMap(({ applicants }) => applicants)
+  //     : [];
+  // }
+
 
   state.isLoading = false;
 })
