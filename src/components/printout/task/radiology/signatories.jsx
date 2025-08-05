@@ -1,4 +1,7 @@
-import { ENDPOINT, properFullname } from "../../../../services/utilities";
+import {
+  CLOUDINARY_ENDPOINT,
+  properFullname,
+} from "../../../../services/utilities";
 
 const Signature = ({ person, label, style = {}, withSignature }) => {
   return (
@@ -11,7 +14,9 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
             left: "50%",
             transform: "translate(-50%, -50%)",
           }}
-          src={`${ENDPOINT}/public/users/${person?.email}/signature.png`}
+          src={`${CLOUDINARY_ENDPOINT}users/${
+            person?.email
+          }/signature.png?v=${Date.now()}`}
           alt={person?.email || "signature"}
         />
       )}

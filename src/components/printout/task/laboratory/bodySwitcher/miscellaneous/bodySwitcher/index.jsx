@@ -8,17 +8,17 @@ import Gloucose from "./hba1c";
 
 export default function BodySwitcher({ task, fontSize }) {
   const handleSwitch = () => {
-    const { packages = [] } = task;
+    const { data = [] } = task;
 
-    if (packages.includes(67) || packages.includes(84)) return Pregnancy;
+    if (data.includes(67) || data.includes(84)) return Pregnancy;
 
-    if (packages.includes(66)) return BloodTyping;
+    if (data.includes(66)) return BloodTyping;
 
-    if (packages.includes(146)) return Ogtt;
+    if (data.includes(146)) return Ogtt;
 
-    if (packages.includes(77) || packages.includes(120)) return Dengue;
+    if (data.includes(77) || data.includes(120)) return Dengue;
 
-    if (packages.includes(11)) return Gloucose;
+    if (data.includes(11)) return Gloucose;
 
     return Cluster;
   };

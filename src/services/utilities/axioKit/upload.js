@@ -12,6 +12,7 @@ const upload = async (data, token, onUploadProgress) =>
     .post("assets/persons/auth/upload", data, {
       headers: {
         Authorization: `QTracy ${token}`,
+        "Content-Type": "multipart/form-data",
       },
       onUploadProgress,
     })

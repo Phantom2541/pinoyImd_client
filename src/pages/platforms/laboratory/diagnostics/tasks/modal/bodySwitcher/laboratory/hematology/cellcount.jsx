@@ -28,6 +28,7 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
       }, 400);
     }
   }, [showModal, activeTab]);
+
   const handleChange = (e) => {
     const { name, value } = e.target,
       _name = Number(name),
@@ -70,6 +71,11 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
             Preferences[selected.customerId.isMale ? "Male" : "Female"][
               Abbreviation[index]
             ];
+          let color = "";
+          if (!isNaN(cell)) {
+            if (cell < lo) color = "blue";
+            else if (cell > hi) color = "red";
+          }
 
           return (
             <tr key={`cell-${index}`}>
@@ -77,21 +83,22 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
               <td className="py-1">
                 <input
                   type="number"
-                  ref={(el) => (inputRefs.current[index] = el)}
-                  style={{
-                    color: cell
-                      ? cell < lo
-                        ? "blue"
-                        : cell > hi
-                        ? "red"
-                        : ""
-                      : "",
+                  ref={(el) => {
+                    inputRefs.current[index] = el;
+
+                    if (el && activeTab === "CELL COUNT") {
+                      setTimeout(() => {
+                        el.focus();
+                        el.select();
+                      }, 0); // immediate after current call stack
+                    }
                   }}
+                  style={{ color }}
                   name={index}
                   value={String(cell)}
                   onChange={handleChange}
                   onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-100 text-center fw-bold"
+                  className="sectInput w-100 text-center fw-bold"
                 />
               </td>
               <td className="py-1">

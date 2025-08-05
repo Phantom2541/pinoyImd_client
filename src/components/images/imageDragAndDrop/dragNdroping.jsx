@@ -24,6 +24,7 @@ const ImageDragAndDrop = ({
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   const [rawImage, setRawImage] = useState(null);
+  const [croppedBlob, setCroppedBlob] = useState(null); // 💡 store cropped blob
   const [showCropper, setShowCropper] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -65,12 +66,16 @@ const ImageDragAndDrop = ({
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+
+    // Reset file input so same file can be selected again
+    e.target.value = null;
+
     if (!file || !file.type.startsWith("image/")) {
       addToast("Please upload a valid image file.", { appearance: "error" });
       return;
     }
 
-    setFileName(`${setImgName}.jpg`); // force jpg filename
+    setFileName(`${setImgName}.jpg`);
     readImageFile(file);
   };
 
@@ -89,34 +94,65 @@ const ImageDragAndDrop = ({
     setCroppedAreaPixels(croppedPixels);
   };
 
+  // ✅ Only crop here
   const handleCropDone = async () => {
-    const blob = await getCroppedImg(rawImage, croppedAreaPixels);
-    const previewUrl = URL.createObjectURL(blob);
-    setPreview(previewUrl);
-    setShowCropper(false);
-    savedImg?.(null, previewUrl);
+    try {
+      const blob = await getCroppedImg(rawImage, croppedAreaPixels);
+      const previewUrl = URL.createObjectURL(blob);
+      setPreview(previewUrl);
+      setCroppedBlob(blob); // Save blob for upload later
+      setShowCropper(false);
+      setIsAccepted(false);
+      savedImg?.(null, previewUrl);
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64 = reader.result.split(",")[1];
-      const fileName = `${setImgName}.jpg`;
-
-      dispatch(
-        UPLOAD({
-          data: {
-            path: `users/${setImgEmail}`,
-            base64,
-            name: fileName,
-          },
-          token,
-        })
-      );
-      addToast("Cropped profile image uploaded!", {
-        appearance: "success",
+      addToast("✅ Image cropped successfully!", {
+        appearance: "info",
       });
-    };
+    } catch (err) {
+      addToast("❌ Error cropping image.", {
+        appearance: "error",
+      });
+    }
+  };
 
-    reader.readAsDataURL(blob);
+  // ✅ Upload only when user accepts
+  const handleUploadOnly = async () => {
+    if (!croppedBlob) {
+      addToast("⚠️ No cropped image to upload.", {
+        appearance: "warning",
+      });
+      return;
+    }
+
+    try {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64 = reader.result.split(",")[1];
+        const fileName = `${setImgName}.jpg`;
+
+        await dispatch(
+          UPLOAD({
+            data: {
+              path: `users/${setImgEmail}`,
+              base64,
+              name: fileName,
+            },
+            token,
+          })
+        );
+
+        setIsAccepted(true);
+        addToast("✅ Cropped profile image uploaded!", {
+          appearance: "success",
+        });
+      };
+
+      reader.readAsDataURL(croppedBlob);
+    } catch (err) {
+      addToast("❌ Failed to upload cropped image.", {
+        appearance: "error",
+      });
+    }
   };
 
   const handleRemove = () => {
@@ -124,6 +160,7 @@ const ImageDragAndDrop = ({
     setIsDefault(true);
     setIsAccepted(false);
     setRawImage(null);
+    setCroppedBlob(null);
     setShowCropper(false);
   };
 
@@ -161,8 +198,8 @@ const ImageDragAndDrop = ({
 
     return new Promise((resolve) => {
       canvas.toBlob((blob) => {
-        resolve(blob); // return blob instead of object URL
-      }, "image/jpeg"); // force JPEG MIME
+        resolve(blob);
+      }, "image/jpeg");
     });
   };
 
@@ -245,7 +282,7 @@ const ImageDragAndDrop = ({
             className="icon-accept"
             onClick={(e) => {
               e.stopPropagation();
-              setIsAccepted(true);
+              handleUploadOnly(); // ✅ upload manually
             }}
           />
           <MDBIcon
