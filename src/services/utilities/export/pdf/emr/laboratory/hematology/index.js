@@ -1,6 +1,5 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { ENDPOINT } from "../../../../..";
 import { Cellcount, Diffcount, Rci as RCI } from "../../../../../../fakeDb";
 import utils from "../utils";
 
