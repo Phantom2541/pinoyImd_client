@@ -7,6 +7,7 @@ import { Input, Select } from "../../../../../components/customizable";
 import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
 import { SetFILTERED } from "../../../../../services/redux/slices/assets/companies";
 import EditableSelect from "../../../../../components/customizable/editableSelect";
+import EditableField from "../../../../../components/customizable/editableField";
 // ... your existing imports remain the same
 export default function Collapsable({ branches, cid }) {
   const { token } = useSelector(({ auth }) => auth),
@@ -15,8 +16,18 @@ export default function Collapsable({ branches, cid }) {
     { collections } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();
 
-  const handleUpdate = (data) => {
-    const { _id, key, value } = data;
+  const handleUpdate = ({ _id, key, value }) => {
+    let data = { _id };
+
+    if (key?.includes(".")) {
+      // Handle nested update like settings.subscription
+      const keys = key.split(".");
+      const nested = keys.reduceRight((acc, curr) => ({ [curr]: acc }), value);
+      data = { ...data, ...nested };
+    } else {
+      // Flat update like category
+      data[key] = value;
+    }
 
     dispatch(UPDATE({ token, data })).then(({ payload }) => {
       const fbranch = payload.payload;
@@ -26,11 +37,12 @@ export default function Collapsable({ branches, cid }) {
       );
 
       const _collections = collections.map((company) =>
-        company?._id === cid ? { ...company, branches: _branches } : company
+        company._id === cid ? { ...company, branches: _branches } : company
       );
 
       dispatch(SetFILTERED(_collections));
     });
+
     setSelected({});
   };
 
@@ -50,16 +62,16 @@ export default function Collapsable({ branches, cid }) {
       <MDBTableHead>
         <tr>
           <th>Branch</th>
-          <th>displayname</th>
+          <th>Display Name</th>
           <th>Acronym</th>
           <th>Category</th>
           <th>Subscription</th>
-          <th>status</th>
-          <th>billing</th>
-          <th>startDate</th>
+          <th>Status</th>
+          <th>Billing</th>
+          <th>End Date</th>
           <th>Hiring</th>
           <th>AO</th>
-          <th>Action</th>
+          <th>Payor</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
@@ -115,6 +127,29 @@ export default function Collapsable({ branches, cid }) {
 
               {/* displayname */}
               <td>
+                <EditableField
+                  title="Click to edit"
+                  // className="form-control form-control-sm"
+                  width="13rem"
+                  type="string"
+                  keyForValue="displayname"
+                  fieldData={{
+                    _id,
+                    displayname,
+                  }}
+                  onSave={(data) =>
+                    handleUpdate({
+                      _id: data._id,
+                      key: "displayname",
+                      value: data.displayname,
+                    })
+                  }
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                />
+              </td>
+
+              {/* <td>
                 {isSelected && selected.key === "displayname" ? (
                   <div
                     style={{ width: "13rem" }}
@@ -136,38 +171,36 @@ export default function Collapsable({ branches, cid }) {
                     {displayname || "N/A"}
                   </span>
                 )}
-              </td>
+              </td> */}
 
               {/* abbr */}
               <td>
-                {isSelected && selected.key === "abbr" ? (
-                  <div
-                    style={{ width: "13rem" }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Input
-                      _key={"value"}
-                      className="mt-2 form-control form-control-sm"
-                      isSuccess={isSuccess}
-                      selected={selected}
-                      onChange={(key, val) =>
-                        setSelected({ ...selected, [key]: val })
-                      }
-                      handleCheck={() => handleUpdate()}
-                    />
-                  </div>
-                ) : (
-                  <span onClick={() => handleSelected({ _id, abbr })}>
-                    {abbr || "N/A"}
-                  </span>
-                )}
+                <EditableField
+                  title="Click to edit"
+                  // className="form-control form-control-sm"
+                  width="13rem"
+                  type="string"
+                  keyForValue="abbr"
+                  fieldData={{
+                    _id,
+                    abbr,
+                  }}
+                  onSave={(data) =>
+                    handleUpdate({
+                      _id: data._id,
+                      key: "abbr",
+                      value: data.abbr,
+                    })
+                  }
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                />
               </td>
 
               {/* category */}
               <td>
                 <EditableSelect
                   title="Click to edit"
-                  // classNameTxt="signatories-card-section"
                   isEditable
                   preValue={category}
                   collections={[
@@ -190,73 +223,65 @@ export default function Collapsable({ branches, cid }) {
                   formSubmitted={formSubmitted}
                   isSuccess={isSuccess}
                   onSave={(data) =>
-                    handleUpdate({ _id: data._id, category: data.category })
+                    handleUpdate({
+                      _id: data._id,
+                      key: "category",
+                      value: data.category,
+                    })
                   }
                 />
               </td>
 
               {/* subscription */}
               <td>
-                {isSelected && selected.key === "subscription" ? (
-                  <div
-                    style={{ width: "13rem" }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Select
-                      keys={"subscription"}
-                      collections={[
-                        "demo",
-                        "subscriber",
-                        "loyalty",
-                        "lifetime",
-                      ]}
-                      className="mt-2 form-control form-control-sm"
-                      isSuccess={isSuccess}
-                      selected={selected}
-                      onChange={(key, value) =>
-                        setSelected({ ...selected, value, key })
-                      }
-                      handleCheck={() => handleUpdate()}
-                      soloUpdate={true}
-                    />
-                  </div>
-                ) : (
-                  <span onClick={() => handleSelected({ _id, subscription })}>
-                    {capitalize(subscription) || "N/A"}
-                  </span>
-                )}
+                <EditableSelect
+                  title="Click to edit"
+                  isEditable
+                  preValue={subscription}
+                  collections={["demo", "subscriber", "loyalty", "lifetime"]}
+                  selectStyle={{ width: "13rem" }}
+                  keyForText="subscription"
+                  keyForValue="subscription"
+                  fieldData={{
+                    _id,
+                    subscription,
+                  }}
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                  onSave={(data) =>
+                    handleUpdate({
+                      _id: data._id,
+                      key: "settings.subscription",
+                      value: data.subscription,
+                    })
+                  }
+                />
               </td>
 
               {/* status */}
               <td>
-                {isSelected && selected.key === "status" ? (
-                  <div
-                    style={{ width: "13rem" }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Select
-                      keys={"status"}
-                      collections={[
-                        "Active",
-                        "Expired",
-                        "Suspended",
-                        "Cancelled",
-                      ]}
-                      className="mt-2 form-control form-control-sm"
-                      isSuccess={isSuccess}
-                      selected={selected}
-                      onChange={(key, value) =>
-                        setSelected({ ...selected, value, key })
-                      }
-                      handleCheck={() => handleUpdate()}
-                      soloUpdate={true}
-                    />
-                  </div>
-                ) : (
-                  <span onClick={() => handleSelected({ _id, status })}>
-                    {capitalize(status) || "N/A"}
-                  </span>
-                )}
+                <EditableSelect
+                  title="Click to edit"
+                  isEditable
+                  preValue={status}
+                  collections={["Active", "Expired", "Suspended", "Cancelled"]}
+                  selectStyle={{ width: "13rem" }}
+                  keyForText="status"
+                  keyForValue="status"
+                  fieldData={{
+                    _id,
+                    status,
+                  }}
+                  formSubmitted={formSubmitted}
+                  isSuccess={isSuccess}
+                  onSave={(data) =>
+                    handleUpdate({
+                      _id: data._id,
+                      key: "settings.status",
+                      value: data.status,
+                    })
+                  }
+                />
               </td>
 
               <td>{capitalize(billing) || "N/A"}</td>
