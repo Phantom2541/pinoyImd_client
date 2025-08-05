@@ -4,8 +4,7 @@ import { MDBView } from "mdbreact";
 import {
   RESET,
 } from "../../../../../services/redux/slices/assets/persons/physicians";
-import Branch from "../../../headquarter/dashboard/branch";
-import { BROWSE } from "../../../../../services/redux/slices/assets/persons/applicants";
+import { SECRETARY } from "../../../../../services/redux/slices/assets/persons/applicants";
 
 const Header = () => {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -13,14 +12,11 @@ const Header = () => {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token) {
+    if (token&& activePlatform?.branchId) {
       dispatch(
-        BROWSE({
-          data: {
-            physicianId: auth._id,
-            branchId: activePlatform.branchId,
+        SECRETARY({token, data: {branchId: activePlatform.branchId,
           },
-          token,
+        
         })
       );
     }
