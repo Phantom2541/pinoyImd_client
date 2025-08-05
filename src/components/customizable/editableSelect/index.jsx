@@ -230,9 +230,9 @@ export default function EditableSelect({
                       preValues,
                       preValue
                     )}
-                    value={String(value) || "--"}
+                    value={String(value) || "N/A"}
                   >
-                    {(isCapitalize ? capitalize(text) : text) || "--"}
+                    {(isCapitalize ? capitalize(text) : text) || "N/A"}
                   </MDBSelectOption>
                 );
               })}

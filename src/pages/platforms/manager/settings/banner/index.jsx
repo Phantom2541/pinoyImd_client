@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MDBAlert,
   MDBAnimation,
@@ -16,7 +16,12 @@ import {
   MDBView,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import { ENDPOINT, fullName, getAge } from "../../../../../services/utilities";
+import {
+  buildImageForm,
+  CLOUDINARY_ENDPOINT,
+  fullName,
+  getAge,
+} from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
   UPLOAD,
@@ -30,11 +35,11 @@ const array = new Array(5).fill().map((_, index) => index);
 const Banner = () => {
   const { auth, message, isSuccess } = useSelector(({ auth }) => auth);
   const { addToast } = useToasts();
-  const [preview, setPreview] = useState("");
   const { activePlatform, company, token } = useSelector(({ auth }) => auth);
+  const [dateNow, setDateNow] = useState(Date.now()); //Used to display the banner in real time.
   const [showImgCropper, setShowImgCropper] = useState(false);
   const dispatch = useDispatch();
-
+  const folder = `companies/${company.name}/${activePlatform?.branch?.name}`;
   useEffect(() => {
     setShowImgCropper(false);
     dispatch(RESET());
@@ -50,35 +55,16 @@ const Banner = () => {
   }, [isSuccess, message, addToast, dispatch]);
 
   const handleUpload = (base64) => {
-    const byteString = atob(base64.split(",")[1]);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    const newBlob = new Blob([ab], { type: "image/png" });
-
-    // Create an object URL and load the image to check dimensions
-    const objectUrl = URL.createObjectURL(newBlob);
-    const image = new Image();
-    image.onload = () => {
-      console.log("Image dimensions before upload:", image.width, image.height);
-      setPreview(objectUrl);
-    };
-    image.src = objectUrl;
-
+    const formData = buildImageForm(base64, folder, "banner");
     dispatch(
       UPLOAD({
-        data: {
-          path: `companies/${company.name}/${activePlatform?.branch?.name}`,
-          base64: base64.split(",")[1],
-          name: "banner.png",
-        },
+        data: formData,
         token,
       })
-    );
+    ).then(() => {
+      setDateNow(Date.now());
+    });
   };
-  console.log("company", activePlatform?.branch?.name);
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -101,10 +87,8 @@ const Banner = () => {
         <MDBCardBody>
           <MDBView hover={!showImgCropper}>
             <img
-              src={
-                preview ||
-                `${ENDPOINT}/public/companies/${company.name}/${activePlatform?.branch?.name}/banner.png`
-              }
+              key={dateNow}
+              src={`${CLOUDINARY_ENDPOINT}/${folder}/banner.png?v=${dateNow}`}
               className="img-fluid"
               alt={company?.name || "Default Banner"}
               onError={(e) => (e.target.src = FailedBanner)}

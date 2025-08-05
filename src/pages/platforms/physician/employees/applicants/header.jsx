@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import {
-  RESET,
-} from "../../../../../services/redux/slices/assets/persons/physicians";
+import { RESET } from "../../../../../services/redux/slices/assets/persons/physicians";
 import { SECRETARY } from "../../../../../services/redux/slices/assets/persons/applicants";
 
 const Header = () => {
@@ -12,12 +10,9 @@ const Header = () => {
     dispatch = useDispatch();
 
   useEffect(() => {
-    if (token&& activePlatform?.branchId) {
+    if (token && activePlatform?.branchId) {
       dispatch(
-        SECRETARY({token, data: {branchId: activePlatform.branchId,
-          },
-        
-        })
+        SECRETARY({ token, data: { branchId: activePlatform.branchId } })
       );
     }
 
