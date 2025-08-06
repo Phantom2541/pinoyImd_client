@@ -1,22 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { MDBIcon } from "mdbreact";
-import Description from "./desciption";
 
-export default function Cards({ collections }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCard, setSelectedCard] = useState(null); // <-- para sa description view
+export default function Cards({
+  collections,
+  currentPage,
+  onPageChange,
+  onCardClick,
+}) {
   const itemsPerPage = 12;
   const totalPages = Math.ceil(collections.length / itemsPerPage);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = collections.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
 
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
@@ -31,13 +27,6 @@ export default function Cards({ collections }) {
     }
   }
 
-  // ✅ Kapag may napiling card, Description view ang lalabas
-  if (selectedCard) {
-    return (
-      <Description card={selectedCard} onBack={() => setSelectedCard(null)} />
-    );
-  }
-
   return (
     <div className="stock-cards-wrapper">
       <div className="stock-cards-container">
@@ -45,7 +34,7 @@ export default function Cards({ collections }) {
           <div
             className="stock-cards"
             key={item.id}
-            onClick={() => setSelectedCard(item)} // ✅ dito siya magse-set
+            onClick={() => onCardClick(item)}
             style={{ cursor: "pointer" }}
           >
             <img src={item.image[0]} alt={item.title} />
@@ -61,12 +50,26 @@ export default function Cards({ collections }) {
                 <span className="stock-cards-sold">{item.sold} sold/month</span>
               </div>
             </div>
+
+            {/* ✅ Add to cart with stopPropagation */}
+            <button
+              className="stock-cards-btn"
+              onClick={(e) => {
+                e.stopPropagation(); // ← Prevent trigger of onCardClick
+                console.log("Add to cart:", item.title);
+              }}
+            >
+              <MDBIcon icon="cart" /> Add to Cart
+            </button>
           </div>
         ))}
       </div>
 
       <div className="stock-cards-pagination">
-        <button onClick={() => handlePageChange(currentPage - 1)}>
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
           <MDBIcon fas icon="angle-left" />
         </button>
 
@@ -79,14 +82,17 @@ export default function Cards({ collections }) {
             <button
               key={index}
               className={currentPage === num ? "active" : ""}
-              onClick={() => handlePageChange(num)}
+              onClick={() => onPageChange(num)}
             >
               {num}
             </button>
           )
         )}
 
-        <button onClick={() => handlePageChange(currentPage + 1)}>
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
           <MDBIcon fas icon="angle-right" />
         </button>
       </div>

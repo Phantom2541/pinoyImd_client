@@ -12,7 +12,10 @@ import { useToasts } from "react-toast-notifications";
 
 import CustomNode from "./customNode";
 import CustomEdge from "./customEdge";
-import { properFullname } from "../../../../services/utilities";
+import {
+  CLOUDINARY_ENDPOINT,
+  properFullname,
+} from "../../../../services/utilities";
 import { Policy } from "../../../../services/fakeDb";
 import Default from "./../../../../assets/iMD.png";
 import { ENDPOINT } from "../../../../services/utilities";
@@ -592,7 +595,7 @@ export default function OrgChart() {
                   onDragStart={(e) => handleDragStart(e, item)}
                 >
                   <img
-                    src={`${ENDPOINT}/public/users/${email}/profile.jpg`}
+                    src={`${CLOUDINARY_ENDPOINT}/users/${email}/profile.png?v=${Date.now()}`}
                     alt="profile"
                     className="orgChart-innerCard-image"
                     onError={(e) => {

@@ -1,4 +1,4 @@
-import { ENDPOINT, FailedBanner } from "../index";
+import { CLOUDINARY_ENDPOINT, FailedBanner } from "../index";
 
 export default function Banner({
   company,
@@ -8,7 +8,7 @@ export default function Banner({
   return (
     <div className={className}>
       <img
-        src={`${ENDPOINT}/public/companies/${company}/${branch}/banner.png`}
+        src={`${CLOUDINARY_ENDPOINT}companies/${company}/${branch}/banner.png?v=${Date.now()}`}
         onError={(e) => (e.target.src = FailedBanner)}
         width="100%"
         height="85px"

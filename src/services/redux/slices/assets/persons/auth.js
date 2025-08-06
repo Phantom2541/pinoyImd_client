@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axioKit, employment, ENDPOINT } from "../../../../utilities";
+import {
+  axioKit,
+  CLOUDINARY_ENDPOINT,
+  employment,
+  ENDPOINT,
+} from "../../../../utilities";
 import { Policy } from "../../../../fakeDb";
 
 const url = "auth",
@@ -353,7 +358,10 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
-        state.image = `${ENDPOINT}/public/users/${auth.email}/profile.jpg`;
+        state.image = `${CLOUDINARY_ENDPOINT}/users/${
+          auth.email
+        }/profile.png?v=${Date.now()}`;
+
         state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
         state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
         state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
@@ -450,7 +458,10 @@ export const reduxSlice = createSlice({
             ...(!isEmployed && { platform: "" }),
           };
           state.company = branch?.companyId;
-          state.image = `${ENDPOINT}/public/users/${auth.email}/profile.jpg`;
+          state.image = `${CLOUDINARY_ENDPOINT}/users/${
+            auth.email
+          }/profile.png?v=${Date.now()}`;
+
           state.resume = `${ENDPOINT}${fileUrl}/resume.pdf`;
           state.prc = `${ENDPOINT}${fileUrl}/prc.jpg`;
           state.board = `${ENDPOINT}${fileUrl}/board.jpg`;
@@ -477,19 +488,20 @@ export const reduxSlice = createSlice({
       })
 
       .addCase(UPLOAD.pending, (state) => {
-        state.isLoading = true;
+        state.formSubmitted = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(UPLOAD.fulfilled, (state, _) => {
-        state.isLoading = false;
         state.isSuccess = true;
+        state.formSubmitted = false;
+
         state.message = "Sucessfully uploaded!";
       })
       .addCase(UPLOAD.rejected, (state, action) => {
         const { error } = action;
+        state.formSubmitted = false;
         state.message = error.message;
-        state.isLoading = false;
       });
   },
 });

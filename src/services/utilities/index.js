@@ -57,6 +57,7 @@ import PresetIMD from "../../assets/iMD.png";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
 import Barcode from "./barcode";
+import buildImageForm from "./buildImageForm";
 //Google Drive
 import gDrive from "./gDrive";
 // Clear's Cache
@@ -73,6 +74,8 @@ import MenusToPDF from "./export/pdf/menus";
 import employment from "../fakeDb/employment";
 
 const ENDPOINT = "http://localhost:5000";
+const CLOUDINARY_ENDPOINT = "https://res.cloudinary.com/dr7ljconx/image/upload";
+
 // const ENDPOINT = window.location.origin;
 
 //
@@ -105,6 +108,8 @@ export {
   FailedLogo,
   PresetImage,
   ENDPOINT,
+  buildImageForm,
+  CLOUDINARY_ENDPOINT,
   axioKit,
   axiosMiddleware,
   socket,
