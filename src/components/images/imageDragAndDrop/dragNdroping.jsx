@@ -14,6 +14,7 @@ const ImageDragAndDrop = ({
   setImgName = "file-name",
   setImgEmail = "file-email",
   token,
+  handleUpload,
   allowedType = null,
 }) => {
   const fileInputRef = useRef(null);
@@ -127,24 +128,8 @@ const ImageDragAndDrop = ({
     try {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        const base64 = reader.result.split(",")[1];
-        const fileName = `${setImgName}.jpg`;
-
-        await dispatch(
-          UPLOAD({
-            data: {
-              path: `users/${setImgEmail}`,
-              base64,
-              name: fileName,
-            },
-            token,
-          })
-        );
-
+        handleUpload(reader.result);
         setIsAccepted(true);
-        addToast("✅ Cropped profile image uploaded!", {
-          appearance: "success",
-        });
       };
 
       reader.readAsDataURL(croppedBlob);
