@@ -7,7 +7,14 @@ export default function Gloucose({ task, setTask }) {
   const handleChange = (value) =>
     setTask({ ...task, results: { ...results, hba1c: value } });
 
-  //console.log(task);
+  const getColorClass = (value) => {
+    const num = parseFloat(value);
+    if (isNaN(num)) return "";
+    if (num < 4) return "text-primary fw-bold"; // Low → Blue
+    if (num > 6) return "text-danger fw-bold"; // High → Red
+    return "text-dark fw-bold"; // Normal → Black
+  };
+
   return (
     <>
       <MDBTable hover responsive className="mb-0">
@@ -31,16 +38,14 @@ export default function Gloucose({ task, setTask }) {
             <td className="py-1">
               <input
                 type="number"
-                name={"hb"}
-                value={results.hba1c}
+                name="hb"
+                value={results.hba1c || ""}
                 onChange={(e) => handleChange(e.target.value)}
-                className="w-100 text-center fw-bold"
+                className={`w-100 text-center ${getColorClass(results.hba1c)}`}
               />
             </td>
-            <>
-              <td className="py-1">4 - 6</td>
-              <td className="py-1 text-capitalize">%</td>
-            </>
+            <td className="py-1">4 - 6</td>
+            <td className="py-1 text-capitalize">%</td>
           </tr>
         </tbody>
       </MDBTable>

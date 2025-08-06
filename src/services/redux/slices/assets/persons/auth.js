@@ -325,7 +325,7 @@ export const reduxSlice = createSlice({
             .filter(({ branchId: bID }) => bID === branchId)
             .map((a) => a.platform);
 
-          const branch = branches.find((branch) => branch._id === branchId);
+          const branch = branches?.find((branch) => branch?._id === branchId);
           const { contract = { designation: -1 }, status } = branch || {};
           const isEmployed = employment.isEmployed(status);
 
