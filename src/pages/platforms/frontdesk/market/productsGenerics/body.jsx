@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBTable, MDBBtn } from "mdbreact";
-import { Input } from "../../../../../components/customizable";
+// import { Input } from "../../../../../components/customizable";
 import {
   SetEDIT,
   DESTROY,
@@ -9,8 +9,8 @@ import {
 
 const Body = () => {
   //THIS IS NOT NESSECARY(?) SAID BY MELUIN. the two lines under these are called by dispatch
-  const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState(null);
+  // const [showModal, setShowModal] = useState(false);
+  // const [modalData, setModalData] = useState(null);
 
   //DONT FORGET REALLY IMPORTANT  ( ALEARDY ON LINE  18)
   //const dispatch = useDispatch();
@@ -24,39 +24,39 @@ const Body = () => {
   console.log("collections", collections);
 
   //THIS IS ... asky tommy abou this???(idk reeall ejhaoefoifhPHPEIFHPOEHPO4ihjf)
-  const { filtered, activePage, maxPage, isSuccess } = useSelector(
+  const { filtered, activePage, maxPage } = useSelector(
       ({ productsGenerics }) => productsGenerics
     ),
     [selected, setSelected] = useState({}); // so this bassically is the selected item and its properties. useState({});  means nothing is selected
 
   // let it go, let it go, dont use this code anymore~
-  const handleUpdate = () => {
-    const { _id, key, value } = selected;
-    console.log("selected", { _id, [key]: value });
+  // const handleUpdate = () => {
+  //   const { _id, key, value } = selected;
+  //   console.log("selected", { _id, [key]: value });
 
-    // dispatch here to update the selected item (said template so here ya go (taken from header))
-    //NOTE TO SELF: THERE IS NO DISPATCH YET (NVM THERE IS ON LINE 14)
+  //   // dispatch here to update the selected item (said template so here ya go (taken from header))
+  //   //NOTE TO SELF: THERE IS NO DISPATCH YET (NVM THERE IS ON LINE 14)
 
-    setSelected({}); //idk what this is yet: SIR SAID SMTH ABT THIS ASK MELUIN FOR MORE INFORMATION
-  };
+  //   setSelected({}); //idk what this is yet: SIR SAID SMTH ABT THIS ASK MELUIN FOR MORE INFORMATION
+  // };
 
-  // let it go, let it go, dont use this code anymore~
-  const handleSelected = (data) => {
-    const { _id, ...val } = data; // template note: on handling data from collection, please use _id
-    const [key] = Object.keys(val);
-    const value = val[key];
+  // // let it go, let it go, dont use this code anymore~
+  // const handleSelected = (data) => {
+  //   const { _id, ...val } = data; // template note: on handling data from collection, please use _id
+  //   const [key] = Object.keys(val);
+  //   const value = val[key];
 
-    console.log("data", data);
+  //   console.log("data", data);
 
-    console.log("selected", { _id, key, value });
+  //   console.log("selected", { _id, key, value });
 
-    // template note: If already selected, toggle off
-    if (selected?._id === _id) {
-      setSelected({});
-    } else {
-      setSelected({ _id, key, value, old: val[key] });
-    }
-  };
+  //   // template note: If already selected, toggle off
+  //   if (selected?._id === _id) {
+  //     setSelected({});
+  //   } else {
+  //     setSelected({ _id, key, value, old: val[key] });
+  //   }
+  // };
   // let it go, let it go, dont use this code anymore~ (the code above is the template code)
 
   /**
@@ -83,7 +83,7 @@ const Body = () => {
       <tbody>
         {paginatedData?.map((item, index) => {
           const { _id, name, section, expense } = item;
-          const isSelected = selected._id === _id;
+          // const isSelected = selected._id === _id;
           return (
             <tr key={index}>
               <td key={index}>{index + startIndex + 1}</td>

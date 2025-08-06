@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import { MDBTable, MDBCardBody } from "mdbreact";
 import Patient from "./patient";
-import { useState } from "react";
 export default function Table() {
   const {
     filteredStatus,

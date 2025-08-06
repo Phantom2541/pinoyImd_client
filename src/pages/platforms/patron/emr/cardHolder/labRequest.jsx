@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { MDBCard, MDBCardBody, MDBBtn, MDBIcon } from "mdbreact";
 
 const LabRequest = ({

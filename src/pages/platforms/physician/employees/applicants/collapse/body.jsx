@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBtn } from "mdbreact";
 import { UPDATE } from "../../../../../../services/redux/slices/assets/persons/applicants";
@@ -32,9 +32,9 @@ export default function Collapsable({ item }) {
     );
   };
 
-  useEffect(() => {
-    autoSave();
-  }, [status, remarks]);
+  // useEffect(() => {
+  //   autoSave();
+  // }, [status, remarks]);
 
   const handleSaveDate = () => {
     setInterviewDate(tempDate);
@@ -63,8 +63,12 @@ export default function Collapsable({ item }) {
       </MDBTableHead>
       <MDBTableBody>
         <tr>
-          <td><h5>{item.frequency}</h5></td>
-          <td><small>{item.decSS}</small></td>
+          <td>
+            <h5>{item.frequency}</h5>
+          </td>
+          <td>
+            <small>{item.decSS}</small>
+          </td>
           <td>
             {editing ? (
               <>
@@ -79,7 +83,11 @@ export default function Collapsable({ item }) {
                   <MDBBtn size="sm" color="primary" onClick={handleSaveDate}>
                     Save
                   </MDBBtn>{" "}
-                  <MDBBtn size="sm" color="secondary" onClick={handleCancelEdit}>
+                  <MDBBtn
+                    size="sm"
+                    color="secondary"
+                    onClick={handleCancelEdit}
+                  >
                     Cancel
                   </MDBBtn>
                 </div>

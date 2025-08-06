@@ -3,12 +3,12 @@ import {
   qualityControls,
   Temperatures,
   Machines,
-  HandlingComplaint,
+  // HandlingComplaint,
   MissionVision,
-  PlantEnvironment,
-  LicenseOperate,
-  policyManagement,
-  EquipmentSupplies,
+  // PlantEnvironment,
+  // LicenseOperate,
+  // policyManagement,
+  // EquipmentSupplies,
 } from "../../../../pages/platforms/accredetations/index";
 import OrgChartView from "../../../../pages/platforms/accredetations/labAssessment/organizationManagement/orgChartView";
 
@@ -51,7 +51,7 @@ const accreditation = [
             title:
               "valid DOH-LTO, Valid DOH-LTO posted in conspicious area visible to clients",
             icon: "cogs",
-            component: LicenseOperate,
+            // component: LicenseOperate,
           },
           {
             name: "4. Policy and Procedure ",
@@ -59,7 +59,7 @@ const accreditation = [
             title:
               "i. Written policy on management review\n ii. Compilation of documented minutes of meeting reflecting the date, time, attendance, agenda, and action taken signed and approved by the head of the laboratory\n iii. Supporting documents of evaluation and monitoring for activities such as records, logbook, checklist of supplies, inspection report, purchasing or procurement, and acceptance of supplies, etc.",
             icon: "cogs",
-            component: policyManagement,
+            // component: policyManagement,
           },
           {
             name: "5. procedure for handling complaint",
@@ -67,7 +67,7 @@ const accreditation = [
             title:
               "Written policy and proceduresfor handling complaints/clients feedback\n Suggestion box visible to clients\n Forms for complaints/clients feedback\n Records of complaints/client feedbackand action takens",
             icon: "cogs",
-            component: HandlingComplaint,
+            // component: HandlingComplaint,
           },
         ],
       },
@@ -178,14 +178,14 @@ const accreditation = [
         name: "3. PHYSICAL PLANT and ENVIRONMENT MANAGEMENT",
         path: "/laboratory/environment",
         icon: "cogs",
-        component: PlantEnvironment,
+        // component: PlantEnvironment,
       },
       {
         name: "4. Lab Equipment & Supplies ",
         path: "/laboratory/supplies",
         icon: "cogs",
         title: "Keeping Track of Lab Tools, Reagents, and Supplies",
-        component: EquipmentSupplies,
+        // component: EquipmentSupplies,
       },
       {
         name: "5. INFORMATION MANAGEMENTS",

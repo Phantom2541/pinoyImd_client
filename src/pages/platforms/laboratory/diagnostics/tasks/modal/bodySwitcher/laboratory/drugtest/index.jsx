@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
-  MDBCardTitle,
   MDBContainer,
   MDBNav,
   MDBNavItem,

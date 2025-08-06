@@ -34,6 +34,8 @@ export default function Modal() {
   const [member, setMember] = useState();
   const [branch, setBranch] = useState();
 
+  console.log("branch", branch);
+
   useEffect(() => {
     setForm({
       type: "inhouse",
@@ -105,12 +107,12 @@ export default function Modal() {
     const newTeam = [...safeTeam, form];
     console.log("form", form);
 
-    // dispatch(
-    //   UPDATE({
-    //     data: { _id: selected._id, team: newTeam },
-    //     token,
-    //   })
-    // ).then(() => dispatch(TOGGLETeam()));
+    dispatch(
+      UPDATE({
+        data: { _id: selected._id, team: newTeam },
+        token,
+      })
+    ).then(() => dispatch(TOGGLETeam()));
   };
 
   const handleSubmit = (e) => {

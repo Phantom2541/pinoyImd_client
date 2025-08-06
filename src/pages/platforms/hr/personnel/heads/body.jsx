@@ -43,6 +43,7 @@ export default function Body() {
   const dispatch = useDispatch();
   const [imageErrors, setImageErrors] = useState({});
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
+  const [emailRefreshKey, setEmailRefreshKey] = useState({});
   const [heads, setHeads] = useState([]);
 
   useEffect(() => {
@@ -150,6 +151,9 @@ export default function Body() {
   };
 
   const handleImageChange = (file, imageUrl) => {
+    console.log(savedImage);
+    console.log(file);
+
     setSavedImage(imageUrl);
   };
 
@@ -177,6 +181,21 @@ export default function Body() {
     return sections;
   };
 
+  const handleUploadProfile = (base64, email) => {
+    const formData = buildImageForm(base64, `users/${email}`, "profile");
+    dispatch(
+      UPLOAD({
+        data: formData,
+        token,
+      })
+    ).then(() => {
+      setEmailRefreshKey((prev) => ({
+        ...prev,
+        [email]: Date.now(),
+      }));
+    });
+  };
+
   const totalPages = Math.ceil(heads.length / itemsPerPage);
   const paginatedHeads = heads.slice(
     (currentPage - 1) * itemsPerPage,
@@ -196,9 +215,15 @@ export default function Body() {
             >
               <div className="signatories-card-header">
                 <ImageDragAndDrop
-                  img={`${ENDPOINT}/public/users/${email}/profile.jpg`}
+                  img={
+                    `${CLOUDINARY_ENDPOINT}/users/${email}/profile.png?=${emailRefreshKey?.[email]}` ||
+                    ""
+                  }
                   savedImg={handleImageChange}
                   setImgEmail={email}
+                  handleUpload={(cropImg) =>
+                    handleUploadProfile(cropImg, email)
+                  }
                   setImgName="profile"
                   token={token}
                   allowedType="jpg"

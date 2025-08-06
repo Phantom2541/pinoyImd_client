@@ -1,13 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { MDBBadge, MDBTable } from "mdbreact";
 import { Services as service } from "../../../../../services/fakeDb";
 import "./style.css";
 
 const Body = () => {
   const { filtered, activePage, maxPage } = useSelector(
-      ({ onBoardings }) => onBoardings
-    ),
-    dispatch = useDispatch();
+    ({ onBoardings }) => onBoardings
+  );
 
   /**
    * Pagination: Calculate the start and end index for the current page

@@ -1,18 +1,18 @@
-import React, { useRef, useEffect, useState } from "react";
+// import React, { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Line } from "react-chartjs-2";
+// import { Line } from "react-chartjs-2";
 import { Banner } from "../../../services/utilities";
 
-import {
-  Chart,
-  LineElement,
-  PointElement,
-  LinearScale,
-  Title,
-  Tooltip,
-  Legend,
-  CategoryScale,
-} from "chart.js";
+// import {
+//   Chart,
+//   LineElement,
+//   PointElement,
+//   LinearScale,
+//   Title,
+//   Tooltip,
+//   Legend,
+//   CategoryScale,
+// } from "chart.js";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 // import Header from "./header";
 
@@ -37,9 +37,8 @@ import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 //   return { mean, stdDev };
 // };
 
-
 export default function PrintChart() {
-  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { activePlatform } = useSelector(({ auth }) => auth);
   // const { filtered } = useSelector(({ controls }) => controls);
   // const [hi, setHi] = useState([]);
   // const [norm, setNorm] = useState([]);
@@ -49,7 +48,7 @@ export default function PrintChart() {
   // const chartRef = useRef(null);
 
   // useEffect(() => {
-  //   setHi(filtered.map((item) => item.hi));  
+  //   setHi(filtered.map((item) => item.hi));
   //   setLo(filtered.map((item) => item.lo));
   //   setNorm(filtered.map((item) => item.norm));
   //   setDays(
@@ -59,73 +58,73 @@ export default function PrintChart() {
   //   );
   // }, [filtered]);
 
-// const printChart = () => {
-//   if (chartRef.current) {
-//     const chartCanvas = chartRef.current.canvas;
+  // const printChart = () => {
+  //   if (chartRef.current) {
+  //     const chartCanvas = chartRef.current.canvas;
 
-//     const tempCanvas = document.createElement("canvas");
-//     tempCanvas.width = chartCanvas.width * 3;
-//     tempCanvas.height = chartCanvas.height * 3;
-//     const ctx = tempCanvas.getContext("2d");
+  //     const tempCanvas = document.createElement("canvas");
+  //     tempCanvas.width = chartCanvas.width * 3;
+  //     tempCanvas.height = chartCanvas.height * 3;
+  //     const ctx = tempCanvas.getContext("2d");
 
-//     ctx.scale(3, 3);
-//     ctx.drawImage(chartCanvas, 0, 0);
+  //     ctx.scale(3, 3);
+  //     ctx.drawImage(chartCanvas, 0, 0);
 
-//     const chartImage = tempCanvas.toDataURL("image/png");
-//     const printWindow = window.open("", "_blank");
+  //     const chartImage = tempCanvas.toDataURL("image/png");
+  //     const printWindow = window.open("", "_blank");
 
-//     printWindow.document.write(`
-//       <html>
-//         <head>
-//           <title>Print Chart</title>
-//           <style>
-//             @page {
-//               size: A4 landscape;
-//               margin: 0;
-//             }
+  //     printWindow.document.write(`
+  //       <html>
+  //         <head>
+  //           <title>Print Chart</title>
+  //           <style>
+  //             @page {
+  //               size: A4 landscape;
+  //               margin: 0;
+  //             }
 
-//             html, body {
-//               margin: 0;
-//               height: 100%;
-//               overflow: hidden;
-//               background: white;
-//             }
+  //             html, body {
+  //               margin: 0;
+  //               height: 100%;
+  //               overflow: hidden;
+  //               background: white;
+  //             }
 
-//             .chart-container {
-//               display: flex;
-//               justify-content: center;
-//               align-items: center;
-//               height: 100vh;
-//               padding: 50px;
-//               box-sizing: border-box;
-//             }
+  //             .chart-container {
+  //               display: flex;
+  //               justify-content: center;
+  //               align-items: center;
+  //               height: 100vh;
+  //               padding: 50px;
+  //               box-sizing: border-box;
+  //             }
 
-//             img {
-//               max-width: 100%;
-//               max-height: 100%;
-//               object-fit: contain;
-//               page-break-inside: avoid;
-//               break-inside: avoid;
-//             }
-//           </style>
-//         </head>
-//         <body>
-//           <div class="chart-container">
-//             <img src="${chartImage}" />
-//           </div>
-//           <script>
-//             window.onload = () => {
-//               window.print();
-//               window.onafterprint = () => window.close();
-//             };
-//           </script>
-//         </body>
-//       </html>
-//     `);
+  //             img {
+  //               max-width: 100%;
+  //               max-height: 100%;
+  //               object-fit: contain;
+  //               page-break-inside: avoid;
+  //               break-inside: avoid;
+  //             }
+  //           </style>
+  //         </head>
+  //         <body>
+  //           <div class="chart-container">
+  //             <img src="${chartImage}" />
+  //           </div>
+  //           <script>
+  //             window.onload = () => {
+  //               window.print();
+  //               window.onafterprint = () => window.close();
+  //             };
+  //           </script>
+  //         </body>
+  //       </html>
+  //     `);
 
-//     printWindow.document.close();
-//   }
-// };
+  //     printWindow.document.close();
+  //   }
+  // };
 
   // const lineChartData = {
   //   labels: days,
@@ -208,9 +207,9 @@ export default function PrintChart() {
       <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
         {/* <Header /> */}
         <Banner
-                company={activePlatform?.branch?.companyId?.name}
-                branch={activePlatform?.branch?.name}
-              />
+          company={activePlatform?.branch?.companyId?.name}
+          branch={activePlatform?.branch?.name}
+        />
         <MDBCardBody
           className="d-flex flex-column justify-content-between"
           style={{ height: "100%" }}
@@ -244,5 +243,4 @@ export default function PrintChart() {
       </MDBCard>
     </MDBAnimation>
   );
-};
-
+}

@@ -25,6 +25,7 @@
     "num-words": "^1.2.3",
     "number-to-words": "^1.2.4",
     "numbers-to-word": "^1.0.1",
+    "pdfjs-dist": "^3.4.120",
     "pdfmake": "^0.2.20",
     "pica": "^9.0.1",
     "qrcode": "^1.5.4",
@@ -45,7 +46,6 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router": "^5.1.2",
     "react-scripts": "^5.0.1",
-    "react-snap": "^1.23.0",
     "react-toast-notifications": "^2.5.1",
     "react-webcam": "^7.2.0",
     "socket.io-client": "^4.6.1",
@@ -59,10 +59,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postbuild": "react-snap"
-  },
-  "reactSnap": {
-    "inlineCss": true
+    "postbuild": ""
   },
   "eslintConfig": {
     "extends": "react-app"

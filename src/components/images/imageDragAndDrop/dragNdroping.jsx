@@ -4,7 +4,6 @@ import Cropper from "react-easy-crop";
 import logo from "./../../../assets/iMD.png";
 import "./style.css";
 import { useDispatch } from "react-redux";
-import { UPLOAD } from "../../../services/redux/slices/assets/persons/auth";
 import { useToasts } from "react-toast-notifications";
 
 const ImageDragAndDrop = ({
@@ -12,9 +11,10 @@ const ImageDragAndDrop = ({
   savedImg,
   downloadName = "downloaded-image.jpg",
   setImgName = "file-name",
-  setImgEmail = "file-email",
-  token,
-  allowedType = null,
+  // setImgEmail = "file-email",
+  // token,
+  handleUpload,
+  // allowedType = null,
 }) => {
   const fileInputRef = useRef(null);
   const [preview, setPreview] = useState(img);
@@ -30,7 +30,7 @@ const ImageDragAndDrop = ({
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const { addToast } = useToasts();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     let blobUrl;
@@ -127,24 +127,8 @@ const ImageDragAndDrop = ({
     try {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        const base64 = reader.result.split(",")[1];
-        const fileName = `${setImgName}.jpg`;
-
-        await dispatch(
-          UPLOAD({
-            data: {
-              path: `users/${setImgEmail}`,
-              base64,
-              name: fileName,
-            },
-            token,
-          })
-        );
-
+        handleUpload(reader.result);
         setIsAccepted(true);
-        addToast("✅ Cropped profile image uploaded!", {
-          appearance: "success",
-        });
       };
 
       reader.readAsDataURL(croppedBlob);

@@ -3,7 +3,6 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import utils from "../utils";
 import {
   calculateIndicators,
-  ENDPOINT,
   findReference,
   formatToSI,
   properFullname,

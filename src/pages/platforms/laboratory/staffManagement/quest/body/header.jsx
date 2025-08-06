@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import "./style.css";
@@ -9,7 +9,6 @@ import {
   ResetDATE,
 } from "../../../../../../services/redux/slices/diagnostics/clinician/quest";
 import { Calendars } from "../../../../../../components/header";
-import { currency } from "../../../../../../services/utilities";
 
 const Header = () => {
   const { collections, month, year } = useSelector(({ quest }) => quest),
@@ -32,7 +31,6 @@ const Header = () => {
   }, [token, dispatch, activePlatform, month, year]);
 
   // Determine balance status and style for remittance only
-  let remittedClass = "";
   let balanceMessage = "";
 
   return (

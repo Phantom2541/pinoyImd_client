@@ -44,7 +44,6 @@ const Body = () => {
       UPDATE({
         token,
         data: { sched, ro, breakdownID, _id: selected._id },
-        token,
       })
     );
   };

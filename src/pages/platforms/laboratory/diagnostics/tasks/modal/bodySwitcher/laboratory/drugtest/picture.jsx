@@ -4,15 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import Cropper from "react-easy-crop";
 
-import { isJpegOrJpgFile } from "../../../../../../../../../services/utilities";
+// import { isJpegOrJpgFile } from "../../../../../../../../../services/utilities";
 import {
   IMAGE,
-  UPLOAD,
+  // UPLOAD,
 } from "../../../../../../../../../services/redux/slices/assets/persons/auth";
-
-export default function ProfileImage({ task, setTask }) {
+// {
+//   task, setTask;
+// }
+export default function ProfileImage() {
   const dispatch = useDispatch();
-  const { token, progressBar } = useSelector(({ auth }) => auth);
+  const { progressBar } = useSelector(({ auth }) => auth);
   const { addToast } = useToasts();
 
   const videoRef = useRef(null);
@@ -56,38 +58,38 @@ export default function ProfileImage({ task, setTask }) {
     };
   }, [capturedImage, finalImage]);
 
-  const handleError = (message) => addToast(message, { appearance: "warning" });
+  // const handleError = (message) => addToast(message, { appearance: "warning" });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!isJpegOrJpgFile(file))
-      return handleError("Please select a JPG image.");
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (!isJpegOrJpgFile(file))
+  //     return handleError("Please select a JPG image.");
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.src = e.target.result;
-      img.onload = () => {
-        if (img.width !== img.height)
-          return handleError("Image must be square.");
+  //   const reader = new FileReader();
+  //   reader.onload = (e) => {
+  //     const img = new Image();
+  //     img.src = e.target.result;
+  //     img.onload = () => {
+  //       if (img.width !== img.height)
+  //         return handleError("Image must be square.");
 
-        setFile(file);
-        setTask({ ...task, image: "profile.jpg" });
+  //       setFile(file);
+  //       setTask({ ...task, image: "profile.jpg" });
 
-        dispatch(
-          UPLOAD({
-            data: {
-              path: `${task.patient.email}`,
-              base64: reader.result.split(",")[1],
-              name: "profile.jpg",
-            },
-            token,
-          })
-        );
-      };
-    };
-    reader.readAsDataURL(file);
-  };
+  //       dispatch(
+  //         UPLOAD({
+  //           data: {
+  //             path: `${task.patient.email}`,
+  //             base64: reader.result.split(",")[1],
+  //             name: "profile.jpg",
+  //           },
+  //           token,
+  //         })
+  //       );
+  //     };
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
   const capturePhoto = () => {
     const canvas = canvasRef.current;

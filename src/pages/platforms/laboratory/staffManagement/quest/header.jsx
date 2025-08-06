@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import {
@@ -8,7 +7,6 @@ import {
 } from "../../../../../services/redux/slices/diagnostics/clinician/quest";
 import { Search } from "../../../../../components/searchables";
 import Modal from "./modal";
-import { DateTime } from "luxon";
 
 const Header = () => {
   const dispatch = useDispatch();

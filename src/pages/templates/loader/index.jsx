@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Loader from "./loader"; // adjust path if needed
-import Marquee from "../../../components/marquee";
 import SubsNotice from "../../../components/subsNotice";
 
 const ParentComponent = () => {
