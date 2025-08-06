@@ -4,7 +4,6 @@ import Cropper from "react-easy-crop";
 import logo from "./../../../assets/iMD.png";
 import "./style.css";
 import { useDispatch } from "react-redux";
-import { UPLOAD } from "../../../services/redux/slices/assets/persons/auth";
 import { useToasts } from "react-toast-notifications";
 
 const ImageDragAndDrop = ({
@@ -12,10 +11,10 @@ const ImageDragAndDrop = ({
   savedImg,
   downloadName = "downloaded-image.jpg",
   setImgName = "file-name",
-  setImgEmail = "file-email",
-  token,
+  // setImgEmail = "file-email",
+  // token,
   handleUpload,
-  allowedType = null,
+  // allowedType = null,
 }) => {
   const fileInputRef = useRef(null);
   const [preview, setPreview] = useState(img);
@@ -31,7 +30,7 @@ const ImageDragAndDrop = ({
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const { addToast } = useToasts();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     let blobUrl;
