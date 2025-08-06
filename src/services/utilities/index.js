@@ -57,7 +57,7 @@ import PresetIMD from "../../assets/iMD.png";
 import paymentMethod from "./paymentMethod";
 import Deals from "./deals";
 import Barcode from "./barcode";
-import buildImageForm from "./buildImageForm";
+import buildFileForm from "./buildFileForm";
 //Google Drive
 import gDrive from "./gDrive";
 // Clear's Cache
@@ -108,7 +108,7 @@ export {
   FailedLogo,
   PresetImage,
   ENDPOINT,
-  buildImageForm,
+  buildFileForm,
   CLOUDINARY_ENDPOINT,
   axioKit,
   axiosMiddleware,

@@ -17,7 +17,7 @@ import {
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
-  buildImageForm,
+  buildFileForm,
   CLOUDINARY_ENDPOINT,
   fullName,
   getAge,
@@ -55,7 +55,7 @@ const Banner = () => {
   }, [isSuccess, message, addToast, dispatch]);
 
   const handleUpload = (base64) => {
-    const formData = buildImageForm(base64, folder, "banner");
+    const formData = buildFileForm(base64, folder, "banner");
     dispatch(
       UPLOAD({
         data: formData,

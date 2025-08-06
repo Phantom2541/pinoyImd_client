@@ -190,11 +190,8 @@ export const reduxSlice = createSlice({
       .addCase(BROWSE.fulfilled, (state, action) => {
         const { payload, query = {} } = action.payload || {};
         const { branchId } = query;
-
         if (branchId) {
-          state.collections = Array.isArray(payload)
-            ? payload.flatMap(({ applicants }) => applicants)
-            : [];
+          state.collections = payload.payload;
           state.filtered = state.collections;
         } else {
           state.branches = Array.isArray(payload)

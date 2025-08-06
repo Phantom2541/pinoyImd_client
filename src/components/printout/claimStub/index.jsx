@@ -110,7 +110,13 @@ const Stub = ({ sale, companyId }) => {
         <tbody>
           {Array.isArray(cart) &&
             cart?.map((menu, index) => {
-              const { description, abbreviation, packages = [], up } = menu;
+              const {
+                description,
+                abbreviation,
+                packages = [],
+                up,
+                discount = 0,
+              } = menu;
 
               return (
                 <tr key={`menu-${index}`}>
@@ -138,9 +144,9 @@ const Stub = ({ sale, companyId }) => {
                   </td>
                   <td
                     style={{ fontSize: "17.5px" }}
-                    className="text-right py-0 px-0 fw-bold"
+                    className="text-right py-0 px-0"
                   >
-                    {currency.format(up)}
+                    {currency.format(up + discount)}
                   </td>
                 </tr>
               );
@@ -148,9 +154,22 @@ const Stub = ({ sale, companyId }) => {
         </tbody>
       </MDBTable>
       <Hr />
-      <Text title="Total" value={currency.format(amount + discount)} />
-      <Text title="Discount" value={currency.format(discount)} />
-      <Text title="Subtotal" value={currency.format(amount)} />
+      <Text
+        title="Total"
+        value={currency.format(amount + discount)}
+        className="fw-bold"
+      />
+      {discount > 0 && (
+        <>
+          <Text title="Discount" value={currency.format(discount)} />
+          <Text
+            title="Subtotal"
+            value={currency.format(amount)}
+            className="fw-bold"
+          />
+        </>
+      )}
+      <Hr />
       <Text
         title={capitalize(payment === "cash" ? "Tendered" : payment)}
         value={

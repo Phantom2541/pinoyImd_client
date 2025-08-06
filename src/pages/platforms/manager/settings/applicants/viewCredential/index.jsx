@@ -1,7 +1,11 @@
 import { MDBModal, MDBModalBody, MDBModalHeader } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { ToggleViewCredential } from "../../../../../../services/redux/slices/assets/persons/applicants";
-import { ENDPOINT, fullName } from "../../../../../../services/utilities";
+import {
+  CLOUDINARY_ENDPOINT,
+  ENDPOINT,
+  fullName,
+} from "../../../../../../services/utilities";
 
 const types = {
   AppLetter: "Application Letter",
@@ -39,10 +43,7 @@ export default function ViewCredential() {
       </MDBModalHeader>
       <MDBModalBody className="m-0 p-0">
         <iframe
-          src={`${ENDPOINT}/public/users/${user?.email}/credentials/${companyId?.name}/${type}.pdf`}
-          alt={user?.email}
-          className="mx-auto rounded img-max img-fluid mb-1"
-          // onError={(e) => (e.target.src = PresetUser)}
+          src={`${CLOUDINARY_ENDPOINT}/users/${user?.email}/credentials/${companyId?.name}/${type}.pdf`}
           title="Personal Data"
           style={{
             width: "100%",

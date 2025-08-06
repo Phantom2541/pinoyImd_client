@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { ENDPOINT } from "../../../../../services/utilities";
 import "./style.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import ImageDragAndDrop from "../../../../../components/images/imageDragAndDrop/dragNdroping";
