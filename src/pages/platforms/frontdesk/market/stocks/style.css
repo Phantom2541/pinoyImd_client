@@ -17,6 +17,32 @@
   background-color: #1266f1;
 }
 
+.header-backSearch-cotnainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.header-back {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  margin-right: 0;
+  width: 0;
+  overflow: hidden;
+  transition: width 0.5s ease;
+}
+.header-back.active {
+  width: 55px;
+  margin-right: 30px;
+}
+
 .stocks-header-search {
   display: flex;
   align-items: center;
@@ -26,6 +52,7 @@
   max-width: 600px;
   padding: 1px 0;
   padding-right: 3px;
+  overflow: hidden;
 }
 
 .stocks-header-search input {
@@ -43,6 +70,7 @@
   color: white;
   font-size: 1.2rem;
   padding: 5px 10px;
+  transform-origin: center;
 }
 
 .stocks-header-search .stocks-header-search-icon:hover {
@@ -50,7 +78,7 @@
 }
 
 .stocks-header-search .stocks-header-search-icon:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 .stocks-header-cart {
@@ -69,7 +97,7 @@
 .stocks-header-cart span {
   position: absolute;
   top: -5px;
-  right: -20px;
+  right: -10px;
   background-color: red;
   border: 2px solid #1266f1;
   color: white;
@@ -245,6 +273,13 @@
   height: 100%;
   max-height: 250px;
 }
+
+.stock-cards img.fly-to-cart {
+  pointer-events: none;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
 .stock-cards-body {
   padding: 10px;
   display: flex;
@@ -271,9 +306,27 @@
   color: #1266f1;
 }
 
+.stock-cards-original {
+  font-size: 0.7em;
+  color: rgba(18, 102, 241, 0.5);
+  margin-left: 5px;
+  position: relative;
+}
+
+.stock-cards-original::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 110%;
+  height: 2px;
+  background-color: rgba(18, 102, 241, 0.5);
+}
+
 .stock-cards-discount {
   width: fit-content;
-  background-color: #ff7f00; /* Shopee orange */
+  background-color: #ff7f00;
   color: #fff;
   font-weight: bold;
   padding: 0 8px;
@@ -386,16 +439,6 @@
   gap: 20px;
 }
 
-.description-back {
-  all: unset;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-top: 10px;
-  margin-left: 20px;
-  transition: all 0.3s ease;
-}
-
 .description-info-container {
   display: flex;
   align-items: flex-start;
@@ -403,10 +446,6 @@
   background-color: white;
   border-radius: 3px;
   padding: 20px;
-}
-
-.description-back:hover {
-  color: #1266f1;
 }
 
 .description-details {
@@ -505,6 +544,47 @@
   width: 100%;
   padding: 17px 10px;
   margin-top: 10px;
+}
+
+.description-price span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.description-price-discount {
+  width: fit-content;
+  background-color: #ff7f00; /* Shopee orange */
+  color: #fff;
+  font-weight: bold;
+  padding: 0 8px;
+  font-size: 0.7rem;
+  border-radius: 2px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Bilog sa kaliwa */
+.description-price-discount::before,
+.description-price-discount::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: #e8f0fe;
+  border-radius: 50%;
+}
+
+/* Kaliwang bilog */
+.description-price-discount::before {
+  left: -3px;
+}
+
+/* Kanang bilog */
+.description-price-discount::after {
+  right: -3px;
 }
 
 .description-options {
@@ -722,6 +802,7 @@
   display: grid;
   gap: 10px;
   width: 100%;
+  position: relative;
 }
 
 .cart-header {
@@ -810,6 +891,8 @@
 }
 
 .cart-footer {
+  position: sticky;
+  top: 0;
   width: 100%;
   padding: 10px 20px;
   background-color: white;
@@ -861,7 +944,51 @@
   gap: 5px;
 }
 
-.cart-checkOut-total-price-item span {
+.cart-checkOut-total-price-item span:first-child {
   font-size: 1rem;
   font-weight: 500;
+}
+
+.cart-checkOut-total-price-item span:nth-child(2) {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #1266f1;
+}
+
+.cart-checkOut-saved {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+}
+
+.cart-checkOut-saved span {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.cart-checkOut-saved span:nth-child(2) {
+  color: #1266f1;
+}
+
+.cart-checkOut-button {
+  all: unset;
+  cursor: pointer;
+  background-color: #1266f1;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 400;
+  padding: 10px 50px;
+  border-radius: 3px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  margin-left: 10px;
+  text-transform: capitalize;
+}
+
+.cart-checkOut-button:hover {
+  filter: brightness(1.1);
+}
+
+.cart-checkOut-button:active {
+  background-color: #0e51c1;
+  transform: scale(0.98);
 }

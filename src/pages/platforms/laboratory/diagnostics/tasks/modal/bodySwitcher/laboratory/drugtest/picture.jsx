@@ -4,15 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import Cropper from "react-easy-crop";
 
-import { isJpegOrJpgFile } from "../../../../../../../../../services/utilities";
+// import { isJpegOrJpgFile } from "../../../../../../../../../services/utilities";
 import {
   IMAGE,
-  UPLOAD,
+  // UPLOAD,
 } from "../../../../../../../../../services/redux/slices/assets/persons/auth";
-
-export default function ProfileImage({ task, setTask }) {
+// {
+//   task, setTask;
+// }
+export default function ProfileImage() {
   const dispatch = useDispatch();
-  const { token, progressBar } = useSelector(({ auth }) => auth);
+  const { progressBar } = useSelector(({ auth }) => auth);
   const { addToast } = useToasts();
 
   const videoRef = useRef(null);

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Header from "./header";
 import Cards from "./cards";
 import Description from "./desciption";
-import Cart from "./cart"; // ← import cart
+import Cart from "./cart";
 import "./style.css";
 import collections from "./collections";
 
@@ -11,7 +11,11 @@ export default function Stocks() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortType, setSortType] = useState("");
-  const [showCart, setShowCart] = useState(false); // ← NEW state
+  const [showCart, setShowCart] = useState(false);
+  const [lastView, setLastView] = useState(null);
+  const [lastCard, setLastCard] = useState(null);
+
+  const cartIconRef = useRef(null);
 
   const handleSort = (type) => {
     setSortType(type);
@@ -24,15 +28,113 @@ export default function Stocks() {
   };
 
   const handleCartClick = () => {
-    setShowCart(true); // ← show cart
+    setLastView(selectedCard ? "desc" : "list");
+    setLastCard(selectedCard);
+    setShowCart(true);
+  };
+
+  const handleCardClick = (card) => {
+    setLastView(showCart ? "cart" : "list");
+    setLastCard(null);
+    setSelectedCard(card);
+    setShowCart(false);
   };
 
   const handleBack = () => {
-    setSelectedCard(null);
-    setShowCart(false); // ← hide cart if open
+    if (showCart) {
+      setShowCart(false);
+      if (lastView === "desc" && lastCard) {
+        setSelectedCard(lastCard);
+      }
+    } else if (selectedCard) {
+      setSelectedCard(null);
+    }
   };
 
-  // 🔍 Filter and sort
+  // load cart with quantities
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem("cartItems");
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) return [];
+
+      return parsed
+        .filter((ci) => ci && typeof ci === "object" && ci.id != null)
+        .map((ci) => ({
+          ...ci,
+          quantity: Math.max(1, ci.quantity ?? 1),
+        }));
+    } catch (e) {
+      console.warn("Invalid cartItems in localStorage:", e);
+      return [];
+    }
+  });
+
+  // persist whenever cartItems changes
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  // helper to add item (increments quantity if exists)
+  const addToCart = (imgRef, item) => {
+    handleAddToCartAnimation(imgRef); // ✈️ animate only
+
+    setCartItems((prev) => {
+      const existing = prev.find((ci) => ci?.id === item.id);
+
+      if (existing) {
+        return prev.map((ci) =>
+          ci.id === item.id
+            ? {
+                ...ci,
+                quantity: Math.min(
+                  (ci.quantity ?? 1) + 1,
+                  item.stock ?? Infinity // cap to stock
+                ),
+              }
+            : ci
+        );
+      } else {
+        return [...prev, { ...item, quantity: 1 }];
+      }
+    });
+  };
+
+  // 💥 Fly to cart animation
+  const handleAddToCartAnimation = (imgRef) => {
+    if (!imgRef?.current || !cartIconRef?.current) return;
+
+    const img = imgRef.current;
+    const cart = cartIconRef.current;
+    const imgRect = img.getBoundingClientRect();
+    const cartRect = cart.getBoundingClientRect();
+
+    const clone = img.cloneNode(true);
+    clone.classList.add("fly-to-cart");
+    clone.style.position = "fixed";
+    clone.style.top = `${imgRect.top}px`;
+    clone.style.left = `${imgRect.left}px`;
+    clone.style.width = `${imgRect.width}px`;
+    clone.style.height = `${imgRect.height}px`;
+    clone.style.transition = "all 0.8s ease-in-out";
+    clone.style.zIndex = 1000;
+    document.body.appendChild(clone);
+
+    requestAnimationFrame(() => {
+      clone.style.top = `${cartRect.top}px`;
+      clone.style.left = `${cartRect.left}px`;
+      clone.style.width = "20px";
+      clone.style.height = "20px";
+      clone.style.opacity = "0.5";
+    });
+
+    setTimeout(() => {
+      document.body.removeChild(clone);
+    }, 800);
+  };
+
+  // 🔍 Filtering and sorting...
   let filteredCollections = collections.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -69,19 +171,23 @@ export default function Stocks() {
         onSearch={handleSearch}
         onSort={handleSort}
         sortType={sortType}
-        onCartClick={handleCartClick} // ← pass this to header
+        onCartClick={handleCartClick}
+        onBack={selectedCard || showCart ? handleBack : null}
+        cartIconRef={cartIconRef}
+        cartCount={cartItems.length}
       />
 
       {showCart ? (
-        <Cart />
+        <Cart cartItems={cartItems} setCartItems={setCartItems} />
       ) : selectedCard ? (
-        <Description card={selectedCard} onBack={handleBack} />
+        <Description card={selectedCard} />
       ) : (
         <Cards
           collections={filteredCollections}
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}
-          onCardClick={(card) => setSelectedCard(card)}
+          onCardClick={handleCardClick}
+          onAddToCart={addToCart}
         />
       )}
     </div>

@@ -14,7 +14,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
             left: "50%",
             transform: "translate(-50%, -50%)",
           }}
-          src={`${CLOUDINARY_ENDPOINT}users/${
+          src={`${CLOUDINARY_ENDPOINT}/users/${
             person?.email
           }/signature.png?v=${Date.now()}`}
           alt={person?.email || "signature"}

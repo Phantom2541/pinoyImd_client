@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MDBIcon } from "mdbreact";
 
-export default function Description({ card, onBack }) {
+export default function Description({ card }) {
   const [mainImage, setMainImage] = useState(card.image[0]);
   const [quantity, setQuantity] = useState(1);
 
@@ -29,109 +29,102 @@ export default function Description({ card, onBack }) {
 
   return (
     <div className="description-container">
-      <div
-        className="bg-white"
-        style={{ boxShadow: " 0 0 7px rgb(0, 0, 0, 0.2)" }}
-      >
-        <button onClick={onBack} className="description-back">
-          <MDBIcon fas icon="angle-left" />
-          &nbsp; Back
-        </button>
-        <div className="description-info-container">
-          <div className="description-image-wrapper">
-            <img
-              src={mainImage}
-              className="description-image"
-              alt={card.title}
-            />
-            <div className="description-images">
-              {card.image.map((img, index) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`${card.title} ${index}`}
-                  onMouseEnter={() => setMainImage(img)}
-                />
-              ))}
+      <div className="description-info-container">
+        <div className="description-image-wrapper">
+          <img src={mainImage} className="description-image" alt={card.title} />
+          <div className="description-images">
+            {card.image.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`${card.title} ${index}`}
+                onMouseEnter={() => setMainImage(img)}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="description-details">
+          <span className="description-title">{card.title}</span>
+          <div className="description-ratingAndSold">
+            <div className="description-rating">
+              <span>{card.rating}</span>
+              <span>★★★★★</span>
+            </div>
+            <div className="description-sold">
+              <span>{card.sold}</span>
+              <span>sold</span>
             </div>
           </div>
-          <div className="description-details">
-            <span className="description-title">{card.title}</span>
-            <div className="description-ratingAndSold">
-              <div className="description-rating">
-                <span>{card.rating}</span>
-                <span>★★★★★</span>
-              </div>
-              <div className="description-sold">
-                <span>{card.sold}</span>
-                <span>sold</span>
-              </div>
-            </div>
-            <div className="description-price">
-              <span>$ {card.price}</span>
-            </div>
-            <div className="description-options">
-              {[
-                { label: "Color", data: card.color },
-                { label: "Size", data: card.size },
-                { label: "Power", data: card.power },
-              ].map((opt, i) => (
-                <div className="description-option-group" key={i}>
-                  <span className="description-option-label">{opt.label}</span>
-                  <div className="description-option-buttons">
-                    {opt.data.map((item, index) => (
-                      <button key={index}>{item}</button>
-                    ))}
-                  </div>
+          <div className="description-price">
+            <span>
+              $ {card.price}
+              <span className="description-price-discount">
+                {card.discount}% off
+              </span>
+            </span>
+          </div>
+          <div className="description-options">
+            {[
+              { label: "Color", data: card.color },
+              { label: "Size", data: card.size },
+              { label: "Power", data: card.power },
+            ].map((opt, i) => (
+              <div className="description-option-group" key={i}>
+                <span className="description-option-label">{opt.label}</span>
+                <div className="description-option-buttons">
+                  {opt.data.map((item, index) => (
+                    <button key={index}>{item}</button>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="description-quantity">
-              <span>Quantity</span>
-              <div className="description-quantity-container">
-                <div className="description-quantity-box">
-                  <button
-                    onClick={decrease}
-                    disabled={quantity <= 1}
-                    className="description-quantity-btn"
-                  >
-                    –
-                  </button>
-
-                  <input
-                    type="text"
-                    value={quantity}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="description-quantity-input"
-                  />
-
-                  <button
-                    onClick={increase}
-                    disabled={quantity >= card.stock}
-                    className="description-quantity-btn"
-                  >
-                    +
-                  </button>
-                </div>
-                <span className="description-stock-text">
-                  {card.stock > 0 ? `IN STOCK (${card.stock})` : "OUT OF STOCK"}
-                </span>
               </div>
+            ))}
+          </div>
+          <div className="description-quantity">
+            <span>Quantity</span>
+            <div className="description-quantity-container">
+              <div className="description-quantity-box">
+                <button
+                  onClick={decrease}
+                  disabled={quantity <= 1}
+                  className="description-quantity-btn"
+                >
+                  –
+                </button>
+
+                <input
+                  type="text"
+                  value={quantity}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="description-quantity-input"
+                />
+
+                <button
+                  onClick={increase}
+                  disabled={quantity >= card.stock}
+                  className="description-quantity-btn"
+                >
+                  +
+                </button>
+              </div>
+              <span className="description-stock-text">
+                {card.stock > 0 ? `IN STOCK (${card.stock})` : "OUT OF STOCK"}
+              </span>
             </div>
-            <div className="description-btnCartBuy">
-              <button className="description-btnAddtoCart">
-                <MDBIcon fas icon="cart-plus" />
-                &nbsp;add to cart
-              </button>
-              <button className="description-btnBuy">
-                <span>Buy with voucher</span>
-                <span>$&nbsp;{card.price}</span>
-              </button>
-            </div>
+          </div>
+          <div className="description-btnCartBuy">
+            <button className="description-btnAddtoCart">
+              <MDBIcon fas icon="cart-plus" />
+              &nbsp;add to cart
+            </button>
+            <button className="description-btnBuy">
+              <span>Buy with voucher</span>
+              <span>$&nbsp;{card.price}</span>
+            </button>
           </div>
         </div>
       </div>
+
       <div className="description-specifications">
         <span className="description-specifications-title">
           Product Specification

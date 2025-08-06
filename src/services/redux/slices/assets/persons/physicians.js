@@ -250,7 +250,6 @@ export const reduxSlice = createSlice({
       })
       .addCase(SECRETARYAPPLICANTS.fulfilled, (state, action) => {
         const { payload } = action.payload;
-        console.log("action.payloadsample", action.payload);
 
         state.collections = state.filtered = payload;
         state.isLoading = false;

@@ -33,7 +33,7 @@ const Header = () => {
         },
       })
     );
-  }, [activePlatform, token]);
+  }, [activePlatform, dispatch, token]);
 
   useEffect(() => {
     dispatch(
@@ -44,7 +44,7 @@ const Header = () => {
     ).then(() => {
       dispatch(SetFIRST_SCHED(null));
     });
-  }, [activePlatform, token, month, year]);
+  }, [activePlatform, token, month, year, dispatch]);
 
   const lastDay = new Date(year, month, 0).getDate(); // e.g., 31
 
