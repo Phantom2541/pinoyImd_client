@@ -73,10 +73,11 @@ import MenusToPDF from "./export/pdf/menus";
 //status
 import employment from "../fakeDb/employment";
 
-const ENDPOINT = "http://localhost:5000";
+// const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = window.location.origin;
+
 const CLOUDINARY_ENDPOINT = "https://res.cloudinary.com/dr7ljconx/image/upload";
 
-// const ENDPOINT = window.location.origin;
 
 //
 // endpoint ni kuya kevin
