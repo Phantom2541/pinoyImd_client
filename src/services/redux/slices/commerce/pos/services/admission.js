@@ -6,6 +6,8 @@ const url = "commerce/catalog/generics";
 const initialState = {
   collections: [],
   filtered: [],
+  showModal: false,
+  willCreate: false,
   maxPage: 5,
   totalPages: 0,
   activePage: 1,
@@ -104,9 +106,20 @@ export const reduxSlice = createSlice({
 
       // state.isSuccess = true;
     },
+    SetCREATE: (state) => {
+      state.selected = {
+        department: state.department,
+        mode: "",
+        section: "",
+        expectedAt: "",
+      };
+      state.willCreate = true;
+      state.showModal = true;
+    },
     SetCOLLECTIONS: (state, { payload }) => {
       state.collections = payload;
     },
+
     SetMaxPage: (state, { payload }) => {
       state.maxPage = payload;
       state.activePage = 1;
@@ -206,7 +219,13 @@ export const reduxSlice = createSlice({
   },
 });
 
-export const { SetFILTERED, SetCOLLECTIONS, SetMaxPage, SetActivePAGE, RESET } =
-  reduxSlice.actions;
+export const {
+  SetFILTERED,
+  SetCOLLECTIONS,
+  SetMaxPage,
+  SetActivePAGE,
+  RESET,
+  SetCREATE,
+} = reduxSlice.actions;
 
 export default reduxSlice.reducer;
