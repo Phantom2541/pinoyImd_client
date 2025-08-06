@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBBtn } from "mdbreact";
 
 const Header = ({ company = {}, isOpen, textColor, index, setActiveId }) => {

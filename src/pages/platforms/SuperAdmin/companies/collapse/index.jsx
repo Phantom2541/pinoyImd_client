@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   MDBCard,
   MDBCardBody,
@@ -16,9 +16,8 @@ import { collapse, fullName } from "../../../../../services/utilities";
 export default function Body() {
   const { filtered, activePage, maxPage } = useSelector(
     ({ companies }) => companies
-  ),
-    dispatch = useDispatch();
-  
+  );
+
   /**
    * Pagination: Calculate the start and end index for the current page
    */

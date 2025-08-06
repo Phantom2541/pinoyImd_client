@@ -25,6 +25,7 @@
     "num-words": "^1.2.3",
     "number-to-words": "^1.2.4",
     "numbers-to-word": "^1.0.1",
+    "pdfjs-dist": "^3.4.120",
     "pdfmake": "^0.2.20",
     "pica": "^9.0.1",
     "qrcode": "^1.5.4",

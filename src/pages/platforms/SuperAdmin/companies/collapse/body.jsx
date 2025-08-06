@@ -1,9 +1,6 @@
-import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBadge } from "mdbreact";
 import { fullName } from "../../../../../services/utilities";
-import { capitalize } from "lodash";
-import { Input, Select } from "../../../../../components/customizable";
 import { UPDATE } from "../../../../../services/redux/slices/assets/branches";
 import { SetFILTERED } from "../../../../../services/redux/slices/assets/companies";
 import EditableSelect from "../../../../../components/customizable/editableSelect";
@@ -11,7 +8,6 @@ import EditableField from "../../../../../components/customizable/editableField"
 // ... your existing imports remain the same
 export default function Collapsable({ branches, cid }) {
   const { token } = useSelector(({ auth }) => auth),
-    [selected, setSelected] = useState({}),
     { isSuccess, formSubmitted } = useSelector(({ branches }) => branches),
     { collections } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();
@@ -42,19 +38,6 @@ export default function Collapsable({ branches, cid }) {
 
       dispatch(SetFILTERED(_collections));
     });
-
-    setSelected({});
-  };
-
-  const handleSelected = (data) => {
-    const { _id, ...val } = data;
-    const [key] = Object.keys(val);
-    const value = val[key];
-    if (selected?._id === _id && selected?.key === key) {
-      setSelected({});
-    } else {
-      setSelected({ _id, key, value, old: val[key] });
-    }
   };
 
   return (
@@ -88,7 +71,6 @@ export default function Collapsable({ branches, cid }) {
             isHiring,
           } = branch;
           const { subscription = "demo", billing, status } = settings;
-          const isSelected = selected._id === _id;
 
           return (
             <tr key={index}>
