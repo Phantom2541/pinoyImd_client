@@ -23,6 +23,7 @@ import {
   billings,
   dispenser,
   onBoardings,
+  admission,
 } from "./slices/commerce";
 
 import {
@@ -86,6 +87,7 @@ const store = configureStore({
     validator,
     physicians,
     menus,
+    admission,
     services,
     onBoardings,
     sales,
