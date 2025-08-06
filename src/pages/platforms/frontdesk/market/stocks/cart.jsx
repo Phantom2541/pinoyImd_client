@@ -1,18 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { MDBIcon } from "mdbreact";
+import Swal from "sweetalert2";
 
 export default function Cart({ cartItems, setCartItems }) {
-  // Ensure every item has selected flag defaulting to true
+  const [tempSelectedOptions, setTempSelectedOptions] = useState({});
+
+  // Ensure each item has `selected: true` by default
   useEffect(() => {
-    const fixed = cartItems.map((ci) =>
+    const updated = cartItems.map((ci) =>
       ci.selected === undefined ? { ...ci, selected: true } : ci
     );
-    if (JSON.stringify(fixed) !== JSON.stringify(cartItems)) {
-      setCartItems(fixed);
+    if (JSON.stringify(updated) !== JSON.stringify(cartItems)) {
+      setCartItems(updated);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Helpers
+  // === Helpers ===
   const updateQuantity = (id, delta) => {
     setCartItems((prev) =>
       prev.map((ci) =>
@@ -37,13 +41,6 @@ export default function Cart({ cartItems, setCartItems }) {
     );
   };
 
-  const allSelected = cartItems.every((ci) => ci.selected !== false);
-  const toggleSelectAll = () => {
-    setCartItems((prev) =>
-      prev.map((ci) => ({ ...ci, selected: !allSelected }))
-    );
-  };
-
   const removeItem = (id) => {
     setCartItems((prev) => prev.filter((ci) => ci.id !== id));
   };
@@ -56,7 +53,44 @@ export default function Cart({ cartItems, setCartItems }) {
     setCartItems([]);
   };
 
-  // Only include checked/selected items for totals
+  const handleTempVariationChange = (id, label, value) => {
+    setTempSelectedOptions((prev) => ({
+      ...prev,
+      [id]: {
+        ...(prev[id] || {}),
+        [label]: value,
+      },
+    }));
+  };
+
+  const confirmVariationSelection = (id) => {
+    const updated = cartItems.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            selectedOptions: {
+              ...(item.selectedOptions || {}),
+              ...(tempSelectedOptions[id] || {}),
+            },
+          }
+        : item
+    );
+    setCartItems(updated);
+    localStorage.setItem("cartItems", JSON.stringify(updated));
+
+    setTempSelectedOptions((prev) => {
+      const { [id]: _, ...rest } = prev;
+      return rest;
+    });
+  };
+
+  // === Computed Values ===
+  const allSelected = cartItems.every((ci) => ci.selected !== false);
+  const toggleSelectAll = () =>
+    setCartItems((prev) =>
+      prev.map((ci) => ({ ...ci, selected: !allSelected }))
+    );
+
   const checkedItems = cartItems.filter((ci) => ci.selected !== false);
   const totalQuantity = checkedItems.reduce(
     (sum, ci) => sum + (ci.quantity || 0),
@@ -74,8 +108,22 @@ export default function Cart({ cartItems, setCartItems }) {
     0
   );
 
+  const handleCheckout = () => {
+    Swal.fire({
+      icon: "success",
+      title: "Order placed!",
+      text: "Thank you for your purchase.",
+      confirmButtonText: "OK",
+    });
+
+    const remaining = cartItems.filter((ci) => ci.selected === false);
+    setCartItems(remaining);
+    localStorage.setItem("cartItems", JSON.stringify(remaining));
+  };
+
   return (
     <div className="cart-container">
+      {/* Header */}
       <div className="cart-header">
         <span>
           <input
@@ -92,6 +140,7 @@ export default function Cart({ cartItems, setCartItems }) {
         <span>Actions</span>
       </div>
 
+      {/* Body */}
       {cartItems.map((item) => (
         <div className="cart-body" key={item.id}>
           <div className="cart-item">
@@ -102,11 +151,60 @@ export default function Cart({ cartItems, setCartItems }) {
               onChange={() => toggleSelect(item.id)}
             />
             <img src={item.image?.[0]} alt={item.title} />
-            <span>{item.title}</span>
+            <span className="cart-title">{item.title}</span>
+
+            <div className="cart-variation">
+              <span>
+                Variation:&nbsp;&nbsp;&nbsp;
+                <MDBIcon fas icon="caret-down" />
+              </span>
+              <span>
+                {Object.values(item.selectedOptions || {})
+                  .filter(Boolean)
+                  .join(", ") || "None"}
+              </span>
+
+              <div className="cart-variation-options">
+                {["Color", "Size", "Power"].map((label) => {
+                  const options = item[label.toLowerCase()];
+                  if (!options?.length) return null;
+
+                  return (
+                    <div className="cart-variation-btnOptions" key={label}>
+                      <span>{label}:</span>
+                      {options.map((opt, index) => {
+                        const selected =
+                          (tempSelectedOptions[item.id]?.[label] ??
+                            item.selectedOptions?.[label]) === opt;
+                        return (
+                          <button
+                            key={index}
+                            className={selected ? "selected" : ""}
+                            onClick={() =>
+                              handleTempVariationChange(item.id, label, opt)
+                            }
+                          >
+                            {opt}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+
+                <div className="cart-variation-confirm">
+                  <button onClick={() => confirmVariationSelection(item.id)}>
+                    CONFIRM
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div className="cart-price">
             <span>${(item.price || 0).toFixed(2)}</span>
           </div>
+
           <div className="cart-quantity">
             <div className="description-quantity-box">
               <button
@@ -131,6 +229,7 @@ export default function Cart({ cartItems, setCartItems }) {
               </button>
             </div>
           </div>
+
           <div className="cart-totalPrice">
             <span>
               $
@@ -141,12 +240,14 @@ export default function Cart({ cartItems, setCartItems }) {
               ).toFixed(2)}
             </span>
           </div>
+
           <div className="cart-action">
             <button onClick={() => removeItem(item.id)}>Delete</button>
           </div>
         </div>
       ))}
 
+      {/* Footer */}
       <div className="cart-footer">
         <div className="cart-selectDelete-all">
           <span>
@@ -155,8 +256,8 @@ export default function Cart({ cartItems, setCartItems }) {
               type="checkbox"
               checked={allSelected}
               onChange={toggleSelectAll}
-            />{" "}
-            Select all ({totalQuantity})
+            />
+            Select all ({cartItems.length})
           </span>
           <button className="cart-delete-all" onClick={deleteSelected}>
             Delete selected
@@ -165,12 +266,12 @@ export default function Cart({ cartItems, setCartItems }) {
             Delete all
           </button>
         </div>
+
         <div className="cart-checkOut-total">
           <div className="cart-checkOut-total-price">
             <div className="cart-checkOut-total-price-item">
               <span>
-                Total ({totalQuantity} item
-                {totalQuantity !== 1 && "s"}):
+                Total ({totalQuantity} item{totalQuantity !== 1 && "s"}):
               </span>
               <span>${totalPrice.toFixed(2)}</span>
             </div>
@@ -179,9 +280,11 @@ export default function Cart({ cartItems, setCartItems }) {
               <span>${totalSaved.toFixed(2)}</span>
             </div>
           </div>
+
           <button
             className="cart-checkOut-button"
             disabled={checkedItems.length === 0}
+            onClick={handleCheckout}
           >
             Check Out
           </button>
