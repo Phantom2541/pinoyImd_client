@@ -1,5 +1,5 @@
 import { MDBBtn, MDBModal, MDBModalHeader } from "mdbreact";
-import React, { useState } from "react";
+import { useState } from "react";
 import { computeGD, currency } from "../../../../../../../services/utilities";
 import { Services } from "../../../../../../../services/fakeDb";
 

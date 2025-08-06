@@ -45,11 +45,12 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
     dispatch(SetPARAMS({ key: "cc", value: _cells }));
   };
   const handleKeyDown = (e, index) => {
-    if (e.key === "Enter" || e.key === "Tab") {
+    if (e.key === "Enter") {
       e.preventDefault();
       const nextInput = inputRefs.current[index + 1];
       if (nextInput) {
         nextInput.focus();
+        nextInput.select();
       } else {
         setActiveTab("DIFF COUNT");
       }
@@ -83,16 +84,7 @@ export default function Cellcount({ setActiveTab = () => {}, activeTab = "" }) {
               <td className="py-1">
                 <input
                   type="number"
-                  ref={(el) => {
-                    inputRefs.current[index] = el;
-
-                    if (el && activeTab === "CELL COUNT") {
-                      setTimeout(() => {
-                        el.focus();
-                        el.select();
-                      }, 0); // immediate after current call stack
-                    }
-                  }}
+                  ref={(el) => (inputRefs.current[index] = el)}
                   style={{ color }}
                   name={index}
                   value={String(cell)}

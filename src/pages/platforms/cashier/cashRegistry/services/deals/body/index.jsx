@@ -475,7 +475,10 @@ const Tables = () => {
                       </div>
                       <h6
                         title="Cash"
-                        style={{ opacity: index === didHoverID ? 0 : 1 }}
+                        style={{
+                          opacity: index === didHoverID ? 0 : 1,
+                          fontSize: "0.7rem",
+                        }}
                       >
                         {currency.format(deal.cash)}
                       </h6>
