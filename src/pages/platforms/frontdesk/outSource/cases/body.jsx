@@ -1,69 +1,39 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { MDBTable } from "mdbreact";
+import React from "react";
+import { MDBTable, MDBTableBody, MDBTableHead, MDBBadge } from "mdbreact";
+import { useSelector } from "react-redux";
+import { fullName } from "../../../../../services/utilities";
 
-const Body = () => {
-  const { filtered, activePage, maxPage, isSuccess } = useSelector(
-    ({ admission }) => admission
-  );
-  const dispatch = useDispatch();
-
-  const [data, setData] = useState({
-    admissionTime: "",
-    admissionType: "",
-    physician: "",
-  });
-
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-  };
+export default function CaseBody() {
+  const { filtered } = useSelector((state) => state.cases);
 
   return (
-    <MDBTable responsive hover>
-      <tbody>
+    <MDBTable small bordered hover responsive>
+      <MDBTableHead>
         <tr>
-          <td className="pr-4 py-2 font-medium">Admission Date/Time</td>
-          <td>
-            <input
-              className="w-full"
-              type="datetime-local"
-              name="admissionTime"
-              value={data.admissionTime}
-              onChange={onChange}
-            />
-          </td>
+          <th>Patient #</th>
+          <th>Patient Name</th>
+          <th>Case #</th>
+          <th>Title</th>
+          <th>Remarks</th>
+          <th>Status</th>
         </tr>
-        <tr>
-          <td className="pr-4 py-2 font-medium">Type of Admission</td>
-          <td>
-            <select
-              className="w-full"
-              name="admissionType"
-              value={data.admissionType}
-              onChange={onChange}
-            >
-              <option value="">Select Type</option>
-              <option value="emergency">Emergency</option>
-              <option value="scheduled">Scheduled</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td className="pr-4 py-2 font-medium">Attending Physician</td>
-          <td>
-            <input
-              className="w-full"
-              type="text"
-              name="physician"
-              value={data.physician}
-              onChange={onChange}
-            />
-          </td>
-        </tr>
-      </tbody>
+      </MDBTableHead>
+      <MDBTableBody>
+        {filtered.map((item, index) => (
+          <tr key={index}>
+            <td>{item?.pId?.personnelNo || "—"}</td>
+            <td>{item?.pId ? fullName(item.pId) : "—"}</td>
+            <td>{item?.caseNumber || "—"}</td>
+            <td>{item?.title || "—"}</td>
+            <td>{item?.description || "—"}</td>
+            <td>
+              <MDBBadge color="info" pill className="text-capitalize">
+                {item?.status || "active"}
+              </MDBBadge>
+            </td>
+          </tr>
+        ))}
+      </MDBTableBody>
     </MDBTable>
   );
-};
-
-export default Body;
+}
