@@ -27,7 +27,11 @@ import generics from "../../../../pages/platforms/frontdesk/market/generics";
 import mentainance from "../../../../pages/platforms/frontdesk/market/mentainance";
 import { Billings } from "../../../../pages/platforms/frontdesk/Sendouts";
 import { SOA } from "../../../../pages/platforms/cashier";
-import { Status } from "../../../../pages/platforms/frontdesk";
+import {
+  Status,
+  Admission,
+  Cases,
+} from "../../../../pages/platforms/frontdesk";
 
 import {
   Tablestemplate,
@@ -470,6 +474,18 @@ const frontdesk = [
         component: SubExpired,
       },
     ],
+  },
+  {
+    name: "Cases",
+    icon: "tachometer-alt",
+    path: "/cases",
+    component: Cases,
+  },
+  {
+    name: "Admission",
+    icon: "tachometer-alt",
+    path: "/admission",
+    component: Admission,
   },
 ];
 

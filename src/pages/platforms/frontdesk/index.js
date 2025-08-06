@@ -1,6 +1,6 @@
 // export * from "./diagnostics";
 // export * from "./logbooks";
 
-import { Status } from "./outSource";
+import { Status, Admission, Cases } from "./outSource";
 
-export { Status };
+export { Status, Admission, Cases };
