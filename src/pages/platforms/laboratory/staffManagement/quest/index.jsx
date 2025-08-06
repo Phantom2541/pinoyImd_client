@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { MDBCard, MDBAnimation } from "mdbreact";
 
 import TableLoading from "../../../../../components/tableLoading";
-import Header from "./header";
 import Body from "./body";
 import Modal from "./modal";
 import ModalTeams from "./collapse/modal";
-import Footer from "./footer";
 
 const Index = () => {
   const { isLoading } = useSelector(({ quest }) => quest);

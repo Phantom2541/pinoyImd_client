@@ -4,8 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { SetTASK } from "../../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
 
 const Protime = () => {
-  const { theme } = useSelector(({ auth }) => auth),
-    { task } = useSelector(({ validator }) => validator),
+  const { task } = useSelector(({ validator }) => validator),
     [inr, setInr] = useState(),
     [percent, setPercent] = useState(),
     [pt, setPt] = useState([0, 0]),

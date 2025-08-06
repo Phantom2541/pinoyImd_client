@@ -91,7 +91,7 @@ const Preferences = {
       hi: 160,
       crical: 204,
       alert: 0,
-      crical: 200,
+      // crical: 200,
       unit: "g/l",
     },
     rbc: {

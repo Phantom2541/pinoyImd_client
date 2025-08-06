@@ -8,6 +8,9 @@ export default function Header({
   onSort,
   sortType,
   onCartClick,
+  onBack,
+  cartIconRef,
+  cartCount = 0,
 }) {
   const [searchInput, setSearchInput] = useState("");
 
@@ -24,26 +27,36 @@ export default function Header({
   return (
     <div className="stocks-header">
       <div className="stocks-header-top">
-        <div className="stocks-header-search">
-          <input
-            type="search"
-            placeholder="Search"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={handleKeyDown} // ← detect ENTER key
-          />
-          <MDBIcon
-            icon="search"
-            className="stocks-header-search-icon"
-            onClick={handleSearchClick} // ← detect icon click
-            style={{ cursor: "pointer" }}
-          />
+        <div className="header-backSearch-cotnainer">
+          <div className={`header-back ${onBack && "active"}`} onClick={onBack}>
+            <MDBIcon fas icon="arrow-left" /> Back
+          </div>
+
+          <div className="stocks-header-search">
+            <input
+              type="search"
+              placeholder="Search"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={handleKeyDown} // ← detect ENTER key
+            />
+            <MDBIcon
+              icon="search"
+              className="stocks-header-search-icon"
+              onClick={handleSearchClick} // ← detect icon click
+              style={{ cursor: "pointer" }}
+            />
+          </div>
         </div>
         <div className="stocks-header-cart">
-          <button className="stocks-header-cartBtn" onClick={onCartClick}>
+          <button
+            ref={cartIconRef}
+            className="stocks-header-cartBtn"
+            onClick={onCartClick}
+          >
             <MDBIcon fas icon="shopping-cart" />
           </button>
-          <span>101</span>
+          <span>{cartCount > 99 ? "99+" : cartCount}</span>
         </div>
       </div>
 

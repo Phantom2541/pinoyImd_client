@@ -249,8 +249,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SECRETARYAPPLICANTS.fulfilled, (state, action) => {
-        const { payload, query } = action.payload;
-        console.log("action.payloadsample", action.payload);
+        const { payload } = action.payload;
 
         state.collections = state.filtered = payload;
         state.isLoading = false;

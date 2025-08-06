@@ -1,6 +1,5 @@
 import Bulletin from "../../../../pages/platforms/cashier/bulletin";
 import { Calender, Scheduler } from "../../../../pages/platforms/hr/dtr";
-import { Sales } from "../../../../pages/platforms/accounting/businessOperations";
 import { Quest } from "../../../../pages/platforms/laboratory/staffManagement";
 import { Applicants } from "../../../../pages/platforms/manager/settings";
 import { Services, Menus } from "../../../../pages/platforms/accounting";

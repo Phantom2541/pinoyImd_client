@@ -1,10 +1,10 @@
 import React from "react";
-import Calendar from "./calendar";
+// import Calendar from "./calendar";
 import { MDBCard, MDBContainer, MDBAnimation } from "mdbreact";
 import Header from "./header";
 import "./style.css";
-
-export default function Ledger({ summaryRef, summaryBodyRef }) {
+// summaryRef, summaryBodyRef;
+export default function Ledger() {
   return (
     <MDBAnimation type="bounceInDown">
       <MDBContainer className="d-grid" fluid>

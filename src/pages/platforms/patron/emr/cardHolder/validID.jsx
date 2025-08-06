@@ -19,7 +19,7 @@ const CardRequest = ({ form, setForm, isValid, setIsValid }) => {
       setForm({ ...form, vi: { ...form.vi, img: image } });
     };
     getImage();
-  }, []);
+  }, [auth?.email, form, setForm, token, validID]);
   const handleUploadClick = () => {
     fileInputRef.current.click();
   };

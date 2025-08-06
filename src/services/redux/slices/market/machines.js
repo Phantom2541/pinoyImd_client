@@ -226,7 +226,7 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(DOWNLOAD_MIDDLEWARE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
+        const { success } = action.payload;
 
         state.isSuccess = success;
         state.isLoading = false;
