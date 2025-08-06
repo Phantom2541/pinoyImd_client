@@ -1,8 +1,4 @@
-import {
-  capitalize,
-  getAge,
-  fullName as nameFormatter,
-} from "../../../../services/utilities";
+import { capitalize, getAge } from "../../../../services/utilities";
 import { MDBRow, MDBCol, MDBAlert } from "mdbreact";
 import { Categories } from "../../../../services/fakeDb";
 import { formColor } from "../../../../services/utilities";
@@ -11,15 +7,17 @@ export default function Header({ task }) {
   const { category, patient, source, referral, form, updatedAt } = task;
   const { fullName: pFull, isMale = false, dob = "", _id } = patient;
   const categoryWidth = source && referral ? "30%" : "64.2%";
+
+  const patientName = `${pFull.lname.toUpperCase()},${pFull.fname.toUpperCase()} ${
+    pFull.mname ? `y ${pFull.mname.toUpperCase()}` : ""
+  }`;
   return (
     <div className="px-1">
       <div className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center">
           Name:&nbsp;
           <h5 className="mb-0 fw-bold text-nowrap">
-            <u className="text-nowrap">
-              {nameFormatter(pFull, true).toUpperCase()}
-            </u>
+            <u className="text-nowrap">{patientName}</u>
           </h5>
         </div>
         <div>

@@ -35,8 +35,17 @@ const individual = (
   }
 
   if (privilege === 4 && !isWellness) {
-    up = promo > 0 ? promo : up;
+    return {
+      gross,
+      up,
+      discount: gross - up,
+      color: "primary",
+      title: "Special Price",
+    };
+  }
 
+  if (privilege === 5 && !isWellness) {
+    up = promo > 0 ? promo : up;
     return {
       gross,
       up,

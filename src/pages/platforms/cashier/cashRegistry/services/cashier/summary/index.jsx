@@ -92,9 +92,14 @@ export default function Summary() {
             packages = [],
             _id,
             isNew,
-            discount: soldDiscount,
           } = menu,
-          { up } = computeGD(menu, category, privilege, membership, hmo);
+          { up, discount: soldDiscount } = computeGD(
+            menu,
+            category,
+            privilege,
+            membership,
+            hmo
+          );
 
         return {
           capital,

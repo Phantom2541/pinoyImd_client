@@ -9,9 +9,8 @@ import {
 import { useToasts } from "react-toast-notifications";
 import {
   fullName,
-  ENDPOINT,
   CLOUDINARY_ENDPOINT,
-  buildImageForm,
+  buildFileForm,
 } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
@@ -38,8 +37,7 @@ export default function Body() {
     { addToast } = useToasts(),
     [currentPage, setCurrentPage] = useState(1),
     itemsPerPage = 6,
-    [animateClass, setAnimateClass] = useState(""),
-    [savedImage, setSavedImage] = useState(null);
+    [animateClass, setAnimateClass] = useState("");
   const dispatch = useDispatch();
   const [imageErrors, setImageErrors] = useState({});
   const [signatureRefreshKey, setSignatureRefreshKey] = useState({});
@@ -67,7 +65,7 @@ export default function Body() {
 
       reader.onload = () => {
         file.signature = file.name;
-        const formData = buildImageForm(
+        const formData = buildFileForm(
           reader.result,
           `users/${email}`,
           "signature"
@@ -150,13 +148,6 @@ export default function Body() {
     setImageErrors((prev) => ({ ...prev, [email]: true }));
   };
 
-  const handleImageChange = (file, imageUrl) => {
-    console.log(savedImage);
-    console.log(file);
-
-    setSavedImage(imageUrl);
-  };
-
   const updateAuth = (data) => {
     const { user, prc } = data;
     dispatch(UPDATE_INFO({ token, data: { _id: user, prc } })).then(
@@ -182,7 +173,7 @@ export default function Body() {
   };
 
   const handleUploadProfile = (base64, email) => {
-    const formData = buildImageForm(base64, `users/${email}`, "profile");
+    const formData = buildFileForm(base64, `users/${email}`, "profile");
     dispatch(
       UPLOAD({
         data: formData,
@@ -193,6 +184,7 @@ export default function Body() {
         ...prev,
         [email]: Date.now(),
       }));
+      addToast("Profile Successfully uploaded!", { appearance: "success" });
     });
   };
 
@@ -215,17 +207,14 @@ export default function Body() {
             >
               <div className="signatories-card-header">
                 <ImageDragAndDrop
-                  img={
-                    `${CLOUDINARY_ENDPOINT}/users/${email}/profile.png?=${emailRefreshKey?.[email]}` ||
-                    ""
-                  }
-                  savedImg={handleImageChange}
-                  setImgEmail={email}
+                  key={emailRefreshKey?.[email]}
+                  img={`${CLOUDINARY_ENDPOINT}/users/${email}/profile.png?refresh=${
+                    emailRefreshKey[email] || Date.now()
+                  }`}
                   handleUpload={(cropImg) =>
                     handleUploadProfile(cropImg, email)
                   }
-                  setImgName="profile"
-                  token={token}
+                  formSubmitted={fsAuth}
                   allowedType="jpg"
                 />
               </div>

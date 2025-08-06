@@ -1,31 +1,37 @@
-import Header from "./header.jsx";
-import Tab from "./tab.jsx";
-import Footer from "./footer.jsx";
-import Body from "./body.jsx";
-import { useState } from "react";
-import { MDBCard, MDBAnimation } from "mdbreact";
+import React, { useState, useEffect } from "react";
+import Header from "./header";
+import Body from "./body";
+import CaseModal from "./modal";
+import { useDispatch, useSelector } from "react-redux";
+import { BROWSE } from "../../../../../services/redux/slices/commerce/pos/services/cases";
 
-const CaseAdmissionForm = () => {
-  const [activeTab, setActiveTab] = useState("patient");
-  const [formData, setFormData] = useState({});
+export default function CaseIndex() {
+  const dispatch = useDispatch();
+  const [modal, setModal] = useState(false);
+  const [selected, setSelected] = useState({});
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  useEffect(() => {
+    if (token) {
+      dispatch(BROWSE({ token, params: { branchId: activePlatform.branchId } }));
+    }
+  }, [token, activePlatform, dispatch]);
+
+  const handleAdd = () => {
+    setSelected({});
+    setModal(true);
+  };
+
+  const handleEdit = (item) => {
+    setSelected(item);
+    setModal(true);
   };
 
   return (
     <>
-      <MDBAnimation type="bounceInDown">
-        <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-          <Header />
-          <Tab activeTab={activeTab} setActiveTab={setActiveTab} />
-          <Body activeTab={activeTab} data={formData} onChange={handleChange} />
-          <Footer onSubmit={() => alert("Patient & Admission saved!")} />
-        </MDBCard>
-      </MDBAnimation>
+      <Header onAdd={handleAdd} />
+      <Body onEdit={handleEdit} />
+      <CaseModal modal={modal} toggle={() => setModal(false)} selected={selected} />
     </>
   );
-};
-
-export default CaseAdmissionForm;
+}

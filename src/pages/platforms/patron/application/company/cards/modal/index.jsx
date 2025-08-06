@@ -10,7 +10,10 @@ import {
   MDBIcon,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { properFullname } from "../../../../../../../services/utilities/index.js";
+import {
+  buildFileForm,
+  properFullname,
+} from "../../../../../../../services/utilities/index.js";
 import {
   SAVE,
   APPLICATION,
@@ -112,12 +115,11 @@ export default function ApplicationModal({
     const reader = new FileReader();
 
     reader.onload = () => {
-      const base64 = reader.result.split(",")[1]; // Get only the base64 part
       setApplication((prev) => ({
         ...prev,
         file201: {
           ...prev.file201,
-          [name]: base64,
+          [name]: reader.result,
         },
       }));
 
@@ -143,15 +145,16 @@ export default function ApplicationModal({
     const { DataSheet = "", Resume = "", AppLetter = "" } = file201;
     //save file201 pdfs
     Object.entries(file201)?.forEach(([key, value]) => {
+      const formData = buildFileForm(
+        value,
+        `users/${auth.email}/credentials${
+          key !== "dataSheet" ? `/${company.name}` : ""
+        }`,
+        key
+      );
       dispatch(
         UPLOAD({
-          data: {
-            path: `users/${auth.email}/credentials${
-              key !== "dataSheet" ? `/${company.name}` : ""
-            }`,
-            base64: value,
-            name: `${key}.pdf`,
-          },
+          data: formData,
           token,
         })
       );
@@ -180,6 +183,7 @@ export default function ApplicationModal({
       })
     );
   };
+
   const PDF_VIEWER = (path) => {
     if (!file201Preview[path]) return "";
 
