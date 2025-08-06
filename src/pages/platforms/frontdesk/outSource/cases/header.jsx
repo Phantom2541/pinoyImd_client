@@ -1,17 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
 import { BROWSE } from "../../../../../services/redux/slices/commerce/pos/services/admission";
+
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth); //get the max page
-  const { collections } = useSelector(({ onBoardings }) => onBoardings), //
+  const { collections } = useSelector(({ admission }) => admission), //
     dispatch = useDispatch();
 
   //initial values
   useEffect(() => {
-    if (token && activePlatform?.branchId)
-      dispatch(BROWSE({ key: { branchId: activePlatform?.branchId }, token }));
-  }, [dispatch, activePlatform, token]);
+    if (token && activePlatform?.branchId) {
+      dispatch(BROWSE({ key: { branchId: activePlatform.branchId }, token }));
+    }
+  }, [token, activePlatform?.branchId, dispatch]);
 
   return (
     <MDBView
@@ -20,7 +22,7 @@ const Header = () => {
     >
       <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
         <span className="white-text mx-3 text-nowrap mt-0">
-          {collections?.length} Patient and Admission Info
+          {collections?.length} Cases form
         </span>
       </div>
     </MDBView>

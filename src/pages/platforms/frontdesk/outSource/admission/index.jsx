@@ -1,31 +1,23 @@
+import React from "react";
+import { useSelector } from "react-redux";
+import { MDBCard, MDBCardBody, MDBAnimation } from "mdbreact";
+
+import TableLoading from "../../../../../components/tableLoading";
 import Header from "./header";
-import Tab from "./tab";
+import Body from "./collapse";
 import Footer from "./footer";
-import Body from "./body.jsx";
-import { useState } from "react";
-import { MDBCard, MDBAnimation } from "mdbreact";
-
-const CaseAdmissionForm = () => {
-  const [activeTab, setActiveTab] = useState("patient");
-  const [formData, setFormData] = useState({});
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+const Collapsable = () => {
+  const { isLoading } = useSelector(({ admission }) => admission);
 
   return (
-    <>
-      <MDBAnimation type="bounceInDown">
-        <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-          <Header />
-          <Tab activeTab={activeTab} setActiveTab={setActiveTab} />
-          <Body activeTab={activeTab} data={formData} onChange={handleChange} />
-          <Footer onSubmit={() => alert("Patient & Admission saved!")} />
-        </MDBCard>
-      </MDBAnimation>
-    </>
+    <MDBAnimation type="bounceInDown">
+      <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
+        <Header />
+        <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
+        <Footer />
+      </MDBCard>
+    </MDBAnimation>
   );
 };
 
-export default CaseAdmissionForm;
+export default Collapsable;
