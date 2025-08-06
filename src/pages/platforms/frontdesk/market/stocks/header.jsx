@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 
@@ -13,11 +13,19 @@ export default function Header({
   cartCount = 0,
 }) {
   const [searchInput, setSearchInput] = useState("");
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    if (cartCount > 0) {
+      setAnimate(false);
+      requestAnimationFrame(() => setAnimate(true));
+      const timeout = setTimeout(() => setAnimate(false), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [cartCount]);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      onSearch(searchInput);
-    }
+    if (e.key === "Enter") onSearch(searchInput);
   };
 
   const handleSearchClick = () => {
@@ -28,7 +36,10 @@ export default function Header({
     <div className="stocks-header">
       <div className="stocks-header-top">
         <div className="header-backSearch-cotnainer">
-          <div className={`header-back ${onBack && "active"}`} onClick={onBack}>
+          <div
+            className={`header-back ${onBack ? "active" : ""}`}
+            onClick={onBack}
+          >
             <MDBIcon fas icon="arrow-left" /> Back
           </div>
 
@@ -38,20 +49,21 @@ export default function Header({
               placeholder="Search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={handleKeyDown} // ← detect ENTER key
+              onKeyDown={handleKeyDown}
             />
             <MDBIcon
               icon="search"
               className="stocks-header-search-icon"
-              onClick={handleSearchClick} // ← detect icon click
+              onClick={handleSearchClick}
               style={{ cursor: "pointer" }}
             />
           </div>
         </div>
+
         <div className="stocks-header-cart">
           <button
             ref={cartIconRef}
-            className="stocks-header-cartBtn"
+            className={`stocks-header-cartBtn ${animate ? "cart-animate" : ""}`}
             onClick={onCartClick}
           >
             <MDBIcon fas icon="shopping-cart" />
@@ -76,12 +88,15 @@ export default function Header({
             >
               Top Sales
             </button>
+
             <div className="stocks-sort-options">
               <span className="stocks-sort-options-label">
                 Price
                 {sortType === "priceLowHigh"
                   ? ": Low to High"
-                  : ": High to Low"}
+                  : sortType === "priceHighLow"
+                  ? ": High to Low"
+                  : ""}
               </span>
               <MDBIcon icon="angle-down" className="stocks-sort-options-icon" />
               <div className="stocks-sort-options-list">

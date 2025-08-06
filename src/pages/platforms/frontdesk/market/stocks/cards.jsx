@@ -6,14 +6,14 @@ export default function Cards({
   currentPage,
   onPageChange,
   onCardClick,
-  onAddToCart,
 }) {
   const itemsPerPage = 12;
   const totalPages = Math.ceil(collections.length / itemsPerPage);
-
   const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = collections.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = collections.slice(
+    indexOfLastItem - itemsPerPage,
+    indexOfLastItem
+  );
 
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
@@ -23,7 +23,7 @@ export default function Cards({
       (i >= currentPage - 1 && i <= currentPage + 1)
     ) {
       pageNumbers.push(i);
-    } else if (pageNumbers[pageNumbers.length - 1] !== "...") {
+    } else if (pageNumbers.at(-1) !== "...") {
       pageNumbers.push("...");
     }
   }
@@ -31,53 +31,39 @@ export default function Cards({
   return (
     <div className="stock-cards-wrapper">
       <div className="stock-cards-container">
-        {currentItems.map((item) => {
-          const imgRef = React.createRef(); // ← move this here
-
-          return (
-            <div
-              className="stock-cards"
-              key={item.id}
-              onClick={() => onCardClick(item)}
-              style={{ cursor: "pointer" }}
-            >
-              <img ref={imgRef} src={item.image[0]} alt={item.title} />
-              <div className="stock-cards-body">
-                <div className="stock-cards-info">
-                  <span className="stock-cards-title">{item.title}</span>
-
-                  <span className="stock-cards-price">
-                    ${Math.round(item.price * (1 - item.discount / 100))}
+        {currentItems.map((item) => (
+          <div
+            className="stock-cards"
+            key={item.id}
+            onClick={() => onCardClick(item)}
+            style={{ cursor: "pointer" }}
+          >
+            <img src={item.image[0]} alt={item.title} />
+            <div className="stock-cards-body">
+              <div className="stock-cards-info">
+                <span className="stock-cards-title">{item.title}</span>
+                <span className="stock-cards-price">
+                  ${Math.round(item.price * (1 - item.discount / 100))}
+                  {item.discount > 0 && (
                     <span className="stock-cards-original">
                       &nbsp;${item.price}
                     </span>
-                  </span>
-
+                  )}
+                </span>
+                {item.discount > 0 && (
                   <span className="stock-cards-discount">
                     {item.discount}% off
                   </span>
-                </div>
-                <div className="stock-cards-stats">
-                  <span className="stock-cards-star">★</span>
-                  <span className="stock-cards-rating">{item.rating}</span>
-                  <span className="stock-cards-sold">
-                    {item.sold} sold/month
-                  </span>
-                </div>
+                )}
               </div>
-
-              <button
-                className="stock-cards-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onAddToCart(imgRef, item); // now passes the whole item
-                }}
-              >
-                <MDBIcon icon="cart-plus" /> Add to Cart
-              </button>
+              <div className="stock-cards-stats">
+                <span className="stock-cards-star">★</span>
+                <span className="stock-cards-rating">{item.rating}</span>
+                <span className="stock-cards-sold">{item.sold} sold/month</span>
+              </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
       <div className="stock-cards-pagination">
