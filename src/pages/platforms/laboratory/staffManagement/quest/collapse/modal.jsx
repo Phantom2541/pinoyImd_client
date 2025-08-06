@@ -34,6 +34,8 @@ export default function Modal() {
   const [member, setMember] = useState();
   const [branch, setBranch] = useState();
 
+  console.log("branch", branch);
+
   useEffect(() => {
     setForm({
       type: "inhouse",

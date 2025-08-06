@@ -13,8 +13,7 @@ import { useSelector } from "react-redux";
 import { Protime, APTT } from "./containers";
 
 const Coagulation = () => {
-  const { token, auth } = useSelector(({ auth }) => auth),
-    { packages } = useSelector(({ task }) => task),
+  const { packages } = useSelector(({ task }) => task),
     [pt, setPt] = useState([null, null]),
     [aptt, setAptt] = useState([null, null]),
     [verticalActive, setVerticalActive] = useState("tab1");

@@ -56,38 +56,38 @@ export default function ProfileImage({ task, setTask }) {
     };
   }, [capturedImage, finalImage]);
 
-  const handleError = (message) => addToast(message, { appearance: "warning" });
+  // const handleError = (message) => addToast(message, { appearance: "warning" });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!isJpegOrJpgFile(file))
-      return handleError("Please select a JPG image.");
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (!isJpegOrJpgFile(file))
+  //     return handleError("Please select a JPG image.");
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.src = e.target.result;
-      img.onload = () => {
-        if (img.width !== img.height)
-          return handleError("Image must be square.");
+  //   const reader = new FileReader();
+  //   reader.onload = (e) => {
+  //     const img = new Image();
+  //     img.src = e.target.result;
+  //     img.onload = () => {
+  //       if (img.width !== img.height)
+  //         return handleError("Image must be square.");
 
-        setFile(file);
-        setTask({ ...task, image: "profile.jpg" });
+  //       setFile(file);
+  //       setTask({ ...task, image: "profile.jpg" });
 
-        dispatch(
-          UPLOAD({
-            data: {
-              path: `${task.patient.email}`,
-              base64: reader.result.split(",")[1],
-              name: "profile.jpg",
-            },
-            token,
-          })
-        );
-      };
-    };
-    reader.readAsDataURL(file);
-  };
+  //       dispatch(
+  //         UPLOAD({
+  //           data: {
+  //             path: `${task.patient.email}`,
+  //             base64: reader.result.split(",")[1],
+  //             name: "profile.jpg",
+  //           },
+  //           token,
+  //         })
+  //       );
+  //     };
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
   const capturePhoto = () => {
     const canvas = canvasRef.current;
