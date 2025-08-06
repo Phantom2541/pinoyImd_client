@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { MDBModal, MDBModalBody, MDBModalHeader, MDBInput, MDBBtn } from "mdbreact";
+import {
+  MDBModal,
+  MDBModalBody,
+  MDBModalHeader,
+  MDBInput,
+  MDBBtn,
+} from "mdbreact";
 import { useDispatch } from "react-redux";
 import { SAVE, UPDATE } from "../../../../../../services/redux/slices/commerce/pos/services/cases";
 
@@ -9,18 +15,29 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
     pId: "",
     caseNumber: "",
     title: "",
-    reason: "",
+    description: "",
+    remarks: "",
+    assignedAt: "",
+    notes: "",
   });
 
   useEffect(() => {
     if (selected && selected._id) {
-      setForm(selected);
+      const attending = selected.ap?.[0] || {};
+      setForm({
+        ...selected,
+        assignedAt: attending.assignedAt || "",
+        notes: attending.notes || "",
+      });
     } else {
       setForm({
         pId: "",
         caseNumber: "",
         title: "",
-        reason: "",
+        description: "",
+        remarks: "",
+        assignedAt: "",
+        notes: "",
       });
     }
   }, [selected]);
@@ -30,11 +47,23 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
   };
 
   const handleSubmit = () => {
+    const newCase = {
+      ...form,
+      ap: [
+        {
+          userId: form.pId, // assuming pId is userId for attending physician
+          assignedAt: form.assignedAt,
+          notes: form.notes,
+        },
+      ],
+    };
+
     if (form._id) {
-      dispatch(UPDATE({ data: form, token: "" }));
+      dispatch(UPDATE({ data: newCase, token: "" }));
     } else {
-      dispatch(SAVE({ data: form, token: "" }));
+      dispatch(SAVE({ data: newCase, token: "" }));
     }
+
     toggle();
   };
 
@@ -63,9 +92,28 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
           onChange={handleChange}
         />
         <MDBInput
-          label="Reason for Admission"
-          name="reason"
-          value={form.reason}
+          label="Description"
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+        />
+        <MDBInput
+          label="Remarks"
+          name="remarks"
+          value={form.remarks}
+          onChange={handleChange}
+        />
+        <MDBInput
+          label="Assigned At"
+          type="datetime-local"
+          name="assignedAt"
+          value={form.assignedAt}
+          onChange={handleChange}
+        />
+        <MDBInput
+          label="Notes"
+          name="notes"
+          value={form.notes}
           onChange={handleChange}
         />
         <MDBBtn color="primary" block onClick={handleSubmit}>

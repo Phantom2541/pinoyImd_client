@@ -1,23 +1,22 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView, MDBBtn } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
 import {
   BROWSE,
   SetFILTERED,
-  SetCREATE,
 } from "../../../../../services/redux/slices/commerce/pos/services/cases";
 
-export default function Header() {
+export default function Header({ onAdd }) {
   const dispatch = useDispatch();
-  const { token, activePlatform } = useSelector(({ auth }) => auth);
+  const { token } = useSelector(({ auth }) => auth);
   const { collections } = useSelector(({ cases }) => cases);
 
   useEffect(() => {
-    if (token && activePlatform?.branchId) {
-      dispatch(BROWSE({ token, params: { branchId: activePlatform.branchId } }));
+    if (token) {
+      dispatch(BROWSE({ token }));
     }
-  }, [token, dispatch, activePlatform]);
+  }, [token, dispatch]);
 
   return (
     <MDBView
@@ -26,7 +25,10 @@ export default function Header() {
       style={{ borderRadius: "0.3rem" }}
     >
       <div className="d-flex justify-content-between align-items-center flex-wrap">
-        <h5 className="white-text m-0">{collections.length} Patient Cases</h5>
+        <h5 className="white-text m-0">
+          {collections?.length || 0} Patient Cases
+        </h5>
+
         <div className="d-flex align-items-center gap-2 mt-2 mt-md-0" style={{ minWidth: "300px" }}>
           <Search
             collections={collections}
@@ -36,8 +38,13 @@ export default function Header() {
             hideButton={true}
           />
 
+          {onAdd && (
+            <MDBBtn color="light" size="sm" onClick={onAdd} className="ml-2">
+              <i className="fas fa-plus" />
+            </MDBBtn>
+          )}
         </div>
       </div>
     </MDBView>
   );
-}
+} 
