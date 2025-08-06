@@ -21,13 +21,13 @@ import Search from "../../../../../components/searchables/search";
 import "./style.css";
 
 export default function UnsetApply() {
-  const { token, maxPage, activePlatform } = useSelector(({ auth }) => auth),
+  const { token, maxPage } = useSelector(({ auth }) => auth),
     { collections, isLoading, filtered } = useSelector(
       ({ companies }) => companies
     ),
     [companies, setCompanies] = useState([]),
     [page, setPage] = useState(1),
-    [totalPages, setTotalPages] = useState(1),
+    // [totalPages, setTotalPages] = useState(1),
     dispatch = useDispatch();
   useEffect(() => {
     if (token) {
@@ -48,7 +48,7 @@ export default function UnsetApply() {
         })
       );
     return () => dispatch(RESET());
-  }, [dispatch]);
+  }, [collections, dispatch, token]);
 
   useEffect(() => {
     setCompanies(filtered);
@@ -59,7 +59,7 @@ export default function UnsetApply() {
       //Pagination
       let totalPages = Math.floor(companies.length / maxPage);
       if (companies.length % maxPage > 0) totalPages += 1;
-      setTotalPages(totalPages);
+      // setTotalPages(totalPages);
 
       page > totalPages && setPage(totalPages);
     }

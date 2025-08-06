@@ -6,7 +6,6 @@ import {
   SetTASK,
   SetWorkArea,
 } from "../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
-import Swal from "sweetalert2";
 import LIS_STATUS from "../lis-status.jsx";
 
 const Tasks = ({ key, form, obj, index, customer, deal }) => {

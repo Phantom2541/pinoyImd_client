@@ -151,6 +151,9 @@ export default function Body() {
   };
 
   const handleImageChange = (file, imageUrl) => {
+    console.log(savedImage);
+    console.log(file);
+
     setSavedImage(imageUrl);
   };
 

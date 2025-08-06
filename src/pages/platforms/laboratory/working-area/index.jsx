@@ -123,7 +123,7 @@ export default function WorkingArea() {
     return () => {
       socket.off("A15-RECEIVER", handleReceive);
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <MDBCard narrow>

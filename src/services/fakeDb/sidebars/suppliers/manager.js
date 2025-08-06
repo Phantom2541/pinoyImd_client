@@ -4,7 +4,6 @@ import {
   Details,
   Applicants,
   Tieups,
-  Banner,
 } from "../../../../pages/platforms/manager/index.js";
 // } from "../../../../pages/platforms/manager/settings/index.jsx";
 import {

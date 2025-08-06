@@ -48,7 +48,7 @@ const CardRequest = ({
     };
 
     fetchBothImages();
-  }, []);
+  }, [auth, form, healthCard, setForm, token]);
 
   const handleUploadClick = (_isFront) => {
     setIsFront(_isFront);

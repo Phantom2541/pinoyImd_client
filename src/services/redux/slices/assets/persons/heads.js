@@ -178,10 +178,10 @@ export const reduxSlice = createSlice({
     SetActivePAGE: (state, { payload }) => {
       state.activePage = payload;
     },
-    RESET: (state) => {
-      state.isSuccess = false;
-      state.message = "";
-    },
+    // RESET: (state) => {
+    //   state.isSuccess = false;
+    //   state.message = "";
+    // },
   },
 
   extraReducers: (builder) => {

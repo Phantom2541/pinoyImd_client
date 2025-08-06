@@ -109,7 +109,7 @@ export default function CardioGraph({
     // Finish with flat line to end
     d += ` L3000,${baseline}`;
     return d;
-  }, [waves]);
+  }, [waves, pathId]);
 
   return (
     <div className={`ecg-wrapper ${className}`}>
