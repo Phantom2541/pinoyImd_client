@@ -9,7 +9,6 @@ import {
   fullName,
 } from "../../../../../../services/utilities";
 import { Quotes } from "../../../../../../services/fakeDb";
-import DEFAULT from "../../../../../../assets/iMD.png";
 import { MDBAnimation } from "mdbreact";
 import ImageDragAndDrop from "../../../../../../components/images/imageDragAndDrop/dragNdroping";
 import EditableField from "../../../../../../components/customizable/editableField";
