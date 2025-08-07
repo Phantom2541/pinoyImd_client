@@ -11,7 +11,7 @@ import {
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  buildFileForm,
+  Cloudinary,
   properFullname,
 } from "../../../../../../../services/utilities/index.js";
 import {
@@ -145,7 +145,7 @@ export default function ApplicationModal({
     const { DataSheet = "", Resume = "", AppLetter = "" } = file201;
     //save file201 pdfs
     Object.entries(file201)?.forEach(([key, value]) => {
-      const formData = buildFileForm(
+      const formData = Cloudinary.buildFileForm(
         value,
         `users/${auth.email}/credentials${
           key !== "dataSheet" ? `/${company.name}` : ""

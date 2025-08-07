@@ -7,11 +7,7 @@ import {
   RESET,
 } from "../../../.././../services/redux/slices/assets/persons/heads";
 import { useToasts } from "react-toast-notifications";
-import {
-  fullName,
-  CLOUDINARY_ENDPOINT,
-  buildFileForm,
-} from "../../../../../services/utilities";
+import { fullName, Cloudinary } from "../../../../../services/utilities";
 import Swal from "sweetalert2";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
@@ -52,6 +48,18 @@ export default function Body() {
     }
   }, [isSuccess, message, addToast]);
 
+  // Load from localStorage (once)
+  useEffect(() => {
+    const savedSignatureKeys = JSON.parse(
+      localStorage.getItem("signatureRefreshKey") || "{}"
+    );
+    const savedEmailKeys = JSON.parse(
+      localStorage.getItem("emailRefreshKey") || "{}"
+    );
+    setSignatureRefreshKey(savedSignatureKeys);
+    setEmailRefreshKey(savedEmailKeys);
+  }, []);
+
   useEffect(() => {
     setHeads(filtered);
   }, [filtered]);
@@ -65,7 +73,7 @@ export default function Body() {
 
       reader.onload = () => {
         file.signature = file.name;
-        const formData = buildFileForm(
+        const formData = Cloudinary.buildFileForm(
           reader.result,
           `users/${email}`,
           "signature"
@@ -78,10 +86,9 @@ export default function Body() {
           })
         ).then(() => {
           setImageErrors((prev) => ({ ...prev, [email]: false }));
-          setSignatureRefreshKey((prev) => ({
-            ...prev,
-            [email]: Date.now(),
-          }));
+          const updated = { ...signatureRefreshKey, [email]: Date.now() };
+          setSignatureRefreshKey(updated);
+          localStorage.setItem("signatureRefreshKey", JSON.stringify(updated));
           addToast("Signature updated!", { appearance: "success" });
         });
       };
@@ -173,17 +180,20 @@ export default function Body() {
   };
 
   const handleUploadProfile = (base64, email) => {
-    const formData = buildFileForm(base64, `users/${email}`, "profile");
+    const formData = Cloudinary.buildFileForm(
+      base64,
+      `users/${email}`,
+      "profile"
+    );
     dispatch(
       UPLOAD({
         data: formData,
         token,
       })
     ).then(() => {
-      setEmailRefreshKey((prev) => ({
-        ...prev,
-        [email]: Date.now(),
-      }));
+      const updated = { ...emailRefreshKey, [email]: Date.now() };
+      setEmailRefreshKey(updated);
+      localStorage.setItem("emailRefreshKey", JSON.stringify(updated));
       addToast("Profile Successfully uploaded!", { appearance: "success" });
     });
   };
@@ -207,9 +217,9 @@ export default function Body() {
             >
               <div className="signatories-card-header">
                 <ImageDragAndDrop
-                  key={emailRefreshKey?.[email]}
-                  img={`${CLOUDINARY_ENDPOINT}/users/${email}/profile.png?refresh=${
-                    emailRefreshKey[email] || Date.now()
+                  key={emailRefreshKey[email] || email}
+                  img={`${Cloudinary.getEndpoint()}/users/${email}/profile.png?refresh=${
+                    emailRefreshKey[email] || ""
                   }`}
                   handleUpload={(cropImg) =>
                     handleUploadProfile(cropImg, email)
@@ -269,13 +279,13 @@ export default function Body() {
                 <div className="signatories-card-signature-container">
                   {!imageErrors[email] ? (
                     <img
-                      key={Date.now()}
+                      key={signatureRefreshKey[email] || email}
                       onClick={() => {
                         document.getElementById(`file-upload-${email}`).click();
                       }}
                       alt="Signature"
-                      src={`${CLOUDINARY_ENDPOINT}/users/${email}/signature.png?v=${
-                        signatureRefreshKey[email] || Date.now()
+                      src={`${Cloudinary.getEndpoint()}/users/${email}/signature.png?v=${
+                        signatureRefreshKey[email] || ""
                       }`}
                       onError={() => handleImageError(email)}
                       className="signatories-card-signature"

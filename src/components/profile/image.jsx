@@ -8,7 +8,7 @@ import {
   MDBBtnGroup,
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { PresetImage } from "../../services/utilities";
+import { Cloudinary, PresetImage } from "../../services/utilities";
 import { useToasts } from "react-toast-notifications";
 import { IMAGE, UPLOAD } from "../../services/redux/slices/assets/persons/auth";
 import { ImageCropper } from "../../../src/components/images";
@@ -17,18 +17,6 @@ export default function ProfileImage() {
   const { auth, token, progressBar, image } = useSelector(({ auth }) => auth),
     dispatch = useDispatch(),
     { addToast } = useToasts();
-
-  console.log(image);
-
-  // useEffect(() => {
-  //   if (file && progressBar === 100) {
-  //     dispatch(IMAGE(URL.createObjectURL(file)));
-  //     setFile(null);
-  //     addToast("Image Updated Successfully.", {
-  //       appearance: "success",
-  //     });
-  //   }
-  // }, [progressBar, file, dispatch, addToast]);
 
   const handleError = (message) =>
     addToast(message, {
@@ -85,18 +73,11 @@ export default function ProfileImage() {
   };
 
   const handleUpload = (img) => {
-    const byteString = atob(img.split(",")[1]);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    const newBlob = new Blob([ab], { type: "image/png" });
-    const file = new File([newBlob], "profile.png", { type: "image/png" });
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("folder", `users/${auth.email}`);
-    formData.append("filename", "profile");
+    const formData = Cloudinary.buildFileForm(
+      img,
+      `users/${auth.email}`,
+      "profile"
+    );
     dispatch(
       UPLOAD({
         data: formData,
