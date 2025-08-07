@@ -6,6 +6,7 @@ import TableLoading from "../../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./collapse";
 import Footer from "./footer";
+import Modal from "./modal";
 const Collapsable = () => {
   const { isLoading } = useSelector(({ admission }) => admission);
 
@@ -16,6 +17,7 @@ const Collapsable = () => {
         <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
         <Footer />
       </MDBCard>
+      <Modal />
     </MDBAnimation>
   );
 };

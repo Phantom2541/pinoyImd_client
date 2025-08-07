@@ -12,11 +12,11 @@ const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { collections } = useSelector(({ admission }) => admission),
     dispatch = useDispatch();
-
+  const handleAdd = (item) => dispatch(SetCREATE(item));
   //initial values
   useEffect(() => {
     if (token) {
-      dispatch(BROWSE({ token, branchId: activePlatform.branchId }));
+      dispatch(BROWSE({ token, key: { branchId: activePlatform.branchId } }));
     }
   }, [dispatch, token, activePlatform]);
 
@@ -39,7 +39,7 @@ const Header = () => {
             haveAction={true}
             reset={() => dispatch(SetFILTERED(collections))}
             hideButton={true}
-            handleAdd={(item) => dispatch(SetCREATE())}
+            handleAdd={(item) => handleAdd(item)}
           />
         </div>
       </div>
