@@ -32,7 +32,6 @@ export default function Applicants() {
     [applicants, setApplicants] = useState([]),
     dispatch = useDispatch(),
     { addToast } = useToasts();
-  console.log("applicants", applicants);
 
   useEffect(() => {
     if (message) {
@@ -41,7 +40,6 @@ export default function Applicants() {
       });
     }
   }, [isSuccess, message, addToast]);
-
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       dispatch(BROWSE({ token, data: { branchId: activePlatform?.branchId } }));

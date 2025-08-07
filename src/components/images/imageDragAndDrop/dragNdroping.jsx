@@ -3,22 +3,13 @@ import { MDBIcon } from "mdbreact";
 import Cropper from "react-easy-crop";
 import logo from "./../../../assets/iMD.png";
 import "./style.css";
-import { useDispatch } from "react-redux";
-import { useToasts } from "react-toast-notifications";
 
-const ImageDragAndDrop = ({
-  img = "",
-  savedImg,
-  downloadName = "downloaded-image.jpg",
-  setImgName = "file-name",
-  // setImgEmail = "file-email",
-  // token,
-  handleUpload,
-  // allowedType = null,
-}) => {
+import { useToasts } from "react-toast-notifications";
+import Spinner from "../../spinner";
+
+const ImageDragAndDrop = ({ img = "", handleUpload, formSubmitted }) => {
   const fileInputRef = useRef(null);
-  const [preview, setPreview] = useState(img);
-  const [fileName, setFileName] = useState(downloadName);
+  const [preview, setPreview] = useState("");
   const [isDefault, setIsDefault] = useState(true);
   const [isAccepted, setIsAccepted] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
@@ -30,12 +21,11 @@ const ImageDragAndDrop = ({
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const { addToast } = useToasts();
-  // const dispatch = useDispatch();
 
   useEffect(() => {
     let blobUrl;
 
-    if (img) {
+    if (img && !preview) {
       fetch(img)
         .then((res) => res.blob())
         .then((blob) => {
@@ -43,7 +33,6 @@ const ImageDragAndDrop = ({
           setPreview(blobUrl);
         })
         .catch((err) => {
-          console.error("Failed to fetch image", err);
           setPreview(img);
         });
     }
@@ -53,7 +42,13 @@ const ImageDragAndDrop = ({
         URL.revokeObjectURL(blobUrl);
       }
     };
-  }, [img]);
+  }, [img, preview]);
+
+  useEffect(() => {
+    if (!formSubmitted) {
+      setIsAccepted(true);
+    }
+  }, [formSubmitted]);
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -75,7 +70,6 @@ const ImageDragAndDrop = ({
       return;
     }
 
-    setFileName(`${setImgName}.jpg`);
     readImageFile(file);
   };
 
@@ -103,7 +97,6 @@ const ImageDragAndDrop = ({
       setCroppedBlob(blob); // Save blob for upload later
       setShowCropper(false);
       setIsAccepted(false);
-      savedImg?.(null, previewUrl);
 
       addToast("✅ Image cropped successfully!", {
         appearance: "info",
@@ -128,7 +121,6 @@ const ImageDragAndDrop = ({
       const reader = new FileReader();
       reader.onloadend = async () => {
         handleUpload(reader.result);
-        setIsAccepted(true);
       };
 
       reader.readAsDataURL(croppedBlob);
@@ -260,19 +252,26 @@ const ImageDragAndDrop = ({
 
       {!isDefault && !isAccepted && !showCropper && (
         <div className="icon-actions">
-          <MDBIcon
-            icon="check-circle"
-            size="2x"
-            className="icon-accept"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleUploadOnly(); // ✅ upload manually
-            }}
-          />
+          {!formSubmitted ? (
+            <MDBIcon
+              icon="check-circle"
+              size="2x"
+              className="icon-accept"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUploadOnly(); // ✅ upload manually
+              }}
+            />
+          ) : (
+            <div>
+              <Spinner formSubmitted={formSubmitted} />
+            </div>
+          )}
           <MDBIcon
             icon="times-circle"
             size="2x"
             className="icon-remove"
+            disabled={formSubmitted}
             onClick={(e) => {
               e.stopPropagation();
               handleRemove();
@@ -286,7 +285,6 @@ const ImageDragAndDrop = ({
           <a
             title="Download"
             href={preview}
-            download={fileName}
             className="download-button"
             onClick={(e) => e.stopPropagation()}
           >

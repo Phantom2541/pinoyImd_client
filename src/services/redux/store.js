@@ -1,4 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
+
+// ADD THIS LINE ✅
+import cases from "./slices/commerce/pos/services/cases";
+
+// ASSETS
 import {
   auth,
   personnels,
@@ -12,7 +17,11 @@ import {
   providers,
   tieups,
 } from "./slices/assets";
+
+// REUSABLE
 import { dragDrop, table } from "./slices/reusable";
+
+// COMMERCE
 import {
   menus,
   services,
@@ -26,6 +35,7 @@ import {
   admission,
 } from "./slices/commerce";
 
+// DIAGNOSTICS
 import {
   hematology,
   urinalysis,
@@ -45,7 +55,7 @@ import {
   appointments,
 } from "./slices/diagnostics";
 
-import { access, liabilities } from "./slices/liability";
+// FINANCE
 import {
   remittances,
   payables,
@@ -56,7 +66,8 @@ import {
   orgChart,
   duties,
 } from "./slices/finance";
-import { quest } from "./slices/diagnostics";
+
+// MARKET
 import {
   products,
   productsGenerics,
@@ -66,7 +77,13 @@ import {
   mentainance,
   attendances,
 } from "./slices/market";
+
+// LIABILITY
+import { access, liabilities } from "./slices/liability";
+
+// OTHER
 import portal from "./slices/emr/portal";
+import { quest } from "./slices/diagnostics";
 
 const store = configureStore({
   reducer: {
@@ -119,18 +136,16 @@ const store = configureStore({
     productsGenerics,
     machines,
     attendances,
-    // temperaturez,
     medicines,
     generics,
     mentainance,
     quest,
-    //this is results for viewing the results online
     portal,
-    //for templates only
     dragDrop,
     table,
     miscellaneous,
     orgChart,
+    cases,
   },
   devTools: true,
 });
