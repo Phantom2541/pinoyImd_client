@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../../utilities";
 
-const url = "commerce/catalog/generics";
+const url = "/diagnostics/admissions";
 
 const initialState = {
   collections: [],
@@ -131,6 +131,11 @@ export const reduxSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
+    TOGGLE: (state) => {
+      state.showModal = !state.showModal;
+      state.selected = {};
+      state.closeModal = !state.closeModal;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -226,6 +231,7 @@ export const {
   SetActivePAGE,
   RESET,
   SetCREATE,
+  TOGGLE,
 } = reduxSlice.actions;
 
 export default reduxSlice.reducer;

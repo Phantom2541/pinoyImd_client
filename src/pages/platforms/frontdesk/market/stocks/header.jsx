@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 
@@ -11,13 +11,23 @@ export default function Header({
   onBack,
   cartIconRef,
   cartCount = 0,
+  primarySort,
+  priceSort,
 }) {
   const [searchInput, setSearchInput] = useState("");
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    if (cartCount > 0) {
+      setAnimate(false);
+      requestAnimationFrame(() => setAnimate(true));
+      const timeout = setTimeout(() => setAnimate(false), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [cartCount]);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      onSearch(searchInput);
-    }
+    if (e.key === "Enter") onSearch(searchInput);
   };
 
   const handleSearchClick = () => {
@@ -28,7 +38,10 @@ export default function Header({
     <div className="stocks-header">
       <div className="stocks-header-top">
         <div className="header-backSearch-cotnainer">
-          <div className={`header-back ${onBack && "active"}`} onClick={onBack}>
+          <div
+            className={`header-back ${onBack ? "active" : ""}`}
+            onClick={onBack}
+          >
             <MDBIcon fas icon="arrow-left" /> Back
           </div>
 
@@ -38,20 +51,21 @@ export default function Header({
               placeholder="Search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={handleKeyDown} // ← detect ENTER key
+              onKeyDown={handleKeyDown}
             />
             <MDBIcon
               icon="search"
               className="stocks-header-search-icon"
-              onClick={handleSearchClick} // ← detect icon click
+              onClick={handleSearchClick}
               style={{ cursor: "pointer" }}
             />
           </div>
         </div>
+
         <div className="stocks-header-cart">
           <button
             ref={cartIconRef}
-            className="stocks-header-cartBtn"
+            className={`stocks-header-cartBtn ${animate ? "cart-animate" : ""}`}
             onClick={onCartClick}
           >
             <MDBIcon fas icon="shopping-cart" />
@@ -65,34 +79,37 @@ export default function Header({
           <div className="stocks-sort">
             <span>Sort by</span>
             <button
-              className={sortType === "quantity" ? "active" : ""}
+              className={primarySort === "quantity" ? "active" : ""}
               onClick={() => onSort("quantity")}
             >
               Quantity
             </button>
             <button
-              className={sortType === "topSales" ? "active" : ""}
+              className={primarySort === "topSales" ? "active" : ""}
               onClick={() => onSort("topSales")}
             >
               Top Sales
             </button>
+
             <div className="stocks-sort-options">
               <span className="stocks-sort-options-label">
                 Price
-                {sortType === "priceLowHigh"
+                {priceSort === "priceLowHigh"
                   ? ": Low to High"
-                  : ": High to Low"}
+                  : priceSort === "priceHighLow"
+                  ? ": High to Low"
+                  : ""}
               </span>
               <MDBIcon icon="angle-down" className="stocks-sort-options-icon" />
               <div className="stocks-sort-options-list">
                 <span
-                  className={sortType === "priceLowHigh" ? "active" : ""}
+                  className={priceSort === "priceLowHigh" ? "active" : ""}
                   onClick={() => onSort("priceLowHigh")}
                 >
                   Price: Low to High
                 </span>
                 <span
-                  className={sortType === "priceHighLow" ? "active" : ""}
+                  className={priceSort === "priceHighLow" ? "active" : ""}
                   onClick={() => onSort("priceHighLow")}
                 >
                   Price: High to Low

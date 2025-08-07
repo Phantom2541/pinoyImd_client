@@ -1,9 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import Header from "./header";
 import Cards from "./cards";
 import Description from "./desciption";
 import Cart from "./cart";
 import "./style.css";
+import Swal from "sweetalert2";
+
 import collections from "./collections";
 
 export default function Stocks() {
@@ -14,11 +16,43 @@ export default function Stocks() {
   const [showCart, setShowCart] = useState(false);
   const [lastView, setLastView] = useState(null);
   const [lastCard, setLastCard] = useState(null);
-
   const cartIconRef = useRef(null);
+  const [primarySort, setPrimarySort] = useState(""); // quantity or topSales
+  const [priceSort, setPriceSort] = useState(""); // priceLowHigh or priceHighLow
+
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem("cartItems");
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) return [];
+
+      return parsed
+        .filter((ci) => ci && typeof ci === "object" && ci.id != null)
+        .map((ci) => ({
+          ...ci,
+          quantity: Math.max(1, ci.quantity ?? 1),
+        }));
+    } catch (e) {
+      console.warn("Invalid cartItems in localStorage:", e);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const handleSort = (type) => {
-    setSortType(type);
+    if (type === "quantity" || type === "topSales") {
+      setPrimarySort((prev) => (prev === type ? "" : type));
+      if (type === "topSales") {
+        setPriceSort(""); // Disable price sort if topSales is toggled on
+      }
+    } else if (type === "priceLowHigh" || type === "priceHighLow") {
+      setPriceSort((prev) => (prev === type ? "" : type));
+      // Allow price sort even if primarySort is "topSales" – remove that restriction
+    }
+
     setCurrentPage(1);
   };
 
@@ -51,110 +85,57 @@ export default function Stocks() {
     }
   };
 
-  // load cart with quantities
-  const [cartItems, setCartItems] = useState(() => {
-    try {
-      const saved = localStorage.getItem("cartItems");
-      if (!saved) return [];
-      const parsed = JSON.parse(saved);
-      if (!Array.isArray(parsed)) return [];
-
-      return parsed
-        .filter((ci) => ci && typeof ci === "object" && ci.id != null)
-        .map((ci) => ({
-          ...ci,
-          quantity: Math.max(1, ci.quantity ?? 1),
-        }));
-    } catch (e) {
-      console.warn("Invalid cartItems in localStorage:", e);
-      return [];
-    }
-  });
-
-  // persist whenever cartItems changes
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  // helper to add item (increments quantity if exists)
-  const addToCart = (imgRef, item) => {
-    handleAddToCartAnimation(imgRef); // ✈️ animate only
-
+  const handleAddToCart = (item) => {
     setCartItems((prev) => {
-      const existing = prev.find((ci) => ci?.id === item.id);
+      const existing = prev.find(
+        (ci) =>
+          ci.id === item.id &&
+          JSON.stringify(ci.selectedOptions || {}) ===
+            JSON.stringify(item.selectedOptions || {})
+      );
 
       if (existing) {
         return prev.map((ci) =>
-          ci.id === item.id
-            ? {
-                ...ci,
-                quantity: Math.min(
-                  (ci.quantity ?? 1) + 1,
-                  item.stock ?? Infinity // cap to stock
-                ),
-              }
+          ci.id === item.id &&
+          JSON.stringify(ci.selectedOptions || {}) ===
+            JSON.stringify(item.selectedOptions || {})
+            ? { ...ci, quantity: ci.quantity + item.quantity }
             : ci
         );
       } else {
-        return [...prev, { ...item, quantity: 1 }];
+        return [...prev, item];
       }
     });
   };
 
-  // 💥 Fly to cart animation
-  const handleAddToCartAnimation = (imgRef) => {
-    if (!imgRef?.current || !cartIconRef?.current) return;
-
-    const img = imgRef.current;
-    const cart = cartIconRef.current;
-    const imgRect = img.getBoundingClientRect();
-    const cartRect = cart.getBoundingClientRect();
-
-    const clone = img.cloneNode(true);
-    clone.classList.add("fly-to-cart");
-    clone.style.position = "fixed";
-    clone.style.top = `${imgRect.top}px`;
-    clone.style.left = `${imgRect.left}px`;
-    clone.style.width = `${imgRect.width}px`;
-    clone.style.height = `${imgRect.height}px`;
-    clone.style.transition = "all 0.8s ease-in-out";
-    clone.style.zIndex = 1000;
-    document.body.appendChild(clone);
-
-    requestAnimationFrame(() => {
-      clone.style.top = `${cartRect.top}px`;
-      clone.style.left = `${cartRect.left}px`;
-      clone.style.width = "20px";
-      clone.style.height = "20px";
-      clone.style.opacity = "0.5";
+  const handleBuyNow = (item) => {
+    Swal.fire({
+      icon: "success",
+      title: "Order placed!",
+      text: `You've successfully ordered ${item.title}.`,
+      confirmButtonColor: "#3085d6",
     });
-
-    setTimeout(() => {
-      document.body.removeChild(clone);
-    }, 800);
   };
 
-  // 🔍 Filtering and sorting...
-  let filteredCollections = collections.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCollections = useMemo(() => {
+    let filtered = collections.filter((item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-  switch (sortType) {
-    case "quantity":
-      filteredCollections.sort((a, b) => b.stock - a.stock);
-      break;
-    case "topSales":
-      filteredCollections.sort((a, b) => b.sold - a.sold);
-      break;
-    case "priceLowHigh":
-      filteredCollections.sort((a, b) => a.price - b.price);
-      break;
-    case "priceHighLow":
-      filteredCollections.sort((a, b) => b.price - a.price);
-      break;
-    default:
-      break;
-  }
+    if (primarySort === "topSales") {
+      filtered.sort((a, b) => b.sold - a.sold);
+    } else if (primarySort === "quantity") {
+      filtered.sort((a, b) => b.stock - a.stock);
+    }
+
+    if (priceSort === "priceLowHigh") {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (priceSort === "priceHighLow") {
+      filtered.sort((a, b) => b.price - a.price);
+    }
+
+    return filtered;
+  }, [searchTerm, primarySort, priceSort]);
 
   return (
     <div
@@ -170,7 +151,8 @@ export default function Stocks() {
         hideSort={!!selectedCard || showCart}
         onSearch={handleSearch}
         onSort={handleSort}
-        sortType={sortType}
+        primarySort={primarySort}
+        priceSort={priceSort}
         onCartClick={handleCartClick}
         onBack={selectedCard || showCart ? handleBack : null}
         cartIconRef={cartIconRef}
@@ -180,14 +162,17 @@ export default function Stocks() {
       {showCart ? (
         <Cart cartItems={cartItems} setCartItems={setCartItems} />
       ) : selectedCard ? (
-        <Description card={selectedCard} />
+        <Description
+          card={selectedCard}
+          addToCart={handleAddToCart}
+          buyNow={handleBuyNow}
+        />
       ) : (
         <Cards
           collections={filteredCollections}
           currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
+          onPageChange={setCurrentPage}
           onCardClick={handleCardClick}
-          onAddToCart={addToCart}
         />
       )}
     </div>

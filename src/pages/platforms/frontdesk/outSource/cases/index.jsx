@@ -1,27 +1,37 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
-import TableLoading from "../../../../../components/tableLoading";
+import React, { useState, useEffect } from "react";
 import Header from "./header";
 import Body from "./body";
-// import Footer from "./footer";
-// import Modal from "./modal";
+import CaseModal from "./modal";
+import { useDispatch, useSelector } from "react-redux";
+import { BROWSE } from "../../../../../services/redux/slices/commerce/pos/services/cases";
 
-const Index = () => {
-  const { isLoading } = useSelector(({ admission }) => admission);
+export default function CaseIndex() {
+  const dispatch = useDispatch();
+  const [modal, setModal] = useState(false);
+  const [selected, setSelected] = useState({});
+  const { token, activePlatform } = useSelector(({ auth }) => auth);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(BROWSE({ token, params: { branchId: activePlatform.branchId } }));
+    }
+  }, [token, activePlatform, dispatch]);
+
+  const handleAdd = () => {
+    setSelected({});
+    setModal(true);
+  };
+
+  const handleEdit = (item) => {
+    setSelected(item);
+    setModal(true);
+  };
 
   return (
     <>
-      <MDBAnimation type="bounceInDown">
-        <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
-          <Header />
-          <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
-          {/* <Footer /> */}
-        </MDBCard>
-      </MDBAnimation>
-      {/* <Modal /> */}
+      <Header onAdd={handleAdd} />
+      <Body onEdit={handleEdit} />
+      <CaseModal modal={modal} toggle={() => setModal(false)} selected={selected} />
     </>
   );
-};
-
-export default Index;
+}

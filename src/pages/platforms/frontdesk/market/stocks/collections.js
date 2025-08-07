@@ -11,7 +11,7 @@ const collections = [
     id: 1,
     title: "Cardiac Defibrillator AED Portable Unit",
     price: 1000,
-    discount: 35,
+    discount: 0,
     rating: 4.9,
     sold: 10000,
     image: imgs,
