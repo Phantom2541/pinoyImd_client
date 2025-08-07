@@ -11,6 +11,8 @@ export default function Header({
   onBack,
   cartIconRef,
   cartCount = 0,
+  primarySort,
+  priceSort,
 }) {
   const [searchInput, setSearchInput] = useState("");
   const [animate, setAnimate] = useState(false);
@@ -77,13 +79,13 @@ export default function Header({
           <div className="stocks-sort">
             <span>Sort by</span>
             <button
-              className={sortType === "quantity" ? "active" : ""}
+              className={primarySort === "quantity" ? "active" : ""}
               onClick={() => onSort("quantity")}
             >
               Quantity
             </button>
             <button
-              className={sortType === "topSales" ? "active" : ""}
+              className={primarySort === "topSales" ? "active" : ""}
               onClick={() => onSort("topSales")}
             >
               Top Sales
@@ -92,22 +94,22 @@ export default function Header({
             <div className="stocks-sort-options">
               <span className="stocks-sort-options-label">
                 Price
-                {sortType === "priceLowHigh"
+                {priceSort === "priceLowHigh"
                   ? ": Low to High"
-                  : sortType === "priceHighLow"
+                  : priceSort === "priceHighLow"
                   ? ": High to Low"
                   : ""}
               </span>
               <MDBIcon icon="angle-down" className="stocks-sort-options-icon" />
               <div className="stocks-sort-options-list">
                 <span
-                  className={sortType === "priceLowHigh" ? "active" : ""}
+                  className={priceSort === "priceLowHigh" ? "active" : ""}
                   onClick={() => onSort("priceLowHigh")}
                 >
                   Price: Low to High
                 </span>
                 <span
-                  className={sortType === "priceHighLow" ? "active" : ""}
+                  className={priceSort === "priceHighLow" ? "active" : ""}
                   onClick={() => onSort("priceHighLow")}
                 >
                   Price: High to Low

@@ -194,6 +194,8 @@ export default function Body() {
     currentPage * itemsPerPage
   );
 
+  console.log("Signatories here", paginatedHeads.length);
+
   return (
     <div className="signatories-section">
       <div className={`signatories-card-container mt-4 ${animateClass}`}>
@@ -402,21 +404,26 @@ export default function Body() {
             </div>
           );
         })}
-        <button
-          className="signatories-pagination-btnLeft"
-          onClick={prevPage}
-          disabled={currentPage === 1}
-        >
-          <MDBIcon icon="angle-left" />
-        </button>
-
-        <button
-          className="signatories-pagination-btnRight"
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
-        >
-          <MDBIcon icon="angle-right" />
-        </button>
+        {paginatedHeads.length === 0 ? (
+          ""
+        ) : (
+          <>
+            <button
+              className="signatories-pagination-btnLeft"
+              onClick={prevPage}
+              disabled={currentPage === 1}
+            >
+              <MDBIcon icon="angle-left" />
+            </button>
+            <button
+              className="signatories-pagination-btnRight"
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
+            >
+              <MDBIcon icon="angle-right" />
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

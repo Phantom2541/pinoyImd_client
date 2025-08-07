@@ -125,7 +125,7 @@ export default function Description({ card, addToCart, buyNow }) {
           </div>
 
           <div className="description-price">
-            <span>${Math.round(card.price * (1 - card.discount / 100))}</span>
+            <span>₱{Math.round(card.price * (1 - card.discount / 100))}</span>
             {card.discount > 0 && (
               <>
                 <span className="description-price-original">{card.price}</span>
@@ -215,7 +215,7 @@ export default function Description({ card, addToCart, buyNow }) {
             <button className="description-btnBuy" onClick={handleBuyNow}>
               <span>Buy with voucher</span>
               <span>
-                $
+                ₱
                 {(
                   card.price *
                   quantity *

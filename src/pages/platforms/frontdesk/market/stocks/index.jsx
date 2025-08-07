@@ -17,6 +17,8 @@ export default function Stocks() {
   const [lastView, setLastView] = useState(null);
   const [lastCard, setLastCard] = useState(null);
   const cartIconRef = useRef(null);
+  const [primarySort, setPrimarySort] = useState(""); // quantity or topSales
+  const [priceSort, setPriceSort] = useState(""); // priceLowHigh or priceHighLow
 
   const [cartItems, setCartItems] = useState(() => {
     try {
@@ -41,7 +43,16 @@ export default function Stocks() {
   }, [cartItems]);
 
   const handleSort = (type) => {
-    setSortType(type);
+    if (type === "quantity" || type === "topSales") {
+      setPrimarySort((prev) => (prev === type ? "" : type));
+      if (type === "topSales") {
+        setPriceSort(""); // Disable price sort if topSales is toggled on
+      }
+    } else if (type === "priceLowHigh" || type === "priceHighLow") {
+      setPriceSort((prev) => (prev === type ? "" : type));
+      // Allow price sort even if primarySort is "topSales" – remove that restriction
+    }
+
     setCurrentPage(1);
   };
 
@@ -111,25 +122,20 @@ export default function Stocks() {
       item.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    switch (sortType) {
-      case "quantity":
-        filtered.sort((a, b) => b.stock - a.stock);
-        break;
-      case "topSales":
-        filtered.sort((a, b) => b.sold - a.sold);
-        break;
-      case "priceLowHigh":
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case "priceHighLow":
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      default:
-        break;
+    if (primarySort === "topSales") {
+      filtered.sort((a, b) => b.sold - a.sold);
+    } else if (primarySort === "quantity") {
+      filtered.sort((a, b) => b.stock - a.stock);
+    }
+
+    if (priceSort === "priceLowHigh") {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (priceSort === "priceHighLow") {
+      filtered.sort((a, b) => b.price - a.price);
     }
 
     return filtered;
-  }, [searchTerm, sortType]);
+  }, [searchTerm, primarySort, priceSort]);
 
   return (
     <div
@@ -145,7 +151,8 @@ export default function Stocks() {
         hideSort={!!selectedCard || showCart}
         onSearch={handleSearch}
         onSort={handleSort}
-        sortType={sortType}
+        primarySort={primarySort}
+        priceSort={priceSort}
         onCartClick={handleCartClick}
         onBack={selectedCard || showCart ? handleBack : null}
         cartIconRef={cartIconRef}
