@@ -43,10 +43,10 @@ export default function Cards({
               <div className="stock-cards-info">
                 <span className="stock-cards-title">{item.title}</span>
                 <span className="stock-cards-price">
-                  ${Math.round(item.price * (1 - item.discount / 100))}
+                  ₱{Math.round(item.price * (1 - item.discount / 100))}
                   {item.discount > 0 && (
                     <span className="stock-cards-original">
-                      &nbsp;${item.price}
+                      &nbsp;₱{item.price}
                     </span>
                   )}
                 </span>
@@ -61,6 +61,10 @@ export default function Cards({
                 <span className="stock-cards-rating">{item.rating}</span>
                 <span className="stock-cards-sold">{item.sold} sold/month</span>
               </div>
+              <span className="stock-cards-location">
+                <MDBIcon fas icon="map-marker-alt" />
+                {item.location}
+              </span>
             </div>
           </div>
         ))}

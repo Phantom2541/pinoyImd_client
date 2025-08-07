@@ -1,11 +1,12 @@
+// Your existing imports remain unchanged
 import React, { useEffect, useState } from "react";
 import { MDBIcon } from "mdbreact";
 import Swal from "sweetalert2";
 
 export default function Cart({ cartItems, setCartItems }) {
   const [tempSelectedOptions, setTempSelectedOptions] = useState({});
+  const [openVariationId, setOpenVariationId] = useState(null);
 
-  // Ensure each item has `selected: true` by default
   useEffect(() => {
     const updated = cartItems.map((ci) =>
       ci.selected === undefined ? { ...ci, selected: true } : ci
@@ -13,7 +14,6 @@ export default function Cart({ cartItems, setCartItems }) {
     if (JSON.stringify(updated) !== JSON.stringify(cartItems)) {
       setCartItems(updated);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // === Helpers ===
@@ -84,7 +84,6 @@ export default function Cart({ cartItems, setCartItems }) {
     });
   };
 
-  // === Computed Values ===
   const allSelected = cartItems.every((ci) => ci.selected !== false);
   const toggleSelectAll = () =>
     setCartItems((prev) =>
@@ -121,6 +120,24 @@ export default function Cart({ cartItems, setCartItems }) {
     localStorage.setItem("cartItems", JSON.stringify(remaining));
   };
 
+  // === Group by company ===
+  const groupedItems = cartItems.reduce((groups, item) => {
+    const company = item.company || "Unknown Supplier";
+    if (!groups[company]) groups[company] = [];
+    groups[company].push(item);
+    return groups;
+  }, {});
+
+  const toggleCompanySelect = (company) => {
+    const companyItems = cartItems.filter((ci) => ci.company === company);
+    const allSelected = companyItems.every((ci) => ci.selected !== false);
+    setCartItems((prev) =>
+      prev.map((ci) =>
+        ci.company === company ? { ...ci, selected: !allSelected } : ci
+      )
+    );
+  };
+
   return (
     <div className="cart-container">
       {/* Header */}
@@ -141,111 +158,167 @@ export default function Cart({ cartItems, setCartItems }) {
       </div>
 
       {/* Body */}
-      {cartItems.map((item) => (
-        <div className="cart-body" key={item.id}>
-          <div className="cart-item">
-            <input
-              className="cart-checkbox"
-              type="checkbox"
-              checked={item.selected !== false}
-              onChange={() => toggleSelect(item.id)}
-            />
-            <img src={item.image?.[0]} alt={item.title} />
-            <span className="cart-title">{item.title}</span>
+      <div className="cart-body-container">
+        {Object.entries(groupedItems).map(([company, items]) => {
+          const allCompanySelected = items.every((ci) => ci.selected !== false);
 
-            <div className="cart-variation">
-              <span>
-                Variation:&nbsp;&nbsp;&nbsp;
-                <MDBIcon fas icon="caret-down" />
-              </span>
-              <span>
-                {Object.values(item.selectedOptions || {})
-                  .filter(Boolean)
-                  .join(", ") || "None"}
-              </span>
-
-              <div className="cart-variation-options">
-                {["Color", "Size", "Power"].map((label) => {
-                  const options = item[label.toLowerCase()];
-                  if (!options?.length) return null;
-
-                  return (
-                    <div className="cart-variation-btnOptions" key={label}>
-                      <span>{label}:</span>
-                      {options.map((opt, index) => {
-                        const selected =
-                          (tempSelectedOptions[item.id]?.[label] ??
-                            item.selectedOptions?.[label]) === opt;
-                        return (
-                          <button
-                            key={index}
-                            className={selected ? "selected" : ""}
-                            onClick={() =>
-                              handleTempVariationChange(item.id, label, opt)
-                            }
-                          >
-                            {opt}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-
-                <div className="cart-variation-confirm">
-                  <button onClick={() => confirmVariationSelection(item.id)}>
-                    CONFIRM
-                  </button>
-                </div>
+          return (
+            <div key={company}>
+              <div className="cart-body-company">
+                <input
+                  className="cart-checkbox"
+                  type="checkbox"
+                  checked={allCompanySelected}
+                  onChange={() => toggleCompanySelect(company)}
+                />
+                <MDBIcon fas icon="warehouse" />
+                <span>{company}</span>
               </div>
+
+              {items.map((item) => (
+                <div className="cart-body" key={item.id}>
+                  <div className="cart-item">
+                    <input
+                      className="cart-checkbox"
+                      type="checkbox"
+                      checked={item.selected !== false}
+                      onChange={() => toggleSelect(item.id)}
+                    />
+                    <img src={item.image?.[0]} alt={item.title} />
+                    <span className="cart-title">{item.title}</span>
+
+                    <div className="cart-variation">
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          setOpenVariationId(
+                            openVariationId === item.id ? null : item.id
+                          )
+                        }
+                      >
+                        Variation:&nbsp;&nbsp;&nbsp;
+                        {openVariationId === item.id ? (
+                          <MDBIcon fas icon="caret-up" />
+                        ) : (
+                          <MDBIcon fas icon="caret-down" />
+                        )}
+                      </span>
+                      <span>
+                        {Object.values(item.selectedOptions || {})
+                          .filter(Boolean)
+                          .join(", ") || "None"}
+                      </span>
+
+                      {openVariationId === item.id && (
+                        <div className="cart-variation-options">
+                          {["Color", "Size", "Power"].map((label) => {
+                            const options = item[label.toLowerCase()];
+                            if (!options?.length) return null;
+
+                            return (
+                              <div
+                                className="cart-variation-btnOptions"
+                                key={label}
+                              >
+                                <span>{label}:</span>
+                                {options.map((opt, index) => {
+                                  const selected =
+                                    (tempSelectedOptions[item.id]?.[label] ??
+                                      item.selectedOptions?.[label]) === opt;
+                                  return (
+                                    <button
+                                      key={index}
+                                      className={selected ? "selected" : ""}
+                                      onClick={() =>
+                                        handleTempVariationChange(
+                                          item.id,
+                                          label,
+                                          opt
+                                        )
+                                      }
+                                    >
+                                      {opt}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })}
+
+                          <div className="cart-variation-confirm">
+                            <button
+                              onClick={() => {
+                                setOpenVariationId(null);
+                                setTempSelectedOptions((prev) => {
+                                  const { [item.id]: _, ...rest } = prev;
+                                  return rest;
+                                });
+                              }}
+                            >
+                              CANCEL
+                            </button>
+                            <button
+                              onClick={() => confirmVariationSelection(item.id)}
+                            >
+                              CONFIRM
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="cart-price">
+                    <span>₱{(item.price || 0).toFixed(2)}</span>
+                  </div>
+
+                  <div className="cart-quantity">
+                    <div className="description-quantity-box">
+                      <button
+                        className="description-quantity-btn"
+                        onClick={() => updateQuantity(item.id, -1)}
+                        disabled={(item.quantity || 1) <= 1}
+                      >
+                        –
+                      </button>
+                      <input
+                        type="text"
+                        value={item.quantity || 1}
+                        readOnly
+                        className="description-quantity-input"
+                      />
+                      <button
+                        className="description-quantity-btn"
+                        onClick={() => updateQuantity(item.id, 1)}
+                        disabled={
+                          (item.quantity || 1) >= (item.stock || Infinity)
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="cart-totalPrice">
+                    <span>
+                      ₱
+                      {(
+                        (item.price || 0) *
+                        (item.quantity || 1) *
+                        (1 - (item.discount || 0) / 100)
+                      ).toFixed(2)}
+                    </span>
+                  </div>
+
+                  <div className="cart-action">
+                    <button onClick={() => removeItem(item.id)}>Delete</button>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-
-          <div className="cart-price">
-            <span>${(item.price || 0).toFixed(2)}</span>
-          </div>
-
-          <div className="cart-quantity">
-            <div className="description-quantity-box">
-              <button
-                className="description-quantity-btn"
-                onClick={() => updateQuantity(item.id, -1)}
-                disabled={(item.quantity || 1) <= 1}
-              >
-                –
-              </button>
-              <input
-                type="text"
-                value={item.quantity || 1}
-                readOnly
-                className="description-quantity-input"
-              />
-              <button
-                className="description-quantity-btn"
-                onClick={() => updateQuantity(item.id, 1)}
-                disabled={(item.quantity || 1) >= (item.stock || Infinity)}
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          <div className="cart-totalPrice">
-            <span>
-              $
-              {(
-                (item.price || 0) *
-                (item.quantity || 1) *
-                (1 - (item.discount || 0) / 100)
-              ).toFixed(2)}
-            </span>
-          </div>
-
-          <div className="cart-action">
-            <button onClick={() => removeItem(item.id)}>Delete</button>
-          </div>
-        </div>
-      ))}
+          );
+        })}
+      </div>
 
       {/* Footer */}
       <div className="cart-footer">
@@ -273,11 +346,11 @@ export default function Cart({ cartItems, setCartItems }) {
               <span>
                 Total ({totalQuantity} item{totalQuantity !== 1 && "s"}):
               </span>
-              <span>${totalPrice.toFixed(2)}</span>
+              <span>₱{totalPrice.toFixed(2)}</span>
             </div>
             <div className="cart-checkOut-saved">
               <span>Saved</span>
-              <span>${totalSaved.toFixed(2)}</span>
+              <span>₱{totalSaved.toFixed(2)}</span>
             </div>
           </div>
 

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   axioKit,
-  CLOUDINARY_ENDPOINT,
+  Cloudinary,
   employment,
   ENDPOINT,
 } from "../../../../utilities";
@@ -358,7 +358,7 @@ export const reduxSlice = createSlice({
         state.message = success;
         state.loginSuccess = true;
         state.isLoading = false;
-        state.image = `${CLOUDINARY_ENDPOINT}/users/${
+        state.image = `${Cloudinary.getEndpoint()}/users/${
           auth.email
         }/profile.png?v=${Date.now()}`;
 
@@ -458,7 +458,7 @@ export const reduxSlice = createSlice({
             ...(!isEmployed && { platform: "" }),
           };
           state.company = branch?.companyId;
-          state.image = `${CLOUDINARY_ENDPOINT}/users/${
+          state.image = `${Cloudinary.getEndpoint()}/users/${
             auth.email
           }/profile.png?v=${Date.now()}`;
 
