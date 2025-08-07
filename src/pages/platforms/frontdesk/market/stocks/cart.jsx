@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 
 export default function Cart({ cartItems, setCartItems }) {
   const [tempSelectedOptions, setTempSelectedOptions] = useState({});
+  const [openVariationId, setOpenVariationId] = useState(null);
 
   // Ensure each item has `selected: true` by default
   useEffect(() => {
@@ -154,7 +155,14 @@ export default function Cart({ cartItems, setCartItems }) {
             <span className="cart-title">{item.title}</span>
 
             <div className="cart-variation">
-              <span>
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  setOpenVariationId(
+                    openVariationId === item.id ? null : item.id
+                  )
+                }
+              >
                 Variation:&nbsp;&nbsp;&nbsp;
                 <MDBIcon fas icon="caret-down" />
               </span>
@@ -164,40 +172,42 @@ export default function Cart({ cartItems, setCartItems }) {
                   .join(", ") || "None"}
               </span>
 
-              <div className="cart-variation-options">
-                {["Color", "Size", "Power"].map((label) => {
-                  const options = item[label.toLowerCase()];
-                  if (!options?.length) return null;
+              {openVariationId === item.id && (
+                <div className="cart-variation-options">
+                  {["Color", "Size", "Power"].map((label) => {
+                    const options = item[label.toLowerCase()];
+                    if (!options?.length) return null;
 
-                  return (
-                    <div className="cart-variation-btnOptions" key={label}>
-                      <span>{label}:</span>
-                      {options.map((opt, index) => {
-                        const selected =
-                          (tempSelectedOptions[item.id]?.[label] ??
-                            item.selectedOptions?.[label]) === opt;
-                        return (
-                          <button
-                            key={index}
-                            className={selected ? "selected" : ""}
-                            onClick={() =>
-                              handleTempVariationChange(item.id, label, opt)
-                            }
-                          >
-                            {opt}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
+                    return (
+                      <div className="cart-variation-btnOptions" key={label}>
+                        <span>{label}:</span>
+                        {options.map((opt, index) => {
+                          const selected =
+                            (tempSelectedOptions[item.id]?.[label] ??
+                              item.selectedOptions?.[label]) === opt;
+                          return (
+                            <button
+                              key={index}
+                              className={selected ? "selected" : ""}
+                              onClick={() =>
+                                handleTempVariationChange(item.id, label, opt)
+                              }
+                            >
+                              {opt}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
 
-                <div className="cart-variation-confirm">
-                  <button onClick={() => confirmVariationSelection(item.id)}>
-                    CONFIRM
-                  </button>
+                  <div className="cart-variation-confirm">
+                    <button onClick={() => confirmVariationSelection(item.id)}>
+                      CONFIRM
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -232,7 +242,7 @@ export default function Cart({ cartItems, setCartItems }) {
 
           <div className="cart-totalPrice">
             <span>
-              $
+              ₱
               {(
                 (item.price || 0) *
                 (item.quantity || 1) *
@@ -273,11 +283,11 @@ export default function Cart({ cartItems, setCartItems }) {
               <span>
                 Total ({totalQuantity} item{totalQuantity !== 1 && "s"}):
               </span>
-              <span>${totalPrice.toFixed(2)}</span>
+              <span>₱{totalPrice.toFixed(2)}</span>
             </div>
             <div className="cart-checkOut-saved">
               <span>Saved</span>
-              <span>${totalSaved.toFixed(2)}</span>
+              <span>₱{totalSaved.toFixed(2)}</span>
             </div>
           </div>
 

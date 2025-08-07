@@ -1,11 +1,8 @@
 import { MDBModal, MDBModalBody, MDBModalHeader } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { ToggleViewCredential } from "../../../../../../services/redux/slices/assets/persons/applicants";
-import {
-  CLOUDINARY_ENDPOINT,
-  ENDPOINT,
-  fullName,
-} from "../../../../../../services/utilities";
+import { Cloudinary, fullName } from "../../../../../../services/utilities";
+import DocumentViewer from "../../../../../../components/documentViewer";
 
 const types = {
   AppLetter: "Application Letter",
@@ -25,6 +22,7 @@ export default function ViewCredential() {
 
   const toggle = () => dispatch(ToggleViewCredential());
   const { user, type } = selected;
+
   return (
     <MDBModal
       isOpen={showViewCredential}
@@ -42,18 +40,11 @@ export default function ViewCredential() {
         </h6>
       </MDBModalHeader>
       <MDBModalBody className="m-0 p-0">
-        <iframe
-          src={`${CLOUDINARY_ENDPOINT}/users/${user?.email}/credentials/${companyId?.name}/${type}.pdf`}
-          title="Personal Data"
-          style={{
-            width: "100%",
-            height: "30rem",
-            border: "1px solid #ccc",
-            borderRadius: "10px",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-            display: "block",
-            margin: "auto",
-          }}
+        <DocumentViewer
+          src={`${Cloudinary.getEndpoint(false)}/users/${
+            user?.email
+          }/credentials/${companyId?.name}/${type}`}
+          height="585px"
         />
       </MDBModalBody>
     </MDBModal>

@@ -1,7 +1,4 @@
-import {
-  CLOUDINARY_ENDPOINT,
-  properFullname,
-} from "../../../../services/utilities";
+import { Cloudinary, properFullname } from "../../../../services/utilities";
 import "./style.css";
 
 const Signature = ({ person, label, style = {}, withSignature }) => {
@@ -17,7 +14,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
             zIndex: 0,
             position: "relative",
           }}
-          src={`${CLOUDINARY_ENDPOINT}/users/${
+          src={`${Cloudinary.getEndpoint()}/users/${
             person?.email
           }/signature.png?v=${Date.now()}`}
           alt={person?.email || "signature"}

@@ -17,8 +17,7 @@ import {
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
-  buildFileForm,
-  CLOUDINARY_ENDPOINT,
+  Cloudinary,
   fullName,
   getAge,
 } from "../../../../../services/utilities";
@@ -55,7 +54,7 @@ const Banner = () => {
   }, [isSuccess, message, addToast, dispatch]);
 
   const handleUpload = (base64) => {
-    const formData = buildFileForm(base64, folder, "banner");
+    const formData = Cloudinary.buildFileForm(base64, folder, "banner");
     dispatch(
       UPLOAD({
         data: formData,
@@ -88,7 +87,7 @@ const Banner = () => {
           <MDBView hover={!showImgCropper}>
             <img
               key={dateNow}
-              src={`${CLOUDINARY_ENDPOINT}/${folder}/banner.png?v=${dateNow}`}
+              src={`${Cloudinary.getEndpoint()}/${folder}/banner.png?v=${dateNow}`}
               className="img-fluid"
               alt={company?.name || "Default Banner"}
               onError={(e) => (e.target.src = FailedBanner)}

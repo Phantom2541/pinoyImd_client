@@ -43,7 +43,7 @@ export default function Cards({
               <div className="stock-cards-info">
                 <span className="stock-cards-title">{item.title}</span>
                 <span className="stock-cards-price">
-                  ${Math.round(item.price * (1 - item.discount / 100))}
+                  ₱{Math.round(item.price * (1 - item.discount / 100))}
                   {item.discount > 0 && (
                     <span className="stock-cards-original">
                       &nbsp;${item.price}

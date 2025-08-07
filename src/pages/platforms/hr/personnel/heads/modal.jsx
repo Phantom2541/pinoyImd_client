@@ -164,7 +164,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
       <MDBModalBody className="mb-0">
         <form onSubmit={handleSubmit}>
           <MDBCol>
-            <label>Department</label>
+            {/* <label>Department</label> */}
             <Select
               className="mb-1"
               collections={["Radiology", "Laboratory"]}
@@ -174,7 +174,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               onChange={handleDepartmentChange}
             />
 
-            <label>Sections</label>
+            {/* <label className="bg-danger">Sections</label> */}
             <Select
               className="mb-1"
               collections={sections}
@@ -183,7 +183,7 @@ export default function Modal({ show, toggle, selected, willCreate }) {
               label={"Sections"}
               multiple={false}
             />
-            <label>Staff</label>
+            {/* <label>Staff</label> */}
             <Select
               className="mb-1"
               collections={crews.map((crew) => ({
