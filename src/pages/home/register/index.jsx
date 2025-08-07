@@ -23,9 +23,7 @@ import Spinner from "../../../components/spinner";
 
 const Register = () => {
   const dispatch = useDispatch();
-  const { message, isLoading, isSuccess, formSubmitted } = useSelector(
-    ({ users }) => users
-  );
+  const { isSuccess, formSubmitted } = useSelector(({ users }) => users);
 
   const [isMale, setIsMale] = useState(false);
   const [isLocked, setIsLocked] = useState({
@@ -40,7 +38,7 @@ const Register = () => {
     fname: "",
     mname: "",
     lname: "",
-    suffix: "NONE",
+    suffix: "",
     dob: "",
     mobile: "",
     email: "",

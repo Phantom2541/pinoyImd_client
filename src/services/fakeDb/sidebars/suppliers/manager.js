@@ -22,15 +22,14 @@ import {
   Physicians,
   Heads,
 } from "../../../../pages/platforms/hr/index.js";
-import { Procurments } from "../../../../pages/platforms/procurement/index.js";
 
 import stockHolder from "../../../../pages/platforms/hr/personnel/stockHolder/index.jsx";
 import { Quest } from "../../../../pages/platforms/laboratory/staffManagement/index.js";
 
-import {
-  ProductGenerics,
-  Products,
-} from "../../../../pages/platforms/manager/commerce/merchandise/index.jsx";
+// import {
+//   ProductGenerics,
+//   Products,
+// } from "../../../../pages/platforms/manager/commerce/merchandise/index.jsx";
 
 import {
   Vouchers,
@@ -260,13 +259,6 @@ const ManagerSidebar = [
         path: "/records",
         icon: "clipboard-list",
       },
-      {
-        name: "Procurement Records",
-        title: "Procurement log for physical assets.",
-        path: "/procurement",
-        icon: "file-alt",
-        component: Procurments,
-      },
     ],
   },
   {
@@ -308,20 +300,20 @@ const ManagerSidebar = [
         path: "/machines",
         icon: "laptop-code",
       },
-      {
-        name: "Products",
-        title: "All available retail products.",
-        path: "/products",
-        icon: "cogs",
-        component: Products,
-      },
-      {
-        name: "Medicines",
-        title: "Medicine inventory and sales.",
-        path: "/medicines",
-        icon: "pills",
-        component: Products,
-      },
+      // {
+      //   name: "Products",
+      //   title: "All available retail products.",
+      //   path: "/products",
+      //   icon: "cogs",
+      //   component: Products,
+      // },
+      // {
+      //   name: "Medicines",
+      //   title: "Medicine inventory and sales.",
+      //   path: "/medicines",
+      //   icon: "pills",
+      //   component: Products,
+      // },
     ],
   },
   {
@@ -451,14 +443,14 @@ const ManagerSidebar = [
             title: "Generic product listings for resale.",
             path: "/products/generics",
             icon: "cubes",
-            component: ProductGenerics,
+            // component: ProductGenerics,
           },
           {
             name: "Products",
             title: "All available retail products.",
             path: "/products",
             icon: "box",
-            component: Products,
+            // component: Products,
           },
         ],
       },

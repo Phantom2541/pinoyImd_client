@@ -23,25 +23,9 @@ const ImageDragAndDrop = ({ img = "", handleUpload, formSubmitted }) => {
   const { addToast } = useToasts();
 
   useEffect(() => {
-    let blobUrl;
-
     if (img && !preview) {
-      fetch(img)
-        .then((res) => res.blob())
-        .then((blob) => {
-          blobUrl = URL.createObjectURL(blob);
-          setPreview(blobUrl);
-        })
-        .catch((err) => {
-          setPreview(img);
-        });
+      setPreview(img);
     }
-
-    return () => {
-      if (blobUrl) {
-        URL.revokeObjectURL(blobUrl);
-      }
-    };
   }, [img, preview]);
 
   useEffect(() => {
@@ -230,6 +214,7 @@ const ImageDragAndDrop = ({ img = "", handleUpload, formSubmitted }) => {
         <>
           <img
             src={preview}
+            loading="lazy"
             onError={(e) => (e.target.src = logo)}
             alt="preview"
             className={isDraggingOver ? "dragging-preview" : "normal-preview"}

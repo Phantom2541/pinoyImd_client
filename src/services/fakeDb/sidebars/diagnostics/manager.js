@@ -21,7 +21,6 @@ import {
   Physicians,
   Heads,
 } from "../../../../pages/platforms/hr/index.js";
-import { Procurments } from "../../../../pages/platforms/procurement/index.js";
 
 import stockHolder from "../../../../pages/platforms/hr/personnel/stockHolder/index.jsx";
 import { Quest } from "../../../../pages/platforms/laboratory/staffManagement/index.js";
@@ -264,7 +263,7 @@ const ManagerSidebar = [
         title: "Procurement log for physical assets.",
         path: "/procurement",
         icon: "file-alt",
-        component: Procurments,
+        // component: Procurments,
       },
     ],
   },

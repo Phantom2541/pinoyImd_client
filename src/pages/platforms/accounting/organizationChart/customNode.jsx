@@ -2,11 +2,7 @@ import { useState } from "react";
 import { useReactFlow, Handle, Position } from "react-flow-renderer";
 import Swal from "sweetalert2";
 import Default from "./../../../../assets/iMD.png";
-import {
-  CLOUDINARY_ENDPOINT,
-  ENDPOINT,
-  properFullname,
-} from "../../../../services/utilities";
+import { Cloudinary, properFullname } from "../../../../services/utilities";
 import { MDBIcon } from "mdbreact";
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,7 +10,6 @@ export default function CustomNode({ data, id, setAvailableNodes }) {
   const { setNodes, setEdges } = useReactFlow();
   const [isFading, setIsFading] = useState(false);
   const { eid } = data;
-  const profile = `${ENDPOINT}/public/users/${eid?.email}/profile.jpg`;
   const isClone = data.isClone;
   const handleClone = async () => {
     setNodes((prev) => {
@@ -130,7 +125,7 @@ export default function CustomNode({ data, id, setAvailableNodes }) {
         </button>
         <img
           className="orgChart-innerCard-image"
-          src={`${CLOUDINARY_ENDPOINT}/users/${eid?.email}/profile.png`}
+          src={`${Cloudinary.getEndpoint()}/users/${eid?.email}/profile.png`}
           alt="profile"
           onError={(e) => {
             e.target.onerror = null;

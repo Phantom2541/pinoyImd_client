@@ -1,9 +1,9 @@
-import Dashboard from "../../../pages/platforms/SuperAdmin/dashboard/index.jsx";
+import Dashboard from "../../../pages/platforms/SuperAdmin/dashboard";
 import Companies from "../../../pages/platforms/SuperAdmin/companies";
 import HealthCard from "../../../pages/platforms/SuperAdmin/healthCard";
-import Products from "../../../pages/platforms/frontdesk/market/products";
-import machines from "../../../pages/platforms/frontdesk/market/machines";
-import generics from "../../../pages/platforms/frontdesk/market/generics";
+import Products from "../../../pages/platforms/SuperAdmin/commerce/supplies/products";
+import generics from "../../../pages/platforms/SuperAdmin/commerce/medicines/generics";
+import machines from "../../../pages/platforms/SuperAdmin/commerce/assets/machines";
 
 const admin = [
   {
