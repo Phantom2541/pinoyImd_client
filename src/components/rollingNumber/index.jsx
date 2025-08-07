@@ -2,11 +2,14 @@
 import React, { useEffect, useRef, useState, memo } from "react";
 import "./style.css";
 
+/* *
+ */
 export default function RollingNumber({
   value = 0,
   precision = 0,
   duration = 300,
   prefix = "₱",
+  color = "#1266f1",
 }) {
   const isValidNumber = typeof value === "number" && !isNaN(value);
 
@@ -44,6 +47,7 @@ export default function RollingNumber({
   return (
     <div
       className={`rolling-number ${isRolling ? "rolling" : ""}`}
+      style={{ color: color }}
       aria-label={`${prefix}${paddedValue}`}
     >
       {prefix && <div className="digit-static">{prefix}</div>}
