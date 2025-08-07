@@ -4,7 +4,7 @@ import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import Header from "./header";
 import Body from "./body";
 // import Footer from "./footer";
-import TableLoading from "../../../../../components/tableLoading";
+import TableLoading from "../../../../../../components/tableLoading";
 // import Modal from "./modal";
 
 const Index = () => {

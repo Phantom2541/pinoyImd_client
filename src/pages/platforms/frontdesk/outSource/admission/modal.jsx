@@ -89,6 +89,8 @@ export default function Modal() {
   const handleClose = () => dispatch(TOGGLE());
 
   const { cp = {}, code } = form;
+  console.log("form", form);
+  console.log("sex", form.sex);
 
   return (
     <MDBModal isOpen={showModal} toggle={handleClose} backdrop size="md">
@@ -103,10 +105,10 @@ export default function Modal() {
         <form onSubmit={handleSubmit}>
           {/* 👇 patient Select */}
           <label>Patient Name</label>
-          <SearchUser setPatient={handlePatient} />
-
+          {/* 👇 SearchUser should only appear if user is editing or no patient selected */}
           {showInputFields || !form.fullName ? (
             <>
+              <SearchUser setPatient={handlePatient} />
               <MDBInput
                 label="Full Name (Format: Lastname, Firstname Middlename)"
                 type="text"
@@ -116,43 +118,30 @@ export default function Modal() {
               />
             </>
           ) : (
-            <div className="mb-3 ml-1">
-              {showInputFields || !form.fullName ? (
-                <MDBInput
-                  label="Full Name (Format: Lastname, Firstname Middlename)"
-                  type="text"
-                  value={handleValue("fullName")}
-                  required
-                  onChange={(e) => handleChange("fullName", e.target.value)}
-                />
-              ) : (
-                <div className="d-flex align-items-center mt-3 ml-1">
-                  <MDBIcon
-                    icon={form?.isMale === "true" ? "mars" : "venus"}
-                    className={`mr-2 ${
-                      form?.isMale === "true" ? "text-primary" : "text-danger"
-                    }`}
-                  />
-                  <strong>{properFullname(form.fullName)}</strong>
-                  <MDBBtn
-                    size="sm"
-                    color="danger"
-                    className="ml-2"
-                    onClick={() => {
-                      setShowInputFields(true);
-                      setForm((prev) => ({ ...prev, fullName: "" }));
-                    }}
-                  >
-                    <MDBIcon icon="times" />
-                  </MDBBtn>
-                </div>
-              )}
+            <div className="d-flex align-items-center mt-3 ml-1">
+              <MDBIcon
+                icon={form?.sex ? "mars" : "venus"}
+                className={`mr-2 ${form?.sex ? "text-primary" : "text-danger"}`}
+              />
+              <strong>{properFullname(form.fullName)}</strong>
+              <MDBBtn
+                size="sm"
+                rounded
+                color="danger"
+                className="ml-2"
+                onClick={() => {
+                  setShowInputFields(true);
+                  setForm((prev) => ({ ...prev, fullName: "" }));
+                }}
+              >
+                <MDBIcon icon="times" />
+              </MDBBtn>
             </div>
           )}
 
           {/* 👇 Contact Info Inputs */}
           <MDBInput
-            label="Phone"
+            label="Emergency"
             type="number"
             maxLength="11"
             value={cp.phone || ""}

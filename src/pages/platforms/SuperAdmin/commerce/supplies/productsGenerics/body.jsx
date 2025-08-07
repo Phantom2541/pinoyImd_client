@@ -5,7 +5,7 @@ import { MDBTable, MDBBtn } from "mdbreact";
 import {
   SetEDIT,
   DESTROY,
-} from "../../../../../services/redux/slices/market/productsGenerics";
+} from "../../../../../../services/redux/slices/market/productsGenerics";
 
 const Body = () => {
   //THIS IS NOT NESSECARY(?) SAID BY MELUIN. the two lines under these are called by dispatch

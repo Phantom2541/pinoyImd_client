@@ -10,7 +10,7 @@ import {
 
 import CollapsableBody from "./body";
 import CollapsableHeader from "./header";
-import { collapse } from "../../../../../../services/utilities";
+import { collapse } from "../../../../../../../services/utilities";
 // import { SetAddChild } from "../../../../../../services/redux/slices/market/generics";
 
 export default function Body() {

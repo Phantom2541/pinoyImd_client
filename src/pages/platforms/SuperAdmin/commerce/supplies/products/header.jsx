@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBView } from "mdbreact";
-import { Search } from "../../../../../components/searchables";
+import { Search } from "../../../../../../components/searchables";
 import {
   BROWSE,
   SetCREATE,
   SetFILTERED,
-} from "../../../../../services/redux/slices/commerce/pos/services/cases";
+} from "../../../../../../services/redux/slices/commerce/pos/services/cases";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);
@@ -15,7 +15,9 @@ const Header = () => {
 
   useEffect(() => {
     if (token) {
-      dispatch(BROWSE({ token, params: { branchId: activePlatform.branchId } }));
+      dispatch(
+        BROWSE({ token, params: { branchId: activePlatform.branchId } })
+      );
     }
   }, [token, dispatch, activePlatform]);
 
@@ -32,7 +34,10 @@ const Header = () => {
       </div>
 
       {/* RIGHT: Search + Add */}
-      <div className="d-flex align-items-center mr-3" style={{ maxWidth: "500px", width: "100%" }}>
+      <div
+        className="d-flex align-items-center mr-3"
+        style={{ maxWidth: "500px", width: "100%" }}
+      >
         <Search
           collections={collections}
           placeholder="Search patient, title, reason..."

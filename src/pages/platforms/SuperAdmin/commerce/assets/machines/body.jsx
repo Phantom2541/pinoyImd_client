@@ -3,7 +3,7 @@ import { MDBBtn, MDBIcon, MDBTable } from "mdbreact";
 import {
   SetEDIT,
   DESTROY,
-} from "../../../../../services/redux/slices/market/machines";
+} from "../../../../../../services/redux/slices/market/machines";
 import Swal from "sweetalert2";
 
 const Body = () => {

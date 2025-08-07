@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch } from "react-redux";
-import { SetEDIT } from "../../../../../../services/redux/slices/market/generics";
+import { SetEDIT } from "../../../../../../../services/redux/slices/market/generics";
 
 const Header = ({ item, isOpen, textColor, index, setActiveId }) => {
   const { name, status, drugClass, SystemTarget } = item,

@@ -30,7 +30,7 @@ export default function Collapsable({ item }) {
           <td>{properFullname(ppId?.fullName || "N/A")}</td>
           <td>{source}</td>
           <td>{rfv}</td>
-          <td>{cases?.name || "N/A"}</td>
+          <td>{cases || "N/A"}</td>
         </tr>
         <tr>
           <th>Admitted</th>

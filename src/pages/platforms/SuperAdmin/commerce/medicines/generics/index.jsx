@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { MDBCard, MDBCardBody, MDBAnimation } from "mdbreact";
 
-import TableLoading from "../../../../../components/tableLoading";
+import TableLoading from "../../../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./collapse";
 import Footer from "./footer";

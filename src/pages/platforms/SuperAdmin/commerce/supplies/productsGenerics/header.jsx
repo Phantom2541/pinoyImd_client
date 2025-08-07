@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { Search } from "../../../../../components/searchables";
+import { Search } from "../../../../../../components/searchables";
 import {
   BROWSE,
   SetFILTER,
-} from "../../../../../services/redux/slices/market/productsGenerics";
+} from "../../../../../../services/redux/slices/market/productsGenerics";
 import { MDBView } from "mdbreact";
-import { SetCREATE } from "../../../../../services/redux/slices/market/productsGenerics";
+import { SetCREATE } from "../../../../../../services/redux/slices/market/productsGenerics";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth);

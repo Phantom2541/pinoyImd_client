@@ -1,13 +1,13 @@
 import React from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { Search } from "../../../../../../components/searchables";
+import { Search } from "../../../../../../../components/searchables";
 import {
   DESTROY,
   SetEDIT,
   SetCREATE,
   SetFILTER,
-} from "../../../../../../services/redux/slices/market/medicines";
+} from "../../../../../../../services/redux/slices/market/medicines";
 import Swal from "sweetalert2";
 
 export default function Collapsable({ generics, brands }) {

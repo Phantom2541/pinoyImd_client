@@ -15,12 +15,12 @@ import {
   SAVE,
   TOGGLE,
   UPDATE,
-} from "../../../../../../services/redux/slices/market/medicines";
+} from "../../../../../../../services/redux/slices/market/medicines";
 import {
   // SAVE as GenSAVE,
   // UPDATE as GenUPDATE,
   SetBrands,
-} from "../../../../../../services/redux/slices/market/generics";
+} from "../../../../../../../services/redux/slices/market/generics";
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
 

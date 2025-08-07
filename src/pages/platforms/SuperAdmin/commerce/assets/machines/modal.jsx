@@ -14,11 +14,11 @@ import {
   TOGGLE,
   SAVE,
   UPDATE,
-} from "../../../../../services/redux/slices/market/machines";
+} from "../../../../../../services/redux/slices/market/machines";
 
 import { isEqual } from "lodash";
 import { useToasts } from "react-toast-notifications";
-import { Templates } from "../../../../../services/fakeDb";
+import { Templates } from "../../../../../../services/fakeDb";
 
 export default function Modal() {
   const { showModal, selected, willCreate, isLoading } = useSelector(
