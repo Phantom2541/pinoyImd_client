@@ -5,6 +5,7 @@ import {
   Records,
   Staffs,
 } from "../../../../pages/platforms/hr/index";
+import { Catalogs } from "../../../../pages/platforms/headquarter";
 import {
   Equipments,
   Procurments as Procurement,
@@ -30,6 +31,7 @@ import { Branches } from "../../../../pages/platforms/headquarter/humanResources
 import PatientCategories from "../../../../pages/platforms/headquarter/patientCategories";
 import Dashboard from "../../../../pages/platforms/headquarter/dashboard";
 import hpWalkthrough from "../../../../pages/platforms/headquarter/hpWalkthrough";
+import { Catalog } from "pdfjs-dist/build/pdf.worker";
 
 const headquarter = [
   {
@@ -357,6 +359,13 @@ const headquarter = [
     icon: "credit-card",
     title: "Homepage walkthroughs(view only)",
     component: hpWalkthrough,
+  },
+  {
+    name: "Catalogs",
+    path: "/catalogs",
+    icon: "credit-card",
+    title: "Homepage walkthroughs(view only)",
+    component: Catalogs,
   },
 ];
 

@@ -358,6 +358,7 @@ const headquarter = [
     title: "Homepage walkthroughs(view only)",
     component: hpWalkthrough,
   },
+  
 ];
 
 export default headquarter;
