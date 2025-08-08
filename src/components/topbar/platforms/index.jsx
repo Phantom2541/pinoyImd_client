@@ -7,7 +7,6 @@ import {
   MDBDropdownToggle,
   MDBDropdownMenu,
   MDBDropdownItem,
-  MDBTooltip,
 } from "mdbreact";
 import { capitalize } from "../../../services/utilities";
 import { SETACTIVEPLATFORM } from "../../../services/redux/slices/assets/persons/auth";
@@ -61,34 +60,22 @@ export default function Platforms() {
 
   return (
     <MDBDropdown className="sample">
-      <MDBTooltip placement="bottom" domElement>
-        <span>
-          <MDBDropdownToggle nav caret id="platforms-dropdown">
-            <MDBIcon icon="network-wired" />
-            &nbsp;
-            <div className="d-none d-md-inline">
-              {capitalize(activePlatform?.platform || "patron")}
-            </div>
-          </MDBDropdownToggle>
-        </span>
-        <div
-          className="bg-primary text-white p-2 rounded"
-          style={{
-            fontSize: "0.85rem",
-            maxWidth: "1260px",
-            lineHeight: "auto",
-          }}
-        >
-          Some platforms are currently disabled because this branch is still in
-          draft mode.
-          <br />
-          <br /> Please complete the Menu, Services, Staff, and Signatories.
-          <br />
-          <br />
-          Once done, kindly inform us so we can activate your Demo Subscription.
+      <MDBDropdownToggle
+        nav
+        caret
+        id="platforms-dropdown"
+        title={
+          isDraft
+            ? "Some platforms are currently disabled because this branch is still in draft mode.   Please complete the Menu, Services, Staff, and Signatories to unlock full access.    Once done, kindly inform us so we can activate your full system access."
+            : "Switch between your available platforms."
+        }
+      >
+        <MDBIcon icon="network-wired" />
+        &nbsp;
+        <div className="d-none d-md-inline">
+          {capitalize(activePlatform?.platform || "patron")}
         </div>
-      </MDBTooltip>
-
+      </MDBDropdownToggle>
       <MDBDropdownMenu right id="platforms-dropdown-menu">
         {access.map((platform, index) => {
           const cleanedPlatform = platform.toLowerCase();
