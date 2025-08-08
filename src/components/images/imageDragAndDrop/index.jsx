@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ImageDragAndDrop from "./dragNdroping";
 import logo from "../../../assets/iMD.png"; // make sure the path is correct
 
@@ -8,6 +8,8 @@ export default function ParentComponent() {
   const handleImageChange = (file, imageUrl) => {
     setSavedImage(imageUrl);
   };
+
+  console.log("savedImage", savedImage);
 
   return (
     <div style={{ width: "400px", height: "230px" }}>

@@ -22,6 +22,8 @@ import {
   removeUndefinedValues,
 } from "./../../../../../../../services/utilities";
 import "./style.css";
+import { transform } from "lodash";
+import RollingNumber from "../../../../../../../components/rollingNumber";
 
 export default function Modal() {
   const { token, activePlatform, auth } = useSelector(({ auth }) => auth),
@@ -279,7 +281,9 @@ export default function Modal() {
               <div className="d-flex align-items-end">
                 <span ref={floatingCashRef}>
                   {title || "Floating Cash  "}
-                  {sum > 0 && ` : (${currency.format(sum)})`}
+                  {sum > 0 && (
+                    <RollingNumber value={sum} color="white" duration={800} />
+                  )}
                 </span>
                 <span></span>
               </div>
@@ -317,7 +321,7 @@ export default function Modal() {
           )}
           <div className="d-flex flex-column align-items-center justify-content-center">
             <span
-              className=" font-weight-bold mb-4"
+              className=" font-weight-bold mb-1"
               style={{
                 textTransform: "uppercase",
                 letterSpacing: "25px",
@@ -328,16 +332,11 @@ export default function Modal() {
             </span>
             <div
               className="d-flex justify-content-center"
-              style={{ gap: "50px" }}
+              style={{ gap: "30px" }}
             >
               <div className="d-flex flex-column justify-content-center align-items-center">
                 <h5 className="text-center font-weight-bold mb-4">Bills</h5>
-                <div
-                  className="d-flex flex-column"
-                  style={{
-                    gap: "15px",
-                  }}
-                >
+                <div className="d-flex flex-column">
                   {/* LEFT COLUMN */}
                   {currency.Denominations.bills
                     .reduce((rows, bill, index) => {
@@ -373,6 +372,11 @@ export default function Modal() {
                             position: "relative",
                             overflow: "hidden",
                             width: "fit-content",
+                            transform: "scale(.8)",
+                            transformOrigin: "top",
+                            marginBottom: "-20px",
+                            boxShadow: "none",
+                            marginRight: "-20px",
                           }}
                         >
                           <MDBCardBody
@@ -420,6 +424,11 @@ export default function Modal() {
                               position: "relative",
                               overflow: "hidden",
                               width: "fit-content",
+                              transform: "scale(.8)",
+                              transformOrigin: "top",
+                              marginBottom: "-15px",
+                              marginLeft: "-20px",
+                              boxShadow: "none",
                             }}
                           >
                             <MDBCardBody className="p-0">

@@ -7,10 +7,10 @@ import {
 } from "../../../../pages/platforms/laboratory/diagnostics";
 
 import { Menus, Services } from "../../../../pages/platforms/cashier";
-import Products from "../../../../pages/platforms/frontdesk/market/products";
-import productsGenerics from "../../../../pages/platforms/frontdesk/market/productsGenerics";
-import machines from "../../../../pages/platforms/frontdesk/market/machines";
-import generics from "../../../../pages/platforms/frontdesk/market/generics";
+// import Products from "../../../../pages/platforms/frontdesk/market/products";
+// import productsGenerics from "../../../../pages/platforms/frontdesk/market/productsGenerics";
+// import machines from "../../../../pages/platforms/SuperAdmin/commerce/assets/machines";
+// import generics from "../../../../pages/platforms/frontdesk/market/generics";
 import mentainance from "../../../../pages/platforms/frontdesk/market/mentainance";
 
 import Sendouts from "../../../../pages/platforms/laboratory/diagnostics/sendouts";
@@ -122,34 +122,34 @@ const frontdesk = [
     title:
       "Manage inventory and product listings like machines, medicines, and consumables.",
     children: [
-      {
-        name: "productsGenerics",
-        path: "/productsGenerics",
-        icon: "cogs",
-        title: "List of generic categories for medical products.",
-        component: productsGenerics,
-      },
-      {
-        name: "products",
-        path: "/products",
-        icon: "cogs",
-        title: "Inventory of available products for use or sale.",
-        component: Products,
-      },
-      {
-        name: "Machines",
-        path: "/merchandise/machines",
-        icon: "laptop-code",
-        title: "List and manage medical machines and diagnostic equipment.",
-        component: machines, // add your component here
-      },
-      {
-        name: "Medicines",
-        path: "/medicines",
-        icon: "laptop-code",
-        title: "Manage pharmaceutical stocks and generic drugs.",
-        component: generics, // add your component here
-      },
+      // {
+      //   name: "productsGenerics",
+      //   path: "/productsGenerics",
+      //   icon: "cogs",
+      //   title: "List of generic categories for medical products.",
+      //   component: productsGenerics,
+      // },
+      // {
+      //   name: "products",
+      //   path: "/products",
+      //   icon: "cogs",
+      //   title: "Inventory of available products for use or sale.",
+      //   component: Products,
+      // },
+      // {
+      //   name: "Machines",
+      //   path: "/merchandise/machines",
+      //   icon: "laptop-code",
+      //   title: "List and manage medical machines and diagnostic equipment.",
+      //   component: machines, // add your component here
+      // },
+      // {
+      //   name: "Medicines",
+      //   path: "/medicines",
+      //   icon: "laptop-code",
+      //   title: "Manage pharmaceutical stocks and generic drugs.",
+      //   component: generics, // add your component here
+      // },
       {
         name: "Mentainance",
         path: "/merchandise/mentainance",

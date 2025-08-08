@@ -7,7 +7,7 @@ import {
 } from "../../../../pages/platforms/hr/index";
 import {
   Equipments,
-  Procurments as Procurement,
+  // Procurments as Procurement,
   Hmo,
 } from "../../../../pages/platforms/headquarter/file201";
 import { banner } from "../../../../pages/platforms/headquarter/settings/profile";
@@ -25,7 +25,7 @@ import {
   Description,
 } from "../../../../pages/platforms/headquarter/settings";
 
-import ProcurmentEquipments from "../../../../pages/platforms/procurement/equipments";
+// import ProcurmentEquipments from "../../../../pages/platforms/procurement/equipments";
 import { Branches } from "../../../../pages/platforms/headquarter/humanResources";
 import PatientCategories from "../../../../pages/platforms/headquarter/patientCategories";
 import Dashboard from "../../../../pages/platforms/headquarter/dashboard";
@@ -111,7 +111,7 @@ const headquarter = [
         path: "/duty/equipments",
         icon: "hammer",
         title: "Unit-specific equipment list",
-        component: ProcurmentEquipments,
+        // component: ProcurmentEquipments,
       },
       {
         name: "Preventive Maintenance",
@@ -137,7 +137,7 @@ const headquarter = [
             path: "/procurement",
             icon: "clipboard-list",
             title: "Manage purchases, orders, and suppliers",
-            component: Procurement,
+            // component: Procurement,
           },
         ],
       },
@@ -358,6 +358,7 @@ const headquarter = [
     title: "Homepage walkthroughs(view only)",
     component: hpWalkthrough,
   },
+  
 ];
 
 export default headquarter;
