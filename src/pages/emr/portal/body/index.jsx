@@ -91,11 +91,17 @@ const Body = () => {
 
   const form = diagnostic[activeType]?.form || activeType;
 
-  const handlePDF = () => {
-    EMR_RESULT_TO_PDF({ task, form, department: getDepartment() });
+  const handlePDF = async () => {
+    await EMR_RESULT_TO_PDF({
+      task,
+      form,
+      department: getDepartment(),
+      result,
+    });
   };
+
   return (
-    <div className="mx-2">
+    <div className="mx-2 mt-n3">
       <Header />
       <MDBNav tabs color="indigo" className="nav-justified m-0 py-1">
         {tabs.map((tab) => (
@@ -143,17 +149,19 @@ const Body = () => {
                           </option>
                         ))}
                       </select>
-                      <MDBBtn
-                        size="sm"
-                        color="success"
-                        outline
-                        rounded
-                        className="px-2"
-                        onClick={handlePDF}
-                        title="Download PDF"
-                      >
-                        <MDBIcon icon="file-pdf" />
-                      </MDBBtn>
+                      {isResultReady && (
+                        <MDBBtn
+                          size="sm"
+                          color="success"
+                          outline
+                          rounded
+                          className="px-2"
+                          onClick={handlePDF}
+                          title="Download PDF"
+                        >
+                          <MDBIcon icon="file-pdf" />
+                        </MDBBtn>
+                      )}
                     </div>
                   </div>
                   <div className="my-4">

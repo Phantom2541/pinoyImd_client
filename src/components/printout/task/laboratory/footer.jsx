@@ -89,7 +89,7 @@ const Footer = ({ dealId }) => {
                 lineHeight: 1.2,
               }}
             >
-              Scan to view EMR
+              Scan to view e-Copy
             </h5>
           </div>
         </div>
