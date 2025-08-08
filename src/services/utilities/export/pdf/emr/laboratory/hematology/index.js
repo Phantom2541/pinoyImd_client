@@ -3,7 +3,6 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import { Cellcount, Diffcount, Rci as RCI } from "../../../../../../fakeDb";
 import logo from "../../../../../../../assets/iMD.png";
 import utils from "../utils";
-import fullName from "../../../../../fullName";
 import properFullname from "../../../../../properFullname";
 
 pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
@@ -155,7 +154,7 @@ export const Hematology = async ({ task, form }) => {
 
   const head = signatories[0],
     dr = signatories[1],
-    frontdesk = signatories[2];
+    encoder = signatories[2];
 
   const headSig = await utils.getSignature(head?.email);
   const drSig = await utils.getSignature(dr?.email);
@@ -233,10 +232,14 @@ export const Hematology = async ({ task, form }) => {
       },
     ],
     footer: function (currentPage, pageCount) {
-      const base64Sig = drSig.replace(
-        /^data:image\/(png|jpg|jpeg);base64,/,
-        ""
-      );
+      const base64DrSig = drSig.replace(
+          /^data:image\/(png|jpg|jpeg);base64,/,
+          ""
+        ),
+        base64HeadSig = headSig.replace(
+          /^data:image\/(png|jpg|jpeg);base64,/,
+          ""
+        );
 
       return {
         margin: [10, -115, 10, 80],
@@ -288,7 +291,7 @@ export const Hematology = async ({ task, form }) => {
                       {
                         absolutePosition: { x: 125, y: -100 },
                         width: 50,
-                        image: "data:image/png;base64," + base64Sig,
+                        image: "data:image/png;base64," + base64HeadSig,
                       },
                       {
                         stack: [
@@ -320,7 +323,7 @@ export const Hematology = async ({ task, form }) => {
                   {
                     stack: [
                       {
-                        text: "Ric Darrel A. Pajarillaga",
+                        text: properFullname(encoder?.fullName)?.toUpperCase(),
                         style: "footerName",
                         alignment: "center",
                         margin: [0, 5, 0, 0],
@@ -341,7 +344,7 @@ export const Hematology = async ({ task, form }) => {
                       {
                         absolutePosition: { x: 0, y: -70 },
                         alignment: "center",
-                        image: "data:image/png;base64," + base64Sig,
+                        image: "data:image/png;base64," + base64DrSig,
                         width: 50,
                       },
                       {
