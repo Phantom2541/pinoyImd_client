@@ -12,7 +12,7 @@ export default function Miscellaneous({ task, fontSize }) {
         border: "solid 1px",
       }}
     >
-      {!packages.includes(146, 11) && (
+      {!packages.includes(11) && !packages.includes(146) && (
         <label style={style} className="ml-2">
           <h6>
             Specimen:

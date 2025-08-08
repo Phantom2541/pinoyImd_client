@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCol } from "mdbreact";
 const types = ["A", "B", "O", "AB"];
 export default function BloodTyping({ task, fontSize }) {

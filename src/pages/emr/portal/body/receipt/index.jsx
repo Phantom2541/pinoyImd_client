@@ -84,9 +84,9 @@ const Stub = ({ sale }) => {
                   </td>
                   <td
                     style={{ fontSize: "17.5px" }}
-                    className="text-right py-0 px-0 fw-bold"
+                    className="text-right py-0 px-0"
                   >
-                    {currency.format(up)}
+                    {currency.format(up + menu?.discount)}
                   </td>
                 </tr>
               );
@@ -94,14 +94,28 @@ const Stub = ({ sale }) => {
         </tbody>
       </MDBTable>
       <Hr />
-      <Text title="Total" value={currency.format(amount)} />
+      <Text
+        title="Total"
+        value={currency.format(amount + discount)}
+        className="fw-bold"
+      />
+
+      {discount > 0 && (
+        <>
+          <Text title="Discount" value={currency.format(discount)} />
+          <Text
+            title="Subtotal"
+            value={currency.format(amount)}
+            className="fw-bold"
+          />
+        </>
+      )}
       <Text
         title={capitalize(payment)}
         value={
           payment === "cash" ? currency.format(cash) : currency.format(amount)
         }
       />
-      <Text title="Discount" value={currency.format(discount)} />
       {payment === "cash" && (
         <Text title="Change" value={currency.format(cash - amount)} />
       )}

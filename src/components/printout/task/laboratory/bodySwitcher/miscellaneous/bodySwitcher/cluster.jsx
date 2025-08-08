@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCol } from "mdbreact";
 import { Services } from "../../../../../../../services/fakeDb";
 
@@ -10,8 +9,6 @@ import { Services } from "../../../../../../../services/fakeDb";
 const test = [68, 69, 70, 97, 131];
 
 export default function Cluster({ task, fontSize }) {
-  console.log("Cluster task", task);
-
   const { results } = task;
   const services = Object.keys(results)
     .filter((key) => test.includes(Number(key)))
