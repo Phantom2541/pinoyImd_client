@@ -7,6 +7,8 @@ export default function CellCount({ cc, isMale, style, apc }) {
 
   const parseValue = (value) =>
     value <= 2 ? value.toFixed(2) : value < 10 ? value.toFixed(1) : value;
+  const reference = Preferences[isMale];
+  console.log(reference[Abbreviation[0]]);
 
   return (
     <MDBTable hover bordered responsive className="mb-0">
@@ -59,6 +61,78 @@ export default function CellCount({ cc, isMale, style, apc }) {
             </tr>
           );
         })}
+        {cc.length === 0 && (
+          <>
+            <tr>
+              <td style={style} className="py-0">
+                <span className="ml-2">Hematocrit</span>
+              </td>
+              <td
+                style={{
+                  ...style,
+                  color: apc < 150 ? "blue" : apc > 450 && "red",
+                }}
+                className="py-0 fw-bold text-center"
+              ></td>
+              <td style={style} className="py-0">
+                {reference[Abbreviation[0]]?.lo} -{" "}
+                {reference[Abbreviation[0]]?.hi}{" "}
+                <Markup content={reference[Abbreviation[0]]?.unit} />
+              </td>
+            </tr>
+            <tr>
+              <td style={style} className="py-0">
+                <span className="ml-2">Hemoglobin</span>
+              </td>
+              <td
+                style={{
+                  ...style,
+                  color: apc < 150 ? "blue" : apc > 450 && "red",
+                }}
+                className="py-0 fw-bold text-center"
+              ></td>
+              <td style={style} className="py-0">
+                {reference[Abbreviation[1]]?.lo} -{" "}
+                {reference[Abbreviation[1]]?.hi}{" "}
+                <Markup content={reference[Abbreviation[1]]?.unit} />
+              </td>
+            </tr>
+            <tr>
+              <td style={style} className="py-0">
+                <span className="ml-2">Erythrocyte</span>
+              </td>
+              <td
+                style={{
+                  ...style,
+                  color: apc < 150 ? "blue" : apc > 450 && "red",
+                }}
+                className="py-0 fw-bold text-center"
+              ></td>
+              <td style={style} className="py-0">
+                {reference[Abbreviation[2]]?.lo} -{" "}
+                {reference[Abbreviation[2]]?.hi}{" "}
+                <Markup content={reference[Abbreviation[2]]?.unit} />
+              </td>
+            </tr>
+            <tr>
+              <td style={style} className="py-0">
+                <span className="ml-2">Leukocyte</span>
+              </td>
+              <td
+                style={{
+                  ...style,
+                  color: apc < 150 ? "blue" : apc > 450 && "red",
+                }}
+                className="py-0 fw-bold text-center"
+              ></td>
+              <td style={style} className="py-0">
+                {reference[Abbreviation[3]]?.lo} -{" "}
+                {reference[Abbreviation[3]]?.hi}{" "}
+                <Markup content={reference[Abbreviation[3]]?.unit} />
+              </td>
+            </tr>
+          </>
+        )}
 
         <tr>
           <td style={style} className="py-0">
