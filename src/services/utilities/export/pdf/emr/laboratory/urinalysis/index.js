@@ -1,6 +1,6 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import utils from "../utils";
+import utils from "../../utils";
 import {
   MicroscopicInRange,
   MicroscopicResultInWord,
@@ -113,10 +113,16 @@ const microscopicCountRows = (me) => {
   return rows;
 };
 
-export const Urinalysis = async ({ task, form }) => {
-  const { pe, ce, me } = task;
+export const Urinalysis = async ({ task, form, result }) => {
+  const { pe, ce, me, signatories } = task;
 
   const imageBase64 = await utils.getImage();
+
+  const [head, dr] = signatories;
+  const headSig = await utils.getSignature(head.email);
+  const drSig = await utils.getSignature(dr.email);
+  const imgLogo = await utils.getLogo();
+  const QrCode = await utils.generateQrCODE(result);
 
   const tableSection = (titleRow, rows) => [
     [
@@ -206,6 +212,14 @@ export const Urinalysis = async ({ task, form }) => {
       },
     ],
 
+    footer: utils.footer({
+      task,
+      headSig,
+      drSig,
+      imgLogo,
+      QrCode,
+    }),
+
     styles: {
       tableSpacing: {
         margin: [0, 10, 0, 20],
@@ -219,7 +233,7 @@ export const Urinalysis = async ({ task, form }) => {
 
   pdfMake
     .createPdf(docDefinition)
-    .download(`Urinalysis Report - ${new Date().toLocaleDateString()}.pdf`);
+    .download(`Urinalysis Result - ${new Date().toLocaleDateString()}.pdf`);
 };
 
 export default Urinalysis;

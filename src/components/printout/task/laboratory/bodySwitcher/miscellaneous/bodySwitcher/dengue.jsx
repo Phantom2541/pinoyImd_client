@@ -1,7 +1,6 @@
 import { MDBCol } from "mdbreact";
 
 export default function Dengue({ task, fontSize }) {
-  console.log("task", task);
   const { ns1, igg, igm } = task?.results || {};
   return (
     <div className="offset-1" style={{ fontSize: `${fontSize}rem` }}>

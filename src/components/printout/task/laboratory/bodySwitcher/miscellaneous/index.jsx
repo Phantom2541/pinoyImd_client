@@ -1,12 +1,10 @@
-import React from "react";
 import BodySwitcher from "./bodySwitcher";
 import Troupe from "./troupe";
 import Category from "./category";
 
 export default function Miscellaneous({ task, fontSize }) {
-  const { specimen, packages, data } = task;
+  const { specimen, data } = task;
   const style = { fontSize: `${fontSize}rem` };
-  console.log("packages :", packages);
   return (
     <div
       style={{

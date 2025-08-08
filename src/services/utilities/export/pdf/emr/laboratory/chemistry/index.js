@@ -1,26 +1,24 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import utils from "../utils";
+import utils from "../../utils";
 import {
   calculateIndicators,
   findReference,
   formatToSI,
-  properFullname,
 } from "../../../../../../../services/utilities";
 
 pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
 
-export const Chemistry = async ({ task, form }) => {
+export const Chemistry = async ({ task, form, result }) => {
   const { packages, services, patient, signatories } = task;
 
   const imageBase64 = await utils.getImage();
-  const head = signatories[0],
-    dr = signatories[1],
-    frontdesk = signatories[2];
 
-  const headSig = await utils.getSignature(head?.email);
-  const drSig = await utils.getSignature(dr?.email);
-
+  const [head, dr] = signatories;
+  const headSig = await utils.getSignature(head.email);
+  const drSig = await utils.getSignature(dr.email);
+  const imgLogo = await utils.getLogo();
+  const QrCode = await utils.generateQrCODE(result);
   const rows = [
     [
       {
@@ -172,98 +170,7 @@ export const Chemistry = async ({ task, form }) => {
         margin: [0, 10, 0, 20],
       },
     ],
-    footer: (currentPage, pageCount) => ({
-      margin: [30, 10, 30, 10],
-      layout: "noBorders",
-      table: {
-        widths: ["33%", "34%", "33%"],
-        body: [
-          [
-            {
-              stack: [
-                ...(headSig
-                  ? [
-                      {
-                        image: headSig,
-                        width: 100,
-                        opacity: 0.6,
-                        margin: [0, 0, 0, -10],
-                      },
-                    ]
-                  : []),
-                {
-                  text: properFullname(head?.fullName),
-                  style: "signatureName",
-                },
-                {
-                  text: "Medical Laboratory Scientist",
-                  alignment: "center",
-                  fontSize: 9,
-                },
-                head?.prc
-                  ? {
-                      text: `PRC#: ${head.prc.id}`,
-                      alignment: "center",
-                      fontSize: 8,
-                    }
-                  : "",
-              ],
-              alignment: "center",
-            },
-            {
-              stack: [
-                {
-                  text: properFullname(frontdesk?.fullName),
-                  style: "signatureName",
-                },
-                {
-                  text: "Receptionist",
-                  alignment: "center",
-                  fontSize: 9,
-                },
-              ],
-              alignment: "center",
-            },
-            {}, // blank column
-          ],
-          [
-            {
-              colSpan: 3,
-              stack: [
-                ...(drSig
-                  ? [
-                      {
-                        image: drSig,
-                        width: 100,
-                        opacity: 0.6,
-                        margin: [0, 10, 0, -10], // top spacing for bottom sig
-                      },
-                    ]
-                  : []),
-                {
-                  text: properFullname(dr?.fullName || "Dr. Juan Dela Cruz"),
-                  style: "signatureName",
-                  alignment: "center",
-                },
-                {
-                  text: "Pathologist",
-                  alignment: "center",
-                  fontSize: 9,
-                },
-                {
-                  text: `PRC#: ${dr?.prc?.id || "1234567"}`,
-                  alignment: "center",
-                  fontSize: 8,
-                },
-              ],
-              alignment: "center",
-            },
-            {},
-            {},
-          ],
-        ],
-      },
-    }),
+    footer: utils.footer({ drSig, headSig, imgLogo, QrCode, task }),
 
     styles: {
       signatureName: {
@@ -282,7 +189,7 @@ export const Chemistry = async ({ task, form }) => {
 
   pdfMake
     .createPdf(docDefinition)
-    .download(`Chemistry Report - ${new Date().toLocaleDateString()}.pdf`);
+    .download(`Chemistry Result - ${new Date().toLocaleDateString()}.pdf`);
 };
 
 export default Chemistry;
