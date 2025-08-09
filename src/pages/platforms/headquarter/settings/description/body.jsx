@@ -34,10 +34,13 @@ export default function DescriptionBody() {
 
   const [isValueFocused, setIsValueFocused] = useState(false);
   const [description, setDescription] = useState(companyId?.description || "");
+  const [tagline, setTagline] = useState(companyId?.tagline || "");
   const [mission, setMission] = useState(companyId?.ms || "");
   const [vision, setVision] = useState(companyId?.vs || "");
   const [value, setValue] = useState(
-    Array.isArray(companyId?.vl) ? companyId.vl.join("\n") : companyId?.vl || ""
+    Array.isArray(companyId?.vl)
+      ? companyId?.vl.join("\n")
+      : companyId?.vl || ""
   );
   const [contacts, setContacts] = useState(
     companyId?.contacts || { email: "", mobile: "" }
@@ -45,7 +48,7 @@ export default function DescriptionBody() {
   const [address, setAddress] = useState(
     branch?.address || {
       street: "",
-      barangay: " ",
+      barangay: "",
       city: "",
       province: "",
       region: "",
@@ -64,7 +67,6 @@ export default function DescriptionBody() {
         appearance: isSuccess ? "success" : "error",
       });
     }
-
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
 
@@ -81,46 +83,50 @@ export default function DescriptionBody() {
       .filter((v) => v.length > 0);
 
     setIsLoading(true);
+
     dispatch(
       UPDATE({
         data: {
           _id: companyId?._id,
+          name: companyId?.name,
+          tagline,
           description,
-          mission,
-          vision,
+          ms: mission,
+          vs: vision,
           vl: valueArray,
           contacts,
           address,
         },
-        token,
+        // token,
       })
     ).then(() => {
-      setIsLoading(false);
-
       const updatedCompany = {
-        _id: companyId?._id,
-        name: companyId?.name,
-        subName: companyId?.subName,
-        tagline: companyId?.tagline,
-        hmo: companyId?.hmo,
+        ...companyId,
+        tagline,
+        description,
         ms: mission,
         vs: vision,
         vl: valueArray,
         contacts,
-        description,
         address,
-        // include any other fields you rely on from companyId if needed
       };
 
-      dispatch(SetCOMPANY(updatedCompany));
+      // dispatch(SetCOMPANY(updatedCompany));
 
       dispatch(
         SetActivePlatform({
-          data: updatedCompany,
-          isHMO: false,
+          data: {
+            ...activePlatform,
+            branch: {
+              ...branch,
+              companyId: updatedCompany,
+            },
+          },
+          isBranch: true,
         })
       );
 
+      setIsLoading(false);
       Swal.fire({
         title: "Success!",
         text: "Description Successfully Updated.",
@@ -157,7 +163,7 @@ export default function DescriptionBody() {
                 label="Email"
                 className="pb-0"
                 style={{ minWidth: "300px" }}
-                value={contacts.email}
+                value={contacts?.email}
                 onChange={({ target }) =>
                   setContacts({ ...contacts, email: target.value })
                 }
@@ -167,7 +173,7 @@ export default function DescriptionBody() {
                 type="text"
                 label="Phone Number"
                 className="pb-0"
-                value={contacts.mobile}
+                value={contacts?.mobile}
                 onChange={({ target }) =>
                   setContacts({ ...contacts, mobile: target.value })
                 }
@@ -179,11 +185,19 @@ export default function DescriptionBody() {
         <div className="companyDescription-body">
           <MDBInput
             type="textarea"
-            label="Enter tagline here...."
-            rows={1}
+            label="Enter Company description here..."
             className="pb-0"
-            // value={tagline || company?.tagline}
-            // onChange={({ target }) => setTagline(target.value)}
+            value={description}
+            onChange={({ target }) => setDescription(target.value)}
+            required
+          />
+          <MDBInput
+            type="textarea"
+            label="Enter Company tagline here..."
+            className="pb-0"
+            rows={tagline.split("\n").length || 1}
+            value={tagline}
+            onChange={({ target }) => setTagline(target.value)}
             required
           />
           <div className="d-flex align-items-center" style={{ gap: "20px" }}>
@@ -210,22 +224,13 @@ export default function DescriptionBody() {
               />
             </div>
           </div>
-          <MDBInput
-            type="textarea"
-            label="Enter Company description here..."
-            className="pb-0"
-            rows={description.split("\n").length || 1}
-            value={description}
-            onChange={({ target }) => setDescription(target.value)}
-            required
-          />
+
           <div className="w-100 d-flex" style={{ gap: "20px" }}>
             <div className="w-100">
               <MDBInput
                 type="textarea"
                 label="Enter core values (one per line)..."
                 className="pb-0"
-                rows={value.split("\n").length || 1}
                 value={value}
                 onChange={({ target }) => setValue(target.value)}
                 onFocus={() => setIsValueFocused(true)}
