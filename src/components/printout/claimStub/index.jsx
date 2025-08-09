@@ -86,9 +86,9 @@ const Stub = ({ sale, companyId }) => {
           }  ${fullName.lname || ""}`
         ).toUpperCase()}
       />
-      {!verified && (
+      {/* {!verified && (
         <Text title="Email" value={email} isAddress fontSize="0.8rem" />
-      )}
+      )} */}
       <Text
         title="Address"
         value={billingAddress(address)}
@@ -222,7 +222,20 @@ const Stub = ({ sale, companyId }) => {
         />
       </div>
       <h6>Scan this QR Code </h6>
-      <h6 style={{ marginTop: "-0.7rem" }}>To check transaction status </h6>
+      <h6 style={{ marginTop: "-0.7rem" }}>
+        To activate your acount and check the transaction status
+      </h6>
+      <Hr />
+      <div className="d-flex align-items-center justify-content-between">
+        <h6>Email:</h6>
+        <h6 style={{ fontSize: "13px" }}> {email} </h6>
+      </div>
+      <div className="d-flex align-items-center mt-n2 mb-n2 justify-content-between">
+        <h6>Password:</h6>
+        <h6 style={{ fontSize: "13px" }}>
+          Birthday (format: <span className="fw-bold">YYMMDD</span>)
+        </h6>
+      </div>
       <Hr />
       <h6 className="font-weight-bold">PINOY-iMD </h6>
       <h6 style={{ marginTop: "-0.3rem" }}>Health within reached </h6>
@@ -249,9 +262,9 @@ export default function ClaimStub() {
         const parsed = JSON.parse(raw);
         setSale(parsed);
       }
-      setTimeout(() => {
-        window.print();
-      }, 500);
+      // setTimeout(() => {
+      //   window.print();
+      // }, 500);
     } catch (error) {
       console.error("Failed to parse claimStub:", error);
     }

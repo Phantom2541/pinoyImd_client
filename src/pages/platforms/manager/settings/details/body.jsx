@@ -49,8 +49,6 @@ export default function BranchDescription() {
     companyId.name
   )}/profile/logo.png`;
 
-  console.log("logo", logo);
-
   useEffect(() => {
     if (message) {
       addToast(message, {

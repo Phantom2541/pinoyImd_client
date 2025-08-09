@@ -26,8 +26,8 @@ const Header = () => {
       hour12: true,
     });
 
-  const customerName = `${fullName.lname.toUpperCase()}, ${fullName.fname.toUpperCase()} ${
-    fullName.mname ? `y ${fullName.mname.toUpperCase()}` : ""
+  const customerName = `${fullName?.lname?.toUpperCase()}, ${fullName?.fname?.toUpperCase()} ${
+    fullName?.mname ? `y ${fullName?.mname?.toUpperCase()}` : ""
   }`;
 
   return (

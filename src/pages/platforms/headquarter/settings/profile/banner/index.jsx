@@ -14,6 +14,7 @@ import {
   MDBTypography,
   MDBView,
   MDBAnimation,
+  MDBBadge,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
@@ -30,6 +31,7 @@ import { FailedBanner } from "../../../../../../services/utilities";
 import ImageCropper from "../../../../../../components/images/imageCropper";
 import { BROWSE } from "../../../../../../services/redux/slices/assets/branches";
 import "./style.css";
+import { orderBy } from "lodash";
 
 const array = new Array(5).fill().map((_, index) => index);
 
@@ -79,7 +81,6 @@ const Banner = () => {
     const objectUrl = URL.createObjectURL(newBlob);
     const image = new Image();
     image.onload = () => {
-      console.log("Image dimensions before upload:", image.width, image.height);
       setPreview(objectUrl);
     };
     image.src = objectUrl;
@@ -106,12 +107,16 @@ const Banner = () => {
   // navigation handlers (play animation first, then change index)
   const ANIM_MS = 500;
   const handleNext = () => {
-    if (isAnimating || !collections || currentIndex >= collections.length - 1)
+    if (
+      isAnimating ||
+      !sortedCollections ||
+      currentIndex >= sortedCollections.length - 1
+    )
       return;
 
     setIsAnimating(true);
-    setCurrentIndex((prev) => prev + 1); // una, palitan muna ang image
-    setDirection("left"); // pagkatapos, lagyan ng fade-in direction
+    setCurrentIndex((prev) => prev + 1);
+    setDirection("left");
 
     setTimeout(() => {
       setIsAnimating(false);
@@ -120,11 +125,11 @@ const Banner = () => {
   };
 
   const handlePrev = () => {
-    if (isAnimating || !collections || currentIndex <= 0) return;
+    if (isAnimating || !sortedCollections || currentIndex <= 0) return;
 
     setIsAnimating(true);
-    setCurrentIndex((prev) => prev - 1); // una, palitan muna ang image
-    setDirection("right"); // pagkatapos, lagyan ng fade-in direction
+    setCurrentIndex((prev) => prev - 1);
+    setDirection("right");
 
     setTimeout(() => {
       setIsAnimating(false);
@@ -132,12 +137,23 @@ const Banner = () => {
     }, ANIM_MS);
   };
 
-  if (!collections || collections.length === 0) {
+  // ✅ Sort collections for display order
+  const sortedCollections = orderBy(
+    collections || [],
+    [
+      (o) => !o.isMain, // main branches first
+      (o) => o.settings?.status?.trim().toLowerCase() !== "active", // active first
+      (o) => o.name.toLowerCase().trim(), // alphabetical
+    ],
+    ["asc", "asc", "asc"]
+  );
+
+  if (!sortedCollections || sortedCollections.length === 0) {
     return <p className="text-center">No collections found</p>;
   }
 
-  const collection = collections[currentIndex];
-  const { name } = collection;
+  const collection = sortedCollections[currentIndex];
+  const { name, isMain, settings } = collection;
 
   // decide class: left, right, or default fade
   const wrapperClass =
@@ -168,15 +184,16 @@ const Banner = () => {
                 <MDBTypography
                   tag="h4"
                   className="text-center my-3 text-uppercase"
+                  align="center"
                 >
-                  {company?.name} — {name}
+                  {company?.name} —{name}
+                  {isMain && <MDBBadge color="warning">Main</MDBBadge>}
                 </MDBTypography>
                 <img
                   src={
                     preview ||
                     `${ENDPOINT}/public/companies/${companyId.name}/${name}/banner.png`
                   }
-                  // className="img-fluid"
                   style={{
                     width: "100%",
                     height: "85px",
@@ -293,7 +310,7 @@ const Banner = () => {
                     ))}
                 </tbody>
                 <div className="Banner-waterMark">
-                  <span>Demo</span>
+                  <span>{settings.subscription || "Demo"}</span>
                   <span>Subscription</span>
                 </div>
               </MDBTable>
@@ -312,14 +329,16 @@ const Banner = () => {
           <MDBIcon icon="chevron-left" />
         </button>
         <span className="banner-pagination-current">
-          {currentIndex + 1} / {collections.length}
+          {currentIndex + 1} / {sortedCollections.length}
         </span>
         <button
           className="banner-pagination-right"
           style={{
             cursor: isAnimating ? "not-allowed" : "pointer",
           }}
-          disabled={currentIndex === collections.length - 1 || isAnimating}
+          disabled={
+            currentIndex === sortedCollections.length - 1 || isAnimating
+          }
           onClick={handleNext}
         >
           <MDBIcon icon="chevron-right" />
