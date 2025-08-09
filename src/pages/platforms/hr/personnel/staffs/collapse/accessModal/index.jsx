@@ -50,14 +50,18 @@ export default function AccessModal({ show, toggle, selected }) {
     setDuplicateRoles(_roles);
   }, []);
 
-  const removeDuplicate = useCallback((_existingAccess) => {
-    return Access.collections.filter((c) =>
-      _existingAccess?.every(
-        (existAcc) =>
-          existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
-      )
-    );
-  }, []);
+  const removeDuplicate = useCallback(
+    (_existingAccess) => {
+      return Access.getByCategory(activePlatform?.branch?.category).filter(
+        (c) =>
+          _existingAccess?.every(
+            (existAcc) =>
+              existAcc.platform.toUpperCase() !== c.platform.toUpperCase()
+          )
+      );
+    },
+    [activePlatform]
+  );
 
   useEffect(() => {
     // remove existing access in collections of roles
