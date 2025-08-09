@@ -13,7 +13,7 @@
   width: fit-content;
 }
 
-@keyframes fadeIn {
+@keyframes signatoriesFadeIn {
   from {
     opacity: 0;
     transform: translateX(20px);
@@ -24,7 +24,7 @@
   }
 }
 
-@keyframes fadeOut {
+@keyframes signatoriesFadeOut {
   from {
     opacity: 1;
     transform: translateX(0);
@@ -36,11 +36,11 @@
 }
 
 .fade-in {
-  animation: fadeIn 0.3s ease-in forwards;
+  animation: signatoriesFadeIn 0.3s ease-in forwards;
 }
 
 .fade-out {
-  animation: fadeOut 0.3s ease-out forwards;
+  animation: signatoriesFadeOut 0.3s ease-out forwards;
 }
 
 .signatories-card {
