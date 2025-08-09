@@ -181,6 +181,10 @@ export const reduxSlice = createSlice({
   name: url,
   initialState,
   reducers: {
+    SetAUTH: (state, { payload }) => {
+      state.auth = payload;
+      state.email = payload.email;
+    },
     UPLOADBAR: (state, data) => {
       state.progressBar = data.payload;
     },
@@ -508,6 +512,7 @@ export const reduxSlice = createSlice({
 
 export const {
   RESET,
+  SetAUTH,
   SetCOMPANY,
   MAXPAGE,
   UPLOADBAR,

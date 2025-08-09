@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   MDBIcon,
   MDBDropdown,
@@ -30,9 +30,9 @@ export default function Profile() {
     var companyId = company?._id;
     const fakeDB = localStorage.getItem("companyId");
     if (fakeDB && !company?._id) {
-      companyId = JSON.parse(fakeDB);
+      companyId = fakeDB.replace(/"/g, "");
     }
-    // localStorage.clear();
+    localStorage.clear();
     history.push(`/subscribers/${companyId}`);
     clearSiteData();
   };
