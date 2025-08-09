@@ -1,5 +1,13 @@
 import collections from "./collections.json";
 // Category-based Access Control
+/*
+ 10 = Laboratory
+ 11 = Radiology
+ 18 = Clinic
+ 4 = Cashier
+ 20 = Service Engineer
+ 13 = Procurement
+*/
 const laboratory = [10, 18, 4];
 const radiology = [11, 18, 4];
 const accessMap = {
