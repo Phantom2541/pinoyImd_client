@@ -124,7 +124,8 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
         <MDBInput
           label="Case Number"
           name="caseNumber"
-          value={form.caseNumber}
+          value={form?.caseNumber || ""}
+
           onChange={handleChange}
         />
         <MDBInput
