@@ -152,14 +152,16 @@ const Body = () => {
                       {isResultReady && (
                         <MDBBtn
                           size="sm"
-                          color="success"
+                          color="info"
                           outline
-                          rounded
                           className="px-2"
                           onClick={handlePDF}
                           title="Download PDF"
                         >
-                          <MDBIcon icon="file-pdf" />
+                          <MDBIcon
+                            icon="download"
+                            style={{ fontSize: "0.9rem" }}
+                          />
                         </MDBBtn>
                       )}
                     </div>
