@@ -78,7 +78,7 @@ export default function Logo() {
 
   return (
     <>
-      <div style={{ width: "31rem" }} className="mx-auto">
+      {/* <div style={{ width: "31rem" }} className="mx-auto">
         <MDBTypography
           variant="h6"
           noteColor="warning"
@@ -88,47 +88,48 @@ export default function Logo() {
         >
           Hover over the logo to upload or download a new one.
         </MDBTypography>
-      </div>
-      <div style={{ width: "230px" }} className="mx-auto">
+      </div> */}
+      {/* <div style={{ width: "230px" }} className="mx-auto">
         <MDBCard>
-          <MDBCardBody>
-            <MDBView hover={!showImgCropper}>
-              <img
-                src={
-                  preview ||
-                  `${ENDPOINT}/public/companies/${company.name}/logo.png`
+          <MDBCardBody> */}
+      <div style={{ width: "150px" }}>
+        <MDBView hover={!showImgCropper}>
+          <img
+            src={
+              preview || `${ENDPOINT}/public/companies/${company.name}/logo.png`
+            }
+            className="img-fluid"
+            alt={company?.name || "Default Logo"}
+            onError={(e) => (e.target.src = FailedLogo)}
+          />
+          <MDBMask overlay="grey-strong d-flex align-items-center">
+            <MDBBtnGroup className="mx-auto">
+              <MDBBtn
+                disabled={isLoading}
+                color="warning"
+                size="sm"
+                title="Download"
+                onClick={handleDownload}
+              >
+                <MDBIcon icon="download" />
+              </MDBBtn>
+              <ImageCropper
+                handleUpload={handleUpload}
+                cropSize={{ width: 230, height: 80 }}
+                setIsShow={(show) => setShowImgCropper(show)}
+                isUpload
+                label={
+                  <>
+                    <MDBIcon icon="upload" />
+                  </>
                 }
-                className="img-fluid"
-                alt={company?.name || "Default Logo"}
-                onError={(e) => (e.target.src = FailedLogo)}
+                accept={".png"}
               />
-              <MDBMask overlay="grey-strong d-flex align-items-center">
-                <MDBBtnGroup className="mx-auto">
-                  <MDBBtn
-                    disabled={isLoading}
-                    color="warning"
-                    size="sm"
-                    title="Download"
-                    onClick={handleDownload}
-                  >
-                    <MDBIcon icon="download" />
-                  </MDBBtn>
-                  <ImageCropper
-                    handleUpload={handleUpload}
-                    cropSize={{ width: 230, height: 80 }}
-                    setIsShow={(show) => setShowImgCropper(show)}
-                    isUpload
-                    label={
-                      <>
-                        <MDBIcon icon="upload" />
-                      </>
-                    }
-                    accept={".png"}
-                  />
-                </MDBBtnGroup>
-              </MDBMask>
-            </MDBView>
-            <hr />
+            </MDBBtnGroup>
+          </MDBMask>
+        </MDBView>
+      </div>
+      {/* <hr />
             {array
               .sort(() => Math.random() - 0.5)
               .map((index, i) => (
@@ -151,7 +152,7 @@ export default function Logo() {
               ))}
           </MDBCardBody>
         </MDBCard>
-      </div>
+      </div> */}
     </>
   );
 }

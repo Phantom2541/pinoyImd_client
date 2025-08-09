@@ -163,6 +163,19 @@ const Banner = () => {
       ? "bannerFadeInRight"
       : "";
 
+  const shadowColor =
+    settings?.status === "Active"
+      ? "#198754"
+      : settings?.status === "Draft"
+      ? "#6f42c1"
+      : settings?.status === "Expired"
+      ? "#dc3545"
+      : settings?.status === "Suspended"
+      ? "#ffc107"
+      : settings?.status === "Cancelled"
+      ? "#b23c17"
+      : "";
+
   return (
     <div>
       <div style={{ width: "850px" }} className="mx-auto position-relative">
@@ -178,17 +191,23 @@ const Banner = () => {
 
         {/* key changes when currentIndex or direction changes -> remount and play animation */}
         <div key={`${currentIndex}-${direction}`} className={wrapperClass}>
-          <MDBCard>
+          <MDBCard style={{ boxShadow: `0 0 7px ${shadowColor}` }}>
             <MDBCardBody>
+              <MDBTypography
+                tag="h4"
+                className="d-flex justify-content-center align-items-center my-3 text-uppercase"
+                align="center"
+              >
+                <span style={{ color: shadowColor, fontWeight: "bold" }}>
+                  {company?.name} — {name}
+                </span>
+                {isMain && (
+                  <MDBBadge color="warning" className="ml-2">
+                    Main
+                  </MDBBadge>
+                )}
+              </MDBTypography>
               <MDBView hover={!showImgCropper}>
-                <MDBTypography
-                  tag="h4"
-                  className="text-center my-3 text-uppercase"
-                  align="center"
-                >
-                  {company?.name} —{name}
-                  {isMain && <MDBBadge color="warning">Main</MDBBadge>}
-                </MDBTypography>
                 <img
                   src={
                     preview ||
@@ -310,8 +329,7 @@ const Banner = () => {
                     ))}
                 </tbody>
                 <div className="Banner-waterMark">
-                  <span>{settings.subscription || "Demo"}</span>
-                  <span>Subscription</span>
+                  <span>{settings.subscription || "Demo"} Subscription</span>
                 </div>
               </MDBTable>
             </MDBCardBody>

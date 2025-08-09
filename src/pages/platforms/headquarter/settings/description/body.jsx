@@ -20,6 +20,8 @@ import {
 import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
 import Swal from "sweetalert2";
+import Logo from "../logo";
+import "./style.css";
 
 export default function DescriptionBody() {
   const { addToast } = useToasts();
@@ -130,58 +132,111 @@ export default function DescriptionBody() {
   };
 
   return (
-    <div style={{ width: "900px" }} className="mx-auto">
-      <MDBCard>
-        <MDBCardBody>
-          <MDBView>
-            <h5 className="font-weight-bold">{companyId?.name}</h5>
-            <img
-              src={logo}
-              className="mx-auto img-fluid"
-              alt={companyId?.name || "Default Logo"}
-              onError={(e) => (e.target.src = FailedLogo)}
-            />
-          </MDBView>
-          <hr />
-          <form onSubmit={handleUpdate}>
-            <MDBInput
-              type="textarea"
-              label="Enter description here...."
-              value={description}
-              onChange={({ target }) => setDescription(target.value)}
-              style={{ minHeight: "200px" }}
-              required
-            />
-            <MDBInput
-              type="textarea"
-              label="Enter mission here...."
-              value={mission}
-              onChange={({ target }) => setMission(target.value)}
-              style={{ minHeight: "100px" }}
-              required
-            />
-            <MDBInput
-              type="textarea"
-              label="Enter vision here...."
-              value={vision}
-              onChange={({ target }) => setVision(target.value)}
-              style={{ minHeight: "100px" }}
-              required
-            />
-            <MDBInput
-              type="textarea"
-              label="Enter core values (one per line)..."
-              value={value}
-              onChange={({ target }) => setValue(target.value)}
-              onFocus={() => setIsValueFocused(true)}
-              onBlur={() => setIsValueFocused(false)}
-              style={{ minHeight: "200px", whiteSpace: "pre-wrap" }}
-              required
-            />
+    <div className="companyDescription-container">
+      <form onSubmit={handleUpdate}>
+        <div className="companyDescription-header">
+          <Logo />
+          <div className="companyDescription-header-wrapper">
+            <span className="companyDescription-name">{companyId?.name}</span>
+            <div className="companyDescription-address">
+              <AddressSelect address={address} handleChange={handleChange} />
+              <div className="patient-form full-width">
+                <span>Street (Optional)</span>
+                <input
+                  type="text"
+                  value={address?.street || ""}
+                  onChange={({ target }) =>
+                    setAddress({ ...address, street: target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="d-flex" style={{ gap: "20px" }}>
+              <MDBInput
+                type="text"
+                label="Email"
+                className="pb-0"
+                style={{ minWidth: "300px" }}
+                value={contacts.email}
+                onChange={({ target }) =>
+                  setContacts({ ...contacts, email: target.value })
+                }
+                required
+              />
+              <MDBInput
+                type="text"
+                label="Phone Number"
+                className="pb-0"
+                value={contacts.mobile}
+                onChange={({ target }) =>
+                  setContacts({ ...contacts, mobile: target.value })
+                }
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div className="companyDescription-body">
+          <MDBInput
+            type="textarea"
+            label="Enter tagline here...."
+            rows={1}
+            className="pb-0"
+            // value={tagline || company?.tagline}
+            // onChange={({ target }) => setTagline(target.value)}
+            required
+          />
+          <div className="d-flex align-items-center" style={{ gap: "20px" }}>
+            <div className="w-100">
+              <MDBInput
+                type="textarea"
+                label="Enter mission here...."
+                className="pb-0"
+                rows={mission.split("\n").length || 1}
+                value={mission}
+                onChange={({ target }) => setMission(target.value)}
+                required
+              />
+            </div>
+            <div className="w-100">
+              <MDBInput
+                type="textarea"
+                label="Enter vision here...."
+                className="pb-0"
+                rows={vision.split("\n").length || 1}
+                value={vision}
+                onChange={({ target }) => setVision(target.value)}
+                required
+              />
+            </div>
+          </div>
+          <MDBInput
+            type="textarea"
+            label="Enter Company description here..."
+            className="pb-0"
+            rows={description.split("\n").length || 1}
+            value={description}
+            onChange={({ target }) => setDescription(target.value)}
+            required
+          />
+          <div className="w-100 d-flex" style={{ gap: "20px" }}>
+            <div className="w-100">
+              <MDBInput
+                type="textarea"
+                label="Enter core values (one per line)..."
+                className="pb-0"
+                rows={value.split("\n").length || 1}
+                value={value}
+                onChange={({ target }) => setValue(target.value)}
+                onFocus={() => setIsValueFocused(true)}
+                onBlur={() => setIsValueFocused(false)}
+                required
+              />
+            </div>
 
             {isValueFocused && (
               <div
-                className="mt-2"
+                className="mt-2 w-100"
                 style={{ paddingLeft: "10px", fontSize: "0.9rem" }}
               >
                 <strong>Preview</strong>
@@ -202,64 +257,22 @@ export default function DescriptionBody() {
                 </ul>
               </div>
             )}
-
-            <MDBRow className="mt-4">
-              <MDBCol md="6">
-                <MDBInput
-                  type="text"
-                  label="Email"
-                  value={contacts.email}
-                  onChange={({ target }) =>
-                    setContacts({ ...contacts, email: target.value })
-                  }
-                  required
-                />
-              </MDBCol>
-              <MDBCol md="6">
-                <MDBInput
-                  type="text"
-                  label="Phone Number"
-                  value={contacts.mobile}
-                  onChange={({ target }) =>
-                    setContacts({ ...contacts, mobile: target.value })
-                  }
-                  required
-                />
-              </MDBCol>
-            </MDBRow>
-
-            <div
-              className="patient-personal-info address-grid mt-4"
-              data-title="Address Information"
-            >
-              <AddressSelect address={address} handleChange={handleChange} />
-              <div className="patient-form full-width">
-                <span>Street (Optional)</span>
-                <input
-                  type="text"
-                  value={address?.street || ""}
-                  onChange={({ target }) =>
-                    setAddress({ ...address, street: target.value })
-                  }
-                />
-              </div>
-            </div>
-
-            <MDBBtn
-              size="sm"
-              className="float-right mt-3"
-              rounded
-              color="primary"
-              type="submit"
-              disabled={isLoading}
-              title="Update Description"
-            >
-              <MDBIcon icon="pencil-alt" />
-              {isLoading && <MDBIcon icon="spinner" pulse className="ml-2" />}
-            </MDBBtn>
-          </form>
-        </MDBCardBody>
-      </MDBCard>
+          </div>
+        </div>
+        <div className="d-flex justify-content-end">
+          <MDBBtn
+            size="md"
+            className=" mt-3"
+            color="primary"
+            type="submit"
+            disabled={isLoading}
+            title="Update Description"
+          >
+            <MDBIcon icon="pencil-alt" />
+            {isLoading && <MDBIcon icon="spinner" pulse className="ml-2" />}
+          </MDBBtn>
+        </div>
+      </form>
     </div>
   );
 }

@@ -167,8 +167,9 @@ const PatientCategories = () => {
 
                 <div
                   style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "30px",
                   }}
                 >
                   {group.map(({ name, abbr, index }) => {
