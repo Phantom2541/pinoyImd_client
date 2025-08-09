@@ -13,7 +13,7 @@ export default function Description({ card, addToCart, buyNow }) {
   const [showVariationError, setShowVariationError] = useState(false);
 
   const allOptionsSelected = Object.values(selectedOptions).every(Boolean);
-  const incompleteSelections = !allOptionsSelected;
+  // const incompleteSelections = !allOptionsSelected;
 
   const handleOptionSelect = (label, value) => {
     setSelectedOptions((prev) => ({

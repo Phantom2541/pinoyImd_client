@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import Header from "./header";
 import Cards from "./cards";
 import Description from "./desciption";
@@ -12,7 +12,7 @@ export default function Stocks() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortType, setSortType] = useState("");
+  // const [sortType, setSortType] = useState("");
   const [showCart, setShowCart] = useState(false);
   const [lastView, setLastView] = useState(null);
   const [lastCard, setLastCard] = useState(null);
