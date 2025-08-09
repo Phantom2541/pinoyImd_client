@@ -16,7 +16,7 @@ function chunkArray(array, size) {
   return result;
 }
 
-const Printout = ({ task }) => {
+const Printout = ({ task, onloaded, setOnloaded }) => {
   const { branchId, remarks, signatories, packages } = task;
   const chunks = chunkArray(packages, 23); // adjust row count per page here
 
@@ -28,11 +28,15 @@ const Printout = ({ task }) => {
             <Banner
               company={branchId.companyId.name}
               branch={branchId.name}
+              onloaded={onloaded}
+              setOnloaded={setOnloaded}
               className="laboratory-banner"
             />
             <div className="laboratory-body">
               <Header task={task} />
-              <BodySwitcher task={{ ...task, packages: chunk, data:packages }} />
+              <BodySwitcher
+                task={{ ...task, packages: chunk, data: packages }}
+              />
             </div>
           </div>
 
@@ -63,15 +67,24 @@ const Printout = ({ task }) => {
 
 export default function LabTaskPrintout() {
   const [task, setTask] = useState({ _id: "" });
+  const [onloaded, setOnloaded] = useState(false);
 
   useEffect(() => {
     setTask(JSON.parse(localStorage.getItem("taskPrintout")));
-    setTimeout(() => {
-      window.print();
-    }, 500);
   }, []);
 
-  if (task?._id) return <Printout task={task} />;
+  useEffect(() => {
+    if (onloaded) {
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
+  }, [onloaded]);
+
+  if (task?._id)
+    return (
+      <Printout task={task} onloaded={onloaded} setOnloaded={setOnloaded} />
+    );
 
   return <div>Task is Empty</div>;
 }

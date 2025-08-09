@@ -182,13 +182,7 @@ const headquarter = [
             title: "Company introduction or overview",
             component: PatientCategories,
           },
-          {
-            name: "Logo",
-            path: "/logos",
-            icon: "image",
-            title: "Upload or change official company logos",
-            component: Logo,
-          },
+
           {
             name: "Banner",
             path: "/banners",
@@ -196,13 +190,7 @@ const headquarter = [
             title: "Manage website or app banners",
             component: banner,
           },
-          {
-            name: "Tagline",
-            path: "/taglines",
-            icon: "quote",
-            title: "Set or edit company taglines",
-            component: Tagline,
-          },
+
           {
             name: "Branches",
             path: "/hr/branches",
@@ -338,10 +326,10 @@ const headquarter = [
     title: "Business operation-related scheduling (view only)",
     children: [
       {
-        name: "Duty Schedule",
-        path: "/commerce/duty",
+        name: "Supplies",
+        path: "/supplies",
         icon: "calendar-days",
-        title: "Shifts and task assignments",
+        title: "Supplies and equipment",
       },
     ],
   },
@@ -350,6 +338,14 @@ const headquarter = [
     path: "/finance",
     icon: "credit-card",
     title: "Financial monitoring and transactions (view only)",
+    children: [
+      {
+        name: "Duty Schedule",
+        path: "/finance/duty",
+        icon: "calendar-days",
+        title: "Shifts and task assignments",
+      },
+    ],
   },
   {
     name: "Walkthrough",
@@ -358,7 +354,6 @@ const headquarter = [
     title: "Homepage walkthroughs(view only)",
     component: hpWalkthrough,
   },
-  
 ];
 
 export default headquarter;

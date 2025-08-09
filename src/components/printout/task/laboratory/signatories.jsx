@@ -57,7 +57,7 @@ export default function Signatories({ signatories = [] }) {
           // style={{ marginTop: "-0.5rem" }}
           withSignature={head?.withSignature}
         />
-        <Signature person={frontdesk} label="Receptionist" isHalf />
+        <Signature person={frontdesk} label="Encoder" isHalf />
       </div>
       <Signature
         person={dr}

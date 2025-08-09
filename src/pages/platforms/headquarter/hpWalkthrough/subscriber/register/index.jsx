@@ -98,6 +98,7 @@ export default function Register({ handleFlip, flipped }) {
   }, [isSuccess]);
 
   const handleImageChange = (file, imageUrl) => {
+    console.log(savedImage);
     setSavedImage(imageUrl);
   };
 

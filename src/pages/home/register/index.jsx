@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   MDBCol,
-  MDBIcon,
   MDBInput,
   MDBRow,
   MDBSelect,
@@ -11,7 +10,6 @@ import {
 } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  CUSTOMALERT,
   DUPLICATE_CHECKER,
   REGISTER,
 } from "../../../services/redux/slices/assets/persons/users";

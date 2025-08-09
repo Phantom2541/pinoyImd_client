@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../utilities";
 
-const url = "/procurements/commodity";
+const url = "/procurements/operationals/machines/fixedAssets";
 
 const initialState = {
   filter: [],

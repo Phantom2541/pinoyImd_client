@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import {
   fullAddress,
-  fullName as formattedName,
   getAge,
   getGenderIcon,
 } from "../../../../../services/utilities";
@@ -27,6 +26,10 @@ const Header = () => {
       hour12: true,
     });
 
+  const customerName = `${fullName?.lname?.toUpperCase()}, ${fullName?.fname?.toUpperCase()} ${
+    fullName?.mname ? `y ${fullName?.mname?.toUpperCase()}` : ""
+  }`;
+
   return (
     <div>
       {isLoading ? (
@@ -38,7 +41,7 @@ const Header = () => {
       ) : (
         <>
           <h5 className="ellipsis" style={{ fontWeight: 600 }}>
-            <u> {formattedName(fullName, true).toUpperCase()}</u>
+            <u> {customerName}</u>
           </h5>
           <h6 style={{ marginTop: "-0.5rem" }}>
             {getGenderIcon(isMale)} {getAge(dob)}

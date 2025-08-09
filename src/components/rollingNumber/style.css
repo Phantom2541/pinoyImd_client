@@ -39,5 +39,5 @@
 /* 🔵 Animate color on rolling */
 .rolling-number.rolling .digit,
 .rolling-number.rolling .digit-static {
-  color: #1266f1;
+  color: inherit;
 }

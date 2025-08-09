@@ -75,20 +75,20 @@ const PatientCategories = () => {
     return acc;
   }, {});
 
-  const toggleGroup = (type, allChecked) => {
-    let updated = [...categories];
-    groupedCategories[type].forEach(({ index }) => {
-      const exists = updated.includes(index);
-      if (allChecked && exists) {
-        updated = updated.filter((i) => i !== index); // uncheck
-      } else if (!allChecked && !exists) {
-        updated.push(index); // check
-      }
-    });
-    dispatch(UPDATE({ token, data: { _id: companyId?._id, pc: updated } }));
-    dispatch(SetPatientCategories(updated));
-    setCategories(updated);
-  };
+  // const toggleGroup = (type, allChecked) => {
+  //   let updated = [...categories];
+  //   groupedCategories[type].forEach(({ index }) => {
+  //     const exists = updated.includes(index);
+  //     if (allChecked && exists) {
+  //       updated = updated.filter((i) => i !== index); // uncheck
+  //     } else if (!allChecked && !exists) {
+  //       updated.push(index); // check
+  //     }
+  //   });
+  //   dispatch(UPDATE({ token, data: { _id: companyId?._id, pc: updated } }));
+  //   dispatch(SetPatientCategories(updated));
+  //   setCategories(updated);
+  // };
 
   return (
     <MDBCard narrow>
@@ -103,9 +103,9 @@ const PatientCategories = () => {
       <MDBCardBody>
         <div className="bg-white rounded">
           {Object.entries(groupedCategories).map(([type, group]) => {
-            const allChecked = group.every((cat) =>
-              categories.includes(cat.index)
-            );
+            // const allChecked = group.every((cat) =>
+            //   categories.includes(cat.index)
+            // );
 
             return (
               <div key={type} className="mb-3">
@@ -167,8 +167,9 @@ const PatientCategories = () => {
 
                 <div
                   style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "30px",
                   }}
                 >
                   {group.map(({ name, abbr, index }) => {

@@ -295,21 +295,22 @@ const ManagerSidebar = [
     ],
   },
   {
-    name: "Marketplace",
-    title: "Machines, medicines, and product listings.",
+    name: "Marketplace Hub",
+    title:
+      "This is the Manager's Marketplace, set by HQ. Can't see any items? Ask HQ for access!",
     icon: "shopping-cart",
     path: "/marketplace",
     children: [
       {
-        name: "Machines",
-        title: "Machine listings and models.",
+        name: "Assets",
+        title: "All available clinic assets and machines.",
         path: "/machines",
         icon: "laptop-code",
       },
       {
-        name: "Products",
-        title: "All available retail products.",
-        path: "/products",
+        name: "Supplies",
+        title: "All available consumable supplies.",
+        path: "/supplies",
         icon: "cogs",
         component: Products,
       },

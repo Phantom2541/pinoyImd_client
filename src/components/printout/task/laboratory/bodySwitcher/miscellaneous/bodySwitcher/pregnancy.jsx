@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBCol } from "mdbreact";
 
 export default function Pregnancy({ task, fontSize }) {
