@@ -1,0 +1,84 @@
+.banner-pagination-left {
+  position: absolute;
+  top: 50%;
+  left: -8%;
+  transform: translate(-50%, 100%);
+  border: none;
+  font-size: 2rem;
+  background-color: transparent;
+}
+
+.banner-pagination-right {
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  transform: translate(-50%, 100%);
+  border: none;
+  font-size: 2rem;
+  background-color: transparent;
+}
+
+.banner-pagination-current {
+  position: absolute;
+  bottom: -3%;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* wrapper animations */
+.bannerFadeInLeft,
+.bannerFadeInRight {
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+/* fade in a bit from left (small offset, not full slide) */
+@keyframes bannerFadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.bannerFadeInLeft {
+  animation-name: bannerFadeInLeft;
+}
+
+/* fade in a bit from right */
+@keyframes bannerFadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.bannerFadeInRight {
+  animation-name: bannerFadeInRight;
+}
+
+.Banner-waterMark {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Banner-waterMark span {
+  font-size: 1.2rem;
+  line-height: 1.3rem;
+  text-transform: uppercase;
+  font-weight: 900;
+  -webkit-text-stroke: 0.5px rgba(18, 102, 241, 1);
+  color: rgba(18, 102, 241, 0.8);
+  letter-spacing: 2px;
+}
