@@ -338,10 +338,10 @@ const headquarter = [
     title: "Business operation-related scheduling (view only)",
     children: [
       {
-        name: "Duty Schedule",
-        path: "/commerce/duty",
+        name: "Supplies",
+        path: "/supplies",
         icon: "calendar-days",
-        title: "Shifts and task assignments",
+        title: "Supplies and equipment",
       },
     ],
   },
@@ -350,6 +350,14 @@ const headquarter = [
     path: "/finance",
     icon: "credit-card",
     title: "Financial monitoring and transactions (view only)",
+    children: [
+      {
+        name: "Duty Schedule",
+        path: "/finance/duty",
+        icon: "calendar-days",
+        title: "Shifts and task assignments",
+      },
+    ],
   },
   {
     name: "Walkthrough",

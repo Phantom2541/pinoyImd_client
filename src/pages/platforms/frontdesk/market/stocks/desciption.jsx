@@ -128,7 +128,9 @@ export default function Description({ card, addToCart, buyNow }) {
             <span>₱{Math.round(card.price * (1 - card.discount / 100))}</span>
             {card.discount > 0 && (
               <>
-                <span className="description-price-original">{card.price}</span>
+                <span className="description-price-original">
+                  ₱{card.price}
+                </span>
                 <span className="description-price-discount">
                   {card.discount}% off
                 </span>

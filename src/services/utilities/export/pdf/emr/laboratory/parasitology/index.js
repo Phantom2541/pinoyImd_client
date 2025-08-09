@@ -1,6 +1,6 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import utils from "../utils";
+import utils from "../../utils";
 import {
   BacteriaInRange,
   Consistency,
@@ -94,11 +94,15 @@ const microscopicCountRows = (me) => {
   return rows;
 };
 
-export const Parasitology = async ({ task, form }) => {
-  const { pe, ce, me } = task;
+export const Parasitology = async ({ task, form, result }) => {
+  const { pe, ce, me, signatories } = task;
 
   const imageBase64 = await utils.getImage();
-
+  const [head, dr] = signatories;
+  const headSig = await utils.getSignature(head.email);
+  const drSig = await utils.getSignature(dr.email);
+  const imgLogo = await utils.getLogo();
+  const QrCode = await utils.generateQrCODE(result);
   const tableSection = (titleRow, rows) => [
     [
       {
@@ -186,6 +190,7 @@ export const Parasitology = async ({ task, form }) => {
         },
       },
     ],
+    footer: utils.footer({ drSig, headSig, imgLogo, QrCode, task }),
 
     styles: {
       tableSpacing: {
@@ -200,7 +205,7 @@ export const Parasitology = async ({ task, form }) => {
 
   pdfMake
     .createPdf(docDefinition)
-    .download(`Parasitology Report - ${new Date().toLocaleDateString()}.pdf`);
+    .download(`Parasitology Result - ${new Date().toLocaleDateString()}.pdf`);
 };
 
 export default Parasitology;

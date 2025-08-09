@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView, MDBBtn } from "mdbreact";
+import { MDBView } from "mdbreact";
 import { Search } from "../../../../../components/searchables";
 import {
   BROWSE,
@@ -29,22 +29,20 @@ export default function Header({ onAdd }) {
           {collections?.length || 0} Patient Cases
         </h5>
 
-        <div className="d-flex align-items-center gap-2 mt-2 mt-md-0" style={{ minWidth: "300px" }}>
+        <div
+          className="d-flex align-items-center gap-2 mt-2 mt-md-0"
+          style={{ minWidth: "300px" }}
+        >
           <Search
             collections={collections}
             placeholder="Search patient cases..."
             setFiltered={(items) => dispatch(SetFILTERED(items))}
+            handleAdd={() => onAdd?.()}
             reset={() => dispatch(SetFILTERED(collections))}
             hideButton={true}
           />
-
-          {onAdd && (
-            <MDBBtn color="light" size="sm" onClick={onAdd} className="ml-2">
-              <i className="fas fa-plus" />
-            </MDBBtn>
-          )}
         </div>
       </div>
     </MDBView>
   );
-} 
+}

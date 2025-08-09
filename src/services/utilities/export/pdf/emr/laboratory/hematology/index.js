@@ -1,7 +1,7 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { Cellcount, Diffcount, Rci as RCI } from "../../../../../../fakeDb";
-import utils from "../utils";
+import utils from "../../utils";
 
 pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
 
@@ -31,8 +31,8 @@ function convertSuperscriptHTML(unit) {
   );
 }
 
-export const Hematology = async ({ task, form }) => {
-  const { patient, cc, dc, rci, apc, troupe } = task;
+export const Hematology = async ({ task, form, result }) => {
+  const { patient, cc, dc, rci, apc, troupe, signatories } = task;
   const { Preferences, Abbreviation, Title } = Cellcount;
   const isMale = patient.isMale ? "Male" : "Female";
   const imageBase64 = await utils.getImage();
@@ -137,6 +137,12 @@ export const Hematology = async ({ task, form }) => {
     "0 - 15 mm/hr",
   ]);
 
+  const [head, dr] = signatories;
+  const headSig = await utils.getSignature(head.email);
+  const drSig = await utils.getSignature(dr.email);
+  const imgLogo = await utils.getLogo();
+  const QrCode = await utils.generateQrCODE(result);
+
   const docDefinition = {
     pageSize: "A4",
     pageMargins: [10, 59, 10, 60],
@@ -209,19 +215,17 @@ export const Hematology = async ({ task, form }) => {
         },
       },
     ],
-    // footer: (currentPage, pageCount) => ({
-    //   columns: [
-    //     { text: `Prepared by: ${createdBy}`, alignment: "left", fontSize: 9 },
-    //     {
-    //       text: `Page ${currentPage} of ${pageCount}`,
-    //       alignment: "right",
-    //       fontSize: 9,
-    //     },
-    //   ],
-    //   margin: [20, 10],
-    // }),
+    footer: utils.footer({ task, drSig, headSig, imgLogo, QrCode }),
 
     styles: {
+      footerName: {
+        fontSize: 11,
+        bold: true,
+      },
+      footerTitle: {
+        fontSize: 8,
+        italics: true,
+      },
       header: {
         fontSize: 16,
         bold: true,
@@ -244,6 +248,6 @@ export const Hematology = async ({ task, form }) => {
 
   pdfMake
     .createPdf(docDefinition)
-    .download(`Hematology Report - ${new Date().toLocaleDateString()}.pdf`);
+    .download(`Hematology Result - ${new Date().toLocaleDateString()}.pdf`);
 };
 export default Hematology;

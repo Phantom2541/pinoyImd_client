@@ -5,6 +5,7 @@ import {
   Records,
   Staffs,
 } from "../../../../pages/platforms/hr/index";
+import { Catalogs } from "../../../../pages/platforms/headquarter";
 import {
   Equipments,
   // Procurments as Procurement,
@@ -357,6 +358,13 @@ const headquarter = [
     icon: "credit-card",
     title: "Homepage walkthroughs(view only)",
     component: hpWalkthrough,
+  },
+  {
+    name: "Catalogs",
+    path: "/catalogs",
+    icon: "credit-card",
+    title: "Homepage walkthroughs(view only)",
+    component: Catalogs,
   },
 ];
 

@@ -60,7 +60,16 @@ export default function Platforms() {
 
   return (
     <MDBDropdown className="sample">
-      <MDBDropdownToggle nav caret id="platforms-dropdown">
+      <MDBDropdownToggle
+        nav
+        caret
+        id="platforms-dropdown"
+        title={
+          isDraft
+            ? "Some platforms are currently disabled because this branch is still in draft mode.   Please complete the Menu, Services, Staff, and Signatories to unlock full access.    Once done, kindly inform us so we can activate your full system access."
+            : "Switch between your available platforms."
+        }
+      >
         <MDBIcon icon="network-wired" />
         &nbsp;
         <div className="d-none d-md-inline">

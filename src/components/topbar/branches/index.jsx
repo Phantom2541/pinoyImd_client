@@ -20,13 +20,11 @@ export default function Branches() {
     } = useSelector(({ auth }) => auth),
     dispatch = useDispatch();
 
-  const handleActivePlatform = (branchId) => {
+  const handleActiveBranch = (branchId) => {
     const _access =
       access
         .filter((branch) => branch.branchId === branchId)
         .flatMap(({ platform }) => platform) || [];
-
-    console.log("activePlatform", activePlatform);
 
     const data = {
       _id: auth._id,
@@ -62,7 +60,7 @@ export default function Branches() {
           <MDBDropdownItem
             active={_id === activePlatform?.branchId}
             key={`branch-${index}`}
-            onClick={() => handleActivePlatform(_id)}
+            onClick={() => handleActiveBranch(_id)}
           >
             {capitalize(name)}
           </MDBDropdownItem>

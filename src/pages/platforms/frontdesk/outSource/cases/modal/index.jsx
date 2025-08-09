@@ -7,10 +7,14 @@ import {
   MDBBtn,
 } from "mdbreact";
 import { useDispatch } from "react-redux";
-import { SAVE, UPDATE } from "../../../../../../services/redux/slices/commerce/pos/services/cases";
+import {
+  SAVE,
+  UPDATE,
+} from "../../../../../../services/redux/slices/commerce/pos/services/cases";
 
 const CaseModal = ({ modal, toggle, selected = {} }) => {
   const dispatch = useDispatch();
+
   const [form, setForm] = useState({
     pId: "",
     caseNumber: "",
@@ -19,7 +23,42 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
     remarks: "",
     assignedAt: "",
     notes: "",
+    tag: "",
   });
+
+  const descriptionOptions = [
+    "Patient admitted for severe chest pain",
+    "Referred case with high fever",
+    "General consultation, no complaints",
+    "Admitted for abdominal pain",
+    "Transferred for observation",
+  ];
+
+  const remarksOptions = [
+    "Monitored closely due to elevated BP",
+    "For follow-up diagnostics",
+    "Scheduled for surgery",
+    "Patient stable",
+    "Needs hydration and monitoring",
+  ];
+
+  const notesOptions = [
+    "Primary attending",
+    "On-call physician",
+    "Follow-up recommended",
+    "Requires close observation",
+    "Special instructions provided",
+  ];
+
+  const tagOptions = [
+    "Urgent",
+    "Emergency",
+    "Pedia",
+    "Charity",
+    "Surgery",
+    "Critical",
+    "Special Case",
+  ];
 
   useEffect(() => {
     if (selected && selected._id) {
@@ -28,6 +67,7 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
         ...selected,
         assignedAt: attending.assignedAt || "",
         notes: attending.notes || "",
+        tag: attending.tag || "",
       });
     } else {
       setForm({
@@ -38,6 +78,7 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
         remarks: "",
         assignedAt: "",
         notes: "",
+        tag: "",
       });
     }
   }, [selected]);
@@ -51,9 +92,10 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
       ...form,
       ap: [
         {
-          userId: form.pId, // assuming pId is userId for attending physician
+          userId: form.pId,
           assignedAt: form.assignedAt,
           notes: form.notes,
+          tag: form.tag,
         },
       ],
     };
@@ -91,18 +133,37 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
           value={form.title}
           onChange={handleChange}
         />
-        <MDBInput
-          label="Description"
+
+        <label>Description</label>
+        <select
+          className="browser-default custom-select mb-3"
           name="description"
           value={form.description}
           onChange={handleChange}
-        />
-        <MDBInput
-          label="Remarks"
+        >
+          <option value="">Choose description</option>
+          {descriptionOptions.map((desc, i) => (
+            <option key={i} value={desc}>
+              {desc}
+            </option>
+          ))}
+        </select>
+
+        <label>Remarks</label>
+        <select
+          className="browser-default custom-select mb-3"
           name="remarks"
           value={form.remarks}
           onChange={handleChange}
-        />
+        >
+          <option value="">Choose remarks</option>
+          {remarksOptions.map((rem, i) => (
+            <option key={i} value={rem}>
+              {rem}
+            </option>
+          ))}
+        </select>
+
         <MDBInput
           label="Assigned At"
           type="datetime-local"
@@ -110,12 +171,37 @@ const CaseModal = ({ modal, toggle, selected = {} }) => {
           value={form.assignedAt}
           onChange={handleChange}
         />
-        <MDBInput
-          label="Notes"
+
+        <label>Notes</label>
+        <select
+          className="browser-default custom-select mb-3"
           name="notes"
           value={form.notes}
           onChange={handleChange}
-        />
+        >
+          <option value="">Choose notes</option>
+          {notesOptions.map((note, i) => (
+            <option key={i} value={note}>
+              {note}
+            </option>
+          ))}
+        </select>
+
+        <label>Tag</label>
+        <select
+          className="browser-default custom-select mb-3"
+          name="tag"
+          value={form.tag}
+          onChange={handleChange}
+        >
+          <option value="">Choose tag</option>
+          {tagOptions.map((tag, i) => (
+            <option key={i} value={tag}>
+              {tag}
+            </option>
+          ))}
+        </select>
+
         <MDBBtn color="primary" block onClick={handleSubmit}>
           {form._id ? "Update" : "Save"}
         </MDBBtn>

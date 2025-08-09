@@ -32,7 +32,9 @@ const Printout = ({ task }) => {
             />
             <div className="laboratory-body">
               <Header task={task} />
-              <BodySwitcher task={{ ...task, packages: chunk, data:packages }} />
+              <BodySwitcher
+                task={{ ...task, packages: chunk, data: packages }}
+              />
             </div>
           </div>
 

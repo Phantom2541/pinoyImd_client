@@ -5,16 +5,21 @@ const Header = ({ companyId }) => {
   const history = useHistory();
 
   return (
-    <MDBCard className="mb-4  bg-primary text-white">
+    <MDBCard
+      className="mb-4  bg-primary text-white shadow-sm"
+      style={{ borderRadius: "0px" }}
+    >
       <MDBCardBody className="m-0 p-0 p-2 mx-2">
         <div className="d-flex align-items-center justify-content-between ">
-          <MDBIcon
-            far
-            icon="arrow-alt-circle-left"
-            onClick={() => history.push(`/subscribers/${companyId}`)}
-            style={{ fontSize: "1.8rem", color: "white" }}
-          />
-          <h5 style={{ fontWeight: 500 }} className="mt-1">
+          <div className="d-flex align-items-center">
+            <MDBIcon
+              far
+              icon="arrow-alt-circle-left"
+              onClick={() => history.push(`/subscribers/${companyId}`)}
+              style={{ fontSize: "1.8rem", color: "white" }}
+            />
+          </div>
+          <h5 style={{ fontWeight: 500 }} className="mt-2 ml-2">
             PINOY-iMD
           </h5>
           <img src={pinoyImd} alt="Pinoy IMD" style={{ height: "2.5rem" }} />
