@@ -262,9 +262,9 @@ export default function ClaimStub() {
         const parsed = JSON.parse(raw);
         setSale(parsed);
       }
-      // setTimeout(() => {
-      //   window.print();
-      // }, 500);
+      setTimeout(() => {
+        window.print();
+      }, 500);
     } catch (error) {
       console.error("Failed to parse claimStub:", error);
     }
