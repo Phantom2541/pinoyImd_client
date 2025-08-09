@@ -51,7 +51,7 @@ export default function AddressSelect({
           ))}
         </select>
       </div>
-      <div className="patient-form mt-3 ">
+      <div className="patient-form">
         <span>Province</span>
         <select
           value={address.province}
@@ -65,7 +65,7 @@ export default function AddressSelect({
           ))}
         </select>
       </div>
-      <div className="patient-form mt-3">
+      <div className="patient-form">
         <span>City/Municipality</span>
         <select
           value={address?.city}
@@ -79,7 +79,7 @@ export default function AddressSelect({
           ))}
         </select>
       </div>
-      <div className="patient-form  mt-3">
+      <div className="patient-form">
         <span>Barangay</span>
         <select
           value={address?.barangay}

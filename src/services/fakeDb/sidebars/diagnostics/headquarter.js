@@ -182,13 +182,7 @@ const headquarter = [
             title: "Company introduction or overview",
             component: PatientCategories,
           },
-          {
-            name: "Logo",
-            path: "/logos",
-            icon: "image",
-            title: "Upload or change official company logos",
-            component: Logo,
-          },
+
           {
             name: "Banner",
             path: "/banners",
@@ -196,13 +190,7 @@ const headquarter = [
             title: "Manage website or app banners",
             component: banner,
           },
-          {
-            name: "Tagline",
-            path: "/taglines",
-            icon: "quote",
-            title: "Set or edit company taglines",
-            component: Tagline,
-          },
+
           {
             name: "Branches",
             path: "/hr/branches",
