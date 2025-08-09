@@ -4,38 +4,60 @@ import { useDispatch } from "react-redux";
 import { SetSELECTED } from "../../../../../../services/redux/slices/assets/branches";
 
 const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
-  const { settings = {}, displayname = "", code = "" } = branch;
-  const { subscription = "demo" } = settings,
-    dispatch = useDispatch();
+  const { settings = {}, displayname = "", code = "", isMain = false } = branch;
+  const { subscription = "demo", status = "draft" } = settings;
+  const dispatch = useDispatch();
 
+  // Subscription colors
   const getColorBySubscriptionType = (type) => {
-    console.log("type", type);
-    switch (type) {
-      case "demo":
-        return "warning";
-      case "monthly":
-        return "info";
-      case "quarterly":
-        return "primary";
-      case "yearly":
-        return "success";
-      case "lifetime":
-        return "dark";
-      default:
-        return "secondary";
-    }
+    const map = {
+      demo: "secondary",
+      subscriber: "primary",
+      loyalty: "success",
+      lifetime: "dark",
+    };
+    return map[type?.toLowerCase()] || "secondary";
+  };
+
+  // Status colors
+  const getColorByStatusType = (type) => {
+    const map = {
+      draft: "light",
+      active: "primary",
+      expired: "danger",
+      suspended: "warning",
+      cancelled: "secondary",
+    };
+    return map[type?.toLowerCase()] || "secondary";
   };
 
   const handleTitle = (type) => {
-    if (type === "draft")
-      return "This subscription is inactive. To activate a demo, please contact support.";
-    if (type === "demo")
-      return "You are currently on a 6-month demo subscription.";
-    return `You are currently subscribed to the ${type} plan.`;
+    switch (type?.toLowerCase()) {
+      case "draft":
+        return "This branch is inactive. To activate a demo, please contact support.";
+      case "demo":
+        return "You are currently on a 3-month demo subscription.";
+      case "subscriber":
+        return "You are a regular subscriber.";
+      case "loyalty":
+        return "You are on a loyalty subscription.";
+      case "lifetime":
+        return "You have a lifetime subscription.";
+      case "active":
+        return "This branch is active.";
+      case "expired":
+        return "The branch's subscription has expired.";
+      case "suspended":
+        return "This branch's subscription is temporarily suspended.";
+      case "cancelled":
+        return "This branch's subscription has been cancelled.";
+      default:
+        return "";
+    }
   };
 
   return (
-    <div className={`d-flex justify-content-between ${textColor} `}>
+    <div className={`d-flex justify-content-between ${textColor}`}>
       <div>
         {index + 1}. {displayname.toUpperCase()} - {code}
         {!branch?.ao && (
@@ -53,7 +75,25 @@ const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
           onClick={() => dispatch(SetSELECTED(branch))}
         />
       </div>
+
       <div className="d-flex">
+        {isMain && (
+          <MDBBadge color="warning" pill className="mr-3" title="Main Branch">
+            Main
+          </MDBBadge>
+        )}
+
+        {/* Status Badge */}
+        <MDBBadge
+          color={getColorByStatusType(status)}
+          className="mr-3"
+          pill
+          title={handleTitle(status)}
+        >
+          <small>{capitalize(status)}</small>
+        </MDBBadge>
+
+        {/* Subscription Badge */}
         <MDBBadge
           color={getColorBySubscriptionType(subscription)}
           className="mr-3"
@@ -68,12 +108,12 @@ const Header = ({ branch, isOpen, textColor, index, setActiveId }) => {
           color="white"
           rounded
           onClick={() => setActiveId((prev) => (index === prev ? -1 : index))}
-          className="m-0 p-0 transition-all "
+          className="m-0 p-0 transition-all"
           style={{ width: isOpen ? "1.5rem" : "2rem" }}
         >
           <i
             style={{ rotate: `${isOpen ? 0 : 90}deg` }}
-            className="fa fa-angle-down transition-all "
+            className="fa fa-angle-down transition-all"
           />
         </MDBBtn>
       </div>

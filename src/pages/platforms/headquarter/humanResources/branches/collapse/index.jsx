@@ -32,11 +32,19 @@ export default function Body() {
   const itemsPerPage = maxPage; // Number of items per page
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-
   const paginatedData = orderBy(
     filtered,
-    [(o) => o.name.toLowerCase().trim()], // field or accessor function
-    ["asc"] // sort order
+    [
+      // 1️⃣ Main branches first
+      (o) => !o.isMain, // false (main) → comes before true (not main)
+
+      // 2️⃣ Active branches first
+      (o) => o.settings?.status?.trim().toLowerCase() !== "active",
+
+      // 3️⃣ Alphabetical by name
+      (o) => o.name.toLowerCase().trim(),
+    ],
+    ["asc", "asc", "asc"]
   ).slice(startIndex, endIndex);
 
   /**
