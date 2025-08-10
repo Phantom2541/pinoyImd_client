@@ -11,8 +11,10 @@ const Inhouse = ({ form, setForm }) => {
   const foundIndexs = [...categoryIndexes]
     .filter((pk) => srpIndexs.includes(pk))
     .sort((a, b) => a - b);
-  const categories = foundIndexs.map((cIndex) => Categories[cIndex]);
-
+  const categories = foundIndexs
+    .map((cIndex) => Categories[cIndex])
+    .map((c) => ({ ...c, value: c.abbr, text: c.name }))
+    .filter(({ value }) => value !== "opd");
   return (
     <>
       <MDBTypography
@@ -23,7 +25,10 @@ const Inhouse = ({ form, setForm }) => {
       >
         Select one or more price categories to include:
       </MDBTypography>
-      {[{ value: "opd", name: "SRP ( OPD/Walkin )" }, ...categories]
+      {[
+        { value: "opd", name: "SRP ( OPD/Walkin )", text: "SRP" },
+        ...categories,
+      ]
         .filter((menuType) => menuType)
         .map((menuType, index) => {
           const selectedIndex = form.priceCategories.findIndex(
@@ -47,12 +52,12 @@ const Inhouse = ({ form, setForm }) => {
                     });
                   }
                 }}
-                id={`inhouse${index}`}
+                id={`inhouse-${index}-${menuType.value}`}
                 value={menuType.value}
               />
               <label
                 className="form-check-label pl-4"
-                htmlFor={`inhouse${index}`}
+                htmlFor={`inhouse-${index}-${menuType.value}`}
               >
                 {menuType.name}
               </label>

@@ -1,7 +1,7 @@
 import * as ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { HMO, Memberships, Services } from "../../../fakeDb";
-import { ENDPOINT, mobile } from "../..";
+import { Cloudinary, mobile } from "../..";
 
 const border = {
   top: { style: "thin" },
@@ -15,7 +15,9 @@ const getBanner = async () => {
       localStorage.getItem("activePlatform") || "{}"
     );
     const { companyId = {}, name = "" } = branch || {};
-    const path = `${ENDPOINT}/public/companies/${companyId?.name}/${name}/banner.png`;
+    const path = `${Cloudinary.getEndpoint()}/companies/${
+      companyId?.name
+    }/${name}/banner.png`;
     const response = await fetch(path);
     if (!response.ok) {
       console.error(
@@ -171,6 +173,8 @@ const set = {
     worksheet.addRow([]);
     worksheet.addRow([]);
 
+    console.log("priceCategoires", priceCategories);
+
     let startingRow = isInhouse ? 6 : 7;
 
     let prevCol = 0;
@@ -205,7 +209,7 @@ const set = {
 
     const handlePrices = (obj) => {
       if (isInhouse) {
-        return priceCategories.map(({ value }) => obj?.[value]);
+        return priceCategories.map(({ value }) => obj?.[value] || 0);
       }
       if (isHMO) {
         return [HMO.getSrp(hmo, obj?.hmo)];
