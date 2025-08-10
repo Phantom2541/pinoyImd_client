@@ -30,12 +30,17 @@ const Body = () => {
       </thead>
       <tbody>
         {paginatedData?.map((app, index) => {
-          const { branch = {}, contract = {}, status, remarks: history } = app;
+          const {
+            branch = {},
+            contract = {},
+            status,
+            remarks: history = [],
+          } = app;
           const { name, companyId } = branch;
           const { soe, designation } = contract;
           const haveReason =
             employment.needReason(status) || status === "denied";
-          const remarks = history[history.length - 1]?.reason || "";
+          const remarks = history[history?.length - 1]?.reason || "";
           return (
             <tr key={index}>
               <td key={index}>{index + startIndex + 1}</td>
