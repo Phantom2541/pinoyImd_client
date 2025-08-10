@@ -1,6 +1,6 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { currency, ENDPOINT } from "../..";
+import { Cloudinary, currency } from "../..";
 import { HMO, Memberships, Services } from "../../../fakeDb";
 
 pdfMake.vfs = pdfFonts?.pdfMake?.vfs;
@@ -38,7 +38,9 @@ const getImage = async () => {
   const { branch } = JSON.parse(localStorage.getItem("activePlatform"));
   const { companyId } = branch;
   return await getBase64Image(
-    `${ENDPOINT}/public/companies/${companyId?.name}/${branch?.name}/banner.png`
+    `${Cloudinary.getEndpoint()}/companies/${companyId?.name}/${
+      branch?.name
+    }/banner.png`
   );
 };
 

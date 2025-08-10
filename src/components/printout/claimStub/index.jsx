@@ -233,7 +233,7 @@ const Stub = ({ sale, companyId }) => {
       <div className="d-flex align-items-center mt-n2 mb-n2 justify-content-between">
         <h6>Password:</h6>
         <h6 style={{ fontSize: "13px" }}>
-          Birthday (format: <span className="fw-bold">YYMMDD</span>)
+          Birthday (format: <span className="fw-bold">YYYYMMDD</span>)
         </h6>
       </div>
       <Hr />
@@ -262,9 +262,9 @@ export default function ClaimStub() {
         const parsed = JSON.parse(raw);
         setSale(parsed);
       }
-      // setTimeout(() => {
-      //   window.print();
-      // }, 500);
+      setTimeout(() => {
+        window.print();
+      }, 500);
     } catch (error) {
       console.error("Failed to parse claimStub:", error);
     }

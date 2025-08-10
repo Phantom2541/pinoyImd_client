@@ -86,7 +86,7 @@ export default function ModalCreate() {
   };
 
   const { particular = {}, supplier = {} } = form || {};
-
+  console.log("collections", collections);
   const handleSuppliers = () => {
     return [...collections].map((supplier) => {
       const { vendors = null, displayname } = supplier;

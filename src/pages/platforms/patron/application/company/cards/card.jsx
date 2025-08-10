@@ -21,6 +21,7 @@ export default function CompanyCard({ company }) {
         narrow
         style={{
           marginTop: "44px",
+          maxHeight: "18rem",
           filter: `grayscale(${
             company?.branches?.some(({ isHiring }) => isHiring) ? "0" : "100%"
           })`,

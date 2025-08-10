@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   MDBIcon,
   MDBDropdown,
@@ -30,9 +30,9 @@ export default function Profile() {
     var companyId = company?._id;
     const fakeDB = localStorage.getItem("companyId");
     if (fakeDB && !company?._id) {
-      companyId = JSON.parse(fakeDB);
+      companyId = fakeDB.replace(/"/g, "");
     }
-    // localStorage.clear();
+    localStorage.clear();
     history.push(`/subscribers/${companyId}`);
     clearSiteData();
   };
@@ -55,11 +55,13 @@ export default function Profile() {
         <span className="d-none d-md-inline">Profile</span>
       </MDBDropdownToggle>
       <MDBDropdownMenu right style={{ minWidth: "200px" }}>
-        {platform && (
-          <MDBDropdownItem href={`/${platform?.toLowerCase()}/profile`}>
-            My Account
-          </MDBDropdownItem>
-        )}
+        {/* {platform && ( */}
+        <MDBDropdownItem
+          href={`/${(platform || "patron")?.toLowerCase()}/profile`}
+        >
+          My Account
+        </MDBDropdownItem>
+        {/* )} */}
         {!isPatient && isEmployed && (
           <MDBDropdownItem
             disabled={!auth._id}

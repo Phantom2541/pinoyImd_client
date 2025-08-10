@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axioKit } from "../../../../utilities";
 
-const url = "commerce/catalog/products";
+const url = "/commerce/merchandise/products";
 
 const initialState = {
   collections: [],

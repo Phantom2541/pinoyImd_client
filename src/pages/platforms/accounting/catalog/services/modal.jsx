@@ -166,7 +166,7 @@ export default function Modal({
   console.log("preference", preference);
 
   return (
-    <MDBModal isOpen={show} toggle={toggle} backdrop>
+    <MDBModal isOpen={show} toggle={toggle} backdrop size="lg">
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
@@ -239,7 +239,7 @@ export default function Modal({
                 label="Normal Range (Max)"
               />
             </MDBCol>
-            <MDBCol>
+            <MDBCol md="3">
               <MDBSelect
                 getValue={(e) => handleChange("units", e[0])}
                 className="colorful-select dropdown-primary hidden-md-down"

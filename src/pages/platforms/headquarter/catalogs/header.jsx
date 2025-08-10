@@ -1,46 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBView } from "mdbreact";
+import { BROWSE } from "../../../../services/redux/slices/commerce/catalog/products";
+import { SetActivePlatform } from "../../../../services/redux/slices/assets/persons/auth";
 
-const Header = () => {
-  const { maxPage } = useSelector(({ auth }) => auth); //get the max page
-  const { collections } = useSelector(({ services }) => services), //
-    dispatch = useDispatch();
+export default function Header() {
+  const dispatch = useDispatch();
 
-  //initial values
-  // useEffect(() => {
-  //   if (maxPage)
-  //     dispatch(SetCOLLECTIONS({ collections: Services.collections, maxPage }));
-  // }, [dispatch, maxPage]);
+  // Destructure auth state
+  const { token, branches = [], activePlatform } = useSelector((state) => state.auth);
 
- 
+  useEffect(() => {
+    if (token && activePlatform?.branchId) {
+      dispatch(
+        BROWSE({
+          token,
+          key: { branchId: activePlatform.branchId },
+        })
+      );
+    }
+  }, [token, activePlatform, dispatch]);
 
-  
+  const handleBranchChange = (e) => {
+    const branchId = e.target.value;
+    const selectedBranch = branches.find((branch) => branch._id === branchId) || null;
+    dispatch(SetActivePlatform(selectedBranch));
+  };
+
   return (
-    <MDBView
-      cascade
-      className="gradient-card-header custom-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center"
-    >
-      <div className="d-flex justify-items-center" style={{ width: "20rem" }}>
-        <span className="white-text mx-3 text-nowrap mt-0">
-          {collections?.length} Services
-        </span>
-      </div>
-      <div>
-        {/* <div>
-          <Select
-            className="m-1 mt-2 mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
-            inputClassName="m-0"
-            preValue={component}
-            collections={Templates.getComponents("LAB")}
-            label="Select Component"
-          />
-        </div> */}
-      </div>
-    </MDBView>
+    <div className="d-flex align-items-center">
+      <select
+        className="form-control"
+        value={activePlatform?.branchId || ""}
+        onChange={handleBranchChange}
+      >
+        <option value="">-- Select Branch --</option>
+        {branches.map((branch) => (
+          <option key={branch._id} value={branch._id}>
+            {branch.name}
+          </option>
+        ))}
+      </select>
+    </div>
   );
-};
-
-export default Header;
+}
