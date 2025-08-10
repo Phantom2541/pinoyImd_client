@@ -20,9 +20,9 @@ const imgs = [Electrocardiogram, Ventilator, UM, MRI, Defibrillator];
  * },
  * price: xxx
  *  discount: 20,
-*  rating: 4.7,
-*  sold: 12000,
-* image: imgs,
+ *  rating: 4.7,
+ *  sold: 12000,
+ * image: imgs,
  * }
  */
 
