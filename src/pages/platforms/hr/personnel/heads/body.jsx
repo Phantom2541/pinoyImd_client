@@ -204,8 +204,6 @@ export default function Body() {
     currentPage * itemsPerPage
   );
 
-  console.log("Signatories here", paginatedHeads.length);
-
   return (
     <div className="signatories-section">
       <div className={`signatories-card-container mt-4 ${animateClass}`}>
@@ -232,10 +230,13 @@ export default function Body() {
               </div>
               <div className="signatories-card-body ">
                 <div className="signatories-card-section-department">
-                  <span>
+                  <div>
                     <EditableSelect
                       title="Click to edit"
                       classNameTxt="signatories-card-section"
+                      animation
+                      className="mb-n2 mt-n1"
+                      animationStyle={{ width: "14rem" }}
                       isEditable
                       preValue={section}
                       collections={handleSections(department)}
@@ -252,13 +253,16 @@ export default function Body() {
                         handleUpdate({ id: data._id, section: data.section })
                       }
                     />
-                  </span>
+                  </div>
                   &nbsp;-&nbsp;
                   <span>
                     <EditableSelect
                       title="Click to edit"
                       classNameTxt="signatories-card-department"
                       isEditable
+                      animation
+                      className="mb-n2 mt-n1"
+                      animationStyle={{ width: "14rem" }}
                       preValue={department}
                       collections={Templates.collections}
                       fieldData={{
@@ -310,30 +314,38 @@ export default function Body() {
                   onChange={(e) => handleSignature(e, email)}
                   hidden
                 />
-                <EditableSelect
-                  title="Click to edit"
-                  classNameTxt="signatories-card-name"
-                  isEditable
-                  preValue={user._id}
-                  collections={[
-                    ...personnels.map(({ user }) => ({
-                      userId: user?._id,
-                      text: fullName(user?.fullName),
-                    })),
-                  ]}
-                  fieldData={{
-                    _id,
-                    userId: user._id,
-                    text: fullName(user.fullName),
-                  }}
-                  keyForValue="userId"
-                  keyForText="text"
-                  formSubmitted={formSubmitted}
-                  isSuccess={isSuccess}
-                  onSave={(data) =>
-                    handleUpdate({ id: data._id, user: data.userId })
-                  }
-                />
+                <div
+                  className="position-relative d-flex justify-content-center"
+                  style={{ height: "1.6rem" }}
+                >
+                  <EditableSelect
+                    title="Click to edit"
+                    classNameTxt="signatories-card-name"
+                    isEditable
+                    preValue={user._id}
+                    animation
+                    className="mb-n2 mt-n1"
+                    animationStyle={{ width: "100%" }}
+                    collections={[
+                      ...personnels.map(({ user }) => ({
+                        userId: user?._id,
+                        text: fullName(user?.fullName),
+                      })),
+                    ]}
+                    fieldData={{
+                      _id,
+                      userId: user._id,
+                      text: fullName(user.fullName),
+                    }}
+                    keyForValue="userId"
+                    keyForText="text"
+                    formSubmitted={formSubmitted}
+                    isSuccess={isSuccess}
+                    onSave={(data) =>
+                      handleUpdate({ id: data._id, user: data.userId })
+                    }
+                  />
+                </div>
               </div>
 
               <div className={`signatories-card-footer`}>
@@ -344,8 +356,9 @@ export default function Body() {
                       title="Click to edit"
                       className="form-control form-control-sm"
                       classNameTxt="signatories-card-prc"
-                      width="8rem"
                       type="string"
+                      animation
+                      animationStyle={{ width: "10rem" }}
                       keyForValue="id"
                       fieldData={{
                         _id: `${_id}-id-${index}`,
@@ -364,7 +377,10 @@ export default function Body() {
                     />
                   </span>
                   <span>&nbsp;|&nbsp;</span>
-                  <span className="signatories-card-expiration-label">
+                  <span
+                    className="signatories-card-expiration-label"
+                    style={{ width: "9rem" }}
+                  >
                     <strong>Expiration:&nbsp;</strong>
                     <EditableField
                       title="Click to edit"
@@ -372,6 +388,8 @@ export default function Body() {
                       classNameTxt="signatories-card-expiration"
                       type="date"
                       width="11rem"
+                      animation
+                      animationStyle={{ width: "10rem" }}
                       keyForValue="to"
                       fieldData={{
                         _id: `${_id}-to`,
