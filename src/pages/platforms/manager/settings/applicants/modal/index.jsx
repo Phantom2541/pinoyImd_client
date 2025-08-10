@@ -51,11 +51,15 @@ export default function AccessModal() {
     [duplicateRoles, setDuplicateRoles] = useState([]), //the purpose of this is for searching....
     dispatch = useDispatch();
 
-  const { user = {}, contract } = selected || {};
+  const { user = {}, contract = {} } = selected || {};
 
   const toggle = useCallback(() => {
     dispatch(ToggleAccessModal());
   }, [dispatch]);
+
+  console.log("clusters", clusters);
+  console.log("roles", roles);
+  console.log("search", search);
 
   useEffect(() => {
     if (isSuccess && !formSubmitted && show) {
