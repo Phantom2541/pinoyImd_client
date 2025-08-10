@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBRow, MDBCol, MDBInput } from "mdbreact";
 
 export default function Others({ handleChange, handleValue }) {

@@ -329,7 +329,9 @@ const Banner = () => {
                     ))}
                 </tbody>
                 <div className="Banner-waterMark">
-                  <span>{settings.subscription || "Demo"} Subscription</span>
+                  <span>Subscription</span>
+                  <span>{settings.subscription || "Demo"}</span>
+                  <span>{settings.status.toUpperCase()}</span>
                 </div>
               </MDBTable>
             </MDBCardBody>

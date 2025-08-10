@@ -142,14 +142,12 @@ export default function Modal({ show, toggle, selected, willCreate }) {
   };
 
   // use for direct values like strings and numbers
-  const handleValue = (key) =>
-    willCreate ? form[key] : form[key] || selected?.[key] || "";
+  const handleValue = (key) => form[key];
 
   const handleChange = (key, value) => setForm({ ...form, [key]: value });
-
   return (
     <MDBModal
-      size="lg"
+      size="xl"
       isOpen={show}
       toggle={toggle}
       backdrop

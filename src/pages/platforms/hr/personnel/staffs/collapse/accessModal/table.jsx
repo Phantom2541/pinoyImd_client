@@ -7,6 +7,7 @@ import {
   MDBTableHead,
 } from "mdbreact";
 import "./index.css";
+import { capitalize } from "lodash";
 
 const Table = ({
   collections,
@@ -89,7 +90,7 @@ const Table = ({
                       }}
                     >
                       <div className="ml-3">
-                        {item?.platform}
+                        {capitalize(item?.platform)}
                         <br />
                         {!isTag && <small>{item.description}</small>}
                       </div>

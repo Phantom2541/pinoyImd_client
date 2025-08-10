@@ -10,10 +10,9 @@ import {
 } from "../../../../../services/redux/slices/assets/persons/heads";
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth); //get the max page
-  const { collections, isSuccess } = useSelector(({ heads }) => heads),
+  const { collections } = useSelector(({ heads }) => heads),
     [heads, setHeads] = useState([]),
     dispatch = useDispatch();
-  console.log("collections", collections);
 
   //Initial Browse
   useEffect(() => {
@@ -21,7 +20,7 @@ const Header = () => {
       dispatch(BROWSE({ token, branchId: activePlatform?.branchId }));
 
     return () => dispatch(RESET());
-  }, [token, dispatch, activePlatform, isSuccess]);
+  }, [token, dispatch, activePlatform]);
 
   useEffect(() => {
     if (collections.length > 0) {
