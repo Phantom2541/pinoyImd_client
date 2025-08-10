@@ -169,7 +169,7 @@ export default function Applicants() {
                     user = {},
                     file201 = {},
                     contract = {},
-                    // remarks = [],
+                    message = "",
                   } = applicant;
                   const { hasPds, hasResume, hasLetter } = file201;
 
@@ -209,7 +209,7 @@ export default function Applicants() {
                           type="AppLetter"
                         />
                       </td>
-                      <td>{/* {remarks[remarks?.length - 1]} */}</td>
+                      <td>{message}</td>
                       <td className="text-center">
                         <MDBBtnGroup>
                           <MDBBtn
