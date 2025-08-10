@@ -1,10 +1,10 @@
-import React from "react";
 import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBSwitch } from "mdbreact";
 // import AddressSelect from "../addressSelect";
 import { Select } from "../customizable";
 import { Suffixes } from "../../services/fakeDb";
 import { getAge } from "../../services/utilities";
 import ProfileOthers from "./others";
+import AddressSelect from "../searchables/addressSelect";
 
 export default function Details({
   address,
@@ -13,16 +13,14 @@ export default function Details({
   handleChange,
   handleSubmit,
   isLoading,
-  curraddress,
-  setCurraddress,
 }) {
   return (
     <form onSubmit={handleSubmit}>
       <MDBRow>
-        <MDBCol md="3" className="pr-0">
+        <MDBCol md="3">
           <MDBInput
             type="text"
-            value={form.fullName?.fname}
+            value={form.fullName?.fname?.toUpperCase()}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -30,13 +28,12 @@ export default function Details({
               })
             }
             label="First name"
-            disabled
           />
         </MDBCol>
         <MDBCol md="3" className="px-0">
           <MDBInput
             type="text"
-            value={form.fullName?.mname}
+            value={form.fullName?.mname?.toUpperCase()}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -44,13 +41,12 @@ export default function Details({
               })
             }
             label="Middle name"
-            disabled
           />
         </MDBCol>
-        <MDBCol md="3" className="pl-0">
+        <MDBCol md="3">
           <MDBInput
             type="text"
-            value={form.fullName?.lname}
+            value={form.fullName?.lname?.toUpperCase()}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -58,23 +54,22 @@ export default function Details({
               })
             }
             label="Last name"
-            disabled
           />
         </MDBCol>
-        <MDBCol md="3" className="pl-0">
+        <MDBCol md="3">
           <MDBInput
             type="text"
-            value={form?.alias}
+            value={form?.alias?.toUpperCase()}
             onChange={(e) => handleChange("alias", e.target.value)}
             label="Alias"
           />
         </MDBCol>
       </MDBRow>
       <MDBRow>
-        <MDBCol md="4" className="pr-0">
+        <MDBCol md="4">
           <MDBInput
             type="text"
-            value={form.fullName?.title}
+            value={form.fullName?.title?.toUpperCase()}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -87,7 +82,7 @@ export default function Details({
         <MDBCol md="4" className="px-0">
           <MDBInput
             type="text"
-            value={form.fullName?.postnominal}
+            value={form.fullName?.postnominal?.toUpperCase()}
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -97,7 +92,7 @@ export default function Details({
             label="Postnominal"
           />
         </MDBCol>
-        <MDBCol md="4" style={{ paddingTop: "2px" }} className="pl-0">
+        <MDBCol md="4" style={{ paddingTop: "2px" }}>
           <Select
             label="Suffix"
             preValue={form.fullName?.suffix || "None"}
@@ -113,7 +108,7 @@ export default function Details({
         </MDBCol>
       </MDBRow>
       <MDBRow>
-        <MDBCol md="3" className="pr-0" style={{ paddingTop: "14px" }}>
+        <MDBCol md="3" style={{ paddingTop: "14px" }}>
           <MDBInput
             type="date"
             value={form.dob}
@@ -121,19 +116,17 @@ export default function Details({
             labelClass=""
             className="py-0"
             label={`Birthdate (${getAge(form.dob)})`}
-            disabled
           />
         </MDBCol>
-        <MDBCol md="4" className="px-0">
+        <MDBCol md="4">
           <MDBInput
             type="email"
             value={form.email}
             onChange={(e) => handleChange("email", e.target.value)}
             label="E-mail Address"
-            disabled
           />
         </MDBCol>
-        <MDBCol md="2" className="px-0">
+        <MDBCol md="2">
           <MDBInput
             type="text"
             value={form.mobile}
@@ -155,14 +148,15 @@ export default function Details({
           />
         </MDBCol>
       </MDBRow>
-      address disabled
-      {/* <AddressSelect
-        label="Permanent Address"
+      {/* address disabled */}
+      <AddressSelect
+        label="Address"
+        isPOS={false}
         address={address}
         disabledAllExceptSelected={true}
         handleChange={(_, value) => setAddress(value)}
-      /> */}
-      <MDBCol className="px-0">
+      />
+      {/* <MDBCol className="px-0">
         <MDBInput
           type="text"
           label="Street"
@@ -170,13 +164,13 @@ export default function Details({
           onChange={(e) => setAddress({ ...address, street: e.target.value })}
           disabled
         />
-      </MDBCol>
-      address disabled
-      {/* <AddressSelect
+      </MDBCol> */}
+      {/* address disabled
+      <AddressSelect
         label="Current Address"
         address={curraddress}
         handleChange={(_, value) => setCurraddress(value)}
-      /> */}
+      />
       <MDBCol className="px-0">
         <MDBInput
           type="text"
@@ -186,8 +180,8 @@ export default function Details({
             setCurraddress({ ...curraddress, street: e.target.value })
           }
         />
-      </MDBCol>
-      <div className="d-flex justify-content-between">
+      </MDBCol> */}
+      <div className="d-flex justify-content-between mt-2">
         <ProfileOthers />
         <MDBBtn disabled={isLoading} color="info" type="submit" rounded>
           Update account

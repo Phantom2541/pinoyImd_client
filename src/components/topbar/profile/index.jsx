@@ -55,11 +55,13 @@ export default function Profile() {
         <span className="d-none d-md-inline">Profile</span>
       </MDBDropdownToggle>
       <MDBDropdownMenu right style={{ minWidth: "200px" }}>
-        {platform && (
-          <MDBDropdownItem href={`/${platform?.toLowerCase()}/profile`}>
-            My Account
-          </MDBDropdownItem>
-        )}
+        {/* {platform && ( */}
+        <MDBDropdownItem
+          href={`/${(platform || "patron")?.toLowerCase()}/profile`}
+        >
+          My Account
+        </MDBDropdownItem>
+        {/* )} */}
         {!isPatient && isEmployed && (
           <MDBDropdownItem
             disabled={!auth._id}

@@ -67,7 +67,7 @@ export default function Account() {
 
   useEffect(() => {
     if (auth._id) {
-      if (auth.address.region) setAddress(auth.address);
+      if (auth?.address?.region) setAddress(auth.address);
       setTimeout(
         () =>
           setForm({

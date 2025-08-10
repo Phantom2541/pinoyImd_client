@@ -92,7 +92,11 @@ export default function Routes() {
   return (
     <Switch>
       {renderSidebars()}
-      <Route path={`${platformPrefix}/profile`} exact component={Profile} />
+      <Route
+        path={`${platformPrefix || "/patron"}/profile`}
+        exact
+        component={Profile}
+      />
       <Route path={`${platformPrefix}/shifts`} exact component={Attendances} />
       <Route path={`${platformPrefix}/contract`} exact component={Contract} />
       <Route component={NotFound} />
