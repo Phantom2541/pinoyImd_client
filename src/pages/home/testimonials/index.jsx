@@ -167,7 +167,7 @@ export default function Testimonials() {
           </div>
 
           <div className="homePage-testimonials-sliderContainer-responsive">
-            <div className="homePage-testiminials-sliderContainer">
+            <div className="homePage-testiminials-sliderContainer hide">
               <Swiper
                 modules={[Autoplay]}
                 direction="vertical"
@@ -237,9 +237,14 @@ export default function Testimonials() {
                 }}
                 allowTouchMove={false}
                 spaceBetween={0}
-                slidesPerView={4}
+                // slidesPerView={4}
                 style={{ height: "600px" }}
                 className="swiper-vertical-reverse"
+                breakpoints={{
+                  0: { slidesPerView: 5, spaceBetween: 5 },
+                  1200: { slidesPerView: 4, spaceBetween: 5 },
+                  1600: { slidesPerView: 4, spaceBetween: 5 },
+                }}
               >
                 {testimonials.map((t, index) => (
                   <SwiperSlide key={index}>

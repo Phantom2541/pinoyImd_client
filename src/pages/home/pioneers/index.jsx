@@ -71,7 +71,7 @@ export default function Pioneers() {
   ];
   return (
     <section className="team-section text-center">
-      <h1 className="text-center mt-5 h1">Pioneers</h1>
+      <h1 className="homePage-pioneers-title text-center mt-5 h1">Pioneers</h1>
       <p
         className="text-center mb-5 w-responsive mx-auto"
         style={{ fontWeight: "400" }}

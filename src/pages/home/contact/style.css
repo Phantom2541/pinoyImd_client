@@ -108,3 +108,29 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 480px) {
+  .contactUs-container {
+    width: 100%;
+  }
+
+  .contactUs-logo img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .contactUs-logo span {
+    font-size: 1rem;
+  }
+  .contactUs-quote {
+    font-size: 0.875rem !important;
+  }
+  .contactUs-address,
+  .contactUs-email,
+  .contactUs-phone {
+    font-size: 0.8rem;
+  }
+  .contactUs-emailUs {
+    font-size: 1.25rem;
+  }
+}

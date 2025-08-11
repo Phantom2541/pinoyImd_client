@@ -10,6 +10,7 @@ import {
   getGenderIcon,
   sourceColor,
 } from "../../../../../../services/utilities";
+import { Background } from "react-flow-renderer";
 
 const Header = ({ deal, index }) => {
   const { maxPage } = useSelector(({ auth }) => auth),
@@ -21,45 +22,49 @@ const Header = ({ deal, index }) => {
       category === "wi"
         ? "Walkin"
         : Categories.find(({ abbr }) => abbr === category)?.name;
-
+  const allDone = Object.values(deal.diagnostic).every(
+    (section) => section.hasDone === true
+  );
   return (
-    <MDBCollapseHeader>
-      {(activePage - 1) * maxPage + index + 1}.{" "}
-      {getGenderIcon(customerId?.isMale)} {fullName(customerId?.fullName)} |
-      <span style={{ color: "blue" }}>{getAge(customerId?.dob)}</span>
-      <MDBBadge color={sourceColor(categoryName)} className="mx-2">
-        {categoryName}
-      </MDBBadge>
-      {source && (
-        <MDBBadge color="warning">{capitalize(source?.name)}</MDBBadge>
-      )}
-      {/* on the right corner */}
-      <MDBBadge
-        onClick={() => {
-          localStorage.setItem(`customerId`, JSON.stringify(customerId));
+    <div style={{ backgroundColor: allDone ? "#ffa900" : "" }}>
+      <MDBCollapseHeader>
+        {(activePage - 1) * maxPage + index + 1}.{" "}
+        {getGenderIcon(customerId?.isMale)} {fullName(customerId?.fullName)} |
+        <span style={{ color: "blue" }}>{getAge(customerId?.dob)}</span>
+        <MDBBadge color={sourceColor(categoryName)} className="mx-2">
+          {categoryName}
+        </MDBBadge>
+        {source && (
+          <MDBBadge color="warning">{capitalize(source?.name)}</MDBBadge>
+        )}
+        {/* on the right corner */}
+        <MDBBadge
+          onClick={() => {
+            localStorage.setItem(`customerId`, JSON.stringify(customerId));
 
-          history.push(
-            `/frontdesk/diagnostics/reports?patient=${customerId?._id}`
-          );
-        }}
-        color="info"
-        className="px-2"
-      >
-        <MDBIcon icon="eye" />
-      </MDBBadge>
-      <i
-        onClick={() =>
-          dispatch(
-            SetVALIDATOR({
-              deal,
-              activeCOLAPSE: activeCOLAPSE === index ? -1 : index,
-            })
-          )
-        }
-        style={{ rotate: `${activeCOLAPSE === index ? 0 : 90}deg` }}
-        className="fa fa-angle-down transition-all"
-      />
-    </MDBCollapseHeader>
+            history.push(
+              `/frontdesk/diagnostics/reports?patient=${customerId?._id}`
+            );
+          }}
+          color="info"
+          className="px-2"
+        >
+          <MDBIcon icon="eye" />
+        </MDBBadge>
+        <i
+          onClick={() =>
+            dispatch(
+              SetVALIDATOR({
+                deal,
+                activeCOLAPSE: activeCOLAPSE === index ? -1 : index,
+              })
+            )
+          }
+          style={{ rotate: `${activeCOLAPSE === index ? 0 : 90}deg` }}
+          className="fa fa-angle-down transition-all"
+        />
+      </MDBCollapseHeader>
+    </div>
   );
 };
 

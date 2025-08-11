@@ -15,8 +15,9 @@
   justify-content: center;
   gap: 10px;
   padding: 10px;
+  border-radius: 5px;
   background-color: white;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   transition: transform 1s ease;
 }
@@ -40,7 +41,7 @@
 
 .homePage-pioneers-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 0 8px rgba(0, 121, 107, 0.2);
+  box-shadow: 0 0 7px rgba(0, 121, 107, 0.2);
 }
 
 .homePage-pioneers-card img {
@@ -62,6 +63,7 @@
 
 .pioneerAvatarLink {
   color: black;
+
   transition: all 0.5 ease;
 }
 
@@ -83,5 +85,43 @@
   .homePage-pioneers-card img {
     width: 120px;
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homePage-pioneers-container {
+    grid-template-columns: repeat(2, 160px);
+    gap: 10px;
+  }
+  .homePage-pioneers-card {
+    height: 100%;
+    gap: 5px;
+  }
+
+  .homePage-pioneers-card span {
+    font-size: 0.875rem;
+  }
+  .homePage-pioneers-card p {
+    font-size: 0.6rem !important;
+  }
+  .homePage-pioneers-card img {
+    width: 80px;
+    margin-top: 0px;
+  }
+  .pioneerAvatarLink {
+    font-size: 0.8rem;
+  }
+
+  .homePage-pioneers-card:hover {
+    transform: translateY(0);
+    box-shadow: 0 0 8px rgba(0, 121, 107, 0.2);
+  }
+
+  .homePage-pioneers-title {
+    font-size: 1.25rem !important;
+  }
+
+  .team-section p {
+    font-size: 0.875rem;
   }
 }

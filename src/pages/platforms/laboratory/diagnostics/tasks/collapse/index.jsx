@@ -31,6 +31,9 @@ export default function DealCollapse() {
               } = deal;
               const referral =
                 physicianId?.fullName?.lname || physicianSTR || "";
+
+              console.log("deal", deal);
+
               return (
                 <MDBCard key={`deal-${index}`}>
                   <Header deal={deal} index={index} />

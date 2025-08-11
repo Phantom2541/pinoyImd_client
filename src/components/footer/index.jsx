@@ -1,9 +1,15 @@
 import { MDBIcon } from "mdbreact";
 import "./style.css";
 
-export default function Copyrights() {
+export default function Copyrights({
+  backgroundColor = "#0d4dbc",
+  borderColor = "#0b429f",
+}) {
   return (
-    <div className="footer-copyright">
+    <div
+      className="footer-copyright"
+      style={{ backgroundColor: backgroundColor, borderColor: borderColor }}
+    >
       <span>
         © 2025 <strong>Pinoy iMD</strong> — Empowering Filipino Healthcare
         through Innovation. All rights reserved.

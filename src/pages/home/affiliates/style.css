@@ -1,0 +1,70 @@
+.homePage-affiliates {
+  position: relative;
+  min-height: 180px;
+  padding: 20px 0;
+}
+
+.subscriber-bg-img {
+  position: absolute;
+  inset: 0;
+  background-image: url(./../../../assets/subscriber/hospitalImage.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  z-index: 0;
+}
+
+.subscriber-bg-mask {
+  position: absolute;
+  inset: 0;
+  background-color: var(--primary-color);
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.affiliates-section {
+  margin-bottom: 40px;
+}
+
+.affiliates-title {
+  position: relative;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: white;
+  z-index: 10;
+}
+
+.affiliates-swiper {
+  padding: 10px 0;
+}
+
+.affiliates-logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.affiliates-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 7px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.affiliates-logo:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 480px) {
+  .affiliates-title {
+    font-size: 1.25rem;
+  }
+
+  .affiliates-logo {
+    width: 70px;
+    height: 70px;
+  }
+}
