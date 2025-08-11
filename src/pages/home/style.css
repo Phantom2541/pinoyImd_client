@@ -43,7 +43,7 @@
 .homePage-topbar {
   position: fixed;
   width: 100%;
-  min-width: 460px;
+  /* min-width: 460px; */
   height: 85px;
   display: flex;
   justify-content: space-between;
@@ -318,6 +318,7 @@
     background-color: white;
     padding: 20px;
     z-index: 10;
+    visibility: hidden;
     opacity: 0;
     gap: 10px;
     transform: translateY(-20px);
@@ -327,6 +328,9 @@
 
   .homePage-menu.homePage-open {
     display: flex;
+    visibility: visible;
+    pointer-events: auto;
+
     opacity: 1;
     transform: translateY(0);
   }
@@ -359,5 +363,26 @@
     width: 100%;
     height: auto;
     padding: 0 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homePage-container {
+    width: 100%;
+    padding: 0;
+  }
+
+  .homePage-topbar {
+    padding: 0 10px;
+  }
+
+  .homePage-logo {
+    font-size: 1.1rem;
+  }
+  .homePage-btn-connect {
+    padding: 5px 13px;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 400;
   }
 }

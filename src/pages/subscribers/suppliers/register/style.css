@@ -177,7 +177,7 @@
 }
 
 @media (max-width: 1024px) {
-  .subscriber-flip-container {
+  /* .subscriber-flip-container {
     width: 85%;
     height: 100%;
     width: 100%;
@@ -228,7 +228,7 @@
 
   .subscriber-text-container-style p {
     font-size: 1.1rem;
-  }
+  } */
 }
 
 @media (max-width: 576px) {

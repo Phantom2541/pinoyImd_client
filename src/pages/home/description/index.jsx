@@ -11,7 +11,12 @@ export default function Description() {
         </h1>
         <span className="homePage-description-semi-title">with Pinoy iMD</span>
         <div className="homePage-description-container mt-5">
-          <img src={ABOUTUS} alt="aboutUs" width="700px" />
+          <img
+            className="homePage-description-image"
+            src={ABOUTUS}
+            alt="aboutUs"
+            width="700px"
+          />
           <div className="homePage-description">
             <span>The Pinoy iMD Leadership Mindset:</span>
             <p>

@@ -62,7 +62,9 @@ const collections = [
 export default function AboutUs() {
   return (
     <section className="homePage-aboutUs-section">
-      <h1 className="text-center">Capabilities of the system</h1>
+      <h1 className="text-center homePage-aboutUs-title">
+        Capabilities of the system
+      </h1>
       <div className="homePage-aboutUs-container">
         {collections.map((item, index) => (
           <div className="homePage-AboutUs-card" key={index}>
