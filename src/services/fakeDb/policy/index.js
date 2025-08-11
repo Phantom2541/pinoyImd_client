@@ -98,5 +98,28 @@ const Policy = {
     );
     return positionIDS.map(({ id }) => id);
   },
+
+  getByCategory: (category) => {
+    const laboratory = ["LAB", "Clinic"];
+    const radiology = ["RAD", "Clinic"];
+
+    const policyMap = {
+      laboratory,
+      radiology,
+      diagnostics: [...new Set([...laboratory, ...radiology])],
+    };
+
+    const codesMap = new Set(Object.values(policyMap).flat());
+
+    const departmentsInCategory = collections.filter(({ code }) =>
+      policyMap[category.toLowerCase()].includes(code)
+    );
+
+    const uncategorizedItems = collections.filter(
+      ({ code }) => !codesMap.has(code)
+    );
+
+    return [...uncategorizedItems, ...departmentsInCategory];
+  },
 };
 export default Policy;

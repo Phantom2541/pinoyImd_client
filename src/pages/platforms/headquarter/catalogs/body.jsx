@@ -1,66 +1,44 @@
-import { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBBtn, MDBBtnGroup, MDBIcon, MDBTable } from "mdbreact";
-import { SetEDIT } from "../../../../services/redux/slices/reusable/table";
-// import Swal from "sweetalert2";
-import { RESET } from "../../../../services/redux/slices/assets/companies";
+import { SetEDIT, TOGGLE } from "../../../../services/redux/slices/reusable/table";
+import { DESTROY } from "../../../../services/redux/slices/market/products";
 
 const Body = () => {
-  const { filtered, activePage, maxPage, isSuccess } = useSelector(
-      ({ services }) => services
-    ),
-    dispatch = useDispatch();
+  const { filtered, activePage, maxPage } = useSelector(({ products }) => products);
+  const dispatch = useDispatch();
 
- 
-
-  
-  /**
-   * Pagination: Calculate the start and end index for the current page
-   */
-  const itemsPerPage = maxPage; // Number of items per page
+  const itemsPerPage = maxPage;
   const startIndex = (activePage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = filtered.slice(startIndex, endIndex); // Get only items for the active page
+  const paginatedData = filtered.slice(startIndex, startIndex + itemsPerPage);
 
-  // const handleDelete = (_id) => {
-  //   Swal.fire({
-  //     title: "Are you sure?",
-  //     text: "You won't be able to revert this!",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "Yes, delete it!",
-  //   }).then((result) => {
-  //     // dispatch(DESTROY({ token, data: { _id  } }));
-  //   });
-  // };
   return (
     <MDBTable responsive hover>
-      <thead style={{ backgroundColor: "#", color: "black" }}>
+      <thead>
         <tr>
           <th>#</th>
-          <th>Service</th>
-          <th>Abbreviation</th>
-          <th>Specimen</th>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Category</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {paginatedData?.map((item, index) => {
-          const { id, name, abbreviation, specimen } = item;
+        {paginatedData.map((item, index) => {
+          const { _id, name, price, category } = item;
           return (
-            <tr key={index}>
-              <td key={index}>{index + startIndex + 1}</td>
-              
-              <td>{specimen}</td>
+            <tr key={_id}>
+              <td>{startIndex + index + 1}</td>
+              <td>{name}</td>
+              <td>{price}</td>
+              <td>{category}</td>
               <td>
                 <MDBBtnGroup>
                   <MDBBtn
                     color="danger"
                     size="sm"
                     rounded
-                    // onClick={() => dispatch(RESET(id))}
+                    onClick={() => dispatch(DESTROY({ data: { _id } }))}
                   >
                     <MDBIcon icon="trash" />
                   </MDBBtn>
@@ -68,7 +46,10 @@ const Body = () => {
                     color="primary"
                     size="sm"
                     rounded
-                    // onClick={() => dispatch(SetEDIT(item))}
+                    onClick={() => {
+                      dispatch(SetEDIT(item));
+                      dispatch(TOGGLE());
+                    }}
                   >
                     <MDBIcon icon="pencil-alt" />
                   </MDBBtn>

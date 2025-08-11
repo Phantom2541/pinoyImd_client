@@ -5,6 +5,26 @@ import Electrocardiogram from "./../../../../../assets/subscriber/Electrocardiog
 import MRI from "./../../../../../assets/subscriber/MRI.jpg";
 
 const imgs = [Electrocardiogram, Ventilator, UM, MRI, Defibrillator];
+/**
+ * {
+ *  _id: sdsdsds
+ * pid:{ // product
+ * _id: xxx
+ * title: xxx
+ * description: xxx
+ * },
+ * vId:{ // vendor
+ * _id: xxx
+ * name: xxx
+ * address: xxx
+ * },
+ * price: xxx
+ *  discount: 20,
+ *  rating: 4.7,
+ *  sold: 12000,
+ * image: imgs,
+ * }
+ */
 
 const collections = [
   {

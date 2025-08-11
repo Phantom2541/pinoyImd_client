@@ -295,9 +295,14 @@ export const reduxSlice = createSlice({
       })
       .addCase(DESTROY.fulfilled, (state, action) => {
         const { success, message, _id } = action.payload;
-        const index = state.collections.findIndex((item) => item._id === _id);
+        const updateCollections = (collections) => {
+          const index = collections.findIndex((item) => item._id === _id);
+          collections.splice(index, 1);
+        };
 
-        state.collections.splice(index, 1);
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+
         state.message = message;
         state.isSuccess = success;
         state.isLoading = false;

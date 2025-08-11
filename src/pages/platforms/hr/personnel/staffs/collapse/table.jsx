@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MDBCol, MDBRow, MDBIcon, MDBBadge } from "mdbreact";
 import { useForm } from "react-hook-form";
 import "./styles.css";
@@ -10,6 +10,7 @@ import {
   DESTROY,
 } from "./../../../../../../services/redux/slices/assets/persons/personnels";
 import Swal from "sweetalert2";
+import { capitalize } from "../../../../../../services/utilities";
 
 function EditableField({
   label,
@@ -66,6 +67,7 @@ export default function CollapseTable({
   _id,
   onSubmit,
 }) {
+  const { activePlatform } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
   const [editField, setEditField] = useState(null);
   const [show, setShow] = useState(false);
@@ -228,7 +230,7 @@ export default function CollapseTable({
               }}
             >
               <option value="">-- Select Department --</option>
-              {[...Policy.collections]
+              {[...Policy.getByCategory(activePlatform?.branch?.category)]
                 .sort((a, b) => a.department.localeCompare(b.department))
                 .map((dept) => (
                   <option key={dept.department} value={dept.department}>
@@ -406,11 +408,11 @@ export default function CollapseTable({
             access.map((acc, index) => (
               <MDBBadge
                 key={index}
-                className="mr-2 mb-3"
+                className="mr-1 mb-1"
                 pill
-                style={{ fontSize: "15px", fontWeight: 500 }}
+                style={{ fontSize: "13px", fontWeight: 400 }}
               >
-                {acc.platform}
+                {capitalize(acc.platform)}
               </MDBBadge>
             ))
           ) : (

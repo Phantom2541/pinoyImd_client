@@ -51,11 +51,15 @@ export default function AccessModal() {
     [duplicateRoles, setDuplicateRoles] = useState([]), //the purpose of this is for searching....
     dispatch = useDispatch();
 
-  const { user = {}, contract } = selected || {};
+  const { user = {}, contract = {} } = selected || {};
 
   const toggle = useCallback(() => {
     dispatch(ToggleAccessModal());
   }, [dispatch]);
+
+  console.log("clusters", clusters);
+  console.log("roles", roles);
+  console.log("search", search);
 
   useEffect(() => {
     if (isSuccess && !formSubmitted && show) {
@@ -87,9 +91,9 @@ export default function AccessModal() {
   useEffect(() => {
     if (show) {
       setClusters([]);
-      handleSetRoles(Access.collections);
+      handleSetRoles(Access.getByCategory(activePlatform?.branch?.category));
     }
-  }, [handleSetRoles, show]);
+  }, [handleSetRoles, show, activePlatform]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -248,7 +252,16 @@ export default function AccessModal() {
           <MDBIcon icon="universal-access" className="mr-2" />
           {`${fullName(user.fullName) || ""} `}
         </h6>
-        <small>{Policy.getPositions(contract?.designation)}</small>
+        <small
+          style={{
+            display: "block",
+            marginTop: -9,
+            marginBottom: -10,
+            marginLeft: 25,
+          }}
+        >
+          {Policy.getPositions(contract?.designation)}
+        </small>
       </MDBModalHeader>
       <form onSubmit={handleSubmit}>
         <MDBModalBody>
@@ -301,7 +314,11 @@ export default function AccessModal() {
           </MDBRow>
         </MDBModalBody>
         <MDBModalFooter>
-          <MDBBtn type="submit" color="info" disabled={formSubmitted}>
+          <MDBBtn
+            type="submit"
+            color="info"
+            disabled={formSubmitted || clusters.length === 0}
+          >
             Approve {formSubmitted && <MDBIcon icon="spinner" pulse />}
           </MDBBtn>
         </MDBModalFooter>

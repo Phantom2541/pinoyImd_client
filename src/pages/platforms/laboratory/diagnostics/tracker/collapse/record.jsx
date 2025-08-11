@@ -148,7 +148,7 @@ export default function CollapseTable({ menu }) {
                     const selected = {
                       ...task,
                       branchId: menu?.branchId,
-                      referral: physicianId || {},
+                      referral,
                       services: _packages,
                       signatories: obj?.signatories,
                       isPrint: true,
@@ -170,7 +170,16 @@ export default function CollapseTable({ menu }) {
     );
   };
 
-  const { customerId, physicianId, source, category, _id, diagnostic } = menu;
+  const {
+    customerId,
+    physicianId,
+    source,
+    category,
+    _id,
+    diagnostic,
+    physicianSTR,
+  } = menu;
+  const referral = physicianId?.fullName?.lname || physicianSTR || "";
   return (
     <>
       <MDBTable small hover responsive bordered className="w-100">

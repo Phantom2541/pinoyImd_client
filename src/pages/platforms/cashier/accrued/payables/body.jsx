@@ -23,7 +23,7 @@ const Tables = () => {
   const { filtered, activePage, maxPage, isLoading } = useSelector(
       ({ payables }) => payables
     ),
-    { token, activePlatform } = useSelector(({ auth }) => auth),
+    { token, activePlatform, auth } = useSelector(({ auth }) => auth),
     [activeId, setActiveId] = useState(-1),
     dispatch = useDispatch();
 
@@ -48,8 +48,6 @@ const Tables = () => {
     });
   };
   const handleDelete = (payable) => {
-    console.log("payable", payable);
-
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -63,7 +61,11 @@ const Tables = () => {
         dispatch(
           DESTROY({
             token,
-            data: { _id: payable._id, branch: activePlatform?.branchId },
+            data: {
+              _id: payable._id,
+              branch: activePlatform?.branchId,
+              user: auth._id,
+            },
           })
         );
         Swal.fire({
@@ -143,7 +145,6 @@ const Tables = () => {
                     </td>
                     <td>
                       <h6>
-                        {" "}
                         {util.getVendorOrParticular(particular, supplier)}
                       </h6>
                       <small style={{ color: "blue" }}>

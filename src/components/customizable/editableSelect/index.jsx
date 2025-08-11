@@ -72,7 +72,7 @@ export default function EditableSelect({
   disableSearch = false,
   isMoney = false,
   formSubmitted = false,
-  animationStyle = {},
+  animationStyle = { width: "100%" },
   animation = false,
   isCapitalize = true,
   displayTag = "small", //this is for editable display value tag

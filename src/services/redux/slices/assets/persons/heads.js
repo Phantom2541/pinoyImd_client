@@ -95,6 +95,7 @@ export const reduxSlice = createSlice({
     RESET: (state) => {
       state.isSuccess = false;
       state.formSubmitted = false;
+      state.isLoading = false;
       state.message = "";
     },
     SetCREATE: (state) => {
@@ -140,7 +141,6 @@ export const reduxSlice = createSlice({
       state.showModal = true;
     },
     SetPRC: (state, { payload }) => {
-      console.log("payloadd in set prc", payload);
       const { prc, userId } = payload;
       const updateCollections = (collections) => {
         const foundUser = collections.filter(

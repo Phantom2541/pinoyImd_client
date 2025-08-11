@@ -1,13 +1,14 @@
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { MDBAnimation, MDBCard, MDBCardBody } from "mdbreact";
 import TableLoading from "../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./body";
-// import Footer from "./footer";
-// import Modal from "./modal";
+import Modal from "./modal";
 
 const Catalogs = () => {
-  const { isLoading } = useSelector(({ services }) => services);
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector(({ products }) => products);
 
   return (
     <>
@@ -15,10 +16,9 @@ const Catalogs = () => {
         <MDBCard narrow className="pb-3" style={{ minHeight: "600px" }}>
           <Header />
           <MDBCardBody>{isLoading ? <TableLoading /> : <Body />}</MDBCardBody>
-          {/* <Footer /> */}
         </MDBCard>
       </MDBAnimation>
-      {/* <Modal /> */}
+      <Modal />
     </>
   );
 };

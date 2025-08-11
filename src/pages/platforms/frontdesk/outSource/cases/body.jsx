@@ -90,7 +90,7 @@ export default function CaseBody() {
                       </MDBTableHead>
                       <MDBTableBody>
                         <tr>
-                          <td></td>
+                          <td></td> 
                           <td>{ap.assignedAt ? new Date(ap.assignedAt).toLocaleString() : "—"}</td>
                           <td>{ap.notes || "—"}</td>
                           <td>{item.description || "—"}</td>

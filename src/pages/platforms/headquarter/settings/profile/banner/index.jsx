@@ -45,6 +45,7 @@ const Banner = () => {
   const [direction, setDirection] = useState(""); // "left" | "right" | ""
   const [isAnimating, setIsAnimating] = useState(false);
   const dispatch = useDispatch();
+  const [imgAvailable, setImgAvailable] = useState(false);
 
   const { activePlatform, company, token } = useSelector(({ auth }) => auth);
   const { branch = {} } = activePlatform;
@@ -193,20 +194,23 @@ const Banner = () => {
         <div key={`${currentIndex}-${direction}`} className={wrapperClass}>
           <MDBCard style={{ boxShadow: `0 0 7px ${shadowColor}` }}>
             <MDBCardBody>
-              <MDBTypography
-                tag="h4"
-                className="d-flex justify-content-center align-items-center my-3 text-uppercase"
-                align="center"
-              >
-                <span style={{ color: shadowColor, fontWeight: "bold" }}>
-                  {company?.name} — {name}
-                </span>
-                {isMain && (
-                  <MDBBadge color="warning" className="ml-2">
-                    Main
-                  </MDBBadge>
-                )}
-              </MDBTypography>
+              {console.log(imgAvailable)}
+              {imgAvailable && (
+                <MDBTypography
+                  tag="h4"
+                  className="d-flex justify-content-center align-items-center my-3 text-uppercase"
+                  align="center"
+                >
+                  <span style={{ color: shadowColor, fontWeight: "bold" }}>
+                    {company?.name} — {name}
+                  </span>
+                  {isMain && (
+                    <MDBBadge color="warning" className="ml-2">
+                      Main
+                    </MDBBadge>
+                  )}
+                </MDBTypography>
+              )}
               <MDBView hover={!showImgCropper}>
                 <img
                   src={
@@ -219,8 +223,15 @@ const Banner = () => {
                     objectFit: "fill",
                   }}
                   alt={companyId?.name || "Default Banner"}
-                  onError={(e) => (e.target.src = FailedBanner)}
+                  onError={(e) => {
+                    console.log(e.target.src);
+                    e.target.src = FailedBanner;
+                    setImgAvailable(!imgAvailable);
+                  }}
                 />
+
+                {/* Only show Typography if image is NOT available */}
+
                 <MDBMask overlay="grey-strong d-flex align-items-center">
                   <MDBBtnGroup className="mx-auto">
                     <MDBBtn
@@ -244,7 +255,6 @@ const Banner = () => {
                   </MDBBtnGroup>
                 </MDBMask>
               </MDBView>
-
               <MDBRow className="my-2">
                 <MDBCol md="6">
                   <h6>
@@ -263,7 +273,6 @@ const Banner = () => {
                   </h6>
                 </MDBCol>
               </MDBRow>
-
               <MDBAlert
                 color="primary"
                 className="text-uppercase text-center py-0 mb-1"
@@ -272,7 +281,6 @@ const Banner = () => {
                   CHEMISTRY
                 </h5>
               </MDBAlert>
-
               <MDBTable
                 hover
                 bordered
@@ -329,7 +337,17 @@ const Banner = () => {
                     ))}
                 </tbody>
                 <div className="Banner-waterMark">
-                  <span>{settings.subscription || "Demo"} Subscription</span>
+                  <span>Subscription</span>
+                  <span
+                    style={{
+                      color: settings.status === "Active" ? "lightgray" : "red",
+                    }}
+                  >
+                    {console.log("settings.subscription", settings.status)}
+
+                    {settings.subscription || "Demo"}
+                  </span>
+                  <span>{settings.status.toUpperCase()}</span>
                 </div>
               </MDBTable>
             </MDBCardBody>

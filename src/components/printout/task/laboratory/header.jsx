@@ -7,7 +7,6 @@ export default function Header({ task }) {
   const { category, patient, source, referral, form, updatedAt } = task;
   const { fullName: pFull, isMale = false, dob = "", _id } = patient;
   const categoryWidth = source && referral ? "30%" : "64.2%";
-
   const patientName = `${pFull.lname.toUpperCase()},${pFull.fname.toUpperCase()} ${
     pFull.mname ? `y ${pFull.mname.toUpperCase()}` : ""
   }`;

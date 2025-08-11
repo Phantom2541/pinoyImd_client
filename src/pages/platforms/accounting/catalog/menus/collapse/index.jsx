@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   MDBCard,
   MDBCardBody,
@@ -51,7 +51,7 @@ export default function MenuCollapse({
                 <MDBIcon
                   icon="pencil-alt"
                   title="Edit Menus"
-                  className="mr-3"
+                  className="ml-2"
                   style={{ color: "red", cursor: "pointer" }}
                   onClick={(e) => {
                     e.stopPropagation(); // prevent collapse toggle

@@ -14,7 +14,7 @@ import {
   RESET,
 } from "../../../services/redux/slices/assets/persons/auth";
 import { Logo } from "../../../services/utilities";
-export default function Login({ show, toggle = null }) {
+export default function Login({ show, toggle = null, isEMR = false }) {
   const {
       activePlatform,
       auth,
@@ -153,14 +153,18 @@ export default function Login({ show, toggle = null }) {
               <MDBBtn
                 disabled={isLoading}
                 onClick={() => {
-                  localStorage.clear();
-                  window.location.reload();
+                  if (isEMR) {
+                    toggle();
+                  } else {
+                    localStorage.clear();
+                    window.location.reload();
+                  }
                 }}
                 size="sm"
                 rounded
                 type="button"
               >
-                logout
+                {isEMR ? "later" : "logout"}
               </MDBBtn>
             )}
             <MDBBtn
@@ -174,7 +178,11 @@ export default function Login({ show, toggle = null }) {
               {isLoading ? (
                 <MDBIcon icon="spinner" pulse />
               ) : email ? (
-                "proceed"
+                isEMR ? (
+                  "Sign in"
+                ) : (
+                  "proceed"
+                )
               ) : (
                 "Sign in"
               )}
