@@ -242,11 +242,9 @@ const Body = () => {
                   <p className="fw-bold mb-1 text-capitalize">
                     monthly:{currency.format(rate?.monthly)}
                   </p>
-                  {Number(contract?.pc) === 1 && (
-                    <p className="text-muted mb-0">
-                      Daily: {currency.format(rate?.daily)}
-                    </p>
-                  )}
+                  <p className="text-muted mb-0">
+                    Daily: {currency.format(rate?.daily)}
+                  </p>
                 </td>
                 <td>
                   <p className="fw-bold mb-1 text-capitalize">

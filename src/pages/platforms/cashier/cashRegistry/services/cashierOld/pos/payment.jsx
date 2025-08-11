@@ -40,6 +40,9 @@ export default function CashierPayment({
   physicianId,
   toggleModal,
   privilegeIndex,
+  overrideCart = [],
+  amountPaid = 0,
+  overrideDiscount = 0,
 }) {
   const [payment, setPayment] = useState(""),
     [isDeliver, setIsDeliver] = useState(false),
@@ -54,10 +57,9 @@ export default function CashierPayment({
     paymentOptions = Payments[abbr],
     { customerId, _id: dealId } = deals,
     { _id, fullName, mobile, privilege, address } = customerId;
-  console.log("deals", deals);
   useEffect(() => {
     if (!formSubmitted && isSuccess) {
-      const balance = cash - (gross - discount);
+      const balance = cash - (gross - (discount + amountPaid));
       dispatch(SetMODAL(false));
       if (balance > 0)
         Swal.fire({
@@ -66,16 +68,19 @@ export default function CashierPayment({
           text: "Please return the change to the customer.",
         });
     }
-  }, [isSuccess, formSubmitted, discount, gross, dispatch, cash]);
-
+  }, [isSuccess, formSubmitted, discount, gross, dispatch, cash, amountPaid]);
+  console.log("net", gross - (discount + amountPaid));
   const handleSales = (authorizedBy) => {
-    const net = gross - discount,
+    const net = gross - (discount + amountPaid),
       _payment = payment || paymentOptions[0];
     const selectedMenus = [...cart].filter(({ isNew }) => isNew);
     const _department = [
       ...new Set(selectedMenus.flatMap((item) => item.department)),
     ];
     const department = [...new Set([...deals.department, ..._department])];
+    const cartWithoutOverride = [...cart].filter(
+      ({ overrideBy = "" }) => !overrideBy
+    );
     var data = {
       dealId: dealId || undefined,
       source: sourceVendor || undefined,
@@ -88,10 +93,11 @@ export default function CashierPayment({
       payment: _payment,
       cash,
       amount: net,
-      discount,
+      discount: discount - overrideDiscount,
       department,
       isPickup: !isDeliver,
-      cart: cart.map((menu) => {
+      overrideCart: overrideCart.map(({ saleItemId }) => saleItemId),
+      cart: cartWithoutOverride.map((menu) => {
         const {
             description,
             abbreviation,
@@ -101,8 +107,7 @@ export default function CashierPayment({
             up: soldUp,
             discount: soldDiscount,
           } = menu,
-          { up, discount } = computeGD(menu, categoryIndex, privilegeIndex);
-
+          { up, discount = 0 } = computeGD(menu, categoryIndex, privilegeIndex);
         return {
           description,
           abbreviation,
@@ -110,7 +115,7 @@ export default function CashierPayment({
           menuId: _id,
           isNew,
           up: isNew ? up : soldUp,
-          discount: isNew ? soldDiscount : discount,
+          discount: isNew ? discount ?? 0 : soldDiscount,
         };
       }),
       privilege: privilegeIndex,
@@ -150,9 +155,9 @@ export default function CashierPayment({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const balance = cash - (gross - discount);
-
+    const deduction = discount + amountPaid;
+    const totalDeduction = gross - deduction;
+    const balance = cash - totalDeduction;
     if (balance < 0)
       return Swal.fire({
         icon: "error",

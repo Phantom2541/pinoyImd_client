@@ -14,6 +14,8 @@ import PatientCart from "./cart";
 
 export default function CashierPatient({
   // setSourceVendor,
+  amountPaid = 0,
+  overrideDiscount,
   gross,
   discount,
   cart,
@@ -76,6 +78,8 @@ export default function CashierPatient({
           </MDBRow>
           <PatientCart
             dealId={_id}
+            amountPaid={amountPaid}
+            overrideDiscount={overrideDiscount}
             gross={gross}
             discount={discount}
             cart={cart}

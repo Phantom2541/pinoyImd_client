@@ -6,14 +6,14 @@ const removeRedundantPackages = (obj, array = []) => {
   const { referenceId, abbreviation, description, packages } = obj;
 
   const doesExist = array.find((a) => a.referenceId === referenceId);
-
   if (doesExist) {
     Swal.fire({
       icon: "warning",
       title: "Duplicate Menu",
       text: `${description || abbreviation} is already selected.`,
     });
-    return array;
+
+    return { stop: true };
   }
 
   const matchIndexes = [];
@@ -25,6 +25,7 @@ const removeRedundantPackages = (obj, array = []) => {
       description: desc,
       referenceId: refId,
       isNew,
+      overrideBy,
     } = array[index];
     var isDuplicate = false;
 
@@ -34,10 +35,27 @@ const removeRedundantPackages = (obj, array = []) => {
       if (packages.find((srvc) => srvc === service)) isDuplicate = true;
     }
 
-    if (isDuplicate && isNew) matchIndexes.push({ refId, abbr, desc });
+    if (isDuplicate && isNew && !overrideBy)
+      matchIndexes.push({ refId, abbr, desc });
   }
 
   if (!!matchIndexes.length) {
+    const cart = [...array];
+
+    matchIndexes.forEach((element) => {
+      const overriden = cart.filter(
+        ({ overrideBy = "" }) => overrideBy === element.refId
+      );
+      //to remove overrideBy Key
+      if (overriden.length > 0) {
+        overriden.forEach((e) => {
+          const index = cart.findIndex((x) => x.referenceId === e.referenceId);
+          const { overrideBy, ...rest } = e;
+          cart[index] = { ...rest };
+        });
+      }
+    });
+
     Swal.fire({
       icon: "info",
       title: "Removed Menus",
@@ -46,18 +64,16 @@ const removeRedundantPackages = (obj, array = []) => {
         '<i class="text-info">These menus are removed because of duplicate services.</i>',
     });
 
-    const cart = [...array];
-
-    return [
-      ...cart.filter(
+    return {
+      cart: cart.filter(
         ({ referenceId }) =>
           !matchIndexes.some((removeObj) => referenceId === removeObj.refId)
       ),
       obj,
-    ];
+    };
   }
 
-  return [...array, obj];
+  return { cart: array, obj };
 };
 
 export default removeRedundantPackages;
