@@ -5,16 +5,10 @@ import TableLoading from "../../../../components/tableLoading";
 import Header from "./header";
 import Body from "./body";
 import Modal from "./modal";
-import { BROWSE } from "../../../../services/redux/slices/commerce/catalog/products";
 
 const Catalogs = () => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector(({ products }) => products);
-  const { token } = useSelector(({ auth }) => auth);
-
-  useEffect(() => {
-    dispatch(BROWSE({ token }));
-  }, [dispatch, token]);
 
   return (
     <>
