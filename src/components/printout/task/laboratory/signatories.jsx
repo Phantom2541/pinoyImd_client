@@ -17,6 +17,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
           src={`${Cloudinary.getEndpoint()}/users/${
             person?.email
           }/signature.png?v=${Date.now()}`}
+          onError={(e) => (e.target.style.display = "none")} // hide if not found
           alt={person?.email || "signature"}
         />
       )}
@@ -48,6 +49,7 @@ export default function Signatories({ signatories = [] }) {
   const head = signatories[0],
     dr = signatories[1],
     frontdesk = signatories[2];
+
   return (
     <div className="pt-4 px-3 laboratory-signatories">
       <div className="d-flex justify-content-between">

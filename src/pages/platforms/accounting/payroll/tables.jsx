@@ -17,6 +17,7 @@ import {
 import { Policy } from "../../../../services/fakeDb";
 import TableRowCount from "../../../../components/pagination/rows";
 import Pagination from "../../../../components/pagination";
+import Swal from "sweetalert2";
 const Body = () => {
   const {
       collections,
@@ -48,7 +49,93 @@ const Body = () => {
   }, [isSuccess, message, addToast, dispatch]);
 
   const handlePAYROLL = (selected) => {
-    dispatch(SetSELECTED(selected));
+    const name = fullName(selected?.user?.fullName);
+    const rate = selected?.rate || {};
+    const hasMonthly = !!rate.monthly;
+    const hasDaily = !!rate.daily;
+
+    // If both monthly and daily are present, proceed directly
+    if (hasMonthly && hasDaily) {
+      dispatch(SetSELECTED(selected));
+      return;
+    }
+
+    // Build HTML for alert
+    const buildHtml = (title, messages) => {
+      const items = messages
+        .map(
+          (m) => `
+        <li style="margin-bottom:6px;">
+          <strong>${m.title}</strong>
+          <div style="font-size:0.92rem; color:#555">${m.detail}</div>
+        </li>`
+        )
+        .join("");
+
+      return `
+      <div style="font-family: system-ui, Arial;">
+        <div style="margin-bottom:10px;">
+          <div style="font-weight:700; font-size:1rem;">${title}</div>
+          <div style="font-size:0.9rem; color:#666;">${name}</div>
+        </div>
+        <ul style="padding-left:18px; margin:0;">
+          ${items}
+        </ul>
+      </div>
+    `;
+    };
+
+    // Missing both
+    if (!hasMonthly && !hasDaily) {
+      Swal.fire({
+        title: "Missing salary data",
+        html: buildHtml("Monthly and Daily salary are missing", [
+          {
+            title: "Monthly salary required",
+            detail: "Please declare a monthly salary.",
+          },
+          {
+            title: "Daily rate required",
+            detail: "Please declare a daily rate.",
+          },
+        ]),
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    // Missing monthly
+    if (!hasMonthly) {
+      Swal.fire({
+        title: "Monthly salary missing",
+        html: buildHtml("Monthly salary not declared", [
+          {
+            title: "Monthly salary required",
+            detail: "Please declare a monthly salary.",
+          },
+        ]),
+        icon: "info",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    // Missing daily
+    if (!hasDaily) {
+      Swal.fire({
+        title: "Daily rate missing",
+        html: buildHtml("Daily rate not declared", [
+          {
+            title: "Daily rate required",
+            detail: "Please declare a daily rate.",
+          },
+        ]),
+        icon: "info",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
   };
 
   const handlePayslip = (selected) => {
@@ -138,8 +225,6 @@ const Body = () => {
                 ? day <= 31 && isSameMonth
                 : canBePaidThisQuarter(createdAt);
             });
-            // console.log("Quincena", akinsenas);
-            // console.log("katapusan", katapusan);
 
             return (
               <tr key={`payroll-${index + 1}`}>

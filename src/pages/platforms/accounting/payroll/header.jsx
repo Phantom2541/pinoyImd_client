@@ -15,8 +15,6 @@ const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { month, year } = useSelector(({ personnels }) => personnels),
     dispatch = useDispatch();
-  console.log("employment", employment);
-  //Initial Browse
   useEffect(() => {
     if (token && activePlatform?.branchId) {
       const abbr = [...employment.employed].map(({ abbr }) => abbr);
