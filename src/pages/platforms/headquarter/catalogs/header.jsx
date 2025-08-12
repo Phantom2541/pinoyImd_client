@@ -1,24 +1,26 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CATALOG } from "../../../../services/redux/slices/commerce/catalog/products";
-import { SetActivePlatform } from "../../../../services/redux/slices/assets/persons/auth";
 
 export default function Header() {
   const dispatch = useDispatch();
-
-  // Destructure auth state
   const { token, activePlatform } = useSelector(({ auth }) => auth);
 
   useEffect(() => {
     if (token && activePlatform?.branchId) {
-      dispatch(
-        CATALOG({
-          token,
-          key: { companyId: activePlatform.company._id },
+      const keyPayload = activePlatform.company?._id
+        ? { companyId: activePlatform.company._id }
+        : { branchId: activePlatform.branchId };
+
+      dispatch(CATALOG({ token, key: keyPayload })).unwrap()
+        .then((res) => {
+          console.log("CATALOG API response:", res);
         })
-      );
+        .catch((err) => {
+          console.error("CATALOG API error:", err);
+        });
     }
   }, [token, activePlatform, dispatch]);
 
-  return <div className="d-flex align-items-center"></div>;
+  return <h4>Products Catalog</h4>;
 }

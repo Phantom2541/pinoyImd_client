@@ -33,6 +33,7 @@ import {
   dispenser,
   onBoardings,
   admission,
+  products,       // <- dito na naka-import products mula commerce folder
 } from "./slices/commerce";
 
 // DIAGNOSTICS
@@ -69,14 +70,13 @@ import {
 
 // MARKET
 import {
-  products,
   productsGenerics,
   machines,
   medicines,
   generics,
   mentainance,
   attendances,
-} from "./slices/market";
+} from "./slices/market"; // <-- dito wala na yung products
 
 // LIABILITY
 import { access, liabilities } from "./slices/liability";
@@ -129,7 +129,7 @@ const store = configureStore({
     providers,
     controls,
     assurances,
-    products,
+    products,      // <- dito sa reducer register products mula commerce
     xray,
     ultrasound,
     ecg,
