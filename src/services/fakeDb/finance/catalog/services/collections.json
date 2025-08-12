@@ -257,7 +257,7 @@
     "department": "LAB",
     "frequency": null,
     "hi_ssx": "",
-    "preference": "equal",
+    "preference": "gender",
     "preparation": "none",
     "specimen": "Serum",
     "template": 2

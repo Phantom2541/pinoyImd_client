@@ -19,9 +19,9 @@ export default function Affiliates() {
       <div className="subscriber-bg-img">
         <div className="subscriber-bg-mask" />
       </div>
-      <DiagnosticsSubs />
-      <SuppliersSubs />
       <BetaTester />
+
+      <SuppliersSubs />
     </div>
   );
 }
