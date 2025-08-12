@@ -76,7 +76,7 @@ const Header = ({ payslip, branch }) => {
       </tr>
       <tr>
         <th colSpan={2} className="text-center font-weight-bold py-0">
-          {dateRange}, 2025
+          {dateRange}, {new Date(payslip?.datePaid).getFullYear()}
         </th>
       </tr>
       <tr>

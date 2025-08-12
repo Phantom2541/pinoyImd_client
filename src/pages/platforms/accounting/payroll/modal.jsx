@@ -41,7 +41,7 @@ const _form = {
 
 export default function Modal() {
   const { token, auth } = useSelector(({ auth }) => auth),
-    { selected, showModal, willCreate } = useSelector(
+    { selected, showModal, willCreate, year, month } = useSelector(
       ({ personnels }) => personnels
     ),
     { formSubmitted, isSuccess } = useSelector(({ payments }) => payments),
@@ -122,6 +122,18 @@ export default function Modal() {
     }
   }, [form, selected, handleCalc]);
 
+  const formattedCreatedAt = () => {
+    const { isAquincena = false } = selected;
+    const lastDay = new Date(year, month, 0).getDate();
+
+    const offset =
+      payCycle === 1 ? { day: isAquincena ? 15 : lastDay } : { day: lastDay };
+
+    const date = new Date(year, month - 1 + (offset.month || 0), offset.day);
+    date.setHours(0, 0, 0, 0); // Set oras to 00:00:00
+    return date;
+  };
+
   const handleSubmit = () => {
     const { isAquincena = false } = selected;
     const breakdown = {
@@ -146,8 +158,6 @@ export default function Modal() {
       net: totEarn - totDeduc,
       isAquincena,
     };
-
-    //console.log(selected);
     dispatch(
       SAVE({
         data: {
@@ -155,6 +165,7 @@ export default function Modal() {
           particular: selected?.user?._id,
           userId: auth._id,
           branchId: selected?.branch._id,
+          createdAt: formattedCreatedAt(),
           fsId: 13,
         },
         token,

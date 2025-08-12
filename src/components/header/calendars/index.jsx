@@ -1,8 +1,7 @@
-import React from "react";
 import { MDBBtn, MDBIcon, MDBBtnGroup } from "mdbreact";
 import { Calendar as calendar } from "../../../services/fakeDb";
 
-const CalendarPicker = ({ month, year, moved, reset }) => {
+const CalendarPicker = ({ month, year, moved, reset, isLoading = false }) => {
   const today = new Date();
   const currentMonth = today.getMonth() + 1; // 0-based index (Jan = 0)
   const currentYear = today.getFullYear();
@@ -15,7 +14,7 @@ const CalendarPicker = ({ month, year, moved, reset }) => {
       <MDBBtnGroup style={{ height: "2.3rem" }}>
         <MDBBtn
           onClick={reset}
-          disabled={isActiveMonth}
+          disabled={isActiveMonth || isLoading}
           size="sm"
           className="p-2 m-0 z-depth-0"
           color="white"
@@ -25,6 +24,7 @@ const CalendarPicker = ({ month, year, moved, reset }) => {
         </MDBBtn>
         <MDBBtn
           onClick={() => moved("prev")}
+          disabled={isLoading}
           size="sm"
           className="p-2 m-0 z-depth-0"
           color="white"
@@ -40,14 +40,14 @@ const CalendarPicker = ({ month, year, moved, reset }) => {
             textAlign: "center",
             boxShadow: "inset 0 0 7px 1px rgba(0,0,0,0.2)",
           }}
-          className="d-flex align-items-center"
+          className="d-flex align-items-center "
         >
           {calendar.Months[month - 1]}&nbsp;
           {year}
         </span>
         <MDBBtn
           onClick={() => moved("next")}
-          disabled={isActiveMonth}
+          disabled={isActiveMonth || isLoading}
           size="sm"
           className="p-2 m-0 z-depth-0"
           color="white"
