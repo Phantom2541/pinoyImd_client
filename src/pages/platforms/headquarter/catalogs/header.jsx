@@ -14,7 +14,7 @@ export default function Header() {
       dispatch(
         CATALOG({
           token,
-          key: { companyId: activePlatform.company._id },
+          key: { companyId: activePlatform.branch.company._id },
         })
       );
     }
