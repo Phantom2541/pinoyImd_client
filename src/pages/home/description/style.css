@@ -49,3 +49,23 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 480px) {
+  .homePage-description-section {
+    width: 100%;
+  }
+
+  .homePage-description-title {
+    font-size: 1rem;
+  }
+  .homePage-description-semi-title {
+    font-size: 1rem;
+    margin-top: -10px;
+  }
+  .homePage-description {
+    display: none;
+  }
+  .homePage-description-image {
+    width: 100%;
+  }
+}

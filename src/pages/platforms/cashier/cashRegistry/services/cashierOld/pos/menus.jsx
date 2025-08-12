@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MDBAnimation, MDBBtn, MDBCol, MDBIcon } from "mdbreact";
+import { MDBAnimation, MDBBadge, MDBBtn, MDBCol, MDBIcon } from "mdbreact";
 import DataTable from "../../../../../../../components/dataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
@@ -14,7 +14,7 @@ import {
   // handlePagination,
 } from "../../../../../../../services/utilities";
 // import Search from "../../../../../../services/utilities/search";
-import { Categories } from "../../../../../../../services/fakeDb";
+import { Categories, Services } from "../../../../../../../services/fakeDb";
 
 export default function CashierMenu({ handlePicker }) {
   const [menus, setMenus] = useState([]),
@@ -90,6 +90,9 @@ export default function CashierMenu({ handlePicker }) {
               _text: "Name",
             },
             {
+              _text: "Services",
+            },
+            {
               _text: "SRP",
             },
             {},
@@ -106,6 +109,21 @@ export default function CashierMenu({ handlePicker }) {
                   {data && <p className="mb-0">{abbreviation.toUpperCase()}</p>}
                 </>
               ),
+            },
+            {
+              _isEmpty: true,
+              _key: "packages",
+              _format: (packages) => {
+                return (
+                  <>
+                    {Services.whereIn(packages)?.map((pack) => (
+                      <MDBBadge key={pack} className="mr-1" title={pack?.name}>
+                        {pack?.abbreviation}
+                      </MDBBadge>
+                    ))}
+                  </>
+                );
+              },
             },
             {
               _key: abbr,

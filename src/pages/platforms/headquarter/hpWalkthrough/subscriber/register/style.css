@@ -160,7 +160,7 @@
 
 @media (max-width: 1280px) {
   .subscriber-flip-container {
-    width: 95%;
+    width: 85% !important;
   }
 
   .subscriber-slide-content {

@@ -27,6 +27,8 @@ const Body = () => {
       activePage,
       isLoading,
       totalPages,
+      month,
+      year,
     } = useSelector(({ personnels }) => personnels),
     [personnels, setPersonnels] = useState([]),
     { addToast } = useToasts(),
@@ -167,19 +169,19 @@ const Body = () => {
     const date = new Date(createdAt);
     return date.getDate();
   };
-  const canBePaidThisQuarter = (createdAt) => {
-    const date = new Date(createdAt);
-    const now = new Date();
-
-    const createdMonth = date.getMonth(); // 0–11
-    const nowMonth = now.getMonth();
-
-    const createdQuarter = Math.floor(createdMonth / 3) + 1;
-    const currentQuarter = Math.floor(nowMonth / 3) + 1;
-
-    const sameYear = date.getFullYear() === now.getFullYear();
-
-    return createdQuarter === currentQuarter && sameYear;
+  const canBePaidThisQuarter = (payrolls) => {
+    return payrolls?.some(({ createdAt }) => {
+      const date = new Date(createdAt);
+      //this is paid quarter
+      const createdQuarter = Math.floor(date.getMonth() / 3) + 1;
+      //current quarter base on the current month in header
+      const currentQuarter = Math.floor((month - 1) / 3) + 1;
+      // Must be same quarter and same year
+      if (createdQuarter !== currentQuarter || date.getFullYear() !== year) {
+        return false;
+      }
+      return true;
+    });
   };
 
   return (
@@ -211,19 +213,18 @@ const Body = () => {
 
             const akinsenas = payroll?.find(
               ({ createdAt, breakdown }) =>
-                getMonth(createdAt) === getMonth(new Date()) &&
-                breakdown?.isAquincena
+                getMonth(createdAt) === month - 1 && breakdown?.isAquincena
             );
             const katapusan = payroll?.find(({ createdAt, breakdown }) => {
               const day = getDay(createdAt);
               const pc = Number(contract?.pc);
-              const isSameMonth = getMonth(createdAt) === getMonth(new Date());
+              const isSameMonth = getMonth(createdAt) === month - 1;
 
               return pc === 1
                 ? day > 15 && !breakdown?.isAquincena && isSameMonth
                 : pc === 2
                 ? day <= 31 && isSameMonth
-                : canBePaidThisQuarter(createdAt);
+                : canBePaidThisQuarter(payroll);
             });
 
             return (
@@ -242,11 +243,9 @@ const Body = () => {
                   <p className="fw-bold mb-1 text-capitalize">
                     monthly:{currency.format(rate?.monthly)}
                   </p>
-                  {Number(contract?.pc) === 1 && (
-                    <p className="text-muted mb-0">
-                      Daily: {currency.format(rate?.daily)}
-                    </p>
-                  )}
+                  <p className="text-muted mb-0">
+                    Daily: {currency.format(rate?.daily)}
+                  </p>
                 </td>
                 <td>
                   <p className="fw-bold mb-1 text-capitalize">

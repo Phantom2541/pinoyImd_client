@@ -116,6 +116,7 @@ export default function ContactUs() {
             <form onSubmit={handleSubmit}>
               <MDBInput
                 icon="user"
+                size={window.innerWidth <= 480 ? "sm" : "md"}
                 label="Your name"
                 labelClass="white-text"
                 className="text-white"
@@ -127,6 +128,7 @@ export default function ContactUs() {
               />
               <MDBInput
                 icon="envelope"
+                size={window.innerWidth <= 480 ? "sm" : "md"}
                 label="Your email"
                 labelClass="white-text"
                 className="text-white"
@@ -139,6 +141,7 @@ export default function ContactUs() {
 
               <MDBInput
                 icon="tag"
+                size={window.innerWidth <= 480 ? "sm" : "md"}
                 label="Subject"
                 labelClass="white-text"
                 className="text-white"
@@ -151,6 +154,7 @@ export default function ContactUs() {
 
               <MDBInput
                 icon="pencil-alt"
+                size={window.innerWidth <= 480 ? "sm" : "md"}
                 label="Your message"
                 labelClass="white-text"
                 className="text-white"
@@ -163,7 +167,12 @@ export default function ContactUs() {
               />
 
               <div className="text-right">
-                <MDBBtn disabled={alreadySent} type="submit" color="primary">
+                <MDBBtn
+                  disabled={alreadySent}
+                  size={window.innerWidth <= 480 ? "sm" : "md"}
+                  type="submit"
+                  color="primary"
+                >
                   {alreadySent ? "E-mail Sent" : "Send"}
                 </MDBBtn>
               </div>

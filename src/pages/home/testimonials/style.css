@@ -142,3 +142,44 @@
     width: 100%;
   }
 }
+
+@media (max-width: 480px) {
+  .homePage-testimonials-title {
+    font-size: 1.25rem;
+    margin-bottom: 5px !important;
+  }
+
+  .homePage-testimonials-text h1 {
+    font-size: 1.25rem;
+  }
+
+  .homePage-testimonials-text p {
+    font-size: 0.75rem;
+    margin-top: 10px;
+  }
+  .homPage-testimonials-container {
+    width: 100%;
+  }
+  .homePage-testimonials-sliderContainer-responsive {
+    flex-direction: column;
+  }
+  .homePage-testiminials-sliderContainer.hide {
+    display: none;
+  }
+
+  .homePage-testiminials-sliderCard img {
+    width: 50px;
+  }
+
+  .homePage-testiminials-sliderCard .homePage-testimonials-review {
+    gap: 2px;
+  }
+
+  .homePage-testiminials-sliderCard .homePage-testimonials-review-text,
+  .homePage-testiminials-sliderCard .homePage-testimonials-review-name {
+    font-size: 0.875rem;
+  }
+  .homePage-testimonials-star-rating {
+    font-size: 15px;
+  }
+}

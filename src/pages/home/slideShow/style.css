@@ -22,8 +22,8 @@
 
 .subscriber-text-container-style {
   flex: 1;
-  padding: "20px";
-  text-align: "left";
+  padding: 20px;
+  text-align: left;
 }
 
 .subscriber-text-container-style h1 {
@@ -248,7 +248,15 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 480px) {
+  .subscriber-register-section {
+    width: 100%;
+  }
+
+  .subscriber-flip-container {
+    width: 100%;
+  }
+
   .subscriber-slide-content {
     height: 100%;
   }

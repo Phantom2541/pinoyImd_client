@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBBtn, MDBIcon, MDBTable } from "mdbreact";
 import {
   computeGD,
@@ -6,7 +5,7 @@ import {
 } from "../../../../../../../../services/utilities";
 import Swal from "sweetalert2";
 
-const Computations = ({ gross, discount }) => {
+const Computations = ({ gross, discount = 0, amountPaid }) => {
   return (
     <MDBTable className="text-center mt-2 border" responsive hover>
       <thead>
@@ -21,6 +20,16 @@ const Computations = ({ gross, discount }) => {
           <td className="fw-bold text-left py-1">Gross Amount</td>
           <td className="fw-bold text-right py-1">{currency.format(gross)}</td>
         </tr>
+        {amountPaid > 0 && (
+          <tr>
+            <td className="fw-bold text-left py-1">
+              Paid Amount (Already Charged)
+            </td>
+            <td className="fw-bold text-right py-1">
+              {currency.format(amountPaid)}
+            </td>
+          </tr>
+        )}
         <tr>
           <td className="fw-bold text-left py-1">Discount</td>
           <td className="fw-bold text-right py-1">
@@ -30,7 +39,7 @@ const Computations = ({ gross, discount }) => {
         <tr>
           <td className="fw-bold text-left py-1">Net Amount</td>
           <td className="fw-bold text-right py-1">
-            {currency.format(gross - discount)}
+            {currency.format(gross - (discount + amountPaid))}
           </td>
         </tr>
       </tbody>
@@ -39,6 +48,8 @@ const Computations = ({ gross, discount }) => {
 };
 
 export default function PatientCart({
+  overrideDiscount,
+  amountPaid,
   gross,
   discount,
   didCheckout,
@@ -49,6 +60,20 @@ export default function PatientCart({
   privilegeIndex,
   dealId = "",
 }) {
+  const handleRemove = (menu, index) => {
+    const newCart = cart.map((item) =>
+      item.overrideBy === menu._id
+        ? (() => {
+            const { overrideBy, ...rest } = item;
+            return rest;
+          })()
+        : item
+    );
+
+    newCart.splice(index, 1);
+    setCart(newCart);
+  };
+
   return (
     <>
       <div style={{ height: "300px", overflow: "auto" }}>
@@ -63,7 +88,13 @@ export default function PatientCart({
           </thead>
           <tbody>
             {cart?.map((menu, index) => {
-              const { description, abbreviation, _id, isNew = true } = menu;
+              const {
+                description,
+                abbreviation,
+                _id,
+                isNew = true,
+                overrideBy = "",
+              } = menu;
 
               const {
                 gross = 0,
@@ -71,18 +102,39 @@ export default function PatientCart({
                 title = "",
                 color = "",
               } = computeGD(menu, categoryIndex, privilegeIndex);
-
+              const override =
+                overrideBy &&
+                cart.find(({ referenceId }) => referenceId === overrideBy);
               return (
-                <tr key={`cart-${index}`} style={{ cursor: "default" }}>
+                <tr
+                  key={`cart-${index}-${_id}`}
+                  style={{
+                    cursor: "default",
+                    ...(overrideBy && {
+                      textDecoration: "line-through",
+                      textDecorationThickness: "2px",
+                      textDecorationColor: "red",
+                    }),
+                  }}
+                  title={
+                    overrideBy
+                      ? `Override by ${
+                          override?.description || override?.abbreviation
+                        }`
+                      : ""
+                  }
+                >
                   <td className="fw-bold text-left py-1">
                     {String(description || abbreviation).toUpperCase()}
                   </td>
                   <td className="py-1" title="Suggested Retail Price">
-                    {currency.format(gross)}
+                    {currency.format(
+                      isNew ? gross : menu.up + menu?.discount || 0
+                    )}
                   </td>
                   <td className="py-1">
                     <span title={title} className={`text-${color}`}>
-                      {currency.format(up)}
+                      {currency.format(isNew ? up : menu.up)}
                     </span>
                   </td>
                   <td className="py-1">
@@ -91,9 +143,7 @@ export default function PatientCart({
                     )}
                     {!didCheckout && isNew && (
                       <MDBBtn
-                        onClick={() =>
-                          setCart((prev) => prev.filter((p) => p._id !== _id))
-                        }
+                        onClick={() => handleRemove(menu, index)}
                         color="danger"
                         size="sm"
                         className="py-1 px-2 m-0"
@@ -109,7 +159,12 @@ export default function PatientCart({
         </MDBTable>
       </div>
 
-      <Computations gross={gross} discount={discount} />
+      <Computations
+        gross={gross}
+        discount={discount}
+        amountPaid={amountPaid}
+        overrideDiscount={overrideDiscount}
+      />
 
       <MDBBtn
         onClick={() => {

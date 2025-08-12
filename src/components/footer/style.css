@@ -16,7 +16,8 @@
   background-color: #0d4dbc;
   text-align: center;
   padding: 20px 80px;
-  border-top: 2px solid #0b429f;
+  border-top: 2px solid;
+  border-color: #0b429f;
 }
 
 .footer-copyright span {
@@ -45,5 +46,21 @@
   .footer-copyright {
     padding: 20px 20px;
     gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-copyright {
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px 0;
+  }
+
+  .footer-copyright span {
+    font-size: 0.8rem !important;
+  }
+
+  .footer-socialAccounts {
+    font-size: 0.9rem;
   }
 }

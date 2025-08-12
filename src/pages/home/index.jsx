@@ -1,20 +1,5 @@
 import React from "react";
-import {
-  MDBContainer,
-  // MDBNavbar,
-  // MDBNavbarBrand,
-  // MDBNavbarToggler,
-  // MDBCollapse,
-  // MDBNavbarNav,
-  // MDBNavItem,
-  MDBRow,
-  MDBCol,
-  MDBMask,
-  MDBIcon,
-  MDBView,
-  MDBFooter,
-  // MDBNavLink,
-} from "mdbreact";
+import { MDBContainer, MDBMask, MDBView, MDBFooter } from "mdbreact";
 import "./style.css";
 import Copyrights from "../../components/footer";
 import ContactUs from "./contact";
@@ -24,10 +9,10 @@ import Pioneers from "./pioneers";
 import LOGO from "./../../assets/iMD.png";
 import Testimonials from "./testimonials";
 import AboutUs from "./aboutUs";
-import Affliated from "./affliated";
 import Gallery from "./gallery";
 import SlideShow from "./slideShow";
 import { Helmet } from "react-helmet";
+import Affiliates from "./affiliates";
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -93,7 +78,7 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <div id="landing">
+      <div id="landing" className="overflow-hidden">
         <Helmet>
           <title>
             Pinoy iMD - Filipino EHR, HIMS & Medical Diagnostics Software
@@ -291,8 +276,9 @@ export default class Home extends React.Component {
           </div>
           <hr className="mb-5" />
           <div id="about">
-            <Affliated />
+            <Affiliates />
           </div>
+
           <hr className="mb-5" />
           <div id="testimonials">
             <Testimonials />
@@ -312,7 +298,7 @@ export default class Home extends React.Component {
           </div>
         </MDBContainer>
         <MDBFooter className="mt-5 text-center text-md-left">
-          <MDBContainer>
+          {/* <MDBContainer>
             <MDBRow>
               <MDBCol md="12">
                 <ul className="list-unstyled d-flex justify-content-center mb-0 pb-0 pt-2 list-inline">
@@ -329,7 +315,7 @@ export default class Home extends React.Component {
                       className="white-text p-2 m-2"
                     />
                   </li>
-                  {/* <li
+                  <li
                     className="list-inline-item cursor-pointer"
                     onClick={() =>
                       window.open(
@@ -344,12 +330,12 @@ export default class Home extends React.Component {
                       size="2x"
                       className="white-text p-2 m-2"
                     />
-                  </li> */}
+                  </li>
                 </ul>
               </MDBCol>
             </MDBRow>
-          </MDBContainer>
-          <Copyrights />
+          </MDBContainer> */}
+          <Copyrights backgroundColor="#00796b" borderColor="#00796b " />
         </MDBFooter>
       </div>
     );

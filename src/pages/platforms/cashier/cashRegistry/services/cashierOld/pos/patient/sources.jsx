@@ -12,7 +12,7 @@ export default function PatientSources({ didCheckout }) {
         name="source"
         className="form-control"
         value={`Source: ${
-          selected?.source ? selected?.source?.displayname : "-"
+          selected?.source ? selected?.source?.displayname || "-" : "-"
         }`}
       />
       {/* <MDBSelect className="colorful-select dropdown-primary mt-0 hidden-md-down">
