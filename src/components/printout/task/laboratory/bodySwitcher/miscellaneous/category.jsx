@@ -1,7 +1,7 @@
 import { MDBCol } from "mdbreact";
 
 export default function Category({ task }) {
-  const { specimen } = task;
+  const { specimen = "" } = task;
   return (
     <MDBCol
       size="12"

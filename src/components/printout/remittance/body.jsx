@@ -17,22 +17,22 @@ const Body = ({ remittance = {} }) => {
       </thead>
       <tbody>
         {Object.entries(coins).map(([denomination, quantity], index) => {
-          tableRaw = index++;
           const amount = denomination * quantity;
           return (
             <tr key={`coin-${denomination}`}>
-              <td>{tableRaw + 1}</td>
+              <td>{index + 1}</td>
               <td className="text-center">{currency.format(denomination)}</td>
               <td className="text-center">{quantity}</td>
               <td className="text-center">{currency.format(amount)}</td>
             </tr>
           );
         })}
+
         {Object.entries(bills).map(([denomination, quantity], index) => {
           const amount = denomination * quantity;
           return (
             <tr key={`bill-${denomination}`}>
-              <td>{index + 2 + tableRaw}.</td>
+              <td>{index + 1 + Object.entries(coins).length}</td>
               <td className="text-center">{currency.format(denomination)}</td>
               <td className="text-center">{quantity}</td>
               <td className="text-center">{currency.format(amount)}</td>

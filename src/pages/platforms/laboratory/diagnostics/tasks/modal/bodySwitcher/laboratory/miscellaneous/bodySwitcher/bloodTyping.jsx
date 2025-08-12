@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBRow, MDBCol } from "mdbreact";
 
 const colors = {
@@ -11,7 +10,6 @@ const types = ["A", "B", "O", "AB"];
 
 export default function BloodTyping({ task, setTask }) {
   const { results = { bt: null, rh: null } } = task;
-
   const handleSelectChange = (name, value) => {
     setTask({ ...task, results: { ...results, [name]: value } });
   };

@@ -4,7 +4,6 @@
     height: 100%;
     margin: 0 !important;
     padding: 0 !important;
-    width: 100% !important;
   }
   .remittance-banner img {
     height: 100px;
@@ -14,11 +13,12 @@
     border-bottom: 1px solid #ccc;
   }
   .remittance-body {
-    margin-top: 10px;
+    margin-top: -25px !important;
     padding: 15px;
   }
   .remittance-header {
-    padding: 14px;
+    margin-top: 10px;
+    margin-bottom: 20px !important;
   }
   @page {
     size: legal;
