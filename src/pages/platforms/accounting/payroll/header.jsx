@@ -13,7 +13,7 @@ import CalendarPicker from "../../../../components/header/calendars";
 
 const Header = () => {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
-    { month, year } = useSelector(({ personnels }) => personnels),
+    { month, year, isLoading } = useSelector(({ personnels }) => personnels),
     dispatch = useDispatch();
   useEffect(() => {
     if (token && activePlatform?.branchId) {
@@ -53,15 +53,8 @@ const Header = () => {
             year={year}
             moved={(next) => dispatch(SetMONTH(next))}
             reset={() => dispatch(ResetDATE())}
+            isLoading={isLoading}
           />
-          {/* <Select
-            className="m-0 p-0 calendar mr-4"
-            value={component}
-            onChange={(value) => handleComponent(value)}
-            inputClassName="m-0 p-0"
-            preValue={component}
-            collections={Templates.getComponents("LAB")}
-          /> */}
         </div>
       </div>
     </MDBView>
