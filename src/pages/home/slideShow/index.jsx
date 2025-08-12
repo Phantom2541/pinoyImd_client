@@ -48,6 +48,9 @@ export default function SlideShow({ handleFlip, flipped }) {
                 showThumbs={false}
                 showStatus={false}
                 showArrows={false}
+                emulateTouch={true}
+                swipeScrollTolerance={50}
+                preventMovementUntilSwipeScrollTolerance={true}
               >
                 {slides.map((slide, i) => (
                   <div className="subscriber-slide-style" key={i}>
