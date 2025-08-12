@@ -26,7 +26,7 @@ const Body = ({ filteredHMOs }) => {
       {/* HMO Cards */}
       <div
         className="d-flex justify-content-center align-items-center flex-wrap"
-        style={{ gap: "10px", minHeight: "300px" }}
+        style={{ gap: "20px", minHeight: "300px" }}
       >
         {paginatedHMOs.map(({ code, name }) => (
           <div className="template6-card" key={code}>

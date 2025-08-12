@@ -121,7 +121,8 @@ export default function Login({ show, toggle = null, isEMR = false }) {
               width: "100px",
               height: "100px",
               objectFit: "contain",
-              borderRadius: image === Logo ? "50%" : "0px",
+              boxShadow: "none",
+              filter: "drop-shadow(0 0 8px rgba(0, 0, 0, 0.8))",
             }}
             onError={(e) => (e.target.src = Logo)}
             alt={`avatar-${auth._id}`}
