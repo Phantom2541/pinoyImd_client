@@ -12,7 +12,8 @@ export default function Header() {
         ? { companyId: activePlatform.company._id }
         : { branchId: activePlatform.branchId };
 
-      dispatch(CATALOG({ token, key: keyPayload })).unwrap()
+      dispatch(CATALOG({ token, key: keyPayload }))
+        .unwrap()
         .then((res) => {
           console.log("CATALOG API response:", res);
         })
