@@ -1,5 +1,11 @@
 import React from "react";
-import { MDBContainer, MDBMask, MDBView, MDBFooter } from "mdbreact";
+import {
+  MDBContainer,
+  MDBMask,
+  MDBView,
+  MDBFooter,
+  MDBAnimation,
+} from "mdbreact";
 import "./style.css";
 import Copyrights from "../../components/footer";
 import ContactUs from "./contact";
@@ -98,7 +104,12 @@ export default class Home extends React.Component {
           />
         </Helmet>
 
-        <div className="homePage-topbar">
+        <MDBAnimation
+          reveal
+          type="fadeInDown"
+          duration="1s"
+          className="homePage-topbar"
+        >
           <div
             className={`homePage-topbar-animation ${
               this.state.scrolled ? "scrolled" : ""
@@ -242,7 +253,7 @@ export default class Home extends React.Component {
               </div>
             </div>
           </div>
-        </div>
+        </MDBAnimation>
         <div
           className={`homePage-overlay ${this.state.menuOpen ? "active" : ""}`}
           onClick={() => {

@@ -42,20 +42,42 @@
 
 .affiliates-logo-wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 .affiliates-logo {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
-  filter: drop-shadow(0 0 7px rgba(0, 0, 0, 0.3));
   transition: transform 0.3s ease;
 }
 
 .affiliates-logo:hover {
   transform: scale(1.1);
+}
+
+.affiliates-logo-name {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+}
+
+.affiliates-logo-address {
+  font-size: 1.1rem;
+  line-height: 1rem;
+
+  font-weight: 500;
+  color: white;
+  text-transform: capitalize;
+}
+
+.affiliates-logo-category {
+  font-size: 1rem;
+  font-weight: 400;
+  color: white;
 }
 
 @media (max-width: 480px) {
@@ -66,5 +88,18 @@
   .affiliates-logo {
     width: 70px;
     height: 70px;
+  }
+  .affiliates-logo-name {
+    font-size: 0.95rem;
+  }
+  .affiliates-logo-address {
+    font-size: 0.65rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+  .affiliates-logo-category {
+    font-size: 0.65rem;
   }
 }

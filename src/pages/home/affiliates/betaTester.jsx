@@ -4,8 +4,10 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import logo from "./../../../assets/iMD.png";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
-import { Cloudinary } from "../../../services/utilities";
+import { Cloudinary, fullAddress } from "../../../services/utilities";
 import { useSelector } from "react-redux";
+import BgRemover from "../../../components/bgRemover";
+import { Items } from "pdfjs-dist/build/pdf.worker";
 
 export default function BetaTester() {
   const { collections } = useSelector(({ companies }) => companies);
@@ -16,8 +18,6 @@ export default function BetaTester() {
     const companyDate = new Date(company.createdAt); // change to your actual date property
     return companyDate < cutoffDate;
   });
-
-  const logos = Array(10).fill(logo);
 
   return (
     <div className="affiliates-section">
@@ -37,13 +37,19 @@ export default function BetaTester() {
         spaceBetween={0}
         slidesPerView={7}
         breakpoints={{
-          0: { slidesPerView: 3, spaceBetween: 10 },
-          576: { slidesPerView: 3, spaceBetween: 10 },
+          0: { slidesPerView: 2, spaceBetween: 15 },
+          576: { slidesPerView: 2, spaceBetween: 15 },
           1200: { slidesPerView: 4, spaceBetween: 25 },
           1600: { slidesPerView: 6, spaceBetween: 30 },
         }}
       >
         {earlyCompanies.map((item, index) => {
+          const { branches = [] } = item;
+
+          // Get first main branch (or undefined)
+          const mainBranch = branches.find((branch) => branch.isMain === true);
+          const address = mainBranch?.address || {};
+
           const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
             item.name
           )}/profile/logo`;
@@ -51,14 +57,17 @@ export default function BetaTester() {
           return (
             <SwiperSlide key={item._id || index}>
               <div className="affiliates-logo-wrapper">
-                <img
+                <BgRemover
                   className="affiliates-logo"
                   src={logoUrl}
                   alt={item.name}
-                  onError={(e) => {
-                    e.target.src = fallbackLogo; // use fallback if not found
-                  }}
+                  fallback={fallbackLogo}
                 />
+                <span className="affiliates-logo-name">{item.name}</span>
+                <span className="affiliates-logo-address">{address.city}</span>
+                <span className="affiliates-logo-category">
+                  {item.category}
+                </span>
               </div>
             </SwiperSlide>
           );

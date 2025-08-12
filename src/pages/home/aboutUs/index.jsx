@@ -1,6 +1,7 @@
 import React from "react";
 import "./style.css";
 import LIS from "./../../../assets/LIS.jpg";
+import { MDBAnimation } from "mdbreact";
 
 const collections = [
   {
@@ -62,12 +63,20 @@ const collections = [
 export default function AboutUs() {
   return (
     <section className="homePage-aboutUs-section">
-      <h1 className="text-center homePage-aboutUs-title">
-        Capabilities of the system
-      </h1>
+      <MDBAnimation reveal type="fadeInDown" duration="1.5s" delay="500ms">
+        <h1 className="text-center homePage-aboutUs-title">
+          Capabilities of the system
+        </h1>
+      </MDBAnimation>
       <div className="homePage-aboutUs-container">
         {collections.map((item, index) => (
-          <div className="homePage-AboutUs-card" key={index}>
+          <MDBAnimation
+            reveal
+            type="fadeInUp"
+            className="homePage-AboutUs-card"
+            key={index}
+            delay={`${index * 0.2}s`}
+          >
             <div className="homePage-AboutUs-card-image">
               <img src={item.image} alt={item.title} />
             </div>
@@ -77,7 +86,7 @@ export default function AboutUs() {
                 {item.description}
               </div>
             </div>
-          </div>
+          </MDBAnimation>
         ))}
       </div>
     </section>

@@ -5,6 +5,7 @@ import "swiper/css";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
 import { useSelector } from "react-redux";
 import { Cloudinary } from "../../../services/utilities";
+import BgRemover from "../../../components/bgRemover";
 
 export default function DiagnosticsSubs() {
   const { collections } = useSelector(({ companies }) => companies);
@@ -46,13 +47,11 @@ export default function DiagnosticsSubs() {
           return (
             <SwiperSlide key={item._id || index}>
               <div className="affiliates-logo-wrapper">
-                <img
+                <BgRemover
                   className="affiliates-logo"
                   src={logoUrl}
                   alt={item.name}
-                  onError={(e) => {
-                    e.target.src = fallbackLogo; // use fallback if not found
-                  }}
+                  fallback={fallbackLogo}
                 />
               </div>
             </SwiperSlide>
