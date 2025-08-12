@@ -9,6 +9,7 @@ const removeEmptyValues = (obj) => {
     Object.entries(obj).filter(([_, value]) => {
       if (value === undefined) return false;
       if (Array.isArray(value) && value.length === 0) return false;
+      if (value instanceof Date) return true; // ✅ keep dates
       if (
         typeof value === "object" &&
         value !== null &&

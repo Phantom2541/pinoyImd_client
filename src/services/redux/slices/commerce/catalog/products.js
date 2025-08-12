@@ -15,126 +15,97 @@ const initialState = {
   message: "",
 };
 
-/**
- * Asynchronous thunk action to browse items.
- *
- * @function BROWSE
- * @param {Object} payload - The payload object containing token and key.
- * @param {string} payload.token - The authentication token.
- * @param {string} payload.key - The key for browsing.
- * @param {Object} thunkAPI - The thunk API object.
- * @returns {Promise<Object>} The response data or an error message.
- */
-export const BROWSE = createAsyncThunk(`${url}`, ({ token, key }, thunkAPI) => {
-  try {
-    return axioKit.universal(`${url}/browse`, token, key);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
-export const CATALOG = createAsyncThunk(
-  `${url}`,
-  ({ token, key }, thunkAPI) => {
+// Thunks
+export const BROWSE = createAsyncThunk(
+  "products/browse",
+  async ({ token, key }, thunkAPI) => {
     try {
-      return axioKit.universal(`${url}/catalog`, token, key);
+      return await axioKit.universal(`${url}/browse`, token, key);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
+export const CATALOG = createAsyncThunk(
+  "products/catalog",
+  async ({ token, key }, thunkAPI) => {
+    try {
+      return await axioKit.universal(`${url}/catalog`, token, key);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const SAVE = createAsyncThunk(
-  `${url}/save`,
-  ({ data, token }, thunkAPI) => {
+  "products/save",
+  async ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(url, data, token);
+      return await axioKit.save(url, data, token);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const GENERATE = createAsyncThunk(
-  `${url}/generate`,
-  ({ data, token }, thunkAPI) => {
+  "products/generate",
+  async ({ data, token }, thunkAPI) => {
     try {
-      return axioKit.save(url, data, token, "generate");
+      return await axioKit.save(url, data, token, "generate");
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-
+        error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
-  try {
-    return axioKit.update(url, form.data, form.token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+export const UPDATE = createAsyncThunk(
+  "products/update",
+  async (form, thunkAPI) => {
+    try {
+      return await axioKit.update(url, form.data, form.token);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const reduxSlice = createSlice({
-  name: url,
+const productsSlice = createSlice({
+  name: "products",
   initialState,
   reducers: {
-    SetFILTERED: (state, { payload }) => {
-      // Always create a new array before filtering
-      // const collectionsCopy = state.collections.map((item) =>
-      //   JSON.parse(JSON.stringify(item))
-      // );
-      const filtered = payload;
-      state.filtered = filtered;
-
-      // Dispatch the action instead of calling it as a function
-      state.totalPages = Math.ceil(filtered.length / state.maxPage);
-
-      // state.isSuccess = true;
+    SetFILTERED: (state, action) => {
+      state.filtered = action.payload;
+      state.totalPages = Math.ceil(state.filtered.length / state.maxPage);
     },
-    SetCOLLECTIONS: (state, { payload }) => {
-      state.collections = payload;
+    SetCOLLECTIONS: (state, action) => {
+      state.collections = action.payload;
     },
-    SetMaxPage: (state, { payload }) => {
-      state.maxPage = payload;
+    SetMaxPage: (state, action) => {
+      state.maxPage = action.payload;
       state.activePage = 1;
     },
-    SetActivePAGE: (state, { payload }) => {
-      state.activePage = payload;
+    SetActivePAGE: (state, action) => {
+      state.activePage = action.payload;
     },
     RESET: (state) => {
       state.isSuccess = false;
       state.message = "";
+      state.collections = [];
+      state.filtered = [];
+      state.isLoading = false;
+      state.formSubmitted = false;
     },
   },
   extraReducers: (builder) => {
@@ -145,36 +116,39 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(BROWSE.fulfilled, (state, action) => {
-        const { payload, success } = action.payload;
+        const payload = action.payload?.payload || [];
+        const success = action.payload?.success || false;
 
-        state.collections = state.filtered = payload;
+        state.collections = payload;
+        state.filtered = payload;
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
         state.isLoading = false;
       })
       .addCase(BROWSE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+        state.message = action.payload || action.error.message;
         state.isLoading = false;
       })
+
       .addCase(CATALOG.pending, (state) => {
         state.isLoading = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(CATALOG.fulfilled, (state, action) => {
-        const { payload, success } = action.payload;
+        const payload = action.payload?.payload || [];
+        const success = action.payload?.success || false;
 
-        state.collections = state.filtered = payload;
+        state.collections = payload;
+        state.filtered = payload;
         state.totalPages = Math.ceil(payload.length / state.maxPage) || 1;
         state.activePage = Math.min(state.activePage, state.totalPages);
         state.isSuccess = success;
         state.isLoading = false;
       })
       .addCase(CATALOG.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+        state.message = action.payload || action.error.message;
         state.isLoading = false;
       })
 
@@ -184,16 +158,20 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(SAVE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
-        state.collections.unshift(payload);
-        state.filtered.unshift(payload);
-        state.isSuccess = true;
+        const success = action.payload?.success || false;
+        const payload = action.payload?.payload;
+
+        if (payload) {
+          state.collections.unshift(payload);
+          state.filtered.unshift(payload);
+        }
+
+        state.message = success ? "Saved successfully." : "";
+        state.isSuccess = success;
         state.formSubmitted = false;
       })
       .addCase(SAVE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+        state.message = action.payload || action.error.message;
         state.formSubmitted = false;
       })
 
@@ -203,15 +181,17 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(GENERATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        state.message = success;
+        const success = action.payload?.success || false;
+        const payload = action.payload?.payload || [];
+
+        state.message = success ? "Generated successfully." : "";
         state.collections = payload;
-        state.isSuccess = true;
+        state.filtered = payload;
+        state.isSuccess = success;
         state.isLoading = false;
       })
       .addCase(GENERATE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+        state.message = action.payload || action.error.message;
         state.isLoading = false;
       })
 
@@ -221,29 +201,31 @@ export const reduxSlice = createSlice({
         state.message = "";
       })
       .addCase(UPDATE.fulfilled, (state, action) => {
-        const { success, payload } = action.payload;
-        const updateCollections = (collections) => {
-          const index = collections.findIndex(
-            (item) => item._id === payload._id
-          );
+        const success = action.payload?.success || false;
+        const payload = action.payload?.payload;
 
-          collections[index] = payload;
-        };
-        updateCollections(state.collections);
-        updateCollections(state.filtered);
-        state.message = success;
-        state.isSuccess = true;
+        if (payload) {
+          // update in collections
+          const idx = state.collections.findIndex((item) => item._id === payload._id);
+          if (idx !== -1) state.collections[idx] = payload;
+
+          // update in filtered
+          const idx2 = state.filtered.findIndex((item) => item._id === payload._id);
+          if (idx2 !== -1) state.filtered[idx2] = payload;
+        }
+
+        state.message = success ? "Updated successfully." : "";
+        state.isSuccess = success;
         state.formSubmitted = false;
       })
       .addCase(UPDATE.rejected, (state, action) => {
-        const { error } = action;
-        state.message = error.message;
+        state.message = action.payload || action.error.message;
         state.formSubmitted = false;
       });
   },
 });
 
 export const { SetFILTERED, SetCOLLECTIONS, SetMaxPage, SetActivePAGE, RESET } =
-  reduxSlice.actions;
+  productsSlice.actions;
 
-export default reduxSlice.reducer;
+export default productsSlice.reducer;
