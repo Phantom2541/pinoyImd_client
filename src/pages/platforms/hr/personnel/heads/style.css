@@ -67,6 +67,34 @@
     "header footer"
     "footerRequiredPRC footerRequiredPRC";
   height: auto;
+  position: relative;
+}
+
+.signatories-card.requiredPRC::before,
+.signatories-card.requiredPRC::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 5px; /* adjust kung gusto mo rounded corners */
+  box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.6);
+  animation: requiredPRC 2s ease-out infinite;
+  pointer-events: none;
+}
+
+.signatories-card.requiredPRC::after {
+  animation-delay: 1s; /* 2nd wave starts halfway */
+}
+
+@keyframes requiredPRC {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(255, 0, 0, 0);
+  }
 }
 
 .signatories-card-header {
@@ -90,7 +118,7 @@
 .signatories-card-footer-requiredPRC {
   grid-area: footerRequiredPRC;
   font-size: 0.85rem;
-  color: #c62828;
+  color: red;
   text-align: center;
   padding-bottom: 10px;
 }

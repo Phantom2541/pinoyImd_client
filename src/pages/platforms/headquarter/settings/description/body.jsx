@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  MDBBtn,
-  MDBCard,
-  MDBCardBody,
-  MDBIcon,
-  MDBInput,
-  MDBView,
-  MDBRow,
-  MDBCol,
-} from "mdbreact";
+import { MDBBtn, MDBIcon, MDBInput } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import { ENDPOINT, FailedLogo } from "../../../../../services/utilities";
+import { ENDPOINT } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
   RESET,
-  SetCOMPANY,
   SetActivePlatform,
 } from "../../../../../services/redux/slices/assets/persons/auth";
 import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
@@ -187,15 +177,18 @@ export default function DescriptionBody() {
             type="textarea"
             label="Enter Company description here..."
             className="pb-0"
+            style={{ overflow: "auto" }}
+            rows={5}
             value={description}
             onChange={({ target }) => setDescription(target.value)}
             required
           />
           <MDBInput
             type="textarea"
+            style={{ overflow: "auto" }}
+            rows={1}
             label="Enter Company tagline here..."
             className="pb-0"
-            rows={tagline.split("\n").length || 1}
             value={tagline}
             onChange={({ target }) => setTagline(target.value)}
             required
@@ -204,9 +197,10 @@ export default function DescriptionBody() {
             <div className="w-100">
               <MDBInput
                 type="textarea"
+                style={{ overflow: "auto" }}
+                rows={3}
                 label="Enter mission here...."
                 className="pb-0"
-                rows={mission.split("\n").length || 1}
                 value={mission}
                 onChange={({ target }) => setMission(target.value)}
                 required
@@ -215,9 +209,10 @@ export default function DescriptionBody() {
             <div className="w-100">
               <MDBInput
                 type="textarea"
+                style={{ overflow: "auto" }}
+                rows={3}
                 label="Enter vision here...."
                 className="pb-0"
-                rows={vision.split("\n").length || 1}
                 value={vision}
                 onChange={({ target }) => setVision(target.value)}
                 required
@@ -225,44 +220,44 @@ export default function DescriptionBody() {
             </div>
           </div>
 
-          <div className="w-100 d-flex" style={{ gap: "20px" }}>
-            <div className="w-100">
-              <MDBInput
-                type="textarea"
-                label="Enter core values (one per line)..."
-                className="pb-0"
-                value={value}
-                onChange={({ target }) => setValue(target.value)}
-                onFocus={() => setIsValueFocused(true)}
-                onBlur={() => setIsValueFocused(false)}
-                required
-              />
-            </div>
-
-            {isValueFocused && (
-              <div
-                className="mt-2 w-100"
-                style={{ paddingLeft: "10px", fontSize: "0.9rem" }}
-              >
-                <strong>Preview</strong>
-                <ul style={{ paddingLeft: "20px", marginTop: "4px" }}>
-                  {value
-                    .split("\n")
-                    .filter((line) => line.trim() !== "")
-                    .map((line, idx) => {
-                      const [title, ...rest] = line.split("–");
-                      const detail = rest.join("–").trim();
-                      return (
-                        <li key={idx}>
-                          <strong>{title.trim()}</strong>
-                          {detail && ` – ${detail}`}
-                        </li>
-                      );
-                    })}
-                </ul>
-              </div>
-            )}
+          <div className="w-100">
+            <MDBInput
+              type="textarea"
+              style={{ overflow: "auto" }}
+              rows={4}
+              label="Enter core values (one per line)..."
+              className="pb-0"
+              value={value}
+              onChange={({ target }) => setValue(target.value)}
+              onFocus={() => setIsValueFocused(true)}
+              onBlur={() => setIsValueFocused(false)}
+              required
+            />
           </div>
+
+          {isValueFocused && (
+            <div
+              className="mt-2 w-100"
+              style={{ paddingLeft: "10px", fontSize: "0.9rem" }}
+            >
+              <strong>Preview</strong>
+              <ul style={{ paddingLeft: "20px", marginTop: "4px" }}>
+                {value
+                  .split("\n")
+                  .filter((line) => line.trim() !== "")
+                  .map((line, idx) => {
+                    const [title, ...rest] = line.split("–");
+                    const detail = rest.join("–").trim();
+                    return (
+                      <li key={idx}>
+                        <strong>{title.trim()}</strong>
+                        {detail && ` – ${detail}`}
+                      </li>
+                    );
+                  })}
+              </ul>
+            </div>
+          )}
         </div>
         <div className="d-flex justify-content-end">
           <MDBBtn
