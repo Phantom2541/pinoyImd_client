@@ -12,13 +12,10 @@ export default function BetaTester() {
 
   const cutoffDate = new Date("2025-08-12");
 
-  const betaCompanies = collections.filter((company) => {
+  const earlyCompanies = collections.filter((company) => {
     const companyDate = new Date(company.createdAt); // change to your actual date property
     return companyDate < cutoffDate;
   });
-  console.log("collections", collections);
-
-  console.log("betacollections", betaCompanies);
 
   const logos = Array(10).fill(logo);
 
@@ -46,12 +43,10 @@ export default function BetaTester() {
           1600: { slidesPerView: 6, spaceBetween: 30 },
         }}
       >
-        {betaCompanies.map((item, index) => {
+        {earlyCompanies.map((item, index) => {
           const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
             item.name
           )}/profile/logo`;
-          console.log("logoUrl", logoUrl);
-          console.log("company", item.name);
 
           return (
             <SwiperSlide key={item._id || index}>
