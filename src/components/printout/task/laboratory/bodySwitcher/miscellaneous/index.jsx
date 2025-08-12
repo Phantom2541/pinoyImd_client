@@ -3,7 +3,7 @@ import Troupe from "./troupe";
 import Category from "./category";
 
 export default function Miscellaneous({ task, fontSize }) {
-  const { specimen, data } = task;
+  const { specimen = "", data } = task;
   const style = { fontSize: `${fontSize}rem` };
   return (
     <div

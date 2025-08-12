@@ -167,15 +167,20 @@ const Register = () => {
                 <MDBInput
                   label="First Name"
                   name="fname"
+                  size={window.innerWidth <= 480 ? "sm" : "md"}
                   value={f.fname}
                   onChange={handleChange}
                   required
                 />
               </MDBCol>
-              <MDBCol md="6">
+              <MDBCol
+                md="6"
+                className={`${window.innerWidth <= 480 ? "mt-n4" : ""}`}
+              >
                 <MDBInput
                   label="Middle Name"
                   name="mname"
+                  size={window.innerWidth <= 480 ? "sm" : "md"}
                   value={f.mname}
                   onChange={handleChange}
                 />
@@ -185,6 +190,7 @@ const Register = () => {
               <MDBCol md="6">
                 <MDBInput
                   label="Last Name"
+                  size={window.innerWidth <= 480 ? "sm" : "md"}
                   name="lname"
                   value={f.lname}
                   onChange={handleChange}
@@ -193,6 +199,7 @@ const Register = () => {
               </MDBCol>
               <MDBCol md="6">
                 <MDBSelect
+                  className={`${window.innerWidth <= 480 ? "mt-n3" : ""}`}
                   getValue={handleSuffix}
                   label="Suffix"
                   selected={f.suffix}
@@ -211,6 +218,7 @@ const Register = () => {
             <MDBRow>
               <MDBCol md="6">
                 <MDBInput
+                  size={window.innerWidth <= 480 ? "sm" : "md"}
                   label="Date of Birth"
                   type="date"
                   name="dob"
@@ -220,7 +228,11 @@ const Register = () => {
                 />
               </MDBCol>
               <MDBCol md="6">
-                <div className="d-flex align-items-center mt-4">
+                <div
+                  className={`d-flex align-items-center mt-4 ${
+                    window.innerWidth <= 480 ? "mt-n2" : ""
+                  }`}
+                >
                   <MDBInput
                     label="Male"
                     type="checkbox"
@@ -247,6 +259,7 @@ const Register = () => {
           <MDBRow>
             <MDBCol md="6">
               <MDBInput
+                size={window.innerWidth <= 480 ? "sm" : "md"}
                 label="Phone #"
                 name="mobile"
                 value={f.mobile}
@@ -256,6 +269,8 @@ const Register = () => {
             </MDBCol>
             <MDBCol md="6">
               <MDBInput
+                size={window.innerWidth <= 480 ? "sm" : "md"}
+                className={`${window.innerWidth <= 480 ? "mt-n4" : ""}`}
                 label="E-mail Address"
                 name="email"
                 value={f.email}
@@ -272,6 +287,7 @@ const Register = () => {
             <MDBRow>
               <MDBCol md="6">
                 <MDBInput
+                  size={window.innerWidth <= 480 ? "sm" : "md"}
                   label="Password"
                   name="password"
                   type={isLocked.password ? "password" : "text"}
@@ -290,6 +306,8 @@ const Register = () => {
               </MDBCol>
               <MDBCol md="6">
                 <MDBInput
+                  size={window.innerWidth <= 480 ? "sm" : "md"}
+                  className={`${window.innerWidth <= 480 ? "mt-n4" : ""}`}
                   label="Confirm Password"
                   name="confirmPassword"
                   type={isLocked.confirmPassword ? "password" : "text"}
@@ -316,6 +334,7 @@ const Register = () => {
             <MDBRow>
               <MDBCol>
                 <MDBInput
+                  labelClass={window.innerWidth <= 480 ? "small" : ""}
                   label="I read and agree with the Terms and Conditions"
                   type="checkbox"
                   name="agreement"
@@ -337,7 +356,9 @@ const Register = () => {
       style={{ gap: "15px" }}
     >
       <div style={{ flex: 1 }}>
-        <h2 style={{ fontWeight: "400" }}>Patient Registration Form</h2>
+        <h2 className="subscriber-register-stepper-title">
+          Patient Registration Form
+        </h2>
 
         {/* Stepper */}
         <div className="subscriber-register-stepper-wrapper">
@@ -386,7 +407,13 @@ const Register = () => {
             {renderStepContent()}
           </div>
 
-          <div className="d-flex justify-content-end" style={{ gap: "10px" }}>
+          <div
+            // className="d-flex justify-content-end"
+            className={`d-flex justify-content-end ${
+              window.innerWidth <= 480 ? "mt-2" : ""
+            }`}
+            style={{ gap: "10px" }}
+          >
             <button
               type="button"
               onClick={handleBack}

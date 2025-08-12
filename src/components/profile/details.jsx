@@ -21,6 +21,7 @@ export default function Details({
           <MDBInput
             type="text"
             value={form.fullName?.fname?.toUpperCase()}
+            disabled
             onChange={(e) =>
               handleChange("fullName", {
                 ...form.fullName,
@@ -32,6 +33,7 @@ export default function Details({
         </MDBCol>
         <MDBCol md="3" className="px-0">
           <MDBInput
+            disabled
             type="text"
             value={form.fullName?.mname?.toUpperCase()}
             onChange={(e) =>
@@ -46,6 +48,7 @@ export default function Details({
         <MDBCol md="3">
           <MDBInput
             type="text"
+            disabled
             value={form.fullName?.lname?.toUpperCase()}
             onChange={(e) =>
               handleChange("fullName", {
@@ -112,6 +115,7 @@ export default function Details({
           <MDBInput
             type="date"
             value={form.dob}
+            disabled
             onChange={(e) => handleChange("dob", e.target.value)}
             labelClass=""
             className="py-0"
@@ -124,12 +128,14 @@ export default function Details({
             value={form.email}
             onChange={(e) => handleChange("email", e.target.value)}
             label="E-mail Address"
+            disabled
           />
         </MDBCol>
         <MDBCol md="2">
           <MDBInput
             type="text"
             value={form.mobile}
+            disabled
             onChange={(e) =>
               handleChange("mobile", e.target.value.replace(/\D/g, ""))
             }

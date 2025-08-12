@@ -2,21 +2,26 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
+import logo from "./../../../assets/iMD.png";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
-import { useSelector } from "react-redux";
 import { Cloudinary } from "../../../services/utilities";
+import { useSelector } from "react-redux";
 
-export default function DiagnosticsSubs() {
+export default function BetaTester() {
   const { collections } = useSelector(({ companies }) => companies);
 
-  // Pre-filter once to avoid filtering inside render repeatedly
-  const diagnosticCompanies = collections.filter(
-    (company) => company.category?.toLowerCase() === "diagnostic"
-  );
+  const cutoffDate = new Date("2025-08-12");
+
+  const earlyCompanies = collections.filter((company) => {
+    const companyDate = new Date(company.createdAt); // change to your actual date property
+    return companyDate < cutoffDate;
+  });
+
+  const logos = Array(10).fill(logo);
 
   return (
     <div className="affiliates-section">
-      <h1 className="affiliates-title">Our Diagnostics Subscribers</h1>
+      <h1 className="affiliates-title">Early Access Clients</h1>
       <Swiper
         className="affiliates-swiper"
         modules={[Autoplay]}
@@ -26,7 +31,7 @@ export default function DiagnosticsSubs() {
           delay: 0,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
-          reverseDirection: true,
+          reverseDirection: true, // pa-right
         }}
         allowTouchMove={true}
         spaceBetween={0}
@@ -38,7 +43,7 @@ export default function DiagnosticsSubs() {
           1600: { slidesPerView: 6, spaceBetween: 30 },
         }}
       >
-        {diagnosticCompanies.map((item, index) => {
+        {earlyCompanies.map((item, index) => {
           const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
             item.name
           )}/profile/logo`;

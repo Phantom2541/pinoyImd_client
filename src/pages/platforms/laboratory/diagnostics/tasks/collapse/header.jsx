@@ -26,7 +26,7 @@ const Header = ({ deal, index }) => {
     (section) => section.hasDone === true
   );
   return (
-    <div style={{ backgroundColor: allDone ? "#ffa900" : "" }}>
+    <div style={{ backgroundColor: allDone ? "rgba(255, 169, 0, 0.3)" : "" }}>
       <MDBCollapseHeader>
         {(activePage - 1) * maxPage + index + 1}.{" "}
         {getGenderIcon(customerId?.isMale)} {fullName(customerId?.fullName)} |

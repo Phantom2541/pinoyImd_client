@@ -3,9 +3,17 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import logo from "./../../../assets/iMD.png";
+import { useSelector } from "react-redux";
+import { Cloudinary } from "../../../services/utilities";
+import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
 
 export default function SuppliersSubs() {
-  const logos = Array(10).fill(logo);
+  const { collections } = useSelector(({ companies }) => companies);
+
+  // Pre-filter once to avoid filtering inside render repeatedly
+  const supplierCompanies = collections.filter(
+    (company) => company.category?.toLowerCase() === "supplier"
+  );
 
   return (
     <div className="affiliates-section">
@@ -31,17 +39,26 @@ export default function SuppliersSubs() {
           1600: { slidesPerView: 6, spaceBetween: 30 },
         }}
       >
-        {logos.map((src, index) => (
-          <SwiperSlide key={index}>
-            <div className="affiliates-logo-wrapper">
-              <img
-                className="affiliates-logo"
-                src={src}
-                alt={`Subscriber ${index + 1}`}
-              />
-            </div>
-          </SwiperSlide>
-        ))}
+        {supplierCompanies.map((item, index) => {
+          const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+            item.name
+          )}/profile/logo`;
+
+          return (
+            <SwiperSlide key={item._id || index}>
+              <div className="affiliates-logo-wrapper">
+                <img
+                  className="affiliates-logo"
+                  src={logoUrl}
+                  alt={item.name}
+                  onError={(e) => {
+                    e.target.src = fallbackLogo; // use fallback if not found
+                  }}
+                />
+              </div>
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </div>
   );

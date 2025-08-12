@@ -70,7 +70,7 @@ export const Chemistry = async ({ task, form, result }) => {
       references
     );
 
-    const { lo, hi, units } = reference || {};
+    const { lo, hi, units = "" } = reference || {};
     const indicators = calculateIndicators(reference, value);
     const color = value < lo ? "blue" : value > hi ? "red" : "black";
 
@@ -98,7 +98,7 @@ export const Chemistry = async ({ task, form, result }) => {
         alignment: "center",
       },
       {
-        text: `${!lo ? `< ${hi}` : `${lo} - ${hi}`} ${units}`,
+        text: `${!lo ? `< ${hi}` : `${lo} - ${hi}`} ${units || ""}`,
         alignment: "center",
       },
       {

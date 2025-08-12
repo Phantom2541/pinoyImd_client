@@ -77,7 +77,7 @@ export default function LabTaskPrintout() {
     if (onloaded) {
       setTimeout(() => {
         window.print();
-      }, 500);
+      }, 1000);
     }
   }, [onloaded]);
 

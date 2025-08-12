@@ -278,6 +278,7 @@ export default class Home extends React.Component {
           <div id="about">
             <Affiliates />
           </div>
+
           <hr className="mb-5" />
           <div id="testimonials">
             <Testimonials />

@@ -243,25 +243,30 @@
 .template6-card {
   max-width: 320px;
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin: 16px;
   transition: transform 0.3s ease;
 }
 
-.template6-card:hover {
-  transform: translateY(-4px);
+.template6-card-header {
+  width: 100%;
+  height: 180px;
+  padding: 0 10px;
 }
 
 .template6-card-image {
-  width: 100%;
+  width: 95%;
   height: 180px;
-  object-fit: cover;
+  object-fit: fill;
 }
 
 .template6-card-body {
   padding: 16px;
+  white-space: nowrap; /* wag mag line break */
+  overflow: hidden; /* itago ang lumalagpas */
+  text-overflow: ellipsis; /* gawing ... */
+  text-align: center;
 }
 
 .template6-card-title {

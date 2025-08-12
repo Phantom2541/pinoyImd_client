@@ -11,7 +11,7 @@ export default function Table() {
   const { branch = {} } = activePlatform;
   const { overtime = 0, nightShift = 0, holiday } = earn;
   const { regular = { present: 0, absent: 0 }, special = 0 } = holiday;
-  const { present = 0, absent = 0 } = regular;
+  const { present = 0, absent = 0 } = regular || {};
   const hourlyRate = rate.daily / 8;
 
   return (

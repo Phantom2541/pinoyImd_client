@@ -2,93 +2,67 @@
 import React, { useEffect, useRef, useState, memo } from "react";
 import "./style.css";
 
-/* *
- */
 export default function RollingNumber({
   value = 0,
   precision = 0,
-  duration = 300,
+  duration = 1000,
   prefix = "₱",
   color = "#1266f1",
 }) {
-  const isValidNumber = typeof value === "number" && !isNaN(value);
+  const [displayValue, setDisplayValue] = useState(value);
+  const previousValue = useRef(value);
+  const startTime = useRef(null);
 
-  const paddedValue = isValidNumber
-    ? new Intl.NumberFormat("en-PH", {
-        minimumFractionDigits: precision,
-        maximumFractionDigits: precision,
-      }).format(value)
-    : "-";
+  useEffect(() => {
+    let animationFrame;
+    const startValue = previousValue.current; // magsisimula sa current value
+    const endValue = value;
+    previousValue.current = value;
+    startTime.current = null;
+
+    const animate = (timestamp) => {
+      if (!startTime.current) startTime.current = timestamp;
+      const progress = Math.min((timestamp - startTime.current) / duration, 1);
+      const currentValue = startValue + (endValue - startValue) * progress;
+      setDisplayValue(currentValue);
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [value, duration]);
+
+  const paddedValue = new Intl.NumberFormat("en-PH", {
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
+  }).format(displayValue);
 
   const characters = paddedValue.split("");
 
-  const [digitHeight, setDigitHeight] = useState(20);
-  const digitRef = useRef(null);
-  const previousValue = useRef(paddedValue);
-  const [isRolling, setIsRolling] = useState(false);
-
-  // Calculate digit height only once
-  useEffect(() => {
-    if (digitRef.current) {
-      setDigitHeight(digitRef.current.offsetHeight);
-    }
-  }, []);
-
-  // Rolling state effect
-  useEffect(() => {
-    if (paddedValue !== previousValue.current) {
-      setIsRolling(true);
-      const timer = setTimeout(() => setIsRolling(false), duration);
-      previousValue.current = paddedValue;
-      return () => clearTimeout(timer);
-    }
-  }, [paddedValue, duration]);
-
   return (
     <div
-      className={`rolling-number ${isRolling ? "rolling" : ""}`}
-      style={{ color: color }}
+      className="rolling-number"
+      style={{ color }}
       aria-label={`${prefix}${paddedValue}`}
     >
       {prefix && <div className="digit-static">{prefix}</div>}
-
       {characters.map((char, index) => (
-        <MemoDigit
-          key={index}
-          char={char}
-          duration={duration}
-          digitHeight={digitHeight}
-          digitRef={index === 0 ? digitRef : null}
-        />
+        <MemoDigit key={index} char={char} />
       ))}
     </div>
   );
 }
 
-const Digit = ({ char, duration, digitHeight, digitRef }) => {
+const Digit = ({ char }) => {
   const isDigit = /\d/.test(char);
-  const position = isDigit ? parseInt(char, 10) : 0;
-
-  const style = {
-    transform: `translateY(-${position * digitHeight}px)`,
-    transition: `transform ${duration}ms ease-in-out`,
-  };
-
   return (
-    <div className="digit-wrapper" style={{ height: digitHeight }}>
+    <div className="digit-wrapper">
       {isDigit ? (
-        <div className="digit-strip" style={style}>
-          {Array.from({ length: 10 }, (_, i) => (
-            <div
-              ref={i === 0 ? digitRef : null}
-              className="digit"
-              key={i}
-              style={{ height: digitHeight }}
-            >
-              {i}
-            </div>
-          ))}
-        </div>
+        <div className="digit">{char}</div>
       ) : (
         <div className="digit-static">{char}</div>
       )}

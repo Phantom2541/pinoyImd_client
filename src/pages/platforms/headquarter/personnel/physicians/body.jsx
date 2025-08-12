@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MDBTable } from "mdbreact";
+import { MDBBtn, MDBTable } from "mdbreact";
 import {
   RESET,
   DESTROY,
@@ -132,7 +132,13 @@ export default function Body() {
               </td>
               <td>{item?.specialization || "—"}</td>
               <td>
-                <button onClick={() => handleDelete(item)}>Untag</button>
+                <MDBBtn
+                  color="danger"
+                  size="sm"
+                  onClick={() => handleDelete(item)}
+                >
+                  Untag
+                </MDBBtn>
               </td>
             </tr>
           );

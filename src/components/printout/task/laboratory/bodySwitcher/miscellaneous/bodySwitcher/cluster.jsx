@@ -24,10 +24,10 @@ export default function Cluster({ task, fontSize }) {
               {service?.name || service?.abbreviation}:&nbsp;
               <b
                 style={{
-                  color: results[service?.id] === "true" ? "red" : "black",
+                  color: results[service?.id] ? "red" : "black",
                 }}
               >
-                {results[service?.id] === "true" ? "REACTIVE" : "NON-REACTIVE"}
+                {results[service?.id] ? "REACTIVE" : "NON-REACTIVE"}
               </b>
             </MDBCol>
           ))}

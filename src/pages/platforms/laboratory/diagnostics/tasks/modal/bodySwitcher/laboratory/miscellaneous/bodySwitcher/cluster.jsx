@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MDBRow, MDBCol } from "mdbreact";
 import { Services } from "./../../../../../../../../../../services/fakeDb";
 import { Select } from "./../../../../../../../../../../components/customizable";
@@ -6,11 +6,15 @@ import { Select } from "./../../../../../../../../../../components/customizable"
 export default function Cluster({ task, setTask }) {
   const { packages = [], results = {} } = task;
   // {68: 0, 69: 0, 70: 0 }
-  console.log("Cluster task", task);
-
+  useEffect(() => {
+    if (packages.length !== Object.keys(results).length) {
+      setTask({ ...task, results: { ...results, 68: 0, 69: 0, 70: 0 } });
+    }
+  }, [results, packages, task, setTask]);
   const handleSelectChange = (name, value) =>
     setTask({ ...task, results: { ...results, [name]: value } });
 
+  console.log("results", results);
   return (
     <MDBRow className="text-left">
       {packages.map((fk, index) => {
