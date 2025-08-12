@@ -833,25 +833,6 @@
     "is_available": true
   },
   {
-    "name": "BLOOD UREA NITROGEN",
-    "abbreviation": "BUN",
-    "packages": [20],
-    "discountable": 1,
-    "TAT": 0,
-    "is_profile": false,
-    "opd": 250,
-    "hmo": 0,
-    "er": 0,
-    "cw": 0,
-    "pw": 0,
-    "promo": 0,
-    "has_reseco": true,
-    "refund": 0,
-    "render_tags": null,
-    "is_unique": false,
-    "is_available": true
-  },
-  {
     "name": "BLOOD URIC ACID",
     "abbreviation": "BUA",
     "packages": [12],
