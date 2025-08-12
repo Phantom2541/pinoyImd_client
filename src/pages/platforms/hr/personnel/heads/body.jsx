@@ -40,6 +40,8 @@ export default function Body() {
   const [emailRefreshKey, setEmailRefreshKey] = useState({});
   const [heads, setHeads] = useState([]);
 
+  console.log("signatureRefreshKey", signatureRefreshKey);
+
   useEffect(() => {
     if (message) {
       addToast(message, {

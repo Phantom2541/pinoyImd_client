@@ -2,10 +2,17 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import logo from "./../../../assets/iMD.png";
+import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
+import { useSelector } from "react-redux";
+import { Cloudinary } from "../../../services/utilities";
 
 export default function DiagnosticsSubs() {
-  const logos = Array(10).fill(logo);
+  const { collections } = useSelector(({ companies }) => companies);
+
+  // Pre-filter once to avoid filtering inside render repeatedly
+  const diagnosticCompanies = collections.filter(
+    (company) => company.category?.toLowerCase() === "diagnostic"
+  );
 
   return (
     <div className="affiliates-section">
@@ -19,7 +26,7 @@ export default function DiagnosticsSubs() {
           delay: 0,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
-          reverseDirection: true, // pa-right
+          reverseDirection: true,
         }}
         allowTouchMove={true}
         spaceBetween={0}
@@ -31,17 +38,28 @@ export default function DiagnosticsSubs() {
           1600: { slidesPerView: 6, spaceBetween: 30 },
         }}
       >
-        {logos.map((src, index) => (
-          <SwiperSlide key={index}>
-            <div className="affiliates-logo-wrapper">
-              <img
-                className="affiliates-logo"
-                src={src}
-                alt={`Subscriber ${index + 1}`}
-              />
-            </div>
-          </SwiperSlide>
-        ))}
+        {diagnosticCompanies.map((item, index) => {
+          const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
+            item.name
+          )}/profile/logo`;
+          console.log("logoUrl", logoUrl);
+          console.log("company", item.name);
+
+          return (
+            <SwiperSlide key={item._id || index}>
+              <div className="affiliates-logo-wrapper">
+                <img
+                  className="affiliates-logo"
+                  src={logoUrl}
+                  alt={item.name}
+                  onError={(e) => {
+                    e.target.src = fallbackLogo; // use fallback if not found
+                  }}
+                />
+              </div>
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </div>
   );
