@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { MDBBtn, MDBIcon, MDBInput } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import { ENDPOINT } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,11 +10,12 @@ import { UPDATE } from "../../../../../services/redux/slices/assets/companies";
 import AddressSelect from "../../../../../components/searchables/addressSelect";
 import Swal from "sweetalert2";
 import Logo from "../logo";
+import EditableField from "../../../../../components/customizable/editableField";
 import "./style.css";
 
 export default function DescriptionBody() {
   const { addToast } = useToasts();
-  const { token, message, isSuccess, activePlatform } = useSelector(
+  const { message, isSuccess, activePlatform } = useSelector(
     ({ auth }) => auth
   );
 
@@ -23,28 +23,12 @@ export default function DescriptionBody() {
   const { companyId = {} } = branch;
 
   const [isValueFocused, setIsValueFocused] = useState(false);
-  const [description, setDescription] = useState(companyId?.description || "");
-  const [tagline, setTagline] = useState(companyId?.tagline || "");
-  const [mission, setMission] = useState(companyId?.ms || "");
-  const [vision, setVision] = useState(companyId?.vs || "");
-  const [value, setValue] = useState(
+  const [valuePreview, setValuePreview] = useState(
     Array.isArray(companyId?.vl)
       ? companyId?.vl.join("\n")
       : companyId?.vl || ""
   );
-  const [contacts, setContacts] = useState(
-    companyId?.contacts || { email: "", mobile: "" }
-  );
-  const [address, setAddress] = useState(
-    branch?.address || {
-      street: "",
-      barangay: "",
-      city: "",
-      province: "",
-      region: "",
-    }
-  );
-  const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useDispatch();
 
   const logo = `${ENDPOINT}/public/companies/${encodeURIComponent(
@@ -60,48 +44,19 @@ export default function DescriptionBody() {
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
 
-  const handleChange = (key, value) => {
-    setAddress(value);
-  };
+  const handleUpdate = ({ _id, key, value }) => {
+    let data = { _id };
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
+    if (key?.includes(".")) {
+      const keys = key.split(".");
+      const nested = keys.reduceRight((acc, curr) => ({ [curr]: acc }), value);
+      data = { ...data, ...nested };
+    } else {
+      data[key] = value;
+    }
 
-    const valueArray = value
-      .split("\n")
-      .map((v) => v.trim())
-      .filter((v) => v.length > 0);
-
-    setIsLoading(true);
-
-    dispatch(
-      UPDATE({
-        data: {
-          _id: companyId?._id,
-          name: companyId?.name,
-          tagline,
-          description,
-          ms: mission,
-          vs: vision,
-          vl: valueArray,
-          contacts,
-          address,
-        },
-        // token,
-      })
-    ).then(() => {
-      const updatedCompany = {
-        ...companyId,
-        tagline,
-        description,
-        ms: mission,
-        vs: vision,
-        vl: valueArray,
-        contacts,
-        address,
-      };
-
-      // dispatch(SetCOMPANY(updatedCompany));
+    dispatch(UPDATE({ data })).then(({ payload }) => {
+      const updatedCompany = payload?.payload || companyId;
 
       dispatch(
         SetActivePlatform({
@@ -116,10 +71,9 @@ export default function DescriptionBody() {
         })
       );
 
-      setIsLoading(false);
       Swal.fire({
         title: "Success!",
-        text: "Description Successfully Updated.",
+        text: "Company information updated.",
         icon: "success",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "OK",
@@ -129,109 +83,244 @@ export default function DescriptionBody() {
 
   return (
     <div className="companyDescription-container">
-      <form onSubmit={handleUpdate}>
-        <div className="companyDescription-header">
-          <Logo />
-          <div className="companyDescription-header-wrapper">
-            <span className="companyDescription-name">{companyId?.name}</span>
-            <div className="companyDescription-address">
-              <AddressSelect address={address} handleChange={handleChange} />
-              <div className="patient-form full-width">
-                <span>Street (Optional)</span>
-                <input
-                  type="text"
-                  value={address?.street || ""}
-                  onChange={({ target }) =>
-                    setAddress({ ...address, street: target.value })
-                  }
-                />
-              </div>
-            </div>
-            <div className="d-flex" style={{ gap: "20px" }}>
-              <MDBInput
-                type="text"
-                label="Email"
-                className="pb-0"
-                style={{ minWidth: "300px" }}
-                value={contacts?.email}
-                onChange={({ target }) =>
-                  setContacts({ ...contacts, email: target.value })
+      {/* Header */}
+      <div className="companyDescription-header">
+        <Logo />
+        <div className="companyDescription-header-wrapper">
+          <span className="companyDescription-name">{companyId?.name}</span>
+          <div
+            className="patient-personal-info address-grid mt-4"
+            data-title="Address Information"
+          >
+            {/* Address */}
+            <AddressSelect
+              address={branch?.address}
+              handleChange={(key, val) =>
+                handleUpdate({
+                  _id: companyId._id,
+                  key: `address.${key}`,
+                  value: val,
+                })
+              }
+            />
+
+            {/* Street */}
+            <div>
+              <label className="mt-2">Street (Optional)</label>
+              <EditableField
+                title="Click to edit street"
+                type="string"
+                width="100%"
+                keyForValue="street"
+                fieldData={{
+                  _id: companyId._id,
+                  street: branch?.address?.street || "",
+                }}
+                onSave={(data) =>
+                  handleUpdate({
+                    _id: companyId._id,
+                    key: "address.street",
+                    value: data.street,
+                  })
                 }
-                required
-              />
-              <MDBInput
-                type="text"
-                label="Phone Number"
-                className="pb-0"
-                value={contacts?.mobile}
-                onChange={({ target }) =>
-                  setContacts({ ...contacts, mobile: target.value })
-                }
-                required
-              />
-            </div>
-          </div>
-        </div>
-        <div className="companyDescription-body">
-          <MDBInput
-            type="textarea"
-            label="Enter Company description here..."
-            className="pb-0"
-            style={{ overflow: "auto" }}
-            rows={5}
-            value={description}
-            onChange={({ target }) => setDescription(target.value)}
-            required
-          />
-          <MDBInput
-            type="textarea"
-            style={{ overflow: "auto" }}
-            rows={1}
-            label="Enter Company tagline here..."
-            className="pb-0"
-            value={tagline}
-            onChange={({ target }) => setTagline(target.value)}
-            required
-          />
-          <div className="d-flex align-items-center" style={{ gap: "20px" }}>
-            <div className="w-100">
-              <MDBInput
-                type="textarea"
-                style={{ overflow: "auto" }}
-                rows={3}
-                label="Enter mission here...."
-                className="pb-0"
-                value={mission}
-                onChange={({ target }) => setMission(target.value)}
-                required
-              />
-            </div>
-            <div className="w-100">
-              <MDBInput
-                type="textarea"
-                style={{ overflow: "auto" }}
-                rows={3}
-                label="Enter vision here...."
-                className="pb-0"
-                value={vision}
-                onChange={({ target }) => setVision(target.value)}
-                required
+                formSubmitted={false}
+                isSuccess={isSuccess}
               />
             </div>
           </div>
 
-          <div className="w-100">
-            <MDBInput
+          {/* Contact Info */}
+          <div className="d-flex mt-3" style={{ gap: "20px" }}>
+            <div className="w-50">
+              <label>
+                <strong>Email</strong>
+              </label>
+              <EditableField
+                title="Click to edit email"
+                type="string"
+                width="100%"
+                keyForValue="email"
+                fieldData={{
+                  _id: companyId._id,
+                  email: companyId?.contacts?.email || "",
+                }}
+                onSave={(data) =>
+                  handleUpdate({
+                    _id: companyId._id,
+                    key: "contacts.email",
+                    value: data.email,
+                  })
+                }
+                formSubmitted={false}
+                isSuccess={isSuccess}
+              />
+            </div>
+
+            <div className="w-50">
+              <label>
+                <strong>Phone Number</strong>
+              </label>
+              <EditableField
+                title="Click to edit phone number"
+                type="string"
+                width="100%"
+                keyForValue="mobile"
+                fieldData={{
+                  _id: companyId._id,
+                  mobile: companyId?.contacts?.mobile || "",
+                }}
+                onSave={(data) =>
+                  handleUpdate({
+                    _id: companyId._id,
+                    key: "contacts.mobile",
+                    value: data.mobile,
+                  })
+                }
+                formSubmitted={false}
+                isSuccess={isSuccess}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="companyDescription-body mt-4">
+        <label>
+          <strong>Description</strong>
+        </label>
+        <EditableField
+          title="Click to edit description"
+          type="textarea"
+          width="100%"
+          keyForValue="description"
+          fieldData={{
+            _id: companyId._id,
+            description: companyId?.description || "",
+          }}
+          onSave={(data) =>
+            handleUpdate({
+              _id: companyId._id,
+              key: "description",
+              value: data.description,
+            })
+          }
+          formSubmitted={false}
+          isSuccess={isSuccess}
+        />
+
+        <label className="mt-3">
+          <strong>Tagline</strong>
+        </label>
+        <EditableField
+          title="Click to edit tagline"
+          type="textarea"
+          width="100%"
+          keyForValue="tagline"
+          fieldData={{
+            _id: companyId._id,
+            tagline: companyId?.tagline || "",
+          }}
+          onSave={(data) =>
+            handleUpdate({
+              _id: companyId._id,
+              key: "tagline",
+              value: data.tagline,
+            })
+          }
+          formSubmitted={false}
+          isSuccess={isSuccess}
+        />
+
+        <div className="d-flex align-items-center mt-3" style={{ gap: "20px" }}>
+          <div className="w-50">
+            <label>
+              <strong>Mission</strong>
+            </label>
+            <EditableField
+              title="Click to edit mission"
               type="textarea"
-              style={{ overflow: "auto" }}
-              rows={4}
-              label="Enter core values (one per line)..."
-              className="pb-0"
-              value={value}
-              onChange={({ target }) => setValue(target.value)}
+              width="100%"
+              keyForValue="ms"
+              fieldData={{
+                _id: companyId._id,
+                ms: companyId?.ms || "",
+              }}
+              onSave={(data) =>
+                handleUpdate({
+                  _id: companyId._id,
+                  key: "ms",
+                  value: data.ms,
+                })
+              }
+              formSubmitted={false}
+              isSuccess={isSuccess}
+            />
+          </div>
+
+          <div className="w-50">
+            <label>
+              <strong>Vision</strong>
+            </label>
+            <EditableField
+              title="Click to edit vision"
+              type="textarea"
+              width="100%"
+              keyForValue="vs"
+              fieldData={{
+                _id: companyId._id,
+                vs: companyId?.vs || "",
+              }}
+              onSave={(data) =>
+                handleUpdate({
+                  _id: companyId._id,
+                  key: "vs",
+                  value: data.vs,
+                })
+              }
+              formSubmitted={false}
+              isSuccess={isSuccess}
+            />
+          </div>
+        </div>
+
+        {/* Core Values */}
+        <label className="mt-3">
+          <strong>Core Values</strong>
+        </label>
+        <div className="w-100 d-flex" style={{ gap: "20px" }}>
+          <div className="w-100">
+            <EditableField
+              title="Click to edit core values"
+              type="textarea"
+              width="100%"
+              height="100%"
+              keyForValue="vl"
+              fieldData={{
+                _id: companyId._id,
+                // join array into newline text for editing
+                vl: Array.isArray(valuePreview)
+                  ? valuePreview.join("\n")
+                  : valuePreview,
+              }}
+              onSave={(data) => {
+                // split into array and trim each value
+                const newValues = data.vl
+                  .split("\n")
+                  .map((v) => v.trim())
+                  .filter((v) => v.length > 0);
+
+                setValuePreview(newValues); // keep as array
+                handleUpdate({
+                  _id: companyId._id,
+                  key: "vl",
+                  value: newValues, // send as array
+                });
+              }}
               onFocus={() => setIsValueFocused(true)}
               onBlur={() => setIsValueFocused(false)}
-              required
+              formSubmitted={false}
+              isSuccess={isSuccess}
             />
           </div>
 
@@ -242,8 +331,10 @@ export default function DescriptionBody() {
             >
               <strong>Preview</strong>
               <ul style={{ paddingLeft: "20px", marginTop: "4px" }}>
-                {value
-                  .split("\n")
+                {(Array.isArray(valuePreview)
+                  ? valuePreview
+                  : valuePreview.split("\n")
+                )
                   .filter((line) => line.trim() !== "")
                   .map((line, idx) => {
                     const [title, ...rest] = line.split("–");
@@ -259,20 +350,7 @@ export default function DescriptionBody() {
             </div>
           )}
         </div>
-        <div className="d-flex justify-content-end">
-          <MDBBtn
-            size="md"
-            className=" mt-3"
-            color="primary"
-            type="submit"
-            disabled={isLoading}
-            title="Update Description"
-          >
-            <MDBIcon icon="pencil-alt" />
-            {isLoading && <MDBIcon icon="spinner" pulse className="ml-2" />}
-          </MDBBtn>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

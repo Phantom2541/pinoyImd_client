@@ -3,6 +3,7 @@ import "swiper/css";
 import "./style.css";
 import DiagnosticsSubs from "./diagnosticsSubs";
 import SuppliersSubs from "./suppliersSubs";
+import BetaTester from "./betaTester";
 
 export default function Affiliates() {
   return (
@@ -12,6 +13,7 @@ export default function Affiliates() {
       </div>
       <DiagnosticsSubs />
       <SuppliersSubs />
+      <BetaTester />
     </div>
   );
 }

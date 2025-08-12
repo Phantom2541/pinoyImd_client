@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { MDBBadge, MDBIcon } from "mdbreact";
 import "./style.css";
 import { useToasts } from "react-toast-notifications";
@@ -13,34 +13,12 @@ const tagMap = {
   small: "small",
 };
 
-/**
- * EditableField Component
- *
- * A reusable inline-edit input component with support for toggling between
- * display mode and editable mode on click. Useful for editable fields in tables
- * or forms with custom save handling.
- *
- * @component
- *
- * @param {string} [className="form-control"] - Custom CSS classes for the input element.
- * @param {boolean} [formSubmitted=false] - Flag indicating if the form is in submitting state (disables actions while true).
- * @param {string} [placeholder=""] - Placeholder text for the input element.
- * @param {string} [keyForValue=""] - The property key in `fieldData` to be edited.
- * @param {string} [type="text"] - The type of the input element (e.g., "text", "number", "email").
- * @param {string} [width=""] - Optional width to apply when the field is in editable mode.
- * @param {string} [value="No props for value"] - The display value shown when not in editable mode.
- * @param {object} [fieldData={}] - The full data object representing the current row or item.
- * @param {function} [onSave=() => {}] - Callback function fired when the check icon is clicked to save changes.
- *
- * @returns {JSX.Element} Editable inline input with save/cancel icons.
- *
- */
 const EditableField = ({
-  displayTag = "h6", //h6,badge this is available tag for this component
+  displayTag = "h6",
   className = "form-control form-control-sm",
   classNameTxt = "",
   placeholder = "",
-  keyForValue = "", //this key is for value
+  keyForValue = "",
   keyForText = "",
   type = "text",
   width = "",
@@ -54,12 +32,13 @@ const EditableField = ({
   isCapitalize = true,
   enableEditMode = true,
   formSubmitted = false,
-  localUpdate = false, //this is for local update not for api
+  localUpdate = false,
 }) => {
-  const [editedData, setEditedData] = useState({}),
-    { addToast } = useToasts();
-
+  const [editedData, setEditedData] = useState({});
+  const { addToast } = useToasts();
   const [instanceId] = useState(() => Math.random().toString(36).substr(2, 9));
+  const textareaRef = useRef(null);
+  const displayRef = useRef(null);
 
   useEffect(() => {
     if (!formSubmitted) {
@@ -99,26 +78,20 @@ const EditableField = ({
 
   const Tag = tagMap[displayTag] || "h6";
   const text = fieldData[keyForText || keyForValue];
-  const displayValue = (
-    <Tag
-      style={displayStyle}
-      onClick={() => {
-        window.dispatchEvent(
-          new CustomEvent("close-all-editable", {
-            detail: { excludeId: instanceId },
-          })
-        );
-        setEditedData({ ...fieldData, editingKey: keyForValue });
-      }}
-      className={`cursor-pointer ${classNameTxt}`}
-    >
-      {(isMoney
-        ? currency.format(fieldData[keyForText || keyForValue])
-        : isCapitalize
-        ? capitalize(text)
-        : text) || "N/A"}
-    </Tag>
-  );
+  const formattedText =
+    (isMoney
+      ? currency.format(fieldData[keyForText || keyForValue])
+      : isCapitalize
+      ? capitalize(text)
+      : text) || "N/A";
+
+  // Auto-resize textarea on edit
+  useEffect(() => {
+    if (isEditable && type === "textarea" && textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [isEditable, type]);
 
   return (
     <div
@@ -130,21 +103,41 @@ const EditableField = ({
     >
       {isEditable ? (
         <div
-          className={`d-flex align-items-center customizable-input-container ${
+          className={`d-flex align-items-start customizable-input-container ${
             isEditable && animation && "editableField-zoom-in"
           }`}
         >
-          <input
-            placeholder={placeholder}
-            style={inputStyle}
-            className={className}
-            value={editedData[keyForValue] || ""}
-            type={type}
-            onChange={({ target }) => {
-              setEditedData({ ...editedData, [keyForValue]: target.value });
-            }}
-          />
-          <div className="customizable-input-icons ">
+          {type === "textarea" ? (
+            <textarea
+              ref={textareaRef}
+              placeholder={placeholder}
+              style={{
+                ...inputStyle,
+                width,
+                overflow: "hidden",
+                resize: "none",
+              }}
+              className={className}
+              value={editedData[keyForValue] || ""}
+              onChange={({ target }) => {
+                setEditedData({ ...editedData, [keyForValue]: target.value });
+                target.style.height = "auto";
+                target.style.height = `${target.scrollHeight}px`;
+              }}
+            />
+          ) : (
+            <input
+              placeholder={placeholder}
+              style={inputStyle}
+              className={className}
+              value={editedData[keyForValue] || ""}
+              type={type}
+              onChange={({ target }) =>
+                setEditedData({ ...editedData, [keyForValue]: target.value })
+              }
+            />
+          )}
+          <div className="customizable-input-icons">
             {!formSubmitted ? (
               <MDBIcon
                 icon="check"
@@ -178,7 +171,25 @@ const EditableField = ({
           </div>
         </div>
       ) : (
-        <>{displayValue}</>
+        <Tag
+          ref={displayRef}
+          style={{
+            ...displayStyle,
+            whiteSpace: type === "textarea" ? "pre-wrap" : "normal",
+            wordBreak: "break-word",
+          }}
+          onClick={() => {
+            window.dispatchEvent(
+              new CustomEvent("close-all-editable", {
+                detail: { excludeId: instanceId },
+              })
+            );
+            setEditedData({ ...fieldData, editingKey: keyForValue });
+          }}
+          className={`cursor-pointer ${classNameTxt}`}
+        >
+          {formattedText}
+        </Tag>
       )}
     </div>
   );
