@@ -14,7 +14,6 @@ export default function SuppliersSubs() {
   const supplierCompanies = collections.filter(
     (company) => company.category?.toLowerCase() === "supplier"
   );
-  const logos = Array(10).fill(logo);
 
   return (
     <div className="affiliates-section">
@@ -43,9 +42,7 @@ export default function SuppliersSubs() {
         {supplierCompanies.map((item, index) => {
           const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
             item.name
-          )}/profile/logo.JPG`;
-          console.log("logoUrl", logoUrl);
-          console.log("company", item.name);
+          )}/profile/logo`;
 
           return (
             <SwiperSlide key={item._id || index}>

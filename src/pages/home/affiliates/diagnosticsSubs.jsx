@@ -41,7 +41,7 @@ export default function DiagnosticsSubs() {
         {diagnosticCompanies.map((item, index) => {
           const logoUrl = `${Cloudinary.getEndpoint()}/companies/${encodeURIComponent(
             item.name
-          )}/profile/logo?v=${Date.now()}`;
+          )}/profile/logo`;
 
           return (
             <SwiperSlide key={item._id || index}>
