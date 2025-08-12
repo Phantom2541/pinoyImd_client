@@ -11,3 +11,4 @@ export { default as RequestOutSource } from "./requestOutSource";
 export { default as SOA } from "./soa";
 export { default as Remittance } from "../printout/remittance";
 export { default as Machines } from "./machines";
+export { default as DrugTestPrintout } from "./task/drugtest";

@@ -12,8 +12,11 @@ const Tasks = ({ key, form, obj, index, customer }) => {
   const handleLabPrint = (task) => {
     const services = collections.filter(({ id }) => task.services.includes(id));
     const taskData = { ...task, services };
+    console.log("task", task);
     localStorage.setItem("taskPrintout", JSON.stringify(taskData));
-    const URL = `${window.location.origin}/printout/laboratory/task`;
+    const URL = `${window.location.origin}/printout/laboratory/${
+      task.packages.includes(176) ? "drugtest" : "task"
+    }`;
     const features = "top=100px,left=100px,width=794px,height=1123px";
 
     setTimeout(() => {
@@ -61,7 +64,6 @@ const Tasks = ({ key, form, obj, index, customer }) => {
   const handleEntry = () => dispatch(SetTASK({ task }));
 
   const isEmptyEntry = _packages.length === 0;
-
   return (
     <tr key={task.key} className={hasDone ? "table-active" : ""}>
       <td>{index}</td>

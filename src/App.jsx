@@ -25,6 +25,7 @@ import {
   SOA,
   Remittance,
   Machines,
+  DrugTestPrintout,
 } from "./components/printout";
 import Payslip from "./components/printout/payslip";
 import Census from "./components/census/services";
@@ -78,6 +79,11 @@ export default function App() {
         path="/printout/laboratory/task"
         exact
         component={LabTaskPrintout}
+      />
+      <Route
+        path="/printout/laboratory/drugtest"
+        exact
+        component={DrugTestPrintout}
       />
       <Route
         path="/printout/radiology/task"

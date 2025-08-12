@@ -31,7 +31,6 @@ const Header = () => {
       <div>
         <Search
           collections={collections}
-          hideButton
           setFiltered={(results) =>
             dispatch(SetFILTERED(results.length > 0 ? results : collections))
           }

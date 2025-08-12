@@ -173,9 +173,11 @@ export default function EditableSelect({
             className={`${className} w-100 p-0 m-0`}
             multiple={multiple}
             color="primary"
+            required={true}
           >
             <MDBSelectInput
               className={inputClassName}
+              required
               selected={utils.getSelectedText({
                 preValue: preValue ? preValue : fieldData[keyForValue],
                 keyForText,

@@ -4,7 +4,7 @@ import EditableSelect from "../../customizable/editableSelect";
 
 export default function AddressSelect({
   // disabledAllExceptSelected = false,
-  handleChange,
+  handleChange = () => {},
   required = false,
   address = { region: "", province: "", city: "", barangay: "" },
   // size = "3",
@@ -13,7 +13,7 @@ export default function AddressSelect({
 }) {
   const handleAddress = (key, value) => {
     const _address = { ...address };
-
+    console.log("key", key);
     switch (key) {
       case "region":
         _address.region = value;
@@ -27,6 +27,11 @@ export default function AddressSelect({
         const cityCode = Philippines.initialCity(value);
         _address.city = cityCode;
         break;
+      case "city":
+        _address.city = value;
+        const brgy = Philippines.initialBrgy(value);
+        _address.barangay = brgy;
+        break;
 
       default:
         _address[key] = value;
@@ -35,6 +40,8 @@ export default function AddressSelect({
 
     handleChange("address", _address);
   };
+
+  console.log("address", address);
   return (
     <>
       {isPOS ? (
@@ -136,9 +143,7 @@ export default function AddressSelect({
               <EditableSelect
                 collections={Philippines.Barangays(address.city)}
                 preValue={address.barangay}
-                onChange={(e) =>
-                  handleAddress("barangay", e === "none" ? "" : e)
-                }
+                onChange={(e) => handleAddress("barangay", e)}
                 label="Barangay"
                 keyForValue="name"
                 keyForText="name"
