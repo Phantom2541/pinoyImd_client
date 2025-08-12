@@ -63,6 +63,10 @@
   font-weight: bold;
   color: white;
   text-transform: uppercase;
+  text-decoration: underline; /* line exactly under text */
+  text-decoration-color: white; /* make underline white */
+  text-decoration-thickness: 2px; /* adjust thickness */
+  text-underline-offset: 0.3rem; /* space between text and underline */
 }
 
 .affiliates-logo-subname {
@@ -72,6 +76,7 @@
   font-weight: 500;
   color: white;
   text-transform: capitalize;
+  margin-top: -0.5rem;
 }
 
 .affiliates-logo-category {
