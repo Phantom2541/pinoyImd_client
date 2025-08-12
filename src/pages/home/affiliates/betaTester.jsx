@@ -2,12 +2,10 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import logo from "./../../../assets/iMD.png";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
-import { Cloudinary, fullAddress } from "../../../services/utilities";
+import { Cloudinary } from "../../../services/utilities";
 import { useSelector } from "react-redux";
 import BgRemover from "../../../components/bgRemover";
-import { Items } from "pdfjs-dist/build/pdf.worker";
 
 export default function BetaTester() {
   const { collections } = useSelector(({ companies }) => companies);
@@ -21,7 +19,7 @@ export default function BetaTester() {
 
   return (
     <div className="affiliates-section">
-      <h1 className="affiliates-title">Early Access Clients</h1>
+      <h1 className="affiliates-title">Pinoy iMD Pilot Users</h1>
       <Swiper
         className="affiliates-swiper"
         modules={[Autoplay]}
@@ -54,6 +52,8 @@ export default function BetaTester() {
             item.name
           )}/profile/logo`;
 
+          console.log("item", item);
+
           return (
             <SwiperSlide key={item._id || index}>
               <div className="affiliates-logo-wrapper">
@@ -64,10 +64,8 @@ export default function BetaTester() {
                   fallback={fallbackLogo}
                 />
                 <span className="affiliates-logo-name">{item.name}</span>
-                <span className="affiliates-logo-address">{address.city}</span>
-                <span className="affiliates-logo-category">
-                  {item.category}
-                </span>
+                <span className="affiliates-logo-subname">{item.subName}</span>
+                <small>{address.city}</small>
               </div>
             </SwiperSlide>
           );

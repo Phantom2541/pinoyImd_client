@@ -59,13 +59,13 @@
 }
 
 .affiliates-logo-name {
-  font-size: 1.3rem;
+  font-size: 3rem;
   font-weight: bold;
   color: white;
   text-transform: uppercase;
 }
 
-.affiliates-logo-address {
+.affiliates-logo-subname {
   font-size: 1.1rem;
   line-height: 1rem;
 
