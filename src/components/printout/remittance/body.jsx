@@ -4,7 +4,6 @@ import { currency } from "../../../services/utilities";
 const Body = ({ remittance = {} }) => {
   const { closing } = remittance; // sales
   const { coins = {}, bills = {}, sum = 0 } = closing || {};
-  var tableRaw = 1;
   return (
     <MDBTable small responsive hover bordered>
       <thead>
