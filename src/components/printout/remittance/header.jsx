@@ -21,15 +21,9 @@ export default function Header({ remittance }) {
           </h6>
         </div>
         <div className="d-flex align-items-center" style={{ width: "25%" }}>
-          <h6>Date:</h6>
-          <h6 className="ml-1">
-            {dateFormat(createdAt)} (
-            {
-              ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][
-                new Date(createdAt).getDay()
-              ]
-            }
-            )
+          <h6>Patients:</h6>
+          <h6 className="ml-1" style={{ fontWeight: 700 }}>
+            {patients}
           </h6>
         </div>
       </div>
@@ -64,16 +58,19 @@ export default function Header({ remittance }) {
             {currency.format(sales)}
           </h6>
         </div>
-        <div className="d-flex align-items-center" style={{ width: "25%" }}>
-          <h6>Patients:</h6>
-          <h6 className="ml-1" style={{ fontWeight: 700 }}>
-            {patients}
-          </h6>
-        </div>
       </div>
       <h5 className="text-center mt-n1 " style={{ fontWeight: 600 }}>
         Daily Remittance Report
       </h5>
+      <h6 className="text-center mt-n2">
+        {dateFormat(createdAt)} (
+        {
+          ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][
+            new Date(createdAt).getDay()
+          ]
+        }
+        )
+      </h6>
     </div>
   );
 }

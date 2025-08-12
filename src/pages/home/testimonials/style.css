@@ -183,3 +183,9 @@
     font-size: 15px;
   }
 }
+
+.homePage-testiminials-sliderContainer .swiper,
+.homePage-testiminials-sliderContainer .swiper-wrapper,
+.homePage-testiminials-sliderContainer .swiper-slide {
+  pointer-events: none;
+}

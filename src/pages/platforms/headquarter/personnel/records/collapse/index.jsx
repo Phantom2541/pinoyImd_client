@@ -168,21 +168,24 @@ export default function MenuCollapse({ staffs }) {
                   </div>
 
                   <div className="d-flex align-items-center">
-                    <span
-                      className="rounded-circle shadow-sm mr-2"
-                      style={{
-                        backgroundColor: employment.isEmployed(status)
-                          ? "#ffc107"
-                          : "#dc3545", // green or red
-                        width: "0.65rem",
-                        height: "0.65rem",
-                        display: "inline-block",
-                        position: "relative",
-                        top: "0",
-                        boxShadow: "0 0 4px rgba(0, 0, 0, 0.2)",
-                      }}
-                    ></span>
-                    <div className="d-flex align-items-center">
+                    <div
+                      className="d-flex align-items-center"
+                      style={{ minWidth: "100px" }}
+                    >
+                      <span
+                        className="rounded-circle shadow-sm mr-2 "
+                        style={{
+                          backgroundColor: employment.isEmployed(status)
+                            ? "#ffc107"
+                            : "#dc3545", // green or red
+                          width: "0.65rem",
+                          height: "0.65rem",
+                          display: "inline-block",
+                          position: "relative",
+                          top: "0",
+                          boxShadow: "0 0 4px rgba(0, 0, 0, 0.2)",
+                        }}
+                      />
                       <EditableSelect
                         collections={employment.collections}
                         keyForValue="abbr"

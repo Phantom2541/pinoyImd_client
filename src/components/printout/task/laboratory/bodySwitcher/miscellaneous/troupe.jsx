@@ -1,7 +1,7 @@
 import { MDBCol } from "mdbreact";
 
 export default function Troupe({ task, fontSize }) {
-  const { method, kit, lot, expiry } = task.troupe;
+  const { method = "", kit = "", lot = "", expiry = "" } = task?.troupe || {};
 
   return (
     <MDBCol

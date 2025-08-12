@@ -8,7 +8,6 @@ export default function CellCount({ cc, isMale, style, apc }) {
   const parseValue = (value) =>
     value <= 2 ? value.toFixed(2) : value < 10 ? value.toFixed(1) : value;
   const reference = Preferences[isMale];
-  console.log(reference[Abbreviation[0]]);
 
   return (
     <MDBTable hover bordered responsive className="mb-0">

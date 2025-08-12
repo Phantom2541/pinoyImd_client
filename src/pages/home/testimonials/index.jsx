@@ -235,9 +235,11 @@ export default function Testimonials() {
                   disableOnInteraction: false,
                   pauseOnMouseEnter: false,
                 }}
+                simulateTouch={false}
                 allowTouchMove={false}
+                touchStartPreventDefault={false} // 🔹 importante
+                passiveListeners={false} // 🔹 para sa mga mobile browsers
                 spaceBetween={0}
-                // slidesPerView={4}
                 style={{ height: "600px" }}
                 className="swiper-vertical-reverse"
                 breakpoints={{
