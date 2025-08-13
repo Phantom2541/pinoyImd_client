@@ -1,14 +1,13 @@
 import React, { useRef, useEffect } from "react";
 
 function colorDistanceSq(r1, g1, b1, r2, g2, b2) {
-  // Use squared distance for performance (no sqrt)
   const dr = r1 - r2,
     dg = g1 - g2,
     db = b1 - b2;
   return dr * dr + dg * dg + db * db;
 }
 
-export default function BgRemover({
+function BgRemoverComponent({
   src,
   alt = "",
   fallback,
@@ -29,7 +28,6 @@ export default function BgRemover({
     imgRef.current = img;
 
     let cancelled = false;
-
     const maxToleranceSq = tolerance * tolerance;
 
     img.src = src;
@@ -48,26 +46,51 @@ export default function BgRemover({
 
       const { r: bgR, g: bgG, b: bgB } = bgColor;
 
-      // Process pixels in chunks (optional optimization)
-      for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-        const a = data[i + 3];
+      let i = 0;
+      const chunkSize = 10000;
 
-        if (a === 0) continue;
+      function processChunk(deadline) {
+        if (cancelled) return;
 
-        // Use squared distance to avoid sqrt cost
-        const distSq = colorDistanceSq(r, g, b, bgR, bgG, bgB);
+        const max = Math.min(i + chunkSize, data.length);
+        for (; i < max; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const a = data[i + 3];
 
-        if (distSq < maxToleranceSq) {
-          // Calculate alpha fading
-          const alphaFactor = Math.sqrt(distSq) / tolerance;
-          data[i + 3] = a * alphaFactor;
+          if (a === 0) continue;
+
+          const distSq = colorDistanceSq(r, g, b, bgR, bgG, bgB);
+
+          if (distSq < maxToleranceSq) {
+            const alphaFactor = Math.sqrt(distSq) / tolerance;
+            data[i + 3] = a * alphaFactor;
+          }
+        }
+
+        if (i < data.length) {
+          if (
+            deadline &&
+            deadline.timeRemaining &&
+            deadline.timeRemaining() > 0
+          ) {
+            processChunk(deadline);
+          } else if ("requestIdleCallback" in window) {
+            requestIdleCallback(processChunk);
+          } else {
+            setTimeout(processChunk, 0);
+          }
+        } else {
+          ctx.putImageData(imageData, 0, 0);
         }
       }
 
-      ctx.putImageData(imageData, 0, 0);
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(processChunk);
+      } else {
+        setTimeout(processChunk, 0);
+      }
     };
 
     img.onerror = () => {
@@ -87,7 +110,6 @@ export default function BgRemover({
         };
 
         fallbackImg.onerror = () => {
-          // Optionally clear canvas or show error state
           ctx.clearRect(0, 0, canvas.width, canvas.height);
         };
       } else {
@@ -97,11 +119,10 @@ export default function BgRemover({
 
     return () => {
       cancelled = true;
-      // Optional: cancel image loading if possible
       if (imgRef.current) {
         imgRef.current.onload = null;
         imgRef.current.onerror = null;
-        imgRef.current.src = ""; // Cancel load
+        imgRef.current.src = "";
       }
     };
   }, [src, fallback, bgColor, tolerance]);
@@ -116,3 +137,5 @@ export default function BgRemover({
     />
   );
 }
+
+export default React.memo(BgRemoverComponent);
