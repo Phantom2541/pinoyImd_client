@@ -10,12 +10,12 @@ const Tasks = ({ key, form, obj, index, customer }) => {
     dispatch = useDispatch();
 
   const handleLabPrint = (task) => {
+    const { packages: pkgs = [] } = task;
     const services = collections.filter(({ id }) => task.services.includes(id));
     const taskData = { ...task, services };
-    console.log("task", task);
     localStorage.setItem("taskPrintout", JSON.stringify(taskData));
     const URL = `${window.location.origin}/printout/laboratory/${
-      task.packages.includes(176) ? "drugtest" : "task"
+      Array.isArray(pkgs) && pkgs?.includes(176) ? "drugtest" : "task"
     }`;
     const features = "top=100px,left=100px,width=794px,height=1123px";
 

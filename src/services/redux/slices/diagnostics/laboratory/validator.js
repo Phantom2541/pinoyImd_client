@@ -42,6 +42,7 @@ const initialState = {
   showWorkArea: false, //this is for working area
   showModal: false,
   showRadReader: false, //for viewing of uploaded x-ray
+  isLoadingHeads: false,
   totalPages: 0,
   page: 1,
   maxPage: 5,
@@ -50,6 +51,7 @@ const initialState = {
   isSuccess: false,
   print: false,
   isLoading: false,
+  isLoadingHeads: false,
   formSubmitted: false,
   message: "",
 };
@@ -424,19 +426,19 @@ export const reduxSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(HEADS.pending, (state) => {
-        state.isLoading = true;
+        state.isLoadingHeads = true;
         state.isSuccess = false;
         state.message = "";
       })
       .addCase(HEADS.fulfilled, (state, action) => {
         const { payload } = action.payload;
         state.heads = payload;
-        state.isLoading = false;
+        state.isLoadingHeads = false;
       })
       .addCase(HEADS.rejected, (state, action) => {
         const { error } = action;
         state.message = error.message;
-        state.isLoading = false;
+        state.isLoadingHeads = false;
       });
   },
 });
