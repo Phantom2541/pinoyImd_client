@@ -1,8 +1,8 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MDBTable } from "mdbreact";
 import {
-  referenceColor,
+  // referenceColor,
   findReference,
 } from "./../../../../../../../../../services/utilities";
 import { SetTASK } from "./../../../../../../../../../services/redux/slices/diagnostics/laboratory/validator.js";
@@ -91,13 +91,15 @@ export default function Chemistry() {
         {Object.entries(packages).map(([key, value], index) => {
           const service = services.find((s) => s.id === Number(key)) || {};
           const { preference, abbreviation, name, references } = service;
-          const { lo, hi, warn, alert, critical, units, _id } = findReference(
+          const { lo, hi, units, _id } = findReference(
+            // warn, alert, critical i remove it for now in desctructuring because the referenceColor is not working
             Number(key),
             patient?.isMale,
             patient?.dob,
             preference,
             references
           );
+          const color = value < lo ? "blue" : value > hi && "red";
 
           return (
             <tr key={`${mapKey}-${index}`}>
@@ -109,7 +111,8 @@ export default function Chemistry() {
                   type="number"
                   ref={(el) => (inputRefs.current[index] = el)}
                   style={{
-                    color: referenceColor(Number(value), critical, alert, warn),
+                    // color: referenceColor(Number(value), critical, alert, warn),
+                    color,
                   }}
                   name={key}
                   value={String(value)}

@@ -10,7 +10,6 @@ import {
   getGenderIcon,
   sourceColor,
 } from "../../../../../../services/utilities";
-import { Background } from "react-flow-renderer";
 
 const Header = ({ deal, index }) => {
   const { maxPage } = useSelector(({ auth }) => auth),
