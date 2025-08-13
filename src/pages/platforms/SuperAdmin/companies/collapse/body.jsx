@@ -12,6 +12,8 @@ export default function Collapsable({ branches, cid }) {
     { collections } = useSelector(({ companies }) => companies),
     dispatch = useDispatch();
 
+  console.log("collections", collections);
+
   const handleUpdate = ({ _id, key, value }) => {
     let data = { _id };
 

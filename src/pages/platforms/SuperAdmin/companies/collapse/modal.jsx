@@ -24,48 +24,15 @@ export default function Modal({ show, toggle, handlePick }) {
       <MDBModalHeader
         toggle={toggle}
         className="light-blue darken-3 white-text"
-      >
-        <MDBIcon icon="flask" className="mr-2" />
-        Add a Service
-      </MDBModalHeader>
+      ></MDBModalHeader>
       <MDBModalBody className="mb-0">
-        <DataTable
-          minHeight="0px"
-          title="Services Available"
-          array={services}
-          actions={[
-            {
-              _icon: "share",
-              _function: handlePick,
-              _haveSelect: true,
-              _allowMultiple: true,
-              _shouldReset: true,
-            },
-          ]}
-          tableHeads={[
-            {
-              _text: "Name",
-            },
-            {
-              _text: "Department",
-            },
-          ]}
-          tableBodies={[
-            {
-              _key: "name",
-              _format: (data, { abbreviation }) => (
-                <>
-                  <p className="fw-bold mb-1">{capitalize(data)}</p>
-                  <p className="mb-0">{abbreviation.toUpperCase()}</p>
-                </>
-              ),
-            },
-            {
-              _key: "department",
-              _format: capitalize,
-            },
-          ]}
-          handleSearch={handleSearch}
+        <SearchUser
+          setceo={handleceo}
+          label="CEO"
+          setUser={(value) =>
+            setForm((prev) => ({ ...prev, ceo: value || "" }))
+          }
+          className="mt-4"
         />
       </MDBModalBody>
     </MDBModal>
