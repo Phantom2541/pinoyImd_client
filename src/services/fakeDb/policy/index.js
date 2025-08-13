@@ -106,6 +106,7 @@ const Policy = {
       laboratory,
       radiology,
       diagnostics: [...new Set([...laboratory, ...radiology])],
+      diagnostic: [...new Set([...laboratory, ...radiology])],
     };
 
     const codesMap = new Set(Object.values(policyMap).flat());

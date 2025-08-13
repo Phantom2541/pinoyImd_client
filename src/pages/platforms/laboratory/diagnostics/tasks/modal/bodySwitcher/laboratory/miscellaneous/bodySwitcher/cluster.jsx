@@ -7,10 +7,16 @@ export default function Cluster({ task, setTask }) {
   const { packages = [], results = {} } = task;
   // {68: 0, 69: 0, 70: 0 }
   useEffect(() => {
+    //to implement default value
+    const expectedResults = packages.reduce((acc, key) => {
+      acc[key] = 0;
+      return acc;
+    }, {});
+
     if (packages.length !== Object.keys(results).length) {
-      setTask({ ...task, results: { ...results, 68: 0, 69: 0, 70: 0 } });
+      setTask({ ...task, results: { ...results, ...expectedResults } });
     }
-  }, [results, packages, task, setTask]);
+  }, [packages, results, setTask]);
   const handleSelectChange = (name, value) =>
     setTask({ ...task, results: { ...results, [name]: value } });
 

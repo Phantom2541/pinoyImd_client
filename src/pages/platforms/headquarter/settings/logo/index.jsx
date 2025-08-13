@@ -12,7 +12,7 @@ import {
   MDBView,
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
-import { ENDPOINT } from "./../../../../../services/utilities";
+import { Cloudinary, ENDPOINT } from "./../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
   UPLOAD,
@@ -20,8 +20,6 @@ import {
 } from "./../../../../../services/redux/slices/assets/persons/auth";
 import { FailedLogo } from "./../../../../../services/utilities";
 import ImageCropper from "../../../../../components/images/imageCropper";
-
-const array = new Array(5).fill().map((_, index) => index);
 
 export default function Logo() {
   const { addToast } = useToasts();
@@ -57,13 +55,14 @@ export default function Logo() {
     const newBlob = new Blob([ab], { type: "image/png" });
     const objectUrl = URL.createObjectURL(newBlob);
     setPreview(objectUrl);
+    const formData = Cloudinary.buildFileForm(
+      base64,
+      `companies/${company.name}`,
+      "logo"
+    );
     dispatch(
       UPLOAD({
-        data: {
-          path: `companies/${company.name}`,
-          base64: base64.split(",")[1],
-          name: "logo.png",
-        },
+        data: formData,
         token,
       })
     );
@@ -96,7 +95,8 @@ export default function Logo() {
         <MDBView hover={!showImgCropper}>
           <img
             src={
-              preview || `${ENDPOINT}/public/companies/${company.name}/logo.png`
+              preview ||
+              `${Cloudinary.getEndpoint()}/companies/${company.name}/logo.png`
             }
             className="img-fluid"
             alt={company?.name || "Default Logo"}
