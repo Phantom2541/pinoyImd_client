@@ -11,6 +11,7 @@ import img4 from "./../../../assets/teamBuilding/4.jpg";
 import img5 from "./../../../assets/teamBuilding/5.jpg";
 import img6 from "./../../../assets/teamBuilding/6.jpg";
 import img7 from "./../../../assets/teamBuilding/7.jpg";
+import { MDBAnimation } from "mdbreact";
 
 const allImg = [img1, img2, img3, img4, img5, img6, img7];
 
@@ -35,9 +36,17 @@ export default function Gallery() {
 
   return (
     <div className="homePage-gallery-section">
-      <h1 className="homePage-gallery-title mb-5">Dev Team Building</h1>
+      <MDBAnimation reveal type="fadeInDown" duration="1.5s" delay=".5s">
+        <h1 className="homePage-gallery-title mb-5">Dev Team Building</h1>
+      </MDBAnimation>
 
-      <div className="homePage-gallery-container">
+      <MDBAnimation
+        reveal
+        type="fadeIn"
+        duration="1.5s"
+        delay="1s"
+        className="homePage-gallery-container"
+      >
         <img
           alt="Main Display"
           src={selectedImage}
@@ -73,7 +82,7 @@ export default function Gallery() {
             ))}
           </Swiper>
         </div>
-      </div>
+      </MDBAnimation>
 
       {/* Modal */}
       {modalOpen && (

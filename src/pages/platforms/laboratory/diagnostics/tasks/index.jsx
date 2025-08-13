@@ -31,7 +31,15 @@ import Table from "./table";
 export default function Tasks() {
   const { token, activePlatform } = useSelector(({ auth }) => auth),
     { message, isSuccess } = useSelector(({ deals }) => deals),
-    { isLoading, byGroup } = useSelector(({ validator }) => validator),
+    { isLoading, byGroup, isLoadingHeads } = useSelector(
+      ({ validator }) => validator
+    ),
+    { isLoading: physicianLoading } = useSelector(
+      ({ physicians }) => physicians
+    ),
+    { isLoading: preferencesLoading } = useSelector(
+      ({ preferences }) => preferences
+    ),
     { addToast } = useToasts(),
     dispatch = useDispatch();
 
@@ -102,7 +110,7 @@ export default function Tasks() {
   return (
     <MDBCard narrow>
       <Header />
-      {isLoading ? (
+      {isLoading || physicianLoading || preferencesLoading || isLoadingHeads ? (
         <TableLoading />
       ) : byGroup === "all" ? (
         <DealCollapse />

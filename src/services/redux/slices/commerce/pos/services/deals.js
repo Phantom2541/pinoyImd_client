@@ -277,6 +277,23 @@ export const UPDATE = createAsyncThunk(`${url}/update`, (form, thunkAPI) => {
   }
 });
 
+export const RESCHEDULE = createAsyncThunk(
+  `${url}/reschedule`,
+  (form, thunkAPI) => {
+    try {
+      return axioKit.update(url, form.data, form.token, "reschedule");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const UPDATE_INFO = createAsyncThunk(
   `${url}/UPDATE_INFO`,
   ({ data, token }, thunkAPI) => {
@@ -1381,6 +1398,35 @@ export const reduxSlice = createSlice({
         const { error } = action;
         state.message = error.message;
         state.formSubmitted = false;
+      })
+      .addCase(RESCHEDULE.pending, (state) => {
+        // state.isLoading = true; comment this to stop loading and refreshing UI
+        state.isSuccess = false;
+        state.formSubmitted = true;
+        state.message = "";
+      })
+      .addCase(RESCHEDULE.fulfilled, (state, action) => {
+        const { success, payload } = action.payload;
+
+        const updateCollections = (collections) => {
+          const index = collections.findIndex((item) => item._id === payload);
+          collections.splice(index, 1);
+        };
+
+        updateCollections(state.collections);
+        updateCollections(state.filtered);
+        updateCollections(state.refined);
+
+        state.message = success;
+        state.isSuccess = true;
+        state.formSubmitted = false;
+        state.isLoading = false;
+      })
+      .addCase(RESCHEDULE.rejected, (state, action) => {
+        const { error } = action;
+        state.formSubmitted = false;
+        state.message = error.message;
+        state.isLoading = false;
       })
 
       .addCase(UPDATE.pending, (state) => {

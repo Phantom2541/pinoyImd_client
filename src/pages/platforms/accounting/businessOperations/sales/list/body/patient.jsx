@@ -12,7 +12,7 @@ import tendered from "../../../../../../../assets/tendered.png";
 import discount from "../../../../../../../assets/discount.png";
 import { Categories, HMO } from "../../../../../../../services/fakeDb";
 import { useSelector } from "react-redux";
-// import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
+import PickPhysician from "../../../../../../../components/searchables/physicians/pickPhysician";
 const Patient = ({
   index = -1,
   deal = {},
@@ -32,6 +32,7 @@ const Patient = ({
   onSave = () => {},
   showingPhysician = () => {},
   setDidHoverID = () => {},
+  handleReschedule = () => {},
 }) => {
   const { activePlatform } = useSelector(({ auth }) => auth),
     { formSubmitted, isSuccess } = useSelector(({ deals }) => deals),
@@ -148,7 +149,7 @@ const Patient = ({
               isPhysicianEdit && "deals-zoom-in"
             }`}
           >
-            {/* {isPhysicianEdit && (
+            {isPhysicianEdit && (
               <PickPhysician
                 defaultValue={
                   !deal?.physicianId?._id
@@ -175,7 +176,7 @@ const Patient = ({
                 }
                 handleClose={() => setSelected({})}
               />
-            )} */}
+            )}
           </div>
           <div
             className="cursor-pointer"
@@ -309,6 +310,22 @@ const Patient = ({
                     </MDBBtn>
                   </div>
                 )}
+                <button
+                  onClick={() => handleReschedule(deal)}
+                  title="Reschedule"
+                  style={{
+                    background: "blue",
+                    border: "none",
+                    color: "white",
+                    borderRadius: "4px",
+                    boxShadow: "0 0px 7px  rgba(0, 0, 0, 0.2)",
+                    padding: "5px 8px",
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  <MDBIcon icon="calendar" />
+                </button>
               </MDBBtnGroup>
             </>
           )}
