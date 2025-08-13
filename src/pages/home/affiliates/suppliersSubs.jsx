@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { Cloudinary, fullAddress } from "../../../services/utilities";
 import fallbackLogo from "./../../../assets/iMD.png"; // fallback image
 import BgRemover from "../../../components/bgRemover";
+import { MDBAnimation } from "mdbreact";
 
 export default function SuppliersSubs() {
   const { collections } = useSelector(({ companies }) => companies);
@@ -32,7 +33,9 @@ export default function SuppliersSubs() {
 
   return (
     <div className="affiliates-section">
-      <h1 className="affiliates-title">Suppliers</h1>
+      <MDBAnimation reveal type="fadeInDown" duration="1.5s" delay=".5s">
+        <h1 className="affiliates-title">Suppliers</h1>
+      </MDBAnimation>
       <Swiper
         className="affiliates-swiper"
         modules={[Autoplay]}
@@ -55,8 +58,8 @@ export default function SuppliersSubs() {
         breakpoints={{
           0: { slidesPerView: 2, spaceBetween: 15 },
           576: { slidesPerView: 2, spaceBetween: 15 },
-          1200: { slidesPerView: 4, spaceBetween: 25 },
-          1600: { slidesPerView: 6, spaceBetween: 30 },
+          1200: { slidesPerView: 3, spaceBetween: 25 },
+          1600: { slidesPerView: 4, spaceBetween: 30 },
         }}
       >
         {supplierCompanies.map((item, index) => {
@@ -72,17 +75,29 @@ export default function SuppliersSubs() {
           return (
             <SwiperSlide key={item._id || index}>
               <div className="affiliates-logo-wrapper">
-                <BgRemover
-                  className="affiliates-logo"
-                  src={logoUrl}
-                  alt={item.name}
-                  fallback={fallbackLogo}
-                />
-                <span className="affiliates-logo-name">{item.name}</span>
-                <span className="affiliates-logo-address">{address.city}</span>
-                <span className="affiliates-logo-category">
-                  {item.category}
-                </span>
+                <MDBAnimation reveal type="flipInX" duration="1.5s" delay=".5s">
+                  <BgRemover
+                    className="affiliates-logo"
+                    src={logoUrl}
+                    alt={item.name}
+                    fallback={fallbackLogo}
+                  />
+                </MDBAnimation>
+                <MDBAnimation
+                  className="affiliates-logo-info"
+                  reveal
+                  type="fadeInUp"
+                  duration="1.5s"
+                  delay="1s"
+                >
+                  <span className="affiliates-logo-name">{item.name}</span>
+                  <span className="affiliates-logo-subname">
+                    {item.subName}
+                  </span>
+                  <small className="affiliates-logo-address">
+                    {address.city}
+                  </small>
+                </MDBAnimation>
               </div>
             </SwiperSlide>
           );

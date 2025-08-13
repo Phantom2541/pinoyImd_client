@@ -58,29 +58,31 @@
   transform: scale(1.1);
 }
 
+.affiliates-logo-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .affiliates-logo-name {
   font-size: 3rem;
   font-weight: bold;
   color: white;
   text-transform: uppercase;
-  text-decoration: underline; /* line exactly under text */
-  text-decoration-color: white; /* make underline white */
-  text-decoration-thickness: 2px; /* adjust thickness */
-  text-underline-offset: 0.3rem; /* space between text and underline */
+  text-decoration: underline;
+  text-decoration-color: white;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.1rem;
 }
 
 .affiliates-logo-subname {
   font-size: 1.1rem;
-  line-height: 1rem;
-
   font-weight: 500;
   color: white;
   text-transform: capitalize;
-  margin-top: -0.5rem;
 }
 
-.affiliates-logo-category {
-  font-size: 1rem;
+.affiliates-logo-address {
   font-weight: 400;
   color: white;
 }
@@ -95,16 +97,17 @@
     height: 70px;
   }
   .affiliates-logo-name {
-    font-size: 0.95rem;
+    font-size: 1rem;
+    text-decoration-thickness: 1px;
+  }
+  .affiliates-logo-subname {
+    font-size: 0.55rem;
   }
   .affiliates-logo-address {
-    font-size: 0.65rem;
+    font-size: 0.45rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 120px;
-  }
-  .affiliates-logo-category {
-    font-size: 0.65rem;
   }
 }

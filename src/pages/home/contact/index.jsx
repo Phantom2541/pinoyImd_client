@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MDBIcon, MDBInput, MDBBtn } from "mdbreact";
+import { MDBIcon, MDBInput, MDBBtn, MDBAnimation } from "mdbreact";
 import "./style.css";
 import { useToasts } from "react-toast-notifications";
 // import GoogleMapReact from "google-map-react";
@@ -64,7 +64,12 @@ export default function ContactUs() {
     <section className="d-flex justify-content-center align-content-center">
       <div className="contactUs-container">
         <div className="contactUs-top">
-          <div className="contactUs-leftSide">
+          <MDBAnimation
+            reveal
+            type="fadeIn"
+            duration="1.5s"
+            className="contactUs-leftSide"
+          >
             <div className="contactUs-logo">
               <img src={LOGO} alt="LOGO" width="90px" />
               <span>Pinoy iMD</span>
@@ -88,8 +93,14 @@ export default function ContactUs() {
               <MDBIcon fas icon="phone-alt" />
               <span> 0935-033-9777</span>
             </div>
-          </div>
-          <div className="contactUs-middleSide">
+          </MDBAnimation>
+          <MDBAnimation
+            reveal
+            type="fadeIn"
+            duration="1.5s"
+            delay="1s"
+            className="contactUs-middleSide"
+          >
             <div style={{ height: "100%", width: "100%" }}>
               <Map
                 center={userPosition}
@@ -108,9 +119,15 @@ export default function ContactUs() {
                 </Marker>
               </Map>
             </div>
-          </div>
+          </MDBAnimation>
         </div>
-        <div className="contactUs-rightSide">
+        <MDBAnimation
+          reveal
+          type="fadeIn"
+          duration="1.5s"
+          delay="1.5s"
+          className="contactUs-rightSide"
+        >
           <span className="contactUs-emailUs">Contact Us:</span>
           <div style={{ marginTop: "-20px" }}>
             <form onSubmit={handleSubmit}>
@@ -178,7 +195,7 @@ export default function ContactUs() {
               </div>
             </form>
           </div>
-        </div>
+        </MDBAnimation>
 
         <div></div>
         <div></div>

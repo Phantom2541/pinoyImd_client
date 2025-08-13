@@ -1,5 +1,5 @@
 import React from "react";
-import { MDBIcon } from "mdbreact";
+import { MDBAnimation, MDBIcon } from "mdbreact";
 import "./style.css";
 
 export default function Pioneers() {
@@ -71,18 +71,32 @@ export default function Pioneers() {
   ];
   return (
     <section className="team-section text-center">
-      <h1 className="homePage-pioneers-title text-center mt-5 h1">Pioneers</h1>
-      <p
-        className="text-center mb-5 w-responsive mx-auto"
-        style={{ fontWeight: "400" }}
-      >
-        Our team is composed of talented professionals with diverse expertise,
-        working collaboratively to deliver exceptional results for our clients.
-      </p>
+      <MDBAnimation reveal type="fadeInDown" duration="1.5s" delay=".5s">
+        <h1 className="homePage-pioneers-title text-center mt-5 h1">
+          Pioneers
+        </h1>
+      </MDBAnimation>
+      <MDBAnimation reveal type="fadeInDown" duration="1.5s" delay="1s">
+        <p
+          className="text-center mb-5 w-responsive mx-auto"
+          style={{ fontWeight: "400" }}
+        >
+          Our team is composed of talented professionals with diverse expertise,
+          working collaboratively to deliver exceptional results for our
+          clients.
+        </p>
+      </MDBAnimation>
 
       <div className="homePage-pioneers-container">
         {PIONEERS.map((pioneer, index) => (
-          <div className="homePage-pioneers-card" key={index}>
+          <MDBAnimation
+            reveal
+            type="fadeInUp"
+            duration="1.5s"
+            delay={`${index * 0.2}s`}
+            className="homePage-pioneers-card"
+            key={index}
+          >
             <img src={pioneer.img} alt="avatar" />
             <span>{pioneer.name}</span>
             <p>{pioneer.role}</p>
@@ -112,7 +126,7 @@ export default function Pioneers() {
                 <MDBIcon fab icon="twitter" />
               </a>
             </div>
-          </div>
+          </MDBAnimation>
         ))}
       </div>
     </section>

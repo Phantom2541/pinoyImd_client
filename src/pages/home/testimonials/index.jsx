@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import AVATAR from "./../../../assets/male.jpg";
+import { MDBAnimation } from "mdbreact";
 
 const testimonials = [
   {
@@ -153,10 +154,18 @@ export default function Testimonials() {
   const displayValue = hover || rating;
   return (
     <>
-      <h1 className="homePage-testimonials-title mb-5">Testimonials</h1>
+      <MDBAnimation reveal type="fadeInDown" duration="1.5s" delay=".5s">
+        <h1 className="homePage-testimonials-title mb-5">Testimonials</h1>
+      </MDBAnimation>
       <div className="homPage-testimonials-section">
         <div className="homPage-testimonials-container">
-          <div className="homePage-testimonials-text">
+          <MDBAnimation
+            reveal
+            type="fadeInLeft"
+            duration="1.5s"
+            delay=".5s"
+            className="homePage-testimonials-text"
+          >
             <h1>We believe in the power of community</h1>
             <p>
               Our goal is to create a product and service that your're satisfied
@@ -164,10 +173,16 @@ export default function Testimonials() {
               our services to make it better every day and really listen to what
               our users has to say.
             </p>
-          </div>
+          </MDBAnimation>
 
           <div className="homePage-testimonials-sliderContainer-responsive">
-            <div className="homePage-testiminials-sliderContainer hide">
+            <MDBAnimation
+              reveal
+              type="fadeIn"
+              duration="1.5s"
+              delay="1s"
+              className="homePage-testiminials-sliderContainer hide"
+            >
               <Swiper
                 modules={[Autoplay]}
                 direction="vertical"
@@ -223,8 +238,14 @@ export default function Testimonials() {
                   </SwiperSlide>
                 ))}
               </Swiper>
-            </div>
-            <div className="homePage-testiminials-sliderContainer">
+            </MDBAnimation>
+            <MDBAnimation
+              reveal
+              type="fadeIn"
+              duration="1.5s"
+              delay="1.5s"
+              className="homePage-testiminials-sliderContainer"
+            >
               <Swiper
                 modules={[Autoplay]}
                 direction="vertical"
@@ -288,7 +309,7 @@ export default function Testimonials() {
                   </SwiperSlide>
                 ))}
               </Swiper>
-            </div>
+            </MDBAnimation>
           </div>
         </div>
       </div>
