@@ -29,7 +29,7 @@ export default function TopNavigation({ toggle, onSideNavToggleClick }) {
       expand="md"
       scrolling
       fixed="top"
-      style={{ zIndex: 3 }}
+      style={{ zIndex: 999 }}
     >
       <div className="d-flex justify-content-between align-items-center w-100">
         <div
