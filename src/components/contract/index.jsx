@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBContainer } from "mdbreact";
 import { useSelector } from "react-redux";
 import { billingAddress, fullName } from "../../services/utilities";

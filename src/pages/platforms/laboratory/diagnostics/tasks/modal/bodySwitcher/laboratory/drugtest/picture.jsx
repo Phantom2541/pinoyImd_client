@@ -1,27 +1,21 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
 import Cropper from "react-easy-crop";
 
-// import { isJpegOrJpgFile } from "../../../../../../../../../services/utilities";
-import {
-  IMAGE,
-  // UPLOAD,
-} from "../../../../../../../../../services/redux/slices/assets/persons/auth";
-// {
-//   task, setTask;
-// }
+import { UPLOAD } from "../../../../../../../../../services/redux/slices/assets/persons/auth";
+import { Cloudinary } from "../../../../../../../../../services/utilities";
+import Spinner from "../../../../../../../../../components/spinner";
+
 export default function ProfileImage() {
   const dispatch = useDispatch();
-  const { progressBar } = useSelector(({ auth }) => auth);
-  const { addToast } = useToasts();
+  const { token, formSubmitted } = useSelector(({ auth }) => auth);
+  const { task } = useSelector(({ validator }) => validator);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
 
-  const [file, setFile] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [finalImage, setFinalImage] = useState(null);
@@ -31,13 +25,27 @@ export default function ProfileImage() {
   const aspect = 1;
   const cropSize = { width: 250, height: 250 };
 
+  const checkCloudinaryImage = useCallback(() => {
+    const imgUrl = `${Cloudinary.getEndpoint()}/users/${
+      task.patient.email
+    }/profile.png?v=${Date.now()}`;
+
+    fetch(imgUrl, { method: "HEAD" })
+      .then((res) => {
+        if (res.ok) {
+          setFinalImage(imgUrl);
+          setCapturedImage(null);
+        } else {
+          setFinalImage(null);
+          setCapturedImage(null);
+        }
+      })
+      .catch(() => setFinalImage(null));
+  }, [task]);
+
   useEffect(() => {
-    if (file && progressBar === 100) {
-      dispatch(IMAGE(URL.createObjectURL(file)));
-      setFile(null);
-      addToast("Image Updated Successfully.", { appearance: "success" });
-    }
-  }, [progressBar, file, dispatch, addToast]);
+    checkCloudinaryImage();
+  }, [checkCloudinaryImage]);
 
   useEffect(() => {
     if (!capturedImage && !finalImage) {
@@ -57,39 +65,6 @@ export default function ProfileImage() {
       streamRef.current = null;
     };
   }, [capturedImage, finalImage]);
-
-  // const handleError = (message) => addToast(message, { appearance: "warning" });
-
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (!isJpegOrJpgFile(file))
-  //     return handleError("Please select a JPG image.");
-
-  //   const reader = new FileReader();
-  //   reader.onload = (e) => {
-  //     const img = new Image();
-  //     img.src = e.target.result;
-  //     img.onload = () => {
-  //       if (img.width !== img.height)
-  //         return handleError("Image must be square.");
-
-  //       setFile(file);
-  //       setTask({ ...task, image: "profile.jpg" });
-
-  //       dispatch(
-  //         UPLOAD({
-  //           data: {
-  //             path: `${task.patient.email}`,
-  //             base64: reader.result.split(",")[1],
-  //             name: "profile.jpg",
-  //           },
-  //           token,
-  //         })
-  //       );
-  //     };
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
 
   const capturePhoto = () => {
     const canvas = canvasRef.current;
@@ -123,8 +98,16 @@ export default function ProfileImage() {
       250
     );
 
-    setFinalImage(canvas.toDataURL("image/png"));
-    setCapturedImage(null);
+    const formData = Cloudinary.buildFileForm(
+      canvas.toDataURL("image/png"),
+      `users/${task.patient.email}`,
+      "profile"
+    );
+
+    dispatch(UPLOAD({ data: formData, token })).then(() => {
+      setFinalImage(canvas.toDataURL("image/png"));
+      setCapturedImage(null);
+    });
   };
 
   const handleRetake = () => {
@@ -205,9 +188,18 @@ export default function ProfileImage() {
               }}
             >
               <MDBBtn size="sm" color="success" onClick={getCroppedImg}>
-                <MDBIcon icon="check" />
+                {formSubmitted ? (
+                  <Spinner formSubmitted={formSubmitted} />
+                ) : (
+                  <MDBIcon icon="check" />
+                )}
               </MDBBtn>
-              <MDBBtn size="sm" color="danger" onClick={handleRetake}>
+              <MDBBtn
+                size="sm"
+                color="danger"
+                onClick={() => checkCloudinaryImage()}
+                disabled={formSubmitted}
+              >
                 <MDBIcon icon="times" />
               </MDBBtn>
             </div>
