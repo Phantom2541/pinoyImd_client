@@ -38,7 +38,7 @@ const Details = ({
             label="Subname"
             value={form.subName}
             onChange={({ target }) =>
-              setForm({ ...form, subName: target.value })
+              setForm({ ...form, subName: target.value, isGhost: false })
             }
           />
         </MDBCol>
@@ -84,88 +84,6 @@ const Details = ({
               })
             }
           />
-        </MDBCol>
-      </MDBRow>
-
-      <MDBRow>
-        <MDBCol>
-          <div>
-            <span className="mr-2 " style={{ fontWeight: 500 }}>
-              Is Hiring ?
-            </span>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onChange={() => setForm({ ...form, isHiring: !form.isHiring })}
-              checked={form.isHiring}
-              id={"hiring-yes"}
-            />
-            <label
-              htmlFor={"hiring-yes"}
-              className="form-check-label label-table"
-              style={{ fontWeight: 300 }}
-            >
-              Yes
-            </label>
-
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onChange={() => {
-                setForm({ ...form, isHiring: !form.isHiring });
-                setBranch({ ...branch, isHiring: !branch.isHiring });
-              }}
-              checked={!form.isHiring}
-              id={"hiring-no"}
-            />
-            <label
-              htmlFor={"hiring-no"}
-              className="form-check-label label-table ml-3"
-              style={{ fontWeight: 300 }}
-            >
-              No
-            </label>
-          </div>
-        </MDBCol>
-        <MDBCol>
-          <div>
-            <span className="mr-2" style={{ fontWeight: 500 }}>
-              Is Verify ?
-            </span>
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onChange={() =>
-                setForm({ ...form, hasVerified: !form.hasVerified })
-              }
-              checked={form.hasVerified}
-              id={"verified-yes"}
-            />
-            <label
-              htmlFor={"verified-yes"}
-              className="form-check-label label-table"
-              style={{ fontWeight: 300 }}
-            >
-              Yes
-            </label>
-
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onChange={() =>
-                setForm({ ...form, hasVerified: !form.hasVerified })
-              }
-              checked={!form.hasVerified}
-              id={"verified-no"}
-            />
-            <label
-              htmlFor={"verified-no"}
-              className="form-check-label label-table ml-3"
-              style={{ fontWeight: 300 }}
-            >
-              No
-            </label>
-          </div>
         </MDBCol>
       </MDBRow>
     </>
