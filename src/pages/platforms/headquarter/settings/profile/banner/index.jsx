@@ -18,6 +18,7 @@ import {
 } from "mdbreact";
 import { useToasts } from "react-toast-notifications";
 import {
+  Cloudinary,
   ENDPOINT,
   fullName,
   getAge,
@@ -85,14 +86,14 @@ const Banner = () => {
       setPreview(objectUrl);
     };
     image.src = objectUrl;
-
+    const formData = Cloudinary.buildFileForm(
+      base64,
+      `companies/${companyId.name}/${branch}`,
+      "banner"
+    );
     dispatch(
       UPLOAD({
-        data: {
-          path: `companies/${companyId.name}/${branch}`,
-          base64: base64.split(",")[1],
-          name: "banner.png",
-        },
+        data: formData,
         token,
       })
     );
@@ -194,7 +195,6 @@ const Banner = () => {
         <div key={`${currentIndex}-${direction}`} className={wrapperClass}>
           <MDBCard style={{ boxShadow: `0 0 7px ${shadowColor}` }}>
             <MDBCardBody>
-              {console.log(imgAvailable)}
               {imgAvailable && (
                 <MDBTypography
                   tag="h4"
@@ -215,7 +215,9 @@ const Banner = () => {
                 <img
                   src={
                     preview ||
-                    `${ENDPOINT}/public/companies/${companyId.name}/${name}/banner.png`
+                    `${Cloudinary.getEndpoint()}/companies/${
+                      companyId.name
+                    }/${name}/banner.png`
                   }
                   style={{
                     width: "100%",
