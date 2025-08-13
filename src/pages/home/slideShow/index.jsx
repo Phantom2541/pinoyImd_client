@@ -40,13 +40,7 @@ export default function SlideShow({ handleFlip, flipped }) {
             flipped ? "subscriber-flipped" : ""
           }`}
         >
-          <MDBAnimation
-            reveal
-            type="fadeIn"
-            duration="2000ms"
-            delay="1s"
-            className="subscriber-flip-card"
-          >
+          <div className="subscriber-flip-card">
             <div className="subscriber-flip-card-front">
               <Carousel
                 // autoPlay
@@ -81,7 +75,7 @@ export default function SlideShow({ handleFlip, flipped }) {
               </button>
               <Register />
             </div>
-          </MDBAnimation>
+          </div>
         </div>
       </div>
     </MDBAnimation>
