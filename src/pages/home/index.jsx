@@ -279,7 +279,11 @@ export default class Home extends React.Component {
             </MDBMask>
           </MDBView>
         </section>
-        <MDBContainer fluid style={{ backgroundColor: "#00796B1A" }}>
+        <MDBContainer
+          fluid
+          style={{ backgroundColor: "#00796B1A" }}
+          className="p-0"
+        >
           <div id="about">
             <Description />
           </div>
@@ -315,45 +319,8 @@ export default class Home extends React.Component {
             <ContactUs />
           </div>
         </MDBContainer>
-        <MDBFooter className="mt-5 text-center text-md-left">
-          {/* <MDBContainer>
-            <MDBRow>
-              <MDBCol md="12">
-                <ul className="list-unstyled d-flex justify-content-center mb-0 pb-0 pt-2 list-inline">
-                  <li
-                    className="list-inline-item cursor-pointer"
-                    onClick={() =>
-                      window.open("https://www.facebook.com/z3.star/", "_blank")
-                    }
-                  >
-                    <MDBIcon
-                      fab
-                      icon="facebook"
-                      size="2x"
-                      className="white-text p-2 m-2"
-                    />
-                  </li>
-                  <li
-                    className="list-inline-item cursor-pointer"
-                    onClick={() =>
-                      window.open(
-                        "https://www.linkedin.com/in/benedict-pajarillaga-98b864222/",
-                        "_blank"
-                      )
-                    }
-                  >
-                    <MDBIcon
-                      fab
-                      icon="linkedin"
-                      size="2x"
-                      className="white-text p-2 m-2"
-                    />
-                  </li>
-                </ul>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer> */}
-          <Copyrights backgroundColor="#00796b" borderColor="#00796b " />
+        <MDBFooter className="text-center text-md-left">
+          <Copyrights backgroundColor="#00564B" borderColor="#004B42 " />
         </MDBFooter>
       </div>
     );

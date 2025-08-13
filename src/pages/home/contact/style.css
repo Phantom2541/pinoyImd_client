@@ -3,13 +3,12 @@
   flex-direction: row;
   justify-content: center;
   align-items: stretch;
-  width: 80%;
-  height: 450px;
+  width: 100vw;
+  height: 550px;
   gap: 10px 25px;
   padding: 25px 60px;
   background-color: rgba(0, 121, 107, 1);
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
   flex-wrap: nowrap;
 }
 
@@ -32,6 +31,7 @@
 
 .contactUs-middleSide {
   flex: 1;
+  max-height: 380px;
 }
 
 .contactUs-rightSide {
