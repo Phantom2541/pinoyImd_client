@@ -102,7 +102,6 @@ const Policy = {
   getByCategory: (category) => {
     const laboratory = ["LAB", "Clinic"];
     const radiology = ["RAD", "Clinic"];
-
     const policyMap = {
       laboratory,
       radiology,
@@ -112,7 +111,7 @@ const Policy = {
     const codesMap = new Set(Object.values(policyMap).flat());
 
     const departmentsInCategory = collections.filter(({ code }) =>
-      policyMap[category.toLowerCase()].includes(code)
+      policyMap[category.toLowerCase()]?.includes(code)
     );
 
     const uncategorizedItems = collections.filter(
