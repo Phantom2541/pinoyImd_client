@@ -1,0 +1,12 @@
+.drug-test-table {
+  width: 95%;
+  border: 2px solid black;
+  border-collapse: collapse;
+}
+
+.drug-test-table td,
+.drug-test-table th {
+  border: 2px solid black;
+  padding: 1px 4px;
+  font-weight: 400;
+}

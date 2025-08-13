@@ -1,4 +1,3 @@
-import React from "react";
 import { MDBInput } from "mdbreact";
 
 export default function Troupe({ task, handleSelectChange }) {
