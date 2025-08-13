@@ -44,7 +44,7 @@ export default function Gallery() {
         reveal
         type="fadeIn"
         duration="1.5s"
-        delay="2s"
+        delay="1s"
         className="homePage-gallery-container"
       >
         <img
