@@ -46,6 +46,7 @@
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   margin: 10px;
   padding: 10px 15px;
+  background-color: white;
 }
 
 .homePage-testiminials-sliderCard:hover {

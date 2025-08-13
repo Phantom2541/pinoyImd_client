@@ -1,7 +1,6 @@
 import React from "react";
 import "swiper/css";
 import "./style.css";
-import DiagnosticsSubs from "./diagnosticsSubs";
 import SuppliersSubs from "./suppliersSubs";
 import BetaTester from "./betaTester";
 import { useEffect } from "react";
@@ -16,11 +15,9 @@ export default function Affiliates() {
   }, [dispatch, token]);
   return (
     <div className="homePage-affiliates">
-      <div className="subscriber-bg-img">
-        <div className="subscriber-bg-mask" />
-      </div>
+      <div className="subscriber-bg-img" />
+      <div className="subscriber-bg-mask" />
       <BetaTester />
-
       <SuppliersSubs />
     </div>
   );

@@ -19,6 +19,7 @@ import Gallery from "./gallery";
 import SlideShow from "./slideShow";
 import { Helmet } from "react-helmet";
 import Affiliates from "./affiliates";
+import ECGWave from "./../subscribers/diagnostics/cardioGraph";
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -278,33 +279,38 @@ export default class Home extends React.Component {
             </MDBMask>
           </MDBView>
         </section>
-        <MDBContainer fluid>
+        <MDBContainer fluid style={{ backgroundColor: "#00796B1A" }}>
           <div id="about">
             <Description />
           </div>
-          <hr className="mb-5" />
+          <ECGWave color="#00B8D4" waves={10} className="my-4" />
           <div id="about">
             <AboutUs />
           </div>
-          <hr className="mb-5" />
+          <ECGWave color="#00B8D4" waves={19} className="my-4" />
+
           <div id="about">
             <Affiliates />
           </div>
 
-          <hr className="mb-5" />
+          <ECGWave color="#00B8D4" waves={10} className="my-4" />
+
           <div id="testimonials">
             <Testimonials />
           </div>
 
-          <hr className="mb-4" />
+          <ECGWave color="#00B8D4" waves={25} className="my-4" />
+
           <div id="pioneers">
             <Pioneers />
           </div>
-          <hr className="mb-4" />
+          <ECGWave color="#00B8D4" waves={19} className="my-4" />
+
           <div id="pioneers">
             <Gallery />
           </div>
-          <hr className="mb-4" />
+          <ECGWave color="#00B8D4" waves={5} className="my-4" />
+
           <div id="contact">
             <ContactUs />
           </div>

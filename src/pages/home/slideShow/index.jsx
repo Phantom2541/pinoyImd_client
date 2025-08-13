@@ -33,7 +33,7 @@ const slides = [
 
 export default function SlideShow({ handleFlip, flipped }) {
   return (
-    <MDBAnimation reveal type="fadeIn" duration="1000ms">
+    <MDBAnimation reveal type="fadeIn" duration="2000ms" delay="500ms">
       <div className="subscriber-register-section">
         <div
           className={`subscriber-flip-container ${
