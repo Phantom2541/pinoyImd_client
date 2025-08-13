@@ -33,6 +33,7 @@ const Body = () => {
       activeType = "",
       isLoading = false,
     } = useSelector(({ portal }) => portal),
+    [isExporting, setIsExporting] = useState(false),
     dispatch = useDispatch();
   const { diagnostic = {}, department = [] } = result;
   const task = useMemo(() => {
@@ -92,12 +93,17 @@ const Body = () => {
   const form = diagnostic[activeType]?.form || activeType;
 
   const handlePDF = async () => {
-    await EMR_RESULT_TO_PDF({
-      task,
-      form,
-      department: getDepartment(),
-      result,
-    });
+    try {
+      setIsExporting(true); // start loading
+      await EMR_RESULT_TO_PDF({
+        task,
+        form,
+        department: getDepartment(),
+        result,
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -154,12 +160,14 @@ const Body = () => {
                           size="sm"
                           color="info"
                           outline
+                          disabled={isExporting}
                           className="px-2"
                           onClick={handlePDF}
                           title="Download PDF"
                         >
                           <MDBIcon
-                            icon="download"
+                            pulse={isExporting}
+                            icon={isExporting ? "spinner" : "download"}
                             style={{ fontSize: "0.9rem" }}
                           />
                         </MDBBtn>
