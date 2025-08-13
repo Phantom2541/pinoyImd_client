@@ -44,7 +44,7 @@ export default function SlideShow({ handleFlip, flipped }) {
             reveal
             type="fadeIn"
             duration="2000ms"
-            delay="500ms"
+            delay="1s"
             className="subscriber-flip-card"
           >
             <div className="subscriber-flip-card-front">

@@ -107,7 +107,8 @@ export default class Home extends React.Component {
         <MDBAnimation
           reveal
           type="fadeInDown"
-          duration="1s"
+          duration="1.5s"
+          delay="500ms"
           className="homePage-topbar"
         >
           <div
