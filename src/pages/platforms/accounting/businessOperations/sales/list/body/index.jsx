@@ -4,9 +4,11 @@ import {
   capitalize,
   currency,
   Deals,
+  fullName,
 } from "../../../../../../../services/utilities";
 import {
   MANAGERUPDATE,
+  RESCHEDULE,
   RESET,
   SetREVERT,
   SetSORTING,
@@ -248,6 +250,89 @@ export const Tables = () => {
     );
   };
 
+  const handleReschedule = (deal) => {
+    // Default tomorrow date
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split("T")[0];
+
+    Swal.fire({
+      title: `📅 Reschedule for <span style="color:#3085d6;">${fullName(
+        deal?.customerId?.fullName
+      )}</span>`,
+      html: `
+      <p style="font-size:14px;margin-bottom:12px;color:#555;">
+        Please choose the new schedule date:
+      </p>
+      <input 
+        id="rescheduleDate" 
+        type="date" 
+        class="swal2-input" 
+        value="${tomorrowStr}" 
+        min="${tomorrowStr}"
+        style="width:auto;text-align:center;font-size:14px;">
+    `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "✅ Confirm",
+      cancelButtonText: "❌ Cancel",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      focusConfirm: false,
+      background: "#fefefe",
+      preConfirm: () => {
+        const selectedDateStr = document.getElementById("rescheduleDate").value;
+        if (!selectedDateStr) {
+          Swal.showValidationMessage("Please select a date");
+          return false;
+        }
+
+        // Extra safeguard: must be tomorrow or later
+        if (selectedDateStr < tomorrowStr) {
+          Swal.showValidationMessage("You cannot select today or past dates");
+          return false;
+        }
+
+        // Keep the original time from createdAt
+        const originalTime = new Date(deal.createdAt);
+        const [year, month, day] = selectedDateStr.split("-");
+        const updatedDate = new Date(
+          year,
+          month - 1,
+          day,
+          originalTime.getHours(),
+          originalTime.getMinutes(),
+          originalTime.getSeconds()
+        );
+
+        return updatedDate;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newDate = result.value;
+        dispatch(
+          RESCHEDULE({
+            token,
+            data: { _id: deal._id, createdAt: new Date(newDate) },
+          })
+        ).then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "✅ Rescheduled Successfully",
+            html: `
+          The schedule for 
+          <b style="color:#3085d6;">${fullName(deal?.customerId?.fullName)}</b> 
+          has been moved to 
+          <b>${newDate.toDateString()}</b>.
+        `,
+            confirmButtonColor: "#3085d6",
+            background: "#fefefe",
+          });
+        });
+      }
+    });
+  };
+
   return (
     <MDBCardBody>
       {refined.length !== 0 && (
@@ -364,6 +449,7 @@ export const Tables = () => {
                 handleUpdatePrice={handleUpdatePrice}
                 handleUpdate={handleUpdate}
                 onSave={onSave}
+                handleReschedule={handleReschedule}
               />
             );
           })}
