@@ -15,9 +15,9 @@
   justify-content: center;
   gap: 10px;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: white;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 8px rgba(0, 121, 107, 0.4);
   overflow: hidden;
   transition: transform 1s ease;
 }
@@ -41,7 +41,7 @@
 
 .homePage-pioneers-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 0 7px rgba(0, 121, 107, 0.2);
+  box-shadow: 0 0 9px rgba(0, 121, 107, 0.6);
 }
 
 .homePage-pioneers-card img {
@@ -54,6 +54,7 @@
 .homePage-pioneers-card span {
   font-size: 1.2rem;
   font-weight: 600;
+  color: rgba(0, 121, 107, 1);
 }
 
 .homePage-pioneers-card p {
