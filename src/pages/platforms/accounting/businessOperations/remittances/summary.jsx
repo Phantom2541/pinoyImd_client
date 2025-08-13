@@ -1,6 +1,13 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { MDBBadge, MDBCard, MDBCardBody, MDBView } from "mdbreact";
+import {
+  MDBBadge,
+  MDBBtn,
+  MDBCard,
+  MDBCardBody,
+  MDBIcon,
+  MDBView,
+} from "mdbreact";
 import {
   currency,
   fullName,
@@ -151,6 +158,19 @@ export default function Summary({ summaryRef }) {
     }
   }, [cluster]);
 
+  const printReceipt = (transaction) => {
+    const { customerId: customer, cashierId: cashier } = transaction;
+    localStorage.setItem(
+      "claimStub",
+      JSON.stringify({ ...transaction, customer, cashier: cashier.fullName })
+    );
+    window.open(
+      "/printout/claimstub",
+      "Claim Stub",
+      "top=100px,left=100px,width=550px,height=750px"
+    );
+  };
+
   return (
     <MDBCard narrow>
       <MDBView
@@ -236,18 +256,16 @@ export default function Summary({ summaryRef }) {
                   className="summary-scrollbar "
                 >
                   <ol className="mt-2 list-decimal list-inside">
-                    {cluster.map(
-                      (
-                        {
-                          customerId,
-                          amount,
-                          createdAt,
-                          cart,
-                          deletedAt,
-                          payment,
-                        },
-                        index
-                      ) => (
+                    {cluster.map((deal, index) => {
+                      const {
+                        customerId,
+                        amount,
+                        createdAt,
+                        cart,
+                        deletedAt,
+                        payment,
+                      } = deal;
+                      return (
                         <li key={index} className="p-2 border-b">
                           <div
                             className="font-bold"
@@ -260,12 +278,26 @@ export default function Summary({ summaryRef }) {
                             )}
                           </div>
                           <div className="text-gray-500 text-sm">
-                            {new Date(createdAt).toLocaleTimeString()}
+                            <h6 style={{ fontSize: "0.9rem" }}>
+                              {new Date(createdAt).toLocaleTimeString()}{" "}
+                            </h6>
                           </div>
-                          <div className="text-blue-600">
-                            {currency.format(amount)}{" "}
+                          <div className="text-blue-600 mt-n2">
+                            <strong>{currency.format(amount)}</strong>{" "}
                             {deletedAt ? "(Deleted)" : ""}{" "}
                             {handlePaymentIcon(payment)}
+                            <MDBIcon
+                              icon="receipt"
+                              onClick={() => printReceipt(deal)}
+                              title="Print Receipt"
+                              className="ml-2 cursor-pointer"
+                              style={{
+                                boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                                borderRadius: "6px",
+                                padding: "4px",
+                                color: "#4a5568", // slate gray
+                              }}
+                            />
                           </div>
                           <div className="text-blue-600">
                             {cart.map((i, index) => (
@@ -275,8 +307,8 @@ export default function Summary({ summaryRef }) {
                             ))}
                           </div>
                         </li>
-                      )
-                    )}
+                      );
+                    })}
                   </ol>
                 </div>
               ) : (

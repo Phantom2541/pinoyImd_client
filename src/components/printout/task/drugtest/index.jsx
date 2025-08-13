@@ -1,5 +1,5 @@
 const DrugTestPrintout = () => {
-  return <div>index</div>;
+  return <div className="bg-white">index</div>;
 };
 
 export default DrugTestPrintout;
