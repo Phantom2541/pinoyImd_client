@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
 import { ENDPOINT } from "../../../../../services/utilities";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +30,10 @@ export default function DescriptionBody() {
   );
 
   const dispatch = useDispatch();
-  const [nameRefreshKey, setNameRefreshKey] = useState({});
+
+  const logo = `${ENDPOINT}/public/companies/${encodeURIComponent(
+    companyId.name
+  )}/profile/logo.png`;
 
   useEffect(() => {
     if (message) {
@@ -40,13 +43,6 @@ export default function DescriptionBody() {
     }
     return () => dispatch(RESET());
   }, [isSuccess, message, addToast, dispatch]);
-  useEffect(() => {
-    const savedLogoKeys = JSON.parse(
-      localStorage.getItem("logoRefreshKey") || "{}"
-    );
-
-    setNameRefreshKey(savedLogoKeys);
-  }, []);
 
   const handleUpdate = ({ _id, key, value }) => {
     let data = { _id };
@@ -60,21 +56,15 @@ export default function DescriptionBody() {
     }
 
     dispatch(UPDATE({ data })).then(({ payload }) => {
-      const updatedCompany = payload.payload;
-
-      // Merge old activePlatform.branch.companyId data with updatedCompany
-      const mergedCompany = {
-        ...companyId,
-        ...updatedCompany,
-      };
+      const updatedCompany = payload?.payload || companyId;
 
       dispatch(
         SetActivePlatform({
           data: {
             ...activePlatform,
             branch: {
-              ...activePlatform.branch,
-              companyId: mergedCompany,
+              ...branch,
+              companyId: updatedCompany,
             },
           },
           isBranch: true,
@@ -95,17 +85,7 @@ export default function DescriptionBody() {
     <div className="companyDescription-container">
       {/* Header */}
       <div className="companyDescription-header">
-        <div className="signatories-card-header">
-          <ImageDragAndDrop
-            key={nameRefreshKey[companyId.name] || companyId.name}
-            img={`${Cloudinary.getEndpoint()}/companies/${
-              companyId.name
-            }/profile/logo?refresh=${nameRefreshKey[companyId.name] || ""}`}
-            handleUpload={(cropImg) => handleUploadProfile(cropImg, email)}
-            formSubmitted={fsAuth}
-            allowedType="jpg"
-          />
-        </div>
+        <Logo />
         <div className="companyDescription-header-wrapper">
           <span className="companyDescription-name">{companyId?.name}</span>
           <div
