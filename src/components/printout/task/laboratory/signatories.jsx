@@ -36,9 +36,7 @@ const Signature = ({ person, label, style = {}, withSignature }) => {
       <div style={{ position: "relative", zIndex: 1 }}>
         {label}
         <h6 style={{ fontSize: "0.8rem" }}>
-          {label !== "Receptionist" &&
-            person?.prc &&
-            ` PRC#: ${person?.prc.id}`}
+          {label !== "Encoder" && person?.prc && ` PRC#: ${person?.prc.id}`}{" "}
         </h6>
       </div>
     </div>
