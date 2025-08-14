@@ -20,13 +20,14 @@ const Card = ({
   const { isLoading, day } = useSelector(({ remittances }) => remittances);
   const [activeCell, setActiveCell] = useState(false);
   const dispatch = useDispatch();
-  // const [lastAnimatedCard, setLastAnimatedCard] = useState(null);
 
   const today = new Date();
   const dateCell = new Date(txt);
   const isFuture = dateCell > today;
   const week = txt?.slice(0, 3);
   const isToday = dateCell.toDateString() === today.toDateString();
+
+  console.log("items", items);
 
   useEffect(() => {
     setActiveCell(day === Number(num));
@@ -60,70 +61,7 @@ const Card = ({
     );
   };
 
-  const handleDate = () => {
-    dispatch(SetActiveDATE(num));
-  };
-
-  const handleTitle = (cashier, breakdown) => {
-    if (!breakdown) return fullName;
-
-    const details = Object.entries(breakdown)
-      .map(([key, value]) => `${capitalize(key)}: ${currency.format(value)}`)
-      .join(", ");
-
-    return `${fullName(cashier.fullName)}\n${details}`;
-  };
-
-  const flyToSummary = (e, currentCardNum) => {
-    const current = Number(currentCardNum);
-
-    // ✅ Skip animation only if SAME card was the last clicked
-    if (lastAnimatedCard === current) return;
-
-    setLastAnimatedCard(current); // ✅ update last animated card
-
-    const source = e.currentTarget;
-    const target = summaryRef?.current;
-
-    if (!source || !target) {
-      console.warn("Missing source or target");
-      return;
-    }
-
-    const sourceRect = source.getBoundingClientRect();
-    const targetRect = target.getBoundingClientRect();
-
-    const clone = source.cloneNode(true);
-    clone.style.position = "fixed";
-    clone.style.top = `${sourceRect.top}px`;
-    clone.style.left = `${sourceRect.left}px`;
-    clone.style.width = `${sourceRect.width}px`;
-    clone.style.height = `${sourceRect.height}px`;
-    clone.style.zIndex = 9999;
-    clone.style.transition = "all 0.6s ease-in-out, opacity 1s ease-in";
-    clone.style.pointerEvents = "none";
-    clone.style.opacity = "1";
-    clone.style.background = "white";
-    clone.style.borderRadius = "10px";
-    clone.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
-    clone.classList.add("fly-animation-clone");
-
-    document.body.appendChild(clone);
-
-    requestAnimationFrame(() => {
-      clone.style.top = `${targetRect.top}px`;
-      clone.style.left = `${targetRect.left}px`;
-      clone.style.width = `${targetRect.width}px`;
-      clone.style.height = `${targetRect.height}px`;
-      clone.style.opacity = "0";
-    });
-
-    setTimeout(() => {
-      clone.remove();
-    }, 1000);
-  };
-
-  console.log("items", items);
+  const handleDate = () => dispatch(SetActiveDATE(num));
 
   return (
     <div
@@ -133,7 +71,13 @@ const Card = ({
       style={!num ? { opacity: 0, pointerEvents: "none" } : {}}
       onClick={(e) => {
         if (items.length > 0) {
-          flyToSummary(e, Number(num)); // ✅ always a number
+          flyToSummary(
+            e,
+            Number(num),
+            summaryRef,
+            lastAnimatedCard,
+            setLastAnimatedCard
+          ); // ✅ always a number
         }
         handleDate();
       }}
@@ -150,8 +94,20 @@ const Card = ({
         <div className="sales-card-body">
           <div className="d-flex flex-column">
             {items.map(
-              ({ cashier, sales: gross, collector, _id, breakdown }, i) =>
-                gross > 0 && (
+              (
+                {
+                  cashier,
+                  sales,
+                  collector,
+                  _id,
+                  breakdown,
+                  coh,
+                  expenses,
+                  opening,
+                },
+                i
+              ) =>
+                sales > 0 && (
                   <div
                     key={i}
                     data-id={_id}
@@ -159,7 +115,13 @@ const Card = ({
                       !collector ? "clickable" : ""
                     }`}
                     onClick={() => collector || handleRemittance(_id)}
-                    title={handleTitle(cashier, breakdown)}
+                    title={handleTitle(
+                      cashier,
+                      breakdown,
+                      sales,
+                      expenses,
+                      opening?.sum
+                    )}
                     style={{ position: "relative", zIndex: 999 }}
                   >
                     {cashier?.alias || cashier?.fullName?.fname}
@@ -168,7 +130,7 @@ const Card = ({
                         collector ? "" : "manager-remmitance-price"
                       }`}
                     >
-                      {currency.format(gross)}
+                      {currency.format(coh)}
                       {!collector && <i className="fas fa-angle-right ml-2" />}
                     </span>
                   </div>
@@ -191,3 +153,80 @@ const Card = ({
 };
 
 export default Card;
+
+const flyToSummary = (
+  e,
+  currentCardNum,
+  summaryRef,
+  lastAnimatedCard,
+  setLastAnimatedCard
+) => {
+  const current = Number(currentCardNum);
+
+  // ✅ Skip animation only if SAME card was the last clicked
+  if (lastAnimatedCard === current) return;
+
+  setLastAnimatedCard(current); // ✅ update last animated card
+
+  const source = e.currentTarget;
+  const target = summaryRef?.current;
+
+  if (!source || !target) {
+    console.warn("Missing source or target");
+    return;
+  }
+
+  const sourceRect = source.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+
+  const clone = source.cloneNode(true);
+  clone.style.position = "fixed";
+  clone.style.top = `${sourceRect.top}px`;
+  clone.style.left = `${sourceRect.left}px`;
+  clone.style.width = `${sourceRect.width}px`;
+  clone.style.height = `${sourceRect.height}px`;
+  clone.style.zIndex = 9999;
+  clone.style.transition = "all 0.6s ease-in-out, opacity 1s ease-in";
+  clone.style.pointerEvents = "none";
+  clone.style.opacity = "1";
+  clone.style.background = "white";
+  clone.style.borderRadius = "10px";
+  clone.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+  clone.classList.add("fly-animation-clone");
+
+  document.body.appendChild(clone);
+
+  requestAnimationFrame(() => {
+    clone.style.top = `${targetRect.top}px`;
+    clone.style.left = `${targetRect.left}px`;
+    clone.style.width = `${targetRect.width}px`;
+    clone.style.height = `${targetRect.height}px`;
+    clone.style.opacity = "0";
+  });
+
+  setTimeout(() => {
+    clone.remove();
+  }, 1000);
+};
+
+const handleTitle = (cashier, breakdown, sales, expenses, fc = 0) => {
+  if (!breakdown) return fullName;
+
+  const details = Object.entries(breakdown)
+    .map(([key, value]) => `->${capitalize(key)}: ${currency.format(value)}`)
+    .join("\n ");
+
+  let result = `Sales: ${currency.format(sales)}\nBreakdown:\n${details}`;
+
+  if (fc) {
+    result += `\nFloating Cash: ${currency.format(fc)}`;
+  }
+
+  if (expenses) {
+    result += `\n- Expenses: ${currency.format(expenses)}`;
+  }
+
+  result += `\n----------\nBy: ${fullName(cashier.fullName)}`;
+
+  return result;
+};

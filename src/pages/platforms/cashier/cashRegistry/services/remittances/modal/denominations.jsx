@@ -275,21 +275,20 @@ export default function Modal() {
           toggle={() => dispatch(TOGGLE({ key: "closed" }))}
           className="darken-3 light-blue white-text"
         >
-          <div className="d-flex" style={{ gap: "60px" }}>
-            <div className="d-flex justify-content-between align-content-center">
+          <div
+            className="d-flex justify-content-between w-100"
+            style={{ gap: "60px" }}
+          >
+            {/* Left Side */}
+            <div className="d-flex align-content-center">
               <MDBIcon icon="calendar-alt" className="mr-2" />
-              <div className="d-flex align-items-end">
-                <span ref={floatingCashRef}>
-                  {title || "Floating Cash  "}
-                  {sum > 0 && (
-                    <RollingNumber value={sum} color="white" duration={800} />
-                  )}
-                </span>
-                <span></span>
-              </div>
+              <span ref={floatingCashRef}>
+                {title || "Floating Cash  "} COH: {currency.format(coh)}
+              </span>
             </div>
 
-            {title === "Closing Cash Register" && (
+            {/* Right Side */}
+            {title === "Closing Cash Register" && sum > 0 && (
               <span
                 className={
                   sum < coh
@@ -299,7 +298,18 @@ export default function Modal() {
                     : "text-success" // ✅ Balanced
                 }
               >
-                COH: {currency.format(coh)}
+                Total Amount Denomination :
+                <RollingNumber
+                  value={sum}
+                  duration={800}
+                  color={
+                    sum < coh
+                      ? "text-danger" // 🔴 Shortage
+                      : sum > coh
+                      ? "text-warning" // 🟡 Overage
+                      : "text-success" // ✅ Balanced
+                  }
+                />
               </span>
             )}
           </div>
