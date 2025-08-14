@@ -96,7 +96,9 @@ export default function Modal() {
 
     setSum(total);
   };
+
   const handleSubmit = () => {
+    const now = new Date();
     const _floating = removeUndefinedValues(floating);
     if (!selected?._id) {
       dispatch(
@@ -113,7 +115,14 @@ export default function Modal() {
             cashier: auth._id,
             branch: activePlatform?.branchId,
             department: Policy.getDepartment(activePlatform.position),
-            createdAt: new Date(year, month - 1, day).setHours(17, 4, 0, 3),
+            createdAt: new Date(
+              year,
+              month - 1,
+              day,
+              now.getHours(),
+              now.getMinutes(),
+              now.getSeconds()
+            ),
           },
         })
       );

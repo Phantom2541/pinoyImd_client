@@ -1,19 +1,15 @@
 import Indicator from "./indicator";
 import Footer from "./footer";
 import { currency } from "../../../../../../../services/utilities";
-import { MDBAnimation, MDBProgress } from "mdbreact";
 import CardLoading from "../../../../../../../components/cardLoading";
 // import { useSelector } from "react-redux";
 const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
-  console.log("card-item", item);
-
   // const { collections } = useSelector(({ payments }) => payments);
   const today = new Date();
   const dateCell = new Date(txt);
   const isFuture = dateCell > today;
   const week = txt?.slice(0, 3);
   const isToday = dateCell.toDateString() === today.toDateString();
-
   const {
     opening = {},
     sales: gross = 0,
@@ -23,7 +19,6 @@ const Card = ({ txt, num, index, item = {}, isLoading = false, deals }) => {
     expenses = 0,
   } = item;
   const isRemitted = !!collector;
-  console.log(expenses);
   const { cash, ...rest } = breakdown;
   const nonCash = Object.entries(rest);
   const net = (opening.sum || 0) + cash - expenses;
