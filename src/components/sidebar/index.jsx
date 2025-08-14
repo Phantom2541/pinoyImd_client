@@ -230,7 +230,7 @@ export default function SideNavigation({
         <div className="text-center mt-2 " style={{ marginBottom: "-10px" }}>
           <img
             src={`${Cloudinary.getEndpoint()}/companies/${
-              company.name
+              company?.name
             }/logo.png`}
             onError={(e) => (e.target.src = FailedLogo)}
             alt="Company Logo"
