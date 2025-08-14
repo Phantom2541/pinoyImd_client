@@ -115,7 +115,7 @@ const Card = ({
                       !collector ? "clickable" : ""
                     }`}
                     onClick={() => collector || handleRemittance(_id)}
-                    title={handleTitle(
+                    title={handleLiquidation(
                       cashier,
                       breakdown,
                       sales,
@@ -209,14 +209,16 @@ const flyToSummary = (
   }, 1000);
 };
 
-const handleTitle = (cashier, breakdown, sales, expenses, fc = 0) => {
+const handleLiquidation = (cashier, breakdown, sales, expenses, fc = 0) => {
   if (!breakdown) return fullName;
 
   const details = Object.entries(breakdown)
     .map(([key, value]) => `->${capitalize(key)}: ${currency.format(value)}`)
     .join("\n ");
 
-  let result = `Sales: ${currency.format(sales)}\nBreakdown:\n${details}`;
+  let result = `Daily Liquidation Summary : \n Sales: ${currency.format(
+    sales
+  )}\nBreakdown:\n${details}`;
 
   if (fc) {
     result += `\nFloating Cash: ${currency.format(fc)}`;
